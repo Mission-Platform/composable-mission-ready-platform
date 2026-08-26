@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined
+function useObservable(source: Observable<T>): T | undefined;
 ```
 
 `source` をサブスクライブし、その最新のエミッションを状態として返します。返品
@@ -24,9 +24,9 @@ function useObservable(source: Observable<T>): T | undefined
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | Observable<T> |  |
+| 名前   | タイプ        | 説明 |
+| ------ | ------------- | ---- |
+| ソース | Observable<T> |      |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -45,7 +45,11 @@ export interface Unsubscribable
 **種類:** 関数
 
 ```typescript
-function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T>> | ((value: T) => void), dependencies: MpDependencyList = []): void
+function useSubscribe(
+  source: Observable<T>,
+  observerOrNext?: Partial<Observer<T>> | ((value: T) => void),
+  dependencies: MpDependencyList = [],
+): void;
 ```
 
 指定された `observer` (または `next` コールバック) を使用して `source` をサブスクライブします。
@@ -54,18 +58,18 @@ function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | Observable<T> |  |
-|オブザーバーまたは次 | Partial<Observer<T>> \| ((値: T) => void) |  |
-|依存関係 | MpDependencyList |  |
+| 名前                 | タイプ                                    | 説明 |
+| -------------------- | ----------------------------------------- | ---- |
+| ソース               | Observable<T>                             |      |
+| オブザーバーまたは次 | Partial<Observer<T>> \| ((値: T) => void) |      |
+| 依存関係             | MpDependencyList                          |      |
 
 ### useサブスクリプション
 
 **種類:** 関数
 
 ```typescript
-function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void
+function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void;
 ```
 
 マウント後に `subscribe` を実行し、アンマウント時にその結果をサブスクライブ解除します (そして
@@ -74,7 +78,7 @@ function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDepend
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|購読する | () => 購読不可 |  |
-|依存関係 | MpDependencyList |  |
+| 名前     | タイプ           | 説明 |
+| -------- | ---------------- | ---- |
+| 購読する | () => 購読不可   |      |
+| 依存関係 | MpDependencyList |      |

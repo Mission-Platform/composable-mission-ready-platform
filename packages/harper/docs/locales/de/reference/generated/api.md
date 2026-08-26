@@ -16,7 +16,11 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/harper`.
 **Art:** Funktion
 
 ```typescript
-function useHarperMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue Composable, das Harper-Grammatik- und Stilprüfung in ein integriert
@@ -30,18 +34,18 @@ unmounten und erneut prüfen, wenn sich `language` ändert.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| editorReference | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| aktiviert | MaybeRefOrGetter<boolean> |  |
-| Sprachreferenz | MaybeRefOrGetter<string> |  |
+| Name            | Geben Sie                                                          | ein Beschreibung |
+| --------------- | ------------------------------------------------------------------ | ---------------- |
+| editorReference | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |                  |
+| aktiviert       | MaybeRefOrGetter<boolean>                                          |                  |
+| Sprachreferenz  | MaybeRefOrGetter<string>                                           |                  |
 
 #### Vertrag
 
 - **@param:** – Ein `MaybeRefOrGetter`, der die Monaco-Editor-Instanz umschließt.
 - **@param:** – Ein `MaybeRefOrGetter<boolean>`, das die Prüfung ein-/ausschaltet.
 - **@param:** – Ein `MaybeRefOrGetter<string>` für die Editorsprache
-(wird bei der Registrierung des Code-Aktionsanbieters verwendet).
+  (wird bei der Registrierung des Code-Aktionsanbieters verwendet).
 
 ## `src/types`
 

@@ -56,7 +56,7 @@ Optionele aanwezigheidsindicator weergegeven als een hoekpunt.
 **Soort:** functie
 
 ```typescript
-function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
+function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 ```
 
 `ForgeAvatar` — een avatar van een gebruiker/entiteit die één keer is geschreven in het neutrale JSX-dialect
@@ -71,9 +71,9 @@ de demo-inhoud van Storybook.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<AvatarProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<AvatarProperties> |              |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -112,7 +112,7 @@ Eén formaatspecifieke videobron.
 **Soort:** functie
 
 ```typescript
-function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement
+function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement;
 ```
 
 `ForgeBackgroundVideo` — een decoratieve, full-bleed achtergrondvideo die één keer is geschreven
@@ -133,9 +133,9 @@ slaat automatisch afspelen over wanneer de gebruiker om verminderde beweging hee
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<BackgroundVideoProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<BackgroundVideoProperties> |              |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -164,7 +164,8 @@ Canonieke 2xs → 2xl-grootteschaal, passend bij de tokens van gedeelde grootte.
 **Soort:** type
 
 ```typescript
-export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type BadgeVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Visuele toon van de badge. Spiegelt de `@mission-platform/components` `ForgeBadge`.
@@ -174,7 +175,7 @@ Visuele toon van de badge. Spiegelt de `@mission-platform/components` `ForgeBadg
 **Soort:** functie
 
 ```typescript
-function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
+function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 ```
 
 `ForgeBadge` — een kleine status-/labelchip die één keer in de neutrale JSX is geschreven
@@ -196,9 +197,9 @@ zowel gewone tekenreeksen als de objectvorm `{ className: boolean }`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<BadgeProperties> |  |
+| Naam          | Typ                           | Beschrijving |
+| ------------- | ----------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<BadgeProperties> |              |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -217,7 +218,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type ButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 Visuele behandeling van de knop. Spiegelt de `@mission-platform/components` `ForgeButton`.
@@ -227,7 +229,7 @@ Visuele behandeling van de knop. Spiegelt de `@mission-platform/components` `For
 **Soort:** functie
 
 ```typescript
-function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
+function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 ```
 
 `ForgeButton` — een knop die één keer in het neutrale JSX-dialect is geschreven en is gecompileerd
@@ -249,9 +251,9 @@ samengesteld met de raamwerkneutrale {@link classNames}-helper, inclusief de bij
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ButtonProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<ButtonProperties> |              |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -260,7 +262,7 @@ samengesteld met de raamwerkneutrale {@link classNames}-helper, inclusief de bij
 **Soort:** functie
 
 ```typescript
-function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
+function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 ```
 
 `ForgeIconButton` — een compacte, vierkante knop met alleen pictogrammen, één keer geschreven in de
@@ -276,9 +278,9 @@ gleuf. Omdat er geen zichtbare tekst is, is een toegankelijke naam **vereist** v
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconButtonProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconButtonProperties> |              |
 
 ### PictogramKnopeigenschappen
 
@@ -305,7 +307,8 @@ Groottetoken dat de vierkante opvulling regelt - canonieke 2xs → 2xl-schaal.
 **Soort:** type
 
 ```typescript
-export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type IconButtonVariant =
+  'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Visuele behandeling van de pictogramknop: de canonieke kleurenset plus een transparante `ghost`.
@@ -317,7 +320,7 @@ Visuele behandeling van de pictogramknop: de canonieke kleurenset plus een trans
 **Soort:** functie
 
 ```typescript
-function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement
+function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement;
 ```
 
 `ForgeProgressBar` — een bepaalde of onbepaalde voortgangsindicator geschreven
@@ -332,9 +335,9 @@ een onbepaalde modus. Het is eigenaar van de stijl via de naast elkaar geplaatst
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ProgressBarProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ProgressBarProperties> |              |
 
 ### ProgressBarEigenschappen
 
@@ -361,7 +364,8 @@ Canonieke 2xs → 2xl maatschaal (spoordikte).
 **Soort:** type
 
 ```typescript
-export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ProgressVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Toon van de voortgangsvulling.
@@ -373,7 +377,7 @@ Toon van de voortgangsvulling.
 **Soort:** functie
 
 ```typescript
-function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement
+function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
 ```
 
 `ForgeQuote` — een semantische blockquote / pull-quote die eenmaal in de neutrale kleur is geschreven
@@ -393,9 +397,9 @@ laat dat bereik vallen - attributie wordt aangestuurd door de `author`/`source` 
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<QuoteProperties> |  |
+| Naam          | Typ                           | Beschrijving |
+| ------------- | ----------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<QuoteProperties> |              |
 
 ### CitaatEigenschappen
 
@@ -434,7 +438,7 @@ Visuele behandeling van de offerte.
 **Soort:** functie
 
 ```typescript
-function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement
+function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement;
 ```
 
 `ForgeResponsiveImage` — een kunstgericht, responsief `<picture>`-element
@@ -455,9 +459,9 @@ conventie die wordt gebruikt voor de gemigreerde componenten).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ResponsiveImageProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ResponsiveImageProperties> |              |
 
 ### ResponsiveImageFit
 
@@ -496,7 +500,7 @@ Eén kunstgerichte/formaatspecifieke beeldbron.
 **Soort:** functie
 
 ```typescript
-function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement
+function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement;
 ```
 
 `ForgeResponsiveVideo` — een responsief `<video>`-element dat eenmaal in de
@@ -519,9 +523,9 @@ componenten).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ResponsiveVideoProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ResponsiveVideoProperties> |              |
 
 ### ResponsieveVideoFit
 
@@ -560,7 +564,7 @@ Eén formaatspecifieke videobron.
 **Soort:** functie
 
 ```typescript
-function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement
+function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ```
 
 `ForgeSeparator` — een visuele scheidingsteken/verdeler die eenmaal in de neutrale stand is geschreven
@@ -581,9 +585,9 @@ gehashte moduleklassenamen worden samengesteld met de framework-neutraal
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SeparatorProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<SeparatorProperties> |              |
 
 ### SeparatorOriëntatie
 
@@ -632,7 +636,7 @@ Lijnstijl.
 **Soort:** functie
 
 ```typescript
-function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
+function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 ```
 
 `ForgeSkeleton` — een tijdelijke aanduiding voor het laden die één keer in de neutrale JSX is geschreven
@@ -647,9 +651,9 @@ Het geeft een `aria-hidden`-blok weer in een van de drie vormen (`line`/`circle`
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SkeletonProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<SkeletonProperties> |              |
 
 ### Skeleteigenschappen
 
@@ -678,7 +682,7 @@ De vorm waarin de tijdelijke aanduiding voor het skelet wordt weergegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement
+function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement;
 ```
 
 `ForgeSpinner` - een onbepaalde laadspinner die ooit in de neutrale stand is geschreven
@@ -695,9 +699,9 @@ de neutrale versie (i18n maakt geen deel uit van deze bibliotheek) stelt de `lab
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SpinnerProperties> |  |
+| Naam          | Typ                             | Beschrijving |
+| ------------- | ------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<SpinnerProperties> |              |
 
 ### Spinnereigenschappen
 
@@ -724,7 +728,8 @@ Canonieke 2xs → 2xl-formaatschaal.
 **Soort:** type
 
 ```typescript
-export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type SpinnerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Toon van de spinnerring.
@@ -736,7 +741,7 @@ Toon van de spinnerring.
 **Soort:** functie
 
 ```typescript
-function ForgeStack(properties: Readonly<StackProperties>): MpElement
+function ForgeStack(properties: Readonly<StackProperties>): MpElement;
 ```
 
 `ForgeStack` - een primitieve flexbox-stapellay-out waarin zijn kinderen worden neergelegd
@@ -751,9 +756,9 @@ styling bevindt zich in de naast elkaar gelegen `forge-stack.module.scss` (geïm
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<StackProperties> |  |
+| Naam          | Typ                           | Beschrijving |
+| ------------- | ----------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<StackProperties> |              |
 
 ### StackAlign
 
@@ -812,23 +817,24 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement
+function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<StatusIconProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<StatusIconProperties> |              |
 
 ### StatusIconNiveau
 
 **Soort:** type
 
 ```typescript
-export type StatusIconLevel = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type StatusIconLevel =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Status/toon overgebracht door het pictogram — de canonieke kleurenset.
@@ -890,7 +896,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement
+function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement;
 ```
 
 `ForgeAccordion` — een verticaal gestapelde container met opvouwbare rijen geschreven
@@ -913,9 +919,9 @@ die terugvallen op de tekst `title`/`content` van het item.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<AccordionProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<AccordionProperties> |              |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -944,7 +950,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
+function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 ```
 
 `ForgeBreadcrumb` - broodkruimelspoor ooit geschreven in het neutrale JSX-dialect
@@ -964,9 +970,9 @@ vervanging), dus alleen het `href`-linkformulier wordt overgedragen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<BreadcrumbProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<BreadcrumbProperties> |              |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1005,7 +1011,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement
+function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement;
 ```
 
 `ForgeButtonGroup` — groepeert gerelateerde knoppen in één visuele eenheid. Geschreven
@@ -1024,9 +1030,9 @@ Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-module
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ButtonGroupProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ButtonGroupProperties> |              |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1055,7 +1061,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeCard(properties: Readonly<CardProperties>): MpElement
+function ForgeCard(properties: Readonly<CardProperties>): MpElement;
 ```
 
 `ForgeCard` — een oppervlaktecontainer met optionele kop-/voettekstgebieden, geschreven
@@ -1075,9 +1081,9 @@ kaders.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<CardProperties> |  |
+| Naam          | Typ                          | Beschrijving |
+| ------------- | ---------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<CardProperties> |              |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1116,7 +1122,7 @@ Bubble kleurbehandeling.
 **Soort:** functie
 
 ```typescript
-function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
+function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 ```
 
 `ForgeChatBubble` — een enkele berichtballon die één keer in de neutrale JSX is geschreven
@@ -1137,9 +1143,9 @@ aanwezigheid gedetecteerd via de raamwerkneutrale {@link hasSlot}-helper.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ChatBubbleProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ChatBubbleProperties> |              |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1158,7 +1164,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
+function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 ```
 
 `ForgeCollapse` — een native op `<details>` gebaseerde openbaarmaking die eenmaal in de
@@ -1181,9 +1187,9 @@ botsen met gelijknamige rekwisieten).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<CollapseProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<CollapseProperties> |              |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1232,7 +1238,7 @@ Het apparaatframe waarin de scherminhoud wordt weergegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement
+function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 ```
 
 `ForgeDeviceMock` — een decoratief apparaatframe dat een willekeurig scherm omhult
@@ -1249,9 +1255,9 @@ Het `browser`-frame geeft een titelbalk weer met verkeerslichtbedieningen en een
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<DeviceMockProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<DeviceMockProperties> |              |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1260,7 +1266,7 @@ Het `browser`-frame geeft een titelbalk weer met verkeerslichtbedieningen en een
 **Soort:** functie
 
 ```typescript
-function ForgeGrid(properties: Readonly<GridProperties>): MpElement
+function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 ```
 
 `ForgeGrid` — een CSS-rasterlay-outprimitief die de inhoud ervan rangschikt in een
@@ -1280,9 +1286,9 @@ woont in de naast elkaar gelegen `forge-grid.module.scss` (geïmporteerd door
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<GridProperties> |  |
+| Naam          | Typ                          | Beschrijving |
+| ------------- | ---------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<GridProperties> |              |
 
 ### Rasteruitlijning
 
@@ -1321,7 +1327,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeInView(properties: Readonly<InViewProperties>): MpElement
+function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 ```
 
 `ForgeInView` — verpakt inhoud en gebruikt `IntersectionObserver` om deze te onthullen
@@ -1336,9 +1342,9 @@ wordt puur overgebracht door de geanimeerde stijl van de verpakking en de
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<InViewProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<InViewProperties> |              |
 
 ### InViewAnimatie
 
@@ -1367,7 +1373,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeList(properties: Readonly<ListProperties>): MpElement
+function ForgeList(properties: Readonly<ListProperties>): MpElement;
 ```
 
 `ForgeList` — een geordende/ongeordende/beschrijving/gewone lijst die eenmaal in de
@@ -1388,9 +1394,9 @@ andere gemigreerde componenten lieten scoped slots vallen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ListProperties> |  |
+| Naam          | Typ                          | Beschrijving |
+| ------------- | ---------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ListProperties> |              |
 
 ### LijstItem
 
@@ -1439,7 +1445,7 @@ Semantische/visuele lijststijl.
 **Soort:** functie
 
 ```typescript
-function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement
+function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement;
 ```
 
 `ForgeMasonry` - een primitieve CSS-metselwerklay-out met meerdere kolommen, één keer geschreven
@@ -1462,9 +1468,9 @@ CSS); de dynamische eigenschappen met meerdere kolommen worden inline toegepast.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MasonryProperties> |  |
+| Naam          | Typ                             | Beschrijving |
+| ------------- | ------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MasonryProperties> |              |
 
 ### MetselwerkGap
 
@@ -1493,7 +1499,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
+function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 ```
 
 `ForgeMenuItem` — een enkel menu-item dat één keer is geschreven in het neutrale JSX-dialect
@@ -1513,9 +1519,9 @@ gevestigde routervervanging) en stelt de `onClick` callback prop bloot.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MenuItemProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MenuItemProperties> |              |
 
 ### MenuItemEigenschappen
 
@@ -1532,7 +1538,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type MenuItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 Toon toegepast op het menu-item.
@@ -1544,7 +1551,7 @@ Toon toegepast op het menu-item.
 **Soort:** functie
 
 ```typescript
-function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
+function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 ```
 
 `ForgeMenu` — een toegankelijk menu dat ooit in het neutrale JSX-dialect is geschreven en
@@ -1570,9 +1577,9 @@ vervanging), anders overeenkomend met de rollen/ARIA van de Vue-opmaak.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MenuProperties> |  |
+| Naam          | Typ                          | Beschrijving |
+| ------------- | ---------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MenuProperties> |              |
 
 ### MenuNode
 
@@ -1611,7 +1618,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement
+function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 ```
 
 `ForgeNavbarItem` — een navigatiebalkitem dat ooit in het neutrale JSX-dialect is geschreven en
@@ -1639,9 +1646,9 @@ eigen `direction` prop) en de `onClick` callback prop.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<NavbarItemProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<NavbarItemProperties> |              |
 
 ### NavigatieItemKind
 
@@ -1668,7 +1675,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type NavbarItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 Toon toegepast op het navigatiebalkitem.
@@ -1680,7 +1688,7 @@ Toon toegepast op het navigatiebalkitem.
 **Soort:** functie
 
 ```typescript
-function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
+function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 ```
 
 `ForgePagination` - paginanavigatiebediening één keer geschreven in de neutrale JSX
@@ -1700,9 +1708,9 @@ maakt gebruik van de gevestigde gecontroleerde `modelValue` + callback-prop-conv
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<PaginationProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<PaginationProperties> |              |
 
 ### PagineringItem
 
@@ -1741,7 +1749,7 @@ Groottetoken dat de afmetingen van de knoppen regelt - canonieke 2xs → 2xl-sch
 **Soort:** functie
 
 ```typescript
-function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
+function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 ```
 
 `ForgeTabs` — een toegankelijke, gecontroleerde tabbladencontainer die eenmaal in de
@@ -1775,9 +1783,9 @@ stelde een neutrale ouder samen, waarbij de panelen blanco bleven. Er wordt gebr
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TabsProperties> |  |
+| Naam          | Typ                          | Beschrijving |
+| ------------- | ---------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TabsProperties> |              |
 
 ### TabItem
 
@@ -1826,7 +1834,7 @@ Visuele behandeling van de tabbladenlijst.
 **Soort:** functie
 
 ```typescript
-function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
+function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 ```
 
 `ForgeTimeline` — een geordende, chronologische lijst van gebeurtenissen die ooit in de
@@ -1847,9 +1855,9 @@ De `marker`/`time`/`title`/standaard slots per item worden vier scoped slots
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TimelineProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TimelineProperties> |              |
 
 ### TijdlijnUitlijnen
 
@@ -1886,7 +1894,8 @@ Het bereik wordt doorgegeven aan de itemslots met bereik.
 **Soort:** type
 
 ```typescript
-export type TimelineItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type TimelineItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 Kleurfamilie toegepast op een markeerpunt.
@@ -1918,7 +1927,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement
+function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement;
 ```
 
 `ForgeWindowPopout` — plaatst de inhoud in een apart browservenster,
@@ -1943,9 +1952,9 @@ zijn gewone rekwisieten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<WindowPopoutProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<WindowPopoutProperties> |              |
 
 ### VensterPopoutEigenschappen
 
@@ -1994,7 +2003,7 @@ Het bereik wordt doorgegeven aan het bereik `slide`-slot.
 **Soort:** functie
 
 ```typescript
-function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement
+function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
 ```
 
 `ForgeCarousel` — een horizontaal schuifbaar diadeck dat ooit in de
@@ -2019,9 +2028,9 @@ startcoördinaten worden `useRef`; `defineExpose` is verwijderd; en de
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<CarouselProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<CarouselProperties> |              |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2040,7 +2049,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
+function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 ```
 
 `ForgeChatArea` — een schuifbaar gespreksoppervlak dat één keer is geschreven in de
@@ -2065,9 +2074,9 @@ automatisch scrollen dekt het algemene geval.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ChatAreaProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ChatAreaProperties> |              |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2139,7 +2148,7 @@ Weergavegedrag: zwevend `overlay` (standaard) of responsief `inline`-paneel.
 **Soort:** functie
 
 ```typescript
-function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement
+function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 ```
 
 `ForgeDrawer` — een schuifpaneel dat ooit in het neutrale JSX-dialect is geschreven en
@@ -2169,9 +2178,9 @@ helper) en een `closeLabel`-steun in plaats van i18n.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<DrawerProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<DrawerProperties> |              |
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2180,7 +2189,7 @@ helper) en een `closeLabel`-steun in plaats van i18n.
 **Soort:** functie
 
 ```typescript
-function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
+function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement;
 ```
 
 `ForgeMenubar` — een horizontale applicatiemenubalk die eenmaal in de neutrale stand is geschreven
@@ -2207,9 +2216,9 @@ vervanging).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MenubarProperties> |  |
+| Naam          | Typ                             | Beschrijving |
+| ------------- | ------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MenubarProperties> |              |
 
 ### MenubalkEigenschappen
 
@@ -2228,7 +2237,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement
+function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
 ```
 
 `ForgeNavbar` — de bovenste applicatienavigatiebalk die eenmaal in de neutrale stand is geschreven
@@ -2249,9 +2258,9 @@ heeft geen multi-rootfragmentretour).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<NavbarProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<NavbarProperties> |              |
 
 ### NavigatiebalkUitlijnen
 
@@ -2292,7 +2301,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeTable(properties: Readonly<TableProperties>): MpElement
+function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
 `ForgeTable` - een sorteerbare gegevenstabel die één keer in het neutrale JSX-dialect is geschreven
@@ -2315,9 +2324,9 @@ de andere gemigreerde componenten lieten scoped slots vallen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TableProperties> |  |
+| Naam          | Typ                           | Beschrijving |
+| ------------- | ----------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TableProperties> |              |
 
 ### Sorteerrichting
 
@@ -2356,7 +2365,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
+function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
 ```
 
 `ForgeTreeView` — een recursieve, toegankelijke boom die ooit in de neutrale JSX is geschreven
@@ -2382,9 +2391,9 @@ callback-rekwisieten komen anders overeen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TreeViewProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TreeViewProperties> |              |
 
 ### TreeViewLabelScope
 
@@ -2423,7 +2432,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement
+function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement;
 ```
 
 `ForgeVirtualList` — maakt alleen de rijen zichtbaar binnen de scrollcontainer,
@@ -2444,9 +2453,9 @@ doorgestuurde (maar niet standaard) slots als scoped-functies).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<VirtualListProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<VirtualListProperties> |              |
 
 ### VirtualListItemScope
 
@@ -2475,7 +2484,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement
+function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement;
 ```
 
 `ForgeVirtualLogViewer` — een krachtige, virtueel scrollende logviewer.
@@ -2495,9 +2504,9 @@ onderdrukking valt weg.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<VirtualLogViewerProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<VirtualLogViewerProperties> |              |
 
 ### LogInvoer
 
@@ -2536,7 +2545,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement
+function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement;
 ```
 
 `ForgeVirtualTable` — een virtueel scrollende, sorteerbare gegevenstabel die rendert
@@ -2566,9 +2575,9 @@ slots voor volledig aangepaste (interactieve) celinhoud.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<VirtualTableProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<VirtualTableProperties> |              |
 
 ### VirtueleTabelCellScope
 
@@ -2607,7 +2616,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement
+function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement;
 ```
 
 `ForgeVirtualTabs` — een container met gecontroleerde tabbladen die **alleen de actieve bestanden weergeeft
@@ -2632,9 +2641,9 @@ plain `panel={({ tab }) => …}` attribuut), en gebruikt het gevestigde
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<VirtualTabsProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<VirtualTabsProperties> |              |
 
 ### VirtueelTabPanelScope
 
@@ -2663,7 +2672,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement
+function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement;
 ```
 
 `ForgeVirtualTreeView` — een virtueel scrollende boom die het zichtbare vlak maakt
@@ -2684,9 +2693,9 @@ terugroep rekwisieten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<VirtualTreeViewProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<VirtualTreeViewProperties> |              |
 
 ### BoomNode
 
@@ -2725,7 +2734,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeHero(properties: Readonly<HeroProperties>): MpElement
+function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 ```
 
 `ForgeHero` — een paginaheld/bannersectie die één keer in de neutrale JSX is geschreven
@@ -2747,9 +2756,9 @@ helper) en `eyebrow`/`title`/`subtitle` zijn tekenreekssteunen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<HeroProperties> |  |
+| Naam          | Typ                          | Beschrijving |
+| ------------- | ---------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<HeroProperties> |              |
 
 ### HeldAlign
 
@@ -2788,7 +2797,7 @@ Verticale opvullingsschaal - canonieke 2xs → 2xl schaal.
 **Soort:** functie
 
 ```typescript
-function beginPointerDrag(handlers: PointerDragHandlers): () => void
+function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 ```
 
 Begin met het slepen van de aanwijzer met venstertracking. Bevestigt `pointermove`/`pointerup`/
@@ -2799,9 +2808,9 @@ de server (geen `window`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| behandelaars | PointerDragHandlers |  |
+| Naam         | Typ                 | Beschrijving |
+| ------------ | ------------------- | ------------ |
+| behandelaars | PointerDragHandlers |              |
 
 ### PointerDragHandler
 

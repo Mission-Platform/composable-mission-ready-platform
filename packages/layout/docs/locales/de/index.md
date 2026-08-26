@@ -21,7 +21,7 @@ Dieselbe Quelle funktioniert mit Vue 3, React, Solid, Svelte und Webkomponenten.
 - **Normales Raster**: Geordnete benannte Zellen für Metrik- und Statuskartensammlungen
 - **F-Muster-Zusammensetzung**: Kopf-, Einleitungs-, Artikel-, Sekundär- und Fußzeilenbereiche im Dokumentationsstil
 - **Z-Muster-Zusammensetzung**: Abwechselnde obere, mittlere und untere Inhaltsbereiche
-– **Nur CSS-Reaktionsfähigkeit**: Mobile-First-Reflow ohne `window`, `matchMedia` oder Client-Status
+  – **Nur CSS-Reaktionsfähigkeit**: Mobile-First-Reflow ohne `window`, `matchMedia` oder Client-Status
 - **Integration von Design-Token**: Lücken, Auffüllungen und Ränder verwenden Mission Platform-Abstands-Token
 
 ## Installation
@@ -107,12 +107,12 @@ Gitterflächen. Regions-Wrapper verfügen über vorhersagbare Klassen im BEM-Sti
 
 ### Regionsverträge
 
-| Komponente | Benannte Regionen | Kompositionsquelle |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | Website-Marketing-Helden und Feature-Bereiche |
-| `ForgeGridLayout` | `cell1` bis `cell12` | Service-Monitor-Dashboardkarten und Statuszusammenfassungen |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | Navigationsleiste/Kontext, Artikel, Seitenleiste und Fußzeile der Dokumente |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Abwechselnde Landingpage-Inhalte und -Aktionen |
+| Komponente            | Benannte Regionen                                          | Kompositionsquelle                                                          |
+| --------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | Website-Marketing-Helden und Feature-Bereiche                               |
+| `ForgeGridLayout`     | `cell1` bis `cell12`                                       | Service-Monitor-Dashboardkarten und Statuszusammenfassungen                 |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | Navigationsleiste/Kontext, Artikel, Seitenleiste und Fußzeile der Dokumente |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Abwechselnde Landingpage-Inhalte und -Aktionen                              |
 
 `ForgeGridLayout` akzeptiert `rows` und `columns`, begrenzt beide auf eins oder mehr und begrenzt den darstellbaren Bereich auf 12 benannte
 Zellen und verwendet einen einspaltigen Fallback unterhalb seines Haltepunkts. Benannte Zellen werden immer in der Quellreihenfolge gerendert.

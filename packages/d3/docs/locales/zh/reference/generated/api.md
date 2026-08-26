@@ -37,7 +37,7 @@ D3 选择包含单个元素 `E`，没有绑定数据。
 **种类：**功能
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 返回附加到元素 (`ref={reference}`) 的引用并运行 `draw`
@@ -50,10 +50,10 @@ ref 仍然为空，抽签被跳过。 `draw` 可能会返回一个拆解
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|画| D3Draw<E> |  |
-|依赖关系 | MpDependencyList | MpDependencyList |  |
+| 名称     | 类型             | 描述             |
+| -------- | ---------------- | ---------------- |
+| 画       | D3Draw<E>        |                  |
+| 依赖关系 | MpDependencyList | MpDependencyList |     |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ export interface ChartBox
 **种类：**功能
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 计算给定外部尺寸的图表的内部绘图矩形，并
@@ -81,9 +81,9 @@ function innerDimensions(box: ChartBox): InnerDimensions
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|盒子|图表框|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 盒子 | 图表框 |      |
 
 ### 内部尺寸
 
@@ -121,7 +121,7 @@ export type MarginInput = number | Partial<Margin>;
 **种类：**功能
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 将 {@link MarginInput} 标准化为完整的 {@link Margin}。一个数字是
@@ -130,6 +130,6 @@ function resolveMargin(input?: MarginInput): Margin
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |保证金输入 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 输入 | 保证金输入 |      |

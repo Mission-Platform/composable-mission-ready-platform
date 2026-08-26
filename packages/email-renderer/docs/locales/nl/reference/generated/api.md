@@ -16,33 +16,33 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/email-r
 **Soort:** functie
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 Geef de gedeelde Forge-boom weer als een React-element voor browservoorbeelden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | E-mailNode |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| node | E-mailNode |              |
 
 ### naarEmailReactComponent
 
 **Soort:** functie
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 Verpak een Forge-e-mailcomponent als een React-functiecomponent.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | MpComponent<P> |  |
-| naam | tekenreeks |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bestanddeel | MpComponent<P> |              |
+| naam        | tekenreeks     |              |
 
 ## `src/adapters/solid`
 
@@ -51,32 +51,32 @@ Verpak een Forge-e-mailcomponent als een React-functiecomponent.
 **Soort:** functie
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 Render de gedeelde Forge-boom als Solid JSX voor browservoorbeelden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | E-mailNode |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| node | E-mailNode |              |
 
 ### naarEmailSolidComponent
 
 **Soort:** functie
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 Verpak een Forge-component als een Solid-component.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | Component<P> |  |
+| Naam        | Typ          | Beschrijving |
+| ----------- | ------------ | ------------ |
+| bestanddeel | Component<P> |              |
 
 ## `src/adapters/svelte`
 
@@ -85,16 +85,16 @@ Verpak een Forge-component als een Solid-component.
 **Soort:** functie
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 Converteer een gedeelde Forge-boom naar een Svelte 5 onbewerkt fragment voor `{@render ...}`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | E-mailNode |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| node | E-mailNode |              |
 
 ## `src/adapters/vue`
 
@@ -103,33 +103,33 @@ Converteer een gedeelde Forge-boom naar een Svelte 5 onbewerkt fragment voor `{@
 **Soort:** functie
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 Render de gedeelde Forge-boom als een Vue VNode voor browservoorbeelden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | E-mailNode |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| node | E-mailNode |              |
 
 ### naar EmailVueComponent
 
 **Soort:** functie
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 Verpak een Forge-e-mailcomponent als een functionele Vue-component.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | MpComponent<P> |  |
-| naam | tekenreeks |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bestanddeel | MpComponent<P> |              |
+| naam        | tekenreeks     |              |
 
 ## `src/adapters/web-components`
 
@@ -138,16 +138,16 @@ Verpak een Forge-e-mailcomponent als een functionele Vue-component.
 **Soort:** functie
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 Maak een native Forge-sjabloonresultaat voor een Web Components-host.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | E-mailNode |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| node | E-mailNode |              |
 
 ## `src/markdown/render-markdown`
 
@@ -156,17 +156,17 @@ Maak een native Forge-sjabloonresultaat voor een Web Components-host.
 **Soort:** functie
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 Converteer veilige Markdown-tokens naar dezelfde Forge-boom die door e-mailcomponenten wordt gebruikt.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| afwaardering | tekenreeks |  |
-| opties | MarkdownRenderOptions |  |
+| Naam         | Typ                   | Beschrijving |
+| ------------ | --------------------- | ------------ |
+| afwaardering | tekenreeks            |              |
+| opties       | MarkdownRenderOptions |              |
 
 ## `src/markdown/types`
 
@@ -197,16 +197,16 @@ Opties die het genereren van de Markdown-boom beheren.
 **Soort:** functie
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 Serialiseer een set Forge-eigenschappen op de toelatingslijst in deterministische volgorde.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | E-maileigenschappen |  |
+| Naam          | Typ                 | Beschrijving |
+| ------------- | ------------------- | ------------ |
+| eigenschappen | E-maileigenschappen |              |
 
 ## `src/render/escape`
 
@@ -215,33 +215,33 @@ Serialiseer een set Forge-eigenschappen op de toelatingslijst in deterministisch
 **Soort:** functie
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 Escape-tekst en attribuutinhoud voor HTML-serialisatie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | tekenreeks |  |
+| Naam   | Typ        | Beschrijving |
+| ------ | ---------- | ------------ |
+| waarde | tekenreeks |              |
 
 ### valideerUrl
 
 **Soort:** functie
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 Weiger schema's die code kunnen uitvoeren of een onverwachte bron kunnen laden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | tekenreeks |  |
-| attribuut | tekenreeks |  |
+| Naam      | Typ        | Beschrijving |
+| --------- | ---------- | ------------ |
+| waarde    | tekenreeks |              |
+| attribuut | tekenreeks |              |
 
 ## `src/render/render-email`
 
@@ -250,33 +250,33 @@ Weiger schema's die code kunnen uitvoeren of een onverwachte bron kunnen laden.
 **Soort:** functie
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 Converteer een Forge-e-mailboom naar een compleet, raamwerkvrij HTML-document.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | E-mailNode |  |
-| opties | RenderEmailOpties |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| node   | E-mailNode        |              |
+| opties | RenderEmailOpties |              |
 
 ### renderEmailFragment
 
 **Soort:** functie
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 Render een Forge-boom als een veilig HTML-fragment voor browseradapterhosts.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | E-mailNode |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| node | E-mailNode |              |
 
 ## `src/render/style`
 
@@ -285,16 +285,16 @@ Render een Forge-boom als een veilig HTML-fragment voor browseradapterhosts.
 **Soort:** functie
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 Serialiseer inline-stijlen in deterministische eigenschapsvolgorde zonder CSS-variabelen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| stijl | E-mailstijl \| tekenreeks |  |
+| Naam  | Typ                       | Beschrijving |
+| ----- | ------------------------- | ------------ |
+| stijl | E-mailstijl \| tekenreeks |              |
 
 ## `src/render/types`
 

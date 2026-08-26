@@ -25,15 +25,15 @@ Ajustes preestablecidos de `@mission-platform/typescript-config/framework-<name>
 
 La plataforma utiliza una escala de respuesta de siete pasos basada en los umbrales de ancho de la ventana gráfica:
 
-| Clave | Etiqueta | Umbral | Dispositivo común/caso de uso |
-| :---- | :---------------- | :------------ | :------------------------------ |
-| `2xs` | Extra-extra-pequeño | $\ge 0$ px | Todos los dispositivos |
-| `xs` | Extrapequeño | $\ge 480$ px | Teléfonos grandes |
-| `sm` | Pequeño | $\ge 768$ px | Retrato de tableta |
-| `md` | Medio | $\ge 1024$ px | Tableta horizontal/portátil pequeña |
-| `lg` | Grande | $\ge 1920$ px | Full HD/1080p |
-| `xl` | Extra grande | $\ge 2560$ px | QHD |
-| `2xl` | Extra extra grande | $\ge 3840$ píxeles | 4K UHD |
+| Clave | Etiqueta            | Umbral             | Dispositivo común/caso de uso       |
+| :---- | :------------------ | :----------------- | :---------------------------------- |
+| `2xs` | Extra-extra-pequeño | $\ge 0$ px         | Todos los dispositivos              |
+| `xs`  | Extrapequeño        | $\ge 480$ px       | Teléfonos grandes                   |
+| `sm`  | Pequeño             | $\ge 768$ px       | Retrato de tableta                  |
+| `md`  | Medio               | $\ge 1024$ px      | Tableta horizontal/portátil pequeña |
+| `lg`  | Grande              | $\ge 1920$ px      | Full HD/1080p                       |
+| `xl`  | Extra grande        | $\ge 2560$ px      | QHD                                 |
+| `2xl` | Extra extra grande  | $\ge 3840$ píxeles | 4K UHD                              |
 
 ## Utilidades principales (`/core`)
 

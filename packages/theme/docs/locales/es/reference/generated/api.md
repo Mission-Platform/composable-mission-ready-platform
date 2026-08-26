@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/them
 **Tipo:** función
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle`: alterna el tema activo a través de `light → dark → auto`,
@@ -39,9 +39,9 @@ a través de la ranura predeterminada.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ThemeToggleProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<ThemeToggleProperties> |             |
 
 ### TemaAlternarPropiedades
 
@@ -70,7 +70,7 @@ Ficha de tamaño: escala canónica 2xs → 2xl.
 **Tipo:** función
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer`: compone anulaciones de token de diseño `--mp-*` en tiempo de ejecución (marca
@@ -96,9 +96,9 @@ El contenedor es un `<div>` fijo.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ThemeComposerProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<ThemeComposerProperties> |             |
 
 ### ThemeComposerPropiedades
 
@@ -127,7 +127,7 @@ Ficha de tamaño: escala canónica 2xs → 2xl.
 **Tipo:** función
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider`: configura la tienda de temas compartidos desde sus accesorios y
@@ -151,9 +151,9 @@ almacén a nivel de documento con un contenedor `<div>` fijo.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ThemeProviderProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<ThemeProviderProperties> |             |
 
 ### Propiedades del proveedor del tema
 
@@ -182,7 +182,7 @@ Token de tamaño: escala canónica 2xs → 2xl (heredada a través del contenedo
 **Tipo:** constante
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 Asigna cada atributo descriptivo a la propiedad personalizada CSS `--mp-*` que anula.
@@ -192,7 +192,7 @@ Asigna cada atributo descriptivo a la propiedad personalizada CSS `--mp-*` que a
 **Tipo:** función
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 Convierte un {@link ThemeComposerConfig} en un mapa plano de CSS personalizado
@@ -201,111 +201,115 @@ La trampilla de escape `tokens` está fusionada en la parte superior.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| configuración | ThemeComposerConfig |  |
+| Nombre        | Tipo                | Descripción |
+| ------------- | ------------------- | ----------- |
+| configuración | ThemeComposerConfig |             |
 
 ### configToStyleString
 
 **Tipo:** función
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 Resuelva una configuración en la cadena `style` en línea completa (propiedades personalizadas + `color-scheme`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| configuración | ThemeComposerConfig |  |
+| Nombre        | Tipo                | Descripción |
+| ------------- | ------------------- | ----------- |
+| configuración | ThemeComposerConfig |             |
 
 ### cssVariablesToString
 
 **Tipo:** función
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 Serializa un mapa de propiedades personalizadas de CSS en una cadena `style` en línea.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| variables | Registro<string, string> |  |
+| Nombre    | Tipo                     | Descripción |
+| --------- | ------------------------ | ----------- |
+| variables | Registro<string, string> |             |
 
 ### fusionarConfig
 
 **Tipo:** función
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 Fusionar superficialmente una configuración parcial con la actual (borrando `undefined`/valores vacíos).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| configuración | ThemeComposerConfig |  |
-| parcial | ThemeComposerConfig |  |
+| Nombre        | Tipo                | Descripción |
+| ------------- | ------------------- | ----------- |
+| configuración | ThemeComposerConfig |             |
+| parcial       | ThemeComposerConfig |             |
 
 ### eliminarConfigToken
 
 **Tipo:** función
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 Elimina una única anulación de token sin procesar.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| configuración | ThemeComposerConfig |  |
-| clave | cadena |  |
+| Nombre        | Tipo                | Descripción |
+| ------------- | ------------------- | ----------- |
+| configuración | ThemeComposerConfig |             |
+| clave         | cadena              |             |
 
 ### setConfigAttribute
 
 **Tipo:** función
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 Establezca un único atributo amigable (pase `undefined` para borrarlo).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| configuración | ThemeComposerConfig |  |
-| atributo | k |  |
-| valor | ThemeComposerConfig[K] |  |
+| Nombre        | Tipo                   | Descripción |
+| ------------- | ---------------------- | ----------- |
+| configuración | ThemeComposerConfig    |             |
+| atributo      | k                      |             |
+| valor         | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
 **Tipo:** función
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 Establezca una anulación de token sin formato único. La clave puede omitir el prefijo `--mp-`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| configuración | ThemeComposerConfig |  |
-| clave | cadena |  |
-| valor | cadena |  |
+| Nombre        | Tipo                | Descripción |
+| ------------- | ------------------- | ----------- |
+| configuración | ThemeComposerConfig |             |
+| clave         | cadena              |             |
+| valor         | cadena              |             |
 
 ## `src/stores/theme-store/theme-store`
 
@@ -314,7 +318,7 @@ Establezca una anulación de token sin formato único. La clave puede omitir el 
 **Tipo:** función
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 (Re)configurar la tienda compartida desde los accesorios de un `ForgeThemeProvider`: cambie el
@@ -323,16 +327,16 @@ adopte el `defaultTheme` del proveedor. Vuelve a aplicar y notifica a los suscri
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| configuración | Configuración del tema |  |
+| Nombre        | Tipo                   | Descripción |
+| ------------- | ---------------------- | ----------- |
+| configuración | Configuración del tema |             |
 
 ### cicloTema
 
 **Tipo:** función
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 Recorra `light → dark → auto → light`.
@@ -342,7 +346,7 @@ Recorra `light → dark → auto → light`.
 **Tipo:** función
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 Lea una instantánea inmutable del estado actual de la tienda.
@@ -362,32 +366,32 @@ El tema concreto realmente se aplicó a la interfaz de usuario (nunca `'auto'`).
 **Tipo:** función
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 Establezca la preferencia del tema explícitamente.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| siguiente | Tema |  |
+| Nombre    | Tipo | Descripción |
+| --------- | ---- | ----------- |
+| siguiente | Tema |             |
 
 ### suscribirseTema
 
 **Tipo:** función
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 Suscríbete para recibir cambios en la tienda; devuelve una función para cancelar la suscripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| oyente | () => nulo |  |
+| Nombre | Tipo       | Descripción |
+| ------ | ---------- | ----------- |
+| oyente | () => nulo |             |
 
 ### Tema
 
@@ -424,7 +428,7 @@ Una instantánea inmutable del estado actual de la tienda, devuelta por {@link g
 **Tipo:** función
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 Alterna entre claro y oscuro, según el tema actualmente resuelto.

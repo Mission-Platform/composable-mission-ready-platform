@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/tokens`
 **Soort:** constant
 
 ```typescript
-export const borderWidth
+export const borderWidth;
 ```
 
 Geen beschrijving opgegeven.
@@ -28,7 +28,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const breakpoint
+export const breakpoint;
 ```
 
 Geen beschrijving opgegeven.
@@ -40,7 +40,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const buttonGroup
+export const buttonGroup;
 ```
 
 Geen beschrijving opgegeven.
@@ -52,7 +52,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const button
+export const button;
 ```
 
 Geen beschrijving opgegeven.
@@ -64,7 +64,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const checkable
+export const checkable;
 ```
 
 Geen beschrijving opgegeven.
@@ -76,7 +76,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const code
+export const code;
 ```
 
 Geen beschrijving opgegeven.
@@ -88,7 +88,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const feedback
+export const feedback;
 ```
 
 Geen beschrijving opgegeven.
@@ -100,7 +100,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const icon
+export const icon;
 ```
 
 Geen beschrijving opgegeven.
@@ -112,7 +112,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const input
+export const input;
 ```
 
 Geen beschrijving opgegeven.
@@ -124,7 +124,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const layout
+export const layout;
 ```
 
 Geen beschrijving opgegeven.
@@ -136,7 +136,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const media
+export const media;
 ```
 
 Geen beschrijving opgegeven.
@@ -148,7 +148,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const surface
+export const surface;
 ```
 
 Geen beschrijving opgegeven.
@@ -160,7 +160,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const tag
+export const tag;
 ```
 
 Geen beschrijving opgegeven.
@@ -172,7 +172,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const themeToggle
+export const themeToggle;
 ```
 
 Geen beschrijving opgegeven.
@@ -184,7 +184,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const componentAtomsTypography
+export const componentAtomsTypography;
 ```
 
 Geen beschrijving opgegeven.
@@ -196,7 +196,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const calendar
+export const calendar;
 ```
 
 Geen beschrijving opgegeven.
@@ -208,7 +208,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const card
+export const card;
 ```
 
 Geen beschrijving opgegeven.
@@ -220,7 +220,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const chatBubble
+export const chatBubble;
 ```
 
 Geen beschrijving opgegeven.
@@ -232,7 +232,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const collapse
+export const collapse;
 ```
 
 Geen beschrijving opgegeven.
@@ -244,7 +244,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const colorInput
+export const colorInput;
 ```
 
 Geen beschrijving opgegeven.
@@ -256,7 +256,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const debug
+export const debug;
 ```
 
 Geen beschrijving opgegeven.
@@ -268,7 +268,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const editor
+export const editor;
 ```
 
 Geen beschrijving opgegeven.
@@ -280,7 +280,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const fieldSet
+export const fieldSet;
 ```
 
 Geen beschrijving opgegeven.
@@ -292,7 +292,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const field
+export const field;
 ```
 
 Geen beschrijving opgegeven.
@@ -304,7 +304,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const inView
+export const inView;
 ```
 
 Geen beschrijving opgegeven.
@@ -316,7 +316,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const markdown
+export const markdown;
 ```
 
 Geen beschrijving opgegeven.
@@ -328,7 +328,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const navigation
+export const navigation;
 ```
 
 Geen beschrijving opgegeven.
@@ -340,7 +340,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const overlay
+export const overlay;
 ```
 
 Geen beschrijving opgegeven.
@@ -352,7 +352,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const select
+export const select;
 ```
 
 Geen beschrijving opgegeven.
@@ -364,7 +364,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const time
+export const time;
 ```
 
 Geen beschrijving opgegeven.
@@ -376,7 +376,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const timeline
+export const timeline;
 ```
 
 Geen beschrijving opgegeven.
@@ -388,7 +388,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const data
+export const data;
 ```
 
 Geen beschrijving opgegeven.
@@ -400,7 +400,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const form
+export const form;
 ```
 
 Geen beschrijving opgegeven.
@@ -412,7 +412,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const map
+export const map;
 ```
 
 Geen beschrijving opgegeven.
@@ -424,7 +424,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const resourcePlanner
+export const resourcePlanner;
 ```
 
 Geen beschrijving opgegeven.
@@ -436,7 +436,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const scheduler
+export const scheduler;
 ```
 
 Geen beschrijving opgegeven.
@@ -448,7 +448,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const email
+export const email;
 ```
 
 Geen beschrijving opgegeven.
@@ -460,7 +460,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const font
+export const font;
 ```
 
 Geen beschrijving opgegeven.
@@ -472,7 +472,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const motion
+export const motion;
 ```
 
 Geen beschrijving opgegeven.
@@ -484,7 +484,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const opacity
+export const opacity;
 ```
 
 Geen beschrijving opgegeven.
@@ -496,7 +496,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const palette
+export const palette;
 ```
 
 Geen beschrijving opgegeven.
@@ -508,7 +508,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const radius
+export const radius;
 ```
 
 Geen beschrijving opgegeven.
@@ -520,7 +520,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const shadow
+export const shadow;
 ```
 
 Geen beschrijving opgegeven.
@@ -532,7 +532,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const size
+export const size;
 ```
 
 Geen beschrijving opgegeven.
@@ -544,7 +544,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const spacing
+export const spacing;
 ```
 
 Geen beschrijving opgegeven.
@@ -556,7 +556,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const themeDark
+export const themeDark;
 ```
 
 Geen beschrijving opgegeven.
@@ -568,7 +568,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const themeLight
+export const themeLight;
 ```
 
 Geen beschrijving opgegeven.
@@ -580,7 +580,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const typography
+export const typography;
 ```
 
 Geen beschrijving opgegeven.
@@ -592,7 +592,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const zIndex
+export const zIndex;
 ```
 
 Geen beschrijving opgegeven.

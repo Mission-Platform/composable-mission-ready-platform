@@ -62,38 +62,38 @@ export interface FieldTypeDescriptor
 פונקציה **סוג:**
 
 ```typescript
-function evaluateCondition(condition: FieldCondition, values: FormValues): boolean
+function evaluateCondition(condition: FieldCondition, values: FormValues): boolean;
 ```
 
 הערך {@link FieldCondition} מול הטופס `values`, והחזר אם
-זה מחזיק כרגע.  קבוצות קומבינטור עוקבות אחר סמנטיקה של JSON Schema:
-`allOf` = AND, `anyOf` = OR, `oneOf` = בדיוק-אחד (XOR).  מילות מפתח מרובות
-הנוכחים באותה קבוצה הם עצמם AND-ed.  קבוצה ריקה עוברת.
+זה מחזיק כרגע. קבוצות קומבינטור עוקבות אחר סמנטיקה של JSON Schema:
+`allOf` = AND, `anyOf` = OR, `oneOf` = בדיוק-אחד (XOR). מילות מפתח מרובות
+הנוכחים באותה קבוצה הם עצמם AND-ed. קבוצה ריקה עוברת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מצב | מצב שדה |  |
-| ערכים | FormValues ​​|  |
+| שם    | הקלד          | תיאור |
+| ----- | ------------- | ----- |
+| מצב   | מצב שדה       |       |
+| ערכים | FormValues ​​ |       |
 
 ### isFieldVisible
 
 פונקציה **סוג:**
 
 ```typescript
-function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean
+function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean;
 ```
 
 האם שדה עם תנאי `visibleWhen` אופציונלי צריך להיות כרגע
-שניתנו.  שדות ללא תנאי תמיד גלויים.
+שניתנו. שדות ללא תנאי תמיד גלויים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שדה | { visibleWhen?: FieldCondition } |  |
-| ערכים | FormValues ​​|  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| שדה   | { visibleWhen?: FieldCondition } |       |
+| ערכים | FormValues ​​                    |       |
 
 ## `src/form-schema`
 
@@ -102,16 +102,16 @@ function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormVal
 פונקציה **סוג:**
 
 ```typescript
-function builderFieldToProperty(field: BuilderField): JsonSchemaProperty
+function builderFieldToProperty(field: BuilderField): JsonSchemaProperty;
 ```
 
 ממיר {@link BuilderField} יחיד ל-{@link JsonSchemaProperty}.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שדה | BuilderField |  |
+| שם  | הקלד         | תיאור |
+| --- | ------------ | ----- |
+| שדה | BuilderField |       |
 
 ### createField
 
@@ -123,7 +123,7 @@ function createField(options: {
   label?: string;
   key?: string;
   usedKeys?: Iterable<string>;
-}): BuilderField
+}): BuilderField;
 ```
 
 יוצר {@link BuilderField} חדש של `type` הנתון. המפתח נגזר
@@ -132,16 +132,16 @@ function createField(options: {
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | { type: FormFieldType;   תווית?: מחרוזת;   מפתח?: מחרוזת;   מקשים בשימוש?: Iterable<string>; } |  |
+| שם       | הקלד                                                                                     | תיאור |
+| -------- | ---------------------------------------------------------------------------------------- | ----- |
+| אפשרויות | { type: FormFieldType; תווית?: מחרוזת; מפתח?: מחרוזת; מקשים בשימוש?: Iterable<string>; } |       |
 
 ### DEFAULT_FIELD_TYPES
 
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
+export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[];
 ```
 
 סוגי השדות המוצעים בפלטת ה-Builder, לפי סדר התצוגה. הפלטה
@@ -154,27 +154,30 @@ export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
 פונקציה **סוג:**
 
 ```typescript
-function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined
+function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined;
 ```
 
 מאמת מפתח שדה כנגד אחיו: עליו להיות לא ריק וייחודי
 בתוך המיכל שלו. מחזירה הודעה הניתנת לקריאה אנושית, או `undefined` כאשר
-המפתח תקף. `siblingKeys` הם המפתחות של השדות *אחרים* ב-
+המפתח תקף. `siblingKeys` הם המפתחות של השדות _אחרים_ ב-
 אותו מיכל (לא כולל השדה המאומת).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפתח | מחרוזת |  |
-| אחים מפתחות | Iterable<string> |  |
+| שם          | הקלד             | תיאור |
+| ----------- | ---------------- | ----- |
+| מפתח        | מחרוזת           |       |
+| אחים מפתחות | Iterable<string> |       |
 
 ### fieldsToDefinition
 
 פונקציה **סוג:**
 
 ```typescript
-function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: FieldsToSchemaOptions = {}): SchemaFormDefinition
+function fieldsToDefinition(
+  fields: BuilderField[] | BuilderField[][],
+  options: FieldsToSchemaOptions = {},
+): SchemaFormDefinition;
 ```
 
 בונה את הגדרת הסכימה, בוחר צעד אחד או אשף מ-`options`.
@@ -183,34 +186,34 @@ function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שדות | BuilderField[] \| BuilderField[][] |  |
-| אפשרויות | FieldsToSchemaOptions |  |
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| שדות     | BuilderField[] \| BuilderField[][] |       |
+| אפשרויות | FieldsToSchemaOptions              |       |
 
 ### fieldsToSchema
 
 פונקציה **סוג:**
 
 ```typescript
-function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema
+function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema;
 ```
 
 בונה {@link FormJsonSchema} שלב אחד משדות ברמה העליונה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שדות | BuilderField[] |  |
-| אפשרויות | FieldsToSchemaOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| שדות     | BuilderField[]        |       |
+| אפשרויות | FieldsToSchemaOptions |       |
 
 ### fieldsToWizardSchema
 
 פונקציה **סוג:**
 
 ```typescript
-function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[]
+function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[];
 ```
 
 בונה אשף רב-שלבי ({@link FormJsonSchema}[]) משדה לכל שלב
@@ -218,145 +221,145 @@ function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| צעדים | BuilderField[][] |  |
-| אפשרויות | FieldsToSchemaOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| צעדים    | BuilderField[][]      |       |
+| אפשרויות | FieldsToSchemaOptions |       |
 
 ### isDateWidget
 
 פונקציה **סוג:**
 
 ```typescript
-function isDateWidget(widget: FormFieldType): boolean
+function isDateWidget(widget: FormFieldType): boolean;
 ```
 
 האם הווידג'ט לוכד תאריך לוח שנה (מקבל `minDate` / `maxDate`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ### isFieldsetWidget
 
 פונקציה **סוג:**
 
 ```typescript
-function isFieldsetWidget(widget: FormFieldType): boolean
+function isFieldsetWidget(widget: FormFieldType): boolean;
 ```
 
 האם הווידג'ט הוא קבוצת שדות קיבוץ.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ### isFileWidget
 
 פונקציה **סוג:**
 
 ```typescript
-function isFileWidget(widget: FormFieldType): boolean
+function isFileWidget(widget: FormFieldType): boolean;
 ```
 
 האם הווידג'ט מעלה קובץ (מקבל את `accept` / `multiple` / `capture`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ### isLocationWidget
 
 פונקציה **סוג:**
 
 ```typescript
-function isLocationWidget(widget: FormFieldType): boolean
+function isLocationWidget(widget: FormFieldType): boolean;
 ```
 
 האם הווידג'ט לוכד קואורדינטה גיאוגרפית (מקבל `locationFormat`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ### isMultilineWidget
 
 פונקציה **סוג:**
 
 ```typescript
-function isMultilineWidget(widget: FormFieldType): boolean
+function isMultilineWidget(widget: FormFieldType): boolean;
 ```
 
 האם הווידג'ט מציג אזור מרובה שורות (מקבל ספירת `rows`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ### isNumberWidget
 
 פונקציה **סוג:**
 
 ```typescript
-function isNumberWidget(widget: FormFieldType): boolean
+function isNumberWidget(widget: FormFieldType): boolean;
 ```
 
 האם הווידג'ט הוא מספרי (`number` / `stepper`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ### isTextWidget
 
 פונקציה **סוג:**
 
 ```typescript
-function isTextWidget(widget: FormFieldType): boolean
+function isTextWidget(widget: FormFieldType): boolean;
 ```
 
 האם הווידג'ט מוקלד בטקסט (מקבל את `minLength` / `maxLength` / `pattern`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ### isTimeWidget
 
 פונקציה **סוג:**
 
 ```typescript
-function isTimeWidget(widget: FormFieldType): boolean
+function isTimeWidget(widget: FormFieldType): boolean;
 ```
 
 האם הווידג'ט לוכד שעה ביום (מקבל את החלפת `showSeconds`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ### nextFieldId
 
 פונקציה **סוג:**
 
 ```typescript
-function nextFieldId(): string
+function nextFieldId(): string;
 ```
 
 יוצר מזהה שדה בונה חדש ועמיד בפני התנגשות.
@@ -366,55 +369,55 @@ function nextFieldId(): string
 פונקציה **סוג:**
 
 ```typescript
-function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>
+function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>;
 ```
 
 כללי הנראות המותנית לפי שלב של הגדרת אשף.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הגדרה | SchemaFormDefinition \| לא מוגדר |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| הגדרה | SchemaFormDefinition \| לא מוגדר |       |
 
 ### schemaStepDescriptions
 
 פונקציה **סוג:**
 
 ```typescript
-function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 התיאורים לפי שלב של הגדרת אשף.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הגדרה | SchemaFormDefinition \| לא מוגדר |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| הגדרה | SchemaFormDefinition \| לא מוגדר |       |
 
 ### schemaStepTitles
 
 פונקציה **סוג:**
 
 ```typescript
-function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 הכותרות לכל שלב של הגדרת אשף (ריק עבור טופס חד-שלבי).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הגדרה | SchemaFormDefinition \| לא מוגדר |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| הגדרה | SchemaFormDefinition \| לא מוגדר |       |
 
 ### schemaToFields
 
 פונקציה **סוג:**
 
 ```typescript
-function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][]
+function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][];
 ```
 
 מלחלח {@link SchemaFormDefinition} בחזרה לשדה העבודה של הבונה
@@ -424,74 +427,74 @@ function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderFi
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הגדרה | SchemaFormDefinition \| לא מוגדר |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| הגדרה | SchemaFormDefinition \| לא מוגדר |       |
 
 ### להצניע
 
 פונקציה **סוג:**
 
 ```typescript
-function slugify(label: string): string
+function slugify(label: string): string;
 ```
 
 הופך תווית אנושית למפתח סכימת `snake_case` בטוח.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תווית | מחרוזת |  |
+| שם    | הקלד   | תיאור |
+| ----- | ------ | ----- |
+| תווית | מחרוזת |       |
 
 ### מפתח ייחודי
 
 פונקציה **סוג:**
 
 ```typescript
-function uniqueKey(base: string, used: Iterable<string>): string
+function uniqueKey(base: string, used: Iterable<string>): string;
 ```
 
 מחזירה `base`, או `base_2`, `base_3`, ... עד שהוא לא מתנגש יותר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בסיס | מחרוזת |  |
-| בשימוש | Iterable<string> |  |
+| שם     | הקלד             | תיאור |
+| ------ | ---------------- | ----- |
+| בסיס   | מחרוזת           |       |
+| בשימוש | Iterable<string> |       |
 
 ### widgetHasOptions
 
 פונקציה **סוג:**
 
 ```typescript
-function widgetHasOptions(widget: FormFieldType): boolean
+function widgetHasOptions(widget: FormFieldType): boolean;
 ```
 
 האם הווידג'ט חושף רשימת אפשרויות המוגדרת על ידי מחבר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ### widgetToJsonType
 
 פונקציה **סוג:**
 
 ```typescript
-function widgetToJsonType(widget: FormFieldType): JsonSchemaType
+function widgetToJsonType(widget: FormFieldType): JsonSchemaType;
 ```
 
 הסוג הפרימיטיבי של JSON Schema שאליו יישומון יוצא בסידרה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יישומון | FormFieldType |  |
+| שם      | הקלד          | תיאור |
+| ------- | ------------- | ----- |
+| יישומון | FormFieldType |       |
 
 ## `src/json-schema`
 
@@ -500,7 +503,7 @@ function widgetToJsonType(widget: FormFieldType): JsonSchemaType
 פונקציה **סוג:**
 
 ```typescript
-function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator
+function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator;
 ```
 
 הידור {@link FormJsonSchema} לתוך אימות שניתן לשימוש חוזר מגובה על ידי Ajv.
@@ -508,7 +511,7 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 הודעות השגיאה שנוצרות ממוקמות באמצעות `translate` האופציונלי
 פונקציה (שיקוף vue-i18n של `t(key, named)`); כאשר מושמט, מובנה
-נעשה שימוש בהודעות באנגלית.  `errorMessage` שסופק על ידי המחבר עוקף תמיד
+נעשה שימוש בהודעות באנגלית. `errorMessage` שסופק על ידי המחבר עוקף תמיד
 מנצחים ומוחזרים מילה במילה.
 
 שדות המוגדרים על ידי תנאי `ui.visibleWhen` שאינו מתקיים כעת
@@ -517,10 +520,10 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סכימה | FormJsonSchema |  |
-| תרגם | SchemaFormTranslate |  |
+| שם    | הקלד                | תיאור |
+| ----- | ------------------- | ----- |
+| סכימה | FormJsonSchema      |       |
+| תרגם  | SchemaFormTranslate |       |
 
 ### FormValidator
 
@@ -537,7 +540,7 @@ export interface FormValidator
 פונקציה **סוג:**
 
 ```typescript
-function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
+function jsonSchemaDefaults(schema: FormJsonSchema): FormValues;
 ```
 
 חשב את ערך ברירת המחדל עבור כל שדה מסכמת JSON, תוך כבוד
@@ -546,28 +549,28 @@ function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סכימה | FormJsonSchema |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| סכימה | FormJsonSchema |       |
 
 ### jsonSchemaToFields
 
 פונקציה **סוג:**
 
 ```typescript
-function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[]
+function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[];
 ```
 
 המר {@link FormJsonSchema} לרשימה המסודרת של מוכנים לעיבוד
-{@link FormFieldSchema} מתארים הנצרכים על ידי מעבד השדות.  מקונן
+{@link FormFieldSchema} מתארים הנצרכים על ידי מעבד השדות. מקונן
 `object` (קבוצת שדה) נכסים חוזרים לתוך, כך שקבוצת שדות נושאת את
 `fields` בהזמנה אישית.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סכימה | FormJsonSchema |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| סכימה | FormJsonSchema |       |
 
 ## `src/types`
 
@@ -586,7 +589,7 @@ export type Autocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'ch
 **סוג:** קבוע
 
 ```typescript
-export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>
+export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>;
 ```
 
 אסימוני `autocomplete` לבחירה מקובצים עבור תפריט נפתח. ה-`group`
@@ -610,13 +613,70 @@ export type Autocomplete = AutocompleteToken | (string &
 **סוג:** סוג
 
 ```typescript
-export type AutocompleteToken = | 'off' | 'on' | 'name' | 'honorific-prefix' | 'given-name' | 'additional-name' | 'family-name' | 'honorific-suffix' | 'nickname' | 'email' | 'username' | 'new-password' | 'current-password' | 'one-time-code' | 'organization-title' | 'organization' | 'street-address' | 'address-line1' | 'address-line2' | 'address-line3' | 'address-level4' | 'address-level3' | 'address-level2' | 'address-level1' | 'country' | 'country-name' | 'postal-code' | 'cc-name' | 'cc-given-name' | 'cc-additional-name' | 'cc-family-name' | 'cc-number' | 'cc-exp' | 'cc-exp-month' | 'cc-exp-year' | 'cc-csc' | 'cc-type' | 'transaction-currency' | 'transaction-amount' | 'language' | 'bday' | 'bday-day' | 'bday-month' | 'bday-year' | 'sex' | 'tel' | 'tel-country-code' | 'tel-national' | 'tel-area-code' | 'tel-local' | 'tel-local-prefix' | 'tel-local-suffix' | 'tel-extension' | 'impp' | 'url' | 'photo' | 'webauthn';
+export type AutocompleteToken =
+  | 'off'
+  | 'on'
+  | 'name'
+  | 'honorific-prefix'
+  | 'given-name'
+  | 'additional-name'
+  | 'family-name'
+  | 'honorific-suffix'
+  | 'nickname'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'one-time-code'
+  | 'organization-title'
+  | 'organization'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'address-line3'
+  | 'address-level4'
+  | 'address-level3'
+  | 'address-level2'
+  | 'address-level1'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-given-name'
+  | 'cc-additional-name'
+  | 'cc-family-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-exp-month'
+  | 'cc-exp-year'
+  | 'cc-csc'
+  | 'cc-type'
+  | 'transaction-currency'
+  | 'transaction-amount'
+  | 'language'
+  | 'bday'
+  | 'bday-day'
+  | 'bday-month'
+  | 'bday-year'
+  | 'sex'
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national'
+  | 'tel-area-code'
+  | 'tel-local'
+  | 'tel-local-prefix'
+  | 'tel-local-suffix'
+  | 'tel-extension'
+  | 'impp'
+  | 'url'
+  | 'photo'
+  | 'webauthn';
 ```
 
 אסימוני ה-HTML `autocomplete` הסטנדרטיים, כפי שהם מקוטלגים על ידי MDN
 (https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete).
 
-אלו הם אסימוני *פרט* בשם שקלט דמוי טקסט בודד יכול לפרסם כך
+אלו הם אסימוני _פרט_ בשם שקלט דמוי טקסט בודד יכול לפרסם כך
 דפדפנים ומנהלי סיסמאות יכולים להציע את הערך השמור הנכון. הרשימה
 משמיט בכוונה את משנות הקיבוץ/הקטעים (`section-*`, `shipping`,
 `billing`, `home`, `work`, ...) שרק קידומת של אחד מהאסימונים האלה - א
@@ -641,7 +701,7 @@ export type FieldCondition = FieldConditionLeaf | FieldConditionGroup;
 export interface FieldConditionGroup
 ```
 
-קיבוץ קומבינטור מקוננים {@link FieldCondition}.  מראות את סכימת JSON
+קיבוץ קומבינטור מקוננים {@link FieldCondition}. מראות את סכימת JSON
 מילות מפתח בוליאניות:
 
 - `allOf` - עובר כאשר **כל** תנאי מקונן עובר (ולוגי).
@@ -658,8 +718,8 @@ export interface FieldConditionGroup
 export interface FieldConditionLeaf
 ```
 
-מצב עלה בודד שבודק את הערך הנוכחי של שדה אחד.  אחד בדיוק
-המשווה מוגדר בדרך כלל; כאשר נוכחים כמה הם חייבים *כולם* להחזיק מעמד
+מצב עלה בודד שבודק את הערך הנוכחי של שדה אחד. אחד בדיוק
+המשווה מוגדר בדרך כלל; כאשר נוכחים כמה הם חייבים _כולם_ להחזיק מעמד
 העלה לעבור.
 
 ### FieldUiOptions
@@ -691,8 +751,8 @@ export type FormErrors = Record<string, string | undefined>;
 export interface FormFieldSchema
 ```
 
-מתאר שדה פתור ומוכן לעיבוד.  SchemaForm מפיקה אחד מאלה
-לכל נכס מ-{@link FormJsonSchema}; זה *לא* חלק מהציבור
+מתאר שדה פתור ומוכן לעיבוד. SchemaForm מפיקה אחד מאלה
+לכל נכס מ-{@link FormJsonSchema}; זה _לא_ חלק מהציבור
 משטח קלט ואינו נושא היגיון אימות משלו.
 
 ### FormFieldType
@@ -700,12 +760,36 @@ export interface FormFieldSchema
 **סוג:** סוג
 
 ```typescript
-export type FormFieldType = | 'text' | 'email' | 'password' | 'number' | 'stepper' | 'url' | 'tel' | 'textarea' | 'markdown' | 'code' | 'checkbox' | 'switch' | 'select' | 'radio' | 'multiselect' | 'date' | 'time' | 'datetime' | 'daterange' | 'timerange' | 'datetimerange' | 'location' | 'file' | 'fieldset';
+export type FormFieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'stepper'
+  | 'url'
+  | 'tel'
+  | 'textarea'
+  | 'markdown'
+  | 'code'
+  | 'checkbox'
+  | 'switch'
+  | 'select'
+  | 'radio'
+  | 'multiselect'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'daterange'
+  | 'timerange'
+  | 'datetimerange'
+  | 'location'
+  | 'file'
+  | 'fieldset';
 ```
 
-השליטה החזותית שבוצעה עבור שדה.  זה עניין של מצגת, אז
+השליטה החזותית שבוצעה עבור שדה. זה עניין של מצגת, אז
 הוא חי תחת הרחבה הלא סטנדרטית `ui.widget` במקום להיות א
-JSON Schema מילת מפתח.  כאשר מושמט, SchemaForm מסיק מ-widget הגיוני
+JSON Schema מילת מפתח. כאשר מושמט, SchemaForm מסיק מ-widget הגיוני
 `type`, `format` ו-`enum` של הנכס.
 
 ### FormJsonSchema
@@ -717,8 +801,8 @@ export interface FormJsonSchema
 ```
 
 טופס בודד (או, באשף, שלב בודד): סכמת JSON `object`
-מסמך.  בשימוש ישיר זה מתאר צורה חד-שלבית; כאשר משתמשים בו כ
-כניסה של מערך ברמה העליונה הוא מתאר שלב אשף אחד.  אימות הוא
+מסמך. בשימוש ישיר זה מתאר צורה חד-שלבית; כאשר משתמשים בו כ
+כניסה של מערך ברמה העליונה הוא מתאר שלב אשף אחד. אימות הוא
 בוצע נגדו עם Ajv באופן פנימי.
 
 ### FormValues
@@ -739,7 +823,7 @@ export type FormValues = Record<string, unknown>;
 export interface JsonSchemaProperty
 ```
 
-מתאר מאפיין JSON Schema יחיד.  מפת מילות מפתח אימות סטנדרטית
+מתאר מאפיין JSON Schema יחיד. מפת מילות מפתח אימות סטנדרטית
 ישירות על כללי Ajv שנוצרו.
 
 ### JsonSchemaStringFormat
@@ -772,7 +856,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 ```
 
 ייצוג הקואורדינטות {@link LocationValue} מוזן/מועבר בסידרה
-כמו.  מוגדר כאן (במקום מיובא מרכיב Vue) כך שהמשותף
+כמו. מוגדר כאן (במקום מיובא מרכיב Vue) כך שהמשותף
 הליבה נשארת אגנוסטית למסגרת; זהה מבחינה מבנית ל-
 `@mission-platform/components` סוג קלט מיקום.
 
@@ -784,7 +868,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 export interface LocationValue
 ```
 
-קואורדינטה גיאוגרפית שנלכדה על ידי הווידג'ט `location`.  `lat`/`lng` הם
+קואורדינטה גיאוגרפית שנלכדה על ידי הווידג'ט `location`. `lat`/`lng` הם
 `undefined` בעודו ריק, כך שערך ריק פירושו באופן נקי "אין קלט".
 
 ### SchemaFormDefinition
@@ -809,7 +893,7 @@ export type SchemaFormDefinition = FormJsonSchema | FormJsonSchema[];
 export type SchemaFormTranslate = (key: string, named?: Record<string, unknown>) => string;
 ```
 
-פונקציית תרגום המשמשת ללוקליזציה של הודעות אימות שנוצרו.  זה
+פונקציית תרגום המשמשת ללוקליזציה של הודעות אימות שנוצרו. זה
 משקף את חתימת `t(key, named)` של vue-i18n: ניתן מפתח הודעה ו-
 שקית אופציונלית של ערכי אינטרפולציה עם שם, היא מחזירה את המחרוזת המקומית.
 כאשר מושמט, SchemaForm חוזר להודעות מובנות באנגלית.

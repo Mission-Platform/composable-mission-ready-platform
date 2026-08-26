@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig
+function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig;
 ```
 
 활성 프레임워크를 위한 통합된 {@link StorybookConfig}를 빌드하세요. 하나
@@ -25,9 +25,9 @@ function createStorybookConfig(options: CreateStorybookConfigOptions): Storybook
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | CreateStorybookConfigOptions |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 옵션 | CreateStorybookConfigOptions |      |
 
 ### 스토리북 구성 옵션 만들기
 
@@ -44,7 +44,7 @@ export interface CreateStorybookConfigOptions
 **종류:** 기능
 
 ```typescript
-function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework
+function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework;
 ```
 
 명시적 옵션 또는
@@ -53,9 +53,9 @@ function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFram
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 명시적인 | 스토리북프레임워크 |  |
+| 이름     | 유형               | 설명 |
+| -------- | ------------------ | ---- |
+| 명시적인 | 스토리북프레임워크 |      |
 
 ### 스토리북프레임워크
 
@@ -72,7 +72,7 @@ export type StorybookFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-com
 **종류:** 기능
 
 ```typescript
-function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[]
+function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[];
 ```
 
 요청된 패키지에 대한 공유 중립 스토리 글로브를 빌드합니다.
@@ -81,11 +81,11 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| _프레임워크 | 스토리북프레임워크 |  |
-| 패키지 | 읽기 전용 문자열[] |  |
-| 패키지루트 | 문자열 |  |
+| 이름        | 유형               | 설명 |
+| ----------- | ------------------ | ---- |
+| _프레임워크 | 스토리북프레임워크 |      |
+| 패키지      | 읽기 전용 문자열[] |      |
+| 패키지루트  | 문자열             |      |
 
 ## `src/preview`
 
@@ -94,7 +94,7 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 **종류:** 기능
 
 ```typescript
-function sharedPreviewDecorators()
+function sharedPreviewDecorators();
 ```
 
 모든 프레임워크에 대한 공유 Storybook 데코레이터입니다.
@@ -104,7 +104,7 @@ function sharedPreviewDecorators()
 **종류:** 상수
 
 ```typescript
-export const sharedPreviewParameters
+export const sharedPreviewParameters;
 ```
 
 모든 프레임워크에 대한 공유 Storybook 매개변수입니다.
@@ -114,7 +114,7 @@ export const sharedPreviewParameters
 **종류:** 기능
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework)
+function sharedPreviewParametersFor(framework?: PreviewFramework);
 ```
 
 프레임워크 인식 Storybook 매개변수.
@@ -131,9 +131,9 @@ function sharedPreviewParametersFor(framework?: PreviewFramework)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프레임워크 | 미리보기프레임워크 |  |
+| 이름       | 유형               | 설명 |
+| ---------- | ------------------ | ---- |
+| 프레임워크 | 미리보기프레임워크 |      |
 
 ## `src/slots.dom`
 
@@ -142,7 +142,7 @@ function sharedPreviewParametersFor(framework?: PreviewFramework)
 **종류:** 기능
 
 ```typescript
-function customElementTag(component: unknown): string
+function customElementTag(component: unknown): string;
 ```
 
 해당 요소에서 Forge 웹 구성 요소의 등록된 태그 이름을 파생합니다.
@@ -152,9 +152,9 @@ function customElementTag(component: unknown): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 알 수 없음 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 구성요소 | 알 수 없음 |      |
 
 ## `src/slots.neutral`
 
@@ -163,7 +163,7 @@ function customElementTag(component: unknown): string
 **종류:** 상수
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 자리 표시자 조각 팩토리; 호출된 적이 없습니다({@link 참조). node}).
@@ -173,7 +173,7 @@ export const Fragment
 **종류:** 상수
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 설명이 제공되지 않았습니다.
@@ -187,7 +187,7 @@ export const node: StoryNodeFactory
 **종류:** 상수
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 설명이 제공되지 않았습니다.
@@ -203,7 +203,7 @@ export const renderWithSlots: RenderWithSlots
 **종류:** 상수
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 설명이 제공되지 않았습니다.
@@ -217,7 +217,7 @@ export const node: StoryNodeFactory
 **종류:** 상수
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 설명이 제공되지 않았습니다.
@@ -233,7 +233,7 @@ export const renderWithSlots: RenderWithSlots
 **종류:** 상수
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Solid 조각 구성 요소가 없습니다. 자식 배열은 조각입니다.
@@ -243,7 +243,7 @@ Solid 조각 구성 요소가 없습니다. 자식 배열은 조각입니다.
 **종류:** 상수
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 설명이 제공되지 않았습니다.
@@ -257,7 +257,7 @@ export const node: StoryNodeFactory
 **종류:** 상수
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 설명이 제공되지 않았습니다.
@@ -273,7 +273,7 @@ export const renderWithSlots: RenderWithSlots
 **종류:** 상수
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 JSX 조각용 마커 구성 요소 — 해당 하위 요소는 상위 요소에 바로 마운트됩니다.
@@ -283,7 +283,7 @@ JSX 조각용 마커 구성 요소 — 해당 하위 요소는 상위 요소에 
 **종류:** 상수
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 설명이 제공되지 않았습니다.
@@ -297,7 +297,7 @@ export const node: StoryNodeFactory
 **종류:** 상수
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 설명이 제공되지 않았습니다.
@@ -313,7 +313,12 @@ export const renderWithSlots: RenderWithSlots
 **종류:** 유형
 
 ```typescript
-export type RenderWithSlots = ( component: unknown, properties: Record<string, unknown>, slots: StorySlots, children?: unknown, ) => unknown;
+export type RenderWithSlots = (
+  component: unknown,
+  properties: Record<string, unknown>,
+  slots: StorySlots,
+  children?: unknown,
+) => unknown;
 ```
 
 세우다 `component` ~와 함께 `properties`, 주어진 이름의 `slots` 그리고 선택사항
@@ -325,7 +330,11 @@ export type RenderWithSlots = ( component: unknown, properties: Record<string, u
 **종류:** 유형
 
 ```typescript
-export type StoryNodeFactory = ( type: unknown, properties?: Record<string, unknown> | null, ...children: unknown[] ) => unknown;
+export type StoryNodeFactory = (
+  type: unknown,
+  properties?: Record<string, unknown> | null,
+  ...children: unknown[]
+) => unknown;
 ```
 
 활성 렌더러용 요소 하나를 빌드합니다. 또한 클래식 JSX 역할도 수행합니다.
@@ -349,7 +358,7 @@ export type StorySlots = Record<string, unknown>;
 **종류:** 상수
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 설명이 제공되지 않았습니다.
@@ -363,7 +372,7 @@ export const node: StoryNodeFactory
 **종류:** 상수
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 설명이 제공되지 않았습니다.
@@ -379,7 +388,7 @@ export const renderWithSlots: RenderWithSlots
 **종류:** 상수
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 JSX 조각용 마커 구성 요소 — `DocumentFragment`.
@@ -389,7 +398,7 @@ JSX 조각용 마커 구성 요소 — `DocumentFragment`.
 **종류:** 상수
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 설명이 제공되지 않았습니다.
@@ -403,7 +412,7 @@ export const node: StoryNodeFactory
 **종류:** 상수
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 설명이 제공되지 않았습니다.
@@ -431,7 +440,10 @@ export type Meta<TComponentOrArguments = Args> = ComponentAnnotations<Renderer, 
 **종류:** 유형
 
 ```typescript
-export type StoryObj<TMetaOrComponentOrArgs = Args> = TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments> ? StoryAnnotations<Renderer, TArguments> : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
+export type StoryObj<TMetaOrComponentOrArgs = Args> =
+  TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
+    ? StoryAnnotations<Renderer, TArguments>
+    : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
 프레임워크에 구애받지 않는 스토리북 `StoryObj`, 중립 대응

@@ -26,7 +26,7 @@ export interface MidiControls
 **Genre :** fonction
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 Hook Web MIDI indépendant du framework. Demande un accès MIDI, suit les données disponibles
@@ -53,7 +53,7 @@ export interface SoundControls
 **Genre :** fonction
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 Crochet de lecture sonore neutre en termes de framework. Lit un clip audio à partir de `source` via
@@ -66,9 +66,9 @@ démonter.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| source | chaîne |            |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ Options appliquées lors du démarrage d'une session {@link useSpeechRecognition
 **Genre :** fonction
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 Hook de synthèse vocale indépendant du framework, construit sur la version native du navigateur
@@ -135,7 +135,7 @@ export interface SpeechSynthesisControls
 **Genre :** fonction
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 Un hook de synthèse vocale indépendant du framework, construit sur la version native du navigateur

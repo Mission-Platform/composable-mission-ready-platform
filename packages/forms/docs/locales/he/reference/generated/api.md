@@ -26,7 +26,7 @@ export interface CheckboxProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
+function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 ```
 
 `ForgeCheckbox` - בקרת תיבת סימון שנכתבה פעם אחת בניב JSX הנייטרלי ו
@@ -48,9 +48,9 @@ function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<CheckboxProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<CheckboxProperties> |       |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -59,7 +59,7 @@ function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
 פונקציה **סוג:**
 
 ```typescript
-function ForgeInput(properties: Readonly<InputProperties>): MpElement
+function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 ```
 
 `ForgeInput` - שדה טקסט שכתב פעם אחת בניב JSX הנייטרלי ו
@@ -79,9 +79,9 @@ function ForgeInput(properties: Readonly<InputProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<InputProperties> |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| נכסים | לקריאה בלבד<InputProperties> |       |
 
 ### InputAutocapetalize
 
@@ -130,7 +130,7 @@ export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'u
 פונקציה **סוג:**
 
 ```typescript
-function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
+function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 ```
 
 `ForgeRadio` - בקרת רדיו נכתבה פעם אחת בניב JSX הנייטרלי ו
@@ -147,9 +147,9 @@ function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<RadioProperties> |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| נכסים | לקריאה בלבד<RadioProperties> |       |
 
 ### RadioProperties
 
@@ -168,7 +168,7 @@ export interface RadioProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
+function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 ```
 
 `ForgeRangeInput` - בורר טווח מינימלי/מקסימום דו-אגודלים שנכתב פעם אחת ב-
@@ -193,9 +193,9 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<RangeInputProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<RangeInputProperties> |       |
 
 ### RangeInputProperties
 
@@ -234,7 +234,7 @@ export type RangeValue = [number, number];
 פונקציה **סוג:**
 
 ```typescript
-function ForgeRating(properties: Readonly<RatingProperties>): MpElement
+function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 ```
 
 `ForgeRating` - קלט/תצוגה של דירוג כוכבים נכתב פעם אחת ב-JSX הנייטרלי
@@ -254,9 +254,9 @@ function ForgeRating(properties: Readonly<RatingProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<RatingProperties> |  |
+| שם    | הקלד                          | תיאור |
+| ----- | ----------------------------- | ----- |
+| נכסים | לקריאה בלבד<RatingProperties> |       |
 
 ### RatingProperties
 
@@ -285,7 +285,7 @@ export type RatingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
+function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 ```
 
 `ForgeSlider` - מחוון טווח שכתב פעם אחת בניב JSX הנייטרלי ו
@@ -307,9 +307,9 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<SliderProperties> |  |
+| שם    | הקלד                          | תיאור |
+| ----- | ----------------------------- | ----- |
+| נכסים | לקריאה בלבד<SliderProperties> |       |
 
 ### SliderProperties
 
@@ -338,7 +338,7 @@ export type SliderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement
+function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement;
 ```
 
 `ForgeSwitch` — מתג חילופין שנכתב פעם אחת בניב JSX הנייטרלי ו
@@ -356,9 +356,9 @@ function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<SwitchProperties> |  |
+| שם    | הקלד                          | תיאור |
+| ----- | ----------------------------- | ----- |
+| נכסים | לקריאה בלבד<SwitchProperties> |       |
 
 ### SwitchProperties
 
@@ -387,7 +387,7 @@ export type SwitchSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
+function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 ```
 
 `ForgeTextarea` - שדה טקסט מרובה שורות שנכתב פעם אחת ב-JSX הנייטרלי
@@ -408,9 +408,9 @@ function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<TextareaProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<TextareaProperties> |       |
 
 ### TextareaAutocapitalize
 
@@ -479,7 +479,7 @@ export type CalendarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement
+function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 ```
 
 `ForgeCalendar` - בוחר תאריכים של רשת חודש שנכתב פעם אחת ב-JSX הנייטרלי
@@ -507,9 +507,9 @@ function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<CalendarProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<CalendarProperties> |       |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -538,7 +538,7 @@ export type ColorInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
+function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 ```
 
 `ForgeColorInput` - בוחר צבעים שכתב פעם אחת בניב JSX הנייטרלי ו
@@ -558,9 +558,9 @@ function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ColorInputProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ColorInputProperties> |       |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -589,7 +589,7 @@ export type DateInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
+function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 ```
 
 `ForgeDateInput` - בוחר תאריכים שנכתב פעם אחת בניב JSX הנייטרלי ו
@@ -612,9 +612,9 @@ function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<DateInputProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<DateInputProperties> |       |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -643,7 +643,7 @@ export type DateRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 פונקציה **סוג:**
 
 ```typescript
-function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement
+function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateRangeInput` - בוחר טווח תאריכים שחיבר פעם אחת ב-JSX הנייטרלי
@@ -672,9 +672,9 @@ function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<DateRangeInputProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<DateRangeInputProperties> |       |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -693,7 +693,7 @@ export interface FieldSetProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement
+function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement;
 ```
 
 `ForgeFieldSet` - מיכל קיבוץ סמנטי שנכתב פעם אחת בניוטרל
@@ -714,9 +714,9 @@ function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<FieldSetProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<FieldSetProperties> |       |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -745,7 +745,7 @@ export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
+function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 ```
 
 `ForgeFileInput` - קלט קובץ שנכתב פעם אחת בניב JSX הנייטרלי ו
@@ -765,9 +765,9 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<FileInputProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<FileInputProperties> |       |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -776,7 +776,7 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
 פונקציה **סוג:**
 
 ```typescript
-function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement
+function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement;
 ```
 
 `ForgeLocationInput` - קלט קואורדינטות גיאוגרפי שנכתב פעם אחת ב-
@@ -796,17 +796,18 @@ function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpEl
 תחליפים מ-Vue SFC המקורי: `useId` מפות ישירות ל-
 וו `useId` יליד מסגרת; מאגרי הטקסט המקומיים
 (`latText`/`lngText`) הופכים ללא עצלן {@link useState} (לכן העיבוד הראשוני
+
 - כולל SSR - כבר מציג את הקואורדינטות המעוצבות) מסונכרנות מחדש מה-
-מודל עם {@link useEffect}; וה-`v-model` + `change` פולט הופכים ל-
-`onUpdateModelValue`/`onChange` אביזרי callback. כיתות פריסת הילד הם
-מוחל על עטיפות `<div>`s במקום לעבור ללחן
-רכיבים.
+  מודל עם {@link useEffect}; וה-`v-model` + `change` פולט הופכים ל-
+  `onUpdateModelValue`/`onChange` אביזרי callback. כיתות פריסת הילד הם
+  מוחל על עטיפות `<div>`s במקום לעבור ללחן
+  רכיבים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<LocationInputProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<LocationInputProperties> |       |
 
 ### LocationInputProperties
 
@@ -849,7 +850,7 @@ export interface LocationValue
 ```
 
 הערך הקנוני של שדה מיקום: קואורדינטות של מעלות עשרוניות בסימן
-בתוספת הגרסה שבה הם מוצגים/מסודרים.  `undefined` קואורדינטות
+בתוספת הגרסה שבה הם מוצגים/מסודרים. `undefined` קואורדינטות
 מתכוון "ללא קלט".
 
 ## `src/components/molecules/forge-number-stepper/forge-number-stepper`
@@ -859,7 +860,7 @@ export interface LocationValue
 פונקציה **סוג:**
 
 ```typescript
-function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement
+function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement;
 ```
 
 `ForgeNumberStepper` - צעד מספרי שכתב פעם אחת בניב JSX הנייטרלי
@@ -879,9 +880,9 @@ function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpEl
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<NumberStepperProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<NumberStepperProperties> |       |
 
 ### NumberStepperProperties
 
@@ -910,7 +911,7 @@ export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 פונקציה **סוג:**
 
 ```typescript
-function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
+function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 ```
 
 `ForgeOtpInput` - קלט סיסמה חד פעמי מפולח שנכתב פעם אחת ב
@@ -932,9 +933,9 @@ function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<OtpInputProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<OtpInputProperties> |       |
 
 ### OtpInputProperties
 
@@ -973,7 +974,7 @@ export type OtpInputType = 'numeric' | 'alphanumeric' | 'text';
 פונקציה **סוג:**
 
 ```typescript
-function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement
+function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 ```
 
 `ForgePhoneInput` - שדה בינלאומי של מספרי טלפון שנכתב פעם אחת ב-
@@ -1002,9 +1003,9 @@ SFC: המפות הניתנות לחיבור `useId` ישירות ל-`useId` המ
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<PhoneInputProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<PhoneInputProperties> |       |
 
 ### PhoneChange
 
@@ -1055,7 +1056,7 @@ export interface PhoneCountry
 פונקציה **סוג:**
 
 ```typescript
-function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement
+function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement;
 ```
 
 `ForgeRadioGroup` - מקבץ מספר פקדים של {@link ForgeRadio} תחת פקד משותף
@@ -1078,9 +1079,9 @@ React או Vue מאת `@mission-platform/vite-plugin-forge`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<RadioGroupProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<RadioGroupProperties> |       |
 
 ### RadioGroupDirection
 
@@ -1119,7 +1120,7 @@ export interface RadioOption
 פונקציה **סוג:**
 
 ```typescript
-function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement
+function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement;
 ```
 
 `ForgeSearchInput` - שדה חיפוש שנכתב פעם אחת בניב JSX הנייטרלי ו
@@ -1139,9 +1140,9 @@ function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<SearchInputProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<SearchInputProperties> |       |
 
 ### SearchInputProperties
 
@@ -1170,7 +1171,7 @@ export type SearchInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement
+function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement;
 ```
 
 `ForgeSegmentControl` - בקרה מפולחת (מתג בחירה בודדת) יוצר
@@ -1191,9 +1192,9 @@ refs של רכיב בודד, לא מערכי ref). פולט `v-model` + `change`
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<SegmentControlProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<SegmentControlProperties> |       |
 
 ### SegmentControlProperties
 
@@ -1232,7 +1233,7 @@ export interface SegmentOption
 פונקציה **סוג:**
 
 ```typescript
-function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement
+function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 ```
 
 `ForgeTimeInput` - בורר זמן שנכתב פעם אחת בניב JSX הנייטרלי ו
@@ -1256,9 +1257,9 @@ function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<TimeInputProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<TimeInputProperties> |       |
 
 ### TimeInputProperties
 
@@ -1287,7 +1288,7 @@ export type TimeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement
+function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeTimeRangeInput` - בורר טווח זמן שנכתב פעם אחת ב-JSX הנייטרלי
@@ -1313,9 +1314,9 @@ function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<TimeRangeInputProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<TimeRangeInputProperties> |       |
 
 ### TimeRangeInputProperties
 
@@ -1364,7 +1365,7 @@ export type DateTimeRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 
 פונקציה **סוג:**
 
 ```typescript
-function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement
+function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateTimeRangeInput` - בוחר טווח תאריכים שיוצר פעם אחת ב-
@@ -1390,13 +1391,14 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 `@mission-platform/icons` `ForgeIconCalendar`/`ForgeIconGlobe`; ה-`start`/`end` SFC
 חריצים הופכים למשבצות `startContent`/`endContent` בשם (`<Slot>`, נוכחות
 זוהה עם המסייע {@link hasSlot} הניטרלי במסגרת); וה-`v-model`
-+ פולטות `change` הופכים לאביזרים להתקשרות חוזרת של `onUpdateModelValue`/`onChange`.
+
+- פולטות `change` הופכים לאביזרים להתקשרות חוזרת של `onUpdateModelValue`/`onChange`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<DateTimeRangeInputProperties> |  |
+| שם    | הקלד                                      | תיאור |
+| ----- | ----------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<DateTimeRangeInputProperties> |       |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1405,7 +1407,7 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 פונקציה **סוג:**
 
 ```typescript
-function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement
+function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement;
 ```
 
 `ForgeFormBuilder` - משטח עריכה חזותי, גרור ושחרר עבור JSON-Schema
@@ -1433,9 +1435,9 @@ function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<FormBuilderProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<FormBuilderProperties> |       |
 
 ### FormBuilderProperties
 
@@ -1454,7 +1456,7 @@ export interface FormBuilderProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
+function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 ```
 
 `ForgeFormWizard` - מעטפת טופס רב-שלבית שנכתבה פעם אחת ב-JSX הנייטרלי
@@ -1482,9 +1484,9 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<FormWizardProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<FormWizardProperties> |       |
 
 ### FormWizardProperties
 
@@ -1513,7 +1515,7 @@ export interface WizardStep
 פונקציה **סוג:**
 
 ```typescript
-function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement
+function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement;
 ```
 
 `ForgeSchemaFormDialog` — {@link ForgeSchemaForm} המתארח בתוך a
@@ -1530,9 +1532,9 @@ function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<SchemaFormDialogProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<SchemaFormDialogProperties> |       |
 
 ### SchemaFormDialogProperties
 
@@ -1551,7 +1553,7 @@ export interface SchemaFormDialogProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement
+function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement;
 ```
 
 `ForgeSchemaForm` - טופס מונע סכימה של JSON שנכתב פעם אחת ב-JSX הנייטרלי
@@ -1576,9 +1578,9 @@ function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<SchemaFormProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<SchemaFormProperties> |       |
 
 ### SchemaFormFieldRenderer
 

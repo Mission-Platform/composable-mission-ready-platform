@@ -24,14 +24,14 @@
 
 設定には次のプラグインとルール セットが含まれます。
 
-|プラグイン |目的 |
-|:-------------------------|:-------------------------------------------------------|
-| `typescript-eslint`      |標準 TypeScript ルールと型認識リンティング。      |
-| `eslint-plugin-vue`      | Vue 3 SFC lint とテンプレートの検証。             |
-| `eslint-plugin-sonarjs`  |コードの臭いとバグのリスクを検出します。                |
-| `eslint-plugin-unicorn`  |数十の小さくて便利なコミュニティ ルール。               |
-| `eslint-plugin-i18next`  |翻訳キーが正しく使用されていることを確認します。           |
-| `eslint-config-prettier` |と競合するルールを無効にします Prettier 書式設定。 |
+| プラグイン               | 目的                                               |
+| :----------------------- | :------------------------------------------------- |
+| `typescript-eslint`      | 標準 TypeScript ルールと型認識リンティング。       |
+| `eslint-plugin-vue`      | Vue 3 SFC lint とテンプレートの検証。              |
+| `eslint-plugin-sonarjs`  | コードの臭いとバグのリスクを検出します。           |
+| `eslint-plugin-unicorn`  | 数十の小さくて便利なコミュニティ ルール。          |
+| `eslint-plugin-i18next`  | 翻訳キーが正しく使用されていることを確認します。   |
+| `eslint-config-prettier` | と競合するルールを無効にします Prettier 書式設定。 |
 
 ## 使用法
 

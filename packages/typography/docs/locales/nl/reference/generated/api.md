@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/typogra
 **Soort:** functie
 
 ```typescript
-function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement
+function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 ```
 
 `ForgeTypography` — de tekststijlprimitief die ooit in de neutrale JSX is geschreven
@@ -46,16 +46,28 @@ loopt eigenlijk over), gepositioneerd met **CSS Anchor Positioning** in plaats v
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TypographyProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TypographyProperties> |              |
 
 ### TypografieKleur
 
 **Soort:** type
 
 ```typescript
-export type TypographyColor = | 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'inverse' | 'inherit' | 'neutral' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TypographyColor =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'disabled'
+  | 'inverse'
+  | 'inherit'
+  | 'neutral'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'error'
+  | 'critical';
 ```
 
 Tekstkleur. De structurele tokens (`primary`/`secondary`/`tertiary`/
@@ -128,7 +140,22 @@ Wanneer een link zijn onderstreping tekent.
 **Soort:** type
 
 ```typescript
-export type TypographyVariant = | 'display' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body-lg' | 'body-md' | 'body-sm' | 'body-xs' | 'label' | 'caption' | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */ | 'link';
+export type TypographyVariant =
+  | 'display'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body-lg'
+  | 'body-md'
+  | 'body-sm'
+  | 'body-xs'
+  | 'label'
+  | 'caption'
+  | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */
+  | 'link';
 ```
 
 De semantische/visuele typeschaalstap waarop de tekst wordt weergegeven.
@@ -138,7 +165,8 @@ De semantische/visuele typeschaalstap waarop de tekst wordt weergegeven.
 **Soort:** type
 
 ```typescript
-export type TypographyVerticalAlign = 'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
+export type TypographyVerticalAlign =
+  'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
 ```
 
 Verticale uitlijning van het (inline) tekstvak (wordt toegewezen aan CSS `vertical-align`).

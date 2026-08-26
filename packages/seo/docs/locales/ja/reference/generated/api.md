@@ -16,87 +16,87 @@
 **種類:** 関数
 
 ```typescript
-function article(input: ArticleInput): JsonLd
+function article(input: ArticleInput): JsonLd;
 ```
 
 Schema.org `Article` / `BlogPosting` / `NewsArticle` ビルダー。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |記事入力 |  |
+| 名前 | タイプ   | 説明 |
+| ---- | -------- | ---- |
+| 入力 | 記事入力 |      |
 
 ### ブレッドクラムリスト
 
 **種類:** 関数
 
 ```typescript
-function breadcrumbList(input: BreadcrumbListInput): JsonLd
+function breadcrumbList(input: BreadcrumbListInput): JsonLd;
 ```
 
 Schema.org `BreadcrumbList` — ページごとに発行してサイト階層を公開します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |ブレッドクラムリスト入力 |  |
+| 名前 | タイプ                   | 説明 |
+| ---- | ------------------------ | ---- |
+| 入力 | ブレッドクラムリスト入力 |      |
 
 ### イベント
 
 **種類:** 関数
 
 ```typescript
-function event(input: EventInput): JsonLd
+function event(input: EventInput): JsonLd;
 ```
 
 Schema.org `Event`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |イベント入力 |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| 入力 | イベント入力 |      |
 
 ### よくある質問ページ
 
 **種類:** 関数
 
 ```typescript
-function faqPage(input: FaqPageInput): JsonLd
+function faqPage(input: FaqPageInput): JsonLd;
 ```
 
 Schema.org `FAQPage`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |よくある質問ページ入力 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 入力 | よくある質問ページ入力 |      |
 
 ### 画像オブジェクト
 
 **種類:** 関数
 
 ```typescript
-function imageObject(input: ImageObjectInput): JsonLd
+function imageObject(input: ImageObjectInput): JsonLd;
 ```
 
 Schema.org `ImageObject`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |画像オブジェクト入力 |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| 入力 | 画像オブジェクト入力 |      |
 
 ### jsonLd
 
 **種類:** 定数
 
 ```typescript
-export const jsonLd
+export const jsonLd;
 ```
 
 コンシューマーが `import { jsonLd } から実行できるように、名前空間を再エクスポートします。
@@ -108,208 +108,208 @@ export const jsonLd
 **種類:** 関数
 
 ```typescript
-function localBusiness(input: LocalBusinessInput): JsonLd
+function localBusiness(input: LocalBusinessInput): JsonLd;
 ```
 
 Schema.org `LocalBusiness` — `Organization` を位置データで拡張します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |ローカルビジネス入力 |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| 入力 | ローカルビジネス入力 |      |
 
 ### 組織
 
 **種類:** 関数
 
 ```typescript
-function organization(input: OrganizationInput): JsonLd
+function organization(input: OrganizationInput): JsonLd;
 ```
 
 Schema.org `Organization`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |組織入力 |  |
+| 名前 | タイプ   | 説明 |
+| ---- | -------- | ---- |
+| 入力 | 組織入力 |      |
 
 ### 組織ID
 
 **種類:** 関数
 
 ```typescript
-function organizationId(orgUrl: string): string
+function organizationId(orgUrl: string): string;
 ```
 
 サイト全体の `Organization` (または `LocalBusiness`) node の正規 `@id`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|組織URL |文字列 |  |
+| 名前    | タイプ | 説明 |
+| ------- | ------ | ---- |
+| 組織URL | 文字列 |      |
 
 ### 人
 
 **種類:** 関数
 
 ```typescript
-function person(input: PersonInput): JsonLd
+function person(input: PersonInput): JsonLd;
 ```
 
 Schema.org `Person`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |人物入力 |  |
+| 名前 | タイプ   | 説明 |
+| ---- | -------- | ---- |
+| 入力 | 人物入力 |      |
 
 ### 製品
 
 **種類:** 関数
 
 ```typescript
-function product(input: ProductInput): JsonLd
+function product(input: ProductInput): JsonLd;
 ```
 
 Schema.org `Product`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |製品入力 |  |
+| 名前 | タイプ   | 説明 |
+| ---- | -------- | ---- |
+| 入力 | 製品入力 |      |
 
 ### レシピ
 
 **種類:** 関数
 
 ```typescript
-function recipe(input: RecipeInput): JsonLd
+function recipe(input: RecipeInput): JsonLd;
 ```
 
 Schema.org `Recipe`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |レシピ入力 |  |
+| 名前 | タイプ     | 説明 |
+| ---- | ---------- | ---- |
+| 入力 | レシピ入力 |      |
 
 ### レビュー
 
 **種類:** 関数
 
 ```typescript
-function review(input: ReviewInput): JsonLd
+function review(input: ReviewInput): JsonLd;
 ```
 
 Schema.org `Review`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |レビュー入力 |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| 入力 | レビュー入力 |      |
 
 ### ソフトウェアアプリケーション
 
 **種類:** 関数
 
 ```typescript
-function softwareApplication(input: SoftwareApplicationInput): JsonLd
+function softwareApplication(input: SoftwareApplicationInput): JsonLd;
 ```
 
 Schema.org `SoftwareApplication`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |ソフトウェアアプリケーション入力 |  |
+| 名前 | タイプ                           | 説明 |
+| ---- | -------------------------------- | ---- |
+| 入力 | ソフトウェアアプリケーション入力 |      |
 
 ### ビデオオブジェクト
 
 **種類:** 関数
 
 ```typescript
-function videoObject(input: VideoObjectInput): JsonLd
+function videoObject(input: VideoObjectInput): JsonLd;
 ```
 
 Schema.org `VideoObject`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |ビデオオブジェクト入力 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 入力 | ビデオオブジェクト入力 |      |
 
 ### ウェブページ
 
 **種類:** 関数
 
 ```typescript
-function webPage(input: WebPageInput): JsonLd
+function webPage(input: WebPageInput): JsonLd;
 ```
 
 Schema.org `WebPage` — サイト内の単一のページを記述します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |ウェブページ入力 |  |
+| 名前 | タイプ           | 説明 |
+| ---- | ---------------- | ---- |
+| 入力 | ウェブページ入力 |      |
 
 ### ウェブページID
 
 **種類:** 関数
 
 ```typescript
-function webPageId(pageUrl: string): string
+function webPageId(pageUrl: string): string;
 ```
 
 `WebPage` node の正規 `@id`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ページURL |文字列 |  |
+| 名前      | タイプ | 説明 |
+| --------- | ------ | ---- |
+| ページURL | 文字列 |      |
 
 ### Webサイト
 
 **種類:** 関数
 
 ```typescript
-function webSite(input: WebSiteInput): JsonLd
+function webSite(input: WebSiteInput): JsonLd;
 ```
 
 Schema.org `WebSite` — 通常はサイト全体で 1 回発行されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |ウェブサイト入力 |  |
+| 名前 | タイプ           | 説明 |
+| ---- | ---------------- | ---- |
+| 入力 | ウェブサイト入力 |      |
 
 ### ウェブサイトID
 
 **種類:** 関数
 
 ```typescript
-function webSiteId(siteUrl: string): string
+function webSiteId(siteUrl: string): string;
 ```
 
 サイト全体の `WebSite` node の正規 `@id`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|サイトURL |文字列 |  |
+| 名前      | タイプ | 説明 |
+| --------- | ------ | ---- |
+| サイトURL | 文字列 |      |
 
 ## `src/build-open-graph`
 
@@ -318,7 +318,7 @@ function webSiteId(siteUrl: string): string
 **種類:** 関数
 
 ```typescript
-function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
+function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[];
 ```
 
 {@link OpenGraphMetadata} を `<meta>` タグのフラット リストに変換します
@@ -328,9 +328,9 @@ Open Graph (`property=…`) および Twitter Card (`name=…`) をカバーす�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|メタデータ |オープングラフメタデータ |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| メタデータ | オープングラフメタデータ |      |
 
 ## `src/build-page-meta`
 
@@ -339,7 +339,7 @@ Open Graph (`property=…`) および Twitter Card (`name=…`) をカバーす�
 **種類:** 関数
 
 ```typescript
-function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
+function buildPageMeta(metadata: PageMetadata): BuiltPageMeta;
 ```
 
 {@link PageMetadata} を解決されたタイトル、言語、フラットに変換します
@@ -347,9 +347,9 @@ function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|メタデータ |ページメタデータ |  |
+| 名前       | タイプ           | 説明 |
+| ---------- | ---------------- | ---- |
+| メタデータ | ページメタデータ |      |
 
 ### 構築されたページメタ
 
@@ -368,7 +368,7 @@ export interface BuiltPageMeta
 **種類:** 関数
 
 ```typescript
-function buildRobotsTxt(input: RobotsTxtInput = {}): string
+function buildRobotsTxt(input: RobotsTxtInput = {}): string;
 ```
 
 ポリシーの説明から決定論的な `robots.txt` 文字列を構築します。
@@ -378,9 +378,9 @@ function buildRobotsTxt(input: RobotsTxtInput = {}): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |ロボットテキスト入力 |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| 入力 | ロボットテキスト入力 |      |
 
 ### ロボットグループ
 
@@ -412,23 +412,23 @@ export interface RobotsTxtInput
 **種類:** 関数
 
 ```typescript
-function buildSitemapIndex(input: SitemapIndexInput): string
+function buildSitemapIndex(input: SitemapIndexInput): string;
 ```
 
 決定論的なサイトマップ インデックス XML 文字列を構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |サイトマップインデックス入力 |  |
+| 名前 | タイプ                       | 説明 |
+| ---- | ---------------------------- | ---- |
+| 入力 | サイトマップインデックス入力 |      |
 
 ### buildSitemapXml
 
 **種類:** 関数
 
 ```typescript
-function buildSitemapXml(input: SitemapXmlInput): string
+function buildSitemapXml(input: SitemapXmlInput): string;
 ```
 
 決定論的な `sitemap.xml` 文字列を構築します。出力は常に次の文字で終わります。
@@ -436,9 +436,9 @@ function buildSitemapXml(input: SitemapXmlInput): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |サイトマップXml入力 |  |
+| 名前 | タイプ              | 説明 |
+| ---- | ------------------- | ---- |
+| 入力 | サイトマップXml入力 |      |
 
 ### サイトマップ代替
 
@@ -497,7 +497,7 @@ export interface SitemapXmlInput
 **種類:** 関数
 
 ```typescript
-function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
+function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 ```
 
 Mission Platform SEO サーフェス全体を反応的に同期します - 標準
@@ -513,9 +513,9 @@ ref、getter、またはプレーンな {@link SeoMetadata} オブジェクト�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|メタデータ |たぶんRefOrGetter<SeoMetadata> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| メタデータ | たぶんRefOrGetter<SeoMetadata> |      |
 
 ## `src/mp-seo`
 
@@ -524,7 +524,7 @@ ref、getter、またはプレーンな {@link SeoMetadata} オブジェクト�
 **種類:** コンポーネント
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 レンダリングレス `<Seo>` コンポーネント — {@link useSeo} の宣言ラッパー。
@@ -539,14 +539,14 @@ export const MpSeo
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ### 瀬尾
 
 **種類:** コンポーネント
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 レンダリングレス `<Seo>` コンポーネント — {@link useSeo} の宣言ラッパー。
@@ -561,7 +561,7 @@ export const MpSeo
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ## `src/types`
 

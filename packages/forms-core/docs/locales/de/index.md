@@ -27,7 +27,7 @@ Definiert den Strukturvertrag für Formulare:
 - `SchemaFormDefinition`: Die Root-Definition. Ein einzelnes Objekt stellt ein einstufiges Formular dar, während es sich um ein Array von Objekten handelt
   Definiert einen mehrstufigen Assistenten.
 - `FormFieldSchema`: Die aufgelöste Form eines Feldes, das zum Rendern bereit ist.
-– `FieldUiOptions`: Erweiterungen des JSON-Schemas zur Bereitstellung von Präsentationshinweisen (der Namespace `ui`).
+  – `FieldUiOptions`: Erweiterungen des JSON-Schemas zur Bereitstellung von Präsentationshinweisen (der Namespace `ui`).
 - `FormValues` und `FormErrors`: Typzuordnungen für aktuelle Formulardaten und die entsprechenden Validierungsfehler.
 
 ### 2. Bedingte Sichtbarkeit (`src/conditions.ts`)

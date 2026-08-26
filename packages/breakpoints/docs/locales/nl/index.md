@@ -25,15 +25,15 @@ Kies het raamwerk **eenmaal** — `resolve.conditions` via `defineFrameworkAppCo
 
 Het platform maakt gebruik van een responsieve schaal in zeven stappen, gebaseerd op drempelwaarden voor de breedte van de viewport:
 
-| Sleutel | Etiket | Drempel | Algemeen apparaat/gebruiksscenario |
-| :---- | :---------------- | :------------ | :------------------------------ |
-| `2xs` | Extra-extra-klein | $\ge 0$ px | Alle apparaten |
-| `xs` | Extra klein | $\ge 480$ px | Grote telefoons |
-| `sm` | Klein | $\ge 768$ px | Tabletportret |
-| `md` | Middel | $\ge 1024$ px | Tablet liggend / kleine laptop |
-| `lg` | Groot | $\ge 1920$ px | FullHD / 1080p |
-| `xl` | Extra groot | $\ge 2560$ px | QHD |
-| `2xl` | Extra extra groot | $\ge 3840$ px | 4K UHD |
+| Sleutel | Etiket            | Drempel       | Algemeen apparaat/gebruiksscenario |
+| :------ | :---------------- | :------------ | :--------------------------------- |
+| `2xs`   | Extra-extra-klein | $\ge 0$ px    | Alle apparaten                     |
+| `xs`    | Extra klein       | $\ge 480$ px  | Grote telefoons                    |
+| `sm`    | Klein             | $\ge 768$ px  | Tabletportret                      |
+| `md`    | Middel            | $\ge 1024$ px | Tablet liggend / kleine laptop     |
+| `lg`    | Groot             | $\ge 1920$ px | FullHD / 1080p                     |
+| `xl`    | Extra groot       | $\ge 2560$ px | QHD                                |
+| `2xl`   | Extra extra groot | $\ge 3840$ px | 4K UHD                             |
 
 ## Kernhulpprogramma's (`/core`)
 

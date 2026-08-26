@@ -26,7 +26,8 @@ export interface AlertBannerProperties
 **النوع:** النوع
 
 ```typescript
-export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type AlertBannerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 النية / معالجة ألوان اللافتة — مجموعة الألوان الأساسية.
@@ -36,7 +37,7 @@ export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement
+function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement;
 ```
 
 `ForgeAlertBanner` — شعار تنبيه / إشعار مضمّن تم تأليفه مرة واحدة في ملف
@@ -62,9 +63,9 @@ helper)، ويرسم رمز الحالة مع الكتابة مرة واحدة
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<AlertBannerProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<AlertBannerProperties> |       |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -93,7 +94,7 @@ export interface DropdownProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement
+function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 ```
 
 `ForgeDropdown` - قائمة/لوحة قائمة عائمة مثبتة على مشغل، مؤلفة
@@ -138,9 +139,9 @@ CSS `anchor-size(width)` — لا يوجد قياس JS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<DropdownProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<DropdownProperties> |       |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -149,7 +150,7 @@ CSS `anchor-size(width)` — لا يوجد قياس JS.
 **النوع:** الوظيفة
 
 ```typescript
-function ForgePopover(properties: Readonly<PopoverProperties>): MpElement
+function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 ```
 
 `ForgePopover` - مربع حوار عائم مرتبط بمشغل، تم تأليفه مرة واحدة في ملف
@@ -194,16 +195,28 @@ Popover API الأصلي (`popover="manual"` + `showPopover()`): `z-index` عا�
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<PopoverProperties> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| خصائص | للقراءة فقط<PopoverProperties> |       |
 
 ### PopoverPlacement
 
 **النوع:** النوع
 
 ```typescript
-export type PopoverPlacement = | 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end';
+export type PopoverPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
 ```
 
 الموضع المفضل للعنصر المنبثق بالنسبة لمشغله.
@@ -225,7 +238,7 @@ export interface PopoverProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeToast(properties: Readonly<ToastProperties>): MpElement
+function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 ```
 
 `ForgeToast` — بطاقة إشعار نخب واحدة يتم تأليفها مرة واحدة في الوضع المحايد
@@ -247,9 +260,9 @@ function ForgeToast(properties: Readonly<ToastProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ToastProperties> |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| خصائص | للقراءة فقط<ToastProperties> |       |
 
 ### ToastProperties
 
@@ -276,7 +289,8 @@ export type ToastSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** النوع
 
 ```typescript
-export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ToastVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 نية / معالجة لون الخبز المحمص - مجموعة الألوان الأساسية.
@@ -288,7 +302,7 @@ export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 's
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
+function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 ```
 
 `ForgeTooltip` - تلميح سياقي قصير مرتبط بمشغله، تم تأليفه مرة واحدة
@@ -330,9 +344,9 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<TooltipProperties> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| خصائص | للقراءة فقط<TooltipProperties> |       |
 
 ### تلميح الأداة
 
@@ -391,7 +405,7 @@ export type DialogSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
+function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 ```
 
 `ForgeDialog` — مربع حوار مشروط تم تأليفه مرة واحدة بلهجة JSX المحايدة و
@@ -419,9 +433,9 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<DialogProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<DialogProperties> |       |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -430,7 +444,7 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeModal(properties: Readonly<ModalProperties>): MpElement
+function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 ```
 
 `ForgeModal` — نموذج مركزي تم تأليفه مرة واحدة بلهجة JSX المحايدة و
@@ -456,9 +470,9 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ModalProperties> |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| خصائص | للقراءة فقط<ModalProperties> |       |
 
 ### ModalProperties
 
@@ -487,7 +501,7 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement
+function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement;
 ```
 
 `ForgeToastContainer` - يعرض الخبز المحمص الموجود في `toast-store` المشترك،
@@ -503,6 +517,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 يبقى المصدر متفاعلا على كلا الإطارين.
 
 إمكانية الوصول:
+
 - المكدس عبارة عن `role="region"` مع `aria-label` قابل للتكوين؛ لكل منهما
   يحمل `ForgeToast` `role="status"` / `role="alert"` الخاص به.
 
@@ -526,9 +541,9 @@ React يقوم برنامج التشغيل بتنسيق التحميل/إلغا�
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ToastContainerProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<ToastContainerProperties> |       |
 
 ### ToastContainerProperties
 
@@ -557,7 +572,7 @@ export type ToastContainerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 **النوع:** الوظيفة
 
 ```typescript
-function clearToasts(): void
+function clearToasts(): void;
 ```
 
 رفض جميع الخبز المحمص.
@@ -567,7 +582,7 @@ function clearToasts(): void
 **النوع:** الوظيفة
 
 ```typescript
-function dismissToast(id: number): void
+function dismissToast(id: number): void;
 ```
 
 رفض نخب بواسطة معرف.
@@ -575,15 +590,15 @@ function dismissToast(id: number): void
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف | رقم |  |
+| ----- | ---- | ----- |
+| معرف  | رقم  |       |
 
 ### خطأ
 
 **النوع:** ثابت
 
 ```typescript
-export const errorToast
+export const errorToast;
 ```
 
 الملاءمة: عرض نخب `error`.
@@ -593,7 +608,7 @@ export const errorToast
 **النوع:** الوظيفة
 
 ```typescript
-function getToastsSnapshot(): readonly ToastRecord[]
+function getToastsSnapshot(): readonly ToastRecord[];
 ```
 
 اقرأ لقطة ثابتة من الخبز المحمص النشط.
@@ -603,7 +618,7 @@ function getToastsSnapshot(): readonly ToastRecord[]
 **النوع:** ثابت
 
 ```typescript
-export const infoToast
+export const infoToast;
 ```
 
 الملاءمة: عرض نخب `info`.
@@ -613,39 +628,39 @@ export const infoToast
 **النوع:** الوظيفة
 
 ```typescript
-function showToast(options: ToastOptions | string): number
+function showToast(options: ToastOptions | string): number;
 ```
 
 إظهار نخب وإرجاع هويته.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات التوست \| سلسلة |  |
+| الاسم  | اكتب                   | الوصف |
+| ------ | ---------------------- | ----- |
+| خيارات | خيارات التوست \| سلسلة |       |
 
 ### com.subscribeToasts
 
 **النوع:** الوظيفة
 
 ```typescript
-function subscribeToasts(listener: () => void): () => void
+function subscribeToasts(listener: () => void): () => void;
 ```
 
 الاشتراك في تغييرات المتجر؛ إرجاع وظيفة إلغاء الاشتراك.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مستمع | () => باطل |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| مستمع | () => باطل |       |
 
 ### com.successToast
 
 **النوع:** ثابت
 
 ```typescript
-export const successToast
+export const successToast;
 ```
 
 الملاءمة: عرض نخب `success`.
@@ -685,7 +700,7 @@ export interface ToastRecord
 **النوع:** الوظيفة
 
 ```typescript
-function useToast(): UseToastReturn
+function useToast(): UseToastReturn;
 ```
 
 مساعدين ضروريين لإظهار ورفض الخبز المحمص، مما يعكس Vue
@@ -707,7 +722,7 @@ export interface UseToastReturn
 **النوع:** ثابت
 
 ```typescript
-export const warningToast
+export const warningToast;
 ```
 
 الملاءمة: عرض نخب `warning`.

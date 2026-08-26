@@ -16,7 +16,11 @@
 פונקציה **סוג:**
 
 ```typescript
-function useHarperMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue קומפוזיציה המשלבת דקדוק ובדיקת סגנון של הרפר לתוך א
@@ -30,18 +34,18 @@ unmount, ובודק מחדש כאשר `language` משתנה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| עורך הפניה | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| מופעל | MaybeRefOrGetter<boolean> |  |
-| שפה הפניה | MaybeRefOrGetter<string> |  |
+| שם         | הקלד                                                               | תיאור |
+| ---------- | ------------------------------------------------------------------ | ----- |
+| עורך הפניה | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |       |
+| מופעל      | MaybeRefOrGetter<boolean>                                          |       |
+| שפה הפניה  | MaybeRefOrGetter<string>                                           |       |
 
 #### חוֹזֶה
 
 - **@param:** - `MaybeRefOrGetter` עוטף את מופע עורך מונקו.
 - **@param:** - `MaybeRefOrGetter<boolean>` שמחליק את הסימון להפעלה/כיבוי.
 - **@param:** - `MaybeRefOrGetter<string>` לשפת העורך
-(בשימוש בעת רישום ספק הקוד-פעולה).
+  (בשימוש בעת רישום ספק הקוד-פעולה).
 
 ## `src/types`
 

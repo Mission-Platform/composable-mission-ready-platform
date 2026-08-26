@@ -16,24 +16,24 @@
 **種類:** 関数
 
 ```typescript
-function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig
+function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|デフォルトNS |文字列 |  |
-|オプション | I18nConfigオプション |  |
+| 名前         | タイプ               | 説明 |
+| ------------ | -------------------- | ---- |
+| デフォルトNS | 文字列               |      |
+| オプション   | I18nConfigオプション |      |
 
 ### DEFAULT_LOCALE
 
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_LOCALE
+export const DEFAULT_LOCALE;
 ```
 
 説明はありません。
@@ -63,7 +63,7 @@ export interface I18nConfigOptions
 **種類:** 定数
 
 ```typescript
-export const SUPPORTED_LOCALES
+export const SUPPORTED_LOCALES;
 ```
 
 説明はありません。

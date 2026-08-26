@@ -16,39 +16,39 @@
 פונקציה **סוג:**
 
 ```typescript
-function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities
+function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities;
 ```
 
 צור אובייקט יכולת ניטרלי עבור מתאם יעד, SSR או בדיקה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| עוקף | MpRouterCapabilityOverrides |  |
+| שם   | הקלד                        | תיאור |
+| ---- | --------------------------- | ----- |
+| עוקף | MpRouterCapabilityOverrides |       |
 
 ### isMpRouterCapabilityError
 
 פונקציה **סוג:**
 
 ```typescript
-function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError
+function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError;
 ```
 
 האם שגיאה לא ידועה היא שגיאת החזרה הדטרמיניסטית של הנתב הנייטרלי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שגיאה | לא ידוע |  |
+| שם    | הקלד    | תיאור |
+| ----- | ------- | ----- |
+| שגיאה | לא ידוע |       |
 
 ### MP_ROUTER_COMPILER_MARKER
 
 **סוג:** קבוע
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 מטא נתונים יציבים הנצרכים על ידי תוספי מהדר של נתב Forge.
@@ -58,16 +58,16 @@ export const MP_ROUTER_COMPILER_MARKER
 **סוג:** רכיב
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor
+function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 סמן קישור ניטרלי. יעדים מקוריים מחליפים פונקציה זו במהלך ההידור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | MpLinkProps |  |
+| שם    | הקלד        | תיאור |
+| ----- | ----------- | ----- |
+| נכסים | MpLinkProps |       |
 
 ### MpLinkDescriptor
 
@@ -154,16 +154,16 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **סוג:** רכיב
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor
+function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
 ```
 
 סמן יציאה/תצוגה ניטרלי. יעדים מקוריים מחליפים פונקציה זו במהלך ההידור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | MpRouterViewProps |  |
+| שם    | הקלד              | תיאור |
+| ----- | ----------------- | ----- |
+| נכסים | MpRouterViewProps |       |
 
 ### MpRouterViewDescriptor
 
@@ -190,7 +190,10 @@ export interface MpRouterViewProps
 פונקציה **סוג:**
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string
+function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string;
 ```
 
 פתרו יעד דרך הנתב שבבעלות האפליקציה. היכולת האופציונלית
@@ -198,17 +201,17 @@ function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabi
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
-| יכולות | Pick<MpRouterCapabilities, 'resolve'> |  |
+| שם     | הקלד                                  | תיאור |
+| ------ | ------------------------------------- | ----- |
+| ל      | MpRouteLocationRaw                    |       |
+| יכולות | Pick<MpRouterCapabilities, 'resolve'> |       |
 
 ### השתמש ב-MpNavigation
 
 פונקציה **סוג:**
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 קרא רק את יכולת הניווט החיונית.
@@ -218,7 +221,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 פונקציה **סוג:**
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 קרא את המסלול הנוכחי בבעלות האפליקציה. ה-fallback שלא הודר הוא SSR בטוח ו
@@ -229,7 +232,7 @@ function useMpRoute(): MpResolvedLocation | null
 פונקציה **סוג:**
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 קרא את אובייקט היכולת הנייטרלית שסופק על ידי האפליקציה.
@@ -241,7 +244,7 @@ function useMpRouter(): MpRouterCapabilities
 **סוג:** קבוע
 
 ```typescript
-export const applicationCompatibilityFixtures
+export const applicationCompatibilityFixtures;
 ```
 
 לא סופק תיאור.
@@ -251,7 +254,7 @@ export const applicationCompatibilityFixtures
 **סוג:** קבוע
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 רשומות מסלול המשקפות את טבלת המקום/חיפוש/תפוס של אפליקציית התיעוד.
@@ -261,7 +264,7 @@ export const documentationCompatibilityFixture: ForgeCompatibilityFixture
 **סוג:** קבוע
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 רשומות מסלול המשקפות את טבלת המקום/חיפוש/תפוס של אפליקציית התיעוד.
@@ -291,7 +294,7 @@ export interface ForgeCompatibilityFixture
 **סוג:** קבוע
 
 ```typescript
-export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
+export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 רשומות נתיב המשקפות את קטע השפה של My Care Notes ושכבות-על מונחות כתובת URL.
@@ -301,7 +304,7 @@ export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
 **סוג:** קבוע
 
 ```typescript
-export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
+export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[];
 ```
 
 שורות התנהגות משותפות הנצרכות על ידי חבילת הבדיקה של כל זמן ריצה.
@@ -311,7 +314,7 @@ export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
 **סוג:** קבוע
 
 ```typescript
-export const websiteCompatibilityFixture: ForgeCompatibilityFixture
+export const websiteCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 רשומות מסלול המשקפות את מסלול הבית האופציונלי של האתר עם קידומת מקומית.
@@ -705,7 +708,7 @@ export type ForgeScrollPosition = MpScrollPosition;
 פונקציה **סוג:**
 
 ```typescript
-function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
+function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver;
 ```
 
 צור {@link MpRouteResolver} הקשור לעץ נתיב, ושטח אותו פעם אחת
@@ -713,16 +716,16 @@ function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסלולים | קריאה בלבד MpRoute[] |  |
+| שם      | הקלד                 | תיאור |
+| ------- | -------------------- | ----- |
+| מסלולים | קריאה בלבד MpRoute[] |       |
 
 ### להגדיר מסלולים
 
 פונקציה **סוג:**
 
 ```typescript
-function defineRoutes(routes: T): T
+function defineRoutes(routes: T): T;
 ```
 
 עוזר זהות המגדיר עץ תוואי נייטרלי במסגרת עם סוג מלא
@@ -730,40 +733,40 @@ function defineRoutes(routes: T): T
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסלולים | ט |  |
+| שם      | הקלד | תיאור |
+| ------- | ---- | ----- |
+| מסלולים | ט    |       |
 
 #### חוֹזֶה
 
 - **@example:** const routes = defineRoutes([
   { נתיב: '/', שם: 'בית', רכיב: בית },
   { path: '/users/:id', name: 'user', component: User },
-])
+  ])
 
 ### findRouteByName
 
 פונקציה **סוג:**
 
 ```typescript
-function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined
+function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined;
 ```
 
 מצא את המסלול השטוח הראשון עם השם הפרטי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסלולים | קריאה בלבד MpRoute[] |  |
-| שם | מחרוזת |  |
+| שם      | הקלד                 | תיאור |
+| ------- | -------------------- | ----- |
+| מסלולים | קריאה בלבד MpRoute[] |       |
+| שם      | מחרוזת               |       |
 
 ### לשטח מסלולים
 
 פונקציה **סוג:**
 
 ```typescript
-function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
+function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[];
 ```
 
 לשטח עץ מסלול מקונן לרשימה עומק-ראשונה של מסלולים מוחלטים, עם
@@ -772,16 +775,16 @@ function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסלולים | קריאה בלבד MpRoute[] |  |
+| שם      | הקלד                 | תיאור |
+| ------- | -------------------- | ----- |
+| מסלולים | קריאה בלבד MpRoute[] |       |
 
 ### matchRoutes
 
 פונקציה **סוג:**
 
 ```typescript
-function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined
+function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined;
 ```
 
 התאם שם נתיב מול עץ נתיב, והחזרת המסלול הראשון (ב
@@ -789,10 +792,10 @@ function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסלולים | קריאה בלבד MpRoute[] |  |
-| שם נתיב | מחרוזת |  |
+| שם      | הקלד                 | תיאור |
+| ------- | -------------------- | ----- |
+| מסלולים | קריאה בלבד MpRoute[] |       |
+| שם נתיב | מחרוזת               |       |
 
 ### MpFlatRoute
 
@@ -829,7 +832,7 @@ export interface MpRouteResolver
 פונקציה **סוג:**
 
 ```typescript
-function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation
+function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation;
 ```
 
 הפוך כל {@link MpRouteLocationRaw} ניטרלי למסגרת לגרסה מלאה
@@ -839,15 +842,15 @@ function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
-| מסלולים | קריאה בלבד MpRoute[] |  |
+| שם      | הקלד                 | תיאור |
+| ------- | -------------------- | ----- |
+| ל       | MpRouteLocationRaw   |       |
+| מסלולים | קריאה בלבד MpRoute[] |       |
 
 #### חוֹזֶה
 
 - **@example:** resolveLocation({ name: 'user', params: { id: 42 } }, routes)
-// → { path: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
+  // → { path: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
 
 ## `src/location`
 
@@ -876,44 +879,44 @@ export interface MpLocationParts
 פונקציה **סוג:**
 
 ```typescript
-function normalizeHash(hash: string): string
+function normalizeHash(hash: string): string;
 ```
 
 נרמל קטע hash כך שיכלול `#` מוביל יחיד, או שיהיה ריק.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| hash | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| hash | מחרוזת |       |
 
 ### ניתוח מיקום
 
 פונקציה **סוג:**
 
 ```typescript
-function parseLocation(url: string): MpLocationParts
+function parseLocation(url: string): MpLocationParts;
 ```
 
 פצל כתובת אתר יחסית לאפליקציה ל-{@link MpLocationParts} שלה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כתובת אתר | מחרוזת |  |
+| שם        | הקלד   | תיאור |
+| --------- | ------ | ----- |
+| כתובת אתר | מחרוזת |       |
 
 #### חוֹזֶה
 
 - **@example:** parseLocation('/users/42?tab=info#bio')
-// → { path: '/users/42', query: { tab: 'info' }, hash: '#bio' }
+  // → { path: '/users/42', query: { tab: 'info' }, hash: '#bio' }
 
 ### stringifyLocation
 
 פונקציה **סוג:**
 
 ```typescript
-function stringifyLocation(location: MpLocationInput): string
+function stringifyLocation(location: MpLocationInput): string;
 ```
 
 הרכיב מחרוזת כתובת URL יחסית לאפליקציה מחלקי מיקום. שם הנתיב הוא
@@ -922,14 +925,14 @@ function stringifyLocation(location: MpLocationInput): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מיקום | MpLocationInput |  |
+| שם    | הקלד            | תיאור |
+| ----- | --------------- | ----- |
+| מיקום | MpLocationInput |       |
 
 #### חוֹזֶה
 
 - **@example:** stringifyLocation({ path: '/users/42', query: { tab: 'info' }, hash: 'bio' })
-// → '/users/42?tab=info#bio'
+  // → '/users/42?tab=info#bio'
 
 ## `src/path`
 
@@ -938,7 +941,10 @@ function stringifyLocation(location: MpLocationInput): string
 פונקציה **סוג:**
 
 ```typescript
-function buildPath(pattern: string, parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {}): string
+function buildPath(
+  pattern: string,
+  parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {},
+): string;
 ```
 
 בנו שם נתיב קונקרטי מתבנית ומערכת של פרמטרים, קידוד
@@ -947,23 +953,23 @@ function buildPath(pattern: string, parameters: Record<string, MpParameterValue 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| דפוס | מחרוזת |  |
-| פרמטרים | שיא<string, MpParameterValue \| readonly MpParameterValue[]> |  |
+| שם      | הקלד                                                         | תיאור |
+| ------- | ------------------------------------------------------------ | ----- |
+| דפוס    | מחרוזת                                                       |       |
+| פרמטרים | שיא<string, MpParameterValue \| readonly MpParameterValue[]> |       |
 
 #### חוֹזֶה
 
 - **@example:** buildPath('/users/:id', { id: 42 }) // → '/users/42'
-buildPath('/users/:id?', {}) // → '/users'
-buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
+  buildPath('/users/:id?', {}) // → '/users'
+  buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
 
 ### compilePath
 
 פונקציה **סוג:**
 
 ```typescript
-function compilePath(pattern: string): MpCompiledPath
+function compilePath(pattern: string): MpCompiledPath;
 ```
 
 הרכיב דפוס נתיב לתוך {@link MpCompiledPath} עם הסדר
@@ -971,9 +977,9 @@ function compilePath(pattern: string): MpCompiledPath
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| דפוס | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| דפוס | מחרוזת |       |
 
 #### חוֹזֶה
 
@@ -984,7 +990,7 @@ function compilePath(pattern: string): MpCompiledPath
 פונקציה **סוג:**
 
 ```typescript
-function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined
+function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined;
 ```
 
 התאם שם נתיב לתבנית, החזרת הפרמטרים שחולצו או
@@ -992,15 +998,15 @@ function matchPath(pattern: string, pathname: string): MpRouteParameters | undef
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| דפוס | מחרוזת |  |
-| שם נתיב | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| דפוס    | מחרוזת |       |
+| שם נתיב | מחרוזת |       |
 
 #### חוֹזֶה
 
 - **@example:** matchPath('/users/:id', '/users/42') // → { id: '42' }
-matchPath('/users/:id', '/posts/42') // → undefined
+  matchPath('/users/:id', '/posts/42') // → undefined
 
 ### MpCompiledPath
 
@@ -1027,7 +1033,7 @@ export interface MpPathParameterKey
 פונקציה **סוג:**
 
 ```typescript
-function normalizePath(path: string): string
+function normalizePath(path: string): string;
 ```
 
 נרמל תבנית נתיב (או שם נתיב) לצורה קנונית, מוביל-לוכסן
@@ -1035,16 +1041,16 @@ function normalizePath(path: string): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נתיב | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| נתיב | מחרוזת |       |
 
 ### WILDCARD_PARAM_KEY
 
 **סוג:** קבוע
 
 ```typescript
-export const WILDCARD_PARAM_KEY
+export const WILDCARD_PARAM_KEY;
 ```
 
 המפתח שבו נתפס קטע מיגון `*` עצמאי.
@@ -1056,7 +1062,7 @@ export const WILDCARD_PARAM_KEY
 פונקציה **סוג:**
 
 ```typescript
-function parseQuery(search: string): MpQueryParameters
+function parseQuery(search: string): MpQueryParameters;
 ```
 
 נתח מחרוזת שאילתה למפה של {@link MpQueryParameters}. `?` מוביל הוא
@@ -1064,9 +1070,9 @@ function parseQuery(search: string): MpQueryParameters
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חיפוש | מחרוזת |  |
+| שם    | הקלד   | תיאור |
+| ----- | ------ | ----- |
+| חיפוש | מחרוזת |       |
 
 #### חוֹזֶה
 
@@ -1077,7 +1083,7 @@ function parseQuery(search: string): MpQueryParameters
 פונקציה **סוג:**
 
 ```typescript
-function stringifyQuery(query: MpQueryInput): string
+function stringifyQuery(query: MpQueryInput): string;
 ```
 
 הפוך מפת {@link MpQueryInput} למחרוזת שאילתה עם `?` מוביל,
@@ -1086,14 +1092,14 @@ function stringifyQuery(query: MpQueryInput): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שאילתה | MpQueryInput |  |
+| שם     | הקלד         | תיאור |
+| ------ | ------------ | ----- |
+| שאילתה | MpQueryInput |       |
 
 #### חוֹזֶה
 
 - **@example:** stringifyQuery({ tag: ['a', 'b'], page: 2 }) // → '?tag=a&tag=b&page=2'
-stringifyQuery({}) // → ''
+  stringifyQuery({}) // → ''
 
 ## `src/types`
 
@@ -1318,7 +1324,8 @@ export interface MpReadonlySignal<Value>
 **סוג:** רכיב
 
 ```typescript
-export type MpRedirect = MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
 ```
 
 יעד הפנייה מחדש, המחושב באופן אופציונלי ממסלול היעד.
@@ -1370,7 +1377,10 @@ export type MpRouteChangeListener = (event: MpRouteChangeEvent) => void;
 **סוג:** רכיב
 
 ```typescript
-export type MpRouteGuard = ( to: MpResolvedLocation, from: MpResolvedLocation | null, ) => MpGuardOutcome | Promise<MpGuardOutcome>;
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
 ```
 
 שומר נתיב שהוערך על ידי מכונת ניווט בבעלות זמן ריצה.
@@ -1473,7 +1483,11 @@ export interface MpRouteViewContext<View = unknown>
 **סוג:** רכיב
 
 ```typescript
-export type MpScrollBehavior = ( to: MpResolvedLocation, from: MpResolvedLocation | null, savedPosition?: MpScrollPosition, ) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
 ```
 
 לא סופק תיאור.

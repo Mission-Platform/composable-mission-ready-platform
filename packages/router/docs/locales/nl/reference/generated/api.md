@@ -16,39 +16,39 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/router`
 **Soort:** functie
 
 ```typescript
-function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities
+function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities;
 ```
 
 Maak een neutraal capaciteitsobject voor een doeladapter, SSR of een test.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| overschrijft | MpRouterCapabilityOverschrijvingen |  |
+| Naam         | Typ                                | Beschrijving |
+| ------------ | ---------------------------------- | ------------ |
+| overschrijft | MpRouterCapabilityOverschrijvingen |              |
 
 ### isMpRouterCapabilityError
 
 **Soort:** functie
 
 ```typescript
-function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError
+function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError;
 ```
 
 Of een onbekende fout de deterministische terugvalfout van de neutrale router is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fout | onbekend |  |
+| Naam | Typ      | Beschrijving |
+| ---- | -------- | ------------ |
+| fout | onbekend |              |
 
 ### MP_ROUTER_COMPILER_MARKER
 
 **Soort:** constant
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Stabiele metadata die worden gebruikt door Forge-routercompilerplug-ins.
@@ -58,16 +58,16 @@ Stabiele metadata die worden gebruikt door Forge-routercompilerplug-ins.
 **Soort:** component
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor
+function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 Neutrale linkmarkering. Native doelen vervangen deze functie tijdens compilatie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | MpLinkProps |  |
+| Naam          | Typ         | Beschrijving |
+| ------------- | ----------- | ------------ |
+| eigenschappen | MpLinkProps |              |
 
 ### MpLinkDescriptor
 
@@ -154,16 +154,16 @@ Een gedeeltelijke implementatie die nuttig is voor het richten op adapters en SS
 **Soort:** component
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor
+function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
 ```
 
 Neutrale uitlaat/zichtmarkering. Native doelen vervangen deze functie tijdens compilatie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | MpRouterViewProps |  |
+| Naam          | Typ               | Beschrijving |
+| ------------- | ----------------- | ------------ |
+| eigenschappen | MpRouterViewProps |              |
 
 ### MpRouterViewDescriptor
 
@@ -190,7 +190,10 @@ Rekwisieten geaccepteerd door de neutrale outlet/view-compilermarkering.
 **Soort:** functie
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string
+function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string;
 ```
 
 Los een doel op via de router van de app. De optionele mogelijkheid
@@ -198,17 +201,17 @@ argument maakt de helper deterministisch in SSR/tests en doeladapters.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
-| mogelijkheden | Kies<MpRouterCapabilities, 'resolve'> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| naar          | MpRouteLocationRaw                    |              |
+| mogelijkheden | Kies<MpRouterCapabilities, 'resolve'> |              |
 
 ### gebruik MpNavigatie
 
 **Soort:** functie
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Lees alleen de dwingende navigatiemogelijkheden.
@@ -218,7 +221,7 @@ Lees alleen de dwingende navigatiemogelijkheden.
 **Soort:** functie
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lees de huidige route van de app. De niet-gecompileerde fallback is SSR-veilig en
@@ -229,7 +232,7 @@ retourneert `null`; een compilerdoel vervangt deze aanroep door de oorspronkelij
 **Soort:** functie
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lees het door de app geleverde neutrale capaciteitsobject.
@@ -241,7 +244,7 @@ Lees het door de app geleverde neutrale capaciteitsobject.
 **Soort:** constant
 
 ```typescript
-export const applicationCompatibilityFixtures
+export const applicationCompatibilityFixtures;
 ```
 
 Geen beschrijving opgegeven.
@@ -251,7 +254,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Routerecords die de tabel locale/search/catch-all van de documentatie-app weerspiegelen.
@@ -261,7 +264,7 @@ Routerecords die de tabel locale/search/catch-all van de documentatie-app weersp
 **Soort:** constant
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Routerecords die de tabel locale/search/catch-all van de documentatie-app weerspiegelen.
@@ -291,7 +294,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
+export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Routerecords die het taalsegment en URL-gestuurde overlays van My Care Notes weerspiegelen.
@@ -301,7 +304,7 @@ Routerecords die het taalsegment en URL-gestuurde overlays van My Care Notes wee
 **Soort:** constant
 
 ```typescript
-export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
+export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[];
 ```
 
 Rijen met gedeeld gedrag die worden gebruikt door de contracttestsuite van elke runtime.
@@ -311,7 +314,7 @@ Rijen met gedeeld gedrag die worden gebruikt door de contracttestsuite van elke 
 **Soort:** constant
 
 ```typescript
-export const websiteCompatibilityFixture: ForgeCompatibilityFixture
+export const websiteCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Routerecords die de optionele thuisroute met vooraf ingestelde landinstelling van de website weerspiegelen.
@@ -705,7 +708,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
+function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver;
 ```
 
 Maak een {@link MpRouteResolver} die aan een routeboom is gebonden en maak deze één keer plat
@@ -713,16 +716,16 @@ herhaalde `match`/`resolve`-oproepen gebruiken dezelfde absolute routelijst.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| trajecten | alleen-lezen MpRoute[] |  |
+| Naam      | Typ                    | Beschrijving |
+| --------- | ---------------------- | ------------ |
+| trajecten | alleen-lezen MpRoute[] |              |
 
 ### definieerRoutes
 
 **Soort:** functie
 
 ```typescript
-function defineRoutes(routes: T): T
+function defineRoutes(routes: T): T;
 ```
 
 Identiteitshelper die een raamwerk-neutrale routeboom met volledig type definieert
@@ -730,40 +733,40 @@ gevolgtrekking. Gebruik het zodat redacteuren de route `name`s, `meta` en onderl
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| trajecten | T |  |
+| Naam      | Typ | Beschrijving |
+| --------- | --- | ------------ |
+| trajecten | T   |              |
 
 #### Contract
 
 - **@example:** const routes = definiërenRoutes([
   { pad: '/', naam: 'home', component: Home },
   { pad: '/users/:id', naam: 'gebruiker', component: Gebruiker },
-])
+  ])
 
 ### vindRouteByName
 
 **Soort:** functie
 
 ```typescript
-function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined
+function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined;
 ```
 
 Zoek de eerste afgevlakte route met de opgegeven naam.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| trajecten | alleen-lezen MpRoute[] |  |
-| naam | tekenreeks |  |
+| Naam      | Typ                    | Beschrijving |
+| --------- | ---------------------- | ------------ |
+| trajecten | alleen-lezen MpRoute[] |              |
+| naam      | tekenreeks             |              |
 
 ### Maak routes plat
 
 **Soort:** functie
 
 ```typescript
-function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
+function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[];
 ```
 
 Maak een geneste routeboom plat tot een diepte-eerst-lijst van absolute routes, met
@@ -772,16 +775,16 @@ zijn voorouders.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| trajecten | alleen-lezen MpRoute[] |  |
+| Naam      | Typ                    | Beschrijving |
+| --------- | ---------------------- | ------------ |
+| trajecten | alleen-lezen MpRoute[] |              |
 
 ### matchRoutes
 
 **Soort:** functie
 
 ```typescript
-function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined
+function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined;
 ```
 
 Vergelijk een padnaam met een routeboom en retourneer de eerste route (in
@@ -789,10 +792,10 @@ diepte-eerste definitievolgorde) waarvan het patroon overeenkomt, of `undefined`
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| trajecten | alleen-lezen MpRoute[] |  |
-| padnaam | tekenreeks |  |
+| Naam      | Typ                    | Beschrijving |
+| --------- | ---------------------- | ------------ |
+| trajecten | alleen-lezen MpRoute[] |              |
+| padnaam   | tekenreeks             |              |
 
 ### MpFlatRoute
 
@@ -829,7 +832,7 @@ Een oplosser die is gebonden aan een enkele routeboom.
 **Soort:** functie
 
 ```typescript
-function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation
+function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation;
 ```
 
 Los elke raamwerkneutrale {@link MpRouteLocationRaw} op in een volledig gevormde
@@ -839,15 +842,15 @@ locaties bouwen hun pad op basis van de bijpassende route.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
-| trajecten | alleen-lezen MpRoute[] |  |
+| Naam      | Typ                    | Beschrijving |
+| --------- | ---------------------- | ------------ |
+| naar      | MpRouteLocationRaw     |              |
+| trajecten | alleen-lezen MpRoute[] |              |
 
 #### Contract
 
 - **@example:** solveLocation({ naam: 'gebruiker', params: { id: 42 } }, routes)
-// → { pad: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
+  // → { pad: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
 
 ## `src/location`
 
@@ -876,44 +879,44 @@ De ontlede delen van een URL: padnaam, query en hash.
 **Soort:** functie
 
 ```typescript
-function normalizeHash(hash: string): string
+function normalizeHash(hash: string): string;
 ```
 
 Normaliseer een hashfragment zodat het één leidende `#` bevat, of wees leeg.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| hasj | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| hasj | tekenreeks |              |
 
 ### parseLocatie
 
 **Soort:** functie
 
 ```typescript
-function parseLocation(url: string): MpLocationParts
+function parseLocation(url: string): MpLocationParts;
 ```
 
 Splits een app-relatieve URL in de bijbehorende {@link MpLocationParts}.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| URL | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| URL  | tekenreeks |              |
 
 #### Contract
 
 - **@voorbeeld:** parseLocation('/users/42?tab=info#bio')
-// → { pad: '/users/42', query: { tab: 'info' }, hash: '#bio' }
+  // → { pad: '/users/42', query: { tab: 'info' }, hash: '#bio' }
 
 ### stringifyLocation
 
 **Soort:** functie
 
 ```typescript
-function stringifyLocation(location: MpLocationInput): string
+function stringifyLocation(location: MpLocationInput): string;
 ```
 
 Stel een app-relatieve URL-tekenreeks samen uit locatiedelen. De padnaam is
@@ -922,14 +925,14 @@ hash voorafgegaan door `#` als deze niet leeg is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| locatie | MpLocationInvoer |  |
+| Naam    | Typ              | Beschrijving |
+| ------- | ---------------- | ------------ |
+| locatie | MpLocationInvoer |              |
 
 #### Contract
 
 - **@example:** stringifyLocation({ pad: '/users/42', query: { tab: 'info' }, hash: 'bio' })
-// → '/users/42?tab=info#bio'
+  // → '/users/42?tab=info#bio'
 
 ## `src/path`
 
@@ -938,7 +941,10 @@ hash voorafgegaan door `#` als deze niet leeg is.
 **Soort:** functie
 
 ```typescript
-function buildPath(pattern: string, parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {}): string
+function buildPath(
+  pattern: string,
+  parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {},
+): string;
 ```
 
 Bouw een concrete padnaam op basis van een patroon en een reeks parameters, codering
@@ -947,23 +953,23 @@ ontbrekende vereiste parameterworpen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| patroon | tekenreeks |  |
-| parameters | Record<string, MpParameterValue \| readonly MpParameterValue[]> |  |
+| Naam       | Typ                                                             | Beschrijving |
+| ---------- | --------------------------------------------------------------- | ------------ |
+| patroon    | tekenreeks                                                      |              |
+| parameters | Record<string, MpParameterValue \| readonly MpParameterValue[]> |              |
 
 #### Contract
 
 - **@example:** buildPath('/users/:id', { id: 42 }) // → '/users/42'
-buildPath('/users/:id?', {}) // → '/users'
-buildPath('/files/:rest*', {rest: ['a', 'b'] }) // → '/files/a/b'
+  buildPath('/users/:id?', {}) // → '/users'
+  buildPath('/files/:rest*', {rest: ['a', 'b'] }) // → '/files/a/b'
 
 ### compilepad
 
 **Soort:** functie
 
 ```typescript
-function compilePath(pattern: string): MpCompiledPath
+function compilePath(pattern: string): MpCompiledPath;
 ```
 
 Compileer een padpatroon in een {@link MpCompiledPath} met het orderbestand
@@ -971,9 +977,9 @@ parametersleutels en een overeenkomende reguliere expressie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| patroon | tekenreeks |  |
+| Naam    | Typ        | Beschrijving |
+| ------- | ---------- | ------------ |
+| patroon | tekenreeks |              |
 
 #### Contract
 
@@ -984,7 +990,7 @@ parametersleutels en een overeenkomende reguliere expressie.
 **Soort:** functie
 
 ```typescript
-function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined
+function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined;
 ```
 
 Match een padnaam met een patroon en retourneer de geëxtraheerde parameters of
@@ -992,15 +998,15 @@ Match een padnaam met een patroon en retourneer de geëxtraheerde parameters of
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| patroon | tekenreeks |  |
-| padnaam | tekenreeks |  |
+| Naam    | Typ        | Beschrijving |
+| ------- | ---------- | ------------ |
+| patroon | tekenreeks |              |
+| padnaam | tekenreeks |              |
 
 #### Contract
 
 - **@example:** matchPath('/users/:id', '/users/42') // → {id: '42' }
-matchPath('/users/:id', '/posts/42') // → ongedefinieerd
+  matchPath('/users/:id', '/posts/42') // → ongedefinieerd
 
 ### MpCompiledPath
 
@@ -1027,7 +1033,7 @@ Eén parametersleutel geëxtraheerd uit een gecompileerd padpatroon.
 **Soort:** functie
 
 ```typescript
-function normalizePath(path: string): string
+function normalizePath(path: string): string;
 ```
 
 Normaliseer een padpatroon (of padnaam) naar een canonieke vorm met een leidende schuine streep
@@ -1035,16 +1041,16 @@ zonder afsluitende slash (behalve de root, die `/` blijft).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| pad | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| pad  | tekenreeks |              |
 
 ### WILDCARD_PARAM_KEY
 
 **Soort:** constant
 
 ```typescript
-export const WILDCARD_PARAM_KEY
+export const WILDCARD_PARAM_KEY;
 ```
 
 De sleutel waaronder een zelfstandig `*` catch-all-segment valt.
@@ -1056,7 +1062,7 @@ De sleutel waaronder een zelfstandig `*` catch-all-segment valt.
 **Soort:** functie
 
 ```typescript
-function parseQuery(search: string): MpQueryParameters
+function parseQuery(search: string): MpQueryParameters;
 ```
 
 Parseer een queryreeks in een {@link MpQueryParameters}-kaart. Een toonaangevende `?` is dat wel
@@ -1064,9 +1070,9 @@ optioneel. Herhaalde sleutels worden in volgorde samengevoegd tot een reeks waar
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| zoeken | tekenreeks |  |
+| Naam   | Typ        | Beschrijving |
+| ------ | ---------- | ------------ |
+| zoeken | tekenreeks |              |
 
 #### Contract
 
@@ -1077,7 +1083,7 @@ optioneel. Herhaalde sleutels worden in volgorde samengevoegd tot een reeks waar
 **Soort:** functie
 
 ```typescript
-function stringifyQuery(query: MpQueryInput): string
+function stringifyQuery(query: MpQueryInput): string;
 ```
 
 Serialiseer een {@link MpQueryInput}-kaart in een queryreeks met een leidende `?`,
@@ -1086,14 +1092,14 @@ waarden (en array-items) worden verwijderd; arrays zenden elk één `key=value`-
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vraag | MpQueryInput |  |
+| Naam  | Typ          | Beschrijving |
+| ----- | ------------ | ------------ |
+| vraag | MpQueryInput |              |
 
 #### Contract
 
 - **@example:** stringifyQuery({ tag: ['a', 'b'], pagina: 2 }) // → '?tag=a&tag=b&page=2'
-stringifyQuery({}) // → ''
+  stringifyQuery({}) // → ''
 
 ## `src/types`
 
@@ -1318,7 +1324,8 @@ Structurele reactieve toestand die door adapters wordt gebruikt zonder een raamw
 **Soort:** component
 
 ```typescript
-export type MpRedirect = MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
 ```
 
 Een omleidingsdoel, optioneel berekend op basis van de bestemmingsroute.
@@ -1370,7 +1377,10 @@ Geen beschrijving opgegeven.
 **Soort:** component
 
 ```typescript
-export type MpRouteGuard = ( to: MpResolvedLocation, from: MpResolvedLocation | null, ) => MpGuardOutcome | Promise<MpGuardOutcome>;
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
 ```
 
 Een routewachter geëvalueerd door een navigatiestatusmachine die eigendom is van runtime.
@@ -1473,7 +1483,11 @@ Geen beschrijving opgegeven.
 **Soort:** component
 
 ```typescript
-export type MpScrollBehavior = ( to: MpResolvedLocation, from: MpResolvedLocation | null, savedPosition?: MpScrollPosition, ) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
 ```
 
 Geen beschrijving opgegeven.

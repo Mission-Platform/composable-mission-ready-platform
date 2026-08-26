@@ -75,7 +75,7 @@ De lay-outstrategie die de container gebruikt om zichzelf op de inline-as te ran
 **Soort:** functie
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer` — een primitieve pagina-/sectie-indeling die beperkt en centreert
@@ -95,9 +95,9 @@ in de CSS-module (die de platformbreekpunten inlinet als mediaquery's).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ContainerProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ContainerProperties> |              |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout` — de applicatieshell op het hoogste niveau die eenmaal is geschreven in de
@@ -140,9 +140,9 @@ CSS). De gehashte namen van de moduleklassen worden samengesteld met de framewor
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ApplicationLayoutProperties> |  |
+| Naam          | Typ                                       | Beschrijving |
+| ------------- | ----------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ApplicationLayoutProperties> |              |
 
 ### ZijbalkBreekpunt
 
@@ -191,7 +191,7 @@ Benoemde regio's die zijn blootgelegd door `ForgeBentoLayout`.
 **Soort:** functie
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout` maakt de benoemde slots `hero`, `feature` en `supporting` zichtbaar.
@@ -200,9 +200,9 @@ het ondersteunen van regio's ernaast; alle regio's worden in bronvolgorde op sma
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<BentoLayoutProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<BentoLayoutProperties> |              |
 
 ### PatroonIndelingBreekpunt
 
@@ -241,7 +241,7 @@ Semantische containerelementen ondersteund door de patroonlay-outs.
 **Soort:** functie
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout` geeft `header`, `intro`, `primary`, `secondary` en
@@ -250,9 +250,9 @@ het dominante breedbeeldspoor, terwijl het secundaire gebied daaraan grenst.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<FPatternLayoutProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<FPatternLayoutProperties> |              |
 
 ### FPatternLayoutBreakpoint
 
@@ -311,7 +311,7 @@ Semantische containerelementen ondersteund door `ForgeFPatternLayout`.
 **Soort:** functie
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout` geeft de opgegeven `cell1` … `cell12` benoemde slots weer in
@@ -320,9 +320,9 @@ volgt alleen na het geconfigureerde responsieve breekpunt.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<GridLayoutProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<GridLayoutProperties> |              |
 
 ### GridLayoutBreakpoint
 
@@ -339,7 +339,19 @@ Viewport-breekpunt gebruikt door de terugval in de smalle lay-out van het raster
 **Soort:** type
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 Ondersteunde geordende benoemde celslots (`cell1` tot en met `cell12`).
@@ -381,7 +393,7 @@ Semantische containerelementen ondersteund door `ForgeGridLayout`.
 **Soort:** functie
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout` — een responsieve shell met drie kolommen, ooit geschreven in de
@@ -410,9 +422,9 @@ slot voor gewone inhoud).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<VerticalLayoutProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<VerticalLayoutProperties> |              |
 
 ### VerticalLayoutBreakpoint
 
@@ -451,7 +463,7 @@ Benoemde maatschaal voor de zijkolommen (spiegels `ForgeDrawer`'s `DrawerSize`).
 **Soort:** functie
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` geeft `topStart`, `topEnd`, `middle`, `bottomStart`,
@@ -460,9 +472,9 @@ schermen plaatsen de gebieden op afwisselende zijden met behulp van CSS-rasterge
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ZPatternLayoutProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ZPatternLayoutProperties> |              |
 
 ### ZPatternLayoutBreakpoint
 

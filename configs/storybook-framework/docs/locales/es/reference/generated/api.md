@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/stor
 **Tipo:** función
 
 ```typescript
-function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig
+function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig;
 ```
 
 Cree un {@link StorybookConfig} unificado para el marco activo. Uno
@@ -25,9 +25,9 @@ representa la misma historia ambientada en el marco seleccionado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Crear opciones de configuración de Storybook |  |
+| Nombre   | Tipo                                         | Descripción |
+| -------- | -------------------------------------------- | ----------- |
+| opciones | Crear opciones de configuración de Storybook |             |
 
 ### Crear opciones de configuración de Storybook
 
@@ -44,7 +44,7 @@ Opciones para {@link createStorybookConfig}.
 **Tipo:** función
 
 ```typescript
-function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework
+function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework;
 ```
 
 Resolver el marco activo desde la opción explícita o la
@@ -53,9 +53,9 @@ valor para que un error tipográfico falle rápidamente en lugar de generar sile
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| explícito | Marco del libro de cuentos |  |
+| Nombre    | Tipo                       | Descripción |
+| --------- | -------------------------- | ----------- |
+| explícito | Marco del libro de cuentos |             |
 
 ### Libro De CuentosMarco
 
@@ -72,7 +72,7 @@ Los marcos en los que una aplicación Storybook unificada puede representar hist
 **Tipo:** función
 
 ```typescript
-function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[]
+function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[];
 ```
 
 Cree los globos de historias neutrales compartidos para los paquetes solicitados.
@@ -81,11 +81,11 @@ Se debe representar el mismo inventario de historias de escritura única en cada
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| _marco | Marco del libro de cuentos |  |
-| paquetes | cadena de solo lectura[] |  |
-| paquetesRaíz | cadena |  |
+| Nombre       | Tipo                       | Descripción |
+| ------------ | -------------------------- | ----------- |
+| _marco       | Marco del libro de cuentos |             |
+| paquetes     | cadena de solo lectura[]   |             |
+| paquetesRaíz | cadena                     |             |
 
 ## `src/preview`
 
@@ -94,7 +94,7 @@ Se debe representar el mismo inventario de historias de escritura única en cada
 **Tipo:** función
 
 ```typescript
-function sharedPreviewDecorators()
+function sharedPreviewDecorators();
 ```
 
 Decoradores de Storybook compartidos para todos los marcos.
@@ -104,7 +104,7 @@ Decoradores de Storybook compartidos para todos los marcos.
 **Tipo:** constante
 
 ```typescript
-export const sharedPreviewParameters
+export const sharedPreviewParameters;
 ```
 
 Parámetros de Storybook compartidos para todos los marcos.
@@ -114,7 +114,7 @@ Parámetros de Storybook compartidos para todos los marcos.
 **Tipo:** función
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework)
+function sharedPreviewParametersFor(framework?: PreviewFramework);
 ```
 
 Parámetros de Storybook compatibles con el marco.
@@ -131,9 +131,9 @@ panel fuente.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| marco | Marco de vista previa |  |
+| Nombre | Tipo                  | Descripción |
+| ------ | --------------------- | ----------- |
+| marco  | Marco de vista previa |             |
 
 ## `src/slots.dom`
 
@@ -142,7 +142,7 @@ panel fuente.
 **Tipo:** función
 
 ```typescript
-function customElementTag(component: unknown): string
+function customElementTag(component: unknown): string;
 ```
 
 Derivar el nombre de etiqueta registrado de un componente web de Forge a partir de su elemento
@@ -152,9 +152,9 @@ El respaldo del nombre de clase refleja el del emisor. `kebabCase(name)` registr
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| componente | desconocido |  |
+| Nombre     | Tipo        | Descripción |
+| ---------- | ----------- | ----------- |
+| componente | desconocido |             |
 
 ## `src/slots.neutral`
 
@@ -163,7 +163,7 @@ El respaldo del nombre de clase refleja el del emisor. `kebabCase(name)` registr
 **Tipo:** constante
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Fábrica de fragmentos de marcador de posición; nunca invocado (ver {@link node}).
@@ -173,7 +173,7 @@ Fábrica de fragmentos de marcador de posición; nunca invocado (ver {@link node
 **Tipo:** constante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 No se proporciona descripción.
@@ -187,7 +187,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 No se proporciona descripción.
@@ -203,7 +203,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 No se proporciona descripción.
@@ -217,7 +217,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 No se proporciona descripción.
@@ -233,7 +233,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Solid no tiene ningún componente de fragmento: una matriz de elementos secundarios es un fragmento.
@@ -243,7 +243,7 @@ Solid no tiene ningún componente de fragmento: una matriz de elementos secundar
 **Tipo:** constante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 No se proporciona descripción.
@@ -257,7 +257,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 No se proporciona descripción.
@@ -273,7 +273,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Componente marcador para fragmentos JSX: sus hijos se montan directamente en el padre.
@@ -283,7 +283,7 @@ Componente marcador para fragmentos JSX: sus hijos se montan directamente en el 
 **Tipo:** constante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 No se proporciona descripción.
@@ -297,7 +297,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 No se proporciona descripción.
@@ -313,7 +313,12 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type RenderWithSlots = ( component: unknown, properties: Record<string, unknown>, slots: StorySlots, children?: unknown, ) => unknown;
+export type RenderWithSlots = (
+  component: unknown,
+  properties: Record<string, unknown>,
+  slots: StorySlots,
+  children?: unknown,
+) => unknown;
 ```
 
 Prestar `component` con `properties`, el nombre dado `slots` y opcional
@@ -325,7 +330,11 @@ consume.
 **Tipo:** tipo
 
 ```typescript
-export type StoryNodeFactory = ( type: unknown, properties?: Record<string, unknown> | null, ...children: unknown[] ) => unknown;
+export type StoryNodeFactory = (
+  type: unknown,
+  properties?: Record<string, unknown> | null,
+  ...children: unknown[]
+) => unknown;
 ```
 
 Construya un elemento para el renderizador activo. También sirve como el JSX clásico.
@@ -349,7 +358,7 @@ Contenido de las ranuras con nombre de un componente, codificado por nombre de r
 **Tipo:** constante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 No se proporciona descripción.
@@ -363,7 +372,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 No se proporciona descripción.
@@ -379,7 +388,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Componente marcador para fragmentos JSX: renderizado como un `DocumentFragment`.
@@ -389,7 +398,7 @@ Componente marcador para fragmentos JSX: renderizado como un `DocumentFragment`.
 **Tipo:** constante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 No se proporciona descripción.
@@ -403,7 +412,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 No se proporciona descripción.
@@ -431,7 +440,10 @@ tipo (`Meta<MyComponentProps>`), reflejando el renderizador `Meta` ergonomía.
 **Tipo:** tipo
 
 ```typescript
-export type StoryObj<TMetaOrComponentOrArgs = Args> = TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments> ? StoryAnnotations<Renderer, TArguments> : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
+export type StoryObj<TMetaOrComponentOrArgs = Args> =
+  TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
+    ? StoryAnnotations<Renderer, TArguments>
+    : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
 Libro de cuentos independiente del marco `StoryObj`, la contraparte neutral de

@@ -75,7 +75,7 @@ export type ContainerVariant = 'fixed' | 'fluid' | 'responsive';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer` — تخطيط الصفحة/القسم البدائي الذي يقيد ويركز
@@ -95,9 +95,9 @@ Vue بواسطة `@mission-platform/vite-plugin-forge`. عروض `fixed`/`fluid`
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ContainerProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<ContainerProperties> |       |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ export interface ApplicationLayoutProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout` — غلاف التطبيق ذو المستوى الأعلى الذي تم تأليفه مرة واحدة في ملف
@@ -140,9 +140,9 @@ CSS). يتم تجميع أسماء فئات الوحدة النمطية المج
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ApplicationLayoutProperties> |  |
+| الاسم | اكتب                                     | الوصف |
+| ----- | ---------------------------------------- | ----- |
+| خصائص | للقراءة فقط<ApplicationLayoutProperties> |       |
 
 ### الشريط الجانبي
 
@@ -191,7 +191,7 @@ export type BentoLayoutRegion = 'hero' | 'feature' | 'supporting';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 يعرض `ForgeBentoLayout` الفتحات المسماة `hero` و`feature` و`supporting`.
@@ -200,9 +200,9 @@ function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<BentoLayoutProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<BentoLayoutProperties> |       |
 
 ### PatternLayoutBreakpoint
 
@@ -241,7 +241,7 @@ export type PatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 يعرض `ForgeFPatternLayout` `header` و`intro` و`primary` و`secondary` و
@@ -250,9 +250,9 @@ function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<FPatternLayoutProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<FPatternLayoutProperties> |       |
 
 ### FPatternLayoutBreakpoint
 
@@ -311,7 +311,7 @@ export type FPatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside'
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 يقوم `ForgeGridLayout` بعرض `cell1` … `cell12` الفتحات المسماة في
@@ -320,9 +320,9 @@ function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<GridLayoutProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<GridLayoutProperties> |       |
 
 ### GridLayoutBreakpoint
 
@@ -339,7 +339,19 @@ export type GridLayoutBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 **النوع:** النوع
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 فتحات الخلايا المسماة المطلوبة المدعومة (`cell1` حتى `cell12`).
@@ -381,7 +393,7 @@ export type GridLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout` - غلاف سريع الاستجابة مكون من ثلاثة أعمدة تم تأليفه مرة واحدة في ملف
@@ -410,9 +422,9 @@ Vue SFC، لا يمكن للهجة المحايدة أن تصمم الفتحة �
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<VerticalLayoutProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<VerticalLayoutProperties> |       |
 
 ### VerticalLayoutBreakpoint
 
@@ -451,7 +463,7 @@ export type VerticalLayoutSize = DrawerSize;
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` يعرض `topStart`، `topEnd`، `middle`، `bottomStart`،
@@ -460,9 +472,9 @@ function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ZPatternLayoutProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<ZPatternLayoutProperties> |       |
 
 ### ZPatternLayoutBreakpoint
 

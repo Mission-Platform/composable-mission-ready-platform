@@ -26,7 +26,8 @@ export interface AlertBannerProperties
 **種類：**タイプ
 
 ```typescript
-export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type AlertBannerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 バナーの意図/色の処理 - 正規のカラーセット。
@@ -36,7 +37,7 @@ export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 **種類:** 関数
 
 ```typescript
-function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement
+function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement;
 ```
 
 `ForgeAlertBanner` — インライン アラート/通知バナーは、
@@ -62,9 +63,9 @@ function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElemen
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<AlertBannerProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<AlertBannerProperties> |      |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -93,7 +94,7 @@ export interface DropdownProperties
 **種類:** 関数
 
 ```typescript
-function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement
+function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 ```
 
 `ForgeDropdown` — トリガーに固定された、作成されたフローティング メニュー/リスト パネル
@@ -138,9 +139,9 @@ API はそれをその (おそらくは積み重ねられた) ダイアログの
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<DropdownProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<DropdownProperties> |      |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -149,7 +150,7 @@ API はそれをその (おそらくは積み重ねられた) ダイアログの
 **種類:** 関数
 
 ```typescript
-function ForgePopover(properties: Readonly<PopoverProperties>): MpElement
+function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 ```
 
 `ForgePopover` — トリガーに固定されたフローティング ダイアログ。
@@ -194,16 +195,28 @@ API はそれをその (おそらくは積み重ねられた) ダイアログの
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<PopoverProperties> |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| プロパティ | 読み取り専用<PopoverProperties> |      |
 
 ### ポップオーバーの配置
 
 **種類：**タイプ
 
 ```typescript
-export type PopoverPlacement = | 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end';
+export type PopoverPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
 ```
 
 トリガーに対するポップオーバーの優先配置。
@@ -225,7 +238,7 @@ export interface PopoverProperties
 **種類:** 関数
 
 ```typescript
-function ForgeToast(properties: Readonly<ToastProperties>): MpElement
+function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 ```
 
 `ForgeToast` — ニュートラルで一度作成された単一のトースト通知カード
@@ -247,9 +260,9 @@ callback-prop `onDismiss`、`iconContent` 名前付きスロット (`<Slot>`、
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ToastProperties> |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| プロパティ | 読み取り専用<ToastProperties> |      |
 
 ### トーストのプロパティ
 
@@ -276,7 +289,8 @@ export type ToastSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類：**タイプ
 
 ```typescript
-export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ToastVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 トーストの意図/色の処理 - 正規の色セット。
@@ -288,7 +302,7 @@ export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 's
 **種類:** 関数
 
 ```typescript
-function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
+function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 ```
 
 `ForgeTooltip` — 一度作成された、トリガーに固定された短い文脈上のヒント
@@ -330,9 +344,9 @@ Popover API をサポートしていないブラウザの場合。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<TooltipProperties> |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| プロパティ | 読み取り専用<TooltipProperties> |      |
 
 ### ツールチップの配置
 
@@ -391,7 +405,7 @@ export type DialogSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
+function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 ```
 
 `ForgeDialog` — 中立的な JSX 方言で一度作成されたモーダル ダイアログ
@@ -419,9 +433,9 @@ Enter/Exit フェードは CSS に存在します (`@starting-style` + `transiti
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<DialogProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<DialogProperties> |      |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -430,7 +444,7 @@ Enter/Exit フェードは CSS に存在します (`@starting-style` + `transiti
 **種類:** 関数
 
 ```typescript
-function ForgeModal(properties: Readonly<ModalProperties>): MpElement
+function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 ```
 
 `ForgeModal` — 中立的な JSX 方言で一度作成された中心モーダル
@@ -456,9 +470,9 @@ CSS モジュール `forge-modal.module.scss` と同じ場所に配置されて�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ModalProperties> |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| プロパティ | 読み取り専用<ModalProperties> |      |
 
 ### モーダルプロパティ
 
@@ -487,7 +501,7 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 **種類:** 関数
 
 ```typescript
-function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement
+function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement;
 ```
 
 `ForgeToastContainer` — 共有 `toast-store` に保持されているトーストをレンダリングします。
@@ -503,6 +517,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 ソースは両方のフレームワークでリアクティブなままです。
 
 アクセシビリティ:
+
 - スタックは、構成可能な `aria-label` を備えた `role="region"` です。それぞれ
   `ForgeToast` には、独自の `role="status"` / `role="alert"` が含まれています。
 
@@ -526,9 +541,9 @@ React ビルドは、クラス切り替えの SSR インプレース ベース�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ToastContainerProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ToastContainerProperties> |      |
 
 ### トーストコンテナのプロパティ
 
@@ -557,7 +572,7 @@ export type ToastContainerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 **種類:** 関数
 
 ```typescript
-function clearToasts(): void
+function clearToasts(): void;
 ```
 
 すべてのトーストを中止します。
@@ -567,23 +582,23 @@ function clearToasts(): void
 **種類:** 関数
 
 ```typescript
-function dismissToast(id: number): void
+function dismissToast(id: number): void;
 ```
 
 ID でトーストを終了します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| ID |番号 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| ID   | 番号   |      |
 
 ### エラートースト
 
 **種類:** 定数
 
 ```typescript
-export const errorToast
+export const errorToast;
 ```
 
 利便性: `error` トーストを表示します。
@@ -593,7 +608,7 @@ export const errorToast
 **種類:** 関数
 
 ```typescript
-function getToastsSnapshot(): readonly ToastRecord[]
+function getToastsSnapshot(): readonly ToastRecord[];
 ```
 
 アクティブなトーストの不変スナップショットを読み取ります。
@@ -603,7 +618,7 @@ function getToastsSnapshot(): readonly ToastRecord[]
 **種類:** 定数
 
 ```typescript
-export const infoToast
+export const infoToast;
 ```
 
 利便性: `info` トーストを表示します。
@@ -613,39 +628,39 @@ export const infoToast
 **種類:** 関数
 
 ```typescript
-function showToast(options: ToastOptions | string): number
+function showToast(options: ToastOptions | string): number;
 ```
 
 トーストを表示し、その ID を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |トーストオプション \|文字列 |  |
+| 名前       | タイプ                      | 説明 |
+| ---------- | --------------------------- | ---- |
+| オプション | トーストオプション \|文字列 |      |
 
 ### 購読乾杯
 
 **種類:** 関数
 
 ```typescript
-function subscribeToasts(listener: () => void): () => void
+function subscribeToasts(listener: () => void): () => void;
 ```
 
 ストアの変更を購読します。購読解除関数を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|リスナー | () => 無効 |  |
+| 名前     | タイプ     | 説明 |
+| -------- | ---------- | ---- |
+| リスナー | () => 無効 |      |
 
 ### 成功乾杯
 
 **種類:** 定数
 
 ```typescript
-export const successToast
+export const successToast;
 ```
 
 利便性: `success` トーストを表示します。
@@ -685,7 +700,7 @@ export interface ToastRecord
 **種類:** 関数
 
 ```typescript
-function useToast(): UseToastReturn
+function useToast(): UseToastReturn;
 ```
 
 Vue をミラーリングして、トーストを表示および非表示にする命令型ヘルパー
@@ -707,7 +722,7 @@ export interface UseToastReturn
 **種類:** 定数
 
 ```typescript
-export const warningToast
+export const warningToast;
 ```
 
 利便性: `warning` トーストを表示します。

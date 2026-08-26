@@ -108,21 +108,21 @@ Alle pictogrammen zijn gebaseerd op een viewbox van $ 24 \maal 24 $.
 
 ### Universele rekwisieten
 
-| Prop | Typ | Standaard | Beschrijving |
-| :---------- | :----------------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| `size` | `number \| string` | `'md'` | Breedte en hoogte. Ondersteunt benoemde tokens (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) of een pixelnummer. |
-| `color` | `string` | `'currentColor'` | Lijnkleur (en vulling voor pictogrammen met gevulde markering).                                                                     |
-| `ariaLabel` | `string` | _Per-pictogram standaard_ | Toegankelijke naam. Als u dit weglaat, wordt het pictogram gemarkeerd als `aria-hidden`.                                                     |
+| Prop        | Typ                | Standaard                 | Beschrijving                                                                                                                  |
+| :---------- | :----------------- | :------------------------ | :---------------------------------------------------------------------------------------------------------------------------- |
+| `size`      | `number \| string` | `'md'`                    | Breedte en hoogte. Ondersteunt benoemde tokens (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) of een pixelnummer. |
+| `color`     | `string`           | `'currentColor'`          | Lijnkleur (en vulling voor pictogrammen met gevulde markering).                                                               |
+| `ariaLabel` | `string`           | _Per-pictogram standaard_ | Toegankelijke naam. Als u dit weglaat, wordt het pictogram gemarkeerd als `aria-hidden`.                                      |
 
 ### Gedragspictogrammen
 
 Bepaalde pictogrammen bevatten extra rekwisieten om hun uiterlijk te bepalen:
 
-| Icoon | Extra rekwisieten | Beschrijving |
-| :----------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------- |
-| `ForgeIconArrow` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (standaard `'up'`) | Roteert de pijl via een inline-transformatie.                 |
-| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (standaard `'down'`) | Roteert de chevron via een inline-transformatie.               |
-| `ForgeIconSort` | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined` | Markeert de punthaak die overeenkomt met de actieve sorteerrichting. |
+| Icoon              | Extra rekwisieten                                                       | Beschrijving                                                         |
+| :----------------- | :---------------------------------------------------------------------- | :------------------------------------------------------------------- |
+| `ForgeIconArrow`   | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (standaard `'up'`)   | Roteert de pijl via een inline-transformatie.                        |
+| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (standaard `'down'`) | Roteert de chevron via een inline-transformatie.                     |
+| `ForgeIconSort`    | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined`        | Markeert de punthaak die overeenkomt met de actieve sorteerrichting. |
 
 ## Pictogrambibliotheek
 

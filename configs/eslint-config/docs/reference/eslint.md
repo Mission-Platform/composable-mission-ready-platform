@@ -20,7 +20,7 @@ code quality, accessibility, and architectural rules across all packages, applic
 The configuration includes the following plugins and rule sets:
 
 | Plugin                   | Purpose                                                |
-|:-------------------------|:-------------------------------------------------------|
+| :----------------------- | :----------------------------------------------------- |
 | `typescript-eslint`      | Standard TypeScript rules and type-aware linting.      |
 | `eslint-plugin-vue`      | Vue 3 SFC linting and template validation.             |
 | `eslint-plugin-sonarjs`  | Detection of code smells and bug risks.                |

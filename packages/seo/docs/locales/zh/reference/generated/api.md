@@ -16,87 +16,87 @@
 **种类：**功能
 
 ```typescript
-function article(input: ArticleInput): JsonLd
+function article(input: ArticleInput): JsonLd;
 ```
 
 Schema.org `Article` / `BlogPosting` / `NewsArticle` 构建器。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |文章输入 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 输入 | 文章输入 |      |
 
 ### 面包屑列表
 
 **种类：**功能
 
 ```typescript
-function breadcrumbList(input: BreadcrumbListInput): JsonLd
+function breadcrumbList(input: BreadcrumbListInput): JsonLd;
 ```
 
 Schema.org `BreadcrumbList` — 发出每页以公开站点层次结构。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |面包屑列表输入 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 输入 | 面包屑列表输入 |      |
 
 ### 事件
 
 **种类：**功能
 
 ```typescript
-function event(input: EventInput): JsonLd
+function event(input: EventInput): JsonLd;
 ```
 
 Schema.org `Event`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |事件输入|  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 输入 | 事件输入 |      |
 
 ### 常见问题页面
 
 **种类：**功能
 
 ```typescript
-function faqPage(input: FaqPageInput): JsonLd
+function faqPage(input: FaqPageInput): JsonLd;
 ```
 
 Schema.org `FAQPage`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |常见问题页面输入 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 输入 | 常见问题页面输入 |      |
 
 ### 图像对象
 
 **种类：**功能
 
 ```typescript
-function imageObject(input: ImageObjectInput): JsonLd
+function imageObject(input: ImageObjectInput): JsonLd;
 ```
 
 Schema.org `ImageObject`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |图像对象输入 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 输入 | 图像对象输入 |      |
 
 ### jsonLd
 
 **种类：**常数
 
 ```typescript
-export const jsonLd
+export const jsonLd;
 ```
 
 命名空间重新导出，以便消费者可以执行 `import { jsonLd } from
@@ -108,208 +108,208 @@ export const jsonLd
 **种类：**功能
 
 ```typescript
-function localBusiness(input: LocalBusinessInput): JsonLd
+function localBusiness(input: LocalBusinessInput): JsonLd;
 ```
 
 Schema.org `LocalBusiness` — 使用位置数据扩展 `Organization`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |本地业务输入 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 输入 | 本地业务输入 |      |
 
 ### 组织
 
 **种类：**功能
 
 ```typescript
-function organization(input: OrganizationInput): JsonLd
+function organization(input: OrganizationInput): JsonLd;
 ```
 
 Schema.org `Organization`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |组织输入|  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 输入 | 组织输入 |      |
 
 ### 组织ID
 
 **种类：**功能
 
 ```typescript
-function organizationId(orgUrl: string): string
+function organizationId(orgUrl: string): string;
 ```
 
 Canonical `@id` 用于站点范围的 `Organization`（或 `LocalBusiness`）node。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组织网址 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 组织网址 | 字符串 |      |
 
 ### 人
 
 **种类：**功能
 
 ```typescript
-function person(input: PersonInput): JsonLd
+function person(input: PersonInput): JsonLd;
 ```
 
 Schema.org `Person`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |人员输入|  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 输入 | 人员输入 |      |
 
 ### 产品
 
 **种类：**功能
 
 ```typescript
-function product(input: ProductInput): JsonLd
+function product(input: ProductInput): JsonLd;
 ```
 
 Schema.org `Product`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |产品输入|  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 输入 | 产品输入 |      |
 
 ### 食谱
 
 **种类：**功能
 
 ```typescript
-function recipe(input: RecipeInput): JsonLd
+function recipe(input: RecipeInput): JsonLd;
 ```
 
 Schema.org `Recipe`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |食谱输入|  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 输入 | 食谱输入 |      |
 
 ### 审查
 
 **种类：**功能
 
 ```typescript
-function review(input: ReviewInput): JsonLd
+function review(input: ReviewInput): JsonLd;
 ```
 
 Schema.org `Review`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |评论输入 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 输入 | 评论输入 |      |
 
 ### 软件应用
 
 **种类：**功能
 
 ```typescript
-function softwareApplication(input: SoftwareApplicationInput): JsonLd
+function softwareApplication(input: SoftwareApplicationInput): JsonLd;
 ```
 
 Schema.org `SoftwareApplication`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |软件应用输入|  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 输入 | 软件应用输入 |      |
 
 ### 视频对象
 
 **种类：**功能
 
 ```typescript
-function videoObject(input: VideoObjectInput): JsonLd
+function videoObject(input: VideoObjectInput): JsonLd;
 ```
 
 Schema.org `VideoObject`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |视频对象输入 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 输入 | 视频对象输入 |      |
 
 ### 网页
 
 **种类：**功能
 
 ```typescript
-function webPage(input: WebPageInput): JsonLd
+function webPage(input: WebPageInput): JsonLd;
 ```
 
 Schema.org `WebPage` — 描述站点内的单个页面。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |网页输入|  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 输入 | 网页输入 |      |
 
 ### 网页ID
 
 **种类：**功能
 
 ```typescript
-function webPageId(pageUrl: string): string
+function webPageId(pageUrl: string): string;
 ```
 
 `WebPage` node 的规范 `@id`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|页面网址 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 页面网址 | 字符串 |      |
 
 ### 网站
 
 **种类：**功能
 
 ```typescript
-function webSite(input: WebSiteInput): JsonLd
+function webSite(input: WebSiteInput): JsonLd;
 ```
 
 Schema.org `WebSite` — 通常在站点范围内发出一次。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |网站输入|  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 输入 | 网站输入 |      |
 
 ### 网站ID
 
 **种类：**功能
 
 ```typescript
-function webSiteId(siteUrl: string): string
+function webSiteId(siteUrl: string): string;
 ```
 
 Canonical `@id` 用于站点范围的 `WebSite` node。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|网站网址 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 网站网址 | 字符串 |      |
 
 ## `src/build-open-graph`
 
@@ -318,7 +318,7 @@ Canonical `@id` 用于站点范围的 `WebSite` node。
 **种类：**功能
 
 ```typescript
-function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
+function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[];
 ```
 
 将 {@link OpenGraphMetadata} 转换为 `<meta>` 标签的平面列表
@@ -328,9 +328,9 @@ function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|元数据 | OpenGraph 元数据 |  |
+| 名称   | 类型             | 描述 |
+| ------ | ---------------- | ---- |
+| 元数据 | OpenGraph 元数据 |      |
 
 ## `src/build-page-meta`
 
@@ -339,7 +339,7 @@ function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
 **种类：**功能
 
 ```typescript
-function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
+function buildPageMeta(metadata: PageMetadata): BuiltPageMeta;
 ```
 
 将 {@link PageMetadata} 转换为已解析的标题、语言和平面
@@ -347,9 +347,9 @@ function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|元数据 |页面元数据 |  |
+| 名称   | 类型       | 描述 |
+| ------ | ---------- | ---- |
+| 元数据 | 页面元数据 |      |
 
 ### 内置页面元数据
 
@@ -368,7 +368,7 @@ export interface BuiltPageMeta
 **种类：**功能
 
 ```typescript
-function buildRobotsTxt(input: RobotsTxtInput = {}): string
+function buildRobotsTxt(input: RobotsTxtInput = {}): string;
 ```
 
 根据策略描述构建确定性 `robots.txt` 字符串。
@@ -378,9 +378,9 @@ function buildRobotsTxt(input: RobotsTxtInput = {}): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |机器人文本输入 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 输入 | 机器人文本输入 |      |
 
 ### 机器人集团
 
@@ -412,23 +412,23 @@ export interface RobotsTxtInput
 **种类：**功能
 
 ```typescript
-function buildSitemapIndex(input: SitemapIndexInput): string
+function buildSitemapIndex(input: SitemapIndexInput): string;
 ```
 
 构建确定性站点地图索引 XML 字符串。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |网站地图索引输入 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 输入 | 网站地图索引输入 |      |
 
 ### 构建SitemapXml
 
 **种类：**功能
 
 ```typescript
-function buildSitemapXml(input: SitemapXmlInput): string
+function buildSitemapXml(input: SitemapXmlInput): string;
 ```
 
 构建确定性 `sitemap.xml` 字符串。输出始终以
@@ -436,9 +436,9 @@ function buildSitemapXml(input: SitemapXmlInput): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |网站地图XmlInput |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 输入 | 网站地图XmlInput |      |
 
 ### 站点地图备用
 
@@ -497,7 +497,7 @@ export interface SitemapXmlInput
 **种类：**功能
 
 ```typescript
-function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
+function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 ```
 
 反应式同步完整的 Mission Platform SEO 界面 — 标准
@@ -513,9 +513,9 @@ function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|元数据 | MaybeRefOrGetter<SeoMetadata> |  |
+| 名称   | 类型                          | 描述 |
+| ------ | ----------------------------- | ---- |
+| 元数据 | MaybeRefOrGetter<SeoMetadata> |      |
 
 ## `src/mp-seo`
 
@@ -524,7 +524,7 @@ function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
 **种类：**组件
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 无渲染 `<Seo>` 组件 - {@link useSeo} 的声明性包装器。
@@ -539,14 +539,14 @@ Open Graph，以及 JSON-LD 块作为 props；该组件将反应性地
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ### 搜索引擎优化
 
 **种类：**组件
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 无渲染 `<Seo>` 组件 - {@link useSeo} 的声明性包装器。
@@ -561,7 +561,7 @@ Open Graph，以及 JSON-LD 块作为 props；该组件将反应性地
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ## `src/types`
 

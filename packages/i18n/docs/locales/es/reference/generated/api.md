@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/i18n
 **Tipo:** función
 
 ```typescript
-function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElement
+function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElement;
 ```
 
 Proporciona una instancia i18next al árbol React (delegando a
@@ -24,9 +24,9 @@ Proporciona una instancia i18next al árbol React (delegando a
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | ForgeI18NProviderProperties |  |
+| Nombre      | Tipo                        | Descripción |
+| ----------- | --------------------------- | ----------- |
+| propiedades | ForgeI18NProviderProperties |             |
 
 #### Contrato
 
@@ -52,7 +52,7 @@ Apoyos para {@link ForgeI18NProvider}.
 **Tipo:** función
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin
+function createForgeI18NVue(i18next: I18nInstance): Plugin;
 ```
 
 Envuelve una instancia i18next en un complemento Vue (delegando a `i18next-vue`) para que
@@ -61,9 +61,9 @@ el asistente de plantilla `$t` o el componible `useI18n`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| i18siguiente | Instancia I18n |  |
+| Nombre       | Tipo           | Descripción |
+| ------------ | -------------- | ----------- |
+| i18siguiente | Instancia I18n |             |
 
 #### Contrato
 
@@ -79,7 +79,7 @@ aplicación.use(createForgeI18NVue(i18n))
 **Tipo:** función
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 Proporcione i18next directamente cuando no haya ningún adaptador de marco disponible. Esto mantiene
@@ -89,9 +89,9 @@ tiempo de ejecución del marco en su reserva neutral.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| espacio de nombres | cadena |  |
+| Nombre             | Tipo   | Descripción |
+| ------------------ | ------ | ----------- |
+| espacio de nombres | cadena |             |
 
 ### UsarI18nRegresar
 
@@ -110,7 +110,7 @@ Forma de retorno del respaldo neutral del marco {@link useI18n}.
 **Tipo:** función
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 Gancho que expone la función de traducción, la instancia subyacente de i18next, el
@@ -123,9 +123,9 @@ espacio de nombres (el `mp.<app>` propio de una aplicación, que recurre a todos
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| espacio de nombres | cadena |  |
+| Nombre             | Tipo   | Descripción |
+| ------------------ | ------ | ----------- |
+| espacio de nombres | cadena |             |
 
 ### UsarI18nRegresar
 
@@ -144,7 +144,7 @@ Forma de retorno de {@link useI18n}.
 **Tipo:** función
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 Ayudante de composición que expone la función de traducción reactiva, la activa
@@ -158,9 +158,9 @@ espacio de nombres (el `mp.<app>` propio de una aplicación, que recurre a todos
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| espacio de nombres | cadena |  |
+| Nombre             | Tipo   | Descripción |
+| ------------------ | ------ | ----------- |
+| espacio de nombres | cadena |             |
 
 ### UsarI18nRegresar
 
@@ -179,7 +179,7 @@ Forma de retorno de {@link useI18n}.
 **Tipo:** función
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance
+function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
 ```
 
 Crea un [i18next] configurado e independiente del marco (https://www.i18next.com/)
@@ -201,29 +201,30 @@ las aplicaciones pueden realizar una fusión profunda por espacio de nombres `ov
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | CrearForgeI18NOptions |  |
+| Nombre   | Tipo                  | Descripción |
+| -------- | --------------------- | ----------- |
+| opciones | CrearForgeI18NOptions |             |
 
 #### Contrato
 
 - **@ejemplo:** // Uso neutral del marco
-importar {createForgeI18N} desde '@mission-platform/i18n'
+  importar {createForgeI18N} desde '@mission-platform/i18n'
 
 const i18n = createForgeI18N({ mensajes: { es: { hola: 'Hola {nombre}' } } })
 i18n.t('hola', { nombre: 'Mundo' }) // → 'Hola mundo'
+
 - **@ejemplo:** // Uso del espacio de nombres con una aplicación que anula la cadena de un paquete
-importar {createForgeI18N, forgeNamespace} desde '@mission-platform/i18n'
+  importar {createForgeI18N, forgeNamespace} desde '@mission-platform/i18n'
 
 const i18n = crearForjaI18N({
-  espacio de nombres: forgeNamespace('mis-notas-de-cuidado'),
-  espacios de nombres: {
-    [forgeNamespace('mis-notas-de-cuidado')]: { es: { nav: { notas: 'Notas' } } },
-    [forgeNamespace('puntos de interrupción')]: { es: { punto de interrupción: 'punto de interrupción:' } },
-  },
-  anula: {
-    [forgeNamespace('puntos de interrupción')]: { es: { punto de interrupción: 'Vista:' } },
-  },
+espacio de nombres: forgeNamespace('mis-notas-de-cuidado'),
+espacios de nombres: {
+[forgeNamespace('mis-notas-de-cuidado')]: { es: { nav: { notas: 'Notas' } } },
+[forgeNamespace('puntos de interrupción')]: { es: { punto de interrupción: 'punto de interrupción:' } },
+},
+anula: {
+[forgeNamespace('puntos de interrupción')]: { es: { punto de interrupción: 'Vista:' } },
+},
 })
 
 ### CrearForgeI18NOpciones
@@ -241,7 +242,7 @@ Opciones aceptadas por {@link createForgeI18N}.
 **Tipo:** función
 
 ```typescript
-function getServerI18n(): I18nInstance | undefined
+function getServerI18n(): I18nInstance | undefined;
 ```
 
 Recupera la instancia i18n del lado del servidor actual del contexto de solicitud (AsyncLocalStorage),
@@ -252,33 +253,33 @@ recurrir a la instancia del servidor global configurado, si está configurado.
 **Tipo:** función
 
 ```typescript
-function runWithI18n(i18n: I18nInstance, callback: () => T): T
+function runWithI18n(i18n: I18nInstance, callback: () => T): T;
 ```
 
 Ejecuta una devolución de llamada dentro de un contexto i18n con ámbito de solicitud en el servidor.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| i18n | Instancia I18n |  |
-| devolución de llamada | () => T |  |
+| Nombre                | Tipo           | Descripción |
+| --------------------- | -------------- | ----------- |
+| i18n                  | Instancia I18n |             |
+| devolución de llamada | () => T        |             |
 
 ### establecerServidorI18n
 
 **Tipo:** función
 
 ```typescript
-function setServerI18n(i18n: I18nInstance): void
+function setServerI18n(i18n: I18nInstance): void;
 ```
 
 Configura la instancia i18n del lado del servidor de respaldo global.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| i18n | Instancia I18n |  |
+| Nombre | Tipo           | Descripción |
+| ------ | -------------- | ----------- |
+| i18n   | Instancia I18n |             |
 
 ## `src/utils/merge-locales`
 
@@ -287,7 +288,7 @@ Configura la instancia i18n del lado del servidor de respaldo global.
 **Tipo:** función
 
 ```typescript
-function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLocales
+function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLocales;
 ```
 
 Fusiona en profundidad los objetos de mensaje por configuración regional de `source` en `target`,
@@ -296,17 +297,17 @@ anula configuración regional por configuración regional.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| objetivo | ForgeLocales |  |
-| fuente | ForgeLocales |  |
+| Nombre   | Tipo         | Descripción |
+| -------- | ------------ | ----------- |
+| objetivo | ForgeLocales |             |
+| fuente   | ForgeLocales |             |
 
 ### mensajes de combinación profunda
 
 **Tipo:** función
 
 ```typescript
-function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject
+function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject;
 ```
 
 Fusiona de forma recursiva dos objetos de mensaje y devuelve un nuevo objeto. Llano
@@ -319,17 +320,17 @@ win y se conserva el resto del paquete.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| objetivo | ForgeMessageObjeto |  |
-| fuente | ForgeMessageObjeto |  |
+| Nombre   | Tipo               | Descripción |
+| -------- | ------------------ | ----------- |
+| objetivo | ForgeMessageObjeto |             |
+| fuente   | ForgeMessageObjeto |             |
 
 ### fusionarlocales
 
 **Tipo:** función
 
 ```typescript
-function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessageObject>
+function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessageObject>;
 ```
 
 Fusiona en profundidad una serie de módulos locales en un único mapa de mensajes.
@@ -337,9 +338,9 @@ Los módulos se procesan de izquierda a derecha; las entradas posteriores anulan
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| módulos | ForgeLocaleModule[] |  |
+| Nombre  | Tipo                | Descripción |
+| ------- | ------------------- | ----------- |
+| módulos | ForgeLocaleModule[] |             |
 
 ## `src/utils/namespace`
 
@@ -348,7 +349,7 @@ Los módulos se procesan de izquierda a derecha; las entradas posteriores anulan
 **Tipo:** constante
 
 ```typescript
-export const FORGE_DEFAULT_NAMESPACE
+export const FORGE_DEFAULT_NAMESPACE;
 ```
 
 Los mensajes predeterminados del espacio de nombres i18next se registran cuando no son explícitos.
@@ -360,7 +361,7 @@ resolver claves anidadas (`nav.notes`) sin deletrear un espacio de nombres.
 **Tipo:** constante
 
 ```typescript
-export const FORGE_NAMESPACE_PREFIX
+export const FORGE_NAMESPACE_PREFIX;
 ```
 
 El prefijo reservado para cada espacio de nombres de Mission Platform i18next. Paquetes
@@ -371,7 +372,7 @@ vive bajo `mp.<package_name>` y aplicaciones bajo `mp.<app_name>`.
 **Tipo:** función
 
 ```typescript
-function forgeNamespace(name: string): string
+function forgeNamespace(name: string): string;
 ```
 
 Crea un espacio de nombres Mission Platform i18next para un espacio de trabajo, p.
@@ -383,16 +384,16 @@ Crea un espacio de nombres Mission Platform i18next para un espacio de trabajo, 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombre | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| nombre | cadena |             |
 
 ### espacios de nombres locales
 
 **Tipo:** función
 
 ```typescript
-function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageObject>): ForgeNamespaceLocales
+function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageObject>): ForgeNamespaceLocales;
 ```
 
 Convierte un mapa de paquete de configuración regional única con clave de espacio de nombres: la forma del i18n
@@ -403,18 +404,18 @@ la opción {@link CreateForgeI18NOptions.namespaces} (y `overrides`) espera
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| localidad | cadena |  |
-| paquetes | Registro<string, ForgeMessageObject> |  |
+| Nombre    | Tipo                                 | Descripción |
+| --------- | ------------------------------------ | ----------- |
+| localidad | cadena                               |             |
+| paquetes  | Registro<string, ForgeMessageObject> |             |
 
 #### Contrato
 
 - **@ejemplo:** const enBundles = yaml.load(enLocaleSource) // { 'mp.breakpoints': {...}, 'mp.my-care-notes': {...} }
-crearForgeI18N({
+  crearForgeI18N({
   espacio de nombres: forgeNamespace('mis-notas-de-cuidado'),
   espacios de nombres: localeNamespaces('en', enBundles),
-})
+  })
 
 ## `src/utils/types`
 

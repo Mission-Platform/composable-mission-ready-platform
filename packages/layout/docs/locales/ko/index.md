@@ -107,12 +107,12 @@ export function LandingPage() {
 
 ### 지역 계약
 
-| 구성요소 | 명명된 지역 | 작곡 소스 |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | 웹사이트 마케팅 영웅 및 기능 섹션 |
-| `ForgeGridLayout` | `cell1` - `cell12` | 서비스 모니터 대시보드 카드 및 상태 요약 |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | 문서 탐색바/컨텍스트, 기사, 사이드바 및 바닥글 |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | 랜딩 페이지 콘텐츠와 작업을 번갈아 사용 |
+| 구성요소              | 명명된 지역                                                | 작곡 소스                                      |
+| --------------------- | ---------------------------------------------------------- | ---------------------------------------------- |
+| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | 웹사이트 마케팅 영웅 및 기능 섹션              |
+| `ForgeGridLayout`     | `cell1` - `cell12`                                         | 서비스 모니터 대시보드 카드 및 상태 요약       |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | 문서 탐색바/컨텍스트, 기사, 사이드바 및 바닥글 |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | 랜딩 페이지 콘텐츠와 작업을 번갈아 사용        |
 
 `ForgeGridLayout`은 `rows` 및 `columns`를 허용하고 둘 다 1 이상으로 고정하고 렌더링 가능 영역을 12개로 제한합니다.
 중단점 아래에서 단일 열 대체를 사용합니다. 명명된 셀은 항상 소스 순서대로 렌더링됩니다.

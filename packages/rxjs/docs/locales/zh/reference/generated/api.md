@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined
+function useObservable(source: Observable<T>): T | undefined;
 ```
 
 订阅 `source` 并返回其最新发射作为状态。退货
@@ -24,9 +24,9 @@ function useObservable(source: Observable<T>): T | undefined
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | Observable<T> |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 来源 | Observable<T> |      |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -45,7 +45,11 @@ export interface Unsubscribable
 **种类：**功能
 
 ```typescript
-function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T>> | ((value: T) => void), dependencies: MpDependencyList = []): void
+function useSubscribe(
+  source: Observable<T>,
+  observerOrNext?: Partial<Observer<T>> | ((value: T) => void),
+  dependencies: MpDependencyList = [],
+): void;
 ```
 
 使用给定的 `observer`（或 `next` 回调）订阅 `source`
@@ -54,18 +58,18 @@ function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | Observable<T> |  |
-|观察者或下一个 |部分<Observer<T>> \| （（值：T）=>无效）|  |
-|依赖关系 | MpDependencyList | MpDependencyList |  |
+| 名称           | 类型                                     | 描述             |
+| -------------- | ---------------------------------------- | ---------------- |
+| 来源           | Observable<T>                            |                  |
+| 观察者或下一个 | 部分<Observer<T>> \| （（值：T）=>无效） |                  |
+| 依赖关系       | MpDependencyList                         | MpDependencyList |     |
 
 ### 使用订阅
 
 **种类：**功能
 
 ```typescript
-function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void
+function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void;
 ```
 
 挂载后运行 `subscribe` 并在卸载时取消订阅其结果（并且
@@ -74,7 +78,7 @@ function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDepend
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|订阅 | () => 取消订阅 |  |
-|依赖关系 | MpDependencyList | MpDependencyList |  |
+| 名称     | 类型             | 描述             |
+| -------- | ---------------- | ---------------- |
+| 订阅     | () => 取消订阅   |                  |
+| 依赖关系 | MpDependencyList | MpDependencyList |     |

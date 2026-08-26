@@ -16,23 +16,23 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-figma
 **Art:** Funktion
 
 ```typescript
-function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server
+function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeBridgeServerOptions |  |
+| Name     | Geben Sie                | ein Beschreibung |
+| -------- | ------------------------ | ---------------- |
+| Optionen | ForgeBridgeServerOptions |                  |
 
 ### DEFAULT_EXPORT_PATH
 
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_EXPORT_PATH
+export const DEFAULT_EXPORT_PATH;
 ```
 
 Keine Beschreibung angegeben.
@@ -42,7 +42,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_MAX_FILE_BYTES
+export const DEFAULT_MAX_FILE_BYTES;
 ```
 
 Keine Beschreibung angegeben.
@@ -52,7 +52,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_MAX_REQUEST_BYTES
+export const DEFAULT_MAX_REQUEST_BYTES;
 ```
 
 Keine Beschreibung angegeben.
@@ -62,17 +62,17 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>
+function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | unbekannt |  |
-| Optionen | ForgeBridgeOptions |  |
+| Name     | Geben Sie          | ein Beschreibung |
+| -------- | ------------------ | ---------------- |
+| Wert     | unbekannt          |                  |
+| Optionen | ForgeBridgeOptions |                  |
 
 ### ForgeBridgeOptions
 
@@ -99,16 +99,18 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number }): Promise<Server>
+function startForgeBridgeServer(
+  options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
+): Promise<Server>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeBridgeServerOptions & { readonly host?: string; schreibgeschützter Port?: Nummer } |  |
+| Name     | Geben Sie                                                                               | ein Beschreibung |
+| -------- | --------------------------------------------------------------------------------------- | ---------------- |
+| Optionen | ForgeBridgeServerOptions & { readonly host?: string; schreibgeschützter Port?: Nummer } |                  |
 
 ## `src/protocol`
 
@@ -117,7 +119,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const FORGE_BRIDGE_PROTOCOL_VERSION
+export const FORGE_BRIDGE_PROTOCOL_VERSION;
 ```
 
 Keine Beschreibung angegeben.
@@ -167,7 +169,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse
+function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse;
 ```
 
 Keine Beschreibung angegeben.
@@ -175,5 +177,5 @@ Keine Beschreibung angegeben.
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | unbekannt |  |
+| ---- | --------- | ---------------- |
+| Wert | unbekannt |                  |

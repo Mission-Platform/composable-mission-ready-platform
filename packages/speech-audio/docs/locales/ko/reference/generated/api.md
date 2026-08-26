@@ -26,7 +26,7 @@ export interface MidiControls
 **종류:** 기능
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 프레임워크 중립적인 웹 MIDI 후크. MIDI 액세스를 요청하고 사용 가능한 트랙을 추적합니다.
@@ -53,7 +53,7 @@ export interface SoundControls
 **종류:** 기능
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 프레임워크 중립적인 사운드 재생 후크. 다음을 통해 `source`의 오디오 클립을 재생합니다.
@@ -66,9 +66,9 @@ SSR 안전: `isSupported`은 `false`이며 모든 컨트롤은 다음과 같은 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 출처 | 문자열 |      |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ export interface SpeechRecognitionOptions
 **종류:** 기능
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 브라우저의 기본 기반으로 구축된 프레임워크 중립적인 음성-텍스트 후크
@@ -135,7 +135,7 @@ export interface SpeechSynthesisControls
 **종류:** 기능
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 브라우저의 기본 기반으로 구축된 프레임워크 중립적인 텍스트 음성 변환 후크

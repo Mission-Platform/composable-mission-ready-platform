@@ -107,12 +107,12 @@ export function LandingPage() {
 
 ### 区域合同
 
-|组件|命名区域 |作文来源|
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| `ForgeBentoLayout` | `hero`、`feature`、`supporting` |网站营销英雄和特色部分|
-| `ForgeGridLayout` | `cell1` 至 `cell12` |服务监控仪表板卡和状态摘要 |
-| `ForgeFPatternLayout` | `header`、`intro`、`primary`、`secondary`、`footer` |文档导航栏/上下文、文章、侧边栏和页脚 |
-| `ForgeZPatternLayout` | `topStart`、`topEnd`、`middle`、`bottomStart`、`bottomEnd` |交替登陆页面内容和操作|
+| 组件                  | 命名区域                                                   | 作文来源                              |
+| --------------------- | ---------------------------------------------------------- | ------------------------------------- |
+| `ForgeBentoLayout`    | `hero`、`feature`、`supporting`                            | 网站营销英雄和特色部分                |
+| `ForgeGridLayout`     | `cell1` 至 `cell12`                                        | 服务监控仪表板卡和状态摘要            |
+| `ForgeFPatternLayout` | `header`、`intro`、`primary`、`secondary`、`footer`        | 文档导航栏/上下文、文章、侧边栏和页脚 |
+| `ForgeZPatternLayout` | `topStart`、`topEnd`、`middle`、`bottomStart`、`bottomEnd` | 交替登陆页面内容和操作                |
 
 `ForgeGridLayout` 接受 `rows` 和 `columns`，将两者限制为 1 或更大，将可渲染区域限制为 12 个命名区域
 单元格，并在其断点以下使用单列回退。命名单元格始终按源顺序呈现。

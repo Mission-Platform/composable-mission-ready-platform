@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/storybook-f
 **Art:** Funktion
 
 ```typescript
-function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig
+function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig;
 ```
 
 Erstellen Sie eine einheitliche {@link StorybookConfig} für das aktive Framework. Eins
@@ -25,9 +25,9 @@ rendert den gleichen Story-Satz im ausgewählten Framework.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | CreateStorybookConfigOptions |  |
+| Name     | Geben Sie                    | ein Beschreibung |
+| -------- | ---------------------------- | ---------------- |
+| Optionen | CreateStorybookConfigOptions |                  |
 
 ### CreateStorybookConfigOptions
 
@@ -44,7 +44,7 @@ Optionen für {@link createStorybookConfig}.
 **Art:** Funktion
 
 ```typescript
-function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework
+function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework;
 ```
 
 Lösen Sie das aktive Framework anhand der expliziten Option oder des auf
@@ -53,9 +53,9 @@ Wert, damit ein Tippfehler schnell fehlschlägt, anstatt stillschweigend das fal
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| explizit | StorybookFramework |  |
+| Name     | Geben Sie          | ein Beschreibung |
+| -------- | ------------------ | ---------------- |
+| explizit | StorybookFramework |                  |
 
 ### StorybookFramework
 
@@ -72,7 +72,7 @@ Die Frameworks, auf denen eine einheitliche Storybook-App Geschichten rendern ka
 **Art:** Funktion
 
 ```typescript
-function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[]
+function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[];
 ```
 
 Erstellen Sie die gemeinsam genutzten neutralen Story-Globs für angeforderte Pakete.
@@ -81,11 +81,11 @@ In jeder aktiven Workbench muss das gleiche einmal beschreibbare Story-Inventar 
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| _framework | StorybookFramework |  |
-| Pakete | schreibgeschützter String[] |  |
-| PaketeRoot | Zeichenfolge |  |
+| Name       | Geben Sie                   | ein Beschreibung |
+| ---------- | --------------------------- | ---------------- |
+| _framework | StorybookFramework          |                  |
+| Pakete     | schreibgeschützter String[] |                  |
+| PaketeRoot | Zeichenfolge                |                  |
 
 ## `src/preview`
 
@@ -94,7 +94,7 @@ In jeder aktiven Workbench muss das gleiche einmal beschreibbare Story-Inventar 
 **Art:** Funktion
 
 ```typescript
-function sharedPreviewDecorators()
+function sharedPreviewDecorators();
 ```
 
 Gemeinsame Storybook-Dekoratoren für alle Frameworks.
@@ -104,7 +104,7 @@ Gemeinsame Storybook-Dekoratoren für alle Frameworks.
 **Art:** konstant
 
 ```typescript
-export const sharedPreviewParameters
+export const sharedPreviewParameters;
 ```
 
 Gemeinsame Storybook-Parameter für alle Frameworks.
@@ -114,7 +114,7 @@ Gemeinsame Storybook-Parameter für alle Frameworks.
 **Art:** Funktion
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework)
+function sharedPreviewParametersFor(framework?: PreviewFramework);
 ```
 
 Framework-fähige Storybook-Parameter.
@@ -131,9 +131,9 @@ Quellenbereich.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Rahmen | PreviewFramework |  |
+| Name   | Geben Sie        | ein Beschreibung |
+| ------ | ---------------- | ---------------- |
+| Rahmen | PreviewFramework |                  |
 
 ## `src/slots.dom`
 
@@ -142,7 +142,7 @@ Quellenbereich.
 **Art:** Funktion
 
 ```typescript
-function customElementTag(component: unknown): string
+function customElementTag(component: unknown): string;
 ```
 
 Leiten Sie den registrierten Tag-Namen einer Forge-Webkomponente von ihrem Element ab
@@ -152,9 +152,9 @@ Der Fallback des Klassennamens spiegelt den des Emitters wider `kebabCase(name)`
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | unbekannt |  |
+| Name       | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ---------------- |
+| Komponente | unbekannt |                  |
 
 ## `src/slots.neutral`
 
@@ -163,7 +163,7 @@ Der Fallback des Klassennamens spiegelt den des Emitters wider `kebabCase(name)`
 **Art:** konstant
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Platzhalterfragmentfabrik; nie aufgerufen (siehe {@link node}).
@@ -173,7 +173,7 @@ Platzhalterfragmentfabrik; nie aufgerufen (siehe {@link node}).
 **Art:** konstant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Keine Beschreibung angegeben.
@@ -187,7 +187,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Keine Beschreibung angegeben.
@@ -203,7 +203,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Keine Beschreibung angegeben.
@@ -217,7 +217,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Keine Beschreibung angegeben.
@@ -233,7 +233,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Solid hat keine Fragmentkomponente: Ein Array von untergeordneten Elementen ist ein Fragment.
@@ -243,7 +243,7 @@ Solid hat keine Fragmentkomponente: Ein Array von untergeordneten Elementen ist 
 **Art:** konstant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Keine Beschreibung angegeben.
@@ -257,7 +257,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Keine Beschreibung angegeben.
@@ -273,7 +273,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Markierungskomponente für JSX-Fragmente – ihre untergeordneten Elemente werden direkt in das übergeordnete Element eingebunden.
@@ -283,7 +283,7 @@ Markierungskomponente für JSX-Fragmente – ihre untergeordneten Elemente werde
 **Art:** konstant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Keine Beschreibung angegeben.
@@ -297,7 +297,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Keine Beschreibung angegeben.
@@ -313,7 +313,12 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type RenderWithSlots = ( component: unknown, properties: Record<string, unknown>, slots: StorySlots, children?: unknown, ) => unknown;
+export type RenderWithSlots = (
+  component: unknown,
+  properties: Record<string, unknown>,
+  slots: StorySlots,
+  children?: unknown,
+) => unknown;
 ```
 
 Machen `component` mit `properties`, der gegebene Name `slots` und optional
@@ -325,7 +330,11 @@ verbraucht.
 **Art:** Typ
 
 ```typescript
-export type StoryNodeFactory = ( type: unknown, properties?: Record<string, unknown> | null, ...children: unknown[] ) => unknown;
+export type StoryNodeFactory = (
+  type: unknown,
+  properties?: Record<string, unknown> | null,
+  ...children: unknown[]
+) => unknown;
 ```
 
 Erstellen Sie ein Element für den aktiven Renderer. Dient auch als klassisches JSX
@@ -349,7 +358,7 @@ Inhalt für die benannten Steckplätze einer Komponente, kodiert nach Steckplatz
 **Art:** konstant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Keine Beschreibung angegeben.
@@ -363,7 +372,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Keine Beschreibung angegeben.
@@ -379,7 +388,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Markierungskomponente für JSX-Fragmente – gerendert als `DocumentFragment`.
@@ -389,7 +398,7 @@ Markierungskomponente für JSX-Fragmente – gerendert als `DocumentFragment`.
 **Art:** konstant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Keine Beschreibung angegeben.
@@ -403,7 +412,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Keine Beschreibung angegeben.
@@ -431,7 +440,10 @@ Typ (`Meta<MyComponentProps>`), Spiegelung des Renderers `Meta` Ergonomie.
 **Art:** Typ
 
 ```typescript
-export type StoryObj<TMetaOrComponentOrArgs = Args> = TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments> ? StoryAnnotations<Renderer, TArguments> : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
+export type StoryObj<TMetaOrComponentOrArgs = Args> =
+  TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
+    ? StoryAnnotations<Renderer, TArguments>
+    : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
 Framework-unabhängiges Storybook `StoryObj`, das neutrale Gegenstück zu

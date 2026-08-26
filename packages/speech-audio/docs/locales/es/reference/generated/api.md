@@ -26,7 +26,7 @@ Estado reactivo y controles devueltos por {@link useMidi}.
 **Tipo:** función
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 Gancho Web MIDI neutral en el marco. Solicita acceso MIDI, rastrea los disponibles
@@ -53,7 +53,7 @@ Estado reactivo y controles devueltos por {@link useSound}.
 **Tipo:** función
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 Gancho de reproducción de sonido neutral en el marco. Reproduce un clip de audio de `source` a través de
@@ -66,9 +66,9 @@ desmontar.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fuente | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| fuente | cadena |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ Opciones aplicadas al iniciar una sesión de {@link useSpeechRecognition}.
 **Tipo:** función
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 Enlace de voz a texto neutral en el marco de trabajo creado en el navegador nativo
@@ -135,7 +135,7 @@ Estado reactivo y controles devueltos por {@link useSpeechSynthesis}.
 **Tipo:** función
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 Enlace de texto a voz neutral en el marco de trabajo integrado en el navegador nativo

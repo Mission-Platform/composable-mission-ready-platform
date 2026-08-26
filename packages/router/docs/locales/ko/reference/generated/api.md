@@ -16,39 +16,39 @@
 **종류:** 기능
 
 ```typescript
-function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities
+function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities;
 ```
 
 대상 어댑터, SSR 또는 테스트에 대한 중립 기능 개체를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 재정의 | MpRouterCapabilityOverrides |  |
+| 이름   | 유형                        | 설명 |
+| ------ | --------------------------- | ---- |
+| 재정의 | MpRouterCapabilityOverrides |      |
 
 ### isMpRouterCapabilityError
 
 **종류:** 기능
 
 ```typescript
-function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError
+function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError;
 ```
 
 알 수 없는 오류가 결정적 중립 라우터 대체 오류인지 여부입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 오류 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 오류 | 알 수 없음 |      |
 
 ### MP_ROUTER_COMPILER_MARKER
 
 **종류:** 상수
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Forge 라우터 컴파일러 플러그인에서 사용되는 안정적인 메타데이터입니다.
@@ -58,16 +58,16 @@ Forge 라우터 컴파일러 플러그인에서 사용되는 안정적인 메타
 **종류:** 구성요소
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor
+function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 중립 링크 마커. 네이티브 대상은 컴파일 중에 이 함수를 대체합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | MpLinkProps |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 속성 | MpLinkProps |      |
 
 ### MpLink 설명자
 
@@ -154,16 +154,16 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **종류:** 구성요소
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor
+function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
 ```
 
 중립 콘센트/뷰 마커. 네이티브 대상은 컴파일 중에 이 함수를 대체합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | MpRouterViewProps |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 속성 | MpRouterViewProps |      |
 
 ### MpRouterView설명자
 
@@ -190,7 +190,10 @@ export interface MpRouterViewProps
 **종류:** 기능
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string
+function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string;
 ```
 
 앱 소유 라우터를 통해 대상을 해결합니다. 선택적 기능
@@ -198,17 +201,17 @@ function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabi
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
-| 능력 | Pick<MpRouterCapabilities, 'resolve'> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 에   | MpRouteLocationRaw                    |      |
+| 능력 | Pick<MpRouterCapabilities, 'resolve'> |      |
 
 ### useMpNavigation
 
 **종류:** 기능
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 필수 탐색 기능만 읽으십시오.
@@ -218,7 +221,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **종류:** 기능
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 현재 앱 소유 경로를 읽습니다. 컴파일되지 않은 폴백은 SSR 안전하며
@@ -229,7 +232,7 @@ function useMpRoute(): MpResolvedLocation | null
 **종류:** 기능
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 앱에서 제공하는 중립 기능 개체를 읽습니다.
@@ -241,7 +244,7 @@ function useMpRouter(): MpRouterCapabilities
 **종류:** 상수
 
 ```typescript
-export const applicationCompatibilityFixtures
+export const applicationCompatibilityFixtures;
 ```
 
 설명이 제공되지 않았습니다.
@@ -251,7 +254,7 @@ export const applicationCompatibilityFixtures
 **종류:** 상수
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 문서 앱의 로케일/검색/포괄 테이블을 미러링하여 레코드를 라우팅합니다.
@@ -261,7 +264,7 @@ export const documentationCompatibilityFixture: ForgeCompatibilityFixture
 **종류:** 상수
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 문서 앱의 로케일/검색/포괄 테이블을 미러링하여 레코드를 라우팅합니다.
@@ -291,7 +294,7 @@ export interface ForgeCompatibilityFixture
 **종류:** 상수
 
 ```typescript
-export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
+export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 My Care Notes의 언어 세그먼트 및 URL 기반 오버레이를 미러링하여 기록을 라우팅합니다.
@@ -301,7 +304,7 @@ My Care Notes의 언어 세그먼트 및 URL 기반 오버레이를 미러링하
 **종류:** 상수
 
 ```typescript
-export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
+export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[];
 ```
 
 모든 런타임의 계약 테스트 도구 모음에서 사용되는 공유 동작 행입니다.
@@ -311,7 +314,7 @@ export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
 **종류:** 상수
 
 ```typescript
-export const websiteCompatibilityFixture: ForgeCompatibilityFixture
+export const websiteCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 웹 사이트의 선택적 접두사가 붙은 로케일 홈 경로를 미러링하는 경로 기록입니다.
@@ -705,7 +708,7 @@ export type ForgeScrollPosition = MpScrollPosition;
 **종류:** 기능
 
 ```typescript
-function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
+function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver;
 ```
 
 경로 트리에 바인딩된 {@link MpRouteResolver}를 생성하고 이를 한 번 평면화하여
@@ -713,16 +716,16 @@ function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 노선 | 읽기 전용 MpRoute[] |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 노선 | 읽기 전용 MpRoute[] |      |
 
 ### 경로 정의
 
 **종류:** 기능
 
 ```typescript
-function defineRoutes(routes: T): T
+function defineRoutes(routes: T): T;
 ```
 
 전체 유형으로 프레임워크 중립 경로 트리를 정의하는 ID 도우미
@@ -731,39 +734,39 @@ function defineRoutes(routes: T): T
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 노선 | 티 |  |
+| ---- | ---- | ---- |
+| 노선 | 티   |      |
 
 #### 계약
 
 - **@예:** const 경로 = 정의Routes([
   { 경로: '/', 이름: '홈', 구성요소: 홈 },
   { 경로: '/users/:id', 이름: 'user', 구성 요소: 사용자 },
-])
+  ])
 
 ### 이름별 경로 찾기
 
 **종류:** 기능
 
 ```typescript
-function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined
+function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined;
 ```
 
 주어진 이름을 가진 첫 번째 평면화된 경로를 찾습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 노선 | 읽기 전용 MpRoute[] |  |
-| 이름 | 문자열 |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 노선 | 읽기 전용 MpRoute[] |      |
+| 이름 | 문자열              |      |
 
 ### flattenRoutes
 
 **종류:** 기능
 
 ```typescript
-function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
+function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[];
 ```
 
 다음을 사용하여 중첩된 경로 트리를 절대 경로의 깊이 우선 목록으로 평면화합니다.
@@ -772,16 +775,16 @@ function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 노선 | 읽기 전용 MpRoute[] |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 노선 | 읽기 전용 MpRoute[] |      |
 
 ### matchRoutes
 
 **종류:** 기능
 
 ```typescript
-function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined
+function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined;
 ```
 
 경로 트리와 경로 이름을 일치시켜 첫 번째 경로를 반환합니다(
@@ -789,10 +792,10 @@ function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 노선 | 읽기 전용 MpRoute[] |  |
-| 경로명 | 문자열 |  |
+| 이름   | 유형                | 설명 |
+| ------ | ------------------- | ---- |
+| 노선   | 읽기 전용 MpRoute[] |      |
+| 경로명 | 문자열              |      |
 
 ### MpFlat 경로
 
@@ -829,7 +832,7 @@ export interface MpRouteResolver
 **종류:** 기능
 
 ```typescript
-function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation
+function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation;
 ```
 
 프레임워크 중립적인 {@link MpRouteLocationRaw}를 완전한 형식으로 해결합니다.
@@ -839,15 +842,15 @@ function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
-| 노선 | 읽기 전용 MpRoute[] |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 에   | MpRouteLocationRaw  |      |
+| 노선 | 읽기 전용 MpRoute[] |      |
 
 #### 계약
 
 - **@예:** 해결 위치({ 이름: '사용자', 매개변수: { id: 42 } }, 경로)
-// → { 경로: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
+  // → { 경로: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
 
 ## `src/location`
 
@@ -876,44 +879,44 @@ URL의 분해된 부분: 경로 이름, 쿼리 및 해시.
 **종류:** 기능
 
 ```typescript
-function normalizeHash(hash: string): string
+function normalizeHash(hash: string): string;
 ```
 
 단일 선행 `#`을 포함하거나 비어 있도록 해시 조각을 정규화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 해시 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 해시 | 문자열 |      |
 
 ### 파싱위치
 
 **종류:** 기능
 
 ```typescript
-function parseLocation(url: string): MpLocationParts
+function parseLocation(url: string): MpLocationParts;
 ```
 
 앱 상대 URL을 {@link MpLocationParts}로 분할합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| URL | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| URL  | 문자열 |      |
 
 #### 계약
 
 - **@예:**parseLocation('/users/42?tab=info#bio')
-// → { 경로: '/users/42', 쿼리: { 탭: 'info' }, 해시: '#bio' }
+  // → { 경로: '/users/42', 쿼리: { 탭: 'info' }, 해시: '#bio' }
 
 ### stringify위치
 
 **종류:** 기능
 
 ```typescript
-function stringifyLocation(location: MpLocationInput): string
+function stringifyLocation(location: MpLocationInput): string;
 ```
 
 위치 부분에서 앱 상대 URL 문자열을 조합합니다. 경로 이름은 다음과 같습니다.
@@ -922,14 +925,14 @@ function stringifyLocation(location: MpLocationInput): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위치 | Mp위치 입력 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 위치 | Mp위치 입력 |      |
 
 #### 계약
 
 - **@예:** stringifyLocation({ 경로: '/users/42', 쿼리: { 탭: 'info' }, 해시: 'bio' })
-// → '/users/42?tab=info#bio'
+  // → '/users/42?tab=info#bio'
 
 ## `src/path`
 
@@ -938,7 +941,10 @@ function stringifyLocation(location: MpLocationInput): string
 **종류:** 기능
 
 ```typescript
-function buildPath(pattern: string, parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {}): string
+function buildPath(
+  pattern: string,
+  parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {},
+): string;
 ```
 
 패턴과 매개변수 세트로부터 구체적인 경로명을 구축하고, 인코딩
@@ -947,23 +953,23 @@ function buildPath(pattern: string, parameters: Record<string, MpParameterValue 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 패턴 | 문자열 |  |
-| 매개변수 | 기록<string, MpParameterValue \| readonly MpParameterValue[]> |  |
+| 이름     | 유형                                                          | 설명 |
+| -------- | ------------------------------------------------------------- | ---- |
+| 패턴     | 문자열                                                        |      |
+| 매개변수 | 기록<string, MpParameterValue \| readonly MpParameterValue[]> |      |
 
 #### 계약
 
 - **@example:** buildPath('/users/:id', { id: 42 }) // → '/users/42'
-buildPath('/users/:id?', {}) // → '/users'
-buildPath('/files/:rest*', { 나머지: ['a', 'b'] }) // → '/files/a/b'
+  buildPath('/users/:id?', {}) // → '/users'
+  buildPath('/files/:rest*', { 나머지: ['a', 'b'] }) // → '/files/a/b'
 
 ### 컴파일경로
 
 **종류:** 기능
 
 ```typescript
-function compilePath(pattern: string): MpCompiledPath
+function compilePath(pattern: string): MpCompiledPath;
 ```
 
 순서가 지정된 경로 패턴을 {@link MpCompiledPath}로 컴파일합니다.
@@ -971,9 +977,9 @@ function compilePath(pattern: string): MpCompiledPath
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 패턴 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 패턴 | 문자열 |      |
 
 #### 계약
 
@@ -984,7 +990,7 @@ function compilePath(pattern: string): MpCompiledPath
 **종류:** 기능
 
 ```typescript
-function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined
+function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined;
 ```
 
 경로명을 패턴과 일치시켜 추출된 매개변수를 반환하거나
@@ -992,15 +998,15 @@ function matchPath(pattern: string, pathname: string): MpRouteParameters | undef
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 패턴 | 문자열 |  |
-| 경로명 | 문자열 |  |
+| 이름   | 유형   | 설명 |
+| ------ | ------ | ---- |
+| 패턴   | 문자열 |      |
+| 경로명 | 문자열 |      |
 
 #### 계약
 
 - **@example:** matchPath('/users/:id', '/users/42') // → { id: '42' }
-matchPath('/users/:id', '/posts/42') // → 정의되지 않음
+  matchPath('/users/:id', '/posts/42') // → 정의되지 않음
 
 ### Mp컴파일된 경로
 
@@ -1027,7 +1033,7 @@ export interface MpPathParameterKey
 **종류:** 기능
 
 ```typescript
-function normalizePath(path: string): string
+function normalizePath(path: string): string;
 ```
 
 경로 패턴(또는 경로 이름)을 정식 선행 슬래시 형식으로 정규화합니다.
@@ -1035,16 +1041,16 @@ function normalizePath(path: string): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 경로 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 경로 | 문자열 |      |
 
 ### WILDCARD_PARAM_KEY
 
 **종류:** 상수
 
 ```typescript
-export const WILDCARD_PARAM_KEY
+export const WILDCARD_PARAM_KEY;
 ```
 
 독립형 `*` 포괄 세그먼트가 캡처되는 키입니다.
@@ -1056,7 +1062,7 @@ export const WILDCARD_PARAM_KEY
 **종류:** 기능
 
 ```typescript
-function parseQuery(search: string): MpQueryParameters
+function parseQuery(search: string): MpQueryParameters;
 ```
 
 쿼리 문자열을 {@link MpQueryParameters} 맵으로 구문 분석합니다. 대표적인 `?`은 다음과 같습니다.
@@ -1064,9 +1070,9 @@ function parseQuery(search: string): MpQueryParameters
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 검색 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 검색 | 문자열 |      |
 
 #### 계약
 
@@ -1077,7 +1083,7 @@ function parseQuery(search: string): MpQueryParameters
 **종류:** 기능
 
 ```typescript
-function stringifyQuery(query: MpQueryInput): string
+function stringifyQuery(query: MpQueryInput): string;
 ```
 
 선행 `?`을 사용하여 {@link MpQueryInput} 맵을 쿼리 문자열로 직렬화합니다.
@@ -1086,14 +1092,14 @@ function stringifyQuery(query: MpQueryInput): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 쿼리 | MpQuery입력 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 쿼리 | MpQuery입력 |      |
 
 #### 계약
 
 - **@example:** stringifyQuery({ 태그: ['a', 'b'], 페이지: 2 }) // → '?tag=a&tag=b&page=2'
-stringifyQuery({}) // → ''
+  stringifyQuery({}) // → ''
 
 ## `src/types`
 
@@ -1318,7 +1324,8 @@ export interface MpReadonlySignal<Value>
 **종류:** 구성요소
 
 ```typescript
-export type MpRedirect = MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
 ```
 
 선택적으로 대상 경로에서 계산되는 리디렉션 대상입니다.
@@ -1370,7 +1377,10 @@ export type MpRouteChangeListener = (event: MpRouteChangeEvent) => void;
 **종류:** 구성요소
 
 ```typescript
-export type MpRouteGuard = ( to: MpResolvedLocation, from: MpResolvedLocation | null, ) => MpGuardOutcome | Promise<MpGuardOutcome>;
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
 ```
 
 런타임 소유 탐색 상태 머신에 의해 평가되는 경로 가드입니다.
@@ -1473,7 +1483,11 @@ export interface MpRouteViewContext<View = unknown>
 **종류:** 구성요소
 
 ```typescript
-export type MpScrollBehavior = ( to: MpResolvedLocation, from: MpResolvedLocation | null, savedPosition?: MpScrollPosition, ) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
 ```
 
 설명이 제공되지 않았습니다.

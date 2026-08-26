@@ -16,23 +16,23 @@
 **種類:** 関数
 
 ```typescript
-function createVCard(options: VCardOptions): VCard
+function createVCard(options: VCardOptions): VCard;
 ```
 
 便利なオプションを完全な書き込み可能な vCard ドキュメントに変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | Vカードオプション |  |
+| 名前       | タイプ            | 説明 |
+| ---------- | ----------------- | ---- |
+| オプション | Vカードオプション |      |
 
 ### VCard を解析する
 
 **種類:** 定数
 
 ```typescript
-export const parseVCard
+export const parseVCard;
 ```
 
 パーサー用語を好む呼び出し元のエイリアス。
@@ -42,39 +42,39 @@ export const parseVCard
 **種類:** 関数
 
 ```typescript
-function readVCard(source: string): VCard[]
+function readVCard(source: string): VCard[];
 ```
 
 未知のプロパティを保持しながら 1 つ以上の vCard ブロックを解析します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ソース | 文字列 |      |
 
 ### toVCardOptions
 
 **種類:** 関数
 
 ```typescript
-function toVCardOptions(card: VCard): VCardOptions
+function toVCardOptions(card: VCard): VCardOptions;
 ```
 
 解析されたカードを、QR ビルダーで使用される便利なオプションにマッピングし直します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|カード | VCカード |  |
+| 名前   | タイプ   | 説明 |
+| ------ | -------- | ---- |
+| カード | VCカード |      |
 
 ### vカード
 
 **種類:** 関数
 
 ```typescript
-function vCard(options: VCardOptions): string
+function vCard(options: VCardOptions): string;
 ```
 
 連絡先を記述する vCard 3.0 ペイロード。複数の電話番号/メールアドレスは、
@@ -82,9 +82,9 @@ function vCard(options: VCardOptions): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | Vカードオプション |  |
+| 名前       | タイプ            | 説明 |
+| ---------- | ----------------- | ---- |
+| オプション | Vカードオプション |      |
 
 ### Vカード
 
@@ -121,32 +121,32 @@ export interface VCardProperty
 **種類:** 関数
 
 ```typescript
-function writeVCard(card: VCard): string
+function writeVCard(card: VCard): string;
 ```
 
 QR およびテキスト ペイロードに LF 行末を使用して、1 つの完全な vCard をシリアル化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|カード | VCカード |  |
+| 名前   | タイプ   | 説明 |
+| ------ | -------- | ---- |
+| カード | VCカード |      |
 
 ### writeVCard
 
 **種類:** 関数
 
 ```typescript
-function writeVCards(cards: readonly VCard[]): string
+function writeVCards(cards: readonly VCard[]): string;
 ```
 
 1 つ以上の解析されたカードをシリアル化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|カード |読み取り専用 VCard[] |  |
+| 名前   | タイプ               | 説明 |
+| ------ | -------------------- | ---- |
+| カード | 読み取り専用 VCard[] |      |
 
 ## `src/ast/vevent`
 
@@ -247,204 +247,204 @@ export type VEventTransp = 'OPAQUE' | 'TRANSPARENT';
 **種類:** 関数
 
 ```typescript
-function addDays(date: Date, days: number): Date
+function addDays(date: Date, days: number): Date;
 ```
 
 `days` を JS 日付 (ローカル ゾーン) に追加します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|日付 |日付 |  |
-|日 |番号 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 日付 | 日付   |      |
+| 日   | 番号   |      |
 
 ### 月を追加
 
 **種類:** 関数
 
 ```typescript
-function addMonths(date: Date, months: number): Date
+function addMonths(date: Date, months: number): Date;
 ```
 
 `months` を JS 日付 (ローカル ゾーン) に追加します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|日付 |日付 |  |
-|月 |番号 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 日付 | 日付   |      |
+| 月   | 番号   |      |
 
 ### 年を追加
 
 **種類:** 関数
 
 ```typescript
-function addYears(date: Date, years: number): Date
+function addYears(date: Date, years: number): Date;
 ```
 
 `years` を JS 日付 (ローカル ゾーン) に追加します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|日付 |日付 |  |
-|年 |番号 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 日付 | 日付   |      |
+| 年   | 番号   |      |
 
 ### 日キー
 
 **種類:** 関数
 
 ```typescript
-function dayKey(iso: string): string
+function dayKey(iso: string): string;
 ```
 
 EXDATE および RDATE の照合に使用されるローカル日付キーを返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イソ |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| イソ | 文字列 |      |
 
 ### fmtいいね
 
 **種類:** 関数
 
 ```typescript
-function fmtLike(source: string, dateTime: DateTime): string
+function fmtLike(source: string, dateTime: DateTime): string;
 ```
 
 Luxon DateTime をソース文字列と同じ ISO 表現にフォーマットし直します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|日付時刻 |日時 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| ソース   | 文字列 |      |
+| 日付時刻 | 日時   |      |
 
 ### 今日は一日中
 
 **種類:** 関数
 
 ```typescript
-function isAllDay(iso: string): boolean
+function isAllDay(iso: string): boolean;
 ```
 
 ISO 文字列が日付のみの値 (YYYY-MM-DD) の場合に true を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イソ |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| イソ | 文字列 |      |
 
 ### 解析日
 
 **種類:** 関数
 
 ```typescript
-function parseDate(iso: string): Date
+function parseDate(iso: string): Date;
 ```
 
 ISO 日時/日付文字列を JS 日付に解析します (パブリック API 互換性のため)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イソ |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| イソ | 文字列 |      |
 
 ### 解析DT
 
 **種類:** 関数
 
 ```typescript
-function parseDT(iso: string): DateTime
+function parseDT(iso: string): DateTime;
 ```
 
 ISO 日時/日付文字列を Luxon DateTime (ローカル ゾーン) に解析します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イソ |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| イソ | 文字列 |      |
 
 ### 一日の始まり
 
 **種類:** 関数
 
 ```typescript
-function startOfDay(date: Date): Date
+function startOfDay(date: Date): Date;
 ```
 
 JS Date (ローカルゾーン) の 1 日の始まり。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|日付 |日付 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 日付 | 日付   |      |
 
 ### 月の始まり
 
 **種類:** 関数
 
 ```typescript
-function startOfMonth(date: Date): Date
+function startOfMonth(date: Date): Date;
 ```
 
 `date` (ローカル ゾーン) を含む月の始まり。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|日付 |日付 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 日付 | 日付   |      |
 
 ### 週の始まり
 
 **種類:** 関数
 
 ```typescript
-function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date
+function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date;
 ```
 
 `weekStartsOn` を尊重する、`date` を含む週の始まり。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|日付 |日付 |  |
-|週の始まり | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| 日付       | 日付                            |      |
+| 週の始まり | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 |      |
 
 ### 年の始まり
 
 **種類:** 関数
 
 ```typescript
-function startOfYear(date: Date): Date
+function startOfYear(date: Date): Date;
 ```
 
 `date` (ローカル ゾーン) を含む年の始まり。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|日付 |日付 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 日付 | 日付   |      |
 
 ### WEEKDAY_LUXON
 
 **種類:** 定数
 
 ```typescript
-export const WEEKDAY_LUXON: Record<RRuleWeekday, number>
+export const WEEKDAY_LUXON: Record<RRuleWeekday, number>;
 ```
 
 ルクソンの曜日番号: 月 = 1 ... 日 = 7。
@@ -478,16 +478,16 @@ export type WeekStart = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 **種類:** 関数
 
 ```typescript
-function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement
+function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ForgeICalendarProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ForgeICalendarProperties> |      |
 
 ### ForgeICalendarプロパティ
 
@@ -506,16 +506,16 @@ export interface ForgeICalendarProperties
 **種類:** 関数
 
 ```typescript
-function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement
+function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ForgeVCardProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<ForgeVCardProperties> |      |
 
 ### ForgeVCardプロパティ
 
@@ -534,32 +534,32 @@ export interface ForgeVCardProperties
 **種類:** 関数
 
 ```typescript
-function calendarEvents(calendar: ICalendar): ICalendarEvent[]
+function calendarEvents(calendar: ICalendar): ICalendarEvent[];
 ```
 
 VEVENT コンポーネントを、Forge レンダラで使用される型付きイベント ビューに変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|カレンダー | Iカレンダー |  |
+| 名前       | タイプ      | 説明 |
+| ---------- | ----------- | ---- |
+| カレンダー | Iカレンダー |      |
 
 ### createICalendarEvent
 
 **種類:** 関数
 
 ```typescript
-function createICalendarEvent(event: ICalendarEvent): ICalendarComponent
+function createICalendarEvent(event: ICalendarEvent): ICalendarComponent;
 ```
 
 iCalendar への挿入に適した型付き VEVENT コンポーネントを構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | Iカレンダーイベント |  |
+| 名前     | タイプ              | 説明 |
+| -------- | ------------------- | ---- |
+| イベント | Iカレンダーイベント |      |
 
 ### Iカレンダー
 
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **種類:** 定数
 
 ```typescript
-export const parseICalendar
+export const parseICalendar;
 ```
 
 説明はありません。
@@ -626,23 +626,23 @@ export const parseICalendar
 **種類:** 関数
 
 ```typescript
-function readICalendar(source: string): ICalendar
+function readICalendar(source: string): ICalendar;
 ```
 
 RFC 5545 iCalendar ストリームを解析し、すべてのコンポーネントとプロパティを保持します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ソース | 文字列 |      |
 
 ### シリアル化ICカレンダー
 
 **種類:** 定数
 
 ```typescript
-export const serializeICalendar
+export const serializeICalendar;
 ```
 
 説明はありません。
@@ -652,13 +652,13 @@ export const serializeICalendar
 **種類:** 関数
 
 ```typescript
-function writeICalendar(calendar: ICalendar): string
+function writeICalendar(calendar: ICalendar): string;
 ```
 
 CRLF 行末と 75 オクテットセーフ折りたたみを使用して、RFC 5545 カレンダーをシリアル化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|カレンダー | Iカレンダー |  |
+| 名前       | タイプ      | 説明 |
+| ---------- | ----------- | ---- |
+| カレンダー | Iカレンダー |      |

@@ -16,39 +16,39 @@
 **种类：**功能
 
 ```typescript
-function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities
+function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities;
 ```
 
 为目标适配器、SSR 或测试创建中立功能对象。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|覆盖 | MpRouterCapabilityOverrides | MpRouterCapabilityOverrides | MpRouterCapabilityOverrides | MpRouterCapabilityOverrides  |
+| 名称 | 类型                        | 描述                        |
+| ---- | --------------------------- | --------------------------- |
+| 覆盖 | MpRouterCapabilityOverrides | MpRouterCapabilityOverrides | MpRouterCapabilityOverrides | MpRouterCapabilityOverrides |
 
 ### isMpRouterCapabilityError 错误
 
 **种类：**功能
 
 ```typescript
-function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError
+function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError;
 ```
 
 未知错误是否是确定性中立路由器回退错误。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|错误|未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 错误 | 未知 |      |
 
 ### MP_ROUTER_COMPILER_MARKER
 
 **种类：**常数
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Forge 路由器编译器插件使用的稳定元数据。
@@ -58,16 +58,16 @@ Forge 路由器编译器插件使用的稳定元数据。
 **种类：**组件
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor
+function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 中性链接标记。本机目标在编译期间替换此函数。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | MpLinkProps | MpLinkProps |  |
+| 名称 | 类型        | 描述        |
+| ---- | ----------- | ----------- |
+| 属性 | MpLinkProps | MpLinkProps |     |
 
 ### MpLink描述符
 
@@ -154,16 +154,16 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **种类：**组件
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor
+function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
 ```
 
 中性插座/视图标记。本机目标在编译期间替换此函数。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | MpRouterViewProps | MpRouterViewProps |  |
+| 名称 | 类型              | 描述              |
+| ---- | ----------------- | ----------------- |
+| 属性 | MpRouterViewProps | MpRouterViewProps |     |
 
 ### MpRouterViewDescriptor
 
@@ -190,7 +190,10 @@ export interface MpRouterViewProps
 **种类：**功能
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string
+function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string;
 ```
 
 通过应用程序拥有的路由器解析目标。可选能力
@@ -198,17 +201,17 @@ function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabi
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
-|能力|选择<MpRouterCapabilities, 'resolve'> |  |
+| 名称 | 类型                                  | 描述 |
+| ---- | ------------------------------------- | ---- |
+| 至   | MpRouteLocation原始                   |      |
+| 能力 | 选择<MpRouterCapabilities, 'resolve'> |      |
 
 ### 使用Mp导航
 
 **种类：**功能
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 只读命令式导航功能。
@@ -218,7 +221,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **种类：**功能
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 读取当前应用程序拥有的路线。未编译的后备是 SSR 安全的并且
@@ -229,7 +232,7 @@ function useMpRoute(): MpResolvedLocation | null
 **种类：**功能
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 读取应用程序提供的中立能力对象。
@@ -241,7 +244,7 @@ function useMpRouter(): MpRouterCapabilities
 **种类：**常数
 
 ```typescript
-export const applicationCompatibilityFixtures
+export const applicationCompatibilityFixtures;
 ```
 
 没有提供描述。
@@ -251,7 +254,7 @@ export const applicationCompatibilityFixtures
 **种类：**常数
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 路由记录镜像文档应用程序的区域设置/搜索/catch-all 表。
@@ -261,7 +264,7 @@ export const documentationCompatibilityFixture: ForgeCompatibilityFixture
 **种类：**常数
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 路由记录镜像文档应用程序的区域设置/搜索/catch-all 表。
@@ -291,7 +294,7 @@ export interface ForgeCompatibilityFixture
 **种类：**常数
 
 ```typescript
-export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
+export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 路线记录反映了我的护理笔记的语言段和 URL 驱动的覆盖。
@@ -301,7 +304,7 @@ export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
 **种类：**常数
 
 ```typescript
-export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
+export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[];
 ```
 
 每个运行时的合同测试套件消耗的共享行为行。
@@ -311,7 +314,7 @@ export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
 **种类：**常数
 
 ```typescript
-export const websiteCompatibilityFixture: ForgeCompatibilityFixture
+export const websiteCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 路由记录镜像网站的可选前缀区域设置本地路由。
@@ -705,7 +708,7 @@ export type ForgeScrollPosition = MpScrollPosition;
 **种类：**功能
 
 ```typescript
-function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
+function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver;
 ```
 
 创建一个绑定到路由树的{@link MpRouteResolver}，将其展平一次，以便
@@ -713,16 +716,16 @@ function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路线 |只读 MpRoute[] |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 路线 | 只读 MpRoute[] |      |
 
 ### 定义路由
 
 **种类：**功能
 
 ```typescript
-function defineRoutes(routes: T): T
+function defineRoutes(routes: T): T;
 ```
 
 身份助手，定义具有完整类型的框架中立路由树
@@ -730,40 +733,40 @@ function defineRoutes(routes: T): T
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路线 | T |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 路线 | T    |      |
 
 #### 合同
 
 - **@example:** const 路线 = DefineRoutes([
   { 路径: '/', 名称: 'home', 组件: Home },
   { 路径: '/users/:id', 名称: '用户', 组件: 用户 },
-]）
+  ]）
 
 ### 按名称查找路由
 
 **种类：**功能
 
 ```typescript
-function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined
+function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined;
 ```
 
 查找具有给定名称的第一条扁平路线。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路线 |只读 MpRoute[] |  |
-|名称 |字符串|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 路线 | 只读 MpRoute[] |      |
+| 名称 | 字符串         |      |
 
 ### 扁平化路线
 
 **种类：**功能
 
 ```typescript
-function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
+function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[];
 ```
 
 将嵌套路由树展平为深度优先的绝对路由列表，其中
@@ -772,16 +775,16 @@ function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路线 |只读 MpRoute[] |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 路线 | 只读 MpRoute[] |      |
 
 ### 匹配路线
 
 **种类：**功能
 
 ```typescript
-function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined
+function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined;
 ```
 
 将路径名与路由树进行匹配，返回第一条路由（在
@@ -789,10 +792,10 @@ function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路线 |只读 MpRoute[] |  |
-|路径名 |字符串|  |
+| 名称   | 类型           | 描述 |
+| ------ | -------------- | ---- |
+| 路线   | 只读 MpRoute[] |      |
+| 路径名 | 字符串         |      |
 
 ### Mp平坦路线
 
@@ -829,7 +832,7 @@ export interface MpRouteResolver
 **种类：**功能
 
 ```typescript
-function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation
+function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation;
 ```
 
 将任何框架中立的 {@link MpRouteLocationRaw} 解析为完整的
@@ -839,15 +842,15 @@ function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
-|路线 |只读 MpRoute[] |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
+| 路线 | 只读 MpRoute[]      |      |
 
 #### 合同
 
 - **@example:**resolveLocation({ name: 'user', params: { id: 42 } }, 路线)
-// → { path: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
+  // → { path: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
 
 ## `src/location`
 
@@ -876,44 +879,44 @@ URL 的分解部分：路径名、查询和哈希。
 **种类：**功能
 
 ```typescript
-function normalizeHash(hash: string): string
+function normalizeHash(hash: string): string;
 ```
 
 规范化哈希片段以包含单个前导 `#`，或者为空。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|哈希 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 哈希 | 字符串 |      |
 
 ### 解析位置
 
 **种类：**功能
 
 ```typescript
-function parseLocation(url: string): MpLocationParts
+function parseLocation(url: string): MpLocationParts;
 ```
 
 将应用相对 URL 拆分为其 {@link MpLocationParts}。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|网址 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 网址 | 字符串 |      |
 
 #### 合同
 
 - **@example:** parseLocation('/user/42?tab=info#bio')
-// → { 路径：'/users/42'，查询：{ tab：'info' }，哈希：'#bio' }
+  // → { 路径：'/users/42'，查询：{ tab：'info' }，哈希：'#bio' }
 
 ### 字符串化位置
 
 **种类：**功能
 
 ```typescript
-function stringifyLocation(location: MpLocationInput): string
+function stringifyLocation(location: MpLocationInput): string;
 ```
 
 从位置部分组装与应用程序相关的 URL 字符串。路径名是
@@ -922,14 +925,14 @@ function stringifyLocation(location: MpLocationInput): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地点 | MpLocation输入|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 地点 | MpLocation输入 |      |
 
 #### 合同
 
 - **@example:** stringifyLocation({ 路径: '/users/42', 查询: { tab: 'info' }, 哈希: 'bio' })
-// → '/users/42?tab=info#bio'
+  // → '/users/42?tab=info#bio'
 
 ## `src/path`
 
@@ -938,7 +941,10 @@ function stringifyLocation(location: MpLocationInput): string
 **种类：**功能
 
 ```typescript
-function buildPath(pattern: string, parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {}): string
+function buildPath(
+  pattern: string,
+  parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {},
+): string;
 ```
 
 从模式和一组参数构建具体路径名，编码
@@ -947,23 +953,23 @@ function buildPath(pattern: string, parameters: Record<string, MpParameterValue 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图案|字符串|  |
-|参数|记录<string, MpParameterValue \| readonly MpParameterValue[]> |  |
+| 名称 | 类型                                                          | 描述 |
+| ---- | ------------------------------------------------------------- | ---- |
+| 图案 | 字符串                                                        |      |
+| 参数 | 记录<string, MpParameterValue \| readonly MpParameterValue[]> |      |
 
 #### 合同
 
 - **@example:** buildPath('/users/:id', { id: 42 }) // → '/users/42'
-buildPath('/users/:id?', {}) // → '/users'
-buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
+  buildPath('/users/:id?', {}) // → '/users'
+  buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
 
 ### 编译路径
 
 **种类：**功能
 
 ```typescript
-function compilePath(pattern: string): MpCompiledPath
+function compilePath(pattern: string): MpCompiledPath;
 ```
 
 使用有序的路径模式将路径模式编译为 {@link MpCompiledPath}
@@ -971,9 +977,9 @@ function compilePath(pattern: string): MpCompiledPath
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图案|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 图案 | 字符串 |      |
 
 #### 合同
 
@@ -984,7 +990,7 @@ function compilePath(pattern: string): MpCompiledPath
 **种类：**功能
 
 ```typescript
-function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined
+function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined;
 ```
 
 将路径名与模式匹配，返回提取的参数或
@@ -992,15 +998,15 @@ function matchPath(pattern: string, pathname: string): MpRouteParameters | undef
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图案|字符串|  |
-|路径名 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 图案   | 字符串 |      |
+| 路径名 | 字符串 |      |
 
 #### 合同
 
 - **@example:** matchPath('/users/:id', '/users/42') // → { id: '42' }
-matchPath('/users/:id', '/posts/42') // → 未定义
+  matchPath('/users/:id', '/posts/42') // → 未定义
 
 ### Mp编译路径
 
@@ -1027,7 +1033,7 @@ export interface MpPathParameterKey
 **种类：**功能
 
 ```typescript
-function normalizePath(path: string): string
+function normalizePath(path: string): string;
 ```
 
 将路径模式（或路径名）标准化为规范的前导斜杠形式
@@ -1035,16 +1041,16 @@ function normalizePath(path: string): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路径|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 路径 | 字符串 |      |
 
 ### WILDCARD_PARAM_KEY
 
 **种类：**常数
 
 ```typescript
-export const WILDCARD_PARAM_KEY
+export const WILDCARD_PARAM_KEY;
 ```
 
 捕获独立 `*` catch-all 段的键。
@@ -1056,7 +1062,7 @@ export const WILDCARD_PARAM_KEY
 **种类：**功能
 
 ```typescript
-function parseQuery(search: string): MpQueryParameters
+function parseQuery(search: string): MpQueryParameters;
 ```
 
 将查询字符串解析为 {@link MpQueryParameters} 映射。领先的 `?` 是
@@ -1064,9 +1070,9 @@ function parseQuery(search: string): MpQueryParameters
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|搜索 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 搜索 | 字符串 |      |
 
 #### 合同
 
@@ -1077,7 +1083,7 @@ function parseQuery(search: string): MpQueryParameters
 **种类：**功能
 
 ```typescript
-function stringifyQuery(query: MpQueryInput): string
+function stringifyQuery(query: MpQueryInput): string;
 ```
 
 将 {@link MpQueryInput} 映射序列化为以 `?` 开头的查询字符串，
@@ -1086,14 +1092,14 @@ function stringifyQuery(query: MpQueryInput): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|查询 | MpQuery输入|  |
+| 名称 | 类型        | 描述 |
+| ---- | ----------- | ---- |
+| 查询 | MpQuery输入 |      |
 
 #### 合同
 
 - **@example:** stringifyQuery({ tag: ['a', 'b'], page: 2 }) // → '?tag=a&tag=b&page=2'
-stringifyQuery({}) // → ''
+  stringifyQuery({}) // → ''
 
 ## `src/types`
 
@@ -1318,7 +1324,8 @@ export interface MpReadonlySignal<Value>
 **种类：**组件
 
 ```typescript
-export type MpRedirect = MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
 ```
 
 重定向目标，可选地根据目标路由计算。
@@ -1370,7 +1377,10 @@ export type MpRouteChangeListener = (event: MpRouteChangeEvent) => void;
 **种类：**组件
 
 ```typescript
-export type MpRouteGuard = ( to: MpResolvedLocation, from: MpResolvedLocation | null, ) => MpGuardOutcome | Promise<MpGuardOutcome>;
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
 ```
 
 由运行时拥有的导航状态机评估的路线防护。
@@ -1473,7 +1483,11 @@ export interface MpRouteViewContext<View = unknown>
 **种类：**组件
 
 ```typescript
-export type MpScrollBehavior = ( to: MpResolvedLocation, from: MpResolvedLocation | null, savedPosition?: MpScrollPosition, ) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
 ```
 
 没有提供描述。

@@ -16,24 +16,24 @@
 פונקציה **סוג:**
 
 ```typescript
-function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig
+function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| defaultNS | מחרוזת |  |
-| אפשרויות | I18nConfigOptions |  |
+| שם        | הקלד              | תיאור |
+| --------- | ----------------- | ----- |
+| defaultNS | מחרוזת            |       |
+| אפשרויות  | I18nConfigOptions |       |
 
 ### DEFAULT_LOCALE
 
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_LOCALE
+export const DEFAULT_LOCALE;
 ```
 
 לא סופק תיאור.
@@ -63,7 +63,7 @@ export interface I18nConfigOptions
 **סוג:** קבוע
 
 ```typescript
-export const SUPPORTED_LOCALES
+export const SUPPORTED_LOCALES;
 ```
 
 לא סופק תיאור.

@@ -56,7 +56,7 @@ Indicador de presencia opcional representado como un punto de esquina.
 **Tipo:** función
 
 ```typescript
-function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
+function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 ```
 
 `ForgeAvatar`: un avatar de usuario/entidad creado una vez en el dialecto JSX neutral
@@ -71,9 +71,9 @@ el contenido de demostración de Storybook.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<AvatarProperties> |  |
+| Nombre      | Tipo                           | Descripción |
+| ----------- | ------------------------------ | ----------- |
+| propiedades | Sólo lectura<AvatarProperties> |             |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -112,7 +112,7 @@ Una única fuente de vídeo de formato específico.
 **Tipo:** función
 
 ```typescript
-function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement
+function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement;
 ```
 
 `ForgeBackgroundVideo`: un vídeo de fondo decorativo con sangrado completo creado una vez
@@ -133,9 +133,9 @@ Imagen `poster`. Posee su estilo a través del módulo CSS ubicado en el mismo l
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<BackgroundVideoProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<BackgroundVideoProperties> |             |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -164,7 +164,8 @@ Escala de tamaño canónico 2xs → 2xl, que coincide con los tokens de tamaño 
 **Tipo:** tipo
 
 ```typescript
-export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type BadgeVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Tono visual de la insignia. Refleja el `@mission-platform/components` `ForgeBadge`.
@@ -174,7 +175,7 @@ Tono visual de la insignia. Refleja el `@mission-platform/components` `ForgeBadg
 **Tipo:** función
 
 ```typescript
-function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
+function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 ```
 
 `ForgeBadge`: un pequeño chip de estado/etiqueta creado una vez en el JSX neutral
@@ -196,9 +197,9 @@ cadenas simples, así como el formulario de objeto `{ className: boolean }`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<BadgeProperties> |  |
+| Nombre      | Tipo                          | Descripción |
+| ----------- | ----------------------------- | ----------- |
+| propiedades | Sólo lectura<BadgeProperties> |             |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -217,7 +218,8 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type ButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 Tratamiento visual del botón. Refleja el `@mission-platform/components` `ForgeButton`.
@@ -227,7 +229,7 @@ Tratamiento visual del botón. Refleja el `@mission-platform/components` `ForgeB
 **Tipo:** función
 
 ```typescript
-function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
+function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 ```
 
 `ForgeButton`: un botón creado una vez en el dialecto JSX neutral y compilado
@@ -249,9 +251,9 @@ ensamblado con el asistente {@link classNames} neutral en el marco, incluido su
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ButtonProperties> |  |
+| Nombre      | Tipo                           | Descripción |
+| ----------- | ------------------------------ | ----------- |
+| propiedades | Sólo lectura<ButtonProperties> |             |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -260,7 +262,7 @@ ensamblado con el asistente {@link classNames} neutral en el marco, incluido su
 **Tipo:** función
 
 ```typescript
-function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
+function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 ```
 
 `ForgeIconButton`: un botón compacto, cuadrado y de solo ícono creado una vez en el
@@ -276,9 +278,9 @@ ranura. Debido a que no tiene texto visible, se **requiere** un nombre accesible
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconButtonProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconButtonProperties> |             |
 
 ### Propiedades del botón de icono
 
@@ -305,7 +307,8 @@ Token de tamaño que controla el relleno cuadrado: escala canónica 2xs → 2xl.
 **Tipo:** tipo
 
 ```typescript
-export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type IconButtonVariant =
+  'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Tratamiento visual del botón de icono: el conjunto de colores canónicos más un `ghost` transparente.
@@ -317,7 +320,7 @@ Tratamiento visual del botón de icono: el conjunto de colores canónicos más u
 **Tipo:** función
 
 ```typescript
-function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement
+function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement;
 ```
 
 `ForgeProgressBar`: un indicador de progreso determinado o indeterminado creado
@@ -332,9 +335,9 @@ un modo indeterminado. Posee su estilo a través del módulo CSS ubicado en el m
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ProgressBarProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<ProgressBarProperties> |             |
 
 ### Propiedades de la barra de progreso
 
@@ -361,7 +364,8 @@ Escala de tamaño Canonical 2xs → 2xl (grosor de pista).
 **Tipo:** tipo
 
 ```typescript
-export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ProgressVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Tono del relleno de progreso.
@@ -373,7 +377,7 @@ Tono del relleno de progreso.
 **Tipo:** función
 
 ```typescript
-function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement
+function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
 ```
 
 `ForgeQuote`: una cita en bloque / cita en bloque semántica escrita una vez en neutral
@@ -393,9 +397,9 @@ elimina esa ranura con alcance: la atribución está impulsada por los accesorio
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<QuoteProperties> |  |
+| Nombre      | Tipo                          | Descripción |
+| ----------- | ----------------------------- | ----------- |
+| propiedades | Sólo lectura<QuoteProperties> |             |
 
 ### CotizarPropiedades
 
@@ -434,7 +438,7 @@ Tratamiento visual de la cotización.
 **Tipo:** función
 
 ```typescript
-function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement
+function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement;
 ```
 
 `ForgeResponsiveImage`: un elemento `<picture>` responsivo y dirigido por arte
@@ -455,9 +459,9 @@ convención utilizada en todos los componentes migrados).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ResponsiveImageProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<ResponsiveImageProperties> |             |
 
 ### Ajuste de imagen receptivo
 
@@ -496,7 +500,7 @@ Una única fuente de imagen con dirección artística y formato específico.
 **Tipo:** función
 
 ```typescript
-function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement
+function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement;
 ```
 
 `ForgeResponsiveVideo`: un elemento `<video>` responsivo creado una vez en el
@@ -519,9 +523,9 @@ componentes).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ResponsiveVideoProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<ResponsiveVideoProperties> |             |
 
 ### ResponsiveVideoFit
 
@@ -560,7 +564,7 @@ Una única fuente de vídeo de formato específico.
 **Tipo:** función
 
 ```typescript
-function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement
+function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ```
 
 `ForgeSeparator`: un separador/divisor visual creado una vez en neutral
@@ -581,9 +585,9 @@ Los nombres de clase de módulo hash se ensamblan con el marco neutral.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<SeparatorProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<SeparatorProperties> |             |
 
 ### SeparadorOrientación
 
@@ -632,7 +636,7 @@ Estilo de línea.
 **Tipo:** función
 
 ```typescript
-function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
+function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 ```
 
 `ForgeSkeleton`: un marcador de posición de carga creado una vez en el JSX neutral
@@ -647,9 +651,9 @@ Representa un bloque `aria-hidden` en una de tres formas (`line`/`circle`/
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<SkeletonProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<SkeletonProperties> |             |
 
 ### Propiedades del esqueleto
 
@@ -678,7 +682,7 @@ La forma con la que se representa el marcador de posición del esqueleto.
 **Tipo:** función
 
 ```typescript
-function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement
+function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement;
 ```
 
 `ForgeSpinner`: un control giratorio de carga indeterminado creado una vez en neutral
@@ -695,9 +699,9 @@ la versión neutral (i18n no es parte de esta biblioteca) tiene como valor prede
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<SpinnerProperties> |  |
+| Nombre      | Tipo                            | Descripción |
+| ----------- | ------------------------------- | ----------- |
+| propiedades | Sólo lectura<SpinnerProperties> |             |
 
 ### Propiedades del hilandero
 
@@ -724,7 +728,8 @@ Escala de tamaño Canonical 2xs → 2xl.
 **Tipo:** tipo
 
 ```typescript
-export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type SpinnerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Tono del anillo giratorio.
@@ -736,7 +741,7 @@ Tono del anillo giratorio.
 **Tipo:** función
 
 ```typescript
-function ForgeStack(properties: Readonly<StackProperties>): MpElement
+function ForgeStack(properties: Readonly<StackProperties>): MpElement;
 ```
 
 `ForgeStack`: una primitiva de diseño de pila de flexbox que presenta a sus elementos secundarios en
@@ -751,9 +756,9 @@ El estilo vive en el `forge-stack.module.scss` ubicado conjuntamente (importado 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<StackProperties> |  |
+| Nombre      | Tipo                          | Descripción |
+| ----------- | ----------------------------- | ----------- |
+| propiedades | Sólo lectura<StackProperties> |             |
 
 ### ApilarAlinear
 
@@ -812,23 +817,24 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement
+function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<StatusIconProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<StatusIconProperties> |             |
 
 ### EstadoIconoNivel
 
 **Tipo:** tipo
 
 ```typescript
-export type StatusIconLevel = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type StatusIconLevel =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Estado/tono transmitido por el icono: el conjunto de colores canónicos.
@@ -890,7 +896,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement
+function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement;
 ```
 
 `ForgeAccordion`: un contenedor apilado verticalmente de filas plegables creado
@@ -913,9 +919,9 @@ que vuelven al texto `title`/`content` del elemento.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<AccordionProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<AccordionProperties> |             |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -944,7 +950,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
+function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 ```
 
 `ForgeBreadcrumb`: ruta de navegación creada una vez en el dialecto JSX neutral
@@ -964,9 +970,9 @@ sustitución), por lo que sólo se transfiere el formulario de enlace `href`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<BreadcrumbProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<BreadcrumbProperties> |             |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1005,7 +1011,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement
+function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement;
 ```
 
 `ForgeButtonGroup`: agrupa botones relacionados en una única unidad visual. Autor
@@ -1024,9 +1030,9 @@ Posee su estilo a través del módulo CSS ubicado en el mismo lugar.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ButtonGroupProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<ButtonGroupProperties> |             |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1055,7 +1061,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeCard(properties: Readonly<CardProperties>): MpElement
+function ForgeCard(properties: Readonly<CardProperties>): MpElement;
 ```
 
 `ForgeCard`: un contenedor de superficie con regiones de encabezado/pie de página opcionales, creado
@@ -1075,9 +1081,9 @@ marcos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<CardProperties> |  |
+| Nombre      | Tipo                         | Descripción |
+| ----------- | ---------------------------- | ----------- |
+| propiedades | Sólo lectura<CardProperties> |             |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1116,7 +1122,7 @@ Tratamiento de color burbuja.
 **Tipo:** función
 
 ```typescript
-function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
+function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 ```
 
 `ForgeChatBubble`: una burbuja de mensaje única creada una vez en el JSX neutral
@@ -1137,9 +1143,9 @@ presencia detectada a través del asistente {@link hasSlot} neutral del marco.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ChatBubbleProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<ChatBubbleProperties> |             |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1158,7 +1164,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
+function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 ```
 
 `ForgeCollapse`: una divulgación nativa basada en `<details>` creada una vez en el
@@ -1181,9 +1187,9 @@ chocan con accesorios del mismo nombre).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<CollapseProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<CollapseProperties> |             |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1232,7 +1238,7 @@ El marco del dispositivo muestra el contenido de la pantalla en su interior.
 **Tipo:** función
 
 ```typescript
-function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement
+function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 ```
 
 `ForgeDeviceMock`: un marco de dispositivo decorativo que envuelve cualquier pantalla
@@ -1249,9 +1255,9 @@ El marco `browser` muestra una barra de título con controles de semáforo y un
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<DeviceMockProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<DeviceMockProperties> |             |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1260,7 +1266,7 @@ El marco `browser` muestra una barra de título con controles de semáforo y un
 **Tipo:** función
 
 ```typescript
-function ForgeGrid(properties: Readonly<GridProperties>): MpElement
+function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 ```
 
 `ForgeGrid`: una primitiva de diseño de cuadrícula CSS que organiza su contenido en un
@@ -1280,9 +1286,9 @@ vive en el `forge-grid.module.scss` ubicado conjuntamente (importado por
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<GridProperties> |  |
+| Nombre      | Tipo                         | Descripción |
+| ----------- | ---------------------------- | ----------- |
+| propiedades | Sólo lectura<GridProperties> |             |
 
 ### Alineación de cuadrícula
 
@@ -1321,7 +1327,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeInView(properties: Readonly<InViewProperties>): MpElement
+function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 ```
 
 `ForgeInView`: envuelve el contenido y usa `IntersectionObserver` para revelarlo con
@@ -1336,9 +1342,9 @@ Devoluciones de llamada `onEnter`/`onLeave`, que se asignan claramente a ambos m
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<InViewProperties> |  |
+| Nombre      | Tipo                           | Descripción |
+| ----------- | ------------------------------ | ----------- |
+| propiedades | Sólo lectura<InViewProperties> |             |
 
 ### InViewAnimación
 
@@ -1367,7 +1373,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeList(properties: Readonly<ListProperties>): MpElement
+function ForgeList(properties: Readonly<ListProperties>): MpElement;
 ```
 
 `ForgeList`: una lista ordenada/desordenada/descripción/simple creada una vez en el
@@ -1388,9 +1394,9 @@ otros componentes migrados perdieron ranuras de alcance.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ListProperties> |  |
+| Nombre      | Tipo                         | Descripción |
+| ----------- | ---------------------------- | ----------- |
+| propiedades | Sólo lectura<ListProperties> |             |
 
 ### Lista de elementos
 
@@ -1439,7 +1445,7 @@ Estilo de lista semántica/visual.
 **Tipo:** función
 
 ```typescript
-function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement
+function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement;
 ```
 
 `ForgeMasonry`: una primitiva de diseño de mampostería de varias columnas CSS creada una vez en
@@ -1462,9 +1468,9 @@ CSS); las propiedades dinámicas de varias columnas se aplican en línea.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MasonryProperties> |  |
+| Nombre      | Tipo                            | Descripción |
+| ----------- | ------------------------------- | ----------- |
+| propiedades | Sólo lectura<MasonryProperties> |             |
 
 ### Espacio de mampostería
 
@@ -1493,7 +1499,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
+function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 ```
 
 `ForgeMenuItem`: una única entrada de menú creada una vez en el dialecto JSX neutral
@@ -1513,9 +1519,9 @@ sustitución de enrutador establecida) y expone la propiedad de devolución de l
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MenuItemProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<MenuItemProperties> |             |
 
 ### Propiedades del elemento del menú
 
@@ -1532,7 +1538,8 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type MenuItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 Tono aplicado al elemento del menú.
@@ -1544,7 +1551,7 @@ Tono aplicado al elemento del menú.
 **Tipo:** función
 
 ```typescript
-function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
+function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 ```
 
 `ForgeMenu`: un menú accesible creado una vez en el dialecto JSX neutral y
@@ -1570,9 +1577,9 @@ sustitución), de lo contrario coincide con los roles/ARIA del marcado Vue.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MenuProperties> |  |
+| Nombre      | Tipo                         | Descripción |
+| ----------- | ---------------------------- | ----------- |
+| propiedades | Sólo lectura<MenuProperties> |             |
 
 ### MenúNodo
 
@@ -1611,7 +1618,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement
+function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 ```
 
 `ForgeNavbarItem`: una entrada de la barra de navegación creada una vez en el dialecto JSX neutral y
@@ -1639,9 +1646,9 @@ propio accesorio `direction`) y el accesorio de devolución de llamada `onClick`
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<NavbarItemProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<NavbarItemProperties> |             |
 
 ### Barra de navegaciónItemNiño
 
@@ -1668,7 +1675,8 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type NavbarItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 Tono aplicado al elemento de la barra de navegación.
@@ -1680,7 +1688,7 @@ Tono aplicado al elemento de la barra de navegación.
 **Tipo:** función
 
 ```typescript
-function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
+function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 ```
 
 `ForgePagination`: control de navegación de página creado una vez en el JSX neutral
@@ -1700,9 +1708,9 @@ utiliza la convención `modelValue` + callback-prop controlada y establecida.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<PaginationProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<PaginationProperties> |             |
 
 ### Artículo de paginación
 
@@ -1741,7 +1749,7 @@ Dimensiones del botón de control del token de tamaño: escala canónica 2xs →
 **Tipo:** función
 
 ```typescript
-function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
+function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 ```
 
 `ForgeTabs`: un contenedor de pestañas controlado y accesible creado una vez en el
@@ -1775,9 +1783,9 @@ padre neutral compilado, dejando los paneles en blanco. Utiliza lo establecido
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<TabsProperties> |  |
+| Nombre      | Tipo                         | Descripción |
+| ----------- | ---------------------------- | ----------- |
+| propiedades | Sólo lectura<TabsProperties> |             |
 
 ### TabItem
 
@@ -1826,7 +1834,7 @@ Tratamiento visual de la lista de pestañas.
 **Tipo:** función
 
 ```typescript
-function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
+function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 ```
 
 `ForgeTimeline`: una lista cronológica ordenada de eventos creados una vez en el
@@ -1847,9 +1855,9 @@ Las ranuras por elemento `marker`/`time`/`title`/predeterminadas se convierten e
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<TimelineProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<TimelineProperties> |             |
 
 ### Línea de tiempoAlinear
 
@@ -1886,7 +1894,8 @@ El alcance pasó a las ranuras de elementos con alcance.
 **Tipo:** tipo
 
 ```typescript
-export type TimelineItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type TimelineItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 Familia de colores aplicada a un punto marcador.
@@ -1918,7 +1927,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement
+function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement;
 ```
 
 `ForgeWindowPopout`: muestra su contenido en una ventana separada del navegador,
@@ -1943,9 +1952,9 @@ son simples accesorios.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<WindowPopoutProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<WindowPopoutProperties> |             |
 
 ### Propiedades de ventana emergente
 
@@ -1994,7 +2003,7 @@ El ámbito pasó a la ranura `slide` con ámbito.
 **Tipo:** función
 
 ```typescript
-function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement
+function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
 ```
 
 `ForgeCarousel`: una plataforma de diapositivas de desplazamiento horizontal creada una vez en el
@@ -2019,9 +2028,9 @@ las coordenadas de inicio se convierten en `useRef`; `defineExpose` se elimina; 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<CarouselProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<CarouselProperties> |             |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2040,7 +2049,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
+function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 ```
 
 `ForgeChatArea`: una superficie de conversación desplazable creada una vez en el
@@ -2065,9 +2074,9 @@ El desplazamiento automático cubre el caso común.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ChatAreaProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<ChatAreaProperties> |             |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2139,7 +2148,7 @@ Comportamiento de visualización: panel `overlay` flotante (predeterminado) o `i
 **Tipo:** función
 
 ```typescript
-function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement
+function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 ```
 
 `ForgeDrawer`: un panel deslizante creado una vez en el dialecto JSX neutral y
@@ -2169,9 +2178,9 @@ ayudante) y un accesorio `closeLabel` en lugar de i18n.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<DrawerProperties> |  |
+| Nombre      | Tipo                           | Descripción |
+| ----------- | ------------------------------ | ----------- |
+| propiedades | Sólo lectura<DrawerProperties> |             |
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2180,7 +2189,7 @@ ayudante) y un accesorio `closeLabel` en lugar de i18n.
 **Tipo:** función
 
 ```typescript
-function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
+function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement;
 ```
 
 `ForgeMenubar`: una barra de menú de aplicación horizontal creada una vez en neutral
@@ -2207,9 +2216,9 @@ sustitución).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MenubarProperties> |  |
+| Nombre      | Tipo                            | Descripción |
+| ----------- | ------------------------------- | ----------- |
+| propiedades | Sólo lectura<MenubarProperties> |             |
 
 ### Propiedades de la barra de menú
 
@@ -2228,7 +2237,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement
+function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
 ```
 
 `ForgeNavbar`: la barra de navegación superior de la aplicación creada una vez en neutral
@@ -2249,9 +2258,9 @@ no tiene retorno de fragmento multi-raíz).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<NavbarProperties> |  |
+| Nombre      | Tipo                           | Descripción |
+| ----------- | ------------------------------ | ----------- |
+| propiedades | Sólo lectura<NavbarProperties> |             |
 
 ### Alinear barra de navegación
 
@@ -2292,7 +2301,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeTable(properties: Readonly<TableProperties>): MpElement
+function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
 `ForgeTable`: una tabla de datos ordenables creada una vez en el dialecto JSX neutral
@@ -2315,9 +2324,9 @@ los otros componentes migrados eliminaron las ranuras de alcance.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<TableProperties> |  |
+| Nombre      | Tipo                          | Descripción |
+| ----------- | ----------------------------- | ----------- |
+| propiedades | Sólo lectura<TableProperties> |             |
 
 ### Ordenar dirección
 
@@ -2356,7 +2365,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
+function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
 ```
 
 `ForgeTreeView`: un árbol recursivo y accesible creado una vez en JSX neutral
@@ -2382,9 +2391,9 @@ De lo contrario, los accesorios de devolución de llamada coinciden.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<TreeViewProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<TreeViewProperties> |             |
 
 ### ÁrbolVerEtiquetaAlcance
 
@@ -2423,7 +2432,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement
+function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement;
 ```
 
 `ForgeVirtualList`: muestra solo las filas visibles dentro del contenedor de desplazamiento,
@@ -2444,9 +2453,9 @@ reenviar ranuras con nombre, pero no predeterminadas, como funciones con alcance
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<VirtualListProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<VirtualListProperties> |             |
 
 ### Alcance del elemento de lista virtual
 
@@ -2475,7 +2484,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement
+function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement;
 ```
 
 `ForgeVirtualLogViewer`: un visor de registros de desplazamiento virtual de alto rendimiento.
@@ -2495,9 +2504,9 @@ se elimina la supresión.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<VirtualLogViewerProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<VirtualLogViewerProperties> |             |
 
 ### Entrada de registro
 
@@ -2536,7 +2545,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement
+function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement;
 ```
 
 `ForgeVirtualTable`: una tabla de datos ordenables y de desplazamiento virtual que representa
@@ -2566,9 +2575,9 @@ ranuras para contenido celular totalmente personalizado (interactivo).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<VirtualTableProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<VirtualTableProperties> |             |
 
 ### VirtualTableCellScope
 
@@ -2607,7 +2616,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement
+function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement;
 ```
 
 `ForgeVirtualTabs`: un contenedor de pestañas controladas que muestra **solo lo activo
@@ -2632,9 +2641,9 @@ atributo `panel={({ tab }) => …}` simple), y utiliza el establecido
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<VirtualTabsProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<VirtualTabsProperties> |             |
 
 ### VirtualTabPanelScope
 
@@ -2663,7 +2672,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement
+function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement;
 ```
 
 `ForgeVirtualTreeView`: un árbol de desplazamiento virtual que aplana su visible
@@ -2684,9 +2693,9 @@ accesorios de devolución de llamada.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<VirtualTreeViewProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<VirtualTreeViewProperties> |             |
 
 ### Nodo de árbol
 
@@ -2725,7 +2734,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeHero(properties: Readonly<HeroProperties>): MpElement
+function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 ```
 
 `ForgeHero`: sección de banner/héroe de página creada una vez en JSX neutral
@@ -2747,9 +2756,9 @@ helper) y `eyebrow`/`title`/`subtitle` son accesorios de cadena.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<HeroProperties> |  |
+| Nombre      | Tipo                         | Descripción |
+| ----------- | ---------------------------- | ----------- |
+| propiedades | Sólo lectura<HeroProperties> |             |
 
 ### Alineación de héroes
 
@@ -2788,7 +2797,7 @@ Escala de relleno vertical: escala canónica 2xs → 2xl.
 **Tipo:** función
 
 ```typescript
-function beginPointerDrag(handlers: PointerDragHandlers): () => void
+function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 ```
 
 Comience a arrastrar el puntero siguiendo la ventana. Adjunta `pointermove`/`pointerup`/
@@ -2799,9 +2808,9 @@ el servidor (no `window`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| manipuladores | Controladores de arrastre de puntero |  |
+| Nombre        | Tipo                                 | Descripción |
+| ------------- | ------------------------------------ | ----------- |
+| manipuladores | Controladores de arrastre de puntero |             |
 
 ### PunteroArrastrarManejadores
 

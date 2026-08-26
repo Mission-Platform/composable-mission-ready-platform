@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement
+function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 ```
 
 `ForgeTypography` - הפרימיטיבי בסגנון הטקסט שכתב פעם אחת ב-JSX הנייטרלי
@@ -46,16 +46,28 @@ function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<TypographyProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<TypographyProperties> |       |
 
 ### טיפוגרפיה צבע
 
 **סוג:** סוג
 
 ```typescript
-export type TypographyColor = | 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'inverse' | 'inherit' | 'neutral' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TypographyColor =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'disabled'
+  | 'inverse'
+  | 'inherit'
+  | 'neutral'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'error'
+  | 'critical';
 ```
 
 צבע טקסט. האסימונים המבניים (`primary`/`secondary`/`tertiary`/
@@ -128,7 +140,22 @@ export type TypographyUnderline = 'always' | 'hover' | 'none';
 **סוג:** סוג
 
 ```typescript
-export type TypographyVariant = | 'display' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body-lg' | 'body-md' | 'body-sm' | 'body-xs' | 'label' | 'caption' | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */ | 'link';
+export type TypographyVariant =
+  | 'display'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body-lg'
+  | 'body-md'
+  | 'body-sm'
+  | 'body-xs'
+  | 'label'
+  | 'caption'
+  | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */
+  | 'link';
 ```
 
 השלב בקנה מידה סמנטי/חזותי שבו הטקסט מוצג.
@@ -138,7 +165,8 @@ export type TypographyVariant = | 'display' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' |
 **סוג:** סוג
 
 ```typescript
-export type TypographyVerticalAlign = 'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
+export type TypographyVerticalAlign =
+  'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
 ```
 
 יישור אנכי של תיבת הטקסט (מוטבעת) (ממפה ל-CSS `vertical-align`).

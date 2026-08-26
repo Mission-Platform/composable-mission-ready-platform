@@ -16,23 +16,23 @@
 **種類:** 関数
 
 ```typescript
-function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server
+function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeBridgeServerOptions |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| オプション | ForgeBridgeServerOptions |      |
 
 ### DEFAULT_EXPORT_PATH
 
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_EXPORT_PATH
+export const DEFAULT_EXPORT_PATH;
 ```
 
 説明はありません。
@@ -42,7 +42,7 @@ export const DEFAULT_EXPORT_PATH
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_MAX_FILE_BYTES
+export const DEFAULT_MAX_FILE_BYTES;
 ```
 
 説明はありません。
@@ -52,7 +52,7 @@ export const DEFAULT_MAX_FILE_BYTES
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_MAX_REQUEST_BYTES
+export const DEFAULT_MAX_REQUEST_BYTES;
 ```
 
 説明はありません。
@@ -62,17 +62,17 @@ export const DEFAULT_MAX_REQUEST_BYTES
 **種類:** 関数
 
 ```typescript
-function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>
+function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |不明 |  |
-|オプション | ForgeBridgeオプション |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| 値         | 不明                  |      |
+| オプション | ForgeBridgeオプション |      |
 
 ### ForgeBridgeオプション
 
@@ -99,16 +99,18 @@ export interface ForgeBridgeServerOptions extends ForgeBridgeOptions
 **種類:** 関数
 
 ```typescript
-function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number }): Promise<Server>
+function startForgeBridgeServer(
+  options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
+): Promise<Server>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeBridgeServerOptions & {読み取り専用ホスト?:文字列;読み取り専用ポート?: 番号 } |  |
+| 名前       | タイプ                                                                             | 説明 |
+| ---------- | ---------------------------------------------------------------------------------- | ---- |
+| オプション | ForgeBridgeServerOptions & {読み取り専用ホスト?:文字列;読み取り専用ポート?: 番号 } |      |
 
 ## `src/protocol`
 
@@ -117,7 +119,7 @@ function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly h
 **種類:** 定数
 
 ```typescript
-export const FORGE_BRIDGE_PROTOCOL_VERSION
+export const FORGE_BRIDGE_PROTOCOL_VERSION;
 ```
 
 説明はありません。
@@ -167,13 +169,13 @@ export interface ForgeBridgeResponse
 **種類:** 関数
 
 ```typescript
-function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse
+function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |不明 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 不明   |      |

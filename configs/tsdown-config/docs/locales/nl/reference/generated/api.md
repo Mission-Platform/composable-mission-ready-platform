@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/tsdown-
 **Soort:** functie
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 Bouw een rolldown `external` / `deps.neverBundle` predikaat dat elke behandelt
@@ -24,16 +24,16 @@ naam erin `names` (en al hun subpad-importen, b.v. `pkg/sub`) als extern.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| namen | alleen-lezen tekenreeks[] |  |
+| Naam  | Typ                       | Beschrijving |
+| ----- | ------------------------- | ------------ |
+| namen | alleen-lezen tekenreeks[] |              |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Standaardpakketnamen die elke gedeelde bibliotheek moet behandelen als peer-geleverd.
@@ -44,7 +44,7 @@ Spiegels `@mission-platform/vite-config`van {@link DEFAULT_LIBRARY_EXTERNALS}.
 **Soort:** functie
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Bouw een tsdown-configuratie voor een vlakte TypeScript (of enkele bundel) bibliotheek —
@@ -53,16 +53,16 @@ Archetype A/B. Spiegels `defineLibraryConfig` externaliseringssemantiek van
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TsdownLibraryOptions |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| opties | TsdownLibraryOptions |              |
 
 ### definieerTsdownVueBibliotheek
 
 **Soort:** functie
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Zoals {@link definitionTsdownLibrary}, maar met draden `unplugin-vue` En Vue- bewuste dts
@@ -70,16 +70,16 @@ voor pakketten die worden verzonden `.vue` SFC's (`i18n`, `router`, …).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TsdownLibraryOptions |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| opties | TsdownLibraryOptions |              |
 
 ### leesPackageDependencyNames
 
 **Soort:** functie
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 Lees de `dependencies` En `peerDependencies` gedeclareerd in package.json
@@ -88,16 +88,16 @@ van zijn eigen bundel, zodat consumenten deze kunnen ontdubbelen en aan de boom 
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| rootDirectory | tekenreeks |  |
+| Naam          | Typ        | Beschrijving |
+| ------------- | ---------- | ------------ |
+| rootDirectory | tekenreeks |              |
 
 ### solveTsdownOutputDirectory
 
 **Soort:** functie
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 Spiegel het uiteindelijke pakketuitvoerpad naar een geïsoleerde buildroot. Het houden van de
@@ -106,11 +106,11 @@ onafhankelijk te promoten zonder dat tsdown een zusterboom hoeft schoon te maken
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| rootDirectory | tekenreeks |  |
-| uitvoerDirectory | tekenreeks |  |
-| uitvoerRoot | tekenreeks |  |
+| Naam             | Typ        | Beschrijving |
+| ---------------- | ---------- | ------------ |
+| rootDirectory    | tekenreeks |              |
+| uitvoerDirectory | tekenreeks |              |
+| uitvoerRoot      | tekenreeks |              |
 
 ### TsdownBibliotheekOpties
 

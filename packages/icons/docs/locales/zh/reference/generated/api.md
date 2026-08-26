@@ -16,7 +16,7 @@
 **种类：**常数
 
 ```typescript
-export const ICON_CATALOG: readonly IconCatalogEntry[]
+export const ICON_CATALOG: readonly IconCatalogEntry[];
 ```
 
 现有图标集的已审核目录。
@@ -26,7 +26,7 @@ export const ICON_CATALOG: readonly IconCatalogEntry[]
 **种类：**常数
 
 ```typescript
-export const ICON_GAP_REVIEW
+export const ICON_GAP_REVIEW;
 ```
 
 建立源分类法后要实施的高附加值。
@@ -46,16 +46,16 @@ export interface IconCatalogEntry
 **种类：**功能
 
 ```typescript
-function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void
+function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void;
 ```
 
 在使用静态目录生成包元数据之前对其进行验证。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|目录 |只读 IconCatalogEntry[] |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 目录 | 只读 IconCatalogEntry[] |      |
 
 ## `src/components/communication/messaging/forge-icon-bell/forge-icon-bell`
 
@@ -64,7 +64,7 @@ function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG
 **种类：**功能
 
 ```typescript
-function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
+function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement;
 ```
 
 `ForgeIconBell` — 使用中性 JSX 方言创作的图标。
@@ -75,9 +75,9 @@ function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconBellProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconBellProperties> |      |
 
 ### IconBell属性
 
@@ -96,7 +96,7 @@ export interface IconBellProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
+function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement;
 ```
 
 `ForgeIconChat` — 使用中性 JSX 方言创作的图标。
@@ -107,9 +107,9 @@ function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconChatProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconChatProperties> |      |
 
 ### IconChat属性
 
@@ -128,7 +128,7 @@ export interface IconChatProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
+function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement;
 ```
 
 `ForgeIconMail` — 使用中性 JSX 方言创作的图标。
@@ -139,9 +139,9 @@ function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconMailProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconMailProperties> |      |
 
 ### IconMail属性
 
@@ -160,7 +160,7 @@ export interface IconMailProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
+function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement;
 ```
 
 `ForgeIconPhone` — 使用中性 JSX 方言创作的图标。
@@ -171,9 +171,9 @@ function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconPhoneProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconPhoneProperties> |      |
 
 ### 图标电话属性
 
@@ -192,7 +192,7 @@ export interface IconPhoneProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
+function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement;
 ```
 
 `ForgeIconSend` — 使用中性 JSX 方言创作的图标。
@@ -203,9 +203,9 @@ function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconSendProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconSendProperties> |      |
 
 ### 图标发送属性
 
@@ -224,7 +224,7 @@ export interface IconSendProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
+function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement;
 ```
 
 `ForgeIconShare` — 使用中性 JSX 方言创作的图标。
@@ -235,9 +235,9 @@ function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconShareProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconShareProperties> |      |
 
 ### IconShare属性
 
@@ -256,7 +256,7 @@ export interface IconShareProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
+function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement;
 ```
 
 `ForgeIconCopy` — 使用中性 JSX 方言创作的图标。
@@ -267,9 +267,9 @@ function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconCopyProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconCopyProperties> |      |
 
 ### 图标复制属性
 
@@ -288,7 +288,7 @@ export interface IconCopyProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
+function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement;
 ```
 
 `ForgeIconEdit` — 使用中性 JSX 方言创作的图标。
@@ -299,9 +299,9 @@ function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconEditProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconEditProperties> |      |
 
 ### 图标编辑属性
 
@@ -320,7 +320,7 @@ export interface IconEditProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
+function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement;
 ```
 
 `ForgeIconEyeOff` — 使用中性 JSX 方言创作的图标。
@@ -331,9 +331,9 @@ function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconEyeOffProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconEyeOffProperties> |      |
 
 ### IconEyeOff属性
 
@@ -352,7 +352,7 @@ export interface IconEyeOffProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
+function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement;
 ```
 
 `ForgeIconEye` — 使用中性 JSX 方言创作的图标。
@@ -363,9 +363,9 @@ function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconEyeProperties> |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读<IconEyeProperties> |      |
 
 ### 图标眼睛属性
 
@@ -384,16 +384,16 @@ export interface IconEyeProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement
+function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement;
 ```
 
 重新应用最近撤消的内容编辑。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconRedoProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconRedoProperties> |      |
 
 ### 图标重做属性
 
@@ -412,7 +412,7 @@ export interface IconRedoProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
+function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement;
 ```
 
 `ForgeIconTrash` — 使用中性 JSX 方言创作的图标。
@@ -423,9 +423,9 @@ function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconTrashProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconTrashProperties> |      |
 
 ### IconTrash属性
 
@@ -444,16 +444,16 @@ export interface IconTrashProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement
+function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement;
 ```
 
 反转最近的内容编辑。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconUndoProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconUndoProperties> |      |
 
 ### 图标撤消属性
 
@@ -472,7 +472,7 @@ export interface IconUndoProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement
+function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement;
 ```
 
 `ForgeIconDownload` — 使用中性 JSX 方言创作的图标。
@@ -483,9 +483,9 @@ function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconDownloadProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconDownloadProperties> |      |
 
 ### 图标下载属性
 
@@ -504,7 +504,7 @@ export interface IconDownloadProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
+function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement;
 ```
 
 `ForgeIconUpload` — 使用中性 JSX 方言创作的图标。
@@ -515,9 +515,9 @@ function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconUploadProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconUploadProperties> |      |
 
 ### 图标上传属性
 
@@ -536,7 +536,7 @@ export interface IconUploadProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
+function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement;
 ```
 
 `ForgeIconFilter` — 使用中性 JSX 方言创作的图标。
@@ -547,9 +547,9 @@ function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconFilterProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconFilterProperties> |      |
 
 ### 图标过滤器属性
 
@@ -568,7 +568,7 @@ export interface IconFilterProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
+function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement;
 ```
 
 `ForgeIconSort` — 在中性 JSX 中编写的两 V 形排序指标
@@ -580,9 +580,9 @@ function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconSortProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconSortProperties> |      |
 
 ### 图标排序属性
 
@@ -611,7 +611,7 @@ export type SortDirection = 'asc' | 'desc' | undefined;
 **种类：**功能
 
 ```typescript
-function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement
+function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnAdd` — 使用中性 JSX 方言创作的图标。
@@ -622,9 +622,9 @@ function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperti
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconTableColumnAddProperties> |  |
+| 名称 | 类型                               | 描述 |
+| ---- | ---------------------------------- | ---- |
+| 属性 | 只读<IconTableColumnAddProperties> |      |
 
 ### 图标表列添加属性
 
@@ -643,7 +643,7 @@ export interface IconTableColumnAddProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement
+function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnRemove` — 使用中性 JSX 方言创作的图标。
@@ -654,9 +654,9 @@ function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemovePr
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconTableColumnRemoveProperties> |  |
+| 名称 | 类型                                  | 描述 |
+| ---- | ------------------------------------- | ---- |
+| 属性 | 只读<IconTableColumnRemoveProperties> |      |
 
 ### 图标表列删除属性
 
@@ -675,7 +675,7 @@ export interface IconTableColumnRemoveProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement
+function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement;
 ```
 
 `ForgeIconTableRowAdd` — 使用中性 JSX 方言创作的图标。
@@ -686,9 +686,9 @@ function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconTableRowAddProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<IconTableRowAddProperties> |      |
 
 ### 图标表行添加属性
 
@@ -707,7 +707,7 @@ export interface IconTableRowAddProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement
+function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableRowRemove` — 使用中性 JSX 方言创作的图标。
@@ -718,9 +718,9 @@ function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperti
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconTableRowRemoveProperties> |  |
+| 名称 | 类型                               | 描述 |
+| ---- | ---------------------------------- | ---- |
+| 属性 | 只读<IconTableRowRemoveProperties> |      |
 
 ### IconTableRowRemove属性
 
@@ -739,7 +739,7 @@ export interface IconTableRowRemoveProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
+function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement;
 ```
 
 `ForgeIconTable` — 使用中性 JSX 方言创作的图标。
@@ -750,9 +750,9 @@ function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconTableProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconTableProperties> |      |
 
 ### 图标表属性
 
@@ -771,7 +771,7 @@ export interface IconTableProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement
+function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement;
 ```
 
 `ForgeIconDrawCircle` — 使用中性 JSX 方言创作的图标。
@@ -782,9 +782,9 @@ function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconDrawCircleProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<IconDrawCircleProperties> |      |
 
 ### 图标绘制圆属性
 
@@ -803,7 +803,7 @@ export interface IconDrawCircleProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement
+function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement;
 ```
 
 `ForgeIconDrawLine` — 使用中性 JSX 方言创作的图标。
@@ -814,9 +814,9 @@ function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconDrawLineProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconDrawLineProperties> |      |
 
 ### 图标绘制线属性
 
@@ -835,7 +835,7 @@ export interface IconDrawLineProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement
+function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement;
 ```
 
 `ForgeIconDrawPolygon` — 使用中性 JSX 方言创作的图标。
@@ -846,9 +846,9 @@ function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconDrawPolygonProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<IconDrawPolygonProperties> |      |
 
 ### 图标绘制多边形属性
 
@@ -867,7 +867,7 @@ export interface IconDrawPolygonProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement
+function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement;
 ```
 
 `ForgeIconDrawSquare` — 使用中性 JSX 方言创作的图标。
@@ -878,9 +878,9 @@ function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconDrawSquareProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<IconDrawSquareProperties> |      |
 
 ### IconDrawSquare属性
 
@@ -899,7 +899,7 @@ export interface IconDrawSquareProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement
+function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement;
 ```
 
 `ForgeIconDrawTriangle` — 使用中性 JSX 方言创作的图标。
@@ -910,9 +910,9 @@ function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconDrawTriangleProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<IconDrawTriangleProperties> |      |
 
 ### 图标绘制三角形属性
 
@@ -931,7 +931,7 @@ export interface IconDrawTriangleProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
+function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement;
 ```
 
 `ForgeIconMove` — 使用中性 JSX 方言创作的图标。
@@ -942,9 +942,9 @@ function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconMoveProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconMoveProperties> |      |
 
 ### 图标移动属性
 
@@ -963,7 +963,7 @@ export interface IconMoveProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement
+function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement;
 ```
 
 `ForgeIconPalette` — 使用中性 JSX 方言创作的图标。
@@ -974,9 +974,9 @@ function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconPaletteProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<IconPaletteProperties> |      |
 
 ### 图标调色板属性
 
@@ -995,7 +995,7 @@ export interface IconPaletteProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
+function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement;
 ```
 
 `ForgeIconPencil` — 使用中性 JSX 方言创作的图标。
@@ -1006,9 +1006,9 @@ function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconPencilProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconPencilProperties> |      |
 
 ### 图标铅笔属性
 
@@ -1027,7 +1027,7 @@ export interface IconPencilProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement
+function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCcw` — 使用中性 JSX 方言创作的图标。
@@ -1038,9 +1038,9 @@ function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconRotateCcwProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<IconRotateCcwProperties> |      |
 
 ### 图标旋转CCW属性
 
@@ -1059,7 +1059,7 @@ export interface IconRotateCcwProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement
+function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCw` — 使用中性 JSX 方言创作的图标。
@@ -1070,9 +1070,9 @@ function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconRotateCwProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconRotateCwProperties> |      |
 
 ### IconRotateCw属性
 
@@ -1091,7 +1091,7 @@ export interface IconRotateCwProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement
+function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement;
 ```
 
 `ForgeIconScaleDown` — 使用中性 JSX 方言创作的图标。
@@ -1102,9 +1102,9 @@ function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconScaleDownProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<IconScaleDownProperties> |      |
 
 ### IconScaleDown属性
 
@@ -1123,7 +1123,7 @@ export interface IconScaleDownProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement
+function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement;
 ```
 
 `ForgeIconScaleUp` — 使用中性 JSX 方言创作的图标。
@@ -1134,9 +1134,9 @@ function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconScaleUpProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<IconScaleUpProperties> |      |
 
 ### 图标放大属性
 
@@ -1155,16 +1155,16 @@ export interface IconScaleUpProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement
+function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement;
 ```
 
 带有数据驱动国家口音的地球仪标记。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconCountryGlobeProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<IconCountryGlobeProperties> |      |
 
 ### 图标国家地球属性
 
@@ -1183,16 +1183,16 @@ export interface IconCountryGlobeProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement
+function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement;
 ```
 
 有界、数据驱动的国旗图标。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconFlagProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconFlagProperties> |      |
 
 ### 图标国家代码
 
@@ -1221,7 +1221,7 @@ export interface IconFlagProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement
+function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement;
 ```
 
 `ForgeIconGeodesic` — 使用中性 JSX 方言创作的图标。
@@ -1232,9 +1232,9 @@ function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconGeodesicProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconGeodesicProperties> |      |
 
 ### 图标测地线属性
 
@@ -1253,7 +1253,7 @@ export interface IconGeodesicProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
+function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement;
 ```
 
 `ForgeIconGlobe` — 使用中性 JSX 方言创作的图标。
@@ -1264,9 +1264,9 @@ function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconGlobeProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconGlobeProperties> |      |
 
 ### 图标地球属性
 
@@ -1285,7 +1285,7 @@ export interface IconGlobeProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement
+function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement;
 ```
 
 `ForgeIconLanguage` — 使用中性 JSX 方言创作的图标。
@@ -1296,9 +1296,9 @@ function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconLanguageProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconLanguageProperties> |      |
 
 ### 图标语言属性
 
@@ -1317,7 +1317,7 @@ export interface IconLanguageProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
+function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement;
 ```
 
 `ForgeIconMapPin` — 使用中性 JSX 方言创作的图标。
@@ -1328,9 +1328,9 @@ function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconMapPinProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconMapPinProperties> |      |
 
 ### IconMapPin属性
 
@@ -1349,16 +1349,16 @@ export interface IconMapPinProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement
+function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement;
 ```
 
 用于切换可见地理数据的地图图层堆栈符号。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconLayerProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconLayerProperties> |      |
 
 ### 图标层属性
 
@@ -1377,16 +1377,16 @@ export interface IconLayerProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement
+function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement;
 ```
 
 用于密集兴趣点的分组地图标记。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconMapMarkerClusterProperties> |  |
+| 名称 | 类型                                 | 描述 |
+| ---- | ------------------------------------ | ---- |
+| 属性 | 只读<IconMapMarkerClusterProperties> |      |
 
 ### 图标映射标记簇属性
 
@@ -1405,7 +1405,7 @@ export interface IconMapMarkerClusterProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
+function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement;
 ```
 
 `ForgeIconCamera` — 使用中性 JSX 方言创作的图标。
@@ -1416,9 +1416,9 @@ function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconCameraProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconCameraProperties> |      |
 
 ### 图标相机属性
 
@@ -1437,7 +1437,7 @@ export interface IconCameraProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
+function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement;
 ```
 
 `ForgeIconImage` — 使用中性 JSX 方言创作的图标。
@@ -1448,9 +1448,9 @@ function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconImageProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconImageProperties> |      |
 
 ### 图标图像属性
 
@@ -1469,7 +1469,7 @@ export interface IconImageProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
+function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement;
 ```
 
 `ForgeIconPause` — 在中性 JSX 中创作的填充停顿 (❙❙) 字形
@@ -1481,9 +1481,9 @@ function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconPauseProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconPauseProperties> |      |
 
 ### 图标暂停属性
 
@@ -1502,7 +1502,7 @@ export interface IconPauseProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
+function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement;
 ```
 
 `ForgeIconPlay` — 在中性 JSX 中创作的填充游戏 (▶) 三角形
@@ -1514,9 +1514,9 @@ function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconPlayProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconPlayProperties> |      |
 
 ### IconPlay属性
 
@@ -1535,7 +1535,7 @@ export interface IconPlayProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
+function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement;
 ```
 
 `ForgeIconArrow` — 用中性 JSX 方言编写的方向箭头。
@@ -1546,9 +1546,9 @@ function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconArrowProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconArrowProperties> |      |
 
 ### 图标箭头方向
 
@@ -1577,7 +1577,7 @@ export interface IconArrowProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement
+function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement;
 ```
 
 `ForgeIconChevron` — 用中性 JSX 方言编写的方向 V 形。
@@ -1588,9 +1588,9 @@ function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconChevronProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<IconChevronProperties> |      |
 
 ### 图标Chevron属性
 
@@ -1619,7 +1619,7 @@ V 形符号指向的方向。
 **种类：**功能
 
 ```typescript
-function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement
+function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement;
 ```
 
 `ForgeIconChevrons` — 一次创作的定向双 V 形 (« »)
@@ -1631,9 +1631,9 @@ function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconChevronsProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconChevronsProperties> |      |
 
 ### 图标V形方向方向
 
@@ -1662,7 +1662,7 @@ export interface IconChevronsProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
+function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement;
 ```
 
 `ForgeIconClose` — 使用中性 JSX 方言创作的图标。
@@ -1673,9 +1673,9 @@ function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconCloseProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconCloseProperties> |      |
 
 ### 图标关闭属性
 
@@ -1694,7 +1694,7 @@ export interface IconCloseProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
+function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement;
 ```
 
 `ForgeIconHome` — 使用中性 JSX 方言创作的图标。
@@ -1705,9 +1705,9 @@ function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconHomeProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconHomeProperties> |      |
 
 ### 图标主页属性
 
@@ -1726,7 +1726,7 @@ export interface IconHomeProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
+function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement;
 ```
 
 `ForgeIconJoin` — 使用中性 JSX 方言创作的图标。
@@ -1737,9 +1737,9 @@ function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconJoinProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconJoinProperties> |      |
 
 ### 图标加入属性
 
@@ -1758,7 +1758,7 @@ export interface IconJoinProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
+function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement;
 ```
 
 `ForgeIconMenu` — 使用中性 JSX 方言创作的图标。
@@ -1769,9 +1769,9 @@ function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconMenuProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconMenuProperties> |      |
 
 ### 图标菜单属性
 
@@ -1790,7 +1790,7 @@ export interface IconMenuProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
+function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement;
 ```
 
 `ForgeIconMinus` — 使用中性 JSX 方言创作的图标。
@@ -1801,9 +1801,9 @@ function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconMinusProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconMinusProperties> |      |
 
 ### 图标减号属性
 
@@ -1822,7 +1822,7 @@ export interface IconMinusProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
+function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement;
 ```
 
 `ForgeIconPlus` — 使用中性 JSX 方言创作的图标。
@@ -1833,9 +1833,9 @@ function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconPlusProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconPlusProperties> |      |
 
 ### IconPlus属性
 
@@ -1854,7 +1854,7 @@ export interface IconPlusProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement
+function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement;
 ```
 
 `ForgeIconRefresh` — 使用中性 JSX 方言创作的图标。
@@ -1865,9 +1865,9 @@ function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconRefreshProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<IconRefreshProperties> |      |
 
 ### 图标刷新属性
 
@@ -1886,7 +1886,7 @@ export interface IconRefreshProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
+function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement;
 ```
 
 `ForgeIconSplit` — 使用中性 JSX 方言创作的图标。
@@ -1897,9 +1897,9 @@ function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconSplitProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconSplitProperties> |      |
 
 ### IconSplit属性
 
@@ -1918,7 +1918,7 @@ export interface IconSplitProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement
+function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement;
 ```
 
 `ForgeIconExternalLink` — 使用中性 JSX 方言创作的图标。
@@ -1929,9 +1929,9 @@ function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconExternalLinkProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<IconExternalLinkProperties> |      |
 
 ### 图标外部链接属性
 
@@ -1950,7 +1950,7 @@ export interface IconExternalLinkProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
+function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement;
 ```
 
 `ForgeIconLink` — 使用中性 JSX 方言创作的图标。
@@ -1961,9 +1961,9 @@ function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconLinkProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconLinkProperties> |      |
 
 ### 图标链接属性
 
@@ -1982,7 +1982,7 @@ export interface IconLinkProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
+function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement;
 ```
 
 `ForgeIconSearch` — 使用中性 JSX 方言创作的图标。
@@ -1993,9 +1993,9 @@ function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconSearchProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconSearchProperties> |      |
 
 ### 图标搜索属性
 
@@ -2014,7 +2014,7 @@ export interface IconSearchProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
+function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement;
 ```
 
 `ForgeIconCloud` — 使用中性 JSX 方言创作的图标。
@@ -2025,9 +2025,9 @@ function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconCloudProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconCloudProperties> |      |
 
 ### IconCloud属性
 
@@ -2046,7 +2046,7 @@ export interface IconCloudProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
+function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement;
 ```
 
 `ForgeIconDebug` — 使用中性 JSX 方言创作的图标。
@@ -2057,9 +2057,9 @@ function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconDebugProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconDebugProperties> |      |
 
 ### 图标调试属性
 
@@ -2078,7 +2078,7 @@ export interface IconDebugProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
+function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement;
 ```
 
 `ForgeIconHeart` — 使用中性 JSX 方言创作的图标。
@@ -2089,9 +2089,9 @@ function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconHeartProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconHeartProperties> |      |
 
 ### 图标心形属性
 
@@ -2110,7 +2110,7 @@ export interface IconHeartProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement
+function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement;
 ```
 
 `ForgeIconLightning` — 使用中性 JSX 方言创作的图标。
@@ -2121,9 +2121,9 @@ function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconLightningProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<IconLightningProperties> |      |
 
 ### 图标闪电属性
 
@@ -2142,7 +2142,7 @@ export interface IconLightningProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
+function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement;
 ```
 
 `ForgeIconPuzzle` — 使用中性 JSX 方言创作的图标。
@@ -2153,9 +2153,9 @@ function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconPuzzleProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconPuzzleProperties> |      |
 
 ### 图标拼图属性
 
@@ -2174,7 +2174,7 @@ export interface IconPuzzleProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
+function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement;
 ```
 
 `ForgeIconQrCode` — 使用中性 JSX 方言创作的图标。
@@ -2185,9 +2185,9 @@ function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconQrCodeProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconQrCodeProperties> |      |
 
 ### 图标QrCode属性
 
@@ -2206,7 +2206,7 @@ export interface IconQrCodeProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement
+function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement;
 ```
 
 `ForgeIconSettings` — 使用中性 JSX 方言创作的图标。
@@ -2217,9 +2217,9 @@ function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconSettingsProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconSettingsProperties> |      |
 
 ### 图标设置属性
 
@@ -2238,7 +2238,7 @@ export interface IconSettingsProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
+function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement;
 ```
 
 `ForgeIconStar` — 使用中性 JSX 方言创作的图标。
@@ -2249,9 +2249,9 @@ function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconStarProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconStarProperties> |      |
 
 ### IconStar属性
 
@@ -2270,7 +2270,7 @@ export interface IconStarProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
+function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement;
 ```
 
 `ForgeIconWrench` — 使用中性 JSX 方言创作的图标。
@@ -2281,9 +2281,9 @@ function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconWrenchProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconWrenchProperties> |      |
 
 ### 图标扳手属性
 
@@ -2302,16 +2302,16 @@ export interface IconWrenchProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement
+function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement;
 ```
 
 具有明显起点和终点标记的路线。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconRouteProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconRouteProperties> |      |
 
 ### 图标路由属性
 
@@ -2330,16 +2330,16 @@ export interface IconRouteProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement
+function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement;
 ```
 
 用于路线和地图叠加的可重复使用的航点标记。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconWaypointProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconWaypointProperties> |      |
 
 ### IconWaypoint属性
 
@@ -2358,7 +2358,7 @@ export interface IconWaypointProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement
+function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement;
 ```
 
 `ForgeIconLockOpen` — 使用中性 JSX 方言创作的图标。
@@ -2369,9 +2369,9 @@ function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconLockOpenProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconLockOpenProperties> |      |
 
 ### IconLockOpen属性
 
@@ -2390,7 +2390,7 @@ export interface IconLockOpenProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
+function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement;
 ```
 
 `ForgeIconLock` — 使用中性 JSX 方言创作的图标。
@@ -2401,9 +2401,9 @@ function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconLockProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconLockProperties> |      |
 
 ### 图标锁属性
 
@@ -2422,7 +2422,7 @@ export interface IconLockProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
+function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement;
 ```
 
 `ForgeIconUser` — 使用中性 JSX 方言创作的图标。
@@ -2433,9 +2433,9 @@ function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconUserProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconUserProperties> |      |
 
 ### 图标用户属性
 
@@ -2454,7 +2454,7 @@ export interface IconUserProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement
+function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement;
 ```
 
 `ForgeIconAlertCritical` — 严重警报字形（八边形内的“！”，
@@ -2466,9 +2466,9 @@ function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconAlertCriticalProperties> |  |
+| 名称 | 类型                              | 描述 |
+| ---- | --------------------------------- | ---- |
+| 属性 | 只读<IconAlertCriticalProperties> |      |
 
 ### IconAlertCritical 属性
 
@@ -2487,7 +2487,7 @@ export interface IconAlertCriticalProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement
+function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement;
 ```
 
 `ForgeIconAlertInfo` — 信息警报字形（圆圈内的“i”）
@@ -2499,9 +2499,9 @@ function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconAlertInfoProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<IconAlertInfoProperties> |      |
 
 ### 图标警报信息属性
 
@@ -2520,7 +2520,7 @@ export interface IconAlertInfoProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement
+function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement;
 ```
 
 `ForgeIconAlertNeutral` — 中性警报字形（圆圈内的“–”）
@@ -2533,9 +2533,9 @@ function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconAlertNeutralProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<IconAlertNeutralProperties> |      |
 
 ### IconAlertNeutralProperties
 
@@ -2554,7 +2554,7 @@ export interface IconAlertNeutralProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement
+function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement;
 ```
 
 `ForgeIconAlertWarning` — 警告警报字形（三角形内的“！”）
@@ -2566,9 +2566,9 @@ function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconAlertWarningProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<IconAlertWarningProperties> |      |
 
 ### 图标警报警告属性
 
@@ -2587,7 +2587,7 @@ export interface IconAlertWarningProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
+function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement;
 ```
 
 `ForgeIconAlert` — 使用中性 JSX 方言创作的图标。
@@ -2598,9 +2598,9 @@ function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconAlertProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconAlertProperties> |      |
 
 ### 图标警报属性
 
@@ -2619,7 +2619,7 @@ export interface IconAlertProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
+function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement;
 ```
 
 `ForgeIconCheck` — 使用中性 JSX 方言创作的图标。
@@ -2630,9 +2630,9 @@ function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconCheckProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconCheckProperties> |      |
 
 ### 图标检查属性
 
@@ -2651,7 +2651,7 @@ export interface IconCheckProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
+function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement;
 ```
 
 `ForgeIconError` — 使用中性 JSX 方言创作的图标。
@@ -2662,9 +2662,9 @@ function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconErrorProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconErrorProperties> |      |
 
 ### 图标错误属性
 
@@ -2683,7 +2683,7 @@ export interface IconErrorProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
+function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement;
 ```
 
 `ForgeIconInfo` — 使用中性 JSX 方言创作的图标。
@@ -2694,9 +2694,9 @@ function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconInfoProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconInfoProperties> |      |
 
 ### 图标信息属性
 
@@ -2715,7 +2715,7 @@ export interface IconInfoProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
+function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement;
 ```
 
 `ForgeIconNotice` — 使用中性 JSX 方言创作的图标。
@@ -2726,9 +2726,9 @@ function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconNoticeProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconNoticeProperties> |      |
 
 ### 图标通知属性
 
@@ -2747,7 +2747,7 @@ export interface IconNoticeProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement
+function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement;
 ```
 
 `ForgeIconWarning` — 使用中性 JSX 方言创作的图标。
@@ -2758,9 +2758,9 @@ function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconWarningProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<IconWarningProperties> |      |
 
 ### 图标警告属性
 
@@ -2779,7 +2779,7 @@ export interface IconWarningProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement
+function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement;
 ```
 
 `ForgeIconAlignCenter` — 使用中性 JSX 方言创作的图标。
@@ -2790,9 +2790,9 @@ function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconAlignCenterProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<IconAlignCenterProperties> |      |
 
 ### 图标居中对齐属性
 
@@ -2811,7 +2811,7 @@ export interface IconAlignCenterProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement
+function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement;
 ```
 
 `ForgeIconAlignJustify` — 使用中性 JSX 方言创作的图标。
@@ -2822,9 +2822,9 @@ function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconAlignJustifyProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<IconAlignJustifyProperties> |      |
 
 ### 图标对齐对齐属性
 
@@ -2843,7 +2843,7 @@ export interface IconAlignJustifyProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement
+function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement;
 ```
 
 `ForgeIconAlignLeft` — 使用中性 JSX 方言创作的图标。
@@ -2854,9 +2854,9 @@ function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconAlignLeftProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<IconAlignLeftProperties> |      |
 
 ### 图标左对齐属性
 
@@ -2875,7 +2875,7 @@ export interface IconAlignLeftProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement
+function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement;
 ```
 
 `ForgeIconAlignRight` — 使用中性 JSX 方言创作的图标。
@@ -2886,9 +2886,9 @@ function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconAlignRightProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<IconAlignRightProperties> |      |
 
 ### 图标右对齐属性
 
@@ -2907,7 +2907,7 @@ export interface IconAlignRightProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement
+function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement;
 ```
 
 `ForgeIconBlockquote` — 使用中性 JSX 方言创作的图标。
@@ -2918,9 +2918,9 @@ function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconBlockquoteProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<IconBlockquoteProperties> |      |
 
 ### 图标块引用属性
 
@@ -2939,7 +2939,7 @@ export interface IconBlockquoteProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
+function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement;
 ```
 
 `ForgeIconBold` — 使用中性 JSX 方言创作的图标。
@@ -2950,9 +2950,9 @@ function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconBoldProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<IconBoldProperties> |      |
 
 ### IconBold属性
 
@@ -2971,7 +2971,7 @@ export interface IconBoldProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement
+function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement;
 ```
 
 `ForgeIconBulletList` — 使用中性 JSX 方言创作的图标。
@@ -2982,9 +2982,9 @@ function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconBulletListProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<IconBulletListProperties> |      |
 
 ### 图标项目符号列表属性
 
@@ -3003,7 +3003,7 @@ export interface IconBulletListProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement
+function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement;
 ```
 
 `ForgeIconCodeBlock` — 使用中性 JSX 方言创作的图标。
@@ -3014,9 +3014,9 @@ function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconCodeBlockProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<IconCodeBlockProperties> |      |
 
 ### 图标代码块属性
 
@@ -3035,7 +3035,7 @@ export interface IconCodeBlockProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement
+function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement;
 ```
 
 `ForgeIconCodeInline` — 使用中性 JSX 方言创作的图标。
@@ -3046,9 +3046,9 @@ function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconCodeInlineProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<IconCodeInlineProperties> |      |
 
 ### IconCodeInline属性
 
@@ -3067,7 +3067,7 @@ export interface IconCodeInlineProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement
+function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFive` — 使用中性 JSX 方言创作的图标。
@@ -3078,9 +3078,9 @@ function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconHeadingFiveProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<IconHeadingFiveProperties> |      |
 
 ### 图标标题五属性
 
@@ -3099,7 +3099,7 @@ export interface IconHeadingFiveProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement
+function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFour` — 使用中性 JSX 方言创作的图标。
@@ -3110,9 +3110,9 @@ function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconHeadingFourProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<IconHeadingFourProperties> |      |
 
 ### 图标标题四属性
 
@@ -3131,7 +3131,7 @@ export interface IconHeadingFourProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement
+function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement;
 ```
 
 `ForgeIconHeadingOne` — 使用中性 JSX 方言创作的图标。
@@ -3142,9 +3142,9 @@ function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconHeadingOneProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<IconHeadingOneProperties> |      |
 
 ### IconHeadingOne属性
 
@@ -3163,7 +3163,7 @@ export interface IconHeadingOneProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement
+function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement;
 ```
 
 `ForgeIconHeadingSix` — 使用中性 JSX 方言创作的图标。
@@ -3174,9 +3174,9 @@ function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconHeadingSixProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<IconHeadingSixProperties> |      |
 
 ### 图标标题六属性
 
@@ -3195,7 +3195,7 @@ export interface IconHeadingSixProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement
+function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement;
 ```
 
 `ForgeIconHeadingThree` — 使用中性 JSX 方言创作的图标。
@@ -3206,9 +3206,9 @@ function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconHeadingThreeProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<IconHeadingThreeProperties> |      |
 
 ### 图标标题三个属性
 
@@ -3227,7 +3227,7 @@ export interface IconHeadingThreeProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement
+function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement;
 ```
 
 `ForgeIconHeadingTwo` — 使用中性 JSX 方言创作的图标。
@@ -3238,9 +3238,9 @@ function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconHeadingTwoProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<IconHeadingTwoProperties> |      |
 
 ### 图标标题两个属性
 
@@ -3259,7 +3259,7 @@ export interface IconHeadingTwoProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement
+function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement;
 ```
 
 `ForgeIconHeading` — 使用中性 JSX 方言创作的图标。
@@ -3270,9 +3270,9 @@ function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconHeadingProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<IconHeadingProperties> |      |
 
 ### 图标标题属性
 
@@ -3291,7 +3291,7 @@ export interface IconHeadingProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
+function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement;
 ```
 
 `ForgeIconItalic` — 使用中性 JSX 方言创作的图标。
@@ -3302,9 +3302,9 @@ function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconItalicProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconItalicProperties> |      |
 
 ### IconItalic属性
 
@@ -3323,7 +3323,7 @@ export interface IconItalicProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement
+function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement;
 ```
 
 `ForgeIconNumberedList` — 使用中性 JSX 方言创作的图标。
@@ -3334,9 +3334,9 @@ function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconNumberedListProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<IconNumberedListProperties> |      |
 
 ### 图标编号列表属性
 
@@ -3355,7 +3355,7 @@ export interface IconNumberedListProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement
+function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement;
 ```
 
 `ForgeIconStrikethrough` — 使用中性 JSX 方言创作的图标。
@@ -3366,9 +3366,9 @@ function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconStrikethroughProperties> |  |
+| 名称 | 类型                              | 描述 |
+| ---- | --------------------------------- | ---- |
+| 属性 | 只读<IconStrikethroughProperties> |      |
 
 ### 图标删除线属性
 
@@ -3387,7 +3387,7 @@ export interface IconStrikethroughProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement
+function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement;
 ```
 
 `ForgeIconUnderline` — 使用中性 JSX 方言创作的图标。
@@ -3398,9 +3398,9 @@ function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconUnderlineProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<IconUnderlineProperties> |      |
 
 ### 图标下划线属性
 
@@ -3419,7 +3419,7 @@ export interface IconUnderlineProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement
+function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement;
 ```
 
 `ForgeIconCalendar` — 使用中性 JSX 方言创作的图标。
@@ -3430,9 +3430,9 @@ function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconCalendarProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<IconCalendarProperties> |      |
 
 ### 图标日历属性
 
@@ -3451,7 +3451,7 @@ export interface IconCalendarProperties
 **种类：**功能
 
 ```typescript
-function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
+function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement;
 ```
 
 `ForgeIconClock` — 使用中性 JSX 方言创作的图标。
@@ -3462,9 +3462,9 @@ function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconClockProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<IconClockProperties> |      |
 
 ### 图标时钟属性
 
@@ -3483,7 +3483,7 @@ export interface IconClockProperties
 **种类：**常数
 
 ```typescript
-export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
+export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[];
 ```
 
 没有提供描述。
@@ -3493,17 +3493,17 @@ export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
 **种类：**功能
 
 ```typescript
-function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void
+function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|作文 |只读 IconSymbolDefinition[] |  |
-|可用 ID |只读设置<string> |  |
+| 名称    | 类型                        | 描述 |
+| ------- | --------------------------- | ---- |
+| 作文    | 只读 IconSymbolDefinition[] |      |
+| 可用 ID | 只读设置<string>            |      |
 
 ## `src/sprite/country-flags`
 
@@ -3512,7 +3512,7 @@ function validateCompositions(compositions: readonly IconSymbolDefinition[], ava
 **种类：**常数
 
 ```typescript
-export const SUPPORTED_COUNTRY_CODES
+export const SUPPORTED_COUNTRY_CODES;
 ```
 
 已发布的精灵中带有规范标志符号的国家/地区代码。
@@ -3524,7 +3524,7 @@ export const SUPPORTED_COUNTRY_CODES
 **种类：**常数
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS
+export const COUNTRY_FLAG_SYMBOL_IDS;
 ```
 
 没有提供描述。
@@ -3534,7 +3534,7 @@ export const COUNTRY_FLAG_SYMBOL_IDS
 **种类：**常数
 
 ```typescript
-export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
+export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[];
 ```
 
 没有提供描述。
@@ -3546,16 +3546,16 @@ export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
 **种类：**功能
 
 ```typescript
-function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement
+function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement;
 ```
 
 引用规范精灵几何体的共享可访问包装器。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconUseProperties> |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读<IconUseProperties> |      |
 
 ### 图标使用属性
 
@@ -3574,7 +3574,7 @@ export interface IconUseProperties
 **种类：**常数
 
 ```typescript
-export const IconSpriteContext
+export const IconSpriteContext;
 ```
 
 没有提供描述。
@@ -3584,32 +3584,32 @@ export const IconSpriteContext
 **种类：**功能
 
 ```typescript
-function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement
+function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement;
 ```
 
 为图标组件的子树安装一个内联精灵主机。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconSpriteProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconSpriteProperties> |      |
 
 ### 使用图标参考
 
 **种类：**功能
 
 ```typescript
-function useIconHref(symbolId: string): string
+function useIconHref(symbolId: string): string;
 ```
 
 解析图标包装器的本地或外部符号 URL。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|符号 ID |字符串|  |
+| 名称    | 类型   | 描述 |
+| ------- | ------ | ---- |
+| 符号 ID | 字符串 |      |
 
 ## `src/sprite/serialize`
 
@@ -3618,48 +3618,48 @@ function useIconHref(symbolId: string): string
 **种类：**功能
 
 ```typescript
-function serializeNode(node: IconSvgNode): string
+function serializeNode(node: IconSvgNode): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |图标SvgNode |  |
+| 名称 | 类型        | 描述 |
+| ---- | ----------- | ---- |
+| node | 图标SvgNode |      |
 
 ### 序列化精灵
 
 **种类：**功能
 
 ```typescript
-function serializeSprite(definitions: readonly IconSymbolDefinition[]): string
+function serializeSprite(definitions: readonly IconSymbolDefinition[]): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|定义|只读 IconSymbolDefinition[] |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 定义 | 只读 IconSymbolDefinition[] |      |
 
 ### 序列化符号
 
 **种类：**功能
 
 ```typescript
-function serializeSymbol(definition: IconSymbolDefinition): string
+function serializeSymbol(definition: IconSymbolDefinition): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|定义|图标符号定义 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 定义 | 图标符号定义 |      |
 
 ## `src/sprite/types`
 

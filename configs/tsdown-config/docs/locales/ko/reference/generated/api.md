@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 롤다운 구축 `external` / `deps.neverBundle` 모든 것을 처리하는 술어
@@ -24,16 +24,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이름 | 읽기 전용 문자열[] |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 이름 | 읽기 전용 문자열[] |      |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 모든 공유 라이브러리는 피어 제공으로 처리되어야 하는 기본 패키지 이름입니다.
@@ -44,7 +44,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 **종류:** 기능
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 일반에 대한 tsdown 구성 구축 TypeScript (또는 단일 번들) 라이브러리 —
@@ -53,16 +53,16 @@ function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | TsdownLibrary옵션 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 옵션 | TsdownLibrary옵션 |      |
 
 ### 정의TsdownVue라이브러리
 
 **종류:** 기능
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 {@link DefineTsdownLibrary}와 비슷하지만 와이어 `unplugin-vue` 그리고 Vue-인식 dts
@@ -70,16 +70,16 @@ function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | TsdownLibrary옵션 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 옵션 | TsdownLibrary옵션 |      |
 
 ### readPackageDependencyNames
 
 **종류:** 기능
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 읽기 `dependencies` 그리고 `peerDependencies` package.json에 선언됨
@@ -88,16 +88,16 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 루트디렉토리 | 문자열 |  |
+| 이름         | 유형   | 설명 |
+| ------------ | ------ | ---- |
+| 루트디렉토리 | 문자열 |      |
 
 ### 해결TsdownOutput디렉터리
 
 **종류:** 기능
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 최종 패키지 출력 경로를 격리된 빌드 루트로 미러링합니다. 유지
@@ -106,11 +106,11 @@ tsdown이 형제 트리를 정리하는 것을 허용하지 않고 독립적으�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 루트디렉토리 | 문자열 |  |
-| 출력디렉토리 | 문자열 |  |
-| 출력루트 | 문자열 |  |
+| 이름         | 유형   | 설명 |
+| ------------ | ------ | ---- |
+| 루트디렉토리 | 문자열 |      |
+| 출력디렉토리 | 문자열 |      |
+| 출력루트     | 문자열 |      |
 
 ### TsdownLibrary옵션
 

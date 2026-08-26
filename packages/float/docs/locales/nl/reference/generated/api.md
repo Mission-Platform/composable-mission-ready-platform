@@ -26,7 +26,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type AlertBannerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Intentie/kleurbehandeling van de banner — de canonieke kleurenset.
@@ -36,7 +37,7 @@ Intentie/kleurbehandeling van de banner — de canonieke kleurenset.
 **Soort:** functie
 
 ```typescript
-function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement
+function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement;
 ```
 
 `ForgeAlertBanner` — een inline waarschuwings-/meldingsbanner die eenmaal is geschreven in de
@@ -62,9 +63,9 @@ heeft geen voorwaardelijke wortelretour).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<AlertBannerProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<AlertBannerProperties> |              |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -93,7 +94,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement
+function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 ```
 
 `ForgeDropdown` — een zwevend menu/lijstpaneel verankerd aan een trigger, geschreven
@@ -138,9 +139,9 @@ rekwisieten. Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-mod
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<DropdownProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<DropdownProperties> |              |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -149,7 +150,7 @@ rekwisieten. Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-mod
 **Soort:** functie
 
 ```typescript
-function ForgePopover(properties: Readonly<PopoverProperties>): MpElement
+function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 ```
 
 `ForgePopover` — een zwevend dialoogvenster verankerd aan een trigger, eenmaal geschreven in de
@@ -194,16 +195,28 @@ terugroep rekwisieten. Het is eigenaar van de stijl via de naast elkaar geplaats
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<PopoverProperties> |  |
+| Naam          | Typ                             | Beschrijving |
+| ------------- | ------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<PopoverProperties> |              |
 
 ### Popoverplaatsing
 
 **Soort:** type
 
 ```typescript
-export type PopoverPlacement = | 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end';
+export type PopoverPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
 ```
 
 Voorkeursplaatsing van de popover ten opzichte van de trigger.
@@ -225,7 +238,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeToast(properties: Readonly<ToastProperties>): MpElement
+function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 ```
 
 `ForgeToast` - een enkele toastmeldingskaart die één keer in de neutrale stand is geschreven
@@ -247,9 +260,9 @@ ingesteld (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/`ForgeIconInfo`)
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ToastProperties> |  |
+| Naam          | Typ                           | Beschrijving |
+| ------------- | ----------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ToastProperties> |              |
 
 ### ToastEigenschappen
 
@@ -276,7 +289,8 @@ Grootte token - canonieke 2xs → 2xl schaal.
 **Soort:** type
 
 ```typescript
-export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ToastVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Intentie/kleurbehandeling van de toast — de canonieke kleurenset.
@@ -288,7 +302,7 @@ Intentie/kleurbehandeling van de toast — de canonieke kleurenset.
 **Soort:** functie
 
 ```typescript
-function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
+function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 ```
 
 `ForgeTooltip` — een korte contextuele hint verankerd in de trigger, één keer geschreven
@@ -330,9 +344,9 @@ bezit zijn stijl via de naast elkaar geplaatste CSS-module `forge-tooltip.module
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TooltipProperties> |  |
+| Naam          | Typ                             | Beschrijving |
+| ------------- | ------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TooltipProperties> |              |
 
 ### TooltipPlaatsing
 
@@ -391,7 +405,7 @@ Grootte token - canonieke 2xs → 2xl schaal.
 **Soort:** functie
 
 ```typescript
-function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
+function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 ```
 
 `ForgeDialog` — een modale dialoog die ooit in het neutrale JSX-dialect is geschreven en
@@ -419,9 +433,9 @@ rekwisieten. Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-mod
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<DialogProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<DialogProperties> |              |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -430,7 +444,7 @@ rekwisieten. Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-mod
 **Soort:** functie
 
 ```typescript
-function ForgeModal(properties: Readonly<ModalProperties>): MpElement
+function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 ```
 
 `ForgeModal` — een gecentreerde modale versie die ooit in het neutrale JSX-dialect is geschreven en
@@ -456,9 +470,9 @@ co-located CSS-module `forge-modal.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ModalProperties> |  |
+| Naam          | Typ                           | Beschrijving |
+| ------------- | ----------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ModalProperties> |              |
 
 ### Modale eigenschappen
 
@@ -487,7 +501,7 @@ Breedtestap van de modal op tablet/desktop (`sm`+); mobiel is altijd over de vol
 **Soort:** functie
 
 ```typescript
-function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement
+function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement;
 ```
 
 `ForgeToastContainer` — geeft de toast weer die wordt bewaard in de gedeelde `toast-store`,
@@ -503,6 +517,7 @@ waarneembare winkel met de neutrale {@link useState}/{@link useEffect} hooks
 source blijft reactief op beide frameworks.
 
 Toegankelijkheid:
+
 - De stapel is een `role="region"` met een configureerbare `aria-label`; elk
   `ForgeToast` heeft zijn eigen `role="status"` / `role="alert"`.
 
@@ -526,9 +541,9 @@ composable → de statische `notification` z-indexlaag toegepast in CSS.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ToastContainerProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ToastContainerProperties> |              |
 
 ### ToastContainerEigenschappen
 
@@ -557,7 +572,7 @@ Grootte token - canonieke 2xs → 2xl schaal.
 **Soort:** functie
 
 ```typescript
-function clearToasts(): void
+function clearToasts(): void;
 ```
 
 Sla alle toastjes af.
@@ -567,23 +582,23 @@ Sla alle toastjes af.
 **Soort:** functie
 
 ```typescript
-function dismissToast(id: number): void
+function dismissToast(id: number): void;
 ```
 
 Een toast van id afwijzen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ID | nummer |  |
+| Naam | Typ    | Beschrijving |
+| ---- | ------ | ------------ |
+| ID   | nummer |              |
 
 ### foutToast
 
 **Soort:** constant
 
 ```typescript
-export const errorToast
+export const errorToast;
 ```
 
 Gemak: toon een `error`-toast.
@@ -593,7 +608,7 @@ Gemak: toon een `error`-toast.
 **Soort:** functie
 
 ```typescript
-function getToastsSnapshot(): readonly ToastRecord[]
+function getToastsSnapshot(): readonly ToastRecord[];
 ```
 
 Lees een onveranderlijke momentopname van de actieve toasts.
@@ -603,7 +618,7 @@ Lees een onveranderlijke momentopname van de actieve toasts.
 **Soort:** constant
 
 ```typescript
-export const infoToast
+export const infoToast;
 ```
 
 Gemak: toon een `info`-toast.
@@ -613,39 +628,39 @@ Gemak: toon een `info`-toast.
 **Soort:** functie
 
 ```typescript
-function showToast(options: ToastOptions | string): number
+function showToast(options: ToastOptions | string): number;
 ```
 
 Laat een toost zien en stuur de ID terug.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | Toastopties \| tekenreeks |  |
+| Naam   | Typ                       | Beschrijving |
+| ------ | ------------------------- | ------------ |
+| opties | Toastopties \| tekenreeks |              |
 
 ### abonnerenToast
 
 **Soort:** functie
 
 ```typescript
-function subscribeToasts(listener: () => void): () => void
+function subscribeToasts(listener: () => void): () => void;
 ```
 
 Abonneer u om wijzigingen op te slaan; retourneert een afmeldfunctie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| luisteraar | () => ongeldig |  |
+| Naam       | Typ            | Beschrijving |
+| ---------- | -------------- | ------------ |
+| luisteraar | () => ongeldig |              |
 
 ### succesToast
 
 **Soort:** constant
 
 ```typescript
-export const successToast
+export const successToast;
 ```
 
 Gemak: toon een `success`-toast.
@@ -685,7 +700,7 @@ Een vastberaden toast gehouden in de winkel.
 **Soort:** functie
 
 ```typescript
-function useToast(): UseToastReturn
+function useToast(): UseToastReturn;
 ```
 
 Imperatieve helpers bij het tonen en afwijzen van toast, in navolging van de Vue
@@ -707,7 +722,7 @@ De openbare API geretourneerd door {@link useToast}.
 **Soort:** constant
 
 ```typescript
-export const warningToast
+export const warningToast;
 ```
 
 Gemak: toon een `warning`-toast.

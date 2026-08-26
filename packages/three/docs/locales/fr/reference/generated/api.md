@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement
+function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
 ForgeThreeCanvas - un composant indépendant du framework qui restitue un <canvas>
@@ -24,9 +24,9 @@ et gère un contexte WebGL Three.js via `useThree`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ForgeThreeCanvasProperties> |  |
+| Nom        | Tapez                                     | Descriptif |
+| ---------- | ----------------------------------------- | ---------- |
+| propriétés | Lecture seule<ForgeThreeCanvasProperties> |            |
 
 ### ForgeThreeCanvasPropriétés
 
@@ -55,7 +55,10 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function useThree(canvasReference: ReferenceLike<HTMLCanvasElement | null>, onReady?: (context: ThreeContext) => void | (() => void)): void
+function useThree(
+  canvasReference: ReferenceLike<HTMLCanvasElement | null>,
+  onReady?: (context: ThreeContext) => void | (() => void),
+): void;
 ```
 
 Hook Three.js indépendant du framework.
@@ -66,7 +69,7 @@ Nettoyage automatique : supprime le moteur de rendu et annule l'image d'animati
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| toileRéférence | RéférenceLike<HTMLCanvasElement \| null> |  |
-| prêt | (contexte : ThreeContext) => void \| (() => vide) |  |
+| Nom            | Tapez                                             | Descriptif |
+| -------------- | ------------------------------------------------- | ---------- |
+| toileRéférence | RéférenceLike<HTMLCanvasElement \| null>          |            |
+| prêt           | (contexte : ThreeContext) => void \| (() => vide) |            |

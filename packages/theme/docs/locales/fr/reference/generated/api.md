@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle` — fait défiler le thème actif via `light → dark → auto`,
@@ -39,9 +39,9 @@ via l'emplacement par défaut.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ThemeToggleProperties> |  |
+| Nom        | Tapez                                | Descriptif |
+| ---------- | ------------------------------------ | ---------- |
+| propriétés | Lecture seule<ThemeToggleProperties> |            |
 
 ### ThemeTogglePropriétés
 
@@ -70,7 +70,7 @@ Jeton de taille – échelle canonique 2xs → 2xl.
 **Genre :** fonction
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer` — compose les remplacements de jetons de conception `--mp-*` d'exécution (marque
@@ -96,9 +96,9 @@ le wrapper est un `<div>` fixe.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ThemeComposerProperties> |  |
+| Nom        | Tapez                                  | Descriptif |
+| ---------- | -------------------------------------- | ---------- |
+| propriétés | Lecture seule<ThemeComposerProperties> |            |
 
 ### Propriétés du compositeur de thème
 
@@ -127,7 +127,7 @@ Jeton de taille – échelle canonique 2xs → 2xl.
 **Genre :** fonction
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider` : configure le magasin de thèmes partagés à partir de ses accessoires et
@@ -151,9 +151,9 @@ magasin au niveau du document avec un wrapper `<div>` fixe.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ThemeProviderProperties> |  |
+| Nom        | Tapez                                  | Descriptif |
+| ---------- | -------------------------------------- | ---------- |
+| propriétés | Lecture seule<ThemeProviderProperties> |            |
 
 ### Propriétés du fournisseur de thème
 
@@ -182,7 +182,7 @@ Jeton de taille – échelle canonique 2xs → 2xl (héritée via le wrapper s
 **Genre :** constante
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 Mappe chaque attribut convivial à la propriété personnalisée CSS `--mp-*` qu’il remplace.
@@ -192,7 +192,7 @@ Mappe chaque attribut convivial à la propriété personnalisée CSS `--mp-*` qu
 **Genre :** fonction
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 Convertit un {@link ThemeComposerConfig} en une carte plate de CSS personnalisée
@@ -201,111 +201,115 @@ La trappe d'évacuation `tokens` est fusionnée sur le dessus.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| configuration | ThemeComposerConfig |  |
+| Nom           | Tapez               | Descriptif |
+| ------------- | ------------------- | ---------- |
+| configuration | ThemeComposerConfig |            |
 
 ### configVersStyleString
 
 **Genre :** fonction
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 Résolvez une configuration en chaîne `style` en ligne complète (propriétés personnalisées + `color-scheme`).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| configuration | ThemeComposerConfig |  |
+| Nom           | Tapez               | Descriptif |
+| ------------- | ------------------- | ---------- |
+| configuration | ThemeComposerConfig |            |
 
 ### cssVariablesVersChaîne
 
 **Genre :** fonction
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 Sérialise une carte de propriétés personnalisées CSS dans une chaîne `style` en ligne.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| variables | Enregistrement<string, string> |  |
+| Nom       | Tapez                          | Descriptif |
+| --------- | ------------------------------ | ---------- |
+| variables | Enregistrement<string, string> |            |
 
 ### mergeConfig
 
 **Genre :** fonction
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 Fusionnez superficiellement une configuration partielle dans la configuration actuelle (effacement de `undefined`/valeurs vides).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| configuration | ThemeComposerConfig |  |
-| partiel | ThemeComposerConfig |  |
+| Nom           | Tapez               | Descriptif |
+| ------------- | ------------------- | ---------- |
+| configuration | ThemeComposerConfig |            |
+| partiel       | ThemeComposerConfig |            |
 
 ### supprimerConfigToken
 
 **Genre :** fonction
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 Supprimez un seul remplacement de jeton brut.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| configuration | ThemeComposerConfig |  |
-| clé | chaîne |  |
+| Nom           | Tapez               | Descriptif |
+| ------------- | ------------------- | ---------- |
+| configuration | ThemeComposerConfig |            |
+| clé           | chaîne              |            |
 
 ### setConfigAttribute
 
 **Genre :** fonction
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 Définissez un seul attribut convivial (passez `undefined` pour l'effacer).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| configuration | ThemeComposerConfig |  |
-| attribut | K |  |
-| valeur | ThemeComposerConfig[K] |  |
+| Nom           | Tapez                  | Descriptif |
+| ------------- | ---------------------- | ---------- |
+| configuration | ThemeComposerConfig    |            |
+| attribut      | K                      |            |
+| valeur        | ThemeComposerConfig[K] |            |
 
 ### setConfigToken
 
 **Genre :** fonction
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 Définissez un seul remplacement de jeton brut. La clé peut omettre le préfixe `--mp-`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| configuration | ThemeComposerConfig |  |
-| clé | chaîne |  |
-| valeur | chaîne |  |
+| Nom           | Tapez               | Descriptif |
+| ------------- | ------------------- | ---------- |
+| configuration | ThemeComposerConfig |            |
+| clé           | chaîne              |            |
+| valeur        | chaîne              |            |
 
 ## `src/stores/theme-store/theme-store`
 
@@ -314,7 +318,7 @@ Définissez un seul remplacement de jeton brut. La clé peut omettre le préfixe
 **Genre :** fonction
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 (Re)configurez le magasin partagé à partir des accessoires d'un `ForgeThemeProvider` : changez le
@@ -323,16 +327,16 @@ adopter le `defaultTheme` du fournisseur. Réapplique et informe les abonnés.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| configuration | ThèmeConfig |  |
+| Nom           | Tapez       | Descriptif |
+| ------------- | ----------- | ---------- |
+| configuration | ThèmeConfig |            |
 
 ### cycleThème
 
 **Genre :** fonction
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 Parcourez `light → dark → auto → light`.
@@ -342,7 +346,7 @@ Parcourez `light → dark → auto → light`.
 **Genre :** fonction
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 Lisez un instantané immuable de l’état actuel du magasin.
@@ -362,32 +366,32 @@ Le thème concret réellement appliqué à l'interface utilisateur (jamais `'aut
 **Genre :** fonction
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 Définissez explicitement la préférence de thème.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| suivant | Thème |  |
+| Nom     | Tapez | Descriptif |
+| ------- | ----- | ---------- |
+| suivant | Thème |            |
 
 ### abonnez-vousThème
 
 **Genre :** fonction
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 Abonnez-vous pour stocker les modifications ; renvoie une fonction de désabonnement.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| auditeur | () => vide |  |
+| Nom      | Tapez      | Descriptif |
+| -------- | ---------- | ---------- |
+| auditeur | () => vide |            |
 
 ### Thème
 
@@ -424,7 +428,7 @@ Un instantané immuable de l'état actuel du magasin, renvoyé par {@link getThe
 **Genre :** fonction
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 Basculez entre clair et sombre, en fonction du thème actuellement résolu.

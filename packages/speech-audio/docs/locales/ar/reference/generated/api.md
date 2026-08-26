@@ -26,7 +26,7 @@ export interface MidiControls
 **النوع:** الوظيفة
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 خطاف MIDI على الويب محايد للإطار. يطلب الوصول إلى MIDI، ويتتبع ما هو متاح
@@ -53,7 +53,7 @@ export interface SoundControls
 **النوع:** الوظيفة
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 خطاف تشغيل الصوت المحايد للإطار. تشغيل مقطع صوتي من `source` عبر
@@ -66,9 +66,9 @@ function useSound(source?: string): SoundControls
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المصدر | سلسلة |       |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ export interface SpeechRecognitionOptions
 **النوع:** الوظيفة
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 ربط الكلام إلى النص المحايد للإطار مبني على المتصفح الأصلي
@@ -135,7 +135,7 @@ export interface SpeechSynthesisControls
 **النوع:** الوظيفة
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 خطاف تحويل النص إلى كلام محايد للإطار مبني على المتصفح الأصلي

@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement
+function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 ```
 
 `ForgeTypography` — la primitive de style de texte créée une fois dans le JSX neutre
@@ -46,16 +46,28 @@ déborde en fait), positionné avec **CSS Anchor Positioning** au lieu de
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<TypographyProperties> |  |
+| Nom        | Tapez                               | Descriptif |
+| ---------- | ----------------------------------- | ---------- |
+| propriétés | Lecture seule<TypographyProperties> |            |
 
 ### TypographieCouleur
 
 **Genre :** type
 
 ```typescript
-export type TypographyColor = | 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'inverse' | 'inherit' | 'neutral' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TypographyColor =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'disabled'
+  | 'inverse'
+  | 'inherit'
+  | 'neutral'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'error'
+  | 'critical';
 ```
 
 Couleur du texte. Les jetons structurels (`primary`/`secondary`/`tertiary`/
@@ -128,7 +140,22 @@ Lorsqu'un lien dessine son soulignement.
 **Genre :** type
 
 ```typescript
-export type TypographyVariant = | 'display' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body-lg' | 'body-md' | 'body-sm' | 'body-xs' | 'label' | 'caption' | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */ | 'link';
+export type TypographyVariant =
+  | 'display'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body-lg'
+  | 'body-md'
+  | 'body-sm'
+  | 'body-xs'
+  | 'label'
+  | 'caption'
+  | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */
+  | 'link';
 ```
 
 L'étape d'échelle de type sémantique/visuelle à laquelle le texte est rendu.
@@ -138,7 +165,8 @@ L'étape d'échelle de type sémantique/visuelle à laquelle le texte est rendu.
 **Genre :** type
 
 ```typescript
-export type TypographyVerticalAlign = 'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
+export type TypographyVerticalAlign =
+  'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
 ```
 
 Alignement vertical de la zone de texte (en ligne) (mappé vers CSS `vertical-align`).

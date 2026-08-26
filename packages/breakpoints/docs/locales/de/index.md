@@ -25,15 +25,15 @@ Wählen Sie das Framework **einmal** aus – `resolve.conditions` über `defineF
 
 Die Plattform verwendet eine siebenstufige Reaktionsskalierung basierend auf den Schwellenwerten für die Breite des Ansichtsfensters:
 
-| Schlüssel | Etikett | Schwelle | Häufiges Gerät/Anwendungsfall |
-| :---- | :---------------- | :------------ | :------------------------------ |
-| `2xs` | Extra-extra-klein | $\ge 0$ px | Alle Geräte |
-| `xs` | Extraklein | $\ge 480$ px | Große Telefone |
-| `sm` | Klein | $\ge 768$ px | Tablet-Porträt |
-| `md` | Mittel | $\ge 1024$ px | Tablet-Querformat / kleiner Laptop |
-| `lg` | Groß | $\ge 1920$ px | Full HD / 1080p |
-| `xl` | Extragroß | $\ge 2560$ px | QHD |
-| `2xl` | Extra-extra-groß | $\ge 3840$ px | 4K UHD |
+| Schlüssel | Etikett           | Schwelle      | Häufiges Gerät/Anwendungsfall      |
+| :-------- | :---------------- | :------------ | :--------------------------------- |
+| `2xs`     | Extra-extra-klein | $\ge 0$ px    | Alle Geräte                        |
+| `xs`      | Extraklein        | $\ge 480$ px  | Große Telefone                     |
+| `sm`      | Klein             | $\ge 768$ px  | Tablet-Porträt                     |
+| `md`      | Mittel            | $\ge 1024$ px | Tablet-Querformat / kleiner Laptop |
+| `lg`      | Groß              | $\ge 1920$ px | Full HD / 1080p                    |
+| `xl`      | Extragroß         | $\ge 2560$ px | QHD                                |
+| `2xl`     | Extra-extra-groß  | $\ge 3840$ px | 4K UHD                             |
 
 ## Kerndienstprogramme (`/core`)
 

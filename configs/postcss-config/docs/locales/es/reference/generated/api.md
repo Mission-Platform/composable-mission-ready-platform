@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/post
 **Tipo:** constante
 
 ```typescript
-export const config: { plugins: AcceptedPlugin[] }
+export const config: { plugins: AcceptedPlugin[] };
 ```
 
 No se proporciona descripción.

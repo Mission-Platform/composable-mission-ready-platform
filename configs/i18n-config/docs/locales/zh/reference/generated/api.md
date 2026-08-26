@@ -16,24 +16,24 @@
 **种类：**功能
 
 ```typescript
-function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig
+function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|默认 NS |字符串|  |
-|选项 | I18nConfigOptions | I18nConfigOptions | I18nConfigOptions  |
+| 名称    | 类型              | 描述              |
+| ------- | ----------------- | ----------------- |
+| 默认 NS | 字符串            |                   |
+| 选项    | I18nConfigOptions | I18nConfigOptions | I18nConfigOptions |
 
 ### DEFAULT_LOCALE
 
 **种类：**常数
 
 ```typescript
-export const DEFAULT_LOCALE
+export const DEFAULT_LOCALE;
 ```
 
 没有提供描述。
@@ -63,7 +63,7 @@ export interface I18nConfigOptions
 **种类：**常数
 
 ```typescript
-export const SUPPORTED_LOCALES
+export const SUPPORTED_LOCALES;
 ```
 
 没有提供描述。

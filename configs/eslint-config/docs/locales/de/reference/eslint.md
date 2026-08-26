@@ -24,14 +24,14 @@ Codequalität, Zugänglichkeit und Architekturregeln für alle Pakete, Anwendung
 
 Die Konfiguration umfasst die folgenden Plugins und Regelsätze:
 
-| Plugin | Zweck |
-|:-------------------------|:-------------------------------------------------------|
-| `typescript-eslint`      | Standard TypeScript Regeln und typbewusstes Linting.      |
-| `eslint-plugin-vue`      | Vue 3 SFC-Linting und Vorlagenvalidierung.             |
-| `eslint-plugin-sonarjs`  | Erkennung von Code-Gerüchen und Fehlerrisiken.                |
-| `eslint-plugin-unicorn`  | Dutzende kleine, nützliche Community-Regeln.               |
-| `eslint-plugin-i18next`  | Stellt sicher, dass Übersetzungsschlüssel korrekt verwendet werden.           |
-| `eslint-config-prettier` | Deaktiviert Regeln, die im Konflikt stehen Prettier Formatierung. |
+| Plugin                   | Zweck                                                               |
+| :----------------------- | :------------------------------------------------------------------ |
+| `typescript-eslint`      | Standard TypeScript Regeln und typbewusstes Linting.                |
+| `eslint-plugin-vue`      | Vue 3 SFC-Linting und Vorlagenvalidierung.                          |
+| `eslint-plugin-sonarjs`  | Erkennung von Code-Gerüchen und Fehlerrisiken.                      |
+| `eslint-plugin-unicorn`  | Dutzende kleine, nützliche Community-Regeln.                        |
+| `eslint-plugin-i18next`  | Stellt sicher, dass Übersetzungsschlüssel korrekt verwendet werden. |
+| `eslint-config-prettier` | Deaktiviert Regeln, die im Konflikt stehen Prettier Formatierung.   |
 
 ## Verwendung
 

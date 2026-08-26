@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/email-rende
 **Art:** Funktion
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 Rendern Sie den freigegebenen Forge-Baum als React-Element für Browservorschauen.
@@ -24,25 +24,25 @@ Rendern Sie den freigegebenen Forge-Baum als React-Element für Browservorschaue
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| node | EmailNode |  |
+| ---- | --------- | ---------------- |
+| node | EmailNode |                  |
 
 ### toEmailReactComponent
 
 **Art:** Funktion
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 Verpacken Sie eine Forge-E-Mail-Komponente als React-Funktionskomponente.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | MpComponent<P> |  |
-| Name | Zeichenfolge |  |
+| Name       | Geben Sie      | ein Beschreibung |
+| ---------- | -------------- | ---------------- |
+| Komponente | MpComponent<P> |                  |
+| Name       | Zeichenfolge   |                  |
 
 ## `src/adapters/solid`
 
@@ -51,7 +51,7 @@ Verpacken Sie eine Forge-E-Mail-Komponente als React-Funktionskomponente.
 **Art:** Funktion
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 Rendern Sie den freigegebenen Forge-Baum als Solid JSX für Browservorschauen.
@@ -59,24 +59,24 @@ Rendern Sie den freigegebenen Forge-Baum als Solid JSX für Browservorschauen.
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| node | EmailNode |  |
+| ---- | --------- | ---------------- |
+| node | EmailNode |                  |
 
 ### toEmailSolidComponent
 
 **Art:** Funktion
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 Verpacken Sie eine Forge-Komponente als Solid-Komponente.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | Komponente<P> |  |
+| Name       | Geben Sie     | ein Beschreibung |
+| ---------- | ------------- | ---------------- |
+| Komponente | Komponente<P> |                  |
 
 ## `src/adapters/svelte`
 
@@ -85,7 +85,7 @@ Verpacken Sie eine Forge-Komponente als Solid-Komponente.
 **Art:** Funktion
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 Konvertieren Sie einen gemeinsam genutzten Forge-Baum in ein Svelte 5-Roh-Snippet für `{@render ...}`.
@@ -93,8 +93,8 @@ Konvertieren Sie einen gemeinsam genutzten Forge-Baum in ein Svelte 5-Roh-Snippe
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| node | EmailNode |  |
+| ---- | --------- | ---------------- |
+| node | EmailNode |                  |
 
 ## `src/adapters/vue`
 
@@ -103,7 +103,7 @@ Konvertieren Sie einen gemeinsam genutzten Forge-Baum in ein Svelte 5-Roh-Snippe
 **Art:** Funktion
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 Rendern Sie den freigegebenen Forge-Baum als Vue VNode für Browservorschauen.
@@ -111,25 +111,25 @@ Rendern Sie den freigegebenen Forge-Baum als Vue VNode für Browservorschauen.
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| node | EmailNode |  |
+| ---- | --------- | ---------------- |
+| node | EmailNode |                  |
 
 ### toEmailVueComponent
 
 **Art:** Funktion
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 Verpacken Sie eine Forge-E-Mail-Komponente als Vue-Funktionskomponente.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | MpComponent<P> |  |
-| Name | Zeichenfolge |  |
+| Name       | Geben Sie      | ein Beschreibung |
+| ---------- | -------------- | ---------------- |
+| Komponente | MpComponent<P> |                  |
+| Name       | Zeichenfolge   |                  |
 
 ## `src/adapters/web-components`
 
@@ -138,7 +138,7 @@ Verpacken Sie eine Forge-E-Mail-Komponente als Vue-Funktionskomponente.
 **Art:** Funktion
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 Erstellen Sie ein natives Forge-Vorlagenergebnis für einen Web Components-Host.
@@ -146,8 +146,8 @@ Erstellen Sie ein natives Forge-Vorlagenergebnis für einen Web Components-Host.
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| node | EmailNode |  |
+| ---- | --------- | ---------------- |
+| node | EmailNode |                  |
 
 ## `src/markdown/render-markdown`
 
@@ -156,17 +156,17 @@ Erstellen Sie ein natives Forge-Vorlagenergebnis für einen Web Components-Host.
 **Art:** Funktion
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 Konvertieren Sie sichere Markdown-Tokens in denselben Forge-Baum, der von E-Mail-Komponenten verwendet wird.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Abschlag | Zeichenfolge |  |
-| Optionen | MarkdownRenderOptions |  |
+| Name     | Geben Sie             | ein Beschreibung |
+| -------- | --------------------- | ---------------- |
+| Abschlag | Zeichenfolge          |                  |
+| Optionen | MarkdownRenderOptions |                  |
 
 ## `src/markdown/types`
 
@@ -197,16 +197,16 @@ Optionen zur Steuerung der Markdown-Baumgenerierung.
 **Art:** Funktion
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 Serialisieren Sie einen Satz von Forge-Eigenschaften auf der Zulassungsliste in deterministischer Reihenfolge.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | EmailProperties |  |
+| Name          | Geben Sie       | ein Beschreibung |
+| ------------- | --------------- | ---------------- |
+| Eigenschaften | EmailProperties |                  |
 
 ## `src/render/escape`
 
@@ -215,33 +215,33 @@ Serialisieren Sie einen Satz von Forge-Eigenschaften auf der Zulassungsliste in 
 **Art:** Funktion
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 Escape-Text und Attributinhalt für die HTML-Serialisierung.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Wert | Zeichenfolge |                  |
 
 ### validierenUrl
 
 **Art:** Funktion
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 Lehnen Sie Schemata ab, die Code ausführen oder eine unerwartete Ressource laden können.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | Zeichenfolge |  |
-| Attribut | Zeichenfolge |  |
+| Name     | Geben Sie    | ein Beschreibung |
+| -------- | ------------ | ---------------- |
+| Wert     | Zeichenfolge |                  |
+| Attribut | Zeichenfolge |                  |
 
 ## `src/render/render-email`
 
@@ -250,24 +250,24 @@ Lehnen Sie Schemata ab, die Code ausführen oder eine unerwartete Ressource lade
 **Art:** Funktion
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 Rendern Sie einen Forge-E-Mail-Baum in ein vollständiges, Framework-freies HTML-Dokument.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| node | EmailNode |  |
-| Optionen | RenderEmailOptions |  |
+| Name     | Geben Sie          | ein Beschreibung |
+| -------- | ------------------ | ---------------- |
+| node     | EmailNode          |                  |
+| Optionen | RenderEmailOptions |                  |
 
 ### renderEmailFragment
 
 **Art:** Funktion
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 Rendern Sie einen Forge-Baum als sicheres HTML-Fragment für Browser-Adapter-Hosts.
@@ -275,8 +275,8 @@ Rendern Sie einen Forge-Baum als sicheres HTML-Fragment für Browser-Adapter-Hos
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| node | EmailNode |  |
+| ---- | --------- | ---------------- |
+| node | EmailNode |                  |
 
 ## `src/render/style`
 
@@ -285,16 +285,16 @@ Rendern Sie einen Forge-Baum als sicheres HTML-Fragment für Browser-Adapter-Hos
 **Art:** Funktion
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 Serialisieren Sie Inline-Stile in deterministischer Eigenschaftsreihenfolge ohne CSS-Variablen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Stil | EmailStyle \| Zeichenfolge |  |
+| Name | Geben Sie                  | ein Beschreibung |
+| ---- | -------------------------- | ---------------- |
+| Stil | EmailStyle \| Zeichenfolge |                  |
 
 ## `src/render/types`
 

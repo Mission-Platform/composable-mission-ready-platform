@@ -16,23 +16,23 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/vcar
 **Tipo:** función
 
 ```typescript
-function createVCard(options: VCardOptions): VCard
+function createVCard(options: VCardOptions): VCard;
 ```
 
 Convierta opciones de conveniencia en un documento vCard completo y grabable.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de tarjeta V |  |
+| Nombre   | Tipo                  | Descripción |
+| -------- | --------------------- | ----------- |
+| opciones | Opciones de tarjeta V |             |
 
 ### analizarVCarjeta
 
 **Tipo:** constante
 
 ```typescript
-export const parseVCard
+export const parseVCard;
 ```
 
 Alias ​​para llamantes que prefieren la terminología del analizador.
@@ -42,39 +42,39 @@ Alias ​​para llamantes que prefieren la terminología del analizador.
 **Tipo:** función
 
 ```typescript
-function readVCard(source: string): VCard[]
+function readVCard(source: string): VCard[];
 ```
 
 Analice uno o más bloques vCard conservando propiedades desconocidas.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fuente | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| fuente | cadena |             |
 
 ### a VCardOptions
 
 **Tipo:** función
 
 ```typescript
-function toVCardOptions(card: VCard): VCardOptions
+function toVCardOptions(card: VCard): VCardOptions;
 ```
 
 Asigne una tarjeta analizada a las opciones de conveniencia utilizadas por el creador de QR.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| tarjeta | Tarjeta V |  |
+| Nombre  | Tipo      | Descripción |
+| ------- | --------- | ----------- |
+| tarjeta | Tarjeta V |             |
 
 ### tarjeta virtual
 
 **Tipo:** función
 
 ```typescript
-function vCard(options: VCardOptions): string
+function vCard(options: VCardOptions): string;
 ```
 
 Una carga útil de vCard 3.0 que describe un contacto. Hay varios números de teléfono/correos electrónicos
@@ -82,9 +82,9 @@ emitido como líneas repetidas `TEL` / `EMAIL`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de tarjeta V |  |
+| Nombre   | Tipo                  | Descripción |
+| -------- | --------------------- | ----------- |
+| opciones | Opciones de tarjeta V |             |
 
 ### Tarjeta V
 
@@ -121,32 +121,32 @@ Una propiedad en una vCard analizada, incluidos los parámetros y su valor decod
 **Tipo:** función
 
 ```typescript
-function writeVCard(card: VCard): string
+function writeVCard(card: VCard): string;
 ```
 
 Serializa una vCard completa, usando terminaciones de línea LF para cargas QR y de texto.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| tarjeta | Tarjeta V |  |
+| Nombre  | Tipo      | Descripción |
+| ------- | --------- | ----------- |
+| tarjeta | Tarjeta V |             |
 
 ### escribirVCards
 
 **Tipo:** función
 
 ```typescript
-function writeVCards(cards: readonly VCard[]): string
+function writeVCards(cards: readonly VCard[]): string;
 ```
 
 Serializar una o más tarjetas analizadas.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| tarjetas | VCard de sólo lectura[] |  |
+| Nombre   | Tipo                    | Descripción |
+| -------- | ----------------------- | ----------- |
+| tarjetas | VCard de sólo lectura[] |             |
 
 ## `src/ast/vevent`
 
@@ -247,204 +247,204 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function addDays(date: Date, days: number): Date
+function addDays(date: Date, days: number): Date;
 ```
 
 Agregue `days` a una fecha JS (zona local).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fecha | Fecha |  |
-| días | número |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| fecha  | Fecha  |             |
+| días   | número |             |
 
 ### agregarMeses
 
 **Tipo:** función
 
 ```typescript
-function addMonths(date: Date, months: number): Date
+function addMonths(date: Date, months: number): Date;
 ```
 
 Agregue `months` a una fecha JS (zona local).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fecha | Fecha |  |
-| meses | número |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| fecha  | Fecha  |             |
+| meses  | número |             |
 
 ### agregaraños
 
 **Tipo:** función
 
 ```typescript
-function addYears(date: Date, years: number): Date
+function addYears(date: Date, years: number): Date;
 ```
 
 Agregue `years` a una fecha JS (zona local).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fecha | Fecha |  |
-| años | número |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| fecha  | Fecha  |             |
+| años   | número |             |
 
 ### díaClave
 
 **Tipo:** función
 
 ```typescript
-function dayKey(iso: string): string
+function dayKey(iso: string): string;
 ```
 
 Devuelve la clave de fecha local utilizada para la coincidencia EXDATE y RDATE.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ISO | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| ISO    | cadena |             |
 
 ### fmtMe gusta
 
 **Tipo:** función
 
 ```typescript
-function fmtLike(source: string, dateTime: DateTime): string
+function fmtLike(source: string, dateTime: DateTime): string;
 ```
 
 Vuelva a formatear un Luxon DateTime con la misma representación ISO que la cadena de origen.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fuente | cadena |  |
-| fechahora | FechaHora |  |
+| Nombre    | Tipo      | Descripción |
+| --------- | --------- | ----------- |
+| fuente    | cadena    |             |
+| fechahora | FechaHora |             |
 
 ### es todo el día
 
 **Tipo:** función
 
 ```typescript
-function isAllDay(iso: string): boolean
+function isAllDay(iso: string): boolean;
 ```
 
 Devuelve verdadero cuando la cadena ISO es un valor de solo fecha (AAAA-MM-DD).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ISO | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| ISO    | cadena |             |
 
 ### analizar fecha
 
 **Tipo:** función
 
 ```typescript
-function parseDate(iso: string): Date
+function parseDate(iso: string): Date;
 ```
 
 Analice una cadena de fecha y hora ISO en una fecha JS (para compatibilidad con API pública).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ISO | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| ISO    | cadena |             |
 
 ### analizarDT
 
 **Tipo:** función
 
 ```typescript
-function parseDT(iso: string): DateTime
+function parseDT(iso: string): DateTime;
 ```
 
 Analice una cadena de fecha y hora ISO en una fecha y hora de Luxon (zona local).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ISO | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| ISO    | cadena |             |
 
 ### iniciodeldia
 
 **Tipo:** función
 
 ```typescript
-function startOfDay(date: Date): Date
+function startOfDay(date: Date): Date;
 ```
 
 Inicio del día para una JS Date (zona local).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fecha | Fecha |  |
+| Nombre | Tipo  | Descripción |
+| ------ | ----- | ----------- |
+| fecha  | Fecha |             |
 
 ### inicio del mes
 
 **Tipo:** función
 
 ```typescript
-function startOfMonth(date: Date): Date
+function startOfMonth(date: Date): Date;
 ```
 
 Inicio del mes que contiene `date` (zona local).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fecha | Fecha |  |
+| Nombre | Tipo  | Descripción |
+| ------ | ----- | ----------- |
+| fecha  | Fecha |             |
 
 ### iniciodesemana
 
 **Tipo:** función
 
 ```typescript
-function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date
+function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date;
 ```
 
 Inicio de semana que contiene `date`, en honor a `weekStartsOn`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fecha | Fecha |  |
-| la semana comienza el | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 |  |
+| Nombre                | Tipo                            | Descripción |
+| --------------------- | ------------------------------- | ----------- |
+| fecha                 | Fecha                           |             |
+| la semana comienza el | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 |             |
 
 ### iniciodelaño
 
 **Tipo:** función
 
 ```typescript
-function startOfYear(date: Date): Date
+function startOfYear(date: Date): Date;
 ```
 
 Inicio del año que contiene `date` (zona local).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fecha | Fecha |  |
+| Nombre | Tipo  | Descripción |
+| ------ | ----- | ----------- |
+| fecha  | Fecha |             |
 
 ### DÍA DE LA SEMANA_LUXON
 
 **Tipo:** constante
 
 ```typescript
-export const WEEKDAY_LUXON: Record<RRuleWeekday, number>
+export const WEEKDAY_LUXON: Record<RRuleWeekday, number>;
 ```
 
 Números de días laborables de Luxon: lunes=1… domingo=7.
@@ -478,16 +478,16 @@ El primer día que comienza una vista semanal (0 = domingo… 6 = sábado).
 **Tipo:** función
 
 ```typescript
-function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement
+function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ForgeICalendarProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<ForgeICalendarProperties> |             |
 
 ### Propiedades de ForgeICalendar
 
@@ -506,16 +506,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement
+function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ForgeVCardProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<ForgeVCardProperties> |             |
 
 ### Propiedades de ForgeVCard
 
@@ -534,32 +534,32 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function calendarEvents(calendar: ICalendar): ICalendarEvent[]
+function calendarEvents(calendar: ICalendar): ICalendarEvent[];
 ```
 
 Convierta los componentes VEVENT en la vista de eventos escritos utilizada por los renderizadores de Forge.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| calendario | Calendario |  |
+| Nombre     | Tipo       | Descripción |
+| ---------- | ---------- | ----------- |
+| calendario | Calendario |             |
 
 ### crearICalendarioEvento
 
 **Tipo:** función
 
 ```typescript
-function createICalendarEvent(event: ICalendarEvent): ICalendarComponent
+function createICalendarEvent(event: ICalendarEvent): ICalendarComponent;
 ```
 
 Cree un componente VEVENT escrito adecuado para insertarlo en un iCalendar.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| evento | EventoCalendario |  |
+| Nombre | Tipo             | Descripción |
+| ------ | ---------------- | ----------- |
+| evento | EventoCalendario |             |
 
 ### Calendario
 
@@ -616,7 +616,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const parseICalendar
+export const parseICalendar;
 ```
 
 No se proporciona descripción.
@@ -626,23 +626,23 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function readICalendar(source: string): ICalendar
+function readICalendar(source: string): ICalendar;
 ```
 
 Analice una secuencia de iCalendar RFC 5545, preservando cada componente y propiedad.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fuente | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| fuente | cadena |             |
 
 ### serializarICalendar
 
 **Tipo:** constante
 
 ```typescript
-export const serializeICalendar
+export const serializeICalendar;
 ```
 
 No se proporciona descripción.
@@ -652,13 +652,13 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function writeICalendar(calendar: ICalendar): string
+function writeICalendar(calendar: ICalendar): string;
 ```
 
 Serializar un calendario RFC 5545 con terminaciones de línea CRLF y plegado seguro de 75 octetos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| calendario | Calendario |  |
+| Nombre     | Tipo       | Descripción |
+| ---------- | ---------- | ----------- |
+| calendario | Calendario |             |

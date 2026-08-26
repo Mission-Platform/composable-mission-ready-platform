@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle` — アクティブなテーマを `light → dark → auto` まで循環させます。
@@ -39,9 +39,9 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ThemeToggleProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<ThemeToggleProperties> |      |
 
 ### テーマトグルプロパティ
 
@@ -70,7 +70,7 @@ export type ThemeToggleSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer` — ランタイム `--mp-*` デザイン トークン オーバーライド (ブランド) を構成します
@@ -96,9 +96,9 @@ styleString、setConfig、setAttribute、setToken、removeToken、reset }`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ThemeComposerProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ThemeComposerProperties> |      |
 
 ### テーマ作曲家のプロパティ
 
@@ -127,7 +127,7 @@ export type ThemeComposerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **種類:** 関数
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider` — プロパティと共有テーマ ストアを設定します。
@@ -151,9 +151,9 @@ toggleTheme、cycleTheme }` をスコープとして使用します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ThemeProviderProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ThemeProviderProperties> |      |
 
 ### テーマプロバイダーのプロパティ
 
@@ -182,7 +182,7 @@ export type ThemeProviderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **種類:** 定数
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 各フレンドリ属性を、それがオーバーライドする `--mp-*` CSS カスタム プロパティにマップします。
@@ -192,7 +192,7 @@ export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
 **種類:** 関数
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 {@link ThemeComposerConfig} を CSS カスタムのフラット マップに変換します
@@ -201,111 +201,115 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|設定 |テーマコンポーザー構成 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 設定 | テーマコンポーザー構成 |      |
 
 ### configToStyleString
 
 **種類:** 関数
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 構成を完全なインライン `style` 文字列 (カスタム プロパティ + `color-scheme`) に解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|設定 |テーマコンポーザー構成 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 設定 | テーマコンポーザー構成 |      |
 
 ### css変数ToString
 
 **種類:** 関数
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 CSS カスタム プロパティ マップをインライン `style` 文字列にシリアル化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|変数 |レコード<string, string> |  |
+| 名前 | タイプ                   | 説明 |
+| ---- | ------------------------ | ---- |
+| 変数 | レコード<string, string> |      |
 
 ### マージ構成
 
 **種類:** 関数
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 部分的な構成を現在の構成に浅くマージします (`undefined`/空の値をクリアします)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|設定 |テーマコンポーザー構成 |  |
-|部分的 |テーマコンポーザー構成 |  |
+| 名前   | タイプ                 | 説明 |
+| ------ | ---------------------- | ---- |
+| 設定   | テーマコンポーザー構成 |      |
+| 部分的 | テーマコンポーザー構成 |      |
 
 ### RemoveConfigToken
 
 **種類:** 関数
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 単一の未加工トークンのオーバーライドを削除します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|設定 |テーマコンポーザー構成 |  |
-|キー |文字列 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 設定 | テーマコンポーザー構成 |      |
+| キー | 文字列                 |      |
 
 ### setConfigAttribute
 
 **種類:** 関数
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 単一のフレンドリー属性を設定します (クリアするには `undefined` を渡します)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|設定 |テーマコンポーザー構成 |  |
-|属性 | K |  |
-|値 |テーマコンポーザー構成[K] |  |
+| 名前 | タイプ                    | 説明 |
+| ---- | ------------------------- | ---- |
+| 設定 | テーマコンポーザー構成    |      |
+| 属性 | K                         |      |
+| 値   | テーマコンポーザー構成[K] |      |
 
 ### setConfigToken
 
 **種類:** 関数
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 単一の未加工トークンのオーバーライドを設定します。このキーでは、`--mp-` プレフィックスを省略できます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|設定 |テーマコンポーザー構成 |  |
-|キー |文字列 |  |
-|値 |文字列 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 設定 | テーマコンポーザー構成 |      |
+| キー | 文字列                 |      |
+| 値   | 文字列                 |      |
 
 ## `src/stores/theme-store/theme-store`
 
@@ -314,7 +318,7 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 **種類:** 関数
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 `ForgeThemeProvider` のプロパティから共有ストアを (再) 構成します。
@@ -323,16 +327,16 @@ function configureTheme(config: ThemeConfig): void
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|設定 |テーマ設定 |  |
+| 名前 | タイプ     | 説明 |
+| ---- | ---------- | ---- |
+| 設定 | テーマ設定 |      |
 
 ### サイクルテーマ
 
 **種類:** 関数
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 `light → dark → auto → light` を循環します。
@@ -342,7 +346,7 @@ function cycleTheme(): void
 **種類:** 関数
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 ストアの現在の状態の不変スナップショットを読み取ります。
@@ -362,32 +366,32 @@ export type ResolvedTheme = 'light' | 'dark';
 **種類:** 関数
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 テーマの設定を明示的に設定します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|次へ |テーマ |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 次へ | テーマ |      |
 
 ### 購読テーマ
 
 **種類:** 関数
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 ストアの変更を購読します。購読解除関数を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|リスナー | () => 無効 |  |
+| 名前     | タイプ     | 説明 |
+| -------- | ---------- | ---- |
+| リスナー | () => 無効 |      |
 
 ### テーマ
 
@@ -424,7 +428,7 @@ export interface ThemeSnapshot
 **種類:** 関数
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 現在解決されているテーマに基づいて、明暗を切り替えます。

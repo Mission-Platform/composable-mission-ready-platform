@@ -16,16 +16,18 @@
 פונקציה **סוג:**
 
 ```typescript
-function ForgeResourcePlanner(properties: Readonly<ResourcePlannerProperties>): MpElement
+function ForgeResourcePlanner(
+  properties: Readonly<ResourcePlannerProperties>,
+): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ResourcePlannerProperties> |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ResourcePlannerProperties> |       |
 
 ### PlannerBookingScope
 
@@ -84,7 +86,9 @@ export interface AvailabilityException
 **סוג:** סוג
 
 ```typescript
-export type AvailabilityInput = | ResourceAvailability[] | Record<string, Omit<ResourceAvailability, "resourceId">>;
+export type AvailabilityInput =
+  | ResourceAvailability[]
+  | Record<string, Omit<ResourceAvailability, "resourceId">>;
 ```
 
 לא סופק תיאור.
@@ -114,7 +118,8 @@ export interface CapacityState
 **סוג:** סוג
 
 ```typescript
-export type CapacityStatus = "available" | "unavailable" | "over-capacity" | "conflict";
+export type CapacityStatus =
+  "available" | "unavailable" | "over-capacity" | "conflict";
 ```
 
 לא סופק תיאור.
@@ -266,51 +271,60 @@ export interface WorkingHoursRule
 פונקציה **סוג:**
 
 ```typescript
-function assignmentsForEvent(assignments: PlannerAssignment[], eventId: string): PlannerAssignment[]
+function assignmentsForEvent(
+  assignments: PlannerAssignment[],
+  eventId: string,
+): PlannerAssignment[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| משימות | PlannerAssignment[] |  |
-| eventId | מחרוזת |  |
+| שם      | הקלד                | תיאור |
+| ------- | ------------------- | ----- |
+| משימות  | PlannerAssignment[] |       |
+| eventId | מחרוזת              |       |
 
 ### לנרמל את המשימות
 
 פונקציה **סוג:**
 
 ```typescript
-function normalizeAssignments(assignments: PlannerAssignment[]): PlannerAssignment[]
+function normalizeAssignments(
+  assignments: PlannerAssignment[],
+): PlannerAssignment[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| משימות | PlannerAssignment[] |  |
+| שם     | הקלד                | תיאור |
+| ------ | ------------------- | ----- |
+| משימות | PlannerAssignment[] |       |
 
 ### normalizePlannerEvents
 
 פונקציה **סוג:**
 
 ```typescript
-function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment[], range?: { start: Date; end: Date }): PlannerEventRecord[]
+function normalizePlannerEvents(
+  events: VEvent[],
+  assignments: PlannerAssignment[],
+  range?: { start: Date; end: Date },
+): PlannerEventRecord[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירועים | VEvent[] |  |
-| משימות | PlannerAssignment[] |  |
-| טווח | { start: Date; סוף: תאריך } |  |
+| שם      | הקלד                        | תיאור |
+| ------- | --------------------------- | ----- |
+| אירועים | VEvent[]                    |       |
+| משימות  | PlannerAssignment[]         |       |
+| טווח    | { start: Date; סוף: תאריך } |       |
 
 ## `src/utils/availability`
 
@@ -319,36 +333,44 @@ function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment
 פונקציה **סוג:**
 
 ```typescript
-function availabilityForResource(input: AvailabilityInput, resourceId: string): ResourceAvailability
+function availabilityForResource(
+  input: AvailabilityInput,
+  resourceId: string,
+): ResourceAvailability;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | AvailabilityInput |  |
-| resourceId | מחרוזת |  |
+| שם         | הקלד              | תיאור |
+| ---------- | ----------------- | ----- |
+| קלט        | AvailabilityInput |       |
+| resourceId | מחרוזת            |       |
 
 ### להרחיב זמינות
 
 פונקציה **סוג:**
 
 ```typescript
-function expandAvailability(resourceId: string, input: AvailabilityInput, range: { start: Date; end: Date }, options: AvailabilityOptions = {}): NormalizedAvailabilityInterval[]
+function expandAvailability(
+  resourceId: string,
+  input: AvailabilityInput,
+  range: { start: Date; end: Date },
+  options: AvailabilityOptions = {},
+): NormalizedAvailabilityInterval[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| resourceId | מחרוזת |  |
-| קלט | AvailabilityInput |  |
-| טווח | { start: Date; סוף: תאריך } |  |
-| אפשרויות | זמינות אפשרויות |  |
+| שם         | הקלד                        | תיאור |
+| ---------- | --------------------------- | ----- |
+| resourceId | מחרוזת                      |       |
+| קלט        | AvailabilityInput           |       |
+| טווח       | { start: Date; סוף: תאריך } |       |
+| אפשרויות   | זמינות אפשרויות             |       |
 
 ## `src/utils/capacity`
 
@@ -357,19 +379,24 @@ function expandAvailability(resourceId: string, input: AvailabilityInput, range:
 פונקציה **סוג:**
 
 ```typescript
-function calculateCapacityState(resourceId: string, segment: TimelineSegment | { start: Date; end: Date }, availability: NormalizedAvailabilityInterval[], events: PlannerEventRecord[]): CapacityState
+function calculateCapacityState(
+  resourceId: string,
+  segment: TimelineSegment | { start: Date; end: Date },
+  availability: NormalizedAvailabilityInterval[],
+  events: PlannerEventRecord[],
+): CapacityState;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| resourceId | מחרוזת |  |
-| קטע | TimelineSegment \| { start: Date; סוף: תאריך } |  |
-| זמינות | NormalizedAvailabilityInterval[] |  |
-| אירועים | PlannerEventRecord[] |  |
+| שם         | הקלד                                           | תיאור |
+| ---------- | ---------------------------------------------- | ----- |
+| resourceId | מחרוזת                                         |       |
+| קטע        | TimelineSegment \| { start: Date; סוף: תאריך } |       |
+| זמינות     | NormalizedAvailabilityInterval[]               |       |
+| אירועים    | PlannerEventRecord[]                           |       |
 
 ## `src/utils/layout`
 
@@ -378,18 +405,22 @@ function calculateCapacityState(resourceId: string, segment: TimelineSegment | {
 פונקציה **סוג:**
 
 ```typescript
-function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Date; end: Date }, width: number): PlannerEventGeometry[]
+function layoutResourceEvents(
+  records: PlannerEventRecord[],
+  range: { start: Date; end: Date },
+  width: number,
+): PlannerEventGeometry[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רשומות | PlannerEventRecord[] |  |
-| טווח | { start: Date; סוף: תאריך } |  |
-| רוחב | מספר |  |
+| שם     | הקלד                        | תיאור |
+| ------ | --------------------------- | ----- |
+| רשומות | PlannerEventRecord[]        |       |
+| טווח   | { start: Date; סוף: תאריך } |       |
+| רוחב   | מספר                        |       |
 
 ## `src/utils/mutations`
 
@@ -398,90 +429,110 @@ function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Dat
 פונקציה **סוג:**
 
 ```typescript
-function applyAssignmentUpdate(assignments: PlannerAssignment[], update: PlannerAssignmentUpdate): PlannerAssignment[]
+function applyAssignmentUpdate(
+  assignments: PlannerAssignment[],
+  update: PlannerAssignmentUpdate,
+): PlannerAssignment[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| משימות | PlannerAssignment[] |  |
-| עדכון | PlannerAssignmentUpdate |  |
+| שם     | הקלד                    | תיאור |
+| ------ | ----------------------- | ----- |
+| משימות | PlannerAssignment[]     |       |
+| עדכון  | PlannerAssignmentUpdate |       |
 
 ### movePlannerEventPatch
 
 פונקציה **סוג:**
 
 ```typescript
-function movePlannerEventPatch(event: VEvent, deltaMs: number, options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function movePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירוע | VEvent |  |
-| deltaMs | מספר |  |
-| אפשרויות | PlannerEditOptions |  |
+| שם       | הקלד               | תיאור |
+| -------- | ------------------ | ----- |
+| אירוע    | VEvent             |       |
+| deltaMs  | מספר               |       |
+| אפשרויות | PlannerEditOptions |       |
 
 ### reassignPlannerEvent
 
 פונקציה **סוג:**
 
 ```typescript
-function reassignPlannerEvent(eventId: string, resourceId: string): PlannerAssignmentUpdate
+function reassignPlannerEvent(
+  eventId: string,
+  resourceId: string,
+): PlannerAssignmentUpdate;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| eventId | מחרוזת |  |
-| resourceId | מחרוזת |  |
+| שם         | הקלד   | תיאור |
+| ---------- | ------ | ----- |
+| eventId    | מחרוזת |       |
+| resourceId | מחרוזת |       |
 
 ### resizePlannerEventPatch
 
 פונקציה **סוג:**
 
 ```typescript
-function resizePlannerEventPatch(event: VEvent, deltaMs: number, edge: "start" | "end" = "end", options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function resizePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  edge: "start" | "end" = "end",
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירוע | VEvent |  |
-| deltaMs | מספר |  |
-| קצה | "התחל" \| "סוף" |  |
-| אפשרויות | PlannerEditOptions |  |
+| שם       | הקלד               | תיאור |
+| -------- | ------------------ | ----- |
+| אירוע    | VEvent             |       |
+| deltaMs  | מספר               |       |
+| קצה      | "התחל" \| "סוף"    |       |
+| אפשרויות | PlannerEditOptions |       |
 
 ### בחרPlannerRange
 
 פונקציה **סוג:**
 
 ```typescript
-function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumDurationMs = 15 * 60_000): PlannerRangeSelection | undefined
+function selectPlannerRange(
+  resourceId: string,
+  start: Date,
+  end: Date,
+  minimumDurationMs = 15 * 60_000,
+): PlannerRangeSelection | undefined;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| resourceId | מחרוזת |  |
-| להתחיל | תאריך |  |
-| סוף | תאריך |  |
-| minimumDurationMs |  |  |
+| שם                | הקלד   | תיאור |
+| ----------------- | ------ | ----- |
+| resourceId        | מחרוזת |       |
+| להתחיל            | תאריך  |       |
+| סוף               | תאריך  |       |
+| minimumDurationMs |        |       |
 
 ## `src/utils/timeline`
 
@@ -490,68 +541,80 @@ function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumD
 פונקציה **סוג:**
 
 ```typescript
-function clampToRange(value: Date, range: { start: Date; end: Date }): Date
+function clampToRange(value: Date, range: { start: Date; end: Date }): Date;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | תאריך |  |
-| טווח | { start: Date; סוף: תאריך } |  |
+| שם   | הקלד                        | תיאור |
+| ---- | --------------------------- | ----- |
+| ערך  | תאריך                       |       |
+| טווח | { start: Date; סוף: תאריך } |       |
 
 ### ליצורTimelineSegments
 
 פונקציה **סוג:**
 
 ```typescript
-function generateTimelineSegments(scale: PlannerScale, range: { start: Date; end: Date }, options: TimelineOptions = {}): TimelineSegment[]
+function generateTimelineSegments(
+  scale: PlannerScale,
+  range: { start: Date; end: Date },
+  options: TimelineOptions = {},
+): TimelineSegment[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סולם | PlannerScale |  |
-| טווח | { start: Date; סוף: תאריך } |  |
-| אפשרויות | אפשרויות קו זמן |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| סולם     | PlannerScale                |       |
+| טווח     | { start: Date; סוף: תאריך } |       |
+| אפשרויות | אפשרויות קו זמן             |       |
 
 ### positionToTime
 
 פונקציה **סוג:**
 
 ```typescript
-function positionToTime(position: number, range: { start: Date; end: Date }, width: number): Date
+function positionToTime(
+  position: number,
+  range: { start: Date; end: Date },
+  width: number,
+): Date;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| עמדה | מספר |  |
-| טווח | { start: Date; סוף: תאריך } |  |
-| רוחב | מספר |  |
+| שם   | הקלד                        | תיאור |
+| ---- | --------------------------- | ----- |
+| עמדה | מספר                        |       |
+| טווח | { start: Date; סוף: תאריך } |       |
+| רוחב | מספר                        |       |
 
 ### timeToPosition
 
 פונקציה **סוג:**
 
 ```typescript
-function timeToPosition(time: Date, range: { start: Date; end: Date }, width: number): number
+function timeToPosition(
+  time: Date,
+  range: { start: Date; end: Date },
+  width: number,
+): number;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| זמן | תאריך |  |
-| טווח | { start: Date; סוף: תאריך } |  |
-| רוחב | מספר |  |
+| שם   | הקלד                        | תיאור |
+| ---- | --------------------------- | ----- |
+| זמן  | תאריך                       |       |
+| טווח | { start: Date; סוף: תאריך } |       |
+| רוחב | מספר                        |       |

@@ -16,23 +16,23 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-f
 **Soort:** functie
 
 ```typescript
-function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server
+function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeBridgeServerOptions |  |
+| Naam   | Typ                      | Beschrijving |
+| ------ | ------------------------ | ------------ |
+| opties | ForgeBridgeServerOptions |              |
 
 ### DEFAULT_EXPORT_PATH
 
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_EXPORT_PATH
+export const DEFAULT_EXPORT_PATH;
 ```
 
 Geen beschrijving opgegeven.
@@ -42,7 +42,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_MAX_FILE_BYTES
+export const DEFAULT_MAX_FILE_BYTES;
 ```
 
 Geen beschrijving opgegeven.
@@ -52,7 +52,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_MAX_REQUEST_BYTES
+export const DEFAULT_MAX_REQUEST_BYTES;
 ```
 
 Geen beschrijving opgegeven.
@@ -62,17 +62,17 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>
+function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | onbekend |  |
-| opties | ForgeBridgeOptions |  |
+| Naam   | Typ                | Beschrijving |
+| ------ | ------------------ | ------------ |
+| waarde | onbekend           |              |
+| opties | ForgeBridgeOptions |              |
 
 ### ForgeBridgeOpties
 
@@ -99,16 +99,18 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number }): Promise<Server>
+function startForgeBridgeServer(
+  options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
+): Promise<Server>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeBridgeServerOptions & { alleen-lezen host?: string; alleen-lezen poort?: nummer } |  |
+| Naam   | Typ                                                                                    | Beschrijving |
+| ------ | -------------------------------------------------------------------------------------- | ------------ |
+| opties | ForgeBridgeServerOptions & { alleen-lezen host?: string; alleen-lezen poort?: nummer } |              |
 
 ## `src/protocol`
 
@@ -117,7 +119,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_BRIDGE_PROTOCOL_VERSION
+export const FORGE_BRIDGE_PROTOCOL_VERSION;
 ```
 
 Geen beschrijving opgegeven.
@@ -167,13 +169,13 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse
+function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | onbekend |  |
+| Naam   | Typ      | Beschrijving |
+| ------ | -------- | ------------ |
+| waarde | onbekend |              |

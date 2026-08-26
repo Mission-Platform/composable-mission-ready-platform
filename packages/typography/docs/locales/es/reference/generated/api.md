@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/typo
 **Tipo:** función
 
 ```typescript
-function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement
+function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 ```
 
 `ForgeTypography`: la primitiva de estilo de texto creada una vez en el JSX neutral
@@ -46,16 +46,28 @@ en realidad se desborda), posicionado con **Posicionamiento de anclaje CSS** en 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<TypographyProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<TypographyProperties> |             |
 
 ### TipografíaColor
 
 **Tipo:** tipo
 
 ```typescript
-export type TypographyColor = | 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'inverse' | 'inherit' | 'neutral' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TypographyColor =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'disabled'
+  | 'inverse'
+  | 'inherit'
+  | 'neutral'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'error'
+  | 'critical';
 ```
 
 Color del texto. Los tokens estructurales (`primary`/`secondary`/`tertiary`/
@@ -128,7 +140,22 @@ Cuando un enlace dibuja su subrayado.
 **Tipo:** tipo
 
 ```typescript
-export type TypographyVariant = | 'display' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body-lg' | 'body-md' | 'body-sm' | 'body-xs' | 'label' | 'caption' | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */ | 'link';
+export type TypographyVariant =
+  | 'display'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body-lg'
+  | 'body-md'
+  | 'body-sm'
+  | 'body-xs'
+  | 'label'
+  | 'caption'
+  | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */
+  | 'link';
 ```
 
 El paso de escala de tipos semántico/visual en el que se representa el texto.
@@ -138,7 +165,8 @@ El paso de escala de tipos semántico/visual en el que se representa el texto.
 **Tipo:** tipo
 
 ```typescript
-export type TypographyVerticalAlign = 'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
+export type TypographyVerticalAlign =
+  'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
 ```
 
 Alineación vertical del cuadro de texto (en línea) (se asigna a CSS `vertical-align`).

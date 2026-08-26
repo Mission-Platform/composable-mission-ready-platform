@@ -60,7 +60,7 @@ Bietet Zugriff auf die MapLibre-Instanz und den Kartenstatus.
 **Rückgabe:**
 
 - `map`: Die MapLibre GL-Instanz
-– `isReady`: Boolescher Wert, der angibt, ob die Karte vollständig initialisiert ist
+  – `isReady`: Boolescher Wert, der angibt, ob die Karte vollständig initialisiert ist
 - `loadingProgress`: Zahl zwischen 0 und 1, die den Ladefortschritt anzeigt
 
 **Beispiel:**

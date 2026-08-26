@@ -16,24 +16,24 @@
 **종류:** 기능
 
 ```typescript
-function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig
+function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기본NS | 문자열 |  |
-| 옵션 | I18n구성옵션 |  |
+| 이름   | 유형         | 설명 |
+| ------ | ------------ | ---- |
+| 기본NS | 문자열       |      |
+| 옵션   | I18n구성옵션 |      |
 
 ### DEFAULT_LOCALE
 
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_LOCALE
+export const DEFAULT_LOCALE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -63,7 +63,7 @@ export interface I18nConfigOptions
 **종류:** 상수
 
 ```typescript
-export const SUPPORTED_LOCALES
+export const SUPPORTED_LOCALES;
 ```
 
 설명이 제공되지 않았습니다.

@@ -26,7 +26,7 @@ export interface AppConfigOptions
 פונקציה **סוג:**
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 בניית רול-אפ/רול-דאון `external` פרדיקט שמתייחס לכל שם ב
@@ -34,16 +34,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שמות | מחרוזת לקריאה בלבד[] |  |
+| שם   | הקלד                 | תיאור |
+| ---- | -------------------- | ----- |
+| שמות | מחרוזת לקריאה בלבד[] |       |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 ברירת מחדל של רכיבי אוסף חיצוניים שכל ספרייה משותפת צריכה להתייחס כאל סופקו עמיתים.
@@ -54,7 +54,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
+export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 ```
 
 ברירת מחדל של פלט גלובלי של אוסף עבור צרכני UMD/IIFE. אנחנו מכוונים רק ל-ESM אבל
@@ -65,7 +65,7 @@ export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
 פונקציה **סוג:**
 
 ```typescript
-function defineAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 בנה א Vite תצורה עבור Mission Platform Vue 3 אפליקציות: ה Vue תוסף ואת
@@ -74,16 +74,16 @@ function defineAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | AppConfigOptions |  |
+| שם       | הקלד             | תיאור |
+| -------- | ---------------- | ----- |
+| אפשרויות | AppConfigOptions |       |
 
 ### defineFrameworkAppConfig
 
 פונקציה **סוג:**
 
 ```typescript
-function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig
+function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
 עטפו את {@link defineAppConfig} עם ה- `resolve.conditions` צריך לעשות חשוף
@@ -93,16 +93,16 @@ function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfi
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | FrameworkAppConfigOptions |  |
+| שם       | הקלד                      | תיאור |
+| -------- | ------------------------- | ----- |
+| אפשרויות | FrameworkAppConfigOptions |       |
 
 ### defineLibraryConfig
 
 פונקציה **סוג:**
 
 ```typescript
-function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
+function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
 בנה א Vite תצורה מותאמת לפלטפורמת המשימה Vue חבילות ספרייה:
@@ -116,16 +116,16 @@ function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | LibraryConfigOptions |  |
+| שם       | הקלד                 | תיאור |
+| -------- | -------------------- | ----- |
+| אפשרויות | LibraryConfigOptions |       |
 
 ### defineWebComponentAppConfig
 
 פונקציה **סוג:**
 
 ```typescript
-function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 בנה א Vite תצורת אפליקציה עבור יישומי Web Components ללא מסגרת.
@@ -137,9 +137,9 @@ function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | AppConfigOptions |  |
+| שם       | הקלד             | תיאור |
+| -------- | ---------------- | ----- |
+| אפשרויות | AppConfigOptions |       |
 
 ### FrameworkAppConfigOptions
 
@@ -156,7 +156,7 @@ export interface FrameworkAppConfigOptions extends AppConfigOptions
 פונקציה **סוג:**
 
 ```typescript
-function frameworkCondition(framework: MissionPlatformFramework): string
+function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 מפה {@link MissionPlatformFramework} לתנאי הייצוא המותאם אישית של
@@ -166,16 +166,16 @@ Node/Vite תנאים (`import`, `default`, `browser`, ...).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסגרת | MissionPlatformFramework |  |
+| שם    | הקלד                     | תיאור |
+| ----- | ------------------------ | ----- |
+| מסגרת | MissionPlatformFramework |       |
 
 ### frameworkResolveConditions
 
 פונקציה **סוג:**
 
 ```typescript
-function frameworkResolveConditions(framework: MissionPlatformFramework): string[]
+function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
 בנה את הסדר `resolve.conditions` רשימה שבה אפליקציה צריכה להשתמש כדי לבחור א
@@ -187,16 +187,16 @@ function frameworkResolveConditions(framework: MissionPlatformFramework): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסגרת | MissionPlatformFramework |  |
+| שם    | הקלד                     | תיאור |
+| ----- | ------------------------ | ----- |
+| מסגרת | MissionPlatformFramework |       |
 
 ### ignoreVueI18nBlocksPlugin
 
 פונקציה **סוג:**
 
 ```typescript
-function ignoreVueI18nBlocksPlugin(): Plugin
+function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
 Vite תוסף שמסתובב Vue SFC `<i18n>` בלוקים מותאמים אישית לתוך מודולים ללא הפעלה.
@@ -237,7 +237,7 @@ export type MissionPlatformFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'w
 פונקציה **סוג:**
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 קרא את `dependencies` ו `peerDependencies` הוצהר ב-package.json
@@ -246,9 +246,9 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| rootDirectory | מחרוזת |  |
+| שם            | הקלד   | תיאור |
+| ------------- | ------ | ----- |
+| rootDirectory | מחרוזת |       |
 
 ## `src/vitest`
 
@@ -257,7 +257,7 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 פונקציה **סוג:**
 
 ```typescript
-function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
+function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 בנה א Vitest config עבור חבילות ואפליקציות של Mission Platform. מספק את
@@ -266,9 +266,9 @@ function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | VitestConfigOptions |  |
+| שם       | הקלד                | תיאור |
+| -------- | ------------------- | ----- |
+| אפשרויות | VitestConfigOptions |       |
 
 ### VitestConfigOptions
 

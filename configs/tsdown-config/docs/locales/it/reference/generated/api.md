@@ -16,7 +16,7 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/tsdown-config`
 **Tipo:** funzione
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 Crea un predicato Rolldown `external` / `deps.neverBundle` che tratti ogni
@@ -24,16 +24,16 @@ nome in `names` (e qualsiasi importazione di sottopercorsi, ad esempio `pkg/sub`
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| nomi | stringa di sola lettura[] |  |
+| Nome | Digitare                  | Descrizione |
+| ---- | ------------------------- | ----------- |
+| nomi | stringa di sola lettura[] |             |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Genere:** costante
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Nomi di pacchetto predefiniti che ogni libreria condivisa dovrebbe considerare come forniti da peer.
@@ -44,7 +44,7 @@ Esegue il mirroring di {@link DEFAULT_LIBRARY_EXTERNALS} di `@mission-platform/v
 **Tipo:** funzione
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Crea una configurazione tsdown per una semplice libreria TypeScript (o bundle singolo) —
@@ -53,16 +53,16 @@ Archetipo A/B. Esegue il mirroring della semantica di esternalizzazione `defineL
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | TsdownLibraryOptions |  |
+| Nome    | Digitare             | Descrizione |
+| ------- | -------------------- | ----------- |
+| opzioni | TsdownLibraryOptions |             |
 
 ### defineTsdownVueLibrary
 
 **Tipo:** funzione
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Come {@link defineTsdownLibrary}, ma collega `unplugin-vue` e dts compatibili con Vue
@@ -70,16 +70,16 @@ per i pacchetti che spediscono SFC `.vue` (`i18n`, `router`, …).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | TsdownLibraryOptions |  |
+| Nome    | Digitare             | Descrizione |
+| ------- | -------------------- | ----------- |
+| opzioni | TsdownLibraryOptions |             |
 
 ### leggerePackageDependencyNames
 
 **Tipo:** funzione
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 Leggi `dependencies` e `peerDependencies` dichiarati nel package.json
@@ -88,16 +88,16 @@ del proprio pacchetto in modo che i consumatori possano deduplicarli e scuoterli
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| rootDirectory | stringa |  |
+| Nome          | Digitare | Descrizione |
+| ------------- | -------- | ----------- |
+| rootDirectory | stringa  |             |
 
 ### risolvereTsdownOutputDirectory
 
 **Tipo:** funzione
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 Esegui il mirroring del percorso di output del pacchetto finale in una radice di build isolata. Mantenere il
@@ -106,11 +106,11 @@ promozionabile in modo indipendente senza consentire a tsdown di pulire un alber
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| rootDirectory | stringa |  |
-| outputDirectory | stringa |  |
-| outputRoot | stringa |  |
+| Nome            | Digitare | Descrizione |
+| --------------- | -------- | ----------- |
+| rootDirectory   | stringa  |             |
+| outputDirectory | stringa  |             |
+| outputRoot      | stringa  |             |
 
 ### TsdownLibraryOptions
 

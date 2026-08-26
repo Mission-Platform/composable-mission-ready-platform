@@ -16,16 +16,18 @@
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeResourcePlanner(properties: Readonly<ResourcePlannerProperties>): MpElement
+function ForgeResourcePlanner(
+  properties: Readonly<ResourcePlannerProperties>,
+): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ResourcePlannerProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<ResourcePlannerProperties> |       |
 
 ### PlannerBookingScope
 
@@ -84,7 +86,9 @@ export interface AvailabilityException
 **النوع:** النوع
 
 ```typescript
-export type AvailabilityInput = | ResourceAvailability[] | Record<string, Omit<ResourceAvailability, "resourceId">>;
+export type AvailabilityInput =
+  | ResourceAvailability[]
+  | Record<string, Omit<ResourceAvailability, "resourceId">>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -114,7 +118,8 @@ export interface CapacityState
 **النوع:** النوع
 
 ```typescript
-export type CapacityStatus = "available" | "unavailable" | "over-capacity" | "conflict";
+export type CapacityStatus =
+  "available" | "unavailable" | "over-capacity" | "conflict";
 ```
 
 لم يتم تقديم أي وصف.
@@ -266,51 +271,60 @@ export interface WorkingHoursRule
 **النوع:** الوظيفة
 
 ```typescript
-function assignmentsForEvent(assignments: PlannerAssignment[], eventId: string): PlannerAssignment[]
+function assignmentsForEvent(
+  assignments: PlannerAssignment[],
+  eventId: string,
+): PlannerAssignment[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مهمات | تعيين المخطط[] |  |
-| معرف الحدث | سلسلة |  |
+| الاسم      | اكتب           | الوصف |
+| ---------- | -------------- | ----- |
+| مهمات      | تعيين المخطط[] |       |
+| معرف الحدث | سلسلة          |       |
 
 ### تطبيع المهام
 
 **النوع:** الوظيفة
 
 ```typescript
-function normalizeAssignments(assignments: PlannerAssignment[]): PlannerAssignment[]
+function normalizeAssignments(
+  assignments: PlannerAssignment[],
+): PlannerAssignment[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مهمات | تعيين المخطط[] |  |
+| الاسم | اكتب           | الوصف |
+| ----- | -------------- | ----- |
+| مهمات | تعيين المخطط[] |       |
 
 ### تطبيعPlannerEvents
 
 **النوع:** الوظيفة
 
 ```typescript
-function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment[], range?: { start: Date; end: Date }): PlannerEventRecord[]
+function normalizePlannerEvents(
+  events: VEvent[],
+  assignments: PlannerAssignment[],
+  range?: { start: Date; end: Date },
+): PlannerEventRecord[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أحداث | حدث[] |  |
-| مهمات | تعيين المخطط[] |  |
-| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |  |
+| الاسم  | اكتب                              | الوصف |
+| ------ | --------------------------------- | ----- |
+| أحداث  | حدث[]                             |       |
+| مهمات  | تعيين المخطط[]                    |       |
+| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |       |
 
 ## `src/utils/availability`
 
@@ -319,36 +333,44 @@ function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment
 **النوع:** الوظيفة
 
 ```typescript
-function availabilityForResource(input: AvailabilityInput, resourceId: string): ResourceAvailability
+function availabilityForResource(
+  input: AvailabilityInput,
+  resourceId: string,
+): ResourceAvailability;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | التوفر: الإدخال |  |
-| معرف المورد | سلسلة |  |
+| الاسم       | اكتب            | الوصف |
+| ----------- | --------------- | ----- |
+| الإدخال     | التوفر: الإدخال |       |
+| معرف المورد | سلسلة           |       |
 
 ### توسيع التوفر
 
 **النوع:** الوظيفة
 
 ```typescript
-function expandAvailability(resourceId: string, input: AvailabilityInput, range: { start: Date; end: Date }, options: AvailabilityOptions = {}): NormalizedAvailabilityInterval[]
+function expandAvailability(
+  resourceId: string,
+  input: AvailabilityInput,
+  range: { start: Date; end: Date },
+  options: AvailabilityOptions = {},
+): NormalizedAvailabilityInterval[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف المورد | سلسلة |  |
-| الإدخال | التوفر: الإدخال |  |
-| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |  |
-| خيارات | خيارات التوفر |  |
+| الاسم       | اكتب                              | الوصف |
+| ----------- | --------------------------------- | ----- |
+| معرف المورد | سلسلة                             |       |
+| الإدخال     | التوفر: الإدخال                   |       |
+| النطاق      | { تاريخ البدء؛ النهاية: التاريخ } |       |
+| خيارات      | خيارات التوفر                     |       |
 
 ## `src/utils/capacity`
 
@@ -357,19 +379,24 @@ function expandAvailability(resourceId: string, input: AvailabilityInput, range:
 **النوع:** الوظيفة
 
 ```typescript
-function calculateCapacityState(resourceId: string, segment: TimelineSegment | { start: Date; end: Date }, availability: NormalizedAvailabilityInterval[], events: PlannerEventRecord[]): CapacityState
+function calculateCapacityState(
+  resourceId: string,
+  segment: TimelineSegment | { start: Date; end: Date },
+  availability: NormalizedAvailabilityInterval[],
+  events: PlannerEventRecord[],
+): CapacityState;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف المورد | سلسلة |  |
-| مقطع | شريحة الخط الزمني \| { تاريخ البدء؛ النهاية: التاريخ } |  |
-| التوفر | تطبيع التوافر[] |  |
-| أحداث | سجل الأحداث[] |  |
+| الاسم       | اكتب                                                   | الوصف |
+| ----------- | ------------------------------------------------------ | ----- |
+| معرف المورد | سلسلة                                                  |       |
+| مقطع        | شريحة الخط الزمني \| { تاريخ البدء؛ النهاية: التاريخ } |       |
+| التوفر      | تطبيع التوافر[]                                        |       |
+| أحداث       | سجل الأحداث[]                                          |       |
 
 ## `src/utils/layout`
 
@@ -378,18 +405,22 @@ function calculateCapacityState(resourceId: string, segment: TimelineSegment | {
 **النوع:** الوظيفة
 
 ```typescript
-function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Date; end: Date }, width: number): PlannerEventGeometry[]
+function layoutResourceEvents(
+  records: PlannerEventRecord[],
+  range: { start: Date; end: Date },
+  width: number,
+): PlannerEventGeometry[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| السجلات | سجل الأحداث[] |  |
-| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |  |
-| العرض | رقم |  |
+| الاسم   | اكتب                              | الوصف |
+| ------- | --------------------------------- | ----- |
+| السجلات | سجل الأحداث[]                     |       |
+| النطاق  | { تاريخ البدء؛ النهاية: التاريخ } |       |
+| العرض   | رقم                               |       |
 
 ## `src/utils/mutations`
 
@@ -398,90 +429,110 @@ function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Dat
 **النوع:** الوظيفة
 
 ```typescript
-function applyAssignmentUpdate(assignments: PlannerAssignment[], update: PlannerAssignmentUpdate): PlannerAssignment[]
+function applyAssignmentUpdate(
+  assignments: PlannerAssignment[],
+  update: PlannerAssignmentUpdate,
+): PlannerAssignment[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مهمات | تعيين المخطط[] |  |
-| تحديث | تحديث مخطط التعيين |  |
+| الاسم | اكتب               | الوصف |
+| ----- | ------------------ | ----- |
+| مهمات | تعيين المخطط[]     |       |
+| تحديث | تحديث مخطط التعيين |       |
 
 ### movePlannerEventPatch
 
 **النوع:** الوظيفة
 
 ```typescript
-function movePlannerEventPatch(event: VEvent, deltaMs: number, options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function movePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حدث | حدث |  |
-| دلتا | رقم |  |
-| خيارات | خيارات تحرير المخطط |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| حدث    | حدث                 |       |
+| دلتا   | رقم                 |       |
+| خيارات | خيارات تحرير المخطط |       |
 
 ### resignPlannerEvent
 
 **النوع:** الوظيفة
 
 ```typescript
-function reassignPlannerEvent(eventId: string, resourceId: string): PlannerAssignmentUpdate
+function reassignPlannerEvent(
+  eventId: string,
+  resourceId: string,
+): PlannerAssignmentUpdate;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف الحدث | سلسلة |  |
-| معرف المورد | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| معرف الحدث  | سلسلة |       |
+| معرف المورد | سلسلة |       |
 
 ### resizePlannerEventPatch
 
 **النوع:** الوظيفة
 
 ```typescript
-function resizePlannerEventPatch(event: VEvent, deltaMs: number, edge: "start" | "end" = "end", options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function resizePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  edge: "start" | "end" = "end",
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حدث | حدث |  |
-| دلتا | رقم |  |
-| الحافة | "ابدأ" \| "النهاية" |  |
-| خيارات | خيارات تحرير المخطط |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| حدث    | حدث                 |       |
+| دلتا   | رقم                 |       |
+| الحافة | "ابدأ" \| "النهاية" |       |
+| خيارات | خيارات تحرير المخطط |       |
 
 ### حددPlannerRange
 
 **النوع:** الوظيفة
 
 ```typescript
-function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumDurationMs = 15 * 60_000): PlannerRangeSelection | undefined
+function selectPlannerRange(
+  resourceId: string,
+  start: Date,
+  end: Date,
+  minimumDurationMs = 15 * 60_000,
+): PlannerRangeSelection | undefined;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف المورد | سلسلة |  |
-| ابدأ | التاريخ |  |
-| النهاية | التاريخ |  |
-| الحد الأدنى للمدة |  |  |
+| الاسم             | اكتب    | الوصف |
+| ----------------- | ------- | ----- |
+| معرف المورد       | سلسلة   |       |
+| ابدأ              | التاريخ |       |
+| النهاية           | التاريخ |       |
+| الحد الأدنى للمدة |         |       |
 
 ## `src/utils/timeline`
 
@@ -490,68 +541,80 @@ function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumD
 **النوع:** الوظيفة
 
 ```typescript
-function clampToRange(value: Date, range: { start: Date; end: Date }): Date
+function clampToRange(value: Date, range: { start: Date; end: Date }): Date;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | التاريخ |  |
-| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |  |
+| الاسم  | اكتب                              | الوصف |
+| ------ | --------------------------------- | ----- |
+| القيمة | التاريخ                           |       |
+| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |       |
 
 ### createTimelineSegments
 
 **النوع:** الوظيفة
 
 ```typescript
-function generateTimelineSegments(scale: PlannerScale, range: { start: Date; end: Date }, options: TimelineOptions = {}): TimelineSegment[]
+function generateTimelineSegments(
+  scale: PlannerScale,
+  range: { start: Date; end: Date },
+  options: TimelineOptions = {},
+): TimelineSegment[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مقياس | مقياس المخطط |  |
-| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |  |
-| خيارات | خيارات الجدول الزمني |  |
+| الاسم  | اكتب                              | الوصف |
+| ------ | --------------------------------- | ----- |
+| مقياس  | مقياس المخطط                      |       |
+| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |       |
+| خيارات | خيارات الجدول الزمني              |       |
 
 ### locationToTime
 
 **النوع:** الوظيفة
 
 ```typescript
-function positionToTime(position: number, range: { start: Date; end: Date }, width: number): Date
+function positionToTime(
+  position: number,
+  range: { start: Date; end: Date },
+  width: number,
+): Date;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| موقف | رقم |  |
-| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |  |
-| العرض | رقم |  |
+| الاسم  | اكتب                              | الوصف |
+| ------ | --------------------------------- | ----- |
+| موقف   | رقم                               |       |
+| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |       |
+| العرض  | رقم                               |       |
 
 ### timeToPosition
 
 **النوع:** الوظيفة
 
 ```typescript
-function timeToPosition(time: Date, range: { start: Date; end: Date }, width: number): number
+function timeToPosition(
+  time: Date,
+  range: { start: Date; end: Date },
+  width: number,
+): number;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوقت | التاريخ |  |
-| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |  |
-| العرض | رقم |  |
+| الاسم  | اكتب                              | الوصف |
+| ------ | --------------------------------- | ----- |
+| الوقت  | التاريخ                           |       |
+| النطاق | { تاريخ البدء؛ النهاية: التاريخ } |       |
+| العرض  | رقم                               |       |

@@ -107,12 +107,12 @@ export function LandingPage() {
 
 ### 地域契約
 
-|コンポーネント |名前付き領域 |構成ソース |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| `ForgeBentoLayout` | `hero`、`feature`、`supporting` | Web サイトのマーケティングのヒーローと特集セクション |
-| `ForgeGridLayout` | `cell1` ～ `cell12` |サービス モニター ダッシュボード カードとステータスの概要 |
-| `ForgeFPatternLayout` | `header`、`intro`、`primary`、`secondary`、`footer` |ドキュメントのナビゲーションバー/コンテキスト、記事、サイドバー、フッター |
-| `ForgeZPatternLayout` | `topStart`、`topEnd`、`middle`、`bottomStart`、`bottomEnd` |代替ランディング ページのコンテンツとアクション |
+| コンポーネント        | 名前付き領域                                               | 構成ソース                                                                |
+| --------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `ForgeBentoLayout`    | `hero`、`feature`、`supporting`                            | Web サイトのマーケティングのヒーローと特集セクション                      |
+| `ForgeGridLayout`     | `cell1` ～ `cell12`                                        | サービス モニター ダッシュボード カードとステータスの概要                 |
+| `ForgeFPatternLayout` | `header`、`intro`、`primary`、`secondary`、`footer`        | ドキュメントのナビゲーションバー/コンテキスト、記事、サイドバー、フッター |
+| `ForgeZPatternLayout` | `topStart`、`topEnd`、`middle`、`bottomStart`、`bottomEnd` | 代替ランディング ページのコンテンツとアクション                           |
 
 `ForgeGridLayout` は `rows` と `columns` を受け入れ、両方を 1 以上にクランプし、レンダリング可能な領域を名前付きの 12 に制限します。
 セルを作成し、ブレークポイントの下で単一列フォールバックを使用します。名前付きセルは常にソース順にレンダリングされます。

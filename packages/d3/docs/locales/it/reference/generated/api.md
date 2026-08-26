@@ -37,7 +37,7 @@ Una selezione D3 che avvolge un singolo elemento `E`, senza dato associato.
 **Tipo:** funzione
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 Restituisce un riferimento da allegare a un elemento (`ref={reference}`) ed esegue `draw`
@@ -50,10 +50,10 @@ ordinato: in modo identico su React e Vue.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| disegnare | D3Draw<E> |  |
-| dipendenze | MpDependencyList |  |
+| Nome       | Digitare         | Descrizione |
+| ---------- | ---------------- | ----------- |
+| disegnare  | D3Draw<E>        |             |
+| dipendenze | MpDependencyList |             |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ Il riquadro esterno del grafico più il relativo margine (facoltativo).
 **Tipo:** funzione
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 Calcola il rettangolo di tracciamento interno per un grafico della dimensione esterna data e
@@ -81,9 +81,9 @@ non produrre mai dimensioni negative (che le scale D3 rifiutano).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| scatola | GraficoBox |  |
+| Nome    | Digitare   | Descrizione |
+| ------- | ---------- | ----------- |
+| scatola | GraficoBox |             |
 
 ### Dimensioni interne
 
@@ -121,7 +121,7 @@ oggetto parziale (i lati mancanti sono predefiniti su `0`).
 **Tipo:** funzione
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 Normalizza un {@link MarginInput} in un {@link Margin} completo. Un numero è
@@ -130,6 +130,6 @@ il resto in `0`. `undefined` restituisce un margine pari a zero.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ingresso | Ingresso margine |  |
+| Nome     | Digitare         | Descrizione |
+| -------- | ---------------- | ----------- |
+| ingresso | Ingresso margine |             |

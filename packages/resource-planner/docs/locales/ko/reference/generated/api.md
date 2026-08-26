@@ -16,16 +16,18 @@
 **종류:** 기능
 
 ```typescript
-function ForgeResourcePlanner(properties: Readonly<ResourcePlannerProperties>): MpElement
+function ForgeResourcePlanner(
+  properties: Readonly<ResourcePlannerProperties>,
+): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ResourcePlannerProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<ResourcePlannerProperties> |      |
 
 ### 플래너예약범위
 
@@ -84,7 +86,9 @@ export interface AvailabilityException
 **종류:** 유형
 
 ```typescript
-export type AvailabilityInput = | ResourceAvailability[] | Record<string, Omit<ResourceAvailability, "resourceId">>;
+export type AvailabilityInput =
+  | ResourceAvailability[]
+  | Record<string, Omit<ResourceAvailability, "resourceId">>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -114,7 +118,8 @@ export interface CapacityState
 **종류:** 유형
 
 ```typescript
-export type CapacityStatus = "available" | "unavailable" | "over-capacity" | "conflict";
+export type CapacityStatus =
+  "available" | "unavailable" | "over-capacity" | "conflict";
 ```
 
 설명이 제공되지 않았습니다.
@@ -266,51 +271,60 @@ export interface WorkingHoursRule
 **종류:** 기능
 
 ```typescript
-function assignmentsForEvent(assignments: PlannerAssignment[], eventId: string): PlannerAssignment[]
+function assignmentsForEvent(
+  assignments: PlannerAssignment[],
+  eventId: string,
+): PlannerAssignment[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 과제 | 플래너할당[] |  |
-| 이벤트ID | 문자열 |  |
+| 이름     | 유형         | 설명 |
+| -------- | ------------ | ---- |
+| 과제     | 플래너할당[] |      |
+| 이벤트ID | 문자열       |      |
 
 ### 정규화할당
 
 **종류:** 기능
 
 ```typescript
-function normalizeAssignments(assignments: PlannerAssignment[]): PlannerAssignment[]
+function normalizeAssignments(
+  assignments: PlannerAssignment[],
+): PlannerAssignment[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 과제 | 플래너할당[] |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 과제 | 플래너할당[] |      |
 
 ### NormalizePlanner이벤트
 
 **종류:** 기능
 
 ```typescript
-function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment[], range?: { start: Date; end: Date }): PlannerEventRecord[]
+function normalizePlannerEvents(
+  events: VEvent[],
+  assignments: PlannerAssignment[],
+  range?: { start: Date; end: Date },
+): PlannerEventRecord[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이벤트 | V이벤트[] |  |
-| 과제 | 플래너할당[] |  |
-| 범위 | { 시작: 날짜; 끝: 날짜 } |  |
+| 이름   | 유형                     | 설명 |
+| ------ | ------------------------ | ---- |
+| 이벤트 | V이벤트[]                |      |
+| 과제   | 플래너할당[]             |      |
+| 범위   | { 시작: 날짜; 끝: 날짜 } |      |
 
 ## `src/utils/availability`
 
@@ -319,36 +333,44 @@ function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment
 **종류:** 기능
 
 ```typescript
-function availabilityForResource(input: AvailabilityInput, resourceId: string): ResourceAvailability
+function availabilityForResource(
+  input: AvailabilityInput,
+  resourceId: string,
+): ResourceAvailability;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 가용성 입력 |  |
-| 리소스 ID | 문자열 |  |
+| 이름      | 유형        | 설명 |
+| --------- | ----------- | ---- |
+| 입력      | 가용성 입력 |      |
+| 리소스 ID | 문자열      |      |
 
 ### 확장가용성
 
 **종류:** 기능
 
 ```typescript
-function expandAvailability(resourceId: string, input: AvailabilityInput, range: { start: Date; end: Date }, options: AvailabilityOptions = {}): NormalizedAvailabilityInterval[]
+function expandAvailability(
+  resourceId: string,
+  input: AvailabilityInput,
+  range: { start: Date; end: Date },
+  options: AvailabilityOptions = {},
+): NormalizedAvailabilityInterval[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 리소스 ID | 문자열 |  |
-| 입력 | 가용성 입력 |  |
-| 범위 | { 시작: 날짜; 끝: 날짜 } |  |
-| 옵션 | 가용성 옵션 |  |
+| 이름      | 유형                     | 설명 |
+| --------- | ------------------------ | ---- |
+| 리소스 ID | 문자열                   |      |
+| 입력      | 가용성 입력              |      |
+| 범위      | { 시작: 날짜; 끝: 날짜 } |      |
+| 옵션      | 가용성 옵션              |      |
 
 ## `src/utils/capacity`
 
@@ -357,19 +379,24 @@ function expandAvailability(resourceId: string, input: AvailabilityInput, range:
 **종류:** 기능
 
 ```typescript
-function calculateCapacityState(resourceId: string, segment: TimelineSegment | { start: Date; end: Date }, availability: NormalizedAvailabilityInterval[], events: PlannerEventRecord[]): CapacityState
+function calculateCapacityState(
+  resourceId: string,
+  segment: TimelineSegment | { start: Date; end: Date },
+  availability: NormalizedAvailabilityInterval[],
+  events: PlannerEventRecord[],
+): CapacityState;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 리소스 ID | 문자열 |  |
-| 세그먼트 | 타임라인세그먼트 \| { 시작: 날짜; 끝: 날짜 } |  |
-| 가용성 | NormalizedAvailabilityInterval[] |  |
-| 이벤트 | PlannerEventRecord[] |  |
+| 이름      | 유형                                         | 설명 |
+| --------- | -------------------------------------------- | ---- |
+| 리소스 ID | 문자열                                       |      |
+| 세그먼트  | 타임라인세그먼트 \| { 시작: 날짜; 끝: 날짜 } |      |
+| 가용성    | NormalizedAvailabilityInterval[]             |      |
+| 이벤트    | PlannerEventRecord[]                         |      |
 
 ## `src/utils/layout`
 
@@ -378,18 +405,22 @@ function calculateCapacityState(resourceId: string, segment: TimelineSegment | {
 **종류:** 기능
 
 ```typescript
-function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Date; end: Date }, width: number): PlannerEventGeometry[]
+function layoutResourceEvents(
+  records: PlannerEventRecord[],
+  range: { start: Date; end: Date },
+  width: number,
+): PlannerEventGeometry[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기록 | PlannerEventRecord[] |  |
-| 범위 | { 시작: 날짜; 끝: 날짜 } |  |
-| 폭 | 번호 |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 기록 | PlannerEventRecord[]     |      |
+| 범위 | { 시작: 날짜; 끝: 날짜 } |      |
+| 폭   | 번호                     |      |
 
 ## `src/utils/mutations`
 
@@ -398,90 +429,110 @@ function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Dat
 **종류:** 기능
 
 ```typescript
-function applyAssignmentUpdate(assignments: PlannerAssignment[], update: PlannerAssignmentUpdate): PlannerAssignment[]
+function applyAssignmentUpdate(
+  assignments: PlannerAssignment[],
+  update: PlannerAssignmentUpdate,
+): PlannerAssignment[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 과제 | 플래너할당[] |  |
-| 업데이트 | 플래너할당업데이트 |  |
+| 이름     | 유형               | 설명 |
+| -------- | ------------------ | ---- |
+| 과제     | 플래너할당[]       |      |
+| 업데이트 | 플래너할당업데이트 |      |
 
 ### movePlannerEventPatch
 
 **종류:** 기능
 
 ```typescript
-function movePlannerEventPatch(event: VEvent, deltaMs: number, options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function movePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이벤트 | V이벤트 |  |
-| 델타M | 번호 |  |
-| 옵션 | 플래너편집옵션 |  |
+| 이름   | 유형           | 설명 |
+| ------ | -------------- | ---- |
+| 이벤트 | V이벤트        |      |
+| 델타M  | 번호           |      |
+| 옵션   | 플래너편집옵션 |      |
 
 ### 재할당PlannerEvent
 
 **종류:** 기능
 
 ```typescript
-function reassignPlannerEvent(eventId: string, resourceId: string): PlannerAssignmentUpdate
+function reassignPlannerEvent(
+  eventId: string,
+  resourceId: string,
+): PlannerAssignmentUpdate;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이벤트ID | 문자열 |  |
-| 리소스 ID | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 이벤트ID  | 문자열 |      |
+| 리소스 ID | 문자열 |      |
 
 ### resizePlannerEventPatch
 
 **종류:** 기능
 
 ```typescript
-function resizePlannerEventPatch(event: VEvent, deltaMs: number, edge: "start" | "end" = "end", options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function resizePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  edge: "start" | "end" = "end",
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이벤트 | V이벤트 |  |
-| 델타M | 번호 |  |
-| 가장자리 | "시작" \| "끝" |  |
-| 옵션 | 플래너편집옵션 |  |
+| 이름     | 유형           | 설명 |
+| -------- | -------------- | ---- |
+| 이벤트   | V이벤트        |      |
+| 델타M    | 번호           |      |
+| 가장자리 | "시작" \| "끝" |      |
+| 옵션     | 플래너편집옵션 |      |
 
 ### selectPlannerRange
 
 **종류:** 기능
 
 ```typescript
-function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumDurationMs = 15 * 60_000): PlannerRangeSelection | undefined
+function selectPlannerRange(
+  resourceId: string,
+  start: Date,
+  end: Date,
+  minimumDurationMs = 15 * 60_000,
+): PlannerRangeSelection | undefined;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 리소스 ID | 문자열 |  |
-| 시작 | 날짜 |  |
-| 끝 | 날짜 |  |
-| 최소 기간Ms |  |  |
+| 이름        | 유형   | 설명 |
+| ----------- | ------ | ---- |
+| 리소스 ID   | 문자열 |      |
+| 시작        | 날짜   |      |
+| 끝          | 날짜   |      |
+| 최소 기간Ms |        |      |
 
 ## `src/utils/timeline`
 
@@ -490,68 +541,80 @@ function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumD
 **종류:** 기능
 
 ```typescript
-function clampToRange(value: Date, range: { start: Date; end: Date }): Date
+function clampToRange(value: Date, range: { start: Date; end: Date }): Date;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 날짜 |  |
-| 범위 | { 시작: 날짜; 끝: 날짜 } |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 가치 | 날짜                     |      |
+| 범위 | { 시작: 날짜; 끝: 날짜 } |      |
 
 ### 생성타임라인세그먼트
 
 **종류:** 기능
 
 ```typescript
-function generateTimelineSegments(scale: PlannerScale, range: { start: Date; end: Date }, options: TimelineOptions = {}): TimelineSegment[]
+function generateTimelineSegments(
+  scale: PlannerScale,
+  range: { start: Date; end: Date },
+  options: TimelineOptions = {},
+): TimelineSegment[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 규모 | 플래너스케일 |  |
-| 범위 | { 시작: 날짜; 끝: 날짜 } |  |
-| 옵션 | 타임라인옵션 |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 규모 | 플래너스케일             |      |
+| 범위 | { 시작: 날짜; 끝: 날짜 } |      |
+| 옵션 | 타임라인옵션             |      |
 
 ### 위치까지시간
 
 **종류:** 기능
 
 ```typescript
-function positionToTime(position: number, range: { start: Date; end: Date }, width: number): Date
+function positionToTime(
+  position: number,
+  range: { start: Date; end: Date },
+  width: number,
+): Date;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위치 | 번호 |  |
-| 범위 | { 시작: 날짜; 끝: 날짜 } |  |
-| 폭 | 번호 |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 위치 | 번호                     |      |
+| 범위 | { 시작: 날짜; 끝: 날짜 } |      |
+| 폭   | 번호                     |      |
 
 ### 위치까지의 시간
 
 **종류:** 기능
 
 ```typescript
-function timeToPosition(time: Date, range: { start: Date; end: Date }, width: number): number
+function timeToPosition(
+  time: Date,
+  range: { start: Date; end: Date },
+  width: number,
+): number;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 시간 | 날짜 |  |
-| 범위 | { 시작: 날짜; 끝: 날짜 } |  |
-| 폭 | 번호 |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 시간 | 날짜                     |      |
+| 범위 | { 시작: 날짜; 끝: 날짜 } |      |
+| 폭   | 번호                     |      |

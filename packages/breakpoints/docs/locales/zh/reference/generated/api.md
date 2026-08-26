@@ -26,7 +26,7 @@ export type BreakpointKey = (typeof breakpointKeys)[number];
 **种类：**常数
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 没有提供描述。
@@ -36,7 +36,7 @@ export const breakpointKeys
 **种类：**常数
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 每个断点步骤的最小宽度像素阈值。
@@ -64,23 +64,23 @@ export type BreakpointValues = Record<BreakpointKey, boolean>;
 **种类：**功能
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 返回给定断点键的像素值。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|关键|断点键 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 关键 | 断点键 |      |
 
 ### 最大媒体查询
 
 **种类：**功能
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 返回给定的 `max-width` 媒体查询字符串（上限）
@@ -88,9 +88,9 @@ function maxMediaQuery(key: BreakpointKey): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|关键|断点键 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 关键 | 断点键 |      |
 
 #### 合同
 
@@ -101,37 +101,37 @@ function maxMediaQuery(key: BreakpointKey): string
 **种类：**功能
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 返回给定断点的 `min-width` 媒体查询字符串。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|关键|断点键 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 关键 | 断点键 |      |
 
 #### 合同
 
 - **@example:** mediaQuery('lg') // → '(最小宽度: 1920px)'
-mediaQuery('xl') // → '(最小宽度: 2560px)'
+  mediaQuery('xl') // → '(最小宽度: 2560px)'
 
 ### 解决断点
 
 **种类：**功能
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 给定像素宽度，返回当前活动的断点键。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|宽度|数量 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 宽度 | 数量 |      |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -140,7 +140,7 @@ function resolveBreakpoint(width: number): BreakpointKey
 **种类：**功能
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt` — {@link ForgeShowAt} 的反面：当
@@ -155,9 +155,9 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<HideAtProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<HideAtProperties> |      |
 
 ### 隐藏在属性
 
@@ -176,7 +176,7 @@ export interface HideAtProperties
 **种类：**功能
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` — 仅当视口位于
@@ -192,9 +192,9 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ShowAtProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<ShowAtProperties> |      |
 
 ### 在属性处显示
 
@@ -223,7 +223,7 @@ export type BreakpointDebugProperties = Record<string, never>;
 **种类：**功能
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug` — 固定在右下角的开发时覆盖
@@ -240,9 +240,9 @@ React 和 Vue。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| _属性 |只读<BreakpointDebugProperties> |  |
+| 名称  | 类型                            | 描述 |
+| ----- | ------------------------------- | ---- |
+| _属性 | 只读<BreakpointDebugProperties> |      |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -251,7 +251,7 @@ React 和 Vue。
 **种类：**功能
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 基于文档元素宽度的反应断点状态。

@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/map`.
 **Soort:** functie
 
 ```typescript
-function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
+function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement;
 ```
 
 `ForgeMapDraw` — een interactief teken-/bewerkingshulpmiddel voor de dichtstbijzijnde
@@ -29,9 +29,9 @@ en lagen, en stelt de live `drawing`-controller bloot via een scoped
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MapDrawProperties> |  |
+| Naam          | Typ                             | Beschrijving |
+| ------------- | ------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MapDrawProperties> |              |
 
 ### MapDrawProperties
 
@@ -50,7 +50,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null
+function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null;
 ```
 
 `ForgeMapLayer` — voegt een MapLibre-laag toe aan de dichtstbijzijnde `<MapLibre>`-voorouder
@@ -59,9 +59,9 @@ Eén keer geschreven in het neutrale JSX-dialect.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MapLayerProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MapLayerProperties> |              |
 
 ### MapLayerEigenschappen
 
@@ -80,7 +80,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null
+function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null;
 ```
 
 `ForgeMapMarker` — voegt een MapLibre `Marker` toe aan de dichtstbijzijnde `<MapLibre>`
@@ -89,9 +89,9 @@ doek). Eén keer geschreven in het neutrale JSX-dialect.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MapMarkerProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MapMarkerProperties> |              |
 
 ### MapMarkerEigenschappen
 
@@ -110,7 +110,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null
+function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null;
 ```
 
 `ForgeMapPopup` — voegt een MapLibre `Popup` toe aan de dichtstbijzijnde `<MapLibre>`-voorouder
@@ -119,9 +119,9 @@ eenmaal in het neutrale JSX-dialect.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MapPopupProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MapPopupProperties> |              |
 
 ### MapPopupEigenschappen
 
@@ -140,7 +140,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
+function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement;
 ```
 
 `ForgeMapSource` — registreert een MapLibre-gegevensbron op de dichtstbijzijnde `<MapLibre>`
@@ -149,9 +149,9 @@ verwijzen naar deze bron). Eén keer geschreven in het neutrale JSX-dialect.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MapSourceProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MapSourceProperties> |              |
 
 ### MapSourceEigenschappen
 
@@ -170,7 +170,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
+function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement;
 ```
 
 `ForgeMapLibre` — een MapLibre GL-kaartcontainer die één keer in de neutrale JSX is geschreven
@@ -186,9 +186,9 @@ styling via de co-located CSS-module `forge-map-libre.module.scss` (zijn eigen
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MapLibreProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MapLibreProperties> |              |
 
 ### MapLibreProperties
 
@@ -244,7 +244,7 @@ Unieke string-ID geassocieerd met een getekend object.
 **Soort:** functie
 
 ```typescript
-function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn
+function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn;
 ```
 
 Beheert alle teken- en bewerkingsstatussen voor de kaart. De winkel bedient de kaarten
@@ -253,10 +253,10 @@ om de kaartinstantie door te sturen en bronnen/lagen weer te geven vanuit de ger
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kaart | Kaart \| ongedefinieerd |  |
-| opties | GebruikTekeningOpties |  |
+| Naam   | Typ                     | Beschrijving |
+| ------ | ----------------------- | ------------ |
+| kaart  | Kaart \| ongedefinieerd |              |
+| opties | GebruikTekeningOpties   |              |
 
 ### Gebruik Tekenopties
 
@@ -285,14 +285,14 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function useLayer(map: Map | undefined, options: UseLayerOptions): void
+function useLayer(map: Map | undefined, options: UseLayerOptions): void;
 ```
 
 Voegt een MapLibre-laag toe aan de kaart.
 
 De laag wordt gemaakt zodra de kaart gereed is. Wanneer alleen de `paint`, `layout`,
 `filter` of wijziging van het zoombereik (dezelfde `id`, `type` en `source`), zijn
-gesynchroniseerd met de live laag **op zijn plaats** — de laag is *niet* verwijderd en
+gesynchroniseerd met de live laag **op zijn plaats** — de laag is _niet_ verwijderd en
 opnieuw toegevoegd. Dit is van belang omdat bellers het spec-object gewoonlijk opnieuw opbouwen
 elke render (bijvoorbeeld een interactief tekenhulpmiddel dat reageert op elke muisbeweging):
 Als je een laag afscheurt en deze bij elke render opnieuw maakt, verandert dat van MapLibre
@@ -302,17 +302,18 @@ verplaatsen of een kaartwijziging. Bij het ontkoppelen wordt de laag automatisch
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kaart | Kaart \| ongedefinieerd |  |
-| opties | GebruikLayerOptions |  |
+| Naam   | Typ                     | Beschrijving |
+| ------ | ----------------------- | ------------ |
+| kaart  | Kaart \| ongedefinieerd |              |
+| opties | GebruikLayerOptions     |              |
 
 #### Contract
 
 - **@voorbeeld:** ```ts
-const map = useMap();
-useLayer(map, { layer: circleLayerSpec });
-```
+  const map = useMap();
+  useLayer(map, { layer: circleLayerSpec });
+
+````
 
 ### GebruikLayerOptions
 
@@ -320,7 +321,7 @@ useLayer(map, { layer: circleLayerSpec });
 
 ```typescript
 export interface UseLayerOptions
-```
+````
 
 Geen beschrijving opgegeven.
 
@@ -331,7 +332,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function useMap(): Map | undefined
+function useMap(): Map | undefined;
 ```
 
 Retourneert de MapLibre `Map`-instantie geleverd door de dichtstbijzijnde `<MapLibre>`
@@ -342,11 +343,12 @@ Moet worden aangeroepen binnen een component die een afstammeling is van `<MapLi
 #### Contract
 
 - **@voorbeeld:** ```ts
-const map = useMap();
-useEffect(() => {
+  const map = useMap();
+  useEffect(() => {
   map?.flyTo({ center: [lng, lat] });
-}, [map]);
-```
+  }, [map]);
+
+````
 
 ## `src/composables/use-marker/use-marker`
 
@@ -356,24 +358,25 @@ useEffect(() => {
 
 ```typescript
 function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn
-```
+````
 
 Creëert een MapLibre `Marker` die automatisch aan de kaart wordt toegevoegd en verwijderd
 wanneer het onderdeel dat eigenaar is, is gedemonteerd. De positie van de markering volgt `lngLat`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kaart | Kaart \| ongedefinieerd |  |
-| opties | GebruikMarkerOptions |  |
+| Naam   | Typ                     | Beschrijving |
+| ------ | ----------------------- | ------------ |
+| kaart  | Kaart \| ongedefinieerd |              |
+| opties | GebruikMarkerOptions    |              |
 
 #### Contract
 
 - **@voorbeeld:** ```ts
-const map = useMap();
-const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
-```
+  const map = useMap();
+  const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
+
+````
 
 ### Gebruik MarkerOptions
 
@@ -381,7 +384,7 @@ const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
 
 ```typescript
 export interface UseMarkerOptions extends MarkerOptions
-```
+````
 
 Geen beschrijving opgegeven.
 
@@ -402,7 +405,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn
+function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn;
 ```
 
 Creëert een MapLibre `Popup` die automatisch wordt toegevoegd aan en verwijderd uit de
@@ -411,17 +414,18 @@ en open/gesloten toestand.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kaart | Kaart \| ongedefinieerd |  |
-| opties | GebruikPopupOptions |  |
+| Naam   | Typ                     | Beschrijving |
+| ------ | ----------------------- | ------------ |
+| kaart  | Kaart \| ongedefinieerd |              |
+| opties | GebruikPopupOptions     |              |
 
 #### Contract
 
 - **@voorbeeld:** ```ts
-const map = useMap();
-const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
-```
+  const map = useMap();
+  const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
+
+````
 
 ### GebruikPopupOptions
 
@@ -429,7 +433,7 @@ const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' })
 
 ```typescript
 export interface UsePopupOptions extends PopupOptions
-```
+````
 
 Geen beschrijving opgegeven.
 
@@ -450,7 +454,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function useSource(map: Map | undefined, options: UseSourceOptions): void
+function useSource(map: Map | undefined, options: UseSourceOptions): void;
 ```
 
 Registreert een MapLibre-gegevensbron en houdt deze gesynchroniseerd met de kaart.
@@ -463,17 +467,18 @@ uitgevoerd wanneer het brontype of de structurele opties veranderen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kaart | Kaart \| ongedefinieerd |  |
-| opties | Gebruik bronopties |  |
+| Naam   | Typ                     | Beschrijving |
+| ------ | ----------------------- | ------------ |
+| kaart  | Kaart \| ongedefinieerd |              |
+| opties | Gebruik bronopties      |              |
 
 #### Contract
 
 - **@voorbeeld:** ```ts
-const map = useMap();
-useSource(map, { id: 'earthquakes', source: geojsonSpec });
-```
+  const map = useMap();
+  useSource(map, { id: 'earthquakes', source: geojsonSpec });
+
+````
 
 ### Gebruik bronopties
 
@@ -481,7 +486,7 @@ useSource(map, { id: 'earthquakes', source: geojsonSpec });
 
 ```typescript
 export interface UseSourceOptions
-```
+````
 
 Geen beschrijving opgegeven.
 
@@ -492,7 +497,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const MapContext
+export const MapContext;
 ```
 
 Context met de MapLibre `Map`-instantie van de dichtstbijzijnde `<MapLibre>`-voorouder.

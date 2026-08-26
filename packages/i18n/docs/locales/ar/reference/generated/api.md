@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElement
+function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElement;
 ```
 
 يوفر مثيل i18next لشجرة React (التفويض إلى
@@ -24,9 +24,9 @@ function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | فورجيI18NProviderProperties |  |
+| الاسم | اكتب                        | الوصف |
+| ----- | --------------------------- | ----- |
+| خصائص | فورجيI18NProviderProperties |       |
 
 #### عقد
 
@@ -52,7 +52,7 @@ export interface ForgeI18NProviderProperties
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin
+function createForgeI18NVue(i18next: I18nInstance): Plugin;
 ```
 
 يلتف مثيل i18next في البرنامج المساعد Vue (التفويض إلى `i18next-vue`) لذلك
@@ -61,9 +61,9 @@ function createForgeI18NVue(i18next: I18nInstance): Plugin
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| i18next | I18nInstance |  |
+| الاسم   | اكتب         | الوصف |
+| ------- | ------------ | ----- |
+| i18next | I18nInstance |       |
 
 #### عقد
 
@@ -79,7 +79,7 @@ app.use(createForgeI18NVue(i18n))
 **النوع:** الوظيفة
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 قم بتوفير i18next مباشرة في حالة عدم توفر محول إطار العمل. هذا يبقي
@@ -89,9 +89,9 @@ function useI18n(namespace?: string): UseI18nReturn
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مساحة الاسم | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| مساحة الاسم | سلسلة |       |
 
 ### استخدمI18nReturn
 
@@ -110,7 +110,7 @@ export interface UseI18nReturn
 **النوع:** الوظيفة
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 خطاف يعرض وظيفة الترجمة، والمثيل الأساسي i18next، و
@@ -123,9 +123,9 @@ function useI18n(namespace?: string): UseI18nReturn
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مساحة الاسم | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| مساحة الاسم | سلسلة |       |
 
 ### استخدمI18nReturn
 
@@ -144,7 +144,7 @@ export interface UseI18nReturn
 **النوع:** الوظيفة
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 مساعد التركيب يعرض وظيفة الترجمة التفاعلية، النشطة
@@ -158,9 +158,9 @@ function useI18n(namespace?: string): UseI18nReturn
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مساحة الاسم | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| مساحة الاسم | سلسلة |       |
 
 ### استخدمI18nReturn
 
@@ -179,7 +179,7 @@ export interface UseI18nReturn
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance
+function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
 ```
 
 إنشاء إطار عمل غير محدد [i18next](https://www.i18next.com/)
@@ -201,29 +201,30 @@ function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | كريت فورجI18NOptions |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | كريت فورجI18NOptions |       |
 
 #### عقد
 
 - **@example:** // استخدام محايد للإطار
-استيراد { createForgeI18N } من '@mission-platform/i18n'
+  استيراد { createForgeI18N } من '@mission-platform/i18n'
 
 const i18n = createForgeI18N({ messages: { en: { hello: 'Hello {name}' } } })
 i18n.t('hello', { name: 'World' }) // → 'Hello World'
+
 - **@example:** // استخدام مسافة الاسم مع تطبيق يتجاوز سلسلة الحزمة
-استيراد { createForgeI18N، forgeNamespace } من '@mission-platform/i18n'
+  استيراد { createForgeI18N، forgeNamespace } من '@mission-platform/i18n'
 
 const i18n = createForgeI18N({
-  مساحة الاسم: forgeNamespace('ملاحظات الرعاية الخاصة بي')،
-  مساحات الأسماء: {
-    [forgeNamespace('my-care-notes')]: { en: { nav: {notes: 'Notes' } } },
-    [forgeNamespace('breakpoints')]: { ar: { نقطة التوقف: 'نقطة التوقف:' } },
-  },
-  التجاوزات: {
-    [forgeNamespace('نقاط التوقف')]: { ar: { نقطة التوقف: 'منفذ العرض:' } },
-  },
+مساحة الاسم: forgeNamespace('ملاحظات الرعاية الخاصة بي')،
+مساحات الأسماء: {
+[forgeNamespace('my-care-notes')]: { en: { nav: {notes: 'Notes' } } },
+[forgeNamespace('breakpoints')]: { ar: { نقطة التوقف: 'نقطة التوقف:' } },
+},
+التجاوزات: {
+[forgeNamespace('نقاط التوقف')]: { ar: { نقطة التوقف: 'منفذ العرض:' } },
+},
 })
 
 ### خيارات إنشاء ForgeI18N
@@ -241,7 +242,7 @@ export interface CreateForgeI18NOptions
 **النوع:** الوظيفة
 
 ```typescript
-function getServerI18n(): I18nInstance | undefined
+function getServerI18n(): I18nInstance | undefined;
 ```
 
 استرداد مثيل i18n الحالي من جانب الخادم من سياق الطلب (AsyncLocalStorage)،
@@ -252,33 +253,33 @@ function getServerI18n(): I18nInstance | undefined
 **النوع:** الوظيفة
 
 ```typescript
-function runWithI18n(i18n: I18nInstance, callback: () => T): T
+function runWithI18n(i18n: I18nInstance, callback: () => T): T;
 ```
 
 يقوم بتشغيل رد اتصال ضمن سياق i18n ضمن نطاق الطلب على الخادم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| i18n | I18nInstance |  |
-| رد الاتصال | () => ت |  |
+| الاسم      | اكتب         | الوصف |
+| ---------- | ------------ | ----- |
+| i18n       | I18nInstance |       |
+| رد الاتصال | () => ت      |       |
 
 ### setServerI18n
 
 **النوع:** الوظيفة
 
 ```typescript
-function setServerI18n(i18n: I18nInstance): void
+function setServerI18n(i18n: I18nInstance): void;
 ```
 
 تكوين مثيل i18n من جانب الخادم الاحتياطي العالمي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| i18n | I18nInstance |  |
+| الاسم | اكتب         | الوصف |
+| ----- | ------------ | ----- |
+| i18n  | I18nInstance |       |
 
 ## `src/utils/merge-locales`
 
@@ -287,7 +288,7 @@ function setServerI18n(i18n: I18nInstance): void
 **النوع:** الوظيفة
 
 ```typescript
-function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLocales
+function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLocales;
 ```
 
 الدمج العميق لكائنات الرسائل الخاصة بكل لغة من `source` في `target`،
@@ -296,17 +297,17 @@ function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLoca
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الهدف | فورج لوكاليز |  |
-| المصدر | فورج لوكاليز |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| الهدف  | فورج لوكاليز |       |
+| المصدر | فورج لوكاليز |       |
 
 ### DeepMergeMessages
 
 **النوع:** الوظيفة
 
 ```typescript
-function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject
+function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject;
 ```
 
 يدمج بشكل متكرر كائنين من رسائل الرسائل، مما يؤدي إلى إرجاع كائن جديد. عادي
@@ -319,17 +320,17 @@ win ويتم الحفاظ على بقية حزمة الحزمة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الهدف | ForgeMessageObject |  |
-| المصدر | ForgeMessageObject |  |
+| الاسم  | اكتب               | الوصف |
+| ------ | ------------------ | ----- |
+| الهدف  | ForgeMessageObject |       |
+| المصدر | ForgeMessageObject |       |
 
 ### mergeLocales
 
 **النوع:** الوظيفة
 
 ```typescript
-function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessageObject>
+function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessageObject>;
 ```
 
 الدمج العميق لمجموعة من الوحدات المحلية في خريطة رسائل واحدة.
@@ -337,9 +338,9 @@ function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessage
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| وحدات | ForgeLocaleModule[] |  |
+| الاسم | اكتب                | الوصف |
+| ----- | ------------------- | ----- |
+| وحدات | ForgeLocaleModule[] |       |
 
 ## `src/utils/namespace`
 
@@ -348,7 +349,7 @@ function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessage
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_DEFAULT_NAMESPACE
+export const FORGE_DEFAULT_NAMESPACE;
 ```
 
 يتم تسجيل رسائل مساحة الاسم i18next الافتراضية في حالة عدم وجود صريحة
@@ -360,7 +361,7 @@ export const FORGE_DEFAULT_NAMESPACE
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_NAMESPACE_PREFIX
+export const FORGE_NAMESPACE_PREFIX;
 ```
 
 البادئة المحجوزة لكل مساحة اسم Mission Platform i18next. الحزم
@@ -371,7 +372,7 @@ export const FORGE_NAMESPACE_PREFIX
 **النوع:** الوظيفة
 
 ```typescript
-function forgeNamespace(name: string): string
+function forgeNamespace(name: string): string;
 ```
 
 إنشاء مساحة اسم Mission Platform i18next لمساحة العمل، على سبيل المثال.
@@ -383,16 +384,16 @@ function forgeNamespace(name: string): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| الاسم | سلسلة |       |
 
 ### localeNamespaces
 
 **النوع:** الوظيفة
 
 ```typescript
-function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageObject>): ForgeNamespaceLocales
+function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageObject>): ForgeNamespaceLocales;
 ```
 
 يحول خريطة حزمة ذات لغة واحدة ومفاتيح مساحة الاسم - الشكل i18n
@@ -403,18 +404,18 @@ function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageOb
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| لغة | سلسلة |  |
-| حزم | سجل<string, ForgeMessageObject> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| لغة   | سلسلة                           |       |
+| حزم   | سجل<string, ForgeMessageObject> |       |
 
 #### عقد
 
 - **@example:** const enBundles = yaml.load(enLocaleSource) // { 'mp.breakpoints': {...}, 'mp.my-care-notes': {...} }
-كريت فورجI18N({
+  كريت فورجI18N({
   مساحة الاسم: forgeNamespace('ملاحظات الرعاية الخاصة بي')،
   مساحات الأسماء: localeNamespaces('en', enBundles),
-})
+  })
 
 ## `src/utils/types`
 

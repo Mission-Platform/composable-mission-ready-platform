@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined
+function useObservable(source: Observable<T>): T | undefined;
 ```
 
 הירשם ל-`source` והחזר את הפליטה האחרונה שלו כמדינה. מחזיר
@@ -24,9 +24,9 @@ function useObservable(source: Observable<T>): T | undefined
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | לצפייה<T> |  |
+| שם   | הקלד      | תיאור |
+| ---- | --------- | ----- |
+| מקור | לצפייה<T> |       |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -45,7 +45,11 @@ export interface Unsubscribable
 פונקציה **סוג:**
 
 ```typescript
-function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T>> | ((value: T) => void), dependencies: MpDependencyList = []): void
+function useSubscribe(
+  source: Observable<T>,
+  observerOrNext?: Partial<Observer<T>> | ((value: T) => void),
+  dependencies: MpDependencyList = [],
+): void;
 ```
 
 הירשם ל-`source` עם ה-`observer` (או `next` התקשרות חוזרת) עבור
@@ -54,18 +58,18 @@ function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | לצפייה<T> |  |
-| observerOrNext | חלקי<Observer<T>> \| ((ערך: T) => ריק) |  |
-| תלות | MpDependencyList |  |
+| שם             | הקלד                                   | תיאור |
+| -------------- | -------------------------------------- | ----- |
+| מקור           | לצפייה<T>                              |       |
+| observerOrNext | חלקי<Observer<T>> \| ((ערך: T) => ריק) |       |
+| תלות           | MpDependencyList                       |       |
 
 ### השתמש במנוי
 
 פונקציה **סוג:**
 
 ```typescript
-function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void
+function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void;
 ```
 
 הפעל את `subscribe` לאחר הטעינה ובטל את הרישום מהתוצאה שלו בביטול הטעינה (ו
@@ -74,7 +78,7 @@ function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDepend
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הירשם | () => לא ניתן להירשם |  |
-| תלות | MpDependencyList |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| הירשם | () => לא ניתן להירשם |       |
+| תלות  | MpDependencyList     |       |

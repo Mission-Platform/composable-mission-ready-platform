@@ -37,7 +37,7 @@ Eine D3-Auswahl, die ein einzelnes Element `E` ohne gebundenes Datum umschließt
 **Art:** Funktion
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 Geben Sie einen Verweis zum Anhängen an ein Element (`ref={reference}`) zurück und führen Sie `draw` aus
@@ -50,10 +50,10 @@ ordentlich – identisch auf React und Vue.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zeichnen | D3Draw<E> |  |
-| Abhängigkeiten | MpDependencyList |  |
+| Name           | Geben Sie        | ein Beschreibung |
+| -------------- | ---------------- | ---------------- |
+| zeichnen       | D3Draw<E>        |                  |
+| Abhängigkeiten | MpDependencyList |                  |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ Das äußere Diagrammfeld plus dessen (optionaler) Rand.
 **Art:** Funktion
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 Berechnen Sie das innere Plotrechteck für ein Diagramm der angegebenen Außengröße und
@@ -81,9 +81,9 @@ Erzeugen Sie niemals negative Dimensionen (die D3-Waagen ablehnen).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Kiste | ChartBox |  |
+| Name  | Geben Sie | ein Beschreibung |
+| ----- | --------- | ---------------- |
+| Kiste | ChartBox  |                  |
 
 ### Innere Dimensionen
 
@@ -121,7 +121,7 @@ Teilobjekt (fehlende Seiten sind standardmäßig `0`).
 **Art:** Funktion
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 Normalisieren Sie einen {@link MarginInput} in einen vollständigen {@link Margin}. Eine Zahl ist
@@ -130,6 +130,6 @@ der Rest an `0`. `undefined` ergibt eine Marge von Null.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | MarginInput |  |
+| Name    | Geben Sie   | ein Beschreibung |
+| ------- | ----------- | ---------------- |
+| Eingabe | MarginInput |                  |

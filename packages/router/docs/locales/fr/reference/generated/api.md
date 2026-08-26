@@ -16,39 +16,39 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities
+function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities;
 ```
 
 Créez un objet de capacité neutre pour un adaptateur cible, un SSR ou un test.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| remplacements | MpRouterCapabilityOverrides |  |
+| Nom           | Tapez                       | Descriptif |
+| ------------- | --------------------------- | ---------- |
+| remplacements | MpRouterCapabilityOverrides |            |
 
 ### isMpRouterCapabilityError
 
 **Genre :** fonction
 
 ```typescript
-function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError
+function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError;
 ```
 
 Si une erreur inconnue est l’erreur de repli déterministe du routeur neutre.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| erreur | inconnu |  |
+| Nom    | Tapez   | Descriptif |
+| ------ | ------- | ---------- |
+| erreur | inconnu |            |
 
 ### MP_ROUTER_COMPILER_MARKER
 
 **Genre :** constante
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Métadonnées stables consommées par les plugins du compilateur de routeur Forge.
@@ -58,16 +58,16 @@ Métadonnées stables consommées par les plugins du compilateur de routeur Forg
 **Genre :** composant
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor
+function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 Marqueur de lien neutre. Les cibles natives remplacent cette fonction lors de la compilation.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | MpLinkProps |  |
+| Nom        | Tapez       | Descriptif |
+| ---------- | ----------- | ---------- |
+| propriétés | MpLinkProps |            |
 
 ### MpLinkDescriptor
 
@@ -154,16 +154,16 @@ Une implémentation partielle utile pour cibler les adaptateurs et les harnais S
 **Genre :** composant
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor
+function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
 ```
 
 Marqueur de sortie/vue neutre. Les cibles natives remplacent cette fonction lors de la compilation.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | MpRouterViewProps |  |
+| Nom        | Tapez             | Descriptif |
+| ---------- | ----------------- | ---------- |
+| propriétés | MpRouterViewProps |            |
 
 ### MpRouterViewDescriptor
 
@@ -190,7 +190,10 @@ Accessoires acceptés par le marqueur neutre du compilateur de sortie/vue.
 **Genre :** fonction
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string
+function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string;
 ```
 
 Résolvez une cible via le routeur appartenant à l'application. La capacité optionnelle
@@ -198,17 +201,17 @@ L'argument rend l'assistant déterministe dans les SSR/tests et les adaptateurs 
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| à | MpRouteLocationRaw |  |
-| capacités | Choisir<MpRouterCapabilities, 'resolve'> |  |
+| Nom       | Tapez                                    | Descriptif |
+| --------- | ---------------------------------------- | ---------- |
+| à         | MpRouteLocationRaw                       |            |
+| capacités | Choisir<MpRouterCapabilities, 'resolve'> |            |
 
 ### useMpNavigation
 
 **Genre :** fonction
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Lire uniquement la capacité de navigation impérative.
@@ -218,7 +221,7 @@ Lire uniquement la capacité de navigation impérative.
 **Genre :** fonction
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lisez l'itinéraire actuel appartenant à l'application. La solution de secours non compilée est sécurisée pour SSR et
@@ -229,7 +232,7 @@ renvoie `null` ; une cible du compilateur remplace cet appel par l'état de rou
 **Genre :** fonction
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lisez l’objet de capacité neutre fourni par l’application.
@@ -241,7 +244,7 @@ Lisez l’objet de capacité neutre fourni par l’application.
 **Genre :** constante
 
 ```typescript
-export const applicationCompatibilityFixtures
+export const applicationCompatibilityFixtures;
 ```
 
 Aucune description fournie.
@@ -251,7 +254,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Acheminer les enregistrements reflétant la table locale/search/catch-all de l'application de documentation.
@@ -261,7 +264,7 @@ Acheminer les enregistrements reflétant la table locale/search/catch-all de l'a
 **Genre :** constante
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Acheminer les enregistrements reflétant la table locale/search/catch-all de l'application de documentation.
@@ -291,7 +294,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
+export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Acheminez les enregistrements reflétant le segment linguistique de My Care Notes et les superpositions basées sur les URL.
@@ -301,7 +304,7 @@ Acheminez les enregistrements reflétant le segment linguistique de My Care Note
 **Genre :** constante
 
 ```typescript
-export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
+export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[];
 ```
 
 Lignes de comportement partagées consommées par la suite de tests de contrat de chaque environnement d'exécution.
@@ -311,7 +314,7 @@ Lignes de comportement partagées consommées par la suite de tests de contrat d
 **Genre :** constante
 
 ```typescript
-export const websiteCompatibilityFixture: ForgeCompatibilityFixture
+export const websiteCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Enregistrements d'itinéraire reflétant l'itinéraire d'origine facultatif avec préfixe local du site Web.
@@ -705,7 +708,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
+function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver;
 ```
 
 Créez un {@link MpRouteResolver} lié à une arborescence de routes, en l'aplatissant une fois ainsi
@@ -713,16 +716,16 @@ Les appels `match`/`resolve` répétés réutilisent la même liste de routes ab
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| itinéraires | lecture seule MpRoute[] |  |
+| Nom         | Tapez                   | Descriptif |
+| ----------- | ----------------------- | ---------- |
+| itinéraires | lecture seule MpRoute[] |            |
 
 ### définir des itinéraires
 
 **Genre :** fonction
 
 ```typescript
-function defineRoutes(routes: T): T
+function defineRoutes(routes: T): T;
 ```
 
 Assistant d'identité qui définit une arborescence de routes indépendante du framework avec un type complet
@@ -730,40 +733,40 @@ inférence. Utilisez-le pour que les éditeurs vérifient le type des itinérair
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| itinéraires | T |  |
+| Nom         | Tapez | Descriptif |
+| ----------- | ----- | ---------- |
+| itinéraires | T     |            |
 
 #### Contracter
 
 - **@exemple :** const routes = définirRoutes([
   { chemin : '/', nom : 'home', composant : Home },
   { chemin : '/users/:id', nom : 'user', composant : User },
-])
+  ])
 
 ### findRouteByName
 
 **Genre :** fonction
 
 ```typescript
-function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined
+function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined;
 ```
 
 Recherchez le premier itinéraire aplati portant le nom donné.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| itinéraires | lecture seule MpRoute[] |  |
-| nom | chaîne |  |
+| Nom         | Tapez                   | Descriptif |
+| ----------- | ----------------------- | ---------- |
+| itinéraires | lecture seule MpRoute[] |            |
+| nom         | chaîne                  |            |
 
 ### aplatirRoutes
 
 **Genre :** fonction
 
 ```typescript
-function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
+function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[];
 ```
 
 Aplatissez une arborescence de routes imbriquées en une liste de routes absolues en profondeur, avec
@@ -772,16 +775,16 @@ ses ancêtres.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| itinéraires | lecture seule MpRoute[] |  |
+| Nom         | Tapez                   | Descriptif |
+| ----------- | ----------------------- | ---------- |
+| itinéraires | lecture seule MpRoute[] |            |
 
 ### matchRoutes
 
 **Genre :** fonction
 
 ```typescript
-function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined
+function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined;
 ```
 
 Faites correspondre un nom de chemin avec une arborescence de routes, en renvoyant la première route (dans
@@ -789,10 +792,10 @@ ordre de définition en profondeur d'abord) dont le modèle correspond, ou `unde
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| itinéraires | lecture seule MpRoute[] |  |
-| chemin d'accès | chaîne |  |
+| Nom            | Tapez                   | Descriptif |
+| -------------- | ----------------------- | ---------- |
+| itinéraires    | lecture seule MpRoute[] |            |
+| chemin d'accès | chaîne                  |            |
 
 ### MpFlatRoute
 
@@ -829,7 +832,7 @@ Un résolveur lié à une seule arborescence de routes.
 **Genre :** fonction
 
 ```typescript
-function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation
+function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation;
 ```
 
 Résolvez tout {@link MpRouteLocationRaw} neutre en termes de framework en un
@@ -839,15 +842,15 @@ les emplacements construisent leur chemin à partir de l’itinéraire correspon
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| à | MpRouteLocationRaw |  |
-| itinéraires | lecture seule MpRoute[] |  |
+| Nom         | Tapez                   | Descriptif |
+| ----------- | ----------------------- | ---------- |
+| à           | MpRouteLocationRaw      |            |
+| itinéraires | lecture seule MpRoute[] |            |
 
 #### Contracter
 
 - **@exemple :** solveLocation({ nom : 'utilisateur', paramètres : { id : 42 } }, routes)
-// → { chemin : '/users/42', fullPath : '/users/42', params : { id : '42' }, … }
+  // → { chemin : '/users/42', fullPath : '/users/42', params : { id : '42' }, … }
 
 ## `src/location`
 
@@ -876,44 +879,44 @@ Les parties décomposées d'une URL : chemin d'accès, requête et hachage.
 **Genre :** fonction
 
 ```typescript
-function normalizeHash(hash: string): string
+function normalizeHash(hash: string): string;
 ```
 
 Normalisez un fragment de hachage pour inclure un seul `#` en tête, ou soyez vide.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| hachage | chaîne |  |
+| Nom     | Tapez  | Descriptif |
+| ------- | ------ | ---------- |
+| hachage | chaîne |            |
 
 ### analyserEmplacement
 
 **Genre :** fonction
 
 ```typescript
-function parseLocation(url: string): MpLocationParts
+function parseLocation(url: string): MpLocationParts;
 ```
 
 Divisez une URL relative à une application en ses {@link MpLocationParts}.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| URL | chaîne |  |
+| Nom | Tapez  | Descriptif |
+| --- | ------ | ---------- |
+| URL | chaîne |            |
 
 #### Contracter
 
 - **@exemple :** parseLocation('/users/42?tab=info#bio')
-// → { chemin : '/users/42', requête : { onglet : 'info' }, hachage : '#bio' }
+  // → { chemin : '/users/42', requête : { onglet : 'info' }, hachage : '#bio' }
 
 ### stringifyLocation
 
 **Genre :** fonction
 
 ```typescript
-function stringifyLocation(location: MpLocationInput): string
+function stringifyLocation(location: MpLocationInput): string;
 ```
 
 Assemblez une chaîne d'URL relative à l'application à partir de parties d'emplacement. Le chemin d'accès est
@@ -922,14 +925,14 @@ hachage préfixé par `#` lorsqu'il n'est pas vide.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| emplacement | MpLocationEntrée |  |
+| Nom         | Tapez            | Descriptif |
+| ----------- | ---------------- | ---------- |
+| emplacement | MpLocationEntrée |            |
 
 #### Contracter
 
 - **@exemple :** stringifyLocation({ chemin : '/users/42', requête : { tab : 'info' }, hachage : 'bio' })
-// → '/users/42?tab=info#bio'
+  // → '/users/42?tab=info#bio'
 
 ## `src/path`
 
@@ -938,7 +941,10 @@ hachage préfixé par `#` lorsqu'il n'est pas vide.
 **Genre :** fonction
 
 ```typescript
-function buildPath(pattern: string, parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {}): string
+function buildPath(
+  pattern: string,
+  parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {},
+): string;
 ```
 
 Construire un chemin d'accès concret à partir d'un modèle et d'un ensemble de paramètres, encodant
@@ -947,23 +953,23 @@ les lancers de paramètres obligatoires manquants.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modèle | chaîne |  |
-| paramètres | Enregistrement<string, MpParameterValue \| readonly MpParameterValue[]> |  |
+| Nom        | Tapez                                                                   | Descriptif |
+| ---------- | ----------------------------------------------------------------------- | ---------- |
+| modèle     | chaîne                                                                  |            |
+| paramètres | Enregistrement<string, MpParameterValue \| readonly MpParameterValue[]> |            |
 
 #### Contracter
 
 - **@exemple :** buildPath('/users/:id', { id: 42 }) // → '/users/42'
-buildPath('/users/:id?', {}) // → '/users'
-buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
+  buildPath('/users/:id?', {}) // → '/users'
+  buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
 
 ### chemincompilation
 
 **Genre :** fonction
 
 ```typescript
-function compilePath(pattern: string): MpCompiledPath
+function compilePath(pattern: string): MpCompiledPath;
 ```
 
 Compilez un modèle de chemin dans un {@link MpCompiledPath} avec l'ordre
@@ -971,9 +977,9 @@ des clés de paramètres et une expression régulière correspondante.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modèle | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| modèle | chaîne |            |
 
 #### Contracter
 
@@ -984,7 +990,7 @@ des clés de paramètres et une expression régulière correspondante.
 **Genre :** fonction
 
 ```typescript
-function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined
+function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined;
 ```
 
 Faites correspondre un nom de chemin à un modèle, en renvoyant les paramètres extraits ou
@@ -992,15 +998,15 @@ Faites correspondre un nom de chemin à un modèle, en renvoyant les paramètres
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modèle | chaîne |  |
-| chemin d'accès | chaîne |  |
+| Nom            | Tapez  | Descriptif |
+| -------------- | ------ | ---------- |
+| modèle         | chaîne |            |
+| chemin d'accès | chaîne |            |
 
 #### Contracter
 
 - **@exemple :** matchPath('/users/:id', '/users/42') // → { id: '42' }
-matchPath('/users/:id', '/posts/42') // → non défini
+  matchPath('/users/:id', '/posts/42') // → non défini
 
 ### MpCompiledPath
 
@@ -1027,7 +1033,7 @@ Une clé de paramètre unique extraite d’un modèle de chemin compilé.
 **Genre :** fonction
 
 ```typescript
-function normalizePath(path: string): string
+function normalizePath(path: string): string;
 ```
 
 Normaliser un modèle de chemin (ou un nom de chemin) sous une forme canonique à barre oblique
@@ -1035,16 +1041,16 @@ sans barre oblique finale (sauf la racine, qui reste `/`).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| chemin | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| chemin | chaîne |            |
 
 ### WILDCARD_PARAM_KEY
 
 **Genre :** constante
 
 ```typescript
-export const WILDCARD_PARAM_KEY
+export const WILDCARD_PARAM_KEY;
 ```
 
 La clé sous laquelle un segment fourre-tout `*` autonome est capturée.
@@ -1056,7 +1062,7 @@ La clé sous laquelle un segment fourre-tout `*` autonome est capturée.
 **Genre :** fonction
 
 ```typescript
-function parseQuery(search: string): MpQueryParameters
+function parseQuery(search: string): MpQueryParameters;
 ```
 
 Analysez une chaîne de requête dans une carte {@link MpQueryParameters}. Un `?` leader est
@@ -1064,9 +1070,9 @@ facultatif. Les clés répétées se transforment en un tableau de valeurs, dans
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| rechercher | chaîne |  |
+| Nom        | Tapez  | Descriptif |
+| ---------- | ------ | ---------- |
+| rechercher | chaîne |            |
 
 #### Contracter
 
@@ -1077,7 +1083,7 @@ facultatif. Les clés répétées se transforment en un tableau de valeurs, dans
 **Genre :** fonction
 
 ```typescript
-function stringifyQuery(query: MpQueryInput): string
+function stringifyQuery(query: MpQueryInput): string;
 ```
 
 Sérialisez une carte {@link MpQueryInput} dans une chaîne de requête avec un `?` en tête,
@@ -1086,14 +1092,14 @@ les valeurs (et les éléments du tableau) sont supprimées ; les tableaux éme
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| requête | MpQueryInput |  |
+| Nom     | Tapez        | Descriptif |
+| ------- | ------------ | ---------- |
+| requête | MpQueryInput |            |
 
 #### Contracter
 
 - **@exemple :** stringifyQuery({ tag : ['a', 'b'], page : 2 }) // → '?tag=a&tag=b&page=2'
-stringifyQuery({}) // → ''
+  stringifyQuery({}) // → ''
 
 ## `src/types`
 
@@ -1318,7 +1324,8 @@ export interface MpReadonlySignal<Value>
 **Genre :** composant
 
 ```typescript
-export type MpRedirect = MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
 ```
 
 Une cible de redirection, éventuellement calculée à partir de la route de destination.
@@ -1370,7 +1377,10 @@ Aucune description fournie.
 **Genre :** composant
 
 ```typescript
-export type MpRouteGuard = ( to: MpResolvedLocation, from: MpResolvedLocation | null, ) => MpGuardOutcome | Promise<MpGuardOutcome>;
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
 ```
 
 Un garde-route évalué par une machine d'état de navigation appartenant au runtime.
@@ -1473,7 +1483,11 @@ Aucune description fournie.
 **Genre :** composant
 
 ```typescript
-export type MpScrollBehavior = ( to: MpResolvedLocation, from: MpResolvedLocation | null, savedPosition?: MpScrollPosition, ) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
 ```
 
 Aucune description fournie.

@@ -16,23 +16,23 @@
 **种类：**功能
 
 ```typescript
-function createVCard(options: VCardOptions): VCard
+function createVCard(options: VCardOptions): VCard;
 ```
 
 将便利选项转换为完整的、可写的 vCard 文档。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |电子卡选项 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 选项 | 电子卡选项 |      |
 
 ### 解析V卡
 
 **种类：**常数
 
 ```typescript
-export const parseVCard
+export const parseVCard;
 ```
 
 喜欢解析器术语的调用者的别名。
@@ -42,39 +42,39 @@ export const parseVCard
 **种类：**功能
 
 ```typescript
-function readVCard(source: string): VCard[]
+function readVCard(source: string): VCard[];
 ```
 
 解析一个或多个 vCard 块，同时保留未知属性。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
 
 ### 至V卡选项
 
 **种类：**功能
 
 ```typescript
-function toVCardOptions(card: VCard): VCardOptions
+function toVCardOptions(card: VCard): VCardOptions;
 ```
 
 将已解析的卡片映射回 QR 构建器使用的便利选项。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|卡 |电子贺卡 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 卡   | 电子贺卡 |      |
 
 ### 电子名片
 
 **种类：**功能
 
 ```typescript
-function vCard(options: VCardOptions): string
+function vCard(options: VCardOptions): string;
 ```
 
 描述联系人的 vCard 3.0 有效负载。多个电话号码/电子邮件
@@ -82,9 +82,9 @@ function vCard(options: VCardOptions): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |电子卡选项 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 选项 | 电子卡选项 |      |
 
 ### 电子卡
 
@@ -121,32 +121,32 @@ export interface VCardProperty
 **种类：**功能
 
 ```typescript
-function writeVCard(card: VCard): string
+function writeVCard(card: VCard): string;
 ```
 
 使用 QR 和文本有效负载的 LF 行结尾来序列化一张完整的 vCard。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|卡 |电子贺卡 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 卡   | 电子贺卡 |      |
 
 ### 写V卡
 
 **种类：**功能
 
 ```typescript
-function writeVCards(cards: readonly VCard[]): string
+function writeVCards(cards: readonly VCard[]): string;
 ```
 
 序列化一张或多张已解析的卡片。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|卡片 |只读 VCard[] |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 卡片 | 只读 VCard[] |      |
 
 ## `src/ast/vevent`
 
@@ -247,204 +247,204 @@ export type VEventTransp = 'OPAQUE' | 'TRANSPARENT';
 **种类：**功能
 
 ```typescript
-function addDays(date: Date, days: number): Date
+function addDays(date: Date, days: number): Date;
 ```
 
 将 `days` 添加到 JS 日期（本地区域）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|日期 |日期 |  |
-|天|数量 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 日期 | 日期 |      |
+| 天   | 数量 |      |
 
 ### 添加月份
 
 **种类：**功能
 
 ```typescript
-function addMonths(date: Date, months: number): Date
+function addMonths(date: Date, months: number): Date;
 ```
 
 将 `months` 添加到 JS 日期（本地区域）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|日期 |日期 |  |
-|月 |数量 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 日期 | 日期 |      |
+| 月   | 数量 |      |
 
 ### 添加年份
 
 **种类：**功能
 
 ```typescript
-function addYears(date: Date, years: number): Date
+function addYears(date: Date, years: number): Date;
 ```
 
 将 `years` 添加到 JS 日期（本地区域）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|日期 |日期 |  |
-|年 |数量 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 日期 | 日期 |      |
+| 年   | 数量 |      |
 
 ### 日密钥
 
 **种类：**功能
 
 ```typescript
-function dayKey(iso: string): string
+function dayKey(iso: string): string;
 ```
 
 返回用于 EXDATE 和 RDATE 匹配的本地日期键。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|异|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 异   | 字符串 |      |
 
 ### 喜欢
 
 **种类：**功能
 
 ```typescript
-function fmtLike(source: string, dateTime: DateTime): string
+function fmtLike(source: string, dateTime: DateTime): string;
 ```
 
 将 Luxon DateTime 格式化回与源字符串相同的 ISO 表示形式。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|日期时间 |日期时间 |  |
+| 名称     | 类型     | 描述 |
+| -------- | -------- | ---- |
+| 来源     | 字符串   |      |
+| 日期时间 | 日期时间 |      |
 
 ### 是全天
 
 **种类：**功能
 
 ```typescript
-function isAllDay(iso: string): boolean
+function isAllDay(iso: string): boolean;
 ```
 
 当 ISO 字符串是仅日期值 (YYYY-MM-DD) 时返回 true。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|异|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 异   | 字符串 |      |
 
 ### 解析日期
 
 **种类：**功能
 
 ```typescript
-function parseDate(iso: string): Date
+function parseDate(iso: string): Date;
 ```
 
 将 ISO 日期时间/日期字符串解析为 JS 日期（为了公共 API 兼容性）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|异|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 异   | 字符串 |      |
 
 ### 解析DT
 
 **种类：**功能
 
 ```typescript
-function parseDT(iso: string): DateTime
+function parseDT(iso: string): DateTime;
 ```
 
 将 ISO 日期时间/日期字符串解析为 Luxon DateTime（本地区域）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|异|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 异   | 字符串 |      |
 
 ### 一天的开始
 
 **种类：**功能
 
 ```typescript
-function startOfDay(date: Date): Date
+function startOfDay(date: Date): Date;
 ```
 
 JS 日期（本地区域）一天的开始。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|日期 |日期 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 日期 | 日期 |      |
 
 ### 月初
 
 **种类：**功能
 
 ```typescript
-function startOfMonth(date: Date): Date
+function startOfMonth(date: Date): Date;
 ```
 
 包含 `date`（本地区域）的月初。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|日期 |日期 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 日期 | 日期 |      |
 
 ### 周开始时间
 
 **种类：**功能
 
 ```typescript
-function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date
+function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date;
 ```
 
 包含 `date` 的一周开始，纪念 `weekStartsOn`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|日期 |日期 |  |
-|周开始于 | 0 \| 1 \| 2 | | 3 \| 4 \| 5 \| 6 |  |
+| 名称     | 类型        | 描述 |
+| -------- | ----------- | ---- |
+| 日期     | 日期        |      |
+| 周开始于 | 0 \| 1 \| 2 |      | 3 \| 4 \| 5 \| 6 |     |
 
 ### 年初
 
 **种类：**功能
 
 ```typescript
-function startOfYear(date: Date): Date
+function startOfYear(date: Date): Date;
 ```
 
 包含 `date`（本地区域）的年初。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|日期 |日期 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 日期 | 日期 |      |
 
 ### WEEKDAY_LUXON
 
 **种类：**常数
 
 ```typescript
-export const WEEKDAY_LUXON: Record<RRuleWeekday, number>
+export const WEEKDAY_LUXON: Record<RRuleWeekday, number>;
 ```
 
 Luxon 工作日数字：周一=1 … 周日=7。
@@ -478,16 +478,16 @@ export type WeekStart = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 **种类：**功能
 
 ```typescript
-function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement
+function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ForgeICalendarProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<ForgeICalendarProperties> |      |
 
 ### ForgeICalendar 属性
 
@@ -506,16 +506,16 @@ export interface ForgeICalendarProperties
 **种类：**功能
 
 ```typescript
-function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement
+function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ForgeVCardProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<ForgeVCardProperties> |      |
 
 ### 伪造V卡属性
 
@@ -534,32 +534,32 @@ export interface ForgeVCardProperties
 **种类：**功能
 
 ```typescript
-function calendarEvents(calendar: ICalendar): ICalendarEvent[]
+function calendarEvents(calendar: ICalendar): ICalendarEvent[];
 ```
 
 将 VEVENT 组件转换为 Forge 渲染器使用的类型化事件视图。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|日历 |日历 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 日历 | 日历 |      |
 
 ### 创建ICalendar事件
 
 **种类：**功能
 
 ```typescript
-function createICalendarEvent(event: ICalendarEvent): ICalendarComponent
+function createICalendarEvent(event: ICalendarEvent): ICalendarComponent;
 ```
 
 构建适合插入 iCalendar 的类型化 VEVENT 组件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | IC日历活动 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 活动 | IC日历活动 |      |
 
 ### 日历
 
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **种类：**常数
 
 ```typescript
-export const parseICalendar
+export const parseICalendar;
 ```
 
 没有提供描述。
@@ -626,23 +626,23 @@ export const parseICalendar
 **种类：**功能
 
 ```typescript
-function readICalendar(source: string): ICalendar
+function readICalendar(source: string): ICalendar;
 ```
 
 解析 RFC 5545 iCalendar 流，保留每个组件和属性。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
 
 ### 序列化日历
 
 **种类：**常数
 
 ```typescript
-export const serializeICalendar
+export const serializeICalendar;
 ```
 
 没有提供描述。
@@ -652,13 +652,13 @@ export const serializeICalendar
 **种类：**功能
 
 ```typescript
-function writeICalendar(calendar: ICalendar): string
+function writeICalendar(calendar: ICalendar): string;
 ```
 
 使用 CRLF 行结尾和 75 八位字节安全折叠来序列化 RFC 5545 日历。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|日历 |日历 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 日历 | 日历 |      |

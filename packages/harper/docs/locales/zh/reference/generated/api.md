@@ -16,7 +16,11 @@
 **种类：**功能
 
 ```typescript
-function useHarperMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue 可组合项将 Harper 语法和风格检查集成到
@@ -30,18 +34,18 @@ Vue 可组合项将 Harper 语法和风格检查集成到
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编辑参考| MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-|已启用 | MaybeRefOrGetter<boolean> |  |
-|语言参考 | MaybeRefOrGetter<string> |  |
+| 名称     | 类型                                                               | 描述 |
+| -------- | ------------------------------------------------------------------ | ---- |
+| 编辑参考 | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |      |
+| 已启用   | MaybeRefOrGetter<boolean>                                          |      |
+| 语言参考 | MaybeRefOrGetter<string>                                           |      |
 
 #### 合同
 
 - **@param:** - 包装 Monaco 编辑器实例的 `MaybeRefOrGetter`。
 - **@param:** - 用于打开/关闭检查的 `MaybeRefOrGetter<boolean>`。
 - **@param:** - 用于编辑器语言的 `MaybeRefOrGetter<string>`
-（在注册代码操作提供程序时使用）。
+  （在注册代码操作提供程序时使用）。
 
 ## `src/types`
 

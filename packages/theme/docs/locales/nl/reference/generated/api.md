@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/theme`.
 **Soort:** functie
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle` — doorloopt het actieve thema door `light → dark → auto`,
@@ -39,9 +39,9 @@ via het standaardslot.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ThemeToggleProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ThemeToggleProperties> |              |
 
 ### ThemeToggleEigenschappen
 
@@ -70,7 +70,7 @@ Grootte token - canonieke 2xs → 2xl schaal.
 **Soort:** functie
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer` — stelt runtime `--mp-*` ontwerptoken-overschrijvingen samen (merk
@@ -96,9 +96,9 @@ wrapper is een vaste `<div>`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ThemeComposerProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ThemeComposerProperties> |              |
 
 ### ThemeComposerEigenschappen
 
@@ -127,7 +127,7 @@ Grootte token - canonieke 2xs → 2xl schaal.
 **Soort:** functie
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider` — configureert de gedeelde themawinkel op basis van de rekwisieten en
@@ -151,9 +151,9 @@ opslag op documentniveau met een vaste `<div>`-wrapper.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ThemeProviderProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ThemeProviderProperties> |              |
 
 ### ThemaProviderEigenschappen
 
@@ -182,7 +182,7 @@ Groottetoken — canonieke 2xs → 2xl-schaal (overgenomen via de renderloze wra
 **Soort:** constant
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 Wijst elk vriendelijk attribuut toe aan de aangepaste CSS-eigenschap `--mp-*` die het overschrijft.
@@ -192,7 +192,7 @@ Wijst elk vriendelijk attribuut toe aan de aangepaste CSS-eigenschap `--mp-*` di
 **Soort:** functie
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 Converteert een {@link ThemeComposerConfig} naar een platte kaart van aangepaste CSS
@@ -201,111 +201,115 @@ eigenschappen (`--mp-*` → waarde). Attributen hebben eerst voorrang, daarna de
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| configuratie | ThemeComposerConfig |  |
+| Naam         | Typ                 | Beschrijving |
+| ------------ | ------------------- | ------------ |
+| configuratie | ThemeComposerConfig |              |
 
 ### configToStyleString
 
 **Soort:** functie
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 Los een configuratie op naar de volledige inline `style`-reeks (aangepaste eigenschappen + `color-scheme`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| configuratie | ThemeComposerConfig |  |
+| Naam         | Typ                 | Beschrijving |
+| ------------ | ------------------- | ------------ |
+| configuratie | ThemeComposerConfig |              |
 
 ### cssVariabelenToString
 
 **Soort:** functie
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 Serialiseert een aangepaste CSS-eigenschapskaart in een inline `style`-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| variabelen | Record<string, string> |  |
+| Naam       | Typ                    | Beschrijving |
+| ---------- | ---------------------- | ------------ |
+| variabelen | Record<string, string> |              |
 
 ### mergeConfig
 
 **Soort:** functie
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 Voeg een gedeeltelijke configuratie ondiep samen met de huidige (waarbij `undefined`/lege waarden worden gewist).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| configuratie | ThemeComposerConfig |  |
-| gedeeltelijk | ThemeComposerConfig |  |
+| Naam         | Typ                 | Beschrijving |
+| ------------ | ------------------- | ------------ |
+| configuratie | ThemeComposerConfig |              |
+| gedeeltelijk | ThemeComposerConfig |              |
 
 ### removeConfigToken
 
 **Soort:** functie
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 Verwijder een enkele onbewerkte tokenoverschrijving.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| configuratie | ThemeComposerConfig |  |
-| sleutel | tekenreeks |  |
+| Naam         | Typ                 | Beschrijving |
+| ------------ | ------------------- | ------------ |
+| configuratie | ThemeComposerConfig |              |
+| sleutel      | tekenreeks          |              |
 
 ### setConfigAttribuut
 
 **Soort:** functie
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 Stel één enkel vriendelijk attribuut in (geef `undefined` door om het te wissen).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| configuratie | ThemeComposerConfig |  |
-| attribuut | K |  |
-| waarde | ThemeComposerConfig[K] |  |
+| Naam         | Typ                    | Beschrijving |
+| ------------ | ---------------------- | ------------ |
+| configuratie | ThemeComposerConfig    |              |
+| attribuut    | K                      |              |
+| waarde       | ThemeComposerConfig[K] |              |
 
 ### setConfigToken
 
 **Soort:** functie
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 Stel één onbewerkte tokenoverschrijving in. De sleutel kan het voorvoegsel `--mp-` weglaten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| configuratie | ThemeComposerConfig |  |
-| sleutel | tekenreeks |  |
-| waarde | tekenreeks |  |
+| Naam         | Typ                 | Beschrijving |
+| ------------ | ------------------- | ------------ |
+| configuratie | ThemeComposerConfig |              |
+| sleutel      | tekenreeks          |              |
+| waarde       | tekenreeks          |              |
 
 ## `src/stores/theme-store/theme-store`
 
@@ -314,7 +318,7 @@ Stel één onbewerkte tokenoverschrijving in. De sleutel kan het voorvoegsel `--
 **Soort:** functie
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 (Her)configureer de gedeelde winkel vanuit de rekwisieten van een `ForgeThemeProvider`: schakel de
@@ -323,16 +327,16 @@ neem de `defaultTheme` van de provider over. Opnieuw toepassen en abonnees op de
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| configuratie | ThemaConfig |  |
+| Naam         | Typ         | Beschrijving |
+| ------------ | ----------- | ------------ |
+| configuratie | ThemaConfig |              |
 
 ### cyclusThema
 
 **Soort:** functie
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 Blader door `light → dark → auto → light`.
@@ -342,7 +346,7 @@ Blader door `light → dark → auto → light`.
 **Soort:** functie
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 Lees een onveranderlijke momentopname van de huidige status van de winkel.
@@ -362,32 +366,32 @@ Het concrete thema was feitelijk van toepassing op de gebruikersinterface (nooit
 **Soort:** functie
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 Stel de themavoorkeur expliciet in.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| volgende | Thema |  |
+| Naam     | Typ   | Beschrijving |
+| -------- | ----- | ------------ |
+| volgende | Thema |              |
 
 ### abonnerenThema
 
 **Soort:** functie
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 Abonneer u om wijzigingen op te slaan; retourneert een afmeldfunctie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| luisteraar | () => ongeldig |  |
+| Naam       | Typ            | Beschrijving |
+| ---------- | -------------- | ------------ |
+| luisteraar | () => ongeldig |              |
 
 ### Thema
 
@@ -424,7 +428,7 @@ Een onveranderlijke momentopname van de huidige status van de winkel, geretourne
 **Soort:** functie
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 Schakel tussen licht en donker, op basis van het momenteel opgeloste thema.

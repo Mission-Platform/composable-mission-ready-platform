@@ -16,87 +16,87 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function article(input: ArticleInput): JsonLd
+function article(input: ArticleInput): JsonLd;
 ```
 
 Générateur Schema.org `Article` / `BlogPosting` / `NewsArticle`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ArticleEntrée |  |
+| Nom    | Tapez         | Descriptif |
+| ------ | ------------- | ---------- |
+| entrée | ArticleEntrée |            |
 
 ### fil d'ArianeListe
 
 **Genre :** fonction
 
 ```typescript
-function breadcrumbList(input: BreadcrumbListInput): JsonLd
+function breadcrumbList(input: BreadcrumbListInput): JsonLd;
 ```
 
 Schema.org `BreadcrumbList` — émet par page pour exposer la hiérarchie du site.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | Fil d'ArianeListeEntrée |  |
+| Nom    | Tapez                   | Descriptif |
+| ------ | ----------------------- | ---------- |
+| entrée | Fil d'ArianeListeEntrée |            |
 
 ### événement
 
 **Genre :** fonction
 
 ```typescript
-function event(input: EventInput): JsonLd
+function event(input: EventInput): JsonLd;
 ```
 
 Schema.org `Event`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | Entrée d'événement |  |
+| Nom    | Tapez              | Descriptif |
+| ------ | ------------------ | ---------- |
+| entrée | Entrée d'événement |            |
 
 ### FAQPage
 
 **Genre :** fonction
 
 ```typescript
-function faqPage(input: FaqPageInput): JsonLd
+function faqPage(input: FaqPageInput): JsonLd;
 ```
 
 Schema.org `FAQPage`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | FaqPageEntrée |  |
+| Nom    | Tapez         | Descriptif |
+| ------ | ------------- | ---------- |
+| entrée | FaqPageEntrée |            |
 
 ### imageObjet
 
 **Genre :** fonction
 
 ```typescript
-function imageObject(input: ImageObjectInput): JsonLd
+function imageObject(input: ImageObjectInput): JsonLd;
 ```
 
 Schema.org `ImageObject`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ImageObjectEntrée |  |
+| Nom    | Tapez             | Descriptif |
+| ------ | ----------------- | ---------- |
+| entrée | ImageObjectEntrée |            |
 
 ### jsonLd
 
 **Genre :** constante
 
 ```typescript
-export const jsonLd
+export const jsonLd;
 ```
 
 Réexportation de l'espace de noms afin que les consommateurs puissent effectuer `import { jsonLd } depuis
@@ -108,208 +108,208 @@ Réexportation de l'espace de noms afin que les consommateurs puissent effectuer
 **Genre :** fonction
 
 ```typescript
-function localBusiness(input: LocalBusinessInput): JsonLd
+function localBusiness(input: LocalBusinessInput): JsonLd;
 ```
 
 Schema.org `LocalBusiness` — étend `Organization` avec des données de localisation.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | Entrée d'entreprise locale |  |
+| Nom    | Tapez                      | Descriptif |
+| ------ | -------------------------- | ---------- |
+| entrée | Entrée d'entreprise locale |            |
 
 ### organisation
 
 **Genre :** fonction
 
 ```typescript
-function organization(input: OrganizationInput): JsonLd
+function organization(input: OrganizationInput): JsonLd;
 ```
 
 Schema.org `Organization`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | OrganisationEntrée |  |
+| Nom    | Tapez              | Descriptif |
+| ------ | ------------------ | ---------- |
+| entrée | OrganisationEntrée |            |
 
 ### IDorganisation
 
 **Genre :** fonction
 
 ```typescript
-function organizationId(orgUrl: string): string
+function organizationId(orgUrl: string): string;
 ```
 
 `@id` canonique pour le `Organization` (ou `LocalBusiness`) node à l'échelle du site.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| orgUrl | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| orgUrl | chaîne |            |
 
 ### personne
 
 **Genre :** fonction
 
 ```typescript
-function person(input: PersonInput): JsonLd
+function person(input: PersonInput): JsonLd;
 ```
 
 Schema.org `Person`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | Entrée personne |  |
+| Nom    | Tapez           | Descriptif |
+| ------ | --------------- | ---------- |
+| entrée | Entrée personne |            |
 
 ### produit
 
 **Genre :** fonction
 
 ```typescript
-function product(input: ProductInput): JsonLd
+function product(input: ProductInput): JsonLd;
 ```
 
 Schema.org `Product`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | Entrée produit |  |
+| Nom    | Tapez          | Descriptif |
+| ------ | -------------- | ---------- |
+| entrée | Entrée produit |            |
 
 ### recette
 
 **Genre :** fonction
 
 ```typescript
-function recipe(input: RecipeInput): JsonLd
+function recipe(input: RecipeInput): JsonLd;
 ```
 
 Schema.org `Recipe`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | RecetteEntrée |  |
+| Nom    | Tapez         | Descriptif |
+| ------ | ------------- | ---------- |
+| entrée | RecetteEntrée |            |
 
 ### revoir
 
 **Genre :** fonction
 
 ```typescript
-function review(input: ReviewInput): JsonLd
+function review(input: ReviewInput): JsonLd;
 ```
 
 Schema.org `Review`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | RevueEntrée |  |
+| Nom    | Tapez       | Descriptif |
+| ------ | ----------- | ---------- |
+| entrée | RevueEntrée |            |
 
 ### logicielApplication
 
 **Genre :** fonction
 
 ```typescript
-function softwareApplication(input: SoftwareApplicationInput): JsonLd
+function softwareApplication(input: SoftwareApplicationInput): JsonLd;
 ```
 
 Schema.org `SoftwareApplication`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | LogicielApplicationEntrée |  |
+| Nom    | Tapez                     | Descriptif |
+| ------ | ------------------------- | ---------- |
+| entrée | LogicielApplicationEntrée |            |
 
 ### objetvidéo
 
 **Genre :** fonction
 
 ```typescript
-function videoObject(input: VideoObjectInput): JsonLd
+function videoObject(input: VideoObjectInput): JsonLd;
 ```
 
 Schema.org `VideoObject`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | EntréeObjetVidéo |  |
+| Nom    | Tapez            | Descriptif |
+| ------ | ---------------- | ---------- |
+| entrée | EntréeObjetVidéo |            |
 
 ### page web
 
 **Genre :** fonction
 
 ```typescript
-function webPage(input: WebPageInput): JsonLd
+function webPage(input: WebPageInput): JsonLd;
 ```
 
 Schema.org `WebPage` — décrit une seule page d'un site.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | Entrée de page Web |  |
+| Nom    | Tapez              | Descriptif |
+| ------ | ------------------ | ---------- |
+| entrée | Entrée de page Web |            |
 
 ### ID de page Web
 
 **Genre :** fonction
 
 ```typescript
-function webPageId(pageUrl: string): string
+function webPageId(pageUrl: string): string;
 ```
 
 Canonique `@id` pour un `WebPage` node.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| URL de la page | chaîne |  |
+| Nom            | Tapez  | Descriptif |
+| -------------- | ------ | ---------- |
+| URL de la page | chaîne |            |
 
 ### site web
 
 **Genre :** fonction
 
 ```typescript
-function webSite(input: WebSiteInput): JsonLd
+function webSite(input: WebSiteInput): JsonLd;
 ```
 
 Schema.org `WebSite` — généralement émis une fois sur l'ensemble du site.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | Entrée du site Web |  |
+| Nom    | Tapez              | Descriptif |
+| ------ | ------------------ | ---------- |
+| entrée | Entrée du site Web |            |
 
 ### ID du site Web
 
 **Genre :** fonction
 
 ```typescript
-function webSiteId(siteUrl: string): string
+function webSiteId(siteUrl: string): string;
 ```
 
 Canonique `@id` pour le `WebSite` node à l'échelle du site.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| URL du site | chaîne |  |
+| Nom         | Tapez  | Descriptif |
+| ----------- | ------ | ---------- |
+| URL du site | chaîne |            |
 
 ## `src/build-open-graph`
 
@@ -318,7 +318,7 @@ Canonique `@id` pour le `WebSite` node à l'échelle du site.
 **Genre :** fonction
 
 ```typescript
-function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
+function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[];
 ```
 
 Convertir {@link OpenGraphMetadata} en une liste plate de balises `<meta>`
@@ -328,9 +328,9 @@ sous-propriétés d'image regroupées après chaque URL `og:image`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| métadonnées | OpenGraphMétadonnées |  |
+| Nom         | Tapez                | Descriptif |
+| ----------- | -------------------- | ---------- |
+| métadonnées | OpenGraphMétadonnées |            |
 
 ## `src/build-page-meta`
 
@@ -339,7 +339,7 @@ sous-propriétés d'image regroupées après chaque URL `og:image`.
 **Genre :** fonction
 
 ```typescript
-function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
+function buildPageMeta(metadata: PageMetadata): BuiltPageMeta;
 ```
 
 Convertissez {@link PageMetadata} en titre, langue et plat résolus
@@ -347,9 +347,9 @@ listes de descripteurs de balises `<meta>` / `<link>`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| métadonnées | PageMétadonnées |  |
+| Nom         | Tapez           | Descriptif |
+| ----------- | --------------- | ---------- |
+| métadonnées | PageMétadonnées |            |
 
 ### MétaPageConstruite
 
@@ -368,7 +368,7 @@ Résultat de {@link buildPageMeta} : tout ce dont l'applicateur a besoin pour s
 **Genre :** fonction
 
 ```typescript
-function buildRobotsTxt(input: RobotsTxtInput = {}): string
+function buildRobotsTxt(input: RobotsTxtInput = {}): string;
 ```
 
 Créez une chaîne déterministe `robots.txt` à partir d’une description de stratégie.
@@ -378,9 +378,9 @@ et correspond à la convention utilisée par la plupart des générateurs de sit
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | RobotsTxtInput |  |
+| Nom    | Tapez          | Descriptif |
+| ------ | -------------- | ---------- |
+| entrée | RobotsTxtInput |            |
 
 ### Groupe de robots
 
@@ -412,23 +412,23 @@ Entrée décrivant une stratégie `robots.txt` complète.
 **Genre :** fonction
 
 ```typescript
-function buildSitemapIndex(input: SitemapIndexInput): string
+function buildSitemapIndex(input: SitemapIndexInput): string;
 ```
 
 Créez une chaîne XML d'index de plan de site déterministe.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | Plan du siteIndexEntrée |  |
+| Nom    | Tapez                   | Descriptif |
+| ------ | ----------------------- | ---------- |
+| entrée | Plan du siteIndexEntrée |            |
 
 ### buildSitemapXml
 
 **Genre :** fonction
 
 ```typescript
-function buildSitemapXml(input: SitemapXmlInput): string
+function buildSitemapXml(input: SitemapXmlInput): string;
 ```
 
 Créez une chaîne déterministe `sitemap.xml`. La sortie se termine toujours par un
@@ -436,9 +436,9 @@ nouvelle ligne de fin afin qu'elle soit concaténée proprement avec les répons
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | Plan du siteXmlInput |  |
+| Nom    | Tapez                | Descriptif |
+| ------ | -------------------- | ---------- |
+| entrée | Plan du siteXmlInput |            |
 
 ### Plan du siteAlternatif
 
@@ -497,7 +497,7 @@ Entrée décrivant un plan de site complet.
 **Genre :** fonction
 
 ```typescript
-function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
+function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 ```
 
 Synchronisez de manière réactive la surface SEO complète de Mission Platform – standard
@@ -513,9 +513,9 @@ Accepte une référence, un getter ou un simple objet {@link SeoMetadata} afin q
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| métadonnées | Peut-êtreRefOrGetter<SeoMetadata> |  |
+| Nom         | Tapez                             | Descriptif |
+| ----------- | --------------------------------- | ---------- |
+| métadonnées | Peut-êtreRefOrGetter<SeoMetadata> |            |
 
 ## `src/mp-seo`
 
@@ -524,7 +524,7 @@ Accepte une référence, un getter ou un simple objet {@link SeoMetadata} afin q
 **Genre :** composant
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 Composant `<Seo>` sans rendu : un wrapper déclaratif autour de {@link useSeo}.
@@ -539,14 +539,14 @@ synchronisez-les dans l’en-tête du document. Ne restitue aucun DOM propre.
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ### Référencement
 
 **Genre :** composant
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 Composant `<Seo>` sans rendu : un wrapper déclaratif autour de {@link useSeo}.
@@ -561,7 +561,7 @@ synchronisez-les dans l’en-tête du document. Ne restitue aucun DOM propre.
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ## `src/types`
 

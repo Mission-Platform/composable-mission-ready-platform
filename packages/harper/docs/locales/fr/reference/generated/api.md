@@ -16,7 +16,11 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function useHarperMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue composable qui intègre la vérification de la grammaire et du style Harper dans un
@@ -30,18 +34,18 @@ démonter et revérifie lorsque le `language` change.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| éditeurRéférence | Peut-êtreRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| activé | Peut-êtreRefOrGetter<boolean> |  |
-| langueRéférence | Peut-êtreRefOrGetter<string> |  |
+| Nom              | Tapez                                                                  | Descriptif |
+| ---------------- | ---------------------------------------------------------------------- | ---------- |
+| éditeurRéférence | Peut-êtreRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |            |
+| activé           | Peut-êtreRefOrGetter<boolean>                                          |            |
+| langueRéférence  | Peut-êtreRefOrGetter<string>                                           |            |
 
 #### Contracter
 
 - **@param:** - Un `MaybeRefOrGetter` encapsulant l'instance de l'éditeur Monaco.
 - **@param:** - Un `MaybeRefOrGetter<boolean>` qui active/désactive la vérification.
 - **@param:** - Un `MaybeRefOrGetter<string>` pour le langage de l'éditeur
-(utilisé lors de l'enregistrement du fournisseur de code-action).
+  (utilisé lors de l'enregistrement du fournisseur de code-action).
 
 ## `src/types`
 

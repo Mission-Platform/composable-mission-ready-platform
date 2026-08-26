@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined
+function useObservable(source: Observable<T>): T | undefined;
 ```
 
 اشترك في `source` وقم بإرجاع أحدث إصدار لها كحالة. المرتجعات
@@ -24,9 +24,9 @@ function useObservable(source: Observable<T>): T | undefined
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | يمكن ملاحظتها<T> |  |
+| الاسم  | اكتب             | الوصف |
+| ------ | ---------------- | ----- |
+| المصدر | يمكن ملاحظتها<T> |       |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -45,7 +45,11 @@ export interface Unsubscribable
 **النوع:** الوظيفة
 
 ```typescript
-function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T>> | ((value: T) => void), dependencies: MpDependencyList = []): void
+function useSubscribe(
+  source: Observable<T>,
+  observerOrNext?: Partial<Observer<T>> | ((value: T) => void),
+  dependencies: MpDependencyList = [],
+): void;
 ```
 
 اشترك في `source` باستخدام `observer` المحدد (أو رد الاتصال `next`) لـ
@@ -54,18 +58,18 @@ function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | يمكن ملاحظتها<T> |  |
-| المراقب أو التالي | جزئي<Observer<T>> \| ((القيمة: T) => باطل) |  |
-| التبعيات | قائمة التبعيات |  |
+| الاسم             | اكتب                                       | الوصف |
+| ----------------- | ------------------------------------------ | ----- |
+| المصدر            | يمكن ملاحظتها<T>                           |       |
+| المراقب أو التالي | جزئي<Observer<T>> \| ((القيمة: T) => باطل) |       |
+| التبعيات          | قائمة التبعيات                             |       |
 
 ### useSubscription
 
 **النوع:** الوظيفة
 
 ```typescript
-function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void
+function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void;
 ```
 
 قم بتشغيل `subscribe` بعد التحميل وإلغاء الاشتراك من نتيجته عند إلغاء التحميل (و
@@ -74,7 +78,7 @@ function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDepend
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اشترك | () => غير قابل للاشتراك |  |
-| التبعيات | قائمة التبعيات |  |
+| الاسم    | اكتب                    | الوصف |
+| -------- | ----------------------- | ----- |
+| اشترك    | () => غير قابل للاشتراك |       |
+| التبعيات | قائمة التبعيات          |       |

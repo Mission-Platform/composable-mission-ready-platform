@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 בנה Rolldown `external` / `deps.neverBundle` פרדיקט המטפל בכל
@@ -24,16 +24,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שמות | מחרוזת לקריאה בלבד[] |  |
+| שם   | הקלד                 | תיאור |
+| ---- | -------------------- | ----- |
+| שמות | מחרוזת לקריאה בלבד[] |       |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 שמות חבילות ברירת מחדל צריכים להתייחס לכל ספרייה משותפת כאל מתן עמיתים.
@@ -44,7 +44,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 פונקציה **סוג:**
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 בנה תצורת tsdown עבור מישור TypeScript (או חבילה בודדת) ספרייה -
@@ -53,16 +53,16 @@ function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TsdownLibraryOptions |  |
+| שם       | הקלד                 | תיאור |
+| -------- | -------------------- | ----- |
+| אפשרויות | TsdownLibraryOptions |       |
 
 ### defineTsdownVueLibrary
 
 פונקציה **סוג:**
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 כמו {@link defineTsdownLibrary}, אבל חוטים `unplugin-vue` ו Vue-מודע dts
@@ -70,16 +70,16 @@ function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TsdownLibraryOptions |  |
+| שם       | הקלד                 | תיאור |
+| -------- | -------------------- | ----- |
+| אפשרויות | TsdownLibraryOptions |       |
 
 ### readPackageDependencyNames
 
 פונקציה **סוג:**
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 קרא את `dependencies` ו `peerDependencies` הוצהר ב-package.json
@@ -88,16 +88,16 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| rootDirectory | מחרוזת |  |
+| שם            | הקלד   | תיאור |
+| ------------- | ------ | ----- |
+| rootDirectory | מחרוזת |       |
 
 ### resolveTsdownOutputDirectory
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 שיקוף נתיב פלט סופי של חבילה לשורש בנייה מבודד. שמירה על
@@ -106,11 +106,11 @@ function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: st
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| rootDirectory | מחרוזת |  |
-| outputDirectory | מחרוזת |  |
-| outputRoot | מחרוזת |  |
+| שם              | הקלד   | תיאור |
+| --------------- | ------ | ----- |
+| rootDirectory   | מחרוזת |       |
+| outputDirectory | מחרוזת |       |
+| outputRoot      | מחרוזת |       |
 
 ### TsdownLibraryOptions
 

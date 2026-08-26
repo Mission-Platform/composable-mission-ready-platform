@@ -25,15 +25,15 @@ Préréglages `@mission-platform/typescript-config/framework-<name>` — puis im
 
 La plate-forme utilise une échelle réactive en sept étapes basée sur les seuils de largeur de fenêtre :
 
-| Clé | Étiquette | Seuil | Appareil commun/cas d'utilisation |
-| :---- | :---------------- | :------------ | :------------------------------ |
-| `2xs` | Extra-extra-petit | $\ge 0$ px | Tous les appareils |
-| `xs` | Très petit | $\ge 480$ px | Grands téléphones |
-| `sm` | Petit | $\ge 768$ px | Portrait sur tablette |
-| `md` | Moyen | $\ge 1024$ px | Paysage de tablette / petit ordinateur portable |
-| `lg` | Grand | $\ge 1920$ px | Pleine HD / 1080p |
-| `xl` | Très grand | $\ge 2560$ px | QHD |
-| `2xl` | Extra-extra-large | $\ge 3840$ px | 4K UHD |
+| Clé   | Étiquette         | Seuil         | Appareil commun/cas d'utilisation               |
+| :---- | :---------------- | :------------ | :---------------------------------------------- |
+| `2xs` | Extra-extra-petit | $\ge 0$ px    | Tous les appareils                              |
+| `xs`  | Très petit        | $\ge 480$ px  | Grands téléphones                               |
+| `sm`  | Petit             | $\ge 768$ px  | Portrait sur tablette                           |
+| `md`  | Moyen             | $\ge 1024$ px | Paysage de tablette / petit ordinateur portable |
+| `lg`  | Grand             | $\ge 1920$ px | Pleine HD / 1080p                               |
+| `xl`  | Très grand        | $\ge 2560$ px | QHD                                             |
+| `2xl` | Extra-extra-large | $\ge 3840$ px | 4K UHD                                          |
 
 ## Utilitaires principaux (`/core`)
 

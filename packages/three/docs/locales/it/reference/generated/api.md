@@ -16,7 +16,7 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/three`.
 **Tipo:** funzione
 
 ```typescript
-function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement
+function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
 ForgeThreeCanvas: un componente indipendente dal framework che esegue il rendering di un <canvas>
@@ -24,9 +24,9 @@ e gestisce un contesto WebGL Three.js tramite `useThree`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Sola lettura<ForgeThreeCanvasProperties> |  |
+| Nome      | Digitare                                 | Descrizione |
+| --------- | ---------------------------------------- | ----------- |
+| proprietà | Sola lettura<ForgeThreeCanvasProperties> |             |
 
 ### ForgeThreeCanvasProperties
 
@@ -55,7 +55,10 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function useThree(canvasReference: ReferenceLike<HTMLCanvasElement | null>, onReady?: (context: ThreeContext) => void | (() => void)): void
+function useThree(
+  canvasReference: ReferenceLike<HTMLCanvasElement | null>,
+  onReady?: (context: ThreeContext) => void | (() => void),
+): void;
 ```
 
 Hook Three.js neutrale rispetto al framework.
@@ -66,7 +69,7 @@ Pulizia automatica: elimina il renderer e cancella il fotogramma dell'animazione
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| telaRiferimento | RiferimentoCome<HTMLCanvasElement \| null> |  |
-| onPronto | (contesto: TreContesto) => void \| (() => vuoto) |  |
+| Nome            | Digitare                                         | Descrizione |
+| --------------- | ------------------------------------------------ | ----------- |
+| telaRiferimento | RiferimentoCome<HTMLCanvasElement \| null>       |             |
+| onPronto        | (contesto: TreContesto) => void \| (() => vuoto) |             |

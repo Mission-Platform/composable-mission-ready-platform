@@ -26,7 +26,7 @@ export interface MidiControls
 פונקציה **סוג:**
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 וו MIDI Web ניטרלי למסגרת. מבקש גישת MIDI, עוקב אחר הזמין
@@ -53,7 +53,7 @@ export interface SoundControls
 פונקציה **סוג:**
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 וו השמעת צליל נייטרלי מסגרת. מנגן קליפ אודיו מ-`source` דרך
@@ -66,9 +66,9 @@ API או DOM רלוונטיים לדפדפן אינם זמינים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| מקור | מחרוזת |       |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ export interface SpeechRecognitionOptions
 פונקציה **סוג:**
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 הוק של דיבור לטקסט ניטראלי במסגרת נבנה על המקור של הדפדפן
@@ -135,7 +135,7 @@ export interface SpeechSynthesisControls
 פונקציה **סוג:**
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 הוק טקסט-לדיבור ניטרלי מסגרת שנבנה על המקור של הדפדפן

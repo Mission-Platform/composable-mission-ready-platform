@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
+function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement;
 ```
 
 `ForgeMapDraw` — 最も近いもののためのインタラクティブな描画/編集ツール
@@ -29,9 +29,9 @@ function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MapDrawProperties> |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| プロパティ | 読み取り専用<MapDrawProperties> |      |
 
 ### MapDrawプロパティ
 
@@ -50,7 +50,7 @@ export interface MapDrawProperties
 **種類:** 関数
 
 ```typescript
-function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null
+function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null;
 ```
 
 `ForgeMapLayer` — MapLibre レイヤーを最も近い `<MapLibre>` の祖先に追加します。
@@ -59,9 +59,9 @@ function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | nu
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MapLayerProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<MapLayerProperties> |      |
 
 ### マップレイヤーのプロパティ
 
@@ -80,7 +80,7 @@ export interface MapLayerProperties
 **種類:** 関数
 
 ```typescript
-function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null
+function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null;
 ```
 
 `ForgeMapMarker` — MapLibre `Marker` を最も近い `<MapLibre>` に追加します
@@ -89,9 +89,9 @@ function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MapMarkerProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<MapMarkerProperties> |      |
 
 ### マップマーカーのプロパティ
 
@@ -110,7 +110,7 @@ export interface MapMarkerProperties
 **種類:** 関数
 
 ```typescript
-function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null
+function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null;
 ```
 
 `ForgeMapPopup` — MapLibre `Popup` を最も近い `<MapLibre>` の祖先に追加します
@@ -119,9 +119,9 @@ function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | nu
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MapPopupProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<MapPopupProperties> |      |
 
 ### MapPopupProperties
 
@@ -140,7 +140,7 @@ export interface MapPopupProperties
 **種類:** 関数
 
 ```typescript
-function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
+function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement;
 ```
 
 `ForgeMapSource` — 最も近い `<MapLibre>` に MapLibre データ ソースを登録します
@@ -149,9 +149,9 @@ function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MapSourceProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<MapSourceProperties> |      |
 
 ### マップソースのプロパティ
 
@@ -170,7 +170,7 @@ export interface MapSourceProperties
 **種類:** 関数
 
 ```typescript
-function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
+function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement;
 ```
 
 `ForgeMapLibre` — ニュートラル JSX で一度作成された MapLibre GL マップ コンテナ
@@ -186,9 +186,9 @@ function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MapLibreProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<MapLibreProperties> |      |
 
 ### MapLibreプロパティ
 
@@ -244,7 +244,7 @@ export type FeatureId = string | number;
 **種類:** 関数
 
 ```typescript
-function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn
+function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn;
 ```
 
 マップのすべての描画および編集状態を管理します。店が地図を配線する
@@ -253,10 +253,10 @@ function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseD
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地図 |地図 \|未定義 |  |
-|オプション |描画オプションを使用する |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| 地図       | 地図 \|未定義            |      |
+| オプション | 描画オプションを使用する |      |
 
 ### 描画オプションを使用する
 
@@ -285,7 +285,7 @@ export interface UseDrawingReturn
 **種類:** 関数
 
 ```typescript
-function useLayer(map: Map | undefined, options: UseLayerOptions): void
+function useLayer(map: Map | undefined, options: UseLayerOptions): void;
 ```
 
 MapLibre レイヤーをマップに追加します。
@@ -302,17 +302,18 @@ MapLibre レイヤーをマップに追加します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地図 |地図 \|未定義 |  |
-|オプション |レイヤーオプションを使用する |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| 地図       | 地図 \|未定義                |      |
+| オプション | レイヤーオプションを使用する |      |
 
 #### 契約
 
 - **@例：** ```ts
-const map = useMap();
-useLayer(map, { layer: circleLayerSpec });
-```
+  const map = useMap();
+  useLayer(map, { layer: circleLayerSpec });
+
+````
 
 ### レイヤーオプションの使用
 
@@ -320,7 +321,7 @@ useLayer(map, { layer: circleLayerSpec });
 
 ```typescript
 export interface UseLayerOptions
-```
+````
 
 説明はありません。
 
@@ -331,7 +332,7 @@ export interface UseLayerOptions
 **種類:** 関数
 
 ```typescript
-function useMap(): Map | undefined
+function useMap(): Map | undefined;
 ```
 
 最も近い `<MapLibre>` によって提供される MapLibre `Map` インスタンスを返します。
@@ -342,11 +343,12 @@ function useMap(): Map | undefined
 #### 契約
 
 - **@例：** ```ts
-const map = useMap();
-useEffect(() => {
+  const map = useMap();
+  useEffect(() => {
   map?.flyTo({ center: [lng, lat] });
-}, [map]);
-```
+  }, [map]);
+
+````
 
 ## `src/composables/use-marker/use-marker`
 
@@ -356,24 +358,25 @@ useEffect(() => {
 
 ```typescript
 function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn
-```
+````
 
 マップに自動的に追加および削除される MapLibre `Marker` を作成します
 所有コンポーネントがアンマウントされたとき。マーカーの位置は `lngLat` を追跡します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地図 |地図 \|未定義 |  |
-|オプション |マーカーオプションを使用する |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| 地図       | 地図 \|未定義                |      |
+| オプション | マーカーオプションを使用する |      |
 
 #### 契約
 
 - **@例：** ```ts
-const map = useMap();
-const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
-```
+  const map = useMap();
+  const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
+
+````
 
 ### マーカーオプションの使用
 
@@ -381,7 +384,7 @@ const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
 
 ```typescript
 export interface UseMarkerOptions extends MarkerOptions
-```
+````
 
 説明はありません。
 
@@ -402,7 +405,7 @@ export interface UseMarkerReturn
 **種類:** 関数
 
 ```typescript
-function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn
+function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn;
 ```
 
 MapLibre `Popup` を作成し、自動的に追加および削除されます。
@@ -411,17 +414,18 @@ MapLibre `Popup` を作成し、自動的に追加および削除されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地図 |地図 \|未定義 |  |
-|オプション |ポップアップオプションを使用する |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| 地図       | 地図 \|未定義                    |      |
+| オプション | ポップアップオプションを使用する |      |
 
 #### 契約
 
 - **@例：** ```ts
-const map = useMap();
-const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
-```
+  const map = useMap();
+  const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
+
+````
 
 ### ポップアップオプションを使用する
 
@@ -429,7 +433,7 @@ const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' })
 
 ```typescript
 export interface UsePopupOptions extends PopupOptions
-```
+````
 
 説明はありません。
 
@@ -450,7 +454,7 @@ export interface UsePopupReturn
 **種類:** 関数
 
 ```typescript
-function useSource(map: Map | undefined, options: UseSourceOptions): void
+function useSource(map: Map | undefined, options: UseSourceOptions): void;
 ```
 
 MapLibre データ ソースを登録し、マップとの同期を維持します。
@@ -463,17 +467,18 @@ MapLibre データ ソースを登録し、マップとの同期を維持しま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地図 |地図 \|未定義 |  |
-|オプション |ソースオプションを使用する |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| 地図       | 地図 \|未定義              |      |
+| オプション | ソースオプションを使用する |      |
 
 #### 契約
 
 - **@例：** ```ts
-const map = useMap();
-useSource(map, { id: 'earthquakes', source: geojsonSpec });
-```
+  const map = useMap();
+  useSource(map, { id: 'earthquakes', source: geojsonSpec });
+
+````
 
 ### ソースオプションの使用
 
@@ -481,7 +486,7 @@ useSource(map, { id: 'earthquakes', source: geojsonSpec });
 
 ```typescript
 export interface UseSourceOptions
-```
+````
 
 説明はありません。
 
@@ -492,7 +497,7 @@ export interface UseSourceOptions
 **種類:** 定数
 
 ```typescript
-export const MapContext
+export const MapContext;
 ```
 
 最も近い `<MapLibre>` 祖先の MapLibre `Map` インスタンスを保持するコンテキスト。

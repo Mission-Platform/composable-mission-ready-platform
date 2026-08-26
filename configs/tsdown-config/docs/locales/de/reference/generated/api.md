@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/tsdown-conf
 **Art:** Funktion
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 Erstellen Sie einen Rolldown `external` / `deps.neverBundle` Prädikat, das jeden behandelt
@@ -24,16 +24,16 @@ Namen ein `names` (und alle ihre Unterpfadimporte, z. B. `pkg/sub`) als äußerl
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Namen | schreibgeschützter String[] |  |
+| Name  | Geben Sie                   | ein Beschreibung |
+| ----- | --------------------------- | ---------------- |
+| Namen | schreibgeschützter String[] |                  |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Standardpaketnamen, die jede gemeinsam genutzte Bibliothek als von Peers bereitgestellt behandeln sollte.
@@ -44,7 +44,7 @@ Spiegel `@mission-platform/vite-config`ist {@link DEFAULT_LIBRARY_EXTERNALS}.
 **Art:** Funktion
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Erstellen Sie eine Tsdown-Konfiguration für eine Ebene TypeScript (oder Einzelbündel-)Bibliothek –
@@ -53,16 +53,16 @@ Archetyp A/B. Spiegel `defineLibraryConfig` Externalisierungssemantik von
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | TsdownLibraryOptions |  |
+| Name     | Geben Sie            | ein Beschreibung |
+| -------- | -------------------- | ---------------- |
+| Optionen | TsdownLibraryOptions |                  |
 
 ### defineTsdownVueLibrary
 
 **Art:** Funktion
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Wie {@link defineTsdownLibrary}, aber verdrahtet `unplugin-vue` Und Vue-bewusste dts
@@ -70,16 +70,16 @@ für Pakete, die versendet werden `.vue` SFCs (`i18n`, `router`, …).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | TsdownLibraryOptions |  |
+| Name     | Geben Sie            | ein Beschreibung |
+| -------- | -------------------- | ---------------- |
+| Optionen | TsdownLibraryOptions |                  |
 
 ### readPackageDependencyNames
 
 **Art:** Funktion
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 Lesen Sie die `dependencies` Und `peerDependencies` in der package.json deklariert
@@ -88,16 +88,16 @@ eines eigenen Pakets, sodass Verbraucher sie deduplizieren und aufschlüsseln k�
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| rootDirectory | Zeichenfolge |  |
+| Name          | Geben Sie    | ein Beschreibung |
+| ------------- | ------------ | ---------------- |
+| rootDirectory | Zeichenfolge |                  |
 
 ### „resolveTsdownOutputDirectory“.
 
 **Art:** Funktion
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 Spiegeln Sie einen endgültigen Paketausgabepfad in einen isolierten Build-Root. Halten Sie die
@@ -106,11 +106,11 @@ Unabhängig förderbar, ohne dass tsdown einen Geschwisterbaum reinigen kann.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| rootDirectory | Zeichenfolge |  |
-| Ausgabeverzeichnis | Zeichenfolge |  |
-| AusgabeRoot | Zeichenfolge |  |
+| Name               | Geben Sie    | ein Beschreibung |
+| ------------------ | ------------ | ---------------- |
+| rootDirectory      | Zeichenfolge |                  |
+| Ausgabeverzeichnis | Zeichenfolge |                  |
+| AusgabeRoot        | Zeichenfolge |                  |
 
 ### TsdownLibraryOptions
 

@@ -26,7 +26,7 @@ export interface AppConfigOptions
 **النوع:** الوظيفة
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 بناء التراكمي/التدحرج `external` المسند الذي يعالج كل اسم فيه
@@ -34,16 +34,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أسماء | سلسلة للقراءة فقط[] |  |
+| الاسم | اكتب                | الوصف |
+| ----- | ------------------- | ----- |
+| أسماء | سلسلة للقراءة فقط[] |       |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 يجب أن تعامل كل مكتبة مشتركة الإظهار الافتراضي الخارجي على أنها مقدمة من نظير.
@@ -54,7 +54,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
+export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 ```
 
 إجماليات الإخراج التراكمية الافتراضية لعملاء UMD/IIFE. نحن نستهدف الإدارة السليمة بيئيا فقط ولكن
@@ -65,7 +65,7 @@ export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
 **النوع:** الوظيفة
 
 ```typescript
-function defineAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 بناء أ Vite التكوين لمنصة المهمة Vue 3 تطبيقات: Vue البرنامج المساعد و
@@ -74,16 +74,16 @@ function defineAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات تكوين التطبيق |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | خيارات تكوين التطبيق |       |
 
 ### تعريفFrameworkAppConfig
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig
+function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
 قم بلف {@link DefineAppConfig} مع ملف `resolve.conditions` اللازمة لجعل العارية
@@ -93,16 +93,16 @@ function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfi
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات FrameworkAppConfigOptions |  |
+| الاسم  | اكتب                             | الوصف |
+| ------ | -------------------------------- | ----- |
+| خيارات | خيارات FrameworkAppConfigOptions |       |
 
 ### تعريفLibraryConfig
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
+function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
 بناء أ Vite التكوين مصمم خصيصًا لمنصة المهمة Vue حزم المكتبة:
@@ -116,16 +116,16 @@ function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات تكوين المكتبة |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | خيارات تكوين المكتبة |       |
 
 ### تعريفWebComponentAppConfig
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 بناء أ Vite تكوين التطبيق لتطبيقات مكونات الويب الخالية من إطار العمل.
@@ -137,9 +137,9 @@ function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات تكوين التطبيق |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | خيارات تكوين التطبيق |       |
 
 ### خيارات FrameworkAppConfig
 
@@ -156,7 +156,7 @@ export interface FrameworkAppConfigOptions extends AppConfigOptions
 **النوع:** الوظيفة
 
 ```typescript
-function frameworkCondition(framework: MissionPlatformFramework): string
+function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 قم بتعيين {@link MissionPlatformFramework} إلى حالة التصدير المخصصة
@@ -166,16 +166,16 @@ Node/Vite شروط (`import`, `default`, `browser`, ...).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإطار | مهمة منصة الإطار |  |
+| الاسم  | اكتب             | الوصف |
+| ------ | ---------------- | ----- |
+| الإطار | مهمة منصة الإطار |       |
 
 ### FrameworkResolveConditions
 
 **النوع:** الوظيفة
 
 ```typescript
-function frameworkResolveConditions(framework: MissionPlatformFramework): string[]
+function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
 بناء أمر `resolve.conditions` قائمة يجب أن يستخدمها التطبيق لتحديد أ
@@ -187,16 +187,16 @@ function frameworkResolveConditions(framework: MissionPlatformFramework): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإطار | مهمة منصة الإطار |  |
+| الاسم  | اكتب             | الوصف |
+| ------ | ---------------- | ----- |
+| الإطار | مهمة منصة الإطار |       |
 
 ### تجاهلVueI18nBlocksPlugin
 
 **النوع:** الوظيفة
 
 ```typescript
-function ignoreVueI18nBlocksPlugin(): Plugin
+function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
 Vite البرنامج المساعد الذي يتحول Vue SFC `<i18n>` كتل مخصصة في وحدات no-op.
@@ -237,7 +237,7 @@ export type MissionPlatformFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'w
 **النوع:** الوظيفة
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 اقرأ `dependencies` و `peerDependencies` أعلن في package.json
@@ -246,9 +246,9 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الدليل الجذر | سلسلة |  |
+| الاسم        | اكتب  | الوصف |
+| ------------ | ----- | ----- |
+| الدليل الجذر | سلسلة |       |
 
 ## `src/vitest`
 
@@ -257,7 +257,7 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 **النوع:** الوظيفة
 
 ```typescript
-function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
+function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 بناء أ Vitest التكوين لحزم وتطبيقات Mission Platform. يوفر
@@ -266,9 +266,9 @@ function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فيتيست كونفيجوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | فيتيست كونفيجوبتيونس |       |
 
 ### VitestConfigOptions
 

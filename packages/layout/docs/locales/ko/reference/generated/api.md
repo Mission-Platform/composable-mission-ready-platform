@@ -75,7 +75,7 @@ export type ContainerVariant = 'fixed' | 'fluid' | 'responsive';
 **종류:** 기능
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer` — 제한하고 중심을 맞추는 페이지/섹션 레이아웃 기본 요소
@@ -95,9 +95,9 @@ CSS 모듈(플랫폼 중단점을 미디어 쿼리로 인라인)에 있습니다
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ContainerProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<ContainerProperties> |      |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ export interface ApplicationLayoutProperties
 **종류:** 기능
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout` — 한 번 작성된 최상위 애플리케이션 셸입니다.
@@ -140,9 +140,9 @@ CSS). 해시된 모듈 클래스 이름은 프레임워크 중립적으로 조�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ApplicationLayoutProperties> |  |
+| 이름 | 유형                                   | 설명 |
+| ---- | -------------------------------------- | ---- |
+| 속성 | 읽기 전용<ApplicationLayoutProperties> |      |
 
 ### 사이드바 중단점
 
@@ -191,7 +191,7 @@ export type BentoLayoutRegion = 'hero' | 'feature' | 'supporting';
 **종류:** 기능
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout`은 `hero`, `feature` 및 `supporting` 명명된 슬롯을 노출합니다.
@@ -200,9 +200,9 @@ function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<BentoLayoutProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<BentoLayoutProperties> |      |
 
 ### 패턴레이아웃중단점
 
@@ -241,7 +241,7 @@ export type PatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **종류:** 기능
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout`은 `header`, `intro`, `primary`, `secondary`를 노출합니다.
@@ -250,9 +250,9 @@ function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): Mp
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<FPatternLayoutProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<FPatternLayoutProperties> |      |
 
 ### FPatternLayoutBreakpoint
 
@@ -311,7 +311,7 @@ export type FPatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside'
 **종류:** 기능
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout`은 제공된 `cell1` ... `cell12` 명명된 슬롯을 렌더링합니다.
@@ -320,9 +320,9 @@ function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<GridLayoutProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<GridLayoutProperties> |      |
 
 ### 그리드 레이아웃 중단점
 
@@ -339,7 +339,19 @@ export type GridLayoutBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 **종류:** 유형
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 지원되는 정렬된 명명된 셀 슬롯(`cell1`~`cell12`)
@@ -381,7 +393,7 @@ export type GridLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **종류:** 기능
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout` — 한 번 작성된 반응형 3열 쉘입니다.
@@ -410,9 +422,9 @@ Vue SFC, 중립 방언은 범위가 지정된 기본 슬롯을 모델링할 수 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<VerticalLayoutProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<VerticalLayoutProperties> |      |
 
 ### 수직 레이아웃 중단점
 
@@ -451,7 +463,7 @@ export type VerticalLayoutSize = DrawerSize;
 **종류:** 기능
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout`은 `topStart`, `topEnd`, `middle`, `bottomStart`를 노출합니다.
@@ -460,9 +472,9 @@ function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): Mp
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ZPatternLayoutProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<ZPatternLayoutProperties> |      |
 
 ### ZPatternLayoutBreakpoint
 

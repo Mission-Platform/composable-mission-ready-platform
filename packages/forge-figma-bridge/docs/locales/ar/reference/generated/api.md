@@ -16,23 +16,23 @@
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server
+function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورج بريدج سيرفيروبتيونس |  |
+| الاسم  | اكتب                     | الوصف |
+| ------ | ------------------------ | ----- |
+| خيارات | فورج بريدج سيرفيروبتيونس |       |
 
 ### DEFAULT_EXPORT_PATH
 
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_EXPORT_PATH
+export const DEFAULT_EXPORT_PATH;
 ```
 
 لم يتم تقديم أي وصف.
@@ -42,7 +42,7 @@ export const DEFAULT_EXPORT_PATH
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_MAX_FILE_BYTES
+export const DEFAULT_MAX_FILE_BYTES;
 ```
 
 لم يتم تقديم أي وصف.
@@ -52,7 +52,7 @@ export const DEFAULT_MAX_FILE_BYTES
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_MAX_REQUEST_BYTES
+export const DEFAULT_MAX_REQUEST_BYTES;
 ```
 
 لم يتم تقديم أي وصف.
@@ -62,17 +62,17 @@ export const DEFAULT_MAX_REQUEST_BYTES
 **النوع:** الوظيفة
 
 ```typescript
-function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>
+function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | غير معروف |  |
-| خيارات | فورجبريدج أوبتيونس |  |
+| الاسم  | اكتب               | الوصف |
+| ------ | ------------------ | ----- |
+| القيمة | غير معروف          |       |
+| خيارات | فورجبريدج أوبتيونس |       |
 
 ### ForgeBridgeOptions
 
@@ -99,16 +99,18 @@ export interface ForgeBridgeServerOptions extends ForgeBridgeOptions
 **النوع:** الوظيفة
 
 ```typescript
-function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number }): Promise<Server>
+function startForgeBridgeServer(
+  options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
+): Promise<Server>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | ForgeBridgeServerOptions & { مضيف للقراءة فقط؟: سلسلة؛ منفذ للقراءة فقط؟: رقم } |  |
+| الاسم  | اكتب                                                                            | الوصف |
+| ------ | ------------------------------------------------------------------------------- | ----- |
+| خيارات | ForgeBridgeServerOptions & { مضيف للقراءة فقط؟: سلسلة؛ منفذ للقراءة فقط؟: رقم } |       |
 
 ## `src/protocol`
 
@@ -117,7 +119,7 @@ function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly h
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_BRIDGE_PROTOCOL_VERSION
+export const FORGE_BRIDGE_PROTOCOL_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -167,13 +169,13 @@ export interface ForgeBridgeResponse
 **النوع:** الوظيفة
 
 ```typescript
-function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse
+function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | غير معروف |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| القيمة | غير معروف |       |

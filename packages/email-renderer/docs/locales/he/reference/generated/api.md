@@ -16,33 +16,33 @@
 פונקציה **סוג:**
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 עבד את עץ Forge המשותף כרכיב React עבור תצוגות מקדימות של הדפדפן.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | EmailNode |  |
+| שם   | הקלד      | תיאור |
+| ---- | --------- | ----- |
+| node | EmailNode |       |
 
 ### toEmailReactComponent
 
 פונקציה **סוג:**
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 עטוף רכיב אימייל של Forge כרכיב פונקציה React.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | MpComponent<P> |  |
-| שם | מחרוזת |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| רכיב | MpComponent<P> |       |
+| שם   | מחרוזת         |       |
 
 ## `src/adapters/solid`
 
@@ -51,32 +51,32 @@ function toEmailReactComponent(component: MpComponent<P>, name?: string): Functi
 פונקציה **סוג:**
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 עבד את עץ Forge המשותף כ-Solid JSX לתצוגות מקדימות של הדפדפן.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | EmailNode |  |
+| שם   | הקלד      | תיאור |
+| ---- | --------- | ----- |
+| node | EmailNode |       |
 
 ### toEmailSolidComponent
 
 פונקציה **סוג:**
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 עטפו רכיב Forge כרכיב Solid.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | רכיב<P> |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| רכיב | רכיב<P> |       |
 
 ## `src/adapters/svelte`
 
@@ -85,16 +85,16 @@ function toEmailSolidComponent(component: Component<P>): Component<P>
 פונקציה **סוג:**
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 המר עץ Forge משותף ל-Svelte 5 קטע גולמי עבור `{@render ...}`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | EmailNode |  |
+| שם   | הקלד      | תיאור |
+| ---- | --------- | ----- |
+| node | EmailNode |       |
 
 ## `src/adapters/vue`
 
@@ -103,33 +103,33 @@ function renderToEmailSvelte(node: EmailNode): Snippet
 פונקציה **סוג:**
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 עבד את עץ Forge המשותף כ-Vue VNode עבור תצוגות מקדימות של הדפדפן.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | EmailNode |  |
+| שם   | הקלד      | תיאור |
+| ---- | --------- | ----- |
+| node | EmailNode |       |
 
 ### toEmailVueComponent
 
 פונקציה **סוג:**
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 עטוף רכיב אימייל של Forge כרכיב פונקציונלי Vue.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | MpComponent<P> |  |
-| שם | מחרוזת |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| רכיב | MpComponent<P> |       |
+| שם   | מחרוזת         |       |
 
 ## `src/adapters/web-components`
 
@@ -138,16 +138,16 @@ function toEmailVueComponent(component: MpComponent<P>, name?: string): Function
 פונקציה **סוג:**
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 צור תוצאת תבנית Forge מקורית עבור מארח רכיבי אינטרנט.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | EmailNode |  |
+| שם   | הקלד      | תיאור |
+| ---- | --------- | ----- |
+| node | EmailNode |       |
 
 ## `src/markdown/render-markdown`
 
@@ -156,17 +156,17 @@ function renderToEmailWebComponent(node: EmailNode): TemplateResult
 פונקציה **סוג:**
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 המר אסימוני Markdown בטוחים לאותו עץ Forge המשמש את רכיבי האימייל.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סימון | מחרוזת |  |
-| אפשרויות | MarkdownRenderOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| סימון    | מחרוזת                |       |
+| אפשרויות | MarkdownRenderOptions |       |
 
 ## `src/markdown/types`
 
@@ -197,16 +197,16 @@ export interface MarkdownRenderOptions
 פונקציה **סוג:**
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 עשה סדרה של קבוצה רשומה ברשימה של Forge בסדר דטרמיניסטי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | EmailProperties |  |
+| שם    | הקלד            | תיאור |
+| ----- | --------------- | ----- |
+| נכסים | EmailProperties |       |
 
 ## `src/render/escape`
 
@@ -215,33 +215,33 @@ function serializeAttributes(properties: EmailProperties): string
 פונקציה **סוג:**
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 בריחה מטקסט ותוכן תכונה עבור סידור HTML.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### validateUrl
 
 פונקציה **סוג:**
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 דחה סכימות שיכולות להפעיל קוד או לטעון משאב לא צפוי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
-| תכונה | מחרוזת |  |
+| שם    | הקלד   | תיאור |
+| ----- | ------ | ----- |
+| ערך   | מחרוזת |       |
+| תכונה | מחרוזת |       |
 
 ## `src/render/render-email`
 
@@ -250,33 +250,33 @@ function validateUrl(value: string, attribute: string): string
 פונקציה **סוג:**
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 עבד עץ דוא"ל של Forge למסמך HTML מלא ללא מסגרת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | EmailNode |  |
-| אפשרויות | RenderEmailOptions |  |
+| שם       | הקלד               | תיאור |
+| -------- | ------------------ | ----- |
+| node     | EmailNode          |       |
+| אפשרויות | RenderEmailOptions |       |
 
 ### renderEmailFragment
 
 פונקציה **סוג:**
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 עבד עץ Forge כקטע HTML בטוח עבור מארחים של מתאמי דפדפן.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | EmailNode |  |
+| שם   | הקלד      | תיאור |
+| ---- | --------- | ----- |
+| node | EmailNode |       |
 
 ## `src/render/style`
 
@@ -285,16 +285,16 @@ function renderEmailFragment(node: EmailNode): string
 פונקציה **סוג:**
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 הסדר סגנונות מוטבעים בסדר מאפיינים דטרמיניסטי ללא משתני CSS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סגנון | EmailStyle \| מחרוזת |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| סגנון | EmailStyle \| מחרוזת |       |
 
 ## `src/render/types`
 

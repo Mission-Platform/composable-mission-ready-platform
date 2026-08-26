@@ -25,15 +25,15 @@ Preimpostazioni `@mission-platform/typescript-config/framework-<name>`: quindi i
 
 La piattaforma utilizza una scala reattiva in sette passaggi basata sulle soglie di larghezza del viewport:
 
-| Chiave | Etichetta | Soglia | Dispositivo comune/caso d'uso |
-| :---- | :---------------- | :------------ | :------------------------------ |
-| `2xs` | Extra-extra-piccolo | $\ge 0$ px | Tutti i dispositivi |
-| `xs` | Extrapiccolo | $\ge 480$ px | Telefoni grandi |
-| `sm` | Piccolo | $\ge 768$ px | Ritratto su tavoletta |
-| `md` | Medio | $\ge 1024$ px | Tablet orizzontale/piccolo laptop |
-| `lg` | Grande | $\ge 1920$ px | FullHD/1080p |
-| `xl` | Extra large | $\ge 2560$px | QHD |
-| `2xl` | Extra extra large | $\ge 3840$ px | 4KUHD |
+| Chiave | Etichetta           | Soglia        | Dispositivo comune/caso d'uso     |
+| :----- | :------------------ | :------------ | :-------------------------------- |
+| `2xs`  | Extra-extra-piccolo | $\ge 0$ px    | Tutti i dispositivi               |
+| `xs`   | Extrapiccolo        | $\ge 480$ px  | Telefoni grandi                   |
+| `sm`   | Piccolo             | $\ge 768$ px  | Ritratto su tavoletta             |
+| `md`   | Medio               | $\ge 1024$ px | Tablet orizzontale/piccolo laptop |
+| `lg`   | Grande              | $\ge 1920$ px | FullHD/1080p                      |
+| `xl`   | Extra large         | $\ge 2560$px  | QHD                               |
+| `2xl`  | Extra extra large   | $\ge 3840$ px | 4KUHD                             |
 
 ## Utilità principali (`/core`)
 

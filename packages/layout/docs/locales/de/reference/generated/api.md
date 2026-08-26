@@ -75,7 +75,7 @@ Die Layoutstrategie, mit der der Container seine Größe auf der Inline-Achse be
 **Art:** Funktion
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer` – ein Grundelement für das Seiten-/Abschnittslayout, das einschränkt und zentriert
@@ -95,9 +95,9 @@ im CSS-Modul (das die Plattform-Haltepunkte als Medienabfragen einfügt).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ContainerProperties> |  |
+| Name          | Geben Sie                             | ein Beschreibung |
+| ------------- | ------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<ContainerProperties> |                  |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout` – die Anwendungs-Shell der obersten Ebene, die einmal im erstellt wurde
@@ -140,9 +140,9 @@ CSS). Die gehashten Modulklassennamen werden mit dem Framework-Neutralen zusamme
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ApplicationLayoutProperties> |  |
+| Name          | Geben Sie                                     | ein Beschreibung |
+| ------------- | --------------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<ApplicationLayoutProperties> |                  |
 
 ### Seitenleisten-Haltepunkt
 
@@ -191,7 +191,7 @@ Benannte Regionen, die durch `ForgeBentoLayout` verfügbar gemacht werden.
 **Art:** Funktion
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout` macht die benannten Slots `hero`, `feature` und `supporting` verfügbar.
@@ -200,9 +200,9 @@ Unterstützung der angrenzenden Regionen; Alle Regionen werden in der Quellreihe
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<BentoLayoutProperties> |  |
+| Name          | Geben Sie                               | ein Beschreibung |
+| ------------- | --------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<BentoLayoutProperties> |                  |
 
 ### PatternLayoutHaltepunkt
 
@@ -241,7 +241,7 @@ Von den Musterlayouts unterstützte semantische Containerelemente.
 **Art:** Funktion
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout` macht `header`, `intro`, `primary`, `secondary` und verfügbar
@@ -250,9 +250,9 @@ die dominierende Breitbildspur, während der sekundäre Bereich daneben verbleib
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<FPatternLayoutProperties> |  |
+| Name          | Geben Sie                                  | ein Beschreibung |
+| ------------- | ------------------------------------------ | ---------------- |
+| Eigenschaften | Schreibgeschützt<FPatternLayoutProperties> |                  |
 
 ### FPatternLayoutHaltepunkt
 
@@ -311,7 +311,7 @@ Von `ForgeFPatternLayout` unterstützte semantische Containerelemente.
 **Art:** Funktion
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout` rendert die bereitgestellten `cell1` … `cell12` benannten Slots in
@@ -320,9 +320,9 @@ Tracks erst nach dem konfigurierten reaktionsfähigen Haltepunkt.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<GridLayoutProperties> |  |
+| Name          | Geben Sie                              | ein Beschreibung |
+| ------------- | -------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<GridLayoutProperties> |                  |
 
 ### GridLayoutHaltepunkt
 
@@ -339,7 +339,19 @@ Ansichtsfenster-Haltepunkt, der vom schmalen Layout-Fallback des Rasters verwend
 **Art:** Typ
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 Unterstützte geordnete benannte Zellenslots (`cell1` bis `cell12`).
@@ -381,7 +393,7 @@ Von `ForgeGridLayout` unterstützte semantische Containerelemente.
 **Art:** Funktion
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout` – eine reaktionsfähige dreispaltige Shell, die einmal im erstellt wurde
@@ -410,9 +422,9 @@ einfacher Content-Slot).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<VerticalLayoutProperties> |  |
+| Name          | Geben Sie                                  | ein Beschreibung |
+| ------------- | ------------------------------------------ | ---------------- |
+| Eigenschaften | Schreibgeschützt<VerticalLayoutProperties> |                  |
 
 ### VerticalLayoutHaltepunkt
 
@@ -451,7 +463,7 @@ Benannte Größenskala für die Seitenspalten (spiegelt `ForgeDrawer`'s `DrawerS
 **Art:** Funktion
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` macht `topStart`, `topEnd`, `middle`, `bottomStart` verfügbar.
@@ -460,9 +472,9 @@ Bildschirme platzieren die Regionen mithilfe von CSS-Rasterbereichen auf abwechs
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ZPatternLayoutProperties> |  |
+| Name          | Geben Sie                                  | ein Beschreibung |
+| ------------- | ------------------------------------------ | ---------------- |
+| Eigenschaften | Schreibgeschützt<ZPatternLayoutProperties> |                  |
 
 ### ZPatternLayoutBreakpoint
 

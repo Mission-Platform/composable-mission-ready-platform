@@ -16,91 +16,91 @@
 **النوع:** الوظيفة
 
 ```typescript
-function article(input: ArticleInput): JsonLd
+function article(input: ArticleInput): JsonLd;
 ```
 
 Schema.org `Article` / `BlogPosting` / `NewsArticle` منشئ.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال المادة |  |
+| الاسم   | اكتب         | الوصف |
+| ------- | ------------ | ----- |
+| الإدخال | إدخال المادة |       |
 
 ### breadcrumbList
 
 **النوع:** الوظيفة
 
 ```typescript
-function breadcrumbList(input: BreadcrumbListInput): JsonLd
+function breadcrumbList(input: BreadcrumbListInput): JsonLd;
 ```
 
 Schema.org `BreadcrumbList` — ينبعث في كل صفحة لكشف التسلسل الهرمي للموقع.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال قائمة التنقل |  |
+| الاسم   | اكتب               | الوصف |
+| ------- | ------------------ | ----- |
+| الإدخال | إدخال قائمة التنقل |       |
 
 ### حدث
 
 **النوع:** الوظيفة
 
 ```typescript
-function event(input: EventInput): JsonLd
+function event(input: EventInput): JsonLd;
 ```
 
 Schema.org `Event`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال الأحداث |  |
+| الاسم   | اكتب          | الوصف |
+| ------- | ------------- | ----- |
+| الإدخال | إدخال الأحداث |       |
 
 ### faqPage
 
 **النوع:** الوظيفة
 
 ```typescript
-function faqPage(input: FaqPageInput): JsonLd
+function faqPage(input: FaqPageInput): JsonLd;
 ```
 
 Schema.org `FAQPage`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | الأسئلة الشائعةإدخال الصفحة |  |
+| الاسم   | اكتب                        | الوصف |
+| ------- | --------------------------- | ----- |
+| الإدخال | الأسئلة الشائعةإدخال الصفحة |       |
 
 ### imageObject
 
 **النوع:** الوظيفة
 
 ```typescript
-function imageObject(input: ImageObjectInput): JsonLd
+function imageObject(input: ImageObjectInput): JsonLd;
 ```
 
 Schema.org `ImageObject`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إيماج أوبجيكت إنبوت |  |
+| الاسم   | اكتب                | الوصف |
+| ------- | ------------------- | ----- |
+| الإدخال | إيماج أوبجيكت إنبوت |       |
 
 ### jsonLd
 
 **النوع:** ثابت
 
 ```typescript
-export const jsonLd
+export const jsonLd;
 ```
 
 إعادة تصدير مساحة الاسم حتى يتمكن المستهلكون من استيراد { jsonLd } من
-'@mission-platform/seo'` and call `jsonLd.webSite(...)',
+'@mission-platform/seo'`and call`jsonLd.webSite(...)',
 `jsonLd.organization(...)`، الخ.
 
 ### localBusiness
@@ -108,208 +108,208 @@ export const jsonLd
 **النوع:** الوظيفة
 
 ```typescript
-function localBusiness(input: LocalBusinessInput): JsonLd
+function localBusiness(input: LocalBusinessInput): JsonLd;
 ```
 
 Schema.org `LocalBusiness` - يمتد `Organization` ببيانات الموقع.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال الأعمال المحلية |  |
+| الاسم   | اكتب                  | الوصف |
+| ------- | --------------------- | ----- |
+| الإدخال | إدخال الأعمال المحلية |       |
 
 ### منظمة
 
 **النوع:** الوظيفة
 
 ```typescript
-function organization(input: OrganizationInput): JsonLd
+function organization(input: OrganizationInput): JsonLd;
 ```
 
 Schema.org `Organization`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال المنظمة |  |
+| الاسم   | اكتب          | الوصف |
+| ------- | ------------- | ----- |
+| الإدخال | إدخال المنظمة |       |
 
 ### معرف المنظمة
 
 **النوع:** الوظيفة
 
 ```typescript
-function organizationId(orgUrl: string): string
+function organizationId(orgUrl: string): string;
 ```
 
 `@id` الكنسي لـ `Organization` (أو `LocalBusiness`) node على مستوى الموقع.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أورل | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| أورل  | سلسلة |       |
 
 ### شخص
 
 **النوع:** الوظيفة
 
 ```typescript
-function person(input: PersonInput): JsonLd
+function person(input: PersonInput): JsonLd;
 ```
 
 Schema.org `Person`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال الشخص |  |
+| الاسم   | اكتب        | الوصف |
+| ------- | ----------- | ----- |
+| الإدخال | إدخال الشخص |       |
 
 ### منتج
 
 **النوع:** الوظيفة
 
 ```typescript
-function product(input: ProductInput): JsonLd
+function product(input: ProductInput): JsonLd;
 ```
 
 Schema.org `Product`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال المنتج |  |
+| الاسم   | اكتب         | الوصف |
+| ------- | ------------ | ----- |
+| الإدخال | إدخال المنتج |       |
 
 ### وصفة
 
 **النوع:** الوظيفة
 
 ```typescript
-function recipe(input: RecipeInput): JsonLd
+function recipe(input: RecipeInput): JsonLd;
 ```
 
 Schema.org `Recipe`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال الوصفة |  |
+| الاسم   | اكتب         | الوصف |
+| ------- | ------------ | ----- |
+| الإدخال | إدخال الوصفة |       |
 
 ### مراجعة
 
 **النوع:** الوظيفة
 
 ```typescript
-function review(input: ReviewInput): JsonLd
+function review(input: ReviewInput): JsonLd;
 ```
 
 Schema.org `Review`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | مراجعة الإدخال |  |
+| الاسم   | اكتب           | الوصف |
+| ------- | -------------- | ----- |
+| الإدخال | مراجعة الإدخال |       |
 
 ### SoftwareApplication
 
 **النوع:** الوظيفة
 
 ```typescript
-function softwareApplication(input: SoftwareApplicationInput): JsonLd
+function softwareApplication(input: SoftwareApplicationInput): JsonLd;
 ```
 
 Schema.org `SoftwareApplication`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال تطبيق البرمجيات |  |
+| الاسم   | اكتب                  | الوصف |
+| ------- | --------------------- | ----- |
+| الإدخال | إدخال تطبيق البرمجيات |       |
 
 ### videoObject
 
 **النوع:** الوظيفة
 
 ```typescript
-function videoObject(input: VideoObjectInput): JsonLd
+function videoObject(input: VideoObjectInput): JsonLd;
 ```
 
 Schema.org `VideoObject`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | فيديوObjectInput |  |
+| الاسم   | اكتب             | الوصف |
+| ------- | ---------------- | ----- |
+| الإدخال | فيديوObjectInput |       |
 
 ### صفحة على الإنترنت
 
 **النوع:** الوظيفة
 
 ```typescript
-function webPage(input: WebPageInput): JsonLd
+function webPage(input: WebPageInput): JsonLd;
 ```
 
 Schema.org `WebPage` - يصف صفحة واحدة داخل الموقع.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال صفحة ويب |  |
+| الاسم   | اكتب           | الوصف |
+| ------- | -------------- | ----- |
+| الإدخال | إدخال صفحة ويب |       |
 
 ### webPageId
 
 **النوع:** الوظيفة
 
 ```typescript
-function webPageId(pageUrl: string): string
+function webPageId(pageUrl: string): string;
 ```
 
 `@id` الكنسي لـ `WebPage` node.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| عنوان الصفحة | سلسلة |  |
+| الاسم        | اكتب  | الوصف |
+| ------------ | ----- | ----- |
+| عنوان الصفحة | سلسلة |       |
 
 ### موقع إلكتروني
 
 **النوع:** الوظيفة
 
 ```typescript
-function webSite(input: WebSiteInput): JsonLd
+function webSite(input: WebSiteInput): JsonLd;
 ```
 
 Schema.org `WebSite` — ينبعث عادةً مرة واحدة على مستوى الموقع.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال موقع الويب |  |
+| الاسم   | اكتب             | الوصف |
+| ------- | ---------------- | ----- |
+| الإدخال | إدخال موقع الويب |       |
 
 ### معرف موقع الويب
 
 **النوع:** الوظيفة
 
 ```typescript
-function webSiteId(siteUrl: string): string
+function webSiteId(siteUrl: string): string;
 ```
 
 `@id` الكنسي لـ `WebSite` node على مستوى الموقع.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| موقع URL | سلسلة |  |
+| الاسم    | اكتب  | الوصف |
+| -------- | ----- | ----- |
+| موقع URL | سلسلة |       |
 
 ## `src/build-open-graph`
 
@@ -318,7 +318,7 @@ function webSiteId(siteUrl: string): string
 **النوع:** الوظيفة
 
 ```typescript
-function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
+function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[];
 ```
 
 قم بتحويل {@link OpenGraphMetadata} إلى قائمة مسطحة من علامات `<meta>`
@@ -328,9 +328,9 @@ function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البيانات الوصفية | البيانات الوصفية المفتوحة |  |
+| الاسم            | اكتب                      | الوصف |
+| ---------------- | ------------------------- | ----- |
+| البيانات الوصفية | البيانات الوصفية المفتوحة |       |
 
 ## `src/build-page-meta`
 
@@ -339,7 +339,7 @@ function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
 **النوع:** الوظيفة
 
 ```typescript
-function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
+function buildPageMeta(metadata: PageMetadata): BuiltPageMeta;
 ```
 
 قم بتحويل {@link PageMetadata} إلى العنوان واللغة والمسطح الذي تم حله
@@ -347,9 +347,9 @@ function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البيانات الوصفية | بيانات تعريف الصفحة |  |
+| الاسم            | اكتب                | الوصف |
+| ---------------- | ------------------- | ----- |
+| البيانات الوصفية | بيانات تعريف الصفحة |       |
 
 ### بنيتPageMeta
 
@@ -368,7 +368,7 @@ export interface BuiltPageMeta
 **النوع:** الوظيفة
 
 ```typescript
-function buildRobotsTxt(input: RobotsTxtInput = {}): string
+function buildRobotsTxt(input: RobotsTxtInput = {}): string;
 ```
 
 أنشئ سلسلة `robots.txt` حتمية من وصف السياسة.
@@ -378,9 +378,9 @@ function buildRobotsTxt(input: RobotsTxtInput = {}): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | روبوتكستكسينبوت |  |
+| الاسم   | اكتب            | الوصف |
+| ------- | --------------- | ----- |
+| الإدخال | روبوتكستكسينبوت |       |
 
 ### RobotsGroup
 
@@ -412,23 +412,23 @@ export interface RobotsTxtInput
 **النوع:** الوظيفة
 
 ```typescript
-function buildSitemapIndex(input: SitemapIndexInput): string
+function buildSitemapIndex(input: SitemapIndexInput): string;
 ```
 
 أنشئ سلسلة XML حتمية لفهرس خريطة الموقع.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال فهرس خريطة الموقع |  |
+| الاسم   | اكتب                    | الوصف |
+| ------- | ----------------------- | ----- |
+| الإدخال | إدخال فهرس خريطة الموقع |       |
 
 ### buildSitemapXml
 
 **النوع:** الوظيفة
 
 ```typescript
-function buildSitemapXml(input: SitemapXmlInput): string
+function buildSitemapXml(input: SitemapXmlInput): string;
 ```
 
 إنشاء سلسلة `sitemap.xml` حتمية. ينتهي الإخراج دائمًا بـ a
@@ -436,9 +436,9 @@ function buildSitemapXml(input: SitemapXmlInput): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | خريطة الموقعXmlInput |  |
+| الاسم   | اكتب                 | الوصف |
+| ------- | -------------------- | ----- |
+| الإدخال | خريطة الموقعXmlInput |       |
 
 ### خريطة الموقع البديلة
 
@@ -497,7 +497,7 @@ export interface SitemapXmlInput
 **النوع:** الوظيفة
 
 ```typescript
-function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
+function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 ```
 
 مزامنة تفاعلية لسطح Mission Platform SEO الكامل - قياسي
@@ -513,9 +513,9 @@ function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البيانات الوصفية | MaybeRefOrGetter<SeoMetadata> |  |
+| الاسم            | اكتب                          | الوصف |
+| ---------------- | ----------------------------- | ----- |
+| البيانات الوصفية | MaybeRefOrGetter<SeoMetadata> |       |
 
 ## `src/mp-seo`
 
@@ -524,7 +524,7 @@ function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
 **النوع:** مكون
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 مكون `<Seo>` بدون عرض - غلاف تعريفي حول {@link useSeo}.
@@ -539,14 +539,14 @@ export const MpSeo
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ### سيو
 
 **النوع:** مكون
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 مكون `<Seo>` بدون عرض - غلاف تعريفي حول {@link useSeo}.
@@ -561,7 +561,7 @@ export const MpSeo
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ## `src/types`
 

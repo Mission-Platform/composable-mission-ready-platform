@@ -141,6 +141,7 @@ Der React-Adapter ermöglicht die Integration mit dem React-Router.
 **Hauptexporte:**
 
 – **`withMpRouter`**: HOC zur Bereitstellung des Router-Kontexts
+
 - **`useMpRoute`**: Hook zum Zugriff auf aktuelle Routeninformationen
 - **`MpLink`**: Framework-neutrale Linkkomponente für React
 

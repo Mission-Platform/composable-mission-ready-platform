@@ -16,7 +16,11 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/hunspel
 **Soort:** functie
 
 ```typescript
-function useHunspellMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHunspellMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue composable die de spellingcontrole van Hunspell integreert in een Monaco-editor.
@@ -29,11 +33,11 @@ ontkoppelen en opnieuw controleren wanneer de `language` verandert.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| editorReferentie | MisschienRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| ingeschakeld | MisschienRefOrGetter<boolean> |  |
-| taalReferentie | MisschienRefOrGetter<string> |  |
+| Naam             | Typ                                                                    | Beschrijving |
+| ---------------- | ---------------------------------------------------------------------- | ------------ |
+| editorReferentie | MisschienRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |              |
+| ingeschakeld     | MisschienRefOrGetter<boolean>                                          |              |
+| taalReferentie   | MisschienRefOrGetter<string>                                           |              |
 
 ## `src/wasm/hunspell.d`
 

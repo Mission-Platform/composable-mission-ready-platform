@@ -26,7 +26,7 @@ export interface MidiControls
 **種類:** 関数
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 フレームワークに依存しない Web MIDI フック。 MIDI アクセスをリクエストし、利用可能なデータを追跡します
@@ -53,7 +53,7 @@ export interface SoundControls
 **種類:** 関数
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 フレームワークに依存しないサウンド再生フック。 `source` からオーディオ クリップを再生します。
@@ -66,9 +66,9 @@ SSR セーフ: `isSupported` は `false` であり、次の場合、すべての
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ソース | 文字列 |      |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ export interface SpeechRecognitionOptions
 **種類:** 関数
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 ブラウザのネイティブ上に構築された、フレームワークに依存しない音声テキスト変換フック
@@ -135,7 +135,7 @@ export interface SpeechSynthesisControls
 **種類:** 関数
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 ブラウザのネイティブ上に構築されたフレームワークに依存しないテキスト読み上げフック

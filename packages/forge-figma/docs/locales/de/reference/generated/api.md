@@ -26,17 +26,20 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function generateForgeExportBundle(document: ForgeDesignDocument, options: ForgeGenerationOptions = {}): ForgeExportBundle
+function generateForgeExportBundle(
+  document: ForgeDesignDocument,
+  options: ForgeGenerationOptions = {},
+): ForgeExportBundle;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Dokument | ForgeDesignDocument |  |
-| Optionen | ForgeGenerationOptions |  |
+| Name     | Geben Sie              | ein Beschreibung |
+| -------- | ---------------------- | ---------------- |
+| Dokument | ForgeDesignDocument    |                  |
+| Optionen | ForgeGenerationOptions |                  |
 
 ## `src/model/design`
 
@@ -45,7 +48,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const FORGE_DESIGN_SCHEMA_VERSION
+export const FORGE_DESIGN_SCHEMA_VERSION;
 ```
 
 Keine Beschreibung angegeben.
@@ -145,7 +148,20 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeDesignNodeType = | 'frame' | 'group' | 'component' | 'instance' | 'text' | 'rectangle' | 'ellipse' | 'line' | 'vector' | 'boolean-operation' | 'image' | 'section' | 'unknown';
+export type ForgeDesignNodeType =
+  | 'frame'
+  | 'group'
+  | 'component'
+  | 'instance'
+  | 'text'
+  | 'rectangle'
+  | 'ellipse'
+  | 'line'
+  | 'vector'
+  | 'boolean-operation'
+  | 'image'
+  | 'section'
+  | 'unknown';
 ```
 
 Keine Beschreibung angegeben.
@@ -267,16 +283,18 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeDiagnostic(diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>): ForgeDiagnostic
+function createForgeDiagnostic(
+  diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>,
+): ForgeDiagnostic;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Diagnose | Lassen Sie <ForgeDiagnostic, 'code'> weg und wählen Sie <ForgeDiagnostic, 'code'> |  |
+| Name     | Geben Sie                                                                         | ein Beschreibung |
+| -------- | --------------------------------------------------------------------------------- | ---------------- |
+| Diagnose | Lassen Sie <ForgeDiagnostic, 'code'> weg und wählen Sie <ForgeDiagnostic, 'code'> |                  |
 
 ### ForgeDiagnostic
 
@@ -431,24 +449,24 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined
+function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Name | Zeichenfolge |  |
-| Metadaten | ForgeComponentMetadata |  |
+| Name      | Geben Sie              | ein Beschreibung |
+| --------- | ---------------------- | ---------------- |
+| Name      | Zeichenfolge           |                  |
+| Metadaten | ForgeComponentMetadata |                  |
 
 ### FORGE_COMPONENT_REGISTRY
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
+export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[];
 ```
 
 Keine Beschreibung angegeben.
@@ -458,16 +476,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function getForgeComponent(name: string): ForgeComponentRegistryEntry
+function getForgeComponent(name: string): ForgeComponentRegistryEntry;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Name | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Name | Zeichenfolge |                  |
 
 ## `src/tokens/resolve`
 
@@ -476,16 +494,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function componentPathToCssVariable(path: string): string | undefined
+function componentPathToCssVariable(path: string): string | undefined;
 ```
 
 Konvertieren Sie einen kanonischen Komponentenpfad in den generierten Mission Platform-CSS-Variablennamen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Pfad | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Pfad | Zeichenfolge |                  |
 
 ### FigmaVariableBinding
 
@@ -512,7 +530,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const MISSION_PLATFORM_COMPONENT_COLLECTION
+export const MISSION_PLATFORM_COMPONENT_COLLECTION;
 ```
 
 Keine Beschreibung angegeben.
@@ -522,32 +540,32 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function normalizeComponentTokenPath(value: string): string | undefined
+function normalizeComponentTokenPath(value: string): string | undefined;
 ```
 
 Normalisieren Sie einen Figma-Variablennamen oder Alias ​​auf den kanonischen `component.*`-Pfad.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Wert | Zeichenfolge |                  |
 
 ### auflösenFigmaVariable
 
 **Art:** Funktion
 
 ```typescript
-function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution
+function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Bindung | FigmaVariableBinding |  |
+| Name    | Geben Sie            | ein Beschreibung |
+| ------- | -------------------- | ---------------- |
+| Bindung | FigmaVariableBinding |                  |
 
 ## `src/validation/document`
 
@@ -556,16 +574,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[]
+function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Dokument | ForgeDesignDocument |  |
+| Name     | Geben Sie           | ein Beschreibung |
+| -------- | ------------------- | ---------------- |
+| Dokument | ForgeDesignDocument |                  |
 
 ### validierenForgeExportBundle
 
@@ -574,16 +592,16 @@ Keine Beschreibung angegeben.
 ```typescript
 function validateForgeExportBundle(bundle: {
   readonly files: readonly { readonly path: string }[];
-}): readonly ForgeDiagnostic[]
+}): readonly ForgeDiagnostic[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Bündel | { schreibgeschützte Dateien: schreibgeschützt { schreibgeschützter Pfad: Zeichenfolge }[]; } |  |
+| Name   | Geben Sie                                                                                    | ein Beschreibung |
+| ------ | -------------------------------------------------------------------------------------------- | ---------------- |
+| Bündel | { schreibgeschützte Dateien: schreibgeschützt { schreibgeschützter Pfad: Zeichenfolge }[]; } |                  |
 
 ## `src/validation/names`
 
@@ -592,34 +610,34 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string
+function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string;
 ```
 
 Erstellen Sie einen stabilen PascalCase-Bezeichner aus einem Figma-Ebenen- oder Frame-Namen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | Zeichenfolge |  |
-| Rückfall |  |  |
+| Name     | Geben Sie    | ein Beschreibung |
+| -------- | ------------ | ---------------- |
+| Wert     | Zeichenfolge |                  |
+| Rückfall |              |                  |
 
 ### normalizeFileName
 
 **Art:** Funktion
 
 ```typescript
-function normalizeFileName(value: string, fallback = 'generated-component'): string
+function normalizeFileName(value: string, fallback = 'generated-component'): string;
 ```
 
 Erstellen Sie einen sicheren Kebab-Case-Dateistamm aus einem Figma-Ebenen- oder Rahmennamen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | Zeichenfolge |  |
-| Rückfall |  |  |
+| Name     | Geben Sie    | ein Beschreibung |
+| -------- | ------------ | ---------------- |
+| Wert     | Zeichenfolge |                  |
+| Rückfall |              |                  |
 
 ## `src/validation/paths`
 
@@ -638,14 +656,17 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function validateRepositoryRelativePath(value: string, allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg']): ForgePathValidationResult
+function validateRepositoryRelativePath(
+  value: string,
+  allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg'],
+): ForgePathValidationResult;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | Zeichenfolge |  |
-| erlaubte Erweiterungen | schreibgeschützter String[] |  |
+| Name                   | Geben Sie                   | ein Beschreibung |
+| ---------------------- | --------------------------- | ---------------- |
+| Wert                   | Zeichenfolge                |                  |
+| erlaubte Erweiterungen | schreibgeschützter String[] |                  |

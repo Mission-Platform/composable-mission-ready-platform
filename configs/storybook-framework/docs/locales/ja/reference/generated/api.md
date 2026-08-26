@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig
+function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig;
 ```
 
 アクティブなフレームワーク用に統合された {@link StorybookConfig} を構築します。 1つ
@@ -25,9 +25,9 @@ function createStorybookConfig(options: CreateStorybookConfigOptions): Storybook
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |ストーリーブック構成オプションを作成する |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| オプション | ストーリーブック構成オプションを作成する |      |
 
 ### CreateStorybookConfigOptions
 
@@ -44,7 +44,7 @@ export interface CreateStorybookConfigOptions
 **種類:** 関数
 
 ```typescript
-function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework
+function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework;
 ```
 
 明示的なオプションまたは
@@ -53,9 +53,9 @@ function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFram
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|明示的な |ストーリーブックフレームワーク |  |
+| 名前     | タイプ                         | 説明 |
+| -------- | ------------------------------ | ---- |
+| 明示的な | ストーリーブックフレームワーク |      |
 
 ### ストーリーブックフレームワーク
 
@@ -72,7 +72,7 @@ export type StorybookFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-com
 **種類:** 関数
 
 ```typescript
-function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[]
+function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[];
 ```
 
 要求されたパッケージの共有ニュートラル ストーリー グロブを構築します。
@@ -81,11 +81,11 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| _フレームワーク |ストーリーブックフレームワーク |  |
-|パッケージ |読み取り専用文字列[] |  |
-|パッケージルート |文字列 |  |
+| 名前             | タイプ                         | 説明 |
+| ---------------- | ------------------------------ | ---- |
+| _フレームワーク  | ストーリーブックフレームワーク |      |
+| パッケージ       | 読み取り専用文字列[]           |      |
+| パッケージルート | 文字列                         |      |
 
 ## `src/preview`
 
@@ -94,7 +94,7 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 **種類:** 関数
 
 ```typescript
-function sharedPreviewDecorators()
+function sharedPreviewDecorators();
 ```
 
 すべてのフレームワークの共有 Storybook デコレータ。
@@ -104,7 +104,7 @@ function sharedPreviewDecorators()
 **種類:** 定数
 
 ```typescript
-export const sharedPreviewParameters
+export const sharedPreviewParameters;
 ```
 
 すべてのフレームワークで共有される Storybook パラメータ。
@@ -114,7 +114,7 @@ export const sharedPreviewParameters
 **種類:** 関数
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework)
+function sharedPreviewParametersFor(framework?: PreviewFramework);
 ```
 
 フレームワーク対応の Storybook パラメータ。
@@ -131,9 +131,9 @@ CSF `render` を呼び出す関数 `useArgs()` 投げる：
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フレームワーク |プレビューフレームワーク |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| フレームワーク | プレビューフレームワーク |      |
 
 ## `src/slots.dom`
 
@@ -142,7 +142,7 @@ CSF `render` を呼び出す関数 `useArgs()` 投げる：
 **種類:** 関数
 
 ```typescript
-function customElementTag(component: unknown): string
+function customElementTag(component: unknown): string;
 ```
 
 Forge Web コンポーネントの登録タグ名をその要素から導出する
@@ -152,9 +152,9 @@ class-name フォールバックはエミッター自身をミラーリングし
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |不明 |  |
+| 名前           | タイプ | 説明 |
+| -------------- | ------ | ---- |
+| コンポーネント | 不明   |      |
 
 ## `src/slots.neutral`
 
@@ -163,7 +163,7 @@ class-name フォールバックはエミッター自身をミラーリングし
 **種類:** 定数
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 プレースホルダー フラグメント ファクトリ。決して呼び出されることはありません ({@link を参照) node}).
@@ -173,7 +173,7 @@ export const Fragment
 **種類:** 定数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 説明はありません。
@@ -187,7 +187,7 @@ export const node: StoryNodeFactory
 **種類:** 定数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 説明はありません。
@@ -203,7 +203,7 @@ export const renderWithSlots: RenderWithSlots
 **種類:** 定数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 説明はありません。
@@ -217,7 +217,7 @@ export const node: StoryNodeFactory
 **種類:** 定数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 説明はありません。
@@ -233,7 +233,7 @@ export const renderWithSlots: RenderWithSlots
 **種類:** 定数
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Solid フラグメント コンポーネントがありません。子の配列はフラグメントです。
@@ -243,7 +243,7 @@ Solid フラグメント コンポーネントがありません。子の配列�
 **種類:** 定数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 説明はありません。
@@ -257,7 +257,7 @@ export const node: StoryNodeFactory
 **種類:** 定数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 説明はありません。
@@ -273,7 +273,7 @@ export const renderWithSlots: RenderWithSlots
 **種類:** 定数
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 JSX フラグメントのマーカー コンポーネント — その子は親に直接マウントされます。
@@ -283,7 +283,7 @@ JSX フラグメントのマーカー コンポーネント — その子は親�
 **種類:** 定数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 説明はありません。
@@ -297,7 +297,7 @@ export const node: StoryNodeFactory
 **種類:** 定数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 説明はありません。
@@ -313,7 +313,12 @@ export const renderWithSlots: RenderWithSlots
 **種類：**タイプ
 
 ```typescript
-export type RenderWithSlots = ( component: unknown, properties: Record<string, unknown>, slots: StorySlots, children?: unknown, ) => unknown;
+export type RenderWithSlots = (
+  component: unknown,
+  properties: Record<string, unknown>,
+  slots: StorySlots,
+  children?: unknown,
+) => unknown;
 ```
 
 与える `component` と `properties`、与えられた名前 `slots` そしてオプションの
@@ -325,7 +330,11 @@ export type RenderWithSlots = ( component: unknown, properties: Record<string, u
 **種類：**タイプ
 
 ```typescript
-export type StoryNodeFactory = ( type: unknown, properties?: Record<string, unknown> | null, ...children: unknown[] ) => unknown;
+export type StoryNodeFactory = (
+  type: unknown,
+  properties?: Record<string, unknown> | null,
+  ...children: unknown[]
+) => unknown;
 ```
 
 アクティブなレンダラ用に 1 つの要素を構築します。クラシックな JSX としても機能します
@@ -349,7 +358,7 @@ export type StorySlots = Record<string, unknown>;
 **種類:** 定数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 説明はありません。
@@ -363,7 +372,7 @@ export const node: StoryNodeFactory
 **種類:** 定数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 説明はありません。
@@ -379,7 +388,7 @@ export const renderWithSlots: RenderWithSlots
 **種類:** 定数
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 JSX フラグメントのマーカー コンポーネント — としてレンダリングされます。 `DocumentFragment`.
@@ -389,7 +398,7 @@ JSX フラグメントのマーカー コンポーネント — としてレン�
 **種類:** 定数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 説明はありません。
@@ -403,7 +412,7 @@ export const node: StoryNodeFactory
 **種類:** 定数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 説明はありません。
@@ -431,7 +440,10 @@ export type Meta<TComponentOrArguments = Args> = ComponentAnnotations<Renderer, 
 **種類：**タイプ
 
 ```typescript
-export type StoryObj<TMetaOrComponentOrArgs = Args> = TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments> ? StoryAnnotations<Renderer, TArguments> : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
+export type StoryObj<TMetaOrComponentOrArgs = Args> =
+  TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
+    ? StoryAnnotations<Renderer, TArguments>
+    : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
 フレームワークに依存しないストーリーブック `StoryObj`、中立的な対応者

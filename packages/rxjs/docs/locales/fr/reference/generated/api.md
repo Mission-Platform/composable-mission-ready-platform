@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined
+function useObservable(source: Observable<T>): T | undefined;
 ```
 
 Abonnez-vous à `source` et renvoyez sa dernière émission sous forme d'état. Retours
@@ -24,9 +24,9 @@ Abonnez-vous à `source` et renvoyez sa dernière émission sous forme d'état. 
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | Observable<T> |  |
+| Nom    | Tapez         | Descriptif |
+| ------ | ------------- | ---------- |
+| source | Observable<T> |            |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -45,7 +45,11 @@ Tout ce qui peut être désabonné correspond au `Unsubscribable` de RxJS.
 **Genre :** fonction
 
 ```typescript
-function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T>> | ((value: T) => void), dependencies: MpDependencyList = []): void
+function useSubscribe(
+  source: Observable<T>,
+  observerOrNext?: Partial<Observer<T>> | ((value: T) => void),
+  dependencies: MpDependencyList = [],
+): void;
 ```
 
 Abonnez-vous à `source` avec le rappel `observer` donné (ou `next`) pour le
@@ -54,18 +58,18 @@ durée de vie du composant, réabonnement lorsque `source` (ou tout supplément
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | Observable<T> |  |
-| observateurOuSuivant | Partial<Observer<T>> \| ((valeur : T) => vide) |  |
-| dépendances | MpDependencyList |  |
+| Nom                  | Tapez                                          | Descriptif |
+| -------------------- | ---------------------------------------------- | ---------- |
+| source               | Observable<T>                                  |            |
+| observateurOuSuivant | Partial<Observer<T>> \| ((valeur : T) => vide) |            |
+| dépendances          | MpDependencyList                               |            |
 
 ### utiliser l'abonnement
 
 **Genre :** fonction
 
 ```typescript
-function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void
+function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void;
 ```
 
 Exécutez `subscribe` après le montage et désabonnez-vous de son résultat au démontage (et
@@ -74,7 +78,7 @@ il peut envelopper un simple appel `source.subscribe(...)` ou un pipeline entier
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| abonnez-vous | () => Désabonnement |  |
-| dépendances | MpDependencyList |  |
+| Nom          | Tapez               | Descriptif |
+| ------------ | ------------------- | ---------- |
+| abonnez-vous | () => Désabonnement |            |
+| dépendances  | MpDependencyList    |            |

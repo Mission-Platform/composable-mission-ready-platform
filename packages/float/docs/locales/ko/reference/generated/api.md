@@ -26,7 +26,8 @@ export interface AlertBannerProperties
 **종류:** 유형
 
 ```typescript
-export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type AlertBannerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 배너의 의도/색상 처리 — 표준 색상 세트.
@@ -36,7 +37,7 @@ export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 **종류:** 기능
 
 ```typescript
-function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement
+function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement;
 ```
 
 `ForgeAlertBanner` — 인라인 경고/알림 배너는
@@ -62,9 +63,9 @@ function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<AlertBannerProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<AlertBannerProperties> |      |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -93,7 +94,7 @@ export interface DropdownProperties
 **종류:** 기능
 
 ```typescript
-function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement
+function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 ```
 
 `ForgeDropdown` — 트리거에 고정되어 작성된 부동 메뉴/목록 패널
@@ -138,9 +139,9 @@ API는 해당(아마도 쌓인) 대화 상자 위에 스택됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<DropdownProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<DropdownProperties> |      |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -149,7 +150,7 @@ API는 해당(아마도 쌓인) 대화 상자 위에 스택됩니다.
 **종류:** 기능
 
 ```typescript
-function ForgePopover(properties: Readonly<PopoverProperties>): MpElement
+function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 ```
 
 `ForgePopover` — 트리거에 고정된 부동 대화 상자로,
@@ -194,16 +195,28 @@ API는 해당(아마도 쌓인) 대화 상자 위에 스택됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<PopoverProperties> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용<PopoverProperties> |      |
 
 ### 팝오버 배치
 
 **종류:** 유형
 
 ```typescript
-export type PopoverPlacement = | 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end';
+export type PopoverPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
 ```
 
 트리거를 기준으로 팝오버의 기본 배치입니다.
@@ -225,7 +238,7 @@ export interface PopoverProperties
 **종류:** 기능
 
 ```typescript
-function ForgeToast(properties: Readonly<ToastProperties>): MpElement
+function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 ```
 
 `ForgeToast` — 중립에서 한 번 작성된 단일 토스트 알림 카드
@@ -247,9 +260,9 @@ callback-prop `onDismiss`, `iconContent` 명명된 슬롯(`<Slot>`,
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ToastProperties> |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 속성 | 읽기 전용<ToastProperties> |      |
 
 ### 토스트속성
 
@@ -276,7 +289,8 @@ export type ToastSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 유형
 
 ```typescript
-export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ToastVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 토스트의 의도/색상 처리 — 표준 색상 세트.
@@ -288,7 +302,7 @@ export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 's
 **종류:** 기능
 
 ```typescript
-function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
+function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 ```
 
 `ForgeTooltip` — 트리거에 고정된 짧은 상황별 힌트, 한 번 작성됨
@@ -330,9 +344,9 @@ Popover API를 지원하지 않는 브라우저의 경우.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<TooltipProperties> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용<TooltipProperties> |      |
 
 ### 도구 설명 배치
 
@@ -391,7 +405,7 @@ export type DialogSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 기능
 
 ```typescript
-function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
+function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 ```
 
 `ForgeDialog` — 중립 JSX 방언으로 한 번 작성된 모달 대화 상자
@@ -419,9 +433,9 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<DialogProperties> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 속성 | 읽기 전용<DialogProperties> |      |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -430,7 +444,7 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
 **종류:** 기능
 
 ```typescript
-function ForgeModal(properties: Readonly<ModalProperties>): MpElement
+function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 ```
 
 `ForgeModal` — 중립 JSX 방언으로 한 번 작성된 중앙 모달이며
@@ -456,9 +470,9 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ModalProperties> |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 속성 | 읽기 전용<ModalProperties> |      |
 
 ### 모달속성
 
@@ -487,7 +501,7 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 **종류:** 기능
 
 ```typescript
-function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement
+function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement;
 ```
 
 `ForgeToastContainer` — 공유 `toast-store`에 보관된 토스트를 렌더링합니다.
@@ -503,6 +517,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 소스는 두 프레임워크 모두에서 반응성을 유지합니다.
 
 접근성:
+
 - 스택은 구성 가능한 `aria-label`이 포함된 `role="region"`입니다. 각각
   `ForgeToast`은 자체 `role="status"`/`role="alert"`을 보유합니다.
 
@@ -526,9 +541,9 @@ React 빌드는 클래스 토글을 위한 SSR-in-place 기준으로 저하됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ToastContainerProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<ToastContainerProperties> |      |
 
 ### ToastContainer속성
 
@@ -557,7 +572,7 @@ export type ToastContainerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 **종류:** 기능
 
 ```typescript
-function clearToasts(): void
+function clearToasts(): void;
 ```
 
 토스트를 모두 닫습니다.
@@ -567,23 +582,23 @@ function clearToasts(): void
 **종류:** 기능
 
 ```typescript
-function dismissToast(id: number): void
+function dismissToast(id: number): void;
 ```
 
 ID로 토스트를 닫습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 아이디 | 번호 |  |
+| 이름   | 유형 | 설명 |
+| ------ | ---- | ---- |
+| 아이디 | 번호 |      |
 
 ### 오류토스트
 
 **종류:** 상수
 
 ```typescript
-export const errorToast
+export const errorToast;
 ```
 
 편의성: `error` 토스트를 표시합니다.
@@ -593,7 +608,7 @@ export const errorToast
 **종류:** 기능
 
 ```typescript
-function getToastsSnapshot(): readonly ToastRecord[]
+function getToastsSnapshot(): readonly ToastRecord[];
 ```
 
 활성 알림의 변경 불가능한 스냅샷을 읽습니다.
@@ -603,7 +618,7 @@ function getToastsSnapshot(): readonly ToastRecord[]
 **종류:** 상수
 
 ```typescript
-export const infoToast
+export const infoToast;
 ```
 
 편의성: `info` 토스트를 표시합니다.
@@ -613,39 +628,39 @@ export const infoToast
 **종류:** 기능
 
 ```typescript
-function showToast(options: ToastOptions | string): number
+function showToast(options: ToastOptions | string): number;
 ```
 
 토스트를 표시하고 해당 ID를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 토스트 옵션 \| 문자열 |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 옵션 | 토스트 옵션 \| 문자열 |      |
 
 ### 구독토스트
 
 **종류:** 기능
 
 ```typescript
-function subscribeToasts(listener: () => void): () => void
+function subscribeToasts(listener: () => void): () => void;
 ```
 
 매장 변경사항을 구독하세요. 구독 취소 함수를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 청취자 | () => 무효 |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 청취자 | () => 무효 |      |
 
 ### 성공토스트
 
 **종류:** 상수
 
 ```typescript
-export const successToast
+export const successToast;
 ```
 
 편의성: `success` 토스트를 표시합니다.
@@ -685,7 +700,7 @@ export interface ToastRecord
 **종류:** 기능
 
 ```typescript
-function useToast(): UseToastReturn
+function useToast(): UseToastReturn;
 ```
 
 Vue를 미러링하여 토스트를 표시하고 해제하는 필수 도우미
@@ -707,7 +722,7 @@ export interface UseToastReturn
 **종류:** 상수
 
 ```typescript
-export const warningToast
+export const warningToast;
 ```
 
 편의성: `warning` 토스트를 표시합니다.

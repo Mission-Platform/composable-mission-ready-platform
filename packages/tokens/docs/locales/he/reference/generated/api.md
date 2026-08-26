@@ -16,7 +16,7 @@
 **סוג:** קבוע
 
 ```typescript
-export const borderWidth
+export const borderWidth;
 ```
 
 לא סופק תיאור.
@@ -28,7 +28,7 @@ export const borderWidth
 **סוג:** קבוע
 
 ```typescript
-export const breakpoint
+export const breakpoint;
 ```
 
 לא סופק תיאור.
@@ -40,7 +40,7 @@ export const breakpoint
 **סוג:** קבוע
 
 ```typescript
-export const buttonGroup
+export const buttonGroup;
 ```
 
 לא סופק תיאור.
@@ -52,7 +52,7 @@ export const buttonGroup
 **סוג:** קבוע
 
 ```typescript
-export const button
+export const button;
 ```
 
 לא סופק תיאור.
@@ -64,7 +64,7 @@ export const button
 **סוג:** קבוע
 
 ```typescript
-export const checkable
+export const checkable;
 ```
 
 לא סופק תיאור.
@@ -76,7 +76,7 @@ export const checkable
 **סוג:** קבוע
 
 ```typescript
-export const code
+export const code;
 ```
 
 לא סופק תיאור.
@@ -88,7 +88,7 @@ export const code
 **סוג:** קבוע
 
 ```typescript
-export const feedback
+export const feedback;
 ```
 
 לא סופק תיאור.
@@ -100,7 +100,7 @@ export const feedback
 **סוג:** קבוע
 
 ```typescript
-export const icon
+export const icon;
 ```
 
 לא סופק תיאור.
@@ -112,7 +112,7 @@ export const icon
 **סוג:** קבוע
 
 ```typescript
-export const input
+export const input;
 ```
 
 לא סופק תיאור.
@@ -124,7 +124,7 @@ export const input
 **סוג:** קבוע
 
 ```typescript
-export const layout
+export const layout;
 ```
 
 לא סופק תיאור.
@@ -136,7 +136,7 @@ export const layout
 **סוג:** קבוע
 
 ```typescript
-export const media
+export const media;
 ```
 
 לא סופק תיאור.
@@ -148,7 +148,7 @@ export const media
 **סוג:** קבוע
 
 ```typescript
-export const surface
+export const surface;
 ```
 
 לא סופק תיאור.
@@ -160,7 +160,7 @@ export const surface
 **סוג:** קבוע
 
 ```typescript
-export const tag
+export const tag;
 ```
 
 לא סופק תיאור.
@@ -172,7 +172,7 @@ export const tag
 **סוג:** קבוע
 
 ```typescript
-export const themeToggle
+export const themeToggle;
 ```
 
 לא סופק תיאור.
@@ -184,7 +184,7 @@ export const themeToggle
 **סוג:** קבוע
 
 ```typescript
-export const componentAtomsTypography
+export const componentAtomsTypography;
 ```
 
 לא סופק תיאור.
@@ -196,7 +196,7 @@ export const componentAtomsTypography
 **סוג:** קבוע
 
 ```typescript
-export const calendar
+export const calendar;
 ```
 
 לא סופק תיאור.
@@ -208,7 +208,7 @@ export const calendar
 **סוג:** קבוע
 
 ```typescript
-export const card
+export const card;
 ```
 
 לא סופק תיאור.
@@ -220,7 +220,7 @@ export const card
 **סוג:** קבוע
 
 ```typescript
-export const chatBubble
+export const chatBubble;
 ```
 
 לא סופק תיאור.
@@ -232,7 +232,7 @@ export const chatBubble
 **סוג:** קבוע
 
 ```typescript
-export const collapse
+export const collapse;
 ```
 
 לא סופק תיאור.
@@ -244,7 +244,7 @@ export const collapse
 **סוג:** קבוע
 
 ```typescript
-export const colorInput
+export const colorInput;
 ```
 
 לא סופק תיאור.
@@ -256,7 +256,7 @@ export const colorInput
 **סוג:** קבוע
 
 ```typescript
-export const debug
+export const debug;
 ```
 
 לא סופק תיאור.
@@ -268,7 +268,7 @@ export const debug
 **סוג:** קבוע
 
 ```typescript
-export const editor
+export const editor;
 ```
 
 לא סופק תיאור.
@@ -280,7 +280,7 @@ export const editor
 **סוג:** קבוע
 
 ```typescript
-export const fieldSet
+export const fieldSet;
 ```
 
 לא סופק תיאור.
@@ -292,7 +292,7 @@ export const fieldSet
 **סוג:** קבוע
 
 ```typescript
-export const field
+export const field;
 ```
 
 לא סופק תיאור.
@@ -304,7 +304,7 @@ export const field
 **סוג:** קבוע
 
 ```typescript
-export const inView
+export const inView;
 ```
 
 לא סופק תיאור.
@@ -316,7 +316,7 @@ export const inView
 **סוג:** קבוע
 
 ```typescript
-export const markdown
+export const markdown;
 ```
 
 לא סופק תיאור.
@@ -328,7 +328,7 @@ export const markdown
 **סוג:** קבוע
 
 ```typescript
-export const navigation
+export const navigation;
 ```
 
 לא סופק תיאור.
@@ -340,7 +340,7 @@ export const navigation
 **סוג:** קבוע
 
 ```typescript
-export const overlay
+export const overlay;
 ```
 
 לא סופק תיאור.
@@ -352,7 +352,7 @@ export const overlay
 **סוג:** קבוע
 
 ```typescript
-export const select
+export const select;
 ```
 
 לא סופק תיאור.
@@ -364,7 +364,7 @@ export const select
 **סוג:** קבוע
 
 ```typescript
-export const time
+export const time;
 ```
 
 לא סופק תיאור.
@@ -376,7 +376,7 @@ export const time
 **סוג:** קבוע
 
 ```typescript
-export const timeline
+export const timeline;
 ```
 
 לא סופק תיאור.
@@ -388,7 +388,7 @@ export const timeline
 **סוג:** קבוע
 
 ```typescript
-export const data
+export const data;
 ```
 
 לא סופק תיאור.
@@ -400,7 +400,7 @@ export const data
 **סוג:** קבוע
 
 ```typescript
-export const form
+export const form;
 ```
 
 לא סופק תיאור.
@@ -412,7 +412,7 @@ export const form
 **סוג:** קבוע
 
 ```typescript
-export const map
+export const map;
 ```
 
 לא סופק תיאור.
@@ -424,7 +424,7 @@ export const map
 **סוג:** קבוע
 
 ```typescript
-export const resourcePlanner
+export const resourcePlanner;
 ```
 
 לא סופק תיאור.
@@ -436,7 +436,7 @@ export const resourcePlanner
 **סוג:** קבוע
 
 ```typescript
-export const scheduler
+export const scheduler;
 ```
 
 לא סופק תיאור.
@@ -448,7 +448,7 @@ export const scheduler
 **סוג:** קבוע
 
 ```typescript
-export const email
+export const email;
 ```
 
 לא סופק תיאור.
@@ -460,7 +460,7 @@ export const email
 **סוג:** קבוע
 
 ```typescript
-export const font
+export const font;
 ```
 
 לא סופק תיאור.
@@ -472,7 +472,7 @@ export const font
 **סוג:** קבוע
 
 ```typescript
-export const motion
+export const motion;
 ```
 
 לא סופק תיאור.
@@ -484,7 +484,7 @@ export const motion
 **סוג:** קבוע
 
 ```typescript
-export const opacity
+export const opacity;
 ```
 
 לא סופק תיאור.
@@ -496,7 +496,7 @@ export const opacity
 **סוג:** קבוע
 
 ```typescript
-export const palette
+export const palette;
 ```
 
 לא סופק תיאור.
@@ -508,7 +508,7 @@ export const palette
 **סוג:** קבוע
 
 ```typescript
-export const radius
+export const radius;
 ```
 
 לא סופק תיאור.
@@ -520,7 +520,7 @@ export const radius
 **סוג:** קבוע
 
 ```typescript
-export const shadow
+export const shadow;
 ```
 
 לא סופק תיאור.
@@ -532,7 +532,7 @@ export const shadow
 **סוג:** קבוע
 
 ```typescript
-export const size
+export const size;
 ```
 
 לא סופק תיאור.
@@ -544,7 +544,7 @@ export const size
 **סוג:** קבוע
 
 ```typescript
-export const spacing
+export const spacing;
 ```
 
 לא סופק תיאור.
@@ -556,7 +556,7 @@ export const spacing
 **סוג:** קבוע
 
 ```typescript
-export const themeDark
+export const themeDark;
 ```
 
 לא סופק תיאור.
@@ -568,7 +568,7 @@ export const themeDark
 **סוג:** קבוע
 
 ```typescript
-export const themeLight
+export const themeLight;
 ```
 
 לא סופק תיאור.
@@ -580,7 +580,7 @@ export const themeLight
 **סוג:** קבוע
 
 ```typescript
-export const typography
+export const typography;
 ```
 
 לא סופק תיאור.
@@ -592,7 +592,7 @@ export const typography
 **סוג:** קבוע
 
 ```typescript
-export const zIndex
+export const zIndex;
 ```
 
 לא סופק תיאור.

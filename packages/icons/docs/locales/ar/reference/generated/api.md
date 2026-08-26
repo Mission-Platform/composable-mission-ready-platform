@@ -16,7 +16,7 @@
 **النوع:** ثابت
 
 ```typescript
-export const ICON_CATALOG: readonly IconCatalogEntry[]
+export const ICON_CATALOG: readonly IconCatalogEntry[];
 ```
 
 الكتالوج الذي تمت مراجعته لمجموعة الأيقونات الموجودة.
@@ -26,7 +26,7 @@ export const ICON_CATALOG: readonly IconCatalogEntry[]
 **النوع:** ثابت
 
 ```typescript
-export const ICON_GAP_REVIEW
+export const ICON_GAP_REVIEW;
 ```
 
 إضافات عالية القيمة سيتم تنفيذها بعد إنشاء تصنيف المصدر.
@@ -46,16 +46,16 @@ export interface IconCatalogEntry
 **النوع:** الوظيفة
 
 ```typescript
-function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void
+function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void;
 ```
 
 تحقق من صحة الكتالوج الثابت قبل استخدامه لإنشاء بيانات تعريف الحزمة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| كتالوج | للقراءة فقط IconCatalogEntry[] |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| كتالوج | للقراءة فقط IconCatalogEntry[] |       |
 
 ## `src/components/communication/messaging/forge-icon-bell/forge-icon-bell`
 
@@ -64,7 +64,7 @@ function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
+function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement;
 ```
 
 `ForgeIconBell` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -75,9 +75,9 @@ function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconBellProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconBellProperties> |       |
 
 ### IconBellProperties
 
@@ -96,7 +96,7 @@ export interface IconBellProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
+function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement;
 ```
 
 `ForgeIconChat` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -107,9 +107,9 @@ function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconChatProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconChatProperties> |       |
 
 ### IconChatProperties
 
@@ -128,7 +128,7 @@ export interface IconChatProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
+function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement;
 ```
 
 `ForgeIconMail` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -139,9 +139,9 @@ function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconMailProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconMailProperties> |       |
 
 ### IconMailProperties
 
@@ -160,7 +160,7 @@ export interface IconMailProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
+function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement;
 ```
 
 `ForgeIconPhone` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -171,9 +171,9 @@ function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconPhoneProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconPhoneProperties> |       |
 
 ### IconPhoneProperties
 
@@ -192,7 +192,7 @@ export interface IconPhoneProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
+function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement;
 ```
 
 `ForgeIconSend` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -203,9 +203,9 @@ function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconSendProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconSendProperties> |       |
 
 ### IconSendProperties
 
@@ -224,7 +224,7 @@ export interface IconSendProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
+function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement;
 ```
 
 `ForgeIconShare` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -235,9 +235,9 @@ function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconShareProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconShareProperties> |       |
 
 ### IconShareProperties
 
@@ -256,7 +256,7 @@ export interface IconShareProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
+function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement;
 ```
 
 `ForgeIconCopy` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -267,9 +267,9 @@ function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconCopyProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconCopyProperties> |       |
 
 ### IconCopyProperties
 
@@ -288,7 +288,7 @@ export interface IconCopyProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
+function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement;
 ```
 
 `ForgeIconEdit` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -299,9 +299,9 @@ function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconEditProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconEditProperties> |       |
 
 ### IconEditProperties
 
@@ -320,7 +320,7 @@ export interface IconEditProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
+function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement;
 ```
 
 `ForgeIconEyeOff` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -331,9 +331,9 @@ function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconEyeOffProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconEyeOffProperties> |       |
 
 ### IconEyeOffProperties
 
@@ -352,7 +352,7 @@ export interface IconEyeOffProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
+function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement;
 ```
 
 `ForgeIconEye` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -363,9 +363,9 @@ function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconEyeProperties> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| خصائص | للقراءة فقط<IconEyeProperties> |       |
 
 ### IconEyeProperties
 
@@ -384,16 +384,16 @@ export interface IconEyeProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement
+function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement;
 ```
 
 يعيد تطبيق آخر تعديل للمحتوى تم التراجع عنه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconRedoProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconRedoProperties> |       |
 
 ### IconRedoProperties
 
@@ -412,7 +412,7 @@ export interface IconRedoProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
+function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement;
 ```
 
 `ForgeIconTrash` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -423,9 +423,9 @@ function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconTrashProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconTrashProperties> |       |
 
 ### IconTrashProperties
 
@@ -444,16 +444,16 @@ export interface IconTrashProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement
+function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement;
 ```
 
 يعكس أحدث تعديل للمحتوى.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconUndoProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconUndoProperties> |       |
 
 ### IconUndoProperties
 
@@ -472,7 +472,7 @@ export interface IconUndoProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement
+function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement;
 ```
 
 `ForgeIconDownload` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -483,9 +483,9 @@ function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconDownloadProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconDownloadProperties> |       |
 
 ### أيقونة تحميل الخصائص
 
@@ -504,7 +504,7 @@ export interface IconDownloadProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
+function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement;
 ```
 
 `ForgeIconUpload` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -515,9 +515,9 @@ function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconUploadProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconUploadProperties> |       |
 
 ### IconUploadProperties
 
@@ -536,7 +536,7 @@ export interface IconUploadProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
+function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement;
 ```
 
 `ForgeIconFilter` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -547,9 +547,9 @@ function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconFilterProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconFilterProperties> |       |
 
 ### IconFilterProperties
 
@@ -568,7 +568,7 @@ export interface IconFilterProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
+function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement;
 ```
 
 `ForgeIconSort` — مؤشر فرز ثنائي الشيفرون تم تأليفه مرة واحدة في JSX المحايد
@@ -580,9 +580,9 @@ function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconSortProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconSortProperties> |       |
 
 ### IconSortProperties
 
@@ -611,7 +611,7 @@ export type SortDirection = 'asc' | 'desc' | undefined;
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement
+function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnAdd` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -622,9 +622,9 @@ function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperti
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconTableColumnAddProperties> |  |
+| الاسم | اكتب                                      | الوصف |
+| ----- | ----------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconTableColumnAddProperties> |       |
 
 ### IconTableColumnAddProperties
 
@@ -643,7 +643,7 @@ export interface IconTableColumnAddProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement
+function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnRemove` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -654,9 +654,9 @@ function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemovePr
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconTableColumnRemoveProperties> |  |
+| الاسم | اكتب                                         | الوصف |
+| ----- | -------------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconTableColumnRemoveProperties> |       |
 
 ### IconTableColumnRemoveProperties
 
@@ -675,7 +675,7 @@ export interface IconTableColumnRemoveProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement
+function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement;
 ```
 
 `ForgeIconTableRowAdd` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -686,9 +686,9 @@ function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconTableRowAddProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconTableRowAddProperties> |       |
 
 ### IconTableRowAddProperties
 
@@ -707,7 +707,7 @@ export interface IconTableRowAddProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement
+function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableRowRemove` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -718,9 +718,9 @@ function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperti
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconTableRowRemoveProperties> |  |
+| الاسم | اكتب                                      | الوصف |
+| ----- | ----------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconTableRowRemoveProperties> |       |
 
 ### IconTableRowRemoveProperties
 
@@ -739,7 +739,7 @@ export interface IconTableRowRemoveProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
+function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement;
 ```
 
 `ForgeIconTable` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -750,9 +750,9 @@ function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconTableProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconTableProperties> |       |
 
 ### IconTableProperties
 
@@ -771,7 +771,7 @@ export interface IconTableProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement
+function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement;
 ```
 
 `ForgeIconDrawCircle` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -782,9 +782,9 @@ function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconDrawCircleProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconDrawCircleProperties> |       |
 
 ### IconDrawCircleProperties
 
@@ -803,7 +803,7 @@ export interface IconDrawCircleProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement
+function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement;
 ```
 
 `ForgeIconDrawLine` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -814,9 +814,9 @@ function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconDrawLineProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconDrawLineProperties> |       |
 
 ### IconDrawLineProperties
 
@@ -835,7 +835,7 @@ export interface IconDrawLineProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement
+function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement;
 ```
 
 `ForgeIconDrawPolygon` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -846,9 +846,9 @@ function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconDrawPolygonProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconDrawPolygonProperties> |       |
 
 ### IconDrawPolygonProperties
 
@@ -867,7 +867,7 @@ export interface IconDrawPolygonProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement
+function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement;
 ```
 
 `ForgeIconDrawSquare` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -878,9 +878,9 @@ function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconDrawSquareProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconDrawSquareProperties> |       |
 
 ### IconDrawSquareProperties
 
@@ -899,7 +899,7 @@ export interface IconDrawSquareProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement
+function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement;
 ```
 
 `ForgeIconDrawTriangle` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -910,9 +910,9 @@ function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconDrawTriangleProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconDrawTriangleProperties> |       |
 
 ### IconDrawTriangleProperties
 
@@ -931,7 +931,7 @@ export interface IconDrawTriangleProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
+function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement;
 ```
 
 `ForgeIconMove` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -942,9 +942,9 @@ function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconMoveProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconMoveProperties> |       |
 
 ### IconMoveProperties
 
@@ -963,7 +963,7 @@ export interface IconMoveProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement
+function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement;
 ```
 
 `ForgeIconPalette` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -974,9 +974,9 @@ function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconPaletteProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconPaletteProperties> |       |
 
 ### IconPaletteProperties
 
@@ -995,7 +995,7 @@ export interface IconPaletteProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
+function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement;
 ```
 
 `ForgeIconPencil` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1006,9 +1006,9 @@ function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconPencilProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconPencilProperties> |       |
 
 ### IconPencilProperties
 
@@ -1027,7 +1027,7 @@ export interface IconPencilProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement
+function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCcw` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1038,9 +1038,9 @@ function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconRotateCcwProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<IconRotateCcwProperties> |       |
 
 ### IconRotateCcwProperties
 
@@ -1059,7 +1059,7 @@ export interface IconRotateCcwProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement
+function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCw` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1070,9 +1070,9 @@ function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconRotateCwProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconRotateCwProperties> |       |
 
 ### IconRotateCwProperties
 
@@ -1091,7 +1091,7 @@ export interface IconRotateCwProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement
+function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement;
 ```
 
 `ForgeIconScaleDown` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1102,9 +1102,9 @@ function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconScaleDownProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<IconScaleDownProperties> |       |
 
 ### IconScaleDownProperties
 
@@ -1123,7 +1123,7 @@ export interface IconScaleDownProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement
+function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement;
 ```
 
 `ForgeIconScaleUp` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1134,9 +1134,9 @@ function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconScaleUpProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconScaleUpProperties> |       |
 
 ### IconScaleUpProperties
 
@@ -1155,16 +1155,16 @@ export interface IconScaleUpProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement
+function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement;
 ```
 
 علامة الكرة الأرضية مع لهجة البلد المعتمدة على البيانات.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconCountryGlobeProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconCountryGlobeProperties> |       |
 
 ### IconCountryGlobeProperties
 
@@ -1183,16 +1183,16 @@ export interface IconCountryGlobeProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement
+function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement;
 ```
 
 أيقونة علم دولة محددة ومعتمدة على البيانات.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconFlagProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconFlagProperties> |       |
 
 ### IconCountryCode
 
@@ -1221,7 +1221,7 @@ export interface IconFlagProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement
+function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement;
 ```
 
 `ForgeIconGeodesic` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1232,9 +1232,9 @@ function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconGeodesicProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconGeodesicProperties> |       |
 
 ### IconGeodesicProperties
 
@@ -1253,7 +1253,7 @@ export interface IconGeodesicProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
+function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement;
 ```
 
 `ForgeIconGlobe` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1264,9 +1264,9 @@ function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconGlobeProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconGlobeProperties> |       |
 
 ### IconGlobeProperties
 
@@ -1285,7 +1285,7 @@ export interface IconGlobeProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement
+function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement;
 ```
 
 `ForgeIconLanguage` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1296,9 +1296,9 @@ function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconLanguageProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconLanguageProperties> |       |
 
 ### IconLanguageProperties
 
@@ -1317,7 +1317,7 @@ export interface IconLanguageProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
+function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement;
 ```
 
 `ForgeIconMapPin` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1328,9 +1328,9 @@ function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconMapPinProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconMapPinProperties> |       |
 
 ### IconMapPinProperties
 
@@ -1349,16 +1349,16 @@ export interface IconMapPinProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement
+function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement;
 ```
 
 رمز مكدس طبقة الخريطة لتبديل البيانات الجغرافية المرئية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconLayerProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconLayerProperties> |       |
 
 ### IconLayerProperties
 
@@ -1377,16 +1377,16 @@ export interface IconLayerProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement
+function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement;
 ```
 
 علامة خريطة مجمعة لنقاط الاهتمام الكثيفة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconMapMarkerClusterProperties> |  |
+| الاسم | اكتب                                        | الوصف |
+| ----- | ------------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconMapMarkerClusterProperties> |       |
 
 ### IconMapMarkerClusterProperties
 
@@ -1405,7 +1405,7 @@ export interface IconMapMarkerClusterProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
+function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement;
 ```
 
 `ForgeIconCamera` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1416,9 +1416,9 @@ function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconCameraProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconCameraProperties> |       |
 
 ### IconCameraProperties
 
@@ -1437,7 +1437,7 @@ export interface IconCameraProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
+function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement;
 ```
 
 `ForgeIconImage` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1448,9 +1448,9 @@ function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconImageProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconImageProperties> |       |
 
 ### IconImageProperties
 
@@ -1469,7 +1469,7 @@ export interface IconImageProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
+function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement;
 ```
 
 `ForgeIconPause` — رمز وقفة مملوء (❙❙) تم تأليفه مرة واحدة في JSX المحايد
@@ -1481,9 +1481,9 @@ function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconPauseProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconPauseProperties> |       |
 
 ### IconPauseProperties
 
@@ -1502,7 +1502,7 @@ export interface IconPauseProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
+function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement;
 ```
 
 `ForgeIconPlay` — مثلث مملوء (◀) تم تأليفه مرة واحدة في JSX المحايدة
@@ -1514,9 +1514,9 @@ function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconPlayProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconPlayProperties> |       |
 
 ### IconPlayProperties
 
@@ -1535,7 +1535,7 @@ export interface IconPlayProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
+function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement;
 ```
 
 `ForgeIconArrow` — سهم اتجاهي تم كتابته مرة واحدة بلهجة JSX المحايدة.
@@ -1546,9 +1546,9 @@ function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconArrowProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconArrowProperties> |       |
 
 ### IconArrowDirection
 
@@ -1577,7 +1577,7 @@ export interface IconArrowProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement
+function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement;
 ```
 
 `ForgeIconChevron` — شيفرون اتجاهي تم تأليفه مرة واحدة بلهجة JSX المحايدة.
@@ -1588,9 +1588,9 @@ function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconChevronProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconChevronProperties> |       |
 
 ### IconChevronProperties
 
@@ -1619,7 +1619,7 @@ export type IconDirection = 'up' | 'right' | 'down' | 'left';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement
+function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement;
 ```
 
 `ForgeIconChevrons` - شيفرون اتجاهي مزدوج (« ») تم تأليفه مرة واحدة في
@@ -1631,9 +1631,9 @@ function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconChevronsProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconChevronsProperties> |       |
 
 ### IconChevronsDirection
 
@@ -1662,7 +1662,7 @@ export interface IconChevronsProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
+function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement;
 ```
 
 `ForgeIconClose` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1673,9 +1673,9 @@ function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconCloseProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconCloseProperties> |       |
 
 ### IconCloseProperties
 
@@ -1694,7 +1694,7 @@ export interface IconCloseProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
+function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement;
 ```
 
 `ForgeIconHome` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1705,9 +1705,9 @@ function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconHomeProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconHomeProperties> |       |
 
 ### IconHomeProperties
 
@@ -1726,7 +1726,7 @@ export interface IconHomeProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
+function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement;
 ```
 
 `ForgeIconJoin` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1737,9 +1737,9 @@ function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconJoinProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconJoinProperties> |       |
 
 ### IconJoinProperties
 
@@ -1758,7 +1758,7 @@ export interface IconJoinProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
+function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement;
 ```
 
 `ForgeIconMenu` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1769,9 +1769,9 @@ function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconMenuProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconMenuProperties> |       |
 
 ### IconMenuProperties
 
@@ -1790,7 +1790,7 @@ export interface IconMenuProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
+function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement;
 ```
 
 `ForgeIconMinus` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1801,9 +1801,9 @@ function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconMinusProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconMinusProperties> |       |
 
 ### IconMinusProperties
 
@@ -1822,7 +1822,7 @@ export interface IconMinusProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
+function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement;
 ```
 
 `ForgeIconPlus` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1833,9 +1833,9 @@ function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconPlusProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconPlusProperties> |       |
 
 ### IconPlusProperties
 
@@ -1854,7 +1854,7 @@ export interface IconPlusProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement
+function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement;
 ```
 
 `ForgeIconRefresh` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1865,9 +1865,9 @@ function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconRefreshProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconRefreshProperties> |       |
 
 ### IconRefreshProperties
 
@@ -1886,7 +1886,7 @@ export interface IconRefreshProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
+function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement;
 ```
 
 `ForgeIconSplit` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1897,9 +1897,9 @@ function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconSplitProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconSplitProperties> |       |
 
 ### IconSplitProperties
 
@@ -1918,7 +1918,7 @@ export interface IconSplitProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement
+function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement;
 ```
 
 `ForgeIconExternalLink` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1929,9 +1929,9 @@ function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconExternalLinkProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconExternalLinkProperties> |       |
 
 ### خصائص أيقونةExternalLink
 
@@ -1950,7 +1950,7 @@ export interface IconExternalLinkProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
+function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement;
 ```
 
 `ForgeIconLink` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1961,9 +1961,9 @@ function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconLinkProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconLinkProperties> |       |
 
 ### IconLinkProperties
 
@@ -1982,7 +1982,7 @@ export interface IconLinkProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
+function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement;
 ```
 
 `ForgeIconSearch` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -1993,9 +1993,9 @@ function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconSearchProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconSearchProperties> |       |
 
 ### IconSearchProperties
 
@@ -2014,7 +2014,7 @@ export interface IconSearchProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
+function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement;
 ```
 
 `ForgeIconCloud` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2025,9 +2025,9 @@ function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconCloudProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconCloudProperties> |       |
 
 ### IconCloudProperties
 
@@ -2046,7 +2046,7 @@ export interface IconCloudProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
+function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement;
 ```
 
 `ForgeIconDebug` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2057,9 +2057,9 @@ function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconDebugProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconDebugProperties> |       |
 
 ### IconDebugProperties
 
@@ -2078,7 +2078,7 @@ export interface IconDebugProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
+function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement;
 ```
 
 `ForgeIconHeart` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2089,9 +2089,9 @@ function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconHeartProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconHeartProperties> |       |
 
 ### IconHeartProperties
 
@@ -2110,7 +2110,7 @@ export interface IconHeartProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement
+function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement;
 ```
 
 `ForgeIconLightning` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2121,9 +2121,9 @@ function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconLightningProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<IconLightningProperties> |       |
 
 ### IconLightningProperties
 
@@ -2142,7 +2142,7 @@ export interface IconLightningProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
+function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement;
 ```
 
 `ForgeIconPuzzle` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2153,9 +2153,9 @@ function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconPuzzleProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconPuzzleProperties> |       |
 
 ### IconPuzzleProperties
 
@@ -2174,7 +2174,7 @@ export interface IconPuzzleProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
+function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement;
 ```
 
 `ForgeIconQrCode` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2185,9 +2185,9 @@ function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconQrCodeProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconQrCodeProperties> |       |
 
 ### IconQrCodeProperties
 
@@ -2206,7 +2206,7 @@ export interface IconQrCodeProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement
+function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement;
 ```
 
 `ForgeIconSettings` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2217,9 +2217,9 @@ function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconSettingsProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconSettingsProperties> |       |
 
 ### إعدادات أيقونةالخصائص
 
@@ -2238,7 +2238,7 @@ export interface IconSettingsProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
+function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement;
 ```
 
 `ForgeIconStar` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2249,9 +2249,9 @@ function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconStarProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconStarProperties> |       |
 
 ### IconStarProperties
 
@@ -2270,7 +2270,7 @@ export interface IconStarProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
+function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement;
 ```
 
 `ForgeIconWrench` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2281,9 +2281,9 @@ function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconWrenchProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconWrenchProperties> |       |
 
 ### IconWrenchProperties
 
@@ -2302,16 +2302,16 @@ export interface IconWrenchProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement
+function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement;
 ```
 
 خط طريق بعلامات بداية ووجهة مميزة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconRouteProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconRouteProperties> |       |
 
 ### IconRouteProperties
 
@@ -2330,16 +2330,16 @@ export interface IconRouteProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement
+function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement;
 ```
 
 علامة إحداثية قابلة لإعادة الاستخدام للطرق وتراكبات الخرائط.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconWaypointProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconWaypointProperties> |       |
 
 ### IconWaypointProperties
 
@@ -2358,7 +2358,7 @@ export interface IconWaypointProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement
+function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement;
 ```
 
 `ForgeIconLockOpen` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2369,9 +2369,9 @@ function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconLockOpenProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconLockOpenProperties> |       |
 
 ### IconLockOpenProperties
 
@@ -2390,7 +2390,7 @@ export interface IconLockOpenProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
+function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement;
 ```
 
 `ForgeIconLock` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2401,9 +2401,9 @@ function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconLockProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconLockProperties> |       |
 
 ### IconLockProperties
 
@@ -2422,7 +2422,7 @@ export interface IconLockProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
+function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement;
 ```
 
 `ForgeIconUser` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2433,9 +2433,9 @@ function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconUserProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconUserProperties> |       |
 
 ### IconUserProperties
 
@@ -2454,7 +2454,7 @@ export interface IconUserProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement
+function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement;
 ```
 
 `ForgeIconAlertCritical` - الصورة الرمزية للتنبيه الحرج ("!" داخل المثمن،
@@ -2466,9 +2466,9 @@ function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconAlertCriticalProperties> |  |
+| الاسم | اكتب                                     | الوصف |
+| ----- | ---------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconAlertCriticalProperties> |       |
 
 ### IconAlertCriticalProperties
 
@@ -2487,7 +2487,7 @@ export interface IconAlertCriticalProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement
+function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement;
 ```
 
 `ForgeIconAlertInfo` - الصورة الرمزية للتنبيه المعلوماتي (حرف "i" داخل دائرة)
@@ -2499,9 +2499,9 @@ function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconAlertInfoProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<IconAlertInfoProperties> |       |
 
 ### IconAlertInfoProperties
 
@@ -2520,7 +2520,7 @@ export interface IconAlertInfoProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement
+function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement;
 ```
 
 `ForgeIconAlertNeutral` — حرف التنبيه المحايد (علامة "-" داخل دائرة)
@@ -2533,9 +2533,9 @@ function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconAlertNeutralProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconAlertNeutralProperties> |       |
 
 ### IconAlertNeutralProperties
 
@@ -2554,7 +2554,7 @@ export interface IconAlertNeutralProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement
+function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement;
 ```
 
 `ForgeIconAlertWarning` - الصورة الرمزية للتنبيه التحذيري ("!" داخل المثلث)
@@ -2566,9 +2566,9 @@ function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconAlertWarningProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconAlertWarningProperties> |       |
 
 ### IconAlertWarningProperties
 
@@ -2587,7 +2587,7 @@ export interface IconAlertWarningProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
+function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement;
 ```
 
 `ForgeIconAlert` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2598,9 +2598,9 @@ function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconAlertProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconAlertProperties> |       |
 
 ### IconAlertProperties
 
@@ -2619,7 +2619,7 @@ export interface IconAlertProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
+function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement;
 ```
 
 `ForgeIconCheck` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2630,9 +2630,9 @@ function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconCheckProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconCheckProperties> |       |
 
 ### IconCheckProperties
 
@@ -2651,7 +2651,7 @@ export interface IconCheckProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
+function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement;
 ```
 
 `ForgeIconError` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2662,9 +2662,9 @@ function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconErrorProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconErrorProperties> |       |
 
 ### IconErrorProperties
 
@@ -2683,7 +2683,7 @@ export interface IconErrorProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
+function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement;
 ```
 
 `ForgeIconInfo` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2694,9 +2694,9 @@ function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconInfoProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconInfoProperties> |       |
 
 ### IconInfoProperties
 
@@ -2715,7 +2715,7 @@ export interface IconInfoProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
+function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement;
 ```
 
 `ForgeIconNotice` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2726,9 +2726,9 @@ function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconNoticeProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconNoticeProperties> |       |
 
 ### IconNoticeProperties
 
@@ -2747,7 +2747,7 @@ export interface IconNoticeProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement
+function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement;
 ```
 
 `ForgeIconWarning` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2758,9 +2758,9 @@ function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconWarningProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconWarningProperties> |       |
 
 ### IconWarningProperties
 
@@ -2779,7 +2779,7 @@ export interface IconWarningProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement
+function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement;
 ```
 
 `ForgeIconAlignCenter` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2790,9 +2790,9 @@ function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconAlignCenterProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconAlignCenterProperties> |       |
 
 ### IconAlignCenterProperties
 
@@ -2811,7 +2811,7 @@ export interface IconAlignCenterProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement
+function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement;
 ```
 
 `ForgeIconAlignJustify` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2822,9 +2822,9 @@ function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconAlignJustifyProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconAlignJustifyProperties> |       |
 
 ### IconAlignJustifyProperties
 
@@ -2843,7 +2843,7 @@ export interface IconAlignJustifyProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement
+function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement;
 ```
 
 `ForgeIconAlignLeft` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2854,9 +2854,9 @@ function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconAlignLeftProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<IconAlignLeftProperties> |       |
 
 ### IconAlignLeftProperties
 
@@ -2875,7 +2875,7 @@ export interface IconAlignLeftProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement
+function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement;
 ```
 
 `ForgeIconAlignRight` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2886,9 +2886,9 @@ function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconAlignRightProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconAlignRightProperties> |       |
 
 ### IconAlignRightProperties
 
@@ -2907,7 +2907,7 @@ export interface IconAlignRightProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement
+function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement;
 ```
 
 `ForgeIconBlockquote` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2918,9 +2918,9 @@ function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconBlockquoteProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconBlockquoteProperties> |       |
 
 ### IconBlockquoteProperties
 
@@ -2939,7 +2939,7 @@ export interface IconBlockquoteProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
+function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement;
 ```
 
 `ForgeIconBold` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2950,9 +2950,9 @@ function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconBoldProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconBoldProperties> |       |
 
 ### IconBoldProperties
 
@@ -2971,7 +2971,7 @@ export interface IconBoldProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement
+function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement;
 ```
 
 `ForgeIconBulletList` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -2982,9 +2982,9 @@ function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconBulletListProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconBulletListProperties> |       |
 
 ### IconBulletListProperties
 
@@ -3003,7 +3003,7 @@ export interface IconBulletListProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement
+function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement;
 ```
 
 `ForgeIconCodeBlock` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3014,9 +3014,9 @@ function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconCodeBlockProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<IconCodeBlockProperties> |       |
 
 ### IconCodeBlockProperties
 
@@ -3035,7 +3035,7 @@ export interface IconCodeBlockProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement
+function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement;
 ```
 
 `ForgeIconCodeInline` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3046,9 +3046,9 @@ function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconCodeInlineProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconCodeInlineProperties> |       |
 
 ### IconCodeInlineProperties
 
@@ -3067,7 +3067,7 @@ export interface IconCodeInlineProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement
+function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFive` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3078,9 +3078,9 @@ function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconHeadingFiveProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconHeadingFiveProperties> |       |
 
 ### IconHeadingFiveProperties
 
@@ -3099,7 +3099,7 @@ export interface IconHeadingFiveProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement
+function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFour` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3110,9 +3110,9 @@ function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconHeadingFourProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconHeadingFourProperties> |       |
 
 ### IconHeadingFourProperties
 
@@ -3131,7 +3131,7 @@ export interface IconHeadingFourProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement
+function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement;
 ```
 
 `ForgeIconHeadingOne` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3142,9 +3142,9 @@ function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconHeadingOneProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconHeadingOneProperties> |       |
 
 ### IconHeadingOneProperties
 
@@ -3163,7 +3163,7 @@ export interface IconHeadingOneProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement
+function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement;
 ```
 
 `ForgeIconHeadingSix` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3174,9 +3174,9 @@ function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconHeadingSixProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconHeadingSixProperties> |       |
 
 ### IconHeadingSixProperties
 
@@ -3195,7 +3195,7 @@ export interface IconHeadingSixProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement
+function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement;
 ```
 
 `ForgeIconHeadingThree` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3206,9 +3206,9 @@ function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconHeadingThreeProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconHeadingThreeProperties> |       |
 
 ### IconHeadingThreeProperties
 
@@ -3227,7 +3227,7 @@ export interface IconHeadingThreeProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement
+function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement;
 ```
 
 `ForgeIconHeadingTwo` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3238,9 +3238,9 @@ function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconHeadingTwoProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconHeadingTwoProperties> |       |
 
 ### IconHeadingTwoProperties
 
@@ -3259,7 +3259,7 @@ export interface IconHeadingTwoProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement
+function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement;
 ```
 
 `ForgeIconHeading` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3270,9 +3270,9 @@ function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconHeadingProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconHeadingProperties> |       |
 
 ### IconHeadingProperties
 
@@ -3291,7 +3291,7 @@ export interface IconHeadingProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
+function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement;
 ```
 
 `ForgeIconItalic` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3302,9 +3302,9 @@ function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconItalicProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconItalicProperties> |       |
 
 ### IconItalicProperties
 
@@ -3323,7 +3323,7 @@ export interface IconItalicProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement
+function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement;
 ```
 
 `ForgeIconNumberedList` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3334,9 +3334,9 @@ function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconNumberedListProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconNumberedListProperties> |       |
 
 ### IconNumberedListProperties
 
@@ -3355,7 +3355,7 @@ export interface IconNumberedListProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement
+function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement;
 ```
 
 `ForgeIconStrikethrough` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3366,9 +3366,9 @@ function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconStrikethroughProperties> |  |
+| الاسم | اكتب                                     | الوصف |
+| ----- | ---------------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconStrikethroughProperties> |       |
 
 ### IconStrikethroughProperties
 
@@ -3387,7 +3387,7 @@ export interface IconStrikethroughProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement
+function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement;
 ```
 
 `ForgeIconUnderline` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3398,9 +3398,9 @@ function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconUnderlineProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<IconUnderlineProperties> |       |
 
 ### IconUnderlineProperties
 
@@ -3419,7 +3419,7 @@ export interface IconUnderlineProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement
+function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement;
 ```
 
 `ForgeIconCalendar` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3430,9 +3430,9 @@ function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconCalendarProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconCalendarProperties> |       |
 
 ### IconCalendarProperties
 
@@ -3451,7 +3451,7 @@ export interface IconCalendarProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
+function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement;
 ```
 
 `ForgeIconClock` — أيقونة تم تأليفها مرة واحدة بلهجة JSX المحايدة.
@@ -3462,9 +3462,9 @@ function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconClockProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconClockProperties> |       |
 
 ### IconClockProperties
 
@@ -3483,7 +3483,7 @@ export interface IconClockProperties
 **النوع:** ثابت
 
 ```typescript
-export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
+export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[];
 ```
 
 لم يتم تقديم أي وصف.
@@ -3493,17 +3493,17 @@ export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
 **النوع:** الوظيفة
 
 ```typescript
-function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void
+function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مؤلفات | للقراءة فقط IconSymbolDefinition[] |  |
-| المعرفات المتاحة | ReadonlySet<string> |  |
+| الاسم            | اكتب                               | الوصف |
+| ---------------- | ---------------------------------- | ----- |
+| مؤلفات           | للقراءة فقط IconSymbolDefinition[] |       |
+| المعرفات المتاحة | ReadonlySet<string>                |       |
 
 ## `src/sprite/country-flags`
 
@@ -3512,7 +3512,7 @@ function validateCompositions(compositions: readonly IconSymbolDefinition[], ava
 **النوع:** ثابت
 
 ```typescript
-export const SUPPORTED_COUNTRY_CODES
+export const SUPPORTED_COUNTRY_CODES;
 ```
 
 رموز الدولة مع رموز العلم الأساسية في الصورة المتحركة المنشورة.
@@ -3524,7 +3524,7 @@ export const SUPPORTED_COUNTRY_CODES
 **النوع:** ثابت
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS
+export const COUNTRY_FLAG_SYMBOL_IDS;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3534,7 +3534,7 @@ export const COUNTRY_FLAG_SYMBOL_IDS
 **النوع:** ثابت
 
 ```typescript
-export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
+export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[];
 ```
 
 لم يتم تقديم أي وصف.
@@ -3546,16 +3546,16 @@ export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement
+function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement;
 ```
 
 غلاف مشترك يمكن الوصول إليه يشير إلى هندسة الكائنات الأساسية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconUseProperties> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| خصائص | للقراءة فقط<IconUseProperties> |       |
 
 ### IconUseProperties
 
@@ -3574,7 +3574,7 @@ export interface IconUseProperties
 **النوع:** ثابت
 
 ```typescript
-export const IconSpriteContext
+export const IconSpriteContext;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3584,32 +3584,32 @@ export const IconSpriteContext
 **النوع:** الوظيفة
 
 ```typescript
-function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement
+function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement;
 ```
 
 قم بتركيب مضيف كائن مضمّن واحد لشجرة فرعية من مكونات الأيقونات.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconSpriteProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconSpriteProperties> |       |
 
 ### useIconHref
 
 **النوع:** الوظيفة
 
 ```typescript
-function useIconHref(symbolId: string): string
+function useIconHref(symbolId: string): string;
 ```
 
 حل عنوان URL للرمز المحلي أو الخارجي لمجمع الأيقونات.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف الرمز | سلسلة |  |
+| الاسم      | اكتب  | الوصف |
+| ---------- | ----- | ----- |
+| معرف الرمز | سلسلة |       |
 
 ## `src/sprite/serialize`
 
@@ -3618,48 +3618,48 @@ function useIconHref(symbolId: string): string
 **النوع:** الوظيفة
 
 ```typescript
-function serializeNode(node: IconSvgNode): string
+function serializeNode(node: IconSvgNode): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | أيقونةSvgNode |  |
+| الاسم | اكتب          | الوصف |
+| ----- | ------------- | ----- |
+| node  | أيقونةSvgNode |       |
 
 ### تسلسل سبرايت
 
 **النوع:** الوظيفة
 
 ```typescript
-function serializeSprite(definitions: readonly IconSymbolDefinition[]): string
+function serializeSprite(definitions: readonly IconSymbolDefinition[]): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعريفات | للقراءة فقط IconSymbolDefinition[] |  |
+| الاسم   | اكتب                               | الوصف |
+| ------- | ---------------------------------- | ----- |
+| تعريفات | للقراءة فقط IconSymbolDefinition[] |       |
 
 ### serializeSymbol
 
 **النوع:** الوظيفة
 
 ```typescript
-function serializeSymbol(definition: IconSymbolDefinition): string
+function serializeSymbol(definition: IconSymbolDefinition): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعريف | تعريف رمز الرمز |  |
+| الاسم | اكتب            | الوصف |
+| ----- | --------------- | ----- |
+| تعريف | تعريف رمز الرمز |       |
 
 ## `src/sprite/types`
 

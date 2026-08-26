@@ -108,21 +108,21 @@ Toutes les icônes sont basées sur une boîte de visualisation de 24 $ fois 2
 
 ### Accessoires universels
 
-| Accessoire | Tapez | Par défaut | Descriptif |
-| :---------- | :----------------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| `size` | `number \| string` | `'md'` | Largeur et hauteur. Prend en charge les jetons nommés (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) ou un numéro de pixel. |
-| `color` | `string` | `'currentColor'` | Couleur du trait (et remplissage pour les icônes de marqueurs remplis).                                                                     |
-| `ariaLabel` | `string` | _Par défaut par icône_ | Nom accessible. En cas d'omission, l'icône est marquée comme `aria-hidden`.                                                     |
+| Accessoire  | Tapez              | Par défaut             | Descriptif                                                                                                                              |
+| :---------- | :----------------- | :--------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+| `size`      | `number \| string` | `'md'`                 | Largeur et hauteur. Prend en charge les jetons nommés (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) ou un numéro de pixel. |
+| `color`     | `string`           | `'currentColor'`       | Couleur du trait (et remplissage pour les icônes de marqueurs remplis).                                                                 |
+| `ariaLabel` | `string`           | _Par défaut par icône_ | Nom accessible. En cas d'omission, l'icône est marquée comme `aria-hidden`.                                                             |
 
 ### Icônes comportementales
 
 Certaines icônes incluent des accessoires supplémentaires pour contrôler leur apparence :
 
-| Icône | Accessoires supplémentaires | Descriptif |
-| :----------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------- |
-| `ForgeIconArrow` | `direction` : `'up' \| 'right' \| 'down' \| 'left'` (`'up'` par défaut) | Fait pivoter la flèche via une transformation en ligne.                 |
-| `ForgeIconChevron` | `direction` : `'up' \| 'right' \| 'down' \| 'left'` (`'down'` par défaut) | Fait pivoter le chevron via une transformation en ligne.               |
-| `ForgeIconSort` | `active` : `boolean`, `direction` : `'asc' \| 'desc' \| undefined` | Met en surbrillance le chevron correspondant au sens de tri actif. |
+| Icône              | Accessoires supplémentaires                                               | Descriptif                                                         |
+| :----------------- | :------------------------------------------------------------------------ | :----------------------------------------------------------------- |
+| `ForgeIconArrow`   | `direction` : `'up' \| 'right' \| 'down' \| 'left'` (`'up'` par défaut)   | Fait pivoter la flèche via une transformation en ligne.            |
+| `ForgeIconChevron` | `direction` : `'up' \| 'right' \| 'down' \| 'left'` (`'down'` par défaut) | Fait pivoter le chevron via une transformation en ligne.           |
+| `ForgeIconSort`    | `active` : `boolean`, `direction` : `'asc' \| 'desc' \| undefined`        | Met en surbrillance le chevron correspondant au sens de tri actif. |
 
 ## Bibliothèque d'icônes
 

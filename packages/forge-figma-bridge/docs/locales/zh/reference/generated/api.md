@@ -16,23 +16,23 @@
 **种类：**功能
 
 ```typescript
-function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server
+function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeBridgeServerOptions | ForgeBridgeServerOptions |  |
+| 名称 | 类型                     | 描述                     |
+| ---- | ------------------------ | ------------------------ |
+| 选项 | ForgeBridgeServerOptions | ForgeBridgeServerOptions |     |
 
 ### DEFAULT_EXPORT_PATH
 
 **种类：**常数
 
 ```typescript
-export const DEFAULT_EXPORT_PATH
+export const DEFAULT_EXPORT_PATH;
 ```
 
 没有提供描述。
@@ -42,7 +42,7 @@ export const DEFAULT_EXPORT_PATH
 **种类：**常数
 
 ```typescript
-export const DEFAULT_MAX_FILE_BYTES
+export const DEFAULT_MAX_FILE_BYTES;
 ```
 
 没有提供描述。
@@ -52,7 +52,7 @@ export const DEFAULT_MAX_FILE_BYTES
 **种类：**常数
 
 ```typescript
-export const DEFAULT_MAX_REQUEST_BYTES
+export const DEFAULT_MAX_REQUEST_BYTES;
 ```
 
 没有提供描述。
@@ -62,17 +62,17 @@ export const DEFAULT_MAX_REQUEST_BYTES
 **种类：**功能
 
 ```typescript
-function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>
+function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|未知 |  |
-|选项 | ForgeBridge 选项 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 价值 | 未知             |      |
+| 选项 | ForgeBridge 选项 |      |
 
 ### ForgeBridge选项
 
@@ -99,16 +99,18 @@ export interface ForgeBridgeServerOptions extends ForgeBridgeOptions
 **种类：**功能
 
 ```typescript
-function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number }): Promise<Server>
+function startForgeBridgeServer(
+  options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
+): Promise<Server>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeBridgeServerOptions & { 只读主机？: string;只读端口？：号码 } |  |
+| 名称 | 类型                                                               | 描述 |
+| ---- | ------------------------------------------------------------------ | ---- |
+| 选项 | ForgeBridgeServerOptions & { 只读主机？: string;只读端口？：号码 } |      |
 
 ## `src/protocol`
 
@@ -117,7 +119,7 @@ function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly h
 **种类：**常数
 
 ```typescript
-export const FORGE_BRIDGE_PROTOCOL_VERSION
+export const FORGE_BRIDGE_PROTOCOL_VERSION;
 ```
 
 没有提供描述。
@@ -167,13 +169,13 @@ export interface ForgeBridgeResponse
 **种类：**功能
 
 ```typescript
-function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse
+function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 价值 | 未知 |      |

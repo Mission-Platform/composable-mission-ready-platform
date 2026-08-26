@@ -26,7 +26,7 @@ export interface CheckboxProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
+function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 ```
 
 `ForgeCheckbox` - يتم تأليف عنصر التحكم في مربع الاختيار مرة واحدة بلهجة JSX المحايدة و
@@ -48,9 +48,9 @@ function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<CheckboxProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<CheckboxProperties> |       |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -59,7 +59,7 @@ function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeInput(properties: Readonly<InputProperties>): MpElement
+function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 ```
 
 `ForgeInput` — حقل نصي تم تأليفه مرة واحدة بلهجة JSX المحايدة و
@@ -79,9 +79,9 @@ function ForgeInput(properties: Readonly<InputProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<InputProperties> |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| خصائص | للقراءة فقط<InputProperties> |       |
 
 ### الإدخال التلقائي للأحرف الكبيرة
 
@@ -130,7 +130,7 @@ export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'u
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
+function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 ```
 
 `ForgeRadio` — التحكم اللاسلكي تم تأليفه مرة واحدة بلهجة JSX المحايدة و
@@ -147,9 +147,9 @@ function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<RadioProperties> |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| خصائص | للقراءة فقط<RadioProperties> |       |
 
 ### خصائص الراديو
 
@@ -168,7 +168,7 @@ export interface RadioProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
+function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 ```
 
 `ForgeRangeInput` - محدد النطاق الأدنى/الأقصى ثنائي الإبهام تم تأليفه مرة واحدة في
@@ -193,9 +193,9 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<RangeInputProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<RangeInputProperties> |       |
 
 ### خصائص نطاق الإدخال
 
@@ -234,7 +234,7 @@ export type RangeValue = [number, number];
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeRating(properties: Readonly<RatingProperties>): MpElement
+function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 ```
 
 `ForgeRating` — إدخال/عرض تصنيف النجوم تم تأليفه مرة واحدة في JSX المحايدة
@@ -254,9 +254,9 @@ function ForgeRating(properties: Readonly<RatingProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<RatingProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<RatingProperties> |       |
 
 ### خصائص التقييم
 
@@ -285,7 +285,7 @@ export type RatingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
+function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 ```
 
 `ForgeSlider` — شريط تمرير النطاق تم تأليفه مرة واحدة بلهجة JSX المحايدة و
@@ -307,9 +307,9 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SliderProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<SliderProperties> |       |
 
 ### خصائص المنزلق
 
@@ -338,7 +338,7 @@ export type SliderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement
+function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement;
 ```
 
 `ForgeSwitch` - تبديل المفتاح المؤلف مرة واحدة بلهجة JSX المحايدة و
@@ -356,9 +356,9 @@ function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SwitchProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<SwitchProperties> |       |
 
 ### خصائص التبديل
 
@@ -387,7 +387,7 @@ export type SwitchSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
+function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 ```
 
 `ForgeTextarea` — حقل نصي متعدد الأسطر تم تأليفه مرة واحدة في JSX المحايد
@@ -408,9 +408,9 @@ function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<TextareaProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<TextareaProperties> |       |
 
 ### TextareaAutocapitalize
 
@@ -479,7 +479,7 @@ export type CalendarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement
+function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 ```
 
 `ForgeCalendar` — منتقي تاريخ شبكة الشهر الذي تم تأليفه مرة واحدة في JSX المحايدة
@@ -507,9 +507,9 @@ function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<CalendarProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<CalendarProperties> |       |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -538,7 +538,7 @@ export type ColorInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
+function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 ```
 
 `ForgeColorInput` — منتقي الألوان تم تأليفه مرة واحدة بلهجة JSX المحايدة و
@@ -558,9 +558,9 @@ function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ColorInputProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<ColorInputProperties> |       |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -589,7 +589,7 @@ export type DateInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
+function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 ```
 
 `ForgeDateInput` — منتقي تاريخ تم تأليفه مرة واحدة بلهجة JSX المحايدة و
@@ -612,9 +612,9 @@ function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<DateInputProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<DateInputProperties> |       |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -643,7 +643,7 @@ export type DateRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement
+function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateRangeInput` — منتقي النطاق الزمني الذي تم تأليفه مرة واحدة في JSX المحايدة
@@ -672,9 +672,9 @@ function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<DateRangeInputProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<DateRangeInputProperties> |       |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -693,7 +693,7 @@ export interface FieldSetProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement
+function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement;
 ```
 
 `ForgeFieldSet` - حاوية تجميع دلالية تم تأليفها مرة واحدة في الوضع المحايد
@@ -714,9 +714,9 @@ function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<FieldSetProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<FieldSetProperties> |       |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -745,7 +745,7 @@ export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
+function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 ```
 
 `ForgeFileInput` — تم تأليف إدخال الملف مرة واحدة بلهجة JSX المحايدة و
@@ -765,9 +765,9 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<FileInputProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<FileInputProperties> |       |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -776,7 +776,7 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement
+function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement;
 ```
 
 `ForgeLocationInput` - إدخال إحداثيات جغرافية تم تأليفه مرة واحدة في
@@ -796,17 +796,18 @@ function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpEl
 البدائل من Vue SFC الأصلي: يقوم `useId` بالتخطيط مباشرة إلى
 خطاف `useId` الأصلي للإطار؛ المخازن المؤقتة للنص المحلي
 (`latText`/`lngText`) يصبح غير كسول {@link useState} (وبالتالي فإن العرض الأولي
+
 - بما في ذلك SSR - يعرض بالفعل الإحداثيات المنسقة) التي تمت إعادة مزامنتها من
-نموذج ذو {@link useEffect}; ويصبح انبعاث `v-model` + `change` هو
-`onUpdateModelValue`/`onChange` دعائم رد الاتصال. فئات تخطيط الطفل هي
-يتم تطبيقه على الغلاف `<div>`s بدلاً من تمريره إلى الملف المؤلف
-مكونات.
+  نموذج ذو {@link useEffect}; ويصبح انبعاث `v-model` + `change` هو
+  `onUpdateModelValue`/`onChange` دعائم رد الاتصال. فئات تخطيط الطفل هي
+  يتم تطبيقه على الغلاف `<div>`s بدلاً من تمريره إلى الملف المؤلف
+  مكونات.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<LocationInputProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<LocationInputProperties> |       |
 
 ### خصائص إدخال الموقع
 
@@ -849,7 +850,7 @@ export interface LocationValue
 ```
 
 القيمة الأساسية لحقل الموقع: إحداثيات الدرجة العشرية الموقعة
-بالإضافة إلى المتغير الذي تم تقديمه/تسلسله كـ.  إحداثيات `undefined`
+بالإضافة إلى المتغير الذي تم تقديمه/تسلسله كـ. إحداثيات `undefined`
 يعني "لا يوجد إدخال".
 
 ## `src/components/molecules/forge-number-stepper/forge-number-stepper`
@@ -859,7 +860,7 @@ export interface LocationValue
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement
+function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement;
 ```
 
 `ForgeNumberStepper` — خطوة رقمية تم تأليفها مرة واحدة بلهجة JSX المحايدة
@@ -879,9 +880,9 @@ function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<NumberStepperProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<NumberStepperProperties> |       |
 
 ### NumberStepperProperties
 
@@ -910,7 +911,7 @@ export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
+function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 ```
 
 `ForgeOtpInput` - إدخال كلمة مرور مجزأة لمرة واحدة تم تأليفه مرة واحدة في
@@ -932,9 +933,9 @@ function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<OtpInputProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<OtpInputProperties> |       |
 
 ### OtpInputProperties
 
@@ -973,7 +974,7 @@ export type OtpInputType = 'numeric' | 'alphanumeric' | 'text';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement
+function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 ```
 
 `ForgePhoneInput` — حقل رقم هاتف دولي تم تأليفه مرة واحدة في
@@ -1002,9 +1003,9 @@ SFC: يقوم `useId` بتعيين الخرائط القابلة للتركيب 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<PhoneInputProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<PhoneInputProperties> |       |
 
 ### تغيير الهاتف
 
@@ -1055,7 +1056,7 @@ export interface PhoneCountry
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement
+function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement;
 ```
 
 `ForgeRadioGroup` - يجمع عدة عناصر تحكم {@link ForgeRadio} ضمن ملف مشترك
@@ -1078,9 +1079,9 @@ primitives ويمتلك تصميمه من خلال وحدة CSS الموجودة
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<RadioGroupProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<RadioGroupProperties> |       |
 
 ### RadioGroupDirection
 
@@ -1119,7 +1120,7 @@ export interface RadioOption
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement
+function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement;
 ```
 
 `ForgeSearchInput` — حقل بحث تم تأليفه مرة واحدة بلهجة JSX المحايدة و
@@ -1139,9 +1140,9 @@ function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SearchInputProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<SearchInputProperties> |       |
 
 ### SearchInputProperties
 
@@ -1170,7 +1171,7 @@ export type SearchInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement
+function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement;
 ```
 
 `ForgeSegmentControl` - تأليف التحكم المجزأ (محول التحديد الفردي).
@@ -1191,9 +1192,9 @@ function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SegmentControlProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<SegmentControlProperties> |       |
 
 ### خصائص التحكم بالقطاعات
 
@@ -1232,7 +1233,7 @@ export interface SegmentOption
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement
+function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 ```
 
 `ForgeTimeInput` — منتقي الوقت تم تأليفه مرة واحدة بلهجة JSX المحايدة و
@@ -1256,9 +1257,9 @@ function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<TimeInputProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<TimeInputProperties> |       |
 
 ### خصائص إدخال الوقت
 
@@ -1287,7 +1288,7 @@ export type TimeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement
+function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeTimeRangeInput` — منتقي النطاق الزمني تم تأليفه مرة واحدة في JSX المحايدة
@@ -1313,9 +1314,9 @@ function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<TimeRangeInputProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<TimeRangeInputProperties> |       |
 
 ### خصائص TimeRangeInput
 
@@ -1364,7 +1365,7 @@ export type DateTimeRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement
+function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateTimeRangeInput` - منتقي النطاق الزمني والتاريخي تم تأليفه مرة واحدة في ملف
@@ -1390,13 +1391,14 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 `@mission-platform/icons` `ForgeIconCalendar`/`ForgeIconGlobe`; `start`/`end` SFC
 تصبح الفتحات هي الفتحات المسماة `startContent`/`endContent` (`<Slot>`، وجود
 تم اكتشافه باستخدام المساعد {@link hasSlot} المحايد للإطار)؛ و`v-model`
-+ يصبح إصدار `change` بمثابة دعائم رد الاتصال `onUpdateModelValue`/`onChange`.
+
+- يصبح إصدار `change` بمثابة دعائم رد الاتصال `onUpdateModelValue`/`onChange`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<DateTimeRangeInputProperties> |  |
+| الاسم | اكتب                                      | الوصف |
+| ----- | ----------------------------------------- | ----- |
+| خصائص | للقراءة فقط<DateTimeRangeInputProperties> |       |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1405,7 +1407,7 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement
+function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement;
 ```
 
 `ForgeFormBuilder` - سطح تأليف مرئي بالسحب والإفلات لمخطط JSON
@@ -1433,9 +1435,9 @@ function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<FormBuilderProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<FormBuilderProperties> |       |
 
 ### FormBuilderProperties
 
@@ -1454,7 +1456,7 @@ export interface FormBuilderProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
+function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 ```
 
 `ForgeFormWizard` — نموذج متعدد الخطوات تم تأليفه مرة واحدة في JSX المحايد
@@ -1482,9 +1484,9 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<FormWizardProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<FormWizardProperties> |       |
 
 ### خصائص معالج النماذج
 
@@ -1513,7 +1515,7 @@ export interface WizardStep
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement
+function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement;
 ```
 
 `ForgeSchemaFormDialog` - {@link ForgeSchemaForm} مستضاف داخل ملف
@@ -1530,9 +1532,9 @@ function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SchemaFormDialogProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<SchemaFormDialogProperties> |       |
 
 ### خصائص SchemaFormDialog
 
@@ -1551,7 +1553,7 @@ export interface SchemaFormDialogProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement
+function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement;
 ```
 
 `ForgeSchemaForm` - نموذج يحركه مخطط JSON تم تأليفه مرة واحدة في JSX المحايد
@@ -1576,9 +1578,9 @@ function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SchemaFormProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<SchemaFormProperties> |       |
 
 ### SchemaFormFieldRenderer
 

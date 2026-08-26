@@ -16,23 +16,23 @@
 **种类：**功能
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 断言为电子邮件组件记录的保守输出子集。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| html |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| html | 字符串 |      |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **种类：**常数
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 没有提供描述。
@@ -42,7 +42,7 @@ export const CAN_I_EMAIL_FEATURES_URL
 **种类：**常数
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 没有提供描述。
@@ -52,7 +52,7 @@ export const CAN_I_EMAIL_INLINE_STYLES_URL
 **种类：**常数
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 没有提供描述。
@@ -62,7 +62,7 @@ export const CAN_I_EMAIL_MAX_WIDTH_URL
 **种类：**常数
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 没有提供描述。
@@ -72,7 +72,7 @@ export const CAN_I_EMAIL_MEDIA_QUERIES_URL
 **种类：**常数
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 没有提供描述。
@@ -82,7 +82,7 @@ export const CAN_I_EMAIL_TABLES_URL
 **种类：**常数
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 没有提供描述。
@@ -92,7 +92,7 @@ export const COMPATIBILITY_REVIEWED
 **种类：**常数
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 没有提供描述。
@@ -104,16 +104,16 @@ export const EMAIL_ALLOWED_TAGS
 **种类：**功能
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailButtonProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<EmailButtonProperties> |      |
 
 ### 电子邮件按钮属性
 
@@ -130,7 +130,8 @@ export interface EmailButtonProperties
 **种类：**类型
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 没有提供描述。
@@ -142,16 +143,16 @@ export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 **种类：**功能
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailDividerProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<EmailDividerProperties> |      |
 
 ### 电子邮件分隔符属性
 
@@ -170,16 +171,16 @@ export interface EmailDividerProperties
 **种类：**功能
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailImageProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<EmailImageProperties> |      |
 
 ### 电子邮件图像属性
 
@@ -198,16 +199,16 @@ export interface EmailImageProperties
 **种类：**功能
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailSpacerProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<EmailSpacerProperties> |      |
 
 ### EmailSpacer属性
 
@@ -226,7 +227,7 @@ export interface EmailSpacerProperties
 **种类：**功能
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 单个电子邮件文本原子，镜像 `ForgeTypography` 词汇：正文
@@ -235,9 +236,9 @@ function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpEle
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailTypographyProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<EmailTypographyProperties> |      |
 
 ### 电子邮件版式属性
 
@@ -266,16 +267,16 @@ export type EmailTypographyTag = 'p' | 'span' | 'div' | 'a' | 'h1' | 'h2' | 'h3'
 **种类：**功能
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailCardProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<EmailCardProperties> |      |
 
 ### 电子邮件卡属性
 
@@ -294,16 +295,16 @@ export interface EmailCardProperties
 **种类：**功能
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailColumnProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<EmailColumnProperties> |      |
 
 ### 电子邮件列属性
 
@@ -322,16 +323,16 @@ export interface EmailColumnProperties
 **种类：**功能
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailListProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<EmailListProperties> |      |
 
 ### 电子邮件列表项
 
@@ -360,16 +361,16 @@ export interface EmailListProperties
 **种类：**功能
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailRowProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<EmailRowProperties> |      |
 
 ### 电子邮件行属性
 
@@ -398,16 +399,16 @@ export interface EmailSocialLink
 **种类：**功能
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailSocialLinksProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<EmailSocialLinksProperties> |      |
 
 ### 电子邮件社交链接属性
 
@@ -426,16 +427,16 @@ export interface EmailSocialLinksProperties
 **种类：**功能
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailFooterProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<EmailFooterProperties> |      |
 
 ### 电子邮件页脚属性
 
@@ -454,16 +455,16 @@ export interface EmailFooterProperties
 **种类：**功能
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailHeaderProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<EmailHeaderProperties> |      |
 
 ### 电子邮件标头属性
 
@@ -482,16 +483,16 @@ export interface EmailHeaderProperties
 **种类：**功能
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailPreheaderProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<EmailPreheaderProperties> |      |
 
 ### 电子邮件Preheader属性
 
@@ -510,16 +511,16 @@ export interface EmailPreheaderProperties
 **种类：**功能
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailContainerProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<EmailContainerProperties> |      |
 
 ### 电子邮件容器属性
 
@@ -538,16 +539,16 @@ export interface EmailContainerProperties
 **种类：**功能
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailDocumentProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<EmailDocumentProperties> |      |
 
 ### 电子邮件文档属性
 
@@ -566,16 +567,16 @@ export interface EmailDocumentProperties
 **种类：**功能
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<EmailSectionProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<EmailSectionProperties> |      |
 
 ### 电子邮件部分属性
 

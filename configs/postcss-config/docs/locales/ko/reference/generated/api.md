@@ -16,7 +16,7 @@
 **종류:** 상수
 
 ```typescript
-export const config: { plugins: AcceptedPlugin[] }
+export const config: { plugins: AcceptedPlugin[] };
 ```
 
 설명이 제공되지 않았습니다.

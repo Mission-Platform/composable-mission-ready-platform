@@ -16,24 +16,24 @@
 **النوع:** الوظيفة
 
 ```typescript
-function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig
+function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الافتراضي NS | سلسلة |  |
-| خيارات | I18nConfigOptions |  |
+| الاسم        | اكتب              | الوصف |
+| ------------ | ----------------- | ----- |
+| الافتراضي NS | سلسلة             |       |
+| خيارات       | I18nConfigOptions |       |
 
 ### DEFAULT_LOCALE
 
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_LOCALE
+export const DEFAULT_LOCALE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -63,7 +63,7 @@ export interface I18nConfigOptions
 **النوع:** ثابت
 
 ```typescript
-export const SUPPORTED_LOCALES
+export const SUPPORTED_LOCALES;
 ```
 
 لم يتم تقديم أي وصف.

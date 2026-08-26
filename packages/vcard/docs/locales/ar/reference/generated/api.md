@@ -16,23 +16,23 @@
 **النوع:** الوظيفة
 
 ```typescript
-function createVCard(options: VCardOptions): VCard
+function createVCard(options: VCardOptions): VCard;
 ```
 
 قم بتحويل خيارات الراحة إلى مستند vCard كامل وقابل للكتابة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات VCardOptions |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| خيارات | خيارات VCardOptions |       |
 
 ### parseVCard
 
 **النوع:** ثابت
 
 ```typescript
-export const parseVCard
+export const parseVCard;
 ```
 
 الاسم المستعار للمتصلين الذين يفضلون مصطلحات المحلل اللغوي.
@@ -42,39 +42,39 @@ export const parseVCard
 **النوع:** الوظيفة
 
 ```typescript
-function readVCard(source: string): VCard[]
+function readVCard(source: string): VCard[];
 ```
 
 تحليل كتلة vCard واحدة أو أكثر مع الاحتفاظ بخصائص غير معروفة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المصدر | سلسلة |       |
 
 ### toVCardOptions
 
 **النوع:** الوظيفة
 
 ```typescript
-function toVCardOptions(card: VCard): VCardOptions
+function toVCardOptions(card: VCard): VCardOptions;
 ```
 
 قم بتعيين البطاقة التي تم تحليلها مرة أخرى إلى خيارات الراحة التي يستخدمها منشئ QR.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بطاقة | بطاقة VC |  |
+| الاسم | اكتب     | الوصف |
+| ----- | -------- | ----- |
+| بطاقة | بطاقة VC |       |
 
 ### vCard
 
 **النوع:** الوظيفة
 
 ```typescript
-function vCard(options: VCardOptions): string
+function vCard(options: VCardOptions): string;
 ```
 
 حمولة vCard 3.0 تصف جهة اتصال. أرقام الهواتف / رسائل البريد الإلكتروني متعددة
@@ -82,9 +82,9 @@ function vCard(options: VCardOptions): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات VCardOptions |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| خيارات | خيارات VCardOptions |       |
 
 ### بطاقة V
 
@@ -121,32 +121,32 @@ export interface VCardProperty
 **النوع:** الوظيفة
 
 ```typescript
-function writeVCard(card: VCard): string
+function writeVCard(card: VCard): string;
 ```
 
 قم بإجراء تسلسل vCard واحد كامل، باستخدام نهايات أسطر LF لحمولات QR والحمولات النصية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بطاقة | بطاقة VC |  |
+| الاسم | اكتب     | الوصف |
+| ----- | -------- | ----- |
+| بطاقة | بطاقة VC |       |
 
 ### writeVCards
 
 **النوع:** الوظيفة
 
 ```typescript
-function writeVCards(cards: readonly VCard[]): string
+function writeVCards(cards: readonly VCard[]): string;
 ```
 
 إجراء تسلسل لواحدة أو أكثر من البطاقات التي تم تحليلها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بطاقات | للقراءة فقط VCard[] |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| بطاقات | للقراءة فقط VCard[] |       |
 
 ## `src/ast/vevent`
 
@@ -247,204 +247,204 @@ export type VEventTransp = 'OPAQUE' | 'TRANSPARENT';
 **النوع:** الوظيفة
 
 ```typescript
-function addDays(date: Date, days: number): Date
+function addDays(date: Date, days: number): Date;
 ```
 
 أضف `days` إلى تاريخ JS (المنطقة المحلية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التاريخ | التاريخ |  |
-| أيام | رقم |  |
+| الاسم   | اكتب    | الوصف |
+| ------- | ------- | ----- |
+| التاريخ | التاريخ |       |
+| أيام    | رقم     |       |
 
 ### com.addMonths
 
 **النوع:** الوظيفة
 
 ```typescript
-function addMonths(date: Date, months: number): Date
+function addMonths(date: Date, months: number): Date;
 ```
 
 أضف `months` إلى تاريخ JS (المنطقة المحلية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التاريخ | التاريخ |  |
-| أشهر | رقم |  |
+| الاسم   | اكتب    | الوصف |
+| ------- | ------- | ----- |
+| التاريخ | التاريخ |       |
+| أشهر    | رقم     |       |
 
 ### addYears
 
 **النوع:** الوظيفة
 
 ```typescript
-function addYears(date: Date, years: number): Date
+function addYears(date: Date, years: number): Date;
 ```
 
 أضف `years` إلى تاريخ JS (المنطقة المحلية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التاريخ | التاريخ |  |
-| سنوات | رقم |  |
+| الاسم   | اكتب    | الوصف |
+| ------- | ------- | ----- |
+| التاريخ | التاريخ |       |
+| سنوات   | رقم     |       |
 
 ### dayKey
 
 **النوع:** الوظيفة
 
 ```typescript
-function dayKey(iso: string): string
+function dayKey(iso: string): string;
 ```
 
 إرجاع مفتاح التاريخ المحلي المستخدم لمطابقة EXDATE وRDATE.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ايزو | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| ايزو  | سلسلة |       |
 
 ### fmtLike
 
 **النوع:** الوظيفة
 
 ```typescript
-function fmtLike(source: string, dateTime: DateTime): string
+function fmtLike(source: string, dateTime: DateTime): string;
 ```
 
 قم بتنسيق Luxon DateTime مرة أخرى إلى نفس تمثيل ISO مثل السلسلة المصدر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| التاريخ والوقت | التاريخ والوقت |  |
+| الاسم          | اكتب           | الوصف |
+| -------------- | -------------- | ----- |
+| المصدر         | سلسلة          |       |
+| التاريخ والوقت | التاريخ والوقت |       |
 
 ### com.isAllDay
 
 **النوع:** الوظيفة
 
 ```typescript
-function isAllDay(iso: string): boolean
+function isAllDay(iso: string): boolean;
 ```
 
 يتم إرجاع صحيح عندما تكون سلسلة ISO قيمة للتاريخ فقط (YYYY-MM-DD).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ايزو | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| ايزو  | سلسلة |       |
 
 ### تاريخ
 
 **النوع:** الوظيفة
 
 ```typescript
-function parseDate(iso: string): Date
+function parseDate(iso: string): Date;
 ```
 
 قم بتحليل سلسلة التاريخ/التاريخ ISO إلى تاريخ JS (للتوافق مع واجهة برمجة التطبيقات العامة).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ايزو | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| ايزو  | سلسلة |       |
 
 ### تحليل
 
 **النوع:** الوظيفة
 
 ```typescript
-function parseDT(iso: string): DateTime
+function parseDT(iso: string): DateTime;
 ```
 
 تحليل سلسلة التاريخ/التاريخ ISO إلى Luxon DateTime (المنطقة المحلية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ايزو | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| ايزو  | سلسلة |       |
 
 ### startOfDay
 
 **النوع:** الوظيفة
 
 ```typescript
-function startOfDay(date: Date): Date
+function startOfDay(date: Date): Date;
 ```
 
 بداية اليوم لتاريخ JS (المنطقة المحلية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التاريخ | التاريخ |  |
+| الاسم   | اكتب    | الوصف |
+| ------- | ------- | ----- |
+| التاريخ | التاريخ |       |
 
 ### startOfMonth
 
 **النوع:** الوظيفة
 
 ```typescript
-function startOfMonth(date: Date): Date
+function startOfMonth(date: Date): Date;
 ```
 
 بداية الشهر الذي يحتوي على `date` (المنطقة المحلية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التاريخ | التاريخ |  |
+| الاسم   | اكتب    | الوصف |
+| ------- | ------- | ----- |
+| التاريخ | التاريخ |       |
 
 ### startOfWeek
 
 **النوع:** الوظيفة
 
 ```typescript
-function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date
+function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date;
 ```
 
 بداية الأسبوع الذي يحتوي على `date`، تكريمًا لـ `weekStartsOn`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التاريخ | التاريخ |  |
-| يبدأ الأسبوع | 0 \| 1\| 2\| 3\| 4\| 5\| 6 |  |
+| الاسم        | اكتب                       | الوصف |
+| ------------ | -------------------------- | ----- |
+| التاريخ      | التاريخ                    |       |
+| يبدأ الأسبوع | 0 \| 1\| 2\| 3\| 4\| 5\| 6 |       |
 
 ### startOfYear
 
 **النوع:** الوظيفة
 
 ```typescript
-function startOfYear(date: Date): Date
+function startOfYear(date: Date): Date;
 ```
 
 بداية العام الذي يحتوي على `date` (المنطقة المحلية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التاريخ | التاريخ |  |
+| الاسم   | اكتب    | الوصف |
+| ------- | ------- | ----- |
+| التاريخ | التاريخ |       |
 
 ### WEEKDAY_LUXON
 
 **النوع:** ثابت
 
 ```typescript
-export const WEEKDAY_LUXON: Record<RRuleWeekday, number>
+export const WEEKDAY_LUXON: Record<RRuleWeekday, number>;
 ```
 
 أرقام أيام الأسبوع في لوكسون: الإثنين=1 … الأحد=7.
@@ -478,16 +478,16 @@ export type WeekStart = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement
+function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ForgeICalendarProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<ForgeICalendarProperties> |       |
 
 ### ForgeICalendarProperties
 
@@ -506,16 +506,16 @@ export interface ForgeICalendarProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement
+function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ForgeVCardProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<ForgeVCardProperties> |       |
 
 ### ForgeVCardProperties
 
@@ -534,32 +534,32 @@ export interface ForgeVCardProperties
 **النوع:** الوظيفة
 
 ```typescript
-function calendarEvents(calendar: ICalendar): ICalendarEvent[]
+function calendarEvents(calendar: ICalendar): ICalendarEvent[];
 ```
 
 قم بتحويل مكونات VEVENT إلى عرض الحدث المكتوب الذي يستخدمه عارضو Forge.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التقويم | التقويم |  |
+| الاسم   | اكتب    | الوصف |
+| ------- | ------- | ----- |
+| التقويم | التقويم |       |
 
 ### createICalendarEvent
 
 **النوع:** الوظيفة
 
 ```typescript
-function createICalendarEvent(event: ICalendarEvent): ICalendarComponent
+function createICalendarEvent(event: ICalendarEvent): ICalendarComponent;
 ```
 
 أنشئ مكون VEVENT مكتوبًا مناسبًا لإدراجه في iCalendar.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حدث | حدث آي كاليندار |  |
+| الاسم | اكتب            | الوصف |
+| ----- | --------------- | ----- |
+| حدث   | حدث آي كاليندار |       |
 
 ### تقويم
 
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **النوع:** ثابت
 
 ```typescript
-export const parseICalendar
+export const parseICalendar;
 ```
 
 لم يتم تقديم أي وصف.
@@ -626,23 +626,23 @@ export const parseICalendar
 **النوع:** الوظيفة
 
 ```typescript
-function readICalendar(source: string): ICalendar
+function readICalendar(source: string): ICalendar;
 ```
 
 تحليل دفق RFC 5545 iCalendar، مع الحفاظ على كل مكون وخاصية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المصدر | سلسلة |       |
 
 ### تسلسلICalendar
 
 **النوع:** ثابت
 
 ```typescript
-export const serializeICalendar
+export const serializeICalendar;
 ```
 
 لم يتم تقديم أي وصف.
@@ -652,13 +652,13 @@ export const serializeICalendar
 **النوع:** الوظيفة
 
 ```typescript
-function writeICalendar(calendar: ICalendar): string
+function writeICalendar(calendar: ICalendar): string;
 ```
 
 قم بإجراء تسلسل لتقويم RFC 5545 مع نهايات سطر CRLF وطي آمن بطول 75 أوكتيت.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التقويم | التقويم |  |
+| الاسم   | اكتب    | الوصف |
+| ------- | ------- | ----- |
+| التقويم | التقويم |       |

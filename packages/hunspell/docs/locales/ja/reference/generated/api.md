@@ -16,7 +16,11 @@
 **種類:** 関数
 
 ```typescript
-function useHunspellMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHunspellMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Hunspell のスペルチェックを Monaco エディタに統合する Vue コンポーザブル。
@@ -29,11 +33,11 @@ Hunspell のスペルチェックを Monaco エディタに統合する Vue コ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|エディタリファレンス |たぶんRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-|有効 |たぶんRefOrGetter<boolean> |  |
-|言語リファレンス |たぶんRefOrGetter<string> |  |
+| 名前                 | タイプ                                                              | 説明 |
+| -------------------- | ------------------------------------------------------------------- | ---- |
+| エディタリファレンス | たぶんRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |      |
+| 有効                 | たぶんRefOrGetter<boolean>                                          |      |
+| 言語リファレンス     | たぶんRefOrGetter<string>                                           |      |
 
 ## `src/wasm/hunspell.d`
 

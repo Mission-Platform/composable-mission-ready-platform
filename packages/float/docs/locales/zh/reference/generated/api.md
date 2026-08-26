@@ -26,7 +26,8 @@ export interface AlertBannerProperties
 **种类：**类型
 
 ```typescript
-export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type AlertBannerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 横幅的意图/颜色处理 - 规范颜色集。
@@ -36,7 +37,7 @@ export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 **种类：**功能
 
 ```typescript
-function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement
+function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement;
 ```
 
 `ForgeAlertBanner` — 内联警报/通知横幅在
@@ -62,9 +63,9 @@ helper），并使用 write-once 绘制状态图标
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<AlertBannerProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<AlertBannerProperties> |      |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -93,7 +94,7 @@ export interface DropdownProperties
 **种类：**功能
 
 ```typescript
-function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement
+function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 ```
 
 `ForgeDropdown` — 锚定到触发器的浮动菜单/列表面板，创作
@@ -138,9 +139,9 @@ API 将其堆叠在该（可能堆叠的）对话框之上。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<DropdownProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<DropdownProperties> |      |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -149,7 +150,7 @@ API 将其堆叠在该（可能堆叠的）对话框之上。
 **种类：**功能
 
 ```typescript
-function ForgePopover(properties: Readonly<PopoverProperties>): MpElement
+function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 ```
 
 `ForgePopover` — 锚定到触发器的浮动对话框，在
@@ -194,16 +195,28 @@ API 将其堆叠在该（可能堆叠的）对话框之上。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<PopoverProperties> |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读<PopoverProperties> |      |
 
 ### 弹出框放置
 
 **种类：**类型
 
 ```typescript
-export type PopoverPlacement = | 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end';
+export type PopoverPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
 ```
 
 弹出窗口相对于其触发器的首选位置。
@@ -225,7 +238,7 @@ export interface PopoverProperties
 **种类：**功能
 
 ```typescript
-function ForgeToast(properties: Readonly<ToastProperties>): MpElement
+function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 ```
 
 `ForgeToast` — 在中立状态下创作的单个 Toast 通知卡
@@ -247,9 +260,9 @@ callback-prop `onDismiss`，`iconContent` 命名槽（`<Slot>`，带有
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ToastProperties> |  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 属性 | 只读<ToastProperties> |      |
 
 ### Toast 属性
 
@@ -276,7 +289,8 @@ export type ToastSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**类型
 
 ```typescript
-export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ToastVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 吐司的意图/颜色处理 - 规范的颜色集。
@@ -288,7 +302,7 @@ export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 's
 **种类：**功能
 
 ```typescript
-function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
+function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 ```
 
 `ForgeTooltip` — 锚定到其触发器的简短上下文提示，创作一次
@@ -330,9 +344,9 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<TooltipProperties> |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读<TooltipProperties> |      |
 
 ### 工具提示放置
 
@@ -391,7 +405,7 @@ export type DialogSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
+function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 ```
 
 `ForgeDialog` — 使用中性 JSX 方言编写的模式对话框
@@ -419,9 +433,9 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<DialogProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<DialogProperties> |      |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -430,7 +444,7 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
 **种类：**功能
 
 ```typescript
-function ForgeModal(properties: Readonly<ModalProperties>): MpElement
+function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 ```
 
 `ForgeModal` — 以中性 JSX 方言编写的居中模式
@@ -456,9 +470,9 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ModalProperties> |  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 属性 | 只读<ModalProperties> |      |
 
 ### 模态属性
 
@@ -487,7 +501,7 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 **种类：**功能
 
 ```typescript
-function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement
+function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement;
 ```
 
 `ForgeToastContainer` — 渲染共享 `toast-store` 中保存的 toast，
@@ -503,6 +517,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 源在两个框架上都保持反应。
 
 辅助功能：
+
 - 堆栈是 `role="region"` 和可配置的 `aria-label`；每个
   `ForgeToast` 带有自己的 `role="status"` / `role="alert"`。
 
@@ -526,9 +541,9 @@ React 构建降级到类切换的 SSR 就地基线，
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ToastContainerProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<ToastContainerProperties> |      |
 
 ### ToastContainer 属性
 
@@ -557,7 +572,7 @@ export type ToastContainerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 **种类：**功能
 
 ```typescript
-function clearToasts(): void
+function clearToasts(): void;
 ```
 
 关闭所有祝酒词。
@@ -567,23 +582,23 @@ function clearToasts(): void
 **种类：**功能
 
 ```typescript
-function dismissToast(id: number): void
+function dismissToast(id: number): void;
 ```
 
 通过 id 取消 toast。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编号 |数量 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 编号 | 数量 |      |
 
 ### 错误提示
 
 **种类：**常数
 
 ```typescript
-export const errorToast
+export const errorToast;
 ```
 
 方便：显示 `error` toast。
@@ -593,7 +608,7 @@ export const errorToast
 **种类：**功能
 
 ```typescript
-function getToastsSnapshot(): readonly ToastRecord[]
+function getToastsSnapshot(): readonly ToastRecord[];
 ```
 
 读取活动 toast 的不可变快照。
@@ -603,7 +618,7 @@ function getToastsSnapshot(): readonly ToastRecord[]
 **种类：**常数
 
 ```typescript
-export const infoToast
+export const infoToast;
 ```
 
 方便：显示 `info` toast。
@@ -613,39 +628,39 @@ export const infoToast
 **种类：**功能
 
 ```typescript
-function showToast(options: ToastOptions | string): number
+function showToast(options: ToastOptions | string): number;
 ```
 
 显示一个 toast 并返回它的 id。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ToastOptions \|字符串|  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 选项 | ToastOptions \|字符串 |      |
 
 ### 订阅Toasts
 
 **种类：**功能
 
 ```typescript
-function subscribeToasts(listener: () => void): () => void
+function subscribeToasts(listener: () => void): () => void;
 ```
 
 订阅商店变更；返回取消订阅函数。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|听众 | () => 无效 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 听众 | () => 无效 |      |
 
 ### 成功祝酒词
 
 **种类：**常数
 
 ```typescript
-export const successToast
+export const successToast;
 ```
 
 方便：显示 `success` toast。
@@ -685,7 +700,7 @@ export interface ToastRecord
 **种类：**功能
 
 ```typescript
-function useToast(): UseToastReturn
+function useToast(): UseToastReturn;
 ```
 
 命令式助手显示和消除 toast，反映 Vue
@@ -707,7 +722,7 @@ export interface UseToastReturn
 **种类：**常数
 
 ```typescript
-export const warningToast
+export const warningToast;
 ```
 
 方便：显示 `warning` toast。

@@ -16,7 +16,11 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/harper`
 **Soort:** functie
 
 ```typescript
-function useHarperMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue composable die Harper-grammatica en stijlcontrole integreert in een
@@ -30,18 +34,18 @@ ontkoppelen en opnieuw controleren wanneer de `language` verandert.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| editorReferentie | MisschienRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| ingeschakeld | MisschienRefOrGetter<boolean> |  |
-| taalReferentie | MisschienRefOrGetter<string> |  |
+| Naam             | Typ                                                                    | Beschrijving |
+| ---------------- | ---------------------------------------------------------------------- | ------------ |
+| editorReferentie | MisschienRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |              |
+| ingeschakeld     | MisschienRefOrGetter<boolean>                                          |              |
+| taalReferentie   | MisschienRefOrGetter<string>                                           |              |
 
 #### Contract
 
 - **@param:** - Een `MaybeRefOrGetter` die de Monaco-editorinstantie inpakt.
 - **@param:** - EEN `MaybeRefOrGetter<boolean>` die het controleren aan/uit schakelt.
 - **@param:** - A `MaybeRefOrGetter<string>` voor de editortaal
-(gebruikt bij het registreren van de codeactieprovider).
+  (gebruikt bij het registreren van de codeactieprovider).
 
 ## `src/types`
 

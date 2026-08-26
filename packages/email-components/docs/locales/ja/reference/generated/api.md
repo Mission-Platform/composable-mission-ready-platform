@@ -16,23 +16,23 @@
 **種類:** 関数
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 電子メール コンポーネントについて文書化された保守的な出力サブセットをアサートします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| html |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| html | 文字列 |      |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **種類:** 定数
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 説明はありません。
@@ -42,7 +42,7 @@ export const CAN_I_EMAIL_FEATURES_URL
 **種類:** 定数
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 説明はありません。
@@ -52,7 +52,7 @@ export const CAN_I_EMAIL_INLINE_STYLES_URL
 **種類:** 定数
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 説明はありません。
@@ -62,7 +62,7 @@ export const CAN_I_EMAIL_MAX_WIDTH_URL
 **種類:** 定数
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 説明はありません。
@@ -72,7 +72,7 @@ export const CAN_I_EMAIL_MEDIA_QUERIES_URL
 **種類:** 定数
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 説明はありません。
@@ -82,7 +82,7 @@ export const CAN_I_EMAIL_TABLES_URL
 **種類:** 定数
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 説明はありません。
@@ -92,7 +92,7 @@ export const COMPATIBILITY_REVIEWED
 **種類:** 定数
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 説明はありません。
@@ -104,16 +104,16 @@ export const EMAIL_ALLOWED_TAGS
 **種類:** 関数
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailButtonProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailButtonProperties> |      |
 
 ### 電子メールボタンのプロパティ
 
@@ -130,7 +130,8 @@ export interface EmailButtonProperties
 **種類：**タイプ
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 説明はありません。
@@ -142,16 +143,16 @@ export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 **種類:** 関数
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailDividerProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<EmailDividerProperties> |      |
 
 ### EmailDividerプロパティ
 
@@ -170,16 +171,16 @@ export interface EmailDividerProperties
 **種類:** 関数
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailImageProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailImageProperties> |      |
 
 ### 電子メール画像プロパティ
 
@@ -198,16 +199,16 @@ export interface EmailImageProperties
 **種類:** 関数
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailSpacerProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailSpacerProperties> |      |
 
 ### EmailSpacerプロパティ
 
@@ -226,7 +227,7 @@ export interface EmailSpacerProperties
 **種類:** 関数
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 `ForgeTypography` ボキャブラリーを反映した単一の電子メール テキスト アトム: body
@@ -235,9 +236,9 @@ function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpEle
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailTypographyProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailTypographyProperties> |      |
 
 ### 電子メールタイポグラフィープロパティ
 
@@ -266,16 +267,16 @@ export type EmailTypographyTag = 'p' | 'span' | 'div' | 'a' | 'h1' | 'h2' | 'h3'
 **種類:** 関数
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailCardProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailCardProperties> |      |
 
 ### 電子メールカードのプロパティ
 
@@ -294,16 +295,16 @@ export interface EmailCardProperties
 **種類:** 関数
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailColumnProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailColumnProperties> |      |
 
 ### EmailColumnProperties
 
@@ -322,16 +323,16 @@ export interface EmailColumnProperties
 **種類:** 関数
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailListProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailListProperties> |      |
 
 ### 電子メールリスト項目
 
@@ -360,16 +361,16 @@ export interface EmailListProperties
 **種類:** 関数
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailRowProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailRowProperties> |      |
 
 ### 電子メール行プロパティ
 
@@ -398,16 +399,16 @@ export interface EmailSocialLink
 **種類:** 関数
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailSocialLinksProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailSocialLinksProperties> |      |
 
 ### 電子メールソーシャルリンクプロパティ
 
@@ -426,16 +427,16 @@ export interface EmailSocialLinksProperties
 **種類:** 関数
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailFooterProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailFooterProperties> |      |
 
 ### 電子メールフッタープロパティ
 
@@ -454,16 +455,16 @@ export interface EmailFooterProperties
 **種類:** 関数
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailHeaderProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailHeaderProperties> |      |
 
 ### 電子メールヘッダーのプロパティ
 
@@ -482,16 +483,16 @@ export interface EmailHeaderProperties
 **種類:** 関数
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailPreheaderProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailPreheaderProperties> |      |
 
 ### EmailPreheaderプロパティ
 
@@ -510,16 +511,16 @@ export interface EmailPreheaderProperties
 **種類:** 関数
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailContainerProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailContainerProperties> |      |
 
 ### EmailContainerProperties
 
@@ -538,16 +539,16 @@ export interface EmailContainerProperties
 **種類:** 関数
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailDocumentProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<EmailDocumentProperties> |      |
 
 ### 電子メールドキュメントのプロパティ
 
@@ -566,16 +567,16 @@ export interface EmailDocumentProperties
 **種類:** 関数
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<EmailSectionProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<EmailSectionProperties> |      |
 
 ### 電子メールセクションのプロパティ
 

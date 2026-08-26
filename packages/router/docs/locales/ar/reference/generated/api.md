@@ -16,39 +16,39 @@
 **النوع:** الوظيفة
 
 ```typescript
-function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities
+function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities;
 ```
 
 قم بإنشاء كائن قدرة محايد لمحول هدف أو SSR أو اختبار.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| يتجاوز | MpRouterCapabilityOverrides |  |
+| الاسم  | اكتب                        | الوصف |
+| ------ | --------------------------- | ----- |
+| يتجاوز | MpRouterCapabilityOverrides |       |
 
 ### isMpRouterCapabilityError
 
 **النوع:** الوظيفة
 
 ```typescript
-function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError
+function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError;
 ```
 
 ما إذا كان الخطأ غير المعروف هو الخطأ الاحتياطي الحتمي لجهاز التوجيه المحايد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خطأ | غير معروف |  |
+| الاسم | اكتب      | الوصف |
+| ----- | --------- | ----- |
+| خطأ   | غير معروف |       |
 
 ### MP_ROUTER_COMPILER_MARKER
 
 **النوع:** ثابت
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 البيانات التعريفية المستقرة التي تستهلكها المكونات الإضافية لبرنامج التحويل البرمجي لجهاز التوجيه Forge.
@@ -58,16 +58,16 @@ export const MP_ROUTER_COMPILER_MARKER
 **النوع:** مكون
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor
+function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 علامة الارتباط المحايدة. تحل الأهداف الأصلية محل هذه الوظيفة أثناء الترجمة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | مب لينك بروبس |  |
+| الاسم | اكتب          | الوصف |
+| ----- | ------------- | ----- |
+| خصائص | مب لينك بروبس |       |
 
 ### MpLinkDescriptor
 
@@ -154,16 +154,16 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **النوع:** مكون
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor
+function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
 ```
 
 مخرج/علامة عرض محايدة. تحل الأهداف الأصلية محل هذه الوظيفة أثناء الترجمة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | مبرووترفيوبروبس |  |
+| الاسم | اكتب            | الوصف |
+| ----- | --------------- | ----- |
+| خصائص | مبرووترفيوبروبس |       |
 
 ### MpRouterViewDescriptor
 
@@ -190,7 +190,10 @@ export interface MpRouterViewProps
 **النوع:** الوظيفة
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string
+function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string;
 ```
 
 حل هدف من خلال جهاز التوجيه المملوك للتطبيق. القدرة الاختيارية
@@ -198,17 +201,17 @@ function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabi
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
-| القدرات | يختار<MpRouterCapabilities, 'resolve'> |  |
+| الاسم   | اكتب                                   | الوصف |
+| ------- | -------------------------------------- | ----- |
+| إلى     | مبرووتلوكيشن راو                       |       |
+| القدرات | يختار<MpRouterCapabilities, 'resolve'> |       |
 
 ### useMpNavigation
 
 **النوع:** الوظيفة
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 قراءة فقط القدرة على الملاحة حتمية.
@@ -218,7 +221,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 اقرأ المسار الحالي المملوك للتطبيق. يعتبر الإجراء الاحتياطي غير المترجم آمنًا لـ SSR و
@@ -229,7 +232,7 @@ function useMpRoute(): MpResolvedLocation | null
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 اقرأ كائن القدرة المحايدة المقدم من التطبيق.
@@ -241,7 +244,7 @@ function useMpRouter(): MpRouterCapabilities
 **النوع:** ثابت
 
 ```typescript
-export const applicationCompatibilityFixtures
+export const applicationCompatibilityFixtures;
 ```
 
 لم يتم تقديم أي وصف.
@@ -251,7 +254,7 @@ export const applicationCompatibilityFixtures
 **النوع:** ثابت
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 تعكس سجلات المسار جدول الإعدادات المحلية/البحث/التقاط الكل لتطبيق التوثيق.
@@ -261,7 +264,7 @@ export const documentationCompatibilityFixture: ForgeCompatibilityFixture
 **النوع:** ثابت
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 تعكس سجلات المسار جدول الإعدادات المحلية/البحث/التقاط الكل لتطبيق التوثيق.
@@ -291,7 +294,7 @@ export interface ForgeCompatibilityFixture
 **النوع:** ثابت
 
 ```typescript
-export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
+export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 تعكس سجلات المسار مقطع اللغة الخاص بـ My Care Notes والتراكبات المستندة إلى عنوان URL.
@@ -301,7 +304,7 @@ export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
 **النوع:** ثابت
 
 ```typescript
-export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
+export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[];
 ```
 
 صفوف السلوك المشتركة التي تستهلكها مجموعة اختبار العقود في كل وقت تشغيل.
@@ -311,7 +314,7 @@ export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
 **النوع:** ثابت
 
 ```typescript
-export const websiteCompatibilityFixture: ForgeCompatibilityFixture
+export const websiteCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 تعكس سجلات المسار المسار الرئيسي الاختياري ذو اللغة المحلية المسبقة لموقع الويب.
@@ -705,7 +708,7 @@ export type ForgeScrollPosition = MpScrollPosition;
 **النوع:** الوظيفة
 
 ```typescript
-function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
+function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver;
 ```
 
 قم بإنشاء {@link MpRouteResolver} المرتبط بشجرة المسار، وقم بتسويتها مرة واحدة
@@ -713,16 +716,16 @@ function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الطرق | للقراءة فقط MpRoute[] |  |
+| الاسم | اكتب                  | الوصف |
+| ----- | --------------------- | ----- |
+| الطرق | للقراءة فقط MpRoute[] |       |
 
 ### تعريف الطرق
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineRoutes(routes: T): T
+function defineRoutes(routes: T): T;
 ```
 
 مساعد الهوية الذي يحدد شجرة مسار محايدة للإطار بنوع كامل
@@ -731,39 +734,39 @@ function defineRoutes(routes: T): T
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الطرق | ت |  |
+| ----- | ---- | ----- |
+| الطرق | ت    |       |
 
 #### عقد
 
 - **@example:** طرق ثابتة = تعريف المسارات([
   { المسار: '/'، الاسم: 'المنزل'، المكون: المنزل }،
   { المسار: '/المستخدمين/:المعرف'، الاسم: 'المستخدم'، المكون: المستخدم }،
-])
+  ])
 
 ### findRouteByName
 
 **النوع:** الوظيفة
 
 ```typescript
-function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined
+function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined;
 ```
 
 ابحث عن أول طريق مسطح بالاسم المحدد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الطرق | للقراءة فقط MpRoute[] |  |
-| الاسم | سلسلة |  |
+| الاسم | اكتب                  | الوصف |
+| ----- | --------------------- | ----- |
+| الطرق | للقراءة فقط MpRoute[] |       |
+| الاسم | سلسلة                 |       |
 
 ### com.flatenRoutes
 
 **النوع:** الوظيفة
 
 ```typescript
-function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
+function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[];
 ```
 
 قم بتسوية شجرة المسار المتداخلة في قائمة العمق الأول للمسارات المطلقة، باستخدام
@@ -772,16 +775,16 @@ function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الطرق | للقراءة فقط MpRoute[] |  |
+| الاسم | اكتب                  | الوصف |
+| ----- | --------------------- | ----- |
+| الطرق | للقراءة فقط MpRoute[] |       |
 
 ### com.matchRoutes
 
 **النوع:** الوظيفة
 
 ```typescript
-function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined
+function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined;
 ```
 
 قم بمطابقة اسم المسار مع شجرة المسار، وإرجاع المسار الأول (في
@@ -789,10 +792,10 @@ function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الطرق | للقراءة فقط MpRoute[] |  |
-| اسم المسار | سلسلة |  |
+| الاسم      | اكتب                  | الوصف |
+| ---------- | --------------------- | ----- |
+| الطرق      | للقراءة فقط MpRoute[] |       |
+| اسم المسار | سلسلة                 |       |
 
 ### MpFlatRoute
 
@@ -829,7 +832,7 @@ export interface MpRouteResolver
 **النوع:** الوظيفة
 
 ```typescript
-function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation
+function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation;
 ```
 
 قم بحل أي {@link MpRouteLocationRaw} محايد للإطار إلى ملف كامل التكوين
@@ -839,15 +842,15 @@ function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
-| الطرق | للقراءة فقط MpRoute[] |  |
+| الاسم | اكتب                  | الوصف |
+| ----- | --------------------- | ----- |
+| إلى   | مبرووتلوكيشن راو      |       |
+| الطرق | للقراءة فقط MpRoute[] |       |
 
 #### عقد
 
 - **@example:** ResolveLocation({ name: 'user', params: { id: 42 } },ways)
-// → { المسار: '/المستخدمين/42'، المسار الكامل: '/المستخدمين/42'، المعلمات: { المعرف: '42' }، … }
+  // → { المسار: '/المستخدمين/42'، المسار الكامل: '/المستخدمين/42'، المعلمات: { المعرف: '42' }، … }
 
 ## `src/location`
 
@@ -876,44 +879,44 @@ export interface MpLocationParts
 **النوع:** الوظيفة
 
 ```typescript
-function normalizeHash(hash: string): string
+function normalizeHash(hash: string): string;
 ```
 
 قم بتطبيع جزء التجزئة ليشمل `#` بادئ واحد، أو يكون فارغًا.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التجزئة | سلسلة |  |
+| الاسم   | اكتب  | الوصف |
+| ------- | ----- | ----- |
+| التجزئة | سلسلة |       |
 
 ### parseLocation
 
 **النوع:** الوظيفة
 
 ```typescript
-function parseLocation(url: string): MpLocationParts
+function parseLocation(url: string): MpLocationParts;
 ```
 
 قم بتقسيم عنوان URL المتعلق بالتطبيق إلى {@link MpLocationParts}.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رابط | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| رابط  | سلسلة |       |
 
 #### عقد
 
 - **@example:** parseLocation('/users/42?tab=info#bio')
-// → { المسار: '/users/42'، الاستعلام: { علامة التبويب: 'info' }، التجزئة: '#bio' }
+  // → { المسار: '/users/42'، الاستعلام: { علامة التبويب: 'info' }، التجزئة: '#bio' }
 
 ### stringifyLocation
 
 **النوع:** الوظيفة
 
 ```typescript
-function stringifyLocation(location: MpLocationInput): string
+function stringifyLocation(location: MpLocationInput): string;
 ```
 
 قم بتجميع سلسلة عنوان URL ذات صلة بالتطبيق من أجزاء الموقع. اسم المسار هو
@@ -922,14 +925,14 @@ function stringifyLocation(location: MpLocationInput): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الموقع | MpLocationInput |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| الموقع | MpLocationInput |       |
 
 #### عقد
 
 - **@example:** stringifyLocation({ المسار: '/users/42'، الاستعلام: { tab: 'info' }، hash: 'bio' })
-// → '/users/42?tab=info#bio'
+  // → '/users/42?tab=info#bio'
 
 ## `src/path`
 
@@ -938,7 +941,10 @@ function stringifyLocation(location: MpLocationInput): string
 **النوع:** الوظيفة
 
 ```typescript
-function buildPath(pattern: string, parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {}): string
+function buildPath(
+  pattern: string,
+  parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {},
+): string;
 ```
 
 قم ببناء اسم مسار ملموس من نمط ومجموعة من المعلمات والتشفير
@@ -947,23 +953,23 @@ function buildPath(pattern: string, parameters: Record<string, MpParameterValue 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نمط | سلسلة |  |
-| المعلمات | سجل<string, MpParameterValue \| readonly MpParameterValue[]> |  |
+| الاسم    | اكتب                                                         | الوصف |
+| -------- | ------------------------------------------------------------ | ----- |
+| نمط      | سلسلة                                                        |       |
+| المعلمات | سجل<string, MpParameterValue \| readonly MpParameterValue[]> |       |
 
 #### عقد
 
 - **@example:** buildPath('/users/:id', { id: 42 }) // → '/users/42'
-buildPath('/users/:id?', {}) // → '/users'
-buildPath('/files/:rest*', { بقية: ['a', 'b'] }) // → '/files/a/b'
+  buildPath('/users/:id?', {}) // → '/users'
+  buildPath('/files/:rest*', { بقية: ['a', 'b'] }) // → '/files/a/b'
 
 ### com.compilePath
 
 **النوع:** الوظيفة
 
 ```typescript
-function compilePath(pattern: string): MpCompiledPath
+function compilePath(pattern: string): MpCompiledPath;
 ```
 
 قم بتجميع نمط المسار في {@link MpCompiledPath} بالأمر المرتب
@@ -971,9 +977,9 @@ function compilePath(pattern: string): MpCompiledPath
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نمط | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| نمط   | سلسلة |       |
 
 #### عقد
 
@@ -984,7 +990,7 @@ function compilePath(pattern: string): MpCompiledPath
 **النوع:** الوظيفة
 
 ```typescript
-function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined
+function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined;
 ```
 
 مطابقة اسم المسار مع النمط، وإرجاع المعلمات المستخرجة أو
@@ -992,15 +998,15 @@ function matchPath(pattern: string, pathname: string): MpRouteParameters | undef
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نمط | سلسلة |  |
-| اسم المسار | سلسلة |  |
+| الاسم      | اكتب  | الوصف |
+| ---------- | ----- | ----- |
+| نمط        | سلسلة |       |
+| اسم المسار | سلسلة |       |
 
 #### عقد
 
 - **@example:** matchPath('/users/:id', '/users/42') // → { المعرف: '42' }
-matchPath('/users/:id', '/posts/42') // → غير محدد
+  matchPath('/users/:id', '/posts/42') // → غير محدد
 
 ### MpCompiledPath
 
@@ -1027,7 +1033,7 @@ export interface MpPathParameterKey
 **النوع:** الوظيفة
 
 ```typescript
-function normalizePath(path: string): string
+function normalizePath(path: string): string;
 ```
 
 قم بتطبيع نمط المسار (أو اسم المسار) إلى نموذج شرطة مائلة أساسية
@@ -1035,16 +1041,16 @@ function normalizePath(path: string): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المسار | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المسار | سلسلة |       |
 
 ### WILDCARD_PARAM_KEY
 
 **النوع:** ثابت
 
 ```typescript
-export const WILDCARD_PARAM_KEY
+export const WILDCARD_PARAM_KEY;
 ```
 
 المفتاح الذي يتم التقاط مقطع استقبال الرسائل `*` المستقل تحته.
@@ -1056,7 +1062,7 @@ export const WILDCARD_PARAM_KEY
 **النوع:** الوظيفة
 
 ```typescript
-function parseQuery(search: string): MpQueryParameters
+function parseQuery(search: string): MpQueryParameters;
 ```
 
 قم بتحليل سلسلة استعلام في خريطة {@link MpQueryParameters}. الرائد `?` هو
@@ -1064,9 +1070,9 @@ function parseQuery(search: string): MpQueryParameters
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بحث | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| بحث   | سلسلة |       |
 
 #### عقد
 
@@ -1077,7 +1083,7 @@ function parseQuery(search: string): MpQueryParameters
 **النوع:** الوظيفة
 
 ```typescript
-function stringifyQuery(query: MpQueryInput): string
+function stringifyQuery(query: MpQueryInput): string;
 ```
 
 إجراء تسلسل لخريطة {@link MpQueryInput} في سلسلة استعلام باستخدام `?` بادئة،
@@ -1086,14 +1092,14 @@ function stringifyQuery(query: MpQueryInput): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| استعلام | مبكويريإينبوت |  |
+| الاسم   | اكتب          | الوصف |
+| ------- | ------------- | ----- |
+| استعلام | مبكويريإينبوت |       |
 
 #### عقد
 
 - **@example:** stringifyQuery({ tag: ['a', 'b'], page: 2 }) // → '?tag=a&tag=b&page=2'
-stringifyQuery({}) // → ''
+  stringifyQuery({}) // → ''
 
 ## `src/types`
 
@@ -1318,7 +1324,8 @@ export interface MpReadonlySignal<Value>
 **النوع:** مكون
 
 ```typescript
-export type MpRedirect = MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
 ```
 
 هدف إعادة التوجيه، يتم حسابه اختياريًا من مسار الوجهة.
@@ -1370,7 +1377,10 @@ export type MpRouteChangeListener = (event: MpRouteChangeEvent) => void;
 **النوع:** مكون
 
 ```typescript
-export type MpRouteGuard = ( to: MpResolvedLocation, from: MpResolvedLocation | null, ) => MpGuardOutcome | Promise<MpGuardOutcome>;
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
 ```
 
 يتم تقييم حارس الطريق بواسطة جهاز حالة التنقل المملوك لوقت التشغيل.
@@ -1473,7 +1483,11 @@ export interface MpRouteViewContext<View = unknown>
 **النوع:** مكون
 
 ```typescript
-export type MpScrollBehavior = ( to: MpResolvedLocation, from: MpResolvedLocation | null, savedPosition?: MpScrollPosition, ) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
 ```
 
 لم يتم تقديم أي وصف.

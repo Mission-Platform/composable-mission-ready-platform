@@ -37,7 +37,7 @@ export type D3Selection<E extends Element> = Selection<E, unknown, null, undefin
 **종류:** 기능
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 요소(`ref={reference}`)에 첨부할 참조를 반환하고 `draw`을 실행합니다.
@@ -50,10 +50,10 @@ tidy — React 및 Vue에서 동일합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 무승부 | D3Draw<E> |  |
-| 종속성 | MpDependencyList |  |
+| 이름   | 유형             | 설명 |
+| ------ | ---------------- | ---- |
+| 무승부 | D3Draw<E>        |      |
+| 종속성 | MpDependencyList |      |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ export interface ChartBox
 **종류:** 기능
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 주어진 외부 크기의 차트에 대한 내부 플롯 직사각형을 계산하고
@@ -81,9 +81,9 @@ function innerDimensions(box: ChartBox): InnerDimensions
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 상자 | 차트박스 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 상자 | 차트박스 |      |
 
 ### 내부차원
 
@@ -121,7 +121,7 @@ export type MarginInput = number | Partial<Margin>;
 **종류:** 기능
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 {@link MarginInput}을 전체 {@link Margin}으로 정규화합니다. 숫자는
@@ -130,6 +130,6 @@ function resolveMargin(input?: MarginInput): Margin
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 여백입력 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 입력 | 여백입력 |      |

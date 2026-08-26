@@ -16,23 +16,23 @@
 **종류:** 기능
 
 ```typescript
-function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server
+function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeBridgeServer옵션 |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 옵션 | ForgeBridgeServer옵션 |      |
 
 ### DEFAULT_EXPORT_PATH
 
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_EXPORT_PATH
+export const DEFAULT_EXPORT_PATH;
 ```
 
 설명이 제공되지 않았습니다.
@@ -42,7 +42,7 @@ export const DEFAULT_EXPORT_PATH
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_MAX_FILE_BYTES
+export const DEFAULT_MAX_FILE_BYTES;
 ```
 
 설명이 제공되지 않았습니다.
@@ -52,7 +52,7 @@ export const DEFAULT_MAX_FILE_BYTES
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_MAX_REQUEST_BYTES
+export const DEFAULT_MAX_REQUEST_BYTES;
 ```
 
 설명이 제공되지 않았습니다.
@@ -62,17 +62,17 @@ export const DEFAULT_MAX_REQUEST_BYTES
 **종류:** 기능
 
 ```typescript
-function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>
+function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 알 수 없음 |  |
-| 옵션 | ForgeBridge옵션 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 가치 | 알 수 없음      |      |
+| 옵션 | ForgeBridge옵션 |      |
 
 ### ForgeBridge옵션
 
@@ -99,16 +99,18 @@ export interface ForgeBridgeServerOptions extends ForgeBridgeOptions
 **종류:** 기능
 
 ```typescript
-function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number }): Promise<Server>
+function startForgeBridgeServer(
+  options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
+): Promise<Server>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeBridgeServerOptions & { 읽기 전용 호스트?: 문자열; 읽기 전용 포트?: 숫자 } |  |
+| 이름 | 유형                                                                            | 설명 |
+| ---- | ------------------------------------------------------------------------------- | ---- |
+| 옵션 | ForgeBridgeServerOptions & { 읽기 전용 호스트?: 문자열; 읽기 전용 포트?: 숫자 } |      |
 
 ## `src/protocol`
 
@@ -117,7 +119,7 @@ function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly h
 **종류:** 상수
 
 ```typescript
-export const FORGE_BRIDGE_PROTOCOL_VERSION
+export const FORGE_BRIDGE_PROTOCOL_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
@@ -167,13 +169,13 @@ export interface ForgeBridgeResponse
 **종류:** 기능
 
 ```typescript
-function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse
+function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 가치 | 알 수 없음 |      |

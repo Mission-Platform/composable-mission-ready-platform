@@ -16,7 +16,7 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/postcss-config
 **Genere:** costante
 
 ```typescript
-export const config: { plugins: AcceptedPlugin[] }
+export const config: { plugins: AcceptedPlugin[] };
 ```
 
 Nessuna descrizione fornita.

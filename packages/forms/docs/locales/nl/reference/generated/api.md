@@ -26,7 +26,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
+function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 ```
 
 `ForgeCheckbox` — selectievakjecontrole eenmaal geschreven in het neutrale JSX-dialect en
@@ -48,9 +48,9 @@ touwtje; en de `v-model` + `change`-uitzending wordt de gevestigde orde
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<CheckboxProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<CheckboxProperties> |              |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -59,7 +59,7 @@ touwtje; en de `v-model` + `change`-uitzending wordt de gevestigde orde
 **Soort:** functie
 
 ```typescript
-function ForgeInput(properties: Readonly<InputProperties>): MpElement
+function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 ```
 
 `ForgeInput` — tekstveld één keer geschreven in het neutrale JSX-dialect en
@@ -79,9 +79,9 @@ de `v-model` + `change`/`blur`/`focus` wordt de
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<InputProperties> |  |
+| Naam          | Typ                           | Beschrijving |
+| ------------- | ----------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<InputProperties> |              |
 
 ### InvoerAutomatisch hoofdlettergebruik
 
@@ -130,7 +130,7 @@ Ondersteunde native invoertypen.
 **Soort:** functie
 
 ```typescript
-function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
+function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 ```
 
 `ForgeRadio` — radiobesturing eenmaal geschreven in het neutrale JSX-dialect en
@@ -147,9 +147,9 @@ De originele Vue SFC's `v-model` + `change` worden de gevestigde naam
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<RadioProperties> |  |
+| Naam          | Typ                           | Beschrijving |
+| ------------- | ----------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<RadioProperties> |              |
 
 ### Radio-eigenschappen
 
@@ -168,7 +168,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
+function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 ```
 
 `ForgeRangeInput` — een min/max-bereikkiezer met dubbele duim, ooit geschreven in de
@@ -193,9 +193,9 @@ rekwisieten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<RangeInputProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<RangeInputProperties> |              |
 
 ### BereikInvoereigenschappen
 
@@ -234,7 +234,7 @@ De geselecteerde `[lower, upper]`-grenzen.
 **Soort:** functie
 
 ```typescript
-function ForgeRating(properties: Readonly<RatingProperties>): MpElement
+function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 ```
 
 `ForgeRating` - invoer/weergave van sterrenwaardering één keer geschreven in de neutrale JSX
@@ -254,9 +254,9 @@ gebruikt de neutrale `useState` haak; en de `v-model` + `change`-uitzending word
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<RatingProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<RatingProperties> |              |
 
 ### BeoordelingEigenschappen
 
@@ -285,7 +285,7 @@ Groottetoken dat de sterafmetingen regelt: canonieke 2xs → 2xl-schaal.
 **Soort:** functie
 
 ```typescript
-function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
+function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 ```
 
 `ForgeSlider` - bereikschuifregelaar ooit geschreven in het neutrale JSX-dialect en
@@ -307,9 +307,9 @@ mede-gelocaliseerde `pointer-drag`-helper; de originele Composition-API `ref`s w
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SliderProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<SliderProperties> |              |
 
 ### SliderEigenschappen
 
@@ -338,7 +338,7 @@ Groottetoken dat de afmetingen van het spoor / de duim regelt - canonieke 2xs �
 **Soort:** functie
 
 ```typescript
-function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement
+function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement;
 ```
 
 `ForgeSwitch` — tuimelschakelaar één keer geschreven in het neutrale JSX-dialect en
@@ -356,9 +356,9 @@ rekwisieten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SwitchProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<SwitchProperties> |              |
 
 ### Schakeleigenschappen
 
@@ -387,7 +387,7 @@ Groottetoken dat de afmetingen van het spoor/de duim regelt (canonieke `2xs … 
 **Soort:** functie
 
 ```typescript
-function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
+function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 ```
 
 `ForgeTextarea` - tekstveld met meerdere regels, één keer geschreven in de neutrale JSX
@@ -408,9 +408,9 @@ via de raamwerkneutrale {@link hasSlot}-helper; en de `v-model`+
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TextareaProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TextareaProperties> |              |
 
 ### TekstgebiedAutomatisch hoofdlettergebruik
 
@@ -479,7 +479,7 @@ Visuele grootte van de kalender, passend bij de gedeelde grootteschaal.
 **Soort:** functie
 
 ```typescript
-function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement
+function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 ```
 
 `ForgeCalendar` - een datumkiezer voor een maandraster, één keer geschreven in de neutrale JSX
@@ -507,9 +507,9 @@ external-sync `watch` wordt een {@link useEffect}; de
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<CalendarProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<CalendarProperties> |              |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -538,7 +538,7 @@ Groottetoken (canonieke `2xs … 2xl`-schaal).
 **Soort:** functie
 
 ```typescript
-function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
+function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 ```
 
 `ForgeColorInput` — kleurkiezer één keer geschreven in het neutrale JSX-dialect en
@@ -558,9 +558,9 @@ een {@link useEffect}; en de `v-model` + `change`-uitzending wordt de
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ColorInputProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ColorInputProperties> |              |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -589,7 +589,7 @@ Veldgrootte (canonieke `2xs … 2xl`-schaal).
 **Soort:** functie
 
 ```typescript
-function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
+function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 ```
 
 `ForgeDateInput` — een datumkiezer die ooit in het neutrale JSX-dialect is geschreven en
@@ -612,9 +612,9 @@ word de `onUpdateModelValue`/`onChange` callback-rekwisieten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<DateInputProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<DateInputProperties> |              |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -643,7 +643,7 @@ Veldgrootte (canonieke `2xs … 2xl`-schaal).
 **Soort:** functie
 
 ```typescript
-function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement
+function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateRangeInput` — een datumbereikkiezer die één keer in de neutrale JSX is geschreven
@@ -672,9 +672,9 @@ framework-native `useId`-haak; de kalenderglyph is de eenmalige beschrijfbare `@
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<DateRangeInputProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<DateRangeInputProperties> |              |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -693,7 +693,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement
+function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement;
 ```
 
 `ForgeFieldSet` — een semantische groeperingscontainer die ooit in de neutrale stand is geschreven
@@ -714,9 +714,9 @@ wordt een gewone flex `<div>`, en de genoemde `legend`-sleuf wordt gereduceerd t
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<FieldSetProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<FieldSetProperties> |              |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -745,7 +745,7 @@ Veldgroottetoken - canonieke 2xs → 2xl schaal.
 **Soort:** functie
 
 ```typescript
-function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
+function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 ```
 
 `ForgeFileInput` — bestandsinvoer die één keer is geschreven in het neutrale JSX-dialect en
@@ -765,9 +765,9 @@ word de `onUpdateModelValue`/`onChange` callback rekwisieten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<FileInputProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<FileInputProperties> |              |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -776,7 +776,7 @@ word de `onUpdateModelValue`/`onChange` callback rekwisieten.
 **Soort:** functie
 
 ```typescript
-function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement
+function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement;
 ```
 
 `ForgeLocationInput` — een invoer van geografische coördinaten die eenmaal is geschreven in de
@@ -804,9 +804,9 @@ componenten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<LocationInputProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<LocationInputProperties> |              |
 
 ### LocatieInvoereigenschappen
 
@@ -849,7 +849,7 @@ export interface LocationValue
 ```
 
 De canonieke waarde van een locatieveld: coördinaten in decimale graden met teken
-plus de variant waarin ze worden gepresenteerd/geserialiseerd.  `undefined`-coördinaten
+plus de variant waarin ze worden gepresenteerd/geserialiseerd. `undefined`-coördinaten
 betekent "geen invoer".
 
 ## `src/components/molecules/forge-number-stepper/forge-number-stepper`
@@ -859,7 +859,7 @@ betekent "geen invoer".
 **Soort:** functie
 
 ```typescript
-function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement
+function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement;
 ```
 
 `ForgeNumberStepper` - numerieke stepper één keer geschreven in het neutrale JSX-dialect
@@ -879,9 +879,9 @@ terugroep rekwisieten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<NumberStepperProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<NumberStepperProperties> |              |
 
 ### AantalStepperProperties
 
@@ -910,7 +910,7 @@ Groottetoken (canonieke `2xs … 2xl`-schaal).
 **Soort:** functie
 
 ```typescript
-function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
+function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 ```
 
 `ForgeOtpInput` — gesegmenteerde eenmalige wachtwoordinvoer, eenmaal geschreven in de
@@ -932,9 +932,9 @@ en de `v-model` + `complete`-uitzending worden de `onUpdateModelValue`/
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<OtpInputProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<OtpInputProperties> |              |
 
 ### OtpInputProperties
 
@@ -973,7 +973,7 @@ Tekenset geaccepteerd door de OTP-cellen.
 **Soort:** functie
 
 ```typescript
-function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement
+function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 ```
 
 `ForgePhoneInput` — een internationaal telefoonnummerveld dat ooit is geschreven in de
@@ -1002,9 +1002,9 @@ haak; de geldigheidsmarkering is de eenmalige beschrijfbare `@mission-platform/i
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<PhoneInputProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<PhoneInputProperties> |              |
 
 ### TelefoonWijzigen
 
@@ -1055,7 +1055,7 @@ Een selecteerbaar land/regio in de landkiezer van de telefooninvoer.
 **Soort:** functie
 
 ```typescript
-function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement
+function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement;
 ```
 
 `ForgeRadioGroup` — groepeert verschillende {@link ForgeRadio}-besturingselementen onder een gedeelde
@@ -1078,9 +1078,9 @@ opties.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<RadioGroupProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<RadioGroupProperties> |              |
 
 ### RadioGroepRichting
 
@@ -1119,7 +1119,7 @@ Eén selecteerbare optie binnen een {@link ForgeRadioGroup}.
 **Soort:** functie
 
 ```typescript
-function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement
+function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement;
 ```
 
 `ForgeSearchInput` — zoekveld één keer geschreven in het neutrale JSX-dialect en
@@ -1139,9 +1139,9 @@ rekwisieten; en de `v-model` + `search`/`clear`-uitzendingen worden de
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SearchInputProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<SearchInputProperties> |              |
 
 ### Zoekinvoereigenschappen
 
@@ -1170,7 +1170,7 @@ Groottetoken (canonieke `2xs … 2xl`-schaal).
 **Soort:** functie
 
 ```typescript
-function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement
+function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement;
 ```
 
 `ForgeSegmentControl` - gesegmenteerde besturing (single-select switcher) geschreven
@@ -1191,9 +1191,9 @@ enkelvoudige elementreferenties, geen ref-arrays). De `v-model` + `change`-uitze
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SegmentControlProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<SegmentControlProperties> |              |
 
 ### SegmentControlEigenschappen
 
@@ -1232,7 +1232,7 @@ Eén selecteerbaar segment.
 **Soort:** functie
 
 ```typescript
-function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement
+function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 ```
 
 `ForgeTimeInput` — een tijdkiezer die ooit in het neutrale JSX-dialect is geschreven en
@@ -1256,9 +1256,9 @@ slots (`<Slot>`) waarbij hun aanwezigheid wordt gedetecteerd via het raamwerk-ne
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TimeInputProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TimeInputProperties> |              |
 
 ### TijdInvoerEigenschappen
 
@@ -1287,7 +1287,7 @@ Veldgrootte (canonieke `2xs … 2xl`-schaal).
 **Soort:** functie
 
 ```typescript
-function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement
+function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeTimeRangeInput` — een tijdsbereikkiezer die één keer in de neutrale JSX is geschreven
@@ -1313,9 +1313,9 @@ aanwezigheid gedetecteerd met de raamwerkneutrale {@link hasSlot}-helper; de
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TimeRangeInputProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TimeRangeInputProperties> |              |
 
 ### TimeRangeInputEigenschappen
 
@@ -1364,7 +1364,7 @@ Veldgrootte (canonieke `2xs … 2xl`-schaal).
 **Soort:** functie
 
 ```typescript
-function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement
+function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateTimeRangeInput` — een datum-tijdbereikkiezer die eenmaal in de
@@ -1390,13 +1390,14 @@ framework-native `useId`-haak; de kalender-/tijdzone-glyphs zijn eenmalig te sch
 `@mission-platform/icons` `ForgeIconCalendar`/`ForgeIconGlobe`; de `start`/`end` SFC
 slots worden de `startContent`/`endContent` genaamd slots (`<Slot>`, aanwezigheid
 gedetecteerd met de raamwerk-neutrale {@link hasSlot} helper); en de `v-model`
-+ `change`-uitzendingen worden de `onUpdateModelValue`/`onChange` callback-props.
+
+- `change`-uitzendingen worden de `onUpdateModelValue`/`onChange` callback-props.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<DateTimeRangeInputProperties> |  |
+| Naam          | Typ                                        | Beschrijving |
+| ------------- | ------------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<DateTimeRangeInputProperties> |              |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1405,7 +1406,7 @@ gedetecteerd met de raamwerk-neutrale {@link hasSlot} helper); en de `v-model`
 **Soort:** functie
 
 ```typescript
-function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement
+function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement;
 ```
 
 `ForgeFormBuilder` — een visueel ontwerpoppervlak met slepen en neerzetten voor JSON-Schema
@@ -1433,9 +1434,9 @@ container), aangestuurd door een `dropIndicator` insert-target bijgewerkt op `dr
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<FormBuilderProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<FormBuilderProperties> |              |
 
 ### FormBuilderEigenschappen
 
@@ -1454,7 +1455,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
+function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 ```
 
 `ForgeFormWizard` — een uit meerdere stappen bestaande formuliershell die één keer in de neutrale JSX is geschreven
@@ -1482,9 +1483,9 @@ rekwisieten. De actieve index blijft **gecontroleerd** (`modelValue`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<FormWizardProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<FormWizardProperties> |              |
 
 ### FormWizardEigenschappen
 
@@ -1513,7 +1514,7 @@ Eén enkele wizardstap.
 **Soort:** functie
 
 ```typescript
-function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement
+function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement;
 ```
 
 `ForgeSchemaFormDialog` — een {@link ForgeSchemaForm} gehost in een
@@ -1530,9 +1531,9 @@ of er moet worden afgesloten met een geldige indiening.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SchemaFormDialogProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<SchemaFormDialogProperties> |              |
 
 ### SchemaFormDialogEigenschappen
 
@@ -1551,7 +1552,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement
+function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement;
 ```
 
 `ForgeSchemaForm` — een JSON-Schema-gestuurd formulier dat één keer in de neutrale JSX is geschreven
@@ -1576,9 +1577,9 @@ een overschrijfbaar `actions`-slot.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SchemaFormProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<SchemaFormProperties> |              |
 
 ### SchemaFormFieldRenderer
 

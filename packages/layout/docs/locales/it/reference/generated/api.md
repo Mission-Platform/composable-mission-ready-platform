@@ -75,7 +75,7 @@ La strategia di layout utilizzata dal contenitore per dimensionarsi sull'asse in
 **Tipo:** funzione
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer`: una primitiva di layout di pagina/sezione che vincola e centra
@@ -95,9 +95,9 @@ nel modulo CSS (che integra i punti di interruzione della piattaforma come query
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Sola lettura<ContainerProperties> |  |
+| Nome      | Digitare                          | Descrizione |
+| --------- | --------------------------------- | ----------- |
+| proprietà | Sola lettura<ContainerProperties> |             |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout`: la shell dell'applicazione di livello superiore creata una volta nel file
@@ -140,9 +140,9 @@ Assistente {@link classNames}.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Sola lettura<ApplicationLayoutProperties> |  |
+| Nome      | Digitare                                  | Descrizione |
+| --------- | ----------------------------------------- | ----------- |
+| proprietà | Sola lettura<ApplicationLayoutProperties> |             |
 
 ### Punto di interruzione della barra laterale
 
@@ -191,7 +191,7 @@ Regioni denominate esposte da `ForgeBentoLayout`.
 **Tipo:** funzione
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout` espone gli slot denominati `hero`, `feature` e `supporting`.
@@ -200,9 +200,9 @@ sostenere le regioni accanto ad esso; tutte le regioni si accumulano nell'ordine
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Sola lettura<BentoLayoutProperties> |  |
+| Nome      | Digitare                            | Descrizione |
+| --------- | ----------------------------------- | ----------- |
+| proprietà | Sola lettura<BentoLayoutProperties> |             |
 
 ### Punto di interruzione PatternLayout
 
@@ -241,7 +241,7 @@ Elementi contenitore semantici supportati dai layout del modello.
 **Tipo:** funzione
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout` espone `header`, `intro`, `primary`, `secondary` e
@@ -250,9 +250,9 @@ la traccia dominante dello schermo panoramico mentre la regione secondaria riman
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Sola lettura<FPatternLayoutProperties> |  |
+| Nome      | Digitare                               | Descrizione |
+| --------- | -------------------------------------- | ----------- |
+| proprietà | Sola lettura<FPatternLayoutProperties> |             |
 
 ### Punto di interruzione FPatternLayout
 
@@ -311,7 +311,7 @@ Elementi contenitore semantici supportati da `ForgeFPatternLayout`.
 **Tipo:** funzione
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout` rende gli slot con nome `cell1` … `cell12` forniti in
@@ -320,9 +320,9 @@ tiene traccia solo dopo il punto di interruzione responsivo configurato.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Sola lettura<GridLayoutProperties> |  |
+| Nome      | Digitare                           | Descrizione |
+| --------- | ---------------------------------- | ----------- |
+| proprietà | Sola lettura<GridLayoutProperties> |             |
 
 ### Punto di interruzione del layout della griglia
 
@@ -339,7 +339,19 @@ Punto di interruzione della finestra utilizzato dal fallback con layout stretto 
 **Genere:** tipo
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 Slot di cella denominati ordinati supportati (da `cell1` a `cell12`).
@@ -381,7 +393,7 @@ Elementi contenitore semantici supportati da `ForgeGridLayout`.
 **Tipo:** funzione
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout`: una shell reattiva a tre colonne creata una volta nel file
@@ -410,9 +422,9 @@ slot di contenuto semplice).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Sola lettura<VerticalLayoutProperties> |  |
+| Nome      | Digitare                               | Descrizione |
+| --------- | -------------------------------------- | ----------- |
+| proprietà | Sola lettura<VerticalLayoutProperties> |             |
 
 ### Punto di interruzione del layout verticale
 
@@ -451,7 +463,7 @@ Scala delle dimensioni con nome per le colonne laterali (specchia `DrawerSize` d
 **Tipo:** funzione
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` espone `topStart`, `topEnd`, `middle`, `bottomStart`,
@@ -460,9 +472,9 @@ gli schermi posizionano le regioni su lati alternati utilizzando le aree della g
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Sola lettura<ZPatternLayoutProperties> |  |
+| Nome      | Digitare                               | Descrizione |
+| --------- | -------------------------------------- | ----------- |
+| proprietà | Sola lettura<ZPatternLayoutProperties> |             |
 
 ### ZPatternLayoutBreakpoint
 

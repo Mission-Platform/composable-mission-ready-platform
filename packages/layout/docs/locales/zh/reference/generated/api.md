@@ -75,7 +75,7 @@ export type ContainerVariant = 'fixed' | 'fluid' | 'responsive';
 **种类：**功能
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer` — 约束和居中的页面/部分布局原语
@@ -95,9 +95,9 @@ Vue 由 `@mission-platform/vite-plugin-forge` 提供。 `fixed`/`fluid` 宽度�
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ContainerProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<ContainerProperties> |      |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ export interface ApplicationLayoutProperties
 **种类：**功能
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout` — 在中编写的顶级应用程序 shell
@@ -140,9 +140,9 @@ CSS）。散列模块类名是用框架中立的
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ApplicationLayoutProperties> |  |
+| 名称 | 类型                              | 描述 |
+| ---- | --------------------------------- | ---- |
+| 属性 | 只读<ApplicationLayoutProperties> |      |
 
 ### 侧边栏断点
 
@@ -191,7 +191,7 @@ export type BentoLayoutRegion = 'hero' | 'feature' | 'supporting';
 **种类：**功能
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout` 公开 `hero`、`feature` 和 `supporting` 命名槽。
@@ -200,9 +200,9 @@ function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<BentoLayoutProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<BentoLayoutProperties> |      |
 
 ### 模式布局断点
 
@@ -241,7 +241,7 @@ export type PatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **种类：**功能
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout` 公开 `header`、`intro`、`primary`、`secondary` 和
@@ -250,9 +250,9 @@ function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<FPatternLayoutProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<FPatternLayoutProperties> |      |
 
 ### FPatternLayout断点
 
@@ -311,7 +311,7 @@ export type FPatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside'
 **种类：**功能
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout` 呈现提供的 `cell1` … `cell12` 命名槽
@@ -320,9 +320,9 @@ function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<GridLayoutProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<GridLayoutProperties> |      |
 
 ### 网格布局断点
 
@@ -339,7 +339,19 @@ export type GridLayoutBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 **种类：**类型
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 支持有序命名单元槽（`cell1` 到 `cell12`）。
@@ -381,7 +393,7 @@ export type GridLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **种类：**功能
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout` — 一个响应式三列 shell，在
@@ -410,9 +422,9 @@ Vue SFC，中性方言无法对作用域默认插槽建模，因此
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<VerticalLayoutProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<VerticalLayoutProperties> |      |
 
 ### 垂直布局断点
 
@@ -451,7 +463,7 @@ export type VerticalLayoutSize = DrawerSize;
 **种类：**功能
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` 公开 `topStart`、`topEnd`、`middle`、`bottomStart`、
@@ -460,9 +472,9 @@ function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ZPatternLayoutProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<ZPatternLayoutProperties> |      |
 
 ### ZPatternLayout断点
 

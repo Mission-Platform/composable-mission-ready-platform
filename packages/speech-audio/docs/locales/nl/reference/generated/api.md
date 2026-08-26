@@ -26,7 +26,7 @@ Reactieve status en bedieningselementen geretourneerd door {@link useMidi}.
 **Soort:** functie
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 Kaderneutrale Web MIDI-hook. Vraagt MIDI-toegang aan, volgt de beschikbare
@@ -53,7 +53,7 @@ Reactieve status en bedieningselementen geretourneerd door {@link useSound}.
 **Soort:** functie
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 Kaderneutrale geluidsafspeelhaak. Speelt een audiofragment af van `source` via
@@ -66,9 +66,9 @@ ontkoppelen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| bron | tekenreeks |              |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ Opties die worden toegepast bij het starten van een {@link useSpeechRecognition}
 **Soort:** functie
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 Kaderneutrale spraak-naar-tekst-hook gebouwd op de native versie van de browser
@@ -135,7 +135,7 @@ Reactieve status en besturingselementen geretourneerd door {@link useSpeechSynth
 **Soort:** functie
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 Kaderneutrale tekst-naar-spraak-hook gebouwd op de native versie van de browser

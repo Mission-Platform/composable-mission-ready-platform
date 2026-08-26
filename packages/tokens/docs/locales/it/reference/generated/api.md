@@ -16,7 +16,7 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/tokens`.
 **Genere:** costante
 
 ```typescript
-export const borderWidth
+export const borderWidth;
 ```
 
 Nessuna descrizione fornita.
@@ -28,7 +28,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const breakpoint
+export const breakpoint;
 ```
 
 Nessuna descrizione fornita.
@@ -40,7 +40,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const buttonGroup
+export const buttonGroup;
 ```
 
 Nessuna descrizione fornita.
@@ -52,7 +52,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const button
+export const button;
 ```
 
 Nessuna descrizione fornita.
@@ -64,7 +64,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const checkable
+export const checkable;
 ```
 
 Nessuna descrizione fornita.
@@ -76,7 +76,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const code
+export const code;
 ```
 
 Nessuna descrizione fornita.
@@ -88,7 +88,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const feedback
+export const feedback;
 ```
 
 Nessuna descrizione fornita.
@@ -100,7 +100,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const icon
+export const icon;
 ```
 
 Nessuna descrizione fornita.
@@ -112,7 +112,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const input
+export const input;
 ```
 
 Nessuna descrizione fornita.
@@ -124,7 +124,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const layout
+export const layout;
 ```
 
 Nessuna descrizione fornita.
@@ -136,7 +136,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const media
+export const media;
 ```
 
 Nessuna descrizione fornita.
@@ -148,7 +148,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const surface
+export const surface;
 ```
 
 Nessuna descrizione fornita.
@@ -160,7 +160,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const tag
+export const tag;
 ```
 
 Nessuna descrizione fornita.
@@ -172,7 +172,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const themeToggle
+export const themeToggle;
 ```
 
 Nessuna descrizione fornita.
@@ -184,7 +184,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const componentAtomsTypography
+export const componentAtomsTypography;
 ```
 
 Nessuna descrizione fornita.
@@ -196,7 +196,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const calendar
+export const calendar;
 ```
 
 Nessuna descrizione fornita.
@@ -208,7 +208,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const card
+export const card;
 ```
 
 Nessuna descrizione fornita.
@@ -220,7 +220,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const chatBubble
+export const chatBubble;
 ```
 
 Nessuna descrizione fornita.
@@ -232,7 +232,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const collapse
+export const collapse;
 ```
 
 Nessuna descrizione fornita.
@@ -244,7 +244,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const colorInput
+export const colorInput;
 ```
 
 Nessuna descrizione fornita.
@@ -256,7 +256,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const debug
+export const debug;
 ```
 
 Nessuna descrizione fornita.
@@ -268,7 +268,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const editor
+export const editor;
 ```
 
 Nessuna descrizione fornita.
@@ -280,7 +280,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const fieldSet
+export const fieldSet;
 ```
 
 Nessuna descrizione fornita.
@@ -292,7 +292,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const field
+export const field;
 ```
 
 Nessuna descrizione fornita.
@@ -304,7 +304,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const inView
+export const inView;
 ```
 
 Nessuna descrizione fornita.
@@ -316,7 +316,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const markdown
+export const markdown;
 ```
 
 Nessuna descrizione fornita.
@@ -328,7 +328,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const navigation
+export const navigation;
 ```
 
 Nessuna descrizione fornita.
@@ -340,7 +340,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const overlay
+export const overlay;
 ```
 
 Nessuna descrizione fornita.
@@ -352,7 +352,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const select
+export const select;
 ```
 
 Nessuna descrizione fornita.
@@ -364,7 +364,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const time
+export const time;
 ```
 
 Nessuna descrizione fornita.
@@ -376,7 +376,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const timeline
+export const timeline;
 ```
 
 Nessuna descrizione fornita.
@@ -388,7 +388,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const data
+export const data;
 ```
 
 Nessuna descrizione fornita.
@@ -400,7 +400,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const form
+export const form;
 ```
 
 Nessuna descrizione fornita.
@@ -412,7 +412,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const map
+export const map;
 ```
 
 Nessuna descrizione fornita.
@@ -424,7 +424,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const resourcePlanner
+export const resourcePlanner;
 ```
 
 Nessuna descrizione fornita.
@@ -436,7 +436,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const scheduler
+export const scheduler;
 ```
 
 Nessuna descrizione fornita.
@@ -448,7 +448,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const email
+export const email;
 ```
 
 Nessuna descrizione fornita.
@@ -460,7 +460,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const font
+export const font;
 ```
 
 Nessuna descrizione fornita.
@@ -472,7 +472,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const motion
+export const motion;
 ```
 
 Nessuna descrizione fornita.
@@ -484,7 +484,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const opacity
+export const opacity;
 ```
 
 Nessuna descrizione fornita.
@@ -496,7 +496,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const palette
+export const palette;
 ```
 
 Nessuna descrizione fornita.
@@ -508,7 +508,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const radius
+export const radius;
 ```
 
 Nessuna descrizione fornita.
@@ -520,7 +520,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const shadow
+export const shadow;
 ```
 
 Nessuna descrizione fornita.
@@ -532,7 +532,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const size
+export const size;
 ```
 
 Nessuna descrizione fornita.
@@ -544,7 +544,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const spacing
+export const spacing;
 ```
 
 Nessuna descrizione fornita.
@@ -556,7 +556,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const themeDark
+export const themeDark;
 ```
 
 Nessuna descrizione fornita.
@@ -568,7 +568,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const themeLight
+export const themeLight;
 ```
 
 Nessuna descrizione fornita.
@@ -580,7 +580,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const typography
+export const typography;
 ```
 
 Nessuna descrizione fornita.
@@ -592,7 +592,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const zIndex
+export const zIndex;
 ```
 
 Nessuna descrizione fornita.

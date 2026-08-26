@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
+function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement;
 ```
 
 `ForgeMapDraw` — 가장 가까운 위치에 대한 대화형 그리기/편집 도구
@@ -29,9 +29,9 @@ function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MapDrawProperties> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용<MapDrawProperties> |      |
 
 ### MapDraw속성
 
@@ -50,7 +50,7 @@ export interface MapDrawProperties
 **종류:** 기능
 
 ```typescript
-function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null
+function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null;
 ```
 
 `ForgeMapLayer` — 가장 가까운 `<MapLibre>` 조상에 MapLibre 레이어를 추가합니다.
@@ -59,9 +59,9 @@ function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | nu
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MapLayerProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<MapLayerProperties> |      |
 
 ### MapLayer속성
 
@@ -80,7 +80,7 @@ export interface MapLayerProperties
 **종류:** 기능
 
 ```typescript
-function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null
+function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null;
 ```
 
 `ForgeMapMarker` — 가장 가까운 `<MapLibre>`에 MapLibre `Marker`을 추가합니다.
@@ -89,9 +89,9 @@ function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MapMarkerProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<MapMarkerProperties> |      |
 
 ### 지도마커속성
 
@@ -110,7 +110,7 @@ export interface MapMarkerProperties
 **종류:** 기능
 
 ```typescript
-function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null
+function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null;
 ```
 
 `ForgeMapPopup` — 가장 가까운 `<MapLibre>` 조상에 MapLibre `Popup`을 추가합니다.
@@ -119,9 +119,9 @@ function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | nu
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MapPopupProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<MapPopupProperties> |      |
 
 ### MapPopup속성
 
@@ -140,7 +140,7 @@ export interface MapPopupProperties
 **종류:** 기능
 
 ```typescript
-function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
+function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement;
 ```
 
 `ForgeMapSource` — 가장 가까운 `<MapLibre>`에 MapLibre 데이터 소스를 등록합니다.
@@ -149,9 +149,9 @@ function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MapSourceProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<MapSourceProperties> |      |
 
 ### 맵소스속성
 
@@ -170,7 +170,7 @@ export interface MapSourceProperties
 **종류:** 기능
 
 ```typescript
-function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
+function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement;
 ```
 
 `ForgeMapLibre` — 중립 JSX에서 한 번 작성된 MapLibre GL 맵 컨테이너
@@ -186,9 +186,9 @@ function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MapLibreProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<MapLibreProperties> |      |
 
 ### MapLibre속성
 
@@ -244,7 +244,7 @@ export type FeatureId = string | number;
 **종류:** 기능
 
 ```typescript
-function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn
+function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn;
 ```
 
 지도의 모든 그리기 및 편집 상태를 관리합니다. 상점에서는 지도를 연결합니다.
@@ -253,10 +253,10 @@ function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseD
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지도 | 지도 \| 정의되지 않음 |  |
-| 옵션 | 사용드로잉옵션 |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 지도 | 지도 \| 정의되지 않음 |      |
+| 옵션 | 사용드로잉옵션        |      |
 
 ### 사용드로잉옵션
 
@@ -285,14 +285,14 @@ export interface UseDrawingReturn
 **종류:** 기능
 
 ```typescript
-function useLayer(map: Map | undefined, options: UseLayerOptions): void
+function useLayer(map: Map | undefined, options: UseLayerOptions): void;
 ```
 
 지도에 MapLibre 레이어를 추가합니다.
 
 지도가 준비되면 레이어가 생성됩니다. `paint`, `layout`,
 `filter` 또는 줌 범위 변경(동일 `id`, `type` 및 `source`)
-라이브 레이어 **제자리**에 동기화 — 레이어는 제거되지 *않고*
+라이브 레이어 **제자리**에 동기화 — 레이어는 제거되지 _않고_
 다시 추가했습니다. 이는 호출자가 일반적으로 사양 개체를 다시 빌드하기 때문에 중요합니다.
 모든 렌더링(예: 각 마우스 움직임에 반응하는 대화형 그리기 도구):
 레이어를 분해하고 렌더링할 때마다 다시 생성하면 MapLibre의
@@ -302,17 +302,18 @@ function useLayer(map: Map | undefined, options: UseLayerOptions): void
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지도 | 지도 \| 정의되지 않음 |  |
-| 옵션 | UseLayer옵션 |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 지도 | 지도 \| 정의되지 않음 |      |
+| 옵션 | UseLayer옵션          |      |
 
 #### 계약
 
 - **@예:** ```ts
-const map = useMap();
-useLayer(map, { layer: circleLayerSpec });
-```
+  const map = useMap();
+  useLayer(map, { layer: circleLayerSpec });
+
+````
 
 ### 레이어 옵션 사용
 
@@ -320,7 +321,7 @@ useLayer(map, { layer: circleLayerSpec });
 
 ```typescript
 export interface UseLayerOptions
-```
+````
 
 설명이 제공되지 않았습니다.
 
@@ -331,7 +332,7 @@ export interface UseLayerOptions
 **종류:** 기능
 
 ```typescript
-function useMap(): Map | undefined
+function useMap(): Map | undefined;
 ```
 
 가장 가까운 `<MapLibre>`에서 제공하는 MapLibre `Map` 인스턴스를 반환합니다.
@@ -342,11 +343,12 @@ function useMap(): Map | undefined
 #### 계약
 
 - **@예:** ```ts
-const map = useMap();
-useEffect(() => {
+  const map = useMap();
+  useEffect(() => {
   map?.flyTo({ center: [lng, lat] });
-}, [map]);
-```
+  }, [map]);
+
+````
 
 ## `src/composables/use-marker/use-marker`
 
@@ -356,24 +358,25 @@ useEffect(() => {
 
 ```typescript
 function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn
-```
+````
 
 지도에 자동으로 추가되고 제거되는 MapLibre `Marker`을 생성합니다.
 소유 구성요소가 마운트 해제될 때. 마커의 위치는 `lngLat`을 추적합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지도 | 지도 \| 정의되지 않음 |  |
-| 옵션 | UseMarkerOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 지도 | 지도 \| 정의되지 않음 |      |
+| 옵션 | UseMarkerOptions      |      |
 
 #### 계약
 
 - **@예:** ```ts
-const map = useMap();
-const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
-```
+  const map = useMap();
+  const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
+
+````
 
 ### 사용마커옵션
 
@@ -381,7 +384,7 @@ const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
 
 ```typescript
 export interface UseMarkerOptions extends MarkerOptions
-```
+````
 
 설명이 제공되지 않았습니다.
 
@@ -402,7 +405,7 @@ export interface UseMarkerReturn
 **종류:** 기능
 
 ```typescript
-function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn
+function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn;
 ```
 
 자동으로 추가되거나 제거되는 MapLibre `Popup`을 생성합니다.
@@ -411,17 +414,18 @@ function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupRetur
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지도 | 지도 \| 정의되지 않음 |  |
-| 옵션 | UsePopupOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 지도 | 지도 \| 정의되지 않음 |      |
+| 옵션 | UsePopupOptions       |      |
 
 #### 계약
 
 - **@예:** ```ts
-const map = useMap();
-const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
-```
+  const map = useMap();
+  const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
+
+````
 
 ### 팝업 옵션 사용
 
@@ -429,7 +433,7 @@ const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' })
 
 ```typescript
 export interface UsePopupOptions extends PopupOptions
-```
+````
 
 설명이 제공되지 않았습니다.
 
@@ -450,7 +454,7 @@ export interface UsePopupReturn
 **종류:** 기능
 
 ```typescript
-function useSource(map: Map | undefined, options: UseSourceOptions): void
+function useSource(map: Map | undefined, options: UseSourceOptions): void;
 ```
 
 MapLibre 데이터 소스를 등록하고 지도와 동기화를 유지합니다.
@@ -463,17 +467,18 @@ MapLibre 데이터 소스를 등록하고 지도와 동기화를 유지합니다
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지도 | 지도 \| 정의되지 않음 |  |
-| 옵션 | UseSourceOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 지도 | 지도 \| 정의되지 않음 |      |
+| 옵션 | UseSourceOptions      |      |
 
 #### 계약
 
 - **@예:** ```ts
-const map = useMap();
-useSource(map, { id: 'earthquakes', source: geojsonSpec });
-```
+  const map = useMap();
+  useSource(map, { id: 'earthquakes', source: geojsonSpec });
+
+````
 
 ### 소스 옵션 사용
 
@@ -481,7 +486,7 @@ useSource(map, { id: 'earthquakes', source: geojsonSpec });
 
 ```typescript
 export interface UseSourceOptions
-```
+````
 
 설명이 제공되지 않았습니다.
 
@@ -492,7 +497,7 @@ export interface UseSourceOptions
 **종류:** 상수
 
 ```typescript
-export const MapContext
+export const MapContext;
 ```
 
 가장 가까운 `<MapLibre>` 조상의 MapLibre `Map` 인스턴스를 전달하는 컨텍스트입니다.

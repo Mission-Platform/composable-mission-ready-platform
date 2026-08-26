@@ -16,7 +16,11 @@
 **النوع:** الوظيفة
 
 ```typescript
-function useHunspellMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHunspellMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue قابل للتركيب ويدمج التدقيق الإملائي Hunspell في محرر Monaco.
@@ -29,11 +33,11 @@ Vue قابل للتركيب ويدمج التدقيق الإملائي Hunspell 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مرجع المحرر | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| ممكّن | MaybeRefOrGetter<boolean> |  |
-| مرجع اللغة | MaybeRefOrGetter<string> |  |
+| الاسم       | اكتب                                                               | الوصف |
+| ----------- | ------------------------------------------------------------------ | ----- |
+| مرجع المحرر | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |       |
+| ممكّن       | MaybeRefOrGetter<boolean>                                          |       |
+| مرجع اللغة  | MaybeRefOrGetter<string>                                           |       |
 
 ## `src/wasm/hunspell.d`
 

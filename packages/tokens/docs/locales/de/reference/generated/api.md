@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/tokens`.
 **Art:** konstant
 
 ```typescript
-export const borderWidth
+export const borderWidth;
 ```
 
 Keine Beschreibung angegeben.
@@ -28,7 +28,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const breakpoint
+export const breakpoint;
 ```
 
 Keine Beschreibung angegeben.
@@ -40,7 +40,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const buttonGroup
+export const buttonGroup;
 ```
 
 Keine Beschreibung angegeben.
@@ -52,7 +52,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const button
+export const button;
 ```
 
 Keine Beschreibung angegeben.
@@ -64,7 +64,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const checkable
+export const checkable;
 ```
 
 Keine Beschreibung angegeben.
@@ -76,7 +76,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const code
+export const code;
 ```
 
 Keine Beschreibung angegeben.
@@ -88,7 +88,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const feedback
+export const feedback;
 ```
 
 Keine Beschreibung angegeben.
@@ -100,7 +100,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const icon
+export const icon;
 ```
 
 Keine Beschreibung angegeben.
@@ -112,7 +112,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const input
+export const input;
 ```
 
 Keine Beschreibung angegeben.
@@ -124,7 +124,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const layout
+export const layout;
 ```
 
 Keine Beschreibung angegeben.
@@ -136,7 +136,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const media
+export const media;
 ```
 
 Keine Beschreibung angegeben.
@@ -148,7 +148,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const surface
+export const surface;
 ```
 
 Keine Beschreibung angegeben.
@@ -160,7 +160,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const tag
+export const tag;
 ```
 
 Keine Beschreibung angegeben.
@@ -172,7 +172,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const themeToggle
+export const themeToggle;
 ```
 
 Keine Beschreibung angegeben.
@@ -184,7 +184,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const componentAtomsTypography
+export const componentAtomsTypography;
 ```
 
 Keine Beschreibung angegeben.
@@ -196,7 +196,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const calendar
+export const calendar;
 ```
 
 Keine Beschreibung angegeben.
@@ -208,7 +208,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const card
+export const card;
 ```
 
 Keine Beschreibung angegeben.
@@ -220,7 +220,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const chatBubble
+export const chatBubble;
 ```
 
 Keine Beschreibung angegeben.
@@ -232,7 +232,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const collapse
+export const collapse;
 ```
 
 Keine Beschreibung angegeben.
@@ -244,7 +244,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const colorInput
+export const colorInput;
 ```
 
 Keine Beschreibung angegeben.
@@ -256,7 +256,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const debug
+export const debug;
 ```
 
 Keine Beschreibung angegeben.
@@ -268,7 +268,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const editor
+export const editor;
 ```
 
 Keine Beschreibung angegeben.
@@ -280,7 +280,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const fieldSet
+export const fieldSet;
 ```
 
 Keine Beschreibung angegeben.
@@ -292,7 +292,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const field
+export const field;
 ```
 
 Keine Beschreibung angegeben.
@@ -304,7 +304,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const inView
+export const inView;
 ```
 
 Keine Beschreibung angegeben.
@@ -316,7 +316,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const markdown
+export const markdown;
 ```
 
 Keine Beschreibung angegeben.
@@ -328,7 +328,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const navigation
+export const navigation;
 ```
 
 Keine Beschreibung angegeben.
@@ -340,7 +340,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const overlay
+export const overlay;
 ```
 
 Keine Beschreibung angegeben.
@@ -352,7 +352,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const select
+export const select;
 ```
 
 Keine Beschreibung angegeben.
@@ -364,7 +364,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const time
+export const time;
 ```
 
 Keine Beschreibung angegeben.
@@ -376,7 +376,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const timeline
+export const timeline;
 ```
 
 Keine Beschreibung angegeben.
@@ -388,7 +388,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const data
+export const data;
 ```
 
 Keine Beschreibung angegeben.
@@ -400,7 +400,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const form
+export const form;
 ```
 
 Keine Beschreibung angegeben.
@@ -412,7 +412,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const map
+export const map;
 ```
 
 Keine Beschreibung angegeben.
@@ -424,7 +424,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const resourcePlanner
+export const resourcePlanner;
 ```
 
 Keine Beschreibung angegeben.
@@ -436,7 +436,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const scheduler
+export const scheduler;
 ```
 
 Keine Beschreibung angegeben.
@@ -448,7 +448,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const email
+export const email;
 ```
 
 Keine Beschreibung angegeben.
@@ -460,7 +460,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const font
+export const font;
 ```
 
 Keine Beschreibung angegeben.
@@ -472,7 +472,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const motion
+export const motion;
 ```
 
 Keine Beschreibung angegeben.
@@ -484,7 +484,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const opacity
+export const opacity;
 ```
 
 Keine Beschreibung angegeben.
@@ -496,7 +496,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const palette
+export const palette;
 ```
 
 Keine Beschreibung angegeben.
@@ -508,7 +508,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const radius
+export const radius;
 ```
 
 Keine Beschreibung angegeben.
@@ -520,7 +520,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const shadow
+export const shadow;
 ```
 
 Keine Beschreibung angegeben.
@@ -532,7 +532,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const size
+export const size;
 ```
 
 Keine Beschreibung angegeben.
@@ -544,7 +544,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const spacing
+export const spacing;
 ```
 
 Keine Beschreibung angegeben.
@@ -556,7 +556,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const themeDark
+export const themeDark;
 ```
 
 Keine Beschreibung angegeben.
@@ -568,7 +568,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const themeLight
+export const themeLight;
 ```
 
 Keine Beschreibung angegeben.
@@ -580,7 +580,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const typography
+export const typography;
 ```
 
 Keine Beschreibung angegeben.
@@ -592,7 +592,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const zIndex
+export const zIndex;
 ```
 
 Keine Beschreibung angegeben.

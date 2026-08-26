@@ -16,33 +16,33 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/email-renderer
 **Tipo:** funzione
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 Visualizza l'albero Forge condiviso come elemento React per le anteprime del browser.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| node | NodoEmail |  |
+| Nome | Digitare  | Descrizione |
+| ---- | --------- | ----------- |
+| node | NodoEmail |             |
 
 ### toEmailReactComponent
 
 **Tipo:** funzione
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 Avvolgi un componente email Forge come componente della funzione React.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | MpComponent<P> |  |
-| nome | stringa |  |
+| Nome       | Digitare       | Descrizione |
+| ---------- | -------------- | ----------- |
+| componente | MpComponent<P> |             |
+| nome       | stringa        |             |
 
 ## `src/adapters/solid`
 
@@ -51,32 +51,32 @@ Avvolgi un componente email Forge come componente della funzione React.
 **Tipo:** funzione
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 Visualizza l'albero Forge condiviso come Solid JSX per le anteprime del browser.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| node | NodoEmail |  |
+| Nome | Digitare  | Descrizione |
+| ---- | --------- | ----------- |
+| node | NodoEmail |             |
 
 ### aEmailSolidComponent
 
 **Tipo:** funzione
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 Racchiude un componente Forge come componente Solid.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente<P> |  |
+| Nome       | Digitare      | Descrizione |
+| ---------- | ------------- | ----------- |
+| componente | Componente<P> |             |
 
 ## `src/adapters/svelte`
 
@@ -85,16 +85,16 @@ Racchiude un componente Forge come componente Solid.
 **Tipo:** funzione
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 Converti un albero Forge condiviso in uno snippet non elaborato Svelte 5 per `{@render ...}`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| node | NodoEmail |  |
+| Nome | Digitare  | Descrizione |
+| ---- | --------- | ----------- |
+| node | NodoEmail |             |
 
 ## `src/adapters/vue`
 
@@ -103,33 +103,33 @@ Converti un albero Forge condiviso in uno snippet non elaborato Svelte 5 per `{@
 **Tipo:** funzione
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 Renderizza l'albero Forge condiviso come un VNode Vue per le anteprime del browser.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| node | NodoEmail |  |
+| Nome | Digitare  | Descrizione |
+| ---- | --------- | ----------- |
+| node | NodoEmail |             |
 
 ### toEmailVueComponent
 
 **Tipo:** funzione
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 Avvolgi un componente email Forge come componente funzionale Vue.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | MpComponent<P> |  |
-| nome | stringa |  |
+| Nome       | Digitare       | Descrizione |
+| ---------- | -------------- | ----------- |
+| componente | MpComponent<P> |             |
+| nome       | stringa        |             |
 
 ## `src/adapters/web-components`
 
@@ -138,16 +138,16 @@ Avvolgi un componente email Forge come componente funzionale Vue.
 **Tipo:** funzione
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 Crea un risultato del modello Forge nativo per un host Web Components.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| node | NodoEmail |  |
+| Nome | Digitare  | Descrizione |
+| ---- | --------- | ----------- |
+| node | NodoEmail |             |
 
 ## `src/markdown/render-markdown`
 
@@ -156,17 +156,17 @@ Crea un risultato del modello Forge nativo per un host Web Components.
 **Tipo:** funzione
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 Converti token Markdown sicuri nello stesso albero Forge utilizzato dai componenti di posta elettronica.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ribasso | stringa |  |
-| opzioni | MarkdownRenderOptions |  |
+| Nome    | Digitare              | Descrizione |
+| ------- | --------------------- | ----------- |
+| ribasso | stringa               |             |
+| opzioni | MarkdownRenderOptions |             |
 
 ## `src/markdown/types`
 
@@ -197,16 +197,16 @@ Opzioni che controllano la generazione dell'albero Markdown.
 **Tipo:** funzione
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 Serializza un insieme di proprietà Forge consentite in ordine deterministico.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Proprietà e-mail |  |
+| Nome      | Digitare         | Descrizione |
+| --------- | ---------------- | ----------- |
+| proprietà | Proprietà e-mail |             |
 
 ## `src/render/escape`
 
@@ -215,33 +215,33 @@ Serializza un insieme di proprietà Forge consentite in ordine deterministico.
 **Tipo:** funzione
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 Escape il testo e attribuisce il contenuto per la serializzazione HTML.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | stringa |  |
+| Nome   | Digitare | Descrizione |
+| ------ | -------- | ----------- |
+| valore | stringa  |             |
 
 ### validateUrl
 
 **Tipo:** funzione
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 Rifiuta schemi che possono eseguire codice o caricare una risorsa imprevista.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | stringa |  |
-| attributo | stringa |  |
+| Nome      | Digitare | Descrizione |
+| --------- | -------- | ----------- |
+| valore    | stringa  |             |
+| attributo | stringa  |             |
 
 ## `src/render/render-email`
 
@@ -250,33 +250,33 @@ Rifiuta schemi che possono eseguire codice o caricare una risorsa imprevista.
 **Tipo:** funzione
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 Trasforma un albero di posta elettronica Forge in un documento HTML completo e privo di framework.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| node | NodoEmail |  |
-| opzioni | OpzioniRenderEmail |  |
+| Nome    | Digitare           | Descrizione |
+| ------- | ------------------ | ----------- |
+| node    | NodoEmail          |             |
+| opzioni | OpzioniRenderEmail |             |
 
 ### renderEmailFragment
 
 **Tipo:** funzione
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 Visualizza un albero Forge come frammento HTML sicuro per gli host dell'adattatore browser.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| node | NodoEmail |  |
+| Nome | Digitare  | Descrizione |
+| ---- | --------- | ----------- |
+| node | NodoEmail |             |
 
 ## `src/render/style`
 
@@ -285,16 +285,16 @@ Visualizza un albero Forge come frammento HTML sicuro per gli host dell'adattato
 **Tipo:** funzione
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 Serializza gli stili in linea in ordine di proprietà deterministico senza variabili CSS.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| stile | Stile email \| stringa |  |
+| Nome  | Digitare               | Descrizione |
+| ----- | ---------------------- | ----------- |
+| stile | Stile email \| stringa |             |
 
 ## `src/render/types`
 

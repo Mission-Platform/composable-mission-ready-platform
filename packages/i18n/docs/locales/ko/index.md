@@ -17,11 +17,11 @@ Vite의 `resolve.conditions`(`defineFrameworkAppConfig`/`frameworkResolveConditi
 `@mission-platform/vite-config`) 및 TypeScript의 `customConditions`(
 `@mission-platform/typescript-config/framework-<name>` 사전 설정). 모든 가져오기는 그대로 유지됩니다.
 
-| 활성 상태 | | 주요 수출 |
-| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
-| _(없음)_ | 프레임워크 중립 코어 | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue` | Vue 3 어댑터 | 중립 코어 플러스 `createForgeI18NVue`, `useI18n` |
-| `mp:react` | React 어댑터 | 중성 코어 플러스 `ForgeI18NProvider`, `useI18n` |
+| 활성 상태  |                      | 주요 수출                                                               |
+| :--------- | :------------------- | :---------------------------------------------------------------------- |
+| _(없음)_   | 프레임워크 중립 코어 | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
+| `mp:vue`   | Vue 3 어댑터         | 중립 코어 플러스 `createForgeI18NVue`, `useI18n`                        |
+| `mp:react` | React 어댑터         | 중성 코어 플러스 `ForgeI18NProvider`, `useI18n`                         |
 
 ## 핵심 개념
 

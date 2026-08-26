@@ -107,12 +107,12 @@ export function LandingPage() {
 
 ### חוזי אזור
 
-| רכיב | אזורים בעלי שם | מקור הרכב |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | גיבור שיווק אתרים וקטעי תכונה |
-| `ForgeGridLayout` | `cell1` עד `cell12` | כרטיסי לוח מחוונים של מוניטור שירות וסיכומי מצב |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | סרגל/הקשר של Docs, מאמר, סרגל צד וכותרת תחתונה |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | תוכן ופעולות מתחלפות בדף הנחיתה |
+| רכיב                  | אזורים בעלי שם                                             | מקור הרכב                                       |
+| --------------------- | ---------------------------------------------------------- | ----------------------------------------------- |
+| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | גיבור שיווק אתרים וקטעי תכונה                   |
+| `ForgeGridLayout`     | `cell1` עד `cell12`                                        | כרטיסי לוח מחוונים של מוניטור שירות וסיכומי מצב |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | סרגל/הקשר של Docs, מאמר, סרגל צד וכותרת תחתונה  |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | תוכן ופעולות מתחלפות בדף הנחיתה                 |
 
 `ForgeGridLayout` מקבל את `rows` ו-`columns`, מהדק את שניהם לאחד או יותר, מגביל את האזור הניתן לעיבוד ל-12 בשם
 תאים, ומשתמש ב-fallback של עמודה אחת מתחת לנקודת השבירה שלו. תאים בעלי שם מעובדים תמיד לפי סדר המקור.

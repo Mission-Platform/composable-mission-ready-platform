@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/tsdo
 **Tipo:** función
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 Cree un predicado Rolldown `external` / `deps.neverBundle` que trate cada
@@ -24,16 +24,16 @@ nombre en `names` (y cualquiera de sus importaciones de subruta, por ejemplo, `p
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombres | cadena de solo lectura[] |  |
+| Nombre  | Tipo                     | Descripción |
+| ------- | ------------------------ | ----------- |
+| nombres | cadena de solo lectura[] |             |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Tipo:** constante
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Los nombres de paquetes predeterminados que cada biblioteca compartida deben tratar como proporcionados por pares.
@@ -44,7 +44,7 @@ Refleja el {@link DEFAULT_LIBRARY_EXTERNALS} de `@mission-platform/vite-config`.
 **Tipo:** función
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Cree una configuración tsdown para una biblioteca TypeScript simple (o de un solo paquete):
@@ -53,16 +53,16 @@ Arquetipo A/B. Refleja la semántica de externalización `defineLibraryConfig` d
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | TsdownLibraryOptions |  |
+| Nombre   | Tipo                 | Descripción |
+| -------- | -------------------- | ----------- |
+| opciones | TsdownLibraryOptions |             |
 
 ### definirTsdownVueLibrary
 
 **Tipo:** función
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Como {@link defineTsdownLibrary}, pero conecta dts compatibles con `unplugin-vue` y Vue
@@ -70,16 +70,16 @@ para paquetes que envían SFC `.vue` (`i18n`, `router`,…).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | TsdownLibraryOptions |  |
+| Nombre   | Tipo                 | Descripción |
+| -------- | -------------------- | ----------- |
+| opciones | TsdownLibraryOptions |             |
 
 ### leerPackageDependencyNames
 
 **Tipo:** función
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 Lea `dependencies` y `peerDependencies` declarados en package.json
@@ -88,16 +88,16 @@ de su propio paquete para que los consumidores puedan deduplicarlos y sacudirlos
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| directorioraíz | cadena |  |
+| Nombre         | Tipo   | Descripción |
+| -------------- | ------ | ----------- |
+| directorioraíz | cadena |             |
 
 ### resolverTsdownDirectorioSalida
 
 **Tipo:** función
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 Refleje una ruta de salida del paquete final en una raíz de compilación aislada. manteniendo el
@@ -106,11 +106,11 @@ promocionable de forma independiente sin permitir que tsdown limpie un árbol he
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| directorioraíz | cadena |  |
-| directorio de salida | cadena |  |
-| raíz de salida | cadena |  |
+| Nombre               | Tipo   | Descripción |
+| -------------------- | ------ | ----------- |
+| directorioraíz       | cadena |             |
+| directorio de salida | cadena |             |
+| raíz de salida       | cadena |             |
 
 ### TsdownLibraryOptions
 

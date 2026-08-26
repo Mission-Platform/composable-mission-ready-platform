@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement
+function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 ```
 
 `ForgeScheduler` — 在中性 JSX 中编写的完整日历/调度程序
@@ -41,9 +41,9 @@ Vue SFC 的替代：`@mission-platform/icons` V 形变为
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SchedulerProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<SchedulerProperties> |      |
 
 ### 调度程序属性
 
@@ -72,7 +72,7 @@ export type SchedulerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent
+function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent;
 ```
 
 将补丁应用于事件，碰撞 `lastModified` 和 `sequence`（标准
@@ -80,17 +80,17 @@ RFC 5545 修订语义）。 `uid` 被保留。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V活动 |  |
-|补丁|部分<Omit<VEvent, 'uid'>> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 活动 | V活动                     |      |
+| 补丁 | 部分<Omit<VEvent, 'uid'>> |      |
 
 ### 创建事件
 
 **种类：**功能
 
 ```typescript
-function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
+function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent;
 ```
 
 从部分构建全新的{@link VEvent}（没有 `uid`/`dtstamp`），
@@ -98,70 +98,70 @@ function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|部分 |省略<VEvent, 'uid' \| 'dtstamp'> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 部分 | 省略<VEvent, 'uid' \| 'dtstamp'> |      |
 
 ### 当日活动
 
 **种类：**功能
 
 ```typescript
-function eventsForDay(events: VEvent[], day: Date): VEvent[]
+function eventsForDay(events: VEvent[], day: Date): VEvent[];
 ```
 
 返回给定日历日发生的事件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V事件[] |  |
-|日 |日期 |  |
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 活动 | V事件[] |      |
+| 日   | 日期    |      |
 
 ### 范围事件
 
 **种类：**功能
 
 ```typescript
-function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[]
+function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 ```
 
 返回与给定重叠的事件（包括重复发生的事件）
-日期范围[开始、结束)。  排除带有 `status === 'CANCELLED'` 的事件。
+日期范围[开始、结束)。 排除带有 `status === 'CANCELLED'` 的事件。
 重复事件通过其 RRULE / RDATE 进行扩展； EXDATE 排除是
 很荣幸。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V事件[] |  |
-|开始 |日期 |  |
-|结束 |日期 |  |
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 活动 | V事件[] |      |
+| 开始 | 日期    |      |
+| 结束 | 日期    |      |
 
 ### 格式持续时间
 
 **种类：**功能
 
 ```typescript
-function formatDuration(event: VEvent): string
+function formatDuration(event: VEvent): string;
 ```
 
 返回事件的人类可读的持续时间字符串，例如“1小时30m”。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V活动 |  |
+| 名称 | 类型  | 描述 |
+| ---- | ----- | ---- |
+| 活动 | V活动 |      |
 
 ### 布局日
 
 **种类：**功能
 
 ```typescript
-function layoutDay(events: VEvent[]): SchedulerEventSlot[]
+function layoutDay(events: VEvent[]): SchedulerEventSlot[];
 ```
 
 使用简单的基于列的碰撞来布置一天的事件
@@ -170,16 +170,16 @@ function layoutDay(events: VEvent[]): SchedulerEventSlot[]
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V事件[] |  |
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 活动 | V事件[] |      |
 
 ### 移动事件补丁
 
 **种类：**功能
 
 ```typescript
-function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>
+function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>;
 ```
 
 `{ dtstart, dtend }` 补丁将事件移动 `deltaMs` 毫秒，
@@ -187,17 +187,17 @@ function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V活动 |  |
-| DeltaMs |数量 |  |
+| 名称    | 类型  | 描述 |
+| ------- | ----- | ---- |
+| 活动    | V活动 |      |
+| DeltaMs | 数量  |      |
 
 ### 调整大小事件补丁
 
 **种类：**功能
 
 ```typescript
-function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
+function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>;
 ```
 
 `{ dtend }` 补丁通过 `deltaMs` 调整事件结束的大小，夹紧以便
@@ -205,10 +205,10 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V活动 |  |
-| DeltaMs |数量 |  |
+| 名称    | 类型  | 描述 |
+| ------- | ----- | ---- |
+| 活动    | V活动 |      |
+| DeltaMs | 数量  |      |
 
 ## `src/core/range`
 
@@ -217,7 +217,7 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 **种类：**功能
 
 ```typescript
-function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
+function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 ```
 
 将 `anchor` 步进 `direction`（-1 = 上一个，+1 = 下一个）视图单元。
@@ -225,18 +225,18 @@ function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|查看 |调度视图 |  |
-|锚|日期 |  |
-|方向 | -1 \| 1 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 查看 | 调度视图 |      |
+| 锚   | 日期     |      |
+| 方向 | -1 \| 1  |      |
 
 ### 可见范围
 
 **种类：**功能
 
 ```typescript
-function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange
+function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange;
 ```
 
 给定 `view` 锚定的可见半开 `[start, end)` 窗口
@@ -244,11 +244,11 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|查看 |调度视图 |  |
-|锚|日期 |  |
-|周开始于 |周开始 |  |
+| 名称     | 类型     | 描述 |
+| -------- | -------- | ---- |
+| 查看     | 调度视图 |      |
+| 锚       | 日期     |      |
+| 周开始于 | 周开始   |      |
 
 ## `src/core/recurrence`
 
@@ -257,11 +257,11 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 **种类：**功能
 
 ```typescript
-function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[]
+function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[];
 ```
 
 将带有 RRULE 的单个 VEvent 扩展到所有重叠的事件中
-与 [rangeStart, rangeEnd)。  返回虚拟 VEvent 克隆 — 每个
+与 [rangeStart, rangeEnd)。 返回虚拟 VEvent 克隆 — 每个
 发生 — 调整 dtstart / dtend。
 
 还处理 RDATE（额外日期）和 EXDATE（排除日期）。
@@ -271,11 +271,11 @@ function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEv
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V活动 |  |
-|范围开始 |日期 |  |
-|范围结束 |日期 |  |
+| 名称     | 类型  | 描述 |
+| -------- | ----- | ---- |
+| 活动     | V活动 |      |
+| 范围开始 | 日期  |      |
+| 范围结束 | 日期  |      |
 
 ## `src/core/types`
 

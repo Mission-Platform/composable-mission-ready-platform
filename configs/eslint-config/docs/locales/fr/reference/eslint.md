@@ -24,13 +24,13 @@ la qualité du code, l'accessibilité et les règles architecturales dans tous l
 
 La configuration comprend les plugins et ensembles de règles suivants :
 
-| Plugin | Objectif |
-|:-------------------------|:-------------------------------------------------------|
-| `typescript-eslint`      | Standard TypeScript règles et peluchage sensible au type.      |
-| `eslint-plugin-vue`      | Vue 3 Linting SFC et validation du modèle.             |
-| `eslint-plugin-sonarjs`  | Détection des odeurs de code et des risques de bugs.                |
-| `eslint-plugin-unicorn`  | Des dizaines de petites règles communautaires utiles.               |
-| `eslint-plugin-i18next`  | S'assure que les clés de traduction sont utilisées correctement.           |
+| Plugin                   | Objectif                                                             |
+| :----------------------- | :------------------------------------------------------------------- |
+| `typescript-eslint`      | Standard TypeScript règles et peluchage sensible au type.            |
+| `eslint-plugin-vue`      | Vue 3 Linting SFC et validation du modèle.                           |
+| `eslint-plugin-sonarjs`  | Détection des odeurs de code et des risques de bugs.                 |
+| `eslint-plugin-unicorn`  | Des dizaines de petites règles communautaires utiles.                |
+| `eslint-plugin-i18next`  | S'assure que les clés de traduction sont utilisées correctement.     |
 | `eslint-config-prettier` | Désactive les règles qui entrent en conflit avec Prettier formatage. |
 
 ## Usage

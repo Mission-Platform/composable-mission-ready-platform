@@ -26,17 +26,20 @@ export interface ForgeGenerationOptions
 **종류:** 기능
 
 ```typescript
-function generateForgeExportBundle(document: ForgeDesignDocument, options: ForgeGenerationOptions = {}): ForgeExportBundle
+function generateForgeExportBundle(
+  document: ForgeDesignDocument,
+  options: ForgeGenerationOptions = {},
+): ForgeExportBundle;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 문서 | Forge디자인문서 |  |
-| 옵션 | ForgeGeneration옵션 |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 문서 | Forge디자인문서     |      |
+| 옵션 | ForgeGeneration옵션 |      |
 
 ## `src/model/design`
 
@@ -45,7 +48,7 @@ function generateForgeExportBundle(document: ForgeDesignDocument, options: Forge
 **종류:** 상수
 
 ```typescript
-export const FORGE_DESIGN_SCHEMA_VERSION
+export const FORGE_DESIGN_SCHEMA_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
@@ -145,7 +148,20 @@ export interface ForgeDesignNode
 **종류:** 유형
 
 ```typescript
-export type ForgeDesignNodeType = | 'frame' | 'group' | 'component' | 'instance' | 'text' | 'rectangle' | 'ellipse' | 'line' | 'vector' | 'boolean-operation' | 'image' | 'section' | 'unknown';
+export type ForgeDesignNodeType =
+  | 'frame'
+  | 'group'
+  | 'component'
+  | 'instance'
+  | 'text'
+  | 'rectangle'
+  | 'ellipse'
+  | 'line'
+  | 'vector'
+  | 'boolean-operation'
+  | 'image'
+  | 'section'
+  | 'unknown';
 ```
 
 설명이 제공되지 않았습니다.
@@ -267,16 +283,18 @@ export interface ForgeTextContent
 **종류:** 기능
 
 ```typescript
-function createForgeDiagnostic(diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>): ForgeDiagnostic
+function createForgeDiagnostic(
+  diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>,
+): ForgeDiagnostic;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | <ForgeDiagnostic, 'code'> 생략 및 <ForgeDiagnostic, 'code'> 선택 |  |
+| 이름 | 유형                                                             | 설명 |
+| ---- | ---------------------------------------------------------------- | ---- |
+| 진단 | <ForgeDiagnostic, 'code'> 생략 및 <ForgeDiagnostic, 'code'> 선택 |      |
 
 ### Forge진단
 
@@ -431,24 +449,24 @@ export interface ForgeSlotDefinition
 **종류:** 기능
 
 ```typescript
-function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined
+function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이름 | 문자열 |  |
-| 메타데이터 | ForgeComponentMetadata |  |
+| 이름       | 유형                   | 설명 |
+| ---------- | ---------------------- | ---- |
+| 이름       | 문자열                 |      |
+| 메타데이터 | ForgeComponentMetadata |      |
 
 ### FORGE_COMPONENT_REGISTRY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
+export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[];
 ```
 
 설명이 제공되지 않았습니다.
@@ -458,16 +476,16 @@ export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
 **종류:** 기능
 
 ```typescript
-function getForgeComponent(name: string): ForgeComponentRegistryEntry
+function getForgeComponent(name: string): ForgeComponentRegistryEntry;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이름 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 이름 | 문자열 |      |
 
 ## `src/tokens/resolve`
 
@@ -476,16 +494,16 @@ function getForgeComponent(name: string): ForgeComponentRegistryEntry
 **종류:** 기능
 
 ```typescript
-function componentPathToCssVariable(path: string): string | undefined
+function componentPathToCssVariable(path: string): string | undefined;
 ```
 
 정식 구성 요소 경로를 생성된 Mission Platform CSS 변수 이름으로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 경로 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 경로 | 문자열 |      |
 
 ### Figma가변바인딩
 
@@ -512,7 +530,7 @@ export interface ForgeTokenResolution
 **종류:** 상수
 
 ```typescript
-export const MISSION_PLATFORM_COMPONENT_COLLECTION
+export const MISSION_PLATFORM_COMPONENT_COLLECTION;
 ```
 
 설명이 제공되지 않았습니다.
@@ -522,32 +540,32 @@ export const MISSION_PLATFORM_COMPONENT_COLLECTION
 **종류:** 기능
 
 ```typescript
-function normalizeComponentTokenPath(value: string): string | undefined
+function normalizeComponentTokenPath(value: string): string | undefined;
 ```
 
 Figma 변수 이름 또는 별칭을 정식 `component.*` 경로로 정규화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### 해결Figma변수
 
 **종류:** 기능
 
 ```typescript
-function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution
+function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바인딩 | Figma변수바인딩 |  |
+| 이름   | 유형            | 설명 |
+| ------ | --------------- | ---- |
+| 바인딩 | Figma변수바인딩 |      |
 
 ## `src/validation/document`
 
@@ -556,16 +574,16 @@ function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResoluti
 **종류:** 기능
 
 ```typescript
-function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[]
+function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 문서 | Forge디자인문서 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 문서 | Forge디자인문서 |      |
 
 ### verifyForgeExportBundle
 
@@ -574,16 +592,16 @@ function validateForgeDesignDocument(document: ForgeDesignDocument): readonly Fo
 ```typescript
 function validateForgeExportBundle(bundle: {
   readonly files: readonly { readonly path: string }[];
-}): readonly ForgeDiagnostic[]
+}): readonly ForgeDiagnostic[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 번들 | { 읽기 전용 파일: 읽기 전용 { 읽기 전용 경로: 문자열 }[]; } |  |
+| 이름 | 유형                                                        | 설명 |
+| ---- | ----------------------------------------------------------- | ---- |
+| 번들 | { 읽기 전용 파일: 읽기 전용 { 읽기 전용 경로: 문자열 }[]; } |      |
 
 ## `src/validation/names`
 
@@ -592,34 +610,34 @@ function validateForgeExportBundle(bundle: {
 **종류:** 기능
 
 ```typescript
-function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string
+function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string;
 ```
 
 Figma 레이어 또는 프레임 이름에서 안정적인 PascalCase 식별자를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
-| 대체 |  |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
+| 대체 |        |      |
 
 ### 정규화파일 이름
 
 **종류:** 기능
 
 ```typescript
-function normalizeFileName(value: string, fallback = 'generated-component'): string
+function normalizeFileName(value: string, fallback = 'generated-component'): string;
 ```
 
 Figma 레이어 또는 프레임 이름에서 안전한 케밥 케이스 파일 줄기를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
-| 대체 |  |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
+| 대체 |        |      |
 
 ## `src/validation/paths`
 
@@ -638,14 +656,17 @@ export interface ForgePathValidationResult
 **종류:** 기능
 
 ```typescript
-function validateRepositoryRelativePath(value: string, allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg']): ForgePathValidationResult
+function validateRepositoryRelativePath(
+  value: string,
+  allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg'],
+): ForgePathValidationResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
-| 허용된 확장 | 읽기 전용 문자열[] |  |
+| 이름        | 유형               | 설명 |
+| ----------- | ------------------ | ---- |
+| 가치        | 문자열             |      |
+| 허용된 확장 | 읽기 전용 문자열[] |      |

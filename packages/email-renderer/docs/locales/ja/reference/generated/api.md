@@ -16,33 +16,33 @@
 **種類:** 関数
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 共有 Forge ツリーをブラウザ プレビュー用の React 要素としてレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |メールノード |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| node | メールノード |      |
 
 ### toEmailReactコンポーネント
 
 **種類:** 関数
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 Forge 電子メール コンポーネントを React 関数コンポーネントとしてラップします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント | MpComponent<P> |  |
-|名前 |文字列 |  |
+| 名前           | タイプ         | 説明 |
+| -------------- | -------------- | ---- |
+| コンポーネント | MpComponent<P> |      |
+| 名前           | 文字列         |      |
 
 ## `src/adapters/solid`
 
@@ -51,32 +51,32 @@ Forge 電子メール コンポーネントを React 関数コンポーネント
 **種類:** 関数
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 共有 Forge ツリーをブラウザー プレビュー用に Solid JSX としてレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |メールノード |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| node | メールノード |      |
 
 ### toEmailSolidComponent
 
 **種類:** 関数
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 Forge コンポーネントを Solid コンポーネントとしてラップします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンポーネント<P> |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| コンポーネント | コンポーネント<P> |      |
 
 ## `src/adapters/svelte`
 
@@ -85,16 +85,16 @@ Forge コンポーネントを Solid コンポーネントとしてラップし�
 **種類:** 関数
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 共有 Forge ツリーを `{@render ...}` の Svelte 5 生のスニペットに変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |メールノード |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| node | メールノード |      |
 
 ## `src/adapters/vue`
 
@@ -103,33 +103,33 @@ function renderToEmailSvelte(node: EmailNode): Snippet
 **種類:** 関数
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 共有 Forge ツリーをブラウザ プレビュー用の Vue VNode としてレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |メールノード |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| node | メールノード |      |
 
 ### toEmailVueコンポーネント
 
 **種類:** 関数
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 Forge 電子メール コンポーネントを Vue 機能コンポーネントとしてラップします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント | MpComponent<P> |  |
-|名前 |文字列 |  |
+| 名前           | タイプ         | 説明 |
+| -------------- | -------------- | ---- |
+| コンポーネント | MpComponent<P> |      |
+| 名前           | 文字列         |      |
 
 ## `src/adapters/web-components`
 
@@ -138,16 +138,16 @@ Forge 電子メール コンポーネントを Vue 機能コンポーネント�
 **種類:** 関数
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 Web コンポーネント ホストのネイティブ Forge テンプレート結果を作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |メールノード |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| node | メールノード |      |
 
 ## `src/markdown/render-markdown`
 
@@ -156,17 +156,17 @@ Web コンポーネント ホストのネイティブ Forge テンプレート�
 **種類:** 関数
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 安全な Markdown トークンを、電子メール コンポーネントで使用されるのと同じ Forge ツリーに変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値下げ |文字列 |  |
-|オプション | MarkdownRenderOptions |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| 値下げ     | 文字列                |      |
+| オプション | MarkdownRenderOptions |      |
 
 ## `src/markdown/types`
 
@@ -197,16 +197,16 @@ Markdown ツリーの生成を制御するオプション。
 **種類:** 関数
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 ホワイトリストに登録された Forge プロパティのセットを決定的な順序でシリアル化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |電子メールのプロパティ |  |
+| 名前       | タイプ                 | 説明 |
+| ---------- | ---------------------- | ---- |
+| プロパティ | 電子メールのプロパティ |      |
 
 ## `src/render/escape`
 
@@ -215,33 +215,33 @@ function serializeAttributes(properties: EmailProperties): string
 **種類:** 関数
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 HTML シリアル化のテキストと属性コンテンツをエスケープします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### 検証URL
 
 **種類:** 関数
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 コードを実行したり、予期しないリソースをロードしたりする可能性のあるスキームを拒否します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
-|属性 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
+| 属性 | 文字列 |      |
 
 ## `src/render/render-email`
 
@@ -250,33 +250,33 @@ function validateUrl(value: string, attribute: string): string
 **種類:** 関数
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 Forge 電子メール ツリーを、フレームワークを使用しない完全な HTML ドキュメントにレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |メールノード |  |
-|オプション |レンダーメールオプション |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| node       | メールノード             |      |
+| オプション | レンダーメールオプション |      |
 
 ### renderEmailFragment
 
 **種類:** 関数
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 Forge ツリーをブラウザ アダプタ ホスト用の安全な HTML フラグメントとしてレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |メールノード |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| node | メールノード |      |
 
 ## `src/render/style`
 
@@ -285,16 +285,16 @@ Forge ツリーをブラウザ アダプタ ホスト用の安全な HTML フラ
 **種類:** 関数
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 CSS 変数を使用せずに、決定論的なプロパティ順序でインライン スタイルをシリアル化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|スタイル |電子メールスタイル \|文字列 |  |
+| 名前     | タイプ                      | 説明 |
+| -------- | --------------------------- | ---- |
+| スタイル | 電子メールスタイル \|文字列 |      |
 
 ## `src/render/types`
 

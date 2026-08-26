@@ -32,15 +32,15 @@ Ce package démontre une architecture multi-framework à haute efficacité :
 Chaque composant de la bibliothèque prend en charge un accessoire `size` qui suit une échelle canonique de t-shirt. Cela garantit une cohérence
 mise à l'échelle sur tous les éléments de l'interface utilisateur.
 
-| Valeur | Étiquette |
-| :---- | :---------------- |
-| `2xs` | Extra-extra-petit |
-| `xs` | Très petit |
-| `sm` | Petit |
-| `md` | Moyen (par défaut) |
-| `lg` | Grand |
-| `xl` | Très grand |
-| `2xl` | Extra-extra-large |
+| Valeur | Étiquette          |
+| :----- | :----------------- |
+| `2xs`  | Extra-extra-petit  |
+| `xs`   | Très petit         |
+| `sm`   | Petit              |
+| `md`   | Moyen (par défaut) |
+| `lg`   | Grand              |
+| `xl`   | Très grand         |
+| `2xl`  | Extra-extra-large  |
 
 La plupart des composants appliquent un utilitaire de dimensionnement partagé qui ajuste le `font-size` en fonction des jetons de conception. Un peu complexe
 les composants (comme `ForgeButton` ou `ForgeHero`) ont un style sur mesure par taille pour le remplissage, les marges et la mise en page.
@@ -51,86 +51,86 @@ les composants (comme `ForgeButton` ou `ForgeHero`) ont un style sur mesure par 
 
 Primitives pour organiser le contenu sur la page.
 
-| Composant | Descriptif | Accessoires clés |
-| :--------------- | :-------------------------------------------------------- | :--------------------------------------------------- |
-| `ForgeStack` | Pile Flexbox (ligne/colonne) avec espace configurable.         | `direction`, `gap` (`2xs-2xl`), `justify`, `align` |
-| `ForgeGrid` | Primitive de disposition de grille CSS.                                | `rows`, `cols`, `gap`, `justify`, `align` |
+| Composant        | Descriptif                                                        | Accessoires clés                                     |
+| :--------------- | :---------------------------------------------------------------- | :--------------------------------------------------- |
+| `ForgeStack`     | Pile Flexbox (ligne/colonne) avec espace configurable.            | `direction`, `gap` (`2xs-2xl`), `justify`, `align`   |
+| `ForgeGrid`      | Primitive de disposition de grille CSS.                           | `rows`, `cols`, `gap`, `justify`, `align`            |
 | `ForgeSeparator` | Séparateur visuel (horizontal/vertical) avec étiquette en option. | `orientation`, `variant` (`solid`/`dashed`/`dotted`) |
-| `ForgeMasonry` | Disposition de maçonnerie multi-colonnes.                              | `columns`, `minColumnWidth`, `gap` |
+| `ForgeMasonry`   | Disposition de maçonnerie multi-colonnes.                         | `columns`, `minColumnWidth`, `gap`                   |
 
 ### Coque d'application et navigation
 
 Composants de haut niveau pour la structure et le routage des applications.
 
-| Composant | Descriptif | Accessoires clés |
-| :--------------------------- | :----------------------------------------------------------- | :---------------------------------------------- |
-| `ForgeNavbar` | Barre de navigation supérieure réactive avec menu de marque et de hamburger. | `brand`, `sticky`, `mobileTitle` |
-| `ForgeDrawer` | Panneau coulissant (fixe ou réactif en ligne).                  | `open`, `placement`, `size`, `inlineBreakpoint` |
-| `ForgePagination` | Contrôle de navigation dans les pages contrôlé.                          | `modelValue`, `pageCount`/`total`, `pageSize` |
-| `ForgeTabs` | Liste de tableaux ARIA avec tabindex itinérant et panneaux.                | `tabs`, `modelValue`, `variant` (`line`/`pill`) |
-| `ForgeMenu` / `ForgeMenubar` | Menus/barres de menus récursifs accessibles avec sous-menus.            | `items`, `orientation`, `ariaLabel` |
-| `ForgeBreadcrumb` | Chemin hiérarchique des liens.                                 | `items`, `separator` |
+| Composant                    | Descriptif                                                                   | Accessoires clés                                |
+| :--------------------------- | :--------------------------------------------------------------------------- | :---------------------------------------------- |
+| `ForgeNavbar`                | Barre de navigation supérieure réactive avec menu de marque et de hamburger. | `brand`, `sticky`, `mobileTitle`                |
+| `ForgeDrawer`                | Panneau coulissant (fixe ou réactif en ligne).                               | `open`, `placement`, `size`, `inlineBreakpoint` |
+| `ForgePagination`            | Contrôle de navigation dans les pages contrôlé.                              | `modelValue`, `pageCount`/`total`, `pageSize`   |
+| `ForgeTabs`                  | Liste de tableaux ARIA avec tabindex itinérant et panneaux.                  | `tabs`, `modelValue`, `variant` (`line`/`pill`) |
+| `ForgeMenu` / `ForgeMenubar` | Menus/barres de menus récursifs accessibles avec sous-menus.                 | `items`, `orientation`, `ariaLabel`             |
+| `ForgeBreadcrumb`            | Chemin hiérarchique des liens.                                               | `items`, `separator`                            |
 
 ### Typographie et contenu
 
 Blocs de style de texte et de contenu sémantique.
 
-| Composant | Descriptif | Accessoires clés |
-| :----------- | :--------------------------------------------------------------- | :-------------------------------------- |
-| `ForgeHero` | Bannière de page avec titre, sous-titre, arrière-plan multimédia et actions. | `title`, `subtitle`, `media`, `actions` |
-| `ForgeQuote` | Citation sémantique avec attribution.                            | `variant`, `tone`, `author`, `source` |
-| `ForgeList` | Liste générique (ordonnée/non ordonnée/description).                    | `items`, `variant`, `tone`, `divided` |
+| Composant    | Descriptif                                                                   | Accessoires clés                        |
+| :----------- | :--------------------------------------------------------------------------- | :-------------------------------------- |
+| `ForgeHero`  | Bannière de page avec titre, sous-titre, arrière-plan multimédia et actions. | `title`, `subtitle`, `media`, `actions` |
+| `ForgeQuote` | Citation sémantique avec attribution.                                        | `variant`, `tone`, `author`, `source`   |
+| `ForgeList`  | Liste générique (ordonnée/non ordonnée/description).                         | `items`, `variant`, `tone`, `divided`   |
 
 ### Formulaires et entrées
 
 Éléments interactifs pour la saisie de données.
 
-| Composant | Descriptif | Accessoires clés |
-| :--------------------------------------- | :--------------------------------------------------- | :------------------------------------------- |
-| `ForgeButton` | Bouton fondamental avec variantes et état de chargement. | `variant`, `size`, `loading`, `disabled` |
-| `ForgeIconButton` | Bouton compact contenant uniquement des icônes.                            | `label` (obligatoire), `variant`, `size` |
-| `ForgeInput` / `ForgeTextarea` | Champs de texte avec états d’étiquette, d’indice et d’erreur.      | `modelValue`, `type`, `placeholder`, `label` |
-| `ForgeCheckbox` / `ForgeRadio` | Entrées booléennes ou de sélection de groupe.                   | `modelValue`, `value`, `label` |
-| `ForgeSwitch` | Interrupteur à bascule pour les paramètres booléens.                  | `modelValue`, `label`, `size` |
-| `ForgeNumberStepper` | Saisie numérique avec boutons d'incrémentation/décrémentation.       | `modelValue`, `min`/`max`, `precision` |
-| `ForgeSlider` / `ForgeRangeInput` | Sélecteurs de gamme à un ou deux pouces.                | `modelValue`, `min`/`max`, `step` |
-| `ForgeDateInput` / `ForgeDateRangeInput` | Sélecteurs de dates et de plages de dates avec calendriers popover.  | `modelValue`, `min`/`max`, `size` |
-| `ForgeColorInput` | Sélecteur de couleurs avec champ de texte hexadécimal.                   | `modelValue`, `size`, `label` |
+| Composant                                | Descriptif                                                          | Accessoires clés                             |
+| :--------------------------------------- | :------------------------------------------------------------------ | :------------------------------------------- |
+| `ForgeButton`                            | Bouton fondamental avec variantes et état de chargement.            | `variant`, `size`, `loading`, `disabled`     |
+| `ForgeIconButton`                        | Bouton compact contenant uniquement des icônes.                     | `label` (obligatoire), `variant`, `size`     |
+| `ForgeInput` / `ForgeTextarea`           | Champs de texte avec états d’étiquette, d’indice et d’erreur.       | `modelValue`, `type`, `placeholder`, `label` |
+| `ForgeCheckbox` / `ForgeRadio`           | Entrées booléennes ou de sélection de groupe.                       | `modelValue`, `value`, `label`               |
+| `ForgeSwitch`                            | Interrupteur à bascule pour les paramètres booléens.                | `modelValue`, `label`, `size`                |
+| `ForgeNumberStepper`                     | Saisie numérique avec boutons d'incrémentation/décrémentation.      | `modelValue`, `min`/`max`, `precision`       |
+| `ForgeSlider` / `ForgeRangeInput`        | Sélecteurs de gamme à un ou deux pouces.                            | `modelValue`, `min`/`max`, `step`            |
+| `ForgeDateInput` / `ForgeDateRangeInput` | Sélecteurs de dates et de plages de dates avec calendriers popover. | `modelValue`, `min`/`max`, `size`            |
+| `ForgeColorInput`                        | Sélecteur de couleurs avec champ de texte hexadécimal.              | `modelValue`, `size`, `label`                |
 
 ### Affichage des données et virtualisation
 
 Composants permettant de gérer efficacement de grands ensembles de données.
 
-| Composant | Descriptif | Accessoires clés |
-| :--------------------- | :---------------------------------------------------------- | :-------------------------------------------- |
-| `ForgeTable` | Table de données triables avec états de chargement et vides.          | `columns`, `rows`, `onSort`, `loading` |
-| `ForgeVirtualList` | Liste fenêtrée pour les grands tableaux (rend uniquement les lignes visibles). | `items`, `itemHeight`, `height` |
-| `ForgeVirtualTable` | Table triable virtualisée avec en-tête collant.              | `columns`, `rows`, `rowHeight`, `onSort` |
-| `ForgeVirtualTreeView` | Vue arborescente fenêtrée avec logique de développement/réduction.              | `nodes`, `itemHeight`, `onSelect`, `onToggle` |
-| `ForgeTreeView` | Arbre accessible récursif (non virtualisé).                | `nodes`, `defaultOpen`, `onSelect` |
-| `ForgeTimeline` | Liste d'événements verticale ou horizontale.                          | `items`, `orientation`, `align` |
+| Composant              | Descriptif                                                                     | Accessoires clés                              |
+| :--------------------- | :----------------------------------------------------------------------------- | :-------------------------------------------- |
+| `ForgeTable`           | Table de données triables avec états de chargement et vides.                   | `columns`, `rows`, `onSort`, `loading`        |
+| `ForgeVirtualList`     | Liste fenêtrée pour les grands tableaux (rend uniquement les lignes visibles). | `items`, `itemHeight`, `height`               |
+| `ForgeVirtualTable`    | Table triable virtualisée avec en-tête collant.                                | `columns`, `rows`, `rowHeight`, `onSort`      |
+| `ForgeVirtualTreeView` | Vue arborescente fenêtrée avec logique de développement/réduction.             | `nodes`, `itemHeight`, `onSelect`, `onToggle` |
+| `ForgeTreeView`        | Arbre accessible récursif (non virtualisé).                                    | `nodes`, `defaultOpen`, `onSelect`            |
+| `ForgeTimeline`        | Liste d'événements verticale ou horizontale.                                   | `items`, `orientation`, `align`               |
 
 ### Commentaires et superpositions
 
 Indicateurs de notification et de chargement.
 
-| Composant | Descriptif | Accessoires clés |
-| :----------------- | :------------------------------------------- | :--------------------------------------------------- |
-| `ForgeSpinner` | Anneau de chargement indéterminé.                  | `size`, `variant`, `label` |
-| `ForgeSkeleton` | Espace réservé chatoyant pour le chargement du contenu.  | `shape` (`line`/`circle`/`block`), `width`, `height` |
-| `ForgeProgressBar` | Piste de progression déterminée ou indéterminée. | `value`, `max`, `variant`, `indeterminate` |
-| `ForgeStatusIcon` | Petit glyphe indicateur d'état tonique.          | `status`, `size`, `label` |
+| Composant          | Descriptif                                              | Accessoires clés                                     |
+| :----------------- | :------------------------------------------------------ | :--------------------------------------------------- |
+| `ForgeSpinner`     | Anneau de chargement indéterminé.                       | `size`, `variant`, `label`                           |
+| `ForgeSkeleton`    | Espace réservé chatoyant pour le chargement du contenu. | `shape` (`line`/`circle`/`block`), `width`, `height` |
+| `ForgeProgressBar` | Piste de progression déterminée ou indéterminée.        | `value`, `max`, `variant`, `indeterminate`           |
+| `ForgeStatusIcon`  | Petit glyphe indicateur d'état tonique.                 | `status`, `size`, `label`                            |
 
 ### Médias
 
 Gestion des images, des vidéos et du look-and-feel de la plateforme.
 
-| Composant | Descriptif | Accessoires clés |
-| :--------------------- | :------------------------------------------------------------ | :------------------------------------- |
-| `ForgeResponsiveImage` | `<picture>` dirigé par l'art avec srcset/sizes natifs.            | `src`, `sources`, `aspectRatio`, `fit` |
-| `ForgeResponsiveVideo` | Lecteur vidéo réactif avec rapport hauteur/largeur fixe.              | `src`, `sources`, `poster`, `autoplay` |
-| `ForgeBackgroundVideo` | Vidéo d'arrière-plan à fond perdu avec prise en charge des mouvements réduits.      | `src`, `overlay`, `minHeight` |
-| `ForgeDeviceMock` | Cadre de l'appareil (mobile/tablette/ordinateur de bureau/navigateur) autour d'un écran. | `device`, `orientation`, `url`, `size` |
+| Composant              | Descriptif                                                                               | Accessoires clés                       |
+| :--------------------- | :--------------------------------------------------------------------------------------- | :------------------------------------- |
+| `ForgeResponsiveImage` | `<picture>` dirigé par l'art avec srcset/sizes natifs.                                   | `src`, `sources`, `aspectRatio`, `fit` |
+| `ForgeResponsiveVideo` | Lecteur vidéo réactif avec rapport hauteur/largeur fixe.                                 | `src`, `sources`, `poster`, `autoplay` |
+| `ForgeBackgroundVideo` | Vidéo d'arrière-plan à fond perdu avec prise en charge des mouvements réduits.           | `src`, `overlay`, `minHeight`          |
+| `ForgeDeviceMock`      | Cadre de l'appareil (mobile/tablette/ordinateur de bureau/navigateur) autour d'un écran. | `device`, `orientation`, `url`, `size` |
 
 ## Détails de mise en œuvre
 

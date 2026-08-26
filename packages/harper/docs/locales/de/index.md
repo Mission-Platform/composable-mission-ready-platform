@@ -85,6 +85,7 @@ function useHarperMonaco(
 ```
 
 – `editorReference`: Ein Ref oder Getter, der die Monaco-Editor-Instanz bereitstellt.
+
 - `enabled`: Ein reaktiver boolescher Wert zum Ein-/Ausschalten der Grammatikprüfung.
 - `languageReference`: Der Sprachmodus des Editors, der zum Registrieren von Codeaktionen verwendet wird.
 

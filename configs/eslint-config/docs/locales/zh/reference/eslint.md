@@ -24,14 +24,14 @@
 
 该配置包括以下插件和规则集：
 
-|插件 |目的|
-|:-------------------------|:-------------------------------------------------------|
-| `typescript-eslint`      |标准 TypeScript 规则和类型感知的 linting。      |
+| 插件                     | 目的                                       |
+| :----------------------- | :----------------------------------------- |
+| `typescript-eslint`      | 标准 TypeScript 规则和类型感知的 linting。 |
 | `eslint-plugin-vue`      | Vue 3 SFC linting 和模板验证。             |
-| `eslint-plugin-sonarjs`  |检测代码气味和错误风险。                |
-| `eslint-plugin-unicorn`  |数十条小而有用的社区规则。               |
-| `eslint-plugin-i18next`  |确保正确使用翻译键。           |
-| `eslint-config-prettier` |禁用与以下内容冲突的规则 Prettier 格式化。 |
+| `eslint-plugin-sonarjs`  | 检测代码气味和错误风险。                   |
+| `eslint-plugin-unicorn`  | 数十条小而有用的社区规则。                 |
+| `eslint-plugin-i18next`  | 确保正确使用翻译键。                       |
+| `eslint-config-prettier` | 禁用与以下内容冲突的规则 Prettier 格式化。 |
 
 ## 用法
 

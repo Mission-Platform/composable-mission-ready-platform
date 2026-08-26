@@ -17,11 +17,11 @@ die aktive Exportbedingung `mp:<framework>`, die Sie **einmal** für das gesamte
 `@mission-platform/vite-config`) und `customConditions` in TypeScript (über die
 `@mission-platform/typescript-config/framework-<name>`-Voreinstellungen). Jeder Import bleibt leer.
 
-| Aktiver Zustand | Wird zu | aufgelöst Wichtige Exporte |
-| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
-| _(keine)_ | Framework-neutraler Kern | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue` | Vue 3 Adapter | der neutrale Kern plus `createForgeI18NVue`, `useI18n` |
-| `mp:react` | React-Adapter | der neutrale Kern plus `ForgeI18NProvider`, `useI18n` |
+| Aktiver Zustand | Wird zu                  | aufgelöst Wichtige Exporte                                              |
+| :-------------- | :----------------------- | :---------------------------------------------------------------------- |
+| _(keine)_       | Framework-neutraler Kern | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
+| `mp:vue`        | Vue 3 Adapter            | der neutrale Kern plus `createForgeI18NVue`, `useI18n`                  |
+| `mp:react`      | React-Adapter            | der neutrale Kern plus `ForgeI18NProvider`, `useI18n`                   |
 
 ## Kernkonzepte
 

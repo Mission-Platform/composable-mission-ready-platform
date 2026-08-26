@@ -16,16 +16,18 @@
 **種類:** 関数
 
 ```typescript
-function ForgeResourcePlanner(properties: Readonly<ResourcePlannerProperties>): MpElement
+function ForgeResourcePlanner(
+  properties: Readonly<ResourcePlannerProperties>,
+): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ResourcePlannerProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ResourcePlannerProperties> |      |
 
 ### プランナー予約範囲
 
@@ -84,7 +86,9 @@ export interface AvailabilityException
 **種類：**タイプ
 
 ```typescript
-export type AvailabilityInput = | ResourceAvailability[] | Record<string, Omit<ResourceAvailability, "resourceId">>;
+export type AvailabilityInput =
+  | ResourceAvailability[]
+  | Record<string, Omit<ResourceAvailability, "resourceId">>;
 ```
 
 説明はありません。
@@ -114,7 +118,8 @@ export interface CapacityState
 **種類：**タイプ
 
 ```typescript
-export type CapacityStatus = "available" | "unavailable" | "over-capacity" | "conflict";
+export type CapacityStatus =
+  "available" | "unavailable" | "over-capacity" | "conflict";
 ```
 
 説明はありません。
@@ -266,51 +271,60 @@ export interface WorkingHoursRule
 **種類:** 関数
 
 ```typescript
-function assignmentsForEvent(assignments: PlannerAssignment[], eventId: string): PlannerAssignment[]
+function assignmentsForEvent(
+  assignments: PlannerAssignment[],
+  eventId: string,
+): PlannerAssignment[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|割り当て |プランナーの割り当て[] |  |
-|イベントID |文字列 |  |
+| 名前       | タイプ                 | 説明 |
+| ---------- | ---------------------- | ---- |
+| 割り当て   | プランナーの割り当て[] |      |
+| イベントID | 文字列                 |      |
 
 ### 正規化割り当て
 
 **種類:** 関数
 
 ```typescript
-function normalizeAssignments(assignments: PlannerAssignment[]): PlannerAssignment[]
+function normalizeAssignments(
+  assignments: PlannerAssignment[],
+): PlannerAssignment[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|割り当て |プランナーの割り当て[] |  |
+| 名前     | タイプ                 | 説明 |
+| -------- | ---------------------- | ---- |
+| 割り当て | プランナーの割り当て[] |      |
 
 ### 正規化プランナーイベント
 
 **種類:** 関数
 
 ```typescript
-function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment[], range?: { start: Date; end: Date }): PlannerEventRecord[]
+function normalizePlannerEvents(
+  events: VEvent[],
+  assignments: PlannerAssignment[],
+  range?: { start: Date; end: Date },
+): PlannerEventRecord[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント[] |  |
-|割り当て |プランナーの割り当て[] |  |
-|範囲 | { 開始日;終了: 日付 } |  |
+| 名前     | タイプ                 | 説明 |
+| -------- | ---------------------- | ---- |
+| イベント | VEイベント[]           |      |
+| 割り当て | プランナーの割り当て[] |      |
+| 範囲     | { 開始日;終了: 日付 }  |      |
 
 ## `src/utils/availability`
 
@@ -319,36 +333,44 @@ function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment
 **種類:** 関数
 
 ```typescript
-function availabilityForResource(input: AvailabilityInput, resourceId: string): ResourceAvailability
+function availabilityForResource(
+  input: AvailabilityInput,
+  resourceId: string,
+): ResourceAvailability;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |可用性入力 |  |
-|リソースID |文字列 |  |
+| 名前       | タイプ     | 説明 |
+| ---------- | ---------- | ---- |
+| 入力       | 可用性入力 |      |
+| リソースID | 文字列     |      |
 
 ### 可用性を拡張する
 
 **種類:** 関数
 
 ```typescript
-function expandAvailability(resourceId: string, input: AvailabilityInput, range: { start: Date; end: Date }, options: AvailabilityOptions = {}): NormalizedAvailabilityInterval[]
+function expandAvailability(
+  resourceId: string,
+  input: AvailabilityInput,
+  range: { start: Date; end: Date },
+  options: AvailabilityOptions = {},
+): NormalizedAvailabilityInterval[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|リソースID |文字列 |  |
-|入力 |可用性入力 |  |
-|範囲 | { 開始日;終了: 日付 } |  |
-|オプション |可用性オプション |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| リソースID | 文字列                |      |
+| 入力       | 可用性入力            |      |
+| 範囲       | { 開始日;終了: 日付 } |      |
+| オプション | 可用性オプション      |      |
 
 ## `src/utils/capacity`
 
@@ -357,19 +379,24 @@ function expandAvailability(resourceId: string, input: AvailabilityInput, range:
 **種類:** 関数
 
 ```typescript
-function calculateCapacityState(resourceId: string, segment: TimelineSegment | { start: Date; end: Date }, availability: NormalizedAvailabilityInterval[], events: PlannerEventRecord[]): CapacityState
+function calculateCapacityState(
+  resourceId: string,
+  segment: TimelineSegment | { start: Date; end: Date },
+  availability: NormalizedAvailabilityInterval[],
+  events: PlannerEventRecord[],
+): CapacityState;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|リソースID |文字列 |  |
-|セグメント |タイムラインセグメント \| { 開始日;終了: 日付 } |  |
-|可用性 | NormalizedAvailabilityInterval[] |  |
-|イベント |プランナーイベントレコード[] |  |
+| 名前       | タイプ                                          | 説明 |
+| ---------- | ----------------------------------------------- | ---- |
+| リソースID | 文字列                                          |      |
+| セグメント | タイムラインセグメント \| { 開始日;終了: 日付 } |      |
+| 可用性     | NormalizedAvailabilityInterval[]                |      |
+| イベント   | プランナーイベントレコード[]                    |      |
 
 ## `src/utils/layout`
 
@@ -378,18 +405,22 @@ function calculateCapacityState(resourceId: string, segment: TimelineSegment | {
 **種類:** 関数
 
 ```typescript
-function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Date; end: Date }, width: number): PlannerEventGeometry[]
+function layoutResourceEvents(
+  records: PlannerEventRecord[],
+  range: { start: Date; end: Date },
+  width: number,
+): PlannerEventGeometry[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記録 |プランナーイベントレコード[] |  |
-|範囲 | { 開始日;終了: 日付 } |  |
-|幅 |番号 |  |
+| 名前 | タイプ                       | 説明 |
+| ---- | ---------------------------- | ---- |
+| 記録 | プランナーイベントレコード[] |      |
+| 範囲 | { 開始日;終了: 日付 }        |      |
+| 幅   | 番号                         |      |
 
 ## `src/utils/mutations`
 
@@ -398,90 +429,110 @@ function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Dat
 **種類:** 関数
 
 ```typescript
-function applyAssignmentUpdate(assignments: PlannerAssignment[], update: PlannerAssignmentUpdate): PlannerAssignment[]
+function applyAssignmentUpdate(
+  assignments: PlannerAssignment[],
+  update: PlannerAssignmentUpdate,
+): PlannerAssignment[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|割り当て |プランナーの割り当て[] |  |
-|更新 |プランナー割り当て更新 |  |
+| 名前     | タイプ                 | 説明 |
+| -------- | ---------------------- | ---- |
+| 割り当て | プランナーの割り当て[] |      |
+| 更新     | プランナー割り当て更新 |      |
 
 ### 移動プランナーイベントパッチ
 
 **種類:** 関数
 
 ```typescript
-function movePlannerEventPatch(event: VEvent, deltaMs: number, options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function movePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント |  |
-|デルタムス |番号 |  |
-|オプション |プランナー編集オプション |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| イベント   | VEイベント               |      |
+| デルタムス | 番号                     |      |
+| オプション | プランナー編集オプション |      |
 
 ### reassignプランナーイベント
 
 **種類:** 関数
 
 ```typescript
-function reassignPlannerEvent(eventId: string, resourceId: string): PlannerAssignmentUpdate
+function reassignPlannerEvent(
+  eventId: string,
+  resourceId: string,
+): PlannerAssignmentUpdate;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベントID |文字列 |  |
-|リソースID |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| イベントID | 文字列 |      |
+| リソースID | 文字列 |      |
 
 ### サイズ変更プランナーイベントパッチ
 
 **種類:** 関数
 
 ```typescript
-function resizePlannerEventPatch(event: VEvent, deltaMs: number, edge: "start" | "end" = "end", options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function resizePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  edge: "start" | "end" = "end",
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント |  |
-|デルタムス |番号 |  |
-|エッジ | 「開始」 \| 「終わり」 |  |
-|オプション |プランナー編集オプション |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| イベント   | VEイベント               |      |
+| デルタムス | 番号                     |      |
+| エッジ     | 「開始」 \| 「終わり」   |      |
+| オプション | プランナー編集オプション |      |
 
 ### selectPlannerRange
 
 **種類:** 関数
 
 ```typescript
-function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumDurationMs = 15 * 60_000): PlannerRangeSelection | undefined
+function selectPlannerRange(
+  resourceId: string,
+  start: Date,
+  end: Date,
+  minimumDurationMs = 15 * 60_000,
+): PlannerRangeSelection | undefined;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|リソースID |文字列 |  |
-|開始 |日付 |  |
-|終わり |日付 |  |
-|最小期間Ms |  |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| リソースID | 文字列 |      |
+| 開始       | 日付   |      |
+| 終わり     | 日付   |      |
+| 最小期間Ms |        |      |
 
 ## `src/utils/timeline`
 
@@ -490,68 +541,80 @@ function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumD
 **種類:** 関数
 
 ```typescript
-function clampToRange(value: Date, range: { start: Date; end: Date }): Date
+function clampToRange(value: Date, range: { start: Date; end: Date }): Date;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |日付 |  |
-|範囲 | { 開始日;終了: 日付 } |  |
+| 名前 | タイプ                | 説明 |
+| ---- | --------------------- | ---- |
+| 値   | 日付                  |      |
+| 範囲 | { 開始日;終了: 日付 } |      |
 
 ### タイムラインセグメントの生成
 
 **種類:** 関数
 
 ```typescript
-function generateTimelineSegments(scale: PlannerScale, range: { start: Date; end: Date }, options: TimelineOptions = {}): TimelineSegment[]
+function generateTimelineSegments(
+  scale: PlannerScale,
+  range: { start: Date; end: Date },
+  options: TimelineOptions = {},
+): TimelineSegment[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|スケール |プランナースケール |  |
-|範囲 | { 開始日;終了: 日付 } |  |
-|オプション |タイムラインオプション |  |
+| 名前       | タイプ                 | 説明 |
+| ---------- | ---------------------- | ---- |
+| スケール   | プランナースケール     |      |
+| 範囲       | { 開始日;終了: 日付 }  |      |
+| オプション | タイムラインオプション |      |
 
 ### 位置から時間まで
 
 **種類:** 関数
 
 ```typescript
-function positionToTime(position: number, range: { start: Date; end: Date }, width: number): Date
+function positionToTime(
+  position: number,
+  range: { start: Date; end: Date },
+  width: number,
+): Date;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|位置 |番号 |  |
-|範囲 | { 開始日;終了: 日付 } |  |
-|幅 |番号 |  |
+| 名前 | タイプ                | 説明 |
+| ---- | --------------------- | ---- |
+| 位置 | 番号                  |      |
+| 範囲 | { 開始日;終了: 日付 } |      |
+| 幅   | 番号                  |      |
 
 ### 位置までの時間
 
 **種類:** 関数
 
 ```typescript
-function timeToPosition(time: Date, range: { start: Date; end: Date }, width: number): number
+function timeToPosition(
+  time: Date,
+  range: { start: Date; end: Date },
+  width: number,
+): number;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|時間 |日付 |  |
-|範囲 | { 開始日;終了: 日付 } |  |
-|幅 |番号 |  |
+| 名前 | タイプ                | 説明 |
+| ---- | --------------------- | ---- |
+| 時間 | 日付                  |      |
+| 範囲 | { 開始日;終了: 日付 } |      |
+| 幅   | 番号                  |      |

@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/three`.
 **Soort:** functie
 
 ```typescript
-function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement
+function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
 ForgeThreeCanvas — een raamwerkneutrale component die een <canvas> oplevert
@@ -24,9 +24,9 @@ en beheert een Three.js WebGL-context via `useThree`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ForgeThreeCanvasProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ForgeThreeCanvasProperties> |              |
 
 ### ForgeThreeCanvasEigenschappen
 
@@ -55,7 +55,10 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function useThree(canvasReference: ReferenceLike<HTMLCanvasElement | null>, onReady?: (context: ThreeContext) => void | (() => void)): void
+function useThree(
+  canvasReference: ReferenceLike<HTMLCanvasElement | null>,
+  onReady?: (context: ThreeContext) => void | (() => void),
+): void;
 ```
 
 Kaderneutrale Three.js-haak.
@@ -66,7 +69,7 @@ Automatisch opschonen: verwijdert de renderer en annuleert het animatieframe bij
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| canvasReferentie | ReferentieLike<HTMLCanvasElement \| null> |  |
-| opReady | (context: ThreeContext) => void \| (() => ongeldig) |  |
+| Naam             | Typ                                                 | Beschrijving |
+| ---------------- | --------------------------------------------------- | ------------ |
+| canvasReferentie | ReferentieLike<HTMLCanvasElement \| null>           |              |
+| opReady          | (context: ThreeContext) => void \| (() => ongeldig) |              |

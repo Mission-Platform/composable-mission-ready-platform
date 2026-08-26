@@ -17,11 +17,11 @@ Vite の `resolve.conditions` (`defineFrameworkAppConfig` / `frameworkResolveCon
 `@mission-platform/vite-config`) および TypeScript の `customConditions` (
 `@mission-platform/typescript-config/framework-<name>` プリセット）。すべてのインポートは裸のままです。
 
-|アクティブな状態 | | に解決されます。主要な輸出 |
-| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
-| _(なし)_ |フレームワーク中立のコア | `createForgeI18N`、`forgeNamespace`、`localeNamespaces`、`mergeLocales` |
-| `mp:vue` | Vue 3 アダプター |ニュートラルコアと `createForgeI18NVue`、`useI18n` |
-| `mp:react` | React アダプター |ニュートラルコアと `ForgeI18NProvider`、`useI18n` |
+| アクティブな状態 |                          | に解決されます。主要な輸出                                              |
+| :--------------- | :----------------------- | :---------------------------------------------------------------------- |
+| _(なし)_         | フレームワーク中立のコア | `createForgeI18N`、`forgeNamespace`、`localeNamespaces`、`mergeLocales` |
+| `mp:vue`         | Vue 3 アダプター         | ニュートラルコアと `createForgeI18NVue`、`useI18n`                      |
+| `mp:react`       | React アダプター         | ニュートラルコアと `ForgeI18NProvider`、`useI18n`                       |
 
 ## 中心となる概念
 

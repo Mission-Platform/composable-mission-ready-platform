@@ -26,17 +26,20 @@ export interface ForgeGenerationOptions
 פונקציה **סוג:**
 
 ```typescript
-function generateForgeExportBundle(document: ForgeDesignDocument, options: ForgeGenerationOptions = {}): ForgeExportBundle
+function generateForgeExportBundle(
+  document: ForgeDesignDocument,
+  options: ForgeGenerationOptions = {},
+): ForgeExportBundle;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסמך | ForgeDesignDocument |  |
-| אפשרויות | ForgeGenerationOptions |  |
+| שם       | הקלד                   | תיאור |
+| -------- | ---------------------- | ----- |
+| מסמך     | ForgeDesignDocument    |       |
+| אפשרויות | ForgeGenerationOptions |       |
 
 ## `src/model/design`
 
@@ -45,7 +48,7 @@ function generateForgeExportBundle(document: ForgeDesignDocument, options: Forge
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_DESIGN_SCHEMA_VERSION
+export const FORGE_DESIGN_SCHEMA_VERSION;
 ```
 
 לא סופק תיאור.
@@ -145,7 +148,20 @@ export interface ForgeDesignNode
 **סוג:** סוג
 
 ```typescript
-export type ForgeDesignNodeType = | 'frame' | 'group' | 'component' | 'instance' | 'text' | 'rectangle' | 'ellipse' | 'line' | 'vector' | 'boolean-operation' | 'image' | 'section' | 'unknown';
+export type ForgeDesignNodeType =
+  | 'frame'
+  | 'group'
+  | 'component'
+  | 'instance'
+  | 'text'
+  | 'rectangle'
+  | 'ellipse'
+  | 'line'
+  | 'vector'
+  | 'boolean-operation'
+  | 'image'
+  | 'section'
+  | 'unknown';
 ```
 
 לא סופק תיאור.
@@ -267,16 +283,18 @@ export interface ForgeTextContent
 פונקציה **סוג:**
 
 ```typescript
-function createForgeDiagnostic(diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>): ForgeDiagnostic
+function createForgeDiagnostic(
+  diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>,
+): ForgeDiagnostic;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | השמט<ForgeDiagnostic, 'code'> ובחר<ForgeDiagnostic, 'code'> |  |
+| שם    | הקלד                                                        | תיאור |
+| ----- | ----------------------------------------------------------- | ----- |
+| אבחון | השמט<ForgeDiagnostic, 'code'> ובחר<ForgeDiagnostic, 'code'> |       |
 
 ### ForgeDiagnostic
 
@@ -431,24 +449,24 @@ export interface ForgeSlotDefinition
 פונקציה **סוג:**
 
 ```typescript
-function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined
+function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם | מחרוזת |  |
-| מטא נתונים | ForgeComponentMetadata |  |
+| שם         | הקלד                   | תיאור |
+| ---------- | ---------------------- | ----- |
+| שם         | מחרוזת                 |       |
+| מטא נתונים | ForgeComponentMetadata |       |
 
 ### FORGE_COMPONENT_REGISTRY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
+export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[];
 ```
 
 לא סופק תיאור.
@@ -458,16 +476,16 @@ export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
 פונקציה **סוג:**
 
 ```typescript
-function getForgeComponent(name: string): ForgeComponentRegistryEntry
+function getForgeComponent(name: string): ForgeComponentRegistryEntry;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| שם  | מחרוזת |       |
 
 ## `src/tokens/resolve`
 
@@ -476,16 +494,16 @@ function getForgeComponent(name: string): ForgeComponentRegistryEntry
 פונקציה **סוג:**
 
 ```typescript
-function componentPathToCssVariable(path: string): string | undefined
+function componentPathToCssVariable(path: string): string | undefined;
 ```
 
 המר נתיב רכיב קנוני לשם המשתנה של Mission Platform CSS שנוצר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נתיב | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| נתיב | מחרוזת |       |
 
 ### FigmaVariableBinding
 
@@ -512,7 +530,7 @@ export interface ForgeTokenResolution
 **סוג:** קבוע
 
 ```typescript
-export const MISSION_PLATFORM_COMPONENT_COLLECTION
+export const MISSION_PLATFORM_COMPONENT_COLLECTION;
 ```
 
 לא סופק תיאור.
@@ -522,32 +540,32 @@ export const MISSION_PLATFORM_COMPONENT_COLLECTION
 פונקציה **סוג:**
 
 ```typescript
-function normalizeComponentTokenPath(value: string): string | undefined
+function normalizeComponentTokenPath(value: string): string | undefined;
 ```
 
 נרמל שם או כינוי של משתנה Figma לנתיב הקנוני `component.*`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### resolveFigmaVariable
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution
+function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מחייב | FigmaVariableBinding |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| מחייב | FigmaVariableBinding |       |
 
 ## `src/validation/document`
 
@@ -556,16 +574,16 @@ function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResoluti
 פונקציה **סוג:**
 
 ```typescript
-function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[]
+function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסמך | ForgeDesignDocument |  |
+| שם   | הקלד                | תיאור |
+| ---- | ------------------- | ----- |
+| מסמך | ForgeDesignDocument |       |
 
 ### validateForgeExportBundle
 
@@ -574,16 +592,16 @@ function validateForgeDesignDocument(document: ForgeDesignDocument): readonly Fo
 ```typescript
 function validateForgeExportBundle(bundle: {
   readonly files: readonly { readonly path: string }[];
-}): readonly ForgeDiagnostic[]
+}): readonly ForgeDiagnostic[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| צרור | { readonly files: readonly { readonly path: string }[]; } |  |
+| שם   | הקלד                                                      | תיאור |
+| ---- | --------------------------------------------------------- | ----- |
+| צרור | { readonly files: readonly { readonly path: string }[]; } |       |
 
 ## `src/validation/names`
 
@@ -592,34 +610,34 @@ function validateForgeExportBundle(bundle: {
 פונקציה **סוג:**
 
 ```typescript
-function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string
+function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string;
 ```
 
 צור מזהה PascalCase יציב משכבת ​​Figma או שם מסגרת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
-| חזרה |  |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| ערך  | מחרוזת |       |
+| חזרה |        |       |
 
 ### normalizeFileName
 
 פונקציה **סוג:**
 
 ```typescript
-function normalizeFileName(value: string, fallback = 'generated-component'): string
+function normalizeFileName(value: string, fallback = 'generated-component'): string;
 ```
 
 צור קובץ קבב בטוח שמקורו משכבת ​​Figma או שם מסגרת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
-| חזרה |  |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| ערך  | מחרוזת |       |
+| חזרה |        |       |
 
 ## `src/validation/paths`
 
@@ -638,14 +656,17 @@ export interface ForgePathValidationResult
 פונקציה **סוג:**
 
 ```typescript
-function validateRepositoryRelativePath(value: string, allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg']): ForgePathValidationResult
+function validateRepositoryRelativePath(
+  value: string,
+  allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg'],
+): ForgePathValidationResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
-| מותר הרחבות | מחרוזת לקריאה בלבד[] |  |
+| שם          | הקלד                 | תיאור |
+| ----------- | -------------------- | ----- |
+| ערך         | מחרוזת               |       |
+| מותר הרחבות | מחרוזת לקריאה בלבד[] |       |

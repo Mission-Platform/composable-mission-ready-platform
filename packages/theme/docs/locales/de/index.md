@@ -10,8 +10,8 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 ## Öffentliche Oberfläche
 
 - `ForgeThemeToggle` wechselt zwischen den gemeinsamen Einstellungen Hell, Dunkel und Auto.
-– `ForgeThemeProvider` konfiguriert die Persistenz und macht den Designstatus über seine bereichsbezogene Render-Requisite verfügbar.
-– `ForgeThemeComposer` steuert bereichsbezogene oder globale `--mp-*`-Token-Überschreibungen.
+  – `ForgeThemeProvider` konfiguriert die Persistenz und macht den Designstatus über seine bereichsbezogene Render-Requisite verfügbar.
+  – `ForgeThemeComposer` steuert bereichsbezogene oder globale `--mp-*`-Token-Überschreibungen.
 - Theme-Store-Verträge umfassen `getThemeSnapshot`, `subscribeTheme`, `setTheme`, `toggleTheme`, `cycleTheme` und
   `configureTheme`.
 - Composer-Verträge umfassen Konfigurationszusammenführung, Attribut-/Token-Mutation, CSS-Variablenkonvertierung und Reset-Helfer.

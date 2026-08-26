@@ -62,38 +62,38 @@ Canvas は、指定された `type` の新しい {@link BuilderField} を作成�
 **種類:** 関数
 
 ```typescript
-function evaluateCondition(condition: FieldCondition, values: FormValues): boolean
+function evaluateCondition(condition: FieldCondition, values: FormValues): boolean;
 ```
 
 `values` フォームに対して {@link FieldCondition} を評価し、次のいずれかを返します。
-現在は保持されています。  コンビネータ グループは JSON スキーマのセマンティクスに従います。
-`allOf` = AND、`anyOf` = OR、`oneOf` = 正確に 1 (XOR)。  複数のキーワード
-同じグループに存在するものは、それ自体 AND 演算されます。  空のグループが通過します。
+現在は保持されています。 コンビネータ グループは JSON スキーマのセマンティクスに従います。
+`allOf` = AND、`anyOf` = OR、`oneOf` = 正確に 1 (XOR)。 複数のキーワード
+同じグループに存在するものは、それ自体 AND 演算されます。 空のグループが通過します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|状態 |フィールド条件 |  |
-|値 |フォーム値 |  |
+| 名前 | タイプ         | 説明 |
+| ---- | -------------- | ---- |
+| 状態 | フィールド条件 |      |
+| 値   | フォーム値     |      |
 
 ### isFieldVisible
 
 **種類:** 関数
 
 ```typescript
-function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean
+function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean;
 ```
 
 オプションの `visibleWhen` 条件を持つフィールドを現在次のようにするかどうか
-レンダリングされました。  条件のないフィールドは常に表示されます。
+レンダリングされました。 条件のないフィールドは常に表示されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フィールド | {visibleWhen?: FieldCondition } |  |
-|値 |フォーム値 |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| フィールド | {visibleWhen?: FieldCondition } |      |
+| 値         | フォーム値                      |      |
 
 ## `src/form-schema`
 
@@ -102,16 +102,16 @@ function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormVal
 **種類:** 関数
 
 ```typescript
-function builderFieldToProperty(field: BuilderField): JsonSchemaProperty
+function builderFieldToProperty(field: BuilderField): JsonSchemaProperty;
 ```
 
 単一の {@link BuilderField} を {@link JsonSchemaProperty} に変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フィールド |ビルダーフィールド |  |
+| 名前       | タイプ             | 説明 |
+| ---------- | ------------------ | ---- |
+| フィールド | ビルダーフィールド |      |
 
 ### フィールドの作成
 
@@ -123,7 +123,7 @@ function createField(options: {
   label?: string;
   key?: string;
   usedKeys?: Iterable<string>;
-}): BuilderField
+}): BuilderField;
 ```
 
 指定された `type` の新しい {@link BuilderField} を作成します。キーが導出されます
@@ -132,16 +132,16 @@ function createField(options: {
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | { タイプ: フォームフィールドタイプ;   ラベル?: 文字列;   キー?: 文字列;   usedKeys?: Iterable<string>; } |  |
+| 名前       | タイプ                                                                                             | 説明 |
+| ---------- | -------------------------------------------------------------------------------------------------- | ---- |
+| オプション | { タイプ: フォームフィールドタイプ; ラベル?: 文字列; キー?: 文字列; usedKeys?: Iterable<string>; } |      |
 
 ### DEFAULT_FIELD_TYPES
 
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
+export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[];
 ```
 
 ビルダー パレットで提供されるフィールド タイプ (表示順)。パレット
@@ -154,7 +154,7 @@ export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
 **種類:** 関数
 
 ```typescript
-function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined
+function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined;
 ```
 
 フィールド キーをその兄弟に対して検証します。フィールド キーは空ではなく、一意である必要があります。
@@ -164,17 +164,20 @@ function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | und
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キー |文字列 |  |
-|兄弟キー | Iterable<string> |  |
+| 名前     | タイプ           | 説明 |
+| -------- | ---------------- | ---- |
+| キー     | 文字列           |      |
+| 兄弟キー | Iterable<string> |      |
 
 ### 定義先フィールド
 
 **種類:** 関数
 
 ```typescript
-function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: FieldsToSchemaOptions = {}): SchemaFormDefinition
+function fieldsToDefinition(
+  fields: BuilderField[] | BuilderField[][],
+  options: FieldsToSchemaOptions = {},
+): SchemaFormDefinition;
 ```
 
 `options` からシングルステップまたはウィザードを選択して、スキーマ定義を構築します。
@@ -183,34 +186,34 @@ function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フィールド |ビルダーフィールド[] \|ビルダーフィールド[][] |  |
-|オプション |フィールドとスキーマのオプション |  |
+| 名前       | タイプ                                        | 説明 |
+| ---------- | --------------------------------------------- | ---- |
+| フィールド | ビルダーフィールド[] \|ビルダーフィールド[][] |      |
+| オプション | フィールドとスキーマのオプション              |      |
 
 ### フィールドからスキーマへ
 
 **種類:** 関数
 
 ```typescript
-function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema
+function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema;
 ```
 
 トップレベルのフィールドからシングルステップの {@link FormJsonSchema} を構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フィールド |ビルダーフィールド[] |  |
-|オプション |フィールドとスキーマのオプション |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| フィールド | ビルダーフィールド[]             |      |
+| オプション | フィールドとスキーマのオプション |      |
 
 ### フィールドToWizardSchema
 
 **種類:** 関数
 
 ```typescript
-function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[]
+function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[];
 ```
 
 ステップごとのフィールドから複数ステップのウィザード ({@link FormJsonSchema}[]) を構築します
@@ -218,145 +221,145 @@ function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOp
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ステップ |ビルダーフィールド[][] |  |
-|オプション |フィールドとスキーマのオプション |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| ステップ   | ビルダーフィールド[][]           |      |
+| オプション | フィールドとスキーマのオプション |      |
 
 ### isDateウィジェット
 
 **種類:** 関数
 
 ```typescript
-function isDateWidget(widget: FormFieldType): boolean
+function isDateWidget(widget: FormFieldType): boolean;
 ```
 
 ウィジェットがカレンダーの日付をキャプチャするかどうか (`minDate` / `maxDate` を受け入れます)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ### isFieldsetウィジェット
 
 **種類:** 関数
 
 ```typescript
-function isFieldsetWidget(widget: FormFieldType): boolean
+function isFieldsetWidget(widget: FormFieldType): boolean;
 ```
 
 ウィジェットがグループ化フィールド セットであるかどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ### isFileWidget
 
 **種類:** 関数
 
 ```typescript
-function isFileWidget(widget: FormFieldType): boolean
+function isFileWidget(widget: FormFieldType): boolean;
 ```
 
 ウィジェットがファイルをアップロードするかどうか (`accept` / `multiple` / `capture` を受け入れます)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ### isLocationウィジェット
 
 **種類:** 関数
 
 ```typescript
-function isLocationWidget(widget: FormFieldType): boolean
+function isLocationWidget(widget: FormFieldType): boolean;
 ```
 
 ウィジェットが地理座標をキャプチャするかどうか (`locationFormat` を受け入れます)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ### isMultilineWidget
 
 **種類:** 関数
 
 ```typescript
-function isMultilineWidget(widget: FormFieldType): boolean
+function isMultilineWidget(widget: FormFieldType): boolean;
 ```
 
 ウィジェットが複数行の領域をレンダリングするかどうか (`rows` カウントを受け入れる)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ### isNumberWidget
 
 **種類:** 関数
 
 ```typescript
-function isNumberWidget(widget: FormFieldType): boolean
+function isNumberWidget(widget: FormFieldType): boolean;
 ```
 
 ウィジェットが数値 (`number` / `stepper`) かどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ### isTextWidget
 
 **種類:** 関数
 
 ```typescript
-function isTextWidget(widget: FormFieldType): boolean
+function isTextWidget(widget: FormFieldType): boolean;
 ```
 
 ウィジェットがテキスト入力であるかどうか (`minLength` / `maxLength` / `pattern` を受け入れます)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ### isTimeウィジェット
 
 **種類:** 関数
 
 ```typescript
-function isTimeWidget(widget: FormFieldType): boolean
+function isTimeWidget(widget: FormFieldType): boolean;
 ```
 
 ウィジェットが時刻をキャプチャするかどうか (`showSeconds` トグルを受け入れる)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ### 次のフィールド ID
 
 **種類:** 関数
 
 ```typescript
-function nextFieldId(): string
+function nextFieldId(): string;
 ```
 
 新しい、衝突耐性のあるビルダー フィールド ID を生成します。
@@ -366,55 +369,55 @@ function nextFieldId(): string
 **種類:** 関数
 
 ```typescript
-function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>
+function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>;
 ```
 
 ウィザード定義のステップごとの条件付き可視性ルール。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|定義 |スキーマフォーム定義 \|未定義 |  |
+| 名前 | タイプ                        | 説明 |
+| ---- | ----------------------------- | ---- |
+| 定義 | スキーマフォーム定義 \|未定義 |      |
 
 ### スキーマステップ説明
 
 **種類:** 関数
 
 ```typescript
-function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 ウィザード定義のステップごとの説明。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|定義 |スキーマフォーム定義 \|未定義 |  |
+| 名前 | タイプ                        | 説明 |
+| ---- | ----------------------------- | ---- |
+| 定義 | スキーマフォーム定義 \|未定義 |      |
 
 ### スキーマステップタイトル
 
 **種類:** 関数
 
 ```typescript
-function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 ウィザード定義のステップごとのタイトル (シングルステップ フォームの場合は空)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|定義 |スキーマフォーム定義 \|未定義 |  |
+| 名前 | タイプ                        | 説明 |
+| ---- | ----------------------------- | ---- |
+| 定義 | スキーマフォーム定義 \|未定義 |      |
 
 ### スキーマからフィールド
 
 **種類:** 関数
 
 ```typescript
-function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][]
+function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][];
 ```
 
 {@link SchemaFormDefinition} をビルダーの作業フィールドに戻します。
@@ -424,74 +427,74 @@ function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderFi
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|定義 |スキーマフォーム定義 \|未定義 |  |
+| 名前 | タイプ                        | 説明 |
+| ---- | ----------------------------- | ---- |
+| 定義 | スキーマフォーム定義 \|未定義 |      |
 
 ### 鈍化する
 
 **種類:** 関数
 
 ```typescript
-function slugify(label: string): string
+function slugify(label: string): string;
 ```
 
 人間のラベルを安全な `snake_case` スキーマ キーに変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ラベル |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ラベル | 文字列 |      |
 
 ### 固有のキー
 
 **種類:** 関数
 
 ```typescript
-function uniqueKey(base: string, used: Iterable<string>): string
+function uniqueKey(base: string, used: Iterable<string>): string;
 ```
 
 衝突しなくなるまで、`base`、または `base_2`、`base_3`、…を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベース |文字列 |  |
-|中古 | Iterable<string> |  |
+| 名前   | タイプ           | 説明 |
+| ------ | ---------------- | ---- |
+| ベース | 文字列           |      |
+| 中古   | Iterable<string> |      |
 
 ### ウィジェットにはオプションがあります
 
 **種類:** 関数
 
 ```typescript
-function widgetHasOptions(widget: FormFieldType): boolean
+function widgetHasOptions(widget: FormFieldType): boolean;
 ```
 
 ウィジェットが作成者定義のオプション リストを公開するかどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ### ウィジェットから JsonType
 
 **種類:** 関数
 
 ```typescript
-function widgetToJsonType(widget: FormFieldType): JsonSchemaType
+function widgetToJsonType(widget: FormFieldType): JsonSchemaType;
 ```
 
 ウィジェットがシリアル化される JSON スキーマのプリミティブ タイプ。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ウィジェット |フォームフィールドタイプ |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| ウィジェット | フォームフィールドタイプ |      |
 
 ## `src/json-schema`
 
@@ -500,7 +503,7 @@ function widgetToJsonType(widget: FormFieldType): JsonSchemaType
 **種類:** 関数
 
 ```typescript
-function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator
+function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator;
 ```
 
 {@link FormJsonSchema} を Ajv に裏付けられた再利用可能なバリデータにコンパイルします。
@@ -508,7 +511,7 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 生成されたエラー メッセージは、オプションの `translate` によってローカライズされます。
 関数 (vue-i18n の `t(key, named)` をミラーリング);省略時は組み込み
-英語のメッセージが使われています。  作成者が提供した `errorMessage` は常にオーバーライドされます
+英語のメッセージが使われています。 作成者が提供した `errorMessage` は常にオーバーライドされます
 勝利し、そのまま返されます。
 
 現在成立しない `ui.visibleWhen` 条件によってゲートされたフィールドは、
@@ -517,10 +520,10 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|スキーマ |フォームJsonスキーマ |  |
-|翻訳 |スキーマフォーム翻訳 |  |
+| 名前     | タイプ               | 説明 |
+| -------- | -------------------- | ---- |
+| スキーマ | フォームJsonスキーマ |      |
+| 翻訳     | スキーマフォーム翻訳 |      |
 
 ### フォームバリデーター
 
@@ -537,7 +540,7 @@ export interface FormValidator
 **種類:** 関数
 
 ```typescript
-function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
+function jsonSchemaDefaults(schema: FormJsonSchema): FormValues;
 ```
 
 JSON スキーマから各フィールドのデフォルト値を計算します。
@@ -546,28 +549,28 @@ JSON スキーマから各フィールドのデフォルト値を計算します
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|スキーマ |フォームJsonスキーマ |  |
+| 名前     | タイプ               | 説明 |
+| -------- | -------------------- | ---- |
+| スキーマ | フォームJsonスキーマ |      |
 
 ### jsonSchemaToFields
 
 **種類:** 関数
 
 ```typescript
-function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[]
+function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[];
 ```
 
 {@link FormJsonSchema} をレンダリング可能な順序付きリストに変換します。
-フィールド レンダラによって使用される {@link FormFieldSchema} 記述子。  入れ子になった
+フィールド レンダラによって使用される {@link FormFieldSchema} 記述子。 入れ子になった
 `object` (フィールド セット) プロパティは再帰されるため、フィールド セットはそのプロパティを保持します。
 自分が注文した `fields`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|スキーマ |フォームJsonスキーマ |  |
+| 名前     | タイプ               | 説明 |
+| -------- | -------------------- | ---- |
+| スキーマ | フォームJsonスキーマ |      |
 
 ## `src/types`
 
@@ -586,7 +589,7 @@ export type Autocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'ch
 **種類:** 定数
 
 ```typescript
-export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>
+export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>;
 ```
 
 ビルダー ドロップダウン用にグループ化された選択可能な `autocomplete` トークン。 `group`
@@ -610,13 +613,70 @@ export type Autocomplete = AutocompleteToken | (string &
 **種類：**タイプ
 
 ```typescript
-export type AutocompleteToken = | 'off' | 'on' | 'name' | 'honorific-prefix' | 'given-name' | 'additional-name' | 'family-name' | 'honorific-suffix' | 'nickname' | 'email' | 'username' | 'new-password' | 'current-password' | 'one-time-code' | 'organization-title' | 'organization' | 'street-address' | 'address-line1' | 'address-line2' | 'address-line3' | 'address-level4' | 'address-level3' | 'address-level2' | 'address-level1' | 'country' | 'country-name' | 'postal-code' | 'cc-name' | 'cc-given-name' | 'cc-additional-name' | 'cc-family-name' | 'cc-number' | 'cc-exp' | 'cc-exp-month' | 'cc-exp-year' | 'cc-csc' | 'cc-type' | 'transaction-currency' | 'transaction-amount' | 'language' | 'bday' | 'bday-day' | 'bday-month' | 'bday-year' | 'sex' | 'tel' | 'tel-country-code' | 'tel-national' | 'tel-area-code' | 'tel-local' | 'tel-local-prefix' | 'tel-local-suffix' | 'tel-extension' | 'impp' | 'url' | 'photo' | 'webauthn';
+export type AutocompleteToken =
+  | 'off'
+  | 'on'
+  | 'name'
+  | 'honorific-prefix'
+  | 'given-name'
+  | 'additional-name'
+  | 'family-name'
+  | 'honorific-suffix'
+  | 'nickname'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'one-time-code'
+  | 'organization-title'
+  | 'organization'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'address-line3'
+  | 'address-level4'
+  | 'address-level3'
+  | 'address-level2'
+  | 'address-level1'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-given-name'
+  | 'cc-additional-name'
+  | 'cc-family-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-exp-month'
+  | 'cc-exp-year'
+  | 'cc-csc'
+  | 'cc-type'
+  | 'transaction-currency'
+  | 'transaction-amount'
+  | 'language'
+  | 'bday'
+  | 'bday-day'
+  | 'bday-month'
+  | 'bday-year'
+  | 'sex'
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national'
+  | 'tel-area-code'
+  | 'tel-local'
+  | 'tel-local-prefix'
+  | 'tel-local-suffix'
+  | 'tel-extension'
+  | 'impp'
+  | 'url'
+  | 'photo'
+  | 'webauthn';
 ```
 
 MDN によってカタログ化されている標準の HTML `autocomplete` トークン
 (https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete)。
 
-これらは、単一のテキストのような入力で宣伝できる名前付き *detail* トークンです。
+これらは、単一のテキストのような入力で宣伝できる名前付き _detail_ トークンです。
 ブラウザとパスワード マネージャーは、適切な保存値を提供できます。 The list
 グループ化/セクション修飾子 (`section-*`、`shipping`、
 `billing`、`home`、`work`、…) これらのトークンの 1 つだけをプレフィックスとして付けます。
@@ -641,7 +701,7 @@ export type FieldCondition = FieldConditionLeaf | FieldConditionGroup;
 export interface FieldConditionGroup
 ```
 
-ネストされた {@link FieldCondition} をグループ化するコンビネータ。  JSON スキーマをミラーリングします
+ネストされた {@link FieldCondition} をグループ化するコンビネータ。 JSON スキーマをミラーリングします
 ブール値のキーワード:
 
 - `allOf` — **すべて**のネストされた条件が合格すると合格します (論理 AND)。
@@ -658,8 +718,8 @@ export interface FieldConditionGroup
 export interface FieldConditionLeaf
 ```
 
-1 つのフィールドの現在の値をテストする単一のリーフ条件。  まさに 1 つ
-コンパレータは通常設定されます。複数存在する場合、それらは *すべて* 保持されなければなりません
+1 つのフィールドの現在の値をテストする単一のリーフ条件。 まさに 1 つ
+コンパレータは通常設定されます。複数存在する場合、それらは _すべて_ 保持されなければなりません
 通過する葉。
 
 ### フィールドUiオプション
@@ -691,7 +751,7 @@ export type FormErrors = Record<string, string | undefined>;
 export interface FormFieldSchema
 ```
 
-解決された、レンダリングの準備ができたフィールド記述子。  SchemaForm はこれらのいずれかを派生します
+解決された、レンダリングの準備ができたフィールド記述子。 SchemaForm はこれらのいずれかを派生します
 {@link FormJsonSchema} のプロパティごと。それは公共の一部ではありません
 入力サーフェイスであり、独自の検証ロジックはありません。
 
@@ -700,12 +760,36 @@ export interface FormFieldSchema
 **種類：**タイプ
 
 ```typescript
-export type FormFieldType = | 'text' | 'email' | 'password' | 'number' | 'stepper' | 'url' | 'tel' | 'textarea' | 'markdown' | 'code' | 'checkbox' | 'switch' | 'select' | 'radio' | 'multiselect' | 'date' | 'time' | 'datetime' | 'daterange' | 'timerange' | 'datetimerange' | 'location' | 'file' | 'fieldset';
+export type FormFieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'stepper'
+  | 'url'
+  | 'tel'
+  | 'textarea'
+  | 'markdown'
+  | 'code'
+  | 'checkbox'
+  | 'switch'
+  | 'select'
+  | 'radio'
+  | 'multiselect'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'daterange'
+  | 'timerange'
+  | 'datetimerange'
+  | 'location'
+  | 'file'
+  | 'fieldset';
 ```
 
-フィールドに対してレンダリングされるビジュアル コントロール。  これはプレゼンテーションの問題であるため、
+フィールドに対してレンダリングされるビジュアル コントロール。 これはプレゼンテーションの問題であるため、
 それは、非標準の `ui.widget` 拡張子の下で存在します。
-JSON スキーマのキーワード。  省略すると、SchemaForm は適切なウィジェットを次から推測します。
+JSON スキーマのキーワード。 省略すると、SchemaForm は適切なウィジェットを次から推測します。
 プロパティの `type`、`format`、および `enum`。
 
 ### フォームJsonスキーマ
@@ -717,8 +801,8 @@ export interface FormJsonSchema
 ```
 
 単一フォーム (またはウィザードでは単一ステップ): JSON スキーマ `object`
-文書。  直接使用すると、ワンステップ形式を表します。として使用する場合
-最上位配列のエントリは、ウィザードの 1 つのステップを説明します。  検証は
+文書。 直接使用すると、ワンステップ形式を表します。として使用する場合
+最上位配列のエントリは、ウィザードの 1 つのステップを説明します。 検証は
 内部的には Ajv を使用してそれに対して実行されました。
 
 ### フォーム値
@@ -739,7 +823,7 @@ export type FormValues = Record<string, unknown>;
 export interface JsonSchemaProperty
 ```
 
-単一の JSON スキーマ プロパティ記述子。  標準検証キーワード マップ
+単一の JSON スキーマ プロパティ記述子。 標準検証キーワード マップ
 生成された Ajv ルールに直接適用します。
 
 ### JsonSchemaStringFormat
@@ -772,7 +856,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 ```
 
 {@link LocationValue} が入力/シリアル化される座標表現
-として。  (Vue コンポーネントからインポートされるのではなく) ここで定義されているため、共有
+として。 (Vue コンポーネントからインポートされるのではなく) ここで定義されているため、共有
 コアはフレームワークに依存しません。構造的には同じです
 `@mission-platform/components` 位置入力タイプ。
 
@@ -784,7 +868,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 export interface LocationValue
 ```
 
-`location` ウィジェットによって取得された地理座標。  `lat`/`lng` は
+`location` ウィジェットによって取得された地理座標。 `lat`/`lng` は
 `undefined` は空であるため、空白の値は明確に「入力なし」を意味します。
 
 ### スキーマフォーム定義
@@ -809,7 +893,7 @@ export type SchemaFormDefinition = FormJsonSchema | FormJsonSchema[];
 export type SchemaFormTranslate = (key: string, named?: Record<string, unknown>) => string;
 ```
 
-生成された検証メッセージをローカライズするために使用される変換機能。  それ
+生成された検証メッセージをローカライズするために使用される変換機能。 それ
 vue-i18n の `t(key, named)` 署名をミラーリングします: メッセージ キーと
 名前付き補間値のオプションのバッグの場合、ローカライズされた文字列を返します。
 省略すると、SchemaForm は組み込みの英語メッセージに戻ります。

@@ -16,23 +16,23 @@
 פונקציה **סוג:**
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 טען את תת-קבוצת הפלט השמרנית המתועדת עבור רכיבי דואר אלקטרוני.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| html | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| html | מחרוזת |       |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **סוג:** קבוע
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 לא סופק תיאור.
@@ -42,7 +42,7 @@ export const CAN_I_EMAIL_FEATURES_URL
 **סוג:** קבוע
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 לא סופק תיאור.
@@ -52,7 +52,7 @@ export const CAN_I_EMAIL_INLINE_STYLES_URL
 **סוג:** קבוע
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 לא סופק תיאור.
@@ -62,7 +62,7 @@ export const CAN_I_EMAIL_MAX_WIDTH_URL
 **סוג:** קבוע
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 לא סופק תיאור.
@@ -72,7 +72,7 @@ export const CAN_I_EMAIL_MEDIA_QUERIES_URL
 **סוג:** קבוע
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 לא סופק תיאור.
@@ -82,7 +82,7 @@ export const CAN_I_EMAIL_TABLES_URL
 **סוג:** קבוע
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 לא סופק תיאור.
@@ -92,7 +92,7 @@ export const COMPATIBILITY_REVIEWED
 **סוג:** קבוע
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 לא סופק תיאור.
@@ -104,16 +104,16 @@ export const EMAIL_ALLOWED_TAGS
 פונקציה **סוג:**
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailButtonProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailButtonProperties> |       |
 
 ### EmailButtonProperties
 
@@ -130,7 +130,8 @@ export interface EmailButtonProperties
 **סוג:** סוג
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 לא סופק תיאור.
@@ -142,16 +143,16 @@ export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 פונקציה **סוג:**
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailDividerProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailDividerProperties> |       |
 
 ### EmailDividerProperties
 
@@ -170,16 +171,16 @@ export interface EmailDividerProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailImageProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailImageProperties> |       |
 
 ### EmailImageProperties
 
@@ -198,16 +199,16 @@ export interface EmailImageProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailSpacerProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailSpacerProperties> |       |
 
 ### EmailSpacerProperties
 
@@ -226,7 +227,7 @@ export interface EmailSpacerProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 אטום טקסט הדוא"ל היחיד, המשקף את אוצר המילים `ForgeTypography`: גוף
@@ -235,9 +236,9 @@ function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpEle
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailTypographyProperties> |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailTypographyProperties> |       |
 
 ### EmailTypographyProperties
 
@@ -266,16 +267,16 @@ export type EmailTypographyTag = 'p' | 'span' | 'div' | 'a' | 'h1' | 'h2' | 'h3'
 פונקציה **סוג:**
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailCardProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailCardProperties> |       |
 
 ### EmailCardProperties
 
@@ -294,16 +295,16 @@ export interface EmailCardProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailColumnProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailColumnProperties> |       |
 
 ### EmailColumnProperties
 
@@ -322,16 +323,16 @@ export interface EmailColumnProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailListProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailListProperties> |       |
 
 ### EmailListItem
 
@@ -360,16 +361,16 @@ export interface EmailListProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailRowProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailRowProperties> |       |
 
 ### EmailRowProperties
 
@@ -398,16 +399,16 @@ export interface EmailSocialLink
 פונקציה **סוג:**
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailSocialLinksProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailSocialLinksProperties> |       |
 
 ### EmailSocialLinksProperties
 
@@ -426,16 +427,16 @@ export interface EmailSocialLinksProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailFooterProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailFooterProperties> |       |
 
 ### EmailFooterProperties
 
@@ -454,16 +455,16 @@ export interface EmailFooterProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailHeaderProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailHeaderProperties> |       |
 
 ### EmailHeaderProperties
 
@@ -482,16 +483,16 @@ export interface EmailHeaderProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailPreheaderProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailPreheaderProperties> |       |
 
 ### EmailPreheaderProperties
 
@@ -510,16 +511,16 @@ export interface EmailPreheaderProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailContainerProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailContainerProperties> |       |
 
 ### EmailContainerProperties
 
@@ -538,16 +539,16 @@ export interface EmailContainerProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailDocumentProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<EmailDocumentProperties> |       |
 
 ### EmailDocumentProperties
 
@@ -566,16 +567,16 @@ export interface EmailDocumentProperties
 פונקציה **סוג:**
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<EmailSectionProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<EmailSectionProperties> |       |
 
 ### EmailSectionProperties
 

@@ -16,33 +16,33 @@
 **种类：**功能
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 将共享 Forge 树渲染为 React 元素以供浏览器预览。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |电子邮件节点 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 电子邮件节点 |      |
 
 ### toEmailReactComponent
 
 **种类：**功能
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 将 Forge 电子邮件组件包装为 React 函数组件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件| MpComponent<P> |  |
-|名称 |字符串|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 组件 | MpComponent<P> |      |
+| 名称 | 字符串         |      |
 
 ## `src/adapters/solid`
 
@@ -51,32 +51,32 @@ function toEmailReactComponent(component: MpComponent<P>, name?: string): Functi
 **种类：**功能
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 将共享 Forge 树渲染为 Solid JSX 以供浏览器预览。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |电子邮件节点 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 电子邮件节点 |      |
 
 ### toEmailSolidComponent
 
 **种类：**功能
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 将 Forge 组件包装为 Solid 组件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|组件<P> |  |
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 组件 | 组件<P> |      |
 
 ## `src/adapters/svelte`
 
@@ -85,16 +85,16 @@ function toEmailSolidComponent(component: Component<P>): Component<P>
 **种类：**功能
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 将共享 Forge 树转换为 `{@render ...}` 的 Svelte 5 原始片段。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |电子邮件节点 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 电子邮件节点 |      |
 
 ## `src/adapters/vue`
 
@@ -103,33 +103,33 @@ function renderToEmailSvelte(node: EmailNode): Snippet
 **种类：**功能
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 将共享 Forge 树渲染为 Vue VNode 以供浏览器预览。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |电子邮件节点 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 电子邮件节点 |      |
 
 ### toEmailVue组件
 
 **种类：**功能
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 将 Forge 电子邮件组件包装为 Vue 功能组件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件| MpComponent<P> |  |
-|名称 |字符串|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 组件 | MpComponent<P> |      |
+| 名称 | 字符串         |      |
 
 ## `src/adapters/web-components`
 
@@ -138,16 +138,16 @@ function toEmailVueComponent(component: MpComponent<P>, name?: string): Function
 **种类：**功能
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 为 Web 组件主机创建本机 Forge 模板结果。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |电子邮件节点 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 电子邮件节点 |      |
 
 ## `src/markdown/render-markdown`
 
@@ -156,17 +156,17 @@ function renderToEmailWebComponent(node: EmailNode): TemplateResult
 **种类：**功能
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 将安全的 Markdown 令牌转换为电子邮件组件使用的同一 Forge 树。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|降价|字符串|  |
-|选项 | Markdown渲染选项 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 降价 | 字符串           |      |
+| 选项 | Markdown渲染选项 |      |
 
 ## `src/markdown/types`
 
@@ -197,16 +197,16 @@ export interface MarkdownRenderOptions
 **种类：**功能
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 按确定性顺序序列化一组列入白名单的 Forge 属性。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |电子邮件属性 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 属性 | 电子邮件属性 |      |
 
 ## `src/render/escape`
 
@@ -215,33 +215,33 @@ function serializeAttributes(properties: EmailProperties): string
 **种类：**功能
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 对 HTML 序列化的文本和属性内容进行转义。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 验证网址
 
 **种类：**功能
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 拒绝可以执行代码或加载意外资源的方案。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
-|属性|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
+| 属性 | 字符串 |      |
 
 ## `src/render/render-email`
 
@@ -250,33 +250,33 @@ function validateUrl(value: string, attribute: string): string
 **种类：**功能
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 将 Forge 电子邮件树渲染为完整的、无框架的 HTML 文档。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |电子邮件节点 |  |
-|选项 |渲染电子邮件选项 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| node | 电子邮件节点     |      |
+| 选项 | 渲染电子邮件选项 |      |
 
 ### 渲染电子邮件片段
 
 **种类：**功能
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 将 Forge 树渲染为浏览器适配器主机的安全 HTML 片段。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |电子邮件节点 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 电子邮件节点 |      |
 
 ## `src/render/style`
 
@@ -285,16 +285,16 @@ function renderEmailFragment(node: EmailNode): string
 **种类：**功能
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 以确定性属性顺序序列化内联样式，无需 CSS 变量。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|风格|电子邮件样式 \|字符串|  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 风格 | 电子邮件样式 \|字符串 |      |
 
 ## `src/render/types`
 

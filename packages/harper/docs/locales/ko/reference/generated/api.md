@@ -16,7 +16,11 @@
 **종류:** 기능
 
 ```typescript
-function useHarperMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue Harper 문법 및 스타일 검사를
@@ -30,18 +34,18 @@ Vue Harper 문법 및 스타일 검사를
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 편집자참조 | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| 활성화 | MaybeRefOrGetter<boolean> |  |
-| 언어참조 | MaybeRefOrGetter<string> |  |
+| 이름       | 유형                                                               | 설명 |
+| ---------- | ------------------------------------------------------------------ | ---- |
+| 편집자참조 | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |      |
+| 활성화     | MaybeRefOrGetter<boolean>                                          |      |
+| 언어참조   | MaybeRefOrGetter<string>                                           |      |
 
 #### 계약
 
 - **@param:** - Monaco 편집기 인스턴스를 래핑하는 `MaybeRefOrGetter`입니다.
 - **@param:** - 확인 켜기/끄기를 전환하는 `MaybeRefOrGetter<boolean>`입니다.
 - **@param:** - 편집기 언어용 `MaybeRefOrGetter<string>`
-(코드액션 제공자를 등록할 때 사용됨)
+  (코드액션 제공자를 등록할 때 사용됨)
 
 ## `src/types`
 

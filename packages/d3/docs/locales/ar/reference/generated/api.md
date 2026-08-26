@@ -37,7 +37,7 @@ export type D3Selection<E extends Element> = Selection<E, unknown, null, undefin
 **النوع:** الوظيفة
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 قم بإرجاع مرجع لإرفاقه بعنصر (`ref={reference}`) وتشغيل `draw`
@@ -50,10 +50,10 @@ function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رسم | D3Draw<E> |  |
-| التبعيات | قائمة التبعيات |  |
+| الاسم    | اكتب           | الوصف |
+| -------- | -------------- | ----- |
+| رسم      | D3Draw<E>      |       |
+| التبعيات | قائمة التبعيات |       |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ export interface ChartBox
 **النوع:** الوظيفة
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 حساب مستطيل التخطيط الداخلي لمخطط بالحجم الخارجي المحدد و
@@ -81,9 +81,9 @@ function innerDimensions(box: ChartBox): InnerDimensions
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| صندوق | صندوق الرسم البياني |  |
+| الاسم | اكتب                | الوصف |
+| ----- | ------------------- | ----- |
+| صندوق | صندوق الرسم البياني |       |
 
 ### الأبعاد الداخلية
 
@@ -121,7 +121,7 @@ export type MarginInput = number | Partial<Margin>;
 **النوع:** الوظيفة
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 قم بتطبيع {@link MarginInput} في {@link MarginInput} كامل. رقم هو
@@ -130,6 +130,6 @@ function resolveMargin(input?: MarginInput): Margin
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال الهامش |  |
+| الاسم   | اكتب         | الوصف |
+| ------- | ------------ | ----- |
+| الإدخال | إدخال الهامش |       |

@@ -26,7 +26,7 @@ export interface AppConfigOptions
 **种类：**功能
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 构建汇总/汇总 `external` 处理每个名字的谓词
@@ -34,16 +34,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|名称 |只读字符串[] |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 名称 | 只读字符串[] |      |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **种类：**常数
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 每个共享库的默认汇总外部都应视为同行提供的。
@@ -54,7 +54,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 **种类：**常数
 
 ```typescript
-export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
+export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 ```
 
 UMD/IIFE 消费者的默认汇总输出全局变量。我们只针对 ESM，但是
@@ -65,7 +65,7 @@ UMD/IIFE 消费者的默认汇总输出全局变量。我们只针对 ESM，但�
 **种类：**功能
 
 ```typescript
-function defineAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 建立一个 Vite 任务平台配置 Vue 3 个应用程序： Vue 插件和
@@ -74,16 +74,16 @@ function defineAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |应用程序配置选项 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 选项 | 应用程序配置选项 |      |
 
 ### 定义FrameworkAppConfig
 
 **种类：**功能
 
 ```typescript
-function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig
+function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
 将 {@link DefineAppConfig} 包裹起来 `resolve.conditions` 需要裸露
@@ -93,16 +93,16 @@ function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfi
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |框架应用程序配置选项 |  |
+| 名称 | 类型                 | 描述 |
+| ---- | -------------------- | ---- |
+| 选项 | 框架应用程序配置选项 |      |
 
 ### 定义库配置
 
 **种类：**功能
 
 ```typescript
-function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
+function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
 建立一个 Vite 针对任务平台量身定制的配置 Vue 库包：
@@ -116,16 +116,16 @@ function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |库配置选项 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 选项 | 库配置选项 |      |
 
 ### 定义WebComponentAppConfig
 
 **种类：**功能
 
 ```typescript
-function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 建立一个 Vite 无框架 Web 组件应用程序的应用程序配置。
@@ -137,9 +137,9 @@ function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |应用程序配置选项 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 选项 | 应用程序配置选项 |      |
 
 ### 框架应用程序配置选项
 
@@ -156,7 +156,7 @@ export interface FrameworkAppConfigOptions extends AppConfigOptions
 **种类：**功能
 
 ```typescript
-function frameworkCondition(framework: MissionPlatformFramework): string
+function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 将 {@link MissionPlatformFramework} 映射到自定义导出条件
@@ -166,16 +166,16 @@ Node/Vite 状况 （`import`, `default`, `browser`, ...).
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|框架|任务平台框架 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 框架 | 任务平台框架 |      |
 
 ### 框架解决条件
 
 **种类：**功能
 
 ```typescript
-function frameworkResolveConditions(framework: MissionPlatformFramework): string[]
+function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
 构建有序的 `resolve.conditions` 列出应用程序应用于选择的
@@ -187,16 +187,16 @@ function frameworkResolveConditions(framework: MissionPlatformFramework): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|框架|任务平台框架 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 框架 | 任务平台框架 |      |
 
 ### 忽略VueI18nBlocks插件
 
 **种类：**功能
 
 ```typescript
-function ignoreVueI18nBlocksPlugin(): Plugin
+function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
 Vite 转的插件 Vue 证监会 `<i18n>` 将自定义块放入无操作模块中。
@@ -237,7 +237,7 @@ Mission Platform 应用程序可以针对的一组框架。选择一个驱动器
 **种类：**功能
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 阅读 `dependencies` 和 `peerDependencies` 在 package.json 中声明
@@ -246,9 +246,9 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|根目录 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 根目录 | 字符串 |      |
 
 ## `src/vitest`
 
@@ -257,7 +257,7 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 **种类：**功能
 
 ```typescript
-function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
+function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 建立一个 Vitest 任务平台包和应用程序的配置。提供
@@ -266,9 +266,9 @@ function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | VitestConfigOptions | VitestConfigOptions |  |
+| 名称 | 类型                | 描述                |
+| ---- | ------------------- | ------------------- |
+| 选项 | VitestConfigOptions | VitestConfigOptions |     |
 
 ### Vitest配置选项
 

@@ -16,7 +16,7 @@
 **种类：**常数
 
 ```typescript
-export const config: { plugins: AcceptedPlugin[] }
+export const config: { plugins: AcceptedPlugin[] };
 ```
 
 没有提供描述。

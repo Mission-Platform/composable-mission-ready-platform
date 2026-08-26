@@ -16,7 +16,7 @@
 **النوع:** ثابت
 
 ```typescript
-export const borderWidth
+export const borderWidth;
 ```
 
 لم يتم تقديم أي وصف.
@@ -28,7 +28,7 @@ export const borderWidth
 **النوع:** ثابت
 
 ```typescript
-export const breakpoint
+export const breakpoint;
 ```
 
 لم يتم تقديم أي وصف.
@@ -40,7 +40,7 @@ export const breakpoint
 **النوع:** ثابت
 
 ```typescript
-export const buttonGroup
+export const buttonGroup;
 ```
 
 لم يتم تقديم أي وصف.
@@ -52,7 +52,7 @@ export const buttonGroup
 **النوع:** ثابت
 
 ```typescript
-export const button
+export const button;
 ```
 
 لم يتم تقديم أي وصف.
@@ -64,7 +64,7 @@ export const button
 **النوع:** ثابت
 
 ```typescript
-export const checkable
+export const checkable;
 ```
 
 لم يتم تقديم أي وصف.
@@ -76,7 +76,7 @@ export const checkable
 **النوع:** ثابت
 
 ```typescript
-export const code
+export const code;
 ```
 
 لم يتم تقديم أي وصف.
@@ -88,7 +88,7 @@ export const code
 **النوع:** ثابت
 
 ```typescript
-export const feedback
+export const feedback;
 ```
 
 لم يتم تقديم أي وصف.
@@ -100,7 +100,7 @@ export const feedback
 **النوع:** ثابت
 
 ```typescript
-export const icon
+export const icon;
 ```
 
 لم يتم تقديم أي وصف.
@@ -112,7 +112,7 @@ export const icon
 **النوع:** ثابت
 
 ```typescript
-export const input
+export const input;
 ```
 
 لم يتم تقديم أي وصف.
@@ -124,7 +124,7 @@ export const input
 **النوع:** ثابت
 
 ```typescript
-export const layout
+export const layout;
 ```
 
 لم يتم تقديم أي وصف.
@@ -136,7 +136,7 @@ export const layout
 **النوع:** ثابت
 
 ```typescript
-export const media
+export const media;
 ```
 
 لم يتم تقديم أي وصف.
@@ -148,7 +148,7 @@ export const media
 **النوع:** ثابت
 
 ```typescript
-export const surface
+export const surface;
 ```
 
 لم يتم تقديم أي وصف.
@@ -160,7 +160,7 @@ export const surface
 **النوع:** ثابت
 
 ```typescript
-export const tag
+export const tag;
 ```
 
 لم يتم تقديم أي وصف.
@@ -172,7 +172,7 @@ export const tag
 **النوع:** ثابت
 
 ```typescript
-export const themeToggle
+export const themeToggle;
 ```
 
 لم يتم تقديم أي وصف.
@@ -184,7 +184,7 @@ export const themeToggle
 **النوع:** ثابت
 
 ```typescript
-export const componentAtomsTypography
+export const componentAtomsTypography;
 ```
 
 لم يتم تقديم أي وصف.
@@ -196,7 +196,7 @@ export const componentAtomsTypography
 **النوع:** ثابت
 
 ```typescript
-export const calendar
+export const calendar;
 ```
 
 لم يتم تقديم أي وصف.
@@ -208,7 +208,7 @@ export const calendar
 **النوع:** ثابت
 
 ```typescript
-export const card
+export const card;
 ```
 
 لم يتم تقديم أي وصف.
@@ -220,7 +220,7 @@ export const card
 **النوع:** ثابت
 
 ```typescript
-export const chatBubble
+export const chatBubble;
 ```
 
 لم يتم تقديم أي وصف.
@@ -232,7 +232,7 @@ export const chatBubble
 **النوع:** ثابت
 
 ```typescript
-export const collapse
+export const collapse;
 ```
 
 لم يتم تقديم أي وصف.
@@ -244,7 +244,7 @@ export const collapse
 **النوع:** ثابت
 
 ```typescript
-export const colorInput
+export const colorInput;
 ```
 
 لم يتم تقديم أي وصف.
@@ -256,7 +256,7 @@ export const colorInput
 **النوع:** ثابت
 
 ```typescript
-export const debug
+export const debug;
 ```
 
 لم يتم تقديم أي وصف.
@@ -268,7 +268,7 @@ export const debug
 **النوع:** ثابت
 
 ```typescript
-export const editor
+export const editor;
 ```
 
 لم يتم تقديم أي وصف.
@@ -280,7 +280,7 @@ export const editor
 **النوع:** ثابت
 
 ```typescript
-export const fieldSet
+export const fieldSet;
 ```
 
 لم يتم تقديم أي وصف.
@@ -292,7 +292,7 @@ export const fieldSet
 **النوع:** ثابت
 
 ```typescript
-export const field
+export const field;
 ```
 
 لم يتم تقديم أي وصف.
@@ -304,7 +304,7 @@ export const field
 **النوع:** ثابت
 
 ```typescript
-export const inView
+export const inView;
 ```
 
 لم يتم تقديم أي وصف.
@@ -316,7 +316,7 @@ export const inView
 **النوع:** ثابت
 
 ```typescript
-export const markdown
+export const markdown;
 ```
 
 لم يتم تقديم أي وصف.
@@ -328,7 +328,7 @@ export const markdown
 **النوع:** ثابت
 
 ```typescript
-export const navigation
+export const navigation;
 ```
 
 لم يتم تقديم أي وصف.
@@ -340,7 +340,7 @@ export const navigation
 **النوع:** ثابت
 
 ```typescript
-export const overlay
+export const overlay;
 ```
 
 لم يتم تقديم أي وصف.
@@ -352,7 +352,7 @@ export const overlay
 **النوع:** ثابت
 
 ```typescript
-export const select
+export const select;
 ```
 
 لم يتم تقديم أي وصف.
@@ -364,7 +364,7 @@ export const select
 **النوع:** ثابت
 
 ```typescript
-export const time
+export const time;
 ```
 
 لم يتم تقديم أي وصف.
@@ -376,7 +376,7 @@ export const time
 **النوع:** ثابت
 
 ```typescript
-export const timeline
+export const timeline;
 ```
 
 لم يتم تقديم أي وصف.
@@ -388,7 +388,7 @@ export const timeline
 **النوع:** ثابت
 
 ```typescript
-export const data
+export const data;
 ```
 
 لم يتم تقديم أي وصف.
@@ -400,7 +400,7 @@ export const data
 **النوع:** ثابت
 
 ```typescript
-export const form
+export const form;
 ```
 
 لم يتم تقديم أي وصف.
@@ -412,7 +412,7 @@ export const form
 **النوع:** ثابت
 
 ```typescript
-export const map
+export const map;
 ```
 
 لم يتم تقديم أي وصف.
@@ -424,7 +424,7 @@ export const map
 **النوع:** ثابت
 
 ```typescript
-export const resourcePlanner
+export const resourcePlanner;
 ```
 
 لم يتم تقديم أي وصف.
@@ -436,7 +436,7 @@ export const resourcePlanner
 **النوع:** ثابت
 
 ```typescript
-export const scheduler
+export const scheduler;
 ```
 
 لم يتم تقديم أي وصف.
@@ -448,7 +448,7 @@ export const scheduler
 **النوع:** ثابت
 
 ```typescript
-export const email
+export const email;
 ```
 
 لم يتم تقديم أي وصف.
@@ -460,7 +460,7 @@ export const email
 **النوع:** ثابت
 
 ```typescript
-export const font
+export const font;
 ```
 
 لم يتم تقديم أي وصف.
@@ -472,7 +472,7 @@ export const font
 **النوع:** ثابت
 
 ```typescript
-export const motion
+export const motion;
 ```
 
 لم يتم تقديم أي وصف.
@@ -484,7 +484,7 @@ export const motion
 **النوع:** ثابت
 
 ```typescript
-export const opacity
+export const opacity;
 ```
 
 لم يتم تقديم أي وصف.
@@ -496,7 +496,7 @@ export const opacity
 **النوع:** ثابت
 
 ```typescript
-export const palette
+export const palette;
 ```
 
 لم يتم تقديم أي وصف.
@@ -508,7 +508,7 @@ export const palette
 **النوع:** ثابت
 
 ```typescript
-export const radius
+export const radius;
 ```
 
 لم يتم تقديم أي وصف.
@@ -520,7 +520,7 @@ export const radius
 **النوع:** ثابت
 
 ```typescript
-export const shadow
+export const shadow;
 ```
 
 لم يتم تقديم أي وصف.
@@ -532,7 +532,7 @@ export const shadow
 **النوع:** ثابت
 
 ```typescript
-export const size
+export const size;
 ```
 
 لم يتم تقديم أي وصف.
@@ -544,7 +544,7 @@ export const size
 **النوع:** ثابت
 
 ```typescript
-export const spacing
+export const spacing;
 ```
 
 لم يتم تقديم أي وصف.
@@ -556,7 +556,7 @@ export const spacing
 **النوع:** ثابت
 
 ```typescript
-export const themeDark
+export const themeDark;
 ```
 
 لم يتم تقديم أي وصف.
@@ -568,7 +568,7 @@ export const themeDark
 **النوع:** ثابت
 
 ```typescript
-export const themeLight
+export const themeLight;
 ```
 
 لم يتم تقديم أي وصف.
@@ -580,7 +580,7 @@ export const themeLight
 **النوع:** ثابت
 
 ```typescript
-export const typography
+export const typography;
 ```
 
 لم يتم تقديم أي وصف.
@@ -592,7 +592,7 @@ export const typography
 **النوع:** ثابت
 
 ```typescript
-export const zIndex
+export const zIndex;
 ```
 
 لم يتم تقديم أي وصف.

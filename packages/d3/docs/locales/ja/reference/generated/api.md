@@ -37,7 +37,7 @@ export type D3Selection<E extends Element> = Selection<E, unknown, null, undefin
 **種類:** 関数
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 要素 (`ref={reference}`) にアタッチする ref を返し、`draw` を実行します
@@ -50,10 +50,10 @@ function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|描く | D3Draw<E> |  |
-|依存関係 | MpDependencyList |  |
+| 名前     | タイプ           | 説明 |
+| -------- | ---------------- | ---- |
+| 描く     | D3Draw<E>        |      |
+| 依存関係 | MpDependencyList |      |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ export interface ChartBox
 **種類:** 関数
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 指定された外側サイズのチャートの内側のプロット長方形を計算し、
@@ -81,9 +81,9 @@ function innerDimensions(box: ChartBox): InnerDimensions
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ボックス |チャートボックス |  |
+| 名前     | タイプ           | 説明 |
+| -------- | ---------------- | ---- |
+| ボックス | チャートボックス |      |
 
 ### 内部寸法
 
@@ -121,7 +121,7 @@ export type MarginInput = number | Partial<Margin>;
 **種類:** 関数
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 {@link MarginInput} を完全な {@link Margin} に正規化します。数字は
@@ -130,6 +130,6 @@ function resolveMargin(input?: MarginInput): Margin
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |マージン入力 |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| 入力 | マージン入力 |      |

@@ -16,87 +16,87 @@
 **종류:** 기능
 
 ```typescript
-function article(input: ArticleInput): JsonLd
+function article(input: ArticleInput): JsonLd;
 ```
 
 Schema.org `Article` / `BlogPosting` / `NewsArticle` 빌더.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 기사입력 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 입력 | 기사입력 |      |
 
 ### 탐색경로목록
 
 **종류:** 기능
 
 ```typescript
-function breadcrumbList(input: BreadcrumbListInput): JsonLd
+function breadcrumbList(input: BreadcrumbListInput): JsonLd;
 ```
 
 Schema.org `BreadcrumbList` — 사이트 계층 구조를 노출하기 위해 페이지별로 방출합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 이동 경로 목록 입력 |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 입력 | 이동 경로 목록 입력 |      |
 
 ### 이벤트
 
 **종류:** 기능
 
 ```typescript
-function event(input: EventInput): JsonLd
+function event(input: EventInput): JsonLd;
 ```
 
 Schema.org `Event`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 이벤트입력 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 입력 | 이벤트입력 |      |
 
 ### 자주 묻는 질문페이지
 
 **종류:** 기능
 
 ```typescript
-function faqPage(input: FaqPageInput): JsonLd
+function faqPage(input: FaqPageInput): JsonLd;
 ```
 
 Schema.org `FAQPage`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 자주 묻는 질문 페이지 입력 |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 입력 | 자주 묻는 질문 페이지 입력 |      |
 
 ### 이미지객체
 
 **종류:** 기능
 
 ```typescript
-function imageObject(input: ImageObjectInput): JsonLd
+function imageObject(input: ImageObjectInput): JsonLd;
 ```
 
 Schema.org `ImageObject`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 이미지객체입력 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 입력 | 이미지객체입력 |      |
 
 ### jsonLd
 
 **종류:** 상수
 
 ```typescript
-export const jsonLd
+export const jsonLd;
 ```
 
 소비자가 다음에서 `import { jsonLd }를 수행할 수 있도록 네임스페이스 다시 내보내기
@@ -108,208 +108,208 @@ export const jsonLd
 **종류:** 기능
 
 ```typescript
-function localBusiness(input: LocalBusinessInput): JsonLd
+function localBusiness(input: LocalBusinessInput): JsonLd;
 ```
 
 Schema.org `LocalBusiness` — 위치 데이터로 `Organization`을 확장합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 로컬비즈니스입력 |  |
+| 이름 | 유형             | 설명 |
+| ---- | ---------------- | ---- |
+| 입력 | 로컬비즈니스입력 |      |
 
 ### 조직
 
 **종류:** 기능
 
 ```typescript
-function organization(input: OrganizationInput): JsonLd
+function organization(input: OrganizationInput): JsonLd;
 ```
 
 Schema.org `Organization`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 조직입력 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 입력 | 조직입력 |      |
 
 ### 조직 ID
 
 **종류:** 기능
 
 ```typescript
-function organizationId(orgUrl: string): string
+function organizationId(orgUrl: string): string;
 ```
 
 사이트 전체 `Organization`(또는 `LocalBusiness`) node에 대한 정식 `@id`입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 조직 URL | 문자열 |  |
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 조직 URL | 문자열 |      |
 
 ### 사람
 
 **종류:** 기능
 
 ```typescript
-function person(input: PersonInput): JsonLd
+function person(input: PersonInput): JsonLd;
 ```
 
 Schema.org `Person`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 사람 입력 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| 입력 | 사람 입력 |      |
 
 ### 제품
 
 **종류:** 기능
 
 ```typescript
-function product(input: ProductInput): JsonLd
+function product(input: ProductInput): JsonLd;
 ```
 
 Schema.org `Product`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 제품입력 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 입력 | 제품입력 |      |
 
 ### 레시피
 
 **종류:** 기능
 
 ```typescript
-function recipe(input: RecipeInput): JsonLd
+function recipe(input: RecipeInput): JsonLd;
 ```
 
 Schema.org `Recipe`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 레시피 입력 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 입력 | 레시피 입력 |      |
 
 ### 검토
 
 **종류:** 기능
 
 ```typescript
-function review(input: ReviewInput): JsonLd
+function review(input: ReviewInput): JsonLd;
 ```
 
 Schema.org `Review`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 리뷰 입력 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| 입력 | 리뷰 입력 |      |
 
 ### 소프트웨어응용 프로그램
 
 **종류:** 기능
 
 ```typescript
-function softwareApplication(input: SoftwareApplicationInput): JsonLd
+function softwareApplication(input: SoftwareApplicationInput): JsonLd;
 ```
 
 Schema.org `SoftwareApplication`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 소프트웨어응용프로그램입력 |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 입력 | 소프트웨어응용프로그램입력 |      |
 
 ### 비디오객체
 
 **종류:** 기능
 
 ```typescript
-function videoObject(input: VideoObjectInput): JsonLd
+function videoObject(input: VideoObjectInput): JsonLd;
 ```
 
 Schema.org `VideoObject`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | VideoObject입력 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 입력 | VideoObject입력 |      |
 
 ### 웹페이지
 
 **종류:** 기능
 
 ```typescript
-function webPage(input: WebPageInput): JsonLd
+function webPage(input: WebPageInput): JsonLd;
 ```
 
 Schema.org `WebPage` — 사이트 내의 단일 페이지를 설명합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 웹페이지입력 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 입력 | 웹페이지입력 |      |
 
 ### 웹페이지 ID
 
 **종류:** 기능
 
 ```typescript
-function webPageId(pageUrl: string): string
+function webPageId(pageUrl: string): string;
 ```
 
 `WebPage` node에 대한 정식 `@id`입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 페이지 URL | 문자열 |  |
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 페이지 URL | 문자열 |      |
 
 ### 웹사이트
 
 **종류:** 기능
 
 ```typescript
-function webSite(input: WebSiteInput): JsonLd
+function webSite(input: WebSiteInput): JsonLd;
 ```
 
 Schema.org `WebSite` — 일반적으로 사이트 전체에 한 번만 생성됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 웹사이트입력 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 입력 | 웹사이트입력 |      |
 
 ### 웹사이트 ID
 
 **종류:** 기능
 
 ```typescript
-function webSiteId(siteUrl: string): string
+function webSiteId(siteUrl: string): string;
 ```
 
 사이트 전체 `WebSite` node에 대한 정식 `@id`입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 사이트 URL | 문자열 |  |
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 사이트 URL | 문자열 |      |
 
 ## `src/build-open-graph`
 
@@ -318,7 +318,7 @@ function webSiteId(siteUrl: string): string
 **종류:** 기능
 
 ```typescript
-function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
+function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[];
 ```
 
 {@link OpenGraphMetadata}를 `<meta>` 태그의 단순 목록으로 변환
@@ -328,9 +328,9 @@ Open Graph(`property=…`) 및 Twitter 카드(`name=…`)를 포함하는 설명
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 메타데이터 | 오픈그래프 메타데이터 |  |
+| 이름       | 유형                  | 설명 |
+| ---------- | --------------------- | ---- |
+| 메타데이터 | 오픈그래프 메타데이터 |      |
 
 ## `src/build-page-meta`
 
@@ -339,7 +339,7 @@ Open Graph(`property=…`) 및 Twitter 카드(`name=…`)를 포함하는 설명
 **종류:** 기능
 
 ```typescript
-function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
+function buildPageMeta(metadata: PageMetadata): BuiltPageMeta;
 ```
 
 {@link PageMetadata}를 해결된 제목, 언어 및 플랫으로 변환합니다.
@@ -347,9 +347,9 @@ function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 메타데이터 | 페이지메타데이터 |  |
+| 이름       | 유형             | 설명 |
+| ---------- | ---------------- | ---- |
+| 메타데이터 | 페이지메타데이터 |      |
 
 ### 내장페이지메타
 
@@ -368,7 +368,7 @@ export interface BuiltPageMeta
 **종류:** 기능
 
 ```typescript
-function buildRobotsTxt(input: RobotsTxtInput = {}): string
+function buildRobotsTxt(input: RobotsTxtInput = {}): string;
 ```
 
 정책 설명에서 결정적 `robots.txt` 문자열을 작성합니다.
@@ -378,9 +378,9 @@ function buildRobotsTxt(input: RobotsTxtInput = {}): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 로봇Txt입력 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 입력 | 로봇Txt입력 |      |
 
 ### 로봇그룹
 
@@ -412,23 +412,23 @@ export interface RobotsTxtInput
 **종류:** 기능
 
 ```typescript
-function buildSitemapIndex(input: SitemapIndexInput): string
+function buildSitemapIndex(input: SitemapIndexInput): string;
 ```
 
 결정적 사이트맵 색인 XML 문자열을 작성합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 사이트맵색인입력 |  |
+| 이름 | 유형             | 설명 |
+| ---- | ---------------- | ---- |
+| 입력 | 사이트맵색인입력 |      |
 
 ### buildSitemapXml
 
 **종류:** 기능
 
 ```typescript
-function buildSitemapXml(input: SitemapXmlInput): string
+function buildSitemapXml(input: SitemapXmlInput): string;
 ```
 
 결정적 `sitemap.xml` 문자열을 빌드합니다. 출력은 항상 다음으로 끝납니다.
@@ -436,9 +436,9 @@ function buildSitemapXml(input: SitemapXmlInput): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 사이트맵Xml입력 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 입력 | 사이트맵Xml입력 |      |
 
 ### 사이트맵대체
 
@@ -497,7 +497,7 @@ export interface SitemapXmlInput
 **종류:** 기능
 
 ```typescript
-function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
+function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 ```
 
 전체 Mission Platform SEO 표면을 반응적으로 동기화 - 표준
@@ -513,9 +513,9 @@ ref, getter 또는 일반 {@link SeoMetadata} 개체를 허용하여 다음을 �
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 메타데이터 | MaybeRefOrGetter<SeoMetadata> |  |
+| 이름       | 유형                          | 설명 |
+| ---------- | ----------------------------- | ---- |
+| 메타데이터 | MaybeRefOrGetter<SeoMetadata> |      |
 
 ## `src/mp-seo`
 
@@ -524,7 +524,7 @@ ref, getter 또는 일반 {@link SeoMetadata} 개체를 허용하여 다음을 �
 **종류:** 구성요소
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 렌더리스 `<Seo>` 구성요소 — {@link useSeo} 주위의 선언적 래퍼입니다.
@@ -539,14 +539,14 @@ Open Graph 및 JSON-LD 블록을 소품으로 사용합니다. 구성 요소는 
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ### 서
 
 **종류:** 구성요소
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 렌더리스 `<Seo>` 구성요소 — {@link useSeo} 주위의 선언적 래퍼입니다.
@@ -561,7 +561,7 @@ Open Graph 및 JSON-LD 블록을 소품으로 사용합니다. 구성 요소는 
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ## `src/types`
 

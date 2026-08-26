@@ -16,16 +16,18 @@
 **种类：**功能
 
 ```typescript
-function ForgeResourcePlanner(properties: Readonly<ResourcePlannerProperties>): MpElement
+function ForgeResourcePlanner(
+  properties: Readonly<ResourcePlannerProperties>,
+): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ResourcePlannerProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<ResourcePlannerProperties> |      |
 
 ### 规划师预订范围
 
@@ -84,7 +86,9 @@ export interface AvailabilityException
 **种类：**类型
 
 ```typescript
-export type AvailabilityInput = | ResourceAvailability[] | Record<string, Omit<ResourceAvailability, "resourceId">>;
+export type AvailabilityInput =
+  | ResourceAvailability[]
+  | Record<string, Omit<ResourceAvailability, "resourceId">>;
 ```
 
 没有提供描述。
@@ -114,7 +118,8 @@ export interface CapacityState
 **种类：**类型
 
 ```typescript
-export type CapacityStatus = "available" | "unavailable" | "over-capacity" | "conflict";
+export type CapacityStatus =
+  "available" | "unavailable" | "over-capacity" | "conflict";
 ```
 
 没有提供描述。
@@ -266,51 +271,60 @@ export interface WorkingHoursRule
 **种类：**功能
 
 ```typescript
-function assignmentsForEvent(assignments: PlannerAssignment[], eventId: string): PlannerAssignment[]
+function assignmentsForEvent(
+  assignments: PlannerAssignment[],
+  eventId: string,
+): PlannerAssignment[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|作业 |规划器分配[] |  |
-|事件 ID |字符串|  |
+| 名称    | 类型         | 描述 |
+| ------- | ------------ | ---- |
+| 作业    | 规划器分配[] |      |
+| 事件 ID | 字符串       |      |
 
 ### 标准化作业
 
 **种类：**功能
 
 ```typescript
-function normalizeAssignments(assignments: PlannerAssignment[]): PlannerAssignment[]
+function normalizeAssignments(
+  assignments: PlannerAssignment[],
+): PlannerAssignment[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|作业 |规划器分配[] |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 作业 | 规划器分配[] |      |
 
 ### 标准化规划器事件
 
 **种类：**功能
 
 ```typescript
-function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment[], range?: { start: Date; end: Date }): PlannerEventRecord[]
+function normalizePlannerEvents(
+  events: VEvent[],
+  assignments: PlannerAssignment[],
+  range?: { start: Date; end: Date },
+): PlannerEventRecord[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V事件[] |  |
-|作业 |规划器分配[] |  |
-|范围 | { 开始：日期；结束：日期 } |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 活动 | V事件[]                    |      |
+| 作业 | 规划器分配[]               |      |
+| 范围 | { 开始：日期；结束：日期 } |      |
 
 ## `src/utils/availability`
 
@@ -319,36 +333,44 @@ function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment
 **种类：**功能
 
 ```typescript
-function availabilityForResource(input: AvailabilityInput, resourceId: string): ResourceAvailability
+function availabilityForResource(
+  input: AvailabilityInput,
+  resourceId: string,
+): ResourceAvailability;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |可用性输入 |  |
-|资源 ID |字符串|  |
+| 名称    | 类型       | 描述 |
+| ------- | ---------- | ---- |
+| 输入    | 可用性输入 |      |
+| 资源 ID | 字符串     |      |
 
 ### 展开可用性
 
 **种类：**功能
 
 ```typescript
-function expandAvailability(resourceId: string, input: AvailabilityInput, range: { start: Date; end: Date }, options: AvailabilityOptions = {}): NormalizedAvailabilityInterval[]
+function expandAvailability(
+  resourceId: string,
+  input: AvailabilityInput,
+  range: { start: Date; end: Date },
+  options: AvailabilityOptions = {},
+): NormalizedAvailabilityInterval[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|资源 ID |字符串|  |
-|输入 |可用性输入 |  |
-|范围 | { 开始：日期；结束：日期 } |  |
-|选项 |可用性选项 |  |
+| 名称    | 类型                       | 描述 |
+| ------- | -------------------------- | ---- |
+| 资源 ID | 字符串                     |      |
+| 输入    | 可用性输入                 |      |
+| 范围    | { 开始：日期；结束：日期 } |      |
+| 选项    | 可用性选项                 |      |
 
 ## `src/utils/capacity`
 
@@ -357,19 +379,24 @@ function expandAvailability(resourceId: string, input: AvailabilityInput, range:
 **种类：**功能
 
 ```typescript
-function calculateCapacityState(resourceId: string, segment: TimelineSegment | { start: Date; end: Date }, availability: NormalizedAvailabilityInterval[], events: PlannerEventRecord[]): CapacityState
+function calculateCapacityState(
+  resourceId: string,
+  segment: TimelineSegment | { start: Date; end: Date },
+  availability: NormalizedAvailabilityInterval[],
+  events: PlannerEventRecord[],
+): CapacityState;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|资源 ID |字符串|  |
-|段 |时间线段\| { 开始：日期；结束：日期 } |  |
-|可用性 |标准化可用性间隔[] |  |
-|活动 |计划者事件记录[] |  |
+| 名称    | 类型                                  | 描述 |
+| ------- | ------------------------------------- | ---- |
+| 资源 ID | 字符串                                |      |
+| 段      | 时间线段\| { 开始：日期；结束：日期 } |      |
+| 可用性  | 标准化可用性间隔[]                    |      |
+| 活动    | 计划者事件记录[]                      |      |
 
 ## `src/utils/layout`
 
@@ -378,18 +405,22 @@ function calculateCapacityState(resourceId: string, segment: TimelineSegment | {
 **种类：**功能
 
 ```typescript
-function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Date; end: Date }, width: number): PlannerEventGeometry[]
+function layoutResourceEvents(
+  records: PlannerEventRecord[],
+  range: { start: Date; end: Date },
+  width: number,
+): PlannerEventGeometry[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|记录|计划者事件记录[] |  |
-|范围 | { 开始：日期；结束：日期 } |  |
-|宽度|数量 |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 记录 | 计划者事件记录[]           |      |
+| 范围 | { 开始：日期；结束：日期 } |      |
+| 宽度 | 数量                       |      |
 
 ## `src/utils/mutations`
 
@@ -398,90 +429,110 @@ function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Dat
 **种类：**功能
 
 ```typescript
-function applyAssignmentUpdate(assignments: PlannerAssignment[], update: PlannerAssignmentUpdate): PlannerAssignment[]
+function applyAssignmentUpdate(
+  assignments: PlannerAssignment[],
+  update: PlannerAssignmentUpdate,
+): PlannerAssignment[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|作业 |规划器分配[] |  |
-|更新 |规划师作业更新 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 作业 | 规划器分配[]   |      |
+| 更新 | 规划师作业更新 |      |
 
 ### movePlanner事件补丁
 
 **种类：**功能
 
 ```typescript
-function movePlannerEventPatch(event: VEvent, deltaMs: number, options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function movePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V活动 |  |
-| DeltaMs |数量 |  |
-|选项 |规划器编辑选项 |  |
+| 名称    | 类型           | 描述 |
+| ------- | -------------- | ---- |
+| 活动    | V活动          |      |
+| DeltaMs | 数量           |      |
+| 选项    | 规划器编辑选项 |      |
 
 ### 重新分配PlannerEvent
 
 **种类：**功能
 
 ```typescript
-function reassignPlannerEvent(eventId: string, resourceId: string): PlannerAssignmentUpdate
+function reassignPlannerEvent(
+  eventId: string,
+  resourceId: string,
+): PlannerAssignmentUpdate;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|事件 ID |字符串|  |
-|资源 ID |字符串|  |
+| 名称    | 类型   | 描述 |
+| ------- | ------ | ---- |
+| 事件 ID | 字符串 |      |
+| 资源 ID | 字符串 |      |
 
 ### 调整PlannerEventPatch大小
 
 **种类：**功能
 
 ```typescript
-function resizePlannerEventPatch(event: VEvent, deltaMs: number, edge: "start" | "end" = "end", options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function resizePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  edge: "start" | "end" = "end",
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|活动 | V活动 |  |
-| DeltaMs |数量 |  |
-|边缘| “开始”\| “结束”|  |
-|选项 |规划器编辑选项 |  |
+| 名称    | 类型            | 描述 |
+| ------- | --------------- | ---- |
+| 活动    | V活动           |      |
+| DeltaMs | 数量            |      |
+| 边缘    | “开始”\| “结束” |      |
+| 选项    | 规划器编辑选项  |      |
 
 ### 选择规划器范围
 
 **种类：**功能
 
 ```typescript
-function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumDurationMs = 15 * 60_000): PlannerRangeSelection | undefined
+function selectPlannerRange(
+  resourceId: string,
+  start: Date,
+  end: Date,
+  minimumDurationMs = 15 * 60_000,
+): PlannerRangeSelection | undefined;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|资源 ID |字符串|  |
-|开始 |日期 |  |
-|结束 |日期 |  |
-|最小持续时间女士 |  |  |
+| 名称             | 类型   | 描述 |
+| ---------------- | ------ | ---- |
+| 资源 ID          | 字符串 |      |
+| 开始             | 日期   |      |
+| 结束             | 日期   |      |
+| 最小持续时间女士 |        |      |
 
 ## `src/utils/timeline`
 
@@ -490,68 +541,80 @@ function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumD
 **种类：**功能
 
 ```typescript
-function clampToRange(value: Date, range: { start: Date; end: Date }): Date
+function clampToRange(value: Date, range: { start: Date; end: Date }): Date;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|日期 |  |
-|范围 | { 开始：日期；结束：日期 } |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 价值 | 日期                       |      |
+| 范围 | { 开始：日期；结束：日期 } |      |
 
 ### 生成时间线段
 
 **种类：**功能
 
 ```typescript
-function generateTimelineSegments(scale: PlannerScale, range: { start: Date; end: Date }, options: TimelineOptions = {}): TimelineSegment[]
+function generateTimelineSegments(
+  scale: PlannerScale,
+  range: { start: Date; end: Date },
+  options: TimelineOptions = {},
+): TimelineSegment[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|规模|规划师规模|  |
-|范围 | { 开始：日期；结束：日期 } |  |
-|选项 |时间线选项 |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 规模 | 规划师规模                 |      |
+| 范围 | { 开始：日期；结束：日期 } |      |
+| 选项 | 时间线选项                 |      |
 
 ### 位置到时间
 
 **种类：**功能
 
 ```typescript
-function positionToTime(position: number, range: { start: Date; end: Date }, width: number): Date
+function positionToTime(
+  position: number,
+  range: { start: Date; end: Date },
+  width: number,
+): Date;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|位置|数量 |  |
-|范围 | { 开始：日期；结束：日期 } |  |
-|宽度|数量 |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 位置 | 数量                       |      |
+| 范围 | { 开始：日期；结束：日期 } |      |
+| 宽度 | 数量                       |      |
 
 ### 到达位置的时间
 
 **种类：**功能
 
 ```typescript
-function timeToPosition(time: Date, range: { start: Date; end: Date }, width: number): number
+function timeToPosition(
+  time: Date,
+  range: { start: Date; end: Date },
+  width: number,
+): number;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|时间 |日期 |  |
-|范围 | { 开始：日期；结束：日期 } |  |
-|宽度|数量 |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 时间 | 日期                       |      |
+| 范围 | { 开始：日期；结束：日期 } |      |
+| 宽度 | 数量                       |      |

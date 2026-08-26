@@ -75,7 +75,7 @@ La estrategia de diseño que utiliza el contenedor para dimensionarse en el eje 
 **Tipo:** función
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer`: primitiva de diseño de página/sección que restringe y centra
@@ -95,9 +95,9 @@ en el módulo CSS (que incluye los puntos de interrupción de la plataforma como
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ContainerProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<ContainerProperties> |             |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout`: el shell de la aplicación de nivel superior creado una vez en el
@@ -140,9 +140,9 @@ CSS). Los nombres de clase del módulo hash se ensamblan con el marco neutral
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ApplicationLayoutProperties> |  |
+| Nombre      | Tipo                                      | Descripción |
+| ----------- | ----------------------------------------- | ----------- |
+| propiedades | Sólo lectura<ApplicationLayoutProperties> |             |
 
 ### Punto de interrupción de la barra lateral
 
@@ -191,7 +191,7 @@ Regiones nombradas expuestas por `ForgeBentoLayout`.
 **Tipo:** función
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout` expone ranuras con nombre `hero`, `feature` y `supporting`.
@@ -200,9 +200,9 @@ apoyar a las regiones a su lado; todas las regiones se apilan en orden de origen
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<BentoLayoutProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<BentoLayoutProperties> |             |
 
 ### PatrónDiseñoPunto de interrupción
 
@@ -241,7 +241,7 @@ Elementos contenedores semánticos soportados por los diseños de patrones.
 **Tipo:** función
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout` expone `header`, `intro`, `primary`, `secondary` y
@@ -250,9 +250,9 @@ la pista de pantalla ancha dominante mientras que la región secundaria permanec
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<FPatternLayoutProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<FPatternLayoutProperties> |             |
 
 ### FPatternLayoutPunto de interrupción
 
@@ -311,7 +311,7 @@ Elementos de contenedor semántico soportados por `ForgeFPatternLayout`.
 **Tipo:** función
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout` representa las ranuras con nombre `cell1` … `cell12` suministradas en
@@ -320,9 +320,9 @@ rastrea solo después del punto de interrupción de respuesta configurado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<GridLayoutProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<GridLayoutProperties> |             |
 
 ### Punto de interrupción del diseño de cuadrícula
 
@@ -339,7 +339,19 @@ Punto de interrupción de la ventana gráfica utilizado por el respaldo de dise�
 **Tipo:** tipo
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 Ranuras de celdas con nombre ordenadas admitidas (`cell1` a `cell12`).
@@ -381,7 +393,7 @@ Elementos de contenedor semántico soportados por `ForgeGridLayout`.
 **Tipo:** función
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout`: un shell responsivo de tres columnas creado una vez en el
@@ -410,9 +422,9 @@ espacio de contenido simple).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<VerticalLayoutProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<VerticalLayoutProperties> |             |
 
 ### Punto de interrupción de diseño vertical
 
@@ -451,7 +463,7 @@ Escala de tamaño nombrada para las columnas laterales (espejos `ForgeDrawer`'s 
 **Tipo:** función
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` expone `topStart`, `topEnd`, `middle`, `bottomStart`,
@@ -460,9 +472,9 @@ Las pantallas colocan las regiones en lados alternos usando áreas de cuadrícul
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ZPatternLayoutProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<ZPatternLayoutProperties> |             |
 
 ### ZPatternLayoutPunto de interrupción
 

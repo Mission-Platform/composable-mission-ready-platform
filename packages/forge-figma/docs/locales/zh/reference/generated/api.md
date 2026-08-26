@@ -26,17 +26,20 @@ export interface ForgeGenerationOptions
 **种类：**功能
 
 ```typescript
-function generateForgeExportBundle(document: ForgeDesignDocument, options: ForgeGenerationOptions = {}): ForgeExportBundle
+function generateForgeExportBundle(
+  document: ForgeDesignDocument,
+  options: ForgeGenerationOptions = {},
+): ForgeExportBundle;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件 | Forge 设计文档 |  |
-|选项 | ForgeGeneration选项|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 文件 | Forge 设计文档      |      |
+| 选项 | ForgeGeneration选项 |      |
 
 ## `src/model/design`
 
@@ -45,7 +48,7 @@ function generateForgeExportBundle(document: ForgeDesignDocument, options: Forge
 **种类：**常数
 
 ```typescript
-export const FORGE_DESIGN_SCHEMA_VERSION
+export const FORGE_DESIGN_SCHEMA_VERSION;
 ```
 
 没有提供描述。
@@ -145,7 +148,20 @@ export interface ForgeDesignNode
 **种类：**类型
 
 ```typescript
-export type ForgeDesignNodeType = | 'frame' | 'group' | 'component' | 'instance' | 'text' | 'rectangle' | 'ellipse' | 'line' | 'vector' | 'boolean-operation' | 'image' | 'section' | 'unknown';
+export type ForgeDesignNodeType =
+  | 'frame'
+  | 'group'
+  | 'component'
+  | 'instance'
+  | 'text'
+  | 'rectangle'
+  | 'ellipse'
+  | 'line'
+  | 'vector'
+  | 'boolean-operation'
+  | 'image'
+  | 'section'
+  | 'unknown';
 ```
 
 没有提供描述。
@@ -267,16 +283,18 @@ export interface ForgeTextContent
 **种类：**功能
 
 ```typescript
-function createForgeDiagnostic(diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>): ForgeDiagnostic
+function createForgeDiagnostic(
+  diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>,
+): ForgeDiagnostic;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断|省略 <ForgeDiagnostic, 'code'> 并选择 <ForgeDiagnostic, 'code'> |  |
+| 名称 | 类型                                                            | 描述 |
+| ---- | --------------------------------------------------------------- | ---- |
+| 诊断 | 省略 <ForgeDiagnostic, 'code'> 并选择 <ForgeDiagnostic, 'code'> |      |
 
 ### 锻造诊断
 
@@ -431,24 +449,24 @@ export interface ForgeSlotDefinition
 **种类：**功能
 
 ```typescript
-function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined
+function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|名称 |字符串|  |
-|元数据 | ForgeComponentMetadata | 锻造组件元数据  |
+| 名称   | 类型                   | 描述           |
+| ------ | ---------------------- | -------------- |
+| 名称   | 字符串                 |                |
+| 元数据 | ForgeComponentMetadata | 锻造组件元数据 |
 
 ### FORGE_COMPONENT_REGISTRY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
+export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[];
 ```
 
 没有提供描述。
@@ -458,16 +476,16 @@ export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
 **种类：**功能
 
 ```typescript
-function getForgeComponent(name: string): ForgeComponentRegistryEntry
+function getForgeComponent(name: string): ForgeComponentRegistryEntry;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|名称 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 名称 | 字符串 |      |
 
 ## `src/tokens/resolve`
 
@@ -476,16 +494,16 @@ function getForgeComponent(name: string): ForgeComponentRegistryEntry
 **种类：**功能
 
 ```typescript
-function componentPathToCssVariable(path: string): string | undefined
+function componentPathToCssVariable(path: string): string | undefined;
 ```
 
 将规范组件路径转换为生成的 Mission Platform CSS 变量名称。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路径|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 路径 | 字符串 |      |
 
 ### Figma变量绑定
 
@@ -512,7 +530,7 @@ export interface ForgeTokenResolution
 **种类：**常数
 
 ```typescript
-export const MISSION_PLATFORM_COMPONENT_COLLECTION
+export const MISSION_PLATFORM_COMPONENT_COLLECTION;
 ```
 
 没有提供描述。
@@ -522,32 +540,32 @@ export const MISSION_PLATFORM_COMPONENT_COLLECTION
 **种类：**功能
 
 ```typescript
-function normalizeComponentTokenPath(value: string): string | undefined
+function normalizeComponentTokenPath(value: string): string | undefined;
 ```
 
 将 Figma 变量名称或别名标准化为规范 `component.*` 路径。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 解析Figma变量
 
 **种类：**功能
 
 ```typescript
-function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution
+function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|绑定| FigmaVariableBinding | FigmaVariableBinding |  |
+| 名称 | 类型                 | 描述                 |
+| ---- | -------------------- | -------------------- |
+| 绑定 | FigmaVariableBinding | FigmaVariableBinding |     |
 
 ## `src/validation/document`
 
@@ -556,16 +574,16 @@ function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResoluti
 **种类：**功能
 
 ```typescript
-function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[]
+function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件 | Forge 设计文档 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 文件 | Forge 设计文档 |      |
 
 ### validateForgeExportBundle
 
@@ -574,16 +592,16 @@ function validateForgeDesignDocument(document: ForgeDesignDocument): readonly Fo
 ```typescript
 function validateForgeExportBundle(bundle: {
   readonly files: readonly { readonly path: string }[];
-}): readonly ForgeDiagnostic[]
+}): readonly ForgeDiagnostic[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|捆绑| { 只读文件：只读 { 只读路径：字符串 }[]; } |  |
+| 名称 | 类型                                       | 描述 |
+| ---- | ------------------------------------------ | ---- |
+| 捆绑 | { 只读文件：只读 { 只读路径：字符串 }[]; } |      |
 
 ## `src/validation/names`
 
@@ -592,34 +610,34 @@ function validateForgeExportBundle(bundle: {
 **种类：**功能
 
 ```typescript
-function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string
+function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string;
 ```
 
 从 Figma 图层或框架名称创建稳定的 PascalCase 标识符。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
-|后备|  |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
+| 后备 |        |      |
 
 ### 规范化文件名
 
 **种类：**功能
 
 ```typescript
-function normalizeFileName(value: string, fallback = 'generated-component'): string
+function normalizeFileName(value: string, fallback = 'generated-component'): string;
 ```
 
 根据 Figma 图层或框架名称创建安全的 kebab-case 文件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
-|后备|  |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
+| 后备 |        |      |
 
 ## `src/validation/paths`
 
@@ -638,14 +656,17 @@ export interface ForgePathValidationResult
 **种类：**功能
 
 ```typescript
-function validateRepositoryRelativePath(value: string, allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg']): ForgePathValidationResult
+function validateRepositoryRelativePath(
+  value: string,
+  allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg'],
+): ForgePathValidationResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
-|允许扩展 |只读字符串[] |  |
+| 名称     | 类型         | 描述 |
+| -------- | ------------ | ---- |
+| 价值     | 字符串       |      |
+| 允许扩展 | 只读字符串[] |      |

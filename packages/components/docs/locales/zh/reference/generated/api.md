@@ -56,7 +56,7 @@ export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy' | undefined;
 **种类：**功能
 
 ```typescript
-function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
+function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 ```
 
 `ForgeAvatar` — 使用中性 JSX 方言创作的用户/实体头像
@@ -71,9 +71,9 @@ function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<AvatarProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<AvatarProperties> |      |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -112,7 +112,7 @@ export interface BackgroundVideoSource
 **种类：**功能
 
 ```typescript
-function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement
+function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement;
 ```
 
 `ForgeBackgroundVideo` — 一次创作的装饰性全出血背景视频
@@ -133,9 +133,9 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<BackgroundVideoProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<BackgroundVideoProperties> |      |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -164,7 +164,8 @@ export type BadgeSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**类型
 
 ```typescript
-export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type BadgeVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 徽章的视觉色调。镜像 `@mission-platform/components` `ForgeBadge`。
@@ -174,7 +175,7 @@ export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 's
 **种类：**功能
 
 ```typescript
-function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
+function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 ```
 
 `ForgeBadge` — 在中立 JSX 中编写的小型状态/标签芯片
@@ -196,9 +197,9 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<BadgeProperties> |  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 属性 | 只读<BadgeProperties> |      |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -217,7 +218,8 @@ export interface ButtonProperties
 **种类：**类型
 
 ```typescript
-export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type ButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 按钮的视觉处理。镜像 `@mission-platform/components` `ForgeButton`。
@@ -227,7 +229,7 @@ export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | '
 **种类：**功能
 
 ```typescript
-function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
+function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 ```
 
 `ForgeButton` — 使用中性 JSX 方言编写一次并编译的按钮
@@ -249,9 +251,9 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ButtonProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<ButtonProperties> |      |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -260,7 +262,7 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
 **种类：**功能
 
 ```typescript
-function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
+function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 ```
 
 `ForgeIconButton` — 一个紧凑、方形、仅图标的按钮，在
@@ -276,9 +278,9 @@ function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<IconButtonProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<IconButtonProperties> |      |
 
 ### 图标按钮属性
 
@@ -305,7 +307,8 @@ export type IconButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**类型
 
 ```typescript
-export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type IconButtonVariant =
+  'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 图标按钮的视觉处理 - 规范颜色集加上透明的 `ghost`。
@@ -317,7 +320,7 @@ export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 
 **种类：**功能
 
 ```typescript
-function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement
+function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement;
 ```
 
 `ForgeProgressBar` — 编写的确定或不确定进度指示器
@@ -332,9 +335,9 @@ function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ProgressBarProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<ProgressBarProperties> |      |
 
 ### 进度条属性
 
@@ -361,7 +364,8 @@ Canonical 2xs → 2xl 尺寸比例（轨道厚度）。
 **种类：**类型
 
 ```typescript
-export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ProgressVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 进度填充的语气。
@@ -373,7 +377,7 @@ export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' |
 **种类：**功能
 
 ```typescript
-function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement
+function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
 ```
 
 `ForgeQuote` — 在中性中创作一次的语义块引用/拉引
@@ -393,9 +397,9 @@ JSX 方言并直接编译为 React 或 Vue
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<QuoteProperties> |  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 属性 | 只读<QuoteProperties> |      |
 
 ### 报价属性
 
@@ -434,7 +438,7 @@ export type QuoteVariant = 'default' | 'bordered' | 'plain';
 **种类：**功能
 
 ```typescript
-function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement
+function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement;
 ```
 
 `ForgeResponsiveImage` — 一个艺术导向的、响应式的 `<picture>` 元素
@@ -455,9 +459,9 @@ Vue 由 `@mission-platform/vite-plugin-forge` 提供。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ResponsiveImageProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<ResponsiveImageProperties> |      |
 
 ### 响应式图像适配
 
@@ -496,7 +500,7 @@ export interface ResponsiveImageSource
 **种类：**功能
 
 ```typescript
-function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement
+function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement;
 ```
 
 `ForgeResponsiveVideo` — 一个响应式 `<video>` 元素，在
@@ -519,9 +523,9 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ResponsiveVideoProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<ResponsiveVideoProperties> |      |
 
 ### 响应式视频适配
 
@@ -560,7 +564,7 @@ export interface ResponsiveVideoSource
 **种类：**功能
 
 ```typescript
-function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement
+function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ```
 
 `ForgeSeparator` — 在中性位置创作一次的视觉分隔符/分隔符
@@ -581,9 +585,9 @@ JSX 方言并直接编译为 React 或 Vue
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SeparatorProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<SeparatorProperties> |      |
 
 ### 分离器方向
 
@@ -632,7 +636,7 @@ export type SeparatorVariant = 'solid' | 'dashed' | 'dotted';
 **种类：**功能
 
 ```typescript
-function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
+function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 ```
 
 `ForgeSkeleton` — 在中性 JSX 中编写的加载占位符
@@ -647,9 +651,9 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SkeletonProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<SkeletonProperties> |      |
 
 ### 骨架属性
 
@@ -678,7 +682,7 @@ export type SkeletonShape = 'line' | 'circle' | 'block';
 **种类：**功能
 
 ```typescript
-function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement
+function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement;
 ```
 
 `ForgeSpinner` — 一次在中性位置创作的不确定加载旋转器
@@ -695,9 +699,9 @@ JSX 方言并直接编译为 React 或 Vue
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SpinnerProperties> |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读<SpinnerProperties> |      |
 
 ### Spinner 属性
 
@@ -724,7 +728,8 @@ export type SpinnerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**类型
 
 ```typescript
-export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type SpinnerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 旋转环的音调。
@@ -736,7 +741,7 @@ export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 
 **种类：**功能
 
 ```typescript
-function ForgeStack(properties: Readonly<StackProperties>): MpElement
+function ForgeStack(properties: Readonly<StackProperties>): MpElement;
 ```
 
 `ForgeStack` — 一个 Flexbox 堆栈布局原语，将其子级布局在
@@ -751,9 +756,9 @@ function ForgeStack(properties: Readonly<StackProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<StackProperties> |  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 属性 | 只读<StackProperties> |      |
 
 ### 堆栈对齐
 
@@ -812,23 +817,24 @@ export interface StackProperties
 **种类：**功能
 
 ```typescript
-function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement
+function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<StatusIconProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<StatusIconProperties> |      |
 
 ### 状态图标级别
 
 **种类：**类型
 
 ```typescript
-export type StatusIconLevel = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type StatusIconLevel =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 图标传达的状态/基调——规范的颜色集。
@@ -890,7 +896,7 @@ export interface AccordionProperties
 **种类：**功能
 
 ```typescript
-function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement
+function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement;
 ```
 
 `ForgeAccordion` — 一个垂直堆叠的可折叠行容器
@@ -913,9 +919,9 @@ React/Vue);每个项目的 `summary`/default 槽变成两个作用域槽
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<AccordionProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<AccordionProperties> |      |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -944,7 +950,7 @@ export interface BreadcrumbProperties
 **种类：**功能
 
 ```typescript
-function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
+function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 ```
 
 `ForgeBreadcrumb` — 以中性 JSX 方言编写的面包屑路径
@@ -964,9 +970,9 @@ function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<BreadcrumbProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<BreadcrumbProperties> |      |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1005,7 +1011,7 @@ export interface ButtonGroupProperties
 **种类：**功能
 
 ```typescript
-function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement
+function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement;
 ```
 
 `ForgeButtonGroup` — 将相关按钮分组到单个视觉单元中。撰写
@@ -1024,9 +1030,9 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ButtonGroupProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<ButtonGroupProperties> |      |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1055,7 +1061,7 @@ export interface CardProperties
 **种类：**功能
 
 ```typescript
-function ForgeCard(properties: Readonly<CardProperties>): MpElement
+function ForgeCard(properties: Readonly<CardProperties>): MpElement;
 ```
 
 `ForgeCard` — 具有可选页眉/页脚区域的表面容器，由作者编写
@@ -1075,9 +1081,9 @@ React 的道具存在检查）因此存在检测在两者上的工作方式相�
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<CardProperties> |  |
+| 名称 | 类型                 | 描述 |
+| ---- | -------------------- | ---- |
+| 属性 | 只读<CardProperties> |      |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1116,7 +1122,7 @@ export type ChatBubbleVariant = 'default' | 'primary';
 **种类：**功能
 
 ```typescript
-function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
+function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 ```
 
 `ForgeChatBubble` — 在中性 JSX 中创建一次的单个消息气泡
@@ -1137,9 +1143,9 @@ function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ChatBubbleProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<ChatBubbleProperties> |      |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1158,7 +1164,7 @@ export interface CollapseProperties
 **种类：**功能
 
 ```typescript
-function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
+function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 ```
 
 `ForgeCollapse` — 基于 `<details>` 的本机披露，在
@@ -1181,9 +1187,9 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<CollapseProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<CollapseProperties> |      |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1232,7 +1238,7 @@ export type DeviceMockType = 'mobile' | 'tablet' | 'desktop' | 'browser';
 **种类：**功能
 
 ```typescript
-function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement
+function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 ```
 
 `ForgeDeviceMock` — 包裹任意屏幕的装饰性设备框架
@@ -1249,9 +1255,9 @@ chrome，以中性 JSX 方言编写一次 (`@mission-platform/forge`)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<DeviceMockProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<DeviceMockProperties> |      |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1260,7 +1266,7 @@ chrome，以中性 JSX 方言编写一次 (`@mission-platform/forge`)
 **种类：**功能
 
 ```typescript
-function ForgeGrid(properties: Readonly<GridProperties>): MpElement
+function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 ```
 
 `ForgeGrid` — CSS 网格布局原语，将其内容排列成
@@ -1280,9 +1286,9 @@ function ForgeGrid(properties: Readonly<GridProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<GridProperties> |  |
+| 名称 | 类型                 | 描述 |
+| ---- | -------------------- | ---- |
+| 属性 | 只读<GridProperties> |      |
 
 ### 网格对齐
 
@@ -1321,7 +1327,7 @@ export interface GridProperties
 **种类：**功能
 
 ```typescript
-function ForgeInView(properties: Readonly<InViewProperties>): MpElement
+function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 ```
 
 `ForgeInView` — 包装内容并使用 `IntersectionObserver` 来显示它
@@ -1336,9 +1342,9 @@ function ForgeInView(properties: Readonly<InViewProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<InViewProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<InViewProperties> |      |
 
 ### 视图动画
 
@@ -1367,7 +1373,7 @@ export interface InViewProperties
 **种类：**功能
 
 ```typescript
-function ForgeList(properties: Readonly<ListProperties>): MpElement
+function ForgeList(properties: Readonly<ListProperties>): MpElement;
 ```
 
 `ForgeList` — 一次在文档中创建的有序/无序/描述/普通列表
@@ -1388,9 +1394,9 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ListProperties> |  |
+| 名称 | 类型                 | 描述 |
+| ---- | -------------------- | ---- |
+| 属性 | 只读<ListProperties> |      |
 
 ### 列表项
 
@@ -1439,7 +1445,7 @@ export type ListVariant = 'unordered' | 'ordered' | 'description' | 'none';
 **种类：**功能
 
 ```typescript
-function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement
+function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement;
 ```
 
 `ForgeMasonry` — 一次编写的 CSS 多列砌体布局原语
@@ -1462,9 +1468,9 @@ CSS）；动态多列属性是内联应用的。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MasonryProperties> |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读<MasonryProperties> |      |
 
 ### 砌体间隙
 
@@ -1493,7 +1499,7 @@ export interface MasonryProperties
 **种类：**功能
 
 ```typescript
-function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
+function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 ```
 
 `ForgeMenuItem` — 使用中性 JSX 方言编写的单个菜单条目
@@ -1513,9 +1519,9 @@ function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MenuItemProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<MenuItemProperties> |      |
 
 ### 菜单项属性
 
@@ -1532,7 +1538,8 @@ export interface MenuItemProperties
 **种类：**类型
 
 ```typescript
-export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type MenuItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 应用于菜单项的提示音。
@@ -1544,7 +1551,7 @@ export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' |
 **种类：**功能
 
 ```typescript
-function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
+function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 ```
 
 `ForgeMenu` — 使用中性 JSX 方言编写的可访问菜单
@@ -1570,9 +1577,9 @@ function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MenuProperties> |  |
+| 名称 | 类型                 | 描述 |
+| ---- | -------------------- | ---- |
+| 属性 | 只读<MenuProperties> |      |
 
 ### 菜单节点
 
@@ -1611,7 +1618,7 @@ export interface MenuProperties
 **种类：**功能
 
 ```typescript
-function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement
+function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 ```
 
 `ForgeNavbarItem` — 使用中性 JSX 方言编写的导航栏条目
@@ -1639,9 +1646,9 @@ React 的元素类型/Vue 的 `<component :is>`)，其中 `tag` 解析为 `'a'`
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<NavbarItemProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<NavbarItemProperties> |      |
 
 ### 导航栏项目子项
 
@@ -1668,7 +1675,8 @@ export interface NavbarItemProperties
 **种类：**类型
 
 ```typescript
-export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type NavbarItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 应用于导航栏项目的色调。
@@ -1680,7 +1688,7 @@ export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary'
 **种类：**功能
 
 ```typescript
-function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
+function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 ```
 
 `ForgePagination` — 在中性 JSX 中编写一次的页面导航控件
@@ -1700,9 +1708,9 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<PaginationProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<PaginationProperties> |      |
 
 ### 分页项
 
@@ -1741,7 +1749,7 @@ export type PaginationSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
+function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 ```
 
 `ForgeTabs` — 一个可访问、受控的选项卡容器，在
@@ -1775,9 +1783,9 @@ function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<TabsProperties> |  |
+| 名称 | 类型                 | 描述 |
+| ---- | -------------------- | ---- |
+| 属性 | 只读<TabsProperties> |      |
 
 ### 选项卡项
 
@@ -1826,7 +1834,7 @@ export type TabsVariant = 'line' | 'pill';
 **种类：**功能
 
 ```typescript
-function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
+function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 ```
 
 `ForgeTimeline` — 一次按时间顺序创作的事件的有序列表
@@ -1847,9 +1855,9 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<TimelineProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<TimelineProperties> |      |
 
 ### 时间线对齐
 
@@ -1886,7 +1894,8 @@ export interface TimelineItemScope
 **种类：**类型
 
 ```typescript
-export type TimelineItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type TimelineItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 应用于标记点的颜色系列。
@@ -1918,7 +1927,7 @@ export interface TimelineProperties
 **种类：**功能
 
 ```typescript
-function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement
+function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement;
 ```
 
 `ForgeWindowPopout` — 将其内容弹出到单独的浏览器窗口中，
@@ -1943,9 +1952,9 @@ props（替换原始 SFC 的发射）。中性 `useState` / `useRef`
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<WindowPopoutProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<WindowPopoutProperties> |      |
 
 ### WindowPopout 属性
 
@@ -1994,7 +2003,7 @@ export interface CarouselSlideScope
 **种类：**功能
 
 ```typescript
-function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement
+function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
 ```
 
 `ForgeCarousel` — 一个可水平滚动的幻灯片，曾在
@@ -2019,9 +2028,9 @@ function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<CarouselProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<CarouselProperties> |      |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2040,7 +2049,7 @@ export interface ChatAreaProperties
 **种类：**功能
 
 ```typescript
-function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
+function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 ```
 
 `ForgeChatArea` — 一次在
@@ -2065,9 +2074,9 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ChatAreaProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<ChatAreaProperties> |      |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2139,7 +2148,7 @@ export type DrawerVariant = 'overlay' | 'inline';
 **种类：**功能
 
 ```typescript
-function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement
+function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 ```
 
 `ForgeDrawer` — 一个用中性 JSX 方言编写的滑动面板
@@ -2169,9 +2178,9 @@ helper）和 `closeLabel` 属性代替 i18n。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<DrawerProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<DrawerProperties> |      |
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2180,7 +2189,7 @@ helper）和 `closeLabel` 属性代替 i18n。
 **种类：**功能
 
 ```typescript
-function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
+function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement;
 ```
 
 `ForgeMenubar` — 在中立状态下编写的水平应用程序菜单栏
@@ -2207,9 +2216,9 @@ leaf 触发其 `onClick`。与 Vue 原始版本一样，每个选项仅打开一
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MenubarProperties> |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读<MenubarProperties> |      |
 
 ### 菜单栏属性
 
@@ -2228,7 +2237,7 @@ export interface MenubarProperties
 **种类：**功能
 
 ```typescript
-function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement
+function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
 ```
 
 `ForgeNavbar` — 在中立状态下编写的顶部应用程序导航栏
@@ -2249,9 +2258,9 @@ JSX 方言并直接编译为 React 或 Vue
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<NavbarProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<NavbarProperties> |      |
 
 ### 导航栏对齐
 
@@ -2292,7 +2301,7 @@ export interface NavbarProperties
 **种类：**功能
 
 ```typescript
-function ForgeTable(properties: Readonly<TableProperties>): MpElement
+function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
 `ForgeTable` — 使用中性 JSX 方言编写的可排序数据表
@@ -2315,9 +2324,9 @@ function ForgeTable(properties: Readonly<TableProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<TableProperties> |  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 属性 | 只读<TableProperties> |      |
 
 ### 排序方向
 
@@ -2356,7 +2365,7 @@ export interface TableProperties
 **种类：**功能
 
 ```typescript
-function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
+function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
 ```
 
 `ForgeTreeView` — 在中性 JSX 中编写一次的递归、可访问的树
@@ -2382,9 +2391,9 @@ function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<TreeViewProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<TreeViewProperties> |      |
 
 ### 树视图标签范围
 
@@ -2423,7 +2432,7 @@ export interface TreeViewProperties
 **种类：**功能
 
 ```typescript
-function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement
+function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement;
 ```
 
 `ForgeVirtualList` — 仅呈现滚动容器中可见的行，
@@ -2444,9 +2453,9 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<VirtualListProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<VirtualListProperties> |      |
 
 ### 虚拟列表项范围
 
@@ -2475,7 +2484,7 @@ export interface VirtualListProperties
 **种类：**功能
 
 ```typescript
-function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement
+function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement;
 ```
 
 `ForgeVirtualLogViewer` — 高性能虚拟滚动日志查看器。
@@ -2495,9 +2504,9 @@ Vue 由 `@mission-platform/vite-plugin-forge` 提供；它仅呈现其中的行
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<VirtualLogViewerProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<VirtualLogViewerProperties> |      |
 
 ### 日志条目
 
@@ -2536,7 +2545,7 @@ export interface VirtualLogViewerProperties
 **种类：**功能
 
 ```typescript
-function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement
+function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement;
 ```
 
 `ForgeVirtualTable` — 一个虚拟滚动、可排序的数据表，可呈现
@@ -2566,9 +2575,9 @@ function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<VirtualTableProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<VirtualTableProperties> |      |
 
 ### 虚拟表单元作用域
 
@@ -2607,7 +2616,7 @@ export interface VirtualTableProperties
 **种类：**功能
 
 ```typescript
-function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement
+function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement;
 ```
 
 `ForgeVirtualTabs` — 受控选项卡容器，仅渲染**活动的选项卡
@@ -2632,9 +2641,9 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<VirtualTabsProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<VirtualTabsProperties> |      |
 
 ### 虚拟选项卡面板范围
 
@@ -2663,7 +2672,7 @@ export interface VirtualTabsProperties
 **种类：**功能
 
 ```typescript
-function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement
+function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement;
 ```
 
 `ForgeVirtualTreeView` — 虚拟滚动树，使其可见
@@ -2684,9 +2693,9 @@ function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<VirtualTreeViewProperties> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 只读<VirtualTreeViewProperties> |      |
 
 ### 树节点
 
@@ -2725,7 +2734,7 @@ export interface VirtualTreeViewProperties
 **种类：**功能
 
 ```typescript
-function ForgeHero(properties: Readonly<HeroProperties>): MpElement
+function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 ```
 
 `ForgeHero` — 在中性 JSX 中创作的页面英雄/横幅部分
@@ -2747,9 +2756,9 @@ helper) 和 `eyebrow`/`title`/`subtitle` 是字符串道具。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<HeroProperties> |  |
+| 名称 | 类型                 | 描述 |
+| ---- | -------------------- | ---- |
+| 属性 | 只读<HeroProperties> |      |
 
 ### 英雄对齐
 
@@ -2788,7 +2797,7 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function beginPointerDrag(handlers: PointerDragHandlers): () => void
+function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 ```
 
 开始窗口跟踪指针拖动。附件 `pointermove`/`pointerup`/
@@ -2799,9 +2808,9 @@ function beginPointerDrag(handlers: PointerDragHandlers): () => void
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|处理程序 |指针拖动处理程序 |  |
+| 名称     | 类型             | 描述 |
+| -------- | ---------------- | ---- |
+| 处理程序 | 指针拖动处理程序 |      |
 
 ### 指针拖动处理程序
 

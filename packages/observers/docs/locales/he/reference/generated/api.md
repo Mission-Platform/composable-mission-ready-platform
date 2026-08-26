@@ -16,7 +16,11 @@
 פונקציה **סוג:**
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 וו IntersectionObserver ניטרלי למסגרת.
@@ -28,11 +32,11 @@ SSR-safe: אין הפעלה כאשר ה-API של הדפדפן או ה-DOM אינ
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יעד | MpRef<Element \| null> |  |
-| התקשרות חזרה | IntersectionObserverCallback |  |
-| אפשרויות | IntersectionObserverInit |  |
+| שם           | הקלד                         | תיאור |
+| ------------ | ---------------------------- | ----- |
+| יעד          | MpRef<Element \| null>       |       |
+| התקשרות חזרה | IntersectionObserverCallback |       |
+| אפשרויות     | IntersectionObserverInit     |       |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -41,7 +45,11 @@ SSR-safe: אין הפעלה כאשר ה-API של הדפדפן או ה-DOM אינ
 פונקציה **סוג:**
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 וו MutationObserver נייטרלי למסגרת.
@@ -52,11 +60,11 @@ SSR-safe: אין הפעלה כאשר ה-API של הדפדפן או ה-DOM אינ
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יעד | MpRef<Node \| null> |  |
-| התקשרות חזרה | MutationCallback |  |
-| אפשרויות | MutationObserverInit |  |
+| שם           | הקלד                 | תיאור |
+| ------------ | -------------------- | ----- |
+| יעד          | MpRef<Node \| null>  |       |
+| התקשרות חזרה | MutationCallback     |       |
+| אפשרויות     | MutationObserverInit |       |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -65,7 +73,7 @@ SSR-safe: אין הפעלה כאשר ה-API של הדפדפן או ה-DOM אינ
 פונקציה **סוג:**
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 הווק PerformanceObserver נייטרלי למסגרת.
@@ -77,7 +85,7 @@ SSR-safe: ללא הפעלה כאשר ממשק ה-API של הדפדפן אינו 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| התקשרות חזרה | PerformanceObserverCallback |  |
-| אפשרויות | PerformanceObserverInit |  |
+| שם           | הקלד                        | תיאור |
+| ------------ | --------------------------- | ----- |
+| התקשרות חזרה | PerformanceObserverCallback |       |
+| אפשרויות     | PerformanceObserverInit     |       |

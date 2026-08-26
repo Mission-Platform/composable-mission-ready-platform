@@ -62,38 +62,38 @@ export interface FieldTypeDescriptor
 **النوع:** الوظيفة
 
 ```typescript
-function evaluateCondition(condition: FieldCondition, values: FormValues): boolean
+function evaluateCondition(condition: FieldCondition, values: FormValues): boolean;
 ```
 
 قم بتقييم {@link FieldCondition} مقابل النموذج `values`، مع إرجاع ما إذا كان
-يحمل حاليا.  تتبع مجموعات Combinator دلالات مخطط JSON:
-`allOf` = AND، `anyOf` = OR، `oneOf` = واحد بالضبط (XOR).  كلمات رئيسية متعددة
-الحاضرين في نفس المجموعة هم أنفسهم AND-ed.  تمر مجموعة فارغة.
+يحمل حاليا. تتبع مجموعات Combinator دلالات مخطط JSON:
+`allOf` = AND، `anyOf` = OR، `oneOf` = واحد بالضبط (XOR). كلمات رئيسية متعددة
+الحاضرين في نفس المجموعة هم أنفسهم AND-ed. تمر مجموعة فارغة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حالة | الحالة الميدانية |  |
-| القيم | قيم النموذج |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| حالة  | الحالة الميدانية |       |
+| القيم | قيم النموذج      |       |
 
 ### isFieldVisible
 
 **النوع:** الوظيفة
 
 ```typescript
-function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean
+function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean;
 ```
 
 ما إذا كان يجب أن يكون الحقل الذي يحتوي على شرط `visibleWhen` اختياريًا حاليًا
-المقدمة.  الحقول التي لا تحتوي على شرط تكون مرئية دائمًا.
+المقدمة. الحقول التي لا تحتوي على شرط تكون مرئية دائمًا.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المجال | {مرئي متى؟: FieldCondition } |  |
-| القيم | قيم النموذج |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| المجال | {مرئي متى؟: FieldCondition } |       |
+| القيم  | قيم النموذج                  |       |
 
 ## `src/form-schema`
 
@@ -102,16 +102,16 @@ function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormVal
 **النوع:** الوظيفة
 
 ```typescript
-function builderFieldToProperty(field: BuilderField): JsonSchemaProperty
+function builderFieldToProperty(field: BuilderField): JsonSchemaProperty;
 ```
 
 تحويل {@link BuilderField} واحد إلى {@link JsonSchemaProperty}.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المجال | منشئ الميدان |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المجال | منشئ الميدان |       |
 
 ### createField
 
@@ -123,7 +123,7 @@ function createField(options: {
   label?: string;
   key?: string;
   usedKeys?: Iterable<string>;
-}): BuilderField
+}): BuilderField;
 ```
 
 يقوم بإنشاء {@link BuilderField} جديد لـ `type` المحدد. المفتاح مشتق
@@ -132,16 +132,16 @@ function createField(options: {
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | { النوع: نوع الحقل النموذجي؛   التسمية؟: سلسلة؛   مفتاح؟: سلسلة؛   useKeys?: Iterable<string>; } |  |
+| الاسم  | اكتب                                                                                       | الوصف |
+| ------ | ------------------------------------------------------------------------------------------ | ----- |
+| خيارات | { النوع: نوع الحقل النموذجي؛ التسمية؟: سلسلة؛ مفتاح؟: سلسلة؛ useKeys?: Iterable<string>; } |       |
 
 ### DEFAULT_FIELD_TYPES
 
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
+export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[];
 ```
 
 أنواع الحقول المتوفرة في لوحة المنشئ، بترتيب العرض. اللوحة
@@ -154,27 +154,30 @@ export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
 **النوع:** الوظيفة
 
 ```typescript
-function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined
+function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined;
 ```
 
 التحقق من صحة مفتاح الحقل مقابل أشقائه: يجب أن يكون غير فارغ وفريدًا
 داخل الحاوية الخاصة به. إرجاع رسالة يمكن قراءتها بواسطة الإنسان، أو `undefined` عندما
-المفتاح صالح. `siblingKeys` هي مفاتيح الحقول *الأخرى* في ملف
+المفتاح صالح. `siblingKeys` هي مفاتيح الحقول _الأخرى_ في ملف
 نفس الحاوية (باستثناء الحقل الذي يتم التحقق من صحته).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مفتاح | سلسلة |  |
-| مفاتيح الأخوة | Iterable<string> |  |
+| الاسم         | اكتب             | الوصف |
+| ------------- | ---------------- | ----- |
+| مفتاح         | سلسلة            |       |
+| مفاتيح الأخوة | Iterable<string> |       |
 
 ### fieldToDefinition
 
 **النوع:** الوظيفة
 
 ```typescript
-function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: FieldsToSchemaOptions = {}): SchemaFormDefinition
+function fieldsToDefinition(
+  fields: BuilderField[] | BuilderField[][],
+  options: FieldsToSchemaOptions = {},
+): SchemaFormDefinition;
 ```
 
 إنشاء تعريف المخطط، واختيار خطوة واحدة أو المعالج من `options`.
@@ -183,34 +186,34 @@ function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الحقول | BuilderField[] \| منشئ الحقل[][] |  |
-| خيارات | فيلدستوسكيماوبشنز |  |
+| الاسم  | اكتب                             | الوصف |
+| ------ | -------------------------------- | ----- |
+| الحقول | BuilderField[] \| منشئ الحقل[][] |       |
+| خيارات | فيلدستوسكيماوبشنز                |       |
 
 ### fieldToSchema
 
 **النوع:** الوظيفة
 
 ```typescript
-function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema
+function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema;
 ```
 
 ينشئ {@link FormJsonSchema} خطوة واحدة من حقول المستوى الأعلى.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الحقول | منشئ الحقل[] |  |
-| خيارات | فيلدستوسكيماوبشنز |  |
+| الاسم  | اكتب              | الوصف |
+| ------ | ----------------- | ----- |
+| الحقول | منشئ الحقل[]      |       |
+| خيارات | فيلدستوسكيماوبشنز |       |
 
 ### fieldToWizardSchema
 
 **النوع:** الوظيفة
 
 ```typescript
-function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[]
+function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[];
 ```
 
 إنشاء معالج متعدد الخطوات ({@link FormJsonSchema}[]) من حقل لكل خطوة
@@ -218,145 +221,145 @@ function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خطوات | منشئ الحقل[][] |  |
-| خيارات | فيلدستوسكيماوبشنز |  |
+| الاسم  | اكتب              | الوصف |
+| ------ | ----------------- | ----- |
+| خطوات  | منشئ الحقل[][]    |       |
+| خيارات | فيلدستوسكيماوبشنز |       |
 
 ### com.isDateWidget
 
 **النوع:** الوظيفة
 
 ```typescript
-function isDateWidget(widget: FormFieldType): boolean
+function isDateWidget(widget: FormFieldType): boolean;
 ```
 
 ما إذا كانت الأداة تلتقط تاريخ تقويم (يقبل `minDate` / `maxDate`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ### com.isFieldsetWidget
 
 **النوع:** الوظيفة
 
 ```typescript
-function isFieldsetWidget(widget: FormFieldType): boolean
+function isFieldsetWidget(widget: FormFieldType): boolean;
 ```
 
 ما إذا كانت الأداة عبارة عن مجموعة حقول تجميع.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ### com.isFileWidget
 
 **النوع:** الوظيفة
 
 ```typescript
-function isFileWidget(widget: FormFieldType): boolean
+function isFileWidget(widget: FormFieldType): boolean;
 ```
 
 ما إذا كانت الأداة تقوم بتحميل ملف (يقبل `accept` / `multiple` / `capture`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ### isLocationWidget
 
 **النوع:** الوظيفة
 
 ```typescript
-function isLocationWidget(widget: FormFieldType): boolean
+function isLocationWidget(widget: FormFieldType): boolean;
 ```
 
 ما إذا كان عنصر واجهة المستخدم يلتقط إحداثيات جغرافية (يقبل `locationFormat`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ### isMultilineWidget
 
 **النوع:** الوظيفة
 
 ```typescript
-function isMultilineWidget(widget: FormFieldType): boolean
+function isMultilineWidget(widget: FormFieldType): boolean;
 ```
 
 ما إذا كان عنصر واجهة المستخدم يعرض منطقة متعددة الأسطر (يقبل عدد `rows`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ### isNumberWidget
 
 **النوع:** الوظيفة
 
 ```typescript
-function isNumberWidget(widget: FormFieldType): boolean
+function isNumberWidget(widget: FormFieldType): boolean;
 ```
 
 ما إذا كانت الأداة رقمية (`number` / `stepper`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ### com.isTextWidget
 
 **النوع:** الوظيفة
 
 ```typescript
-function isTextWidget(widget: FormFieldType): boolean
+function isTextWidget(widget: FormFieldType): boolean;
 ```
 
 ما إذا كانت الأداة مكتوبة بالنص (تقبل `minLength` / `maxLength` / `pattern`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ### com.isTimeWidget
 
 **النوع:** الوظيفة
 
 ```typescript
-function isTimeWidget(widget: FormFieldType): boolean
+function isTimeWidget(widget: FormFieldType): boolean;
 ```
 
 ما إذا كانت الأداة تلتقط وقتًا من اليوم (يقبل تبديل `showSeconds`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ### nextFieldId
 
 **النوع:** الوظيفة
 
 ```typescript
-function nextFieldId(): string
+function nextFieldId(): string;
 ```
 
 يُنشئ معرف حقل منشئ جديد ومقاوم للتصادم.
@@ -366,55 +369,55 @@ function nextFieldId(): string
 **النوع:** الوظيفة
 
 ```typescript
-function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>
+function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>;
 ```
 
 قواعد الرؤية المشروطة لكل خطوة لتعريف المعالج.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعريف | تعريف المخطط \| غير محدد |  |
+| الاسم | اكتب                     | الوصف |
+| ----- | ------------------------ | ----- |
+| تعريف | تعريف المخطط \| غير محدد |       |
 
 ### schemaStepDescriptions
 
 **النوع:** الوظيفة
 
 ```typescript
-function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 الأوصاف لكل خطوة لتعريف المعالج.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعريف | تعريف المخطط \| غير محدد |  |
+| الاسم | اكتب                     | الوصف |
+| ----- | ------------------------ | ----- |
+| تعريف | تعريف المخطط \| غير محدد |       |
 
 ### schemaStepTitles
 
 **النوع:** الوظيفة
 
 ```typescript
-function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 العناوين لكل خطوة لتعريف المعالج (فارغة لنموذج خطوة واحدة).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعريف | تعريف المخطط \| غير محدد |  |
+| الاسم | اكتب                     | الوصف |
+| ----- | ------------------------ | ----- |
+| تعريف | تعريف المخطط \| غير محدد |       |
 
 ### schemaToFields
 
 **النوع:** الوظيفة
 
 ```typescript
-function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][]
+function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][];
 ```
 
 يرطب {@link SchemaFormDefinition} مرة أخرى في مجال عمل المنشئ
@@ -424,74 +427,74 @@ function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderFi
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعريف | تعريف المخطط \| غير محدد |  |
+| الاسم | اكتب                     | الوصف |
+| ----- | ------------------------ | ----- |
+| تعريف | تعريف المخطط \| غير محدد |       |
 
 ### slugify
 
 **النوع:** الوظيفة
 
 ```typescript
-function slugify(label: string): string
+function slugify(label: string): string;
 ```
 
 يحول التسمية البشرية إلى مفتاح مخطط `snake_case` آمن.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التسمية | سلسلة |  |
+| الاسم   | اكتب  | الوصف |
+| ------- | ----- | ----- |
+| التسمية | سلسلة |       |
 
 ### UniqueKey
 
 **النوع:** الوظيفة
 
 ```typescript
-function uniqueKey(base: string, used: Iterable<string>): string
+function uniqueKey(base: string, used: Iterable<string>): string;
 ```
 
 تُرجع `base`، أو `base_2`، `base_3`، ... حتى يتوقف التصادم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| قاعدة | سلسلة |  |
-| مستعمل | Iterable<string> |  |
+| الاسم  | اكتب             | الوصف |
+| ------ | ---------------- | ----- |
+| قاعدة  | سلسلة            |       |
+| مستعمل | Iterable<string> |       |
 
 ### widgetHasOptions
 
 **النوع:** الوظيفة
 
 ```typescript
-function widgetHasOptions(widget: FormFieldType): boolean
+function widgetHasOptions(widget: FormFieldType): boolean;
 ```
 
 ما إذا كان عنصر واجهة المستخدم يعرض قائمة خيارات محددة من قبل المؤلف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ### widgetToJsonType
 
 **النوع:** الوظيفة
 
 ```typescript
-function widgetToJsonType(widget: FormFieldType): JsonSchemaType
+function widgetToJsonType(widget: FormFieldType): JsonSchemaType;
 ```
 
 النوع البدائي لمخطط JSON الذي يتم إجراء تسلسل لعنصر واجهة المستخدم عليه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القطعة | نوع حقل النموذج |  |
+| الاسم  | اكتب            | الوصف |
+| ------ | --------------- | ----- |
+| القطعة | نوع حقل النموذج |       |
 
 ## `src/json-schema`
 
@@ -500,7 +503,7 @@ function widgetToJsonType(widget: FormFieldType): JsonSchemaType
 **النوع:** الوظيفة
 
 ```typescript
-function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator
+function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator;
 ```
 
 قم بتجميع {@link FormJsonSchema} في أداة التحقق القابلة لإعادة الاستخدام والمدعومة بـ Ajv.
@@ -508,7 +511,7 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 يتم ترجمة رسائل الخطأ التي تم إنشاؤها من خلال `translate` الاختياري
 الوظيفة (تعكس vue-i18n's `t(key, named)`)؛ عند حذفها، المدمج في
-يتم استخدام الرسائل الإنجليزية.  يتم تجاوز `errorMessage` المقدم من المؤلف دائمًا
+يتم استخدام الرسائل الإنجليزية. يتم تجاوز `errorMessage` المقدم من المؤلف دائمًا
 الفوز ويتم إرجاعها حرفيا.
 
 الحقول المسورة بشرط `ui.visibleWhen` التي لا تحتوي حاليًا هي
@@ -517,10 +520,10 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المخطط | مخطط فورمجسون |  |
-| ترجمة | ترجمة المخطط |  |
+| الاسم  | اكتب          | الوصف |
+| ------ | ------------- | ----- |
+| المخطط | مخطط فورمجسون |       |
+| ترجمة  | ترجمة المخطط  |       |
 
 ### FormValidator
 
@@ -537,7 +540,7 @@ export interface FormValidator
 **النوع:** الوظيفة
 
 ```typescript
-function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
+function jsonSchemaDefaults(schema: FormJsonSchema): FormValues;
 ```
 
 قم بحساب القيمة الافتراضية لكل حقل من مخطط JSON، مع احترام ذلك
@@ -546,28 +549,28 @@ function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المخطط | مخطط فورمجسون |  |
+| الاسم  | اكتب          | الوصف |
+| ------ | ------------- | ----- |
+| المخطط | مخطط فورمجسون |       |
 
 ### jsonSchemaToFields
 
 **النوع:** الوظيفة
 
 ```typescript
-function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[]
+function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[];
 ```
 
 قم بتحويل {@link FormJsonSchema} إلى القائمة المرتبة للعرض الجاهز
-واصفات {@link FormFieldSchema} التي يستهلكها عارض الحقل.  متداخلة
+واصفات {@link FormFieldSchema} التي يستهلكها عارض الحقل. متداخلة
 يتم تكرار خصائص `object` (مجموعة الحقول) إلى، لذا فإن مجموعة الحقول تحمل خصائصها
 أمرت الخاصة `fields`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المخطط | مخطط فورمجسون |  |
+| الاسم  | اكتب          | الوصف |
+| ------ | ------------- | ----- |
+| المخطط | مخطط فورمجسون |       |
 
 ## `src/types`
 
@@ -586,7 +589,7 @@ export type Autocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'ch
 **النوع:** ثابت
 
 ```typescript
-export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>
+export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>;
 ```
 
 الرموز المميزة `autocomplete` القابلة للتحديد المجمعة لقائمة منسدلة للمنشئ. `group`
@@ -610,13 +613,70 @@ export type Autocomplete = AutocompleteToken | (string &
 **النوع:** النوع
 
 ```typescript
-export type AutocompleteToken = | 'off' | 'on' | 'name' | 'honorific-prefix' | 'given-name' | 'additional-name' | 'family-name' | 'honorific-suffix' | 'nickname' | 'email' | 'username' | 'new-password' | 'current-password' | 'one-time-code' | 'organization-title' | 'organization' | 'street-address' | 'address-line1' | 'address-line2' | 'address-line3' | 'address-level4' | 'address-level3' | 'address-level2' | 'address-level1' | 'country' | 'country-name' | 'postal-code' | 'cc-name' | 'cc-given-name' | 'cc-additional-name' | 'cc-family-name' | 'cc-number' | 'cc-exp' | 'cc-exp-month' | 'cc-exp-year' | 'cc-csc' | 'cc-type' | 'transaction-currency' | 'transaction-amount' | 'language' | 'bday' | 'bday-day' | 'bday-month' | 'bday-year' | 'sex' | 'tel' | 'tel-country-code' | 'tel-national' | 'tel-area-code' | 'tel-local' | 'tel-local-prefix' | 'tel-local-suffix' | 'tel-extension' | 'impp' | 'url' | 'photo' | 'webauthn';
+export type AutocompleteToken =
+  | 'off'
+  | 'on'
+  | 'name'
+  | 'honorific-prefix'
+  | 'given-name'
+  | 'additional-name'
+  | 'family-name'
+  | 'honorific-suffix'
+  | 'nickname'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'one-time-code'
+  | 'organization-title'
+  | 'organization'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'address-line3'
+  | 'address-level4'
+  | 'address-level3'
+  | 'address-level2'
+  | 'address-level1'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-given-name'
+  | 'cc-additional-name'
+  | 'cc-family-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-exp-month'
+  | 'cc-exp-year'
+  | 'cc-csc'
+  | 'cc-type'
+  | 'transaction-currency'
+  | 'transaction-amount'
+  | 'language'
+  | 'bday'
+  | 'bday-day'
+  | 'bday-month'
+  | 'bday-year'
+  | 'sex'
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national'
+  | 'tel-area-code'
+  | 'tel-local'
+  | 'tel-local-prefix'
+  | 'tel-local-suffix'
+  | 'tel-extension'
+  | 'impp'
+  | 'url'
+  | 'photo'
+  | 'webauthn';
 ```
 
 رموز HTML `autocomplete` القياسية، كما تم فهرستها بواسطة MDN
 (https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete).
 
-هذه هي الرموز المميزة *التفاصيل* التي يمكن لمدخل واحد يشبه النص الإعلان عنها
+هذه هي الرموز المميزة _التفاصيل_ التي يمكن لمدخل واحد يشبه النص الإعلان عنها
 يمكن للمتصفحات ومديري كلمات المرور تقديم القيمة المحفوظة الصحيحة. القائمة
 يتجاهل معدّلات التجميع/القسم عمدًا (`section-*`، `shipping`،
 `billing`، `home`، `work`، ...) التي تسبق أحد هذه الرموز المميزة فقط - أ
@@ -641,7 +701,7 @@ export type FieldCondition = FieldConditionLeaf | FieldConditionGroup;
 export interface FieldConditionGroup
 ```
 
-مجموعة مجمعة متداخلة مع {@link FieldCondition}.  يعكس مخطط JSON
+مجموعة مجمعة متداخلة مع {@link FieldCondition}. يعكس مخطط JSON
 الكلمات الرئيسية المنطقية:
 
 - `allOf` — يتم تمريره عندما يمر **كل** شرط متداخل (منطقي AND).
@@ -658,8 +718,8 @@ export interface FieldConditionGroup
 export interface FieldConditionLeaf
 ```
 
-شرط ورقة واحدة يختبر القيمة الحالية لحقل واحد.  واحد بالضبط
-يتم ضبط المقارنة بشكل طبيعي؛ عند وجود العديد منهم، يجب عليهم *الجميع* الانتظار
+شرط ورقة واحدة يختبر القيمة الحالية لحقل واحد. واحد بالضبط
+يتم ضبط المقارنة بشكل طبيعي؛ عند وجود العديد منهم، يجب عليهم _الجميع_ الانتظار
 الورقة لتمرير.
 
 ### FieldUiOptions
@@ -691,8 +751,8 @@ export type FormErrors = Record<string, string | undefined>;
 export interface FormFieldSchema
 ```
 
-واصف حقل تم حله وجاهز للعرض.  يستمد SchemaForm واحدًا من هذه
-لكل خاصية من {@link FormJsonSchema}؛ إنه *ليس* جزءًا من الجمهور
+واصف حقل تم حله وجاهز للعرض. يستمد SchemaForm واحدًا من هذه
+لكل خاصية من {@link FormJsonSchema}؛ إنه _ليس_ جزءًا من الجمهور
 سطح الإدخال ولا يحمل منطق التحقق الخاص به.
 
 ### FormFieldType
@@ -700,12 +760,36 @@ export interface FormFieldSchema
 **النوع:** النوع
 
 ```typescript
-export type FormFieldType = | 'text' | 'email' | 'password' | 'number' | 'stepper' | 'url' | 'tel' | 'textarea' | 'markdown' | 'code' | 'checkbox' | 'switch' | 'select' | 'radio' | 'multiselect' | 'date' | 'time' | 'datetime' | 'daterange' | 'timerange' | 'datetimerange' | 'location' | 'file' | 'fieldset';
+export type FormFieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'stepper'
+  | 'url'
+  | 'tel'
+  | 'textarea'
+  | 'markdown'
+  | 'code'
+  | 'checkbox'
+  | 'switch'
+  | 'select'
+  | 'radio'
+  | 'multiselect'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'daterange'
+  | 'timerange'
+  | 'datetimerange'
+  | 'location'
+  | 'file'
+  | 'fieldset';
 ```
 
-التحكم المرئي المقدم للحقل.  هذا هو القلق العرض، لذلك
+التحكم المرئي المقدم للحقل. هذا هو القلق العرض، لذلك
 إنه يعيش تحت امتداد `ui.widget` غير القياسي بدلاً من أن يكون امتدادًا
-الكلمة الأساسية لمخطط JSON.  عند حذفه، يستنتج SchemaForm عنصر واجهة مستخدم معقول من
+الكلمة الأساسية لمخطط JSON. عند حذفه، يستنتج SchemaForm عنصر واجهة مستخدم معقول من
 الخاصية `type` و`format` و`enum`.
 
 ### FormJsonSchema
@@ -717,8 +801,8 @@ export interface FormJsonSchema
 ```
 
 نموذج واحد (أو، في المعالج، خطوة واحدة): مخطط JSON `object`
-وثيقة.  عند استخدامه مباشرة فإنه يصف نموذجًا من خطوة واحدة؛ عندما تستخدم ك
-إدخال مصفوفة المستوى الأعلى يصف خطوة معالج واحدة.  التحقق من الصحة هو
+وثيقة. عند استخدامه مباشرة فإنه يصف نموذجًا من خطوة واحدة؛ عندما تستخدم ك
+إدخال مصفوفة المستوى الأعلى يصف خطوة معالج واحدة. التحقق من الصحة هو
 يؤديها ضدها مع Ajv داخليا.
 
 ### قيم النموذج
@@ -739,7 +823,7 @@ export type FormValues = Record<string, unknown>;
 export interface JsonSchemaProperty
 ```
 
-واصف خاصية مخطط JSON واحد.  خريطة الكلمات الرئيسية للتحقق من الصحة القياسية
+واصف خاصية مخطط JSON واحد. خريطة الكلمات الرئيسية للتحقق من الصحة القياسية
 مباشرة على قواعد Ajv التي تم إنشاؤها.
 
 ### JsonSchemaStringFormat
@@ -772,7 +856,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 ```
 
 تم إدخال/تسلسل تمثيل الإحداثيات {@link LocationValue}.
-كما.  تم تعريفه هنا (بدلاً من استيراده من مكون Vue) بحيث يتم مشاركة
+كما. تم تعريفه هنا (بدلاً من استيراده من مكون Vue) بحيث يتم مشاركة
 يبقى الجوهر حياديًا للإطار؛ إنه مطابق من الناحية الهيكلية لـ
 `@mission-platform/components` نوع إدخال الموقع.
 
@@ -784,7 +868,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 export interface LocationValue
 ```
 
-إحداثيات جغرافية تم التقاطها بواسطة عنصر واجهة المستخدم `location`.  `lat`/`lng` هي
+إحداثيات جغرافية تم التقاطها بواسطة عنصر واجهة المستخدم `location`. `lat`/`lng` هي
 `undefined` عندما تكون فارغة، فإن القيمة الفارغة تعني بوضوح "لا يوجد إدخال".
 
 ### تعريف نموذج المخطط
@@ -809,7 +893,7 @@ export type SchemaFormDefinition = FormJsonSchema | FormJsonSchema[];
 export type SchemaFormTranslate = (key: string, named?: Record<string, unknown>) => string;
 ```
 
-وظيفة الترجمة المستخدمة لتوطين رسائل التحقق من الصحة التي تم إنشاؤها.  ذلك
+وظيفة الترجمة المستخدمة لتوطين رسائل التحقق من الصحة التي تم إنشاؤها. ذلك
 يعكس توقيع vue-i18n `t(key, named)`: مع إعطاء مفتاح رسالة ورمز
 حقيبة اختيارية لقيم الاستيفاء المسماة، تقوم بإرجاع السلسلة المترجمة.
 عند حذفه، يعود SchemaForm إلى الرسائل الإنجليزية المضمنة.

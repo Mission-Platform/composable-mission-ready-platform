@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined
+function useObservable(source: Observable<T>): T | undefined;
 ```
 
 `source`을 구독하고 최신 방출을 상태로 반환합니다. 반품
@@ -24,9 +24,9 @@ function useObservable(source: Observable<T>): T | undefined
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 관찰 가능<T> |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 출처 | 관찰 가능<T> |      |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -45,7 +45,11 @@ export interface Unsubscribable
 **종류:** 기능
 
 ```typescript
-function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T>> | ((value: T) => void), dependencies: MpDependencyList = []): void
+function useSubscribe(
+  source: Observable<T>,
+  observerOrNext?: Partial<Observer<T>> | ((value: T) => void),
+  dependencies: MpDependencyList = [],
+): void;
 ```
 
 지정된 `observer`(또는 `next` 콜백)을 사용하여 `source`을 구독합니다.
@@ -54,18 +58,18 @@ function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 관찰 가능<T> |  |
-| 관찰자또는다음 | 부분<Observer<T>> \| ((값: T) => 무효) |  |
-| 종속성 | MpDependencyList |  |
+| 이름           | 유형                                   | 설명 |
+| -------------- | -------------------------------------- | ---- |
+| 출처           | 관찰 가능<T>                           |      |
+| 관찰자또는다음 | 부분<Observer<T>> \| ((값: T) => 무효) |      |
+| 종속성         | MpDependencyList                       |      |
 
 ### 사용구독
 
 **종류:** 기능
 
 ```typescript
-function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void
+function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void;
 ```
 
 마운트 후 `subscribe`을 실행하고 마운트 해제 시 해당 결과를 구독 취소합니다.
@@ -74,7 +78,7 @@ function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDepend
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구독 | () => 구독 불가 |  |
-| 종속성 | MpDependencyList |  |
+| 이름   | 유형             | 설명 |
+| ------ | ---------------- | ---- |
+| 구독   | () => 구독 불가  |      |
+| 종속성 | MpDependencyList |      |

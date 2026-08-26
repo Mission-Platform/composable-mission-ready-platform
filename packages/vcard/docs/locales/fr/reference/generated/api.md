@@ -16,23 +16,23 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function createVCard(options: VCardOptions): VCard
+function createVCard(options: VCardOptions): VCard;
 ```
 
 Convertissez les options pratiques en un document vCard complet et inscriptible.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | Options de la carte V |  |
+| Nom     | Tapez                 | Descriptif |
+| ------- | --------------------- | ---------- |
+| options | Options de la carte V |            |
 
 ### analyserVCard
 
 **Genre :** constante
 
 ```typescript
-export const parseVCard
+export const parseVCard;
 ```
 
 Alias ​​pour les appelants qui préfèrent la terminologie de l'analyseur.
@@ -42,39 +42,39 @@ Alias ​​pour les appelants qui préfèrent la terminologie de l'analyseur.
 **Genre :** fonction
 
 ```typescript
-function readVCard(source: string): VCard[]
+function readVCard(source: string): VCard[];
 ```
 
 Analysez un ou plusieurs blocs vCard tout en conservant les propriétés inconnues.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| source | chaîne |            |
 
 ### versOptionsVCard
 
 **Genre :** fonction
 
 ```typescript
-function toVCardOptions(card: VCard): VCardOptions
+function toVCardOptions(card: VCard): VCardOptions;
 ```
 
 Mappez une carte analysée aux options pratiques utilisées par le générateur QR.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| carte | Carte virtuelle |  |
+| Nom   | Tapez           | Descriptif |
+| ----- | --------------- | ---------- |
+| carte | Carte virtuelle |            |
 
 ### vCard
 
 **Genre :** fonction
 
 ```typescript
-function vCard(options: VCardOptions): string
+function vCard(options: VCardOptions): string;
 ```
 
 Une charge utile vCard 3.0 décrivant un contact. Plusieurs numéros de téléphone/e-mails sont
@@ -82,9 +82,9 @@ Une charge utile vCard 3.0 décrivant un contact. Plusieurs numéros de téléph
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | Options de la carte V |  |
+| Nom     | Tapez                 | Descriptif |
+| ------- | --------------------- | ---------- |
+| options | Options de la carte V |            |
 
 ### Carte virtuelle
 
@@ -121,32 +121,32 @@ Une propriété dans une vCard analysée, comprenant les paramètres et sa valeu
 **Genre :** fonction
 
 ```typescript
-function writeVCard(card: VCard): string
+function writeVCard(card: VCard): string;
 ```
 
 Sérialisez une vCard complète, en utilisant les fins de ligne LF pour les charges utiles QR et texte.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| carte | Carte virtuelle |  |
+| Nom   | Tapez           | Descriptif |
+| ----- | --------------- | ---------- |
+| carte | Carte virtuelle |            |
 
 ### écrire des cartes virtuelles
 
 **Genre :** fonction
 
 ```typescript
-function writeVCards(cards: readonly VCard[]): string
+function writeVCards(cards: readonly VCard[]): string;
 ```
 
 Sérialisez une ou plusieurs cartes analysées.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| cartes | lecture seule VCard[] |  |
+| Nom    | Tapez                 | Descriptif |
+| ------ | --------------------- | ---------- |
+| cartes | lecture seule VCard[] |            |
 
 ## `src/ast/vevent`
 
@@ -247,204 +247,204 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function addDays(date: Date, days: number): Date
+function addDays(date: Date, days: number): Date;
 ```
 
 Ajoutez `days` à une date JS (zone locale).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| date | Dates |  |
-| jours | numéro |  |
+| Nom   | Tapez  | Descriptif |
+| ----- | ------ | ---------- |
+| date  | Dates  |            |
+| jours | numéro |            |
 
 ### ajouter des mois
 
 **Genre :** fonction
 
 ```typescript
-function addMonths(date: Date, months: number): Date
+function addMonths(date: Date, months: number): Date;
 ```
 
 Ajoutez `months` à une date JS (zone locale).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| date | Dates |  |
-| mois | numéro |  |
+| Nom  | Tapez  | Descriptif |
+| ---- | ------ | ---------- |
+| date | Dates  |            |
+| mois | numéro |            |
 
 ### ajouter des années
 
 **Genre :** fonction
 
 ```typescript
-function addYears(date: Date, years: number): Date
+function addYears(date: Date, years: number): Date;
 ```
 
 Ajoutez `years` à une date JS (zone locale).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| date | Dates |  |
-| années | numéro |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| date   | Dates  |            |
+| années | numéro |            |
 
 ### clé du jour
 
 **Genre :** fonction
 
 ```typescript
-function dayKey(iso: string): string
+function dayKey(iso: string): string;
 ```
 
 Renvoie la clé de date locale utilisée pour la correspondance EXDATE et RDATE.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| iso | chaîne |  |
+| Nom | Tapez  | Descriptif |
+| --- | ------ | ---------- |
+| iso | chaîne |            |
 
 ### fmtJ'aime
 
 **Genre :** fonction
 
 ```typescript
-function fmtLike(source: string, dateTime: DateTime): string
+function fmtLike(source: string, dateTime: DateTime): string;
 ```
 
 Formatez un Luxon DateTime avec la même représentation ISO que la chaîne source.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
-| dateHeure | DateHeure |  |
+| Nom       | Tapez     | Descriptif |
+| --------- | --------- | ---------- |
+| source    | chaîne    |            |
+| dateHeure | DateHeure |            |
 
 ### estToutleJour
 
 **Genre :** fonction
 
 ```typescript
-function isAllDay(iso: string): boolean
+function isAllDay(iso: string): boolean;
 ```
 
 Renvoie vrai lorsque la chaîne ISO est une valeur de date uniquement (AAAA-MM-JJ).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| iso | chaîne |  |
+| Nom | Tapez  | Descriptif |
+| --- | ------ | ---------- |
+| iso | chaîne |            |
 
 ### analyserDate
 
 **Genre :** fonction
 
 ```typescript
-function parseDate(iso: string): Date
+function parseDate(iso: string): Date;
 ```
 
 Analysez une chaîne datetime/date ISO en une date JS (pour la compatibilité des API publiques).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| iso | chaîne |  |
+| Nom | Tapez  | Descriptif |
+| --- | ------ | ---------- |
+| iso | chaîne |            |
 
 ### analyserDT
 
 **Genre :** fonction
 
 ```typescript
-function parseDT(iso: string): DateTime
+function parseDT(iso: string): DateTime;
 ```
 
 Analysez une chaîne datetime/date ISO en Luxon DateTime (zone locale).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| iso | chaîne |  |
+| Nom | Tapez  | Descriptif |
+| --- | ------ | ---------- |
+| iso | chaîne |            |
 
 ### débutDeJour
 
 **Genre :** fonction
 
 ```typescript
-function startOfDay(date: Date): Date
+function startOfDay(date: Date): Date;
 ```
 
 Début de journée pour une Date JS (zone locale).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| date | Dates |  |
+| Nom  | Tapez | Descriptif |
+| ---- | ----- | ---------- |
+| date | Dates |            |
 
 ### débutdumois
 
 **Genre :** fonction
 
 ```typescript
-function startOfMonth(date: Date): Date
+function startOfMonth(date: Date): Date;
 ```
 
 Début du mois contenant `date` (zone locale).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| date | Dates |  |
+| Nom  | Tapez | Descriptif |
+| ---- | ----- | ---------- |
+| date | Dates |            |
 
 ### débutDeSemaine
 
 **Genre :** fonction
 
 ```typescript
-function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date
+function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date;
 ```
 
 Début de la semaine contenant `date`, honorant `weekStartsOn`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| date | Dates |  |
-| WeekStartsOn | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 |  |
+| Nom          | Tapez                           | Descriptif |
+| ------------ | ------------------------------- | ---------- |
+| date         | Dates                           |            |
+| WeekStartsOn | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 |            |
 
 ### début d'année
 
 **Genre :** fonction
 
 ```typescript
-function startOfYear(date: Date): Date
+function startOfYear(date: Date): Date;
 ```
 
 Début de l'année contenant `date` (zone locale).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| date | Dates |  |
+| Nom  | Tapez | Descriptif |
+| ---- | ----- | ---------- |
+| date | Dates |            |
 
 ### WEEKDAY_LUXON
 
 **Genre :** constante
 
 ```typescript
-export const WEEKDAY_LUXON: Record<RRuleWeekday, number>
+export const WEEKDAY_LUXON: Record<RRuleWeekday, number>;
 ```
 
 Numéros de jours de la semaine à Luxon : Lun=1 … Dim=7.
@@ -478,16 +478,16 @@ Le premier jour où commence une vue hebdomadaire (0 = dimanche… 6 = samedi).
 **Genre :** fonction
 
 ```typescript
-function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement
+function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ForgeICalendarProperties> |  |
+| Nom        | Tapez                                   | Descriptif |
+| ---------- | --------------------------------------- | ---------- |
+| propriétés | Lecture seule<ForgeICalendarProperties> |            |
 
 ### ForgeICalendarPropriétés
 
@@ -506,16 +506,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement
+function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ForgeVCardProperties> |  |
+| Nom        | Tapez                               | Descriptif |
+| ---------- | ----------------------------------- | ---------- |
+| propriétés | Lecture seule<ForgeVCardProperties> |            |
 
 ### ForgeVCardPropriétés
 
@@ -534,32 +534,32 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function calendarEvents(calendar: ICalendar): ICalendarEvent[]
+function calendarEvents(calendar: ICalendar): ICalendarEvent[];
 ```
 
 Convertissez les composants VEVENT en vue d'événements typés utilisée par les moteurs de rendu Forge.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| calendrier | ICalendrier |  |
+| Nom        | Tapez       | Descriptif |
+| ---------- | ----------- | ---------- |
+| calendrier | ICalendrier |            |
 
 ### createICalendarEvent
 
 **Genre :** fonction
 
 ```typescript
-function createICalendarEvent(event: ICalendarEvent): ICalendarComponent
+function createICalendarEvent(event: ICalendarEvent): ICalendarComponent;
 ```
 
 Créez un composant VEVENT typé pouvant être inséré dans un iCalendar.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| événement | ICalendarEvent |  |
+| Nom       | Tapez          | Descriptif |
+| --------- | -------------- | ---------- |
+| événement | ICalendarEvent |            |
 
 ### ICalendrier
 
@@ -616,7 +616,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const parseICalendar
+export const parseICalendar;
 ```
 
 Aucune description fournie.
@@ -626,23 +626,23 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function readICalendar(source: string): ICalendar
+function readICalendar(source: string): ICalendar;
 ```
 
 Analysez un flux iCalendar RFC 5545, en préservant chaque composant et propriété.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| source | chaîne |            |
 
 ### sérialiserICalendar
 
 **Genre :** constante
 
 ```typescript
-export const serializeICalendar
+export const serializeICalendar;
 ```
 
 Aucune description fournie.
@@ -652,13 +652,13 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function writeICalendar(calendar: ICalendar): string
+function writeICalendar(calendar: ICalendar): string;
 ```
 
 Sérialisez un calendrier RFC 5545 avec des fins de ligne CRLF et un pliage sécurisé de 75 octets.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| calendrier | ICalendrier |  |
+| Nom        | Tapez       | Descriptif |
+| ---------- | ----------- | ---------- |
+| calendrier | ICalendrier |            |

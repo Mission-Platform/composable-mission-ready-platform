@@ -26,7 +26,7 @@ export type BreakpointKey = (typeof breakpointKeys)[number];
 **種類:** 定数
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 説明はありません。
@@ -36,7 +36,7 @@ export const breakpointKeys
 **種類:** 定数
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 ブレークポイント ステップごとの最小幅ピクセ​​ルしきい値。
@@ -64,23 +64,23 @@ export type BreakpointValues = Record<BreakpointKey, boolean>;
 **種類:** 関数
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 指定されたブレークポイント キーのピクセル値を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キー |ブレークポイントキー |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| キー | ブレークポイントキー |      |
 
 ### maxMediaQuery
 
 **種類:** 関数
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 を返します `max-width` 指定されたメディア クエリ文字列 (上限)
@@ -88,9 +88,9 @@ function maxMediaQuery(key: BreakpointKey): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キー |ブレークポイントキー |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| キー | ブレークポイントキー |      |
 
 #### 契約
 
@@ -101,37 +101,37 @@ function maxMediaQuery(key: BreakpointKey): string
 **種類:** 関数
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 指定されたブレークポイントの `min-width` メディア クエリ文字列を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キー |ブレークポイントキー |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| キー | ブレークポイントキー |      |
 
 #### 契約
 
 - **@example:** mediaQuery('lg') // → '(min-width: 1920px)'
-mediaQuery('xl') // → '(min-width: 2560px)'
+  mediaQuery('xl') // → '(min-width: 2560px)'
 
 ### ブレークポイントの解決
 
 **種類:** 関数
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 ピクセル幅を指定すると、現在アクティブなブレークポイント キーを返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|幅 |番号 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 幅   | 番号   |      |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -140,7 +140,7 @@ function resolveBreakpoint(width: number): BreakpointKey
 **種類:** 関数
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt` — {@link ForgeShowAt} の逆: デフォルトのスロットを非表示にします。
@@ -155,9 +155,9 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<HideAtProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<HideAtProperties> |      |
 
 ### HideAtProperties
 
@@ -176,7 +176,7 @@ export interface HideAtProperties
 **種類:** 関数
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` — ビューポートが次の場合にのみ、デフォルトのスロットを条件付きでレンダリングします。
@@ -192,9 +192,9 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ShowAtProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<ShowAtProperties> |      |
 
 ### ShowAtProperties
 
@@ -223,7 +223,7 @@ export type BreakpointDebugProperties = Record<string, never>;
 **種類:** 関数
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug` — 右下に固定された開発時のオーバーレイ
@@ -240,9 +240,9 @@ React と Vue の両方。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| _プロパティ |読み取り専用<BreakpointDebugProperties> |  |
+| 名前        | タイプ                                  | 説明 |
+| ----------- | --------------------------------------- | ---- |
+| _プロパティ | 読み取り専用<BreakpointDebugProperties> |      |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -251,7 +251,7 @@ React と Vue の両方。
 **種類:** 関数
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 ドキュメント要素の幅に基づくリアクティブ ブレークポイントの状態。

@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/thre
 **Tipo:** función
 
 ```typescript
-function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement
+function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
 ForgeThreeCanvas: un componente neutral del marco que genera un <canvas>
@@ -24,9 +24,9 @@ y gestiona un contexto WebGL Three.js a través de `useThree`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ForgeThreeCanvasProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<ForgeThreeCanvasProperties> |             |
 
 ### ForgeThreeCanvasProperties
 
@@ -55,7 +55,10 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function useThree(canvasReference: ReferenceLike<HTMLCanvasElement | null>, onReady?: (context: ThreeContext) => void | (() => void)): void
+function useThree(
+  canvasReference: ReferenceLike<HTMLCanvasElement | null>,
+  onReady?: (context: ThreeContext) => void | (() => void),
+): void;
 ```
 
 Gancho Three.js neutral en el marco de trabajo.
@@ -66,7 +69,7 @@ Limpieza automática: elimina el renderizador y cancela el cuadro de animación 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| lienzoReferencia | ReferenciaMe gusta<HTMLCanvasElement \| null> |  |
-| listo | (contexto: ThreeContext) => vacío \| (() => nulo) |  |
+| Nombre           | Tipo                                              | Descripción |
+| ---------------- | ------------------------------------------------- | ----------- |
+| lienzoReferencia | ReferenciaMe gusta<HTMLCanvasElement \| null>     |             |
+| listo            | (contexto: ThreeContext) => vacío \| (() => nulo) |             |

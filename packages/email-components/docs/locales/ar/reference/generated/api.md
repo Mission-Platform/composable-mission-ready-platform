@@ -16,23 +16,23 @@
 **النوع:** الوظيفة
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 تأكيد المجموعة الفرعية للمخرجات المحافظة الموثقة لمكونات البريد الإلكتروني.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أتش تي أم أل | سلسلة |  |
+| الاسم        | اكتب  | الوصف |
+| ------------ | ----- | ----- |
+| أتش تي أم أل | سلسلة |       |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **النوع:** ثابت
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 لم يتم تقديم أي وصف.
@@ -42,7 +42,7 @@ export const CAN_I_EMAIL_FEATURES_URL
 **النوع:** ثابت
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 لم يتم تقديم أي وصف.
@@ -52,7 +52,7 @@ export const CAN_I_EMAIL_INLINE_STYLES_URL
 **النوع:** ثابت
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 لم يتم تقديم أي وصف.
@@ -62,7 +62,7 @@ export const CAN_I_EMAIL_MAX_WIDTH_URL
 **النوع:** ثابت
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 لم يتم تقديم أي وصف.
@@ -72,7 +72,7 @@ export const CAN_I_EMAIL_MEDIA_QUERIES_URL
 **النوع:** ثابت
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 لم يتم تقديم أي وصف.
@@ -82,7 +82,7 @@ export const CAN_I_EMAIL_TABLES_URL
 **النوع:** ثابت
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 لم يتم تقديم أي وصف.
@@ -92,7 +92,7 @@ export const COMPATIBILITY_REVIEWED
 **النوع:** ثابت
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 لم يتم تقديم أي وصف.
@@ -104,16 +104,16 @@ export const EMAIL_ALLOWED_TAGS
 **النوع:** الوظيفة
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailButtonProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailButtonProperties> |       |
 
 ### خصائص زر البريد الإلكتروني
 
@@ -130,7 +130,8 @@ export interface EmailButtonProperties
 **النوع:** النوع
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 لم يتم تقديم أي وصف.
@@ -142,16 +143,16 @@ export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 **النوع:** الوظيفة
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailDividerProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailDividerProperties> |       |
 
 ### EmailDividerProperties
 
@@ -170,16 +171,16 @@ export interface EmailDividerProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailImageProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailImageProperties> |       |
 
 ### EmailImageProperties
 
@@ -198,16 +199,16 @@ export interface EmailImageProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailSpacerProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailSpacerProperties> |       |
 
 ### خصائص فاصل البريد الإلكتروني
 
@@ -226,7 +227,7 @@ export interface EmailSpacerProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 ذرة نص البريد الإلكتروني المفردة، تعكس مفردات `ForgeTypography`: النص
@@ -235,9 +236,9 @@ function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpEle
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailTypographyProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailTypographyProperties> |       |
 
 ### خصائص طباعة البريد الإلكتروني
 
@@ -266,16 +267,16 @@ export type EmailTypographyTag = 'p' | 'span' | 'div' | 'a' | 'h1' | 'h2' | 'h3'
 **النوع:** الوظيفة
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailCardProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailCardProperties> |       |
 
 ### خصائص بطاقة البريد الإلكتروني
 
@@ -294,16 +295,16 @@ export interface EmailCardProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailColumnProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailColumnProperties> |       |
 
 ### خصائص عمود البريد الإلكتروني
 
@@ -322,16 +323,16 @@ export interface EmailColumnProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailListProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailListProperties> |       |
 
 ### EmailListItem
 
@@ -360,16 +361,16 @@ export interface EmailListProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailRowProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailRowProperties> |       |
 
 ### خصائص صف البريد الإلكتروني
 
@@ -398,16 +399,16 @@ export interface EmailSocialLink
 **النوع:** الوظيفة
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailSocialLinksProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailSocialLinksProperties> |       |
 
 ### البريد الإلكتروني SocialLinksProperties
 
@@ -426,16 +427,16 @@ export interface EmailSocialLinksProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailFooterProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailFooterProperties> |       |
 
 ### خصائص تذييل البريد الإلكتروني
 
@@ -454,16 +455,16 @@ export interface EmailFooterProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailHeaderProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailHeaderProperties> |       |
 
 ### خصائص رأس البريد الإلكتروني
 
@@ -482,16 +483,16 @@ export interface EmailHeaderProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailPreheaderProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailPreheaderProperties> |       |
 
 ### البريد الإلكترونيPreheaderProperties
 
@@ -510,16 +511,16 @@ export interface EmailPreheaderProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailContainerProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailContainerProperties> |       |
 
 ### خصائص حاوية البريد الإلكتروني
 
@@ -538,16 +539,16 @@ export interface EmailContainerProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailDocumentProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<EmailDocumentProperties> |       |
 
 ### البريد الإلكترونيDocumentProperties
 
@@ -566,16 +567,16 @@ export interface EmailDocumentProperties
 **النوع:** الوظيفة
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<EmailSectionProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<EmailSectionProperties> |       |
 
 ### خصائص قسم البريد الإلكتروني
 

@@ -26,7 +26,8 @@ export interface AlertBannerProperties
 **סוג:** סוג
 
 ```typescript
-export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type AlertBannerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 טיפול בכוונה / צבע של הבאנר - ערכת הצבעים הקנונית.
@@ -36,7 +37,7 @@ export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 פונקציה **סוג:**
 
 ```typescript
-function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement
+function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement;
 ```
 
 `ForgeAlertBanner` - באנר מובנה של התראה/התראה שנכתב פעם אחת ב-
@@ -62,9 +63,9 @@ function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<AlertBannerProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<AlertBannerProperties> |       |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -93,7 +94,7 @@ export interface DropdownProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement
+function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 ```
 
 `ForgeDropdown` - לוח תפריט/רשימה צף המעוגן לטריגר, שנכתב
@@ -138,9 +139,9 @@ Popover API מקורי (`popover="manual"` + `showPopover()`): `z-index` רגי�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<DropdownProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<DropdownProperties> |       |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -149,7 +150,7 @@ Popover API מקורי (`popover="manual"` + `showPopover()`): `z-index` רגי�
 פונקציה **סוג:**
 
 ```typescript
-function ForgePopover(properties: Readonly<PopoverProperties>): MpElement
+function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 ```
 
 `ForgePopover` - דו-שיח צף המעוגן לטריגר, שנכתב פעם אחת ב-
@@ -194,16 +195,28 @@ API מקורי של Popover (`popover="manual"` + `showPopover()`): `z-index` ר
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<PopoverProperties> |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| נכסים | לקריאה בלבד<PopoverProperties> |       |
 
 ### PopoverPlacement
 
 **סוג:** סוג
 
 ```typescript
-export type PopoverPlacement = | 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end';
+export type PopoverPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
 ```
 
 מיקום מועדף של הפופ-אובר ביחס להדק שלו.
@@ -225,7 +238,7 @@ export interface PopoverProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeToast(properties: Readonly<ToastProperties>): MpElement
+function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 ```
 
 `ForgeToast` - כרטיס התראה על טוסט בודד שנכתב פעם אחת בניוטרל
@@ -247,9 +260,9 @@ function ForgeToast(properties: Readonly<ToastProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ToastProperties> |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| נכסים | לקריאה בלבד<ToastProperties> |       |
 
 ### ToastProperties
 
@@ -276,7 +289,8 @@ export type ToastSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **סוג:** סוג
 
 ```typescript
-export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ToastVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 טיפול בכוונה / צבע של הטוסט - ערכת הצבעים הקנונית.
@@ -288,7 +302,7 @@ export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 's
 פונקציה **סוג:**
 
 ```typescript
-function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
+function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 ```
 
 `ForgeTooltip` - רמז הקשר קצר המעוגן לטריגר שלו, נכתב פעם אחת
@@ -330,9 +344,9 @@ Popover API מקורי (`popover="manual"` + `showPopover()`): `z-index` רגי�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<TooltipProperties> |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| נכסים | לקריאה בלבד<TooltipProperties> |       |
 
 ### TooltipPlacement
 
@@ -391,7 +405,7 @@ export type DialogSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
+function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 ```
 
 `ForgeDialog` - דו-שיח מודאלי שנכתב פעם אחת בניב JSX הנייטרלי ו
@@ -419,9 +433,9 @@ callbacks, ולחיצה ברקע סוגרת אותו כאשר `closeOnBackdrop` 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<DialogProperties> |  |
+| שם    | הקלד                          | תיאור |
+| ----- | ----------------------------- | ----- |
+| נכסים | לקריאה בלבד<DialogProperties> |       |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -430,7 +444,7 @@ callbacks, ולחיצה ברקע סוגרת אותו כאשר `closeOnBackdrop` 
 פונקציה **סוג:**
 
 ```typescript
-function ForgeModal(properties: Readonly<ModalProperties>): MpElement
+function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 ```
 
 `ForgeModal` - מודאל ממורכז שנכתב פעם אחת בניב JSX הנייטרלי ו
@@ -456,9 +470,9 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ModalProperties> |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| נכסים | לקריאה בלבד<ModalProperties> |       |
 
 ### ModalProperties
 
@@ -487,7 +501,7 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 פונקציה **סוג:**
 
 ```typescript
-function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement
+function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement;
 ```
 
 `ForgeToastContainer` - מציג את הטוסטים שנערכו ב-`toast-store` המשותף,
@@ -503,6 +517,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 המקור נשאר תגובתי בשתי המסגרות.
 
 נגישות:
+
 - המחסנית היא `role="region"` עם `aria-label` שניתן להגדרה; כל אחד
   `ForgeToast` נושא `role="status"` / `role="alert"` משלו.
 
@@ -526,9 +541,9 @@ React הדרייבר מתזמר הפעלה/ביטול של שלב העזיבה (
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ToastContainerProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ToastContainerProperties> |       |
 
 ### ToastContainerProperties
 
@@ -557,7 +572,7 @@ export type ToastContainerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 פונקציה **סוג:**
 
 ```typescript
-function clearToasts(): void
+function clearToasts(): void;
 ```
 
 בטל את כל הטוסטים.
@@ -567,23 +582,23 @@ function clearToasts(): void
 פונקציה **סוג:**
 
 ```typescript
-function dismissToast(id: number): void
+function dismissToast(id: number): void;
 ```
 
 בטל טוסט לפי זיהוי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מזהה | מספר |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| מזהה | מספר |       |
 
 ### errorToast
 
 **סוג:** קבוע
 
 ```typescript
-export const errorToast
+export const errorToast;
 ```
 
 נוחות: הצג טוסט `error`.
@@ -593,7 +608,7 @@ export const errorToast
 פונקציה **סוג:**
 
 ```typescript
-function getToastsSnapshot(): readonly ToastRecord[]
+function getToastsSnapshot(): readonly ToastRecord[];
 ```
 
 קרא תמונת מצב בלתי ניתנת לשינוי של הטוסטים הפעילים.
@@ -603,7 +618,7 @@ function getToastsSnapshot(): readonly ToastRecord[]
 **סוג:** קבוע
 
 ```typescript
-export const infoToast
+export const infoToast;
 ```
 
 נוחות: הצג טוסט `info`.
@@ -613,39 +628,39 @@ export const infoToast
 פונקציה **סוג:**
 
 ```typescript
-function showToast(options: ToastOptions | string): number
+function showToast(options: ToastOptions | string): number;
 ```
 
 הצג טוסט והחזיר את תעודת הזהות שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ToastOptions \| מחרוזת |  |
+| שם       | הקלד                   | תיאור |
+| -------- | ---------------------- | ----- |
+| אפשרויות | ToastOptions \| מחרוזת |       |
 
 ### הירשם לטוסטים
 
 פונקציה **סוג:**
 
 ```typescript
-function subscribeToasts(listener: () => void): () => void
+function subscribeToasts(listener: () => void): () => void;
 ```
 
 הירשם לשינויים בחנות; מחזירה פונקציית ביטול הרשמה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מאזין | () => ריק |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| מאזין | () => ריק |       |
 
 ### הצלחה טוסט
 
 **סוג:** קבוע
 
 ```typescript
-export const successToast
+export const successToast;
 ```
 
 נוחות: הצג טוסט `success`.
@@ -685,7 +700,7 @@ export interface ToastRecord
 פונקציה **סוג:**
 
 ```typescript
-function useToast(): UseToastReturn
+function useToast(): UseToastReturn;
 ```
 
 עוזרים הכרחיים להראות ולבטל טוסטים, תוך שיקוף של Vue
@@ -707,7 +722,7 @@ export interface UseToastReturn
 **סוג:** קבוע
 
 ```typescript
-export const warningToast
+export const warningToast;
 ```
 
 נוחות: הצג טוסט `warning`.

@@ -16,7 +16,11 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function useHunspellMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHunspellMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue composable qui intègre la vérification orthographique Hunspell dans un éditeur monégasque.
@@ -29,11 +33,11 @@ démonter et revérifie lorsque le `language` change.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| éditeurRéférence | Peut-êtreRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| activé | Peut-êtreRefOrGetter<boolean> |  |
-| langueRéférence | Peut-êtreRefOrGetter<string> |  |
+| Nom              | Tapez                                                                  | Descriptif |
+| ---------------- | ---------------------------------------------------------------------- | ---------- |
+| éditeurRéférence | Peut-êtreRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |            |
+| activé           | Peut-êtreRefOrGetter<boolean>                                          |            |
+| langueRéférence  | Peut-êtreRefOrGetter<string>                                           |            |
 
 ## `src/wasm/hunspell.d`
 

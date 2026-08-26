@@ -16,7 +16,11 @@
 **النوع:** الوظيفة
 
 ```typescript
-function useHarperMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue قابل للتركيب والذي يدمج التدقيق النحوي والأسلوب في Harper في ملف
@@ -30,18 +34,18 @@ Vue قابل للتركيب والذي يدمج التدقيق النحوي وا
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مرجع المحرر | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| ممكّن | MaybeRefOrGetter<boolean> |  |
-| مرجع اللغة | MaybeRefOrGetter<string> |  |
+| الاسم       | اكتب                                                               | الوصف |
+| ----------- | ------------------------------------------------------------------ | ----- |
+| مرجع المحرر | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |       |
+| ممكّن       | MaybeRefOrGetter<boolean>                                          |       |
+| مرجع اللغة  | MaybeRefOrGetter<string>                                           |       |
 
 #### عقد
 
 - **@param:** - ملف `MaybeRefOrGetter` يغلف نسخة محرر Monaco.
 - **@param:** - `MaybeRefOrGetter<boolean>` الذي يقوم بتبديل التحقق من التشغيل/الإيقاف.
 - **@param:** - `MaybeRefOrGetter<string>` للغة المحرر
-(يستخدم عند تسجيل موفر إجراء التعليمات البرمجية).
+  (يستخدم عند تسجيل موفر إجراء التعليمات البرمجية).
 
 ## `src/types`
 

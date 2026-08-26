@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
+function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement;
 ```
 
 `ForgeMapDraw` - כלי ציור/עריכה אינטראקטיבי עבור הקרובים ביותר
@@ -29,9 +29,9 @@ function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MapDrawProperties> |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| נכסים | לקריאה בלבד<MapDrawProperties> |       |
 
 ### MapDrawProperties
 
@@ -50,7 +50,7 @@ export interface MapDrawProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null
+function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null;
 ```
 
 `ForgeMapLayer` - מוסיף שכבת MapLibre לאבות ה-`<MapLibre>` הקרובים ביותר
@@ -59,9 +59,9 @@ function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | nu
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MapLayerProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<MapLayerProperties> |       |
 
 ### MapLayerProperties
 
@@ -80,7 +80,7 @@ export interface MapLayerProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null
+function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null;
 ```
 
 `ForgeMapMarker` - מוסיף MapLibre `Marker` ל-`<MapLibre>` הקרוב ביותר
@@ -89,9 +89,9 @@ function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MapMarkerProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<MapMarkerProperties> |       |
 
 ### MapMarkerProperties
 
@@ -110,7 +110,7 @@ export interface MapMarkerProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null
+function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null;
 ```
 
 `ForgeMapPopup` - מוסיף MapLibre `Popup` לאבות הקדמון הקרובים ביותר של `<MapLibre>`
@@ -119,9 +119,9 @@ function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | nu
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MapPopupProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<MapPopupProperties> |       |
 
 ### MapPopupProperties
 
@@ -140,7 +140,7 @@ export interface MapPopupProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
+function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement;
 ```
 
 `ForgeMapSource` - רושם מקור נתונים של MapLibre ב-`<MapLibre>` הקרוב ביותר
@@ -149,9 +149,9 @@ function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MapSourceProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<MapSourceProperties> |       |
 
 ### MapSourceProperties
 
@@ -170,7 +170,7 @@ export interface MapSourceProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
+function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement;
 ```
 
 `ForgeMapLibre` - מיכל מפה של MapLibre GL שנכתב פעם אחת ב-JSX הנייטרלי
@@ -186,9 +186,9 @@ function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MapLibreProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<MapLibreProperties> |       |
 
 ### MapLibreProperties
 
@@ -244,7 +244,7 @@ export type FeatureId = string | number;
 פונקציה **סוג:**
 
 ```typescript
-function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn
+function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn;
 ```
 
 מנהל את כל מצבי הציור והעריכה של המפה. החנות חוטת את המפה
@@ -253,10 +253,10 @@ function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseD
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפה | מפה \| לא מוגדר |  |
-| אפשרויות | השתמש באפשרויות ציור |  |
+| שם       | הקלד                 | תיאור |
+| -------- | -------------------- | ----- |
+| מפה      | מפה \| לא מוגדר      |       |
+| אפשרויות | השתמש באפשרויות ציור |       |
 
 ### השתמש באפשרויות ציור
 
@@ -285,14 +285,14 @@ export interface UseDrawingReturn
 פונקציה **סוג:**
 
 ```typescript
-function useLayer(map: Map | undefined, options: UseLayerOptions): void
+function useLayer(map: Map | undefined, options: UseLayerOptions): void;
 ```
 
 מוסיף שכבת MapLibre למפה.
 
 השכבה נוצרת ברגע שהמפה מוכנה. כאשר רק `paint`, `layout`,
 `filter` או שינוי טווח זום (אותו `id`, `type` ו-`source`), הם
-מסונכרן על גבי השכבה החיה **במקום** - השכבה *לא* מוסרת ו
+מסונכרן על גבי השכבה החיה **במקום** - השכבה _לא_ מוסרת ו
 נוסף מחדש. זה משנה כי מתקשרים בדרך כלל בונים מחדש את אובייקט המפרט
 כל עיבוד (למשל כלי ציור אינטראקטיבי המגיב לכל תנועה של עכבר):
 להרוס שכבה וליצור אותה מחדש בכל רינדור גורם לזו של MapLibre
@@ -302,17 +302,18 @@ function useLayer(map: Map | undefined, options: UseLayerOptions): void
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפה | מפה \| לא מוגדר |  |
-| אפשרויות | UseLayerOptions |  |
+| שם       | הקלד            | תיאור |
+| -------- | --------------- | ----- |
+| מפה      | מפה \| לא מוגדר |       |
+| אפשרויות | UseLayerOptions |       |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
-const map = useMap();
-useLayer(map, { layer: circleLayerSpec });
-```
+  const map = useMap();
+  useLayer(map, { layer: circleLayerSpec });
+
+````
 
 ### השתמש באפשרויות השכבה
 
@@ -320,7 +321,7 @@ useLayer(map, { layer: circleLayerSpec });
 
 ```typescript
 export interface UseLayerOptions
-```
+````
 
 לא סופק תיאור.
 
@@ -331,7 +332,7 @@ export interface UseLayerOptions
 פונקציה **סוג:**
 
 ```typescript
-function useMap(): Map | undefined
+function useMap(): Map | undefined;
 ```
 
 מחזירה את מופע MapLibre `Map` שסופק על ידי `<MapLibre>` הקרוב ביותר
@@ -342,11 +343,12 @@ function useMap(): Map | undefined
 #### חוֹזֶה
 
 - **@example:** ```ts
-const map = useMap();
-useEffect(() => {
+  const map = useMap();
+  useEffect(() => {
   map?.flyTo({ center: [lng, lat] });
-}, [map]);
-```
+  }, [map]);
+
+````
 
 ## `src/composables/use-marker/use-marker`
 
@@ -356,24 +358,25 @@ useEffect(() => {
 
 ```typescript
 function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn
-```
+````
 
 יוצר MapLibre `Marker` שמתווסף אוטומטית למפה ומוסר
 כאשר רכיב הבעלים אינו מותקן. מיקום הסמן עוקב אחר `lngLat`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפה | מפה \| לא מוגדר |  |
-| אפשרויות | UseMarkerOptions |  |
+| שם       | הקלד             | תיאור |
+| -------- | ---------------- | ----- |
+| מפה      | מפה \| לא מוגדר  |       |
+| אפשרויות | UseMarkerOptions |       |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
-const map = useMap();
-const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
-```
+  const map = useMap();
+  const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
+
+````
 
 ### UseMarkerOptions
 
@@ -381,7 +384,7 @@ const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
 
 ```typescript
 export interface UseMarkerOptions extends MarkerOptions
-```
+````
 
 לא סופק תיאור.
 
@@ -402,7 +405,7 @@ export interface UseMarkerReturn
 פונקציה **סוג:**
 
 ```typescript
-function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn
+function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn;
 ```
 
 יוצר MapLibre `Popup` שמתווסף אוטומטית ומוסר ממנו
@@ -411,17 +414,18 @@ function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupRetur
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפה | מפה \| לא מוגדר |  |
-| אפשרויות | UsePopupOptions |  |
+| שם       | הקלד            | תיאור |
+| -------- | --------------- | ----- |
+| מפה      | מפה \| לא מוגדר |       |
+| אפשרויות | UsePopupOptions |       |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
-const map = useMap();
-const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
-```
+  const map = useMap();
+  const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
+
+````
 
 ### השתמש ב-PopupOptions
 
@@ -429,7 +433,7 @@ const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' })
 
 ```typescript
 export interface UsePopupOptions extends PopupOptions
-```
+````
 
 לא סופק תיאור.
 
@@ -450,7 +454,7 @@ export interface UsePopupReturn
 פונקציה **סוג:**
 
 ```typescript
-function useSource(map: Map | undefined, options: UseSourceOptions): void
+function useSource(map: Map | undefined, options: UseSourceOptions): void;
 ```
 
 רושם מקור נתונים של MapLibre ושומר אותו מסונכרן עם המפה.
@@ -463,17 +467,18 @@ function useSource(map: Map | undefined, options: UseSourceOptions): void
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפה | מפה \| לא מוגדר |  |
-| אפשרויות | UseSourceOptions |  |
+| שם       | הקלד             | תיאור |
+| -------- | ---------------- | ----- |
+| מפה      | מפה \| לא מוגדר  |       |
+| אפשרויות | UseSourceOptions |       |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
-const map = useMap();
-useSource(map, { id: 'earthquakes', source: geojsonSpec });
-```
+  const map = useMap();
+  useSource(map, { id: 'earthquakes', source: geojsonSpec });
+
+````
 
 ### השתמש באפשרויות מקור
 
@@ -481,7 +486,7 @@ useSource(map, { id: 'earthquakes', source: geojsonSpec });
 
 ```typescript
 export interface UseSourceOptions
-```
+````
 
 לא סופק תיאור.
 
@@ -492,7 +497,7 @@ export interface UseSourceOptions
 **סוג:** קבוע
 
 ```typescript
-export const MapContext
+export const MapContext;
 ```
 
 הקשר הנושא את מופע MapLibre `Map` של `<MapLibre>` הקרוב ביותר.

@@ -16,39 +16,39 @@
 **種類:** 関数
 
 ```typescript
-function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities
+function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities;
 ```
 
 ターゲット アダプタ、SSR、またはテスト用のニュートラル機能オブジェクトを作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オーバーライド | MpRouterCapabilityOverrides |  |
+| 名前           | タイプ                      | 説明 |
+| -------------- | --------------------------- | ---- |
+| オーバーライド | MpRouterCapabilityOverrides |      |
 
 ### isMpRouterCapabilityError
 
 **種類:** 関数
 
 ```typescript
-function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError
+function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError;
 ```
 
 不明なエラーが決定的なニュートラル ルーター フォールバック エラーであるかどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|エラー |不明 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| エラー | 不明   |      |
 
 ### MP_ROUTER_COMPILER_MARKER
 
 **種類:** 定数
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Forge ルーター コンパイラー プラグインによって消費される安定したメタデータ。
@@ -58,16 +58,16 @@ Forge ルーター コンパイラー プラグインによって消費される
 **種類:** コンポーネント
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor
+function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 ニュートラルリンクマーカー。ネイティブ ターゲットは、コンパイル中にこの関数を置き換えます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | MpLinkProps |  |
+| 名前       | タイプ      | 説明 |
+| ---------- | ----------- | ---- |
+| プロパティ | MpLinkProps |      |
 
 ### MPLink記述子
 
@@ -154,16 +154,16 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **種類:** コンポーネント
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor
+function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
 ```
 
 ニュートラルアウトレット/ビューマーカー。ネイティブ ターゲットは、コンパイル中にこの関数を置き換えます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | MpRouterViewProps |  |
+| 名前       | タイプ            | 説明 |
+| ---------- | ----------------- | ---- |
+| プロパティ | MpRouterViewProps |      |
 
 ### MpRouterViewDescriptor
 
@@ -190,7 +190,10 @@ export interface MpRouterViewProps
 **種類:** 関数
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string
+function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string;
 ```
 
 アプリ所有のルーターを通じてターゲットを解決します。オプションの機能
@@ -198,17 +201,17 @@ function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabi
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
-|能力 | Pick<MpRouterCapabilities, 'resolve'> |  |
+| 名前 | タイプ                                | 説明 |
+| ---- | ------------------------------------- | ---- |
+| へ   | MpRouteLocationRaw                    |      |
+| 能力 | Pick<MpRouterCapabilities, 'resolve'> |      |
 
 ### useMpNavigation
 
 **種類:** 関数
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 命令型ナビゲーション機能のみを読み取ります。
@@ -218,7 +221,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **種類:** 関数
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 現在のアプリが所有するルートを読み取ります。未コンパイルのフォールバックは SSR セーフであり、
@@ -229,7 +232,7 @@ function useMpRoute(): MpResolvedLocation | null
 **種類:** 関数
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 アプリが提供するニュートラル機能オブジェクトを読み取ります。
@@ -241,7 +244,7 @@ function useMpRouter(): MpRouterCapabilities
 **種類:** 定数
 
 ```typescript
-export const applicationCompatibilityFixtures
+export const applicationCompatibilityFixtures;
 ```
 
 説明はありません。
@@ -251,7 +254,7 @@ export const applicationCompatibilityFixtures
 **種類:** 定数
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 ドキュメント アプリのロケール/検索/キャッチオール テーブルをミラーリングするルート レコード。
@@ -261,7 +264,7 @@ export const documentationCompatibilityFixture: ForgeCompatibilityFixture
 **種類:** 定数
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 ドキュメント アプリのロケール/検索/キャッチオール テーブルをミラーリングするルート レコード。
@@ -291,7 +294,7 @@ export interface ForgeCompatibilityFixture
 **種類:** 定数
 
 ```typescript
-export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
+export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 My Care Notes の言語セグメントと URL 駆動のオーバーレイをミラーリングするルート レコード。
@@ -301,7 +304,7 @@ My Care Notes の言語セグメントと URL 駆動のオーバーレイをミ�
 **種類:** 定数
 
 ```typescript
-export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
+export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[];
 ```
 
 すべてのランタイムのコントラクト テスト スイートによって消費される共有動作行。
@@ -311,7 +314,7 @@ export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
 **種類:** 定数
 
 ```typescript
-export const websiteCompatibilityFixture: ForgeCompatibilityFixture
+export const websiteCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Web サイトのオプションのプレフィックス付きロケール ホーム ルートをミラーリングするルート レコード。
@@ -705,7 +708,7 @@ export type ForgeScrollPosition = MpScrollPosition;
 **種類:** 関数
 
 ```typescript
-function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
+function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver;
 ```
 
 ルート ツリーにバインドされた {@link MpRouteResolver} を作成し、一度フラット化して、
@@ -713,16 +716,16 @@ function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルート |読み取り専用 MpRoute[] |  |
+| 名前   | タイプ                 | 説明 |
+| ------ | ---------------------- | ---- |
+| ルート | 読み取り専用 MpRoute[] |      |
 
 ### ルートの定義
 
 **種類:** 関数
 
 ```typescript
-function defineRoutes(routes: T): T
+function defineRoutes(routes: T): T;
 ```
 
 完全なタイプのフレームワーク中立のルート ツリーを定義する ID ヘルパー
@@ -730,40 +733,40 @@ function defineRoutes(routes: T): T
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルート |た |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ルート | た     |      |
 
 #### 契約
 
 - **@example:** const Routes = defineRoutes([
   { パス: '/'、名前: 'ホーム'、コンポーネント: ホーム },
   { パス: '/users/:id'、名前: 'user'、コンポーネント: ユーザー },
-])
+  ])
 
 ### 名前によるルートの検索
 
 **種類:** 関数
 
 ```typescript
-function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined
+function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined;
 ```
 
 指定された名前の最初の平坦化されたルートを検索します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルート |読み取り専用 MpRoute[] |  |
-|名前 |文字列 |  |
+| 名前   | タイプ                 | 説明 |
+| ------ | ---------------------- | ---- |
+| ルート | 読み取り専用 MpRoute[] |      |
+| 名前   | 文字列                 |      |
 
 ### 平坦化ルート
 
 **種類:** 関数
 
 ```typescript
-function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
+function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[];
 ```
 
 ネストされたルート ツリーを絶対ルートの深さ優先リストに平坦化します。
@@ -772,16 +775,16 @@ function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルート |読み取り専用 MpRoute[] |  |
+| 名前   | タイプ                 | 説明 |
+| ------ | ---------------------- | ---- |
+| ルート | 読み取り専用 MpRoute[] |      |
 
 ### ルートの一致
 
 **種類:** 関数
 
 ```typescript
-function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined
+function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined;
 ```
 
 パス名をルート ツリーと照合し、最初のルートを返します (
@@ -789,10 +792,10 @@ function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルート |読み取り専用 MpRoute[] |  |
-|パス名 |文字列 |  |
+| 名前   | タイプ                 | 説明 |
+| ------ | ---------------------- | ---- |
+| ルート | 読み取り専用 MpRoute[] |      |
+| パス名 | 文字列                 |      |
 
 ### MPフラットルート
 
@@ -829,7 +832,7 @@ export interface MpRouteResolver
 **種類:** 関数
 
 ```typescript
-function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation
+function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation;
 ```
 
 フレームワークに依存しない {@link MpRouteLocationRaw} を完全な形式に解決します。
@@ -839,15 +842,15 @@ function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
-|ルート |読み取り専用 MpRoute[] |  |
+| 名前   | タイプ                 | 説明 |
+| ------ | ---------------------- | ---- |
+| へ     | MpRouteLocationRaw     |      |
+| ルート | 読み取り専用 MpRoute[] |      |
 
 #### 契約
 
 - **@example:**solveLocation({ name: 'user', params: { id: 42 } }, Routes)
-// → { パス: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
+  // → { パス: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
 
 ## `src/location`
 
@@ -876,44 +879,44 @@ URL の分解された部分 (パス名、クエリ、ハッシュ)。
 **種類:** 関数
 
 ```typescript
-function normalizeHash(hash: string): string
+function normalizeHash(hash: string): string;
 ```
 
 ハッシュ フラグメントを正規化して、先頭に 1 つの `#` を含めるか、空にします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ハッシュ |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| ハッシュ | 文字列 |      |
 
 ### 解析位置
 
 **種類:** 関数
 
 ```typescript
-function parseLocation(url: string): MpLocationParts
+function parseLocation(url: string): MpLocationParts;
 ```
 
 アプリ相対 URL をその {@link MpLocationParts} に分割します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| URL |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| URL  | 文字列 |      |
 
 #### 契約
 
 - **@example:** parseLocation('/users/42?tab=info#bio')
-// → { パス: '/users/42'、クエリ: { タブ: 'info' }、ハッシュ: '#bio' }
+  // → { パス: '/users/42'、クエリ: { タブ: 'info' }、ハッシュ: '#bio' }
 
 ### stringifyLocation
 
 **種類:** 関数
 
 ```typescript
-function stringifyLocation(location: MpLocationInput): string
+function stringifyLocation(location: MpLocationInput): string;
 ```
 
 場所の部分からアプリ相対 URL 文字列を組み立てます。パス名は
@@ -922,14 +925,14 @@ function stringifyLocation(location: MpLocationInput): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|場所 | MpLocation入力 |  |
+| 名前 | タイプ         | 説明 |
+| ---- | -------------- | ---- |
+| 場所 | MpLocation入力 |      |
 
 #### 契約
 
 - **@example:** stringifyLocation({ パス: '/users/42'、クエリ: { タブ: 'info' }、ハッシュ: 'bio' })
-// → '/users/42?tab=info#bio'
+  // → '/users/42?tab=info#bio'
 
 ## `src/path`
 
@@ -938,7 +941,10 @@ function stringifyLocation(location: MpLocationInput): string
 **種類:** 関数
 
 ```typescript
-function buildPath(pattern: string, parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {}): string
+function buildPath(
+  pattern: string,
+  parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {},
+): string;
 ```
 
 パターンとパラメータのセット、エンコーディングから具体的なパス名を構築します。
@@ -947,23 +953,23 @@ function buildPath(pattern: string, parameters: Record<string, MpParameterValue 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|パターン |文字列 |  |
-|パラメータ |レコード<string, MpParameterValue \| readonly MpParameterValue[]> |  |
+| 名前       | タイプ                                                            | 説明 |
+| ---------- | ----------------------------------------------------------------- | ---- |
+| パターン   | 文字列                                                            |      |
+| パラメータ | レコード<string, MpParameterValue \| readonly MpParameterValue[]> |      |
 
 #### 契約
 
 - **@example:** buildPath('/users/:id', { id: 42 }) // → '/users/42'
-buildPath('/users/:id?', {}) // → '/users'
-buildPath('/files/:rest*', {rest: ['a', 'b'] }) // → '/files/a/b'
+  buildPath('/users/:id?', {}) // → '/users'
+  buildPath('/files/:rest*', {rest: ['a', 'b'] }) // → '/files/a/b'
 
 ### コンパイルパス
 
 **種類:** 関数
 
 ```typescript
-function compilePath(pattern: string): MpCompiledPath
+function compilePath(pattern: string): MpCompiledPath;
 ```
 
 順序付けされたパス パターンを {@link MpCompiledPath} にコンパイルします。
@@ -971,9 +977,9 @@ function compilePath(pattern: string): MpCompiledPath
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|パターン |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| パターン | 文字列 |      |
 
 #### 契約
 
@@ -984,7 +990,7 @@ function compilePath(pattern: string): MpCompiledPath
 **種類:** 関数
 
 ```typescript
-function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined
+function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined;
 ```
 
 パス名をパターンと照合して、抽出されたパラメータを返すか、
@@ -992,15 +998,15 @@ function matchPath(pattern: string, pathname: string): MpRouteParameters | undef
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|パターン |文字列 |  |
-|パス名 |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| パターン | 文字列 |      |
+| パス名   | 文字列 |      |
 
 #### 契約
 
 - **@example:** matchPath('/users/:id', '/users/42') // → { id: '42' }
-matchPath('/users/:id', '/posts/42') // → 未定義
+  matchPath('/users/:id', '/posts/42') // → 未定義
 
 ### Mpコンパイルされたパス
 
@@ -1027,7 +1033,7 @@ export interface MpPathParameterKey
 **種類:** 関数
 
 ```typescript
-function normalizePath(path: string): string
+function normalizePath(path: string): string;
 ```
 
 パス パターン (またはパス名) を正規の先頭のスラッシュ形式に正規化します。
@@ -1035,16 +1041,16 @@ function normalizePath(path: string): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|パス |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| パス | 文字列 |      |
 
 ### WILDCARD_PARAM_KEY
 
 **種類:** 定数
 
 ```typescript
-export const WILDCARD_PARAM_KEY
+export const WILDCARD_PARAM_KEY;
 ```
 
 スタンドアロン `*` キャッチオール セグメントがキャプチャされるキー。
@@ -1056,7 +1062,7 @@ export const WILDCARD_PARAM_KEY
 **種類:** 関数
 
 ```typescript
-function parseQuery(search: string): MpQueryParameters
+function parseQuery(search: string): MpQueryParameters;
 ```
 
 クエリ文字列を {@link MpQueryParameters} マップに解析します。先頭の `?` は
@@ -1064,9 +1070,9 @@ function parseQuery(search: string): MpQueryParameters
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|検索 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 検索 | 文字列 |      |
 
 #### 契約
 
@@ -1077,7 +1083,7 @@ function parseQuery(search: string): MpQueryParameters
 **種類:** 関数
 
 ```typescript
-function stringifyQuery(query: MpQueryInput): string
+function stringifyQuery(query: MpQueryInput): string;
 ```
 
 {@link MpQueryInput} マップを先頭に `?` を付けたクエリ文字列にシリアル化します。
@@ -1086,14 +1092,14 @@ function stringifyQuery(query: MpQueryInput): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|クエリ | MpQuery入力 |  |
+| 名前   | タイプ      | 説明 |
+| ------ | ----------- | ---- |
+| クエリ | MpQuery入力 |      |
 
 #### 契約
 
 - **@example:** stringifyQuery({ タグ: ['a', 'b'], ページ: 2 }) // → '?tag=a&tag=b&page=2'
-stringifyQuery({}) // → ''
+  stringifyQuery({}) // → ''
 
 ## `src/types`
 
@@ -1318,7 +1324,8 @@ export interface MpReadonlySignal<Value>
 **種類:** コンポーネント
 
 ```typescript
-export type MpRedirect = MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
 ```
 
 リダイレクト ターゲット。オプションで宛先ルートから計算されます。
@@ -1370,7 +1377,10 @@ export type MpRouteChangeListener = (event: MpRouteChangeEvent) => void;
 **種類:** コンポーネント
 
 ```typescript
-export type MpRouteGuard = ( to: MpResolvedLocation, from: MpResolvedLocation | null, ) => MpGuardOutcome | Promise<MpGuardOutcome>;
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
 ```
 
 ランタイムが所有するナビゲーション ステート マシンによって評価されるルート ガード。
@@ -1473,7 +1483,11 @@ export interface MpRouteViewContext<View = unknown>
 **種類:** コンポーネント
 
 ```typescript
-export type MpScrollBehavior = ( to: MpResolvedLocation, from: MpResolvedLocation | null, savedPosition?: MpScrollPosition, ) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
 ```
 
 説明はありません。

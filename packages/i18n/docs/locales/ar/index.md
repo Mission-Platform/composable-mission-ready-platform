@@ -17,11 +17,11 @@
 `@mission-platform/vite-config`) و`customConditions` في TypeScript (عبر
 الإعدادات المسبقة `@mission-platform/typescript-config/framework-<name>`). كل استيراد يبقى عارياً.
 
-| حالة نشطة | يقرر إلى | الصادرات الرئيسية |
-| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| حالة نشطة   | يقرر إلى            | الصادرات الرئيسية                                                       |
+| :---------- | :------------------ | :---------------------------------------------------------------------- |
 | _(لا يوجد)_ | إطار محايد الأساسية | `createForgeI18N`، `forgeNamespace`، `localeNamespaces`، `mergeLocales` |
-| `mp:vue` | محول Vue 3 | النواة المحايدة بالإضافة إلى `createForgeI18NVue`، `useI18n` |
-| `mp:react` | محول React | النواة المحايدة بالإضافة إلى `ForgeI18NProvider`، `useI18n` |
+| `mp:vue`    | محول Vue 3          | النواة المحايدة بالإضافة إلى `createForgeI18NVue`، `useI18n`            |
+| `mp:react`  | محول React          | النواة المحايدة بالإضافة إلى `ForgeI18NProvider`، `useI18n`             |
 
 ## المفاهيم الأساسية
 

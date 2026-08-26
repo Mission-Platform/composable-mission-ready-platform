@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle` - מעביר את הנושא הפעיל דרך `light → dark → auto`,
@@ -39,9 +39,9 @@ Vue SFC המקורי שיתף חנות תגובתית דרך `provide`/`inject` 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ThemeToggleProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ThemeToggleProperties> |       |
 
 ### ThemeToggleProperties
 
@@ -70,7 +70,7 @@ export type ThemeToggleSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer` - מרכיב זמן ריצה `--mp-*` עקיפת אסימון עיצוב (מותג
@@ -96,9 +96,9 @@ styleString, setConfig, setAttribute, setToken, removeToken, reset }`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ThemeComposerProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<ThemeComposerProperties> |       |
 
 ### ThemeComposerProperties
 
@@ -127,7 +127,7 @@ export type ThemeComposerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 פונקציה **סוג:**
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider` - מגדיר את חנות הנושאים המשותפת מהאביזרים שלה ו
@@ -151,9 +151,9 @@ toggleTheme, cycleTheme }` כהיקף.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ThemeProviderProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<ThemeProviderProperties> |       |
 
 ### ThemeProviderProperties
 
@@ -182,7 +182,7 @@ export type ThemeProviderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **סוג:** קבוע
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 ממפה כל תכונה ידידותית למאפיין המותאם אישית `--mp-*` CSS שהוא עוקף.
@@ -192,7 +192,7 @@ export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
 פונקציה **סוג:**
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 ממיר {@link ThemeComposerConfig} למפה שטוחה של CSS מותאם אישית
@@ -201,111 +201,115 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תצורה | ThemeComposerConfig |  |
+| שם    | הקלד                | תיאור |
+| ----- | ------------------- | ----- |
+| תצורה | ThemeComposerConfig |       |
 
 ### configToStyleString
 
 פונקציה **סוג:**
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 פתרו תצורה למחרוזת המוטבעת המלאה של `style` (מאפיינים מותאמים אישית + ​​`color-scheme`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תצורה | ThemeComposerConfig |  |
+| שם    | הקלד                | תיאור |
+| ----- | ------------------- | ----- |
+| תצורה | ThemeComposerConfig |       |
 
 ### cssVariablesToString
 
 פונקציה **סוג:**
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 מסדרת מפת CSS מותאמת אישית למחרוזת `style` מוטבעת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| משתנים | שיא<string, string> |  |
+| שם     | הקלד                | תיאור |
+| ------ | ------------------- | ----- |
+| משתנים | שיא<string, string> |       |
 
 ### mergeConfig
 
 פונקציה **סוג:**
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 מיזוג תצורה חלקית לזו הנוכחית (ניקוי ערכי `undefined`/ריקים).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תצורה | ThemeComposerConfig |  |
-| חלקי | ThemeComposerConfig |  |
+| שם    | הקלד                | תיאור |
+| ----- | ------------------- | ----- |
+| תצורה | ThemeComposerConfig |       |
+| חלקי  | ThemeComposerConfig |       |
 
 ### removeConfigToken
 
 פונקציה **סוג:**
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 הסר ביטול אסימון גולמי יחיד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תצורה | ThemeComposerConfig |  |
-| מפתח | מחרוזת |  |
+| שם    | הקלד                | תיאור |
+| ----- | ------------------- | ----- |
+| תצורה | ThemeComposerConfig |       |
+| מפתח  | מחרוזת              |       |
 
 ### setConfigAttribute
 
 פונקציה **סוג:**
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 הגדר תכונה ידידותית אחת (עבר את `undefined` כדי לנקות אותה).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תצורה | ThemeComposerConfig |  |
-| תכונה | ק |  |
-| ערך | ThemeComposerConfig[K] |  |
+| שם    | הקלד                   | תיאור |
+| ----- | ---------------------- | ----- |
+| תצורה | ThemeComposerConfig    |       |
+| תכונה | ק                      |       |
+| ערך   | ThemeComposerConfig[K] |       |
 
 ### setConfigToken
 
 פונקציה **סוג:**
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 הגדר ביטול אסימון גולמי יחיד. המפתח עשוי להשמיט את הקידומת `--mp-`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תצורה | ThemeComposerConfig |  |
-| מפתח | מחרוזת |  |
-| ערך | מחרוזת |  |
+| שם    | הקלד                | תיאור |
+| ----- | ------------------- | ----- |
+| תצורה | ThemeComposerConfig |       |
+| מפתח  | מחרוזת              |       |
+| ערך   | מחרוזת              |       |
 
 ## `src/stores/theme-store/theme-store`
 
@@ -314,7 +318,7 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 פונקציה **סוג:**
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 (מחדש) הגדר את החנות המשותפת מהאביזרים של `ForgeThemeProvider`: החלף את
@@ -323,16 +327,16 @@ function configureTheme(config: ThemeConfig): void
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תצורה | ThemeConfig |  |
+| שם    | הקלד        | תיאור |
+| ----- | ----------- | ----- |
+| תצורה | ThemeConfig |       |
 
 ### מחזור נושא
 
 פונקציה **סוג:**
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 חזור על `light → dark → auto → light`.
@@ -342,7 +346,7 @@ function cycleTheme(): void
 פונקציה **סוג:**
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 קרא תמונת מצב בלתי ניתנת לשינוי של המצב הנוכחי של החנות.
@@ -362,32 +366,32 @@ export type ResolvedTheme = 'light' | 'dark';
 פונקציה **סוג:**
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 הגדר את העדפת הנושא במפורש.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הבא | נושא |  |
+| שם  | הקלד | תיאור |
+| --- | ---- | ----- |
+| הבא | נושא |       |
 
 ### SubscribeTheme
 
 פונקציה **סוג:**
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 הירשם לשינויים בחנות; מחזירה פונקציית ביטול הרשמה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מאזין | () => ריק |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| מאזין | () => ריק |       |
 
 ### נוֹשֵׂא
 
@@ -424,7 +428,7 @@ export interface ThemeSnapshot
 פונקציה **סוג:**
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 החלף בין אור לחושך, על סמך הנושא שנפתר כעת.

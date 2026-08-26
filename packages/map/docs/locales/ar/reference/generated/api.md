@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
+function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement;
 ```
 
 `ForgeMapDraw` — أداة رسم/تحرير تفاعلية للأقرب
@@ -29,9 +29,9 @@ function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MapDrawProperties> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| خصائص | للقراءة فقط<MapDrawProperties> |       |
 
 ### MapDrawProperties
 
@@ -50,7 +50,7 @@ export interface MapDrawProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null
+function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null;
 ```
 
 `ForgeMapLayer` - يضيف طبقة MapLibre إلى أقرب سلف `<MapLibre>`
@@ -59,9 +59,9 @@ function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | nu
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MapLayerProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<MapLayerProperties> |       |
 
 ### MapLayerProperties
 
@@ -80,7 +80,7 @@ export interface MapLayerProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null
+function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null;
 ```
 
 `ForgeMapMarker` - يضيف MapLibre `Marker` إلى أقرب `<MapLibre>`
@@ -89,9 +89,9 @@ function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MapMarkerProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<MapMarkerProperties> |       |
 
 ### MapMarkerProperties
 
@@ -110,7 +110,7 @@ export interface MapMarkerProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null
+function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null;
 ```
 
 `ForgeMapPopup` - يضيف MapLibre `Popup` إلى أقرب سلف `<MapLibre>`
@@ -119,9 +119,9 @@ function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | nu
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MapPopupProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<MapPopupProperties> |       |
 
 ### MapPopupProperties
 
@@ -140,7 +140,7 @@ export interface MapPopupProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
+function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement;
 ```
 
 `ForgeMapSource` — يسجل مصدر بيانات MapLibre على أقرب `<MapLibre>`
@@ -149,9 +149,9 @@ function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MapSourceProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<MapSourceProperties> |       |
 
 ### MapSourceProperties
 
@@ -170,7 +170,7 @@ export interface MapSourceProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
+function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement;
 ```
 
 `ForgeMapLibre` — حاوية خريطة MapLibre GL تم تأليفها مرة واحدة في JSX المحايدة
@@ -186,9 +186,9 @@ function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MapLibreProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<MapLibreProperties> |       |
 
 ### MapLibreProperties
 
@@ -244,7 +244,7 @@ export type FeatureId = string | number;
 **النوع:** الوظيفة
 
 ```typescript
-function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn
+function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn;
 ```
 
 يدير جميع حالات الرسم والتحرير للخريطة. يقوم المتجر بتوصيل الخريطة
@@ -253,10 +253,10 @@ function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseD
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الخريطة | الخريطة \| غير محدد |  |
-| خيارات | استخدام خيارات الرسم |  |
+| الاسم   | اكتب                 | الوصف |
+| ------- | -------------------- | ----- |
+| الخريطة | الخريطة \| غير محدد  |       |
+| خيارات  | استخدام خيارات الرسم |       |
 
 ### UseDrawingOptions
 
@@ -285,14 +285,14 @@ export interface UseDrawingReturn
 **النوع:** الوظيفة
 
 ```typescript
-function useLayer(map: Map | undefined, options: UseLayerOptions): void
+function useLayer(map: Map | undefined, options: UseLayerOptions): void;
 ```
 
 يضيف طبقة MapLibre إلى الخريطة.
 
 يتم إنشاء الطبقة بمجرد أن تصبح الخريطة جاهزة. عند فقط `paint`، `layout`،
 `filter` أو تغيير نطاق التكبير/التصغير (نفس `id` و`type` و`source`)، فهي
-متزامنة مع الطبقة المباشرة **في مكانها** — *لا* تتم إزالة الطبقة و
+متزامنة مع الطبقة المباشرة **في مكانها** — _لا_ تتم إزالة الطبقة و
 إعادة إضافتها. وهذا مهم لأن المتصلين عادةً ما يقومون بإعادة بناء كائن المواصفات
 كل عرض (على سبيل المثال، أداة رسم تفاعلية تتفاعل مع كل حركة بالماوس):
 يؤدي تمزيق الطبقة وإعادة إنشائها في كل عرض إلى إنتاج MapLibre
@@ -302,17 +302,18 @@ function useLayer(map: Map | undefined, options: UseLayerOptions): void
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الخريطة | الخريطة \| غير محدد |  |
-| خيارات | UseLayerOptions |  |
+| الاسم   | اكتب                | الوصف |
+| ------- | ------------------- | ----- |
+| الخريطة | الخريطة \| غير محدد |       |
+| خيارات  | UseLayerOptions     |       |
 
 #### عقد
 
 - **@مثال:** ```ts
-const map = useMap();
-useLayer(map, { layer: circleLayerSpec });
-```
+  const map = useMap();
+  useLayer(map, { layer: circleLayerSpec });
+
+````
 
 ### استخدام طبقة الخيارات
 
@@ -320,7 +321,7 @@ useLayer(map, { layer: circleLayerSpec });
 
 ```typescript
 export interface UseLayerOptions
-```
+````
 
 لم يتم تقديم أي وصف.
 
@@ -331,7 +332,7 @@ export interface UseLayerOptions
 **النوع:** الوظيفة
 
 ```typescript
-function useMap(): Map | undefined
+function useMap(): Map | undefined;
 ```
 
 إرجاع مثيل MapLibre `Map` المقدم من أقرب `<MapLibre>`
@@ -342,11 +343,12 @@ ancestor، أو `undefined` عندما لم يتم تحميل الخريطة ب�
 #### عقد
 
 - **@مثال:** ```ts
-const map = useMap();
-useEffect(() => {
+  const map = useMap();
+  useEffect(() => {
   map?.flyTo({ center: [lng, lat] });
-}, [map]);
-```
+  }, [map]);
+
+````
 
 ## `src/composables/use-marker/use-marker`
 
@@ -356,24 +358,25 @@ useEffect(() => {
 
 ```typescript
 function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn
-```
+````
 
 ينشئ MapLibre `Marker` الذي تتم إضافته تلقائيًا إلى الخريطة وإزالته
 عندما يتم إلغاء تحميل المكون المالك. يتتبع موضع العلامة `lngLat`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الخريطة | الخريطة \| غير محدد |  |
-| خيارات | استخدام ماركر أوبتيونس |  |
+| الاسم   | اكتب                   | الوصف |
+| ------- | ---------------------- | ----- |
+| الخريطة | الخريطة \| غير محدد    |       |
+| خيارات  | استخدام ماركر أوبتيونس |       |
 
 #### عقد
 
 - **@مثال:** ```ts
-const map = useMap();
-const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
-```
+  const map = useMap();
+  const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
+
+````
 
 ### UseMarkerOptions
 
@@ -381,7 +384,7 @@ const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
 
 ```typescript
 export interface UseMarkerOptions extends MarkerOptions
-```
+````
 
 لم يتم تقديم أي وصف.
 
@@ -402,7 +405,7 @@ export interface UseMarkerReturn
 **النوع:** الوظيفة
 
 ```typescript
-function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn
+function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn;
 ```
 
 ينشئ MapLibre `Popup` الذي تتم إضافته وإزالته منه تلقائيًا
@@ -411,17 +414,18 @@ function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupRetur
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الخريطة | الخريطة \| غير محدد |  |
-| خيارات | استخدم PopupOptions |  |
+| الاسم   | اكتب                | الوصف |
+| ------- | ------------------- | ----- |
+| الخريطة | الخريطة \| غير محدد |       |
+| خيارات  | استخدم PopupOptions |       |
 
 #### عقد
 
 - **@مثال:** ```ts
-const map = useMap();
-const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
-```
+  const map = useMap();
+  const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
+
+````
 
 ### استخدم PopupOptions
 
@@ -429,7 +433,7 @@ const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' })
 
 ```typescript
 export interface UsePopupOptions extends PopupOptions
-```
+````
 
 لم يتم تقديم أي وصف.
 
@@ -450,7 +454,7 @@ export interface UsePopupReturn
 **النوع:** الوظيفة
 
 ```typescript
-function useSource(map: Map | undefined, options: UseSourceOptions): void
+function useSource(map: Map | undefined, options: UseSourceOptions): void;
 ```
 
 يسجل مصدر بيانات MapLibre ويبقيه متزامنًا مع الخريطة.
@@ -463,17 +467,18 @@ function useSource(map: Map | undefined, options: UseSourceOptions): void
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الخريطة | الخريطة \| غير محدد |  |
-| خيارات | UseSourceOptions |  |
+| الاسم   | اكتب                | الوصف |
+| ------- | ------------------- | ----- |
+| الخريطة | الخريطة \| غير محدد |       |
+| خيارات  | UseSourceOptions    |       |
 
 #### عقد
 
 - **@مثال:** ```ts
-const map = useMap();
-useSource(map, { id: 'earthquakes', source: geojsonSpec });
-```
+  const map = useMap();
+  useSource(map, { id: 'earthquakes', source: geojsonSpec });
+
+````
 
 ### UseSourceOptions
 
@@ -481,7 +486,7 @@ useSource(map, { id: 'earthquakes', source: geojsonSpec });
 
 ```typescript
 export interface UseSourceOptions
-```
+````
 
 لم يتم تقديم أي وصف.
 
@@ -492,7 +497,7 @@ export interface UseSourceOptions
 **النوع:** ثابت
 
 ```typescript
-export const MapContext
+export const MapContext;
 ```
 
 السياق يحمل الأقرب `<MapLibre>` MapLibre للأجداد `Map` مثال.

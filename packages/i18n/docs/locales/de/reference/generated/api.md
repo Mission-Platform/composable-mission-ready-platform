@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/i18n`.
 **Art:** Funktion
 
 ```typescript
-function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElement
+function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElement;
 ```
 
 Stellt eine i18next-Instanz für den React-Baum bereit (delegiert an
@@ -24,9 +24,9 @@ Stellt eine i18next-Instanz für den React-Baum bereit (delegiert an
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | ForgeI18NProviderProperties |  |
+| Name          | Geben Sie                   | ein Beschreibung |
+| ------------- | --------------------------- | ---------------- |
+| Eigenschaften | ForgeI18NProviderProperties |                  |
 
 #### Vertrag
 
@@ -52,7 +52,7 @@ Requisiten für {@link ForgeI18NProvider}.
 **Art:** Funktion
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin
+function createForgeI18NVue(i18next: I18nInstance): Plugin;
 ```
 
 Bindet eine i18next-Instanz in ein Vue-Plugin ein (delegiert an `i18next-vue`), sodass es funktioniert
@@ -61,9 +61,9 @@ der `$t`-Vorlagenhelfer oder das `useI18n`-Composable.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| i18next | I18nInstance |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| i18next | I18nInstance |                  |
 
 #### Vertrag
 
@@ -79,7 +79,7 @@ app.use(createForgeI18NVue(i18n))
 **Art:** Funktion
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 Stellen Sie i18next direkt bereit, wenn kein Framework-Adapter verfügbar ist. Das hält
@@ -89,9 +89,9 @@ Framework-Laufzeit in ihren neutralen Fallback.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Namensraum | Zeichenfolge |  |
+| Name       | Geben Sie    | ein Beschreibung |
+| ---------- | ------------ | ---------------- |
+| Namensraum | Zeichenfolge |                  |
 
 ### Verwenden Sie I18nReturn
 
@@ -110,7 +110,7 @@ Rückgabeform des Framework-neutralen {@link useI18n}-Fallbacks.
 **Art:** Funktion
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 Hook legt die Übersetzungsfunktion und die zugrunde liegende i18next-Instanz offen
@@ -123,9 +123,9 @@ Namespace (das eigene `mp.<app>` einer App, das auf alle anderen zurückgreift).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Namensraum | Zeichenfolge |  |
+| Name       | Geben Sie    | ein Beschreibung |
+| ---------- | ------------ | ---------------- |
+| Namensraum | Zeichenfolge |                  |
 
 ### Verwenden Sie I18nReturn
 
@@ -144,7 +144,7 @@ Rückgabeform von {@link useI18n}.
 **Art:** Funktion
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 Kompositionshelfer, der die reaktive Übersetzungsfunktion, die aktive, verfügbar macht
@@ -158,9 +158,9 @@ Namespace (das eigene `mp.<app>` einer App, das auf alle anderen zurückgreift).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Namensraum | Zeichenfolge |  |
+| Name       | Geben Sie    | ein Beschreibung |
+| ---------- | ------------ | ---------------- |
+| Namensraum | Zeichenfolge |                  |
 
 ### Verwenden Sie I18nReturn
 
@@ -179,7 +179,7 @@ Rückgabeform von {@link useI18n}.
 **Art:** Funktion
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance
+function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
 ```
 
 Erstellt ein konfiguriertes, Framework-unabhängiges [i18next](https://www.i18next.com/)
@@ -201,29 +201,30 @@ Apps können `overrides` pro Namespace zusätzlich zu den Zeichenfolgen eines Pa
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | CreateForgeI18NOptions |  |
+| Name     | Geben Sie              | ein Beschreibung |
+| -------- | ---------------------- | ---------------- |
+| Optionen | CreateForgeI18NOptions |                  |
 
 #### Vertrag
 
 - **@example:** // Framework-neutrale Verwendung
-importiere { createForgeI18N } aus '@mission-platform/i18n'
+  importiere { createForgeI18N } aus '@mission-platform/i18n'
 
 const i18n = createForgeI18N({ messages: { en: { hello: 'Hallo {name}' } } })
 i18n.t('hello', { name: 'World' }) // → 'Hello World'
+
 - **@example:** // Namespace-Nutzung mit einer App, die die Zeichenfolge eines Pakets überschreibt
-import { createForgeI18N, forgeNamespace } aus '@mission-platform/i18n'
+  import { createForgeI18N, forgeNamespace } aus '@mission-platform/i18n'
 
 const i18n = createForgeI18N({
-  Namespace: forgeNamespace('my-care-notes'),
-  Namensräume: {
-    [forgeNamespace('my-care-notes')]: { de: { nav: { Notes: 'Notes' } } },
-    [forgeNamespace('breakpoints')]: { de: { breakpoint: 'breakpoint:' } },
-  },
-  überschreibt: {
-    [forgeNamespace('breakpoints')]: { de: { breakpoint: 'Viewport:' } },
-  },
+Namespace: forgeNamespace('my-care-notes'),
+Namensräume: {
+[forgeNamespace('my-care-notes')]: { de: { nav: { Notes: 'Notes' } } },
+[forgeNamespace('breakpoints')]: { de: { breakpoint: 'breakpoint:' } },
+},
+überschreibt: {
+[forgeNamespace('breakpoints')]: { de: { breakpoint: 'Viewport:' } },
+},
 })
 
 ### CreateForgeI18NOptions
@@ -241,7 +242,7 @@ Von {@link createForgeI18N} akzeptierte Optionen.
 **Art:** Funktion
 
 ```typescript
-function getServerI18n(): I18nInstance | undefined
+function getServerI18n(): I18nInstance | undefined;
 ```
 
 Ruft die aktuelle serverseitige i18n-Instanz aus dem Anforderungskontext (AsyncLocalStorage) ab.
@@ -252,33 +253,33 @@ Zurückgreifen auf die konfigurierte globale Serverinstanz, falls festgelegt.
 **Art:** Funktion
 
 ```typescript
-function runWithI18n(i18n: I18nInstance, callback: () => T): T
+function runWithI18n(i18n: I18nInstance, callback: () => T): T;
 ```
 
 Führt einen Rückruf innerhalb eines anforderungsbezogenen i18n-Kontexts auf dem Server aus.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| i18n | I18nInstance |  |
-| Rückruf | () => T |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| i18n    | I18nInstance |                  |
+| Rückruf | () => T      |                  |
 
 ### setServerI18n
 
 **Art:** Funktion
 
 ```typescript
-function setServerI18n(i18n: I18nInstance): void
+function setServerI18n(i18n: I18nInstance): void;
 ```
 
 Konfiguriert die globale Fallback-serverseitige i18n-Instanz.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| i18n | I18nInstance |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| i18n | I18nInstance |                  |
 
 ## `src/utils/merge-locales`
 
@@ -287,7 +288,7 @@ Konfiguriert die globale Fallback-serverseitige i18n-Instanz.
 **Art:** Funktion
 
 ```typescript
-function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLocales
+function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLocales;
 ```
 
 Führt die gebietsbezogenen Nachrichtenobjekte von `source` tief in `target` zusammen.
@@ -296,17 +297,17 @@ Gibt eine neue {@link ForgeLocales}-Karte zurück. Wird zum Layern von Namespace
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Ziel | ForgeLocales |  |
-| Quelle | ForgeLocales |  |
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| Ziel   | ForgeLocales |                  |
+| Quelle | ForgeLocales |                  |
 
 ### deepMergeMessages
 
 **Art:** Funktion
 
 ```typescript
-function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject
+function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject;
 ```
 
 Führt zwei Nachrichtenobjekte rekursiv tief zusammen und gibt ein neues Objekt zurück. Einfach
@@ -319,17 +320,17 @@ gewinnen und der Rest des Paketpakets bleibt erhalten.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Ziel | ForgeMessageObject |  |
-| Quelle | ForgeMessageObject |  |
+| Name   | Geben Sie          | ein Beschreibung |
+| ------ | ------------------ | ---------------- |
+| Ziel   | ForgeMessageObject |                  |
+| Quelle | ForgeMessageObject |                  |
 
 ### mergeLocales
 
 **Art:** Funktion
 
 ```typescript
-function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessageObject>
+function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessageObject>;
 ```
 
 Führt ein Array von Gebietsschemamodulen tief in einer einzigen Nachrichtenzuordnung zusammen.
@@ -337,9 +338,9 @@ Module werden von links nach rechts verarbeitet; Spätere Einträge überschreib
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Module | ForgeLocaleModule[] |  |
+| Name   | Geben Sie           | ein Beschreibung |
+| ------ | ------------------- | ---------------- |
+| Module | ForgeLocaleModule[] |                  |
 
 ## `src/utils/namespace`
 
@@ -348,7 +349,7 @@ Module werden von links nach rechts verarbeitet; Spätere Einträge überschreib
 **Art:** konstant
 
 ```typescript
-export const FORGE_DEFAULT_NAMESPACE
+export const FORGE_DEFAULT_NAMESPACE;
 ```
 
 Standardmäßige i18next-Namespace-Nachrichten werden unter registriert, wenn keine expliziten Nachrichten vorhanden sind
@@ -360,7 +361,7 @@ Auflösen verschachtelter Schlüssel (`nav.notes`) ohne Angabe eines Namespace.
 **Art:** konstant
 
 ```typescript
-export const FORGE_NAMESPACE_PREFIX
+export const FORGE_NAMESPACE_PREFIX;
 ```
 
 Das reservierte Präfix für jeden Mission Platform i18next-Namespace. Pakete
@@ -371,7 +372,7 @@ Live unter `mp.<package_name>` und Apps unter `mp.<app_name>`.
 **Art:** Funktion
 
 ```typescript
-function forgeNamespace(name: string): string
+function forgeNamespace(name: string): string;
 ```
 
 Erstellt einen Mission Platform i18next-Namespace für einen Arbeitsbereich, z. B.
@@ -383,16 +384,16 @@ Erstellt einen Mission Platform i18next-Namespace für einen Arbeitsbereich, z. 
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Name | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Name | Zeichenfolge |                  |
 
 ### localeNamespaces
 
 **Art:** Funktion
 
 ```typescript
-function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageObject>): ForgeNamespaceLocales
+function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageObject>): ForgeNamespaceLocales;
 ```
 
 Konvertiert eine Single-Locale-Bundle-Map mit Namespace-Schlüsseln – die Form des i18n
@@ -403,18 +404,18 @@ die Option {@link CreateForgeI18NOptions.namespaces} (und `overrides`) erwartet
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Gebietsschema | Zeichenfolge |  |
-| Bündel | Record<string, ForgeMessageObject> |  |
+| Name          | Geben Sie                          | ein Beschreibung |
+| ------------- | ---------------------------------- | ---------------- |
+| Gebietsschema | Zeichenfolge                       |                  |
+| Bündel        | Record<string, ForgeMessageObject> |                  |
 
 #### Vertrag
 
 - **@example:** const enBundles = yaml.load(enLocaleSource) // { 'mp.breakpoints': {...}, 'mp.my-care-notes': {...} }
-createForgeI18N({
+  createForgeI18N({
   Namespace: forgeNamespace('my-care-notes'),
   Namespaces: localeNamespaces('en', enBundles),
-})
+  })
 
 ## `src/utils/types`
 

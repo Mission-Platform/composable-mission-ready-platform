@@ -107,12 +107,12 @@ Los componentes comienzan como diseños de una columna o apilados. En el punto d
 
 ### Contratos regionales
 
-| Componente | Regiones nombradas | Fuente de composición |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | Secciones destacadas y destacadas del marketing de sitios web |
-| `ForgeGridLayout` | `cell1` a `cell12` | Tarjetas del panel de control de servicio y resúmenes de estado |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | Barra de navegación/contexto de Docs, artículo, barra lateral y pie de página |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Contenido y acciones alternos de la página de destino |
+| Componente            | Regiones nombradas                                         | Fuente de composición                                                         |
+| --------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | Secciones destacadas y destacadas del marketing de sitios web                 |
+| `ForgeGridLayout`     | `cell1` a `cell12`                                         | Tarjetas del panel de control de servicio y resúmenes de estado               |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | Barra de navegación/contexto de Docs, artículo, barra lateral y pie de página |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Contenido y acciones alternos de la página de destino                         |
 
 `ForgeGridLayout` acepta `rows` y `columns`, fija ambos a uno o más, limita el área renderizable a 12 nombres
 celdas y utiliza un respaldo de una sola columna debajo de su punto de interrupción. Las celdas con nombre siempre se representan en el orden de origen.

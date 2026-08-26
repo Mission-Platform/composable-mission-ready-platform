@@ -16,7 +16,7 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/storybook-fram
 **Tipo:** funzione
 
 ```typescript
-function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig
+function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig;
 ```
 
 Crea un {@link StorybookConfig} unificato per il framework attivo. Uno
@@ -25,9 +25,9 @@ rende la stessa storia impostata sulla struttura selezionata.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | CreateStorybookConfigOptions |  |
+| Nome    | Digitare                     | Descrizione |
+| ------- | ---------------------------- | ----------- |
+| opzioni | CreateStorybookConfigOptions |             |
 
 ### CreateStorybookConfigOptions
 
@@ -44,7 +44,7 @@ Opzioni per {@link createStorybookConfig}.
 **Tipo:** funzione
 
 ```typescript
-function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework
+function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework;
 ```
 
 Risolvi il framework attivo dall'opzione esplicita o dal
@@ -53,9 +53,9 @@ valore in modo che un errore di battitura fallisca rapidamente anziché visualiz
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| esplicito | Quadro di fiabe |  |
+| Nome      | Digitare        | Descrizione |
+| --------- | --------------- | ----------- |
+| esplicito | Quadro di fiabe |             |
 
 ### Quadro del libro di fiabe
 
@@ -72,7 +72,7 @@ I framework su cui un'app Storybook unificata può eseguire il rendering delle s
 **Tipo:** funzione
 
 ```typescript
-function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[]
+function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[];
 ```
 
 Costruisci i glob di storie neutrali condivisi per i pacchetti richiesti.
@@ -81,11 +81,11 @@ lo stesso inventario di storie riscrivibili deve essere visualizzato in ogni wor
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| _quadro | Quadro di fiabe |  |
-| pacchetti | stringa di sola lettura[] |  |
-| pacchettiRoot | stringa |  |
+| Nome          | Digitare                  | Descrizione |
+| ------------- | ------------------------- | ----------- |
+| _quadro       | Quadro di fiabe           |             |
+| pacchetti     | stringa di sola lettura[] |             |
+| pacchettiRoot | stringa                   |             |
 
 ## `src/preview`
 
@@ -94,7 +94,7 @@ lo stesso inventario di storie riscrivibili deve essere visualizzato in ogni wor
 **Tipo:** funzione
 
 ```typescript
-function sharedPreviewDecorators()
+function sharedPreviewDecorators();
 ```
 
 Decoratori di libri di fiabe condivisi per tutti i framework.
@@ -104,7 +104,7 @@ Decoratori di libri di fiabe condivisi per tutti i framework.
 **Genere:** costante
 
 ```typescript
-export const sharedPreviewParameters
+export const sharedPreviewParameters;
 ```
 
 Parametri Storybook condivisi per tutti i framework.
@@ -114,7 +114,7 @@ Parametri Storybook condivisi per tutti i framework.
 **Tipo:** funzione
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework)
+function sharedPreviewParametersFor(framework?: PreviewFramework);
 ```
 
 Parametri del libro di fiabe compatibili con il framework.
@@ -131,9 +131,9 @@ pannello delle sorgenti.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| quadro | AnteprimaFramework |  |
+| Nome   | Digitare           | Descrizione |
+| ------ | ------------------ | ----------- |
+| quadro | AnteprimaFramework |             |
 
 ## `src/slots.dom`
 
@@ -142,7 +142,7 @@ pannello delle sorgenti.
 **Tipo:** funzione
 
 ```typescript
-function customElementTag(component: unknown): string
+function customElementTag(component: unknown): string;
 ```
 
 Deriva il nome del tag registrato di un componente web forge dal suo elemento
@@ -152,9 +152,9 @@ il fallback del nome classe rispecchia quello dell'emettitore `kebabCase(name)` 
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | sconosciuto |  |
+| Nome       | Digitare    | Descrizione |
+| ---------- | ----------- | ----------- |
+| componente | sconosciuto |             |
 
 ## `src/slots.neutral`
 
@@ -163,7 +163,7 @@ il fallback del nome classe rispecchia quello dell'emettitore `kebabCase(name)` 
 **Genere:** costante
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Fabbrica di frammenti segnaposto; mai invocato (vedi {@link node}).
@@ -173,7 +173,7 @@ Fabbrica di frammenti segnaposto; mai invocato (vedi {@link node}).
 **Genere:** costante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Nessuna descrizione fornita.
@@ -187,7 +187,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Nessuna descrizione fornita.
@@ -203,7 +203,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Nessuna descrizione fornita.
@@ -217,7 +217,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Nessuna descrizione fornita.
@@ -233,7 +233,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Solid non ha componente frammento: un array di figli è un frammento.
@@ -243,7 +243,7 @@ Solid non ha componente frammento: un array di figli è un frammento.
 **Genere:** costante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Nessuna descrizione fornita.
@@ -257,7 +257,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Nessuna descrizione fornita.
@@ -273,7 +273,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Componente marcatore per frammenti JSX: i suoi figli vengono montati direttamente nel genitore.
@@ -283,7 +283,7 @@ Componente marcatore per frammenti JSX: i suoi figli vengono montati direttament
 **Genere:** costante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Nessuna descrizione fornita.
@@ -297,7 +297,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Nessuna descrizione fornita.
@@ -313,7 +313,12 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type RenderWithSlots = ( component: unknown, properties: Record<string, unknown>, slots: StorySlots, children?: unknown, ) => unknown;
+export type RenderWithSlots = (
+  component: unknown,
+  properties: Record<string, unknown>,
+  slots: StorySlots,
+  children?: unknown,
+) => unknown;
 ```
 
 Render `component` con `properties`, il nome dato `slots` e facoltativo
@@ -325,7 +330,11 @@ consuma.
 **Genere:** tipo
 
 ```typescript
-export type StoryNodeFactory = ( type: unknown, properties?: Record<string, unknown> | null, ...children: unknown[] ) => unknown;
+export type StoryNodeFactory = (
+  type: unknown,
+  properties?: Record<string, unknown> | null,
+  ...children: unknown[]
+) => unknown;
 ```
 
 Costruisci un elemento per il renderer attivo. Serve anche come il classico JSX
@@ -349,7 +358,7 @@ Contenuto per gli slot denominati di un componente, codificato in base al nome d
 **Genere:** costante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Nessuna descrizione fornita.
@@ -363,7 +372,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Nessuna descrizione fornita.
@@ -379,7 +388,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Componente marcatore per frammenti JSX: reso come a `DocumentFragment`.
@@ -389,7 +398,7 @@ Componente marcatore per frammenti JSX: reso come a `DocumentFragment`.
 **Genere:** costante
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Nessuna descrizione fornita.
@@ -403,7 +412,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Nessuna descrizione fornita.
@@ -431,7 +440,10 @@ tipo (`Meta<MyComponentProps>`), rispecchiando il renderer `Meta` ergonomia.
 **Genere:** tipo
 
 ```typescript
-export type StoryObj<TMetaOrComponentOrArgs = Args> = TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments> ? StoryAnnotations<Renderer, TArguments> : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
+export type StoryObj<TMetaOrComponentOrArgs = Args> =
+  TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
+    ? StoryAnnotations<Renderer, TArguments>
+    : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
 Libro di fiabe indipendente dal contesto `StoryObj`, la controparte neutrale di

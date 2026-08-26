@@ -16,23 +16,23 @@
 **종류:** 기능
 
 ```typescript
-function createVCard(options: VCardOptions): VCard
+function createVCard(options: VCardOptions): VCard;
 ```
 
 편리한 옵션을 쓰기 가능한 완전한 vCard 문서로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | V카드옵션 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| 옵션 | V카드옵션 |      |
 
 ### 파싱V카드
 
 **종류:** 상수
 
 ```typescript
-export const parseVCard
+export const parseVCard;
 ```
 
 파서 용어를 선호하는 호출자를 위한 별칭입니다.
@@ -42,39 +42,39 @@ export const parseVCard
 **종류:** 기능
 
 ```typescript
-function readVCard(source: string): VCard[]
+function readVCard(source: string): VCard[];
 ```
 
 알 수 없는 속성을 유지하면서 하나 이상의 vCard 블록을 구문 분석합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 출처 | 문자열 |      |
 
 ### toVCard옵션
 
 **종류:** 기능
 
 ```typescript
-function toVCardOptions(card: VCard): VCardOptions
+function toVCardOptions(card: VCard): VCardOptions;
 ```
 
 분석된 카드를 QR 빌더에서 사용하는 편의 옵션에 다시 매핑합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 카드 | V카드 |  |
+| 이름 | 유형  | 설명 |
+| ---- | ----- | ---- |
+| 카드 | V카드 |      |
 
 ### vCard
 
 **종류:** 기능
 
 ```typescript
-function vCard(options: VCardOptions): string
+function vCard(options: VCardOptions): string;
 ```
 
 연락처를 설명하는 vCard 3.0 페이로드입니다. 여러 전화번호/이메일은
@@ -82,9 +82,9 @@ function vCard(options: VCardOptions): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | V카드옵션 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| 옵션 | V카드옵션 |      |
 
 ### V카드
 
@@ -121,32 +121,32 @@ export interface VCardProperty
 **종류:** 기능
 
 ```typescript
-function writeVCard(card: VCard): string
+function writeVCard(card: VCard): string;
 ```
 
 QR 및 텍스트 페이로드에 LF 줄 끝을 사용하여 하나의 완전한 vCard를 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 카드 | V카드 |  |
+| 이름 | 유형  | 설명 |
+| ---- | ----- | ---- |
+| 카드 | V카드 |      |
 
 ### 쓰기V카드
 
 **종류:** 기능
 
 ```typescript
-function writeVCards(cards: readonly VCard[]): string
+function writeVCards(cards: readonly VCard[]): string;
 ```
 
 하나 이상의 구문 분석된 카드를 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 카드 | 읽기 전용 VCard[] |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 카드 | 읽기 전용 VCard[] |      |
 
 ## `src/ast/vevent`
 
@@ -247,7 +247,7 @@ export type VEventTransp = 'OPAQUE' | 'TRANSPARENT';
 **종류:** 기능
 
 ```typescript
-function addDays(date: Date, days: number): Date
+function addDays(date: Date, days: number): Date;
 ```
 
 JS 날짜(로컬 영역)에 `days`을 추가합니다.
@@ -255,16 +255,16 @@ JS 날짜(로컬 영역)에 `days`을 추가합니다.
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 날짜 | 날짜 |  |
-| 일 | 번호 |  |
+| ---- | ---- | ---- |
+| 날짜 | 날짜 |      |
+| 일   | 번호 |      |
 
 ### 추가월
 
 **종류:** 기능
 
 ```typescript
-function addMonths(date: Date, months: number): Date
+function addMonths(date: Date, months: number): Date;
 ```
 
 JS 날짜(로컬 영역)에 `months`을 추가합니다.
@@ -272,16 +272,16 @@ JS 날짜(로컬 영역)에 `months`을 추가합니다.
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 날짜 | 날짜 |  |
-| 개월 | 번호 |  |
+| ---- | ---- | ---- |
+| 날짜 | 날짜 |      |
+| 개월 | 번호 |      |
 
 ### 연도 추가
 
 **종류:** 기능
 
 ```typescript
-function addYears(date: Date, years: number): Date
+function addYears(date: Date, years: number): Date;
 ```
 
 JS 날짜(로컬 영역)에 `years`을 추가합니다.
@@ -289,97 +289,97 @@ JS 날짜(로컬 영역)에 `years`을 추가합니다.
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 날짜 | 날짜 |  |
-| 년 | 번호 |  |
+| ---- | ---- | ---- |
+| 날짜 | 날짜 |      |
+| 년   | 번호 |      |
 
 ### 일키
 
 **종류:** 기능
 
 ```typescript
-function dayKey(iso: string): string
+function dayKey(iso: string): string;
 ```
 
 EXDATE 및 RDATE 일치에 사용되는 현지 날짜 키를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이소 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 이소 | 문자열 |      |
 
 ### fmt좋아요
 
 **종류:** 기능
 
 ```typescript
-function fmtLike(source: string, dateTime: DateTime): string
+function fmtLike(source: string, dateTime: DateTime): string;
 ```
 
 Luxon DateTime의 형식을 소스 문자열과 동일한 ISO 표현으로 다시 지정합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 날짜시간 | 날짜/시간 |  |
+| 이름     | 유형      | 설명 |
+| -------- | --------- | ---- |
+| 출처     | 문자열    |      |
+| 날짜시간 | 날짜/시간 |      |
 
 ### isAllDay
 
 **종류:** 기능
 
 ```typescript
-function isAllDay(iso: string): boolean
+function isAllDay(iso: string): boolean;
 ```
 
 ISO 문자열이 날짜 전용 값(YYYY-MM-DD)인 경우 true를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이소 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 이소 | 문자열 |      |
 
 ### 구문 분석 날짜
 
 **종류:** 기능
 
 ```typescript
-function parseDate(iso: string): Date
+function parseDate(iso: string): Date;
 ```
 
 ISO 날짜/시간 문자열을 JS 날짜로 구문 분석합니다(공개 API 호환성을 위해).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이소 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 이소 | 문자열 |      |
 
 ### 파싱DT
 
 **종류:** 기능
 
 ```typescript
-function parseDT(iso: string): DateTime
+function parseDT(iso: string): DateTime;
 ```
 
 ISO 날짜/시간/날짜 문자열을 Luxon DateTime(로컬 영역)으로 구문 분석합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이소 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 이소 | 문자열 |      |
 
 ### 시작일
 
 **종류:** 기능
 
 ```typescript
-function startOfDay(date: Date): Date
+function startOfDay(date: Date): Date;
 ```
 
 JS 날짜(로컬 영역)의 하루 시작입니다.
@@ -387,15 +387,15 @@ JS 날짜(로컬 영역)의 하루 시작입니다.
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 날짜 | 날짜 |  |
+| ---- | ---- | ---- |
+| 날짜 | 날짜 |      |
 
 ### 월 시작
 
 **종류:** 기능
 
 ```typescript
-function startOfMonth(date: Date): Date
+function startOfMonth(date: Date): Date;
 ```
 
 `date`(로컬 영역)이 포함된 월의 시작입니다.
@@ -403,32 +403,32 @@ function startOfMonth(date: Date): Date
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 날짜 | 날짜 |  |
+| ---- | ---- | ---- |
+| 날짜 | 날짜 |      |
 
 ### 주 시작
 
 **종류:** 기능
 
 ```typescript
-function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date
+function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date;
 ```
 
 `weekStartsOn`을 기리는 `date`을 포함하는 주의 시작입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 날짜 | 날짜 |  |
-| 주시작일 | 0 \| 1 \| 2\| 3 \| 4\| 5\| 6 |  |
+| 이름     | 유형                         | 설명 |
+| -------- | ---------------------------- | ---- |
+| 날짜     | 날짜                         |      |
+| 주시작일 | 0 \| 1 \| 2\| 3 \| 4\| 5\| 6 |      |
 
 ### 연도 시작
 
 **종류:** 기능
 
 ```typescript
-function startOfYear(date: Date): Date
+function startOfYear(date: Date): Date;
 ```
 
 `date`(로컬 영역)을 포함하는 연도의 시작입니다.
@@ -436,15 +436,15 @@ function startOfYear(date: Date): Date
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 날짜 | 날짜 |  |
+| ---- | ---- | ---- |
+| 날짜 | 날짜 |      |
 
 ### WEEKDAY_LUXON
 
 **종류:** 상수
 
 ```typescript
-export const WEEKDAY_LUXON: Record<RRuleWeekday, number>
+export const WEEKDAY_LUXON: Record<RRuleWeekday, number>;
 ```
 
 Luxon 평일 번호: 월요일=1 ~ 일요일=7.
@@ -478,16 +478,16 @@ export type WeekStart = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 **종류:** 기능
 
 ```typescript
-function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement
+function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ForgeICalendarProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<ForgeICalendarProperties> |      |
 
 ### ForgeICalendar속성
 
@@ -506,16 +506,16 @@ export interface ForgeICalendarProperties
 **종류:** 기능
 
 ```typescript
-function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement
+function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ForgeVCardProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<ForgeVCardProperties> |      |
 
 ### ForgeVCard속성
 
@@ -534,32 +534,32 @@ export interface ForgeVCardProperties
 **종류:** 기능
 
 ```typescript
-function calendarEvents(calendar: ICalendar): ICalendarEvent[]
+function calendarEvents(calendar: ICalendar): ICalendarEvent[];
 ```
 
 VEVENT 구성 요소를 Forge 렌더러에서 사용하는 형식화된 이벤트 보기로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 달력 | 캘린더 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 달력 | 캘린더 |      |
 
 ### createICalendarEvent
 
 **종류:** 기능
 
 ```typescript
-function createICalendarEvent(event: ICalendarEvent): ICalendarComponent
+function createICalendarEvent(event: ICalendarEvent): ICalendarComponent;
 ```
 
 iCalendar에 삽입하기에 적합한 형식화된 VEVENT 구성 요소를 구축합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이벤트 | ICalendar이벤트 |  |
+| 이름   | 유형            | 설명 |
+| ------ | --------------- | ---- |
+| 이벤트 | ICalendar이벤트 |      |
 
 ### I캘린더
 
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **종류:** 상수
 
 ```typescript
-export const parseICalendar
+export const parseICalendar;
 ```
 
 설명이 제공되지 않았습니다.
@@ -626,23 +626,23 @@ export const parseICalendar
 **종류:** 기능
 
 ```typescript
-function readICalendar(source: string): ICalendar
+function readICalendar(source: string): ICalendar;
 ```
 
 모든 구성 요소와 속성을 보존하면서 RFC 5545 iCalendar 스트림을 구문 분석합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 출처 | 문자열 |      |
 
 ### 직렬화ICalendar
 
 **종류:** 상수
 
 ```typescript
-export const serializeICalendar
+export const serializeICalendar;
 ```
 
 설명이 제공되지 않았습니다.
@@ -652,13 +652,13 @@ export const serializeICalendar
 **종류:** 기능
 
 ```typescript
-function writeICalendar(calendar: ICalendar): string
+function writeICalendar(calendar: ICalendar): string;
 ```
 
 CRLF 줄 끝과 75옥텟 안전 접기를 사용하여 RFC 5545 달력을 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 달력 | 캘린더 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 달력 | 캘린더 |      |

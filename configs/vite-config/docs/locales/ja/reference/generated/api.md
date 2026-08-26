@@ -26,7 +26,7 @@ export interface AppConfigOptions
 **種類:** 関数
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 ロールアップ/ロールダウンを作成する `external` すべての名前を扱う述語
@@ -34,16 +34,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前 |読み取り専用文字列[] |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| 名前 | 読み取り専用文字列[] |      |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 デフォルトのロールアップ外部は、すべての共有ライブラリがピア提供のものとして扱う必要があります。
@@ -54,7 +54,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
+export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 ```
 
 UMD/IIFE コンシューマのデフォルトのロールアップ出力グローバル。 ESMのみを対象としていますが、
@@ -65,7 +65,7 @@ UMD/IIFE コンシューマのデフォルトのロールアップ出力グロ�
 **種類:** 関数
 
 ```typescript
-function defineAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 を構築する Vite ミッションプラットフォームの設定 Vue 3 つのアプリ: Vue プラグインと
@@ -74,16 +74,16 @@ function defineAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |アプリ構成オプション |  |
+| 名前       | タイプ               | 説明 |
+| ---------- | -------------------- | ---- |
+| オプション | アプリ構成オプション |      |
 
 ### フレームワークアプリ構成の定義
 
 **種類:** 関数
 
 ```typescript
-function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig
+function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
 {@link defineAppConfig} を次のコードでラップします。 `resolve.conditions` 裸にするために必要な
@@ -93,16 +93,16 @@ function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfi
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | FrameworkAppConfigOptions |  |
+| 名前       | タイプ                    | 説明 |
+| ---------- | ------------------------- | ---- |
+| オプション | FrameworkAppConfigOptions |      |
 
 ### ライブラリ構成の定義
 
 **種類:** 関数
 
 ```typescript
-function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
+function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
 を構築する Vite ミッションプラットフォームに合わせた構成 Vue ライブラリパッケージ:
@@ -116,16 +116,16 @@ function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |ライブラリ構成オプション |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| オプション | ライブラリ構成オプション |      |
 
 ### 定義WebComponentAppConfig
 
 **種類:** 関数
 
 ```typescript
-function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 を構築する Vite フレームワークフリーの Web コンポーネント アプリケーションのアプリ構成。
@@ -137,9 +137,9 @@ function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |アプリ構成オプション |  |
+| 名前       | タイプ               | 説明 |
+| ---------- | -------------------- | ---- |
+| オプション | アプリ構成オプション |      |
 
 ### FrameworkAppConfigOptions
 
@@ -156,7 +156,7 @@ export interface FrameworkAppConfigOptions extends AppConfigOptions
 **種類:** 関数
 
 ```typescript
-function frameworkCondition(framework: MissionPlatformFramework): string
+function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 {@link MissionPlatformFramework} をカスタム エクスポート条件にマッピングします。
@@ -166,16 +166,16 @@ Node/Vite 条件（`import`, `default`, `browser`, ...).
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フレームワーク |ミッションプラットフォームフレームワーク |  |
+| 名前           | タイプ                                   | 説明 |
+| -------------- | ---------------------------------------- | ---- |
+| フレームワーク | ミッションプラットフォームフレームワーク |      |
 
 ### フレームワーク解決条件
 
 **種類:** 関数
 
 ```typescript
-function frameworkResolveConditions(framework: MissionPlatformFramework): string[]
+function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
 注文したものを組み立てる `resolve.conditions` アプリが選択するために使用するリスト
@@ -187,16 +187,16 @@ function frameworkResolveConditions(framework: MissionPlatformFramework): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フレームワーク |ミッションプラットフォームフレームワーク |  |
+| 名前           | タイプ                                   | 説明 |
+| -------------- | ---------------------------------------- | ---- |
+| フレームワーク | ミッションプラットフォームフレームワーク |      |
 
 ### ignoreVueI18nBlocksプラグイン
 
 **種類:** 関数
 
 ```typescript
-function ignoreVueI18nBlocksPlugin(): Plugin
+function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
 Vite 回転するプラグイン Vue SFC `<i18n>` カスタム ブロックを no-op モジュールに変換します。
@@ -237,7 +237,7 @@ Mission Platform アプリがターゲットにできるフレームワークの
 **種類:** 関数
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 読んでください `dependencies` そして `peerDependencies` package.jsonで宣言
@@ -246,9 +246,9 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルートディレクトリ |文字列 |  |
+| 名前               | タイプ | 説明 |
+| ------------------ | ------ | ---- |
+| ルートディレクトリ | 文字列 |      |
 
 ## `src/vitest`
 
@@ -257,7 +257,7 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 **種類:** 関数
 
 ```typescript
-function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
+function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 を構築する Vitest Mission Platform パッケージとアプリの構成。を提供します。
@@ -266,9 +266,9 @@ function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | VitestConfigOptions |  |
+| 名前       | タイプ              | 説明 |
+| ---------- | ------------------- | ---- |
+| オプション | VitestConfigOptions |      |
 
 ### VitestConfigOptions
 

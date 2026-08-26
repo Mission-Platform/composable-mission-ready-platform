@@ -26,7 +26,7 @@ Stato reattivo e controlli restituiti da {@link useMidi}.
 **Tipo:** funzione
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 Hook MIDI Web indipendente dal framework. Richiede l'accesso MIDI, tiene traccia della disponibilità
@@ -53,7 +53,7 @@ Stato reattivo e controlli restituiti da {@link useSound}.
 **Tipo:** funzione
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 Gancio di riproduzione del suono neutro dal punto di vista strutturale. Riproduce un clip audio da `source` tramite
@@ -66,9 +66,9 @@ smontare.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
+| Nome  | Digitare | Descrizione |
+| ----- | -------- | ----------- |
+| fonte | stringa  |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ Opzioni applicate all'avvio di una sessione {@link useSpeechRecognition}.
 **Tipo:** funzione
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 Hook di sintesi vocale indipendente dal framework basato sul nativo del browser
@@ -135,7 +135,7 @@ Stato reattivo e controlli restituiti da {@link useSpeechSynthesis}.
 **Tipo:** funzione
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 Hook di sintesi vocale indipendente dal framework basato sul nativo del browser

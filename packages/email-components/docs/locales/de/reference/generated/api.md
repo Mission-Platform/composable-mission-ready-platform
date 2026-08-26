@@ -16,23 +16,23 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/email-compo
 **Art:** Funktion
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 Stellen Sie die für E-Mail-Komponenten dokumentierte konservative Ausgabeteilmenge sicher.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| html | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| html | Zeichenfolge |                  |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **Art:** konstant
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 Keine Beschreibung angegeben.
@@ -42,7 +42,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 Keine Beschreibung angegeben.
@@ -52,7 +52,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 Keine Beschreibung angegeben.
@@ -62,7 +62,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 Keine Beschreibung angegeben.
@@ -72,7 +72,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 Keine Beschreibung angegeben.
@@ -82,7 +82,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 Keine Beschreibung angegeben.
@@ -92,7 +92,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 Keine Beschreibung angegeben.
@@ -104,16 +104,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailButtonProperties> |  |
+| Name          | Geben Sie                               | ein Beschreibung |
+| ------------- | --------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailButtonProperties> |                  |
 
 ### EmailButtonProperties
 
@@ -130,7 +130,8 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 Keine Beschreibung angegeben.
@@ -142,16 +143,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailDividerProperties> |  |
+| Name          | Geben Sie                                | ein Beschreibung |
+| ------------- | ---------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailDividerProperties> |                  |
 
 ### EmailDividerProperties
 
@@ -170,16 +171,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailImageProperties> |  |
+| Name          | Geben Sie                              | ein Beschreibung |
+| ------------- | -------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailImageProperties> |                  |
 
 ### EmailImageProperties
 
@@ -198,16 +199,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailSpacerProperties> |  |
+| Name          | Geben Sie                               | ein Beschreibung |
+| ------------- | --------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailSpacerProperties> |                  |
 
 ### EmailSpacerProperties
 
@@ -226,7 +227,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 Das einzelne E-Mail-Textatom, das das `ForgeTypography`-Vokabular widerspiegelt: Körper
@@ -235,9 +236,9 @@ wörtliche Inline-Deklarationen, da E-Mail-Clients CSS-Klassen ignorieren.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailTypographyProperties> |  |
+| Name          | Geben Sie                                   | ein Beschreibung |
+| ------------- | ------------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailTypographyProperties> |                  |
 
 ### EmailTypographyProperties
 
@@ -266,16 +267,16 @@ Die Elemente, als die die E-Mail-Typskala gerendert werden kann.
 **Art:** Funktion
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailCardProperties> |  |
+| Name          | Geben Sie                             | ein Beschreibung |
+| ------------- | ------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailCardProperties> |                  |
 
 ### EmailCardProperties
 
@@ -294,16 +295,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailColumnProperties> |  |
+| Name          | Geben Sie                               | ein Beschreibung |
+| ------------- | --------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailColumnProperties> |                  |
 
 ### EmailColumnProperties
 
@@ -322,16 +323,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailListProperties> |  |
+| Name          | Geben Sie                             | ein Beschreibung |
+| ------------- | ------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailListProperties> |                  |
 
 ### EmailListItem
 
@@ -360,16 +361,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailRowProperties> |  |
+| Name          | Geben Sie                            | ein Beschreibung |
+| ------------- | ------------------------------------ | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailRowProperties> |                  |
 
 ### EmailRowProperties
 
@@ -398,16 +399,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailSocialLinksProperties> |  |
+| Name          | Geben Sie                                    | ein Beschreibung |
+| ------------- | -------------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailSocialLinksProperties> |                  |
 
 ### EmailSocialLinksProperties
 
@@ -426,16 +427,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailFooterProperties> |  |
+| Name          | Geben Sie                               | ein Beschreibung |
+| ------------- | --------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailFooterProperties> |                  |
 
 ### EmailFooterProperties
 
@@ -454,16 +455,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailHeaderProperties> |  |
+| Name          | Geben Sie                               | ein Beschreibung |
+| ------------- | --------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailHeaderProperties> |                  |
 
 ### EmailHeaderProperties
 
@@ -482,16 +483,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailPreheaderProperties> |  |
+| Name          | Geben Sie                                  | ein Beschreibung |
+| ------------- | ------------------------------------------ | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailPreheaderProperties> |                  |
 
 ### EmailPreheaderProperties
 
@@ -510,16 +511,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailContainerProperties> |  |
+| Name          | Geben Sie                                  | ein Beschreibung |
+| ------------- | ------------------------------------------ | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailContainerProperties> |                  |
 
 ### EmailContainerProperties
 
@@ -538,16 +539,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailDocumentProperties> |  |
+| Name          | Geben Sie                                 | ein Beschreibung |
+| ------------- | ----------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailDocumentProperties> |                  |
 
 ### EmailDocumentProperties
 
@@ -566,16 +567,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<EmailSectionProperties> |  |
+| Name          | Geben Sie                                | ein Beschreibung |
+| ------------- | ---------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<EmailSectionProperties> |                  |
 
 ### EmailSectionProperties
 

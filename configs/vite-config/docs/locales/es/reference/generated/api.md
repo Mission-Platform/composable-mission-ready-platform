@@ -26,7 +26,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 Cree un predicado `external` Rollup/Rolldown que trate todos los nombres en
@@ -34,16 +34,16 @@ Cree un predicado `external` Rollup/Rolldown que trate todos los nombres en
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombres | cadena de solo lectura[] |  |
+| Nombre  | Tipo                     | Descripción |
+| ------- | ------------------------ | ----------- |
+| nombres | cadena de solo lectura[] |             |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Tipo:** constante
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Los paquetes acumulativos externos predeterminados que cada biblioteca compartida deben tratar como proporcionados por pares.
@@ -54,7 +54,7 @@ Se espera que las aplicaciones que consumen la biblioteca los proporcionen ellas
 **Tipo:** constante
 
 ```typescript
-export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
+export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 ```
 
 Globales de salida acumulativos predeterminados para consumidores UMD/IIFE. Sólo apuntamos al ESM, pero
@@ -65,7 +65,7 @@ El paquete acumulativo todavía advierte sin este mapa cuando se declaran elemen
 **Tipo:** función
 
 ```typescript
-function defineAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 Cree una configuración Vite para las aplicaciones Vue 3 de Mission Platform: el complemento Vue y el
@@ -74,16 +74,16 @@ agrupando ajustes a través de {@link AppConfigOptions.overrides}.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de configuración de aplicación |  |
+| Nombre   | Tipo                                    | Descripción |
+| -------- | --------------------------------------- | ----------- |
+| opciones | Opciones de configuración de aplicación |             |
 
 ### definirFrameworkAppConfig
 
 **Tipo:** función
 
 ```typescript
-function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig
+function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
 Envuelva {@link defineAppConfig} con el `resolve.conditions` necesario para dejar al descubierto
@@ -93,16 +93,16 @@ Utilice este ayudante para configurar el mismo `resolve.conditions` directamente
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de FrameworkAppConfig |  |
+| Nombre   | Tipo                           | Descripción |
+| -------- | ------------------------------ | ----------- |
+| opciones | Opciones de FrameworkAppConfig |             |
 
 ### definirLibraryConfig
 
 **Tipo:** función
 
 ```typescript
-function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
+function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
 Cree una configuración Vite adaptada a los paquetes de biblioteca Vue de Mission Platform:
@@ -116,16 +116,16 @@ caja. Los paquetes que necesitan un único artefacto incluido pueden cancelarse 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de configuración de biblioteca |  |
+| Nombre   | Tipo                                    | Descripción |
+| -------- | --------------------------------------- | ----------- |
+| opciones | Opciones de configuración de biblioteca |             |
 
 ### definirWebComponentAppConfig
 
 **Tipo:** función
 
 ```typescript
-function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 Cree una configuración de aplicación Vite para aplicaciones de componentes web sin marco.
@@ -137,9 +137,9 @@ Las importaciones de paquetes simples de Forge seleccionan sus artefactos de ele
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de configuración de aplicación |  |
+| Nombre   | Tipo                                    | Descripción |
+| -------- | --------------------------------------- | ----------- |
+| opciones | Opciones de configuración de aplicación |             |
 
 ### Opciones de FrameworkAppConfig
 
@@ -156,7 +156,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function frameworkCondition(framework: MissionPlatformFramework): string
+function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 Asigne un {@link MissionPlatformFramework} a la condición de exportación personalizada que
@@ -166,16 +166,16 @@ Condiciones Node/Vite (`import`, `default`, `browser`, ...).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| marco | MisiónPlataformaMarco |  |
+| Nombre | Tipo                  | Descripción |
+| ------ | --------------------- | ----------- |
+| marco  | MisiónPlataformaMarco |             |
 
 ### marcoResolveCondiciones
 
 **Tipo:** función
 
 ```typescript
-function frameworkResolveConditions(framework: MissionPlatformFramework): string[]
+function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
 Cree la lista `resolve.conditions` ordenada que una aplicación debe usar para seleccionar un
@@ -187,16 +187,16 @@ Pase el resultado al `resolve.conditions` de Vite (consulte {@link defineFramewo
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| marco | MisiónPlataformaMarco |  |
+| Nombre | Tipo                  | Descripción |
+| ------ | --------------------- | ----------- |
+| marco  | MisiónPlataformaMarco |             |
 
 ### ignorarVueI18nBlocksPlugin
 
 **Tipo:** función
 
 ```typescript
-function ignoreVueI18nBlocksPlugin(): Plugin
+function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
 Complemento Vite que convierte bloques personalizados Vue SFC `<i18n>` en módulos no operativos.
@@ -237,7 +237,7 @@ Las importaciones `@mission-platform/<pkg>` se resuelven en la salida integrada 
 **Tipo:** función
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 Lea `dependencies` y `peerDependencies` declarados en package.json
@@ -246,9 +246,9 @@ su propio paquete para que los consumidores puedan deduplicarlos y sacudirlos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| directorioraíz | cadena |  |
+| Nombre         | Tipo   | Descripción |
+| -------------- | ------ | ----------- |
+| directorioraíz | cadena |             |
 
 ## `src/vitest`
 
@@ -257,7 +257,7 @@ su propio paquete para que los consumidores puedan deduplicarlos y sacudirlos.
 **Tipo:** función
 
 ```typescript
-function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
+function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Cree una configuración Vitest para paquetes y aplicaciones de Mission Platform. Proporciona el
@@ -266,9 +266,9 @@ preconfigurado para componentes `src/**\/*.vue`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de VitestConfig |  |
+| Nombre   | Tipo                     | Descripción |
+| -------- | ------------------------ | ----------- |
+| opciones | Opciones de VitestConfig |             |
 
 ### Opciones de VitestConfig
 

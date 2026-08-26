@@ -16,7 +16,7 @@ Généré à partir de déclarations de source publique dans `@mission-platform/
 **Genre :** fonction
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 Construire un déroulement `external` / `deps.neverBundle` prédicat qui traite chaque
@@ -24,16 +24,16 @@ nom dans `names` (et n'importe laquelle de leurs importations de sous-chemins, p
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| noms | chaîne en lecture seule[] |  |
+| Nom  | Tapez                     | Descriptif |
+| ---- | ------------------------- | ---------- |
+| noms | chaîne en lecture seule[] |            |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Genre :** constante
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Noms de package par défaut que chaque bibliothèque partagée doit traiter comme étant fournis par les pairs.
@@ -44,7 +44,7 @@ Miroirs `@mission-platform/vite-config`c'est {@link DEFAULT_LIBRARY_EXTERNALS}.
 **Genre :** fonction
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Construisez une configuration tsdown pour un simple TypeScript bibliothèque (ou un seul paquet) —
@@ -53,16 +53,16 @@ Archétype A/B. Miroirs `defineLibraryConfig` sémantique d'externalisation de
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | Options de la bibliothèque Tsdown |  |
+| Nom     | Tapez                             | Descriptif |
+| ------- | --------------------------------- | ---------- |
+| options | Options de la bibliothèque Tsdown |            |
 
 ### définirTsdownVueLibrary
 
 **Genre :** fonction
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Comme {@link definitionTsdownLibrary}, mais les fils `unplugin-vue` et Vue-connaître les dts
@@ -70,16 +70,16 @@ pour les colis expédiés `.vue` SFC (`i18n`, `router`, …).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | Options de la bibliothèque Tsdown |  |
+| Nom     | Tapez                             | Descriptif |
+| ------- | --------------------------------- | ---------- |
+| options | Options de la bibliothèque Tsdown |            |
 
 ### readPackageDependencyNames
 
 **Genre :** fonction
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 Lire le `dependencies` et `peerDependencies` déclaré dans le package.json
@@ -88,16 +88,16 @@ de son propre bundle afin que les consommateurs puissent les dédupliquer et les
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| répertoire racine | chaîne |  |
+| Nom               | Tapez  | Descriptif |
+| ----------------- | ------ | ---------- |
+| répertoire racine | chaîne |            |
 
 ### résoudreTsdownOutputDirectory
 
 **Genre :** fonction
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 Mettez en miroir un chemin de sortie final du package dans une racine de build isolée. Garder le
@@ -106,11 +106,11 @@ pouvant être promu indépendamment sans permettre à tsdown de nettoyer un arbr
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| répertoire racine | chaîne |  |
-| Répertoire de sortie | chaîne |  |
-| racine de sortie | chaîne |  |
+| Nom                  | Tapez  | Descriptif |
+| -------------------- | ------ | ---------- |
+| répertoire racine    | chaîne |            |
+| Répertoire de sortie | chaîne |            |
+| racine de sortie     | chaîne |            |
 
 ### Options de la bibliothèque Tsdown
 

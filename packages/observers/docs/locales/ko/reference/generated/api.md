@@ -16,7 +16,11 @@
 **종류:** 기능
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 프레임워크 중립 IntersectionObserver 후크.
@@ -28,11 +32,11 @@ SSR 안전: 브라우저 API 또는 DOM을 사용할 수 없는 경우 작동하
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 목표 | MpRef<Element \| null> |  |
-| 콜백 | IntersectionObserverCallback |  |
-| 옵션 | IntersectionObserverInit |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 목표 | MpRef<Element \| null>       |      |
+| 콜백 | IntersectionObserverCallback |      |
+| 옵션 | IntersectionObserverInit     |      |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -41,7 +45,11 @@ SSR 안전: 브라우저 API 또는 DOM을 사용할 수 없는 경우 작동하
 **종류:** 기능
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 프레임워크 중립적 MutationObserver 후크.
@@ -52,11 +60,11 @@ SSR 안전: 브라우저 API 또는 DOM을 사용할 수 없는 경우 작동하
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 목표 | MpRef<Node \| null> |  |
-| 콜백 | 돌연변이콜백 |  |
-| 옵션 | MutationObserverInit |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 목표 | MpRef<Node \| null>  |      |
+| 콜백 | 돌연변이콜백         |      |
+| 옵션 | MutationObserverInit |      |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -65,7 +73,7 @@ SSR 안전: 브라우저 API 또는 DOM을 사용할 수 없는 경우 작동하
 **종류:** 기능
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 프레임워크 중립적인 PerformanceObserver 후크.
@@ -77,7 +85,7 @@ SSR 안전: 브라우저 API를 사용할 수 없는 경우 작동하지 않습�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 콜백 | PerformanceObserver콜백 |  |
-| 옵션 | PerformanceObserverInit |  |
+| 이름 | 유형                    | 설명 |
+| ---- | ----------------------- | ---- |
+| 콜백 | PerformanceObserver콜백 |      |
+| 옵션 | PerformanceObserverInit |      |

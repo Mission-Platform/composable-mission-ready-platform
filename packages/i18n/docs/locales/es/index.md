@@ -17,11 +17,11 @@ la condición de exportación activa `mp:<framework>`, que selecciona **una vez*
 `@mission-platform/vite-config`) y `customConditions` en TypeScript (a través del
 `@mission-platform/typescript-config/framework-<name>` preajustes). Cada importación permanece vacía.
 
-| Condición activa | Resuelve | Exportaciones clave |
-| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
-| _(ninguno)_ | Núcleo neutral en cuanto al marco | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue` | Vue 3 adaptadores | el núcleo neutro más `createForgeI18NVue`, `useI18n` |
-| `mp:react` | Adaptador React | el núcleo neutro más `ForgeI18NProvider`, `useI18n` |
+| Condición activa | Resuelve                          | Exportaciones clave                                                     |
+| :--------------- | :-------------------------------- | :---------------------------------------------------------------------- |
+| _(ninguno)_      | Núcleo neutral en cuanto al marco | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
+| `mp:vue`         | Vue 3 adaptadores                 | el núcleo neutro más `createForgeI18NVue`, `useI18n`                    |
+| `mp:react`       | Adaptador React                   | el núcleo neutro más `ForgeI18NProvider`, `useI18n`                     |
 
 ## Conceptos básicos
 

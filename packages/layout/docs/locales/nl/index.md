@@ -107,12 +107,12 @@ rastergebieden. Regiowrappers hebben voorspelbare klassen in BEM-stijl en worden
 
 ### Regio contracten
 
-| Onderdeel | Genoemde regio's | Compositiebron |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | Websitemarketingheld en functiesecties |
-| `ForgeGridLayout` | `cell1` tot en met `cell12` | Servicemonitordashboardkaarten en statussamenvattingen |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | Navigatiebalk/context, artikel, zijbalk en voettekst van Documenten |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Afwisselende inhoud en acties op de landingspagina |
+| Onderdeel             | Genoemde regio's                                           | Compositiebron                                                      |
+| --------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------- |
+| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | Websitemarketingheld en functiesecties                              |
+| `ForgeGridLayout`     | `cell1` tot en met `cell12`                                | Servicemonitordashboardkaarten en statussamenvattingen              |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | Navigatiebalk/context, artikel, zijbalk en voettekst van Documenten |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Afwisselende inhoud en acties op de landingspagina                  |
 
 `ForgeGridLayout` accepteert `rows` en `columns`, klemt beide op één of meer, beperkt het renderbare gebied tot 12 genoemde
 cellen, en gebruikt een terugval met één kolom onder het breekpunt. Benoemde cellen worden altijd in bronvolgorde weergegeven.

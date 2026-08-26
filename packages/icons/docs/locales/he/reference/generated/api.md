@@ -16,7 +16,7 @@
 **סוג:** קבוע
 
 ```typescript
-export const ICON_CATALOG: readonly IconCatalogEntry[]
+export const ICON_CATALOG: readonly IconCatalogEntry[];
 ```
 
 הקטלוג שנבדק עבור ערכת האייקונים הקיימת.
@@ -26,7 +26,7 @@ export const ICON_CATALOG: readonly IconCatalogEntry[]
 **סוג:** קבוע
 
 ```typescript
-export const ICON_GAP_REVIEW
+export const ICON_GAP_REVIEW;
 ```
 
 תוספות בעלות ערך גבוה ליישום לאחר הקמת טקסונומיית המקור.
@@ -46,16 +46,16 @@ export interface IconCatalogEntry
 פונקציה **סוג:**
 
 ```typescript
-function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void
+function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void;
 ```
 
 אמת את הקטלוג הסטטי לפני השימוש בו ליצירת מטא נתונים של החבילה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קטלוג | IconCatalogEntry[] לקריאה בלבד |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| קטלוג | IconCatalogEntry[] לקריאה בלבד |       |
 
 ## `src/components/communication/messaging/forge-icon-bell/forge-icon-bell`
 
@@ -64,7 +64,7 @@ function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
+function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement;
 ```
 
 `ForgeIconBell` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -75,9 +75,9 @@ function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconBellProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconBellProperties> |       |
 
 ### IconBellProperties
 
@@ -96,7 +96,7 @@ export interface IconBellProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
+function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement;
 ```
 
 `ForgeIconChat` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -107,9 +107,9 @@ function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconChatProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconChatProperties> |       |
 
 ### IconChatProperties
 
@@ -128,7 +128,7 @@ export interface IconChatProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
+function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement;
 ```
 
 `ForgeIconMail` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -139,9 +139,9 @@ function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconMailProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconMailProperties> |       |
 
 ### IconMailProperties
 
@@ -160,7 +160,7 @@ export interface IconMailProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
+function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement;
 ```
 
 `ForgeIconPhone` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -171,9 +171,9 @@ function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconPhoneProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconPhoneProperties> |       |
 
 ### IconPhoneProperties
 
@@ -192,7 +192,7 @@ export interface IconPhoneProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
+function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement;
 ```
 
 `ForgeIconSend` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -203,9 +203,9 @@ function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconSendProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconSendProperties> |       |
 
 ### IconSendProperties
 
@@ -224,7 +224,7 @@ export interface IconSendProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
+function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement;
 ```
 
 `ForgeIconShare` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -235,9 +235,9 @@ function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconShareProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconShareProperties> |       |
 
 ### IconShareProperties
 
@@ -256,7 +256,7 @@ export interface IconShareProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
+function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement;
 ```
 
 `ForgeIconCopy` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -267,9 +267,9 @@ function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconCopyProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconCopyProperties> |       |
 
 ### IconCopyProperties
 
@@ -288,7 +288,7 @@ export interface IconCopyProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
+function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement;
 ```
 
 `ForgeIconEdit` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -299,9 +299,9 @@ function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconEditProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconEditProperties> |       |
 
 ### IconEditProperties
 
@@ -320,7 +320,7 @@ export interface IconEditProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
+function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement;
 ```
 
 `ForgeIconEyeOff` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -331,9 +331,9 @@ function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconEyeOffProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconEyeOffProperties> |       |
 
 ### IconEyeOffProperties
 
@@ -352,7 +352,7 @@ export interface IconEyeOffProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
+function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement;
 ```
 
 `ForgeIconEye` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -363,9 +363,9 @@ function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconEyeProperties> |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| נכסים | לקריאה בלבד<IconEyeProperties> |       |
 
 ### IconEyeProperties
 
@@ -384,16 +384,16 @@ export interface IconEyeProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement
+function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement;
 ```
 
 מחיל מחדש את עריכת התוכן האחרונה שבוטלה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconRedoProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconRedoProperties> |       |
 
 ### IconRedoProperties
 
@@ -412,7 +412,7 @@ export interface IconRedoProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
+function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement;
 ```
 
 `ForgeIconTrash` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -423,9 +423,9 @@ function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconTrashProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconTrashProperties> |       |
 
 ### IconTrashProperties
 
@@ -444,16 +444,16 @@ export interface IconTrashProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement
+function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement;
 ```
 
 הופך את עריכת התוכן האחרונה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconUndoProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconUndoProperties> |       |
 
 ### IconUndoProperties
 
@@ -472,7 +472,7 @@ export interface IconUndoProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement
+function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement;
 ```
 
 `ForgeIconDownload` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -483,9 +483,9 @@ function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconDownloadProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconDownloadProperties> |       |
 
 ### IconDownloadProperties
 
@@ -504,7 +504,7 @@ export interface IconDownloadProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
+function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement;
 ```
 
 `ForgeIconUpload` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -515,9 +515,9 @@ function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconUploadProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconUploadProperties> |       |
 
 ### IconUploadProperties
 
@@ -536,7 +536,7 @@ export interface IconUploadProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
+function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement;
 ```
 
 `ForgeIconFilter` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -547,9 +547,9 @@ function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconFilterProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconFilterProperties> |       |
 
 ### IconFilterProperties
 
@@ -568,7 +568,7 @@ export interface IconFilterProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
+function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement;
 ```
 
 `ForgeIconSort` - מחוון מיון דו-שברון שנכתב פעם אחת ב-JSX הנייטרלי
@@ -580,9 +580,9 @@ function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconSortProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconSortProperties> |       |
 
 ### IconSortProperties
 
@@ -611,7 +611,7 @@ export type SortDirection = 'asc' | 'desc' | undefined;
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement
+function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnAdd` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -622,9 +622,9 @@ function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperti
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconTableColumnAddProperties> |  |
+| שם    | הקלד                                      | תיאור |
+| ----- | ----------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconTableColumnAddProperties> |       |
 
 ### IconTableColumnAddProperties
 
@@ -643,7 +643,7 @@ export interface IconTableColumnAddProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement
+function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnRemove` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -654,9 +654,9 @@ function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemovePr
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconTableColumnRemoveProperties> |  |
+| שם    | הקלד                                         | תיאור |
+| ----- | -------------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconTableColumnRemoveProperties> |       |
 
 ### IconTableColumnRemoveProperties
 
@@ -675,7 +675,7 @@ export interface IconTableColumnRemoveProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement
+function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement;
 ```
 
 `ForgeIconTableRowAdd` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -686,9 +686,9 @@ function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconTableRowAddProperties> |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconTableRowAddProperties> |       |
 
 ### IconTableRowAddProperties
 
@@ -707,7 +707,7 @@ export interface IconTableRowAddProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement
+function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableRowRemove` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -718,9 +718,9 @@ function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperti
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconTableRowRemoveProperties> |  |
+| שם    | הקלד                                      | תיאור |
+| ----- | ----------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconTableRowRemoveProperties> |       |
 
 ### IconTableRowRemoveProperties
 
@@ -739,7 +739,7 @@ export interface IconTableRowRemoveProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
+function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement;
 ```
 
 `ForgeIconTable` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -750,9 +750,9 @@ function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconTableProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconTableProperties> |       |
 
 ### IconTableProperties
 
@@ -771,7 +771,7 @@ export interface IconTableProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement
+function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement;
 ```
 
 `ForgeIconDrawCircle` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -782,9 +782,9 @@ function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconDrawCircleProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconDrawCircleProperties> |       |
 
 ### IconDrawCircleProperties
 
@@ -803,7 +803,7 @@ export interface IconDrawCircleProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement
+function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement;
 ```
 
 `ForgeIconDrawLine` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -814,9 +814,9 @@ function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconDrawLineProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconDrawLineProperties> |       |
 
 ### IconDrawLineProperties
 
@@ -835,7 +835,7 @@ export interface IconDrawLineProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement
+function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement;
 ```
 
 `ForgeIconDrawPolygon` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -846,9 +846,9 @@ function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconDrawPolygonProperties> |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconDrawPolygonProperties> |       |
 
 ### IconDrawPolygonProperties
 
@@ -867,7 +867,7 @@ export interface IconDrawPolygonProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement
+function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement;
 ```
 
 `ForgeIconDrawSquare` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -878,9 +878,9 @@ function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconDrawSquareProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconDrawSquareProperties> |       |
 
 ### IconDrawSquareProperties
 
@@ -899,7 +899,7 @@ export interface IconDrawSquareProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement
+function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement;
 ```
 
 `ForgeIconDrawTriangle` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -910,9 +910,9 @@ function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconDrawTriangleProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconDrawTriangleProperties> |       |
 
 ### IconDrawTriangleProperties
 
@@ -931,7 +931,7 @@ export interface IconDrawTriangleProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
+function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement;
 ```
 
 `ForgeIconMove` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -942,9 +942,9 @@ function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconMoveProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconMoveProperties> |       |
 
 ### IconMoveProperties
 
@@ -963,7 +963,7 @@ export interface IconMoveProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement
+function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement;
 ```
 
 `ForgeIconPalette` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -974,9 +974,9 @@ function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconPaletteProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconPaletteProperties> |       |
 
 ### IconPaletteProperties
 
@@ -995,7 +995,7 @@ export interface IconPaletteProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
+function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement;
 ```
 
 `ForgeIconPencil` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1006,9 +1006,9 @@ function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconPencilProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconPencilProperties> |       |
 
 ### IconPencilProperties
 
@@ -1027,7 +1027,7 @@ export interface IconPencilProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement
+function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCcw` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1038,9 +1038,9 @@ function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpEl
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconRotateCcwProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<IconRotateCcwProperties> |       |
 
 ### IconRotateCcwProperties
 
@@ -1059,7 +1059,7 @@ export interface IconRotateCcwProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement
+function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCw` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1070,9 +1070,9 @@ function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconRotateCwProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconRotateCwProperties> |       |
 
 ### IconRotateCwProperties
 
@@ -1091,7 +1091,7 @@ export interface IconRotateCwProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement
+function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement;
 ```
 
 `ForgeIconScaleDown` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1102,9 +1102,9 @@ function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpEl
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconScaleDownProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<IconScaleDownProperties> |       |
 
 ### IconScaleDownProperties
 
@@ -1123,7 +1123,7 @@ export interface IconScaleDownProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement
+function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement;
 ```
 
 `ForgeIconScaleUp` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1134,9 +1134,9 @@ function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconScaleUpProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconScaleUpProperties> |       |
 
 ### IconScaleUpProperties
 
@@ -1155,16 +1155,16 @@ export interface IconScaleUpProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement
+function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement;
 ```
 
 סמן גלובוס עם מבטא מדינה מונע נתונים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconCountryGlobeProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconCountryGlobeProperties> |       |
 
 ### IconCountryGlobeProperties
 
@@ -1183,16 +1183,16 @@ export interface IconCountryGlobeProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement
+function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement;
 ```
 
 סמל דגל מדינה מוגבל, מבוסס נתונים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconFlagProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconFlagProperties> |       |
 
 ### IconCountryCode
 
@@ -1221,7 +1221,7 @@ export interface IconFlagProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement
+function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement;
 ```
 
 `ForgeIconGeodesic` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1232,9 +1232,9 @@ function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconGeodesicProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconGeodesicProperties> |       |
 
 ### IconGeodesicProperties
 
@@ -1253,7 +1253,7 @@ export interface IconGeodesicProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
+function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement;
 ```
 
 `ForgeIconGlobe` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1264,9 +1264,9 @@ function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconGlobeProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconGlobeProperties> |       |
 
 ### IconGlobeProperties
 
@@ -1285,7 +1285,7 @@ export interface IconGlobeProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement
+function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement;
 ```
 
 `ForgeIconLanguage` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1296,9 +1296,9 @@ function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconLanguageProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconLanguageProperties> |       |
 
 ### IconLanguageProperties
 
@@ -1317,7 +1317,7 @@ export interface IconLanguageProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
+function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement;
 ```
 
 `ForgeIconMapPin` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1328,9 +1328,9 @@ function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconMapPinProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconMapPinProperties> |       |
 
 ### IconMapPinProperties
 
@@ -1349,16 +1349,16 @@ export interface IconMapPinProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement
+function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement;
 ```
 
 סמל מחסנית שכבת מפה למעבר בין נתונים גיאוגרפיים גלויים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconLayerProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconLayerProperties> |       |
 
 ### IconLayerProperties
 
@@ -1377,16 +1377,16 @@ export interface IconLayerProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement
+function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement;
 ```
 
 סמן מפה מקובץ לנקודות עניין צפופות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconMapMarkerClusterProperties> |  |
+| שם    | הקלד                                        | תיאור |
+| ----- | ------------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconMapMarkerClusterProperties> |       |
 
 ### IconMapMarkerClusterProperties
 
@@ -1405,7 +1405,7 @@ export interface IconMapMarkerClusterProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
+function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement;
 ```
 
 `ForgeIconCamera` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1416,9 +1416,9 @@ function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconCameraProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconCameraProperties> |       |
 
 ### IconCameraProperties
 
@@ -1437,7 +1437,7 @@ export interface IconCameraProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
+function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement;
 ```
 
 `ForgeIconImage` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1448,9 +1448,9 @@ function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconImageProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconImageProperties> |       |
 
 ### IconImageProperties
 
@@ -1469,7 +1469,7 @@ export interface IconImageProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
+function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement;
 ```
 
 `ForgeIconPause` - גליף מלא הפסקה (❙❙) שכתב פעם אחת ב-JSX הנייטרלי
@@ -1481,9 +1481,9 @@ function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconPauseProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconPauseProperties> |       |
 
 ### IconPauseProperties
 
@@ -1502,7 +1502,7 @@ export interface IconPauseProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
+function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement;
 ```
 
 `ForgeIconPlay` - משולש משחק מלא (▶) שנכתב פעם אחת ב-JSX הנייטרלי
@@ -1514,9 +1514,9 @@ function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconPlayProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconPlayProperties> |       |
 
 ### IconPlayProperties
 
@@ -1535,7 +1535,7 @@ export interface IconPlayProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
+function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement;
 ```
 
 `ForgeIconArrow` - חץ כיוון שכתב פעם אחת בניב JSX הנייטרלי.
@@ -1546,9 +1546,9 @@ function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconArrowProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconArrowProperties> |       |
 
 ### IconArrowDirection
 
@@ -1577,7 +1577,7 @@ export interface IconArrowProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement
+function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement;
 ```
 
 `ForgeIconChevron` - שברון כיווני שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1588,9 +1588,9 @@ function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconChevronProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconChevronProperties> |       |
 
 ### IconChevronProperties
 
@@ -1619,7 +1619,7 @@ export type IconDirection = 'up' | 'right' | 'down' | 'left';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement
+function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement;
 ```
 
 `ForgeIconChevrons` - שברון כפול כיווני (« ») שנכתב פעם אחת ב
@@ -1631,9 +1631,9 @@ function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconChevronsProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconChevronsProperties> |       |
 
 ### IconChvronsDirection
 
@@ -1662,7 +1662,7 @@ export interface IconChevronsProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
+function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement;
 ```
 
 `ForgeIconClose` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1673,9 +1673,9 @@ function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconCloseProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconCloseProperties> |       |
 
 ### IconCloseProperties
 
@@ -1694,7 +1694,7 @@ export interface IconCloseProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
+function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement;
 ```
 
 `ForgeIconHome` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1705,9 +1705,9 @@ function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconHomeProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconHomeProperties> |       |
 
 ### IconHomeProperties
 
@@ -1726,7 +1726,7 @@ export interface IconHomeProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
+function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement;
 ```
 
 `ForgeIconJoin` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1737,9 +1737,9 @@ function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconJoinProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconJoinProperties> |       |
 
 ### IconJoinProperties
 
@@ -1758,7 +1758,7 @@ export interface IconJoinProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
+function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement;
 ```
 
 `ForgeIconMenu` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1769,9 +1769,9 @@ function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconMenuProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconMenuProperties> |       |
 
 ### IconMenuProperties
 
@@ -1790,7 +1790,7 @@ export interface IconMenuProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
+function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement;
 ```
 
 `ForgeIconMinus` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1801,9 +1801,9 @@ function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconMinusProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconMinusProperties> |       |
 
 ### IconMinusProperties
 
@@ -1822,7 +1822,7 @@ export interface IconMinusProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
+function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement;
 ```
 
 `ForgeIconPlus` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1833,9 +1833,9 @@ function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconPlusProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconPlusProperties> |       |
 
 ### IconPlusProperties
 
@@ -1854,7 +1854,7 @@ export interface IconPlusProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement
+function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement;
 ```
 
 `ForgeIconRefresh` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1865,9 +1865,9 @@ function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconRefreshProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconRefreshProperties> |       |
 
 ### IconRefreshProperties
 
@@ -1886,7 +1886,7 @@ export interface IconRefreshProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
+function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement;
 ```
 
 `ForgeIconSplit` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1897,9 +1897,9 @@ function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconSplitProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconSplitProperties> |       |
 
 ### IconSplitProperties
 
@@ -1918,7 +1918,7 @@ export interface IconSplitProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement
+function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement;
 ```
 
 `ForgeIconExternalLink` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1929,9 +1929,9 @@ function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconExternalLinkProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconExternalLinkProperties> |       |
 
 ### IconExternalLinkProperties
 
@@ -1950,7 +1950,7 @@ export interface IconExternalLinkProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
+function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement;
 ```
 
 `ForgeIconLink` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1961,9 +1961,9 @@ function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconLinkProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconLinkProperties> |       |
 
 ### IconLinkProperties
 
@@ -1982,7 +1982,7 @@ export interface IconLinkProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
+function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement;
 ```
 
 `ForgeIconSearch` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -1993,9 +1993,9 @@ function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconSearchProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconSearchProperties> |       |
 
 ### IconSearchProperties
 
@@ -2014,7 +2014,7 @@ export interface IconSearchProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
+function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement;
 ```
 
 `ForgeIconCloud` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2025,9 +2025,9 @@ function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconCloudProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconCloudProperties> |       |
 
 ### IconCloudProperties
 
@@ -2046,7 +2046,7 @@ export interface IconCloudProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
+function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement;
 ```
 
 `ForgeIconDebug` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2057,9 +2057,9 @@ function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconDebugProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconDebugProperties> |       |
 
 ### IconDebugProperties
 
@@ -2078,7 +2078,7 @@ export interface IconDebugProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
+function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement;
 ```
 
 `ForgeIconHeart` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2089,9 +2089,9 @@ function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconHeartProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconHeartProperties> |       |
 
 ### IconHeartProperties
 
@@ -2110,7 +2110,7 @@ export interface IconHeartProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement
+function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement;
 ```
 
 `ForgeIconLightning` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2121,9 +2121,9 @@ function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpEl
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconLightningProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<IconLightningProperties> |       |
 
 ### IconLightningProperties
 
@@ -2142,7 +2142,7 @@ export interface IconLightningProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
+function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement;
 ```
 
 `ForgeIconPuzzle` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2153,9 +2153,9 @@ function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconPuzzleProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconPuzzleProperties> |       |
 
 ### IconPuzzleProperties
 
@@ -2174,7 +2174,7 @@ export interface IconPuzzleProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
+function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement;
 ```
 
 `ForgeIconQrCode` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2185,9 +2185,9 @@ function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconQrCodeProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconQrCodeProperties> |       |
 
 ### IconQrCodeProperties
 
@@ -2206,7 +2206,7 @@ export interface IconQrCodeProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement
+function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement;
 ```
 
 `ForgeIconSettings` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2217,9 +2217,9 @@ function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconSettingsProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconSettingsProperties> |       |
 
 ### IconSettingsProperties
 
@@ -2238,7 +2238,7 @@ export interface IconSettingsProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
+function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement;
 ```
 
 `ForgeIconStar` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2249,9 +2249,9 @@ function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconStarProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconStarProperties> |       |
 
 ### IconStarProperties
 
@@ -2270,7 +2270,7 @@ export interface IconStarProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
+function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement;
 ```
 
 `ForgeIconWrench` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2281,9 +2281,9 @@ function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconWrenchProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconWrenchProperties> |       |
 
 ### IconWrenchProperties
 
@@ -2302,16 +2302,16 @@ export interface IconWrenchProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement
+function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement;
 ```
 
 קו מסלול עם סמני התחלה ויעד ברורים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconRouteProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconRouteProperties> |       |
 
 ### IconRouteProperties
 
@@ -2330,16 +2330,16 @@ export interface IconRouteProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement
+function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement;
 ```
 
 סמן נקודת ציון רב פעמי עבור מסלולים ושכבות מפה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconWaypointProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconWaypointProperties> |       |
 
 ### IconWaypointProperties
 
@@ -2358,7 +2358,7 @@ export interface IconWaypointProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement
+function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement;
 ```
 
 `ForgeIconLockOpen` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2369,9 +2369,9 @@ function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconLockOpenProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconLockOpenProperties> |       |
 
 ### IconLockOpenProperties
 
@@ -2390,7 +2390,7 @@ export interface IconLockOpenProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
+function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement;
 ```
 
 `ForgeIconLock` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2401,9 +2401,9 @@ function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconLockProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconLockProperties> |       |
 
 ### IconLockProperties
 
@@ -2422,7 +2422,7 @@ export interface IconLockProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
+function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement;
 ```
 
 `ForgeIconUser` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2433,9 +2433,9 @@ function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconUserProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconUserProperties> |       |
 
 ### IconUserProperties
 
@@ -2454,7 +2454,7 @@ export interface IconUserProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement
+function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement;
 ```
 
 `ForgeIconAlertCritical` - גליף ההתראה הקריטי ("!" בתוך מתומן,
@@ -2466,9 +2466,9 @@ function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconAlertCriticalProperties> |  |
+| שם    | הקלד                                     | תיאור |
+| ----- | ---------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconAlertCriticalProperties> |       |
 
 ### IconAlertCriticalProperties
 
@@ -2487,7 +2487,7 @@ export interface IconAlertCriticalProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement
+function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement;
 ```
 
 `ForgeIconAlertInfo` - גליף התראת המידע (סימן "i" בתוך עיגול)
@@ -2499,9 +2499,9 @@ function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpEl
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconAlertInfoProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<IconAlertInfoProperties> |       |
 
 ### IconAlertInfoProperties
 
@@ -2520,7 +2520,7 @@ export interface IconAlertInfoProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement
+function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement;
 ```
 
 `ForgeIconAlertNeutral` - גליף ההתראה הנייטרלי ("–" בתוך עיגול)
@@ -2533,9 +2533,9 @@ function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconAlertNeutralProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconAlertNeutralProperties> |       |
 
 ### IconAlertNeutralProperties
 
@@ -2554,7 +2554,7 @@ export interface IconAlertNeutralProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement
+function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement;
 ```
 
 `ForgeIconAlertWarning` - גליף אזהרה (סימן "!" בתוך משולש)
@@ -2566,9 +2566,9 @@ function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconAlertWarningProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconAlertWarningProperties> |       |
 
 ### IconAlertWarningProperties
 
@@ -2587,7 +2587,7 @@ export interface IconAlertWarningProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
+function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement;
 ```
 
 `ForgeIconAlert` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2598,9 +2598,9 @@ function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconAlertProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconAlertProperties> |       |
 
 ### IconAlertProperties
 
@@ -2619,7 +2619,7 @@ export interface IconAlertProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
+function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement;
 ```
 
 `ForgeIconCheck` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2630,9 +2630,9 @@ function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconCheckProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconCheckProperties> |       |
 
 ### IconCheckProperties
 
@@ -2651,7 +2651,7 @@ export interface IconCheckProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
+function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement;
 ```
 
 `ForgeIconError` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2662,9 +2662,9 @@ function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconErrorProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconErrorProperties> |       |
 
 ### IconErrorProperties
 
@@ -2683,7 +2683,7 @@ export interface IconErrorProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
+function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement;
 ```
 
 `ForgeIconInfo` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2694,9 +2694,9 @@ function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconInfoProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconInfoProperties> |       |
 
 ### IconInfoProperties
 
@@ -2715,7 +2715,7 @@ export interface IconInfoProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
+function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement;
 ```
 
 `ForgeIconNotice` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2726,9 +2726,9 @@ function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconNoticeProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconNoticeProperties> |       |
 
 ### IconNoticeProperties
 
@@ -2747,7 +2747,7 @@ export interface IconNoticeProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement
+function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement;
 ```
 
 `ForgeIconWarning` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2758,9 +2758,9 @@ function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconWarningProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconWarningProperties> |       |
 
 ### IconWarningProperties
 
@@ -2779,7 +2779,7 @@ export interface IconWarningProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement
+function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement;
 ```
 
 `ForgeIconAlignCenter` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2790,9 +2790,9 @@ function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconAlignCenterProperties> |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconAlignCenterProperties> |       |
 
 ### IconAlignCenterProperties
 
@@ -2811,7 +2811,7 @@ export interface IconAlignCenterProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement
+function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement;
 ```
 
 `ForgeIconAlignJustify` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2822,9 +2822,9 @@ function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconAlignJustifyProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconAlignJustifyProperties> |       |
 
 ### IconAlignJustifyProperties
 
@@ -2843,7 +2843,7 @@ export interface IconAlignJustifyProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement
+function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement;
 ```
 
 `ForgeIconAlignLeft` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2854,9 +2854,9 @@ function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpEl
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconAlignLeftProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<IconAlignLeftProperties> |       |
 
 ### IconAlignLeftProperties
 
@@ -2875,7 +2875,7 @@ export interface IconAlignLeftProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement
+function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement;
 ```
 
 `ForgeIconAlignRight` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2886,9 +2886,9 @@ function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconAlignRightProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconAlignRightProperties> |       |
 
 ### IconAlignRightProperties
 
@@ -2907,7 +2907,7 @@ export interface IconAlignRightProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement
+function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement;
 ```
 
 `ForgeIconBlockquote` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2918,9 +2918,9 @@ function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconBlockquoteProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconBlockquoteProperties> |       |
 
 ### IconBlockquoteProperties
 
@@ -2939,7 +2939,7 @@ export interface IconBlockquoteProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
+function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement;
 ```
 
 `ForgeIconBold` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2950,9 +2950,9 @@ function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconBoldProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconBoldProperties> |       |
 
 ### IconBoldProperties
 
@@ -2971,7 +2971,7 @@ export interface IconBoldProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement
+function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement;
 ```
 
 `ForgeIconBulletList` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -2982,9 +2982,9 @@ function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconBulletListProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconBulletListProperties> |       |
 
 ### IconBulletListProperties
 
@@ -3003,7 +3003,7 @@ export interface IconBulletListProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement
+function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement;
 ```
 
 `ForgeIconCodeBlock` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3014,9 +3014,9 @@ function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpEl
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconCodeBlockProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<IconCodeBlockProperties> |       |
 
 ### IconCodeBlockProperties
 
@@ -3035,7 +3035,7 @@ export interface IconCodeBlockProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement
+function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement;
 ```
 
 `ForgeIconCodeInline` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3046,9 +3046,9 @@ function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconCodeInlineProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconCodeInlineProperties> |       |
 
 ### IconCodeInlineProperties
 
@@ -3067,7 +3067,7 @@ export interface IconCodeInlineProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement
+function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFive` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3078,9 +3078,9 @@ function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconHeadingFiveProperties> |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconHeadingFiveProperties> |       |
 
 ### IconHeadingFiveProperties
 
@@ -3099,7 +3099,7 @@ export interface IconHeadingFiveProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement
+function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFour` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3110,9 +3110,9 @@ function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconHeadingFourProperties> |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconHeadingFourProperties> |       |
 
 ### IconHeadingFourProperties
 
@@ -3131,7 +3131,7 @@ export interface IconHeadingFourProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement
+function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement;
 ```
 
 `ForgeIconHeadingOne` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3142,9 +3142,9 @@ function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconHeadingOneProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconHeadingOneProperties> |       |
 
 ### IconHeadingOneProperties
 
@@ -3163,7 +3163,7 @@ export interface IconHeadingOneProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement
+function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement;
 ```
 
 `ForgeIconHeadingSix` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3174,9 +3174,9 @@ function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconHeadingSixProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconHeadingSixProperties> |       |
 
 ### IconHeadingSixProperties
 
@@ -3195,7 +3195,7 @@ export interface IconHeadingSixProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement
+function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement;
 ```
 
 `ForgeIconHeadingThree` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3206,9 +3206,9 @@ function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconHeadingThreeProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconHeadingThreeProperties> |       |
 
 ### IconHeadingThreeProperties
 
@@ -3227,7 +3227,7 @@ export interface IconHeadingThreeProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement
+function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement;
 ```
 
 `ForgeIconHeadingTwo` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3238,9 +3238,9 @@ function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconHeadingTwoProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconHeadingTwoProperties> |       |
 
 ### IconHeadingTwoProperties
 
@@ -3259,7 +3259,7 @@ export interface IconHeadingTwoProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement
+function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement;
 ```
 
 `ForgeIconHeading` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3270,9 +3270,9 @@ function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconHeadingProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconHeadingProperties> |       |
 
 ### IconHeadingProperties
 
@@ -3291,7 +3291,7 @@ export interface IconHeadingProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
+function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement;
 ```
 
 `ForgeIconItalic` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3302,9 +3302,9 @@ function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconItalicProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconItalicProperties> |       |
 
 ### IconItalicProperties
 
@@ -3323,7 +3323,7 @@ export interface IconItalicProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement
+function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement;
 ```
 
 `ForgeIconNumberedList` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3334,9 +3334,9 @@ function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconNumberedListProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconNumberedListProperties> |       |
 
 ### IconNumberedListProperties
 
@@ -3355,7 +3355,7 @@ export interface IconNumberedListProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement
+function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement;
 ```
 
 `ForgeIconStrikethrough` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3366,9 +3366,9 @@ function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconStrikethroughProperties> |  |
+| שם    | הקלד                                     | תיאור |
+| ----- | ---------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconStrikethroughProperties> |       |
 
 ### IconStrikethroughProperties
 
@@ -3387,7 +3387,7 @@ export interface IconStrikethroughProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement
+function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement;
 ```
 
 `ForgeIconUnderline` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3398,9 +3398,9 @@ function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpEl
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconUnderlineProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<IconUnderlineProperties> |       |
 
 ### IconUnderlineProperties
 
@@ -3419,7 +3419,7 @@ export interface IconUnderlineProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement
+function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement;
 ```
 
 `ForgeIconCalendar` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3430,9 +3430,9 @@ function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconCalendarProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconCalendarProperties> |       |
 
 ### IconCalendarProperties
 
@@ -3451,7 +3451,7 @@ export interface IconCalendarProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
+function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement;
 ```
 
 `ForgeIconClock` - סמל שנכתב פעם אחת בניב JSX הנייטרלי.
@@ -3462,9 +3462,9 @@ function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconClockProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconClockProperties> |       |
 
 ### IconClockProperties
 
@@ -3483,7 +3483,7 @@ export interface IconClockProperties
 **סוג:** קבוע
 
 ```typescript
-export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
+export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[];
 ```
 
 לא סופק תיאור.
@@ -3493,17 +3493,17 @@ export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
 פונקציה **סוג:**
 
 ```typescript
-function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void
+function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יצירות | readonly IconSymbolDefinition[] |  |
-| זמינים מזהים | ReadonlySet<string> |  |
+| שם           | הקלד                            | תיאור |
+| ------------ | ------------------------------- | ----- |
+| יצירות       | readonly IconSymbolDefinition[] |       |
+| זמינים מזהים | ReadonlySet<string>             |       |
 
 ## `src/sprite/country-flags`
 
@@ -3512,7 +3512,7 @@ function validateCompositions(compositions: readonly IconSymbolDefinition[], ava
 **סוג:** קבוע
 
 ```typescript
-export const SUPPORTED_COUNTRY_CODES
+export const SUPPORTED_COUNTRY_CODES;
 ```
 
 קודי מדינה עם סמלי דגל קנוניים בספרייט שפורסם.
@@ -3524,7 +3524,7 @@ export const SUPPORTED_COUNTRY_CODES
 **סוג:** קבוע
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS
+export const COUNTRY_FLAG_SYMBOL_IDS;
 ```
 
 לא סופק תיאור.
@@ -3534,7 +3534,7 @@ export const COUNTRY_FLAG_SYMBOL_IDS
 **סוג:** קבוע
 
 ```typescript
-export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
+export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[];
 ```
 
 לא סופק תיאור.
@@ -3546,16 +3546,16 @@ export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
 פונקציה **סוג:**
 
 ```typescript
-function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement
+function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement;
 ```
 
 מעטפת נגישה משותפת המתייחסת לגיאומטריית ספרייט קנונית.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconUseProperties> |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| נכסים | לקריאה בלבד<IconUseProperties> |       |
 
 ### IconUseProperties
 
@@ -3574,7 +3574,7 @@ export interface IconUseProperties
 **סוג:** קבוע
 
 ```typescript
-export const IconSpriteContext
+export const IconSpriteContext;
 ```
 
 לא סופק תיאור.
@@ -3584,32 +3584,32 @@ export const IconSpriteContext
 פונקציה **סוג:**
 
 ```typescript
-function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement
+function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement;
 ```
 
 התקן מארח ספרייט מוטבע אחד עבור תת-עץ של רכיבי סמלים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<IconSpriteProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<IconSpriteProperties> |       |
 
 ### useIconHref
 
 פונקציה **סוג:**
 
 ```typescript
-function useIconHref(symbolId: string): string
+function useIconHref(symbolId: string): string;
 ```
 
 פתרו כתובת URL של סמל מקומי או חיצוני עבור מעטפת סמלים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| symbolId | מחרוזת |  |
+| שם       | הקלד   | תיאור |
+| -------- | ------ | ----- |
+| symbolId | מחרוזת |       |
 
 ## `src/sprite/serialize`
 
@@ -3618,48 +3618,48 @@ function useIconHref(symbolId: string): string
 פונקציה **סוג:**
 
 ```typescript
-function serializeNode(node: IconSvgNode): string
+function serializeNode(node: IconSvgNode): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | IconSvgNode |  |
+| שם   | הקלד        | תיאור |
+| ---- | ----------- | ----- |
+| node | IconSvgNode |       |
 
 ### בסדרהSprite
 
 פונקציה **סוג:**
 
 ```typescript
-function serializeSprite(definitions: readonly IconSymbolDefinition[]): string
+function serializeSprite(definitions: readonly IconSymbolDefinition[]): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הגדרות | readonly IconSymbolDefinition[] |  |
+| שם     | הקלד                            | תיאור |
+| ------ | ------------------------------- | ----- |
+| הגדרות | readonly IconSymbolDefinition[] |       |
 
 ### סמל בסידרה
 
 פונקציה **סוג:**
 
 ```typescript
-function serializeSymbol(definition: IconSymbolDefinition): string
+function serializeSymbol(definition: IconSymbolDefinition): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הגדרה | IconSymbolDefinition |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| הגדרה | IconSymbolDefinition |       |
 
 ## `src/sprite/types`
 

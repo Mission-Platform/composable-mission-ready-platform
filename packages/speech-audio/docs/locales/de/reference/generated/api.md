@@ -26,7 +26,7 @@ Von {@link useMidi} zurückgegebener reaktiver Status und Steuerelemente.
 **Art:** Funktion
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 Framework-neutraler Web-MIDI-Hook. Fordert MIDI-Zugriff an, verfolgt die verfügbaren
@@ -53,7 +53,7 @@ Von {@link useSound} zurückgegebener reaktiver Status und Steuerelemente.
 **Art:** Funktion
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 Rahmenneutraler Sound-Wiedergabe-Hook. Spielt einen Audioclip von `source` über ab
@@ -66,9 +66,9 @@ aussteigen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| Quelle | Zeichenfolge |                  |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ Optionen, die beim Starten einer {@link useSpeechRecognition}-Sitzung angewendet
 **Art:** Funktion
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 Framework-neutraler Speech-to-Text-Hook, der auf dem nativen des Browsers basiert
@@ -135,7 +135,7 @@ Reaktiver Zustand und von {@link useSpeechSynthesis} zurückgegebene Steuereleme
 **Art:** Funktion
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 Framework-neutraler Text-to-Speech-Hook, der auf der nativen Version des Browsers basiert

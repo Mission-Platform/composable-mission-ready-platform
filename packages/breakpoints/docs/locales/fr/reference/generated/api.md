@@ -26,7 +26,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 Aucune description fournie.
@@ -36,7 +36,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 Seuils de pixels de largeur minimale pour chaque étape du point d'arrêt.
@@ -64,23 +64,23 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 Renvoie la valeur de pixel pour une clé de point d'arrêt donnée.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| clé | Clé de point d'arrêt |  |
+| Nom | Tapez                | Descriptif |
+| --- | -------------------- | ---------- |
+| clé | Clé de point d'arrêt |            |
 
 ### maxMediaQuery
 
 **Genre :** fonction
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 Renvoie une chaîne de requête multimédia `max-width` (limite supérieure) pour le
@@ -88,9 +88,9 @@ point d'arrêt - c'est-à-dire "plus petit que l'étape suivante".
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| clé | Clé de point d'arrêt |  |
+| Nom | Tapez                | Descriptif |
+| --- | -------------------- | ---------- |
+| clé | Clé de point d'arrêt |            |
 
 #### Contracter
 
@@ -101,37 +101,37 @@ point d'arrêt - c'est-à-dire "plus petit que l'étape suivante".
 **Genre :** fonction
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 Renvoie une chaîne de requête multimédia `min-width` pour le point d'arrêt donné.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| clé | Clé de point d'arrêt |  |
+| Nom | Tapez                | Descriptif |
+| --- | -------------------- | ---------- |
+| clé | Clé de point d'arrêt |            |
 
 #### Contracter
 
 - **@exemple :** mediaQuery('lg') // → '(largeur min : 1920px)'
-mediaQuery('xl') // → '(largeur min : 2560px)'
+  mediaQuery('xl') // → '(largeur min : 2560px)'
 
 ### résoudre le point d'arrêt
 
 **Genre :** fonction
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 Étant donné une largeur de pixel, renvoie la clé de point d'arrêt actuellement active.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| largeur | numéro |  |
+| Nom     | Tapez  | Descriptif |
+| ------- | ------ | ---------- |
+| largeur | numéro |            |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -140,7 +140,7 @@ function resolveBreakpoint(width: number): BreakpointKey
 **Genre :** fonction
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt` — l'inverse de {@link ForgeShowAt} : il masque son emplacement par défaut lorsque le
@@ -155,9 +155,9 @@ Hôte `display: contents` afin que la visibilité puisse basculer sans zone de m
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<HideAtProperties> |  |
+| Nom        | Tapez                           | Descriptif |
+| ---------- | ------------------------------- | ---------- |
+| propriétés | Lecture seule<HideAtProperties> |            |
 
 ### Masquer dans les propriétés
 
@@ -176,7 +176,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` — restitue sous condition son emplacement par défaut uniquement lorsque la fenêtre est à
@@ -192,9 +192,9 @@ basculer sans introduire de zone de mise en page supplémentaire.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ShowAtProperties> |  |
+| Nom        | Tapez                           | Descriptif |
+| ---------- | ------------------------------- | ---------- |
+| propriétés | Lecture seule<ShowAtProperties> |            |
 
 ### ShowAtProperties
 
@@ -223,7 +223,7 @@ La superposition ne prend aucune propriété : elle lit elle-même la fenêtre 
 **Genre :** fonction
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug` — une superposition de temps de développement épinglée en bas à droite
@@ -240,9 +240,9 @@ la même source est résolue par rapport à l'espace de noms `mp.breakpoints` du
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| _propriétés | Lecture seule<BreakpointDebugProperties> |  |
+| Nom         | Tapez                                    | Descriptif |
+| ----------- | ---------------------------------------- | ---------- |
+| _propriétés | Lecture seule<BreakpointDebugProperties> |            |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -251,7 +251,7 @@ la même source est résolue par rapport à l'espace de noms `mp.breakpoints` du
 **Genre :** fonction
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 État du point d'arrêt réactif basé sur la largeur de l'élément du document.

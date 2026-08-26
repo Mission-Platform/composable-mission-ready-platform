@@ -26,7 +26,7 @@ export interface MidiControls
 **种类：**功能
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 框架中立的 Web MIDI 挂钩。请求 MIDI 访问，跟踪可用的
@@ -53,7 +53,7 @@ export interface SoundControls
 **种类：**功能
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 框架中立的声音播放挂钩。通过 `source` 播放音频剪辑
@@ -66,9 +66,9 @@ SSR 安全：`isSupported` 是 `false`，并且当
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -97,7 +97,7 @@ export interface SpeechRecognitionOptions
 **种类：**功能
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 基于浏览器原生构建的框架中立的语音到文本挂钩
@@ -135,7 +135,7 @@ export interface SpeechSynthesisControls
 **种类：**功能
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 基于浏览器原生构建的框架中立的文本转语音挂钩

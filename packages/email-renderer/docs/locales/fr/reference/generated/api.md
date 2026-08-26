@@ -16,33 +16,33 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 Affichez l'arborescence Forge partagée en tant qu'élément React pour les aperçus du navigateur.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| node | Nœud de courrier électronique |  |
+| Nom  | Tapez                         | Descriptif |
+| ---- | ----------------------------- | ---------- |
+| node | Nœud de courrier électronique |            |
 
 ### toEmailReactComponent
 
 **Genre :** fonction
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 Encapsulez un composant de messagerie Forge en tant que composant de fonction React.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composant | MpComponent<P> |  |
-| nom | chaîne |  |
+| Nom       | Tapez          | Descriptif |
+| --------- | -------------- | ---------- |
+| composant | MpComponent<P> |            |
+| nom       | chaîne         |            |
 
 ## `src/adapters/solid`
 
@@ -51,32 +51,32 @@ Encapsulez un composant de messagerie Forge en tant que composant de fonction Re
 **Genre :** fonction
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 Rendre l'arborescence Forge partagée sous Solid JSX pour les aperçus du navigateur.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| node | Nœud de courrier électronique |  |
+| Nom  | Tapez                         | Descriptif |
+| ---- | ----------------------------- | ---------- |
+| node | Nœud de courrier électronique |            |
 
 ### toEmailSolidComponent
 
 **Genre :** fonction
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 Enveloppez un composant Forge en tant que composant Solid.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composant | Composant<P> |  |
+| Nom       | Tapez        | Descriptif |
+| --------- | ------------ | ---------- |
+| composant | Composant<P> |            |
 
 ## `src/adapters/svelte`
 
@@ -85,16 +85,16 @@ Enveloppez un composant Forge en tant que composant Solid.
 **Genre :** fonction
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 Convertissez une arborescence Forge partagée en un extrait brut Svelte 5 pour `{@render ...}`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| node | Nœud de courrier électronique |  |
+| Nom  | Tapez                         | Descriptif |
+| ---- | ----------------------------- | ---------- |
+| node | Nœud de courrier électronique |            |
 
 ## `src/adapters/vue`
 
@@ -103,33 +103,33 @@ Convertissez une arborescence Forge partagée en un extrait brut Svelte 5 pour `
 **Genre :** fonction
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 Rendre l'arborescence Forge partagée en tant que VNode Vue pour les aperçus du navigateur.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| node | Nœud de courrier électronique |  |
+| Nom  | Tapez                         | Descriptif |
+| ---- | ----------------------------- | ---------- |
+| node | Nœud de courrier électronique |            |
 
 ### toEmailVueComponent
 
 **Genre :** fonction
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 Encapsulez un composant de messagerie Forge en tant que composant fonctionnel Vue.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composant | MpComponent<P> |  |
-| nom | chaîne |  |
+| Nom       | Tapez          | Descriptif |
+| --------- | -------------- | ---------- |
+| composant | MpComponent<P> |            |
+| nom       | chaîne         |            |
 
 ## `src/adapters/web-components`
 
@@ -138,16 +138,16 @@ Encapsulez un composant de messagerie Forge en tant que composant fonctionnel Vu
 **Genre :** fonction
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 Créez un résultat de modèle Forge natif pour un hôte de composants Web.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| node | Nœud de courrier électronique |  |
+| Nom  | Tapez                         | Descriptif |
+| ---- | ----------------------------- | ---------- |
+| node | Nœud de courrier électronique |            |
 
 ## `src/markdown/render-markdown`
 
@@ -156,17 +156,17 @@ Créez un résultat de modèle Forge natif pour un hôte de composants Web.
 **Genre :** fonction
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 Convertissez les jetons Markdown sécurisés dans la même arborescence Forge utilisée par les composants de messagerie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| démarque | chaîne |  |
-| options | Options de rendu Markdown |  |
+| Nom      | Tapez                     | Descriptif |
+| -------- | ------------------------- | ---------- |
+| démarque | chaîne                    |            |
+| options  | Options de rendu Markdown |            |
 
 ## `src/markdown/types`
 
@@ -197,16 +197,16 @@ Options contrôlant la génération de l’arborescence Markdown.
 **Genre :** fonction
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 Sérialisez un ensemble de propriétés Forge sur liste blanche dans un ordre déterministe.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Propriétés de messagerie |  |
+| Nom        | Tapez                    | Descriptif |
+| ---------- | ------------------------ | ---------- |
+| propriétés | Propriétés de messagerie |            |
 
 ## `src/render/escape`
 
@@ -215,33 +215,33 @@ Sérialisez un ensemble de propriétés Forge sur liste blanche dans un ordre d�
 **Genre :** fonction
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 Échapper au texte et au contenu des attributs pour la sérialisation HTML.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| valeur | chaîne |            |
 
 ### validerUrl
 
 **Genre :** fonction
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 Rejetez les schémas susceptibles d'exécuter du code ou de charger une ressource inattendue.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
-| attribut | chaîne |  |
+| Nom      | Tapez  | Descriptif |
+| -------- | ------ | ---------- |
+| valeur   | chaîne |            |
+| attribut | chaîne |            |
 
 ## `src/render/render-email`
 
@@ -250,33 +250,33 @@ Rejetez les schémas susceptibles d'exécuter du code ou de charger une ressourc
 **Genre :** fonction
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 Transformez une arborescence de courrier électronique Forge en un document HTML complet et sans cadre.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| node | Nœud de courrier électronique |  |
-| options | Options de rendu d'e-mail |  |
+| Nom     | Tapez                         | Descriptif |
+| ------- | ----------------------------- | ---------- |
+| node    | Nœud de courrier électronique |            |
+| options | Options de rendu d'e-mail     |            |
 
 ### renduEmailFragment
 
 **Genre :** fonction
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 Restituez une arborescence Forge sous la forme d'un fragment HTML sécurisé pour les hôtes de l'adaptateur de navigateur.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| node | Nœud de courrier électronique |  |
+| Nom  | Tapez                         | Descriptif |
+| ---- | ----------------------------- | ---------- |
+| node | Nœud de courrier électronique |            |
 
 ## `src/render/style`
 
@@ -285,16 +285,16 @@ Restituez une arborescence Forge sous la forme d'un fragment HTML sécurisé pou
 **Genre :** fonction
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 Sérialisez les styles en ligne dans un ordre de propriété déterministe sans variables CSS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| style | Style d'e-mail \| chaîne |  |
+| Nom   | Tapez                    | Descriptif |
+| ----- | ------------------------ | ---------- |
+| style | Style d'e-mail \| chaîne |            |
 
 ## `src/render/types`
 

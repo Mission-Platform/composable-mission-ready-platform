@@ -107,12 +107,12 @@ aree della griglia. I wrapper della regione hanno classi di stile BEM prevedibil
 
 ### Contratti regionali
 
-| Componente | Regioni denominate | Fonte composizione |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | Sezioni di eroi e funzionalità di marketing del sito Web |
-| `ForgeGridLayout` | Da `cell1` a `cell12` | Schede dashboard di monitoraggio del servizio e riepiloghi dello stato |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | Barra di navigazione/contesto dei documenti, articolo, barra laterale e piè di pagina |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Contenuti e azioni alternati della pagina di destinazione |
+| Componente            | Regioni denominate                                         | Fonte composizione                                                                    |
+| --------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | Sezioni di eroi e funzionalità di marketing del sito Web                              |
+| `ForgeGridLayout`     | Da `cell1` a `cell12`                                      | Schede dashboard di monitoraggio del servizio e riepiloghi dello stato                |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | Barra di navigazione/contesto dei documenti, articolo, barra laterale e piè di pagina |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Contenuti e azioni alternati della pagina di destinazione                             |
 
 `ForgeGridLayout` accetta `rows` e `columns`, li vincola entrambi a uno o più, limita l'area renderizzabile a 12 nomi
 celle e utilizza un fallback a colonna singola al di sotto del punto di interruzione. Le celle con nome vengono sempre visualizzate nell'ordine di origine.

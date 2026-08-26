@@ -26,7 +26,7 @@ export type BreakpointKey = (typeof breakpointKeys)[number];
 **النوع:** ثابت
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 لم يتم تقديم أي وصف.
@@ -36,7 +36,7 @@ export const breakpointKeys
 **النوع:** ثابت
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 الحد الأدنى للعرض لعتبات البكسل لكل خطوة توقف.
@@ -64,23 +64,23 @@ export type BreakpointValues = Record<BreakpointKey, boolean>;
 **النوع:** الوظيفة
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 إرجاع قيمة البكسل لمفتاح نقطة توقف محدد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مفتاح | مفتاح نقطة التوقف |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| مفتاح | مفتاح نقطة التوقف |       |
 
 ### maxMediaQuery
 
 **النوع:** الوظيفة
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 تقوم بإرجاع سلسلة استعلام الوسائط `max-width` (الجزء العلوي) للمعطى
@@ -88,9 +88,9 @@ function maxMediaQuery(key: BreakpointKey): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مفتاح | مفتاح نقطة التوقف |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| مفتاح | مفتاح نقطة التوقف |       |
 
 #### عقد
 
@@ -101,28 +101,28 @@ function maxMediaQuery(key: BreakpointKey): string
 **النوع:** الوظيفة
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 تقوم بإرجاع سلسلة استعلام الوسائط `min-width` لنقطة التوقف المحددة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مفتاح | مفتاح نقطة التوقف |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| مفتاح | مفتاح نقطة التوقف |       |
 
 #### عقد
 
 - **@example:** mediaQuery('lg') // → '(الحد الأدنى للعرض: 1920 بكسل)'
-mediaQuery('xl') // → '(الحد الأدنى للعرض: 2560 بكسل)'
+  mediaQuery('xl') // → '(الحد الأدنى للعرض: 2560 بكسل)'
 
 ### resolveBreakpoint
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 بالنظر إلى عرض البكسل، يتم إرجاع مفتاح نقطة التوقف النشط حاليًا.
@@ -130,8 +130,8 @@ function resolveBreakpoint(width: number): BreakpointKey
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العرض | رقم |  |
+| ----- | ---- | ----- |
+| العرض | رقم  |       |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -140,7 +140,7 @@ function resolveBreakpoint(width: number): BreakpointKey
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt` - معكوس {@link ForgeShowAt}: يخفي الفتحة الافتراضية الخاصة به عندما
@@ -155,9 +155,9 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<HideAtProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<HideAtProperties> |       |
 
 ### HideAtProperties
 
@@ -176,7 +176,7 @@ export interface HideAtProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` - يعرض الفتحة الافتراضية الخاصة به بشكل مشروط فقط عندما يكون إطار العرض في وضع التشغيل
@@ -192,9 +192,9 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ShowAtProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<ShowAtProperties> |       |
 
 ### ShowAtProperties
 
@@ -223,7 +223,7 @@ export type BreakpointDebugProperties = Record<string, never>;
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug` - تراكب وقت التطوير مثبت في أسفل اليمين
@@ -240,9 +240,9 @@ function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>):
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| _خصائص | للقراءة فقط<BreakpointDebugProperties> |  |
+| الاسم  | اكتب                                   | الوصف |
+| ------ | -------------------------------------- | ----- |
+| _خصائص | للقراءة فقط<BreakpointDebugProperties> |       |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -251,7 +251,7 @@ function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>):
 **النوع:** الوظيفة
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 حالة نقطة التوقف التفاعلية بناءً على عرض عنصر المستند.

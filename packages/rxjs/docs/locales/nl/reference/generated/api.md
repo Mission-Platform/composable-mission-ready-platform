@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/rxjs`.
 **Soort:** functie
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined
+function useObservable(source: Observable<T>): T | undefined;
 ```
 
 Abonneer u op `source` en retourneer de laatste emissie als staat. Retouren
@@ -24,9 +24,9 @@ Abonneer u op `source` en retourneer de laatste emissie als staat. Retouren
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | Waarneembaar<T> |  |
+| Naam | Typ             | Beschrijving |
+| ---- | --------------- | ------------ |
+| bron | Waarneembaar<T> |              |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -45,7 +45,11 @@ Alles waarvoor het abonnement kan worden opgezegd, komt overeen met `Unsubscriba
 **Soort:** functie
 
 ```typescript
-function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T>> | ((value: T) => void), dependencies: MpDependencyList = []): void
+function useSubscribe(
+  source: Observable<T>,
+  observerOrNext?: Partial<Observer<T>> | ((value: T) => void),
+  dependencies: MpDependencyList = [],
+): void;
 ```
 
 Abonneer u op `source` met de opgegeven `observer` (of `next` callback) voor de
@@ -54,18 +58,18 @@ levensduur van de component, opnieuw abonneren wanneer `source` (of een extra
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | Waarneembaar<T> |  |
-| waarnemerOfVolgende | Gedeeltelijk<Observer<T>> \| ((waarde: T) => ongeldig) |  |
-| afhankelijkheden | MpDependencyList |  |
+| Naam                | Typ                                                    | Beschrijving |
+| ------------------- | ------------------------------------------------------ | ------------ |
+| bron                | Waarneembaar<T>                                        |              |
+| waarnemerOfVolgende | Gedeeltelijk<Observer<T>> \| ((waarde: T) => ongeldig) |              |
+| afhankelijkheden    | MpDependencyList                                       |              |
 
 ### gebruikAbonnement
 
 **Soort:** functie
 
 ```typescript
-function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void
+function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void;
 ```
 
 Voer `subscribe` uit na het aankoppelen en meld u af voor het resultaat bij ontkoppelen (en
@@ -74,7 +78,7 @@ het kan een kale `source.subscribe(...)`-oproep of een hele pijplijn inpakken.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| abonneer | () => Afmelden |  |
-| afhankelijkheden | MpDependencyList |  |
+| Naam             | Typ              | Beschrijving |
+| ---------------- | ---------------- | ------------ |
+| abonneer         | () => Afmelden   |              |
+| afhankelijkheden | MpDependencyList |              |

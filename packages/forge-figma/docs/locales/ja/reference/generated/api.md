@@ -26,17 +26,20 @@ export interface ForgeGenerationOptions
 **種類:** 関数
 
 ```typescript
-function generateForgeExportBundle(document: ForgeDesignDocument, options: ForgeGenerationOptions = {}): ForgeExportBundle
+function generateForgeExportBundle(
+  document: ForgeDesignDocument,
+  options: ForgeGenerationOptions = {},
+): ForgeExportBundle;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ドキュメント |フォージデザインドキュメント |  |
-|オプション | ForgeGenerationOptions |  |
+| 名前         | タイプ                       | 説明 |
+| ------------ | ---------------------------- | ---- |
+| ドキュメント | フォージデザインドキュメント |      |
+| オプション   | ForgeGenerationOptions       |      |
 
 ## `src/model/design`
 
@@ -45,7 +48,7 @@ function generateForgeExportBundle(document: ForgeDesignDocument, options: Forge
 **種類:** 定数
 
 ```typescript
-export const FORGE_DESIGN_SCHEMA_VERSION
+export const FORGE_DESIGN_SCHEMA_VERSION;
 ```
 
 説明はありません。
@@ -145,7 +148,20 @@ export interface ForgeDesignNode
 **種類：**タイプ
 
 ```typescript
-export type ForgeDesignNodeType = | 'frame' | 'group' | 'component' | 'instance' | 'text' | 'rectangle' | 'ellipse' | 'line' | 'vector' | 'boolean-operation' | 'image' | 'section' | 'unknown';
+export type ForgeDesignNodeType =
+  | 'frame'
+  | 'group'
+  | 'component'
+  | 'instance'
+  | 'text'
+  | 'rectangle'
+  | 'ellipse'
+  | 'line'
+  | 'vector'
+  | 'boolean-operation'
+  | 'image'
+  | 'section'
+  | 'unknown';
 ```
 
 説明はありません。
@@ -267,16 +283,18 @@ export interface ForgeTextContent
 **種類:** 関数
 
 ```typescript
-function createForgeDiagnostic(diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>): ForgeDiagnostic
+function createForgeDiagnostic(
+  diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>,
+): ForgeDiagnostic;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | <ForgeDiagnostic, 'code'> を省略し、<ForgeDiagnostic, 'code'> を選択 |  |
+| 名前 | タイプ                                                               | 説明 |
+| ---- | -------------------------------------------------------------------- | ---- |
+| 診断 | <ForgeDiagnostic, 'code'> を省略し、<ForgeDiagnostic, 'code'> を選択 |      |
 
 ### フォージ診断
 
@@ -431,24 +449,24 @@ export interface ForgeSlotDefinition
 **種類:** 関数
 
 ```typescript
-function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined
+function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前 |文字列 |  |
-|メタデータ | Forgeコンポーネントメタデータ |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| 名前       | 文字列                        |      |
+| メタデータ | Forgeコンポーネントメタデータ |      |
 
 ### FORGE_COMPONENT_REGISTRY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
+export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[];
 ```
 
 説明はありません。
@@ -458,16 +476,16 @@ export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
 **種類:** 関数
 
 ```typescript
-function getForgeComponent(name: string): ForgeComponentRegistryEntry
+function getForgeComponent(name: string): ForgeComponentRegistryEntry;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 名前 | 文字列 |      |
 
 ## `src/tokens/resolve`
 
@@ -476,16 +494,16 @@ function getForgeComponent(name: string): ForgeComponentRegistryEntry
 **種類:** 関数
 
 ```typescript
-function componentPathToCssVariable(path: string): string | undefined
+function componentPathToCssVariable(path: string): string | undefined;
 ```
 
 正規コンポーネントのパスを、生成された Mission Platform CSS 変数名に変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|パス |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| パス | 文字列 |      |
 
 ### Figma変数バインディング
 
@@ -512,7 +530,7 @@ export interface ForgeTokenResolution
 **種類:** 定数
 
 ```typescript
-export const MISSION_PLATFORM_COMPONENT_COLLECTION
+export const MISSION_PLATFORM_COMPONENT_COLLECTION;
 ```
 
 説明はありません。
@@ -522,32 +540,32 @@ export const MISSION_PLATFORM_COMPONENT_COLLECTION
 **種類:** 関数
 
 ```typescript
-function normalizeComponentTokenPath(value: string): string | undefined
+function normalizeComponentTokenPath(value: string): string | undefined;
 ```
 
 Figma 変数名またはエイリアスを正規の `component.*` パスに正規化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### 解決フィグマ変数
 
 **種類:** 関数
 
 ```typescript
-function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution
+function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バインディング | FigmaVariableBinding |  |
+| 名前           | タイプ               | 説明 |
+| -------------- | -------------------- | ---- |
+| バインディング | FigmaVariableBinding |      |
 
 ## `src/validation/document`
 
@@ -556,16 +574,16 @@ function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResoluti
 **種類:** 関数
 
 ```typescript
-function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[]
+function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ドキュメント |フォージデザインドキュメント |  |
+| 名前         | タイプ                       | 説明 |
+| ------------ | ---------------------------- | ---- |
+| ドキュメント | フォージデザインドキュメント |      |
 
 ### validateForgeExportBundle
 
@@ -574,16 +592,16 @@ function validateForgeDesignDocument(document: ForgeDesignDocument): readonly Fo
 ```typescript
 function validateForgeExportBundle(bundle: {
   readonly files: readonly { readonly path: string }[];
-}): readonly ForgeDiagnostic[]
+}): readonly ForgeDiagnostic[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バンドル | { 読み取り専用ファイル: 読み取り専用 { 読み取り専用パス: 文字列 }[]; } |  |
+| 名前     | タイプ                                                                 | 説明 |
+| -------- | ---------------------------------------------------------------------- | ---- |
+| バンドル | { 読み取り専用ファイル: 読み取り専用 { 読み取り専用パス: 文字列 }[]; } |      |
 
 ## `src/validation/names`
 
@@ -592,34 +610,34 @@ function validateForgeExportBundle(bundle: {
 **種類:** 関数
 
 ```typescript
-function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string
+function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string;
 ```
 
 Figma レイヤーまたはフレーム名から安定した PascalCase 識別子を作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
-|フォールバック |  |  |
+| 名前           | タイプ | 説明 |
+| -------------- | ------ | ---- |
+| 値             | 文字列 |      |
+| フォールバック |        |      |
 
 ### 正規化ファイル名
 
 **種類:** 関数
 
 ```typescript
-function normalizeFileName(value: string, fallback = 'generated-component'): string
+function normalizeFileName(value: string, fallback = 'generated-component'): string;
 ```
 
 Figma レイヤーまたはフレーム名から安全なケバブケース ファイル ステムを作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
-|フォールバック |  |  |
+| 名前           | タイプ | 説明 |
+| -------------- | ------ | ---- |
+| 値             | 文字列 |      |
+| フォールバック |        |      |
 
 ## `src/validation/paths`
 
@@ -638,14 +656,17 @@ export interface ForgePathValidationResult
 **種類:** 関数
 
 ```typescript
-function validateRepositoryRelativePath(value: string, allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg']): ForgePathValidationResult
+function validateRepositoryRelativePath(
+  value: string,
+  allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg'],
+): ForgePathValidationResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
-|許可された拡張機能 |読み取り専用文字列[] |  |
+| 名前               | タイプ               | 説明 |
+| ------------------ | -------------------- | ---- |
+| 値                 | 文字列               |      |
+| 許可された拡張機能 | 読み取り専用文字列[] |      |

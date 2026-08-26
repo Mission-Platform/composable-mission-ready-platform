@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/storybo
 **Soort:** functie
 
 ```typescript
-function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig
+function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig;
 ```
 
 Bouw een uniforme {@link StorybookConfig} voor het actieve raamwerk. Een
@@ -25,9 +25,9 @@ geeft hetzelfde verhaal weer dat zich afspeelt op het geselecteerde raamwerk.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | CreateStorybookConfigOptions |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| opties | CreateStorybookConfigOptions |              |
 
 ### CreateStorybookConfigOptions
 
@@ -44,7 +44,7 @@ Opties voor {@link createStorybookConfig}.
 **Soort:** functie
 
 ```typescript
-function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework
+function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework;
 ```
 
 Los het actieve raamwerk op vanuit de expliciete optie of de
@@ -53,9 +53,9 @@ waarde, zodat een typefout snel mislukt in plaats van stilletjes het verkeerde r
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| expliciet | VerhalenboekFramework |  |
+| Naam      | Typ                   | Beschrijving |
+| --------- | --------------------- | ------------ |
+| expliciet | VerhalenboekFramework |              |
 
 ### VerhalenboekFramework
 
@@ -72,7 +72,7 @@ De raamwerken waarop een uniforme Storybook-app verhalen kan weergeven.
 **Soort:** functie
 
 ```typescript
-function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[]
+function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[];
 ```
 
 Bouw de gedeelde neutrale verhaalglobs voor aangevraagde pakketten.
@@ -81,11 +81,11 @@ dezelfde eenmalige verhaalinventaris moet in elke actieve werkbank worden weerge
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| _frame | VerhalenboekFramework |  |
-| pakketten | alleen-lezen tekenreeks[] |  |
-| pakkettenRoot | tekenreeks |  |
+| Naam          | Typ                       | Beschrijving |
+| ------------- | ------------------------- | ------------ |
+| _frame        | VerhalenboekFramework     |              |
+| pakketten     | alleen-lezen tekenreeks[] |              |
+| pakkettenRoot | tekenreeks                |              |
 
 ## `src/preview`
 
@@ -94,7 +94,7 @@ dezelfde eenmalige verhaalinventaris moet in elke actieve werkbank worden weerge
 **Soort:** functie
 
 ```typescript
-function sharedPreviewDecorators()
+function sharedPreviewDecorators();
 ```
 
 Gedeelde Storybook-decorateurs voor alle raamwerken.
@@ -104,7 +104,7 @@ Gedeelde Storybook-decorateurs voor alle raamwerken.
 **Soort:** constant
 
 ```typescript
-export const sharedPreviewParameters
+export const sharedPreviewParameters;
 ```
 
 Gedeelde Storybook-parameters voor alle raamwerken.
@@ -114,7 +114,7 @@ Gedeelde Storybook-parameters voor alle raamwerken.
 **Soort:** functie
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework)
+function sharedPreviewParametersFor(framework?: PreviewFramework);
 ```
 
 Framework-bewuste Storybook-parameters.
@@ -131,9 +131,9 @@ bronpaneel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kader | Voorbeeldframe |  |
+| Naam  | Typ            | Beschrijving |
+| ----- | -------------- | ------------ |
+| kader | Voorbeeldframe |              |
 
 ## `src/slots.dom`
 
@@ -142,7 +142,7 @@ bronpaneel.
 **Soort:** functie
 
 ```typescript
-function customElementTag(component: unknown): string
+function customElementTag(component: unknown): string;
 ```
 
 Leid de geregistreerde tagnaam van een forge-webcomponent af van zijn element
@@ -152,9 +152,9 @@ class-name fallback weerspiegelt die van de emitter `kebabCase(name)` registrati
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | onbekend |  |
+| Naam        | Typ      | Beschrijving |
+| ----------- | -------- | ------------ |
+| bestanddeel | onbekend |              |
 
 ## `src/slots.neutral`
 
@@ -163,7 +163,7 @@ class-name fallback weerspiegelt die van de emitter `kebabCase(name)` registrati
 **Soort:** constant
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Tijdelijke aanduiding voor fragmentfabriek; nooit aangeroepen (zie {@link node}).
@@ -173,7 +173,7 @@ Tijdelijke aanduiding voor fragmentfabriek; nooit aangeroepen (zie {@link node})
 **Soort:** constant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Geen beschrijving opgegeven.
@@ -187,7 +187,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Geen beschrijving opgegeven.
@@ -203,7 +203,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Geen beschrijving opgegeven.
@@ -217,7 +217,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Geen beschrijving opgegeven.
@@ -233,7 +233,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Solid heeft geen fragmentcomponent: een array van kinderen is een fragment.
@@ -243,7 +243,7 @@ Solid heeft geen fragmentcomponent: een array van kinderen is een fragment.
 **Soort:** constant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Geen beschrijving opgegeven.
@@ -257,7 +257,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Geen beschrijving opgegeven.
@@ -273,7 +273,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Markeringscomponent voor JSX-fragmenten: de onderliggende onderdelen ervan worden rechtstreeks in de ouder geplaatst.
@@ -283,7 +283,7 @@ Markeringscomponent voor JSX-fragmenten: de onderliggende onderdelen ervan worde
 **Soort:** constant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Geen beschrijving opgegeven.
@@ -297,7 +297,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Geen beschrijving opgegeven.
@@ -313,7 +313,12 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type RenderWithSlots = ( component: unknown, properties: Record<string, unknown>, slots: StorySlots, children?: unknown, ) => unknown;
+export type RenderWithSlots = (
+  component: unknown,
+  properties: Record<string, unknown>,
+  slots: StorySlots,
+  children?: unknown,
+) => unknown;
 ```
 
 Veroorzaken `component` met `properties`, de gegeven naam `slots` en optioneel
@@ -325,7 +330,11 @@ verbruikt.
 **Soort:** type
 
 ```typescript
-export type StoryNodeFactory = ( type: unknown, properties?: Record<string, unknown> | null, ...children: unknown[] ) => unknown;
+export type StoryNodeFactory = (
+  type: unknown,
+  properties?: Record<string, unknown> | null,
+  ...children: unknown[]
+) => unknown;
 ```
 
 Bouw één element voor de actieve renderer. Dient ook als de klassieke JSX
@@ -349,7 +358,7 @@ Inhoud voor de benoemde slots van een component, gecodeerd op slotnaam.
 **Soort:** constant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Geen beschrijving opgegeven.
@@ -363,7 +372,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Geen beschrijving opgegeven.
@@ -379,7 +388,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Markeringscomponent voor JSX-fragmenten — weergegeven als een `DocumentFragment`.
@@ -389,7 +398,7 @@ Markeringscomponent voor JSX-fragmenten — weergegeven als een `DocumentFragmen
 **Soort:** constant
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 Geen beschrijving opgegeven.
@@ -403,7 +412,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 Geen beschrijving opgegeven.
@@ -431,7 +440,10 @@ soort (`Meta<MyComponentProps>`), waarbij de renderer wordt gespiegeld `Meta` er
 **Soort:** type
 
 ```typescript
-export type StoryObj<TMetaOrComponentOrArgs = Args> = TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments> ? StoryAnnotations<Renderer, TArguments> : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
+export type StoryObj<TMetaOrComponentOrArgs = Args> =
+  TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
+    ? StoryAnnotations<Renderer, TArguments>
+    : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
 Framework-agnostisch verhalenboek `StoryObj`, de neutrale tegenhanger van

@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/theme`.
 **Art:** Funktion
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle` – schaltet das aktive Thema durch `light → dark → auto`,
@@ -39,9 +39,9 @@ durch den Standardsteckplatz.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ThemeToggleProperties> |  |
+| Name          | Geben Sie                               | ein Beschreibung |
+| ------------- | --------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<ThemeToggleProperties> |                  |
 
 ### ThemeToggleProperties
 
@@ -70,7 +70,7 @@ Größentoken – kanonische Skala 2xs → 2xl.
 **Art:** Funktion
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer` – erstellt zur Laufzeit `--mp-*` Design-Token-Überschreibungen (Marke
@@ -96,9 +96,9 @@ Wrapper ist ein fester `<div>`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ThemeComposerProperties> |  |
+| Name          | Geben Sie                                 | ein Beschreibung |
+| ------------- | ----------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<ThemeComposerProperties> |                  |
 
 ### ThemeComposerProperties
 
@@ -127,7 +127,7 @@ Größentoken – kanonische Skala 2xs → 2xl.
 **Art:** Funktion
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider` – konfiguriert den Shared Theme Store anhand seiner Requisiten und
@@ -151,9 +151,9 @@ Speicher auf Dokumentebene mit einem festen `<div>`-Wrapper.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ThemeProviderProperties> |  |
+| Name          | Geben Sie                                 | ein Beschreibung |
+| ------------- | ----------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<ThemeProviderProperties> |                  |
 
 ### ThemeProviderProperties
 
@@ -182,7 +182,7 @@ Größentoken – kanonische 2xs → 2xl-Skala (über den Renderless-Wrapper gee
 **Art:** konstant
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 Ordnet jedes benutzerfreundliche Attribut der benutzerdefinierten CSS-Eigenschaft `--mp-*` zu, die es überschreibt.
@@ -192,7 +192,7 @@ Ordnet jedes benutzerfreundliche Attribut der benutzerdefinierten CSS-Eigenschaf
 **Art:** Funktion
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 Konvertiert eine {@link ThemeComposerConfig} in eine flache, benutzerdefinierte CSS-Karte
@@ -201,111 +201,115 @@ Eigenschaften (`--mp-*` → Wert). Attribute haben zuerst Vorrang, dann das Rohm
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
+| Name   | Geben Sie           | ein Beschreibung |
+| ------ | ------------------- | ---------------- |
+| config | ThemeComposerConfig |                  |
 
 ### configToStyleString
 
 **Art:** Funktion
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 Lösen Sie eine Konfiguration in die vollständige Inline-Zeichenfolge `style` auf (benutzerdefinierte Eigenschaften + `color-scheme`).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
+| Name   | Geben Sie           | ein Beschreibung |
+| ------ | ------------------- | ---------------- |
+| config | ThemeComposerConfig |                  |
 
 ### cssVariablesToString
 
 **Art:** Funktion
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 Serialisiert eine benutzerdefinierte CSS-Eigenschaftszuordnung in eine Inline-`style`-Zeichenfolge.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Variablen | Record<string, string> |  |
+| Name      | Geben Sie              | ein Beschreibung |
+| --------- | ---------------------- | ---------------- |
+| Variablen | Record<string, string> |                  |
 
 ### mergeConfig
 
 **Art:** Funktion
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 Führen Sie eine flache Zusammenführung einer Teilkonfiguration in die aktuelle durch (löschen Sie `undefined`/leere Werte).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
-| teilweise | ThemeComposerConfig |  |
+| Name      | Geben Sie           | ein Beschreibung |
+| --------- | ------------------- | ---------------- |
+| config    | ThemeComposerConfig |                  |
+| teilweise | ThemeComposerConfig |                  |
 
 ### RemoveConfigToken
 
 **Art:** Funktion
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 Entfernen Sie eine einzelne Raw-Token-Überschreibung.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
-| Schlüssel | Zeichenfolge |  |
+| Name      | Geben Sie           | ein Beschreibung |
+| --------- | ------------------- | ---------------- |
+| config    | ThemeComposerConfig |                  |
+| Schlüssel | Zeichenfolge        |                  |
 
 ### setConfigAttribute
 
 **Art:** Funktion
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 Legen Sie ein einzelnes freundliches Attribut fest (übergeben Sie `undefined`, um es zu löschen).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
-| Attribut | K |  |
-| Wert | ThemeComposerConfig[K] |  |
+| Name     | Geben Sie              | ein Beschreibung |
+| -------- | ---------------------- | ---------------- |
+| config   | ThemeComposerConfig    |                  |
+| Attribut | K                      |                  |
+| Wert     | ThemeComposerConfig[K] |                  |
 
 ### setConfigToken
 
 **Art:** Funktion
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 Legen Sie eine einzelne Raw-Token-Überschreibung fest. Im Schlüssel kann das Präfix `--mp-` weggelassen werden.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
-| Schlüssel | Zeichenfolge |  |
-| Wert | Zeichenfolge |  |
+| Name      | Geben Sie           | ein Beschreibung |
+| --------- | ------------------- | ---------------- |
+| config    | ThemeComposerConfig |                  |
+| Schlüssel | Zeichenfolge        |                  |
+| Wert      | Zeichenfolge        |                  |
 
 ## `src/stores/theme-store/theme-store`
 
@@ -314,7 +318,7 @@ Legen Sie eine einzelne Raw-Token-Überschreibung fest. Im Schlüssel kann das P
 **Art:** Funktion
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 Konfigurieren Sie den gemeinsam genutzten Speicher (neu) über die Requisiten eines `ForgeThemeProvider`: Wechseln Sie den
@@ -323,16 +327,16 @@ Speicherschlüssel / Persistenz und, wenn noch nichts explizit ausgewählt wurde
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| config | ThemeConfig |  |
+| Name   | Geben Sie   | ein Beschreibung |
+| ------ | ----------- | ---------------- |
+| config | ThemeConfig |                  |
 
 ### ZyklusTheme
 
 **Art:** Funktion
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 Durchlaufen Sie `light → dark → auto → light`.
@@ -342,7 +346,7 @@ Durchlaufen Sie `light → dark → auto → light`.
 **Art:** Funktion
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 Lesen Sie eine unveränderliche Momentaufnahme des aktuellen Status des Geschäfts.
@@ -362,32 +366,32 @@ Das konkrete Thema, das tatsächlich auf die Benutzeroberfläche angewendet wurd
 **Art:** Funktion
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 Legen Sie die Designpräferenz explizit fest.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| weiter | Thema |  |
+| Name   | Geben Sie | ein Beschreibung |
+| ------ | --------- | ---------------- |
+| weiter | Thema     |                  |
 
 ### abonnierenTheme
 
 **Art:** Funktion
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 Abonnieren Sie den Store-Änderungen; gibt eine Abmeldefunktion zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Zuhörer | () => void |  |
+| Name    | Geben Sie  | ein Beschreibung |
+| ------- | ---------- | ---------------- |
+| Zuhörer | () => void |                  |
 
 ### Thema
 
@@ -424,7 +428,7 @@ Eine unveränderliche Momentaufnahme des aktuellen Status des Stores, zurückgeg
 **Art:** Funktion
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 Wechseln Sie zwischen hell und dunkel, basierend auf dem aktuell gelösten Thema.

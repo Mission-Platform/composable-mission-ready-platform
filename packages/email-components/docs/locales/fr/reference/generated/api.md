@@ -16,23 +16,23 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 Affirmez le sous-ensemble de sortie conservateur documenté pour les composants de messagerie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| HTML | chaîne |  |
+| Nom  | Tapez  | Descriptif |
+| ---- | ------ | ---------- |
+| HTML | chaîne |            |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **Genre :** constante
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 Aucune description fournie.
@@ -42,7 +42,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 Aucune description fournie.
@@ -52,7 +52,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 Aucune description fournie.
@@ -62,7 +62,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 Aucune description fournie.
@@ -72,7 +72,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 Aucune description fournie.
@@ -82,7 +82,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 Aucune description fournie.
@@ -92,7 +92,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 Aucune description fournie.
@@ -104,16 +104,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailButtonProperties> |  |
+| Nom        | Tapez                                | Descriptif |
+| ---------- | ------------------------------------ | ---------- |
+| propriétés | Lecture seule<EmailButtonProperties> |            |
 
 ### Propriétés du bouton Email
 
@@ -130,7 +130,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 Aucune description fournie.
@@ -142,16 +143,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailDividerProperties> |  |
+| Nom        | Tapez                                 | Descriptif |
+| ---------- | ------------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailDividerProperties> |            |
 
 ### Propriétés du diviseur de courrier électronique
 
@@ -170,16 +171,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailImageProperties> |  |
+| Nom        | Tapez                               | Descriptif |
+| ---------- | ----------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailImageProperties> |            |
 
 ### Propriétés de l'image de courrier électronique
 
@@ -198,16 +199,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailSpacerProperties> |  |
+| Nom        | Tapez                                | Descriptif |
+| ---------- | ------------------------------------ | ---------- |
+| propriétés | Lecture seule<EmailSpacerProperties> |            |
 
 ### Propriétés EmailSpacer
 
@@ -226,7 +227,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 L'atome de texte unique de l'e-mail, reflétant le vocabulaire `ForgeTypography` : body
@@ -235,9 +236,9 @@ déclarations littérales en ligne, car les clients de messagerie ignorent les c
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailTypographyProperties> |  |
+| Nom        | Tapez                                    | Descriptif |
+| ---------- | ---------------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailTypographyProperties> |            |
 
 ### Propriétés de typographie de courrier électronique
 
@@ -266,16 +267,16 @@ Les éléments sous lesquels l'échelle de type d'e-mail peut être rendue.
 **Genre :** fonction
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailCardProperties> |  |
+| Nom        | Tapez                              | Descriptif |
+| ---------- | ---------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailCardProperties> |            |
 
 ### Propriétés de la carte e-mail
 
@@ -294,16 +295,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailColumnProperties> |  |
+| Nom        | Tapez                                | Descriptif |
+| ---------- | ------------------------------------ | ---------- |
+| propriétés | Lecture seule<EmailColumnProperties> |            |
 
 ### Propriétés de la colonne de courrier électronique
 
@@ -322,16 +323,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailListProperties> |  |
+| Nom        | Tapez                              | Descriptif |
+| ---------- | ---------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailListProperties> |            |
 
 ### Élément de liste de courrier électronique
 
@@ -360,16 +361,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailRowProperties> |  |
+| Nom        | Tapez                             | Descriptif |
+| ---------- | --------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailRowProperties> |            |
 
 ### Propriétés de ligne de courrier électronique
 
@@ -398,16 +399,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailSocialLinksProperties> |  |
+| Nom        | Tapez                                     | Descriptif |
+| ---------- | ----------------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailSocialLinksProperties> |            |
 
 ### EmailSocialLinksPropriétés
 
@@ -426,16 +427,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailFooterProperties> |  |
+| Nom        | Tapez                                | Descriptif |
+| ---------- | ------------------------------------ | ---------- |
+| propriétés | Lecture seule<EmailFooterProperties> |            |
 
 ### Propriétés du pied de page de courrier électronique
 
@@ -454,16 +455,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailHeaderProperties> |  |
+| Nom        | Tapez                                | Descriptif |
+| ---------- | ------------------------------------ | ---------- |
+| propriétés | Lecture seule<EmailHeaderProperties> |            |
 
 ### Propriétés d'en-tête de courrier électronique
 
@@ -482,16 +483,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailPreheaderProperties> |  |
+| Nom        | Tapez                                   | Descriptif |
+| ---------- | --------------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailPreheaderProperties> |            |
 
 ### Propriétés de pré-en-tête de courrier électronique
 
@@ -510,16 +511,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailContainerProperties> |  |
+| Nom        | Tapez                                   | Descriptif |
+| ---------- | --------------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailContainerProperties> |            |
 
 ### Propriétés du conteneur de courrier électronique
 
@@ -538,16 +539,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailDocumentProperties> |  |
+| Nom        | Tapez                                  | Descriptif |
+| ---------- | -------------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailDocumentProperties> |            |
 
 ### Propriétés du document de courrier électronique
 
@@ -566,16 +567,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<EmailSectionProperties> |  |
+| Nom        | Tapez                                 | Descriptif |
+| ---------- | ------------------------------------- | ---------- |
+| propriétés | Lecture seule<EmailSectionProperties> |            |
 
 ### Propriétés de la section Email
 

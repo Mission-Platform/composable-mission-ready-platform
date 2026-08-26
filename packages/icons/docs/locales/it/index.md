@@ -108,21 +108,21 @@ Tutte le icone sono basate su una viewbox da $24 \times 24$.
 
 ### Puntelli universali
 
-| Prop | Digitare | Predefinito | Descrizione |
-| :---------- | :----------------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| `size` | `number \| string` | `'md'` | Larghezza e altezza. Supporta token denominati (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) o un numero di pixel. |
-| `color` | `string` | `'currentColor'` | Colore del tratto (e riempimento per le icone dei marcatori pieni).                                                                     |
-| `ariaLabel` | `string` | _Predefinito per icona_ | Nome accessibile. Se omessa, l'icona è contrassegnata come `aria-hidden`.                                                     |
+| Prop        | Digitare           | Predefinito             | Descrizione                                                                                                                     |
+| :---------- | :----------------- | :---------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
+| `size`      | `number \| string` | `'md'`                  | Larghezza e altezza. Supporta token denominati (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) o un numero di pixel. |
+| `color`     | `string`           | `'currentColor'`        | Colore del tratto (e riempimento per le icone dei marcatori pieni).                                                             |
+| `ariaLabel` | `string`           | _Predefinito per icona_ | Nome accessibile. Se omessa, l'icona è contrassegnata come `aria-hidden`.                                                       |
 
 ### Icone comportamentali
 
 Alcune icone includono oggetti aggiuntivi per controllarne l'aspetto:
 
-| Icona | Oggetti di scena extra | Descrizione |
-| :----------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------- |
-| `ForgeIconArrow` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (predefinito `'up'`) | Ruota la freccia tramite una trasformazione in linea.                 |
-| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (predefinito `'down'`) | Ruota la freccia di espansione tramite una trasformazione in linea.               |
-| `ForgeIconSort` | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined` | Evidenzia la freccia che corrisponde alla direzione di ordinamento attiva. |
+| Icona              | Oggetti di scena extra                                                    | Descrizione                                                                |
+| :----------------- | :------------------------------------------------------------------------ | :------------------------------------------------------------------------- |
+| `ForgeIconArrow`   | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (predefinito `'up'`)   | Ruota la freccia tramite una trasformazione in linea.                      |
+| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (predefinito `'down'`) | Ruota la freccia di espansione tramite una trasformazione in linea.        |
+| `ForgeIconSort`    | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined`          | Evidenzia la freccia che corrisponde alla direzione di ordinamento attiva. |
 
 ## Libreria di icone
 

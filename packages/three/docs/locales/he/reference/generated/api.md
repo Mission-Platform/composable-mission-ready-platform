@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement
+function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
 ForgeThreeCanvas - רכיב ניטרלי במסגרת המעבד <canvas>
@@ -24,9 +24,9 @@ ForgeThreeCanvas - רכיב ניטרלי במסגרת המעבד <canvas>
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ForgeThreeCanvasProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ForgeThreeCanvasProperties> |       |
 
 ### ForgeThreeCanvasProperties
 
@@ -55,7 +55,10 @@ export interface ThreeContext
 פונקציה **סוג:**
 
 ```typescript
-function useThree(canvasReference: ReferenceLike<HTMLCanvasElement | null>, onReady?: (context: ThreeContext) => void | (() => void)): void
+function useThree(
+  canvasReference: ReferenceLike<HTMLCanvasElement | null>,
+  onReady?: (context: ThreeContext) => void | (() => void),
+): void;
 ```
 
 וו Three.js נייטרלי מסגרת.
@@ -66,7 +69,7 @@ SSR-safe: ללא הפעלה כאשר ממשק ה-API או בדפדפן אינם 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| canvasReference | הפניה כמו<HTMLCanvasElement \| null> |  |
-| onReady | (הקשר: ThreeContext) => ריק \| (() => ריק) |  |
+| שם              | הקלד                                       | תיאור |
+| --------------- | ------------------------------------------ | ----- |
+| canvasReference | הפניה כמו<HTMLCanvasElement \| null>       |       |
+| onReady         | (הקשר: ThreeContext) => ריק \| (() => ריק) |       |

@@ -24,13 +24,13 @@ calidad del código, accesibilidad y reglas arquitectónicas en todos los paquet
 
 La configuración incluye los siguientes complementos y conjuntos de reglas:
 
-| Complemento | Propósito |
-|:-------------------------|:-------------------------------------------------------|
-| `typescript-eslint`      | Estándar TypeScript reglas y linting con reconocimiento de tipo.      |
-| `eslint-plugin-vue`      | Vue 3 Linting SFC y validación de plantillas.             |
-| `eslint-plugin-sonarjs`  | Detección de olores de código y riesgos de errores.                |
-| `eslint-plugin-unicorn`  | Docenas de reglas comunitarias pequeñas y útiles.               |
-| `eslint-plugin-i18next`  | Garantiza que las claves de traducción se utilicen correctamente.           |
+| Complemento              | Propósito                                                           |
+| :----------------------- | :------------------------------------------------------------------ |
+| `typescript-eslint`      | Estándar TypeScript reglas y linting con reconocimiento de tipo.    |
+| `eslint-plugin-vue`      | Vue 3 Linting SFC y validación de plantillas.                       |
+| `eslint-plugin-sonarjs`  | Detección de olores de código y riesgos de errores.                 |
+| `eslint-plugin-unicorn`  | Docenas de reglas comunitarias pequeñas y útiles.                   |
+| `eslint-plugin-i18next`  | Garantiza que las claves de traducción se utilicen correctamente.   |
 | `eslint-config-prettier` | Desactiva las reglas que entran en conflicto con Prettier formateo. |
 
 ## Uso

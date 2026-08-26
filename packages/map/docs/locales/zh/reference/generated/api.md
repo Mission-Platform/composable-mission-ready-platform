@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
+function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement;
 ```
 
 `ForgeMapDraw` — 交互式绘图/编辑工具，适用于最近的
@@ -29,9 +29,9 @@ function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MapDrawProperties> |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读<MapDrawProperties> |      |
 
 ### 地图绘制属性
 
@@ -50,7 +50,7 @@ export interface MapDrawProperties
 **种类：**功能
 
 ```typescript
-function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null
+function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null;
 ```
 
 `ForgeMapLayer` — 将 MapLibre 图层添加到最近的 `<MapLibre>` 祖先图层
@@ -59,9 +59,9 @@ function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | nu
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MapLayerProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<MapLayerProperties> |      |
 
 ### 地图图层属性
 
@@ -80,7 +80,7 @@ export interface MapLayerProperties
 **种类：**功能
 
 ```typescript
-function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null
+function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null;
 ```
 
 `ForgeMapMarker` — 将 MapLibre `Marker` 添加到最近的 `<MapLibre>`
@@ -89,9 +89,9 @@ function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MapMarkerProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<MapMarkerProperties> |      |
 
 ### 地图标记属性
 
@@ -110,7 +110,7 @@ export interface MapMarkerProperties
 **种类：**功能
 
 ```typescript
-function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null
+function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null;
 ```
 
 `ForgeMapPopup` — 将 MapLibre `Popup` 添加到最近的 `<MapLibre>` 祖先
@@ -119,9 +119,9 @@ function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | nu
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MapPopupProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<MapPopupProperties> |      |
 
 ### 地图弹出属性
 
@@ -140,7 +140,7 @@ export interface MapPopupProperties
 **种类：**功能
 
 ```typescript
-function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
+function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement;
 ```
 
 `ForgeMapSource` — 在最近的 `<MapLibre>` 上注册 MapLibre 数据源
@@ -149,9 +149,9 @@ function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MapSourceProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<MapSourceProperties> |      |
 
 ### 地图源属性
 
@@ -170,7 +170,7 @@ export interface MapSourceProperties
 **种类：**功能
 
 ```typescript
-function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
+function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement;
 ```
 
 `ForgeMapLibre` — 在中性 JSX 中创作一次的 MapLibre GL 地图容器
@@ -186,9 +186,9 @@ function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MapLibreProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<MapLibreProperties> |      |
 
 ### 地图Libre属性
 
@@ -244,7 +244,7 @@ export type FeatureId = string | number;
 **种类：**功能
 
 ```typescript
-function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn
+function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn;
 ```
 
 管理地图的所有绘制和编辑状态。商店连接地图的
@@ -253,10 +253,10 @@ function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseD
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地图 |地图\|未定义 |  |
-|选项 |使用绘图选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 地图 | 地图\|未定义 |      |
+| 选项 | 使用绘图选项 |      |
 
 ### 使用绘图选项
 
@@ -285,7 +285,7 @@ export interface UseDrawingReturn
 **种类：**功能
 
 ```typescript
-function useLayer(map: Map | undefined, options: UseLayerOptions): void
+function useLayer(map: Map | undefined, options: UseLayerOptions): void;
 ```
 
 将 MapLibre 图层添加到地图。
@@ -302,17 +302,18 @@ function useLayer(map: Map | undefined, options: UseLayerOptions): void
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地图 |地图\|未定义 |  |
-|选项 |使用图层选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 地图 | 地图\|未定义 |      |
+| 选项 | 使用图层选项 |      |
 
 #### 合同
 
 - **@例子：** ```ts
-const map = useMap();
-useLayer(map, { layer: circleLayerSpec });
-```
+  const map = useMap();
+  useLayer(map, { layer: circleLayerSpec });
+
+````
 
 ### 使用图层选项
 
@@ -320,7 +321,7 @@ useLayer(map, { layer: circleLayerSpec });
 
 ```typescript
 export interface UseLayerOptions
-```
+````
 
 没有提供描述。
 
@@ -331,7 +332,7 @@ export interface UseLayerOptions
 **种类：**功能
 
 ```typescript
-function useMap(): Map | undefined
+function useMap(): Map | undefined;
 ```
 
 返回最近的 `<MapLibre>` 提供的 MapLibre `Map` 实例
@@ -342,11 +343,12 @@ function useMap(): Map | undefined
 #### 合同
 
 - **@例子：** ```ts
-const map = useMap();
-useEffect(() => {
+  const map = useMap();
+  useEffect(() => {
   map?.flyTo({ center: [lng, lat] });
-}, [map]);
-```
+  }, [map]);
+
+````
 
 ## `src/composables/use-marker/use-marker`
 
@@ -356,24 +358,25 @@ useEffect(() => {
 
 ```typescript
 function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn
-```
+````
 
 创建自动添加到地图并删除的 MapLibre `Marker`
 当所属组件被卸载时。标记的位置跟踪 `lngLat`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地图 |地图\|未定义 |  |
-|选项 |使用标记选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 地图 | 地图\|未定义 |      |
+| 选项 | 使用标记选项 |      |
 
 #### 合同
 
 - **@例子：** ```ts
-const map = useMap();
-const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
-```
+  const map = useMap();
+  const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
+
+````
 
 ### 使用标记选项
 
@@ -381,7 +384,7 @@ const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
 
 ```typescript
 export interface UseMarkerOptions extends MarkerOptions
-```
+````
 
 没有提供描述。
 
@@ -402,7 +405,7 @@ export interface UseMarkerReturn
 **种类：**功能
 
 ```typescript
-function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn
+function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn;
 ```
 
 创建一个自动添加到 MapLibre `Popup` 或从中删除的 MapLibre `Popup`
@@ -411,17 +414,18 @@ function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupRetur
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地图 |地图\|未定义 |  |
-|选项 |使用弹出选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 地图 | 地图\|未定义 |      |
+| 选项 | 使用弹出选项 |      |
 
 #### 合同
 
 - **@例子：** ```ts
-const map = useMap();
-const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
-```
+  const map = useMap();
+  const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
+
+````
 
 ### 使用弹出选项
 
@@ -429,7 +433,7 @@ const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' })
 
 ```typescript
 export interface UsePopupOptions extends PopupOptions
-```
+````
 
 没有提供描述。
 
@@ -450,7 +454,7 @@ export interface UsePopupReturn
 **种类：**功能
 
 ```typescript
-function useSource(map: Map | undefined, options: UseSourceOptions): void
+function useSource(map: Map | undefined, options: UseSourceOptions): void;
 ```
 
 注册 MapLibre 数据源并使其与地图保持同步。
@@ -463,17 +467,18 @@ function useSource(map: Map | undefined, options: UseSourceOptions): void
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地图 |地图\|未定义 |  |
-|选项 |使用源选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 地图 | 地图\|未定义 |      |
+| 选项 | 使用源选项   |      |
 
 #### 合同
 
 - **@例子：** ```ts
-const map = useMap();
-useSource(map, { id: 'earthquakes', source: geojsonSpec });
-```
+  const map = useMap();
+  useSource(map, { id: 'earthquakes', source: geojsonSpec });
+
+````
 
 ### 使用源选项
 
@@ -481,7 +486,7 @@ useSource(map, { id: 'earthquakes', source: geojsonSpec });
 
 ```typescript
 export interface UseSourceOptions
-```
+````
 
 没有提供描述。
 
@@ -492,7 +497,7 @@ export interface UseSourceOptions
 **种类：**常数
 
 ```typescript
-export const MapContext
+export const MapContext;
 ```
 
 上下文携带最近的 `<MapLibre>` 祖先的 MapLibre `Map` 实例。

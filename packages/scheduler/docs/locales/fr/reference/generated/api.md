@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement
+function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 ```
 
 `ForgeScheduler` — un calendrier/planificateur complet créé une fois dans le JSX neutre
@@ -41,9 +41,9 @@ accessoires.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<SchedulerProperties> |  |
+| Nom        | Tapez                              | Descriptif |
+| ---------- | ---------------------------------- | ---------- |
+| propriétés | Lecture seule<SchedulerProperties> |            |
 
 ### Propriétés du planificateur
 
@@ -72,7 +72,7 @@ Jeton de taille – échelle canonique 2xs → 2xl.
 **Genre :** fonction
 
 ```typescript
-function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent
+function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent;
 ```
 
 Appliquez un correctif à un événement, en remplaçant `lastModified` et `sequence` (le standard
@@ -80,17 +80,17 @@ Sémantique de révision RFC 5545). `uid` est conservé.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| événement | VEvénement |  |
-| pièce | Partielle<Omit<VEvent, 'uid'>> |  |
+| Nom       | Tapez                          | Descriptif |
+| --------- | ------------------------------ | ---------- |
+| événement | VEvénement                     |            |
+| pièce     | Partielle<Omit<VEvent, 'uid'>> |            |
 
 ### créer un événement
 
 **Genre :** fonction
 
 ```typescript
-function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
+function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent;
 ```
 
 Créez un tout nouveau {@link VEvent} à partir d'un partiel (sans `uid`/`dtstamp`),
@@ -98,70 +98,70 @@ générer un UID et les horodatages de création/modification.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| partiel | Omettre<VEvent, 'uid' \| 'dtstamp'> |  |
+| Nom     | Tapez                               | Descriptif |
+| ------- | ----------------------------------- | ---------- |
+| partiel | Omettre<VEvent, 'uid' \| 'dtstamp'> |            |
 
 ### événementsPourJour
 
 **Genre :** fonction
 
 ```typescript
-function eventsForDay(events: VEvent[], day: Date): VEvent[]
+function eventsForDay(events: VEvent[], day: Date): VEvent[];
 ```
 
 Renvoie les événements qui tombent le jour calendaire donné.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| événements | VEvénement[] |  |
-| jour | Dates |  |
+| Nom        | Tapez        | Descriptif |
+| ---------- | ------------ | ---------- |
+| événements | VEvénement[] |            |
+| jour       | Dates        |            |
 
 ### événementsPourRange
 
 **Genre :** fonction
 
 ```typescript
-function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[]
+function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 ```
 
 Renvoie les événements (y compris les occurrences récurrentes) qui chevauchent l'événement donné.
-plage de dates [début, fin).  Les événements avec `status === 'CANCELLED'` sont exclus.
+plage de dates [début, fin). Les événements avec `status === 'CANCELLED'` sont exclus.
 Les événements récurrents sont étendus via leur RRULE / RDATE ; Les exclusions EXDATE sont
 honoré.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| événements | VEvénement[] |  |
-| démarrer | Dates |  |
-| fin | Dates |  |
+| Nom        | Tapez        | Descriptif |
+| ---------- | ------------ | ---------- |
+| événements | VEvénement[] |            |
+| démarrer   | Dates        |            |
+| fin        | Dates        |            |
 
 ### formatDurée
 
 **Genre :** fonction
 
 ```typescript
-function formatDuration(event: VEvent): string
+function formatDuration(event: VEvent): string;
 ```
 
 Renvoie une chaîne de durée lisible par l'homme pour un événement, par ex. "1h 30min".
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| événement | VEvénement |  |
+| Nom       | Tapez      | Descriptif |
+| --------- | ---------- | ---------- |
+| événement | VEvénement |            |
 
 ### mise en pageJour
 
 **Genre :** fonction
 
 ```typescript
-function layoutDay(events: VEvent[]): SchedulerEventSlot[]
+function layoutDay(events: VEvent[]): SchedulerEventSlot[];
 ```
 
 Organisez des événements pour une seule journée à l'aide d'une simple collision basée sur des colonnes
@@ -170,16 +170,16 @@ et chacun occupe `column` des pistes parallèles `totalColumns`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| événements | VEvénement[] |  |
+| Nom        | Tapez        | Descriptif |
+| ---------- | ------------ | ---------- |
+| événements | VEvénement[] |            |
 
 ### moveEventPatch
 
 **Genre :** fonction
 
 ```typescript
-function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>
+function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>;
 ```
 
 Le patch `{ dtstart, dtend }` qui déplace un événement de `deltaMs` millisecondes,
@@ -187,17 +187,17 @@ en préservant sa représentation ISO toute la journée / chronométrée.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| événement | VEvénement |  |
-| deltaM | numéro |  |
+| Nom       | Tapez      | Descriptif |
+| --------- | ---------- | ---------- |
+| événement | VEvénement |            |
+| deltaM    | numéro     |            |
 
 ### resizeEventPatch
 
 **Genre :** fonction
 
 ```typescript
-function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
+function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>;
 ```
 
 Le patch `{ dtend }` qui redimensionne la fin d'un événement par `deltaMs`, bloqué pour que
@@ -205,10 +205,10 @@ l'événement dure au moins 15 minutes (ou une journée, pour les événements d
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| événement | VEvénement |  |
-| deltaM | numéro |  |
+| Nom       | Tapez      | Descriptif |
+| --------- | ---------- | ---------- |
+| événement | VEvénement |            |
+| deltaM    | numéro     |            |
 
 ## `src/core/range`
 
@@ -217,7 +217,7 @@ l'événement dure au moins 15 minutes (ou une journée, pour les événements d
 **Genre :** fonction
 
 ```typescript
-function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
+function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 ```
 
 Passez les unités de vue `anchor` à `direction` (-1 = précédent, +1 = suivant).
@@ -225,18 +225,18 @@ Pas de jour/trois jours/semaine en jours ; pas de mois/année dans leurs règle
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| voir | PlanificateurView |  |
-| ancre | Dates |  |
-| direction | -1 \| 1 |  |
+| Nom       | Tapez             | Descriptif |
+| --------- | ----------------- | ---------- |
+| voir      | PlanificateurView |            |
+| ancre     | Dates             |            |
+| direction | -1 \| 1           |            |
 
 ### visibleRangeFor
 
 **Genre :** fonction
 
 ```typescript
-function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange
+function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange;
 ```
 
 La fenêtre `[start, end)` visible entrouverte pour le `view` donné ancrée à
@@ -244,11 +244,11 @@ La fenêtre `[start, end)` visible entrouverte pour le `view` donné ancrée à
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| voir | PlanificateurView |  |
-| ancre | Dates |  |
-| WeekStartsOn | Début de la semaine |  |
+| Nom          | Tapez               | Descriptif |
+| ------------ | ------------------- | ---------- |
+| voir         | PlanificateurView   |            |
+| ancre        | Dates               |            |
+| WeekStartsOn | Début de la semaine |            |
 
 ## `src/core/recurrence`
 
@@ -257,11 +257,11 @@ La fenêtre `[start, end)` visible entrouverte pour le `view` donné ancrée à
 **Genre :** fonction
 
 ```typescript
-function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[]
+function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[];
 ```
 
 Développez un seul VEvent avec une RRULE dans toutes les occurrences qui se chevauchent
-avec [rangeStart, rangeEnd).  Renvoie les clones virtuels VEvent – un par
+avec [rangeStart, rangeEnd). Renvoie les clones virtuels VEvent – un par
 occurrence - avec dtstart / dtend ajusté.
 
 Gère également RDATE (dates supplémentaires) et EXDATE (dates exclues).
@@ -271,11 +271,11 @@ empêcher les boucles infinies sur des règles illimitées.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| événement | VEvénement |  |
-| plageDébut | Dates |  |
-| plageFin | Dates |  |
+| Nom        | Tapez      | Descriptif |
+| ---------- | ---------- | ---------- |
+| événement  | VEvénement |            |
+| plageDébut | Dates      |            |
+| plageFin   | Dates      |            |
 
 ## `src/core/types`
 

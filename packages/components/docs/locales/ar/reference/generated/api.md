@@ -56,7 +56,7 @@ export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy' | undefined;
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
+function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 ```
 
 `ForgeAvatar` — صورة رمزية للمستخدم/الكيان تم تأليفها مرة واحدة بلهجة JSX المحايدة
@@ -71,9 +71,9 @@ function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<AvatarProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<AvatarProperties> |       |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -112,7 +112,7 @@ export interface BackgroundVideoSource
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement
+function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement;
 ```
 
 `ForgeBackgroundVideo` - فيديو خلفية مزخرفة كاملة الهوامش تم تأليفه مرة واحدة
@@ -133,9 +133,9 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<BackgroundVideoProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<BackgroundVideoProperties> |       |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -164,7 +164,8 @@ export type BadgeSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** النوع
 
 ```typescript
-export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type BadgeVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 النغمة المرئية للشارة. يعكس `@mission-platform/components` `ForgeBadge`.
@@ -174,7 +175,7 @@ export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 's
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
+function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 ```
 
 `ForgeBadge` — شريحة صغيرة للحالة/التسمية تم إنشاؤها مرة واحدة في JSX المحايدة
@@ -196,9 +197,9 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<BadgeProperties> |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| خصائص | للقراءة فقط<BadgeProperties> |       |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -217,7 +218,8 @@ export interface ButtonProperties
 **النوع:** النوع
 
 ```typescript
-export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type ButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 المعالجة البصرية للزر. يعكس `@mission-platform/components` `ForgeButton`.
@@ -227,7 +229,7 @@ export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | '
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
+function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 ```
 
 `ForgeButton` — زر تم تأليفه مرة واحدة بلهجة JSX المحايدة وتم تجميعه
@@ -249,9 +251,9 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ButtonProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<ButtonProperties> |       |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -260,7 +262,7 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
+function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 ```
 
 `ForgeIconButton` - زر مضغوط ومربع ومخصص للأيقونات فقط تم تأليفه مرة واحدة في ملف
@@ -276,9 +278,9 @@ function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<IconButtonProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<IconButtonProperties> |       |
 
 ### IconButtonProperties
 
@@ -305,7 +307,8 @@ export type IconButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** النوع
 
 ```typescript
-export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type IconButtonVariant =
+  'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 المعالجة المرئية لزر الرمز - مجموعة الألوان الأساسية بالإضافة إلى `ghost` الشفاف.
@@ -317,7 +320,7 @@ export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement
+function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement;
 ```
 
 `ForgeProgressBar` — تم تأليف مؤشر التقدم المحدد أو غير المحدد
@@ -332,9 +335,9 @@ function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ProgressBarProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<ProgressBarProperties> |       |
 
 ### ProgressBarProperties
 
@@ -361,7 +364,8 @@ export type ProgressSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** النوع
 
 ```typescript
-export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ProgressVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 لهجة ملء التقدم.
@@ -373,7 +377,7 @@ export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' |
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement
+function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
 ```
 
 `ForgeQuote` - الاقتباس الدلالي / الاقتباس المسحب الذي تم تأليفه مرة واحدة في الحياد
@@ -393,9 +397,9 @@ function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<QuoteProperties> |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| خصائص | للقراءة فقط<QuoteProperties> |       |
 
 ### QuoteProperties
 
@@ -434,7 +438,7 @@ export type QuoteVariant = 'default' | 'bordered' | 'plain';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement
+function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement;
 ```
 
 `ForgeResponsiveImage` — عنصر `<picture>` موجه فنيًا وسريع الاستجابة
@@ -455,9 +459,9 @@ Vue بواسطة `@mission-platform/vite-plugin-forge`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ResponsiveImageProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<ResponsiveImageProperties> |       |
 
 ### ResponsiveImageFit
 
@@ -496,7 +500,7 @@ export interface ResponsiveImageSource
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement
+function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement;
 ```
 
 `ForgeResponsiveVideo` - عنصر `<video>` سريع الاستجابة تم تأليفه مرة واحدة في
@@ -519,9 +523,9 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ResponsiveVideoProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<ResponsiveVideoProperties> |       |
 
 ### استجابةVideoFit
 
@@ -560,7 +564,7 @@ export interface ResponsiveVideoSource
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement
+function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ```
 
 `ForgeSeparator` — فاصل / مقسم مرئي تم تأليفه مرة واحدة في الوضع المحايد
@@ -581,9 +585,9 @@ function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SeparatorProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<SeparatorProperties> |       |
 
 ### اتجاه الفاصل
 
@@ -632,7 +636,7 @@ export type SeparatorVariant = 'solid' | 'dashed' | 'dotted';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
+function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 ```
 
 `ForgeSkeleton` — عنصر نائب للتحميل تم تأليفه مرة واحدة في JSX المحايد
@@ -647,9 +651,9 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SkeletonProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<SkeletonProperties> |       |
 
 ### SkeletonProperties
 
@@ -678,7 +682,7 @@ export type SkeletonShape = 'line' | 'circle' | 'block';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement
+function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement;
 ```
 
 `ForgeSpinner` — قرص تحميل غير محدد تم تأليفه مرة واحدة في الوضع المحايد
@@ -695,9 +699,9 @@ function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SpinnerProperties> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| خصائص | للقراءة فقط<SpinnerProperties> |       |
 
 ### SpinnerProperties
 
@@ -724,7 +728,8 @@ export type SpinnerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** النوع
 
 ```typescript
-export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type SpinnerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 نغمة الحلقة الدوارة.
@@ -736,7 +741,7 @@ export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeStack(properties: Readonly<StackProperties>): MpElement
+function ForgeStack(properties: Readonly<StackProperties>): MpElement;
 ```
 
 `ForgeStack` — تخطيط مكدس flexbox بدائي يضع العناصر التابعة له فيه
@@ -751,9 +756,9 @@ function ForgeStack(properties: Readonly<StackProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<StackProperties> |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| خصائص | للقراءة فقط<StackProperties> |       |
 
 ### StackAlign
 
@@ -812,23 +817,24 @@ export interface StackProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement
+function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<StatusIconProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<StatusIconProperties> |       |
 
 ### StatusIconLevel
 
 **النوع:** النوع
 
 ```typescript
-export type StatusIconLevel = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type StatusIconLevel =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 الحالة / النغمة التي ينقلها الرمز — مجموعة الألوان الأساسية.
@@ -890,7 +896,7 @@ export interface AccordionProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement
+function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement;
 ```
 
 `ForgeAccordion` — حاوية مكدسة رأسيًا من الصفوف القابلة للطي
@@ -913,9 +919,9 @@ React/Vue)؛ وتصبح الفتحات `summary`/الافتراضية لكل ع�
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<AccordionProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<AccordionProperties> |       |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -944,7 +950,7 @@ export interface BreadcrumbProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
+function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 ```
 
 `ForgeBreadcrumb` — مسار التنقل تم تأليفه مرة واحدة باللهجة المحايدة لـ JSX
@@ -964,9 +970,9 @@ function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<BreadcrumbProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<BreadcrumbProperties> |       |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1005,7 +1011,7 @@ export interface ButtonGroupProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement
+function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement;
 ```
 
 `ForgeButtonGroup` — يقوم بتجميع الأزرار ذات الصلة في وحدة مرئية واحدة. تأليف
@@ -1024,9 +1030,9 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ButtonGroupProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<ButtonGroupProperties> |       |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1055,7 +1061,7 @@ export interface CardProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeCard(properties: Readonly<CardProperties>): MpElement
+function ForgeCard(properties: Readonly<CardProperties>): MpElement;
 ```
 
 `ForgeCard` — حاوية سطحية تحتوي على مناطق رأس/تذييل اختيارية، مؤلفة
@@ -1075,9 +1081,9 @@ function ForgeCard(properties: Readonly<CardProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<CardProperties> |  |
+| الاسم | اكتب                        | الوصف |
+| ----- | --------------------------- | ----- |
+| خصائص | للقراءة فقط<CardProperties> |       |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1116,7 +1122,7 @@ export type ChatBubbleVariant = 'default' | 'primary';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
+function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 ```
 
 `ForgeChatBubble` — فقاعة رسالة واحدة تم تأليفها مرة واحدة في JSX المحايدة
@@ -1137,9 +1143,9 @@ function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ChatBubbleProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<ChatBubbleProperties> |       |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1158,7 +1164,7 @@ export interface CollapseProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
+function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 ```
 
 `ForgeCollapse` - كشف أصلي يستند إلى `<details>` تم تأليفه مرة واحدة في
@@ -1181,9 +1187,9 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<CollapseProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<CollapseProperties> |       |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1232,7 +1238,7 @@ export type DeviceMockType = 'mobile' | 'tablet' | 'desktop' | 'browser';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement
+function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 ```
 
 `ForgeDeviceMock` — إطار جهاز مزخرف يغلف الشاشة بشكل عشوائي
@@ -1249,9 +1255,9 @@ chrome، تم تأليفه مرة واحدة بلهجة JSX المحايدة (`@
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<DeviceMockProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<DeviceMockProperties> |       |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1260,7 +1266,7 @@ chrome، تم تأليفه مرة واحدة بلهجة JSX المحايدة (`@
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeGrid(properties: Readonly<GridProperties>): MpElement
+function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 ```
 
 `ForgeGrid` - تخطيط أولي لشبكة CSS يقوم بترتيب محتواه في ملف
@@ -1280,9 +1286,9 @@ function ForgeGrid(properties: Readonly<GridProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<GridProperties> |  |
+| الاسم | اكتب                        | الوصف |
+| ----- | --------------------------- | ----- |
+| خصائص | للقراءة فقط<GridProperties> |       |
 
 ### محاذاة الشبكة
 
@@ -1321,7 +1327,7 @@ export interface GridProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeInView(properties: Readonly<InViewProperties>): MpElement
+function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 ```
 
 `ForgeInView` - يلتف المحتوى ويستخدم `IntersectionObserver` للكشف عنه
@@ -1336,9 +1342,9 @@ function ForgeInView(properties: Readonly<InViewProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<InViewProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<InViewProperties> |       |
 
 ### InViewAnimation
 
@@ -1367,7 +1373,7 @@ export interface InViewProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeList(properties: Readonly<ListProperties>): MpElement
+function ForgeList(properties: Readonly<ListProperties>): MpElement;
 ```
 
 `ForgeList` - قائمة مرتبة/غير مرتبة/وصف/قائمة عادية تم تأليفها مرة واحدة في
@@ -1388,9 +1394,9 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ListProperties> |  |
+| الاسم | اكتب                        | الوصف |
+| ----- | --------------------------- | ----- |
+| خصائص | للقراءة فقط<ListProperties> |       |
 
 ### ListItem
 
@@ -1439,7 +1445,7 @@ export type ListVariant = 'unordered' | 'ordered' | 'description' | 'none';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement
+function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement;
 ```
 
 `ForgeMasonry` — تخطيط بناء حجري متعدد الأعمدة في CSS تم تأليفه مرة واحدة في
@@ -1462,9 +1468,9 @@ CSS)؛ يتم تطبيق الخصائص الديناميكية متعددة ال
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MasonryProperties> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| خصائص | للقراءة فقط<MasonryProperties> |       |
 
 ### MasonryGap
 
@@ -1493,7 +1499,7 @@ export interface MasonryProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
+function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 ```
 
 `ForgeMenuItem` — إدخال قائمة واحد يتم تأليفه مرة واحدة بلهجة JSX المحايدة
@@ -1513,9 +1519,9 @@ function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MenuItemProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<MenuItemProperties> |       |
 
 ### MenuItemProperties
 
@@ -1532,7 +1538,8 @@ export interface MenuItemProperties
 **النوع:** النوع
 
 ```typescript
-export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type MenuItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 يتم تطبيق النغمة على عنصر القائمة.
@@ -1544,7 +1551,7 @@ export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' |
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
+function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 ```
 
 `ForgeMenu` — قائمة يمكن الوصول إليها تم تأليفها مرة واحدة بلهجة JSX المحايدة و
@@ -1570,9 +1577,9 @@ function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MenuProperties> |  |
+| الاسم | اكتب                        | الوصف |
+| ----- | --------------------------- | ----- |
+| خصائص | للقراءة فقط<MenuProperties> |       |
 
 ### عقدة القائمة
 
@@ -1611,7 +1618,7 @@ export interface MenuProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement
+function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 ```
 
 `ForgeNavbarItem` — مُدخل شريط التنقل الذي تم كتابته مرة واحدة بلهجة JSX المحايدة و
@@ -1639,9 +1646,9 @@ function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<NavbarItemProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<NavbarItemProperties> |       |
 
 ### NavbarItemChild
 
@@ -1668,7 +1675,8 @@ export interface NavbarItemProperties
 **النوع:** النوع
 
 ```typescript
-export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type NavbarItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 تم تطبيق النغمة على عنصر شريط التنقل.
@@ -1680,7 +1688,7 @@ export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary'
 **النوع:** الوظيفة
 
 ```typescript
-function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
+function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 ```
 
 `ForgePagination` — عنصر التحكم في التنقل بالصفحة تم تأليفه مرة واحدة في JSX المحايدة
@@ -1700,9 +1708,9 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<PaginationProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<PaginationProperties> |       |
 
 ### PaginationItem
 
@@ -1741,7 +1749,7 @@ export type PaginationSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
+function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 ```
 
 `ForgeTabs` — حاوية علامات تبويب يمكن الوصول إليها والتحكم فيها وتم تأليفها مرة واحدة في ملف
@@ -1775,9 +1783,9 @@ function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<TabsProperties> |  |
+| الاسم | اكتب                        | الوصف |
+| ----- | --------------------------- | ----- |
+| خصائص | للقراءة فقط<TabsProperties> |       |
 
 ### TabItem
 
@@ -1826,7 +1834,7 @@ export type TabsVariant = 'line' | 'pill';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
+function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 ```
 
 `ForgeTimeline` — قائمة مرتبة ومرتبة زمنيًا للأحداث التي تم تأليفها مرة واحدة في
@@ -1847,9 +1855,9 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<TimelineProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<TimelineProperties> |       |
 
 ### TimelineAlign
 
@@ -1886,7 +1894,8 @@ export interface TimelineItemScope
 **النوع:** النوع
 
 ```typescript
-export type TimelineItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type TimelineItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 يتم تطبيق مجموعة الألوان على نقطة التحديد.
@@ -1918,7 +1927,7 @@ export interface TimelineProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement
+function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement;
 ```
 
 `ForgeWindowPopout` - يعرض محتواه في نافذة متصفح منفصلة،
@@ -1943,9 +1952,9 @@ function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<WindowPopoutProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<WindowPopoutProperties> |       |
 
 ### WindowPopoutProperties
 
@@ -1994,7 +2003,7 @@ export interface CarouselSlideScope
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement
+function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
 ```
 
 `ForgeCarousel` - مجموعة شرائح قابلة للتمرير أفقيًا تم تأليفها مرة واحدة في
@@ -2019,9 +2028,9 @@ function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<CarouselProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<CarouselProperties> |       |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2040,7 +2049,7 @@ export interface ChatAreaProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
+function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 ```
 
 `ForgeChatArea` - سطح محادثة قابل للتمرير تم تأليفه مرة واحدة في
@@ -2065,9 +2074,9 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ChatAreaProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<ChatAreaProperties> |       |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2139,7 +2148,7 @@ export type DrawerVariant = 'overlay' | 'inline';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement
+function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 ```
 
 `ForgeDrawer` — لوحة منزلقة تم تأليفها مرة واحدة بلهجة JSX المحايدة و
@@ -2169,9 +2178,9 @@ helper) ودعامة `closeLabel` بدلاً من i18n.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<DrawerProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<DrawerProperties> |       |
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2180,7 +2189,7 @@ helper) ودعامة `closeLabel` بدلاً من i18n.
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
+function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement;
 ```
 
 `ForgeMenubar` — شريط قوائم تطبيق أفقي تم تأليفه مرة واحدة في الوضع المحايد
@@ -2207,9 +2216,9 @@ function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MenubarProperties> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| خصائص | للقراءة فقط<MenubarProperties> |       |
 
 ### خصائص شريط القوائم
 
@@ -2228,7 +2237,7 @@ export interface MenubarProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement
+function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
 ```
 
 `ForgeNavbar` — شريط التنقل العلوي للتطبيق الذي تم تأليفه مرة واحدة في الوضع المحايد
@@ -2249,9 +2258,9 @@ function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<NavbarProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<NavbarProperties> |       |
 
 ### NavbarAlign
 
@@ -2292,7 +2301,7 @@ export interface NavbarProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTable(properties: Readonly<TableProperties>): MpElement
+function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
 `ForgeTable` — جدول بيانات قابل للفرز تم تأليفه مرة واحدة بلهجة JSX المحايدة
@@ -2315,9 +2324,9 @@ function ForgeTable(properties: Readonly<TableProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<TableProperties> |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| خصائص | للقراءة فقط<TableProperties> |       |
 
 ### اتجاه الفرز
 
@@ -2356,7 +2365,7 @@ export interface TableProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
+function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
 ```
 
 `ForgeTreeView` — شجرة متكررة ويمكن الوصول إليها وتم تأليفها مرة واحدة في JSX المحايدة
@@ -2382,9 +2391,9 @@ function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<TreeViewProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<TreeViewProperties> |       |
 
 ### TreeViewLabelScope
 
@@ -2423,7 +2432,7 @@ export interface TreeViewProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement
+function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement;
 ```
 
 `ForgeVirtualList` — يجعل الصفوف مرئية فقط داخل حاوية التمرير،
@@ -2444,9 +2453,9 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<VirtualListProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<VirtualListProperties> |       |
 
 ### VirtualListItemScope
 
@@ -2475,7 +2484,7 @@ export interface VirtualListProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement
+function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement;
 ```
 
 `ForgeVirtualLogViewer` — عارض سجل التمرير الظاهري عالي الأداء.
@@ -2495,9 +2504,9 @@ Vue بواسطة `@mission-platform/vite-plugin-forge`؛ فهو يعرض الص�
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<VirtualLogViewerProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<VirtualLogViewerProperties> |       |
 
 ### دخول السجل
 
@@ -2536,7 +2545,7 @@ export interface VirtualLogViewerProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement
+function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement;
 ```
 
 `ForgeVirtualTable` - جدول بيانات قابل للتمرير الظاهري والفرز يتم عرضه
@@ -2566,9 +2575,9 @@ function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<VirtualTableProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<VirtualTableProperties> |       |
 
 ### VirtualTableCellScope
 
@@ -2607,7 +2616,7 @@ export interface VirtualTableProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement
+function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement;
 ```
 
 `ForgeVirtualTabs` — حاوية علامات التبويب التي يتم التحكم فيها والتي تعرض ** فقط العناصر النشطة
@@ -2632,9 +2641,9 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<VirtualTabsProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<VirtualTabsProperties> |       |
 
 ### VirtualTabPanelScope
 
@@ -2663,7 +2672,7 @@ export interface VirtualTabsProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement
+function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement;
 ```
 
 `ForgeVirtualTreeView` - شجرة تمرير افتراضية تعمل على تسطيح مظهرها المرئي
@@ -2684,9 +2693,9 @@ function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<VirtualTreeViewProperties> |  |
+| الاسم | اكتب                                   | الوصف |
+| ----- | -------------------------------------- | ----- |
+| خصائص | للقراءة فقط<VirtualTreeViewProperties> |       |
 
 ### TreeNode
 
@@ -2725,7 +2734,7 @@ export interface VirtualTreeViewProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeHero(properties: Readonly<HeroProperties>): MpElement
+function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 ```
 
 `ForgeHero` — قسم عنوان الصفحة/الشعار الذي تم تأليفه مرة واحدة في JSX المحايدة
@@ -2747,9 +2756,9 @@ helper) و`eyebrow`/`title`/`subtitle` عبارة عن دعائم سلسلة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<HeroProperties> |  |
+| الاسم | اكتب                        | الوصف |
+| ----- | --------------------------- | ----- |
+| خصائص | للقراءة فقط<HeroProperties> |       |
 
 ### HeroAlign
 
@@ -2788,7 +2797,7 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function beginPointerDrag(handlers: PointerDragHandlers): () => void
+function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 ```
 
 ابدأ سحب مؤشر تتبع النافذة. يتم إرفاق `pointermove`/`pointerup`/
@@ -2799,9 +2808,9 @@ function beginPointerDrag(handlers: PointerDragHandlers): () => void
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معالجات | مؤشرات السحب |  |
+| الاسم   | اكتب         | الوصف |
+| ------- | ------------ | ----- |
+| معالجات | مؤشرات السحب |       |
 
 ### PointerDragHandlers
 

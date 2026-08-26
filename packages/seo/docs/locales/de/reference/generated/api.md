@@ -16,91 +16,91 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/seo`.
 **Art:** Funktion
 
 ```typescript
-function article(input: ArticleInput): JsonLd
+function article(input: ArticleInput): JsonLd;
 ```
 
 Schema.org `Article` / `BlogPosting` / `NewsArticle` Builder.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | ArtikelEingabe |  |
+| Name    | Geben Sie      | ein Beschreibung |
+| ------- | -------------- | ---------------- |
+| Eingabe | ArtikelEingabe |                  |
 
 ### BreadcrumbList
 
 **Art:** Funktion
 
 ```typescript
-function breadcrumbList(input: BreadcrumbListInput): JsonLd
+function breadcrumbList(input: BreadcrumbListInput): JsonLd;
 ```
 
 Schema.org `BreadcrumbList` – pro Seite ausgeben, um die Site-Hierarchie offenzulegen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | BreadcrumbListInput |  |
+| Name    | Geben Sie           | ein Beschreibung |
+| ------- | ------------------- | ---------------- |
+| Eingabe | BreadcrumbListInput |                  |
 
 ### Ereignis
 
 **Art:** Funktion
 
 ```typescript
-function event(input: EventInput): JsonLd
+function event(input: EventInput): JsonLd;
 ```
 
 Schema.org `Event`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | EventInput |  |
+| Name    | Geben Sie  | ein Beschreibung |
+| ------- | ---------- | ---------------- |
+| Eingabe | EventInput |                  |
 
 ### FAQ-Seite
 
 **Art:** Funktion
 
 ```typescript
-function faqPage(input: FaqPageInput): JsonLd
+function faqPage(input: FaqPageInput): JsonLd;
 ```
 
 Schema.org `FAQPage`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | FaqPageInput |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| Eingabe | FaqPageInput |                  |
 
 ### imageObject
 
 **Art:** Funktion
 
 ```typescript
-function imageObject(input: ImageObjectInput): JsonLd
+function imageObject(input: ImageObjectInput): JsonLd;
 ```
 
 Schema.org `ImageObject`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | ImageObjectInput |  |
+| Name    | Geben Sie        | ein Beschreibung |
+| ------- | ---------------- | ---------------- |
+| Eingabe | ImageObjectInput |                  |
 
 ### jsonLd
 
 **Art:** konstant
 
 ```typescript
-export const jsonLd
+export const jsonLd;
 ```
 
 Namespace erneut exportieren, damit Verbraucher „import { jsonLd } from“ ausführen können
-'@mission-platform/seo'` and call `jsonLd.webSite(...)`,
+'@mission-platform/seo'`and call`jsonLd.webSite(...)`,
 `jsonLd.organization(...)` usw.
 
 ### localBusiness
@@ -108,208 +108,208 @@ Namespace erneut exportieren, damit Verbraucher „import { jsonLd } from“ aus
 **Art:** Funktion
 
 ```typescript
-function localBusiness(input: LocalBusinessInput): JsonLd
+function localBusiness(input: LocalBusinessInput): JsonLd;
 ```
 
 Schema.org `LocalBusiness` – erweitert `Organization` um Standortdaten.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | LocalBusinessInput |  |
+| Name    | Geben Sie          | ein Beschreibung |
+| ------- | ------------------ | ---------------- |
+| Eingabe | LocalBusinessInput |                  |
 
 ### Organisation
 
 **Art:** Funktion
 
 ```typescript
-function organization(input: OrganizationInput): JsonLd
+function organization(input: OrganizationInput): JsonLd;
 ```
 
 Schema.org `Organization`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | OrganizationInput |  |
+| Name    | Geben Sie         | ein Beschreibung |
+| ------- | ----------------- | ---------------- |
+| Eingabe | OrganizationInput |                  |
 
 ### Organisations-ID
 
 **Art:** Funktion
 
 ```typescript
-function organizationId(orgUrl: string): string
+function organizationId(orgUrl: string): string;
 ```
 
 Kanonisches `@id` für das standortweite `Organization` (oder `LocalBusiness`) node.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| orgUrl | Zeichenfolge |  |
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| orgUrl | Zeichenfolge |                  |
 
 ### Person
 
 **Art:** Funktion
 
 ```typescript
-function person(input: PersonInput): JsonLd
+function person(input: PersonInput): JsonLd;
 ```
 
 Schema.org `Person`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | PersonInput |  |
+| Name    | Geben Sie   | ein Beschreibung |
+| ------- | ----------- | ---------------- |
+| Eingabe | PersonInput |                  |
 
 ### Produkt
 
 **Art:** Funktion
 
 ```typescript
-function product(input: ProductInput): JsonLd
+function product(input: ProductInput): JsonLd;
 ```
 
 Schema.org `Product`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | Produkteingabe |  |
+| Name    | Geben Sie      | ein Beschreibung |
+| ------- | -------------- | ---------------- |
+| Eingabe | Produkteingabe |                  |
 
 ### Rezept
 
 **Art:** Funktion
 
 ```typescript
-function recipe(input: RecipeInput): JsonLd
+function recipe(input: RecipeInput): JsonLd;
 ```
 
 Schema.org `Recipe`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | Rezepteingabe |  |
+| Name    | Geben Sie     | ein Beschreibung |
+| ------- | ------------- | ---------------- |
+| Eingabe | Rezepteingabe |                  |
 
 ### Rezension
 
 **Art:** Funktion
 
 ```typescript
-function review(input: ReviewInput): JsonLd
+function review(input: ReviewInput): JsonLd;
 ```
 
 Schema.org `Review`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | ReviewInput |  |
+| Name    | Geben Sie   | ein Beschreibung |
+| ------- | ----------- | ---------------- |
+| Eingabe | ReviewInput |                  |
 
 ### Softwareanwendung
 
 **Art:** Funktion
 
 ```typescript
-function softwareApplication(input: SoftwareApplicationInput): JsonLd
+function softwareApplication(input: SoftwareApplicationInput): JsonLd;
 ```
 
 Schema.org `SoftwareApplication`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | SoftwareApplicationInput |  |
+| Name    | Geben Sie                | ein Beschreibung |
+| ------- | ------------------------ | ---------------- |
+| Eingabe | SoftwareApplicationInput |                  |
 
 ### videoObject
 
 **Art:** Funktion
 
 ```typescript
-function videoObject(input: VideoObjectInput): JsonLd
+function videoObject(input: VideoObjectInput): JsonLd;
 ```
 
 Schema.org `VideoObject`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | VideoObjectInput |  |
+| Name    | Geben Sie        | ein Beschreibung |
+| ------- | ---------------- | ---------------- |
+| Eingabe | VideoObjectInput |                  |
 
 ### Webseite
 
 **Art:** Funktion
 
 ```typescript
-function webPage(input: WebPageInput): JsonLd
+function webPage(input: WebPageInput): JsonLd;
 ```
 
 Schema.org `WebPage` – beschreibt eine einzelne Seite innerhalb einer Site.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | WebPageInput |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| Eingabe | WebPageInput |                  |
 
 ### webPageId
 
 **Art:** Funktion
 
 ```typescript
-function webPageId(pageUrl: string): string
+function webPageId(pageUrl: string): string;
 ```
 
 Kanonisches `@id` für ein `WebPage` node.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| pageUrl | Zeichenfolge |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| pageUrl | Zeichenfolge |                  |
 
 ### Webseite
 
 **Art:** Funktion
 
 ```typescript
-function webSite(input: WebSiteInput): JsonLd
+function webSite(input: WebSiteInput): JsonLd;
 ```
 
 Schema.org `WebSite` – wird normalerweise einmal auf der gesamten Website ausgegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | WebSiteInput |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| Eingabe | WebSiteInput |                  |
 
 ### webSiteId
 
 **Art:** Funktion
 
 ```typescript
-function webSiteId(siteUrl: string): string
+function webSiteId(siteUrl: string): string;
 ```
 
 Kanonisches `@id` für das standortweite `WebSite` node.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| siteUrl | Zeichenfolge |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| siteUrl | Zeichenfolge |                  |
 
 ## `src/build-open-graph`
 
@@ -318,7 +318,7 @@ Kanonisches `@id` für das standortweite `WebSite` node.
 **Art:** Funktion
 
 ```typescript
-function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
+function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[];
 ```
 
 Konvertieren Sie {@link OpenGraphMetadata} in eine flache Liste des `<meta>`-Tags
@@ -328,9 +328,9 @@ Bild-Untereigenschaften, gruppiert nach jeder `og:image`-URL.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Metadaten | OpenGraphMetadata |  |
+| Name      | Geben Sie         | ein Beschreibung |
+| --------- | ----------------- | ---------------- |
+| Metadaten | OpenGraphMetadata |                  |
 
 ## `src/build-page-meta`
 
@@ -339,7 +339,7 @@ Bild-Untereigenschaften, gruppiert nach jeder `og:image`-URL.
 **Art:** Funktion
 
 ```typescript
-function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
+function buildPageMeta(metadata: PageMetadata): BuiltPageMeta;
 ```
 
 Konvertieren Sie {@link PageMetadata} in den aufgelösten Titel, die Sprache und die Flat
@@ -347,9 +347,9 @@ Listen der Tag-Deskriptoren `<meta>` / `<link>`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Metadaten | Seitenmetadaten |  |
+| Name      | Geben Sie       | ein Beschreibung |
+| --------- | --------------- | ---------------- |
+| Metadaten | Seitenmetadaten |                  |
 
 ### BuiltPageMeta
 
@@ -368,7 +368,7 @@ Ergebnis von {@link buildPageMeta} – alles, was der Anwender zur Synchronisier
 **Art:** Funktion
 
 ```typescript
-function buildRobotsTxt(input: RobotsTxtInput = {}): string
+function buildRobotsTxt(input: RobotsTxtInput = {}): string;
 ```
 
 Erstellen Sie eine deterministische `robots.txt`-Zeichenfolge aus einer Richtlinienbeschreibung.
@@ -378,9 +378,9 @@ und entspricht der Konvention, die von den meisten Generatoren für statische Si
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | RobotsTxtInput |  |
+| Name    | Geben Sie      | ein Beschreibung |
+| ------- | -------------- | ---------------- |
+| Eingabe | RobotsTxtInput |                  |
 
 ### RobotsGroup
 
@@ -412,23 +412,23 @@ Eingabe, die eine vollständige `robots.txt`-Richtlinie beschreibt.
 **Art:** Funktion
 
 ```typescript
-function buildSitemapIndex(input: SitemapIndexInput): string
+function buildSitemapIndex(input: SitemapIndexInput): string;
 ```
 
 Erstellen Sie eine deterministische Sitemap-Index-XML-Zeichenfolge.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | SitemapIndexInput |  |
+| Name    | Geben Sie         | ein Beschreibung |
+| ------- | ----------------- | ---------------- |
+| Eingabe | SitemapIndexInput |                  |
 
 ### buildSitemapXml
 
 **Art:** Funktion
 
 ```typescript
-function buildSitemapXml(input: SitemapXmlInput): string
+function buildSitemapXml(input: SitemapXmlInput): string;
 ```
 
 Erstellen Sie eine deterministische `sitemap.xml`-Zeichenfolge. Die Ausgabe endet immer mit a
@@ -436,9 +436,9 @@ Nachgestellter Zeilenumbruch, damit er sauber mit HTTP-Antworten verkettet wird.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | SitemapXmlInput |  |
+| Name    | Geben Sie       | ein Beschreibung |
+| ------- | --------------- | ---------------- |
+| Eingabe | SitemapXmlInput |                  |
 
 ### SitemapAlternate
 
@@ -497,7 +497,7 @@ Eingabe, die eine vollständige Sitemap beschreibt.
 **Art:** Funktion
 
 ```typescript
-function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
+function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 ```
 
 Reaktive Synchronisierung der gesamten Mission Platform SEO-Oberfläche – Standard
@@ -513,9 +513,9 @@ kann sowohl mit reaktivem Status als auch mit statischen Metadaten verwendet wer
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Metadaten | MaybeRefOrGetter<SeoMetadata> |  |
+| Name      | Geben Sie                     | ein Beschreibung |
+| --------- | ----------------------------- | ---------------- |
+| Metadaten | MaybeRefOrGetter<SeoMetadata> |                  |
 
 ## `src/mp-seo`
 
@@ -524,7 +524,7 @@ kann sowohl mit reaktivem Status als auch mit statischen Metadaten verwendet wer
 **Art:** Komponente
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 Renderlose `<Seo>`-Komponente – ein deklarativer Wrapper um {@link useSeo}.
@@ -539,14 +539,14 @@ Synchronisieren Sie sie mit dem Dokumentenkopf. Rendert kein eigenes DOM.
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ### SEO
 
 **Art:** Komponente
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 Renderlose `<Seo>`-Komponente – ein deklarativer Wrapper um {@link useSeo}.
@@ -561,7 +561,7 @@ Synchronisieren Sie sie mit dem Dokumentenkopf. Rendert kein eigenes DOM.
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ## `src/types`
 

@@ -62,38 +62,38 @@ canvas maakt een nieuw {@link BuilderField} van de opgegeven `type`.
 **Soort:** functie
 
 ```typescript
-function evaluateCondition(condition: FieldCondition, values: FormValues): boolean
+function evaluateCondition(condition: FieldCondition, values: FormValues): boolean;
 ```
 
 Evalueer een {@link FieldCondition} op basis van het formulier `values` en retourneer of
-het houdt momenteel stand.  Combinatorgroepen volgen de semantiek van het JSON-schema:
-`allOf` = AND, `anyOf` = OR, `oneOf` = precies één (XOR).  Meerdere trefwoorden
-aanwezig in dezelfde groep zijn zelf EN-ed.  Een lege groep passeert.
+het houdt momenteel stand. Combinatorgroepen volgen de semantiek van het JSON-schema:
+`allOf` = AND, `anyOf` = OR, `oneOf` = precies één (XOR). Meerdere trefwoorden
+aanwezig in dezelfde groep zijn zelf EN-ed. Een lege groep passeert.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| voorwaarde | Veldvoorwaarde |  |
-| waarden | Vormwaarden |  |
+| Naam       | Typ            | Beschrijving |
+| ---------- | -------------- | ------------ |
+| voorwaarde | Veldvoorwaarde |              |
+| waarden    | Vormwaarden    |              |
 
 ### isVeldZichtbaar
 
 **Soort:** functie
 
 ```typescript
-function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean
+function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean;
 ```
 
 Of een veld met een optionele `visibleWhen`-voorwaarde momenteel zou moeten zijn
-weergegeven.  Velden zonder voorwaarde zijn altijd zichtbaar.
+weergegeven. Velden zonder voorwaarde zijn altijd zichtbaar.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| veld | { zichtbaarWanneer?: Veldvoorwaarde } |  |
-| waarden | Vormwaarden |  |
+| Naam    | Typ                                   | Beschrijving |
+| ------- | ------------------------------------- | ------------ |
+| veld    | { zichtbaarWanneer?: Veldvoorwaarde } |              |
+| waarden | Vormwaarden                           |              |
 
 ## `src/form-schema`
 
@@ -102,16 +102,16 @@ weergegeven.  Velden zonder voorwaarde zijn altijd zichtbaar.
 **Soort:** functie
 
 ```typescript
-function builderFieldToProperty(field: BuilderField): JsonSchemaProperty
+function builderFieldToProperty(field: BuilderField): JsonSchemaProperty;
 ```
 
 Converteert een enkele {@link BuilderField} naar een {@link JsonSchemaProperty}.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| veld | BouwerVeld |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| veld | BouwerVeld |              |
 
 ### maakVeld
 
@@ -123,7 +123,7 @@ function createField(options: {
   label?: string;
   key?: string;
   usedKeys?: Iterable<string>;
-}): BuilderField
+}): BuilderField;
 ```
 
 Creëert een nieuw {@link BuilderField} van de opgegeven `type`. De sleutel is afgeleid
@@ -132,16 +132,16 @@ begin met een lege `children`-array; optiewidgets krijgen twee starteropties.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | {type: FormFieldType;   etiket?: tekenreeks;   sleutel?: tekenreeks;   gebruikte sleutels?: Iterable<string>; } |  |
+| Naam   | Typ                                                                                                       | Beschrijving |
+| ------ | --------------------------------------------------------------------------------------------------------- | ------------ |
+| opties | {type: FormFieldType; etiket?: tekenreeks; sleutel?: tekenreeks; gebruikte sleutels?: Iterable<string>; } |              |
 
 ### DEFAULT_FIELD_TYPES
 
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
+export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[];
 ```
 
 De veldtypen die worden aangeboden in het builderpalet, in weergavevolgorde. Het palet
@@ -154,27 +154,30 @@ datum/tijd → anders → groepering).
 **Soort:** functie
 
 ```typescript
-function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined
+function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined;
 ```
 
 Valideert een veldsleutel ten opzichte van zijn broers en zussen: deze mag niet leeg en uniek zijn
 binnen zijn container. Retourneert een voor mensen leesbaar bericht, of `undefined` wanneer
-de sleutel is geldig. `siblingKeys` zijn de sleutels van de *andere* velden in het
+de sleutel is geldig. `siblingKeys` zijn de sleutels van de _andere_ velden in het
 dezelfde container (exclusief het veld dat wordt gevalideerd).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| sleutel | tekenreeks |  |
-| broer/zussleutels | Itereerbaar<string> |  |
+| Naam              | Typ                 | Beschrijving |
+| ----------------- | ------------------- | ------------ |
+| sleutel           | tekenreeks          |              |
+| broer/zussleutels | Itereerbaar<string> |              |
 
 ### veldenToDefinitie
 
 **Soort:** functie
 
 ```typescript
-function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: FieldsToSchemaOptions = {}): SchemaFormDefinition
+function fieldsToDefinition(
+  fields: BuilderField[] | BuilderField[][],
+  options: FieldsToSchemaOptions = {},
+): SchemaFormDefinition;
 ```
 
 Bouwt de schemadefinitie op, waarbij één stap of wizard uit `options` wordt gekozen.
@@ -183,34 +186,34 @@ het is de platte lijst op het hoogste niveau (`BuilderField[]`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| velden | BouwerVeld[] \| BouwerVeld[][] |  |
-| opties | FieldsToSchemaOptions |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| velden | BouwerVeld[] \| BouwerVeld[][] |              |
+| opties | FieldsToSchemaOptions          |              |
 
 ### veldenNaarSchema
 
 **Soort:** functie
 
 ```typescript
-function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema
+function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema;
 ```
 
 Bouwt een {@link FormJsonSchema} in één stap op basis van velden op het hoogste niveau.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| velden | BouwerVeld[] |  |
-| opties | FieldsToSchemaOptions |  |
+| Naam   | Typ                   | Beschrijving |
+| ------ | --------------------- | ------------ |
+| velden | BouwerVeld[]          |              |
+| opties | FieldsToSchemaOptions |              |
 
 ### fieldToWizardSchema
 
 **Soort:** functie
 
 ```typescript
-function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[]
+function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[];
 ```
 
 Bouwt een wizard met meerdere stappen ({@link FormJsonSchema}[]) op basis van een veld per stap
@@ -218,145 +221,145 @@ matrix: `steps[i]` bevat de velden op het hoogste niveau die zijn toegewezen aan
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| stappen | BouwerVeld[][] |  |
-| opties | FieldsToSchemaOptions |  |
+| Naam    | Typ                   | Beschrijving |
+| ------- | --------------------- | ------------ |
+| stappen | BouwerVeld[][]        |              |
+| opties  | FieldsToSchemaOptions |              |
 
 ### isDateWidget
 
 **Soort:** functie
 
 ```typescript
-function isDateWidget(widget: FormFieldType): boolean
+function isDateWidget(widget: FormFieldType): boolean;
 ```
 
 Of de widget een kalenderdatum vastlegt (accepteert `minDate` / `maxDate`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ### isFieldsetWidget
 
 **Soort:** functie
 
 ```typescript
-function isFieldsetWidget(widget: FormFieldType): boolean
+function isFieldsetWidget(widget: FormFieldType): boolean;
 ```
 
 Of de widget een groeperingsveldset is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ### isFileWidget
 
 **Soort:** functie
 
 ```typescript
-function isFileWidget(widget: FormFieldType): boolean
+function isFileWidget(widget: FormFieldType): boolean;
 ```
 
 Of de widget een bestand uploadt (accepteert `accept` / `multiple` / `capture`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ### isLocationWidget
 
 **Soort:** functie
 
 ```typescript
-function isLocationWidget(widget: FormFieldType): boolean
+function isLocationWidget(widget: FormFieldType): boolean;
 ```
 
 Of de widget een geografische coördinaat vastlegt (accepteert `locationFormat`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ### isMultilineWidget
 
 **Soort:** functie
 
 ```typescript
-function isMultilineWidget(widget: FormFieldType): boolean
+function isMultilineWidget(widget: FormFieldType): boolean;
 ```
 
 Of de widget een gebied met meerdere lijnen weergeeft (accepteert een `rows`-telling).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ### isNummerWidget
 
 **Soort:** functie
 
 ```typescript
-function isNumberWidget(widget: FormFieldType): boolean
+function isNumberWidget(widget: FormFieldType): boolean;
 ```
 
 Of de widget numeriek is (`number` / `stepper`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ### isTextWidget
 
 **Soort:** functie
 
 ```typescript
-function isTextWidget(widget: FormFieldType): boolean
+function isTextWidget(widget: FormFieldType): boolean;
 ```
 
 Of de widget een teksttype is (accepteert `minLength` / `maxLength` / `pattern`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ### isTimeWidget
 
 **Soort:** functie
 
 ```typescript
-function isTimeWidget(widget: FormFieldType): boolean
+function isTimeWidget(widget: FormFieldType): boolean;
 ```
 
 Of de widget een tijdstip van de dag vastlegt (accepteert de `showSeconds`-schakelaar).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ### volgendeVeldId
 
 **Soort:** functie
 
 ```typescript
-function nextFieldId(): string
+function nextFieldId(): string;
 ```
 
 Genereert een nieuwe, botsingsbestendige bouwerveld-ID.
@@ -366,55 +369,55 @@ Genereert een nieuwe, botsingsbestendige bouwerveld-ID.
 **Soort:** functie
 
 ```typescript
-function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>
+function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>;
 ```
 
 De voorwaardelijke zichtbaarheidsregels per stap van een wizarddefinitie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| definitie | SchemaFormDefinitie \| ongedefinieerd |  |
+| Naam      | Typ                                   | Beschrijving |
+| --------- | ------------------------------------- | ------------ |
+| definitie | SchemaFormDefinitie \| ongedefinieerd |              |
 
 ### schemaStepDescriptions
 
 **Soort:** functie
 
 ```typescript
-function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 De stapsgewijze beschrijvingen van een wizarddefinitie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| definitie | SchemaFormDefinitie \| ongedefinieerd |  |
+| Naam      | Typ                                   | Beschrijving |
+| --------- | ------------------------------------- | ------------ |
+| definitie | SchemaFormDefinitie \| ongedefinieerd |              |
 
 ### schemaStepTitels
 
 **Soort:** functie
 
 ```typescript
-function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 De titels per stap van een wizarddefinitie (leeg voor een formulier met één stap).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| definitie | SchemaFormDefinitie \| ongedefinieerd |  |
+| Naam      | Typ                                   | Beschrijving |
+| --------- | ------------------------------------- | ------------ |
+| definitie | SchemaFormDefinitie \| ongedefinieerd |              |
 
 ### schemaToFields
 
 **Soort:** functie
 
 ```typescript
-function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][]
+function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][];
 ```
 
 Hydrateert een {@link SchemaFormDefinition} terug in het werkveld van de bouwer
@@ -424,74 +427,74 @@ definitie wordt een platte lijst (`BuilderField[]`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| definitie | SchemaFormDefinitie \| ongedefinieerd |  |
+| Naam      | Typ                                   | Beschrijving |
+| --------- | ------------------------------------- | ------------ |
+| definitie | SchemaFormDefinitie \| ongedefinieerd |              |
 
 ### sluimeren
 
 **Soort:** functie
 
 ```typescript
-function slugify(label: string): string
+function slugify(label: string): string;
 ```
 
 Verandert een menselijk label in een veilige `snake_case`-schemasleutel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| etiket | tekenreeks |  |
+| Naam   | Typ        | Beschrijving |
+| ------ | ---------- | ------------ |
+| etiket | tekenreeks |              |
 
 ### unieke sleutel
 
 **Soort:** functie
 
 ```typescript
-function uniqueKey(base: string, used: Iterable<string>): string
+function uniqueKey(base: string, used: Iterable<string>): string;
 ```
 
 Retourneert `base`, of `base_2`, `base_3`, ... totdat deze niet meer botst.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| basis | tekenreeks |  |
-| gebruikt | Itereerbaar<string> |  |
+| Naam     | Typ                 | Beschrijving |
+| -------- | ------------------- | ------------ |
+| basis    | tekenreeks          |              |
+| gebruikt | Itereerbaar<string> |              |
 
 ### widgetHasOptions
 
 **Soort:** functie
 
 ```typescript
-function widgetHasOptions(widget: FormFieldType): boolean
+function widgetHasOptions(widget: FormFieldType): boolean;
 ```
 
 Of de widget een door de auteur gedefinieerde optielijst weergeeft.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ### widgetToJsonType
 
 **Soort:** functie
 
 ```typescript
-function widgetToJsonType(widget: FormFieldType): JsonSchemaType
+function widgetToJsonType(widget: FormFieldType): JsonSchemaType;
 ```
 
 Het JSON Schema-primitieve type waarnaar een widget serialiseert.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| widget | FormFieldType |              |
 
 ## `src/json-schema`
 
@@ -500,7 +503,7 @@ Het JSON Schema-primitieve type waarnaar een widget serialiseert.
 **Soort:** functie
 
 ```typescript
-function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator
+function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator;
 ```
 
 Compileer een {@link FormJsonSchema} in een herbruikbare validator ondersteund door Ajv.
@@ -508,7 +511,7 @@ Zowel aanwezigheidsregels als waardebeperkingen komen rechtstreeks uit het JSON-
 
 Gegenereerde foutmeldingen worden gelokaliseerd via de optionele `translate`
 functie (spiegeling van vue-i18n's `t(key, named)`); indien weggelaten, ingebouwd
-Er worden Engelse berichten gebruikt.  Door de auteur aangeleverde `errorMessage` heeft altijd voorrang
+Er worden Engelse berichten gebruikt. Door de auteur aangeleverde `errorMessage` heeft altijd voorrang
 winnen en worden woordelijk teruggegeven.
 
 Velden waarvoor een `ui.visibleWhen`-voorwaarde geldt die momenteel niet geldt, zijn dat wel
@@ -517,10 +520,10 @@ indiening.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| schema | FormJsonSchema |  |
-| vertalen | SchemaFormVertalen |  |
+| Naam     | Typ                | Beschrijving |
+| -------- | ------------------ | ------------ |
+| schema   | FormJsonSchema     |              |
+| vertalen | SchemaFormVertalen |              |
 
 ### FormulierValidator
 
@@ -537,7 +540,7 @@ De validator geretourneerd door {@link createFormValidator}.
 **Soort:** functie
 
 ```typescript
-function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
+function jsonSchemaDefaults(schema: FormJsonSchema): FormValues;
 ```
 
 Bereken de standaardwaarde voor elk veld uit het JSON-schema, rekening houdend met
@@ -546,28 +549,28 @@ Veldsets worden herhaald in een genest object van de standaardinstellingen van h
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| schema | FormJsonSchema |  |
+| Naam   | Typ            | Beschrijving |
+| ------ | -------------- | ------------ |
+| schema | FormJsonSchema |              |
 
 ### jsonSchemaToFields
 
 **Soort:** functie
 
 ```typescript
-function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[]
+function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[];
 ```
 
 Converteer een {@link FormJsonSchema} naar de geordende lijst met render-ready
-{@link FormFieldSchema}-descriptors die worden gebruikt door de veldrenderer.  Genest
+{@link FormFieldSchema}-descriptors die worden gebruikt door de veldrenderer. Genest
 `object`-eigenschappen (veldset) worden herhaald in, dus een veldset draagt zijn
 eigen bestelde `fields`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| schema | FormJsonSchema |  |
+| Naam   | Typ            | Beschrijving |
+| ------ | -------------- | ------------ |
+| schema | FormJsonSchema |              |
 
 ## `src/types`
 
@@ -586,7 +589,7 @@ Native `autocapitalize`-hintwaarden voor tekstachtige invoer.
 **Soort:** constant
 
 ```typescript
-export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>
+export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>;
 ```
 
 Selecteerbare `autocomplete`-tokens gegroepeerd voor een vervolgkeuzelijst voor bouwers. Het `group`
@@ -610,13 +613,70 @@ vormen met sectievoorvoegsel staan de specificatie ook toe.
 **Soort:** type
 
 ```typescript
-export type AutocompleteToken = | 'off' | 'on' | 'name' | 'honorific-prefix' | 'given-name' | 'additional-name' | 'family-name' | 'honorific-suffix' | 'nickname' | 'email' | 'username' | 'new-password' | 'current-password' | 'one-time-code' | 'organization-title' | 'organization' | 'street-address' | 'address-line1' | 'address-line2' | 'address-line3' | 'address-level4' | 'address-level3' | 'address-level2' | 'address-level1' | 'country' | 'country-name' | 'postal-code' | 'cc-name' | 'cc-given-name' | 'cc-additional-name' | 'cc-family-name' | 'cc-number' | 'cc-exp' | 'cc-exp-month' | 'cc-exp-year' | 'cc-csc' | 'cc-type' | 'transaction-currency' | 'transaction-amount' | 'language' | 'bday' | 'bday-day' | 'bday-month' | 'bday-year' | 'sex' | 'tel' | 'tel-country-code' | 'tel-national' | 'tel-area-code' | 'tel-local' | 'tel-local-prefix' | 'tel-local-suffix' | 'tel-extension' | 'impp' | 'url' | 'photo' | 'webauthn';
+export type AutocompleteToken =
+  | 'off'
+  | 'on'
+  | 'name'
+  | 'honorific-prefix'
+  | 'given-name'
+  | 'additional-name'
+  | 'family-name'
+  | 'honorific-suffix'
+  | 'nickname'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'one-time-code'
+  | 'organization-title'
+  | 'organization'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'address-line3'
+  | 'address-level4'
+  | 'address-level3'
+  | 'address-level2'
+  | 'address-level1'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-given-name'
+  | 'cc-additional-name'
+  | 'cc-family-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-exp-month'
+  | 'cc-exp-year'
+  | 'cc-csc'
+  | 'cc-type'
+  | 'transaction-currency'
+  | 'transaction-amount'
+  | 'language'
+  | 'bday'
+  | 'bday-day'
+  | 'bday-month'
+  | 'bday-year'
+  | 'sex'
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national'
+  | 'tel-area-code'
+  | 'tel-local'
+  | 'tel-local-prefix'
+  | 'tel-local-suffix'
+  | 'tel-extension'
+  | 'impp'
+  | 'url'
+  | 'photo'
+  | 'webauthn';
 ```
 
 De standaard HTML `autocomplete`-tokens, zoals gecatalogiseerd door MDN
 (https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete).
 
-Dit zijn de genoemde *detail*-tokens die door een enkele tekstachtige invoer kunnen worden geadverteerd
+Dit zijn de genoemde _detail_-tokens die door een enkele tekstachtige invoer kunnen worden geadverteerd
 browsers en wachtwoordmanagers kunnen de juiste opgeslagen waarde bieden. De lijst
 laat opzettelijk de groeperings-/sectiemodifiers weg (`section-*`, `shipping`,
 `billing`, `home`, `work`, ...) die slechts één van deze tokens voorafgaat: een
@@ -641,7 +701,7 @@ Ofwel een bladvergelijking, ofwel een Booleaanse combinator van geneste omstandi
 export interface FieldConditionGroup
 ```
 
-Een combinator die geneste {@link FieldCondition}s groepeert.  Spiegelt JSON-schema's
+Een combinator die geneste {@link FieldCondition}s groepeert. Spiegelt JSON-schema's
 Booleaanse trefwoorden:
 
 - `allOf` — wordt doorgegeven wanneer **elke** geneste voorwaarde wordt doorgegeven (logisch AND).
@@ -658,8 +718,8 @@ Meerdere trefwoorden in dezelfde groep worden zelf met AND-bewerkingen bewerkt.
 export interface FieldConditionLeaf
 ```
 
-Een voorwaarde voor één blad die de huidige waarde van één veld test.  Precies één
-comparator is normaal ingesteld; als er meerdere aanwezig zijn, moeten ze *allemaal* vasthouden
+Een voorwaarde voor één blad die de huidige waarde van één veld test. Precies één
+comparator is normaal ingesteld; als er meerdere aanwezig zijn, moeten ze _allemaal_ vasthouden
 het blad dat voorbijgaat.
 
 ### VeldUiOptions
@@ -691,8 +751,8 @@ Foutenkaart per veld, ingetoetst door `FormFieldSchema.key`.
 export interface FormFieldSchema
 ```
 
-Een opgeloste, render-ready velddescriptor.  SchemaForm leidt er een van af
-per eigenschap uit de {@link FormJsonSchema}; het maakt *geen* deel uit van het publiek
+Een opgeloste, render-ready velddescriptor. SchemaForm leidt er een van af
+per eigenschap uit de {@link FormJsonSchema}; het maakt _geen_ deel uit van het publiek
 invoeroppervlak en heeft geen eigen validatielogica.
 
 ### Formulierveldtype
@@ -700,12 +760,36 @@ invoeroppervlak en heeft geen eigen validatielogica.
 **Soort:** type
 
 ```typescript
-export type FormFieldType = | 'text' | 'email' | 'password' | 'number' | 'stepper' | 'url' | 'tel' | 'textarea' | 'markdown' | 'code' | 'checkbox' | 'switch' | 'select' | 'radio' | 'multiselect' | 'date' | 'time' | 'datetime' | 'daterange' | 'timerange' | 'datetimerange' | 'location' | 'file' | 'fieldset';
+export type FormFieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'stepper'
+  | 'url'
+  | 'tel'
+  | 'textarea'
+  | 'markdown'
+  | 'code'
+  | 'checkbox'
+  | 'switch'
+  | 'select'
+  | 'radio'
+  | 'multiselect'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'daterange'
+  | 'timerange'
+  | 'datetimerange'
+  | 'location'
+  | 'file'
+  | 'fieldset';
 ```
 
-De visuele controle die voor een veld wordt weergegeven.  Dit is een presentatieprobleem, dus
+De visuele controle die voor een veld wordt weergegeven. Dit is een presentatieprobleem, dus
 het leeft onder de niet-standaard `ui.widget`-extensie in plaats van een
-JSON Schema-trefwoord.  Wanneer dit wordt weggelaten, leidt SchemaForm een zinvolle widget af
+JSON Schema-trefwoord. Wanneer dit wordt weggelaten, leidt SchemaForm een zinvolle widget af
 de `type`, `format` en `enum` van de eigenschap.
 
 ### FormJsonSchema
@@ -717,8 +801,8 @@ export interface FormJsonSchema
 ```
 
 Eén formulier (of, in een wizard, één stap): een JSON-schema `object`
-documenteren.  Bij direct gebruik beschrijft het een formulier in één stap; bij gebruik als
-invoer van een array op het hoogste niveau beschrijft één wizardstap.  Validatie wel
+documenteren. Bij direct gebruik beschrijft het een formulier in één stap; bij gebruik als
+invoer van een array op het hoogste niveau beschrijft één wizardstap. Validatie wel
 er intern tegen opgetreden met Ajv.
 
 ### Vormwaarden
@@ -739,7 +823,7 @@ De gegevenszak met reactief formulier, ingetoetst met een veldsleutel.
 export interface JsonSchemaProperty
 ```
 
-Eén enkele JSON Schema-eigenschapsdescriptor.  Standaard validatie trefwoorden kaart
+Eén enkele JSON Schema-eigenschapsdescriptor. Standaard validatie trefwoorden kaart
 rechtstreeks op gegenereerde Ajv-regels.
 
 ### JsonSchemaStringFormat
@@ -772,7 +856,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 ```
 
 De coördinaatweergave a {@link LocationValue} wordt ingevoerd/geserialiseerd
-als.  Hier gedefinieerd (in plaats van geïmporteerd uit een Vue-component), dus het gedeelde
+als. Hier gedefinieerd (in plaats van geïmporteerd uit een Vue-component), dus het gedeelde
 kern blijft raamwerk-agnostisch; het is structureel identiek aan de
 `@mission-platform/components` locatie-invoertype.
 
@@ -784,7 +868,7 @@ kern blijft raamwerk-agnostisch; het is structureel identiek aan de
 export interface LocationValue
 ```
 
-Een geografische coördinaat vastgelegd door de `location`-widget.  `lat`/`lng` zijn
+Een geografische coördinaat vastgelegd door de `location`-widget. `lat`/`lng` zijn
 `undefined` is leeg, dus een lege waarde betekent duidelijk "geen invoer".
 
 ### SchemaFormDefinitie
@@ -809,7 +893,7 @@ De enige invoer voor een schemagestuurd formulier / `useSchemaForm`.
 export type SchemaFormTranslate = (key: string, named?: Record<string, unknown>) => string;
 ```
 
-Vertaalfunctie die wordt gebruikt om gegenereerde validatieberichten te lokaliseren.  Het
+Vertaalfunctie die wordt gebruikt om gegenereerde validatieberichten te lokaliseren. Het
 spiegelt de `t(key, named)`-handtekening van vue-i18n: gegeven een berichtsleutel en een
 optionele verzameling benoemde interpolatiewaarden, retourneert het de gelokaliseerde tekenreeks.
 Wanneer dit wordt weggelaten, valt SchemaForm terug op ingebouwde Engelse berichten.

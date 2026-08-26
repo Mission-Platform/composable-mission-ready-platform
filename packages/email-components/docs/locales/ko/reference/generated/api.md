@@ -16,23 +16,23 @@
 **종류:** 기능
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 이메일 구성 요소에 대해 문서화된 보수적인 출력 하위 집합을 확인합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| HTML | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| HTML | 문자열 |      |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **종류:** 상수
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 설명이 제공되지 않았습니다.
@@ -42,7 +42,7 @@ export const CAN_I_EMAIL_FEATURES_URL
 **종류:** 상수
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 설명이 제공되지 않았습니다.
@@ -52,7 +52,7 @@ export const CAN_I_EMAIL_INLINE_STYLES_URL
 **종류:** 상수
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 설명이 제공되지 않았습니다.
@@ -62,7 +62,7 @@ export const CAN_I_EMAIL_MAX_WIDTH_URL
 **종류:** 상수
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 설명이 제공되지 않았습니다.
@@ -72,7 +72,7 @@ export const CAN_I_EMAIL_MEDIA_QUERIES_URL
 **종류:** 상수
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 설명이 제공되지 않았습니다.
@@ -82,7 +82,7 @@ export const CAN_I_EMAIL_TABLES_URL
 **종류:** 상수
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 설명이 제공되지 않았습니다.
@@ -92,7 +92,7 @@ export const COMPATIBILITY_REVIEWED
 **종류:** 상수
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 설명이 제공되지 않았습니다.
@@ -104,16 +104,16 @@ export const EMAIL_ALLOWED_TAGS
 **종류:** 기능
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailButtonProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailButtonProperties> |      |
 
 ### 이메일버튼속성
 
@@ -130,7 +130,8 @@ export interface EmailButtonProperties
 **종류:** 유형
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 설명이 제공되지 않았습니다.
@@ -142,16 +143,16 @@ export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary
 **종류:** 기능
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailDividerProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailDividerProperties> |      |
 
 ### EmailDivider속성
 
@@ -170,16 +171,16 @@ export interface EmailDividerProperties
 **종류:** 기능
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailImageProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailImageProperties> |      |
 
 ### 이메일이미지속성
 
@@ -198,16 +199,16 @@ export interface EmailImageProperties
 **종류:** 기능
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailSpacerProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailSpacerProperties> |      |
 
 ### 이메일스페이서속성
 
@@ -226,7 +227,7 @@ export interface EmailSpacerProperties
 **종류:** 기능
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 `ForgeTypography` 어휘를 반영하는 단일 이메일 텍스트 Atom: 본문
@@ -235,9 +236,9 @@ function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpEle
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailTypographyProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<EmailTypographyProperties> |      |
 
 ### 이메일타이포그래피속성
 
@@ -266,16 +267,16 @@ export type EmailTypographyTag = 'p' | 'span' | 'div' | 'a' | 'h1' | 'h2' | 'h3'
 **종류:** 기능
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailCardProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<EmailCardProperties> |      |
 
 ### 이메일카드속성
 
@@ -294,16 +295,16 @@ export interface EmailCardProperties
 **종류:** 기능
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailColumnProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailColumnProperties> |      |
 
 ### 이메일열속성
 
@@ -322,16 +323,16 @@ export interface EmailColumnProperties
 **종류:** 기능
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailListProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<EmailListProperties> |      |
 
 ### 이메일목록항목
 
@@ -360,16 +361,16 @@ export interface EmailListProperties
 **종류:** 기능
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailRowProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<EmailRowProperties> |      |
 
 ### 이메일 행 속성
 
@@ -398,16 +399,16 @@ export interface EmailSocialLink
 **종류:** 기능
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailSocialLinksProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailSocialLinksProperties> |      |
 
 ### 이메일소셜링크속성
 
@@ -426,16 +427,16 @@ export interface EmailSocialLinksProperties
 **종류:** 기능
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailFooterProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailFooterProperties> |      |
 
 ### 이메일바닥글속성
 
@@ -454,16 +455,16 @@ export interface EmailFooterProperties
 **종류:** 기능
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailHeaderProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailHeaderProperties> |      |
 
 ### 이메일헤더속성
 
@@ -482,16 +483,16 @@ export interface EmailHeaderProperties
 **종류:** 기능
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailPreheaderProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailPreheaderProperties> |      |
 
 ### 이메일프리헤더속성
 
@@ -510,16 +511,16 @@ export interface EmailPreheaderProperties
 **종류:** 기능
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailContainerProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailContainerProperties> |      |
 
 ### 이메일컨테이너속성
 
@@ -538,16 +539,16 @@ export interface EmailContainerProperties
 **종류:** 기능
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailDocumentProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailDocumentProperties> |      |
 
 ### 이메일문서속성
 
@@ -566,16 +567,16 @@ export interface EmailDocumentProperties
 **종류:** 기능
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<EmailSectionProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<EmailSectionProperties> |      |
 
 ### 이메일 섹션 속성
 

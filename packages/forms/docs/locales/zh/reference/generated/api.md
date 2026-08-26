@@ -26,7 +26,7 @@ export interface CheckboxProperties
 **种类：**功能
 
 ```typescript
-function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
+function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 ```
 
 `ForgeCheckbox` — 使用中性 JSX 方言编写的复选框控件
@@ -48,9 +48,9 @@ DOM 属性通过 `useRef` + `useEffect` 对（中性
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<CheckboxProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<CheckboxProperties> |      |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -59,7 +59,7 @@ DOM 属性通过 `useRef` + `useEffect` 对（中性
 **种类：**功能
 
 ```typescript
-function ForgeInput(properties: Readonly<InputProperties>): MpElement
+function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 ```
 
 `ForgeInput` — 使用中性 JSX 方言编写一次的文本字段，并且
@@ -79,9 +79,9 @@ function ForgeInput(properties: Readonly<InputProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<InputProperties> |  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 属性 | 只读<InputProperties> |      |
 
 ### 输入自动大写
 
@@ -130,7 +130,7 @@ export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'u
 **种类：**功能
 
 ```typescript
-function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
+function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 ```
 
 `ForgeRadio` — 使用中性 JSX 方言编写的无线电控件
@@ -147,9 +147,9 @@ function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<RadioProperties> |  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 属性 | 只读<RadioProperties> |      |
 
 ### 无线电属性
 
@@ -168,7 +168,7 @@ export interface RadioProperties
 **种类：**功能
 
 ```typescript
-function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
+function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 ```
 
 `ForgeRangeInput` — 双拇指最小/最大范围选择器，在
@@ -193,9 +193,9 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<RangeInputProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<RangeInputProperties> |      |
 
 ### 范围输入属性
 
@@ -234,7 +234,7 @@ export type RangeValue = [number, number];
 **种类：**功能
 
 ```typescript
-function ForgeRating(properties: Readonly<RatingProperties>): MpElement
+function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 ```
 
 `ForgeRating` — 星级输入/显示在中立 JSX 中创作一次
@@ -254,9 +254,9 @@ function ForgeRating(properties: Readonly<RatingProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<RatingProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<RatingProperties> |      |
 
 ### 评级属性
 
@@ -285,7 +285,7 @@ export type RatingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
+function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 ```
 
 `ForgeSlider` — 使用中性 JSX 方言编写的范围滑块
@@ -307,9 +307,9 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SliderProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<SliderProperties> |      |
 
 ### 滑块属性
 
@@ -338,7 +338,7 @@ export type SliderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement
+function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement;
 ```
 
 `ForgeSwitch` — 使用中性 JSX 方言编写的切换开关
@@ -356,9 +356,9 @@ CSS 模块 `forge-switch.module.scss` 并组成中性
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SwitchProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<SwitchProperties> |      |
 
 ### 开关属性
 
@@ -387,7 +387,7 @@ export type SwitchSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
+function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 ```
 
 `ForgeTextarea` — 在中性 JSX 中编写一次的多行文本字段
@@ -408,9 +408,9 @@ function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<TextareaProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<TextareaProperties> |      |
 
 ### 文本区域自动大写
 
@@ -479,7 +479,7 @@ export type CalendarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement
+function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 ```
 
 `ForgeCalendar` — 在中性 JSX 中编写的月份网格日期选择器
@@ -507,9 +507,9 @@ external-sync `watch` 成为 {@link useEffect}；的
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<CalendarProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<CalendarProperties> |      |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -538,7 +538,7 @@ export type ColorInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
+function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 ```
 
 `ForgeColorInput` — 用中性 JSX 方言编写的颜色选择器
@@ -558,9 +558,9 @@ function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ColorInputProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<ColorInputProperties> |      |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -589,7 +589,7 @@ export type DateInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
+function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 ```
 
 `ForgeDateInput` — 用中性 JSX 方言编写的日期选择器
@@ -612,9 +612,9 @@ function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<DateInputProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<DateInputProperties> |      |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -643,7 +643,7 @@ export type DateRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 **种类：**功能
 
 ```typescript
-function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement
+function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateRangeInput` — 在中性 JSX 中编写的日期范围选择器
@@ -672,9 +672,9 @@ function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<DateRangeInputProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<DateRangeInputProperties> |      |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -693,7 +693,7 @@ export interface FieldSetProperties
 **种类：**功能
 
 ```typescript
-function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement
+function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement;
 ```
 
 `ForgeFieldSet` — 在中性中创作一次的语义分组容器
@@ -714,9 +714,9 @@ CSS 模块 `forge-field-set.module.scss` 并组成中性
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<FieldSetProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<FieldSetProperties> |      |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -745,7 +745,7 @@ export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
+function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 ```
 
 `ForgeFileInput` — 使用中性 JSX 方言编写一次的文件输入
@@ -765,9 +765,9 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<FileInputProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<FileInputProperties> |      |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -776,7 +776,7 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
 **种类：**功能
 
 ```typescript
-function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement
+function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement;
 ```
 
 `ForgeLocationInput` — 在文件中创建一次的地理坐标输入
@@ -804,9 +804,9 @@ CSS 模块 `forge-location-input.module.scss`。转换/解析逻辑
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<LocationInputProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<LocationInputProperties> |      |
 
 ### 位置输入属性
 
@@ -849,7 +849,7 @@ export interface LocationValue
 ```
 
 位置字段的规范值：带符号的十进制坐标
-加上它们呈现/序列化的变体。  `undefined` 坐标
+加上它们呈现/序列化的变体。 `undefined` 坐标
 意思是“没有输入”。
 
 ## `src/components/molecules/forge-number-stepper/forge-number-stepper`
@@ -859,7 +859,7 @@ export interface LocationValue
 **种类：**功能
 
 ```typescript
-function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement
+function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement;
 ```
 
 `ForgeNumberStepper` — 使用中性 JSX 方言编写的数字步进器
@@ -879,9 +879,9 @@ function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<NumberStepperProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<NumberStepperProperties> |      |
 
 ### NumberStepper 属性
 
@@ -910,7 +910,7 @@ export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **种类：**功能
 
 ```typescript
-function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
+function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 ```
 
 `ForgeOtpInput` — 在文件中创建一次的分段一次性密码输入
@@ -932,9 +932,9 @@ function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<OtpInputProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<OtpInputProperties> |      |
 
 ### Otp 输入属性
 
@@ -973,7 +973,7 @@ OTP 单元接受的字符集。
 **种类：**功能
 
 ```typescript
-function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement
+function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 ```
 
 `ForgePhoneInput` — 一个国际电话号码字段，在
@@ -1002,9 +1002,9 @@ SFC：`useId` 可组合项直接映射到框架本机 `useId`
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<PhoneInputProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<PhoneInputProperties> |      |
 
 ### 电话变更
 
@@ -1055,7 +1055,7 @@ export interface PhoneCountry
 **种类：**功能
 
 ```typescript
-function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement
+function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement;
 ```
 
 `ForgeRadioGroup` — 将多个 {@link ForgeRadio} 控件分组到一个共享下
@@ -1078,9 +1078,9 @@ React 或 Vue 由 `@mission-platform/vite-plugin-forge`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<RadioGroupProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<RadioGroupProperties> |      |
 
 ### 无线电组方向
 
@@ -1119,7 +1119,7 @@ export interface RadioOption
 **种类：**功能
 
 ```typescript
-function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement
+function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement;
 ```
 
 `ForgeSearchInput` — 搜索字段以中性 JSX 方言编写一次，并且
@@ -1139,9 +1139,9 @@ function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SearchInputProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<SearchInputProperties> |      |
 
 ### 搜索输入属性
 
@@ -1170,7 +1170,7 @@ export type SearchInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement
+function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement;
 ```
 
 `ForgeSegmentControl` — 分段控制（单选切换器）编写
@@ -1191,9 +1191,9 @@ function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SegmentControlProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<SegmentControlProperties> |      |
 
 ### 段控制属性
 
@@ -1232,7 +1232,7 @@ export interface SegmentOption
 **种类：**功能
 
 ```typescript
-function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement
+function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 ```
 
 `ForgeTimeInput` — 用中性 JSX 方言编写的时间选择器
@@ -1256,9 +1256,9 @@ function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<TimeInputProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<TimeInputProperties> |      |
 
 ### 时间输入属性
 
@@ -1287,7 +1287,7 @@ export type TimeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement
+function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeTimeRangeInput` — 在中性 JSX 中编写的时间范围选择器
@@ -1313,9 +1313,9 @@ function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<TimeRangeInputProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<TimeRangeInputProperties> |      |
 
 ### 时间范围输入属性
 
@@ -1364,7 +1364,7 @@ export type DateTimeRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 
 **种类：**功能
 
 ```typescript
-function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement
+function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateTimeRangeInput` — 一次编写的日期时间范围选择器
@@ -1390,13 +1390,14 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 `@mission-platform/icons` `ForgeIconCalendar`/`ForgeIconGlobe`； `start`/`end` SFC
 插槽成为 `startContent`/`endContent` 命名插槽（`<Slot>`，存在
 使用框架中立的 {@link hasSlot} 帮助程序检测到）；和 `v-model`
-+ `change` 发出成为 `onUpdateModelValue`/`onChange` 回调道具。
+
+- `change` 发出成为 `onUpdateModelValue`/`onChange` 回调道具。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<DateTimeRangeInputProperties> |  |
+| 名称 | 类型                               | 描述 |
+| ---- | ---------------------------------- | ---- |
+| 属性 | 只读<DateTimeRangeInputProperties> |      |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1405,7 +1406,7 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 **种类：**功能
 
 ```typescript
-function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement
+function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement;
 ```
 
 `ForgeFormBuilder` — JSON 模式的可视化拖放创作界面
@@ -1433,9 +1434,9 @@ HTML5 拖放**元素事件道具 (`draggable`/`onDragStart`/
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<FormBuilderProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<FormBuilderProperties> |      |
 
 ### 表单生成器属性
 
@@ -1454,7 +1455,7 @@ export interface FormBuilderProperties
 **种类：**功能
 
 ```typescript
-function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
+function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 ```
 
 `ForgeFormWizard` — 在中性 JSX 中编写一次的多步骤表单 shell
@@ -1482,9 +1483,9 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<FormWizardProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<FormWizardProperties> |      |
 
 ### 表单向导属性
 
@@ -1513,7 +1514,7 @@ export interface WizardStep
 **种类：**功能
 
 ```typescript
-function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement
+function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement;
 ```
 
 `ForgeSchemaFormDialog` — 托管在
@@ -1530,9 +1531,9 @@ function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SchemaFormDialogProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<SchemaFormDialogProperties> |      |
 
 ### 架构表单对话框属性
 
@@ -1551,7 +1552,7 @@ export interface SchemaFormDialogProperties
 **种类：**功能
 
 ```typescript
-function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement
+function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement;
 ```
 
 `ForgeSchemaForm` — 在中性 JSX 中编写一次的 JSON 模式驱动的表单
@@ -1576,9 +1577,9 @@ Vue SFC 的替代：动态 `<component :is>` 控件
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SchemaFormProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<SchemaFormProperties> |      |
 
 ### 模式表单字段渲染器
 

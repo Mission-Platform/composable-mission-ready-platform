@@ -16,7 +16,7 @@
 **סוג:** קבוע
 
 ```typescript
-export const config: { plugins: AcceptedPlugin[] }
+export const config: { plugins: AcceptedPlugin[] };
 ```
 
 לא סופק תיאור.

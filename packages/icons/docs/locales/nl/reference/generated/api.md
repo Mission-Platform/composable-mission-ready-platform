@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/icons`.
 **Soort:** constant
 
 ```typescript
-export const ICON_CATALOG: readonly IconCatalogEntry[]
+export const ICON_CATALOG: readonly IconCatalogEntry[];
 ```
 
 De beoordeelde catalogus voor de bestaande icon set.
@@ -26,7 +26,7 @@ De beoordeelde catalogus voor de bestaande icon set.
 **Soort:** constant
 
 ```typescript
-export const ICON_GAP_REVIEW
+export const ICON_GAP_REVIEW;
 ```
 
 Hoogwaardige toevoegingen die kunnen worden geïmplementeerd nadat de brontaxonomie is vastgesteld.
@@ -46,16 +46,16 @@ Een stabiele categorietoewijzing voor elke pictogrambron in dit pakket.
 **Soort:** functie
 
 ```typescript
-function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void
+function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void;
 ```
 
 Valideer de statische catalogus voordat deze wordt gebruikt om pakketmetagegevens te genereren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| catalogus | alleen-lezen IconCatalogEntry[] |  |
+| Naam      | Typ                             | Beschrijving |
+| --------- | ------------------------------- | ------------ |
+| catalogus | alleen-lezen IconCatalogEntry[] |              |
 
 ## `src/components/communication/messaging/forge-icon-bell/forge-icon-bell`
 
@@ -64,7 +64,7 @@ Valideer de statische catalogus voordat deze wordt gebruikt om pakketmetagegeven
 **Soort:** functie
 
 ```typescript
-function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
+function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement;
 ```
 
 `ForgeIconBell` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -75,9 +75,9 @@ co-located CSS-module `forge-icon-bell.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconBellProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconBellProperties> |              |
 
 ### IconBellEigenschappen
 
@@ -96,7 +96,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
+function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement;
 ```
 
 `ForgeIconChat` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -107,9 +107,9 @@ co-located CSS-module `forge-icon-chat.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconChatProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconChatProperties> |              |
 
 ### IconChatEigenschappen
 
@@ -128,7 +128,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
+function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement;
 ```
 
 `ForgeIconMail` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -139,9 +139,9 @@ co-located CSS-module `forge-icon-mail.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconMailProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconMailProperties> |              |
 
 ### IconMailEigenschappen
 
@@ -160,7 +160,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
+function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement;
 ```
 
 `ForgeIconPhone` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -171,9 +171,9 @@ co-located CSS-module `forge-icon-phone.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconPhoneProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconPhoneProperties> |              |
 
 ### PictogramTelefooneigenschappen
 
@@ -192,7 +192,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
+function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement;
 ```
 
 `ForgeIconSend` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -203,9 +203,9 @@ co-located CSS-module `forge-icon-send.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconSendProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconSendProperties> |              |
 
 ### IconSendEigenschappen
 
@@ -224,7 +224,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
+function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement;
 ```
 
 `ForgeIconShare` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -235,9 +235,9 @@ co-located CSS-module `forge-icon-share.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconShareProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconShareProperties> |              |
 
 ### IconShareEigenschappen
 
@@ -256,7 +256,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
+function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement;
 ```
 
 `ForgeIconCopy` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -267,9 +267,9 @@ co-located CSS-module `forge-icon-copy.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconCopyProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconCopyProperties> |              |
 
 ### PictogramKopieereigenschappen
 
@@ -288,7 +288,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
+function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement;
 ```
 
 `ForgeIconEdit` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -299,9 +299,9 @@ co-located CSS-module `forge-icon-edit.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconEditProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconEditProperties> |              |
 
 ### PictogramBewerkenEigenschappen
 
@@ -320,7 +320,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
+function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement;
 ```
 
 `ForgeIconEyeOff` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -331,9 +331,9 @@ co-located CSS-module `forge-icon-eye-off.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconEyeOffProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconEyeOffProperties> |              |
 
 ### IconEyeOffEigenschappen
 
@@ -352,7 +352,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
+function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement;
 ```
 
 `ForgeIconEye` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -363,9 +363,9 @@ co-located CSS-module `forge-icon-eye.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconEyeProperties> |  |
+| Naam          | Typ                             | Beschrijving |
+| ------------- | ------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconEyeProperties> |              |
 
 ### PictogramOogeigenschappen
 
@@ -384,16 +384,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement
+function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement;
 ```
 
 Past de meest recentelijk ongedaan gemaakte inhoudsbewerking opnieuw toe.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconRedoProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconRedoProperties> |              |
 
 ### IconRedoEigenschappen
 
@@ -412,7 +412,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
+function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement;
 ```
 
 `ForgeIconTrash` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -423,9 +423,9 @@ co-located CSS-module `forge-icon-trash.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconTrashProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconTrashProperties> |              |
 
 ### IconTrashEigenschappen
 
@@ -444,16 +444,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement
+function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement;
 ```
 
 Keert de meest recente inhoudsbewerking terug.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconUndoProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconUndoProperties> |              |
 
 ### PictogramUndoEigenschappen
 
@@ -472,7 +472,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement
+function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement;
 ```
 
 `ForgeIconDownload` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -483,9 +483,9 @@ co-located CSS-module `forge-icon-download.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconDownloadProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconDownloadProperties> |              |
 
 ### PictogramDownloadEigenschappen
 
@@ -504,7 +504,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
+function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement;
 ```
 
 `ForgeIconUpload` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -515,9 +515,9 @@ co-located CSS-module `forge-icon-upload.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconUploadProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconUploadProperties> |              |
 
 ### PictogramUploadeigenschappen
 
@@ -536,7 +536,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
+function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement;
 ```
 
 `ForgeIconFilter` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -547,9 +547,9 @@ co-located CSS-module `forge-icon-filter.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconFilterProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconFilterProperties> |              |
 
 ### PictogramFiltereigenschappen
 
@@ -568,7 +568,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
+function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement;
 ```
 
 `ForgeIconSort` - een sorteerindicator met twee punthaken die ooit in de neutrale JSX is geschreven
@@ -580,9 +580,9 @@ co-located CSS-module `forge-icon-sort.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconSortProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconSortProperties> |              |
 
 ### IconSortEigenschappen
 
@@ -611,7 +611,7 @@ De actieve sorteerrichting, of `undefined` indien niet gesorteerd.
 **Soort:** functie
 
 ```typescript
-function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement
+function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnAdd` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -622,9 +622,9 @@ co-located CSS-module `forge-icon-table-column-add.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconTableColumnAddProperties> |  |
+| Naam          | Typ                                        | Beschrijving |
+| ------------- | ------------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconTableColumnAddProperties> |              |
 
 ### IconTableColumnAddEigenschappen
 
@@ -643,7 +643,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement
+function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnRemove` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -654,9 +654,9 @@ co-located CSS-module `forge-icon-table-column-remove.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconTableColumnRemoveProperties> |  |
+| Naam          | Typ                                           | Beschrijving |
+| ------------- | --------------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconTableColumnRemoveProperties> |              |
 
 ### IconTableColumnEigenschappen verwijderen
 
@@ -675,7 +675,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement
+function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement;
 ```
 
 `ForgeIconTableRowAdd` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -686,9 +686,9 @@ co-located CSS-module `forge-icon-table-row-add.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconTableRowAddProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconTableRowAddProperties> |              |
 
 ### IconTableRowAddProperties
 
@@ -707,7 +707,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement
+function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableRowRemove` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -718,9 +718,9 @@ co-located CSS-module `forge-icon-table-row-remove.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconTableRowRemoveProperties> |  |
+| Naam          | Typ                                        | Beschrijving |
+| ------------- | ------------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconTableRowRemoveProperties> |              |
 
 ### PictogramTabelRowEigenschappen verwijderen
 
@@ -739,7 +739,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
+function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement;
 ```
 
 `ForgeIconTable` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -750,9 +750,9 @@ co-located CSS-module `forge-icon-table.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconTableProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconTableProperties> |              |
 
 ### PictogramTabeleigenschappen
 
@@ -771,7 +771,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement
+function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement;
 ```
 
 `ForgeIconDrawCircle` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -782,9 +782,9 @@ co-located CSS-module `forge-icon-draw-circle.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconDrawCircleProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconDrawCircleProperties> |              |
 
 ### PictogramDrawCircleEigenschappen
 
@@ -803,7 +803,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement
+function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement;
 ```
 
 `ForgeIconDrawLine` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -814,9 +814,9 @@ co-located CSS-module `forge-icon-draw-line.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconDrawLineProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconDrawLineProperties> |              |
 
 ### PictogramDrawLineEigenschappen
 
@@ -835,7 +835,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement
+function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement;
 ```
 
 `ForgeIconDrawPolygon` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -846,9 +846,9 @@ co-located CSS-module `forge-icon-draw-polygon.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconDrawPolygonProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconDrawPolygonProperties> |              |
 
 ### PictogramTeken veelhoekeigenschappen
 
@@ -867,7 +867,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement
+function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement;
 ```
 
 `ForgeIconDrawSquare` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -878,9 +878,9 @@ co-located CSS-module `forge-icon-draw-square.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconDrawSquareProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconDrawSquareProperties> |              |
 
 ### IconDrawSquareEigenschappen
 
@@ -899,7 +899,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement
+function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement;
 ```
 
 `ForgeIconDrawTriangle` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -910,9 +910,9 @@ co-located CSS-module `forge-icon-draw-triangle.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconDrawTriangleProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconDrawTriangleProperties> |              |
 
 ### PictogramDrawTriangleEigenschappen
 
@@ -931,7 +931,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
+function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement;
 ```
 
 `ForgeIconMove` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -942,9 +942,9 @@ co-located CSS-module `forge-icon-move.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconMoveProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconMoveProperties> |              |
 
 ### IconMoveProperties
 
@@ -963,7 +963,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement
+function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement;
 ```
 
 `ForgeIconPalette` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -974,9 +974,9 @@ co-located CSS-module `forge-icon-palette.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconPaletteProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconPaletteProperties> |              |
 
 ### IconPaletteEigenschappen
 
@@ -995,7 +995,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
+function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement;
 ```
 
 `ForgeIconPencil` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1006,9 +1006,9 @@ co-located CSS-module `forge-icon-pencil.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconPencilProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconPencilProperties> |              |
 
 ### PictogramPotloodEigenschappen
 
@@ -1027,7 +1027,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement
+function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCcw` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1038,9 +1038,9 @@ co-located CSS-module `forge-icon-rotate-ccw.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconRotateCcwProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconRotateCcwProperties> |              |
 
 ### PictogramRotateCcwProperties
 
@@ -1059,7 +1059,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement
+function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCw` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1070,9 +1070,9 @@ co-located CSS-module `forge-icon-rotate-cw.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconRotateCwProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconRotateCwProperties> |              |
 
 ### PictogramRotateCwProperties
 
@@ -1091,7 +1091,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement
+function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement;
 ```
 
 `ForgeIconScaleDown` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1102,9 +1102,9 @@ co-located CSS-module `forge-icon-scale-down.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconScaleDownProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconScaleDownProperties> |              |
 
 ### IconScaleDownEigenschappen
 
@@ -1123,7 +1123,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement
+function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement;
 ```
 
 `ForgeIconScaleUp` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1134,9 +1134,9 @@ co-located CSS-module `forge-icon-scale-up.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconScaleUpProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconScaleUpProperties> |              |
 
 ### IconScaleUpEigenschappen
 
@@ -1155,16 +1155,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement
+function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement;
 ```
 
 Een wereldbolmarker met een datagedreven landaccent.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconCountryGlobeProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconCountryGlobeProperties> |              |
 
 ### PictogramLandGlobeEigenschappen
 
@@ -1183,16 +1183,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement
+function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement;
 ```
 
 Een begrensd, datagestuurd landvlagpictogram.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconFlagProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconFlagProperties> |              |
 
 ### PictogramLandcode
 
@@ -1221,7 +1221,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement
+function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement;
 ```
 
 `ForgeIconGeodesic` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1232,9 +1232,9 @@ co-located CSS-module `forge-icon-geodesic.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconGeodesicProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconGeodesicProperties> |              |
 
 ### IcoonGeodesischeEigenschappen
 
@@ -1253,7 +1253,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
+function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement;
 ```
 
 `ForgeIconGlobe` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1264,9 +1264,9 @@ co-located CSS-module `forge-icon-globe.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconGlobeProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconGlobeProperties> |              |
 
 ### PictogramGlobeEigenschappen
 
@@ -1285,7 +1285,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement
+function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement;
 ```
 
 `ForgeIconLanguage` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1296,9 +1296,9 @@ co-located CSS-module `forge-icon-language.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconLanguageProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconLanguageProperties> |              |
 
 ### PictogramTaaleigenschappen
 
@@ -1317,7 +1317,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
+function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement;
 ```
 
 `ForgeIconMapPin` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1328,9 +1328,9 @@ co-located CSS-module `forge-icon-map-pin.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconMapPinProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconMapPinProperties> |              |
 
 ### IconMapPinEigenschappen
 
@@ -1349,16 +1349,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement
+function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement;
 ```
 
 Een kaartlaagstapelsymbool voor het schakelen tussen zichtbare geografische gegevens.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconLayerProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconLayerProperties> |              |
 
 ### IconLayerEigenschappen
 
@@ -1377,16 +1377,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement
+function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement;
 ```
 
 Een gegroepeerde kaartmarkering voor interessante punten met een hoge dichtheid.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconMapMarkerClusterProperties> |  |
+| Naam          | Typ                                          | Beschrijving |
+| ------------- | -------------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconMapMarkerClusterProperties> |              |
 
 ### IconMapMarkerClusterEigenschappen
 
@@ -1405,7 +1405,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
+function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement;
 ```
 
 `ForgeIconCamera` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1416,9 +1416,9 @@ co-located CSS-module `forge-icon-camera.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconCameraProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconCameraProperties> |              |
 
 ### PictogramCamera-eigenschappen
 
@@ -1437,7 +1437,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
+function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement;
 ```
 
 `ForgeIconImage` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1448,9 +1448,9 @@ co-located CSS-module `forge-icon-image.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconImageProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconImageProperties> |              |
 
 ### PictogramAfbeeldingseigenschappen
 
@@ -1469,7 +1469,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
+function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement;
 ```
 
 `ForgeIconPause` - een gevulde pauze (❙❙) glyph die één keer in de neutrale JSX is geschreven
@@ -1481,9 +1481,9 @@ co-located CSS-module `forge-icon-pause.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconPauseProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconPauseProperties> |              |
 
 ### PictogramPauzeEigenschappen
 
@@ -1502,7 +1502,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
+function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement;
 ```
 
 `ForgeIconPlay` — een gevulde speeldriehoek (▶), één keer geschreven in de neutrale JSX
@@ -1514,9 +1514,9 @@ co-located CSS-module `forge-icon-play.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconPlayProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconPlayProperties> |              |
 
 ### IconPlay-eigenschappen
 
@@ -1535,7 +1535,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
+function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement;
 ```
 
 `ForgeIconArrow` - een richtingspijl die ooit in het neutrale JSX-dialect is geschreven.
@@ -1546,9 +1546,9 @@ co-located CSS-module `forge-icon-arrow.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconArrowProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconArrowProperties> |              |
 
 ### PictogramPijlRichting
 
@@ -1577,7 +1577,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement
+function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement;
 ```
 
 `ForgeIconChevron` - een directionele chevron die ooit in het neutrale JSX-dialect is geschreven.
@@ -1588,9 +1588,9 @@ co-located CSS-module `forge-icon-chevron.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconChevronProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconChevronProperties> |              |
 
 ### PictogramChevronEigenschappen
 
@@ -1619,7 +1619,7 @@ De richting waarin de punthaak wijst.
 **Soort:** functie
 
 ```typescript
-function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement
+function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement;
 ```
 
 `ForgeIconChevrons` — een directionele dubbele chevron (« »), ooit geschreven in de
@@ -1631,9 +1631,9 @@ co-located CSS-module `forge-icon-chevrons.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconChevronsProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconChevronsProperties> |              |
 
 ### PictogramChevronsRichting
 
@@ -1662,7 +1662,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
+function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement;
 ```
 
 `ForgeIconClose` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1673,9 +1673,9 @@ co-located CSS-module `forge-icon-close.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconCloseProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconCloseProperties> |              |
 
 ### IconCloseEigenschappen
 
@@ -1694,7 +1694,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
+function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement;
 ```
 
 `ForgeIconHome` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1705,9 +1705,9 @@ co-located CSS-module `forge-icon-home.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconHomeProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconHomeProperties> |              |
 
 ### IconHomeEigenschappen
 
@@ -1726,7 +1726,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
+function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement;
 ```
 
 `ForgeIconJoin` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1737,9 +1737,9 @@ co-located CSS-module `forge-icon-join.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconJoinProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconJoinProperties> |              |
 
 ### PictogramJoinEigenschappen
 
@@ -1758,7 +1758,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
+function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement;
 ```
 
 `ForgeIconMenu` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1769,9 +1769,9 @@ co-located CSS-module `forge-icon-menu.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconMenuProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconMenuProperties> |              |
 
 ### PictogramMenuEigenschappen
 
@@ -1790,7 +1790,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
+function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement;
 ```
 
 `ForgeIconMinus` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1801,9 +1801,9 @@ co-located CSS-module `forge-icon-minus.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconMinusProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconMinusProperties> |              |
 
 ### PictogramMinusEigenschappen
 
@@ -1822,7 +1822,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
+function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement;
 ```
 
 `ForgeIconPlus` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1833,9 +1833,9 @@ co-located CSS-module `forge-icon-plus.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconPlusProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconPlusProperties> |              |
 
 ### IconPlusEigenschappen
 
@@ -1854,7 +1854,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement
+function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement;
 ```
 
 `ForgeIconRefresh` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1865,9 +1865,9 @@ co-located CSS-module `forge-icon-refresh.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconRefreshProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconRefreshProperties> |              |
 
 ### IconRefreshEigenschappen
 
@@ -1886,7 +1886,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
+function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement;
 ```
 
 `ForgeIconSplit` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1897,9 +1897,9 @@ co-located CSS-module `forge-icon-split.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconSplitProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconSplitProperties> |              |
 
 ### PictogramGesplitste eigenschappen
 
@@ -1918,7 +1918,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement
+function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement;
 ```
 
 `ForgeIconExternalLink` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1929,9 +1929,9 @@ co-located CSS-module `forge-icon-external-link.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconExternalLinkProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconExternalLinkProperties> |              |
 
 ### IconExternalLinkProperties
 
@@ -1950,7 +1950,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
+function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement;
 ```
 
 `ForgeIconLink` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1961,9 +1961,9 @@ co-located CSS-module `forge-icon-link.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconLinkProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconLinkProperties> |              |
 
 ### IconLinkEigenschappen
 
@@ -1982,7 +1982,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
+function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement;
 ```
 
 `ForgeIconSearch` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -1993,9 +1993,9 @@ co-located CSS-module `forge-icon-search.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconSearchProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconSearchProperties> |              |
 
 ### PictogramZoekeigenschappen
 
@@ -2014,7 +2014,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
+function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement;
 ```
 
 `ForgeIconCloud` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2025,9 +2025,9 @@ co-located CSS-module `forge-icon-cloud.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconCloudProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconCloudProperties> |              |
 
 ### IconCloudProperties
 
@@ -2046,7 +2046,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
+function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement;
 ```
 
 `ForgeIconDebug` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2057,9 +2057,9 @@ co-located CSS-module `forge-icon-debug.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconDebugProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconDebugProperties> |              |
 
 ### IconDebugEigenschappen
 
@@ -2078,7 +2078,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
+function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement;
 ```
 
 `ForgeIconHeart` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2089,9 +2089,9 @@ co-located CSS-module `forge-icon-heart.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconHeartProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconHeartProperties> |              |
 
 ### IconHeartEigenschappen
 
@@ -2110,7 +2110,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement
+function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement;
 ```
 
 `ForgeIconLightning` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2121,9 +2121,9 @@ co-located CSS-module `forge-icon-lightning.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconLightningProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconLightningProperties> |              |
 
 ### PictogramLightningEigenschappen
 
@@ -2142,7 +2142,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
+function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement;
 ```
 
 `ForgeIconPuzzle` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2153,9 +2153,9 @@ co-located CSS-module `forge-icon-puzzle.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconPuzzleProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconPuzzleProperties> |              |
 
 ### IcoonPuzzelEigenschappen
 
@@ -2174,7 +2174,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
+function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement;
 ```
 
 `ForgeIconQrCode` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2185,9 +2185,9 @@ co-located CSS-module `forge-icon-qr-code.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconQrCodeProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconQrCodeProperties> |              |
 
 ### IconQrCodeEigenschappen
 
@@ -2206,7 +2206,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement
+function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement;
 ```
 
 `ForgeIconSettings` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2217,9 +2217,9 @@ co-located CSS-module `forge-icon-settings.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconSettingsProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconSettingsProperties> |              |
 
 ### PictogramInstellingenEigenschappen
 
@@ -2238,7 +2238,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
+function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement;
 ```
 
 `ForgeIconStar` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2249,9 +2249,9 @@ co-located CSS-module `forge-icon-star.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconStarProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconStarProperties> |              |
 
 ### IconStarEigenschappen
 
@@ -2270,7 +2270,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
+function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement;
 ```
 
 `ForgeIconWrench` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2281,9 +2281,9 @@ co-located CSS-module `forge-icon-wrench.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconWrenchProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconWrenchProperties> |              |
 
 ### IconWrenchEigenschappen
 
@@ -2302,16 +2302,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement
+function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement;
 ```
 
 Een routelijn met duidelijke start- en bestemmingsmarkeringen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconRouteProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconRouteProperties> |              |
 
 ### PictogramRouteEigenschappen
 
@@ -2330,16 +2330,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement
+function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement;
 ```
 
 Een herbruikbare waypointmarkering voor routes en kaartoverlays.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconWaypointProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconWaypointProperties> |              |
 
 ### PictogramWaypointEigenschappen
 
@@ -2358,7 +2358,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement
+function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement;
 ```
 
 `ForgeIconLockOpen` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2369,9 +2369,9 @@ co-located CSS-module `forge-icon-lock-open.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconLockOpenProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconLockOpenProperties> |              |
 
 ### IconLockOpenEigenschappen
 
@@ -2390,7 +2390,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
+function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement;
 ```
 
 `ForgeIconLock` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2401,9 +2401,9 @@ co-located CSS-module `forge-icon-lock.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconLockProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconLockProperties> |              |
 
 ### IconLockEigenschappen
 
@@ -2422,7 +2422,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
+function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement;
 ```
 
 `ForgeIconUser` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2433,9 +2433,9 @@ co-located CSS-module `forge-icon-user.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconUserProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconUserProperties> |              |
 
 ### PictogramGebruikerseigenschappen
 
@@ -2454,7 +2454,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement
+function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement;
 ```
 
 `ForgeIconAlertCritical` — de kritieke waarschuwingsglyph (een "!" in een achthoek,
@@ -2466,9 +2466,9 @@ co-located CSS-module `forge-icon-alert-critical.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconAlertCriticalProperties> |  |
+| Naam          | Typ                                       | Beschrijving |
+| ------------- | ----------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconAlertCriticalProperties> |              |
 
 ### IconAlertCriticalEigenschappen
 
@@ -2487,7 +2487,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement
+function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement;
 ```
 
 `ForgeIconAlertInfo` - de informatieve waarschuwingsglyph (een "i" in een cirkel)
@@ -2499,9 +2499,9 @@ co-located CSS-module `forge-icon-alert-info.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconAlertInfoProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconAlertInfoProperties> |              |
 
 ### IconAlertInfoEigenschappen
 
@@ -2520,7 +2520,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement
+function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement;
 ```
 
 `ForgeIconAlertNeutral` — de neutrale waarschuwingsglyph (een "–" in een cirkel)
@@ -2533,9 +2533,9 @@ co-located CSS-module `forge-icon-alert-neutral.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconAlertNeutralProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconAlertNeutralProperties> |              |
 
 ### IconAlertNeutraleEigenschappen
 
@@ -2554,7 +2554,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement
+function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement;
 ```
 
 `ForgeIconAlertWarning` - de waarschuwingsglyph (een "!" in een driehoek)
@@ -2566,9 +2566,9 @@ co-located CSS-module `forge-icon-alert-warning.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconAlertWarningProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconAlertWarningProperties> |              |
 
 ### IconAlertWarningEigenschappen
 
@@ -2587,7 +2587,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
+function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement;
 ```
 
 `ForgeIconAlert` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2598,9 +2598,9 @@ co-located CSS-module `forge-icon-alert.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconAlertProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconAlertProperties> |              |
 
 ### IconAlertEigenschappen
 
@@ -2619,7 +2619,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
+function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement;
 ```
 
 `ForgeIconCheck` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2630,9 +2630,9 @@ co-located CSS-module `forge-icon-check.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconCheckProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconCheckProperties> |              |
 
 ### PictogramCheckEigenschappen
 
@@ -2651,7 +2651,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
+function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement;
 ```
 
 `ForgeIconError` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2662,9 +2662,9 @@ co-located CSS-module `forge-icon-error.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconErrorProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconErrorProperties> |              |
 
 ### PictogramErrorEigenschappen
 
@@ -2683,7 +2683,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
+function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement;
 ```
 
 `ForgeIconInfo` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2694,9 +2694,9 @@ co-located CSS-module `forge-icon-info.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconInfoProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconInfoProperties> |              |
 
 ### IconInfoEigenschappen
 
@@ -2715,7 +2715,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
+function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement;
 ```
 
 `ForgeIconNotice` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2726,9 +2726,9 @@ co-located CSS-module `forge-icon-notice.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconNoticeProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconNoticeProperties> |              |
 
 ### IconNoticeEigenschappen
 
@@ -2747,7 +2747,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement
+function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement;
 ```
 
 `ForgeIconWarning` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2758,9 +2758,9 @@ co-located CSS-module `forge-icon-warning.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconWarningProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconWarningProperties> |              |
 
 ### PictogramWaarschuwingEigenschappen
 
@@ -2779,7 +2779,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement
+function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement;
 ```
 
 `ForgeIconAlignCenter` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2790,9 +2790,9 @@ co-located CSS-module `forge-icon-align-center.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconAlignCenterProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconAlignCenterProperties> |              |
 
 ### IconAlignCenterProperties
 
@@ -2811,7 +2811,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement
+function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement;
 ```
 
 `ForgeIconAlignJustify` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2822,9 +2822,9 @@ co-located CSS-module `forge-icon-align-justify.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconAlignJustifyProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconAlignJustifyProperties> |              |
 
 ### IconAlignJustifyProperties
 
@@ -2843,7 +2843,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement
+function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement;
 ```
 
 `ForgeIconAlignLeft` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2854,9 +2854,9 @@ co-located CSS-module `forge-icon-align-left.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconAlignLeftProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconAlignLeftProperties> |              |
 
 ### IconAlignLeftEigenschappen
 
@@ -2875,7 +2875,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement
+function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement;
 ```
 
 `ForgeIconAlignRight` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2886,9 +2886,9 @@ co-located CSS-module `forge-icon-align-right.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconAlignRightProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconAlignRightProperties> |              |
 
 ### IconAlignRightProperties
 
@@ -2907,7 +2907,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement
+function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement;
 ```
 
 `ForgeIconBlockquote` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2918,9 +2918,9 @@ co-located CSS-module `forge-icon-blockquote.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconBlockquoteProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconBlockquoteProperties> |              |
 
 ### IconBlockquoteEigenschappen
 
@@ -2939,7 +2939,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
+function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement;
 ```
 
 `ForgeIconBold` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2950,9 +2950,9 @@ co-located CSS-module `forge-icon-bold.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconBoldProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconBoldProperties> |              |
 
 ### IconBoldEigenschappen
 
@@ -2971,7 +2971,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement
+function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement;
 ```
 
 `ForgeIconBulletList` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -2982,9 +2982,9 @@ co-located CSS-module `forge-icon-bullet-list.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconBulletListProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconBulletListProperties> |              |
 
 ### IconBulletListEigenschappen
 
@@ -3003,7 +3003,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement
+function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement;
 ```
 
 `ForgeIconCodeBlock` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3014,9 +3014,9 @@ co-located CSS-module `forge-icon-code-block.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconCodeBlockProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconCodeBlockProperties> |              |
 
 ### IconCodeBlockEigenschappen
 
@@ -3035,7 +3035,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement
+function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement;
 ```
 
 `ForgeIconCodeInline` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3046,9 +3046,9 @@ co-located CSS-module `forge-icon-code-inline.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconCodeInlineProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconCodeInlineProperties> |              |
 
 ### IconCodeInlineProperties
 
@@ -3067,7 +3067,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement
+function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFive` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3078,9 +3078,9 @@ co-located CSS-module `forge-icon-heading-five.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconHeadingFiveProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconHeadingFiveProperties> |              |
 
 ### IconHeadingVijfEigenschappen
 
@@ -3099,7 +3099,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement
+function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFour` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3110,9 +3110,9 @@ co-located CSS-module `forge-icon-heading-four.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconHeadingFourProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconHeadingFourProperties> |              |
 
 ### PictogramHeadingVierEigenschappen
 
@@ -3131,7 +3131,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement
+function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement;
 ```
 
 `ForgeIconHeadingOne` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3142,9 +3142,9 @@ co-located CSS-module `forge-icon-heading-one.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconHeadingOneProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconHeadingOneProperties> |              |
 
 ### IconHeadingOneProperties
 
@@ -3163,7 +3163,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement
+function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement;
 ```
 
 `ForgeIconHeadingSix` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3174,9 +3174,9 @@ co-located CSS-module `forge-icon-heading-six.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconHeadingSixProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconHeadingSixProperties> |              |
 
 ### PictogramHeadingZesEigenschappen
 
@@ -3195,7 +3195,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement
+function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement;
 ```
 
 `ForgeIconHeadingThree` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3206,9 +3206,9 @@ co-located CSS-module `forge-icon-heading-three.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconHeadingThreeProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconHeadingThreeProperties> |              |
 
 ### PictogramHeadingDrieEigenschappen
 
@@ -3227,7 +3227,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement
+function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement;
 ```
 
 `ForgeIconHeadingTwo` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3238,9 +3238,9 @@ co-located CSS-module `forge-icon-heading-two.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconHeadingTwoProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconHeadingTwoProperties> |              |
 
 ### PictogramKopTweeEigenschappen
 
@@ -3259,7 +3259,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement
+function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement;
 ```
 
 `ForgeIconHeading` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3270,9 +3270,9 @@ co-located CSS-module `forge-icon-heading.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconHeadingProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconHeadingProperties> |              |
 
 ### PictogramHeadingEigenschappen
 
@@ -3291,7 +3291,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
+function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement;
 ```
 
 `ForgeIconItalic` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3302,9 +3302,9 @@ co-located CSS-module `forge-icon-italic.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconItalicProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconItalicProperties> |              |
 
 ### IconItalicEigenschappen
 
@@ -3323,7 +3323,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement
+function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement;
 ```
 
 `ForgeIconNumberedList` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3334,9 +3334,9 @@ co-located CSS-module `forge-icon-numbered-list.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconNumberedListProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconNumberedListProperties> |              |
 
 ### IconNumberedListEigenschappen
 
@@ -3355,7 +3355,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement
+function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement;
 ```
 
 `ForgeIconStrikethrough` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3366,9 +3366,9 @@ co-located CSS-module `forge-icon-strikethrough.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconStrikethroughProperties> |  |
+| Naam          | Typ                                       | Beschrijving |
+| ------------- | ----------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconStrikethroughProperties> |              |
 
 ### PictogramDoorhaleneigenschappen
 
@@ -3387,7 +3387,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement
+function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement;
 ```
 
 `ForgeIconUnderline` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3398,9 +3398,9 @@ co-located CSS-module `forge-icon-underline.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconUnderlineProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconUnderlineProperties> |              |
 
 ### PictogramOnderstrepenEigenschappen
 
@@ -3419,7 +3419,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement
+function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement;
 ```
 
 `ForgeIconCalendar` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3430,9 +3430,9 @@ co-located CSS-module `forge-icon-calendar.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconCalendarProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<IconCalendarProperties> |              |
 
 ### IcoonKalendereigenschappen
 
@@ -3451,7 +3451,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
+function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement;
 ```
 
 `ForgeIconClock` — een pictogram dat ooit in het neutrale JSX-dialect is geschreven.
@@ -3462,9 +3462,9 @@ co-located CSS-module `forge-icon-clock.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconClockProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconClockProperties> |              |
 
 ### PictogramKlokeigenschappen
 
@@ -3483,7 +3483,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
+export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[];
 ```
 
 Geen beschrijving opgegeven.
@@ -3493,17 +3493,17 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void
+function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| composities | alleen-lezen IconSymbolDefinition[] |  |
-| beschikbaarIds | Alleen-lezenSet<string> |  |
+| Naam           | Typ                                 | Beschrijving |
+| -------------- | ----------------------------------- | ------------ |
+| composities    | alleen-lezen IconSymbolDefinition[] |              |
+| beschikbaarIds | Alleen-lezenSet<string>             |              |
 
 ## `src/sprite/country-flags`
 
@@ -3512,7 +3512,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const SUPPORTED_COUNTRY_CODES
+export const SUPPORTED_COUNTRY_CODES;
 ```
 
 Landcodes met canonieke vlagsymbolen in de gepubliceerde sprite.
@@ -3524,7 +3524,7 @@ Landcodes met canonieke vlagsymbolen in de gepubliceerde sprite.
 **Soort:** constant
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS
+export const COUNTRY_FLAG_SYMBOL_IDS;
 ```
 
 Geen beschrijving opgegeven.
@@ -3534,7 +3534,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
+export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[];
 ```
 
 Geen beschrijving opgegeven.
@@ -3546,16 +3546,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement
+function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement;
 ```
 
 Gedeelde toegankelijke wrapper die verwijst naar canonieke sprite-geometrie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconUseProperties> |  |
+| Naam          | Typ                             | Beschrijving |
+| ------------- | ------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconUseProperties> |              |
 
 ### IconUseEigenschappen
 
@@ -3574,7 +3574,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const IconSpriteContext
+export const IconSpriteContext;
 ```
 
 Geen beschrijving opgegeven.
@@ -3584,32 +3584,32 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement
+function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement;
 ```
 
 Monteer één inline sprite-host voor een substructuur van pictogramcomponenten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<IconSpriteProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<IconSpriteProperties> |              |
 
 ### gebruikIconHref
 
 **Soort:** functie
 
 ```typescript
-function useIconHref(symbolId: string): string
+function useIconHref(symbolId: string): string;
 ```
 
 Los een lokale of externe symbool-URL op voor een pictogramwrapper.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| symboolId | tekenreeks |  |
+| Naam      | Typ        | Beschrijving |
+| --------- | ---------- | ------------ |
+| symboolId | tekenreeks |              |
 
 ## `src/sprite/serialize`
 
@@ -3618,48 +3618,48 @@ Los een lokale of externe symbool-URL op voor een pictogramwrapper.
 **Soort:** functie
 
 ```typescript
-function serializeNode(node: IconSvgNode): string
+function serializeNode(node: IconSvgNode): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | IconSvgNode |  |
+| Naam | Typ         | Beschrijving |
+| ---- | ----------- | ------------ |
+| node | IconSvgNode |              |
 
 ### serialisatieSprite
 
 **Soort:** functie
 
 ```typescript
-function serializeSprite(definitions: readonly IconSymbolDefinition[]): string
+function serializeSprite(definitions: readonly IconSymbolDefinition[]): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| definities | alleen-lezen IconSymbolDefinition[] |  |
+| Naam       | Typ                                 | Beschrijving |
+| ---------- | ----------------------------------- | ------------ |
+| definities | alleen-lezen IconSymbolDefinition[] |              |
 
 ### serializeSymbool
 
 **Soort:** functie
 
 ```typescript
-function serializeSymbol(definition: IconSymbolDefinition): string
+function serializeSymbol(definition: IconSymbolDefinition): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| definitie | PictogramSymboolDefinitie |  |
+| Naam      | Typ                       | Beschrijving |
+| --------- | ------------------------- | ------------ |
+| definitie | PictogramSymboolDefinitie |              |
 
 ## `src/sprite/types`
 

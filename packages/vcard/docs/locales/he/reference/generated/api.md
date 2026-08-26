@@ -16,23 +16,23 @@
 פונקציה **סוג:**
 
 ```typescript
-function createVCard(options: VCardOptions): VCard
+function createVCard(options: VCardOptions): VCard;
 ```
 
 המר אפשרויות נוחות למסמך vCard שלם וניתן לכתיבה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | VCardOptions |  |
+| שם       | הקלד         | תיאור |
+| -------- | ------------ | ----- |
+| אפשרויות | VCardOptions |       |
 
 ### parseVCard
 
 **סוג:** קבוע
 
 ```typescript
-export const parseVCard
+export const parseVCard;
 ```
 
 כינוי למתקשרים המעדיפים את הטרמינולוגיה של המנתח.
@@ -42,39 +42,39 @@ export const parseVCard
 פונקציה **סוג:**
 
 ```typescript
-function readVCard(source: string): VCard[]
+function readVCard(source: string): VCard[];
 ```
 
 נתח בלוק vCard אחד או יותר תוך שמירה על מאפיינים לא ידועים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| מקור | מחרוזת |       |
 
 ### toVCardOptions
 
 פונקציה **סוג:**
 
 ```typescript
-function toVCardOptions(card: VCard): VCardOptions
+function toVCardOptions(card: VCard): VCardOptions;
 ```
 
 מפה כרטיס מנותח בחזרה לאפשרויות הנוחות המשמשות את בונה ה-QR.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כרטיס | VCard |  |
+| שם    | הקלד  | תיאור |
+| ----- | ----- | ----- |
+| כרטיס | VCard |       |
 
 ### vCard
 
 פונקציה **סוג:**
 
 ```typescript
-function vCard(options: VCardOptions): string
+function vCard(options: VCardOptions): string;
 ```
 
 מטען vCard 3.0 המתאר איש קשר. מספרי טלפון / מיילים מרובים
@@ -82,9 +82,9 @@ function vCard(options: VCardOptions): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | VCardOptions |  |
+| שם       | הקלד         | תיאור |
+| -------- | ------------ | ----- |
+| אפשרויות | VCardOptions |       |
 
 ### VCard
 
@@ -121,32 +121,32 @@ export interface VCardProperty
 פונקציה **סוג:**
 
 ```typescript
-function writeVCard(card: VCard): string
+function writeVCard(card: VCard): string;
 ```
 
 עשה בסידרה vCard אחד שלם, באמצעות סיומת שורה של LF עבור עומסי QR וטקסט.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כרטיס | VCard |  |
+| שם    | הקלד  | תיאור |
+| ----- | ----- | ----- |
+| כרטיס | VCard |       |
 
 ### לכתובVCards
 
 פונקציה **סוג:**
 
 ```typescript
-function writeVCards(cards: readonly VCard[]): string
+function writeVCards(cards: readonly VCard[]): string;
 ```
 
 עשה סדרה של קלף אחד או יותר מנותח.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלפים | VCard לקריאה בלבד[] |  |
+| שם    | הקלד                | תיאור |
+| ----- | ------------------- | ----- |
+| קלפים | VCard לקריאה בלבד[] |       |
 
 ## `src/ast/vevent`
 
@@ -247,204 +247,204 @@ export type VEventTransp = 'OPAQUE' | 'TRANSPARENT';
 פונקציה **סוג:**
 
 ```typescript
-function addDays(date: Date, days: number): Date
+function addDays(date: Date, days: number): Date;
 ```
 
 הוסף `days` לתאריך JS (אזור מקומי).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תאריך | תאריך |  |
-| ימים | מספר |  |
+| שם    | הקלד  | תיאור |
+| ----- | ----- | ----- |
+| תאריך | תאריך |       |
+| ימים  | מספר  |       |
 
 ### הוסף חודשים
 
 פונקציה **סוג:**
 
 ```typescript
-function addMonths(date: Date, months: number): Date
+function addMonths(date: Date, months: number): Date;
 ```
 
 הוסף `months` לתאריך JS (אזור מקומי).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תאריך | תאריך |  |
-| חודשים | מספר |  |
+| שם     | הקלד  | תיאור |
+| ------ | ----- | ----- |
+| תאריך  | תאריך |       |
+| חודשים | מספר  |       |
 
 ### הוסף שנים
 
 פונקציה **סוג:**
 
 ```typescript
-function addYears(date: Date, years: number): Date
+function addYears(date: Date, years: number): Date;
 ```
 
 הוסף `years` לתאריך JS (אזור מקומי).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תאריך | תאריך |  |
-| שנים | מספר |  |
+| שם    | הקלד  | תיאור |
+| ----- | ----- | ----- |
+| תאריך | תאריך |       |
+| שנים  | מספר  |       |
 
 ### dayKey
 
 פונקציה **סוג:**
 
 ```typescript
-function dayKey(iso: string): string
+function dayKey(iso: string): string;
 ```
 
 מחזירה את מפתח התאריך המקומי המשמש להתאמת EXDATE ו-RDATE.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| iso | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| iso | מחרוזת |       |
 
 ### fmtLike
 
 פונקציה **סוג:**
 
 ```typescript
-function fmtLike(source: string, dateTime: DateTime): string
+function fmtLike(source: string, dateTime: DateTime): string;
 ```
 
 עצב את Luxon DateTime בחזרה לאותו ייצוג ISO כמו מחרוזת המקור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| dateTime | תאריך ושעה |  |
+| שם       | הקלד       | תיאור |
+| -------- | ---------- | ----- |
+| מקור     | מחרוזת     |       |
+| dateTime | תאריך ושעה |       |
 
 ### isAllDay
 
 פונקציה **סוג:**
 
 ```typescript
-function isAllDay(iso: string): boolean
+function isAllDay(iso: string): boolean;
 ```
 
 מחזירה true כאשר מחרוזת ISO היא ערך לתאריך בלבד (YYYY-MM-DD).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| iso | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| iso | מחרוזת |       |
 
 ### parseDate
 
 פונקציה **סוג:**
 
 ```typescript
-function parseDate(iso: string): Date
+function parseDate(iso: string): Date;
 ```
 
 נתח מחרוזת תאריך/תאריך ISO לתאריך JS (לתאימות API ציבורי).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| iso | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| iso | מחרוזת |       |
 
 ### parseDT
 
 פונקציה **סוג:**
 
 ```typescript
-function parseDT(iso: string): DateTime
+function parseDT(iso: string): DateTime;
 ```
 
 נתח מחרוזת תאריך/תאריך ISO ל-Luxon DateTime (אזור מקומי).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| iso | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| iso | מחרוזת |       |
 
 ### startOfDay
 
 פונקציה **סוג:**
 
 ```typescript
-function startOfDay(date: Date): Date
+function startOfDay(date: Date): Date;
 ```
 
 תחילת היום עבור תאריך JS (אזור מקומי).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תאריך | תאריך |  |
+| שם    | הקלד  | תיאור |
+| ----- | ----- | ----- |
+| תאריך | תאריך |       |
 
 ### startOfMonth
 
 פונקציה **סוג:**
 
 ```typescript
-function startOfMonth(date: Date): Date
+function startOfMonth(date: Date): Date;
 ```
 
 תחילת החודש המכיל `date` (אזור מקומי).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תאריך | תאריך |  |
+| שם    | הקלד  | תיאור |
+| ----- | ----- | ----- |
+| תאריך | תאריך |       |
 
 ### startOfWeek
 
 פונקציה **סוג:**
 
 ```typescript
-function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date
+function startOfWeek(date: Date, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0): Date;
 ```
 
 תחילת השבוע המכיל `date`, לכבוד `weekStartsOn`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תאריך | תאריך |  |
-| weekStartsOn | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 |  |
+| שם           | הקלד                            | תיאור |
+| ------------ | ------------------------------- | ----- |
+| תאריך        | תאריך                           |       |
+| weekStartsOn | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 |       |
 
 ### startOfYear
 
 פונקציה **סוג:**
 
 ```typescript
-function startOfYear(date: Date): Date
+function startOfYear(date: Date): Date;
 ```
 
 תחילת השנה המכילה `date` (אזור מקומי).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תאריך | תאריך |  |
+| שם    | הקלד  | תיאור |
+| ----- | ----- | ----- |
+| תאריך | תאריך |       |
 
 ### WEEKDAY_LUXON
 
 **סוג:** קבוע
 
 ```typescript
-export const WEEKDAY_LUXON: Record<RRuleWeekday, number>
+export const WEEKDAY_LUXON: Record<RRuleWeekday, number>;
 ```
 
 מספרי ימי חול של Luxon: יום שני=1 … ראשון=7.
@@ -478,16 +478,16 @@ export type WeekStart = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 פונקציה **סוג:**
 
 ```typescript
-function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement
+function ForgeICalendar(properties: Readonly<ForgeICalendarProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ForgeICalendarProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ForgeICalendarProperties> |       |
 
 ### ForgeICalendarProperties
 
@@ -506,16 +506,16 @@ export interface ForgeICalendarProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement
+function ForgeVCard(properties: Readonly<ForgeVCardProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ForgeVCardProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ForgeVCardProperties> |       |
 
 ### ForgeVCardProperties
 
@@ -534,32 +534,32 @@ export interface ForgeVCardProperties
 פונקציה **סוג:**
 
 ```typescript
-function calendarEvents(calendar: ICalendar): ICalendarEvent[]
+function calendarEvents(calendar: ICalendar): ICalendarEvent[];
 ```
 
 המר רכיבי VEVENT לתצוגת האירועים המוקלדת בשימוש על ידי מעבדי Forge.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| לוח שנה | ICalendar |  |
+| שם      | הקלד      | תיאור |
+| ------- | --------- | ----- |
+| לוח שנה | ICalendar |       |
 
 ### createICalendarEvent
 
 פונקציה **סוג:**
 
 ```typescript
-function createICalendarEvent(event: ICalendarEvent): ICalendarComponent
+function createICalendarEvent(event: ICalendarEvent): ICalendarComponent;
 ```
 
 בנה רכיב VEVENT מוקלד המתאים להכנסה ל-iCalendar.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירוע | ICalendarEvent |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| אירוע | ICalendarEvent |       |
 
 ### ICalendar
 
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **סוג:** קבוע
 
 ```typescript
-export const parseICalendar
+export const parseICalendar;
 ```
 
 לא סופק תיאור.
@@ -626,23 +626,23 @@ export const parseICalendar
 פונקציה **סוג:**
 
 ```typescript
-function readICalendar(source: string): ICalendar
+function readICalendar(source: string): ICalendar;
 ```
 
 נתח זרם RFC 5545 iCalendar, תוך שמירה על כל רכיב ונכס.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| מקור | מחרוזת |       |
 
 ### serializeICalendar
 
 **סוג:** קבוע
 
 ```typescript
-export const serializeICalendar
+export const serializeICalendar;
 ```
 
 לא סופק תיאור.
@@ -652,13 +652,13 @@ export const serializeICalendar
 פונקציה **סוג:**
 
 ```typescript
-function writeICalendar(calendar: ICalendar): string
+function writeICalendar(calendar: ICalendar): string;
 ```
 
 עשה סדרה של לוח שנה RFC 5545 עם סיומות קו CRLF וקיפול בטוח ל-75 אוקטטים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| לוח שנה | ICalendar |  |
+| שם      | הקלד      | תיאור |
+| ------- | --------- | ----- |
+| לוח שנה | ICalendar |       |

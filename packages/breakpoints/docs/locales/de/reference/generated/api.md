@@ -26,7 +26,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 Keine Beschreibung angegeben.
@@ -36,7 +36,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 Pixelschwellenwerte für die Mindestbreite für jeden Haltepunktschritt.
@@ -64,23 +64,23 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 Gibt den Pixelwert für einen bestimmten Haltepunktschlüssel zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Schlüssel | Haltepunktschlüssel |  |
+| Name      | Geben Sie           | ein Beschreibung |
+| --------- | ------------------- | ---------------- |
+| Schlüssel | Haltepunktschlüssel |                  |
 
 ### maxMediaQuery
 
 **Art:** Funktion
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 Gibt eine `max-width`-Medienabfragezeichenfolge (Obergrenze) für das angegebene zurück
@@ -88,9 +88,9 @@ Haltepunkt – d. h. „kleiner als der nächste Schritt nach oben“.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Schlüssel | Haltepunktschlüssel |  |
+| Name      | Geben Sie           | ein Beschreibung |
+| --------- | ------------------- | ---------------- |
+| Schlüssel | Haltepunktschlüssel |                  |
 
 #### Vertrag
 
@@ -101,37 +101,37 @@ Haltepunkt – d. h. „kleiner als der nächste Schritt nach oben“.
 **Art:** Funktion
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 Gibt eine `min-width`-Medienabfragezeichenfolge für den angegebenen Haltepunkt zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Schlüssel | Haltepunktschlüssel |  |
+| Name      | Geben Sie           | ein Beschreibung |
+| --------- | ------------------- | ---------------- |
+| Schlüssel | Haltepunktschlüssel |                  |
 
 #### Vertrag
 
 - **@example:** mediaQuery('lg') // → '(min-width: 1920px)'
-mediaQuery('xl') // → '(min-width: 2560px)'
+  mediaQuery('xl') // → '(min-width: 2560px)'
 
 ### auflösenHaltepunkt
 
 **Art:** Funktion
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 Gibt bei gegebener Pixelbreite den aktuell aktiven Haltepunktschlüssel zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Breite | Zahl |  |
+| Name   | Geben Sie | ein Beschreibung |
+| ------ | --------- | ---------------- |
+| Breite | Zahl      |                  |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -140,7 +140,7 @@ Gibt bei gegebener Pixelbreite den aktuell aktiven Haltepunktschlüssel zurück.
 **Art:** Funktion
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt` – das Gegenteil von {@link ForgeShowAt}: Es verbirgt seinen Standard-Slot, wenn das
@@ -155,9 +155,9 @@ Die reaktive Breite des Ansichtsfensters wird durch die neutralen Haken verfolgt
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<HideAtProperties> |  |
+| Name          | Geben Sie                          | ein Beschreibung |
+| ------------- | ---------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<HideAtProperties> |                  |
 
 ### HideAtProperties
 
@@ -176,7 +176,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` – rendert seinen Standard-Slot nur dann bedingt, wenn das Ansichtsfenster aktiviert ist
@@ -192,9 +192,9 @@ umschalten, ohne ein zusätzliches Layoutfeld einzuführen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ShowAtProperties> |  |
+| Name          | Geben Sie                          | ein Beschreibung |
+| ------------- | ---------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<ShowAtProperties> |                  |
 
 ### ShowAtProperties
 
@@ -223,7 +223,7 @@ Das Overlay benötigt keine Eigenschaften: Es liest das Live-Ansichtsfenster sel
 **Art:** Funktion
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug` – ein Entwicklungszeit-Overlay, das unten rechts angeheftet ist
@@ -240,9 +240,9 @@ sowohl React als auch Vue.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| _properties | Schreibgeschützt<BreakpointDebugProperties> |  |
+| Name        | Geben Sie                                   | ein Beschreibung |
+| ----------- | ------------------------------------------- | ---------------- |
+| _properties | Schreibgeschützt<BreakpointDebugProperties> |                  |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -251,7 +251,7 @@ sowohl React als auch Vue.
 **Art:** Funktion
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 Reaktiver Haltepunktstatus basierend auf der Breite des Dokumentelements.

@@ -56,7 +56,7 @@ export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy' | undefined;
 **종류:** 기능
 
 ```typescript
-function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
+function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 ```
 
 `ForgeAvatar` — 중립 JSX 방언으로 한 번 작성된 사용자/엔티티 아바타
@@ -71,9 +71,9 @@ function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<AvatarProperties> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 속성 | 읽기 전용<AvatarProperties> |      |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -112,7 +112,7 @@ export interface BackgroundVideoSource
 **종류:** 기능
 
 ```typescript
-function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement
+function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement;
 ```
 
 `ForgeBackgroundVideo` — 한 번 제작된 장식용 풀 블리드 배경 비디오
@@ -133,9 +133,9 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<BackgroundVideoProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<BackgroundVideoProperties> |      |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -164,7 +164,8 @@ export type BadgeSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 유형
 
 ```typescript
-export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type BadgeVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 배지의 시각적 톤. `@mission-platform/components` `ForgeBadge`을 미러링합니다.
@@ -174,7 +175,7 @@ export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 's
 **종류:** 기능
 
 ```typescript
-function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
+function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 ```
 
 `ForgeBadge` — 중립 JSX에서 한 번 작성된 작은 상태/레이블 칩
@@ -196,9 +197,9 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<BadgeProperties> |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 속성 | 읽기 전용<BadgeProperties> |      |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -217,7 +218,8 @@ export interface ButtonProperties
 **종류:** 유형
 
 ```typescript
-export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type ButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 버튼의 시각적 처리. `@mission-platform/components` `ForgeButton`을 미러링합니다.
@@ -227,7 +229,7 @@ export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | '
 **종류:** 기능
 
 ```typescript
-function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
+function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 ```
 
 `ForgeButton` — 중립 JSX 방언으로 한 번 작성되고 컴파일된 버튼
@@ -249,9 +251,9 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ButtonProperties> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 속성 | 읽기 전용<ButtonProperties> |      |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -260,7 +262,7 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
 **종류:** 기능
 
 ```typescript
-function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
+function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 ```
 
 `ForgeIconButton` —
@@ -276,9 +278,9 @@ function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconButtonProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconButtonProperties> |      |
 
 ### 아이콘버튼속성
 
@@ -305,7 +307,8 @@ export type IconButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 유형
 
 ```typescript
-export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type IconButtonVariant =
+  'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 아이콘 버튼의 시각적 처리 - 표준 색상 세트와 투명한 `ghost`.
@@ -317,7 +320,7 @@ export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 
 **종류:** 기능
 
 ```typescript
-function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement
+function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement;
 ```
 
 `ForgeProgressBar` — 작성된 확정 또는 불확정 진행 표시기
@@ -332,9 +335,9 @@ function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ProgressBarProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<ProgressBarProperties> |      |
 
 ### ProgressBar속성
 
@@ -361,7 +364,8 @@ export type ProgressSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 유형
 
 ```typescript
-export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ProgressVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 진행률 채우기 톤.
@@ -373,7 +377,7 @@ export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' |
 **종류:** 기능
 
 ```typescript
-function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement
+function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
 ```
 
 `ForgeQuote` — 중립에서 한 번 작성된 의미론적 인용문/풀 인용문
@@ -393,9 +397,9 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<QuoteProperties> |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 속성 | 읽기 전용<QuoteProperties> |      |
 
 ### 견적속성
 
@@ -434,7 +438,7 @@ export type QuoteVariant = 'default' | 'bordered' | 'plain';
 **종류:** 기능
 
 ```typescript
-function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement
+function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement;
 ```
 
 `ForgeResponsiveImage` — 예술적인 방향으로 반응하는 `<picture>` 요소
@@ -455,9 +459,9 @@ function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ResponsiveImageProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<ResponsiveImageProperties> |      |
 
 ### 반응형이미지맞춤
 
@@ -496,7 +500,7 @@ export interface ResponsiveImageSource
 **종류:** 기능
 
 ```typescript
-function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement
+function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement;
 ```
 
 `ForgeResponsiveVideo` — 한 번 작성된 반응형 `<video>` 요소
@@ -519,9 +523,9 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ResponsiveVideoProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<ResponsiveVideoProperties> |      |
 
 ### 반응형비디오핏
 
@@ -560,7 +564,7 @@ export interface ResponsiveVideoSource
 **종류:** 기능
 
 ```typescript
-function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement
+function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ```
 
 `ForgeSeparator` — 중립에서 한 번 작성된 시각적 구분 기호/구분선
@@ -581,9 +585,9 @@ JSX 방언으로 React 또는 Vue으로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<SeparatorProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<SeparatorProperties> |      |
 
 ### 구분 기호방향
 
@@ -632,7 +636,7 @@ export type SeparatorVariant = 'solid' | 'dashed' | 'dotted';
 **종류:** 기능
 
 ```typescript
-function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
+function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 ```
 
 `ForgeSkeleton` — 중립 JSX에서 한 번 작성된 로딩 자리 표시자
@@ -647,9 +651,9 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<SkeletonProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<SkeletonProperties> |      |
 
 ### 뼈대속성
 
@@ -678,7 +682,7 @@ export type SkeletonShape = 'line' | 'circle' | 'block';
 **종류:** 기능
 
 ```typescript
-function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement
+function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement;
 ```
 
 `ForgeSpinner` — 중립에서 한 번 작성된 불확정 로딩 스피너
@@ -695,9 +699,9 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<SpinnerProperties> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용<SpinnerProperties> |      |
 
 ### Spinner속성
 
@@ -724,7 +728,8 @@ export type SpinnerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 유형
 
 ```typescript
-export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type SpinnerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 스피너 링의 톤.
@@ -736,7 +741,7 @@ export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 
 **종류:** 기능
 
 ```typescript
-function ForgeStack(properties: Readonly<StackProperties>): MpElement
+function ForgeStack(properties: Readonly<StackProperties>): MpElement;
 ```
 
 `ForgeStack` — 자식을 배치하는 flexbox 스택 레이아웃 프리미티브입니다.
@@ -751,9 +756,9 @@ BEM 클래스 이름과 계산된 Flexbox 인라인 스타일을 내보냅니다
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<StackProperties> |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 속성 | 읽기 전용<StackProperties> |      |
 
 ### 스택정렬
 
@@ -812,23 +817,24 @@ export interface StackProperties
 **종류:** 기능
 
 ```typescript
-function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement
+function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<StatusIconProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<StatusIconProperties> |      |
 
 ### 상태아이콘레벨
 
 **종류:** 유형
 
 ```typescript
-export type StatusIconLevel = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type StatusIconLevel =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 아이콘으로 전달되는 상태/톤 — 표준 색상 세트입니다.
@@ -890,7 +896,7 @@ export interface AccordionProperties
 **종류:** 기능
 
 ```typescript
-function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement
+function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement;
 ```
 
 `ForgeAccordion` — 작성된 축소 가능한 행이 수직으로 쌓인 컨테이너입니다.
@@ -913,9 +919,9 @@ React/Vue); 항목당 `summary`/기본 슬롯은 두 개의 범위 지정 슬롯
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<AccordionProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<AccordionProperties> |      |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -944,7 +950,7 @@ export interface BreadcrumbProperties
 **종류:** 기능
 
 ```typescript
-function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
+function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 ```
 
 `ForgeBreadcrumb` — 중립 JSX 방언으로 한 번 작성된 탐색경로 트레일
@@ -964,9 +970,9 @@ function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<BreadcrumbProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<BreadcrumbProperties> |      |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1005,7 +1011,7 @@ export interface ButtonGroupProperties
 **종류:** 기능
 
 ```typescript
-function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement
+function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement;
 ```
 
 `ForgeButtonGroup` — 관련 버튼을 단일 시각적 단위로 그룹화합니다. 작성됨
@@ -1024,9 +1030,9 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ButtonGroupProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<ButtonGroupProperties> |      |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1055,7 +1061,7 @@ export interface CardProperties
 **종류:** 기능
 
 ```typescript
-function ForgeCard(properties: Readonly<CardProperties>): MpElement
+function ForgeCard(properties: Readonly<CardProperties>): MpElement;
 ```
 
 `ForgeCard` — 선택적 머리글/바닥글 영역이 있는 표면 컨테이너, 작성됨
@@ -1075,9 +1081,9 @@ React의 소품 존재 확인) 존재 감지는 두 가지 모두에서 동일�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<CardProperties> |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 속성 | 읽기 전용<CardProperties> |      |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1116,7 +1122,7 @@ export type ChatBubbleVariant = 'default' | 'primary';
 **종류:** 기능
 
 ```typescript
-function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
+function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 ```
 
 `ForgeChatBubble` — 중립 JSX에서 한 번 작성된 단일 메시지 풍선
@@ -1137,9 +1143,9 @@ function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ChatBubbleProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<ChatBubbleProperties> |      |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1158,7 +1164,7 @@ export interface CollapseProperties
 **종류:** 기능
 
 ```typescript
-function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
+function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 ```
 
 `ForgeCollapse` — 한 번 작성된 기본 `<details>` 기반 공개입니다.
@@ -1181,9 +1187,9 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<CollapseProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<CollapseProperties> |      |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1232,7 +1238,7 @@ export type DeviceMockType = 'mobile' | 'tablet' | 'desktop' | 'browser';
 **종류:** 기능
 
 ```typescript
-function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement
+function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 ```
 
 `ForgeDeviceMock` — 임의의 화면을 감싸는 장식 장치 프레임
@@ -1249,9 +1255,9 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<DeviceMockProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<DeviceMockProperties> |      |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1260,7 +1266,7 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement
 **종류:** 기능
 
 ```typescript
-function ForgeGrid(properties: Readonly<GridProperties>): MpElement
+function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 ```
 
 `ForgeGrid` — 콘텐츠를 배열하는 CSS 그리드 레이아웃 프리미티브입니다.
@@ -1280,9 +1286,9 @@ BEM 클래스와 계산된 그리드 인라인 스타일을 내보냅니다. 데
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<GridProperties> |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 속성 | 읽기 전용<GridProperties> |      |
 
 ### 그리드 정렬
 
@@ -1321,7 +1327,7 @@ export interface GridProperties
 **종류:** 기능
 
 ```typescript
-function ForgeInView(properties: Readonly<InViewProperties>): MpElement
+function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 ```
 
 `ForgeInView` — 콘텐츠를 래핑하고 `IntersectionObserver`을 사용하여 공개합니다.
@@ -1336,9 +1342,9 @@ React 후크로 컴파일되는 중립 후크(`useState`/`useRef`/`useEffect`)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<InViewProperties> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 속성 | 읽기 전용<InViewProperties> |      |
 
 ### InView애니메이션
 
@@ -1367,7 +1373,7 @@ export interface InViewProperties
 **종류:** 기능
 
 ```typescript
-function ForgeList(properties: Readonly<ListProperties>): MpElement
+function ForgeList(properties: Readonly<ListProperties>): MpElement;
 ```
 
 `ForgeList` — 순서가 지정된/비순서화된/설명/일반 목록이 한 번 작성되었습니다.
@@ -1388,9 +1394,9 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ListProperties> |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 속성 | 읽기 전용<ListProperties> |      |
 
 ### 목록항목
 
@@ -1439,7 +1445,7 @@ export type ListVariant = 'unordered' | 'ordered' | 'description' | 'none';
 **종류:** 기능
 
 ```typescript
-function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement
+function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement;
 ```
 
 `ForgeMasonry` — 한 번 작성된 CSS 다중 열 석조 레이아웃 기본
@@ -1462,9 +1468,9 @@ CSS); 동적 다중 열 속성은 인라인으로 적용됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MasonryProperties> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용<MasonryProperties> |      |
 
 ### 메이슨리갭
 
@@ -1493,7 +1499,7 @@ export interface MasonryProperties
 **종류:** 기능
 
 ```typescript
-function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
+function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 ```
 
 `ForgeMenuItem` — 중립 JSX 방언으로 한 번 작성된 단일 메뉴 항목
@@ -1513,9 +1519,9 @@ function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MenuItemProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<MenuItemProperties> |      |
 
 ### 메뉴항목속성
 
@@ -1532,7 +1538,8 @@ export interface MenuItemProperties
 **종류:** 유형
 
 ```typescript
-export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type MenuItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 메뉴 항목에 톤이 적용되었습니다.
@@ -1544,7 +1551,7 @@ export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' |
 **종류:** 기능
 
 ```typescript
-function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
+function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 ```
 
 `ForgeMenu` — 중립 JSX 방언으로 한 번 작성된 액세스 가능한 메뉴
@@ -1570,9 +1577,9 @@ function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MenuProperties> |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 속성 | 읽기 전용<MenuProperties> |      |
 
 ### 메뉴노드
 
@@ -1611,7 +1618,7 @@ export interface MenuProperties
 **종류:** 기능
 
 ```typescript
-function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement
+function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 ```
 
 `ForgeNavbarItem` — 중립 JSX 방언으로 한 번 작성된 navbar 항목 및
@@ -1639,9 +1646,9 @@ React의 요소 유형/Vue의 `<component :is>`), `tag`는 `'a'`으로 해석됩
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<NavbarItemProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<NavbarItemProperties> |      |
 
 ### NavbarItemChild
 
@@ -1668,7 +1675,8 @@ export interface NavbarItemProperties
 **종류:** 유형
 
 ```typescript
-export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type NavbarItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 탐색 모음 항목에 톤이 적용되었습니다.
@@ -1680,7 +1688,7 @@ export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary'
 **종류:** 기능
 
 ```typescript
-function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
+function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 ```
 
 `ForgePagination` — 중립 JSX에서 한 번 작성된 페이지 탐색 컨트롤
@@ -1700,9 +1708,9 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<PaginationProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<PaginationProperties> |      |
 
 ### 페이지 매김 항목
 
@@ -1741,7 +1749,7 @@ export type PaginationSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 기능
 
 ```typescript
-function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
+function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 ```
 
 `ForgeTabs` — 한 번 작성된 액세스 가능하고 제어되는 탭 컨테이너입니다.
@@ -1775,9 +1783,9 @@ function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<TabsProperties> |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 속성 | 읽기 전용<TabsProperties> |      |
 
 ### 탭항목
 
@@ -1826,7 +1834,7 @@ export type TabsVariant = 'line' | 'pill';
 **종류:** 기능
 
 ```typescript
-function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
+function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 ```
 
 `ForgeTimeline` — 한 번 작성된 이벤트를 순서대로 연대순으로 나열한 목록입니다.
@@ -1847,9 +1855,9 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<TimelineProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<TimelineProperties> |      |
 
 ### 타임라인정렬
 
@@ -1886,7 +1894,8 @@ export interface TimelineItemScope
 **종류:** 유형
 
 ```typescript
-export type TimelineItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type TimelineItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 마커 점에 적용된 색상군입니다.
@@ -1918,7 +1927,7 @@ export interface TimelineProperties
 **종류:** 기능
 
 ```typescript
-function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement
+function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement;
 ```
 
 `ForgeWindowPopout` — 콘텐츠를 별도의 브라우저 창에 표시합니다.
@@ -1943,9 +1952,9 @@ props(원본 SFC의 방출 대체). 중립 `useState` / `useRef`
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<WindowPopoutProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<WindowPopoutProperties> |      |
 
 ### 창팝아웃속성
 
@@ -1994,7 +2003,7 @@ export interface CarouselSlideScope
 **종류:** 기능
 
 ```typescript
-function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement
+function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
 ```
 
 `ForgeCarousel` — 한 번 작성된 가로 스크롤 가능한 슬라이드 데크
@@ -2019,9 +2028,9 @@ WCAG 2.2.2 일시 정지/재생 컨트롤을 사용한 자동 재생. 그것은 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<CarouselProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<CarouselProperties> |      |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2040,7 +2049,7 @@ export interface ChatAreaProperties
 **종류:** 기능
 
 ```typescript
-function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
+function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 ```
 
 `ForgeChatArea` — 한 번 작성된 스크롤 가능한 대화 표면
@@ -2065,9 +2074,9 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ChatAreaProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<ChatAreaProperties> |      |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2139,7 +2148,7 @@ export type DrawerVariant = 'overlay' | 'inline';
 **종류:** 기능
 
 ```typescript
-function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement
+function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 ```
 
 `ForgeDrawer` — 중립 JSX 언어로 한 번 작성된 슬라이딩 패널 및
@@ -2169,9 +2178,9 @@ Vue이 아닌 `onOpenChange(false)` / `onClose()` 또는 `v-model`을 방출합�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<DrawerProperties> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 속성 | 읽기 전용<DrawerProperties> |      |
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2180,7 +2189,7 @@ Vue이 아닌 `onOpenChange(false)` / `onClose()` 또는 `v-model`을 방출합�
 **종류:** 기능
 
 ```typescript
-function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
+function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement;
 ```
 
 `ForgeMenubar` — 중립에서 한 번 작성된 수평 응용 프로그램 메뉴 표시줄
@@ -2207,9 +2216,9 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MenubarProperties> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용<MenubarProperties> |      |
 
 ### 메뉴바속성
 
@@ -2228,7 +2237,7 @@ export interface MenubarProperties
 **종류:** 기능
 
 ```typescript
-function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement
+function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
 ```
 
 `ForgeNavbar` — 중립에서 한 번 작성된 최상위 애플리케이션 탐색 모음
@@ -2249,9 +2258,9 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<NavbarProperties> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 속성 | 읽기 전용<NavbarProperties> |      |
 
 ### Navbar정렬
 
@@ -2292,7 +2301,7 @@ export interface NavbarProperties
 **종류:** 기능
 
 ```typescript
-function ForgeTable(properties: Readonly<TableProperties>): MpElement
+function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
 `ForgeTable` — 중립 JSX 방언으로 한 번 작성된 정렬 가능한 데이터 테이블
@@ -2315,9 +2324,9 @@ function ForgeTable(properties: Readonly<TableProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<TableProperties> |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 속성 | 읽기 전용<TableProperties> |      |
 
 ### 정렬방향
 
@@ -2356,7 +2365,7 @@ export interface TableProperties
 **종류:** 기능
 
 ```typescript
-function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
+function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
 ```
 
 `ForgeTreeView` — 중립 JSX에서 한 번 작성된 재귀적이고 접근 가능한 트리
@@ -2382,9 +2391,9 @@ function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<TreeViewProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<TreeViewProperties> |      |
 
 ### TreeViewLabelScope
 
@@ -2423,7 +2432,7 @@ export interface TreeViewProperties
 **종류:** 기능
 
 ```typescript
-function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement
+function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement;
 ```
 
 `ForgeVirtualList` — 스크롤 컨테이너 내에 표시되는 행만 렌더링합니다.
@@ -2444,9 +2453,9 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<VirtualListProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<VirtualListProperties> |      |
 
 ### VirtualListItemScope
 
@@ -2475,7 +2484,7 @@ export interface VirtualListProperties
 **종류:** 기능
 
 ```typescript
-function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement
+function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement;
 ```
 
 `ForgeVirtualLogViewer` — 고성능 가상 스크롤 로그 뷰어.
@@ -2495,9 +2504,9 @@ function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<VirtualLogViewerProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<VirtualLogViewerProperties> |      |
 
 ### 로그 항목
 
@@ -2536,7 +2545,7 @@ export interface VirtualLogViewerProperties
 **종류:** 기능
 
 ```typescript
-function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement
+function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement;
 ```
 
 `ForgeVirtualTable` — 렌더링하는 가상 스크롤, 정렬 가능한 데이터 테이블
@@ -2566,9 +2575,9 @@ function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElem
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<VirtualTableProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<VirtualTableProperties> |      |
 
 ### VirtualTableCellScope
 
@@ -2607,7 +2616,7 @@ export interface VirtualTableProperties
 **종류:** 기능
 
 ```typescript
-function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement
+function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement;
 ```
 
 `ForgeVirtualTabs` — 활성 탭만 렌더링하는 제어된 탭 컨테이너
@@ -2632,9 +2641,9 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<VirtualTabsProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<VirtualTabsProperties> |      |
 
 ### VirtualTabPanelScope
 
@@ -2663,7 +2672,7 @@ export interface VirtualTabsProperties
 **종류:** 기능
 
 ```typescript
-function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement
+function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement;
 ```
 
 `ForgeVirtualTreeView` — 가시성을 평면화하는 가상 스크롤 트리
@@ -2684,9 +2693,9 @@ function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<VirtualTreeViewProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<VirtualTreeViewProperties> |      |
 
 ### 트리노드
 
@@ -2725,7 +2734,7 @@ export interface VirtualTreeViewProperties
 **종류:** 기능
 
 ```typescript
-function ForgeHero(properties: Readonly<HeroProperties>): MpElement
+function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 ```
 
 `ForgeHero` — 중립 JSX에서 한 번 작성된 페이지 히어로/배너 섹션
@@ -2747,9 +2756,9 @@ function ForgeHero(properties: Readonly<HeroProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<HeroProperties> |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 속성 | 읽기 전용<HeroProperties> |      |
 
 ### 영웅정렬
 
@@ -2788,7 +2797,7 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 기능
 
 ```typescript
-function beginPointerDrag(handlers: PointerDragHandlers): () => void
+function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 ```
 
 창 추적 포인터 끌기를 시작합니다. `pointermove`/`pointerup`/ 부착
@@ -2799,9 +2808,9 @@ function beginPointerDrag(handlers: PointerDragHandlers): () => void
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 핸들러 | 포인터드래그 핸들러 |  |
+| 이름   | 유형                | 설명 |
+| ------ | ------------------- | ---- |
+| 핸들러 | 포인터드래그 핸들러 |      |
 
 ### 포인터드래그 핸들러
 

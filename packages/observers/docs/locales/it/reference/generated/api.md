@@ -16,7 +16,11 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/observers`.
 **Tipo:** funzione
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 Hook IntersectionObserver neutrale rispetto al framework.
@@ -28,11 +32,11 @@ Pulizia automatica: disconnette l'osservatore durante lo smontaggio.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| obiettivo | MpRef<Element \| null> |  |
-| richiamata | IntersectionObserverCallback |  |
-| opzioni | IntersezioneObserverInit |  |
+| Nome       | Digitare                     | Descrizione |
+| ---------- | ---------------------------- | ----------- |
+| obiettivo  | MpRef<Element \| null>       |             |
+| richiamata | IntersectionObserverCallback |             |
+| opzioni    | IntersezioneObserverInit     |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -41,7 +45,11 @@ Pulizia automatica: disconnette l'osservatore durante lo smontaggio.
 **Tipo:** funzione
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 Hook MutationObserver neutrale rispetto al framework.
@@ -52,11 +60,11 @@ Pulizia automatica: disconnette l'osservatore durante lo smontaggio.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| obiettivo | MpRef<Node \| null> |  |
-| richiamata | MutazioneRichiamata |  |
-| opzioni | MutationObserverInit |  |
+| Nome       | Digitare             | Descrizione |
+| ---------- | -------------------- | ----------- |
+| obiettivo  | MpRef<Node \| null>  |             |
+| richiamata | MutazioneRichiamata  |             |
+| opzioni    | MutationObserverInit |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -65,7 +73,7 @@ Pulizia automatica: disconnette l'osservatore durante lo smontaggio.
 **Tipo:** funzione
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 Hook PerformanceObserver indipendente dal framework.
@@ -77,7 +85,7 @@ Pulizia automatica: disconnette l'osservatore durante lo smontaggio.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| richiamata | PerformanceObserverRichiamata |  |
-| opzioni | PerformanceObserverInit |  |
+| Nome       | Digitare                      | Descrizione |
+| ---------- | ----------------------------- | ----------- |
+| richiamata | PerformanceObserverRichiamata |             |
+| opzioni    | PerformanceObserverInit       |             |

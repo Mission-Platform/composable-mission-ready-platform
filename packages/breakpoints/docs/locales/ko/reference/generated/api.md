@@ -26,7 +26,7 @@ export type BreakpointKey = (typeof breakpointKeys)[number];
 **종류:** 상수
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 설명이 제공되지 않았습니다.
@@ -36,7 +36,7 @@ export const breakpointKeys
 **종류:** 상수
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 모든 중단점 단계에 대한 최소 너비 픽셀 임계값입니다.
@@ -64,23 +64,23 @@ export type BreakpointValues = Record<BreakpointKey, boolean>;
 **종류:** 기능
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 지정된 중단점 키에 대한 픽셀 값을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 키 | 중단점키 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 키   | 중단점키 |      |
 
 ### 최대미디어쿼리
 
 **종류:** 기능
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 주어진 항목에 대해 `max-width` 미디어 쿼리 문자열(상한)을 반환합니다.
@@ -88,9 +88,9 @@ function maxMediaQuery(key: BreakpointKey): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 키 | 중단점키 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 키   | 중단점키 |      |
 
 #### 계약
 
@@ -101,28 +101,28 @@ function maxMediaQuery(key: BreakpointKey): string
 **종류:** 기능
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 지정된 중단점에 대해 `min-width` 미디어 쿼리 문자열을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 키 | 중단점키 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 키   | 중단점키 |      |
 
 #### 계약
 
 - **@example:** mediaQuery('lg') // → '(최소 너비: 1920px)'
-mediaQuery('xl') // → '(최소 너비: 2560px)'
+  mediaQuery('xl') // → '(최소 너비: 2560px)'
 
 ### 중단점 해결
 
 **종류:** 기능
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 픽셀 너비가 주어지면 현재 활성화된 중단점 키를 반환합니다.
@@ -130,8 +130,8 @@ function resolveBreakpoint(width: number): BreakpointKey
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 폭 | 번호 |  |
+| ---- | ---- | ---- |
+| 폭   | 번호 |      |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -140,7 +140,7 @@ function resolveBreakpoint(width: number): BreakpointKey
 **종류:** 기능
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt` - {@link ForgeShowAt}의 반대: 기본 슬롯을 숨깁니다.
@@ -155,9 +155,9 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<HideAtProperties> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 속성 | 읽기 전용<HideAtProperties> |      |
 
 ### HideAt속성
 
@@ -176,7 +176,7 @@ export interface HideAtProperties
 **종류:** 기능
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` — 뷰포트가 다음 위치에 있을 때만 기본 슬롯을 조건부로 렌더링합니다.
@@ -192,9 +192,9 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ShowAtProperties> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 속성 | 읽기 전용<ShowAtProperties> |      |
 
 ### ShowAt속성
 
@@ -223,7 +223,7 @@ export type BreakpointDebugProperties = Record<string, never>;
 **종류:** 기능
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug` — 오른쪽 하단에 고정된 개발 시간 오버레이
@@ -240,9 +240,9 @@ React 및 Vue 모두.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| _속성 | 읽기 전용<BreakpointDebugProperties> |  |
+| 이름  | 유형                                 | 설명 |
+| ----- | ------------------------------------ | ---- |
+| _속성 | 읽기 전용<BreakpointDebugProperties> |      |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -251,7 +251,7 @@ React 및 Vue 모두.
 **종류:** 기능
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 문서 요소의 너비를 기반으로 하는 반응형 중단점 상태입니다.

@@ -16,33 +16,33 @@
 **النوع:** الوظيفة
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 قم بعرض شجرة Forge المشتركة كعنصر React لمعاينات المتصفح.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | عقدة البريد الإلكتروني |  |
+| الاسم | اكتب                   | الوصف |
+| ----- | ---------------------- | ----- |
+| node  | عقدة البريد الإلكتروني |       |
 
 ### toEmailReactComponent
 
 **النوع:** الوظيفة
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 قم بتغليف مكون البريد الإلكتروني Forge كمكون وظيفة React.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | MpComponent<P> |  |
-| الاسم | سلسلة |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| المكون | MpComponent<P> |       |
+| الاسم  | سلسلة          |       |
 
 ## `src/adapters/solid`
 
@@ -51,32 +51,32 @@ function toEmailReactComponent(component: MpComponent<P>, name?: string): Functi
 **النوع:** الوظيفة
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 اعرض شجرة Forge المشتركة بتنسيق Solid JSX لمعاينات المتصفح.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | عقدة البريد الإلكتروني |  |
+| الاسم | اكتب                   | الوصف |
+| ----- | ---------------------- | ----- |
+| node  | عقدة البريد الإلكتروني |       |
 
 ### toEmailSolidComponent
 
 **النوع:** الوظيفة
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 قم بلف مكون Forge كمكون Solid.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | المكون<P> |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| المكون | المكون<P> |       |
 
 ## `src/adapters/svelte`
 
@@ -85,16 +85,16 @@ function toEmailSolidComponent(component: Component<P>): Component<P>
 **النوع:** الوظيفة
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 قم بتحويل شجرة Forge مشتركة إلى مقتطف أولي Svelte 5 لـ `{@render ...}`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | عقدة البريد الإلكتروني |  |
+| الاسم | اكتب                   | الوصف |
+| ----- | ---------------------- | ----- |
+| node  | عقدة البريد الإلكتروني |       |
 
 ## `src/adapters/vue`
 
@@ -103,33 +103,33 @@ function renderToEmailSvelte(node: EmailNode): Snippet
 **النوع:** الوظيفة
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 قم بعرض شجرة Forge المشتركة على هيئة Vue VNode لمعاينات المتصفح.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | عقدة البريد الإلكتروني |  |
+| الاسم | اكتب                   | الوصف |
+| ----- | ---------------------- | ----- |
+| node  | عقدة البريد الإلكتروني |       |
 
 ### toEmailVueComponent
 
 **النوع:** الوظيفة
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 قم بتغليف مكون البريد الإلكتروني Forge كمكون وظيفي Vue.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | MpComponent<P> |  |
-| الاسم | سلسلة |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| المكون | MpComponent<P> |       |
+| الاسم  | سلسلة          |       |
 
 ## `src/adapters/web-components`
 
@@ -138,16 +138,16 @@ function toEmailVueComponent(component: MpComponent<P>, name?: string): Function
 **النوع:** الوظيفة
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 قم بإنشاء نتيجة قالب Forge أصلية لمضيف Web Components.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | عقدة البريد الإلكتروني |  |
+| الاسم | اكتب                   | الوصف |
+| ----- | ---------------------- | ----- |
+| node  | عقدة البريد الإلكتروني |       |
 
 ## `src/markdown/render-markdown`
 
@@ -156,17 +156,17 @@ function renderToEmailWebComponent(node: EmailNode): TemplateResult
 **النوع:** الوظيفة
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 قم بتحويل رموز Markdown المميزة الآمنة إلى نفس شجرة Forge التي تستخدمها مكونات البريد الإلكتروني.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تخفيض السعر | سلسلة |  |
-| خيارات | تخفيض السعرRenderOptions |  |
+| الاسم       | اكتب                     | الوصف |
+| ----------- | ------------------------ | ----- |
+| تخفيض السعر | سلسلة                    |       |
+| خيارات      | تخفيض السعرRenderOptions |       |
 
 ## `src/markdown/types`
 
@@ -197,16 +197,16 @@ export interface MarkdownRenderOptions
 **النوع:** الوظيفة
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 إجراء تسلسل لمجموعة خصائص Forge المدرجة في القائمة المسموح بها بترتيب محدد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | خصائص البريد الإلكتروني |  |
+| الاسم | اكتب                    | الوصف |
+| ----- | ----------------------- | ----- |
+| خصائص | خصائص البريد الإلكتروني |       |
 
 ## `src/render/escape`
 
@@ -215,33 +215,33 @@ function serializeAttributes(properties: EmailProperties): string
 **النوع:** الوظيفة
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 الهروب من النص ومحتوى السمة لتسلسل HTML.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### validateUrl
 
 **النوع:** الوظيفة
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 رفض الأنظمة التي يمكنها تنفيذ تعليمات برمجية أو تحميل مورد غير متوقع.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
-| السمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
+| السمة  | سلسلة |       |
 
 ## `src/render/render-email`
 
@@ -250,33 +250,33 @@ function validateUrl(value: string, attribute: string): string
 **النوع:** الوظيفة
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 قم بتحويل شجرة البريد الإلكتروني Forge إلى مستند HTML كامل وخالي من إطار العمل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | عقدة البريد الإلكتروني |  |
-| خيارات | خيارات عرض البريد الإلكتروني |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| node   | عقدة البريد الإلكتروني       |       |
+| خيارات | خيارات عرض البريد الإلكتروني |       |
 
 ### renderEmailFragment
 
 **النوع:** الوظيفة
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 قم بعرض شجرة Forge كجزء HTML آمن لمضيفي محول المتصفح.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | عقدة البريد الإلكتروني |  |
+| الاسم | اكتب                   | الوصف |
+| ----- | ---------------------- | ----- |
+| node  | عقدة البريد الإلكتروني |       |
 
 ## `src/render/style`
 
@@ -285,16 +285,16 @@ function renderEmailFragment(node: EmailNode): string
 **النوع:** الوظيفة
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 تسلسل الأنماط المضمنة بترتيب الخصائص الحتمية بدون متغيرات CSS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسلوب | نمط البريد الإلكتروني \| سلسلة |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| اسلوب | نمط البريد الإلكتروني \| سلسلة |       |
 
 ## `src/render/types`
 

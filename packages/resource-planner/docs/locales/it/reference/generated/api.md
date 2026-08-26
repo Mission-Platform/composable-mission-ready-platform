@@ -16,16 +16,18 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/resource-plann
 **Tipo:** funzione
 
 ```typescript
-function ForgeResourcePlanner(properties: Readonly<ResourcePlannerProperties>): MpElement
+function ForgeResourcePlanner(
+  properties: Readonly<ResourcePlannerProperties>,
+): MpElement;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Sola lettura<ResourcePlannerProperties> |  |
+| Nome      | Digitare                                | Descrizione |
+| --------- | --------------------------------------- | ----------- |
+| proprietà | Sola lettura<ResourcePlannerProperties> |             |
 
 ### PlannerBookingScope
 
@@ -84,7 +86,9 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type AvailabilityInput = | ResourceAvailability[] | Record<string, Omit<ResourceAvailability, "resourceId">>;
+export type AvailabilityInput =
+  | ResourceAvailability[]
+  | Record<string, Omit<ResourceAvailability, "resourceId">>;
 ```
 
 Nessuna descrizione fornita.
@@ -114,7 +118,8 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type CapacityStatus = "available" | "unavailable" | "over-capacity" | "conflict";
+export type CapacityStatus =
+  "available" | "unavailable" | "over-capacity" | "conflict";
 ```
 
 Nessuna descrizione fornita.
@@ -266,51 +271,60 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function assignmentsForEvent(assignments: PlannerAssignment[], eventId: string): PlannerAssignment[]
+function assignmentsForEvent(
+  assignments: PlannerAssignment[],
+  eventId: string,
+): PlannerAssignment[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| incarichi | Assegnazione pianificatore[] |  |
-| ID evento | stringa |  |
+| Nome      | Digitare                     | Descrizione |
+| --------- | ---------------------------- | ----------- |
+| incarichi | Assegnazione pianificatore[] |             |
+| ID evento | stringa                      |             |
 
 ### normalizeAssignments
 
 **Tipo:** funzione
 
 ```typescript
-function normalizeAssignments(assignments: PlannerAssignment[]): PlannerAssignment[]
+function normalizeAssignments(
+  assignments: PlannerAssignment[],
+): PlannerAssignment[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| incarichi | Assegnazione pianificatore[] |  |
+| Nome      | Digitare                     | Descrizione |
+| --------- | ---------------------------- | ----------- |
+| incarichi | Assegnazione pianificatore[] |             |
 
 ### normalizePlannerEvents
 
 **Tipo:** funzione
 
 ```typescript
-function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment[], range?: { start: Date; end: Date }): PlannerEventRecord[]
+function normalizePlannerEvents(
+  events: VEvent[],
+  assignments: PlannerAssignment[],
+  range?: { start: Date; end: Date },
+): PlannerEventRecord[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| eventi | VEvent[] |  |
-| incarichi | Assegnazione pianificatore[] |  |
-| gamma | {inizio: Data; fine: Data } |  |
+| Nome      | Digitare                     | Descrizione |
+| --------- | ---------------------------- | ----------- |
+| eventi    | VEvent[]                     |             |
+| incarichi | Assegnazione pianificatore[] |             |
+| gamma     | {inizio: Data; fine: Data }  |             |
 
 ## `src/utils/availability`
 
@@ -319,36 +333,44 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function availabilityForResource(input: AvailabilityInput, resourceId: string): ResourceAvailability
+function availabilityForResource(
+  input: AvailabilityInput,
+  resourceId: string,
+): ResourceAvailability;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ingresso | DisponibilitàInserisci |  |
-| IDrisorsa | stringa |  |
+| Nome      | Digitare               | Descrizione |
+| --------- | ---------------------- | ----------- |
+| ingresso  | DisponibilitàInserisci |             |
+| IDrisorsa | stringa                |             |
 
 ### espandereDisponibilità
 
 **Tipo:** funzione
 
 ```typescript
-function expandAvailability(resourceId: string, input: AvailabilityInput, range: { start: Date; end: Date }, options: AvailabilityOptions = {}): NormalizedAvailabilityInterval[]
+function expandAvailability(
+  resourceId: string,
+  input: AvailabilityInput,
+  range: { start: Date; end: Date },
+  options: AvailabilityOptions = {},
+): NormalizedAvailabilityInterval[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| IDrisorsa | stringa |  |
-| ingresso | DisponibilitàInserisci |  |
-| gamma | {inizio: Data; fine: Data } |  |
-| opzioni | DisponibilitàOpzioni |  |
+| Nome      | Digitare                    | Descrizione |
+| --------- | --------------------------- | ----------- |
+| IDrisorsa | stringa                     |             |
+| ingresso  | DisponibilitàInserisci      |             |
+| gamma     | {inizio: Data; fine: Data } |             |
+| opzioni   | DisponibilitàOpzioni        |             |
 
 ## `src/utils/capacity`
 
@@ -357,19 +379,24 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function calculateCapacityState(resourceId: string, segment: TimelineSegment | { start: Date; end: Date }, availability: NormalizedAvailabilityInterval[], events: PlannerEventRecord[]): CapacityState
+function calculateCapacityState(
+  resourceId: string,
+  segment: TimelineSegment | { start: Date; end: Date },
+  availability: NormalizedAvailabilityInterval[],
+  events: PlannerEventRecord[],
+): CapacityState;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| IDrisorsa | stringa |  |
-| segmento | Segmento della linea temporale \| {inizio: Data; fine: Data } |  |
-| disponibilità | Intervallo disponibilità normalizzato[] |  |
-| eventi | PlannerEventRecord[] |  |
+| Nome          | Digitare                                                      | Descrizione |
+| ------------- | ------------------------------------------------------------- | ----------- |
+| IDrisorsa     | stringa                                                       |             |
+| segmento      | Segmento della linea temporale \| {inizio: Data; fine: Data } |             |
+| disponibilità | Intervallo disponibilità normalizzato[]                       |             |
+| eventi        | PlannerEventRecord[]                                          |             |
 
 ## `src/utils/layout`
 
@@ -378,18 +405,22 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Date; end: Date }, width: number): PlannerEventGeometry[]
+function layoutResourceEvents(
+  records: PlannerEventRecord[],
+  range: { start: Date; end: Date },
+  width: number,
+): PlannerEventGeometry[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| record | PlannerEventRecord[] |  |
-| gamma | {inizio: Data; fine: Data } |  |
-| larghezza | numero |  |
+| Nome      | Digitare                    | Descrizione |
+| --------- | --------------------------- | ----------- |
+| record    | PlannerEventRecord[]        |             |
+| gamma     | {inizio: Data; fine: Data } |             |
+| larghezza | numero                      |             |
 
 ## `src/utils/mutations`
 
@@ -398,90 +429,110 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function applyAssignmentUpdate(assignments: PlannerAssignment[], update: PlannerAssignmentUpdate): PlannerAssignment[]
+function applyAssignmentUpdate(
+  assignments: PlannerAssignment[],
+  update: PlannerAssignmentUpdate,
+): PlannerAssignment[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| incarichi | Assegnazione pianificatore[] |  |
-| aggiornamento | Aggiornamento assegnazione pianificatore |  |
+| Nome          | Digitare                                 | Descrizione |
+| ------------- | ---------------------------------------- | ----------- |
+| incarichi     | Assegnazione pianificatore[]             |             |
+| aggiornamento | Aggiornamento assegnazione pianificatore |             |
 
 ### movePlannerEventPatch
 
 **Tipo:** funzione
 
 ```typescript
-function movePlannerEventPatch(event: VEvent, deltaMs: number, options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function movePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| evento | VEvent |  |
-| deltaMs | numero |  |
-| opzioni | OpzioniModificaPianificatore |  |
+| Nome    | Digitare                     | Descrizione |
+| ------- | ---------------------------- | ----------- |
+| evento  | VEvent                       |             |
+| deltaMs | numero                       |             |
+| opzioni | OpzioniModificaPianificatore |             |
 
 ### riassegnarePlannerEvent
 
 **Tipo:** funzione
 
 ```typescript
-function reassignPlannerEvent(eventId: string, resourceId: string): PlannerAssignmentUpdate
+function reassignPlannerEvent(
+  eventId: string,
+  resourceId: string,
+): PlannerAssignmentUpdate;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ID evento | stringa |  |
-| IDrisorsa | stringa |  |
+| Nome      | Digitare | Descrizione |
+| --------- | -------- | ----------- |
+| ID evento | stringa  |             |
+| IDrisorsa | stringa  |             |
 
 ### resizePlannerEventPatch
 
 **Tipo:** funzione
 
 ```typescript
-function resizePlannerEventPatch(event: VEvent, deltaMs: number, edge: "start" | "end" = "end", options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function resizePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  edge: "start" | "end" = "end",
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| evento | VEvent |  |
-| deltaMs | numero |  |
-| bordo | "inizio" \| "fine" |  |
-| opzioni | OpzioniModificaPianificatore |  |
+| Nome    | Digitare                     | Descrizione |
+| ------- | ---------------------------- | ----------- |
+| evento  | VEvent                       |             |
+| deltaMs | numero                       |             |
+| bordo   | "inizio" \| "fine"           |             |
+| opzioni | OpzioniModificaPianificatore |             |
 
 ### selezionare Intervallo pianificatore
 
 **Tipo:** funzione
 
 ```typescript
-function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumDurationMs = 15 * 60_000): PlannerRangeSelection | undefined
+function selectPlannerRange(
+  resourceId: string,
+  start: Date,
+  end: Date,
+  minimumDurationMs = 15 * 60_000,
+): PlannerRangeSelection | undefined;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| IDrisorsa | stringa |  |
-| inizio | Data |  |
-| fine | Data |  |
-| durataminimaMs |  |  |
+| Nome           | Digitare | Descrizione |
+| -------------- | -------- | ----------- |
+| IDrisorsa      | stringa  |             |
+| inizio         | Data     |             |
+| fine           | Data     |             |
+| durataminimaMs |          |             |
 
 ## `src/utils/timeline`
 
@@ -490,68 +541,80 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function clampToRange(value: Date, range: { start: Date; end: Date }): Date
+function clampToRange(value: Date, range: { start: Date; end: Date }): Date;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | Data |  |
-| gamma | {inizio: Data; fine: Data } |  |
+| Nome   | Digitare                    | Descrizione |
+| ------ | --------------------------- | ----------- |
+| valore | Data                        |             |
+| gamma  | {inizio: Data; fine: Data } |             |
 
 ### generare segmenti della linea temporale
 
 **Tipo:** funzione
 
 ```typescript
-function generateTimelineSegments(scale: PlannerScale, range: { start: Date; end: Date }, options: TimelineOptions = {}): TimelineSegment[]
+function generateTimelineSegments(
+  scale: PlannerScale,
+  range: { start: Date; end: Date },
+  options: TimelineOptions = {},
+): TimelineSegment[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| scala | PlannerScale |  |
-| gamma | {inizio: Data; fine: Data } |  |
-| opzioni | Opzioni sequenza temporale |  |
+| Nome    | Digitare                    | Descrizione |
+| ------- | --------------------------- | ----------- |
+| scala   | PlannerScale                |             |
+| gamma   | {inizio: Data; fine: Data } |             |
+| opzioni | Opzioni sequenza temporale  |             |
 
 ### positionToTime
 
 **Tipo:** funzione
 
 ```typescript
-function positionToTime(position: number, range: { start: Date; end: Date }, width: number): Date
+function positionToTime(
+  position: number,
+  range: { start: Date; end: Date },
+  width: number,
+): Date;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| posizione | numero |  |
-| gamma | {inizio: Data; fine: Data } |  |
-| larghezza | numero |  |
+| Nome      | Digitare                    | Descrizione |
+| --------- | --------------------------- | ----------- |
+| posizione | numero                      |             |
+| gamma     | {inizio: Data; fine: Data } |             |
+| larghezza | numero                      |             |
 
 ### timeToPosition
 
 **Tipo:** funzione
 
 ```typescript
-function timeToPosition(time: Date, range: { start: Date; end: Date }, width: number): number
+function timeToPosition(
+  time: Date,
+  range: { start: Date; end: Date },
+  width: number,
+): number;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| tempo | Data |  |
-| gamma | {inizio: Data; fine: Data } |  |
-| larghezza | numero |  |
+| Nome      | Digitare                    | Descrizione |
+| --------- | --------------------------- | ----------- |
+| tempo     | Data                        |             |
+| gamma     | {inizio: Data; fine: Data } |             |
+| larghezza | numero                      |             |

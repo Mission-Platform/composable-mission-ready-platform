@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle` — 通过 `light → dark → auto` 循环活动主题，
@@ -39,9 +39,9 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ThemeToggleProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<ThemeToggleProperties> |      |
 
 ### 主题切换属性
 
@@ -70,7 +70,7 @@ export type ThemeToggleSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer` — 组成运行时 `--mp-*` 设计令牌覆盖（品牌
@@ -96,9 +96,9 @@ styleString、setConfig、setAttribute、setToken、removeToken、重置 }`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ThemeComposerProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<ThemeComposerProperties> |      |
 
 ### ThemeComposer属性
 
@@ -127,7 +127,7 @@ export type ThemeComposerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **种类：**功能
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider` — 从其 props 和配置共享主题存储
@@ -151,9 +151,9 @@ function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ThemeProviderProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<ThemeProviderProperties> |      |
 
 ### 主题提供者属性
 
@@ -182,7 +182,7 @@ export type ThemeProviderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **种类：**常数
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 将每个友好属性映射到它覆盖的 `--mp-*` CSS 自定义属性。
@@ -192,7 +192,7 @@ export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
 **种类：**功能
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 将 {@link ThemeComposerConfig} 转换为 CSS 自定义的平面地图
@@ -201,111 +201,115 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|配置|主题作曲家配置 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 配置 | 主题作曲家配置 |      |
 
 ### 配置到样式字符串
 
 **种类：**功能
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 将配置解析为完整内联 `style` 字符串（自定义属性 + `color-scheme`）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|配置|主题作曲家配置 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 配置 | 主题作曲家配置 |      |
 
 ### css变量转字符串
 
 **种类：**功能
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 将 CSS 自定义属性映射序列化为内联 `style` 字符串。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|变量 |记录<string, string> |  |
+| 名称 | 类型                 | 描述 |
+| ---- | -------------------- | ---- |
+| 变量 | 记录<string, string> |      |
 
 ### 合并配置
 
 **种类：**功能
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 将部分配置浅合并到当前配置中（清除 `undefined`/空值）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|配置|主题作曲家配置 |  |
-|部分 |主题作曲家配置 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 配置 | 主题作曲家配置 |      |
+| 部分 | 主题作曲家配置 |      |
 
 ### 删除配置令牌
 
 **种类：**功能
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 删除单个原始令牌覆盖。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|配置|主题作曲家配置 |  |
-|关键|字符串|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 配置 | 主题作曲家配置 |      |
+| 关键 | 字符串         |      |
 
 ### 设置配置属性
 
 **种类：**功能
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 设置单个友好属性（通过 `undefined` 将其清除）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|配置|主题作曲家配置 |  |
-|属性|克 |  |
-|价值|主题作曲家配置[K] |  |
+| 名称 | 类型              | 描述 |
+| ---- | ----------------- | ---- |
+| 配置 | 主题作曲家配置    |      |
+| 属性 | 克                |      |
+| 价值 | 主题作曲家配置[K] |      |
 
 ### 设置配置令牌
 
 **种类：**功能
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 设置单个原始令牌覆盖。该密钥可以省略 `--mp-` 前缀。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|配置|主题作曲家配置 |  |
-|关键|字符串|  |
-|价值|字符串|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 配置 | 主题作曲家配置 |      |
+| 关键 | 字符串         |      |
+| 价值 | 字符串         |      |
 
 ## `src/stores/theme-store/theme-store`
 
@@ -314,7 +318,7 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 **种类：**功能
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 （重新）从 `ForgeThemeProvider` 的 props 配置共享存储：切换
@@ -323,16 +327,16 @@ function configureTheme(config: ThemeConfig): void
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|配置|主题配置 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 配置 | 主题配置 |      |
 
 ### 周期主题
 
 **种类：**功能
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 循环浏览 `light → dark → auto → light`。
@@ -342,7 +346,7 @@ function cycleTheme(): void
 **种类：**功能
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 读取存储当前状态的不可变快照。
@@ -362,32 +366,32 @@ export type ResolvedTheme = 'light' | 'dark';
 **种类：**功能
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 明确设置主题首选项。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|下一个 |主题|  |
+| 名称   | 类型 | 描述 |
+| ------ | ---- | ---- |
+| 下一个 | 主题 |      |
 
 ### 订阅主题
 
 **种类：**功能
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 订阅商店变更；返回取消订阅函数。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|听众 | () => 无效 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 听众 | () => 无效 |      |
 
 ### 主题
 
@@ -424,7 +428,7 @@ export interface ThemeSnapshot
 **种类：**功能
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 根据当前解决的主题在明暗之间切换。

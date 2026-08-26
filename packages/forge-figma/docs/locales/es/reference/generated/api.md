@@ -26,17 +26,20 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function generateForgeExportBundle(document: ForgeDesignDocument, options: ForgeGenerationOptions = {}): ForgeExportBundle
+function generateForgeExportBundle(
+  document: ForgeDesignDocument,
+  options: ForgeGenerationOptions = {},
+): ForgeExportBundle;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| documento | ForgeDesignDocumento |  |
-| opciones | Opciones de generación de Forge |  |
+| Nombre    | Tipo                            | Descripción |
+| --------- | ------------------------------- | ----------- |
+| documento | ForgeDesignDocumento            |             |
+| opciones  | Opciones de generación de Forge |             |
 
 ## `src/model/design`
 
@@ -45,7 +48,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const FORGE_DESIGN_SCHEMA_VERSION
+export const FORGE_DESIGN_SCHEMA_VERSION;
 ```
 
 No se proporciona descripción.
@@ -145,7 +148,20 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type ForgeDesignNodeType = | 'frame' | 'group' | 'component' | 'instance' | 'text' | 'rectangle' | 'ellipse' | 'line' | 'vector' | 'boolean-operation' | 'image' | 'section' | 'unknown';
+export type ForgeDesignNodeType =
+  | 'frame'
+  | 'group'
+  | 'component'
+  | 'instance'
+  | 'text'
+  | 'rectangle'
+  | 'ellipse'
+  | 'line'
+  | 'vector'
+  | 'boolean-operation'
+  | 'image'
+  | 'section'
+  | 'unknown';
 ```
 
 No se proporciona descripción.
@@ -267,16 +283,18 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function createForgeDiagnostic(diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>): ForgeDiagnostic
+function createForgeDiagnostic(
+  diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>,
+): ForgeDiagnostic;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| diagnóstico | Omitir<ForgeDiagnostic, 'code'> y seleccionar<ForgeDiagnostic, 'code'> |  |
+| Nombre      | Tipo                                                                   | Descripción |
+| ----------- | ---------------------------------------------------------------------- | ----------- |
+| diagnóstico | Omitir<ForgeDiagnostic, 'code'> y seleccionar<ForgeDiagnostic, 'code'> |             |
 
 ### ForgeDiagnóstico
 
@@ -431,24 +449,24 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined
+function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombre | cadena |  |
-| metadatos | ForgeComponentMetadatos |  |
+| Nombre    | Tipo                    | Descripción |
+| --------- | ----------------------- | ----------- |
+| nombre    | cadena                  |             |
+| metadatos | ForgeComponentMetadatos |             |
 
 ### FORGE_COMPONENT_REGISTRY
 
 **Tipo:** constante
 
 ```typescript
-export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
+export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[];
 ```
 
 No se proporciona descripción.
@@ -458,16 +476,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function getForgeComponent(name: string): ForgeComponentRegistryEntry
+function getForgeComponent(name: string): ForgeComponentRegistryEntry;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombre | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| nombre | cadena |             |
 
 ## `src/tokens/resolve`
 
@@ -476,16 +494,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function componentPathToCssVariable(path: string): string | undefined
+function componentPathToCssVariable(path: string): string | undefined;
 ```
 
 Convierta la ruta de un componente canónico al nombre de la variable CSS de Mission Platform generada.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| camino | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| camino | cadena |             |
 
 ### FigmaVariableEncuadernación
 
@@ -512,7 +530,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const MISSION_PLATFORM_COMPONENT_COLLECTION
+export const MISSION_PLATFORM_COMPONENT_COLLECTION;
 ```
 
 No se proporciona descripción.
@@ -522,32 +540,32 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function normalizeComponentTokenPath(value: string): string | undefined
+function normalizeComponentTokenPath(value: string): string | undefined;
 ```
 
 Normalice un nombre o alias de variable Figma a la ruta canónica `component.*`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| valor  | cadena |             |
 
 ### resolverFigmaVariable
 
 **Tipo:** función
 
 ```typescript
-function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution
+function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| encuadernación | FigmaVariableEncuadernación |  |
+| Nombre         | Tipo                        | Descripción |
+| -------------- | --------------------------- | ----------- |
+| encuadernación | FigmaVariableEncuadernación |             |
 
 ## `src/validation/document`
 
@@ -556,16 +574,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[]
+function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[];
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| documento | ForgeDesignDocumento |  |
+| Nombre    | Tipo                 | Descripción |
+| --------- | -------------------- | ----------- |
+| documento | ForgeDesignDocumento |             |
 
 ### validarForgeExportBundle
 
@@ -574,16 +592,16 @@ No se proporciona descripción.
 ```typescript
 function validateForgeExportBundle(bundle: {
   readonly files: readonly { readonly path: string }[];
-}): readonly ForgeDiagnostic[]
+}): readonly ForgeDiagnostic[];
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| paquete | { archivos de solo lectura: solo lectura { ruta de solo lectura: cadena }[]; } |  |
+| Nombre  | Tipo                                                                           | Descripción |
+| ------- | ------------------------------------------------------------------------------ | ----------- |
+| paquete | { archivos de solo lectura: solo lectura { ruta de solo lectura: cadena }[]; } |             |
 
 ## `src/validation/names`
 
@@ -592,34 +610,34 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string
+function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string;
 ```
 
 Cree un identificador PascalCase estable a partir de una capa Figma o un nombre de marco.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | cadena |  |
-| respaldo |  |  |
+| Nombre   | Tipo   | Descripción |
+| -------- | ------ | ----------- |
+| valor    | cadena |             |
+| respaldo |        |             |
 
 ### normalizar nombre de archivo
 
 **Tipo:** función
 
 ```typescript
-function normalizeFileName(value: string, fallback = 'generated-component'): string
+function normalizeFileName(value: string, fallback = 'generated-component'): string;
 ```
 
 Cree un archivo de caja de kebab seguro a partir de una capa de Figma o un nombre de marco.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | cadena |  |
-| respaldo |  |  |
+| Nombre   | Tipo   | Descripción |
+| -------- | ------ | ----------- |
+| valor    | cadena |             |
+| respaldo |        |             |
 
 ## `src/validation/paths`
 
@@ -638,14 +656,17 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function validateRepositoryRelativePath(value: string, allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg']): ForgePathValidationResult
+function validateRepositoryRelativePath(
+  value: string,
+  allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg'],
+): ForgePathValidationResult;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | cadena |  |
-| extensiones permitidas | cadena de solo lectura[] |  |
+| Nombre                 | Tipo                     | Descripción |
+| ---------------------- | ------------------------ | ----------- |
+| valor                  | cadena                   |             |
+| extensiones permitidas | cadena de solo lectura[] |             |

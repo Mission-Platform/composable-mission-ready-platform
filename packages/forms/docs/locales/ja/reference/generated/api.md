@@ -26,7 +26,7 @@ export interface CheckboxProperties
 **種類:** 関数
 
 ```typescript
-function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
+function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 ```
 
 `ForgeCheckbox` — ニュートラルな JSX 方言で一度作成されたチェックボックス コントロール
@@ -48,9 +48,9 @@ SFC `watch` と同等);チェック/不確定マーカーは
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<CheckboxProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<CheckboxProperties> |      |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -59,7 +59,7 @@ SFC `watch` と同等);チェック/不確定マーカーは
 **種類:** 関数
 
 ```typescript
-function ForgeInput(properties: Readonly<InputProperties>): MpElement
+function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 ```
 
 `ForgeInput` — 中立的な JSX 方言で一度作成されたテキスト フィールド
@@ -79,9 +79,9 @@ function ForgeInput(properties: Readonly<InputProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<InputProperties> |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| プロパティ | 読み取り専用<InputProperties> |      |
 
 ### 入力の自動大文字化
 
@@ -130,7 +130,7 @@ export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'u
 **種類:** 関数
 
 ```typescript
-function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
+function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 ```
 
 `ForgeRadio` — ニュートラルな JSX 方言で一度作成されたラジコン
@@ -147,9 +147,9 @@ function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<RadioProperties> |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| プロパティ | 読み取り専用<RadioProperties> |      |
 
 ### 無線プロパティ
 
@@ -168,7 +168,7 @@ export interface RadioProperties
 **種類:** 関数
 
 ```typescript
-function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
+function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 ```
 
 `ForgeRangeInput` — デュアルサムの最小/最大範囲セレクター。
@@ -193,9 +193,9 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<RangeInputProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<RangeInputProperties> |      |
 
 ### RangeInputProperties
 
@@ -234,7 +234,7 @@ export type RangeValue = [number, number];
 **種類:** 関数
 
 ```typescript
-function ForgeRating(properties: Readonly<RatingProperties>): MpElement
+function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 ```
 
 `ForgeRating` — ニュートラル JSX で一度作成された星評価の入力/表示
@@ -254,9 +254,9 @@ function ForgeRating(properties: Readonly<RatingProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<RatingProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<RatingProperties> |      |
 
 ### 評価特性
 
@@ -285,7 +285,7 @@ export type RatingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
+function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 ```
 
 `ForgeSlider` — ニュートラルな JSX 方言で一度作成された範囲スライダーと
@@ -307,9 +307,9 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SliderProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<SliderProperties> |      |
 
 ### スライダーのプロパティ
 
@@ -338,7 +338,7 @@ export type SliderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement
+function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement;
 ```
 
 `ForgeSwitch` — ニュートラルな JSX 方言で一度作成されたトグル スイッチ
@@ -356,9 +356,9 @@ CSS モジュール `forge-switch.module.scss` とニュートラルを構成し
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SwitchProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<SwitchProperties> |      |
 
 ### スイッチのプロパティ
 
@@ -387,7 +387,7 @@ export type SwitchSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
+function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 ```
 
 `ForgeTextarea` — ニュートラル JSX で一度作成された複数行のテキスト フィールド
@@ -408,9 +408,9 @@ function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<TextareaProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<TextareaProperties> |      |
 
 ### テキストエリア自動大文字化
 
@@ -479,7 +479,7 @@ export type CalendarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement
+function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 ```
 
 `ForgeCalendar` — ニュートラル JSX で一度作成された月グリッド日付ピッカー
@@ -507,9 +507,9 @@ external-sync `watch` は {@link useEffect} になります。の
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<CalendarProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<CalendarProperties> |      |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -538,7 +538,7 @@ export type ColorInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
+function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 ```
 
 `ForgeColorInput` — ニュートラルな JSX 方言で一度作成されたカラーピッカー
@@ -558,9 +558,9 @@ function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ColorInputProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<ColorInputProperties> |      |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -589,7 +589,7 @@ export type DateInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
+function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 ```
 
 `ForgeDateInput` — ニュートラルな JSX 方言で一度作成された日付ピッカー
@@ -612,9 +612,9 @@ function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<DateInputProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<DateInputProperties> |      |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -643,7 +643,7 @@ export type DateRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 **種類:** 関数
 
 ```typescript
-function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement
+function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateRangeInput` — ニュートラル JSX で一度作成された日付範囲ピッカー
@@ -672,9 +672,9 @@ function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): Mp
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<DateRangeInputProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<DateRangeInputProperties> |      |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -693,7 +693,7 @@ export interface FieldSetProperties
 **種類:** 関数
 
 ```typescript
-function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement
+function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement;
 ```
 
 `ForgeFieldSet` — ニュートラルで一度作成されたセマンティック グループ化コンテナ
@@ -714,9 +714,9 @@ CSS モジュール `forge-field-set.module.scss` とニュートラルを構成
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<FieldSetProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<FieldSetProperties> |      |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -745,7 +745,7 @@ export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
+function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 ```
 
 `ForgeFileInput` — ニュートラルな JSX 方言で一度作成されたファイル入力と
@@ -765,9 +765,9 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<FileInputProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<FileInputProperties> |      |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -776,7 +776,7 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
 **種類:** 関数
 
 ```typescript
-function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement
+function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement;
 ```
 
 `ForgeLocationInput` — で一度作成された地理座標入力
@@ -804,9 +804,9 @@ CSS モジュール `forge-location-input.module.scss`。変換/解析ロジッ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<LocationInputProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<LocationInputProperties> |      |
 
 ### 位置入力プロパティ
 
@@ -849,7 +849,7 @@ export interface LocationValue
 ```
 
 位置フィールドの正規値: 符号付き 10 進度座標
-加えて、それらが提示/シリアル化されているバリアント。  `undefined` 座標
+加えて、それらが提示/シリアル化されているバリアント。 `undefined` 座標
 「入力がない」という意味です。
 
 ## `src/components/molecules/forge-number-stepper/forge-number-stepper`
@@ -859,7 +859,7 @@ export interface LocationValue
 **種類:** 関数
 
 ```typescript
-function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement
+function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement;
 ```
 
 `ForgeNumberStepper` — ニュートラルな JSX 方言で一度作成された数値ステッパー
@@ -879,9 +879,9 @@ function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpEl
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<NumberStepperProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<NumberStepperProperties> |      |
 
 ### NumberStepperProperties
 
@@ -910,7 +910,7 @@ export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **種類:** 関数
 
 ```typescript
-function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
+function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 ```
 
 `ForgeOtpInput` — セグメント化されたワンタイムパスワード入力は、
@@ -932,9 +932,9 @@ function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<OtpInputProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<OtpInputProperties> |      |
 
 ### OtpInputProperties
 
@@ -973,7 +973,7 @@ OTP セルで受け入れられる文字セット。
 **種類:** 関数
 
 ```typescript
-function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement
+function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 ```
 
 `ForgePhoneInput` — 国際電話番号フィールドは、
@@ -1002,9 +1002,9 @@ SFC: `useId` コンポーザブルは、フレームワークネイティブの 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<PhoneInputProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<PhoneInputProperties> |      |
 
 ### 電話変更
 
@@ -1055,7 +1055,7 @@ export interface PhoneCountry
 **種類:** 関数
 
 ```typescript
-function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement
+function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement;
 ```
 
 `ForgeRadioGroup` — 複数の {@link ForgeRadio} コントロールを共有の下にグループ化します。
@@ -1078,9 +1078,9 @@ function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<RadioGroupProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<RadioGroupProperties> |      |
 
 ### 無線グループの方向
 
@@ -1119,7 +1119,7 @@ export interface RadioOption
 **種類:** 関数
 
 ```typescript
-function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement
+function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement;
 ```
 
 `ForgeSearchInput` — ニュートラルな JSX 方言で一度作成された検索フィールド
@@ -1139,9 +1139,9 @@ function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElemen
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SearchInputProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<SearchInputProperties> |      |
 
 ### 検索入力プロパティ
 
@@ -1170,7 +1170,7 @@ export type SearchInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement
+function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement;
 ```
 
 `ForgeSegmentControl` — セグメント化されたコントロール (単一選択スイッチャー) が作成されました
@@ -1191,9 +1191,9 @@ ref 配列ではなく、単一要素の ref）。 `v-model` + `change` の出�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SegmentControlProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<SegmentControlProperties> |      |
 
 ### セグメントコントロールのプロパティ
 
@@ -1232,7 +1232,7 @@ export interface SegmentOption
 **種類:** 関数
 
 ```typescript
-function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement
+function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 ```
 
 `ForgeTimeInput` — 中立的な JSX 方言で一度作成されたタイムピッカー
@@ -1256,9 +1256,9 @@ CSS モジュール `forge-time-input.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<TimeInputProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<TimeInputProperties> |      |
 
 ### 時間入力プロパティ
 
@@ -1287,7 +1287,7 @@ export type TimeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement
+function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeTimeRangeInput` — ニュートラル JSX で一度作成された時間範囲ピッカー
@@ -1313,9 +1313,9 @@ function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): Mp
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<TimeRangeInputProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<TimeRangeInputProperties> |      |
 
 ### TimeRange入力プロパティ
 
@@ -1364,7 +1364,7 @@ export type DateTimeRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 
 **種類:** 関数
 
 ```typescript
-function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement
+function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateTimeRangeInput` — に一度作成された日付/時刻範囲ピッカー
@@ -1390,13 +1390,14 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 `@mission-platform/icons` `ForgeIconCalendar`/`ForgeIconGlobe`; `start`/`end` SFC
 スロットは `startContent`/`endContent` 名前付きスロット (`<Slot>`、存在) になります。
 フレームワークに依存しない {@link hasSlot} ヘルパーで検出されます)。および `v-model`
-+ `change` の出力は、`onUpdateModelValue`/`onChange` コールバック プロパティになります。
+
+- `change` の出力は、`onUpdateModelValue`/`onChange` コールバック プロパティになります。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<DateTimeRangeInputProperties> |  |
+| 名前       | タイプ                                     | 説明 |
+| ---------- | ------------------------------------------ | ---- |
+| プロパティ | 読み取り専用<DateTimeRangeInputProperties> |      |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1405,7 +1406,7 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 **種類:** 関数
 
 ```typescript
-function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement
+function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement;
 ```
 
 `ForgeFormBuilder` — JSON スキーマ用の視覚的なドラッグ アンド ドロップ オーサリング サーフェス
@@ -1433,9 +1434,9 @@ HTML5 ドラッグ アンド ドロップ** 要素のイベント プロパテ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<FormBuilderProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<FormBuilderProperties> |      |
 
 ### フォームビルダーのプロパティ
 
@@ -1454,7 +1455,7 @@ export interface FormBuilderProperties
 **種類:** 関数
 
 ```typescript
-function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
+function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 ```
 
 `ForgeFormWizard` — ニュートラル JSX で一度作成されたマルチステップ フォーム シェル
@@ -1482,9 +1483,9 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<FormWizardProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<FormWizardProperties> |      |
 
 ### フォームウィザードのプロパティ
 
@@ -1513,7 +1514,7 @@ export interface WizardStep
 **種類:** 関数
 
 ```typescript
-function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement
+function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement;
 ```
 
 `ForgeSchemaFormDialog` — 内でホストされている {@link ForgeSchemaForm}
@@ -1530,9 +1531,9 @@ JSON スキーマ駆動のフォーム (Monaco `code` フィールドを含む) 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SchemaFormDialogProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<SchemaFormDialogProperties> |      |
 
 ### スキーマフォームダイアログプロパティ
 
@@ -1551,7 +1552,7 @@ export interface SchemaFormDialogProperties
 **種類:** 関数
 
 ```typescript
-function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement
+function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement;
 ```
 
 `ForgeSchemaForm` — ニュートラル JSX で一度作成された JSON スキーマ駆動のフォーム
@@ -1576,9 +1577,9 @@ Vue SFC からの代替: 動的 `<component :is>` コントロール
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SchemaFormProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<SchemaFormProperties> |      |
 
 ### スキーマフォームフィールドレンダラー
 

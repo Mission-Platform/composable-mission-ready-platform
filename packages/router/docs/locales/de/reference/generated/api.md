@@ -16,39 +16,39 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/router`.
 **Art:** Funktion
 
 ```typescript
-function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities
+function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities;
 ```
 
 Erstellen Sie ein neutrales Fähigkeitsobjekt für einen Zieladapter, SSR oder einen Test.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| überschreibt | MpRouterCapabilityOverrides |  |
+| Name         | Geben Sie                   | ein Beschreibung |
+| ------------ | --------------------------- | ---------------- |
+| überschreibt | MpRouterCapabilityOverrides |                  |
 
 ### isMpRouterCapabilityError
 
 **Art:** Funktion
 
 ```typescript
-function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError
+function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError;
 ```
 
 Ob es sich bei einem unbekannten Fehler um den deterministischen Neutral-Router-Fallback-Fehler handelt.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Fehler | unbekannt |  |
+| Name   | Geben Sie | ein Beschreibung |
+| ------ | --------- | ---------------- |
+| Fehler | unbekannt |                  |
 
 ### MP_ROUTER_COMPILER_MARKER
 
 **Art:** konstant
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Stabile Metadaten, die von Forge-Router-Compiler-Plugins verwendet werden.
@@ -58,16 +58,16 @@ Stabile Metadaten, die von Forge-Router-Compiler-Plugins verwendet werden.
 **Art:** Komponente
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor
+function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 Neutraler Linkmarker. Native Ziele ersetzen diese Funktion während der Kompilierung.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | MpLinkProps |  |
+| Name          | Geben Sie   | ein Beschreibung |
+| ------------- | ----------- | ---------------- |
+| Eigenschaften | MpLinkProps |                  |
 
 ### MpLinkDescriptor
 
@@ -154,16 +154,16 @@ Eine Teilimplementierung, die für Zieladapter und SSR-/Testkabelbäume nützlic
 **Art:** Komponente
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor
+function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
 ```
 
 Neutrale Steckdose/Ansichtsmarkierung. Native Ziele ersetzen diese Funktion während der Kompilierung.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | MpRouterViewProps |  |
+| Name          | Geben Sie         | ein Beschreibung |
+| ------------- | ----------------- | ---------------- |
+| Eigenschaften | MpRouterViewProps |                  |
 
 ### MpRouterViewDescriptor
 
@@ -190,7 +190,10 @@ Vom neutralen Outlet-/View-Compiler-Marker akzeptierte Requisiten.
 **Art:** Funktion
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string
+function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string;
 ```
 
 Lösen Sie ein Ziel über den App-eigenen Router auf. Die optionale Funktion
@@ -198,17 +201,17 @@ Das Argument macht den Helfer in SSR/Tests und Zieladaptern deterministisch.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
-| Fähigkeiten | Pick<MpRouterCapabilities, 'resolve'> |  |
+| Name        | Geben Sie                             | ein Beschreibung |
+| ----------- | ------------------------------------- | ---------------- |
+| zu          | MpRouteLocationRaw                    |                  |
+| Fähigkeiten | Pick<MpRouterCapabilities, 'resolve'> |                  |
 
 ### useMpNavigation
 
 **Art:** Funktion
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Lesen Sie nur die zwingend erforderliche Navigationsfähigkeit.
@@ -218,7 +221,7 @@ Lesen Sie nur die zwingend erforderliche Navigationsfähigkeit.
 **Art:** Funktion
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lesen Sie die aktuelle App-eigene Route. Der unkompilierte Fallback ist SSR-sicher und
@@ -229,7 +232,7 @@ gibt `null` zurück; Ein Compilerziel ersetzt diesen Aufruf durch den nativen Ro
 **Art:** Funktion
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lesen Sie das von der App bereitgestellte neutrale Fähigkeitsobjekt.
@@ -241,7 +244,7 @@ Lesen Sie das von der App bereitgestellte neutrale Fähigkeitsobjekt.
 **Art:** konstant
 
 ```typescript
-export const applicationCompatibilityFixtures
+export const applicationCompatibilityFixtures;
 ```
 
 Keine Beschreibung angegeben.
@@ -251,7 +254,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Leiten Sie Datensätze weiter, die die Locale-/Such-/Catch-All-Tabelle der Dokumentations-App widerspiegeln.
@@ -261,7 +264,7 @@ Leiten Sie Datensätze weiter, die die Locale-/Such-/Catch-All-Tabelle der Dokum
 **Art:** konstant
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Leiten Sie Datensätze weiter, die die Locale-/Such-/Catch-All-Tabelle der Dokumentations-App widerspiegeln.
@@ -291,7 +294,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
+export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Routendatensätze, die das Sprachsegment und die URL-gesteuerten Overlays von My Care Notes widerspiegeln.
@@ -301,7 +304,7 @@ Routendatensätze, die das Sprachsegment und die URL-gesteuerten Overlays von My
 **Art:** konstant
 
 ```typescript
-export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
+export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[];
 ```
 
 Gemeinsam genutzte Verhaltenszeilen, die von der Vertragstestsuite jeder Laufzeit genutzt werden.
@@ -311,7 +314,7 @@ Gemeinsam genutzte Verhaltenszeilen, die von der Vertragstestsuite jeder Laufzei
 **Art:** konstant
 
 ```typescript
-export const websiteCompatibilityFixture: ForgeCompatibilityFixture
+export const websiteCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Routendatensätze, die die optionale Home-Route mit vorangestelltem Gebietsschema der Website widerspiegeln.
@@ -705,7 +708,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
+function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver;
 ```
 
 Erstellen Sie einen {@link MpRouteResolver}, der an einen Routenbaum gebunden ist, und reduzieren Sie ihn einmal
@@ -713,16 +716,16 @@ Wiederholte `match`/`resolve`-Aufrufe verwenden dieselbe absolute Routenliste er
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Routen | schreibgeschützt MpRoute[] |  |
+| Name   | Geben Sie                  | ein Beschreibung |
+| ------ | -------------------------- | ---------------- |
+| Routen | schreibgeschützt MpRoute[] |                  |
 
 ### Routen definieren
 
 **Art:** Funktion
 
 ```typescript
-function defineRoutes(routes: T): T
+function defineRoutes(routes: T): T;
 ```
 
 Identitätshelfer, der einen Framework-neutralen Routenbaum mit vollständigem Typ definiert
@@ -730,40 +733,40 @@ Schlussfolgerung. Verwenden Sie es, damit Redakteure die Route `name`s, `meta` u
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Routen | T |  |
+| Name   | Geben Sie | ein Beschreibung |
+| ------ | --------- | ---------------- |
+| Routen | T         |                  |
 
 #### Vertrag
 
 - **@example:** constroutes = defineRoutes([
   { Pfad: '/', Name: 'home', Komponente: Home },
   { Pfad: '/users/:id', Name: 'Benutzer', Komponente: Benutzer },
-])
+  ])
 
 ### findRouteByName
 
 **Art:** Funktion
 
 ```typescript
-function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined
+function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined;
 ```
 
 Suchen Sie die erste abgeflachte Route mit dem angegebenen Namen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Routen | schreibgeschützt MpRoute[] |  |
-| Name | Zeichenfolge |  |
+| Name   | Geben Sie                  | ein Beschreibung |
+| ------ | -------------------------- | ---------------- |
+| Routen | schreibgeschützt MpRoute[] |                  |
+| Name   | Zeichenfolge               |                  |
 
 ### flattenRoutes
 
 **Art:** Funktion
 
 ```typescript
-function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
+function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[];
 ```
 
 Reduzieren Sie einen verschachtelten Routenbaum in eine Tiefenliste absoluter Routen mit
@@ -772,16 +775,16 @@ seine Vorfahren.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Routen | schreibgeschützt MpRoute[] |  |
+| Name   | Geben Sie                  | ein Beschreibung |
+| ------ | -------------------------- | ---------------- |
+| Routen | schreibgeschützt MpRoute[] |                  |
 
 ### matchRoutes
 
 **Art:** Funktion
 
 ```typescript
-function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined
+function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined;
 ```
 
 Vergleichen Sie einen Pfadnamen mit einem Routenbaum und geben Sie die erste Route zurück (in
@@ -789,10 +792,10 @@ Tiefendefinitionsreihenfolge), deren Muster übereinstimmt, oder `undefined`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Routen | schreibgeschützt MpRoute[] |  |
-| Pfadname | Zeichenfolge |  |
+| Name     | Geben Sie                  | ein Beschreibung |
+| -------- | -------------------------- | ---------------- |
+| Routen   | schreibgeschützt MpRoute[] |                  |
+| Pfadname | Zeichenfolge               |                  |
 
 ### MpFlatRoute
 
@@ -829,7 +832,7 @@ Ein Resolver, der an einen einzelnen Routenbaum gebunden ist.
 **Art:** Funktion
 
 ```typescript
-function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation
+function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation;
 ```
 
 Lösen Sie jedes Framework-neutrale {@link MpRouteLocationRaw} in ein vollständig geformtes auf
@@ -839,15 +842,15 @@ Orte bauen ihren Weg aus der passenden Route auf.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
-| Routen | schreibgeschützt MpRoute[] |  |
+| Name   | Geben Sie                  | ein Beschreibung |
+| ------ | -------------------------- | ---------------- |
+| zu     | MpRouteLocationRaw         |                  |
+| Routen | schreibgeschützt MpRoute[] |                  |
 
 #### Vertrag
 
 - **@example:** discoverLocation({ name: 'user', params: { id: 42 } }, Routen)
-// → { path: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
+  // → { path: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
 
 ## `src/location`
 
@@ -876,44 +879,44 @@ Die zerlegten Teile einer URL: Pfadname, Abfrage und Hash.
 **Art:** Funktion
 
 ```typescript
-function normalizeHash(hash: string): string
+function normalizeHash(hash: string): string;
 ```
 
 Normalisieren Sie ein Hash-Fragment so, dass es ein einzelnes führendes `#` enthält oder leer ist.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Hash | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Hash | Zeichenfolge |                  |
 
 ### parseLocation
 
 **Art:** Funktion
 
 ```typescript
-function parseLocation(url: string): MpLocationParts
+function parseLocation(url: string): MpLocationParts;
 ```
 
 Teilen Sie eine app-relative URL in ihre {@link MpLocationParts} auf.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| URL | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| URL  | Zeichenfolge |                  |
 
 #### Vertrag
 
 - **@example:** parseLocation('/users/42?tab=info#bio')
-// → { Pfad: '/users/42', Abfrage: { Tab: 'info' }, Hash: '#bio' }
+  // → { Pfad: '/users/42', Abfrage: { Tab: 'info' }, Hash: '#bio' }
 
 ### stringifyLocation
 
 **Art:** Funktion
 
 ```typescript
-function stringifyLocation(location: MpLocationInput): string
+function stringifyLocation(location: MpLocationInput): string;
 ```
 
 Stellen Sie aus Standortteilen eine app-relative URL-Zeichenfolge zusammen. Der Pfadname ist
@@ -922,14 +925,14 @@ Hash mit dem Präfix `#`, wenn er nicht leer ist.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Standort | MpLocationInput |  |
+| Name     | Geben Sie       | ein Beschreibung |
+| -------- | --------------- | ---------------- |
+| Standort | MpLocationInput |                  |
 
 #### Vertrag
 
 - **@example:** stringifyLocation({ path: '/users/42', query: { tab: 'info' }, hash: 'bio' })
-// → '/users/42?tab=info#bio'
+  // → '/users/42?tab=info#bio'
 
 ## `src/path`
 
@@ -938,7 +941,10 @@ Hash mit dem Präfix `#`, wenn er nicht leer ist.
 **Art:** Funktion
 
 ```typescript
-function buildPath(pattern: string, parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {}): string
+function buildPath(
+  pattern: string,
+  parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {},
+): string;
 ```
 
 Erstellen Sie einen konkreten Pfadnamen aus einem Muster und einer Reihe von Parametern sowie einer Codierung
@@ -947,23 +953,23 @@ Es fehlen erforderliche Parameterwürfe.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Muster | Zeichenfolge |  |
-| Parameter | Record<string, MpParameterValue \| readonly MpParameterValue[]> |  |
+| Name      | Geben Sie                                                       | ein Beschreibung |
+| --------- | --------------------------------------------------------------- | ---------------- |
+| Muster    | Zeichenfolge                                                    |                  |
+| Parameter | Record<string, MpParameterValue \| readonly MpParameterValue[]> |                  |
 
 #### Vertrag
 
 - **@example:** buildPath('/users/:id', { id: 42 }) // → '/users/42'
-buildPath('/users/:id?', {}) // → '/users'
-buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
+  buildPath('/users/:id?', {}) // → '/users'
+  buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
 
 ### Kompilierungspfad
 
 **Art:** Funktion
 
 ```typescript
-function compilePath(pattern: string): MpCompiledPath
+function compilePath(pattern: string): MpCompiledPath;
 ```
 
 Kompilieren Sie ein Pfadmuster in einen {@link MpCompiledPath} mit der Reihenfolge
@@ -971,9 +977,9 @@ Parameterschlüssel und einen passenden regulären Ausdruck.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Muster | Zeichenfolge |  |
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| Muster | Zeichenfolge |                  |
 
 #### Vertrag
 
@@ -984,7 +990,7 @@ Parameterschlüssel und einen passenden regulären Ausdruck.
 **Art:** Funktion
 
 ```typescript
-function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined
+function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined;
 ```
 
 Vergleichen Sie einen Pfadnamen mit einem Muster und geben Sie die extrahierten Parameter zurück oder
@@ -992,15 +998,15 @@ Vergleichen Sie einen Pfadnamen mit einem Muster und geben Sie die extrahierten 
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Muster | Zeichenfolge |  |
-| Pfadname | Zeichenfolge |  |
+| Name     | Geben Sie    | ein Beschreibung |
+| -------- | ------------ | ---------------- |
+| Muster   | Zeichenfolge |                  |
+| Pfadname | Zeichenfolge |                  |
 
 #### Vertrag
 
 - **@example:** matchPath('/users/:id', '/users/42') // → { id: '42' }
-matchPath('/users/:id', '/posts/42') // → undefiniert
+  matchPath('/users/:id', '/posts/42') // → undefiniert
 
 ### MpCompiledPath
 
@@ -1027,7 +1033,7 @@ Ein einzelner Parameterschlüssel, der aus einem kompilierten Pfadmuster extrahi
 **Art:** Funktion
 
 ```typescript
-function normalizePath(path: string): string
+function normalizePath(path: string): string;
 ```
 
 Normalisieren Sie ein Pfadmuster (oder einen Pfadnamen) in eine kanonische Form mit einem führenden Schrägstrich
@@ -1035,16 +1041,16 @@ ohne abschließenden Schrägstrich (mit Ausnahme des Stammverzeichnisses, das `/
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Pfad | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Pfad | Zeichenfolge |                  |
 
 ### WILDCARD_PARAM_KEY
 
 **Art:** konstant
 
 ```typescript
-export const WILDCARD_PARAM_KEY
+export const WILDCARD_PARAM_KEY;
 ```
 
 Der Schlüssel, unter dem ein eigenständiges `*`-Catch-All-Segment erfasst wird.
@@ -1056,7 +1062,7 @@ Der Schlüssel, unter dem ein eigenständiges `*`-Catch-All-Segment erfasst wird
 **Art:** Funktion
 
 ```typescript
-function parseQuery(search: string): MpQueryParameters
+function parseQuery(search: string): MpQueryParameters;
 ```
 
 Analysieren Sie eine Abfragezeichenfolge in eine {@link MpQueryParameters}-Map. Ein führendes `?` ist
@@ -1064,9 +1070,9 @@ optional. Wiederholte Schlüssel werden der Reihe nach in ein Array von Werten u
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| suchen | Zeichenfolge |  |
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| suchen | Zeichenfolge |                  |
 
 #### Vertrag
 
@@ -1077,7 +1083,7 @@ optional. Wiederholte Schlüssel werden der Reihe nach in ein Array von Werten u
 **Art:** Funktion
 
 ```typescript
-function stringifyQuery(query: MpQueryInput): string
+function stringifyQuery(query: MpQueryInput): string;
 ```
 
 Serialisieren Sie eine {@link MpQueryInput}-Map in eine Abfragezeichenfolge mit einem führenden `?`.
@@ -1086,14 +1092,14 @@ Werte (und Array-Elemente) werden gelöscht; Arrays geben jeweils ein `key=value
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Abfrage | MpQueryInput |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| Abfrage | MpQueryInput |                  |
 
 #### Vertrag
 
 - **@example:** stringifyQuery({ tag: ['a', 'b'], page: 2 }) // → '?tag=a&tag=b&page=2'
-stringifyQuery({}) // → ''
+  stringifyQuery({}) // → ''
 
 ## `src/types`
 
@@ -1160,7 +1166,7 @@ Die Verlaufsstrategie, die der Router eines Adapters verwenden sollte.
 - `web` – HTML5-Verlauf (saubere URLs), der Standard für Browser-Apps.
 - `hash` – Hash-basierter Verlauf (`/#/path`), für statisches Hosting ohne
   Server schreibt neu.
-– `memory` – In-Memory-Verlauf ohne URL, für SSR und Tests.
+  – `memory` – In-Memory-Verlauf ohne URL, für SSR und Tests.
 
 ### MpMetadataContext
 
@@ -1318,7 +1324,8 @@ Struktureller reaktiver Zustand, der von Adaptern verwendet wird, ohne ein Frame
 **Art:** Komponente
 
 ```typescript
-export type MpRedirect = MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
 ```
 
 Ein Umleitungsziel, optional berechnet aus der Zielroute.
@@ -1370,7 +1377,10 @@ Keine Beschreibung angegeben.
 **Art:** Komponente
 
 ```typescript
-export type MpRouteGuard = ( to: MpResolvedLocation, from: MpResolvedLocation | null, ) => MpGuardOutcome | Promise<MpGuardOutcome>;
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
 ```
 
 Ein Routenwächter, der von einer laufzeiteigenen Navigationszustandsmaschine ausgewertet wird.
@@ -1473,7 +1483,11 @@ Keine Beschreibung angegeben.
 **Art:** Komponente
 
 ```typescript
-export type MpScrollBehavior = ( to: MpResolvedLocation, from: MpResolvedLocation | null, savedPosition?: MpScrollPosition, ) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
 ```
 
 Keine Beschreibung angegeben.

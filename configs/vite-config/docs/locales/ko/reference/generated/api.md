@@ -26,7 +26,7 @@ export interface AppConfigOptions
 **종류:** 기능
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 롤업/롤다운 구축 `external` 모든 이름을 처리하는 술어
@@ -34,16 +34,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이름 | 읽기 전용 문자열[] |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 이름 | 읽기 전용 문자열[] |      |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 모든 공유 라이브러리의 기본 롤업 외부는 피어 제공으로 처리되어야 합니다.
@@ -54,7 +54,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
+export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 ```
 
 UMD/IIFE 소비자에 대한 기본 롤업 출력 전역입니다. 우리는 ESM만을 목표로 하고 있지만
@@ -65,7 +65,7 @@ UMD/IIFE 소비자에 대한 기본 롤업 출력 전역입니다. 우리는 ESM
 **종류:** 기능
 
 ```typescript
-function defineAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 빌드 Vite 미션 플랫폼 구성 Vue 앱 3개: Vue 플러그인과
@@ -74,16 +74,16 @@ function defineAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 앱 구성 옵션 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 옵션 | 앱 구성 옵션 |      |
 
 ### 정의FrameworkAppConfig
 
 **종류:** 기능
 
 ```typescript
-function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig
+function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
 {@link DefineAppConfig}를 다음으로 래핑하세요. `resolve.conditions` 벌거벗기 위해 필요한
@@ -93,16 +93,16 @@ function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfi
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | FrameworkAppConfig옵션 |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 옵션 | FrameworkAppConfig옵션 |      |
 
 ### 정의라이브러리구성
 
 **종류:** 기능
 
 ```typescript
-function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
+function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
 빌드 Vite Mission Platform에 맞춘 구성 Vue 라이브러리 패키지:
@@ -116,16 +116,16 @@ function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 라이브러리구성옵션 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 옵션 | 라이브러리구성옵션 |      |
 
 ### 정의WebComponentAppConfig
 
 **종류:** 기능
 
 ```typescript
-function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 빌드 Vite 프레임워크가 없는 웹 구성 요소 애플리케이션을 위한 앱 구성입니다.
@@ -137,9 +137,9 @@ function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 앱 구성 옵션 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 옵션 | 앱 구성 옵션 |      |
 
 ### FrameworkAppConfig옵션
 
@@ -156,7 +156,7 @@ export interface FrameworkAppConfigOptions extends AppConfigOptions
 **종류:** 기능
 
 ```typescript
-function frameworkCondition(framework: MissionPlatformFramework): string
+function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 {@link MissionPlatformFramework}를 사용자 정의 내보내기 조건에 매핑합니다.
@@ -166,16 +166,16 @@ Node/Vite 조건(`import`, `default`, `browser`, ...).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프레임워크 | MissionPlatform프레임워크 |  |
+| 이름       | 유형                      | 설명 |
+| ---------- | ------------------------- | ---- |
+| 프레임워크 | MissionPlatform프레임워크 |      |
 
 ### 프레임워크해결조건
 
 **종류:** 기능
 
 ```typescript
-function frameworkResolveConditions(framework: MissionPlatformFramework): string[]
+function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
 주문한 빌드 `resolve.conditions` 앱이 선택하는 데 사용해야 하는 목록
@@ -187,16 +187,16 @@ function frameworkResolveConditions(framework: MissionPlatformFramework): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프레임워크 | MissionPlatform프레임워크 |  |
+| 이름       | 유형                      | 설명 |
+| ---------- | ------------------------- | ---- |
+| 프레임워크 | MissionPlatform프레임워크 |      |
 
 ### VueI18nBlocks플러그인 무시
 
 **종류:** 기능
 
 ```typescript
-function ignoreVueI18nBlocksPlugin(): Plugin
+function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
 Vite 회전하는 플러그인 Vue SFC `<i18n>` 사용자 정의 블록을 무작동 모듈로 변환합니다.
@@ -237,7 +237,7 @@ Mission Platform 앱이 대상으로 삼을 수 있는 프레임워크 세트입
 **종류:** 기능
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 읽기 `dependencies` 그리고 `peerDependencies` package.json에 선언됨
@@ -246,9 +246,9 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 루트디렉토리 | 문자열 |  |
+| 이름         | 유형   | 설명 |
+| ------------ | ------ | ---- |
+| 루트디렉토리 | 문자열 |      |
 
 ## `src/vitest`
 
@@ -257,7 +257,7 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 **종류:** 기능
 
 ```typescript
-function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
+function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 빌드 Vitest Mission Platform 패키지 및 앱 구성. 제공하는
@@ -266,9 +266,9 @@ function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | VitestConfigOptions |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 옵션 | VitestConfigOptions |      |
 
 ### VitestConfig옵션
 

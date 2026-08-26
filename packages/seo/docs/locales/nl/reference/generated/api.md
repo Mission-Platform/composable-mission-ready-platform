@@ -16,87 +16,87 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/seo`.
 **Soort:** functie
 
 ```typescript
-function article(input: ArticleInput): JsonLd
+function article(input: ArticleInput): JsonLd;
 ```
 
 Schema.org `Article` / `BlogPosting` / `NewsArticle`-bouwer.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ArtikelInvoer |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| invoer | ArtikelInvoer |              |
 
 ### broodkruimelLijst
 
 **Soort:** functie
 
 ```typescript
-function breadcrumbList(input: BreadcrumbListInput): JsonLd
+function breadcrumbList(input: BreadcrumbListInput): JsonLd;
 ```
 
 Schema.org `BreadcrumbList` — verzend per pagina om de sitehiërarchie bloot te leggen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | BreadcrumbListInvoer |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| invoer | BreadcrumbListInvoer |              |
 
 ### evenement
 
 **Soort:** functie
 
 ```typescript
-function event(input: EventInput): JsonLd
+function event(input: EventInput): JsonLd;
 ```
 
 Schema.org `Event`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | Gebeurtenisinvoer |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| invoer | Gebeurtenisinvoer |              |
 
 ### veelgestelde vragenPagina
 
 **Soort:** functie
 
 ```typescript
-function faqPage(input: FaqPageInput): JsonLd
+function faqPage(input: FaqPageInput): JsonLd;
 ```
 
 Schema.org `FAQPage`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | Veelgestelde vragenPaginaInvoer |  |
+| Naam   | Typ                             | Beschrijving |
+| ------ | ------------------------------- | ------------ |
+| invoer | Veelgestelde vragenPaginaInvoer |              |
 
 ### afbeeldingObject
 
 **Soort:** functie
 
 ```typescript
-function imageObject(input: ImageObjectInput): JsonLd
+function imageObject(input: ImageObjectInput): JsonLd;
 ```
 
 Schema.org `ImageObject`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ImageObjectInvoer |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| invoer | ImageObjectInvoer |              |
 
 ### jsonLd
 
 **Soort:** constant
 
 ```typescript
-export const jsonLd
+export const jsonLd;
 ```
 
 Naamruimte opnieuw exporteren, zodat consumenten `import { jsonLd } kunnen doen
@@ -108,208 +108,208 @@ Naamruimte opnieuw exporteren, zodat consumenten `import { jsonLd } kunnen doen
 **Soort:** functie
 
 ```typescript
-function localBusiness(input: LocalBusinessInput): JsonLd
+function localBusiness(input: LocalBusinessInput): JsonLd;
 ```
 
 Schema.org `LocalBusiness` — breidt `Organization` uit met locatiegegevens.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | LokaalBedrijfInvoer |  |
+| Naam   | Typ                 | Beschrijving |
+| ------ | ------------------- | ------------ |
+| invoer | LokaalBedrijfInvoer |              |
 
 ### organisatie
 
 **Soort:** functie
 
 ```typescript
-function organization(input: OrganizationInput): JsonLd
+function organization(input: OrganizationInput): JsonLd;
 ```
 
 Schema.org `Organization`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | OrganisatieInvoer |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| invoer | OrganisatieInvoer |              |
 
 ### organisatieId
 
 **Soort:** functie
 
 ```typescript
-function organizationId(orgUrl: string): string
+function organizationId(orgUrl: string): string;
 ```
 
 Canonieke `@id` voor de site-brede `Organization` (of `LocalBusiness`) node.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| orgUrl | tekenreeks |  |
+| Naam   | Typ        | Beschrijving |
+| ------ | ---------- | ------------ |
+| orgUrl | tekenreeks |              |
 
 ### persoon
 
 **Soort:** functie
 
 ```typescript
-function person(input: PersonInput): JsonLd
+function person(input: PersonInput): JsonLd;
 ```
 
 Schema.org `Person`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | PersoonInvoer |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| invoer | PersoonInvoer |              |
 
 ### product
 
 **Soort:** functie
 
 ```typescript
-function product(input: ProductInput): JsonLd
+function product(input: ProductInput): JsonLd;
 ```
 
 Schema.org `Product`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | Productinvoer |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| invoer | Productinvoer |              |
 
 ### recept
 
 **Soort:** functie
 
 ```typescript
-function recipe(input: RecipeInput): JsonLd
+function recipe(input: RecipeInput): JsonLd;
 ```
 
 Schema.org `Recipe`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | Receptinvoer |  |
+| Naam   | Typ          | Beschrijving |
+| ------ | ------------ | ------------ |
+| invoer | Receptinvoer |              |
 
 ### beoordeling
 
 **Soort:** functie
 
 ```typescript
-function review(input: ReviewInput): JsonLd
+function review(input: ReviewInput): JsonLd;
 ```
 
 Schema.org `Review`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | BeoordelingInvoer |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| invoer | BeoordelingInvoer |              |
 
 ### softwareapplicatie
 
 **Soort:** functie
 
 ```typescript
-function softwareApplication(input: SoftwareApplicationInput): JsonLd
+function softwareApplication(input: SoftwareApplicationInput): JsonLd;
 ```
 
 Schema.org `SoftwareApplication`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | SoftwareApplicatieInvoer |  |
+| Naam   | Typ                      | Beschrijving |
+| ------ | ------------------------ | ------------ |
+| invoer | SoftwareApplicatieInvoer |              |
 
 ### videoObject
 
 **Soort:** functie
 
 ```typescript
-function videoObject(input: VideoObjectInput): JsonLd
+function videoObject(input: VideoObjectInput): JsonLd;
 ```
 
 Schema.org `VideoObject`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | VideoObjectInvoer |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| invoer | VideoObjectInvoer |              |
 
 ### webpagina
 
 **Soort:** functie
 
 ```typescript
-function webPage(input: WebPageInput): JsonLd
+function webPage(input: WebPageInput): JsonLd;
 ```
 
 Schema.org `WebPage` — beschrijft een enkele pagina binnen een site.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | Webpagina-invoer |  |
+| Naam   | Typ              | Beschrijving |
+| ------ | ---------------- | ------------ |
+| invoer | Webpagina-invoer |              |
 
 ### webPaginaId
 
 **Soort:** functie
 
 ```typescript
-function webPageId(pageUrl: string): string
+function webPageId(pageUrl: string): string;
 ```
 
 Canonieke `@id` voor een `WebPage` node.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| paginaUrl | tekenreeks |  |
+| Naam      | Typ        | Beschrijving |
+| --------- | ---------- | ------------ |
+| paginaUrl | tekenreeks |              |
 
 ### website
 
 **Soort:** functie
 
 ```typescript
-function webSite(input: WebSiteInput): JsonLd
+function webSite(input: WebSiteInput): JsonLd;
 ```
 
 Schema.org `WebSite` — doorgaans één keer uitgezonden op de hele site.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | WebsiteInvoer |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| invoer | WebsiteInvoer |              |
 
 ### websiteId
 
 **Soort:** functie
 
 ```typescript
-function webSiteId(siteUrl: string): string
+function webSiteId(siteUrl: string): string;
 ```
 
 Canonieke `@id` voor de site-brede `WebSite` node.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| siteUrl | tekenreeks |  |
+| Naam    | Typ        | Beschrijving |
+| ------- | ---------- | ------------ |
+| siteUrl | tekenreeks |              |
 
 ## `src/build-open-graph`
 
@@ -318,7 +318,7 @@ Canonieke `@id` voor de site-brede `WebSite` node.
 **Soort:** functie
 
 ```typescript
-function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
+function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[];
 ```
 
 Converteer {@link OpenGraphMetadata} naar een platte lijst met `<meta>`-tags
@@ -328,9 +328,9 @@ subeigenschappen van afbeeldingen gegroepeerd na elke `og:image`-URL.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| metagegevens | OpenGraphMetadata |  |
+| Naam         | Typ               | Beschrijving |
+| ------------ | ----------------- | ------------ |
+| metagegevens | OpenGraphMetadata |              |
 
 ## `src/build-page-meta`
 
@@ -339,7 +339,7 @@ subeigenschappen van afbeeldingen gegroepeerd na elke `og:image`-URL.
 **Soort:** functie
 
 ```typescript
-function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
+function buildPageMeta(metadata: PageMetadata): BuiltPageMeta;
 ```
 
 Converteer {@link PageMetadata} naar de opgeloste titel, taal en flat
@@ -347,9 +347,9 @@ lijsten met `<meta>` / `<link>`-tagdescriptors.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| metagegevens | PaginaMetadata |  |
+| Naam         | Typ            | Beschrijving |
+| ------------ | -------------- | ------------ |
+| metagegevens | PaginaMetadata |              |
 
 ### BuiltPageMeta
 
@@ -368,7 +368,7 @@ Resultaat van {@link buildPageMeta}: alles wat de aanvrager nodig heeft om te sy
 **Soort:** functie
 
 ```typescript
-function buildRobotsTxt(input: RobotsTxtInput = {}): string
+function buildRobotsTxt(input: RobotsTxtInput = {}): string;
 ```
 
 Bouw een deterministische `robots.txt`-tekenreeks op basis van een beleidsbeschrijving.
@@ -378,9 +378,9 @@ en komt overeen met de conventie die wordt gebruikt door de meeste statische sit
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | RobotsTxtInvoer |  |
+| Naam   | Typ             | Beschrijving |
+| ------ | --------------- | ------------ |
+| invoer | RobotsTxtInvoer |              |
 
 ### RobotsGroep
 
@@ -412,23 +412,23 @@ Invoer die een volledig `robots.txt`-beleid beschrijft.
 **Soort:** functie
 
 ```typescript
-function buildSitemapIndex(input: SitemapIndexInput): string
+function buildSitemapIndex(input: SitemapIndexInput): string;
 ```
 
 Bouw een deterministische XML-tekenreeks met sitemapindex.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | SitemapIndexInvoer |  |
+| Naam   | Typ                | Beschrijving |
+| ------ | ------------------ | ------------ |
+| invoer | SitemapIndexInvoer |              |
 
 ### buildSitemapXml
 
 **Soort:** functie
 
 ```typescript
-function buildSitemapXml(input: SitemapXmlInput): string
+function buildSitemapXml(input: SitemapXmlInput): string;
 ```
 
 Bouw een deterministische `sitemap.xml`-tekenreeks. De uitvoer eindigt altijd met a
@@ -436,9 +436,9 @@ achter de nieuwe regel, zodat deze netjes wordt samengevoegd met HTTP-antwoorden
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | SitemapXmlInput |  |
+| Naam   | Typ             | Beschrijving |
+| ------ | --------------- | ------------ |
+| invoer | SitemapXmlInput |              |
 
 ### SitemapAlternatief
 
@@ -497,7 +497,7 @@ Invoer die een volledige sitemap beschrijft.
 **Soort:** functie
 
 ```typescript
-function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
+function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 ```
 
 Synchroniseer reactief het volledige Mission Platform SEO-oppervlak – standaard
@@ -513,9 +513,9 @@ kan zowel met reactieve status als met statische metadata worden gebruikt.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| metagegevens | MisschienRefOrGetter<SeoMetadata> |  |
+| Naam         | Typ                               | Beschrijving |
+| ------------ | --------------------------------- | ------------ |
+| metagegevens | MisschienRefOrGetter<SeoMetadata> |              |
 
 ## `src/mp-seo`
 
@@ -524,7 +524,7 @@ kan zowel met reactieve status als met statische metadata worden gebruikt.
 **Soort:** component
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 Renderloze `<Seo>`-component — een declaratieve verpakking rond {@link useSeo}.
@@ -539,14 +539,14 @@ synchroniseer ze met de documentkop. Geeft zelf geen DOM weer.
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ### Seo
 
 **Soort:** component
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 Renderloze `<Seo>`-component — een declaratieve verpakking rond {@link useSeo}.
@@ -561,7 +561,7 @@ synchroniseer ze met de documentkop. Geeft zelf geen DOM weer.
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ## `src/types`
 

@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement
+function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 ```
 
 `ForgeScheduler` — تقويم/جدولة كاملة تم تأليفها مرة واحدة في JSX المحايدة
@@ -41,9 +41,9 @@ function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SchedulerProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<SchedulerProperties> |       |
 
 ### خصائص الجدولة
 
@@ -72,7 +72,7 @@ export type SchedulerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent
+function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent;
 ```
 
 قم بتطبيق تصحيح على حدث ما، متجاوزًا `lastModified` و`sequence` (المعيار
@@ -80,17 +80,17 @@ RFC 5545 دلالات المراجعة). تم الحفاظ على `uid`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حدث | حدث |  |
-| التصحيح | جزئي<Omit<VEvent, 'uid'>> |  |
+| الاسم   | اكتب                      | الوصف |
+| ------- | ------------------------- | ----- |
+| حدث     | حدث                       |       |
+| التصحيح | جزئي<Omit<VEvent, 'uid'>> |       |
 
 ### createEvent
 
 **النوع:** الوظيفة
 
 ```typescript
-function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
+function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent;
 ```
 
 أنشئ {@link VEvent} جديدًا تمامًا من جزئي (بدون `uid`/`dtstamp`)،
@@ -98,54 +98,54 @@ function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| جزئي | أوميت<VEvent, 'uid' \| 'dtstamp'> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| جزئي  | أوميت<VEvent, 'uid' \| 'dtstamp'> |       |
 
 ### eventsForDay
 
 **النوع:** الوظيفة
 
 ```typescript
-function eventsForDay(events: VEvent[], day: Date): VEvent[]
+function eventsForDay(events: VEvent[], day: Date): VEvent[];
 ```
 
 إرجاع الأحداث التي تقع في يوم تقويمي معين.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أحداث | حدث[] |  |
-| يوم | التاريخ |  |
+| الاسم | اكتب    | الوصف |
+| ----- | ------- | ----- |
+| أحداث | حدث[]   |       |
+| يوم   | التاريخ |       |
 
 ### eventsForRange
 
 **النوع:** الوظيفة
 
 ```typescript
-function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[]
+function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 ```
 
 إرجاع الأحداث (بما في ذلك الأحداث المتكررة) التي تتداخل مع المعطى
-النطاق الزمني [البدء، النهاية).  يتم استبعاد الأحداث ذات `status === 'CANCELLED'`.
+النطاق الزمني [البدء، النهاية). يتم استبعاد الأحداث ذات `status === 'CANCELLED'`.
 يتم توسيع الأحداث المتكررة عبر RRULE / RDATE؛ EXDATE الاستثناءات هي
 تكريم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أحداث | حدث[] |  |
-| ابدأ | التاريخ |  |
-| النهاية | التاريخ |  |
+| الاسم   | اكتب    | الوصف |
+| ------- | ------- | ----- |
+| أحداث   | حدث[]   |       |
+| ابدأ    | التاريخ |       |
+| النهاية | التاريخ |       |
 
 ### formatDuration
 
 **النوع:** الوظيفة
 
 ```typescript
-function formatDuration(event: VEvent): string
+function formatDuration(event: VEvent): string;
 ```
 
 إرجاع سلسلة مدة يمكن قراءتها بواسطة الإنسان لحدث ما، على سبيل المثال. "ساعة و 30 دقيقة".
@@ -153,15 +153,15 @@ function formatDuration(event: VEvent): string
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حدث | حدث |  |
+| ----- | ---- | ----- |
+| حدث   | حدث  |       |
 
 ### LayoutDay
 
 **النوع:** الوظيفة
 
 ```typescript
-function layoutDay(events: VEvent[]): SchedulerEventSlot[]
+function layoutDay(events: VEvent[]): SchedulerEventSlot[];
 ```
 
 قم بتخطيط الأحداث ليوم واحد باستخدام تصادم بسيط قائم على الأعمدة
@@ -170,16 +170,16 @@ function layoutDay(events: VEvent[]): SchedulerEventSlot[]
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أحداث | حدث[] |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| أحداث | حدث[] |       |
 
 ### moveEventPatch
 
 **النوع:** الوظيفة
 
 ```typescript
-function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>
+function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>;
 ```
 
 تصحيح `{ dtstart, dtend }` الذي ينقل الحدث بمقدار `deltaMs` ميلي ثانية،
@@ -188,16 +188,16 @@ function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' 
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حدث | حدث |  |
-| دلتا | رقم |  |
+| ----- | ---- | ----- |
+| حدث   | حدث  |       |
+| دلتا  | رقم  |       |
 
 ### resizeEventPatch
 
 **النوع:** الوظيفة
 
 ```typescript
-function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
+function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>;
 ```
 
 تم تثبيت التصحيح `{ dtend }` الذي يغير حجم نهاية الحدث بواسطة `deltaMs`، بحيث
@@ -206,9 +206,9 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حدث | حدث |  |
-| دلتا | رقم |  |
+| ----- | ---- | ----- |
+| حدث   | حدث  |       |
+| دلتا  | رقم  |       |
 
 ## `src/core/range`
 
@@ -217,7 +217,7 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 **النوع:** الوظيفة
 
 ```typescript
-function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
+function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 ```
 
 خطوة `anchor` بواسطة `direction` (-1 = السابق، +1 = التالي) وحدات العرض.
@@ -225,18 +225,18 @@ function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| عرض | عرض المجدول |  |
-| مرساة | التاريخ |  |
-| الاتجاه | -1 \| 1 |  |
+| الاسم   | اكتب        | الوصف |
+| ------- | ----------- | ----- |
+| عرض     | عرض المجدول |       |
+| مرساة   | التاريخ     |       |
+| الاتجاه | -1 \| 1     |       |
 
 ### visualRangeFor
 
 **النوع:** الوظيفة
 
 ```typescript
-function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange
+function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange;
 ```
 
 نافذة `[start, end)` المرئية نصف المفتوحة لـ `view` المحددة والمثبتة على
@@ -244,11 +244,11 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| عرض | عرض المجدول |  |
-| مرساة | التاريخ |  |
-| يبدأ الأسبوع | بداية الأسبوع |  |
+| الاسم        | اكتب          | الوصف |
+| ------------ | ------------- | ----- |
+| عرض          | عرض المجدول   |       |
+| مرساة        | التاريخ       |       |
+| يبدأ الأسبوع | بداية الأسبوع |       |
 
 ## `src/core/recurrence`
 
@@ -257,11 +257,11 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 **النوع:** الوظيفة
 
 ```typescript
-function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[]
+function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[];
 ```
 
 قم بتوسيع حدث VE واحد باستخدام RRULE إلى كافة الأحداث المتداخلة
-مع [rangeStart، rangeEnd).  إرجاع نسخ VEvent افتراضية - واحدة لكل
+مع [rangeStart، rangeEnd). إرجاع نسخ VEvent افتراضية - واحدة لكل
 حدوث — مع تعديل dtstart / dtend.
 
 يعالج أيضًا RDATE (التواريخ الإضافية) وEXDATE (التواريخ المستبعدة).
@@ -271,11 +271,11 @@ function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEv
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حدث | حدث |  |
-| نطاق البداية | التاريخ |  |
-| نطاق | التاريخ |  |
+| الاسم        | اكتب    | الوصف |
+| ------------ | ------- | ----- |
+| حدث          | حدث     |       |
+| نطاق البداية | التاريخ |       |
+| نطاق         | التاريخ |       |
 
 ## `src/core/types`
 

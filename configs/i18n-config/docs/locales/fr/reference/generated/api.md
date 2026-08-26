@@ -16,24 +16,24 @@ Généré à partir de déclarations de source publique dans `@mission-platform/
 **Genre :** fonction
 
 ```typescript
-function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig
+function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| par défautNS | chaîne |  |
-| options | I18nConfigOptions |  |
+| Nom          | Tapez             | Descriptif |
+| ------------ | ----------------- | ---------- |
+| par défautNS | chaîne            |            |
+| options      | I18nConfigOptions |            |
 
 ### DEFAULT_LOCALE
 
 **Genre :** constante
 
 ```typescript
-export const DEFAULT_LOCALE
+export const DEFAULT_LOCALE;
 ```
 
 Aucune description fournie.
@@ -63,7 +63,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const SUPPORTED_LOCALES
+export const SUPPORTED_LOCALES;
 ```
 
 Aucune description fournie.

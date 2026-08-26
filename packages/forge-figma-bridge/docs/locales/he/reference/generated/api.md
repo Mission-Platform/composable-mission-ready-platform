@@ -16,23 +16,23 @@
 פונקציה **סוג:**
 
 ```typescript
-function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server
+function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeBridgeServerOptions |  |
+| שם       | הקלד                     | תיאור |
+| -------- | ------------------------ | ----- |
+| אפשרויות | ForgeBridgeServerOptions |       |
 
 ### DEFAULT_EXPORT_PATH
 
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_EXPORT_PATH
+export const DEFAULT_EXPORT_PATH;
 ```
 
 לא סופק תיאור.
@@ -42,7 +42,7 @@ export const DEFAULT_EXPORT_PATH
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_MAX_FILE_BYTES
+export const DEFAULT_MAX_FILE_BYTES;
 ```
 
 לא סופק תיאור.
@@ -52,7 +52,7 @@ export const DEFAULT_MAX_FILE_BYTES
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_MAX_REQUEST_BYTES
+export const DEFAULT_MAX_REQUEST_BYTES;
 ```
 
 לא סופק תיאור.
@@ -62,17 +62,17 @@ export const DEFAULT_MAX_REQUEST_BYTES
 פונקציה **סוג:**
 
 ```typescript
-function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>
+function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | לא ידוע |  |
-| אפשרויות | ForgeBridgeOptions |  |
+| שם       | הקלד               | תיאור |
+| -------- | ------------------ | ----- |
+| ערך      | לא ידוע            |       |
+| אפשרויות | ForgeBridgeOptions |       |
 
 ### ForgeBridgeOptions
 
@@ -99,16 +99,18 @@ export interface ForgeBridgeServerOptions extends ForgeBridgeOptions
 פונקציה **סוג:**
 
 ```typescript
-function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number }): Promise<Server>
+function startForgeBridgeServer(
+  options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
+): Promise<Server>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeBridgeServerOptions & { מארח לקריאה בלבד?: string; יציאה לקריאה בלבד?: מספר } |  |
+| שם       | הקלד                                                                               | תיאור |
+| -------- | ---------------------------------------------------------------------------------- | ----- |
+| אפשרויות | ForgeBridgeServerOptions & { מארח לקריאה בלבד?: string; יציאה לקריאה בלבד?: מספר } |       |
 
 ## `src/protocol`
 
@@ -117,7 +119,7 @@ function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly h
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_BRIDGE_PROTOCOL_VERSION
+export const FORGE_BRIDGE_PROTOCOL_VERSION;
 ```
 
 לא סופק תיאור.
@@ -167,13 +169,13 @@ export interface ForgeBridgeResponse
 פונקציה **סוג:**
 
 ```typescript
-function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse
+function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | לא ידוע |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | לא ידוע |       |

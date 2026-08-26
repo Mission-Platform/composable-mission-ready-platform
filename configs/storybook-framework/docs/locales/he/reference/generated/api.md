@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig
+function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig;
 ```
 
 בנה {@link StorybookConfig} מאוחד עבור המסגרת הפעילה. אֶחָד
@@ -25,9 +25,9 @@ function createStorybookConfig(options: CreateStorybookConfigOptions): Storybook
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | CreateStorybookConfigOptions |  |
+| שם       | הקלד                         | תיאור |
+| -------- | ---------------------------- | ----- |
+| אפשרויות | CreateStorybookConfigOptions |       |
 
 ### CreateStorybookConfigOptions
 
@@ -44,7 +44,7 @@ export interface CreateStorybookConfigOptions
 פונקציה **סוג:**
 
 ```typescript
-function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework
+function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework;
 ```
 
 פתור את המסגרת הפעילה מהאפשרות המפורשת או ה
@@ -53,9 +53,9 @@ function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFram
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפורש | StorybookFramework |  |
+| שם    | הקלד               | תיאור |
+| ----- | ------------------ | ----- |
+| מפורש | StorybookFramework |       |
 
 ### StorybookFramework
 
@@ -72,7 +72,7 @@ export type StorybookFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-com
 פונקציה **סוג:**
 
 ```typescript
-function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[]
+function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[];
 ```
 
 בנו את כדורי הסיפור הנייטרליים המשותפים לחבילות המבוקשות.
@@ -81,11 +81,11 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| _מסגרת | StorybookFramework |  |
-| חבילות | מחרוזת לקריאה בלבד[] |  |
-| חבילותRoot | מחרוזת |  |
+| שם         | הקלד                 | תיאור |
+| ---------- | -------------------- | ----- |
+| _מסגרת     | StorybookFramework   |       |
+| חבילות     | מחרוזת לקריאה בלבד[] |       |
+| חבילותRoot | מחרוזת               |       |
 
 ## `src/preview`
 
@@ -94,7 +94,7 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 פונקציה **סוג:**
 
 ```typescript
-function sharedPreviewDecorators()
+function sharedPreviewDecorators();
 ```
 
 מעצבי סיפורים משותפים לכל המסגרות.
@@ -104,7 +104,7 @@ function sharedPreviewDecorators()
 **סוג:** קבוע
 
 ```typescript
-export const sharedPreviewParameters
+export const sharedPreviewParameters;
 ```
 
 פרמטרים של ספר סיפורים משותף לכל המסגרות.
@@ -114,7 +114,7 @@ export const sharedPreviewParameters
 פונקציה **סוג:**
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework)
+function sharedPreviewParametersFor(framework?: PreviewFramework);
 ```
 
 פרמטרים של Storybook המודעים למסגרת.
@@ -131,9 +131,9 @@ CSF `render` פונקציות שקוראות `useArgs()` לזרוק:
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסגרת | PreviewFramework |  |
+| שם    | הקלד             | תיאור |
+| ----- | ---------------- | ----- |
+| מסגרת | PreviewFramework |       |
 
 ## `src/slots.dom`
 
@@ -142,7 +142,7 @@ CSF `render` פונקציות שקוראות `useArgs()` לזרוק:
 פונקציה **סוג:**
 
 ```typescript
-function customElementTag(component: unknown): string
+function customElementTag(component: unknown): string;
 ```
 
 הגזר את שם התג הרשום של רכיב אינטרנט מזויף מהאלמנט שלו
@@ -152,9 +152,9 @@ function customElementTag(component: unknown): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | לא ידוע |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| רכיב | לא ידוע |       |
 
 ## `src/slots.neutral`
 
@@ -163,7 +163,7 @@ function customElementTag(component: unknown): string
 **סוג:** קבוע
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 מפעל לשברי מקום מציין; מעולם לא הופעל (ראה {@link node}).
@@ -173,7 +173,7 @@ export const Fragment
 **סוג:** קבוע
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 לא סופק תיאור.
@@ -187,7 +187,7 @@ export const node: StoryNodeFactory
 **סוג:** קבוע
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 לא סופק תיאור.
@@ -203,7 +203,7 @@ export const renderWithSlots: RenderWithSlots
 **סוג:** קבוע
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 לא סופק תיאור.
@@ -217,7 +217,7 @@ export const node: StoryNodeFactory
 **סוג:** קבוע
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 לא סופק תיאור.
@@ -233,7 +233,7 @@ export const renderWithSlots: RenderWithSlots
 **סוג:** קבוע
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Solid אין רכיב fragment: מערך של ילדים הוא קטע.
@@ -243,7 +243,7 @@ Solid אין רכיב fragment: מערך של ילדים הוא קטע.
 **סוג:** קבוע
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 לא סופק תיאור.
@@ -257,7 +257,7 @@ export const node: StoryNodeFactory
 **סוג:** קבוע
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 לא סופק תיאור.
@@ -273,7 +273,7 @@ export const renderWithSlots: RenderWithSlots
 **סוג:** קבוע
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 רכיב סמן עבור קטעי JSX - ילדיו עולים ישירות לתוך האב.
@@ -283,7 +283,7 @@ export const Fragment
 **סוג:** קבוע
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 לא סופק תיאור.
@@ -297,7 +297,7 @@ export const node: StoryNodeFactory
 **סוג:** קבוע
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 לא סופק תיאור.
@@ -313,7 +313,12 @@ export const renderWithSlots: RenderWithSlots
 **סוג:** סוג
 
 ```typescript
-export type RenderWithSlots = ( component: unknown, properties: Record<string, unknown>, slots: StorySlots, children?: unknown, ) => unknown;
+export type RenderWithSlots = (
+  component: unknown,
+  properties: Record<string, unknown>,
+  slots: StorySlots,
+  children?: unknown,
+) => unknown;
 ```
 
 לְדַקלֵם `component` עִם `properties`, השם הנתון `slots` ואופציונלי
@@ -325,7 +330,11 @@ export type RenderWithSlots = ( component: unknown, properties: Record<string, u
 **סוג:** סוג
 
 ```typescript
-export type StoryNodeFactory = ( type: unknown, properties?: Record<string, unknown> | null, ...children: unknown[] ) => unknown;
+export type StoryNodeFactory = (
+  type: unknown,
+  properties?: Record<string, unknown> | null,
+  ...children: unknown[]
+) => unknown;
 ```
 
 בנה אלמנט אחד עבור המדקר הפעיל. משמש גם כ-JSX הקלאסי
@@ -349,7 +358,7 @@ export type StorySlots = Record<string, unknown>;
 **סוג:** קבוע
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 לא סופק תיאור.
@@ -363,7 +372,7 @@ export const node: StoryNodeFactory
 **סוג:** קבוע
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 לא סופק תיאור.
@@ -379,7 +388,7 @@ export const renderWithSlots: RenderWithSlots
 **סוג:** קבוע
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 רכיב סמן עבור קטעי JSX - מוצג כ-a `DocumentFragment`.
@@ -389,7 +398,7 @@ export const Fragment
 **סוג:** קבוע
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 לא סופק תיאור.
@@ -403,7 +412,7 @@ export const node: StoryNodeFactory
 **סוג:** קבוע
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 לא סופק תיאור.
@@ -431,7 +440,10 @@ export type Meta<TComponentOrArguments = Args> = ComponentAnnotations<Renderer, 
 **סוג:** סוג
 
 ```typescript
-export type StoryObj<TMetaOrComponentOrArgs = Args> = TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments> ? StoryAnnotations<Renderer, TArguments> : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
+export type StoryObj<TMetaOrComponentOrArgs = Args> =
+  TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
+    ? StoryAnnotations<Renderer, TArguments>
+    : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
 ספר סיפורים אגנוסטי למסגרת `StoryObj`, המקביל הנייטרלי ל

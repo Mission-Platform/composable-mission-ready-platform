@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement
+function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
 ForgeThreeCanvas — مكون محايد للإطار يعرض ملف <canvas>
@@ -24,9 +24,9 @@ ForgeThreeCanvas — مكون محايد للإطار يعرض ملف <canvas>
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ForgeThreeCanvasProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<ForgeThreeCanvasProperties> |       |
 
 ### ForgeThreeCanvasProperties
 
@@ -55,7 +55,10 @@ export interface ThreeContext
 **النوع:** الوظيفة
 
 ```typescript
-function useThree(canvasReference: ReferenceLike<HTMLCanvasElement | null>, onReady?: (context: ThreeContext) => void | (() => void)): void
+function useThree(
+  canvasReference: ReferenceLike<HTMLCanvasElement | null>,
+  onReady?: (context: ThreeContext) => void | (() => void),
+): void;
 ```
 
 خطاف Three.js محايد للإطار.
@@ -66,7 +69,7 @@ function useThree(canvasReference: ReferenceLike<HTMLCanvasElement | null>, onRe
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مرجع قماش | مرجع مثل<HTMLCanvasElement \| null> |  |
-| جاهز | (السياق: ThreeContext) => باطل \| (() => باطل) |  |
+| الاسم     | اكتب                                           | الوصف |
+| --------- | ---------------------------------------------- | ----- |
+| مرجع قماش | مرجع مثل<HTMLCanvasElement \| null>            |       |
+| جاهز      | (السياق: ThreeContext) => باطل \| (() => باطل) |       |

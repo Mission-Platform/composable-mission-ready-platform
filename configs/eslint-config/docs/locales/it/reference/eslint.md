@@ -24,14 +24,14 @@ qualità del codice, accessibilità e regole dell'architettura in tutti i pacche
 
 La configurazione include i seguenti plugin e set di regole:
 
-| Plug-in | Scopo |
-|:-------------------------|:-------------------------------------------------------|
-| `typescript-eslint`      | Standard TypeScript regole e linting in base al tipo.      |
-| `eslint-plugin-vue`      | Vue 3 Linting SFC e convalida del modello.             |
-| `eslint-plugin-sonarjs`  | Rilevamento di odori di codice e rischi di bug.                |
-| `eslint-plugin-unicorn`  | Decine di piccole, utili regole comunitarie.               |
-| `eslint-plugin-i18next`  | Garantisce che le chiavi di traduzione vengano utilizzate correttamente.           |
-| `eslint-config-prettier` | Disabilita le regole in conflitto con Prettier formattazione. |
+| Plug-in                  | Scopo                                                                    |
+| :----------------------- | :----------------------------------------------------------------------- |
+| `typescript-eslint`      | Standard TypeScript regole e linting in base al tipo.                    |
+| `eslint-plugin-vue`      | Vue 3 Linting SFC e convalida del modello.                               |
+| `eslint-plugin-sonarjs`  | Rilevamento di odori di codice e rischi di bug.                          |
+| `eslint-plugin-unicorn`  | Decine di piccole, utili regole comunitarie.                             |
+| `eslint-plugin-i18next`  | Garantisce che le chiavi di traduzione vengano utilizzate correttamente. |
+| `eslint-config-prettier` | Disabilita le regole in conflitto con Prettier formattazione.            |
 
 ## Utilizzo
 

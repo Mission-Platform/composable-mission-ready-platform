@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/toke
 **Tipo:** constante
 
 ```typescript
-export const borderWidth
+export const borderWidth;
 ```
 
 No se proporciona descripción.
@@ -28,7 +28,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const breakpoint
+export const breakpoint;
 ```
 
 No se proporciona descripción.
@@ -40,7 +40,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const buttonGroup
+export const buttonGroup;
 ```
 
 No se proporciona descripción.
@@ -52,7 +52,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const button
+export const button;
 ```
 
 No se proporciona descripción.
@@ -64,7 +64,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const checkable
+export const checkable;
 ```
 
 No se proporciona descripción.
@@ -76,7 +76,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const code
+export const code;
 ```
 
 No se proporciona descripción.
@@ -88,7 +88,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const feedback
+export const feedback;
 ```
 
 No se proporciona descripción.
@@ -100,7 +100,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const icon
+export const icon;
 ```
 
 No se proporciona descripción.
@@ -112,7 +112,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const input
+export const input;
 ```
 
 No se proporciona descripción.
@@ -124,7 +124,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const layout
+export const layout;
 ```
 
 No se proporciona descripción.
@@ -136,7 +136,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const media
+export const media;
 ```
 
 No se proporciona descripción.
@@ -148,7 +148,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const surface
+export const surface;
 ```
 
 No se proporciona descripción.
@@ -160,7 +160,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const tag
+export const tag;
 ```
 
 No se proporciona descripción.
@@ -172,7 +172,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const themeToggle
+export const themeToggle;
 ```
 
 No se proporciona descripción.
@@ -184,7 +184,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const componentAtomsTypography
+export const componentAtomsTypography;
 ```
 
 No se proporciona descripción.
@@ -196,7 +196,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const calendar
+export const calendar;
 ```
 
 No se proporciona descripción.
@@ -208,7 +208,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const card
+export const card;
 ```
 
 No se proporciona descripción.
@@ -220,7 +220,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const chatBubble
+export const chatBubble;
 ```
 
 No se proporciona descripción.
@@ -232,7 +232,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const collapse
+export const collapse;
 ```
 
 No se proporciona descripción.
@@ -244,7 +244,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const colorInput
+export const colorInput;
 ```
 
 No se proporciona descripción.
@@ -256,7 +256,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const debug
+export const debug;
 ```
 
 No se proporciona descripción.
@@ -268,7 +268,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const editor
+export const editor;
 ```
 
 No se proporciona descripción.
@@ -280,7 +280,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const fieldSet
+export const fieldSet;
 ```
 
 No se proporciona descripción.
@@ -292,7 +292,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const field
+export const field;
 ```
 
 No se proporciona descripción.
@@ -304,7 +304,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const inView
+export const inView;
 ```
 
 No se proporciona descripción.
@@ -316,7 +316,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const markdown
+export const markdown;
 ```
 
 No se proporciona descripción.
@@ -328,7 +328,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const navigation
+export const navigation;
 ```
 
 No se proporciona descripción.
@@ -340,7 +340,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const overlay
+export const overlay;
 ```
 
 No se proporciona descripción.
@@ -352,7 +352,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const select
+export const select;
 ```
 
 No se proporciona descripción.
@@ -364,7 +364,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const time
+export const time;
 ```
 
 No se proporciona descripción.
@@ -376,7 +376,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const timeline
+export const timeline;
 ```
 
 No se proporciona descripción.
@@ -388,7 +388,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const data
+export const data;
 ```
 
 No se proporciona descripción.
@@ -400,7 +400,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const form
+export const form;
 ```
 
 No se proporciona descripción.
@@ -412,7 +412,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const map
+export const map;
 ```
 
 No se proporciona descripción.
@@ -424,7 +424,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const resourcePlanner
+export const resourcePlanner;
 ```
 
 No se proporciona descripción.
@@ -436,7 +436,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const scheduler
+export const scheduler;
 ```
 
 No se proporciona descripción.
@@ -448,7 +448,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const email
+export const email;
 ```
 
 No se proporciona descripción.
@@ -460,7 +460,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const font
+export const font;
 ```
 
 No se proporciona descripción.
@@ -472,7 +472,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const motion
+export const motion;
 ```
 
 No se proporciona descripción.
@@ -484,7 +484,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const opacity
+export const opacity;
 ```
 
 No se proporciona descripción.
@@ -496,7 +496,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const palette
+export const palette;
 ```
 
 No se proporciona descripción.
@@ -508,7 +508,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const radius
+export const radius;
 ```
 
 No se proporciona descripción.
@@ -520,7 +520,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const shadow
+export const shadow;
 ```
 
 No se proporciona descripción.
@@ -532,7 +532,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const size
+export const size;
 ```
 
 No se proporciona descripción.
@@ -544,7 +544,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const spacing
+export const spacing;
 ```
 
 No se proporciona descripción.
@@ -556,7 +556,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const themeDark
+export const themeDark;
 ```
 
 No se proporciona descripción.
@@ -568,7 +568,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const themeLight
+export const themeLight;
 ```
 
 No se proporciona descripción.
@@ -580,7 +580,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const typography
+export const typography;
 ```
 
 No se proporciona descripción.
@@ -592,7 +592,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const zIndex
+export const zIndex;
 ```
 
 No se proporciona descripción.

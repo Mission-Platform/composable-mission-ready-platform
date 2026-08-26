@@ -26,17 +26,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function generateForgeExportBundle(document: ForgeDesignDocument, options: ForgeGenerationOptions = {}): ForgeExportBundle
+function generateForgeExportBundle(
+  document: ForgeDesignDocument,
+  options: ForgeGenerationOptions = {},
+): ForgeExportBundle;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| document | ForgeDesignDocument |  |
-| opties | ForgeGenerationOptions |  |
+| Naam     | Typ                    | Beschrijving |
+| -------- | ---------------------- | ------------ |
+| document | ForgeDesignDocument    |              |
+| opties   | ForgeGenerationOptions |              |
 
 ## `src/model/design`
 
@@ -45,7 +48,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_DESIGN_SCHEMA_VERSION
+export const FORGE_DESIGN_SCHEMA_VERSION;
 ```
 
 Geen beschrijving opgegeven.
@@ -145,7 +148,20 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeDesignNodeType = | 'frame' | 'group' | 'component' | 'instance' | 'text' | 'rectangle' | 'ellipse' | 'line' | 'vector' | 'boolean-operation' | 'image' | 'section' | 'unknown';
+export type ForgeDesignNodeType =
+  | 'frame'
+  | 'group'
+  | 'component'
+  | 'instance'
+  | 'text'
+  | 'rectangle'
+  | 'ellipse'
+  | 'line'
+  | 'vector'
+  | 'boolean-operation'
+  | 'image'
+  | 'section'
+  | 'unknown';
 ```
 
 Geen beschrijving opgegeven.
@@ -267,16 +283,18 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeDiagnostic(diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>): ForgeDiagnostic
+function createForgeDiagnostic(
+  diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>,
+): ForgeDiagnostic;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostisch | Laat <ForgeDiagnostic, 'code'> weg en kies <ForgeDiagnostic, 'code'> |  |
+| Naam         | Typ                                                                  | Beschrijving |
+| ------------ | -------------------------------------------------------------------- | ------------ |
+| diagnostisch | Laat <ForgeDiagnostic, 'code'> weg en kies <ForgeDiagnostic, 'code'> |              |
 
 ### ForgeDiagnostisch
 
@@ -431,24 +449,24 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined
+function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naam | tekenreeks |  |
-| metagegevens | ForgeComponentMetadata |  |
+| Naam         | Typ                    | Beschrijving |
+| ------------ | ---------------------- | ------------ |
+| naam         | tekenreeks             |              |
+| metagegevens | ForgeComponentMetadata |              |
 
 ### FORGE_COMPONENT_REGISTRY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
+export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[];
 ```
 
 Geen beschrijving opgegeven.
@@ -458,16 +476,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function getForgeComponent(name: string): ForgeComponentRegistryEntry
+function getForgeComponent(name: string): ForgeComponentRegistryEntry;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naam | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| naam | tekenreeks |              |
 
 ## `src/tokens/resolve`
 
@@ -476,16 +494,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function componentPathToCssVariable(path: string): string | undefined
+function componentPathToCssVariable(path: string): string | undefined;
 ```
 
 Converteer een canoniek componentpad naar de gegenereerde Mission Platform CSS-variabelenaam.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| pad | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| pad  | tekenreeks |              |
 
 ### FigmaVariabele Binding
 
@@ -512,7 +530,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const MISSION_PLATFORM_COMPONENT_COLLECTION
+export const MISSION_PLATFORM_COMPONENT_COLLECTION;
 ```
 
 Geen beschrijving opgegeven.
@@ -522,32 +540,32 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function normalizeComponentTokenPath(value: string): string | undefined
+function normalizeComponentTokenPath(value: string): string | undefined;
 ```
 
 Normaliseer de naam of alias van een Figma-variabele naar het canonieke `component.*`-pad.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | tekenreeks |  |
+| Naam   | Typ        | Beschrijving |
+| ------ | ---------- | ------------ |
+| waarde | tekenreeks |              |
 
 ### solveFigmaVariabele
 
 **Soort:** functie
 
 ```typescript
-function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution
+function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bindend | FigmaVariableBinding |  |
+| Naam    | Typ                  | Beschrijving |
+| ------- | -------------------- | ------------ |
+| bindend | FigmaVariableBinding |              |
 
 ## `src/validation/document`
 
@@ -556,16 +574,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[]
+function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| document | ForgeDesignDocument |  |
+| Naam     | Typ                 | Beschrijving |
+| -------- | ------------------- | ------------ |
+| document | ForgeDesignDocument |              |
 
 ### validateForgeExportBundle
 
@@ -574,16 +592,16 @@ Geen beschrijving opgegeven.
 ```typescript
 function validateForgeExportBundle(bundle: {
   readonly files: readonly { readonly path: string }[];
-}): readonly ForgeDiagnostic[]
+}): readonly ForgeDiagnostic[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bundel | { alleen-lezen bestanden: alleen-lezen { alleen-lezen pad: string }[]; } |  |
+| Naam   | Typ                                                                      | Beschrijving |
+| ------ | ------------------------------------------------------------------------ | ------------ |
+| bundel | { alleen-lezen bestanden: alleen-lezen { alleen-lezen pad: string }[]; } |              |
 
 ## `src/validation/names`
 
@@ -592,34 +610,34 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string
+function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string;
 ```
 
 Creëer een stabiele PascalCase-identificatie op basis van een Figma-laag of framenaam.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | tekenreeks |  |
-| terugval |  |  |
+| Naam     | Typ        | Beschrijving |
+| -------- | ---------- | ------------ |
+| waarde   | tekenreeks |              |
+| terugval |            |              |
 
 ### normalizeBestandsnaam
 
 **Soort:** functie
 
 ```typescript
-function normalizeFileName(value: string, fallback = 'generated-component'): string
+function normalizeFileName(value: string, fallback = 'generated-component'): string;
 ```
 
 Maak een veilig kebab-casusbestand op basis van een Figma-laag of framenaam.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | tekenreeks |  |
-| terugval |  |  |
+| Naam     | Typ        | Beschrijving |
+| -------- | ---------- | ------------ |
+| waarde   | tekenreeks |              |
+| terugval |            |              |
 
 ## `src/validation/paths`
 
@@ -638,14 +656,17 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function validateRepositoryRelativePath(value: string, allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg']): ForgePathValidationResult
+function validateRepositoryRelativePath(
+  value: string,
+  allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg'],
+): ForgePathValidationResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | tekenreeks |  |
-| toegestane extensies | alleen-lezen tekenreeks[] |  |
+| Naam                 | Typ                       | Beschrijving |
+| -------------------- | ------------------------- | ------------ |
+| waarde               | tekenreeks                |              |
+| toegestane extensies | alleen-lezen tekenreeks[] |              |

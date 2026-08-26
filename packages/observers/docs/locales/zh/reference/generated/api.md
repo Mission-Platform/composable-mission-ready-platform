@@ -16,7 +16,11 @@
 **种类：**功能
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 框架中立的 IntersectionObserver 钩子。
@@ -28,11 +32,11 @@ SSR 安全：当浏览器 API 或 DOM 不可用时，不执行任何操作。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|目标| MpRef<Element \| null> | MpRef<Element \| null> |  |
-|回调 |路口观察者回调 |  |
-|选项 | IntersectionObserverInit | IntersectionObserverInit |  |
+| 名称 | 类型                     | 描述                     |
+| ---- | ------------------------ | ------------------------ |
+| 目标 | MpRef<Element \| null>   | MpRef<Element \| null>   |     |
+| 回调 | 路口观察者回调           |                          |
+| 选项 | IntersectionObserverInit | IntersectionObserverInit |     |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -41,7 +45,11 @@ SSR 安全：当浏览器 API 或 DOM 不可用时，不执行任何操作。
 **种类：**功能
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 框架中立的 MutationObserver 钩子。
@@ -52,11 +60,11 @@ SSR 安全：当浏览器 API 或 DOM 不可用时，不执行任何操作。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|目标| MpRef<Node \| null> | MpRef<Node \| null> |  |
-|回调 |突变回调 |  |
-|选项 |突变观察者初始化 |  |
+| 名称 | 类型                | 描述                |
+| ---- | ------------------- | ------------------- |
+| 目标 | MpRef<Node \| null> | MpRef<Node \| null> |     |
+| 回调 | 突变回调            |                     |
+| 选项 | 突变观察者初始化    |                     |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -65,7 +73,7 @@ SSR 安全：当浏览器 API 或 DOM 不可用时，不执行任何操作。
 **种类：**功能
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 框架中立的 PerformanceObserver 挂钩。
@@ -77,7 +85,7 @@ SSR 安全：当浏览器 API 不可用时不执行任何操作。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|回调 |性能观察者回调|  |
-|选项 |性能观察者初始化 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 回调 | 性能观察者回调   |      |
+| 选项 | 性能观察者初始化 |      |

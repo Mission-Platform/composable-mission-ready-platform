@@ -75,7 +75,7 @@ export type ContainerVariant = 'fixed' | 'fluid' | 'responsive';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer` - פרימיטיבי פרימיטיבי של עמוד/קטע שמגביל וממרכז
@@ -95,9 +95,9 @@ Vue מאת `@mission-platform/vite-plugin-forge`. רוחב `fixed`/`fluid` וה-
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ContainerProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ContainerProperties> |       |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ export interface ApplicationLayoutProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout` - מעטפת היישום ברמה העליונה שנכתבה פעם אחת ב-
@@ -140,9 +140,9 @@ CSS). שמות מחלקות המודול המגובבים מורכבים עם ה
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ApplicationLayoutProperties> |  |
+| שם    | הקלד                                     | תיאור |
+| ----- | ---------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ApplicationLayoutProperties> |       |
 
 ### נקודת שבירה של סרגל הצד
 
@@ -191,7 +191,7 @@ export type BentoLayoutRegion = 'hero' | 'feature' | 'supporting';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout` חושף חריצים בשם `hero`, `feature` ו-`supporting`.
@@ -200,9 +200,9 @@ function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElemen
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<BentoLayoutProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<BentoLayoutProperties> |       |
 
 ### PatternLayout Breakpoint
 
@@ -241,7 +241,7 @@ export type PatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout` חושף את `header`, `intro`, `primary`, `secondary`, וכן
@@ -250,9 +250,9 @@ function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<FPatternLayoutProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<FPatternLayoutProperties> |       |
 
 ### FPatternLayout Breakpoint
 
@@ -311,7 +311,7 @@ export type FPatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside'
 פונקציה **סוג:**
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout` מעבד את ה-`cell1` ... `cell12` בשם חריצים ב
@@ -320,9 +320,9 @@ function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<GridLayoutProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<GridLayoutProperties> |       |
 
 ### GridLayout Breakpoint
 
@@ -339,7 +339,19 @@ export type GridLayoutBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 **סוג:** סוג
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 נתמכים חריצי תאים בעלי שם (`cell1` עד `cell12`).
@@ -381,7 +393,7 @@ export type GridLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout` - מעטפת מגיבה בת שלוש עמודות שנכתבה פעם אחת ב-
@@ -410,9 +422,9 @@ Vue SFC, הניב הנייטרלי אינו יכול לדגמן את חריץ ב
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<VerticalLayoutProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<VerticalLayoutProperties> |       |
 
 ### VerticalLayout Breakpoint
 
@@ -451,7 +463,7 @@ export type VerticalLayoutSize = DrawerSize;
 פונקציה **סוג:**
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` חושף את `topStart`, `topEnd`, `middle`, `bottomStart`,
@@ -460,9 +472,9 @@ function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): Mp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ZPatternLayoutProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ZPatternLayoutProperties> |       |
 
 ### ZPatternLayout Breakpoint
 

@@ -24,13 +24,13 @@ codekwaliteit, toegankelijkheid en architectuurregels voor alle pakketten, appli
 
 De configuratie omvat de volgende plug-ins en regelsets:
 
-| Plug-in | Doel |
-|:-------------------------|:-------------------------------------------------------|
-| `typescript-eslint`      | Standaard TypeScript regels en typebewuste linting.      |
-| `eslint-plugin-vue`      | Vue 3 SFC-linting en sjabloonvalidatie.             |
-| `eslint-plugin-sonarjs`  | Detectie van codegeuren en bugrisico's.                |
-| `eslint-plugin-unicorn`  | Tientallen kleine, nuttige gemeenschapsregels.               |
-| `eslint-plugin-i18next`  | Zorgt ervoor dat vertaalsleutels correct worden gebruikt.           |
+| Plug-in                  | Doel                                                        |
+| :----------------------- | :---------------------------------------------------------- |
+| `typescript-eslint`      | Standaard TypeScript regels en typebewuste linting.         |
+| `eslint-plugin-vue`      | Vue 3 SFC-linting en sjabloonvalidatie.                     |
+| `eslint-plugin-sonarjs`  | Detectie van codegeuren en bugrisico's.                     |
+| `eslint-plugin-unicorn`  | Tientallen kleine, nuttige gemeenschapsregels.              |
+| `eslint-plugin-i18next`  | Zorgt ervoor dat vertaalsleutels correct worden gebruikt.   |
 | `eslint-config-prettier` | Schakelt regels uit die in strijd zijn met Prettier opmaak. |
 
 ## Gebruik

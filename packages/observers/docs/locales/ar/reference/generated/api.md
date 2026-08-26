@@ -16,7 +16,11 @@
 **النوع:** الوظيفة
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 خطاف IntersectionObserver المحايد للإطار.
@@ -28,11 +32,11 @@ function useIntersectionObserver(target: MpRef<Element | null>, callback: Inters
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الهدف | MpRef<Element \| null> |  |
-| رد الاتصال | IntersectionObserverCallback |  |
-| خيارات | IntersectionObserverInit |  |
+| الاسم      | اكتب                         | الوصف |
+| ---------- | ---------------------------- | ----- |
+| الهدف      | MpRef<Element \| null>       |       |
+| رد الاتصال | IntersectionObserverCallback |       |
+| خيارات     | IntersectionObserverInit     |       |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -41,7 +45,11 @@ function useIntersectionObserver(target: MpRef<Element | null>, callback: Inters
 **النوع:** الوظيفة
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 ربط MutationObserver المحايد للإطار.
@@ -52,11 +60,11 @@ function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallb
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الهدف | MpRef<Node \| null> |  |
-| رد الاتصال | رد الطفرة |  |
-| خيارات | MutationObserverInit |  |
+| الاسم      | اكتب                 | الوصف |
+| ---------- | -------------------- | ----- |
+| الهدف      | MpRef<Node \| null>  |       |
+| رد الاتصال | رد الطفرة            |       |
+| خيارات     | MutationObserverInit |       |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -65,7 +73,7 @@ function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallb
 **النوع:** الوظيفة
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 خطاف PerformanceObserver المحايد للإطار.
@@ -77,7 +85,7 @@ function usePerformanceObserver(callback: PerformanceObserverCallback, options?:
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رد الاتصال | رد اتصال مراقب الأداء |  |
-| خيارات | بيرفورمانس أوبسيرفيرينيت |  |
+| الاسم      | اكتب                     | الوصف |
+| ---------- | ------------------------ | ----- |
+| رد الاتصال | رد اتصال مراقب الأداء    |       |
+| خيارات     | بيرفورمانس أوبسيرفيرينيت |       |

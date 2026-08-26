@@ -37,7 +37,7 @@ export type D3Selection<E extends Element> = Selection<E, unknown, null, undefin
 פונקציה **סוג:**
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 החזר ר"פ לחיבור לאלמנט (`ref={reference}`) והפעל את `draw`
@@ -50,10 +50,10 @@ function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| לצייר | D3Draw<E> |  |
-| תלות | MpDependencyList |  |
+| שם    | הקלד             | תיאור |
+| ----- | ---------------- | ----- |
+| לצייר | D3Draw<E>        |       |
+| תלות  | MpDependencyList |       |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ export interface ChartBox
 פונקציה **סוג:**
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 חשב את מלבן השרטוט הפנימי עבור תרשים של הגודל החיצוני הנתון ו
@@ -81,9 +81,9 @@ function innerDimensions(box: ChartBox): InnerDimensions
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קופסה | ChartBox |  |
+| שם    | הקלד     | תיאור |
+| ----- | -------- | ----- |
+| קופסה | ChartBox |       |
 
 ### מימדים פנימיים
 
@@ -121,7 +121,7 @@ export type MarginInput = number | Partial<Margin>;
 פונקציה **סוג:**
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 נרמל {@link MarginInput} ל-{@link Margin} מלא. מספר הוא
@@ -130,6 +130,6 @@ function resolveMargin(input?: MarginInput): Margin
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | MarginInput |  |
+| שם  | הקלד        | תיאור |
+| --- | ----------- | ----- |
+| קלט | MarginInput |       |

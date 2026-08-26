@@ -16,7 +16,7 @@
 **النوع:** ثابت
 
 ```typescript
-export const config: { plugins: AcceptedPlugin[] }
+export const config: { plugins: AcceptedPlugin[] };
 ```
 
 لم يتم تقديم أي وصف.

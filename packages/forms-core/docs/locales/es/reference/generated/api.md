@@ -62,38 +62,38 @@ canvas crea un nuevo {@link BuilderField} del `type` dado.
 **Tipo:** función
 
 ```typescript
-function evaluateCondition(condition: FieldCondition, values: FormValues): boolean
+function evaluateCondition(condition: FieldCondition, values: FormValues): boolean;
 ```
 
 Evalúe un {@link FieldCondition} con el formulario `values`, devolviendo si
-sostiene actualmente.  Los grupos combinadores siguen la semántica del esquema JSON:
-`allOf` = AND, `anyOf` = OR, `oneOf` = exactamente uno (XOR).  Varias palabras clave
-presentes en el mismo grupo son ellos mismos AND-ed.  Pasa un grupo vacío.
+sostiene actualmente. Los grupos combinadores siguen la semántica del esquema JSON:
+`allOf` = AND, `anyOf` = OR, `oneOf` = exactamente uno (XOR). Varias palabras clave
+presentes en el mismo grupo son ellos mismos AND-ed. Pasa un grupo vacío.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| condición | Condición del campo |  |
-| valores | Valores de formulario |  |
+| Nombre    | Tipo                  | Descripción |
+| --------- | --------------------- | ----------- |
+| condición | Condición del campo   |             |
+| valores   | Valores de formulario |             |
 
 ### esCampoVisible
 
 **Tipo:** función
 
 ```typescript
-function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean
+function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean;
 ```
 
 Si un campo con una condición `visibleWhen` opcional debería estar actualmente
-prestado.  Los campos sin condición siempre están visibles.
+prestado. Los campos sin condición siempre están visibles.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| campo | { visible¿Cuándo?: Condición de campo } |  |
-| valores | Valores de formulario |  |
+| Nombre  | Tipo                                    | Descripción |
+| ------- | --------------------------------------- | ----------- |
+| campo   | { visible¿Cuándo?: Condición de campo } |             |
+| valores | Valores de formulario                   |             |
 
 ## `src/form-schema`
 
@@ -102,16 +102,16 @@ prestado.  Los campos sin condición siempre están visibles.
 **Tipo:** función
 
 ```typescript
-function builderFieldToProperty(field: BuilderField): JsonSchemaProperty
+function builderFieldToProperty(field: BuilderField): JsonSchemaProperty;
 ```
 
 Convierte un único {@link BuilderField} en un {@link JsonSchemaProperty}.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| campo | Campo de construcción |  |
+| Nombre | Tipo                  | Descripción |
+| ------ | --------------------- | ----------- |
+| campo  | Campo de construcción |             |
 
 ### crear campo
 
@@ -123,7 +123,7 @@ function createField(options: {
   label?: string;
   key?: string;
   usedKeys?: Iterable<string>;
-}): BuilderField
+}): BuilderField;
 ```
 
 Crea un nuevo {@link BuilderField} del `type` dado. La clave se deriva
@@ -132,16 +132,16 @@ comience con una matriz `children` vacía; Los widgets de opciones obtienen dos 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | { tipo: FormFieldType;   etiqueta?: cadena;   ¿clave?: cadena;   ¿Claves usadas?: Iterable<string>; } |  |
+| Nombre   | Tipo                                                                                            | Descripción |
+| -------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| opciones | { tipo: FormFieldType; etiqueta?: cadena; ¿clave?: cadena; ¿Claves usadas?: Iterable<string>; } |             |
 
 ### DEFAULT_FIELD_TYPES
 
 **Tipo:** constante
 
 ```typescript
-export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
+export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[];
 ```
 
 Los tipos de campos ofrecidos en la paleta del constructor, en orden de visualización. la paleta
@@ -154,27 +154,30 @@ fecha/hora → otro → agrupación).
 **Tipo:** función
 
 ```typescript
-function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined
+function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined;
 ```
 
 Valida una clave de campo frente a sus hermanos: debe estar no vacía y ser única
 dentro de su contenedor. Devuelve un mensaje legible por humanos, o `undefined` cuando
-la clave es válida. `siblingKeys` son las claves de los *otros* campos en el
+la clave es válida. `siblingKeys` son las claves de los _otros_ campos en el
 mismo contenedor (excluyendo el campo que se está validando).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| clave | cadena |  |
-| llaves de hermanos | Iterable<string> |  |
+| Nombre             | Tipo             | Descripción |
+| ------------------ | ---------------- | ----------- |
+| clave              | cadena           |             |
+| llaves de hermanos | Iterable<string> |             |
 
 ### camposADefinición
 
 **Tipo:** función
 
 ```typescript
-function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: FieldsToSchemaOptions = {}): SchemaFormDefinition
+function fieldsToDefinition(
+  fields: BuilderField[] | BuilderField[][],
+  options: FieldsToSchemaOptions = {},
+): SchemaFormDefinition;
 ```
 
 Crea la definición del esquema, eligiendo paso único o asistente de `options`.
@@ -183,34 +186,34 @@ es la lista plana de nivel superior (`BuilderField[]`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| campos | CampoConstructor[] \| Campo de construcción[][] |  |
-| opciones | Opciones de campos a esquema |  |
+| Nombre   | Tipo                                            | Descripción |
+| -------- | ----------------------------------------------- | ----------- |
+| campos   | CampoConstructor[] \| Campo de construcción[][] |             |
+| opciones | Opciones de campos a esquema                    |             |
 
 ### campos al esquema
 
 **Tipo:** función
 
 ```typescript
-function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema
+function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema;
 ```
 
 Crea un {@link FormJsonSchema} de un solo paso a partir de campos de nivel superior.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| campos | Campo de construcción[] |  |
-| opciones | Opciones de campos a esquema |  |
+| Nombre   | Tipo                         | Descripción |
+| -------- | ---------------------------- | ----------- |
+| campos   | Campo de construcción[]      |             |
+| opciones | Opciones de campos a esquema |             |
 
 ### campos al esquema del asistente
 
 **Tipo:** función
 
 ```typescript
-function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[]
+function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[];
 ```
 
 Crea un asistente de varios pasos ({@link FormJsonSchema}[]) a partir de un campo por paso
@@ -218,145 +221,145 @@ matriz: `steps[i]` contiene los campos de nivel superior asignados al paso del a
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| pasos | Campo de construcción[][] |  |
-| opciones | Opciones de campos a esquema |  |
+| Nombre   | Tipo                         | Descripción |
+| -------- | ---------------------------- | ----------- |
+| pasos    | Campo de construcción[][]    |             |
+| opciones | Opciones de campos a esquema |             |
 
 ### esDateWidget
 
 **Tipo:** función
 
 ```typescript
-function isDateWidget(widget: FormFieldType): boolean
+function isDateWidget(widget: FormFieldType): boolean;
 ```
 
 Si el widget captura una fecha del calendario (acepta `minDate`/`maxDate`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ### isFieldsetWidget
 
 **Tipo:** función
 
 ```typescript
-function isFieldsetWidget(widget: FormFieldType): boolean
+function isFieldsetWidget(widget: FormFieldType): boolean;
 ```
 
 Si el widget es un conjunto de campos de agrupación.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ### esFileWidget
 
 **Tipo:** función
 
 ```typescript
-function isFileWidget(widget: FormFieldType): boolean
+function isFileWidget(widget: FormFieldType): boolean;
 ```
 
 Si el widget carga un archivo (acepta `accept` / `multiple` / `capture`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ### esUbicaciónWidget
 
 **Tipo:** función
 
 ```typescript
-function isLocationWidget(widget: FormFieldType): boolean
+function isLocationWidget(widget: FormFieldType): boolean;
 ```
 
 Si el widget captura una coordenada geográfica (acepta `locationFormat`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ### esMultilineWidget
 
 **Tipo:** función
 
 ```typescript
-function isMultilineWidget(widget: FormFieldType): boolean
+function isMultilineWidget(widget: FormFieldType): boolean;
 ```
 
 Si el widget representa un área de varias líneas (acepta un recuento `rows`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ### esNúmeroWidget
 
 **Tipo:** función
 
 ```typescript
-function isNumberWidget(widget: FormFieldType): boolean
+function isNumberWidget(widget: FormFieldType): boolean;
 ```
 
 Si el widget es numérico (`number`/`stepper`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ### esTextWidget
 
 **Tipo:** función
 
 ```typescript
-function isTextWidget(widget: FormFieldType): boolean
+function isTextWidget(widget: FormFieldType): boolean;
 ```
 
 Si el widget está escrito en texto (acepta `minLength` / `maxLength` / `pattern`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ### esTimeWidget
 
 **Tipo:** función
 
 ```typescript
-function isTimeWidget(widget: FormFieldType): boolean
+function isTimeWidget(widget: FormFieldType): boolean;
 ```
 
 Si el widget captura una hora del día (acepta la opción `showSeconds`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ### siguienteID de campo
 
 **Tipo:** función
 
 ```typescript
-function nextFieldId(): string
+function nextFieldId(): string;
 ```
 
 Genera una identificación de campo de construcción nueva y resistente a colisiones.
@@ -366,55 +369,55 @@ Genera una identificación de campo de construcción nueva y resistente a colisi
 **Tipo:** función
 
 ```typescript
-function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>
+function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>;
 ```
 
 Las reglas de visibilidad condicional por paso de una definición de asistente.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| definición | Definición de formulario de esquema \| indefinido |  |
+| Nombre     | Tipo                                              | Descripción |
+| ---------- | ------------------------------------------------- | ----------- |
+| definición | Definición de formulario de esquema \| indefinido |             |
 
 ### esquemaPasoDescripciones
 
 **Tipo:** función
 
 ```typescript
-function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 Las descripciones por paso de una definición de asistente.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| definición | Definición de formulario de esquema \| indefinido |  |
+| Nombre     | Tipo                                              | Descripción |
+| ---------- | ------------------------------------------------- | ----------- |
+| definición | Definición de formulario de esquema \| indefinido |             |
 
 ### esquemaPasoTítulos
 
 **Tipo:** función
 
 ```typescript
-function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 Los títulos por paso de una definición de asistente (vacíos para un formulario de un solo paso).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| definición | Definición de formulario de esquema \| indefinido |  |
+| Nombre     | Tipo                                              | Descripción |
+| ---------- | ------------------------------------------------- | ----------- |
+| definición | Definición de formulario de esquema \| indefinido |             |
 
 ### esquemaACampos
 
 **Tipo:** función
 
 ```typescript
-function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][]
+function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][];
 ```
 
 Hidrata un {@link SchemaFormDefinition} nuevamente en el campo de trabajo del constructor.
@@ -424,74 +427,74 @@ La definición se convierte en una lista plana (`BuilderField[]`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| definición | Definición de formulario de esquema \| indefinido |  |
+| Nombre     | Tipo                                              | Descripción |
+| ---------- | ------------------------------------------------- | ----------- |
+| definición | Definición de formulario de esquema \| indefinido |             |
 
 ### slugificar
 
 **Tipo:** función
 
 ```typescript
-function slugify(label: string): string
+function slugify(label: string): string;
 ```
 
 Convierte una etiqueta humana en una clave de esquema `snake_case` segura.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| etiqueta | cadena |  |
+| Nombre   | Tipo   | Descripción |
+| -------- | ------ | ----------- |
+| etiqueta | cadena |             |
 
 ### clave única
 
 **Tipo:** función
 
 ```typescript
-function uniqueKey(base: string, used: Iterable<string>): string
+function uniqueKey(base: string, used: Iterable<string>): string;
 ```
 
 Devuelve `base`, o `base_2`, `base_3`,… hasta que ya no colisiona.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| bases | cadena |  |
-| usado | Iterable<string> |  |
+| Nombre | Tipo             | Descripción |
+| ------ | ---------------- | ----------- |
+| bases  | cadena           |             |
+| usado  | Iterable<string> |             |
 
 ### widgetHasOptions
 
 **Tipo:** función
 
 ```typescript
-function widgetHasOptions(widget: FormFieldType): boolean
+function widgetHasOptions(widget: FormFieldType): boolean;
 ```
 
 Si el widget expone una lista de opciones definida por el autor.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ### widgetToJsonType
 
 **Tipo:** función
 
 ```typescript
-function widgetToJsonType(widget: FormFieldType): JsonSchemaType
+function widgetToJsonType(widget: FormFieldType): JsonSchemaType;
 ```
 
 El tipo primitivo del esquema JSON al que se serializa un widget.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| widget | Tipo de campo de formulario |  |
+| Nombre | Tipo                        | Descripción |
+| ------ | --------------------------- | ----------- |
+| widget | Tipo de campo de formulario |             |
 
 ## `src/json-schema`
 
@@ -500,7 +503,7 @@ El tipo primitivo del esquema JSON al que se serializa un widget.
 **Tipo:** función
 
 ```typescript
-function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator
+function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator;
 ```
 
 Compile un {@link FormJsonSchema} en un validador reutilizable respaldado por Ajv.
@@ -508,7 +511,7 @@ Tanto las reglas de presencia como las restricciones de valor provienen directam
 
 Los mensajes de error generados se localizan a través del `translate` opcional.
 función (reflejando `t(key, named)` de vue-i18n); cuando se omite, incorporado
-Se utilizan mensajes en inglés.  `errorMessage` proporcionado por el autor anula siempre
+Se utilizan mensajes en inglés. `errorMessage` proporcionado por el autor anula siempre
 ganan y se devuelven palabra por palabra.
 
 Los campos cerrados por una condición `ui.visibleWhen` que actualmente no se cumple son
@@ -517,10 +520,10 @@ sumisión.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| esquema | FormularioJsonEsquema |  |
-| traducir | SchemaFormTranslate |  |
+| Nombre   | Tipo                  | Descripción |
+| -------- | --------------------- | ----------- |
+| esquema  | FormularioJsonEsquema |             |
+| traducir | SchemaFormTranslate   |             |
 
 ### Validador de formulario
 
@@ -537,7 +540,7 @@ El validador devuelto por {@link createFormValidator}.
 **Tipo:** función
 
 ```typescript
-function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
+function jsonSchemaDefaults(schema: FormJsonSchema): FormValues;
 ```
 
 Calcule el valor predeterminado para cada campo del esquema JSON, respetando
@@ -546,28 +549,28 @@ Los conjuntos de campos se repiten en un objeto anidado con los valores predeter
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| esquema | FormularioJsonEsquema |  |
+| Nombre  | Tipo                  | Descripción |
+| ------- | --------------------- | ----------- |
+| esquema | FormularioJsonEsquema |             |
 
 ### jsonSchemaToFields
 
 **Tipo:** función
 
 ```typescript
-function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[]
+function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[];
 ```
 
 Convierta un {@link FormJsonSchema} en la lista ordenada de listos para renderizar
-{@link FormFieldSchema} descriptores consumidos por el renderizador de campos.  anidado
+{@link FormFieldSchema} descriptores consumidos por el renderizador de campos. anidado
 Las propiedades `object` (conjunto de campos) se recurren a ellas, por lo que un conjunto de campos lleva su
 propio pedido `fields`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| esquema | FormularioJsonEsquema |  |
+| Nombre  | Tipo                  | Descripción |
+| ------- | --------------------- | ----------- |
+| esquema | FormularioJsonEsquema |             |
 
 ## `src/types`
 
@@ -586,7 +589,7 @@ Valores de sugerencia nativos `autocapitalize` para entradas tipo texto.
 **Tipo:** constante
 
 ```typescript
-export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>
+export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>;
 ```
 
 Fichas `autocomplete` seleccionables agrupadas para un menú desplegable de creación. El `group`
@@ -610,13 +613,70 @@ formularios con prefijo de sección que la especificación también permite.
 **Tipo:** tipo
 
 ```typescript
-export type AutocompleteToken = | 'off' | 'on' | 'name' | 'honorific-prefix' | 'given-name' | 'additional-name' | 'family-name' | 'honorific-suffix' | 'nickname' | 'email' | 'username' | 'new-password' | 'current-password' | 'one-time-code' | 'organization-title' | 'organization' | 'street-address' | 'address-line1' | 'address-line2' | 'address-line3' | 'address-level4' | 'address-level3' | 'address-level2' | 'address-level1' | 'country' | 'country-name' | 'postal-code' | 'cc-name' | 'cc-given-name' | 'cc-additional-name' | 'cc-family-name' | 'cc-number' | 'cc-exp' | 'cc-exp-month' | 'cc-exp-year' | 'cc-csc' | 'cc-type' | 'transaction-currency' | 'transaction-amount' | 'language' | 'bday' | 'bday-day' | 'bday-month' | 'bday-year' | 'sex' | 'tel' | 'tel-country-code' | 'tel-national' | 'tel-area-code' | 'tel-local' | 'tel-local-prefix' | 'tel-local-suffix' | 'tel-extension' | 'impp' | 'url' | 'photo' | 'webauthn';
+export type AutocompleteToken =
+  | 'off'
+  | 'on'
+  | 'name'
+  | 'honorific-prefix'
+  | 'given-name'
+  | 'additional-name'
+  | 'family-name'
+  | 'honorific-suffix'
+  | 'nickname'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'one-time-code'
+  | 'organization-title'
+  | 'organization'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'address-line3'
+  | 'address-level4'
+  | 'address-level3'
+  | 'address-level2'
+  | 'address-level1'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-given-name'
+  | 'cc-additional-name'
+  | 'cc-family-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-exp-month'
+  | 'cc-exp-year'
+  | 'cc-csc'
+  | 'cc-type'
+  | 'transaction-currency'
+  | 'transaction-amount'
+  | 'language'
+  | 'bday'
+  | 'bday-day'
+  | 'bday-month'
+  | 'bday-year'
+  | 'sex'
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national'
+  | 'tel-area-code'
+  | 'tel-local'
+  | 'tel-local-prefix'
+  | 'tel-local-suffix'
+  | 'tel-extension'
+  | 'impp'
+  | 'url'
+  | 'photo'
+  | 'webauthn';
 ```
 
 Los tokens HTML estándar `autocomplete`, catalogados por MDN
 (https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete).
 
-Estos son los tokens con nombre *detalle* que una sola entrada tipo texto puede anunciar para que
+Estos son los tokens con nombre _detalle_ que una sola entrada tipo texto puede anunciar para que
 Los navegadores y administradores de contraseñas pueden ofrecer el valor guardado adecuado. la lista
 omite intencionalmente los modificadores de agrupación/sección (`section-*`, `shipping`,
 `billing`, `home`, `work`,…) que solo anteponen uno de estos tokens: un
@@ -641,7 +701,7 @@ Ya sea una comparación de hojas o un combinador booleano de condiciones anidada
 export interface FieldConditionGroup
 ```
 
-Un combinador que agrupa {@link FieldCondition} anidados.  Refleja el esquema JSON
+Un combinador que agrupa {@link FieldCondition} anidados. Refleja el esquema JSON
 palabras clave booleanas:
 
 - `allOf`: pasa cuando **todas** las condiciones anidadas pasan (Y lógico).
@@ -658,8 +718,8 @@ Varias palabras clave del mismo grupo se combinan con AND juntas.
 export interface FieldConditionLeaf
 ```
 
-Una condición de una sola hoja que prueba el valor actual de un campo.  exactamente uno
-el comparador está normalmente configurado; cuando hay varios presentes, deben *todos* aguantar durante
+Una condición de una sola hoja que prueba el valor actual de un campo. exactamente uno
+el comparador está normalmente configurado; cuando hay varios presentes, deben _todos_ aguantar durante
 la hoja para pasar.
 
 ### Opciones de FieldUi
@@ -691,8 +751,8 @@ Mapa de errores por campo, codificado por `FormFieldSchema.key`.
 export interface FormFieldSchema
 ```
 
-Un descriptor de campo resuelto y listo para renderizar.  SchemaForm deriva uno de estos
-por propiedad de {@link FormJsonSchema}; *no* es parte del público
+Un descriptor de campo resuelto y listo para renderizar. SchemaForm deriva uno de estos
+por propiedad de {@link FormJsonSchema}; _no_ es parte del público
 superficie de entrada y no conlleva ninguna lógica de validación propia.
 
 ### Tipo de campo de formulario
@@ -700,12 +760,36 @@ superficie de entrada y no conlleva ninguna lógica de validación propia.
 **Tipo:** tipo
 
 ```typescript
-export type FormFieldType = | 'text' | 'email' | 'password' | 'number' | 'stepper' | 'url' | 'tel' | 'textarea' | 'markdown' | 'code' | 'checkbox' | 'switch' | 'select' | 'radio' | 'multiselect' | 'date' | 'time' | 'datetime' | 'daterange' | 'timerange' | 'datetimerange' | 'location' | 'file' | 'fieldset';
+export type FormFieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'stepper'
+  | 'url'
+  | 'tel'
+  | 'textarea'
+  | 'markdown'
+  | 'code'
+  | 'checkbox'
+  | 'switch'
+  | 'select'
+  | 'radio'
+  | 'multiselect'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'daterange'
+  | 'timerange'
+  | 'datetimerange'
+  | 'location'
+  | 'file'
+  | 'fieldset';
 ```
 
-El control visual representado para un campo.  Esta es una preocupación de presentación, por lo que
+El control visual representado para un campo. Esta es una preocupación de presentación, por lo que
 vive bajo la extensión no estándar `ui.widget` en lugar de ser una
-Palabra clave del esquema JSON.  Cuando se omite, SchemaForm infiere un widget sensible a partir de
+Palabra clave del esquema JSON. Cuando se omite, SchemaForm infiere un widget sensible a partir de
 `type`, `format` y `enum` de la propiedad.
 
 ### FormularioJsonEsquema
@@ -717,8 +801,8 @@ export interface FormJsonSchema
 ```
 
 Un solo formulario (o, en un asistente, un solo paso): un esquema JSON `object`
-documento.  Cuando se usa directamente describe un formulario de un solo paso; cuando se utiliza como
-entrada de una matriz de nivel superior, describe un paso del asistente.  La validación es
+documento. Cuando se usa directamente describe un formulario de un solo paso; cuando se utiliza como
+entrada de una matriz de nivel superior, describe un paso del asistente. La validación es
 realizó contra él con Ajv internamente.
 
 ### Valores de formulario
@@ -739,7 +823,7 @@ La bolsa de datos del formulario reactivo, codificada por clave de campo.
 export interface JsonSchemaProperty
 ```
 
-Un único descriptor de propiedad del esquema JSON.  Mapa de palabras clave de validación estándar
+Un único descriptor de propiedad del esquema JSON. Mapa de palabras clave de validación estándar
 directamente en las reglas Ajv generadas.
 
 ### JsonSchemaStringFormato
@@ -772,7 +856,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 ```
 
 Se ingresa/serializa la representación de coordenadas {@link LocationValue}
-como.  Definido aquí (en lugar de importado desde un componente Vue) para que el compartido
+como. Definido aquí (en lugar de importado desde un componente Vue) para que el compartido
 el núcleo permanece independiente del marco; es estructuralmente idéntico al
 `@mission-platform/components` tipo de entrada de ubicación.
 
@@ -784,7 +868,7 @@ el núcleo permanece independiente del marco; es estructuralmente idéntico al
 export interface LocationValue
 ```
 
-Una coordenada geográfica capturada por el widget `location`.  `lat`/`lng` son
+Una coordenada geográfica capturada por el widget `location`. `lat`/`lng` son
 `undefined` mientras está vacío, por lo que un valor en blanco significa claramente "sin entrada".
 
 ### Definición de formulario de esquema
@@ -809,7 +893,7 @@ La única entrada para un formulario basado en esquema/`useSchemaForm`.
 export type SchemaFormTranslate = (key: string, named?: Record<string, unknown>) => string;
 ```
 
-Función de traducción utilizada para localizar los mensajes de validación generados.  eso
+Función de traducción utilizada para localizar los mensajes de validación generados. eso
 refleja la firma `t(key, named)` de vue-i18n: dada una clave de mensaje y una
 bolsa opcional de valores de interpolación con nombre, devuelve la cadena localizada.
 Cuando se omite, SchemaForm recurre a los mensajes integrados en inglés.

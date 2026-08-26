@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle` - يقوم بتدوير السمة النشطة من خلال `light → dark → auto`،
@@ -39,9 +39,9 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ThemeToggleProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<ThemeToggleProperties> |       |
 
 ### ThemeToggleProperties
 
@@ -70,7 +70,7 @@ export type ThemeToggleSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer` — يؤلف تجاوزات رمز التصميم `--mp-*` لوقت التشغيل (العلامة التجارية
@@ -96,9 +96,9 @@ styleString، setConfig، setAttribute، setToken،removeToken،reset }`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ThemeComposerProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<ThemeComposerProperties> |       |
 
 ### خصائص الملحن
 
@@ -127,7 +127,7 @@ export type ThemeComposerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider` - يقوم بتكوين متجر السمات المشترك من دعائمه و
@@ -151,9 +151,9 @@ toggleTheme,cycleTheme }` كنطاق.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ThemeProviderProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<ThemeProviderProperties> |       |
 
 ### ThemeProviderProperties
 
@@ -182,7 +182,7 @@ export type ThemeProviderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **النوع:** ثابت
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 يقوم بتعيين كل سمة مألوفة إلى خاصية `--mp-*` CSS المخصصة التي تتجاوزها.
@@ -192,7 +192,7 @@ export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
 **النوع:** الوظيفة
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 يحول {@link ThemeComposerConfig} إلى خريطة مسطحة لـ CSS المخصصة
@@ -201,111 +201,115 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التكوين | تكوين السمة |  |
+| الاسم   | اكتب        | الوصف |
+| ------- | ----------- | ----- |
+| التكوين | تكوين السمة |       |
 
 ### configToStyleString
 
 **النوع:** الوظيفة
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 حل التكوين لسلسلة `style` المضمنة الكاملة (الخصائص المخصصة + `color-scheme`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التكوين | تكوين السمة |  |
+| الاسم   | اكتب        | الوصف |
+| ------- | ----------- | ----- |
+| التكوين | تكوين السمة |       |
 
 ### cssVariablesToString
 
 **النوع:** الوظيفة
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 إجراء تسلسل لخريطة خصائص CSS المخصصة في سلسلة `style` المضمنة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المتغيرات | سجل<string, string> |  |
+| الاسم     | اكتب                | الوصف |
+| --------- | ------------------- | ----- |
+| المتغيرات | سجل<string, string> |       |
 
 ### دمج التكوين
 
 **النوع:** الوظيفة
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 دمج تكوين جزئي بشكل سطحي في التكوين الحالي (مسح القيم `undefined`/الفارغة).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التكوين | تكوين السمة |  |
-| جزئي | تكوين السمة |  |
+| الاسم   | اكتب        | الوصف |
+| ------- | ----------- | ----- |
+| التكوين | تكوين السمة |       |
+| جزئي    | تكوين السمة |       |
 
 ### إزالة ConfigToken
 
 **النوع:** الوظيفة
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 إزالة تجاوز رمزي خام واحد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التكوين | تكوين السمة |  |
-| مفتاح | سلسلة |  |
+| الاسم   | اكتب        | الوصف |
+| ------- | ----------- | ----- |
+| التكوين | تكوين السمة |       |
+| مفتاح   | سلسلة       |       |
 
 ### setConfigAttribute
 
 **النوع:** الوظيفة
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 قم بتعيين سمة مألوفة واحدة (مرر `undefined` لمسحها).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التكوين | تكوين السمة |  |
-| السمة | ك |  |
-| القيمة | ThemeComposerConfig[K] |  |
+| الاسم   | اكتب                   | الوصف |
+| ------- | ---------------------- | ----- |
+| التكوين | تكوين السمة            |       |
+| السمة   | ك                      |       |
+| القيمة  | ThemeComposerConfig[K] |       |
 
 ### setConfigToken
 
 **النوع:** الوظيفة
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 قم بتعيين تجاوز رمزي خام واحد. قد يحذف المفتاح البادئة `--mp-`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التكوين | تكوين السمة |  |
-| مفتاح | سلسلة |  |
-| القيمة | سلسلة |  |
+| الاسم   | اكتب        | الوصف |
+| ------- | ----------- | ----- |
+| التكوين | تكوين السمة |       |
+| مفتاح   | سلسلة       |       |
+| القيمة  | سلسلة       |       |
 
 ## `src/stores/theme-store/theme-store`
 
@@ -314,7 +318,7 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 **النوع:** الوظيفة
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 (أعد) تكوين المتجر المشترك من دعائم `ForgeThemeProvider`: قم بتبديل ملف
@@ -323,16 +327,16 @@ function configureTheme(config: ThemeConfig): void
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التكوين | تكوين الموضوع |  |
+| الاسم   | اكتب          | الوصف |
+| ------- | ------------- | ----- |
+| التكوين | تكوين الموضوع |       |
 
 ### this.cycleTheme
 
 **النوع:** الوظيفة
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 قم بالتنقل خلال `light → dark → auto → light`.
@@ -342,7 +346,7 @@ function cycleTheme(): void
 **النوع:** الوظيفة
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 اقرأ لقطة ثابتة للحالة الحالية للمتجر.
@@ -362,32 +366,32 @@ export type ResolvedTheme = 'light' | 'dark';
 **النوع:** الوظيفة
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 قم بتعيين تفضيل السمة بشكل صريح.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التالي | موضوع |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| التالي | موضوع |       |
 
 ### theme.subscribe
 
 **النوع:** الوظيفة
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 الاشتراك في تغييرات المتجر؛ إرجاع وظيفة إلغاء الاشتراك.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مستمع | () => باطل |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| مستمع | () => باطل |       |
 
 ### سمة
 
@@ -424,7 +428,7 @@ export interface ThemeSnapshot
 **النوع:** الوظيفة
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 قم بالتبديل بين الضوء والظلام، بناءً على السمة التي تم حلها حاليًا.

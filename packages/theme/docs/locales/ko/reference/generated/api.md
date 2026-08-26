@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle` — 활성 테마를 다음과 같이 순환합니다. `light → dark → auto`,
@@ -39,9 +39,9 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ThemeToggleProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<ThemeToggleProperties> |      |
 
 ### ThemeToggle속성
 
@@ -70,7 +70,7 @@ export type ThemeToggleSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 기능
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer` — 런타임 `--mp-*` 디자인 토큰 재정의를 구성합니다(브랜드
@@ -96,9 +96,9 @@ styleString, setConfig, setAttribute, setToken, RemoveToken, 재설정 }`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ThemeComposerProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<ThemeComposerProperties> |      |
 
 ### ThemeComposer속성
 
@@ -127,7 +127,7 @@ export type ThemeComposerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **종류:** 기능
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider` — props에서 공유 테마 저장소를 구성하고
@@ -151,9 +151,9 @@ ToggleTheme, CycleTheme }`를 범위로 지정합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ThemeProviderProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<ThemeProviderProperties> |      |
 
 ### ThemeProvider속성
 
@@ -182,7 +182,7 @@ export type ThemeProviderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 **종류:** 상수
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 각 친숙한 속성을 재정의하는 `--mp-*` CSS 사용자 정의 속성에 매핑합니다.
@@ -192,7 +192,7 @@ export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
 **종류:** 기능
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 {@link ThemeComposerConfig}를 CSS 사용자 정의의 평면 지도로 변환합니다.
@@ -201,111 +201,115 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성 | ThemeComposer구성 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 구성 | ThemeComposer구성 |      |
 
 ### configToStyleString
 
 **종류:** 기능
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 전체 인라인 `style` 문자열(사용자 정의 속성 + `color-scheme`)에 대한 구성을 확인합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성 | ThemeComposer구성 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 구성 | ThemeComposer구성 |      |
 
 ### cssVariablesToString
 
 **종류:** 기능
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 CSS 사용자 정의 속성 맵을 인라인 `style` 문자열로 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 변수 | 기록<string, string> |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 변수 | 기록<string, string> |      |
 
 ### 병합 구성
 
 **종류:** 기능
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 부분 구성을 현재 구성에 단순 병합합니다(`undefined`/빈 값 지우기).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성 | ThemeComposer구성 |  |
-| 부분 | ThemeComposer구성 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 구성 | ThemeComposer구성 |      |
+| 부분 | ThemeComposer구성 |      |
 
 ### 제거구성토큰
 
 **종류:** 기능
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 단일 원시 토큰 재정의를 제거합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성 | ThemeComposer구성 |  |
-| 키 | 문자열 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 구성 | ThemeComposer구성 |      |
+| 키   | 문자열            |      |
 
 ### setConfigAttribute
 
 **종류:** 기능
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 단일 속성을 설정합니다(지우려면 `undefined`을 전달).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성 | ThemeComposer구성 |  |
-| 속성 | 케이 |  |
-| 가치 | ThemeComposerConfig[K] |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 구성 | ThemeComposer구성      |      |
+| 속성 | 케이                   |      |
+| 가치 | ThemeComposerConfig[K] |      |
 
 ### setConfigToken
 
 **종류:** 기능
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 단일 원시 토큰 재정의를 설정합니다. 키에서 `--mp-` 접두사를 생략할 수 있습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성 | ThemeComposer구성 |  |
-| 키 | 문자열 |  |
-| 가치 | 문자열 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 구성 | ThemeComposer구성 |      |
+| 키   | 문자열            |      |
+| 가치 | 문자열            |      |
 
 ## `src/stores/theme-store/theme-store`
 
@@ -314,7 +318,7 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 **종류:** 기능
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 `ForgeThemeProvider`의 소품에서 공유 저장소를 (재)구성합니다.
@@ -323,16 +327,16 @@ function configureTheme(config: ThemeConfig): void
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성 | 테마 구성 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| 구성 | 테마 구성 |      |
 
 ### 사이클테마
 
 **종류:** 기능
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 `light → dark → auto → light`을 순환합니다.
@@ -342,7 +346,7 @@ function cycleTheme(): void
 **종류:** 기능
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 저장소의 현재 상태에 대한 변경 불가능한 스냅샷을 읽습니다.
@@ -362,7 +366,7 @@ UI에 실제로 적용되는 구체적인 테마입니다(`'auto'`은 아님).
 **종류:** 기능
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 테마 기본 설정을 명시적으로 설정합니다.
@@ -370,24 +374,24 @@ function setTheme(next: Theme): void
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 다음 | 테마 |  |
+| ---- | ---- | ---- |
+| 다음 | 테마 |      |
 
 ### 구독테마
 
 **종류:** 기능
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 매장 변경사항을 구독하세요. 구독 취소 함수를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 청취자 | () => 무효 |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 청취자 | () => 무효 |      |
 
 ### 주제
 
@@ -424,7 +428,7 @@ export interface ThemeSnapshot
 **종류:** 기능
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 현재 해결된 테마에 따라 밝음과 어두움 사이를 전환합니다.

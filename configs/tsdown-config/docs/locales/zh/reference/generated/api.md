@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 建立一个滚动 `external` / `deps.neverBundle` 谓词处理每个
@@ -24,16 +24,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|名称 |只读字符串[] |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 名称 | 只读字符串[] |      |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **种类：**常数
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 每个共享库的默认包名称都应视为同行提供的。
@@ -44,7 +44,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 **种类：**功能
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 为普通构建 tsdown 配置 TypeScript （或单束）库 -
@@ -53,16 +53,16 @@ function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | TsdownLibraryOptions | TsdownLibraryOptions |  |
+| 名称 | 类型                 | 描述                 |
+| ---- | -------------------- | -------------------- |
+| 选项 | TsdownLibraryOptions | TsdownLibraryOptions |     |
 
 ### 定义TsdownVue库
 
 **种类：**功能
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 与 {@link DefineTsdownLibrary} 类似，但有电线 `unplugin-vue` 和 Vue感知DTS
@@ -70,16 +70,16 @@ function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | TsdownLibraryOptions | TsdownLibraryOptions |  |
+| 名称 | 类型                 | 描述                 |
+| ---- | -------------------- | -------------------- |
+| 选项 | TsdownLibraryOptions | TsdownLibraryOptions |     |
 
 ### 读取PackageDependencyNames
 
 **种类：**功能
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 阅读 `dependencies` 和 `peerDependencies` 在 package.json 中声明
@@ -88,16 +88,16 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|根目录 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 根目录 | 字符串 |      |
 
 ### 解析Tsdown输出目录
 
 **种类：**功能
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 将最终包输出路径镜像到隔离的构建根中。保持
@@ -106,11 +106,11 @@ function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: st
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|根目录 |字符串|  |
-|输出目录 |字符串|  |
-|输出根 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 根目录   | 字符串 |      |
+| 输出目录 | 字符串 |      |
+| 输出根   | 字符串 |      |
 
 ### Tsdown库选项
 

@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement
+function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
 ForgeThreeCanvas — 呈现 <canvas> 的框架中立组件
@@ -24,9 +24,9 @@ ForgeThreeCanvas — 呈现 <canvas> 的框架中立组件
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ForgeThreeCanvasProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<ForgeThreeCanvasProperties> |      |
 
 ### ForgeThreeCanvas 属性
 
@@ -55,7 +55,10 @@ export interface ThreeContext
 **种类：**功能
 
 ```typescript
-function useThree(canvasReference: ReferenceLike<HTMLCanvasElement | null>, onReady?: (context: ThreeContext) => void | (() => void)): void
+function useThree(
+  canvasReference: ReferenceLike<HTMLCanvasElement | null>,
+  onReady?: (context: ThreeContext) => void | (() => void),
+): void;
 ```
 
 框架中立的 Three.js 挂钩。
@@ -66,7 +69,7 @@ SSR 安全：当浏览器 API 或画布不可用时，不执行任何操作。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|画布参考 |参考Like<HTMLCanvasElement \| null> |  |
-|准备就绪 | （上下文：ThreeContext）=> void \| (() => 无效) |  |
+| 名称     | 类型                                            | 描述 |
+| -------- | ----------------------------------------------- | ---- |
+| 画布参考 | 参考Like<HTMLCanvasElement \| null>             |      |
+| 准备就绪 | （上下文：ThreeContext）=> void \| (() => 无效) |      |

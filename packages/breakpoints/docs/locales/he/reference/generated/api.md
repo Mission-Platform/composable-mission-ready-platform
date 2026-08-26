@@ -26,7 +26,7 @@ export type BreakpointKey = (typeof breakpointKeys)[number];
 **סוג:** קבוע
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 לא סופק תיאור.
@@ -36,7 +36,7 @@ export const breakpointKeys
 **סוג:** קבוע
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 ספי פיקסלים ברוחב מינימלי לכל שלב של נקודת שבירה.
@@ -64,23 +64,23 @@ export type BreakpointValues = Record<BreakpointKey, boolean>;
 פונקציה **סוג:**
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 מחזירה את ערך הפיקסל עבור מפתח נקודת שבירה נתון.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפתח | BreakpointKey |  |
+| שם   | הקלד          | תיאור |
+| ---- | ------------- | ----- |
+| מפתח | BreakpointKey |       |
 
 ### maxMediaQuery
 
 פונקציה **סוג:**
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 מחזירה מחרוזת שאילתת מדיה `max-width` (גבול עליון) עבור הנתון
@@ -88,9 +88,9 @@ function maxMediaQuery(key: BreakpointKey): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפתח | BreakpointKey |  |
+| שם   | הקלד          | תיאור |
+| ---- | ------------- | ----- |
+| מפתח | BreakpointKey |       |
 
 #### חוֹזֶה
 
@@ -101,37 +101,37 @@ function maxMediaQuery(key: BreakpointKey): string
 פונקציה **סוג:**
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 מחזירה מחרוזת שאילתת מדיה `min-width` עבור נקודת הפסיקה הנתונה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפתח | BreakpointKey |  |
+| שם   | הקלד          | תיאור |
+| ---- | ------------- | ----- |
+| מפתח | BreakpointKey |       |
 
 #### חוֹזֶה
 
 - **@example:** mediaQuery('lg') // → '(מינימום רוחב: 1920px)'
-mediaQuery('xl') // → '(מינימום רוחב: 2560px)'
+  mediaQuery('xl') // → '(מינימום רוחב: 2560px)'
 
 ### לפתור נקודת שבירה
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 בהינתן רוחב פיקסל, מחזיר את מפתח נקודת השבירה הפעיל כרגע.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רוחב | מספר |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| רוחב | מספר |       |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -140,7 +140,7 @@ function resolveBreakpoint(width: number): BreakpointKey
 פונקציה **סוג:**
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt` — ההיפך של {@link ForgeShowAt}: הוא מסתיר את חריץ ברירת המחדל שלו כאשר
@@ -155,9 +155,9 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<HideAtProperties> |  |
+| שם    | הקלד                          | תיאור |
+| ----- | ----------------------------- | ----- |
+| נכסים | לקריאה בלבד<HideAtProperties> |       |
 
 ### HideAtProperties
 
@@ -176,7 +176,7 @@ export interface HideAtProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` - מציג באופן מותנה את חריץ ברירת המחדל שלו רק כאשר נקודת התצוגה נמצאת ב
@@ -192,9 +192,9 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ShowAtProperties> |  |
+| שם    | הקלד                          | תיאור |
+| ----- | ----------------------------- | ----- |
+| נכסים | לקריאה בלבד<ShowAtProperties> |       |
 
 ### ShowAtProperties
 
@@ -223,7 +223,7 @@ export type BreakpointDebugProperties = Record<string, never>;
 פונקציה **סוג:**
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug` - שכבת-על בזמן פיתוח מוצמדת בצד ימין למטה
@@ -240,9 +240,9 @@ function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>):
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| _נכסים | לקריאה בלבד<BreakpointDebugProperties> |  |
+| שם     | הקלד                                   | תיאור |
+| ------ | -------------------------------------- | ----- |
+| _נכסים | לקריאה בלבד<BreakpointDebugProperties> |       |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -251,7 +251,7 @@ function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>):
 פונקציה **סוג:**
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 מצב נקודת שבירה תגובתי מבוסס על רוחב רכיב המסמך.

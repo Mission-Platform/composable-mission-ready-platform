@@ -108,21 +108,21 @@ Todos los iconos se basan en un cuadro de visualización de $24 \times 24$.
 
 ### Accesorios universales
 
-| Apoyo | Tipo | Predeterminado | Descripción |
-| :---------- | :----------------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| `size` | `number \| string` | `'md'` | Ancho y alto. Admite tokens con nombre (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) o un número de píxel. |
-| `color` | `string` | `'currentColor'` | Color de trazo (y relleno para iconos de marcadores rellenos).                                                                     |
-| `ariaLabel` | `string` | _Predeterminado por icono_ | Nombre accesible. Si se omite, el icono se marca como `aria-hidden`.                                                     |
+| Apoyo       | Tipo               | Predeterminado             | Descripción                                                                                                             |
+| :---------- | :----------------- | :------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
+| `size`      | `number \| string` | `'md'`                     | Ancho y alto. Admite tokens con nombre (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) o un número de píxel. |
+| `color`     | `string`           | `'currentColor'`           | Color de trazo (y relleno para iconos de marcadores rellenos).                                                          |
+| `ariaLabel` | `string`           | _Predeterminado por icono_ | Nombre accesible. Si se omite, el icono se marca como `aria-hidden`.                                                    |
 
 ### Iconos de comportamiento
 
 Ciertos íconos incluyen accesorios adicionales para controlar su apariencia:
 
-| Icono | Accesorios adicionales | Descripción |
-| :----------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------- |
-| `ForgeIconArrow` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (`'up'` predeterminado) | Gira la flecha mediante una transformación en línea.                 |
-| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (`'down'` predeterminado) | Gira el galón mediante una transformación en línea.               |
-| `ForgeIconSort` | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined` | Resalta el galón que coincide con la dirección de clasificación activa. |
+| Icono              | Accesorios adicionales                                                       | Descripción                                                             |
+| :----------------- | :--------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
+| `ForgeIconArrow`   | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (`'up'` predeterminado)   | Gira la flecha mediante una transformación en línea.                    |
+| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (`'down'` predeterminado) | Gira el galón mediante una transformación en línea.                     |
+| `ForgeIconSort`    | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined`             | Resalta el galón que coincide con la dirección de clasificación activa. |
 
 ## Biblioteca de iconos
 

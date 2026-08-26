@@ -16,7 +16,11 @@
 **種類:** 関数
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 フレームワークに依存しない IntersectionObserver フック。
@@ -28,11 +32,11 @@ SSR セーフ: ブラウザー API または DOM が使用できない場合は�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ターゲット | MpRef<Element \| null> |  |
-|コールバック | IntersectionObserverコールバック |  |
-|オプション | IntersectionObserverInit |  |
+| 名前         | タイプ                           | 説明 |
+| ------------ | -------------------------------- | ---- |
+| ターゲット   | MpRef<Element \| null>           |      |
+| コールバック | IntersectionObserverコールバック |      |
+| オプション   | IntersectionObserverInit         |      |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -41,7 +45,11 @@ SSR セーフ: ブラウザー API または DOM が使用できない場合は�
 **種類:** 関数
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 フレームワークに依存しない MutationObserver フック。
@@ -52,11 +60,11 @@ SSR セーフ: ブラウザー API または DOM が使用できない場合は�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ターゲット | MpRef<Node \| null> |  |
-|コールバック |ミューテーションコールバック |  |
-|オプション | MutationObserverInit |  |
+| 名前         | タイプ                       | 説明 |
+| ------------ | ---------------------------- | ---- |
+| ターゲット   | MpRef<Node \| null>          |      |
+| コールバック | ミューテーションコールバック |      |
+| オプション   | MutationObserverInit         |      |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -65,7 +73,7 @@ SSR セーフ: ブラウザー API または DOM が使用できない場合は�
 **種類:** 関数
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 フレームワークに依存しない PerformanceObserver フック。
@@ -77,7 +85,7 @@ SSR セーフ: ブラウザー API が使用できない場合は何も操作し
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コールバック |パフォーマンスオブザーバーコールバック |  |
-|オプション |パフォーマンスオブザーバー初期化 |  |
+| 名前         | タイプ                                 | 説明 |
+| ------------ | -------------------------------------- | ---- |
+| コールバック | パフォーマンスオブザーバーコールバック |      |
+| オプション   | パフォーマンスオブザーバー初期化       |      |

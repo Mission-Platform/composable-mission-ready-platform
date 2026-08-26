@@ -26,7 +26,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 Bouw een rollup/rolldown `external` predikaat dat elke naam behandelt
@@ -34,16 +34,16 @@ Bouw een rollup/rolldown `external` predikaat dat elke naam behandelt
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| namen | alleen-lezen tekenreeks[] |  |
+| Naam  | Typ                       | Beschrijving |
+| ----- | ------------------------- | ------------ |
+| namen | alleen-lezen tekenreeks[] |              |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Standaard externe rollup-bestanden die elke gedeelde bibliotheek moet behandelen als peer-aangeleverd.
@@ -54,7 +54,7 @@ Van apps die de bibliotheek gebruiken, wordt verwacht dat ze deze zelf leveren.
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
+export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 ```
 
 Standaard globale uitvoerwaarden voor UMD/IIFE-consumenten. Wij richten ons alleen op ESM, maar
@@ -65,7 +65,7 @@ Rollup waarschuwt nog steeds zonder deze kaart wanneer externen worden gedeclare
 **Soort:** functie
 
 ```typescript
-function defineAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 Bouw een Vite configuratie voor Mission Platform Vue 3 apps: de Vue plug-in en de
@@ -74,16 +74,16 @@ bundeling van aanpassingen via {@link AppConfigOptions.overrides}.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | AppConfigOptions |  |
+| Naam   | Typ              | Beschrijving |
+| ------ | ---------------- | ------------ |
+| opties | AppConfigOptions |              |
 
 ### definieerFrameworkAppConfig
 
 **Soort:** functie
 
 ```typescript
-function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig
+function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
 Wikkel {@link definiërenAppConfig} in met de `resolve.conditions` nodig om kaal te maken
@@ -93,16 +93,16 @@ gebruik deze helper kan hetzelfde instellen `resolve.conditions` direct.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | FrameworkAppConfigOptions |  |
+| Naam   | Typ                       | Beschrijving |
+| ------ | ------------------------- | ------------ |
+| opties | FrameworkAppConfigOptions |              |
 
 ### definieerBibliotheekConfig
 
 **Soort:** functie
 
 ```typescript
-function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
+function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
 Bouw een Vite configuratie afgestemd op het Mission Platform Vue bibliotheekpakketten:
@@ -116,16 +116,16 @@ doos. Pakketten die één gebundeld artefact nodig hebben, kunnen zich per oproe
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | BibliotheekConfigOptions |  |
+| Naam   | Typ                      | Beschrijving |
+| ------ | ------------------------ | ------------ |
+| opties | BibliotheekConfigOptions |              |
 
 ### definieerWebComponentAppConfig
 
 **Soort:** functie
 
 ```typescript
-function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 Bouw een Vite app-configuratie voor framework-vrije Web Components-applicaties.
@@ -137,9 +137,9 @@ kale Forge-pakketimporten selecteren overal hun aangepaste elementartefacten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | AppConfigOptions |  |
+| Naam   | Typ              | Beschrijving |
+| ------ | ---------------- | ------------ |
+| opties | AppConfigOptions |              |
 
 ### FrameworkAppConfigOptions
 
@@ -156,7 +156,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function frameworkCondition(framework: MissionPlatformFramework): string
+function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 Wijs een {@link MissionPlatformFramework} toe aan de aangepaste exportvoorwaarde de
@@ -166,16 +166,16 @@ Node/Vite voorwaarden (`import`, `default`, `browser`, ...).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kader | MissiePlatformFramework |  |
+| Naam  | Typ                     | Beschrijving |
+| ----- | ----------------------- | ------------ |
+| kader | MissiePlatformFramework |              |
 
 ### raamwerkResolveConditions
 
 **Soort:** functie
 
 ```typescript
-function frameworkResolveConditions(framework: MissionPlatformFramework): string[]
+function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
 Bouw het bestelde `resolve.conditions` lijst die een app moet gebruiken om een
@@ -187,16 +187,16 @@ Geef het resultaat door aan Vite's `resolve.conditions` (zie {@link definiërenF
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kader | MissiePlatformFramework |  |
+| Naam  | Typ                     | Beschrijving |
+| ----- | ----------------------- | ------------ |
+| kader | MissiePlatformFramework |              |
 
 ### negeerVueI18nBlocksPlugin
 
 **Soort:** functie
 
 ```typescript
-function ignoreVueI18nBlocksPlugin(): Plugin
+function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
 Vite plug-in die draait Vue SFC `<i18n>` aangepaste blokken in no-op-modules.
@@ -237,7 +237,7 @@ beide Vite bundelen (via `resolve.conditions`) en — via de matching
 **Soort:** functie
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 Lees de `dependencies` En `peerDependencies` gedeclareerd in package.json
@@ -246,9 +246,9 @@ een eigen bundel, zodat consumenten ze kunnen ontdubbelen en aan de boom kunnen 
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| rootDirectory | tekenreeks |  |
+| Naam          | Typ        | Beschrijving |
+| ------------- | ---------- | ------------ |
+| rootDirectory | tekenreeks |              |
 
 ## `src/vitest`
 
@@ -257,7 +257,7 @@ een eigen bundel, zodat consumenten ze kunnen ontdubbelen en aan de boom kunnen 
 **Soort:** functie
 
 ```typescript
-function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
+function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Bouw een Vitest config voor Mission Platform-pakketten en apps. Biedt de
@@ -266,9 +266,9 @@ voorgeconfigureerd voor `src/**\/*.vue` componenten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | VitestConfigOptions |  |
+| Naam   | Typ                 | Beschrijving |
+| ------ | ------------------- | ------------ |
+| opties | VitestConfigOptions |              |
 
 ### VitestConfigOptions
 

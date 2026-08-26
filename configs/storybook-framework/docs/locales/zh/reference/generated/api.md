@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig
+function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig;
 ```
 
 为活动框架构建统一的{@link StorybookConfig}。一
@@ -25,9 +25,9 @@ function createStorybookConfig(options: CreateStorybookConfigOptions): Storybook
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |创建StorybookConfigOptions |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 选项 | 创建StorybookConfigOptions |      |
 
 ### 创建StorybookConfigOptions
 
@@ -44,7 +44,7 @@ export interface CreateStorybookConfigOptions
 **种类：**功能
 
 ```typescript
-function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework
+function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework;
 ```
 
 从显式选项或
@@ -53,9 +53,9 @@ function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFram
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|明确 | Storybook框架|  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 明确 | Storybook框架 |      |
 
 ### 故事书框架
 
@@ -72,7 +72,7 @@ export type StorybookFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-com
 **种类：**功能
 
 ```typescript
-function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[]
+function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[];
 ```
 
 为请求的包构建共享的中性故事全局。
@@ -81,11 +81,11 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| _框架 | Storybook框架|  |
-|套餐 |只读字符串[] |  |
-|包根 |字符串|  |
+| 名称  | 类型          | 描述 |
+| ----- | ------------- | ---- |
+| _框架 | Storybook框架 |      |
+| 套餐  | 只读字符串[]  |      |
+| 包根  | 字符串        |      |
 
 ## `src/preview`
 
@@ -94,7 +94,7 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 **种类：**功能
 
 ```typescript
-function sharedPreviewDecorators()
+function sharedPreviewDecorators();
 ```
 
 所有框架的共享 Storybook 装饰器。
@@ -104,7 +104,7 @@ function sharedPreviewDecorators()
 **种类：**常数
 
 ```typescript
-export const sharedPreviewParameters
+export const sharedPreviewParameters;
 ```
 
 所有框架共享 Storybook 参数。
@@ -114,7 +114,7 @@ export const sharedPreviewParameters
 **种类：**功能
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework)
+function sharedPreviewParametersFor(framework?: PreviewFramework);
 ```
 
 框架感知的 Storybook 参数。
@@ -131,9 +131,9 @@ function sharedPreviewParametersFor(framework?: PreviewFramework)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|框架|预览框架 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 框架 | 预览框架 |      |
 
 ## `src/slots.dom`
 
@@ -142,7 +142,7 @@ function sharedPreviewParametersFor(framework?: PreviewFramework)
 **种类：**功能
 
 ```typescript
-function customElementTag(component: unknown): string
+function customElementTag(component: unknown): string;
 ```
 
 从伪造的 Web 组件的元素中派生出其注册的标签名称
@@ -152,9 +152,9 @@ function customElementTag(component: unknown): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 组件 | 未知 |      |
 
 ## `src/slots.neutral`
 
@@ -163,7 +163,7 @@ function customElementTag(component: unknown): string
 **种类：**常数
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 占位符片段工厂；从未调用过（请参阅{@link node}).
@@ -173,7 +173,7 @@ export const Fragment
 **种类：**常数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 没有提供描述。
@@ -187,7 +187,7 @@ export const node: StoryNodeFactory
 **种类：**常数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 没有提供描述。
@@ -203,7 +203,7 @@ export const renderWithSlots: RenderWithSlots
 **种类：**常数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 没有提供描述。
@@ -217,7 +217,7 @@ export const node: StoryNodeFactory
 **种类：**常数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 没有提供描述。
@@ -233,7 +233,7 @@ export const renderWithSlots: RenderWithSlots
 **种类：**常数
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Solid 没有片段组件：子数组是一个片段。
@@ -243,7 +243,7 @@ Solid 没有片段组件：子数组是一个片段。
 **种类：**常数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 没有提供描述。
@@ -257,7 +257,7 @@ export const node: StoryNodeFactory
 **种类：**常数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 没有提供描述。
@@ -273,7 +273,7 @@ export const renderWithSlots: RenderWithSlots
 **种类：**常数
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 JSX 片段的标记组件 - 它的子组件直接安装到父组件中。
@@ -283,7 +283,7 @@ JSX 片段的标记组件 - 它的子组件直接安装到父组件中。
 **种类：**常数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 没有提供描述。
@@ -297,7 +297,7 @@ export const node: StoryNodeFactory
 **种类：**常数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 没有提供描述。
@@ -313,7 +313,12 @@ export const renderWithSlots: RenderWithSlots
 **种类：**类型
 
 ```typescript
-export type RenderWithSlots = ( component: unknown, properties: Record<string, unknown>, slots: StorySlots, children?: unknown, ) => unknown;
+export type RenderWithSlots = (
+  component: unknown,
+  properties: Record<string, unknown>,
+  slots: StorySlots,
+  children?: unknown,
+) => unknown;
 ```
 
 使成为 `component` 和 `properties`，给定的命名 `slots` 和可选的
@@ -325,7 +330,11 @@ export type RenderWithSlots = ( component: unknown, properties: Record<string, u
 **种类：**类型
 
 ```typescript
-export type StoryNodeFactory = ( type: unknown, properties?: Record<string, unknown> | null, ...children: unknown[] ) => unknown;
+export type StoryNodeFactory = (
+  type: unknown,
+  properties?: Record<string, unknown> | null,
+  ...children: unknown[]
+) => unknown;
 ```
 
 为活动渲染器构建一个元素。也作为经典的 JSX
@@ -349,7 +358,7 @@ export type StorySlots = Record<string, unknown>;
 **种类：**常数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 没有提供描述。
@@ -363,7 +372,7 @@ export const node: StoryNodeFactory
 **种类：**常数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 没有提供描述。
@@ -379,7 +388,7 @@ export const renderWithSlots: RenderWithSlots
 **种类：**常数
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 JSX 片段的标记组件 — 呈现为 `DocumentFragment`.
@@ -389,7 +398,7 @@ JSX 片段的标记组件 — 呈现为 `DocumentFragment`.
 **种类：**常数
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 没有提供描述。
@@ -403,7 +412,7 @@ export const node: StoryNodeFactory
 **种类：**常数
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 没有提供描述。
@@ -431,7 +440,10 @@ export type Meta<TComponentOrArguments = Args> = ComponentAnnotations<Renderer, 
 **种类：**类型
 
 ```typescript
-export type StoryObj<TMetaOrComponentOrArgs = Args> = TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments> ? StoryAnnotations<Renderer, TArguments> : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
+export type StoryObj<TMetaOrComponentOrArgs = Args> =
+  TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
+    ? StoryAnnotations<Renderer, TArguments>
+    : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
 与框架无关的故事书 `StoryObj`，中性对应物

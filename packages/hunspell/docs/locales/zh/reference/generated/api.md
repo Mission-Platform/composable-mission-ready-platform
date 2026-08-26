@@ -16,7 +16,11 @@
 **种类：**功能
 
 ```typescript
-function useHunspellMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHunspellMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue 可组合项，将 Hunspell 拼写检查集成到 Monaco 编辑器中。
@@ -29,11 +33,11 @@ Vue 可组合项，将 Hunspell 拼写检查集成到 Monaco 编辑器中。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编辑参考| MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-|已启用 | MaybeRefOrGetter<boolean> |  |
-|语言参考 | MaybeRefOrGetter<string> |  |
+| 名称     | 类型                                                               | 描述 |
+| -------- | ------------------------------------------------------------------ | ---- |
+| 编辑参考 | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |      |
+| 已启用   | MaybeRefOrGetter<boolean>                                          |      |
+| 语言参考 | MaybeRefOrGetter<string>                                           |      |
 
 ## `src/wasm/hunspell.d`
 

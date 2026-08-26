@@ -24,13 +24,13 @@
 
 구성에는 다음 플러그인과 규칙 세트가 포함됩니다.
 
-| 플러그인 | 목적 |
-|:-------------------------|:-------------------------------------------------------|
-| `typescript-eslint`      | 기준 TypeScript 규칙 및 유형 인식 린팅.      |
-| `eslint-plugin-vue`      | Vue 3 SFC 린팅 및 템플릿 검증.             |
-| `eslint-plugin-sonarjs`  | 코드 냄새 및 버그 위험을 감지합니다.                |
-| `eslint-plugin-unicorn`  | 수십 개의 작고 유용한 커뮤니티 규칙.               |
-| `eslint-plugin-i18next`  | 번역 키가 올바르게 사용되는지 확인합니다.           |
+| 플러그인                 | 목적                                                       |
+| :----------------------- | :--------------------------------------------------------- |
+| `typescript-eslint`      | 기준 TypeScript 규칙 및 유형 인식 린팅.                    |
+| `eslint-plugin-vue`      | Vue 3 SFC 린팅 및 템플릿 검증.                             |
+| `eslint-plugin-sonarjs`  | 코드 냄새 및 버그 위험을 감지합니다.                       |
+| `eslint-plugin-unicorn`  | 수십 개의 작고 유용한 커뮤니티 규칙.                       |
+| `eslint-plugin-i18next`  | 번역 키가 올바르게 사용되는지 확인합니다.                  |
 | `eslint-config-prettier` | 다음과 충돌하는 규칙을 비활성화합니다. Prettier 서식 지정. |
 
 ## 용법

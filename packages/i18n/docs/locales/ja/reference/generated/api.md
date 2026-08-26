@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElement
+function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElement;
 ```
 
 i18next インスタンスを React ツリーに提供します (委任)
@@ -24,9 +24,9 @@ i18next インスタンスを React ツリーに提供します (委任)
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | ForgeI18Nプロバイダーのプロパティ |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | ForgeI18Nプロバイダーのプロパティ |      |
 
 #### 契約
 
@@ -52,7 +52,7 @@ export interface ForgeI18NProviderProperties
 **種類:** 関数
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin
+function createForgeI18NVue(i18next: I18nInstance): Plugin;
 ```
 
 i18next インスタンスを Vue プラグイン (`i18next-vue` に委任) でラップします。
@@ -61,9 +61,9 @@ i18next インスタンスを Vue プラグイン (`i18next-vue` に委任) で�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| i18ネクスト | I18nインスタンス |  |
+| 名前        | タイプ           | 説明 |
+| ----------- | ---------------- | ---- |
+| i18ネクスト | I18nインスタンス |      |
 
 #### 契約
 
@@ -79,7 +79,7 @@ app.use(createForgeI18NVue(i18n))
 **種類:** 関数
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 利用可能なフレームワーク アダプターがない場合は、i18next を直接提供します。これにより、
@@ -89,9 +89,9 @@ React および Vue ビルドで使用される同じ `useI18n()` インポー�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前空間 |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| 名前空間 | 文字列 |      |
 
 ### UseI18nReturn
 
@@ -110,7 +110,7 @@ export interface UseI18nReturn
 **種類:** 関数
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 変換関数、基礎となる i18next インスタンス、
@@ -123,9 +123,9 @@ function useI18n(namespace?: string): UseI18nReturn
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前空間 |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| 名前空間 | 文字列 |      |
 
 ### UseI18nReturn
 
@@ -144,7 +144,7 @@ export interface UseI18nReturn
 **種類:** 関数
 
 ```typescript
-function useI18n(namespace?: string): UseI18nReturn
+function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 リアクティブ翻訳機能を公開するコンポジションヘルパー、アクティブ
@@ -158,9 +158,9 @@ function useI18n(namespace?: string): UseI18nReturn
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前空間 |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| 名前空間 | 文字列 |      |
 
 ### UseI18nReturn
 
@@ -179,7 +179,7 @@ export interface UseI18nReturn
 **種類:** 関数
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance
+function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
 ```
 
 Creates a configured, framework-agnostic [i18next](https://www.i18next.com/)
@@ -201,29 +201,30 @@ apps can deep-merge per-namespace `overrides` on top of a package's strings.
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | CreateForgeI18NOオプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| オプション | CreateForgeI18NOオプション |      |
 
 #### 契約
 
 - **@example:** // フレームワークに依存しない使用法
-'@mission-platform/i18n' から { createForgeI18N } をインポートします
+  '@mission-platform/i18n' から { createForgeI18N } をインポートします
 
 const i18n = createForgeI18N({ メッセージ: { en: { hello: 'Hello {name}' } } })
 i18n.t('hello', { name: 'World' }) // → 'Hello World'
+
 - **@example:** // パッケージの文字列をオーバーライドするアプリによる名前空間の使用
-import { createForgeI18N, forgeNamespace } から '@mission-platform/i18n'
+  import { createForgeI18N, forgeNamespace } から '@mission-platform/i18n'
 
 const i18n = createForgeI18N({
-  名前空間: forgeNamespace('my-care-notes')、
-  名前空間: {
-    [forgeNamespace('my-care-notes')]: { en: { nav: { Notes: 'Notes' } } },
-    [forgeNamespace('breakpoints')]: { en: { ブレークポイント: 'ブレークポイント:' } },
-  }、
-  オーバーライド: {
-    [forgeNamespace('breakpoints')]: { en: { ブレークポイント: 'ビューポート:' } },
-  }、
+名前空間: forgeNamespace('my-care-notes')、
+名前空間: {
+[forgeNamespace('my-care-notes')]: { en: { nav: { Notes: 'Notes' } } },
+[forgeNamespace('breakpoints')]: { en: { ブレークポイント: 'ブレークポイント:' } },
+}、
+オーバーライド: {
+[forgeNamespace('breakpoints')]: { en: { ブレークポイント: 'ビューポート:' } },
+}、
 })
 
 ### CreateForgeI18NOオプション
@@ -241,7 +242,7 @@ export interface CreateForgeI18NOptions
 **種類:** 関数
 
 ```typescript
-function getServerI18n(): I18nInstance | undefined
+function getServerI18n(): I18nInstance | undefined;
 ```
 
 現在のサーバー側 i18n インスタンスをリクエスト コンテキスト (AsyncLocalStorage) から取得します。
@@ -252,33 +253,33 @@ function getServerI18n(): I18nInstance | undefined
 **種類:** 関数
 
 ```typescript
-function runWithI18n(i18n: I18nInstance, callback: () => T): T
+function runWithI18n(i18n: I18nInstance, callback: () => T): T;
 ```
 
 サーバー上のリクエストスコープの i18n コンテキスト内でコールバックを実行します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| i18n | I18nインスタンス |  |
-|コールバック | () => T |  |
+| 名前         | タイプ           | 説明 |
+| ------------ | ---------------- | ---- |
+| i18n         | I18nインスタンス |      |
+| コールバック | () => T          |      |
 
 ### setServerI18n
 
 **種類:** 関数
 
 ```typescript
-function setServerI18n(i18n: I18nInstance): void
+function setServerI18n(i18n: I18nInstance): void;
 ```
 
 グローバル フォールバック サーバー側 i18n インスタンスを構成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| i18n | I18nインスタンス |  |
+| 名前 | タイプ           | 説明 |
+| ---- | ---------------- | ---- |
+| i18n | I18nインスタンス |      |
 
 ## `src/utils/merge-locales`
 
@@ -287,7 +288,7 @@ function setServerI18n(i18n: I18nInstance): void
 **種類:** 関数
 
 ```typescript
-function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLocales
+function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLocales;
 ```
 
 `source` のロケールごとのメッセージ オブジェクトを `target` にディープ マージします。
@@ -296,17 +297,17 @@ function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLoca
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ターゲット |フォージロケール |  |
-|ソース |フォージロケール |  |
+| 名前       | タイプ           | 説明 |
+| ---------- | ---------------- | ---- |
+| ターゲット | フォージロケール |      |
+| ソース     | フォージロケール |      |
 
 ### ディープマージメッセージ
 
 **種類:** 関数
 
 ```typescript
-function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject
+function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject;
 ```
 
 2 つのメッセージ オブジェクトを再帰的にディープ マージし、新しいオブジェクトを返します。 Plain
@@ -319,17 +320,17 @@ win とパッケージ バンドルの残りの部分は保持されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ターゲット | ForgeMes​​sageObject |  |
-|ソース | ForgeMes​​sageObject |  |
+| 名前       | タイプ               | 説明 |
+| ---------- | -------------------- | ---- |
+| ターゲット | ForgeMes​​sageObject |      |
+| ソース     | ForgeMes​​sageObject |      |
 
 ### マージロケール
 
 **種類:** 関数
 
 ```typescript
-function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessageObject>
+function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessageObject>;
 ```
 
 ロケール モジュールの配列を単一のメッセージ マップにディープ マージします。
@@ -337,9 +338,9 @@ function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessage
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeLocaleModule[] |  |
+| 名前       | タイプ              | 説明 |
+| ---------- | ------------------- | ---- |
+| モジュール | ForgeLocaleModule[] |      |
 
 ## `src/utils/namespace`
 
@@ -348,7 +349,7 @@ function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessage
 **種類:** 定数
 
 ```typescript
-export const FORGE_DEFAULT_NAMESPACE
+export const FORGE_DEFAULT_NAMESPACE;
 ```
 
 デフォルトの i18next 名前空間メッセージは、明示的な指定がない場合に登録されます。
@@ -360,7 +361,7 @@ export const FORGE_DEFAULT_NAMESPACE
 **種類:** 定数
 
 ```typescript
-export const FORGE_NAMESPACE_PREFIX
+export const FORGE_NAMESPACE_PREFIX;
 ```
 
 すべての Mission Platform i18next 名前空間の予約済みプレフィックス。パッケージ
@@ -371,7 +372,7 @@ export const FORGE_NAMESPACE_PREFIX
 **種類:** 関数
 
 ```typescript
-function forgeNamespace(name: string): string
+function forgeNamespace(name: string): string;
 ```
 
 ワークスペース用の Mission Platform i18next 名前空間を構築します。
@@ -383,16 +384,16 @@ function forgeNamespace(name: string): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 名前 | 文字列 |      |
 
 ### ロケール名前空間
 
 **種類:** 関数
 
 ```typescript
-function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageObject>): ForgeNamespaceLocales
+function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageObject>): ForgeNamespaceLocales;
 ```
 
 単一ロケール、名前空間キーのバンドル マップ (i18n の形状) を変換します。
@@ -403,18 +404,18 @@ function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageOb
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ロケール |文字列 |  |
-|バンドル |レコード<string, ForgeMessageObject> |  |
+| 名前     | タイプ                               | 説明 |
+| -------- | ------------------------------------ | ---- |
+| ロケール | 文字列                               |      |
+| バンドル | レコード<string, ForgeMessageObject> |      |
 
 #### 契約
 
 - **@example:** const enBundles = yaml.load(enLocaleSource) // { 'mp.breakpoints': {...}, 'mp.my-care-notes': {...} }
-createForgeI18N({
+  createForgeI18N({
   名前空間: forgeNamespace('my-care-notes')、
   名前空間: localeNamespaces('en', enBundles),
-})
+  })
 
 ## `src/utils/types`
 

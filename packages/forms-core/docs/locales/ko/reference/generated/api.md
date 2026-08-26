@@ -62,38 +62,38 @@ export interface FieldTypeDescriptor
 **종류:** 기능
 
 ```typescript
-function evaluateCondition(condition: FieldCondition, values: FormValues): boolean
+function evaluateCondition(condition: FieldCondition, values: FormValues): boolean;
 ```
 
 `values` 형식에 대해 {@link FieldCondition}을 평가하여 다음 여부를 반환합니다.
-현재 보유하고 있습니다.  조합자 그룹은 JSON 스키마 의미 체계를 따릅니다.
-`allOf` = AND, `anyOf` = OR, `oneOf` = 정확히 1(XOR)입니다.  여러 키워드
-동일한 그룹에 존재하는 자체는 AND로 연결됩니다.  빈 그룹이 통과합니다.
+현재 보유하고 있습니다. 조합자 그룹은 JSON 스키마 의미 체계를 따릅니다.
+`allOf` = AND, `anyOf` = OR, `oneOf` = 정확히 1(XOR)입니다. 여러 키워드
+동일한 그룹에 존재하는 자체는 AND로 연결됩니다. 빈 그룹이 통과합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 상태 | 필드조건 |  |
-| 가치 | 양식값 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 상태 | 필드조건 |      |
+| 가치 | 양식값   |      |
 
 ### isFieldVisible
 
 **종류:** 기능
 
 ```typescript
-function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean
+function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean;
 ```
 
 선택적 `visibleWhen` 조건이 있는 필드를 현재
-렌더링되었습니다.  조건이 없는 필드는 항상 표시됩니다.
+렌더링되었습니다. 조건이 없는 필드는 항상 표시됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 필드 | { visibleWhen?: FieldCondition } |  |
-| 가치 | 양식값 |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 필드 | { visibleWhen?: FieldCondition } |      |
+| 가치 | 양식값                           |      |
 
 ## `src/form-schema`
 
@@ -102,16 +102,16 @@ function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormVal
 **종류:** 기능
 
 ```typescript
-function builderFieldToProperty(field: BuilderField): JsonSchemaProperty
+function builderFieldToProperty(field: BuilderField): JsonSchemaProperty;
 ```
 
 단일 {@link BuilderField}를 {@link JsonSchemaProperty}로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 필드 | 빌더필드 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 필드 | 빌더필드 |      |
 
 ### createField
 
@@ -123,7 +123,7 @@ function createField(options: {
   label?: string;
   key?: string;
   usedKeys?: Iterable<string>;
-}): BuilderField
+}): BuilderField;
 ```
 
 지정된 `type`의 새 {@link BuilderField}를 만듭니다. 열쇠가 파생됩니다
@@ -132,16 +132,16 @@ function createField(options: {
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | { 유형: FormFieldType;   라벨?: 문자열;   키?: 문자열;   UsedKeys?: Iterable<string>; } |  |
+| 이름 | 유형                                                                              | 설명 |
+| ---- | --------------------------------------------------------------------------------- | ---- |
+| 옵션 | { 유형: FormFieldType; 라벨?: 문자열; 키?: 문자열; UsedKeys?: Iterable<string>; } |      |
 
 ### DEFAULT_FIELD_TYPES
 
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
+export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[];
 ```
 
 표시 순서대로 빌더 팔레트에 제공되는 필드 유형입니다. 팔레트
@@ -154,27 +154,30 @@ export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
 **종류:** 기능
 
 ```typescript
-function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined
+function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined;
 ```
 
 형제 항목에 대해 필드 키의 유효성을 검사합니다. 비어 있지 않고 고유해야 합니다.
 컨테이너 내에서. 사람이 읽을 수 있는 메시지를 반환하거나 다음과 같은 경우 `undefined`을 반환합니다.
-키가 유효합니다. `siblingKeys`은 *기타* 필드의 키입니다.
+키가 유효합니다. `siblingKeys`은 _기타_ 필드의 키입니다.
 동일한 컨테이너(검증되는 필드 제외)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 키 | 문자열 |  |
-| 형제키 | 반복 가능한<string> |  |
+| 이름   | 유형                | 설명 |
+| ------ | ------------------- | ---- |
+| 키     | 문자열              |      |
+| 형제키 | 반복 가능한<string> |      |
 
 ### fieldsToDefinition
 
 **종류:** 기능
 
 ```typescript
-function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: FieldsToSchemaOptions = {}): SchemaFormDefinition
+function fieldsToDefinition(
+  fields: BuilderField[] | BuilderField[][],
+  options: FieldsToSchemaOptions = {},
+): SchemaFormDefinition;
 ```
 
 `options`에서 단일 단계 또는 마법사를 선택하여 스키마 정의를 구축합니다.
@@ -183,34 +186,34 @@ function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 필드 | 빌더필드[] \| 빌더필드[][] |  |
-| 옵션 | FieldsToSchemaOptions |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 필드 | 빌더필드[] \| 빌더필드[][] |      |
+| 옵션 | FieldsToSchemaOptions      |      |
 
 ### fieldsToSchema
 
 **종류:** 기능
 
 ```typescript
-function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema
+function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema;
 ```
 
 최상위 필드에서 단일 단계 {@link FormJsonSchema}를 빌드합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 필드 | 빌더필드[] |  |
-| 옵션 | FieldsToSchemaOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 필드 | 빌더필드[]            |      |
+| 옵션 | FieldsToSchemaOptions |      |
 
 ### fieldsToWizard스키마
 
 **종류:** 기능
 
 ```typescript
-function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[]
+function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[];
 ```
 
 단계별 필드에서 다단계 마법사({@link FormJsonSchema}[])를 빌드합니다.
@@ -218,145 +221,145 @@ function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOp
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 단계 | 빌더필드[][] |  |
-| 옵션 | FieldsToSchemaOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 단계 | 빌더필드[][]          |      |
+| 옵션 | FieldsToSchemaOptions |      |
 
 ### isDate위젯
 
 **종류:** 기능
 
 ```typescript
-function isDateWidget(widget: FormFieldType): boolean
+function isDateWidget(widget: FormFieldType): boolean;
 ```
 
 위젯이 달력 날짜를 캡처하는지 여부(`minDate` / `maxDate` 허용)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ### isFieldset위젯
 
 **종류:** 기능
 
 ```typescript
-function isFieldsetWidget(widget: FormFieldType): boolean
+function isFieldsetWidget(widget: FormFieldType): boolean;
 ```
 
 위젯이 그룹화 필드 세트인지 여부입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ### isFileWidget
 
 **종류:** 기능
 
 ```typescript
-function isFileWidget(widget: FormFieldType): boolean
+function isFileWidget(widget: FormFieldType): boolean;
 ```
 
 위젯이 파일을 업로드하는지 여부(`accept` / `multiple` / `capture` 허용)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ### isLocation위젯
 
 **종류:** 기능
 
 ```typescript
-function isLocationWidget(widget: FormFieldType): boolean
+function isLocationWidget(widget: FormFieldType): boolean;
 ```
 
 위젯이 지리적 좌표를 캡처하는지 여부(`locationFormat` 허용)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ### isMultilineWidget
 
 **종류:** 기능
 
 ```typescript
-function isMultilineWidget(widget: FormFieldType): boolean
+function isMultilineWidget(widget: FormFieldType): boolean;
 ```
 
 위젯이 여러 줄로 구성된 영역을 렌더링하는지 여부(`rows` 개수 허용)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ### isNumber위젯
 
 **종류:** 기능
 
 ```typescript
-function isNumberWidget(widget: FormFieldType): boolean
+function isNumberWidget(widget: FormFieldType): boolean;
 ```
 
 위젯이 숫자인지 여부(`number` / `stepper`)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ### isTextWidget
 
 **종류:** 기능
 
 ```typescript
-function isTextWidget(widget: FormFieldType): boolean
+function isTextWidget(widget: FormFieldType): boolean;
 ```
 
 위젯이 텍스트 유형인지 여부(`minLength` / `maxLength` / `pattern` 허용)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ### isTime위젯
 
 **종류:** 기능
 
 ```typescript
-function isTimeWidget(widget: FormFieldType): boolean
+function isTimeWidget(widget: FormFieldType): boolean;
 ```
 
 위젯이 하루 중 시간을 캡처하는지 여부(`showSeconds` 토글 허용)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ### nextFieldId
 
 **종류:** 기능
 
 ```typescript
-function nextFieldId(): string
+function nextFieldId(): string;
 ```
 
 새로운 충돌 방지 빌더 필드 ID를 생성합니다.
@@ -366,55 +369,55 @@ function nextFieldId(): string
 **종류:** 기능
 
 ```typescript
-function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>
+function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>;
 ```
 
 마법사 정의의 단계별 조건부 가시성 규칙입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 정의 | SchemaFormDefinition \| 정의되지 않음 |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 정의 | SchemaFormDefinition \| 정의되지 않음 |      |
 
 ### 스키마단계설명
 
 **종류:** 기능
 
 ```typescript
-function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 마법사 정의의 단계별 설명입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 정의 | SchemaFormDefinition \| 정의되지 않음 |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 정의 | SchemaFormDefinition \| 정의되지 않음 |      |
 
 ### 스키마단계제목
 
 **종류:** 기능
 
 ```typescript
-function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 마법사 정의의 단계별 제목(단일 단계 양식의 경우 비어 있음)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 정의 | SchemaFormDefinition \| 정의되지 않음 |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 정의 | SchemaFormDefinition \| 정의되지 않음 |      |
 
 ### SchemaToFields
 
 **종류:** 기능
 
 ```typescript
-function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][]
+function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][];
 ```
 
 {@link SchemaFormDefinition}을 빌더의 작업 필드에 다시 수화합니다.
@@ -424,74 +427,74 @@ function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderFi
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 정의 | SchemaFormDefinition \| 정의되지 않음 |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 정의 | SchemaFormDefinition \| 정의되지 않음 |      |
 
 ### 슬러그화하다
 
 **종류:** 기능
 
 ```typescript
-function slugify(label: string): string
+function slugify(label: string): string;
 ```
 
 휴먼 레이블을 안전한 `snake_case` 스키마 키로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 라벨 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 라벨 | 문자열 |      |
 
 ### 고유키
 
 **종류:** 기능
 
 ```typescript
-function uniqueKey(base: string, used: Iterable<string>): string
+function uniqueKey(base: string, used: Iterable<string>): string;
 ```
 
 더 이상 충돌하지 않을 때까지 `base` 또는 `base_2`, `base_3` 등을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 베이스 | 문자열 |  |
-| 사용 | 반복 가능한<string> |  |
+| 이름   | 유형                | 설명 |
+| ------ | ------------------- | ---- |
+| 베이스 | 문자열              |      |
+| 사용   | 반복 가능한<string> |      |
 
 ### widgetHasOptions
 
 **종류:** 기능
 
 ```typescript
-function widgetHasOptions(widget: FormFieldType): boolean
+function widgetHasOptions(widget: FormFieldType): boolean;
 ```
 
 위젯이 작성자가 정의한 옵션 목록을 노출하는지 여부입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ### widgetToJsonType
 
 **종류:** 기능
 
 ```typescript
-function widgetToJsonType(widget: FormFieldType): JsonSchemaType
+function widgetToJsonType(widget: FormFieldType): JsonSchemaType;
 ```
 
 위젯이 직렬화되는 JSON 스키마 기본 유형입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위젯 | 양식 필드 유형 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 위젯 | 양식 필드 유형 |      |
 
 ## `src/json-schema`
 
@@ -500,7 +503,7 @@ function widgetToJsonType(widget: FormFieldType): JsonSchemaType
 **종류:** 기능
 
 ```typescript
-function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator
+function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator;
 ```
 
 {@link FormJsonSchema}를 Ajv가 지원하는 재사용 가능한 유효성 검사기로 컴파일합니다.
@@ -508,7 +511,7 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 생성된 오류 메시지는 옵션 `translate`을 통해 현지화됩니다.
 기능(vue-i18n의 `t(key, named)` 미러링); 생략하면 내장됨
-영어 메시지가 사용됩니다.  작성자가 제공한 `errorMessage`는 항상 재정의됩니다.
+영어 메시지가 사용됩니다. 작성자가 제공한 `errorMessage`는 항상 재정의됩니다.
 승리하고 그대로 반환됩니다.
 
 현재 보유하지 않는 `ui.visibleWhen` 조건에 의해 게이트된 필드는 다음과 같습니다.
@@ -517,10 +520,10 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 스키마 | FormJson스키마 |  |
-| 번역하다 | 스키마양식번역 |  |
+| 이름     | 유형           | 설명 |
+| -------- | -------------- | ---- |
+| 스키마   | FormJson스키마 |      |
+| 번역하다 | 스키마양식번역 |      |
 
 ### FormValidator
 
@@ -537,7 +540,7 @@ export interface FormValidator
 **종류:** 기능
 
 ```typescript
-function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
+function jsonSchemaDefaults(schema: FormJsonSchema): FormValues;
 ```
 
 JSON 스키마의 각 필드에 대한 기본값을 계산합니다.
@@ -546,28 +549,28 @@ JSON 스키마의 각 필드에 대한 기본값을 계산합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 스키마 | FormJson스키마 |  |
+| 이름   | 유형           | 설명 |
+| ------ | -------------- | ---- |
+| 스키마 | FormJson스키마 |      |
 
 ### jsonSchemaToFields
 
 **종류:** 기능
 
 ```typescript
-function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[]
+function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[];
 ```
 
 {@link FormJsonSchema}를 정렬된 렌더링 준비 목록으로 변환합니다.
-필드 렌더러가 사용하는 {@link FormFieldSchema} 설명자입니다.  중첩됨
+필드 렌더러가 사용하는 {@link FormFieldSchema} 설명자입니다. 중첩됨
 `object`(필드 세트) 속성은 재귀되므로 필드 세트는 해당 속성을 전달합니다.
 자신이 `fields`을 주문했습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 스키마 | FormJson스키마 |  |
+| 이름   | 유형           | 설명 |
+| ------ | -------------- | ---- |
+| 스키마 | FormJson스키마 |      |
 
 ## `src/types`
 
@@ -586,7 +589,7 @@ export type Autocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'ch
 **종류:** 상수
 
 ```typescript
-export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>
+export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>;
 ```
 
 빌더 드롭다운을 위해 그룹화된 선택 가능한 `autocomplete` 토큰. `group`
@@ -610,13 +613,70 @@ export type Autocomplete = AutocompleteToken | (string &
 **종류:** 유형
 
 ```typescript
-export type AutocompleteToken = | 'off' | 'on' | 'name' | 'honorific-prefix' | 'given-name' | 'additional-name' | 'family-name' | 'honorific-suffix' | 'nickname' | 'email' | 'username' | 'new-password' | 'current-password' | 'one-time-code' | 'organization-title' | 'organization' | 'street-address' | 'address-line1' | 'address-line2' | 'address-line3' | 'address-level4' | 'address-level3' | 'address-level2' | 'address-level1' | 'country' | 'country-name' | 'postal-code' | 'cc-name' | 'cc-given-name' | 'cc-additional-name' | 'cc-family-name' | 'cc-number' | 'cc-exp' | 'cc-exp-month' | 'cc-exp-year' | 'cc-csc' | 'cc-type' | 'transaction-currency' | 'transaction-amount' | 'language' | 'bday' | 'bday-day' | 'bday-month' | 'bday-year' | 'sex' | 'tel' | 'tel-country-code' | 'tel-national' | 'tel-area-code' | 'tel-local' | 'tel-local-prefix' | 'tel-local-suffix' | 'tel-extension' | 'impp' | 'url' | 'photo' | 'webauthn';
+export type AutocompleteToken =
+  | 'off'
+  | 'on'
+  | 'name'
+  | 'honorific-prefix'
+  | 'given-name'
+  | 'additional-name'
+  | 'family-name'
+  | 'honorific-suffix'
+  | 'nickname'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'one-time-code'
+  | 'organization-title'
+  | 'organization'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'address-line3'
+  | 'address-level4'
+  | 'address-level3'
+  | 'address-level2'
+  | 'address-level1'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-given-name'
+  | 'cc-additional-name'
+  | 'cc-family-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-exp-month'
+  | 'cc-exp-year'
+  | 'cc-csc'
+  | 'cc-type'
+  | 'transaction-currency'
+  | 'transaction-amount'
+  | 'language'
+  | 'bday'
+  | 'bday-day'
+  | 'bday-month'
+  | 'bday-year'
+  | 'sex'
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national'
+  | 'tel-area-code'
+  | 'tel-local'
+  | 'tel-local-prefix'
+  | 'tel-local-suffix'
+  | 'tel-extension'
+  | 'impp'
+  | 'url'
+  | 'photo'
+  | 'webauthn';
 ```
 
 MDN에서 분류한 표준 HTML `autocomplete` 토큰
 (https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete).
 
-이는 단일 텍스트와 같은 입력이 광고할 수 있는 명명된 *세부사항* 토큰입니다.
+이는 단일 텍스트와 같은 입력이 광고할 수 있는 명명된 _세부사항_ 토큰입니다.
 브라우저와 비밀번호 관리자는 올바른 저장된 값을 제공할 수 있습니다. 목록
 의도적으로 그룹화/섹션 수정자(`section-*`, `shipping`,
 `billing`, `home`, `work`, …) 이러한 토큰 중 하나만 접두사로 사용됩니다.
@@ -641,7 +701,7 @@ export type FieldCondition = FieldConditionLeaf | FieldConditionGroup;
 export interface FieldConditionGroup
 ```
 
-중첩된 {@link FieldCondition}을 그룹화하는 결합기입니다.  JSON 스키마를 미러링합니다.
+중첩된 {@link FieldCondition}을 그룹화하는 결합기입니다. JSON 스키마를 미러링합니다.
 부울 키워드:
 
 - `allOf` — **모든** 중첩 조건이 통과할 때 통과합니다(논리적 AND).
@@ -658,8 +718,8 @@ export interface FieldConditionGroup
 export interface FieldConditionLeaf
 ```
 
-한 필드의 현재 값을 테스트하는 단일 리프 조건입니다.  정확히 하나
-비교기는 일반적으로 설정됩니다. 여러 개가 존재할 경우 *모두* 유지되어야 합니다.
+한 필드의 현재 값을 테스트하는 단일 리프 조건입니다. 정확히 하나
+비교기는 일반적으로 설정됩니다. 여러 개가 존재할 경우 _모두_ 유지되어야 합니다.
 지나갈 나뭇잎.
 
 ### FieldUi옵션
@@ -691,8 +751,8 @@ export type FormErrors = Record<string, string | undefined>;
 export interface FormFieldSchema
 ```
 
-해결되고 렌더링 가능한 필드 설명자입니다.  SchemaForm은 다음 중 하나를 파생합니다.
-{@link FormJsonSchema}의 속성별로; 그것은 대중의 일부가 *아닙니다*
+해결되고 렌더링 가능한 필드 설명자입니다. SchemaForm은 다음 중 하나를 파생합니다.
+{@link FormJsonSchema}의 속성별로; 그것은 대중의 일부가 _아닙니다_
 입력 표면에는 자체 유효성 검사 논리가 없습니다.
 
 ### 양식 필드 유형
@@ -700,12 +760,36 @@ export interface FormFieldSchema
 **종류:** 유형
 
 ```typescript
-export type FormFieldType = | 'text' | 'email' | 'password' | 'number' | 'stepper' | 'url' | 'tel' | 'textarea' | 'markdown' | 'code' | 'checkbox' | 'switch' | 'select' | 'radio' | 'multiselect' | 'date' | 'time' | 'datetime' | 'daterange' | 'timerange' | 'datetimerange' | 'location' | 'file' | 'fieldset';
+export type FormFieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'stepper'
+  | 'url'
+  | 'tel'
+  | 'textarea'
+  | 'markdown'
+  | 'code'
+  | 'checkbox'
+  | 'switch'
+  | 'select'
+  | 'radio'
+  | 'multiselect'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'daterange'
+  | 'timerange'
+  | 'datetimerange'
+  | 'location'
+  | 'file'
+  | 'fieldset';
 ```
 
-필드에 대해 렌더링된 시각적 컨트롤입니다.  이것은 프레젠테이션 문제이므로
+필드에 대해 렌더링된 시각적 컨트롤입니다. 이것은 프레젠테이션 문제이므로
 이는 비표준 `ui.widget` 확장명 아래에 있습니다.
-JSON 스키마 키워드.  생략하면 SchemaForm은 다음에서 합리적인 위젯을 추론합니다.
+JSON 스키마 키워드. 생략하면 SchemaForm은 다음에서 합리적인 위젯을 추론합니다.
 속성의 `type`, `format` 및 `enum`.
 
 ### FormJson스키마
@@ -717,8 +801,8 @@ export interface FormJsonSchema
 ```
 
 단일 양식(또는 마법사의 경우 단일 단계): JSON 스키마 `object`
-문서.  직접 사용하면 1단계 형식을 설명합니다. 로 사용될 때
-최상위 배열 항목에는 하나의 마법사 단계가 설명되어 있습니다.  유효성 검사는
+문서. 직접 사용하면 1단계 형식을 설명합니다. 로 사용될 때
+최상위 배열 항목에는 하나의 마법사 단계가 설명되어 있습니다. 유효성 검사는
 내부적으로 Ajv를 사용하여 이에 대해 수행했습니다.
 
 ### 양식 값
@@ -739,7 +823,7 @@ export type FormValues = Record<string, unknown>;
 export interface JsonSchemaProperty
 ```
 
-단일 JSON 스키마 속성 설명자.  표준 검증 키워드 맵
+단일 JSON 스키마 속성 설명자. 표준 검증 키워드 맵
 생성된 Ajv 규칙에 직접 적용됩니다.
 
 ### Json스키마문자열형식
@@ -772,7 +856,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 ```
 
 {@link LocationValue}의 좌표 표현이 입력/직렬화되었습니다.
-as.  Vue 구성 요소에서 가져오는 대신 여기에서 정의되므로 공유
+as. Vue 구성 요소에서 가져오는 대신 여기에서 정의되므로 공유
 핵심은 프레임워크에 구애받지 않습니다. 구조적으로는 와 동일합니다.
 `@mission-platform/components` 위치 입력 유형입니다.
 
@@ -784,7 +868,7 @@ as.  Vue 구성 요소에서 가져오는 대신 여기에서 정의되므로 �
 export interface LocationValue
 ```
 
-`location` 위젯으로 캡처된 지리적 좌표입니다.  `lat`/`lng`는
+`location` 위젯으로 캡처된 지리적 좌표입니다. `lat`/`lng`는
 `undefined`은 비어 있으므로 빈 값은 "입력 없음"을 의미합니다.
 
 ### 스키마양식정의
@@ -809,7 +893,7 @@ export type SchemaFormDefinition = FormJsonSchema | FormJsonSchema[];
 export type SchemaFormTranslate = (key: string, named?: Record<string, unknown>) => string;
 ```
 
-생성된 검증 메시지를 현지화하는 데 사용되는 번역 기능입니다.  그것
+생성된 검증 메시지를 현지화하는 데 사용되는 번역 기능입니다. 그것
 vue-i18n의 `t(key, named)` 서명을 미러링합니다. 메시지 키와
 명명된 보간 값의 선택적 백인 경우 현지화된 문자열을 반환합니다.
 생략하면 SchemaForm은 기본 제공 영어 메시지로 대체됩니다.

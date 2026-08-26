@@ -26,7 +26,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 Geen beschrijving opgegeven.
@@ -36,7 +36,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 Pixeldrempels met minimale breedte voor elke breekpuntstap.
@@ -64,23 +64,23 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 Retourneert de pixelwaarde voor een bepaalde breekpuntsleutel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| sleutel | Breekpuntsleutel |  |
+| Naam    | Typ              | Beschrijving |
+| ------- | ---------------- | ------------ |
+| sleutel | Breekpuntsleutel |              |
 
 ### maxMediaQuery
 
 **Soort:** functie
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 Retourneert een `max-width`-mediaquerytekenreeks (bovengrens) voor het gegeven
@@ -88,9 +88,9 @@ breekpunt - dat wil zeggen "kleiner dan de volgende stap omhoog".
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| sleutel | Breekpuntsleutel |  |
+| Naam    | Typ              | Beschrijving |
+| ------- | ---------------- | ------------ |
+| sleutel | Breekpuntsleutel |              |
 
 #### Contract
 
@@ -101,37 +101,37 @@ breekpunt - dat wil zeggen "kleiner dan de volgende stap omhoog".
 **Soort:** functie
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 Retourneert een `min-width`-mediaquerytekenreeks voor het opgegeven breekpunt.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| sleutel | Breekpuntsleutel |  |
+| Naam    | Typ              | Beschrijving |
+| ------- | ---------------- | ------------ |
+| sleutel | Breekpuntsleutel |              |
 
 #### Contract
 
 - **@example:** mediaQuery('lg') // → '(min.breedte: 1920px)'
-mediaQuery('xl') // → '(min-breedte: 2560px)'
+  mediaQuery('xl') // → '(min-breedte: 2560px)'
 
 ### oplossingBreekpunt
 
 **Soort:** functie
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 Retourneert, gegeven een pixelbreedte, de momenteel actieve breekpuntsleutel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| breedte | nummer |  |
+| Naam    | Typ    | Beschrijving |
+| ------- | ------ | ------------ |
+| breedte | nummer |              |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -140,7 +140,7 @@ Retourneert, gegeven een pixelbreedte, de momenteel actieve breekpuntsleutel.
 **Soort:** functie
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt` — het omgekeerde van {@link ForgeShowAt}: het verbergt zijn standaardslot wanneer de
@@ -155,9 +155,9 @@ De reactieve viewport-breedte wordt gevolgd via de neutrale haken
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<HideAtProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<HideAtProperties> |              |
 
 ### HideAtProperties
 
@@ -176,7 +176,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` — geeft voorwaardelijk alleen het standaardslot weer als de viewport actief is
@@ -192,9 +192,9 @@ schakelen zonder een extra lay-outvak te introduceren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ShowAtProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<ShowAtProperties> |              |
 
 ### ShowAtProperties
 
@@ -223,7 +223,7 @@ De overlay heeft geen eigenschappen: hij leest de live-viewport zelf.
 **Soort:** functie
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug` — een overlay over de ontwikkelingstijd rechtsonder
@@ -240,9 +240,9 @@ zowel React als Vue.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| _eigenschappen | Alleen-lezen<BreakpointDebugProperties> |  |
+| Naam           | Typ                                     | Beschrijving |
+| -------------- | --------------------------------------- | ------------ |
+| _eigenschappen | Alleen-lezen<BreakpointDebugProperties> |              |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -251,7 +251,7 @@ zowel React als Vue.
 **Soort:** functie
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 Reactieve breekpuntstatus op basis van de breedte van het documentelement.

@@ -16,87 +16,87 @@
 פונקציה **סוג:**
 
 ```typescript
-function article(input: ArticleInput): JsonLd
+function article(input: ArticleInput): JsonLd;
 ```
 
 Schema.org `Article` / `BlogPosting` / `NewsArticle` בונה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | קלט מאמר |  |
+| שם  | הקלד     | תיאור |
+| --- | -------- | ----- |
+| קלט | קלט מאמר |       |
 
 ### ברשימת פירורי לחם
 
 פונקציה **סוג:**
 
 ```typescript
-function breadcrumbList(input: BreadcrumbListInput): JsonLd
+function breadcrumbList(input: BreadcrumbListInput): JsonLd;
 ```
 
 Schema.org `BreadcrumbList` - פלט לכל עמוד כדי לחשוף את היררכיית האתר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | BreadcrumbListInput |  |
+| שם  | הקלד                | תיאור |
+| --- | ------------------- | ----- |
+| קלט | BreadcrumbListInput |       |
 
 ### מִקרֶה
 
 פונקציה **סוג:**
 
 ```typescript
-function event(input: EventInput): JsonLd
+function event(input: EventInput): JsonLd;
 ```
 
 Schema.org `Event`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | קלט אירוע |  |
+| שם  | הקלד      | תיאור |
+| --- | --------- | ----- |
+| קלט | קלט אירוע |       |
 
 ### faqPage
 
 פונקציה **סוג:**
 
 ```typescript
-function faqPage(input: FaqPageInput): JsonLd
+function faqPage(input: FaqPageInput): JsonLd;
 ```
 
 Schema.org `FAQPage`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | FaqPageInput |  |
+| שם  | הקלד         | תיאור |
+| --- | ------------ | ----- |
+| קלט | FaqPageInput |       |
 
 ### imageObject
 
 פונקציה **סוג:**
 
 ```typescript
-function imageObject(input: ImageObjectInput): JsonLd
+function imageObject(input: ImageObjectInput): JsonLd;
 ```
 
 Schema.org `ImageObject`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ImageObjectInput |  |
+| שם  | הקלד             | תיאור |
+| --- | ---------------- | ----- |
+| קלט | ImageObjectInput |       |
 
 ### jsonLd
 
 **סוג:** קבוע
 
 ```typescript
-export const jsonLd
+export const jsonLd;
 ```
 
 ייצוא מחדש של מרחב השמות כדי שצרכנים יוכלו לבצע `יבוא { jsonLd } מ
@@ -108,208 +108,208 @@ export const jsonLd
 פונקציה **סוג:**
 
 ```typescript
-function localBusiness(input: LocalBusinessInput): JsonLd
+function localBusiness(input: LocalBusinessInput): JsonLd;
 ```
 
 Schema.org `LocalBusiness` - מרחיב את `Organization` עם נתוני מיקום.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | LocalBusinessInput |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| קלט | LocalBusinessInput |       |
 
 ### אִרגוּן
 
 פונקציה **סוג:**
 
 ```typescript
-function organization(input: OrganizationInput): JsonLd
+function organization(input: OrganizationInput): JsonLd;
 ```
 
 Schema.org `Organization`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ארגון קלט |  |
+| שם  | הקלד      | תיאור |
+| --- | --------- | ----- |
+| קלט | ארגון קלט |       |
 
 ### זיהוי ארגון
 
 פונקציה **סוג:**
 
 ```typescript
-function organizationId(orgUrl: string): string
+function organizationId(orgUrl: string): string;
 ```
 
 Canonical `@id` עבור `Organization` (או `LocalBusiness`) node ברחבי האתר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| orgUrl | מחרוזת |  |
+| שם     | הקלד   | תיאור |
+| ------ | ------ | ----- |
+| orgUrl | מחרוזת |       |
 
 ### אָדָם
 
 פונקציה **סוג:**
 
 ```typescript
-function person(input: PersonInput): JsonLd
+function person(input: PersonInput): JsonLd;
 ```
 
 Schema.org `Person`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | קלט אדם |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| קלט | קלט אדם |       |
 
 ### מוּצָר
 
 פונקציה **סוג:**
 
 ```typescript
-function product(input: ProductInput): JsonLd
+function product(input: ProductInput): JsonLd;
 ```
 
 Schema.org `Product`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | קלט מוצר |  |
+| שם  | הקלד     | תיאור |
+| --- | -------- | ----- |
+| קלט | קלט מוצר |       |
 
 ### מַתכּוֹן
 
 פונקציה **סוג:**
 
 ```typescript
-function recipe(input: RecipeInput): JsonLd
+function recipe(input: RecipeInput): JsonLd;
 ```
 
 Schema.org `Recipe`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | קלט מתכון |  |
+| שם  | הקלד      | תיאור |
+| --- | --------- | ----- |
+| קלט | קלט מתכון |       |
 
 ### סְקִירָה
 
 פונקציה **סוג:**
 
 ```typescript
-function review(input: ReviewInput): JsonLd
+function review(input: ReviewInput): JsonLd;
 ```
 
 Schema.org `Review`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | קלט ביקורת |  |
+| שם  | הקלד       | תיאור |
+| --- | ---------- | ----- |
+| קלט | קלט ביקורת |       |
 
 ### יישום תוכנה
 
 פונקציה **סוג:**
 
 ```typescript
-function softwareApplication(input: SoftwareApplicationInput): JsonLd
+function softwareApplication(input: SoftwareApplicationInput): JsonLd;
 ```
 
 Schema.org `SoftwareApplication`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | SoftwareApplicationInput |  |
+| שם  | הקלד                     | תיאור |
+| --- | ------------------------ | ----- |
+| קלט | SoftwareApplicationInput |       |
 
 ### videoObject
 
 פונקציה **סוג:**
 
 ```typescript
-function videoObject(input: VideoObjectInput): JsonLd
+function videoObject(input: VideoObjectInput): JsonLd;
 ```
 
 Schema.org `VideoObject`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | VideoObjectInput |  |
+| שם  | הקלד             | תיאור |
+| --- | ---------------- | ----- |
+| קלט | VideoObjectInput |       |
 
 ### דף אינטרנט
 
 פונקציה **סוג:**
 
 ```typescript
-function webPage(input: WebPageInput): JsonLd
+function webPage(input: WebPageInput): JsonLd;
 ```
 
 Schema.org `WebPage` - מתאר עמוד בודד בתוך אתר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | WebPageInput |  |
+| שם  | הקלד         | תיאור |
+| --- | ------------ | ----- |
+| קלט | WebPageInput |       |
 
 ### webPageId
 
 פונקציה **סוג:**
 
 ```typescript
-function webPageId(pageUrl: string): string
+function webPageId(pageUrl: string): string;
 ```
 
 Canonical `@id` עבור `WebPage` node.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| pageUrl | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| pageUrl | מחרוזת |       |
 
 ### אֲתַר אִינטֶרנֶט
 
 פונקציה **סוג:**
 
 ```typescript
-function webSite(input: WebSiteInput): JsonLd
+function webSite(input: WebSiteInput): JsonLd;
 ```
 
 Schema.org `WebSite` - נפלט בדרך כלל פעם אחת בכל האתר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | קלט אתר |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| קלט | קלט אתר |       |
 
 ### webSiteId
 
 פונקציה **סוג:**
 
 ```typescript
-function webSiteId(siteUrl: string): string
+function webSiteId(siteUrl: string): string;
 ```
 
 Canonical `@id` עבור `WebSite` node ברחבי האתר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| siteURl | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| siteURl | מחרוזת |       |
 
 ## `src/build-open-graph`
 
@@ -318,7 +318,7 @@ Canonical `@id` עבור `WebSite` node ברחבי האתר.
 פונקציה **סוג:**
 
 ```typescript
-function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
+function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[];
 ```
 
 המר את {@link OpenGraphMetadata} לרשימה שטוחה של תג `<meta>`
@@ -328,9 +328,9 @@ function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטא נתונים | OpenGraphMetadata |  |
+| שם         | הקלד              | תיאור |
+| ---------- | ----------------- | ----- |
+| מטא נתונים | OpenGraphMetadata |       |
 
 ## `src/build-page-meta`
 
@@ -339,7 +339,7 @@ function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
 פונקציה **סוג:**
 
 ```typescript
-function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
+function buildPageMeta(metadata: PageMetadata): BuiltPageMeta;
 ```
 
 המר את {@link PageMetadata} לכותרת שנפתרה, לשפה ולשטוח
@@ -347,9 +347,9 @@ function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטא נתונים | PageMetadata |  |
+| שם         | הקלד         | תיאור |
+| ---------- | ------------ | ----- |
+| מטא נתונים | PageMetadata |       |
 
 ### BuiltPageMeta
 
@@ -368,7 +368,7 @@ export interface BuiltPageMeta
 פונקציה **סוג:**
 
 ```typescript
-function buildRobotsTxt(input: RobotsTxtInput = {}): string
+function buildRobotsTxt(input: RobotsTxtInput = {}): string;
 ```
 
 בנו מחרוזת `robots.txt` דטרמיניסטית מתיאור מדיניות.
@@ -378,9 +378,9 @@ function buildRobotsTxt(input: RobotsTxtInput = {}): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | RobotsTxtInput |  |
+| שם  | הקלד           | תיאור |
+| --- | -------------- | ----- |
+| קלט | RobotsTxtInput |       |
 
 ### RobotsGroup
 
@@ -412,23 +412,23 @@ export interface RobotsTxtInput
 פונקציה **סוג:**
 
 ```typescript
-function buildSitemapIndex(input: SitemapIndexInput): string
+function buildSitemapIndex(input: SitemapIndexInput): string;
 ```
 
 בנו מחרוזת XML של אינדקס מפת אתר דטרמיניסטית.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | SitemapIndexInput |  |
+| שם  | הקלד              | תיאור |
+| --- | ----------------- | ----- |
+| קלט | SitemapIndexInput |       |
 
 ### buildSitemapXml
 
 פונקציה **סוג:**
 
 ```typescript
-function buildSitemapXml(input: SitemapXmlInput): string
+function buildSitemapXml(input: SitemapXmlInput): string;
 ```
 
 בנו מחרוזת `sitemap.xml` דטרמיניסטית. הפלט מסתיים תמיד ב-a
@@ -436,9 +436,9 @@ function buildSitemapXml(input: SitemapXmlInput): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | SitemapXmlInput |  |
+| שם  | הקלד            | תיאור |
+| --- | --------------- | ----- |
+| קלט | SitemapXmlInput |       |
 
 ### מפת אתר חלופי
 
@@ -497,7 +497,7 @@ export interface SitemapXmlInput
 פונקציה **סוג:**
 
 ```typescript
-function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
+function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 ```
 
 סנכרן באופן ריאקטיבי את משטח ה-SEO של Mission Platform המלא - סטנדרטי
@@ -513,9 +513,9 @@ function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטא נתונים | MaybeRefOrGetter<SeoMetadata> |  |
+| שם         | הקלד                          | תיאור |
+| ---------- | ----------------------------- | ----- |
+| מטא נתונים | MaybeRefOrGetter<SeoMetadata> |       |
 
 ## `src/mp-seo`
 
@@ -524,7 +524,7 @@ function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
 **סוג:** רכיב
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 רכיב `<Seo>` ללא רנדור - עטיפה הצהרתית סביב {@link useSeo}.
@@ -539,14 +539,14 @@ export const MpSeo
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ### SEO
 
 **סוג:** רכיב
 
 ```typescript
-export const MpSeo
+export const MpSeo;
 ```
 
 רכיב `<Seo>` ללא רנדור - עטיפה הצהרתית סביב {@link useSeo}.
@@ -561,7 +561,7 @@ export const MpSeo
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ## `src/types`
 

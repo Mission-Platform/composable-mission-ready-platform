@@ -16,7 +16,7 @@
 **종류:** 상수
 
 ```typescript
-export const ICON_CATALOG: readonly IconCatalogEntry[]
+export const ICON_CATALOG: readonly IconCatalogEntry[];
 ```
 
 기존 아이콘 세트에 대해 검토된 카탈로그입니다.
@@ -26,7 +26,7 @@ export const ICON_CATALOG: readonly IconCatalogEntry[]
 **종류:** 상수
 
 ```typescript
-export const ICON_GAP_REVIEW
+export const ICON_GAP_REVIEW;
 ```
 
 소스 분류가 확립된 후 구현할 고부가가치 추가입니다.
@@ -46,16 +46,16 @@ export interface IconCatalogEntry
 **종류:** 기능
 
 ```typescript
-function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void
+function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void;
 ```
 
 패키지 메타데이터를 생성하는 데 사용되기 전에 정적 카탈로그의 유효성을 검사하십시오.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 카탈로그 | 읽기 전용 IconCatalogEntry[] |  |
+| 이름     | 유형                         | 설명 |
+| -------- | ---------------------------- | ---- |
+| 카탈로그 | 읽기 전용 IconCatalogEntry[] |      |
 
 ## `src/components/communication/messaging/forge-icon-bell/forge-icon-bell`
 
@@ -64,7 +64,7 @@ function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG
 **종류:** 기능
 
 ```typescript
-function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
+function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement;
 ```
 
 `ForgeIconBell` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -75,9 +75,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconBellProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconBellProperties> |      |
 
 ### 아이콘벨속성
 
@@ -96,7 +96,7 @@ export interface IconBellProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
+function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement;
 ```
 
 `ForgeIconChat` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -107,9 +107,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconChatProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconChatProperties> |      |
 
 ### IconChat속성
 
@@ -128,7 +128,7 @@ export interface IconChatProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
+function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement;
 ```
 
 `ForgeIconMail` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -139,9 +139,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconMailProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconMailProperties> |      |
 
 ### 아이콘메일속성
 
@@ -160,7 +160,7 @@ export interface IconMailProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
+function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement;
 ```
 
 `ForgeIconPhone` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -171,9 +171,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconPhoneProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconPhoneProperties> |      |
 
 ### 아이콘전화속성
 
@@ -192,7 +192,7 @@ export interface IconPhoneProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
+function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement;
 ```
 
 `ForgeIconSend` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -203,9 +203,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconSendProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconSendProperties> |      |
 
 ### 아이콘보내기속성
 
@@ -224,7 +224,7 @@ export interface IconSendProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
+function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement;
 ```
 
 `ForgeIconShare` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -235,9 +235,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconShareProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconShareProperties> |      |
 
 ### 아이콘공유속성
 
@@ -256,7 +256,7 @@ export interface IconShareProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
+function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement;
 ```
 
 `ForgeIconCopy` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -267,9 +267,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconCopyProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconCopyProperties> |      |
 
 ### 아이콘복사속성
 
@@ -288,7 +288,7 @@ export interface IconCopyProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
+function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement;
 ```
 
 `ForgeIconEdit` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -299,9 +299,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconEditProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconEditProperties> |      |
 
 ### 아이콘편집속성
 
@@ -320,7 +320,7 @@ export interface IconEditProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
+function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement;
 ```
 
 `ForgeIconEyeOff` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -331,9 +331,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconEyeOffProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconEyeOffProperties> |      |
 
 ### 아이콘눈꺼짐속성
 
@@ -352,7 +352,7 @@ export interface IconEyeOffProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
+function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement;
 ```
 
 `ForgeIconEye` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -363,9 +363,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconEyeProperties> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용<IconEyeProperties> |      |
 
 ### 아이콘눈속성
 
@@ -384,16 +384,16 @@ export interface IconEyeProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement
+function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement;
 ```
 
 가장 최근에 실행 취소된 콘텐츠 편집 내용을 다시 적용합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconRedoProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconRedoProperties> |      |
 
 ### 아이콘다시 실행속성
 
@@ -412,7 +412,7 @@ export interface IconRedoProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
+function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement;
 ```
 
 `ForgeIconTrash` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -423,9 +423,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconTrashProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconTrashProperties> |      |
 
 ### 아이콘휴지통속성
 
@@ -444,16 +444,16 @@ export interface IconTrashProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement
+function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement;
 ```
 
 가장 최근의 콘텐츠 편집 내용을 되돌립니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconUndoProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconUndoProperties> |      |
 
 ### 아이콘실행 취소속성
 
@@ -472,7 +472,7 @@ export interface IconUndoProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement
+function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement;
 ```
 
 `ForgeIconDownload` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -483,9 +483,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconDownloadProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconDownloadProperties> |      |
 
 ### 아이콘다운로드속성
 
@@ -504,7 +504,7 @@ export interface IconDownloadProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
+function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement;
 ```
 
 `ForgeIconUpload` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -515,9 +515,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconUploadProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconUploadProperties> |      |
 
 ### 아이콘업로드속성
 
@@ -536,7 +536,7 @@ export interface IconUploadProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
+function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement;
 ```
 
 `ForgeIconFilter` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -547,9 +547,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconFilterProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconFilterProperties> |      |
 
 ### 아이콘필터속성
 
@@ -568,7 +568,7 @@ export interface IconFilterProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
+function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement;
 ```
 
 `ForgeIconSort` — 중립 JSX에서 한 번 작성된 2개 갈매기형 정렬 표시기
@@ -580,9 +580,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconSortProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconSortProperties> |      |
 
 ### 아이콘정렬속성
 
@@ -611,7 +611,7 @@ export type SortDirection = 'asc' | 'desc' | undefined;
 **종류:** 기능
 
 ```typescript
-function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement
+function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnAdd` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -622,9 +622,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconTableColumnAddProperties> |  |
+| 이름 | 유형                                    | 설명 |
+| ---- | --------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconTableColumnAddProperties> |      |
 
 ### 아이콘테이블열추가속성
 
@@ -643,7 +643,7 @@ export interface IconTableColumnAddProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement
+function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnRemove` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -654,9 +654,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconTableColumnRemoveProperties> |  |
+| 이름 | 유형                                       | 설명 |
+| ---- | ------------------------------------------ | ---- |
+| 속성 | 읽기 전용<IconTableColumnRemoveProperties> |      |
 
 ### 아이콘테이블열제거속성
 
@@ -675,7 +675,7 @@ export interface IconTableColumnRemoveProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement
+function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement;
 ```
 
 `ForgeIconTableRowAdd` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -686,9 +686,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconTableRowAddProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<IconTableRowAddProperties> |      |
 
 ### 아이콘테이블행추가속성
 
@@ -707,7 +707,7 @@ export interface IconTableRowAddProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement
+function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableRowRemove` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -718,9 +718,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconTableRowRemoveProperties> |  |
+| 이름 | 유형                                    | 설명 |
+| ---- | --------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconTableRowRemoveProperties> |      |
 
 ### 아이콘테이블행제거속성
 
@@ -739,7 +739,7 @@ export interface IconTableRowRemoveProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
+function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement;
 ```
 
 `ForgeIconTable` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -750,9 +750,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconTableProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconTableProperties> |      |
 
 ### 아이콘테이블속성
 
@@ -771,7 +771,7 @@ export interface IconTableProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement
+function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement;
 ```
 
 `ForgeIconDrawCircle` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -782,9 +782,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconDrawCircleProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<IconDrawCircleProperties> |      |
 
 ### 아이콘그리기원속성
 
@@ -803,7 +803,7 @@ export interface IconDrawCircleProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement
+function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement;
 ```
 
 `ForgeIconDrawLine` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -814,9 +814,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconDrawLineProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconDrawLineProperties> |      |
 
 ### IconDrawLine속성
 
@@ -835,7 +835,7 @@ export interface IconDrawLineProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement
+function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement;
 ```
 
 `ForgeIconDrawPolygon` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -846,9 +846,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconDrawPolygonProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<IconDrawPolygonProperties> |      |
 
 ### 아이콘그리기다각형속성
 
@@ -867,7 +867,7 @@ export interface IconDrawPolygonProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement
+function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement;
 ```
 
 `ForgeIconDrawSquare` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -878,9 +878,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconDrawSquareProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<IconDrawSquareProperties> |      |
 
 ### 아이콘그리기스퀘어속성
 
@@ -899,7 +899,7 @@ export interface IconDrawSquareProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement
+function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement;
 ```
 
 `ForgeIconDrawTriangle` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -910,9 +910,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconDrawTriangleProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconDrawTriangleProperties> |      |
 
 ### 아이콘그리기삼각형속성
 
@@ -931,7 +931,7 @@ export interface IconDrawTriangleProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
+function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement;
 ```
 
 `ForgeIconMove` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -942,9 +942,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconMoveProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconMoveProperties> |      |
 
 ### 아이콘이동속성
 
@@ -963,7 +963,7 @@ export interface IconMoveProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement
+function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement;
 ```
 
 `ForgeIconPalette` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -974,9 +974,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconPaletteProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<IconPaletteProperties> |      |
 
 ### 아이콘팔레트속성
 
@@ -995,7 +995,7 @@ export interface IconPaletteProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
+function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement;
 ```
 
 `ForgeIconPencil` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1006,9 +1006,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconPencilProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconPencilProperties> |      |
 
 ### 아이콘연필속성
 
@@ -1027,7 +1027,7 @@ export interface IconPencilProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement
+function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCcw` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1038,9 +1038,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconRotateCcwProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<IconRotateCcwProperties> |      |
 
 ### 아이콘회전Ccw속성
 
@@ -1059,7 +1059,7 @@ export interface IconRotateCcwProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement
+function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCw` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1070,9 +1070,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconRotateCwProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconRotateCwProperties> |      |
 
 ### 아이콘회전Cw속성
 
@@ -1091,7 +1091,7 @@ export interface IconRotateCwProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement
+function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement;
 ```
 
 `ForgeIconScaleDown` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1102,9 +1102,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconScaleDownProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<IconScaleDownProperties> |      |
 
 ### 아이콘크기 축소속성
 
@@ -1123,7 +1123,7 @@ export interface IconScaleDownProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement
+function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement;
 ```
 
 `ForgeIconScaleUp` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1134,9 +1134,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconScaleUpProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<IconScaleUpProperties> |      |
 
 ### 아이콘ScaleUp속성
 
@@ -1155,16 +1155,16 @@ export interface IconScaleUpProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement
+function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement;
 ```
 
 데이터 기반 국가 악센트가 있는 지구본 마커입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconCountryGlobeProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconCountryGlobeProperties> |      |
 
 ### 아이콘국가글로브속성
 
@@ -1183,16 +1183,16 @@ export interface IconCountryGlobeProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement
+function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement;
 ```
 
 제한된 데이터 기반 국가 국기 아이콘입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconFlagProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconFlagProperties> |      |
 
 ### 아이콘국가코드
 
@@ -1221,7 +1221,7 @@ export interface IconFlagProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement
+function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement;
 ```
 
 `ForgeIconGeodesic` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1232,9 +1232,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconGeodesicProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconGeodesicProperties> |      |
 
 ### 아이콘측지 속성
 
@@ -1253,7 +1253,7 @@ export interface IconGeodesicProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
+function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement;
 ```
 
 `ForgeIconGlobe` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1264,9 +1264,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconGlobeProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconGlobeProperties> |      |
 
 ### 아이콘글로브속성
 
@@ -1285,7 +1285,7 @@ export interface IconGlobeProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement
+function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement;
 ```
 
 `ForgeIconLanguage` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1296,9 +1296,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconLanguageProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconLanguageProperties> |      |
 
 ### 아이콘언어속성
 
@@ -1317,7 +1317,7 @@ export interface IconLanguageProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
+function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement;
 ```
 
 `ForgeIconMapPin` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1328,9 +1328,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconMapPinProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconMapPinProperties> |      |
 
 ### 아이콘지도핀속성
 
@@ -1349,16 +1349,16 @@ export interface IconMapPinProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement
+function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement;
 ```
 
 표시되는 지리 데이터를 전환하기 위한 지도 레이어 스택 기호입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconLayerProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconLayerProperties> |      |
 
 ### 아이콘레이어속성
 
@@ -1377,16 +1377,16 @@ export interface IconLayerProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement
+function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement;
 ```
 
 밀집된 관심 지점을 표시하는 그룹화된 지도 표시입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconMapMarkerClusterProperties> |  |
+| 이름 | 유형                                      | 설명 |
+| ---- | ----------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconMapMarkerClusterProperties> |      |
 
 ### 아이콘지도마커클러스터속성
 
@@ -1405,7 +1405,7 @@ export interface IconMapMarkerClusterProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
+function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement;
 ```
 
 `ForgeIconCamera` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1416,9 +1416,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconCameraProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconCameraProperties> |      |
 
 ### 아이콘카메라속성
 
@@ -1437,7 +1437,7 @@ export interface IconCameraProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
+function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement;
 ```
 
 `ForgeIconImage` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1448,9 +1448,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconImageProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconImageProperties> |      |
 
 ### 아이콘이미지속성
 
@@ -1469,7 +1469,7 @@ export interface IconImageProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
+function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement;
 ```
 
 `ForgeIconPause` — 중립 JSX에서 한 번 작성된 채워진 일시정지(❙❙) 글리프
@@ -1481,9 +1481,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconPauseProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconPauseProperties> |      |
 
 ### 아이콘일시 중지속성
 
@@ -1502,7 +1502,7 @@ export interface IconPauseProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
+function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement;
 ```
 
 `ForgeIconPlay` — 중립 JSX에서 한 번 작성된 채워진 플레이(▶) 삼각형
@@ -1514,9 +1514,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconPlayProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconPlayProperties> |      |
 
 ### IconPlay속성
 
@@ -1535,7 +1535,7 @@ export interface IconPlayProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
+function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement;
 ```
 
 `ForgeIconArrow` — 중립 JSX 방언으로 한 번 작성된 방향 화살표입니다.
@@ -1546,9 +1546,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconArrowProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconArrowProperties> |      |
 
 ### 아이콘화살방향
 
@@ -1577,7 +1577,7 @@ export interface IconArrowProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement
+function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement;
 ```
 
 `ForgeIconChevron` — 중립 JSX 방언으로 한 번 작성된 방향 쉐브론입니다.
@@ -1588,9 +1588,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconChevronProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<IconChevronProperties> |      |
 
 ### 아이콘쉐브론속성
 
@@ -1619,7 +1619,7 @@ export type IconDirection = 'up' | 'right' | 'down' | 'left';
 **종류:** 기능
 
 ```typescript
-function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement
+function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement;
 ```
 
 `ForgeIconChevrons` —
@@ -1631,9 +1631,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconChevronsProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconChevronsProperties> |      |
 
 ### 아이콘쉐브론방향
 
@@ -1662,7 +1662,7 @@ export interface IconChevronsProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
+function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement;
 ```
 
 `ForgeIconClose` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1673,9 +1673,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconCloseProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconCloseProperties> |      |
 
 ### 아이콘닫기속성
 
@@ -1694,7 +1694,7 @@ export interface IconCloseProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
+function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement;
 ```
 
 `ForgeIconHome` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1705,9 +1705,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconHomeProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconHomeProperties> |      |
 
 ### 아이콘홈속성
 
@@ -1726,7 +1726,7 @@ export interface IconHomeProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
+function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement;
 ```
 
 `ForgeIconJoin` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1737,9 +1737,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconJoinProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconJoinProperties> |      |
 
 ### IconJoin속성
 
@@ -1758,7 +1758,7 @@ export interface IconJoinProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
+function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement;
 ```
 
 `ForgeIconMenu` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1769,9 +1769,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconMenuProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconMenuProperties> |      |
 
 ### 아이콘메뉴속성
 
@@ -1790,7 +1790,7 @@ export interface IconMenuProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
+function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement;
 ```
 
 `ForgeIconMinus` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1801,9 +1801,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconMinusProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconMinusProperties> |      |
 
 ### 아이콘빼기속성
 
@@ -1822,7 +1822,7 @@ export interface IconMinusProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
+function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement;
 ```
 
 `ForgeIconPlus` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1833,9 +1833,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconPlusProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconPlusProperties> |      |
 
 ### IconPlus속성
 
@@ -1854,7 +1854,7 @@ export interface IconPlusProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement
+function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement;
 ```
 
 `ForgeIconRefresh` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1865,9 +1865,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconRefreshProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<IconRefreshProperties> |      |
 
 ### 아이콘새로고침속성
 
@@ -1886,7 +1886,7 @@ export interface IconRefreshProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
+function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement;
 ```
 
 `ForgeIconSplit` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1897,9 +1897,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconSplitProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconSplitProperties> |      |
 
 ### 아이콘분할속성
 
@@ -1918,7 +1918,7 @@ export interface IconSplitProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement
+function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement;
 ```
 
 `ForgeIconExternalLink` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1929,9 +1929,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconExternalLinkProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconExternalLinkProperties> |      |
 
 ### 아이콘외부링크속성
 
@@ -1950,7 +1950,7 @@ export interface IconExternalLinkProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
+function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement;
 ```
 
 `ForgeIconLink` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1961,9 +1961,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconLinkProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconLinkProperties> |      |
 
 ### IconLink속성
 
@@ -1982,7 +1982,7 @@ export interface IconLinkProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
+function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement;
 ```
 
 `ForgeIconSearch` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -1993,9 +1993,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconSearchProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconSearchProperties> |      |
 
 ### 아이콘검색속성
 
@@ -2014,7 +2014,7 @@ export interface IconSearchProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
+function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement;
 ```
 
 `ForgeIconCloud` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2025,9 +2025,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconCloudProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconCloudProperties> |      |
 
 ### IconCloud속성
 
@@ -2046,7 +2046,7 @@ export interface IconCloudProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
+function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement;
 ```
 
 `ForgeIconDebug` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2057,9 +2057,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconDebugProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconDebugProperties> |      |
 
 ### 아이콘디버그속성
 
@@ -2078,7 +2078,7 @@ export interface IconDebugProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
+function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement;
 ```
 
 `ForgeIconHeart` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2089,9 +2089,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconHeartProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconHeartProperties> |      |
 
 ### 아이콘심장속성
 
@@ -2110,7 +2110,7 @@ export interface IconHeartProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement
+function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement;
 ```
 
 `ForgeIconLightning` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2121,9 +2121,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconLightningProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<IconLightningProperties> |      |
 
 ### 아이콘번개속성
 
@@ -2142,7 +2142,7 @@ export interface IconLightningProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
+function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement;
 ```
 
 `ForgeIconPuzzle` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2153,9 +2153,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconPuzzleProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconPuzzleProperties> |      |
 
 ### 아이콘퍼즐속성
 
@@ -2174,7 +2174,7 @@ export interface IconPuzzleProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
+function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement;
 ```
 
 `ForgeIconQrCode` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2185,9 +2185,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconQrCodeProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconQrCodeProperties> |      |
 
 ### IconQrCode속성
 
@@ -2206,7 +2206,7 @@ export interface IconQrCodeProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement
+function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement;
 ```
 
 `ForgeIconSettings` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2217,9 +2217,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconSettingsProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconSettingsProperties> |      |
 
 ### 아이콘설정속성
 
@@ -2238,7 +2238,7 @@ export interface IconSettingsProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
+function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement;
 ```
 
 `ForgeIconStar` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2249,9 +2249,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconStarProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconStarProperties> |      |
 
 ### 아이콘스타속성
 
@@ -2270,7 +2270,7 @@ export interface IconStarProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
+function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement;
 ```
 
 `ForgeIconWrench` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2281,9 +2281,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconWrenchProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconWrenchProperties> |      |
 
 ### 아이콘렌치속성
 
@@ -2302,16 +2302,16 @@ export interface IconWrenchProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement
+function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement;
 ```
 
 뚜렷한 시작 및 목적지 표시가 있는 경로선입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconRouteProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconRouteProperties> |      |
 
 ### 아이콘경로속성
 
@@ -2330,16 +2330,16 @@ export interface IconRouteProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement
+function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement;
 ```
 
 경로 및 지도 오버레이를 위한 재사용 가능한 웨이포인트 마커입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconWaypointProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconWaypointProperties> |      |
 
 ### 아이콘Waypoint속성
 
@@ -2358,7 +2358,7 @@ export interface IconWaypointProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement
+function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement;
 ```
 
 `ForgeIconLockOpen` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2369,9 +2369,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconLockOpenProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconLockOpenProperties> |      |
 
 ### 아이콘잠금열기속성
 
@@ -2390,7 +2390,7 @@ export interface IconLockOpenProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
+function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement;
 ```
 
 `ForgeIconLock` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2401,9 +2401,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconLockProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconLockProperties> |      |
 
 ### 아이콘잠금속성
 
@@ -2422,7 +2422,7 @@ export interface IconLockProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
+function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement;
 ```
 
 `ForgeIconUser` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2433,9 +2433,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconUserProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconUserProperties> |      |
 
 ### 아이콘사용자속성
 
@@ -2454,7 +2454,7 @@ export interface IconUserProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement
+function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement;
 ```
 
 `ForgeIconAlertCritical` — 중요한 경고 문자(팔각형 내부의 "!",
@@ -2466,9 +2466,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconAlertCriticalProperties> |  |
+| 이름 | 유형                                   | 설명 |
+| ---- | -------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconAlertCriticalProperties> |      |
 
 ### IconAlertCritical속성
 
@@ -2487,7 +2487,7 @@ export interface IconAlertCriticalProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement
+function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement;
 ```
 
 `ForgeIconAlertInfo` — 정보 경고 문자(원 안의 "i")
@@ -2499,9 +2499,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconAlertInfoProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<IconAlertInfoProperties> |      |
 
 ### 아이콘경고정보속성
 
@@ -2520,7 +2520,7 @@ export interface IconAlertInfoProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement
+function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement;
 ```
 
 `ForgeIconAlertNeutral` — 중립 경고 문자(원 안의 "-")
@@ -2533,9 +2533,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconAlertNeutralProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconAlertNeutralProperties> |      |
 
 ### 아이콘경고중립속성
 
@@ -2554,7 +2554,7 @@ export interface IconAlertNeutralProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement
+function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement;
 ```
 
 `ForgeIconAlertWarning` — 경고 경고 문자(삼각형 안의 "!")
@@ -2566,9 +2566,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconAlertWarningProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconAlertWarningProperties> |      |
 
 ### 아이콘경고경고속성
 
@@ -2587,7 +2587,7 @@ export interface IconAlertWarningProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
+function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement;
 ```
 
 `ForgeIconAlert` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2598,9 +2598,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconAlertProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconAlertProperties> |      |
 
 ### 아이콘경고속성
 
@@ -2619,7 +2619,7 @@ export interface IconAlertProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
+function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement;
 ```
 
 `ForgeIconCheck` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2630,9 +2630,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconCheckProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconCheckProperties> |      |
 
 ### IconCheck속성
 
@@ -2651,7 +2651,7 @@ export interface IconCheckProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
+function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement;
 ```
 
 `ForgeIconError` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2662,9 +2662,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconErrorProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconErrorProperties> |      |
 
 ### IconError속성
 
@@ -2683,7 +2683,7 @@ export interface IconErrorProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
+function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement;
 ```
 
 `ForgeIconInfo` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2694,9 +2694,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconInfoProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconInfoProperties> |      |
 
 ### 아이콘정보속성
 
@@ -2715,7 +2715,7 @@ export interface IconInfoProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
+function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement;
 ```
 
 `ForgeIconNotice` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2726,9 +2726,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconNoticeProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconNoticeProperties> |      |
 
 ### 아이콘공지사항속성
 
@@ -2747,7 +2747,7 @@ export interface IconNoticeProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement
+function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement;
 ```
 
 `ForgeIconWarning` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2758,9 +2758,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconWarningProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<IconWarningProperties> |      |
 
 ### 아이콘경고속성
 
@@ -2779,7 +2779,7 @@ export interface IconWarningProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement
+function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement;
 ```
 
 `ForgeIconAlignCenter` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2790,9 +2790,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconAlignCenterProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<IconAlignCenterProperties> |      |
 
 ### 아이콘정렬센터속성
 
@@ -2811,7 +2811,7 @@ export interface IconAlignCenterProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement
+function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement;
 ```
 
 `ForgeIconAlignJustify` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2822,9 +2822,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconAlignJustifyProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconAlignJustifyProperties> |      |
 
 ### 아이콘정렬Justify속성
 
@@ -2843,7 +2843,7 @@ export interface IconAlignJustifyProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement
+function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement;
 ```
 
 `ForgeIconAlignLeft` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2854,9 +2854,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconAlignLeftProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<IconAlignLeftProperties> |      |
 
 ### 아이콘정렬왼쪽속성
 
@@ -2875,7 +2875,7 @@ export interface IconAlignLeftProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement
+function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement;
 ```
 
 `ForgeIconAlignRight` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2886,9 +2886,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconAlignRightProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<IconAlignRightProperties> |      |
 
 ### 아이콘정렬오른쪽속성
 
@@ -2907,7 +2907,7 @@ export interface IconAlignRightProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement
+function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement;
 ```
 
 `ForgeIconBlockquote` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2918,9 +2918,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconBlockquoteProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<IconBlockquoteProperties> |      |
 
 ### IconBlockquote속성
 
@@ -2939,7 +2939,7 @@ export interface IconBlockquoteProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
+function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement;
 ```
 
 `ForgeIconBold` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2950,9 +2950,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconBoldProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<IconBoldProperties> |      |
 
 ### IconBold속성
 
@@ -2971,7 +2971,7 @@ export interface IconBoldProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement
+function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement;
 ```
 
 `ForgeIconBulletList` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -2982,9 +2982,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconBulletListProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<IconBulletListProperties> |      |
 
 ### IconBulletList속성
 
@@ -3003,7 +3003,7 @@ export interface IconBulletListProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement
+function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement;
 ```
 
 `ForgeIconCodeBlock` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3014,9 +3014,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconCodeBlockProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<IconCodeBlockProperties> |      |
 
 ### IconCodeBlock속성
 
@@ -3035,7 +3035,7 @@ export interface IconCodeBlockProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement
+function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement;
 ```
 
 `ForgeIconCodeInline` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3046,9 +3046,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconCodeInlineProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<IconCodeInlineProperties> |      |
 
 ### IconCodeInline속성
 
@@ -3067,7 +3067,7 @@ export interface IconCodeInlineProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement
+function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFive` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3078,9 +3078,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconHeadingFiveProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<IconHeadingFiveProperties> |      |
 
 ### 아이콘제목다섯속성
 
@@ -3099,7 +3099,7 @@ export interface IconHeadingFiveProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement
+function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFour` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3110,9 +3110,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconHeadingFourProperties> |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 속성 | 읽기 전용<IconHeadingFourProperties> |      |
 
 ### 아이콘제목4속성
 
@@ -3131,7 +3131,7 @@ export interface IconHeadingFourProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement
+function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement;
 ```
 
 `ForgeIconHeadingOne` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3142,9 +3142,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconHeadingOneProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<IconHeadingOneProperties> |      |
 
 ### 아이콘제목One속성
 
@@ -3163,7 +3163,7 @@ export interface IconHeadingOneProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement
+function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement;
 ```
 
 `ForgeIconHeadingSix` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3174,9 +3174,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconHeadingSixProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<IconHeadingSixProperties> |      |
 
 ### 아이콘제목여섯속성
 
@@ -3195,7 +3195,7 @@ export interface IconHeadingSixProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement
+function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement;
 ```
 
 `ForgeIconHeadingThree` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3206,9 +3206,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconHeadingThreeProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconHeadingThreeProperties> |      |
 
 ### 아이콘제목세가지속성
 
@@ -3227,7 +3227,7 @@ export interface IconHeadingThreeProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement
+function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement;
 ```
 
 `ForgeIconHeadingTwo` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3238,9 +3238,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconHeadingTwoProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<IconHeadingTwoProperties> |      |
 
 ### 아이콘제목두속성
 
@@ -3259,7 +3259,7 @@ export interface IconHeadingTwoProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement
+function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement;
 ```
 
 `ForgeIconHeading` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3270,9 +3270,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconHeadingProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<IconHeadingProperties> |      |
 
 ### 아이콘제목속성
 
@@ -3291,7 +3291,7 @@ export interface IconHeadingProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
+function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement;
 ```
 
 `ForgeIconItalic` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3302,9 +3302,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconItalicProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconItalicProperties> |      |
 
 ### 아이콘기울임꼴속성
 
@@ -3323,7 +3323,7 @@ export interface IconItalicProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement
+function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement;
 ```
 
 `ForgeIconNumberedList` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3334,9 +3334,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconNumberedListProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconNumberedListProperties> |      |
 
 ### 아이콘번호가 매겨진 목록속성
 
@@ -3355,7 +3355,7 @@ export interface IconNumberedListProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement
+function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement;
 ```
 
 `ForgeIconStrikethrough` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3366,9 +3366,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconStrikethroughProperties> |  |
+| 이름 | 유형                                   | 설명 |
+| ---- | -------------------------------------- | ---- |
+| 속성 | 읽기 전용<IconStrikethroughProperties> |      |
 
 ### 아이콘취소선속성
 
@@ -3387,7 +3387,7 @@ export interface IconStrikethroughProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement
+function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement;
 ```
 
 `ForgeIconUnderline` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3398,9 +3398,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconUnderlineProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<IconUnderlineProperties> |      |
 
 ### 아이콘밑줄속성
 
@@ -3419,7 +3419,7 @@ export interface IconUnderlineProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement
+function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement;
 ```
 
 `ForgeIconCalendar` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3430,9 +3430,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconCalendarProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<IconCalendarProperties> |      |
 
 ### 아이콘캘린더속성
 
@@ -3451,7 +3451,7 @@ export interface IconCalendarProperties
 **종류:** 기능
 
 ```typescript
-function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
+function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement;
 ```
 
 `ForgeIconClock` — 중립 JSX 방언으로 한 번 작성된 아이콘입니다.
@@ -3462,9 +3462,9 @@ vite-plugin-forge를 통해 Vue 3 및 React 모두로 깔끔하게 컴파일됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconClockProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<IconClockProperties> |      |
 
 ### 아이콘시계속성
 
@@ -3483,7 +3483,7 @@ export interface IconClockProperties
 **종류:** 상수
 
 ```typescript
-export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
+export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[];
 ```
 
 설명이 제공되지 않았습니다.
@@ -3493,17 +3493,17 @@ export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
 **종류:** 기능
 
 ```typescript
-function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void
+function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 작곡 | 읽기 전용 아이콘SymbolDefinition[] |  |
-| 사용 가능한 ID | 읽기전용Set<string> |  |
+| 이름           | 유형                               | 설명 |
+| -------------- | ---------------------------------- | ---- |
+| 작곡           | 읽기 전용 아이콘SymbolDefinition[] |      |
+| 사용 가능한 ID | 읽기전용Set<string>                |      |
 
 ## `src/sprite/country-flags`
 
@@ -3512,7 +3512,7 @@ function validateCompositions(compositions: readonly IconSymbolDefinition[], ava
 **종류:** 상수
 
 ```typescript
-export const SUPPORTED_COUNTRY_CODES
+export const SUPPORTED_COUNTRY_CODES;
 ```
 
 게시된 스프라이트에 표준 플래그 기호가 있는 국가 코드입니다.
@@ -3524,7 +3524,7 @@ export const SUPPORTED_COUNTRY_CODES
 **종류:** 상수
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS
+export const COUNTRY_FLAG_SYMBOL_IDS;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3534,7 +3534,7 @@ export const COUNTRY_FLAG_SYMBOL_IDS
 **종류:** 상수
 
 ```typescript
-export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
+export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[];
 ```
 
 설명이 제공되지 않았습니다.
@@ -3546,16 +3546,16 @@ export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
 **종류:** 기능
 
 ```typescript
-function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement
+function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement;
 ```
 
 표준 스프라이트 기하학을 참조하는 공유 액세스 가능한 래퍼입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconUseProperties> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용<IconUseProperties> |      |
 
 ### 아이콘사용속성
 
@@ -3574,7 +3574,7 @@ export interface IconUseProperties
 **종류:** 상수
 
 ```typescript
-export const IconSpriteContext
+export const IconSpriteContext;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3584,32 +3584,32 @@ export const IconSpriteContext
 **종류:** 기능
 
 ```typescript
-function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement
+function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement;
 ```
 
 아이콘 구성 요소의 하위 트리에 대해 하나의 인라인 스프라이트 호스트를 마운트합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<IconSpriteProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<IconSpriteProperties> |      |
 
 ### useIconHref
 
 **종류:** 기능
 
 ```typescript
-function useIconHref(symbolId: string): string
+function useIconHref(symbolId: string): string;
 ```
 
 아이콘 래퍼에 대한 로컬 또는 외부 기호 URL을 확인합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기호 ID | 문자열 |  |
+| 이름    | 유형   | 설명 |
+| ------- | ------ | ---- |
+| 기호 ID | 문자열 |      |
 
 ## `src/sprite/serialize`
 
@@ -3618,48 +3618,48 @@ function useIconHref(symbolId: string): string
 **종류:** 기능
 
 ```typescript
-function serializeNode(node: IconSvgNode): string
+function serializeNode(node: IconSvgNode): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | IconSvgNode |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| node | IconSvgNode |      |
 
 ### 직렬화Sprite
 
 **종류:** 기능
 
 ```typescript
-function serializeSprite(definitions: readonly IconSymbolDefinition[]): string
+function serializeSprite(definitions: readonly IconSymbolDefinition[]): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 정의 | 읽기 전용 아이콘SymbolDefinition[] |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 정의 | 읽기 전용 아이콘SymbolDefinition[] |      |
 
 ### 직렬화기호
 
 **종류:** 기능
 
 ```typescript
-function serializeSymbol(definition: IconSymbolDefinition): string
+function serializeSymbol(definition: IconSymbolDefinition): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 정의 | 아이콘심볼정의 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 정의 | 아이콘심볼정의 |      |
 
 ## `src/sprite/types`
 

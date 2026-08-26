@@ -17,11 +17,11 @@ Vite 中的 `resolve.conditions`（请参阅 `defineFrameworkAppConfig` / `frame
 `@mission-platform/vite-config`）和 TypeScript 中的 `customConditions`（通过
 `@mission-platform/typescript-config/framework-<name>` 预设）。每个进口都保持裸露。
 
-|活跃状态 |决定|主要出口产品|
-| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
-| _（无）_ |框架中立核心 | `createForgeI18N`、`forgeNamespace`、`localeNamespaces`、`mergeLocales` |
-| `mp:vue` | Vue 3 适配器 |中性核心加`createForgeI18NVue`、`useI18n` |
-| `mp:react` | React 适配器 |中性核心加`ForgeI18NProvider`、`useI18n` |
+| 活跃状态   | 决定         | 主要出口产品                                                            |
+| :--------- | :----------- | :---------------------------------------------------------------------- |
+| _（无）_   | 框架中立核心 | `createForgeI18N`、`forgeNamespace`、`localeNamespaces`、`mergeLocales` |
+| `mp:vue`   | Vue 3 适配器 | 中性核心加`createForgeI18NVue`、`useI18n`                               |
+| `mp:react` | React 适配器 | 中性核心加`ForgeI18NProvider`、`useI18n`                                |
 
 ## 核心概念
 

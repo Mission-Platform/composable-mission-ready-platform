@@ -16,23 +16,23 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/email-c
 **Soort:** functie
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 Bevestig de conservatieve uitvoersubset die is gedocumenteerd voor e-mailcomponenten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| html | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| html | tekenreeks |              |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **Soort:** constant
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 Geen beschrijving opgegeven.
@@ -42,7 +42,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 Geen beschrijving opgegeven.
@@ -52,7 +52,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 Geen beschrijving opgegeven.
@@ -62,7 +62,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 Geen beschrijving opgegeven.
@@ -72,7 +72,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 Geen beschrijving opgegeven.
@@ -82,7 +82,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 Geen beschrijving opgegeven.
@@ -92,7 +92,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 Geen beschrijving opgegeven.
@@ -104,16 +104,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailButtonProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailButtonProperties> |              |
 
 ### EmailButton-eigenschappen
 
@@ -130,7 +130,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 Geen beschrijving opgegeven.
@@ -142,16 +143,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailDividerProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<EmailDividerProperties> |              |
 
 ### E-mailDividerProperties
 
@@ -170,16 +171,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailImageProperties> |  |
+| Naam          | Typ                                | Beschrijving |
+| ------------- | ---------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailImageProperties> |              |
 
 ### E-mailAfbeeldingseigenschappen
 
@@ -198,16 +199,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailSpacerProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailSpacerProperties> |              |
 
 ### E-mailSpacerProperties
 
@@ -226,7 +227,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 Het enkele e-mailtekstatoom, dat de `ForgeTypography`-vocabulaire weerspiegelt: body
@@ -235,9 +236,9 @@ letterlijke inline-declaraties, omdat e-mailclients CSS-klassen negeren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailTypographyProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailTypographyProperties> |              |
 
 ### E-mailTypografieEigenschappen
 
@@ -266,16 +267,16 @@ De elementen waarop de schaal van het e-mailtype kan worden weergegeven.
 **Soort:** functie
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailCardProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailCardProperties> |              |
 
 ### E-mailkaarteigenschappen
 
@@ -294,16 +295,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailColumnProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailColumnProperties> |              |
 
 ### E-mailkolomeigenschappen
 
@@ -322,16 +323,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailListProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailListProperties> |              |
 
 ### E-mailLijstItem
 
@@ -360,16 +361,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailRowProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailRowProperties> |              |
 
 ### E-mailRijEigenschappen
 
@@ -398,16 +399,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailSocialLinksProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailSocialLinksProperties> |              |
 
 ### E-mailSocialLinksEigenschappen
 
@@ -426,16 +427,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailFooterProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailFooterProperties> |              |
 
 ### E-mailvoetteksteigenschappen
 
@@ -454,16 +455,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailHeaderProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailHeaderProperties> |              |
 
 ### E-mailHeadereigenschappen
 
@@ -482,16 +483,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailPreheaderProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailPreheaderProperties> |              |
 
 ### E-mailPreheaderEigenschappen
 
@@ -510,16 +511,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailContainerProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailContainerProperties> |              |
 
 ### E-mailContainerProperties
 
@@ -538,16 +539,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailDocumentProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<EmailDocumentProperties> |              |
 
 ### E-mailDocumenteigenschappen
 
@@ -566,16 +567,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<EmailSectionProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<EmailSectionProperties> |              |
 
 ### E-mailSectionProperties
 

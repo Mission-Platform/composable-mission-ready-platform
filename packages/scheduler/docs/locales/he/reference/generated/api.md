@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement
+function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 ```
 
 `ForgeScheduler` - לוח שנה/לוח זמנים מלא שנכתב פעם אחת ב-JSX הנייטרלי
@@ -41,9 +41,9 @@ function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<SchedulerProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<SchedulerProperties> |       |
 
 ### מאפייני מתזמן
 
@@ -72,7 +72,7 @@ export type SchedulerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent
+function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent;
 ```
 
 החל תיקון לאירוע, חבטת `lastModified` ו-`sequence` (התקן
@@ -80,17 +80,17 @@ function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VE
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירוע | VEvent |  |
-| תיקון | חלקי<Omit<VEvent, 'uid'>> |  |
+| שם    | הקלד                      | תיאור |
+| ----- | ------------------------- | ----- |
+| אירוע | VEvent                    |       |
+| תיקון | חלקי<Omit<VEvent, 'uid'>> |       |
 
 ### ליצור אירוע
 
 פונקציה **סוג:**
 
 ```typescript
-function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
+function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent;
 ```
 
 בנה {@link VEvent} חדש לגמרי מחלקי (ללא `uid`/`dtstamp`),
@@ -98,70 +98,70 @@ function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חלקי | השמט<VEvent, 'uid' \| 'dtstamp'> |  |
+| שם   | הקלד                             | תיאור |
+| ---- | -------------------------------- | ----- |
+| חלקי | השמט<VEvent, 'uid' \| 'dtstamp'> |       |
 
 ### eventsForDay
 
 פונקציה **סוג:**
 
 ```typescript
-function eventsForDay(events: VEvent[], day: Date): VEvent[]
+function eventsForDay(events: VEvent[], day: Date): VEvent[];
 ```
 
 מחזיר אירועים שחל ביום הקלנדרי הנתון.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירועים | VEvent[] |  |
-| יום | תאריך |  |
+| שם      | הקלד     | תיאור |
+| ------- | -------- | ----- |
+| אירועים | VEvent[] |       |
+| יום     | תאריך    |       |
 
 ### eventsForRange
 
 פונקציה **סוג:**
 
 ```typescript
-function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[]
+function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 ```
 
 מחזיר אירועים (כולל התרחשויות חוזרות) החופפים לנתון
-טווח תאריכים [התחלה, סוף).  אירועים עם `status === 'CANCELLED'` אינם נכללים.
+טווח תאריכים [התחלה, סוף). אירועים עם `status === 'CANCELLED'` אינם נכללים.
 אירועים חוזרים מורחבים באמצעות RRULE / RDATE שלהם; אי הכללות EXDATE הן
 מכובד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירועים | VEvent[] |  |
-| להתחיל | תאריך |  |
-| סוף | תאריך |  |
+| שם      | הקלד     | תיאור |
+| ------- | -------- | ----- |
+| אירועים | VEvent[] |       |
+| להתחיל  | תאריך    |       |
+| סוף     | תאריך    |       |
 
 ### פורמטDuration
 
 פונקציה **סוג:**
 
 ```typescript
-function formatDuration(event: VEvent): string
+function formatDuration(event: VEvent): string;
 ```
 
 מחזירה מחרוזת משך הניתנת לקריאה על ידי אדם עבור אירוע, למשל. "שעה 30 מ'".
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירוע | VEvent |  |
+| שם    | הקלד   | תיאור |
+| ----- | ------ | ----- |
+| אירוע | VEvent |       |
 
 ### יום layout
 
 פונקציה **סוג:**
 
 ```typescript
-function layoutDay(events: VEvent[]): SchedulerEventSlot[]
+function layoutDay(events: VEvent[]): SchedulerEventSlot[];
 ```
 
 פרק אירועים ליום אחד באמצעות התנגשות פשוטה מבוססת עמודים
@@ -170,16 +170,16 @@ function layoutDay(events: VEvent[]): SchedulerEventSlot[]
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירועים | VEvent[] |  |
+| שם      | הקלד     | תיאור |
+| ------- | -------- | ----- |
+| אירועים | VEvent[] |       |
 
 ### moveEventPatch
 
 פונקציה **סוג:**
 
 ```typescript
-function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>
+function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>;
 ```
 
 התיקון `{ dtstart, dtend }` שמזיז אירוע ב-`deltaMs` אלפיות השנייה,
@@ -187,17 +187,17 @@ function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירוע | VEvent |  |
-| deltaMs | מספר |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| אירוע   | VEvent |       |
+| deltaMs | מספר   |       |
 
 ### resizeEventPatch
 
 פונקציה **סוג:**
 
 ```typescript
-function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
+function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>;
 ```
 
 התיקון `{ dtend }` שמשנה גודל של סוף אירוע על ידי `deltaMs`, מהודק כך
@@ -205,10 +205,10 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירוע | VEvent |  |
-| deltaMs | מספר |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| אירוע   | VEvent |       |
+| deltaMs | מספר   |       |
 
 ## `src/core/range`
 
@@ -217,7 +217,7 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 פונקציה **סוג:**
 
 ```typescript
-function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
+function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 ```
 
 צעד את `anchor` לפי `direction` (-1 = הקודם, +1 = הבא).
@@ -225,18 +225,18 @@ function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| צפה | תזמון צפייה |  |
-| עוגן | תאריך |  |
-| כיוון | -1 \| 1 |  |
+| שם    | הקלד        | תיאור |
+| ----- | ----------- | ----- |
+| צפה   | תזמון צפייה |       |
+| עוגן  | תאריך       |       |
+| כיוון | -1 \| 1     |       |
 
 ### visibleRangeFor
 
 פונקציה **סוג:**
 
 ```typescript
-function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange
+function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange;
 ```
 
 חלון `[start, end)` הפתוח למחצה גלוי עבור ה-`view` הנתון המעוגן ב-
@@ -244,11 +244,11 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| צפה | תזמון צפייה |  |
-| עוגן | תאריך |  |
-| weekStartsOn | תחילת שבוע |  |
+| שם           | הקלד        | תיאור |
+| ------------ | ----------- | ----- |
+| צפה          | תזמון צפייה |       |
+| עוגן         | תאריך       |       |
+| weekStartsOn | תחילת שבוע  |       |
 
 ## `src/core/recurrence`
 
@@ -257,11 +257,11 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 פונקציה **סוג:**
 
 ```typescript
-function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[]
+function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[];
 ```
 
 הרחב VEvent יחיד עם RRULE לכל ההתרחשויות החופפות
-עם [rangeStart, rangeEnd).  מחזירה שיבוטים וירטואליים של VEvent - אחד לכל
+עם [rangeStart, rangeEnd). מחזירה שיבוטים וירטואליים של VEvent - אחד לכל
 מופע - עם dtstart / dtend מותאם.
 
 מטפל גם ב-RDATE (תאריכים נוספים) וב-EXDATE (תאריכים שלא נכללו).
@@ -271,11 +271,11 @@ function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEv
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אירוע | VEvent |  |
-| טווח התחל | תאריך |  |
-| rangeEnd | תאריך |  |
+| שם        | הקלד   | תיאור |
+| --------- | ------ | ----- |
+| אירוע     | VEvent |       |
+| טווח התחל | תאריך  |       |
+| rangeEnd  | תאריך  |       |
 
 ## `src/core/types`
 

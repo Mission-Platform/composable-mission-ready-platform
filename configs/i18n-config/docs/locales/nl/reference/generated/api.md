@@ -16,24 +16,24 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/i18n-co
 **Soort:** functie
 
 ```typescript
-function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig
+function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| standaardNS | tekenreeks |  |
-| opties | I18nConfigOptions |  |
+| Naam        | Typ               | Beschrijving |
+| ----------- | ----------------- | ------------ |
+| standaardNS | tekenreeks        |              |
+| opties      | I18nConfigOptions |              |
 
 ### DEFAULT_LOCALE
 
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_LOCALE
+export const DEFAULT_LOCALE;
 ```
 
 Geen beschrijving opgegeven.
@@ -63,7 +63,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const SUPPORTED_LOCALES
+export const SUPPORTED_LOCALES;
 ```
 
 Geen beschrijving opgegeven.

@@ -75,7 +75,7 @@ export type ContainerVariant = 'fixed' | 'fluid' | 'responsive';
 **種類:** 関数
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer` — 制約と中央揃えを行うページ/セクション レイアウト プリミティブ
@@ -95,9 +95,9 @@ CSS モジュール内 (プラットフォーム ブレークポイントをメ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ContainerProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<ContainerProperties> |      |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ export interface ApplicationLayoutProperties
 **種類:** 関数
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout` — で一度作成されたトップレベルのアプリケーション シェル
@@ -140,9 +140,9 @@ CSS）。ハッシュされたモジュール クラス名は、フレームワ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ApplicationLayoutProperties> |  |
+| 名前       | タイプ                                    | 説明 |
+| ---------- | ----------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ApplicationLayoutProperties> |      |
 
 ### サイドバーブレークポイント
 
@@ -191,7 +191,7 @@ export type BentoLayoutRegion = 'hero' | 'feature' | 'supporting';
 **種類:** 関数
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout` は、`hero`、`feature`、および `supporting` という名前のスロットを公開します。
@@ -200,9 +200,9 @@ function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElemen
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<BentoLayoutProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<BentoLayoutProperties> |      |
 
 ### パターンレイアウトブレークポイント
 
@@ -241,7 +241,7 @@ export type PatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **種類:** 関数
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout` は、`header`、`intro`、`primary`、`secondary`、および
@@ -250,9 +250,9 @@ function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): Mp
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<FPatternLayoutProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<FPatternLayoutProperties> |      |
 
 ### FPatternLayoutブレークポイント
 
@@ -311,7 +311,7 @@ export type FPatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside'
 **種類:** 関数
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout` は、指定された `cell1` … `cell12` という名前のスロットをレンダリングします。
@@ -320,9 +320,9 @@ function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<GridLayoutProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<GridLayoutProperties> |      |
 
 ### グリッドレイアウトブレークポイント
 
@@ -339,7 +339,19 @@ export type GridLayoutBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 **種類：**タイプ
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 順序付けされた名前付きセル スロット (`cell1` ～ `cell12`) がサポートされました。
@@ -381,7 +393,7 @@ export type GridLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **種類:** 関数
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout` — 応答性の高い 3 列のシェル。
@@ -410,9 +422,9 @@ Vue SFC、ニュートラル方言はスコープ付きのデフォルト スロ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<VerticalLayoutProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<VerticalLayoutProperties> |      |
 
 ### 垂直レイアウトブレークポイント
 
@@ -451,7 +463,7 @@ export type VerticalLayoutSize = DrawerSize;
 **種類:** 関数
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` は、`topStart`、`topEnd`、`middle`、`bottomStart`、を公開します。
@@ -460,9 +472,9 @@ function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): Mp
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ZPatternLayoutProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ZPatternLayoutProperties> |      |
 
 ### ZPatternLayoutブレークポイント
 

@@ -26,17 +26,20 @@ export interface ForgeGenerationOptions
 **النوع:** الوظيفة
 
 ```typescript
-function generateForgeExportBundle(document: ForgeDesignDocument, options: ForgeGenerationOptions = {}): ForgeExportBundle
+function generateForgeExportBundle(
+  document: ForgeDesignDocument,
+  options: ForgeGenerationOptions = {},
+): ForgeExportBundle;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| وثيقة | فورج ديزاين دوكومنت |  |
-| خيارات | خيارات فورججينيراتيون |  |
+| الاسم  | اكتب                  | الوصف |
+| ------ | --------------------- | ----- |
+| وثيقة  | فورج ديزاين دوكومنت   |       |
+| خيارات | خيارات فورججينيراتيون |       |
 
 ## `src/model/design`
 
@@ -45,7 +48,7 @@ function generateForgeExportBundle(document: ForgeDesignDocument, options: Forge
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_DESIGN_SCHEMA_VERSION
+export const FORGE_DESIGN_SCHEMA_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -145,7 +148,20 @@ export interface ForgeDesignNode
 **النوع:** النوع
 
 ```typescript
-export type ForgeDesignNodeType = | 'frame' | 'group' | 'component' | 'instance' | 'text' | 'rectangle' | 'ellipse' | 'line' | 'vector' | 'boolean-operation' | 'image' | 'section' | 'unknown';
+export type ForgeDesignNodeType =
+  | 'frame'
+  | 'group'
+  | 'component'
+  | 'instance'
+  | 'text'
+  | 'rectangle'
+  | 'ellipse'
+  | 'line'
+  | 'vector'
+  | 'boolean-operation'
+  | 'image'
+  | 'section'
+  | 'unknown';
 ```
 
 لم يتم تقديم أي وصف.
@@ -267,16 +283,18 @@ export interface ForgeTextContent
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeDiagnostic(diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>): ForgeDiagnostic
+function createForgeDiagnostic(
+  diagnostic: Omit<ForgeDiagnostic, 'code'> & Pick<ForgeDiagnostic, 'code'>,
+): ForgeDiagnostic;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | حذف<ForgeDiagnostic, 'code'> واختيار<ForgeDiagnostic, 'code'> |  |
+| الاسم   | اكتب                                                          | الوصف |
+| ------- | ------------------------------------------------------------- | ----- |
+| التشخيص | حذف<ForgeDiagnostic, 'code'> واختيار<ForgeDiagnostic, 'code'> |       |
 
 ### فورجي دياجنوستيك
 
@@ -431,24 +449,24 @@ export interface ForgeSlotDefinition
 **النوع:** الوظيفة
 
 ```typescript
-function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined
+function findForgeComponent(name: string, metadata?: ForgeComponentMetadata): ForgeComponentRegistryEntry | undefined;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم | سلسلة |  |
-| البيانات الوصفية | فورجكومبونينتميتاداتا |  |
+| الاسم            | اكتب                  | الوصف |
+| ---------------- | --------------------- | ----- |
+| الاسم            | سلسلة                 |       |
+| البيانات الوصفية | فورجكومبونينتميتاداتا |       |
 
 ### FORGE_COMPONENT_REGISTRY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
+export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[];
 ```
 
 لم يتم تقديم أي وصف.
@@ -458,16 +476,16 @@ export const FORGE_COMPONENT_REGISTRY: readonly ForgeComponentRegistryEntry[]
 **النوع:** الوظيفة
 
 ```typescript
-function getForgeComponent(name: string): ForgeComponentRegistryEntry
+function getForgeComponent(name: string): ForgeComponentRegistryEntry;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| الاسم | سلسلة |       |
 
 ## `src/tokens/resolve`
 
@@ -476,16 +494,16 @@ function getForgeComponent(name: string): ForgeComponentRegistryEntry
 **النوع:** الوظيفة
 
 ```typescript
-function componentPathToCssVariable(path: string): string | undefined
+function componentPathToCssVariable(path: string): string | undefined;
 ```
 
 قم بتحويل مسار مكون أساسي إلى اسم متغير Mission Platform CSS الذي تم إنشاؤه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المسار | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المسار | سلسلة |       |
 
 ### FigmaVariableBinding
 
@@ -512,7 +530,7 @@ export interface ForgeTokenResolution
 **النوع:** ثابت
 
 ```typescript
-export const MISSION_PLATFORM_COMPONENT_COLLECTION
+export const MISSION_PLATFORM_COMPONENT_COLLECTION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -522,32 +540,32 @@ export const MISSION_PLATFORM_COMPONENT_COLLECTION
 **النوع:** الوظيفة
 
 ```typescript
-function normalizeComponentTokenPath(value: string): string | undefined
+function normalizeComponentTokenPath(value: string): string | undefined;
 ```
 
 قم بتطبيع اسم متغير Figma أو الاسم المستعار للمسار `component.*` المتعارف عليه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### ResolveFigmaVariable
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution
+function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResolution;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملزمة | فيجماVariableBinding |  |
+| الاسم | اكتب                 | الوصف |
+| ----- | -------------------- | ----- |
+| ملزمة | فيجماVariableBinding |       |
 
 ## `src/validation/document`
 
@@ -556,16 +574,16 @@ function resolveFigmaVariable(binding: FigmaVariableBinding): ForgeTokenResoluti
 **النوع:** الوظيفة
 
 ```typescript
-function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[]
+function validateForgeDesignDocument(document: ForgeDesignDocument): readonly ForgeDiagnostic[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| وثيقة | فورج ديزاين دوكومنت |  |
+| الاسم | اكتب                | الوصف |
+| ----- | ------------------- | ----- |
+| وثيقة | فورج ديزاين دوكومنت |       |
 
 ### validateForgeExportBundle
 
@@ -574,16 +592,16 @@ function validateForgeDesignDocument(document: ForgeDesignDocument): readonly Fo
 ```typescript
 function validateForgeExportBundle(bundle: {
   readonly files: readonly { readonly path: string }[];
-}): readonly ForgeDiagnostic[]
+}): readonly ForgeDiagnostic[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حزمة | { ملفات للقراءة فقط: للقراءة فقط { مسار للقراءة فقط: سلسلة ]؛ } |  |
+| الاسم | اكتب                                                            | الوصف |
+| ----- | --------------------------------------------------------------- | ----- |
+| حزمة  | { ملفات للقراءة فقط: للقراءة فقط { مسار للقراءة فقط: سلسلة ]؛ } |       |
 
 ## `src/validation/names`
 
@@ -592,34 +610,34 @@ function validateForgeExportBundle(bundle: {
 **النوع:** الوظيفة
 
 ```typescript
-function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string
+function normalizeComponentName(value: string, fallback = 'GeneratedComponent'): string;
 ```
 
 قم بإنشاء معرف PascalCase ثابت من طبقة Figma أو اسم الإطار.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
-| احتياطي |  |  |
+| الاسم   | اكتب  | الوصف |
+| ------- | ----- | ----- |
+| القيمة  | سلسلة |       |
+| احتياطي |       |       |
 
 ### تطبيعاسم الملف
 
 **النوع:** الوظيفة
 
 ```typescript
-function normalizeFileName(value: string, fallback = 'generated-component'): string
+function normalizeFileName(value: string, fallback = 'generated-component'): string;
 ```
 
 قم بإنشاء ملف حالة كباب آمن ينبع من طبقة Figma أو اسم الإطار.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
-| احتياطي |  |  |
+| الاسم   | اكتب  | الوصف |
+| ------- | ----- | ----- |
+| القيمة  | سلسلة |       |
+| احتياطي |       |       |
 
 ## `src/validation/paths`
 
@@ -638,14 +656,17 @@ export interface ForgePathValidationResult
 **النوع:** الوظيفة
 
 ```typescript
-function validateRepositoryRelativePath(value: string, allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg']): ForgePathValidationResult
+function validateRepositoryRelativePath(
+  value: string,
+  allowedExtensions: readonly string[] = ['.tsx', '.scss', '.png', '.jpg', '.jpeg', '.webp', '.svg'],
+): ForgePathValidationResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
-| الامتدادات المسموح بها | سلسلة للقراءة فقط[] |  |
+| الاسم                  | اكتب                | الوصف |
+| ---------------------- | ------------------- | ----- |
+| القيمة                 | سلسلة               |       |
+| الامتدادات المسموح بها | سلسلة للقراءة فقط[] |       |

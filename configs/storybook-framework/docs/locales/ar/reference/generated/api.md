@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig
+function createStorybookConfig(options: CreateStorybookConfigOptions): StorybookConfig;
 ```
 
 أنشئ {@link StorybookConfig} موحدًا لإطار العمل النشط. واحد
@@ -25,9 +25,9 @@ function createStorybookConfig(options: CreateStorybookConfigOptions): Storybook
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | إنشاء StorybookConfigOptions |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| خيارات | إنشاء StorybookConfigOptions |       |
 
 ### إنشاء StorybookConfigOptions
 
@@ -44,7 +44,7 @@ export interface CreateStorybookConfigOptions
 **النوع:** الوظيفة
 
 ```typescript
-function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework
+function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFramework;
 ```
 
 حل الإطار النشط من الخيار الصريح أو
@@ -53,9 +53,9 @@ function resolveStorybookFramework(explicit?: StorybookFramework): StorybookFram
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| صريح | إطار عمل القصص المصورة |  |
+| الاسم | اكتب                   | الوصف |
+| ----- | ---------------------- | ----- |
+| صريح  | إطار عمل القصص المصورة |       |
 
 ### StorybookFramework
 
@@ -72,7 +72,7 @@ export type StorybookFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-com
 **النوع:** الوظيفة
 
 ```typescript
-function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[]
+function storyGlobs(_framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[];
 ```
 
 أنشئ مجموعة قصصية محايدة مشتركة للحزم المطلوبة.
@@ -81,11 +81,11 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| _الإطار | إطار عمل القصص المصورة |  |
-| حزم | سلسلة للقراءة فقط[] |  |
-| حزم الجذر | سلسلة |  |
+| الاسم     | اكتب                   | الوصف |
+| --------- | ---------------------- | ----- |
+| _الإطار   | إطار عمل القصص المصورة |       |
+| حزم       | سلسلة للقراءة فقط[]    |       |
+| حزم الجذر | سلسلة                  |       |
 
 ## `src/preview`
 
@@ -94,7 +94,7 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 **النوع:** الوظيفة
 
 ```typescript
-function sharedPreviewDecorators()
+function sharedPreviewDecorators();
 ```
 
 مصممو ديكورات القصص المصورة المشتركة لجميع الأطر.
@@ -104,7 +104,7 @@ function sharedPreviewDecorators()
 **النوع:** ثابت
 
 ```typescript
-export const sharedPreviewParameters
+export const sharedPreviewParameters;
 ```
 
 معلمات القصص المصورة المشتركة لجميع الأطر.
@@ -114,7 +114,7 @@ export const sharedPreviewParameters
 **النوع:** الوظيفة
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework)
+function sharedPreviewParametersFor(framework?: PreviewFramework);
 ```
 
 معلمات القصص المصورة المدركة للإطار.
@@ -131,9 +131,9 @@ function sharedPreviewParametersFor(framework?: PreviewFramework)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإطار | إطار المعاينة |  |
+| الاسم  | اكتب          | الوصف |
+| ------ | ------------- | ----- |
+| الإطار | إطار المعاينة |       |
 
 ## `src/slots.dom`
 
@@ -142,7 +142,7 @@ function sharedPreviewParametersFor(framework?: PreviewFramework)
 **النوع:** الوظيفة
 
 ```typescript
-function customElementTag(component: unknown): string
+function customElementTag(component: unknown): string;
 ```
 
 اشتق اسم العلامة المسجلة لمكون ويب forge من عنصره
@@ -152,9 +152,9 @@ function customElementTag(component: unknown): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | غير معروف |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| المكون | غير معروف |       |
 
 ## `src/slots.neutral`
 
@@ -163,7 +163,7 @@ function customElementTag(component: unknown): string
 **النوع:** ثابت
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 مصنع شظايا العنصر النائب؛ لم يتم استدعاؤه مطلقًا (راجع {@link node}).
@@ -173,7 +173,7 @@ export const Fragment
 **النوع:** ثابت
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 لم يتم تقديم أي وصف.
@@ -187,7 +187,7 @@ export const node: StoryNodeFactory
 **النوع:** ثابت
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 لم يتم تقديم أي وصف.
@@ -203,7 +203,7 @@ export const renderWithSlots: RenderWithSlots
 **النوع:** ثابت
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 لم يتم تقديم أي وصف.
@@ -217,7 +217,7 @@ export const node: StoryNodeFactory
 **النوع:** ثابت
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 لم يتم تقديم أي وصف.
@@ -233,7 +233,7 @@ export const renderWithSlots: RenderWithSlots
 **النوع:** ثابت
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 Solid لا يحتوي على مكون جزء: مجموعة الأطفال عبارة عن جزء.
@@ -243,7 +243,7 @@ Solid لا يحتوي على مكون جزء: مجموعة الأطفال عبا
 **النوع:** ثابت
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 لم يتم تقديم أي وصف.
@@ -257,7 +257,7 @@ export const node: StoryNodeFactory
 **النوع:** ثابت
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 لم يتم تقديم أي وصف.
@@ -273,7 +273,7 @@ export const renderWithSlots: RenderWithSlots
 **النوع:** ثابت
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 مكون التحديد لأجزاء JSX - يتم تركيب أبنائها مباشرة في الأصل.
@@ -283,7 +283,7 @@ export const Fragment
 **النوع:** ثابت
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 لم يتم تقديم أي وصف.
@@ -297,7 +297,7 @@ export const node: StoryNodeFactory
 **النوع:** ثابت
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 لم يتم تقديم أي وصف.
@@ -313,7 +313,12 @@ export const renderWithSlots: RenderWithSlots
 **النوع:** النوع
 
 ```typescript
-export type RenderWithSlots = ( component: unknown, properties: Record<string, unknown>, slots: StorySlots, children?: unknown, ) => unknown;
+export type RenderWithSlots = (
+  component: unknown,
+  properties: Record<string, unknown>,
+  slots: StorySlots,
+  children?: unknown,
+) => unknown;
 ```
 
 يجعل `component` مع `properties`، المعطى المسمى `slots` واختياري
@@ -325,7 +330,11 @@ export type RenderWithSlots = ( component: unknown, properties: Record<string, u
 **النوع:** النوع
 
 ```typescript
-export type StoryNodeFactory = ( type: unknown, properties?: Record<string, unknown> | null, ...children: unknown[] ) => unknown;
+export type StoryNodeFactory = (
+  type: unknown,
+  properties?: Record<string, unknown> | null,
+  ...children: unknown[]
+) => unknown;
 ```
 
 أنشئ عنصرًا واحدًا للعارض النشط. يعمل أيضًا بمثابة JSX الكلاسيكي
@@ -349,7 +358,7 @@ export type StorySlots = Record<string, unknown>;
 **النوع:** ثابت
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 لم يتم تقديم أي وصف.
@@ -363,7 +372,7 @@ export const node: StoryNodeFactory
 **النوع:** ثابت
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 لم يتم تقديم أي وصف.
@@ -379,7 +388,7 @@ export const renderWithSlots: RenderWithSlots
 **النوع:** ثابت
 
 ```typescript
-export const Fragment
+export const Fragment;
 ```
 
 مكون العلامة لأجزاء JSX - يتم تقديمه على هيئة ملف `DocumentFragment`.
@@ -389,7 +398,7 @@ export const Fragment
 **النوع:** ثابت
 
 ```typescript
-export const node: StoryNodeFactory
+export const node: StoryNodeFactory;
 ```
 
 لم يتم تقديم أي وصف.
@@ -403,7 +412,7 @@ export const node: StoryNodeFactory
 **النوع:** ثابت
 
 ```typescript
-export const renderWithSlots: RenderWithSlots
+export const renderWithSlots: RenderWithSlots;
 ```
 
 لم يتم تقديم أي وصف.
@@ -431,7 +440,10 @@ export type Meta<TComponentOrArguments = Args> = ComponentAnnotations<Renderer, 
 **النوع:** النوع
 
 ```typescript
-export type StoryObj<TMetaOrComponentOrArgs = Args> = TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments> ? StoryAnnotations<Renderer, TArguments> : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
+export type StoryObj<TMetaOrComponentOrArgs = Args> =
+  TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
+    ? StoryAnnotations<Renderer, TArguments>
+    : StoryAnnotations<Renderer, ArgumentsOf<TMetaOrComponentOrArgs>>;
 ```
 
 الإطار الملحد القصص المصورة `StoryObj`، النظير المحايد ل

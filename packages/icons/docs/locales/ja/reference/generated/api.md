@@ -16,7 +16,7 @@
 **種類:** 定数
 
 ```typescript
-export const ICON_CATALOG: readonly IconCatalogEntry[]
+export const ICON_CATALOG: readonly IconCatalogEntry[];
 ```
 
 既存のアイコン セットのレビュー済みカタログ。
@@ -26,7 +26,7 @@ export const ICON_CATALOG: readonly IconCatalogEntry[]
 **種類:** 定数
 
 ```typescript
-export const ICON_GAP_REVIEW
+export const ICON_GAP_REVIEW;
 ```
 
 ソース分類が確立された後に実装する高価値の追加。
@@ -46,16 +46,16 @@ export interface IconCatalogEntry
 **種類:** 関数
 
 ```typescript
-function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void
+function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void;
 ```
 
 静的カタログをパッケージ メタデータの生成に使用する前に検証してください。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|カタログ | IconCatalogEntry[] | readonly  |
+| 名前     | タイプ             | 説明     |
+| -------- | ------------------ | -------- |
+| カタログ | IconCatalogEntry[] | readonly |
 
 ## `src/components/communication/messaging/forge-icon-bell/forge-icon-bell`
 
@@ -64,7 +64,7 @@ function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG
 **種類:** 関数
 
 ```typescript
-function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
+function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement;
 ```
 
 `ForgeIconBell` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -75,9 +75,9 @@ CSS モジュール `forge-icon-bell.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconBellProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconBellProperties> |      |
 
 ### アイコンベルのプロパティ
 
@@ -96,7 +96,7 @@ export interface IconBellProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
+function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement;
 ```
 
 `ForgeIconChat` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -107,9 +107,9 @@ CSS モジュール `forge-icon-chat.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconChatProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconChatProperties> |      |
 
 ### アイコンチャットプロパティ
 
@@ -128,7 +128,7 @@ export interface IconChatProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
+function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement;
 ```
 
 `ForgeIconMail` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -139,9 +139,9 @@ CSS モジュール `forge-icon-mail.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconMailProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconMailProperties> |      |
 
 ### アイコンメールプロパティ
 
@@ -160,7 +160,7 @@ export interface IconMailProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
+function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement;
 ```
 
 `ForgeIconPhone` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -171,9 +171,9 @@ CSS モジュール `forge-icon-phone.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconPhoneProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconPhoneProperties> |      |
 
 ### アイコン電話のプロパティ
 
@@ -192,7 +192,7 @@ export interface IconPhoneProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
+function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement;
 ```
 
 `ForgeIconSend` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -203,9 +203,9 @@ CSS モジュール `forge-icon-send.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconSendProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconSendProperties> |      |
 
 ### アイコン送信プロパティ
 
@@ -224,7 +224,7 @@ export interface IconSendProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
+function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement;
 ```
 
 `ForgeIconShare` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -235,9 +235,9 @@ CSS モジュール `forge-icon-share.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconShareProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconShareProperties> |      |
 
 ### アイコン共有プロパティ
 
@@ -256,7 +256,7 @@ export interface IconShareProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
+function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement;
 ```
 
 `ForgeIconCopy` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -267,9 +267,9 @@ CSS モジュール `forge-icon-copy.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconCopyProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconCopyProperties> |      |
 
 ### アイコンコピープロパティ
 
@@ -288,7 +288,7 @@ export interface IconCopyProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
+function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement;
 ```
 
 `ForgeIconEdit` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -299,9 +299,9 @@ CSS モジュール `forge-icon-edit.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconEditProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconEditProperties> |      |
 
 ### アイコン編集プロパティ
 
@@ -320,7 +320,7 @@ export interface IconEditProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
+function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement;
 ```
 
 `ForgeIconEyeOff` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -331,9 +331,9 @@ CSS モジュール `forge-icon-eye-off.module.scss` が同じ場所にありま
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconEyeOffProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconEyeOffProperties> |      |
 
 ### アイコン目オフプロパティ
 
@@ -352,7 +352,7 @@ export interface IconEyeOffProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
+function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement;
 ```
 
 `ForgeIconEye` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -363,9 +363,9 @@ CSS モジュール `forge-icon-eye.module.scss` が同じ場所にあります�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconEyeProperties> |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconEyeProperties> |      |
 
 ### アイコン目のプロパティ
 
@@ -384,16 +384,16 @@ export interface IconEyeProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement
+function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement;
 ```
 
 最後に取り消したコンテンツ編集を再適用します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconRedoProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconRedoProperties> |      |
 
 ### アイコンやり直しプロパティ
 
@@ -412,7 +412,7 @@ export interface IconRedoProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
+function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement;
 ```
 
 `ForgeIconTrash` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -423,9 +423,9 @@ CSS モジュール `forge-icon-trash.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconTrashProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconTrashProperties> |      |
 
 ### アイコンゴミ箱プロパティ
 
@@ -444,16 +444,16 @@ export interface IconTrashProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement
+function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement;
 ```
 
 最新のコンテンツ編集を元に戻します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconUndoProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconUndoProperties> |      |
 
 ### アイコン元に戻すプロパティ
 
@@ -472,7 +472,7 @@ export interface IconUndoProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement
+function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement;
 ```
 
 `ForgeIconDownload` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -483,9 +483,9 @@ CSS モジュール `forge-icon-download.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconDownloadProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconDownloadProperties> |      |
 
 ### アイコンダウンロードプロパティ
 
@@ -504,7 +504,7 @@ export interface IconDownloadProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
+function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement;
 ```
 
 `ForgeIconUpload` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -515,9 +515,9 @@ CSS モジュール `forge-icon-upload.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconUploadProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconUploadProperties> |      |
 
 ### アイコンアップロードプロパティ
 
@@ -536,7 +536,7 @@ export interface IconUploadProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
+function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement;
 ```
 
 `ForgeIconFilter` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -547,9 +547,9 @@ CSS モジュール `forge-icon-filter.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconFilterProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconFilterProperties> |      |
 
 ### アイコンフィルタープロパティ
 
@@ -568,7 +568,7 @@ export interface IconFilterProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
+function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement;
 ```
 
 `ForgeIconSort` — ニュートラル JSX で一度作成された 2 つのシェブロン ソート インジケーター
@@ -580,9 +580,9 @@ CSS モジュール `forge-icon-sort.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconSortProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconSortProperties> |      |
 
 ### アイコン並べ替えプロパティ
 
@@ -611,7 +611,7 @@ export type SortDirection = 'asc' | 'desc' | undefined;
 **種類:** 関数
 
 ```typescript
-function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement
+function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnAdd` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -622,9 +622,9 @@ CSS モジュール `forge-icon-table-column-add.module.scss` が同じ場所に
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconTableColumnAddProperties> |  |
+| 名前       | タイプ                                     | 説明 |
+| ---------- | ------------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconTableColumnAddProperties> |      |
 
 ### IconTableColumnAddProperties
 
@@ -643,7 +643,7 @@ export interface IconTableColumnAddProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement
+function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnRemove` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -654,9 +654,9 @@ CSS モジュール `forge-icon-table-column-remove.module.scss` が同じ場所
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconTableColumnRemoveProperties> |  |
+| 名前       | タイプ                                        | 説明 |
+| ---------- | --------------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconTableColumnRemoveProperties> |      |
 
 ### IconTableColumnRemoveプロパティ
 
@@ -675,7 +675,7 @@ export interface IconTableColumnRemoveProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement
+function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement;
 ```
 
 `ForgeIconTableRowAdd` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -686,9 +686,9 @@ CSS モジュール `forge-icon-table-row-add.module.scss` が同じ場所にあ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconTableRowAddProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconTableRowAddProperties> |      |
 
 ### IconTableRowAddProperties
 
@@ -707,7 +707,7 @@ export interface IconTableRowAddProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement
+function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableRowRemove` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -718,9 +718,9 @@ CSS モジュール `forge-icon-table-row-remove.module.scss` が同じ場所に
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconTableRowRemoveProperties> |  |
+| 名前       | タイプ                                     | 説明 |
+| ---------- | ------------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconTableRowRemoveProperties> |      |
 
 ### IconTableRowRemoveプロパティ
 
@@ -739,7 +739,7 @@ export interface IconTableRowRemoveProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
+function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement;
 ```
 
 `ForgeIconTable` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -750,9 +750,9 @@ CSS モジュール `forge-icon-table.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconTableProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconTableProperties> |      |
 
 ### アイコンテーブルのプロパティ
 
@@ -771,7 +771,7 @@ export interface IconTableProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement
+function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement;
 ```
 
 `ForgeIconDrawCircle` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -782,9 +782,9 @@ CSS モジュール `forge-icon-draw-circle.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconDrawCircleProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconDrawCircleProperties> |      |
 
 ### アイコン描画円プロパティ
 
@@ -803,7 +803,7 @@ export interface IconDrawCircleProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement
+function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement;
 ```
 
 `ForgeIconDrawLine` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -814,9 +814,9 @@ CSS モジュール `forge-icon-draw-line.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconDrawLineProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconDrawLineProperties> |      |
 
 ### アイコン描画ラインプロパティ
 
@@ -835,7 +835,7 @@ export interface IconDrawLineProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement
+function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement;
 ```
 
 `ForgeIconDrawPolygon` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -846,9 +846,9 @@ CSS モジュール `forge-icon-draw-polygon.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconDrawPolygonProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconDrawPolygonProperties> |      |
 
 ### アイコン描画ポリゴンプロパティ
 
@@ -867,7 +867,7 @@ export interface IconDrawPolygonProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement
+function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement;
 ```
 
 `ForgeIconDrawSquare` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -878,9 +878,9 @@ CSS モジュール `forge-icon-draw-square.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconDrawSquareProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconDrawSquareProperties> |      |
 
 ### アイコン描画正方形プロパティ
 
@@ -899,7 +899,7 @@ export interface IconDrawSquareProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement
+function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement;
 ```
 
 `ForgeIconDrawTriangle` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -910,9 +910,9 @@ CSS モジュール `forge-icon-draw-triangle.module.scss` が同じ場所にあ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconDrawTriangleProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconDrawTriangleProperties> |      |
 
 ### アイコン描画三角形プロパティ
 
@@ -931,7 +931,7 @@ export interface IconDrawTriangleProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
+function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement;
 ```
 
 `ForgeIconMove` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -942,9 +942,9 @@ CSS モジュール `forge-icon-move.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconMoveProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconMoveProperties> |      |
 
 ### アイコン移動プロパティ
 
@@ -963,7 +963,7 @@ export interface IconMoveProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement
+function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement;
 ```
 
 `ForgeIconPalette` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -974,9 +974,9 @@ CSS モジュール `forge-icon-palette.module.scss` が同じ場所にありま
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconPaletteProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconPaletteProperties> |      |
 
 ### アイコンパレットプロパティ
 
@@ -995,7 +995,7 @@ export interface IconPaletteProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
+function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement;
 ```
 
 `ForgeIconPencil` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1006,9 +1006,9 @@ CSS モジュール `forge-icon-pencil.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconPencilProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconPencilProperties> |      |
 
 ### アイコン鉛筆プロパティ
 
@@ -1027,7 +1027,7 @@ export interface IconPencilProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement
+function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCcw` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1038,9 +1038,9 @@ CSS モジュール `forge-icon-rotate-ccw.module.scss` が同じ場所にあり
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconRotateCcwProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconRotateCcwProperties> |      |
 
 ### アイコン回転反時計回りプロパティ
 
@@ -1059,7 +1059,7 @@ export interface IconRotateCcwProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement
+function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCw` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1070,9 +1070,9 @@ CSS モジュール `forge-icon-rotate-cw.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconRotateCwProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconRotateCwProperties> |      |
 
 ### アイコン回転Cwプロパティ
 
@@ -1091,7 +1091,7 @@ export interface IconRotateCwProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement
+function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement;
 ```
 
 `ForgeIconScaleDown` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1102,9 +1102,9 @@ CSS モジュール `forge-icon-scale-down.module.scss` が同じ場所にあり
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconScaleDownProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconScaleDownProperties> |      |
 
 ### IconScaleDownプロパティ
 
@@ -1123,7 +1123,7 @@ export interface IconScaleDownProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement
+function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement;
 ```
 
 `ForgeIconScaleUp` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1134,9 +1134,9 @@ CSS モジュール `forge-icon-scale-up.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconScaleUpProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconScaleUpProperties> |      |
 
 ### IconScaleUpプロパティ
 
@@ -1155,16 +1155,16 @@ export interface IconScaleUpProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement
+function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement;
 ```
 
 データに基づいたカントリーアクセントを備えた地球儀マーカー。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconCountryGlobeProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconCountryGlobeProperties> |      |
 
 ### アイコン国地球儀プロパティ
 
@@ -1183,16 +1183,16 @@ export interface IconCountryGlobeProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement
+function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement;
 ```
 
 境界のあるデータ駆動型の国旗アイコン。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconFlagProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconFlagProperties> |      |
 
 ### アイコン国コード
 
@@ -1221,7 +1221,7 @@ export interface IconFlagProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement
+function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement;
 ```
 
 `ForgeIconGeodesic` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1232,9 +1232,9 @@ CSS モジュール `forge-icon-geodesic.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconGeodesicProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconGeodesicProperties> |      |
 
 ### アイコン測地線プロパティ
 
@@ -1253,7 +1253,7 @@ export interface IconGeodesicProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
+function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement;
 ```
 
 `ForgeIconGlobe` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1264,9 +1264,9 @@ CSS モジュール `forge-icon-globe.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconGlobeProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconGlobeProperties> |      |
 
 ### アイコングローブプロパティ
 
@@ -1285,7 +1285,7 @@ export interface IconGlobeProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement
+function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement;
 ```
 
 `ForgeIconLanguage` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1296,9 +1296,9 @@ CSS モジュール `forge-icon-language.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconLanguageProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconLanguageProperties> |      |
 
 ### アイコン言語プロパティ
 
@@ -1317,7 +1317,7 @@ export interface IconLanguageProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
+function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement;
 ```
 
 `ForgeIconMapPin` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1328,9 +1328,9 @@ CSS モジュール `forge-icon-map-pin.module.scss` が同じ場所にありま
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconMapPinProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconMapPinProperties> |      |
 
 ### アイコンマップピンプロパティ
 
@@ -1349,16 +1349,16 @@ export interface IconMapPinProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement
+function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement;
 ```
 
 表示される地理データを切り替えるためのマップ レイヤー スタック シンボル。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconLayerProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconLayerProperties> |      |
 
 ### アイコンレイヤープロパティ
 
@@ -1377,16 +1377,16 @@ export interface IconLayerProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement
+function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement;
 ```
 
 密集した関心のある地点を表すグループ化された地図マーカー。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconMapMarkerClusterProperties> |  |
+| 名前       | タイプ                                       | 説明 |
+| ---------- | -------------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconMapMarkerClusterProperties> |      |
 
 ### アイコンマップマーカークラスタープロパティ
 
@@ -1405,7 +1405,7 @@ export interface IconMapMarkerClusterProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
+function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement;
 ```
 
 `ForgeIconCamera` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1416,9 +1416,9 @@ CSS モジュール `forge-icon-camera.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconCameraProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconCameraProperties> |      |
 
 ### アイコンカメラのプロパティ
 
@@ -1437,7 +1437,7 @@ export interface IconCameraProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
+function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement;
 ```
 
 `ForgeIconImage` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1448,9 +1448,9 @@ CSS モジュール `forge-icon-image.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconImageProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconImageProperties> |      |
 
 ### アイコン画像のプロパティ
 
@@ -1469,7 +1469,7 @@ export interface IconImageProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
+function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement;
 ```
 
 `ForgeIconPause` — ニュートラル JSX で一度作成された、塗りつぶされた一時停止 (❙❙) グリフ
@@ -1481,9 +1481,9 @@ CSS モジュール `forge-icon-pause.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconPauseProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconPauseProperties> |      |
 
 ### アイコン一時停止プロパティ
 
@@ -1502,7 +1502,7 @@ export interface IconPauseProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
+function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement;
 ```
 
 `ForgeIconPlay` — ニュートラル JSX で一度作成された塗りつぶされたプレイ (▶) トライアングル
@@ -1514,9 +1514,9 @@ CSS モジュール `forge-icon-play.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconPlayProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconPlayProperties> |      |
 
 ### アイコンプレイプロパティ
 
@@ -1535,7 +1535,7 @@ export interface IconPlayProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
+function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement;
 ```
 
 `ForgeIconArrow` — ニュートラルな JSX 方言で一度作成された方向矢印。
@@ -1546,9 +1546,9 @@ CSS モジュール `forge-icon-arrow.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconArrowProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconArrowProperties> |      |
 
 ### アイコン矢印方向
 
@@ -1577,7 +1577,7 @@ export interface IconArrowProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement
+function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement;
 ```
 
 `ForgeIconChevron` — 中立的な JSX 方言で一度作成された方向性シェブロン。
@@ -1588,9 +1588,9 @@ CSS モジュール `forge-icon-chevron.module.scss` が同じ場所にありま
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconChevronProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconChevronProperties> |      |
 
 ### アイコンシェブロンプロパティ
 
@@ -1619,7 +1619,7 @@ export type IconDirection = 'up' | 'right' | 'down' | 'left';
 **種類:** 関数
 
 ```typescript
-function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement
+function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement;
 ```
 
 `ForgeIconChevrons` — で一度作成された方向性二重シェブロン (« »)
@@ -1631,9 +1631,9 @@ CSS モジュール `forge-icon-chevrons.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconChevronsProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconChevronsProperties> |      |
 
 ### アイコン山形方向
 
@@ -1662,7 +1662,7 @@ export interface IconChevronsProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
+function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement;
 ```
 
 `ForgeIconClose` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1673,9 +1673,9 @@ CSS モジュール `forge-icon-close.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconCloseProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconCloseProperties> |      |
 
 ### アイコン閉じるプロパティ
 
@@ -1694,7 +1694,7 @@ export interface IconCloseProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
+function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement;
 ```
 
 `ForgeIconHome` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1705,9 +1705,9 @@ CSS モジュール `forge-icon-home.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconHomeProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconHomeProperties> |      |
 
 ### アイコンホームプロパティ
 
@@ -1726,7 +1726,7 @@ export interface IconHomeProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
+function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement;
 ```
 
 `ForgeIconJoin` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1737,9 +1737,9 @@ CSS モジュール `forge-icon-join.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconJoinProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconJoinProperties> |      |
 
 ### アイコン結合プロパティ
 
@@ -1758,7 +1758,7 @@ export interface IconJoinProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
+function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement;
 ```
 
 `ForgeIconMenu` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1769,9 +1769,9 @@ CSS モジュール `forge-icon-menu.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconMenuProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconMenuProperties> |      |
 
 ### アイコンメニュープロパティ
 
@@ -1790,7 +1790,7 @@ export interface IconMenuProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
+function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement;
 ```
 
 `ForgeIconMinus` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1801,9 +1801,9 @@ CSS モジュール `forge-icon-minus.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconMinusProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconMinusProperties> |      |
 
 ### アイコンマイナスプロパティ
 
@@ -1822,7 +1822,7 @@ export interface IconMinusProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
+function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement;
 ```
 
 `ForgeIconPlus` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1833,9 +1833,9 @@ CSS モジュール `forge-icon-plus.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconPlusProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconPlusProperties> |      |
 
 ### アイコンプラスのプロパティ
 
@@ -1854,7 +1854,7 @@ export interface IconPlusProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement
+function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement;
 ```
 
 `ForgeIconRefresh` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1865,9 +1865,9 @@ CSS モジュール `forge-icon-refresh.module.scss` が同じ場所にありま
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconRefreshProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconRefreshProperties> |      |
 
 ### アイコン更新プロパティ
 
@@ -1886,7 +1886,7 @@ export interface IconRefreshProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
+function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement;
 ```
 
 `ForgeIconSplit` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1897,9 +1897,9 @@ CSS モジュール `forge-icon-split.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconSplitProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconSplitProperties> |      |
 
 ### アイコン分割プロパティ
 
@@ -1918,7 +1918,7 @@ export interface IconSplitProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement
+function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement;
 ```
 
 `ForgeIconExternalLink` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1929,9 +1929,9 @@ CSS モジュール `forge-icon-external-link.module.scss` が同じ場所にあ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconExternalLinkProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconExternalLinkProperties> |      |
 
 ### アイコン外部リンクプロパティ
 
@@ -1950,7 +1950,7 @@ export interface IconExternalLinkProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
+function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement;
 ```
 
 `ForgeIconLink` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1961,9 +1961,9 @@ CSS モジュール `forge-icon-link.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconLinkProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconLinkProperties> |      |
 
 ### アイコンリンクプロパティ
 
@@ -1982,7 +1982,7 @@ export interface IconLinkProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
+function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement;
 ```
 
 `ForgeIconSearch` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -1993,9 +1993,9 @@ CSS モジュール `forge-icon-search.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconSearchProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconSearchProperties> |      |
 
 ### アイコン検索プロパティ
 
@@ -2014,7 +2014,7 @@ export interface IconSearchProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
+function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement;
 ```
 
 `ForgeIconCloud` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2025,9 +2025,9 @@ CSS モジュール `forge-icon-cloud.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconCloudProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconCloudProperties> |      |
 
 ### アイコンクラウドプロパティ
 
@@ -2046,7 +2046,7 @@ export interface IconCloudProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
+function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement;
 ```
 
 `ForgeIconDebug` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2057,9 +2057,9 @@ CSS モジュール `forge-icon-debug.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconDebugProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconDebugProperties> |      |
 
 ### アイコンデバッグプロパティ
 
@@ -2078,7 +2078,7 @@ export interface IconDebugProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
+function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement;
 ```
 
 `ForgeIconHeart` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2089,9 +2089,9 @@ CSS モジュール `forge-icon-heart.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconHeartProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconHeartProperties> |      |
 
 ### アイコンハートプロパティ
 
@@ -2110,7 +2110,7 @@ export interface IconHeartProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement
+function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement;
 ```
 
 `ForgeIconLightning` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2121,9 +2121,9 @@ CSS モジュール `forge-icon-lightning.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconLightningProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconLightningProperties> |      |
 
 ### アイコン稲妻プロパティ
 
@@ -2142,7 +2142,7 @@ export interface IconLightningProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
+function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement;
 ```
 
 `ForgeIconPuzzle` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2153,9 +2153,9 @@ CSS モジュール `forge-icon-puzzle.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconPuzzleProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconPuzzleProperties> |      |
 
 ### アイコンパズルプロパティ
 
@@ -2174,7 +2174,7 @@ export interface IconPuzzleProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
+function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement;
 ```
 
 `ForgeIconQrCode` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2185,9 +2185,9 @@ CSS モジュール `forge-icon-qr-code.module.scss` が同じ場所にありま
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconQrCodeProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconQrCodeProperties> |      |
 
 ### IconQrCodeプロパティ
 
@@ -2206,7 +2206,7 @@ export interface IconQrCodeProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement
+function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement;
 ```
 
 `ForgeIconSettings` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2217,9 +2217,9 @@ CSS モジュール `forge-icon-settings.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconSettingsProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconSettingsProperties> |      |
 
 ### アイコン設定プロパティ
 
@@ -2238,7 +2238,7 @@ export interface IconSettingsProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
+function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement;
 ```
 
 `ForgeIconStar` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2249,9 +2249,9 @@ CSS モジュール `forge-icon-star.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconStarProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconStarProperties> |      |
 
 ### アイコンスタープロパティ
 
@@ -2270,7 +2270,7 @@ export interface IconStarProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
+function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement;
 ```
 
 `ForgeIconWrench` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2281,9 +2281,9 @@ CSS モジュール `forge-icon-wrench.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconWrenchProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconWrenchProperties> |      |
 
 ### アイコンレンチプロパティ
 
@@ -2302,16 +2302,16 @@ export interface IconWrenchProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement
+function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement;
 ```
 
 明確な開始点と目的地のマーカーを持つルート ライン。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconRouteProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconRouteProperties> |      |
 
 ### アイコンルートプロパティ
 
@@ -2330,16 +2330,16 @@ export interface IconRouteProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement
+function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement;
 ```
 
 ルートと地図オーバーレイ用の再利用可能なウェイポイント マーカー。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconWaypointProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconWaypointProperties> |      |
 
 ### アイコンウェイポイントプロパティ
 
@@ -2358,7 +2358,7 @@ export interface IconWaypointProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement
+function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement;
 ```
 
 `ForgeIconLockOpen` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2369,9 +2369,9 @@ CSS モジュール `forge-icon-lock-open.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconLockOpenProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconLockOpenProperties> |      |
 
 ### アイコンロック開くプロパティ
 
@@ -2390,7 +2390,7 @@ export interface IconLockOpenProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
+function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement;
 ```
 
 `ForgeIconLock` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2401,9 +2401,9 @@ CSS モジュール `forge-icon-lock.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconLockProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconLockProperties> |      |
 
 ### アイコンロックプロパティ
 
@@ -2422,7 +2422,7 @@ export interface IconLockProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
+function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement;
 ```
 
 `ForgeIconUser` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2433,9 +2433,9 @@ CSS モジュール `forge-icon-user.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconUserProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconUserProperties> |      |
 
 ### アイコンユーザープロパティ
 
@@ -2454,7 +2454,7 @@ export interface IconUserProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement
+function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement;
 ```
 
 `ForgeIconAlertCritical` — クリティカル アラート グリフ (八角形内の「!」、
@@ -2466,9 +2466,9 @@ CSS モジュール `forge-icon-alert-critical.module.scss` が同じ場所に�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconAlertCriticalProperties> |  |
+| 名前       | タイプ                                    | 説明 |
+| ---------- | ----------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconAlertCriticalProperties> |      |
 
 ### アイコンアラート重要プロパティ
 
@@ -2487,7 +2487,7 @@ export interface IconAlertCriticalProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement
+function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement;
 ```
 
 `ForgeIconAlertInfo` — 情報アラートグリフ (円の中の「i」)
@@ -2499,9 +2499,9 @@ CSS モジュール `forge-icon-alert-info.module.scss` が同じ場所にあり
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconAlertInfoProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconAlertInfoProperties> |      |
 
 ### IconAlertInfoプロパティ
 
@@ -2520,7 +2520,7 @@ export interface IconAlertInfoProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement
+function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement;
 ```
 
 `ForgeIconAlertNeutral` — ニュートラル アラート グリフ (円内の「-」)
@@ -2533,9 +2533,9 @@ CSS モジュール `forge-icon-alert-neutral.module.scss` が同じ場所にあ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconAlertNeutralProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconAlertNeutralProperties> |      |
 
 ### アイコンアラートニュートラルプロパティ
 
@@ -2554,7 +2554,7 @@ export interface IconAlertNeutralProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement
+function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement;
 ```
 
 `ForgeIconAlertWarning` — 警告アラートのグリフ (三角形内の「!」)
@@ -2566,9 +2566,9 @@ CSS モジュール `forge-icon-alert-warning.module.scss` が同じ場所にあ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconAlertWarningProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconAlertWarningProperties> |      |
 
 ### アイコンアラート警告プロパティ
 
@@ -2587,7 +2587,7 @@ export interface IconAlertWarningProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
+function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement;
 ```
 
 `ForgeIconAlert` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2598,9 +2598,9 @@ CSS モジュール `forge-icon-alert.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconAlertProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconAlertProperties> |      |
 
 ### アイコンアラートプロパティ
 
@@ -2619,7 +2619,7 @@ export interface IconAlertProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
+function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement;
 ```
 
 `ForgeIconCheck` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2630,9 +2630,9 @@ CSS モジュール `forge-icon-check.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconCheckProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconCheckProperties> |      |
 
 ### アイコンチェックプロパティ
 
@@ -2651,7 +2651,7 @@ export interface IconCheckProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
+function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement;
 ```
 
 `ForgeIconError` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2662,9 +2662,9 @@ CSS モジュール `forge-icon-error.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconErrorProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconErrorProperties> |      |
 
 ### アイコンエラープロパティ
 
@@ -2683,7 +2683,7 @@ export interface IconErrorProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
+function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement;
 ```
 
 `ForgeIconInfo` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2694,9 +2694,9 @@ CSS モジュール `forge-icon-info.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconInfoProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconInfoProperties> |      |
 
 ### アイコン情報プロパティ
 
@@ -2715,7 +2715,7 @@ export interface IconInfoProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
+function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement;
 ```
 
 `ForgeIconNotice` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2726,9 +2726,9 @@ CSS モジュール `forge-icon-notice.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconNoticeProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconNoticeProperties> |      |
 
 ### アイコン通知プロパティ
 
@@ -2747,7 +2747,7 @@ export interface IconNoticeProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement
+function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement;
 ```
 
 `ForgeIconWarning` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2758,9 +2758,9 @@ CSS モジュール `forge-icon-warning.module.scss` が同じ場所にありま
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconWarningProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconWarningProperties> |      |
 
 ### アイコン警告プロパティ
 
@@ -2779,7 +2779,7 @@ export interface IconWarningProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement
+function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement;
 ```
 
 `ForgeIconAlignCenter` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2790,9 +2790,9 @@ CSS モジュール `forge-icon-align-center.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconAlignCenterProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconAlignCenterProperties> |      |
 
 ### アイコンAlignCenterプロパティ
 
@@ -2811,7 +2811,7 @@ export interface IconAlignCenterProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement
+function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement;
 ```
 
 `ForgeIconAlignJustify` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2822,9 +2822,9 @@ CSS モジュール `forge-icon-align-justify.module.scss` が同じ場所にあ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconAlignJustifyProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconAlignJustifyProperties> |      |
 
 ### アイコンAlignJustifyプロパティ
 
@@ -2843,7 +2843,7 @@ export interface IconAlignJustifyProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement
+function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement;
 ```
 
 `ForgeIconAlignLeft` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2854,9 +2854,9 @@ CSS モジュール `forge-icon-align-left.module.scss` が同じ場所にあり
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconAlignLeftProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconAlignLeftProperties> |      |
 
 ### アイコン左揃えプロパティ
 
@@ -2875,7 +2875,7 @@ export interface IconAlignLeftProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement
+function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement;
 ```
 
 `ForgeIconAlignRight` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2886,9 +2886,9 @@ CSS モジュール `forge-icon-align-right.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconAlignRightProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconAlignRightProperties> |      |
 
 ### アイコン右揃えプロパティ
 
@@ -2907,7 +2907,7 @@ export interface IconAlignRightProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement
+function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement;
 ```
 
 `ForgeIconBlockquote` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2918,9 +2918,9 @@ CSS モジュール `forge-icon-blockquote.module.scss` が同じ場所にあり
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconBlockquoteProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconBlockquoteProperties> |      |
 
 ### アイコンブロック引用プロパティ
 
@@ -2939,7 +2939,7 @@ export interface IconBlockquoteProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
+function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement;
 ```
 
 `ForgeIconBold` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2950,9 +2950,9 @@ CSS モジュール `forge-icon-bold.module.scss` が同じ場所にあります
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconBoldProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconBoldProperties> |      |
 
 ### アイコン太字プロパティ
 
@@ -2971,7 +2971,7 @@ export interface IconBoldProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement
+function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement;
 ```
 
 `ForgeIconBulletList` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -2982,9 +2982,9 @@ CSS モジュール `forge-icon-bullet-list.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconBulletListProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconBulletListProperties> |      |
 
 ### IconBulletListプロパティ
 
@@ -3003,7 +3003,7 @@ export interface IconBulletListProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement
+function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement;
 ```
 
 `ForgeIconCodeBlock` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3014,9 +3014,9 @@ CSS モジュール `forge-icon-code-block.module.scss` が同じ場所にあり
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconCodeBlockProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconCodeBlockProperties> |      |
 
 ### IconCodeBlockProperties
 
@@ -3035,7 +3035,7 @@ export interface IconCodeBlockProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement
+function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement;
 ```
 
 `ForgeIconCodeInline` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3046,9 +3046,9 @@ CSS モジュール `forge-icon-code-inline.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconCodeInlineProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconCodeInlineProperties> |      |
 
 ### IconCodeInlineProperties
 
@@ -3067,7 +3067,7 @@ export interface IconCodeInlineProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement
+function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFive` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3078,9 +3078,9 @@ CSS モジュール `forge-icon-heading-five.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconHeadingFiveProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconHeadingFiveProperties> |      |
 
 ### IconHeadingFiveProperties
 
@@ -3099,7 +3099,7 @@ export interface IconHeadingFiveProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement
+function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFour` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3110,9 +3110,9 @@ CSS モジュール `forge-icon-heading-four.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconHeadingFourProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconHeadingFourProperties> |      |
 
 ### アイコン見出し4 プロパティ
 
@@ -3131,7 +3131,7 @@ export interface IconHeadingFourProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement
+function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement;
 ```
 
 `ForgeIconHeadingOne` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3142,9 +3142,9 @@ CSS モジュール `forge-icon-heading-one.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconHeadingOneProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconHeadingOneProperties> |      |
 
 ### IconHeadingOneProperties
 
@@ -3163,7 +3163,7 @@ export interface IconHeadingOneProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement
+function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement;
 ```
 
 `ForgeIconHeadingSix` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3174,9 +3174,9 @@ CSS モジュール `forge-icon-heading-six.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconHeadingSixProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconHeadingSixProperties> |      |
 
 ### アイコン見出しSixProperties
 
@@ -3195,7 +3195,7 @@ export interface IconHeadingSixProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement
+function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement;
 ```
 
 `ForgeIconHeadingThree` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3206,9 +3206,9 @@ CSS モジュール `forge-icon-heading-three.module.scss` が同じ場所にあ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconHeadingThreeProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconHeadingThreeProperties> |      |
 
 ### アイコン見出し 3 つのプロパティ
 
@@ -3227,7 +3227,7 @@ export interface IconHeadingThreeProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement
+function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement;
 ```
 
 `ForgeIconHeadingTwo` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3238,9 +3238,9 @@ CSS モジュール `forge-icon-heading-two.module.scss` が同じ場所にあ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconHeadingTwoProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconHeadingTwoProperties> |      |
 
 ### アイコン見出し 2 つのプロパティ
 
@@ -3259,7 +3259,7 @@ export interface IconHeadingTwoProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement
+function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement;
 ```
 
 `ForgeIconHeading` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3270,9 +3270,9 @@ CSS モジュール `forge-icon-heading.module.scss` が同じ場所にありま
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconHeadingProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconHeadingProperties> |      |
 
 ### アイコン見出しプロパティ
 
@@ -3291,7 +3291,7 @@ export interface IconHeadingProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
+function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement;
 ```
 
 `ForgeIconItalic` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3302,9 +3302,9 @@ CSS モジュール `forge-icon-italic.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconItalicProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconItalicProperties> |      |
 
 ### アイコン斜体プロパティ
 
@@ -3323,7 +3323,7 @@ export interface IconItalicProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement
+function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement;
 ```
 
 `ForgeIconNumberedList` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3334,9 +3334,9 @@ CSS モジュール `forge-icon-numbered-list.module.scss` が同じ場所にあ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconNumberedListProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconNumberedListProperties> |      |
 
 ### IconNumberedListプロパティ
 
@@ -3355,7 +3355,7 @@ export interface IconNumberedListProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement
+function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement;
 ```
 
 `ForgeIconStrikethrough` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3366,9 +3366,9 @@ CSS モジュール `forge-icon-strikethrough.module.scss` が同じ場所にあ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconStrikethroughProperties> |  |
+| 名前       | タイプ                                    | 説明 |
+| ---------- | ----------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconStrikethroughProperties> |      |
 
 ### アイコン取り消し線プロパティ
 
@@ -3387,7 +3387,7 @@ export interface IconStrikethroughProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement
+function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement;
 ```
 
 `ForgeIconUnderline` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3398,9 +3398,9 @@ CSS モジュール `forge-icon-underline.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconUnderlineProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconUnderlineProperties> |      |
 
 ### アイコン下線プロパティ
 
@@ -3419,7 +3419,7 @@ export interface IconUnderlineProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement
+function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement;
 ```
 
 `ForgeIconCalendar` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3430,9 +3430,9 @@ CSS モジュール `forge-icon-calendar.module.scss` が同じ場所にあり�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconCalendarProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<IconCalendarProperties> |      |
 
 ### アイコンカレンダープロパティ
 
@@ -3451,7 +3451,7 @@ export interface IconCalendarProperties
 **種類:** 関数
 
 ```typescript
-function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
+function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement;
 ```
 
 `ForgeIconClock` — ニュートラルな JSX 方言で一度作成されたアイコン。
@@ -3462,9 +3462,9 @@ CSS モジュール `forge-icon-clock.module.scss` が同じ場所にありま�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconClockProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconClockProperties> |      |
 
 ### アイコンクロックプロパティ
 
@@ -3483,7 +3483,7 @@ export interface IconClockProperties
 **種類:** 定数
 
 ```typescript
-export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
+export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[];
 ```
 
 説明はありません。
@@ -3493,17 +3493,17 @@ export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
 **種類:** 関数
 
 ```typescript
-function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void
+function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|作曲 |読み取り専用 IconSymbolDefinition[] |  |
-|利用可能なID | ReadonlySet<string> |  |
+| 名前         | タイプ                              | 説明 |
+| ------------ | ----------------------------------- | ---- |
+| 作曲         | 読み取り専用 IconSymbolDefinition[] |      |
+| 利用可能なID | ReadonlySet<string>                 |      |
 
 ## `src/sprite/country-flags`
 
@@ -3512,7 +3512,7 @@ function validateCompositions(compositions: readonly IconSymbolDefinition[], ava
 **種類:** 定数
 
 ```typescript
-export const SUPPORTED_COUNTRY_CODES
+export const SUPPORTED_COUNTRY_CODES;
 ```
 
 公開されたスプライト内の正規の国旗シンボルを含む国コード。
@@ -3524,7 +3524,7 @@ export const SUPPORTED_COUNTRY_CODES
 **種類:** 定数
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS
+export const COUNTRY_FLAG_SYMBOL_IDS;
 ```
 
 説明はありません。
@@ -3534,7 +3534,7 @@ export const COUNTRY_FLAG_SYMBOL_IDS
 **種類:** 定数
 
 ```typescript
-export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
+export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[];
 ```
 
 説明はありません。
@@ -3546,16 +3546,16 @@ export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
 **種類:** 関数
 
 ```typescript
-function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement
+function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement;
 ```
 
 正規のスプライト ジオメトリを参照する共有アクセス可能なラッパー。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconUseProperties> |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconUseProperties> |      |
 
 ### アイコン使用プロパティ
 
@@ -3574,7 +3574,7 @@ export interface IconUseProperties
 **種類:** 定数
 
 ```typescript
-export const IconSpriteContext
+export const IconSpriteContext;
 ```
 
 説明はありません。
@@ -3584,32 +3584,32 @@ export const IconSpriteContext
 **種類:** 関数
 
 ```typescript
-function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement
+function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement;
 ```
 
 アイコン コンポーネントのサブツリーに対して 1 つのインライン スプライト ホストをマウントします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconSpriteProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconSpriteProperties> |      |
 
 ### useIconHref
 
 **種類:** 関数
 
 ```typescript
-function useIconHref(symbolId: string): string
+function useIconHref(symbolId: string): string;
 ```
 
 アイコン ラッパーのローカルまたは外部シンボル URL を解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|シンボルID |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| シンボルID | 文字列 |      |
 
 ## `src/sprite/serialize`
 
@@ -3618,48 +3618,48 @@ function useIconHref(symbolId: string): string
 **種類:** 関数
 
 ```typescript
-function serializeNode(node: IconSvgNode): string
+function serializeNode(node: IconSvgNode): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |アイコンSvgノード |  |
+| 名前 | タイプ            | 説明 |
+| ---- | ----------------- | ---- |
+| node | アイコンSvgノード |      |
 
 ### シリアライズスプライト
 
 **種類:** 関数
 
 ```typescript
-function serializeSprite(definitions: readonly IconSymbolDefinition[]): string
+function serializeSprite(definitions: readonly IconSymbolDefinition[]): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|定義 |読み取り専用 IconSymbolDefinition[] |  |
+| 名前 | タイプ                              | 説明 |
+| ---- | ----------------------------------- | ---- |
+| 定義 | 読み取り専用 IconSymbolDefinition[] |      |
 
 ### シリアル化シンボル
 
 **種類:** 関数
 
 ```typescript
-function serializeSymbol(definition: IconSymbolDefinition): string
+function serializeSymbol(definition: IconSymbolDefinition): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|定義 |アイコンシンボル定義 |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| 定義 | アイコンシンボル定義 |      |
 
 ## `src/sprite/types`
 

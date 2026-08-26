@@ -56,7 +56,7 @@ export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy' | undefined;
 **種類:** 関数
 
 ```typescript
-function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
+function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 ```
 
 `ForgeAvatar` — ニュートラルな JSX 方言で一度作成されたユーザー/エンティティのアバター
@@ -71,9 +71,9 @@ Storybook のデモ コンテンツ。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<AvatarProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<AvatarProperties> |      |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -112,7 +112,7 @@ export interface BackgroundVideoSource
 **種類:** 関数
 
 ```typescript
-function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement
+function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement;
 ```
 
 `ForgeBackgroundVideo` — 一度作成された装飾的なフルブリード背景ビデオ
@@ -133,9 +133,9 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<BackgroundVideoProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<BackgroundVideoProperties> |      |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -164,7 +164,8 @@ export type BadgeSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類：**タイプ
 
 ```typescript
-export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type BadgeVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 バッジの視覚的なトーン。 `@mission-platform/components` `ForgeBadge` をミラーリングします。
@@ -174,7 +175,7 @@ export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 's
 **種類:** 関数
 
 ```typescript
-function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
+function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 ```
 
 `ForgeBadge` — ニュートラル JSX で一度作成された小さなステータス/ラベル チップ
@@ -196,9 +197,9 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<BadgeProperties> |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| プロパティ | 読み取り専用<BadgeProperties> |      |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -217,7 +218,8 @@ export interface ButtonProperties
 **種類：**タイプ
 
 ```typescript
-export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type ButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 ボタンの視覚的な処理。 `@mission-platform/components` `ForgeButton` をミラーリングします。
@@ -227,7 +229,7 @@ export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | '
 **種類:** 関数
 
 ```typescript
-function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
+function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 ```
 
 `ForgeButton` — ニュートラルな JSX 方言で一度作成され、コンパイルされたボタン
@@ -249,9 +251,9 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ButtonProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<ButtonProperties> |      |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -260,7 +262,7 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
 **種類:** 関数
 
 ```typescript
-function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
+function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 ```
 
 `ForgeIconButton` — コンパクトで正方形のアイコンのみのボタンで、
@@ -276,9 +278,9 @@ function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<IconButtonProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<IconButtonProperties> |      |
 
 ### アイコンボタンプロパティ
 
@@ -305,7 +307,8 @@ export type IconButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類：**タイプ
 
 ```typescript
-export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type IconButtonVariant =
+  'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 アイコン ボタンの視覚的な処理 — 正規のカラー セットと透明な `ghost`。
@@ -317,7 +320,7 @@ export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 
 **種類:** 関数
 
 ```typescript
-function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement
+function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement;
 ```
 
 `ForgeProgressBar` — 作成された確定または不確定の進行状況インジケーター
@@ -332,9 +335,9 @@ function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElemen
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ProgressBarProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<ProgressBarProperties> |      |
 
 ### ProgressBarProperties
 
@@ -361,7 +364,8 @@ export type ProgressSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類：**タイプ
 
 ```typescript
-export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ProgressVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 プログレスフィルのトーン。
@@ -373,7 +377,7 @@ export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' |
 **種類:** 関数
 
 ```typescript
-function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement
+function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
 ```
 
 `ForgeQuote` — ニュートラルで一度作成されたセマンティックなブロッククォート/プルクォート
@@ -393,9 +397,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<QuoteProperties> |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| プロパティ | 読み取り専用<QuoteProperties> |      |
 
 ### 見積プロパティ
 
@@ -434,7 +438,7 @@ export type QuoteVariant = 'default' | 'bordered' | 'plain';
 **種類:** 関数
 
 ```typescript
-function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement
+function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement;
 ```
 
 `ForgeResponsiveImage` — アート指向のレスポンシブ `<picture>` 要素
@@ -455,9 +459,9 @@ function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ResponsiveImageProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ResponsiveImageProperties> |      |
 
 ### レスポンシブイメージフィット
 
@@ -496,7 +500,7 @@ export interface ResponsiveImageSource
 **種類:** 関数
 
 ```typescript
-function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement
+function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement;
 ```
 
 `ForgeResponsiveVideo` — レスポンシブ `<video>` 要素は、
@@ -519,9 +523,9 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ResponsiveVideoProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ResponsiveVideoProperties> |      |
 
 ### レスポンシブビデオフィット
 
@@ -560,7 +564,7 @@ export interface ResponsiveVideoSource
 **種類:** 関数
 
 ```typescript
-function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement
+function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ```
 
 `ForgeSeparator` — ニュートラルで一度作成された視覚的なセパレーター/ディバイダー
@@ -581,9 +585,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SeparatorProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<SeparatorProperties> |      |
 
 ### セパレータの方向
 
@@ -632,7 +636,7 @@ export type SeparatorVariant = 'solid' | 'dashed' | 'dotted';
 **種類:** 関数
 
 ```typescript
-function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
+function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 ```
 
 `ForgeSkeleton` — ニュートラル JSX で一度作成された読み込みプレースホルダー
@@ -647,9 +651,9 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SkeletonProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<SkeletonProperties> |      |
 
 ### スケルトンのプロパティ
 
@@ -678,7 +682,7 @@ export type SkeletonShape = 'line' | 'circle' | 'block';
 **種類:** 関数
 
 ```typescript
-function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement
+function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement;
 ```
 
 `ForgeSpinner` — ニュートラルで一度作成された不定読み込みスピナー
@@ -695,9 +699,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SpinnerProperties> |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| プロパティ | 読み取り専用<SpinnerProperties> |      |
 
 ### スピナーのプロパティ
 
@@ -724,7 +728,8 @@ export type SpinnerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類：**タイプ
 
 ```typescript
-export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type SpinnerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 スピナーリングの音色。
@@ -736,7 +741,7 @@ export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 
 **種類:** 関数
 
 ```typescript
-function ForgeStack(properties: Readonly<StackProperties>): MpElement
+function ForgeStack(properties: Readonly<StackProperties>): MpElement;
 ```
 
 `ForgeStack` — 子を配置するフレックスボックス スタック レイアウト プリミティブ
@@ -751,9 +756,9 @@ BEM クラス名と計算されたフレックスボックス インライン �
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<StackProperties> |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| プロパティ | 読み取り専用<StackProperties> |      |
 
 ### スタックアライン
 
@@ -812,23 +817,24 @@ export interface StackProperties
 **種類:** 関数
 
 ```typescript
-function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement
+function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<StatusIconProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<StatusIconProperties> |      |
 
 ### ステータスアイコンレベル
 
 **種類：**タイプ
 
 ```typescript
-export type StatusIconLevel = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type StatusIconLevel =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 アイコンによって伝えられるステータス/トーン — 正規のカラーセット。
@@ -890,7 +896,7 @@ export interface AccordionProperties
 **種類:** 関数
 
 ```typescript
-function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement
+function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement;
 ```
 
 `ForgeAccordion` — 作成された折りたたみ可能な行の垂直方向に積み重ねられたコンテナー
@@ -913,9 +919,9 @@ React/Vue);アイテムごとの `summary`/デフォルト スロットは 2 つ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<AccordionProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<AccordionProperties> |      |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -944,7 +950,7 @@ export interface BreadcrumbProperties
 **種類:** 関数
 
 ```typescript
-function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
+function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 ```
 
 `ForgeBreadcrumb` — ニュートラルな JSX 方言で一度作成されたブレッドクラム トレイル
@@ -964,9 +970,9 @@ function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<BreadcrumbProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<BreadcrumbProperties> |      |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1005,7 +1011,7 @@ export interface ButtonGroupProperties
 **種類:** 関数
 
 ```typescript
-function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement
+function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement;
 ```
 
 `ForgeButtonGroup` — 関連するボタンを単一の視覚単位にグループ化します。執筆済み
@@ -1024,9 +1030,9 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ButtonGroupProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<ButtonGroupProperties> |      |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1055,7 +1061,7 @@ export interface CardProperties
 **種類:** 関数
 
 ```typescript
-function ForgeCard(properties: Readonly<CardProperties>): MpElement
+function ForgeCard(properties: Readonly<CardProperties>): MpElement;
 ```
 
 `ForgeCard` — オプションのヘッダー/フッター領域を備えたサーフェス コンテナー (作成済み)
@@ -1075,9 +1081,9 @@ React の prop-presence チェック）により、両方で存在検出が同�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<CardProperties> |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| プロパティ | 読み取り専用<CardProperties> |      |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1116,7 +1122,7 @@ export type ChatBubbleVariant = 'default' | 'primary';
 **種類:** 関数
 
 ```typescript
-function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
+function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 ```
 
 `ForgeChatBubble` — ニュートラル JSX で一度作成された単一のメッセージ バブル
@@ -1137,9 +1143,9 @@ function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ChatBubbleProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<ChatBubbleProperties> |      |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1158,7 +1164,7 @@ export interface CollapseProperties
 **種類:** 関数
 
 ```typescript
-function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
+function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 ```
 
 `ForgeCollapse` — ネイティブの `<details>` ベースの開示。
@@ -1181,9 +1187,9 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<CollapseProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<CollapseProperties> |      |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1232,7 +1238,7 @@ export type DeviceMockType = 'mobile' | 'tablet' | 'desktop' | 'browser';
 **種類:** 関数
 
 ```typescript
-function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement
+function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 ```
 
 `ForgeDeviceMock` — 任意の画面を包み込む装飾的なデバイス フレーム
@@ -1249,9 +1255,9 @@ chrome、ニュートラルな JSX 方言で一度作成されました (`@missi
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<DeviceMockProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<DeviceMockProperties> |      |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1260,7 +1266,7 @@ chrome、ニュートラルな JSX 方言で一度作成されました (`@missi
 **種類:** 関数
 
 ```typescript
-function ForgeGrid(properties: Readonly<GridProperties>): MpElement
+function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 ```
 
 `ForgeGrid` — コンテンツを配置する CSS グリッド レイアウト プリミティブ
@@ -1280,9 +1286,9 @@ BEM クラスと計算されたグリッド インライン スタイルを出�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<GridProperties> |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| プロパティ | 読み取り専用<GridProperties> |      |
 
 ### グリッドアラインメント
 
@@ -1321,7 +1327,7 @@ export interface GridProperties
 **種類:** 関数
 
 ```typescript
-function ForgeInView(properties: Readonly<InViewProperties>): MpElement
+function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 ```
 
 `ForgeInView` — コンテンツをラップし、`IntersectionObserver` を使用してそれを表示します。
@@ -1336,9 +1342,9 @@ function ForgeInView(properties: Readonly<InViewProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<InViewProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<InViewProperties> |      |
 
 ### インビューアニメーション
 
@@ -1367,7 +1373,7 @@ export interface InViewProperties
 **種類:** 関数
 
 ```typescript
-function ForgeList(properties: Readonly<ListProperties>): MpElement
+function ForgeList(properties: Readonly<ListProperties>): MpElement;
 ```
 
 `ForgeList` — 順序付けされた/順序付けされていない/説明/単純なリスト。
@@ -1388,9 +1394,9 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ListProperties> |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| プロパティ | 読み取り専用<ListProperties> |      |
 
 ### リストアイテム
 
@@ -1439,7 +1445,7 @@ export type ListVariant = 'unordered' | 'ordered' | 'description' | 'none';
 **種類:** 関数
 
 ```typescript
-function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement
+function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement;
 ```
 
 `ForgeMasonry` — 一度作成された CSS 複数列石積みレイアウト プリミティブ
@@ -1462,9 +1468,9 @@ CSS);動的な複数列プロパティはインラインで適用されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MasonryProperties> |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| プロパティ | 読み取り専用<MasonryProperties> |      |
 
 ### 石積みギャップ
 
@@ -1493,7 +1499,7 @@ export interface MasonryProperties
 **種類:** 関数
 
 ```typescript
-function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
+function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 ```
 
 `ForgeMenuItem` — ニュートラルな JSX 方言で一度作成された単一のメニュー エントリ
@@ -1513,9 +1519,9 @@ function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MenuItemProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<MenuItemProperties> |      |
 
 ### メニュー項目のプロパティ
 
@@ -1532,7 +1538,8 @@ export interface MenuItemProperties
 **種類：**タイプ
 
 ```typescript
-export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type MenuItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 メニュー項目に適用されるトーン。
@@ -1544,7 +1551,7 @@ export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' |
 **種類:** 関数
 
 ```typescript
-function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
+function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 ```
 
 `ForgeMenu` — ニュートラルな JSX 方言で一度作成されたアクセス可能なメニュー
@@ -1570,9 +1577,9 @@ function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MenuProperties> |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| プロパティ | 読み取り専用<MenuProperties> |      |
 
 ### メニューノード
 
@@ -1611,7 +1618,7 @@ export interface MenuProperties
 **種類:** 関数
 
 ```typescript
-function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement
+function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 ```
 
 `ForgeNavbarItem` — ニュートラルな JSX 方言で一度作成された navbar エントリ
@@ -1639,9 +1646,9 @@ React の要素タイプ / Vue の `<component :is>`)、`tag` は `'a'` に解�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<NavbarItemProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<NavbarItemProperties> |      |
 
 ### NavbarItemChild
 
@@ -1668,7 +1675,8 @@ export interface NavbarItemProperties
 **種類：**タイプ
 
 ```typescript
-export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type NavbarItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 ナビゲーションバー項目に適用されるトーン。
@@ -1680,7 +1688,7 @@ export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary'
 **種類:** 関数
 
 ```typescript
-function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
+function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 ```
 
 `ForgePagination` — ニュートラル JSX で一度作成されたページ ナビゲーション コントロール
@@ -1700,9 +1708,9 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<PaginationProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<PaginationProperties> |      |
 
 ### ページネーション項目
 
@@ -1741,7 +1749,7 @@ export type PaginationSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
+function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 ```
 
 `ForgeTabs` — で一度作成された、アクセス可能で制御されたタブ コンテナ
@@ -1775,9 +1783,9 @@ ID ごとの動的なスロット名 (`<slot :name="tab.id">`)、各パネルは
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<TabsProperties> |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| プロパティ | 読み取り専用<TabsProperties> |      |
 
 ### タブ項目
 
@@ -1826,7 +1834,7 @@ export type TabsVariant = 'line' | 'pill';
 **種類:** 関数
 
 ```typescript
-function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
+function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 ```
 
 `ForgeTimeline` — 一度作成されたイベントの順序付けされた時系列リスト。
@@ -1847,9 +1855,9 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<TimelineProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<TimelineProperties> |      |
 
 ### タイムライン整列
 
@@ -1886,7 +1894,8 @@ export interface TimelineItemScope
 **種類：**タイプ
 
 ```typescript
-export type TimelineItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type TimelineItemVariant =
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 マーカー ドットに適用されるカラー ファミリ。
@@ -1918,7 +1927,7 @@ export interface TimelineProperties
 **種類:** 関数
 
 ```typescript
-function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement
+function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement;
 ```
 
 `ForgeWindowPopout` — コンテンツを別のブラウザ ウィンドウにポップアウトします。
@@ -1943,9 +1952,9 @@ props (元の SFC のエミットを置き換えます)。中立的な `useState
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<WindowPopoutProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<WindowPopoutProperties> |      |
 
 ### ウィンドウポップアウトプロパティ
 
@@ -1994,7 +2003,7 @@ export interface CarouselSlideScope
 **種類:** 関数
 
 ```typescript
-function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement
+function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
 ```
 
 `ForgeCarousel` — 水平スクロール可能なスライドデッキ。
@@ -2019,9 +2028,9 @@ CSS モジュール `forge-carousel.module.scss` が同じ場所にあります�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<CarouselProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<CarouselProperties> |      |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2040,7 +2049,7 @@ export interface ChatAreaProperties
 **種類:** 関数
 
 ```typescript
-function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
+function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 ```
 
 `ForgeChatArea` — で一度作成されたスクロール可能な会話サーフェス
@@ -2065,9 +2074,9 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ChatAreaProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<ChatAreaProperties> |      |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2139,7 +2148,7 @@ export type DrawerVariant = 'overlay' | 'inline';
 **種類:** 関数
 
 ```typescript
-function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement
+function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 ```
 
 `ForgeDrawer` — ニュートラルな JSX 方言で一度作成されたスライディング パネル
@@ -2169,9 +2178,9 @@ helper) と、i18n の代わりに `closeLabel` prop を使用します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<DrawerProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<DrawerProperties> |      |
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2180,7 +2189,7 @@ helper) と、i18n の代わりに `closeLabel` prop を使用します。
 **種類:** 関数
 
 ```typescript
-function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
+function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement;
 ```
 
 `ForgeMenubar` — ニュートラルで一度作成された水平アプリケーション メニューバー
@@ -2207,9 +2216,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MenubarProperties> |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| プロパティ | 読み取り専用<MenubarProperties> |      |
 
 ### メニューバーのプロパティ
 
@@ -2228,7 +2237,7 @@ export interface MenubarProperties
 **種類:** 関数
 
 ```typescript
-function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement
+function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
 ```
 
 `ForgeNavbar` — ニュートラルで一度作成されたトップアプリケーションナビゲーションバー
@@ -2249,9 +2258,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<NavbarProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<NavbarProperties> |      |
 
 ### ナビゲーションバーの位置合わせ
 
@@ -2292,7 +2301,7 @@ export interface NavbarProperties
 **種類:** 関数
 
 ```typescript
-function ForgeTable(properties: Readonly<TableProperties>): MpElement
+function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
 `ForgeTable` — ニュートラルな JSX 言語で一度作成された並べ替え可能なデータ テーブル
@@ -2315,9 +2324,9 @@ function ForgeTable(properties: Readonly<TableProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<TableProperties> |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| プロパティ | 読み取り専用<TableProperties> |      |
 
 ### 並べ替え方向
 
@@ -2356,7 +2365,7 @@ export interface TableProperties
 **種類:** 関数
 
 ```typescript
-function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
+function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
 ```
 
 `ForgeTreeView` — ニュートラル JSX で一度作成された再帰的でアクセス可能なツリー
@@ -2382,9 +2391,9 @@ function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<TreeViewProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<TreeViewProperties> |      |
 
 ### ツリービューラベルスコープ
 
@@ -2423,7 +2432,7 @@ export interface TreeViewProperties
 **種類:** 関数
 
 ```typescript
-function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement
+function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement;
 ```
 
 `ForgeVirtualList` — スクロール コンテナ内に表示される行のみをレンダリングします。
@@ -2444,9 +2453,9 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<VirtualListProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<VirtualListProperties> |      |
 
 ### VirtualListItemScope
 
@@ -2475,7 +2484,7 @@ export interface VirtualListProperties
 **種類:** 関数
 
 ```typescript
-function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement
+function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement;
 ```
 
 `ForgeVirtualLogViewer` — 高性能の仮想スクロール ログ ビューア。
@@ -2495,9 +2504,9 @@ Vue by `@mission-platform/vite-plugin-forge`;内の行のみをレンダリン�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<VirtualLogViewerProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<VirtualLogViewerProperties> |      |
 
 ### ログエントリ
 
@@ -2536,7 +2545,7 @@ export interface VirtualLogViewerProperties
 **種類:** 関数
 
 ```typescript
-function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement
+function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement;
 ```
 
 `ForgeVirtualTable` — レンダリングする仮想スクロール、ソート可能なデータ テーブル
@@ -2566,9 +2575,9 @@ unsorted) `onSort` コールバックを起動します。ボディ行は `onRow
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<VirtualTableProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<VirtualTableProperties> |      |
 
 ### 仮想テーブルセルスコープ
 
@@ -2607,7 +2616,7 @@ export interface VirtualTableProperties
 **種類:** 関数
 
 ```typescript
-function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement
+function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement;
 ```
 
 `ForgeVirtualTabs` — **アクティブなタブのみをレンダリングする制御されたタブ コンテナ
@@ -2632,9 +2641,9 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<VirtualTabsProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<VirtualTabsProperties> |      |
 
 ### VirtualTabPanelScope
 
@@ -2663,7 +2672,7 @@ export interface VirtualTabsProperties
 **種類:** 関数
 
 ```typescript
-function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement
+function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement;
 ```
 
 `ForgeVirtualTreeView` — 表示を平坦化する仮想スクロール ツリー
@@ -2684,9 +2693,9 @@ function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<VirtualTreeViewProperties> |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| プロパティ | 読み取り専用<VirtualTreeViewProperties> |      |
 
 ### ツリーノード
 
@@ -2725,7 +2734,7 @@ export interface VirtualTreeViewProperties
 **種類:** 関数
 
 ```typescript
-function ForgeHero(properties: Readonly<HeroProperties>): MpElement
+function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 ```
 
 `ForgeHero` — ニュートラル JSX で一度作成されたページのヒーロー/バナー セクション
@@ -2747,9 +2756,9 @@ helper) と `eyebrow`/`title`/`subtitle` は文字列プロパティです。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<HeroProperties> |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| プロパティ | 読み取り専用<HeroProperties> |      |
 
 ### ヒーローアライン
 
@@ -2788,7 +2797,7 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function beginPointerDrag(handlers: PointerDragHandlers): () => void
+function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 ```
 
 ウィンドウ追跡ポインタのドラッグを開始します。 `pointermove`/`pointerup`/を添付します
@@ -2799,9 +2808,9 @@ function beginPointerDrag(handlers: PointerDragHandlers): () => void
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ハンドラー |ポインタードラッグハンドラー |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| ハンドラー | ポインタードラッグハンドラー |      |
 
 ### ポインタードラッグハンドラー
 

@@ -26,7 +26,8 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type AlertBannerVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Absicht/Farbbehandlung des Banners – der kanonische Farbsatz.
@@ -36,7 +37,7 @@ Absicht/Farbbehandlung des Banners – der kanonische Farbsatz.
 **Art:** Funktion
 
 ```typescript
-function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement
+function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement;
 ```
 
 `ForgeAlertBanner` – ein Inline-Warnungs-/Benachrichtigungsbanner, das einmal im erstellt wurde
@@ -62,9 +63,9 @@ hat keine bedingte Root-Rückgabe).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<AlertBannerProperties> |  |
+| Name          | Geben Sie                               | ein Beschreibung |
+| ------------- | --------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<AlertBannerProperties> |                  |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -93,7 +94,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement
+function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 ```
 
 `ForgeDropdown` – ein schwebendes Menü-/Listenfeld, das an einem Trigger verankert und erstellt wurde
@@ -138,9 +139,9 @@ Requisiten. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<DropdownProperties> |  |
+| Name          | Geben Sie                            | ein Beschreibung |
+| ------------- | ------------------------------------ | ---------------- |
+| Eigenschaften | Schreibgeschützt<DropdownProperties> |                  |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -149,7 +150,7 @@ Requisiten. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 **Art:** Funktion
 
 ```typescript
-function ForgePopover(properties: Readonly<PopoverProperties>): MpElement
+function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 ```
 
 `ForgePopover` – ein schwebender Dialog, der an einem Auslöser verankert ist und einmal im erstellt wurde
@@ -194,16 +195,28 @@ Rückruf-Requisiten. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<PopoverProperties> |  |
+| Name          | Geben Sie                           | ein Beschreibung |
+| ------------- | ----------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<PopoverProperties> |                  |
 
 ### PopoverPlacement
 
 **Art:** Typ
 
 ```typescript
-export type PopoverPlacement = | 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end';
+export type PopoverPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
 ```
 
 Bevorzugte Platzierung des Popovers relativ zu seinem Auslöser.
@@ -225,7 +238,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function ForgeToast(properties: Readonly<ToastProperties>): MpElement
+function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 ```
 
 `ForgeToast` – eine einzelne Toast-Benachrichtigungskarte, die einmal im Neutralen erstellt wurde
@@ -247,9 +260,9 @@ festgelegt (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/`ForgeIconInfo`
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ToastProperties> |  |
+| Name          | Geben Sie                         | ein Beschreibung |
+| ------------- | --------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<ToastProperties> |                  |
 
 ### ToastProperties
 
@@ -276,7 +289,8 @@ Größentoken – kanonische Skala 2xs → 2xl.
 **Art:** Typ
 
 ```typescript
-export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ToastVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Absicht/Farbbehandlung des Toasts – der kanonische Farbsatz.
@@ -288,7 +302,7 @@ Absicht/Farbbehandlung des Toasts – der kanonische Farbsatz.
 **Art:** Funktion
 
 ```typescript
-function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
+function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 ```
 
 `ForgeTooltip` – ein kurzer kontextbezogener Hinweis, der an seinem Auslöser verankert ist und einmal erstellt wurde
@@ -330,9 +344,9 @@ besitzt sein Styling durch das mitgelagerte CSS-Modul `forge-tooltip.module.scss
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<TooltipProperties> |  |
+| Name          | Geben Sie                           | ein Beschreibung |
+| ------------- | ----------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<TooltipProperties> |                  |
 
 ### Tooltip-Platzierung
 
@@ -391,7 +405,7 @@ Größentoken – kanonische Skala 2xs → 2xl.
 **Art:** Funktion
 
 ```typescript
-function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
+function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 ```
 
 `ForgeDialog` – ein modaler Dialog, der einmal im neutralen JSX-Dialekt erstellt wurde und
@@ -419,9 +433,9 @@ Requisiten. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<DialogProperties> |  |
+| Name          | Geben Sie                          | ein Beschreibung |
+| ------------- | ---------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<DialogProperties> |                  |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -430,7 +444,7 @@ Requisiten. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 **Art:** Funktion
 
 ```typescript
-function ForgeModal(properties: Readonly<ModalProperties>): MpElement
+function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 ```
 
 `ForgeModal` – ein zentriertes Modal, das einmal im neutralen JSX-Dialekt erstellt wurde und
@@ -456,9 +470,9 @@ Co-lokalisiertes CSS-Modul `forge-modal.module.scss`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ModalProperties> |  |
+| Name          | Geben Sie                         | ein Beschreibung |
+| ------------- | --------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<ModalProperties> |                  |
 
 ### Modale Eigenschaften
 
@@ -487,7 +501,7 @@ Breitenschritt des Modals auf Tablet/Desktop (`sm`+); Mobile ist immer in voller
 **Art:** Funktion
 
 ```typescript
-function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement
+function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement;
 ```
 
 `ForgeToastContainer` – stellt die im gemeinsamen `toast-store` gehaltenen Toasts dar,
@@ -503,6 +517,7 @@ Observable Store mit den neutralen Hooks {@link useState}/{@link useEffect}
 Die Quelle bleibt auf beiden Frameworks reaktiv.
 
 Zugänglichkeit:
+
 - Der Stack ist ein `role="region"` mit einem konfigurierbaren `aria-label`; jeder
   `ForgeToast` trägt sein eigenes `role="status"` / `role="alert"`.
 
@@ -526,9 +541,9 @@ composable → die in CSS angewendete statische Z-Index-Ebene `notification`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<ToastContainerProperties> |  |
+| Name          | Geben Sie                                  | ein Beschreibung |
+| ------------- | ------------------------------------------ | ---------------- |
+| Eigenschaften | Schreibgeschützt<ToastContainerProperties> |                  |
 
 ### ToastContainerProperties
 
@@ -557,7 +572,7 @@ Größentoken – kanonische Skala 2xs → 2xl.
 **Art:** Funktion
 
 ```typescript
-function clearToasts(): void
+function clearToasts(): void;
 ```
 
 Verwerfen Sie alle Toasts.
@@ -567,7 +582,7 @@ Verwerfen Sie alle Toasts.
 **Art:** Funktion
 
 ```typescript
-function dismissToast(id: number): void
+function dismissToast(id: number): void;
 ```
 
 Einen Toast per ID ablehnen.
@@ -575,15 +590,15 @@ Einen Toast per ID ablehnen.
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| id | Zahl |  |
+| ---- | --------- | ---------------- |
+| id   | Zahl      |                  |
 
 ### FehlerToast
 
 **Art:** konstant
 
 ```typescript
-export const errorToast
+export const errorToast;
 ```
 
 Praktisch: Zeigen Sie einen `error`-Toast an.
@@ -593,7 +608,7 @@ Praktisch: Zeigen Sie einen `error`-Toast an.
 **Art:** Funktion
 
 ```typescript
-function getToastsSnapshot(): readonly ToastRecord[]
+function getToastsSnapshot(): readonly ToastRecord[];
 ```
 
 Lesen Sie eine unveränderliche Momentaufnahme der aktiven Toasts.
@@ -603,7 +618,7 @@ Lesen Sie eine unveränderliche Momentaufnahme der aktiven Toasts.
 **Art:** konstant
 
 ```typescript
-export const infoToast
+export const infoToast;
 ```
 
 Praktisch: Zeigen Sie einen `info`-Toast an.
@@ -613,39 +628,39 @@ Praktisch: Zeigen Sie einen `info`-Toast an.
 **Art:** Funktion
 
 ```typescript
-function showToast(options: ToastOptions | string): number
+function showToast(options: ToastOptions | string): number;
 ```
 
 Zeigt einen Toast und gibt seine ID zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ToastOptions \| Zeichenfolge |  |
+| Name     | Geben Sie                    | ein Beschreibung |
+| -------- | ---------------------------- | ---------------- |
+| Optionen | ToastOptions \| Zeichenfolge |                  |
 
 ### abonnierenToasts
 
 **Art:** Funktion
 
 ```typescript
-function subscribeToasts(listener: () => void): () => void
+function subscribeToasts(listener: () => void): () => void;
 ```
 
 Abonnieren Sie den Store-Änderungen; gibt eine Abmeldefunktion zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Zuhörer | () => void |  |
+| Name    | Geben Sie  | ein Beschreibung |
+| ------- | ---------- | ---------------- |
+| Zuhörer | () => void |                  |
 
 ### ErfolgToast
 
 **Art:** konstant
 
 ```typescript
-export const successToast
+export const successToast;
 ```
 
 Praktisch: Zeigen Sie einen `success`-Toast an.
@@ -685,7 +700,7 @@ Ein entschlossener Trinkspruch im Laden.
 **Art:** Funktion
 
 ```typescript
-function useToast(): UseToastReturn
+function useToast(): UseToastReturn;
 ```
 
 Imperative Helfer zum Anzeigen und Verwerfen von Toasts, die den Vue widerspiegeln
@@ -707,7 +722,7 @@ Die von {@link useToast} zurückgegebene öffentliche API.
 **Art:** konstant
 
 ```typescript
-export const warningToast
+export const warningToast;
 ```
 
 Praktisch: Zeigen Sie einen `warning`-Toast an.

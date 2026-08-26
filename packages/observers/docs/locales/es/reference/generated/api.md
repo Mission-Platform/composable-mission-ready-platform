@@ -16,7 +16,11 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/obse
 **Tipo:** función
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 Gancho IntersectionObserver neutral en el marco de trabajo.
@@ -28,11 +32,11 @@ Limpieza automática: desconecta el observador al desmontar.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| objetivo | MpRef<Element \| null> |  |
-| devolución de llamada | IntersecciónObserverCallback |  |
-| opciones | IntersecciónObserverInit |  |
+| Nombre                | Tipo                         | Descripción |
+| --------------------- | ---------------------------- | ----------- |
+| objetivo              | MpRef<Element \| null>       |             |
+| devolución de llamada | IntersecciónObserverCallback |             |
+| opciones              | IntersecciónObserverInit     |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -41,7 +45,11 @@ Limpieza automática: desconecta el observador al desmontar.
 **Tipo:** función
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 Gancho MutationObserver neutral en el marco de trabajo.
@@ -52,11 +60,11 @@ Limpieza automática: desconecta el observador al desmontar.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| objetivo | MpRef<Node \| null> |  |
-| devolución de llamada | Devolución de llamada de mutación |  |
-| opciones | MutaciónObserverInit |  |
+| Nombre                | Tipo                              | Descripción |
+| --------------------- | --------------------------------- | ----------- |
+| objetivo              | MpRef<Node \| null>               |             |
+| devolución de llamada | Devolución de llamada de mutación |             |
+| opciones              | MutaciónObserverInit              |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -65,7 +73,7 @@ Limpieza automática: desconecta el observador al desmontar.
 **Tipo:** función
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 Gancho PerformanceObserver neutral en el marco de trabajo.
@@ -77,7 +85,7 @@ Limpieza automática: desconecta el observador al desmontar.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| devolución de llamada | PerformanceObserverCallback |  |
-| opciones | PerformanceObserverInit |  |
+| Nombre                | Tipo                        | Descripción |
+| --------------------- | --------------------------- | ----------- |
+| devolución de llamada | PerformanceObserverCallback |             |
+| opciones              | PerformanceObserverInit     |             |

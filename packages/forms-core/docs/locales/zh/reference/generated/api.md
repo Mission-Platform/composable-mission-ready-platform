@@ -62,38 +62,38 @@ canvas 为给定的 `type` 创建一个新的 {@link BuilderField}。
 **种类：**功能
 
 ```typescript
-function evaluateCondition(condition: FieldCondition, values: FormValues): boolean
+function evaluateCondition(condition: FieldCondition, values: FormValues): boolean;
 ```
 
 根据 `values` 形式评估 {@link FieldCondition}，返回是否
-目前它成立。  组合器组遵循 JSON Schema 语义：
-`allOf` = 与、`anyOf` = 或、`oneOf` = 恰好一 (XOR)。  多个关键词
-存在于同一组中的它们本身是“与”的。  一群空人过去。
+目前它成立。 组合器组遵循 JSON Schema 语义：
+`allOf` = 与、`anyOf` = 或、`oneOf` = 恰好一 (XOR)。 多个关键词
+存在于同一组中的它们本身是“与”的。 一群空人过去。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|状况 |现场条件 |  |
-|价值观 |表单值 |  |
+| 名称   | 类型     | 描述 |
+| ------ | -------- | ---- |
+| 状况   | 现场条件 |      |
+| 价值观 | 表单值   |      |
 
 ### 是否字段可见
 
 **种类：**功能
 
 ```typescript
-function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean
+function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean;
 ```
 
 具有可选 `visibleWhen` 条件的字段当前是否应为
-呈现。  没有条件的字段始终可见。
+呈现。 没有条件的字段始终可见。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|领域 | { 可见时间？： 字段条件 } |  |
-|价值观 |表单值 |  |
+| 名称   | 类型                      | 描述 |
+| ------ | ------------------------- | ---- |
+| 领域   | { 可见时间？： 字段条件 } |      |
+| 价值观 | 表单值                    |      |
 
 ## `src/form-schema`
 
@@ -102,16 +102,16 @@ function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormVal
 **种类：**功能
 
 ```typescript
-function builderFieldToProperty(field: BuilderField): JsonSchemaProperty
+function builderFieldToProperty(field: BuilderField): JsonSchemaProperty;
 ```
 
 将单个 {@link BuilderField} 转换为 {@link JsonSchemaProperty}。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|领域 |建设者领域 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 领域 | 建设者领域 |      |
 
 ### 创建字段
 
@@ -123,7 +123,7 @@ function createField(options: {
   label?: string;
   key?: string;
   usedKeys?: Iterable<string>;
-}): BuilderField
+}): BuilderField;
 ```
 
 创建给定 `type` 的新 {@link BuilderField}。密钥已导出
@@ -132,16 +132,16 @@ function createField(options: {
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | { 类型：表单字段类型；   标签？：字符串；   键？：字符串；   使用Keys？：Iterable<string>； } |  |
+| 名称 | 类型                                                                                    | 描述 |
+| ---- | --------------------------------------------------------------------------------------- | ---- |
+| 选项 | { 类型：表单字段类型； 标签？：字符串； 键？：字符串； 使用Keys？：Iterable<string>； } |      |
 
 ### DEFAULT_FIELD_TYPES
 
 **种类：**常数
 
 ```typescript
-export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
+export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[];
 ```
 
 构建器选项板中提供的字段类型（按显示顺序）。调色板
@@ -154,27 +154,30 @@ export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
 **种类：**功能
 
 ```typescript
-function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined
+function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined;
 ```
 
 对照其兄弟字段验证字段键：它必须是非空且唯一的
 在其容器内。返回人类可读的消息，或 `undefined`
-密钥有效。 `siblingKeys` 是 *other* 字段的键
+密钥有效。 `siblingKeys` 是 _other_ 字段的键
 相同的容器（不包括正在验证的字段）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|关键|字符串|  |
-|兄弟键 |可迭代<string> |  |
+| 名称   | 类型           | 描述 |
+| ------ | -------------- | ---- |
+| 关键   | 字符串         |      |
+| 兄弟键 | 可迭代<string> |      |
 
 ### 定义字段
 
 **种类：**功能
 
 ```typescript
-function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: FieldsToSchemaOptions = {}): SchemaFormDefinition
+function fieldsToDefinition(
+  fields: BuilderField[] | BuilderField[][],
+  options: FieldsToSchemaOptions = {},
+): SchemaFormDefinition;
 ```
 
 构建模式定义，从 `options` 选择单步或向导。
@@ -183,34 +186,34 @@ function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|领域 |生成器字段[] \|生成器字段[][] |  |
-|选项 |字段到架构选项 |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 领域 | 生成器字段[] \|生成器字段[][] |      |
+| 选项 | 字段到架构选项                |      |
 
 ### 字段到架构
 
 **种类：**功能
 
 ```typescript
-function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema
+function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema;
 ```
 
 从顶级字段构建单步 {@link FormJsonSchema}。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|领域 |生成器字段[] |  |
-|选项 |字段到架构选项 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 领域 | 生成器字段[]   |      |
+| 选项 | 字段到架构选项 |      |
 
 ### fieldsToWizardSchema
 
 **种类：**功能
 
 ```typescript
-function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[]
+function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[];
 ```
 
 从每步骤字段构建多步骤向导 ({@link FormJsonSchema}[])
@@ -218,145 +221,145 @@ function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|步骤|生成器字段[][] |  |
-|选项 |字段到架构选项 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 步骤 | 生成器字段[][] |      |
+| 选项 | 字段到架构选项 |      |
 
 ### isDateWidget
 
 **种类：**功能
 
 ```typescript
-function isDateWidget(widget: FormFieldType): boolean
+function isDateWidget(widget: FormFieldType): boolean;
 ```
 
 小部件是否捕获日历日期（接受 `minDate` / `maxDate`）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ### isFieldsetWidget
 
 **种类：**功能
 
 ```typescript
-function isFieldsetWidget(widget: FormFieldType): boolean
+function isFieldsetWidget(widget: FormFieldType): boolean;
 ```
 
 小部件是否是分组字段集。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ### 是文件小部件
 
 **种类：**功能
 
 ```typescript
-function isFileWidget(widget: FormFieldType): boolean
+function isFileWidget(widget: FormFieldType): boolean;
 ```
 
 小部件是否上传文件（接受 `accept` / `multiple` / `capture`）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ### isLocationWidget
 
 **种类：**功能
 
 ```typescript
-function isLocationWidget(widget: FormFieldType): boolean
+function isLocationWidget(widget: FormFieldType): boolean;
 ```
 
 小部件是否捕获地理坐标（接受 `locationFormat`）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ### isMultilineWidget
 
 **种类：**功能
 
 ```typescript
-function isMultilineWidget(widget: FormFieldType): boolean
+function isMultilineWidget(widget: FormFieldType): boolean;
 ```
 
 小部件是否呈现多行区域（接受 `rows` 计数）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ### isNumberWidget
 
 **种类：**功能
 
 ```typescript
-function isNumberWidget(widget: FormFieldType): boolean
+function isNumberWidget(widget: FormFieldType): boolean;
 ```
 
 小部件是否为数字（`number` / `stepper`）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ### isTextWidget
 
 **种类：**功能
 
 ```typescript
-function isTextWidget(widget: FormFieldType): boolean
+function isTextWidget(widget: FormFieldType): boolean;
 ```
 
 小部件是否为文本类型（接受 `minLength` / `maxLength` / `pattern`）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ### isTimeWidget
 
 **种类：**功能
 
 ```typescript
-function isTimeWidget(widget: FormFieldType): boolean
+function isTimeWidget(widget: FormFieldType): boolean;
 ```
 
 小部件是否捕获一天中的某个时间（接受 `showSeconds` 切换）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ### 下一个字段ID
 
 **种类：**功能
 
 ```typescript
-function nextFieldId(): string
+function nextFieldId(): string;
 ```
 
 生成一个新的、抗碰撞的构建器字段 ID。
@@ -366,55 +369,55 @@ function nextFieldId(): string
 **种类：**功能
 
 ```typescript
-function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>
+function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>;
 ```
 
 向导定义的每步骤条件可见性规则。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|定义| SchemaFormDefinition \|未定义 |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 定义 | SchemaFormDefinition \|未定义 |      |
 
 ### 模式步骤描述
 
 **种类：**功能
 
 ```typescript
-function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 向导定义的每步骤描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|定义| SchemaFormDefinition \|未定义 |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 定义 | SchemaFormDefinition \|未定义 |      |
 
 ### 模式步骤标题
 
 **种类：**功能
 
 ```typescript
-function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 向导定义的每步骤标题（对于单步骤表单为空）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|定义| SchemaFormDefinition \|未定义 |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 定义 | SchemaFormDefinition \|未定义 |      |
 
 ### 模式到字段
 
 **种类：**功能
 
 ```typescript
-function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][]
+function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][];
 ```
 
 将 {@link SchemaFormDefinition} 重新注入构建器的工作区域
@@ -424,74 +427,74 @@ function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderFi
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|定义| SchemaFormDefinition \|未定义 |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 定义 | SchemaFormDefinition \|未定义 |      |
 
 ### slugify
 
 **种类：**功能
 
 ```typescript
-function slugify(label: string): string
+function slugify(label: string): string;
 ```
 
 将人工标签转换为安全的 `snake_case` 架构键。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|标签|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 标签 | 字符串 |      |
 
 ### 唯一键
 
 **种类：**功能
 
 ```typescript
-function uniqueKey(base: string, used: Iterable<string>): string
+function uniqueKey(base: string, used: Iterable<string>): string;
 ```
 
 返回 `base`、或 `base_2`、`base_3`...，直到不再发生碰撞。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|基地|字符串|  |
-|二手 |可迭代<string> |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 基地 | 字符串         |      |
+| 二手 | 可迭代<string> |      |
 
 ### 小部件有选项
 
 **种类：**功能
 
 ```typescript
-function widgetHasOptions(widget: FormFieldType): boolean
+function widgetHasOptions(widget: FormFieldType): boolean;
 ```
 
 小部件是否公开作者定义的选项列表。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ### widgetToJsonType
 
 **种类：**功能
 
 ```typescript
-function widgetToJsonType(widget: FormFieldType): JsonSchemaType
+function widgetToJsonType(widget: FormFieldType): JsonSchemaType;
 ```
 
 小部件序列化到的 JSON 模式原始类型。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|小部件 |表单字段类型 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 小部件 | 表单字段类型 |      |
 
 ## `src/json-schema`
 
@@ -500,7 +503,7 @@ function widgetToJsonType(widget: FormFieldType): JsonSchemaType
 **种类：**功能
 
 ```typescript
-function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator
+function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator;
 ```
 
 将 {@link FormJsonSchema} 编译为 Ajv 支持的可重用验证器。
@@ -508,7 +511,7 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 生成的错误消息通过可选的 `translate` 进行本地化
 函数（镜像 vue-i18n 的 `t(key, named)`）；当省略时，内置
-使用英文消息。  作者提供的 `errorMessage` 始终覆盖
+使用英文消息。 作者提供的 `errorMessage` 始终覆盖
 获胜并逐字返回。
 
 由当前不成立的 `ui.visibleWhen` 条件门控的字段是
@@ -517,10 +520,10 @@ function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTrans
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|架构| FormJsonSchema |  |
-|翻译 |架构表单翻译 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 架构 | FormJsonSchema |      |
+| 翻译 | 架构表单翻译   |      |
 
 ### 表单验证器
 
@@ -537,7 +540,7 @@ export interface FormValidator
 **种类：**功能
 
 ```typescript
-function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
+function jsonSchemaDefaults(schema: FormJsonSchema): FormValues;
 ```
 
 计算 JSON 模式中每个字段的默认值，尊重
@@ -546,28 +549,28 @@ function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|架构| FormJsonSchema |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 架构 | FormJsonSchema |      |
 
 ### jsonSchemaToFields
 
 **种类：**功能
 
 ```typescript
-function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[]
+function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[];
 ```
 
 将 {@link FormJsonSchema} 转换为渲染就绪的有序列表
-字段渲染器使用的 {@link FormFieldSchema} 描述符。  嵌套
+字段渲染器使用的 {@link FormFieldSchema} 描述符。 嵌套
 `object`（字段集）属性被递归到，因此字段集携带其
 自己订购了 `fields`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|架构| FormJsonSchema |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 架构 | FormJsonSchema |      |
 
 ## `src/types`
 
@@ -586,7 +589,7 @@ export type Autocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'ch
 **种类：**常数
 
 ```typescript
-export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>
+export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>;
 ```
 
 为构建器下拉列表分组的可选 `autocomplete` 令牌。 `group`
@@ -610,7 +613,64 @@ export type Autocomplete = AutocompleteToken | (string &
 **种类：**类型
 
 ```typescript
-export type AutocompleteToken = | 'off' | 'on' | 'name' | 'honorific-prefix' | 'given-name' | 'additional-name' | 'family-name' | 'honorific-suffix' | 'nickname' | 'email' | 'username' | 'new-password' | 'current-password' | 'one-time-code' | 'organization-title' | 'organization' | 'street-address' | 'address-line1' | 'address-line2' | 'address-line3' | 'address-level4' | 'address-level3' | 'address-level2' | 'address-level1' | 'country' | 'country-name' | 'postal-code' | 'cc-name' | 'cc-given-name' | 'cc-additional-name' | 'cc-family-name' | 'cc-number' | 'cc-exp' | 'cc-exp-month' | 'cc-exp-year' | 'cc-csc' | 'cc-type' | 'transaction-currency' | 'transaction-amount' | 'language' | 'bday' | 'bday-day' | 'bday-month' | 'bday-year' | 'sex' | 'tel' | 'tel-country-code' | 'tel-national' | 'tel-area-code' | 'tel-local' | 'tel-local-prefix' | 'tel-local-suffix' | 'tel-extension' | 'impp' | 'url' | 'photo' | 'webauthn';
+export type AutocompleteToken =
+  | 'off'
+  | 'on'
+  | 'name'
+  | 'honorific-prefix'
+  | 'given-name'
+  | 'additional-name'
+  | 'family-name'
+  | 'honorific-suffix'
+  | 'nickname'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'one-time-code'
+  | 'organization-title'
+  | 'organization'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'address-line3'
+  | 'address-level4'
+  | 'address-level3'
+  | 'address-level2'
+  | 'address-level1'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-given-name'
+  | 'cc-additional-name'
+  | 'cc-family-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-exp-month'
+  | 'cc-exp-year'
+  | 'cc-csc'
+  | 'cc-type'
+  | 'transaction-currency'
+  | 'transaction-amount'
+  | 'language'
+  | 'bday'
+  | 'bday-day'
+  | 'bday-month'
+  | 'bday-year'
+  | 'sex'
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national'
+  | 'tel-area-code'
+  | 'tel-local'
+  | 'tel-local-prefix'
+  | 'tel-local-suffix'
+  | 'tel-extension'
+  | 'impp'
+  | 'url'
+  | 'photo'
+  | 'webauthn';
 ```
 
 标准 HTML `autocomplete` 令牌，由 MDN 编目
@@ -641,7 +701,7 @@ export type FieldCondition = FieldConditionLeaf | FieldConditionGroup;
 export interface FieldConditionGroup
 ```
 
-组合器分组嵌套的 {@link FieldCondition}。  镜像 JSON 架构
+组合器分组嵌套的 {@link FieldCondition}。 镜像 JSON 架构
 布尔关键字：
 
 - `allOf` — 当**每个**嵌套条件通过（逻辑 AND）时通过。
@@ -658,7 +718,7 @@ export interface FieldConditionGroup
 export interface FieldConditionLeaf
 ```
 
-测试一个字段的当前值的单叶条件。  正好一个
+测试一个字段的当前值的单叶条件。 正好一个
 比较器通常被设置；当有多个存在时，它们必须“全部”保留
 叶子通过。
 
@@ -691,7 +751,7 @@ export type FormErrors = Record<string, string | undefined>;
 export interface FormFieldSchema
 ```
 
-已解析、可渲染的字段描述符。  SchemaForm 派生其中之一
+已解析、可渲染的字段描述符。 SchemaForm 派生其中之一
 {@link FormJsonSchema} 中的每个属性；它*不是*公众的一部分
 输入表面并且不携带其自己的验证逻辑。
 
@@ -700,12 +760,36 @@ export interface FormFieldSchema
 **种类：**类型
 
 ```typescript
-export type FormFieldType = | 'text' | 'email' | 'password' | 'number' | 'stepper' | 'url' | 'tel' | 'textarea' | 'markdown' | 'code' | 'checkbox' | 'switch' | 'select' | 'radio' | 'multiselect' | 'date' | 'time' | 'datetime' | 'daterange' | 'timerange' | 'datetimerange' | 'location' | 'file' | 'fieldset';
+export type FormFieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'stepper'
+  | 'url'
+  | 'tel'
+  | 'textarea'
+  | 'markdown'
+  | 'code'
+  | 'checkbox'
+  | 'switch'
+  | 'select'
+  | 'radio'
+  | 'multiselect'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'daterange'
+  | 'timerange'
+  | 'datetimerange'
+  | 'location'
+  | 'file'
+  | 'fieldset';
 ```
 
-为字段呈现的视觉控件。  这是一个演示问题，所以
+为字段呈现的视觉控件。 这是一个演示问题，所以
 它存在于非标准 `ui.widget` 扩展名下，而不是一个
-JSON 架构关键字。  当省略时，SchemaForm 会从以下位置推断出一个合理的小部件：
+JSON 架构关键字。 当省略时，SchemaForm 会从以下位置推断出一个合理的小部件：
 该属性的 `type`、`format` 和 `enum`。
 
 ### 表单JsonSchema
@@ -717,8 +801,8 @@ export interface FormJsonSchema
 ```
 
 单个表单（或者，在向导中，单个步骤）：JSON 架构 `object`
-文档。  当直接使用时，它描述了一种单步形式；当用作
-顶级数组的条目，它描述了一个向导步骤。  验证是
+文档。 当直接使用时，它描述了一种单步形式；当用作
+顶级数组的条目，它描述了一个向导步骤。 验证是
 在内部与 Ajv 进行对抗。
 
 ### 表单值
@@ -739,7 +823,7 @@ export type FormValues = Record<string, unknown>;
 export interface JsonSchemaProperty
 ```
 
-单个 JSON 模式属性描述符。  标准验证关键词图
+单个 JSON 模式属性描述符。 标准验证关键词图
 直接到生成的 Ajv 规则上。
 
 ### JsonSchema字符串格式
@@ -772,7 +856,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 ```
 
 输入/序列化 {@link LocationValue} 的坐标表示
-作为。  此处定义（而不是从 Vue 组件导入），因此共享
+作为。 此处定义（而不是从 Vue 组件导入），因此共享
 核心与框架无关；它在结构上与
 `@mission-platform/components` 位置输入类型。
 
@@ -784,7 +868,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 export interface LocationValue
 ```
 
-`location` 小部件捕获的地理坐标。  `lat`/`lng` 是
+`location` 小部件捕获的地理坐标。 `lat`/`lng` 是
 `undefined` 为空，因此空白值明确表示“无输入”。
 
 ### 模式表单定义
@@ -809,7 +893,7 @@ export type SchemaFormDefinition = FormJsonSchema | FormJsonSchema[];
 export type SchemaFormTranslate = (key: string, named?: Record<string, unknown>) => string;
 ```
 
-用于本地化生成的验证消息的翻译功能。  它
+用于本地化生成的验证消息的翻译功能。 它
 镜像 vue-i18n 的 `t(key, named)` 签名：给定消息密钥和
 可选的命名插值包，它返回本地化字符串。
 当省略时，SchemaForm 会回退到内置的英文消息。

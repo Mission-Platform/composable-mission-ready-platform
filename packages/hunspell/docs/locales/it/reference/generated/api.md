@@ -16,7 +16,11 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/hunspell`.
 **Tipo:** funzione
 
 ```typescript
-function useHunspellMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHunspellMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue componibile che integra il controllo ortografico Hunspell in un editor Monaco.
@@ -29,11 +33,11 @@ smonta e ricontrolla quando `language` cambia.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| editorRiferimento | ForseRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| abilitato | ForseRefOrGetter<boolean> |  |
-| linguaRiferimento | ForseRefOrGetter<string> |  |
+| Nome              | Digitare                                                           | Descrizione |
+| ----------------- | ------------------------------------------------------------------ | ----------- |
+| editorRiferimento | ForseRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |             |
+| abilitato         | ForseRefOrGetter<boolean>                                          |             |
+| linguaRiferimento | ForseRefOrGetter<string>                                           |             |
 
 ## `src/wasm/hunspell.d`
 

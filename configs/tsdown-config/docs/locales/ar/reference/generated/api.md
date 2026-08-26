@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 بناء التدحرج `external` / `deps.neverBundle` المسند الذي يعالج كل
@@ -24,16 +24,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أسماء | سلسلة للقراءة فقط[] |  |
+| الاسم | اكتب                | الوصف |
+| ----- | ------------------- | ----- |
+| أسماء | سلسلة للقراءة فقط[] |       |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 أسماء الحزم الافتراضية التي يجب على كل مكتبة مشتركة التعامل معها على أنها مقدمة من نظير.
@@ -44,7 +44,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 **النوع:** الوظيفة
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 قم ببناء تكوين tsdown لملف عادي TypeScript مكتبة (أو حزمة واحدة) -
@@ -53,16 +53,16 @@ function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | تسداونليبراريوبشن |  |
+| الاسم  | اكتب              | الوصف |
+| ------ | ----------------- | ----- |
+| خيارات | تسداونليبراريوبشن |       |
 
 ### تعريفTsdownVueLibrary
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 مثل {@link DefineTsdownLibrary}، ولكن الأسلاك `unplugin-vue` و Vue-علم DTS
@@ -70,16 +70,16 @@ function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | تسداونليبراريوبشن |  |
+| الاسم  | اكتب              | الوصف |
+| ------ | ----------------- | ----- |
+| خيارات | تسداونليبراريوبشن |       |
 
 ### readPackageDependencyNames
 
 **النوع:** الوظيفة
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 اقرأ `dependencies` و `peerDependencies` أعلن في package.json
@@ -88,16 +88,16 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الدليل الجذر | سلسلة |  |
+| الاسم        | اكتب  | الوصف |
+| ------------ | ----- | ----- |
+| الدليل الجذر | سلسلة |       |
 
 ### ResolveTsdownOutputDirectory
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 قم بعكس مسار إخراج الحزمة النهائية في جذر البناء المعزول. الحفاظ على
@@ -106,11 +106,11 @@ function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: st
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الدليل الجذر | سلسلة |  |
-| دليل الإخراج | سلسلة |  |
-| جذر الإخراج | سلسلة |  |
+| الاسم        | اكتب  | الوصف |
+| ------------ | ----- | ----- |
+| الدليل الجذر | سلسلة |       |
+| دليل الإخراج | سلسلة |       |
+| جذر الإخراج  | سلسلة |       |
 
 ### TsdownLibraryOptions
 

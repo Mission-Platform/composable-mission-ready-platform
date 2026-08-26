@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/schedul
 **Soort:** functie
 
 ```typescript
-function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement
+function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 ```
 
 `ForgeScheduler` — een volledige kalender/planner die één keer in de neutrale JSX is geschreven
@@ -41,9 +41,9 @@ rekwisieten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SchedulerProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<SchedulerProperties> |              |
 
 ### Plannereigenschappen
 
@@ -72,7 +72,7 @@ Grootte token - canonieke 2xs → 2xl schaal.
 **Soort:** functie
 
 ```typescript
-function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent
+function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent;
 ```
 
 Pas een patch toe op een gebeurtenis, waarbij `lastModified` en `sequence` (de standaard
@@ -80,17 +80,17 @@ RFC 5545 revisiesemantiek). `uid` blijft behouden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenement | VEvent |  |
-| pleister | Gedeeltelijk<Omit<VEvent, 'uid'>> |  |
+| Naam      | Typ                               | Beschrijving |
+| --------- | --------------------------------- | ------------ |
+| evenement | VEvent                            |              |
+| pleister  | Gedeeltelijk<Omit<VEvent, 'uid'>> |              |
 
 ### maakGebeurtenis
 
 **Soort:** functie
 
 ```typescript
-function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
+function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent;
 ```
 
 Bouw een gloednieuwe {@link VEvent} van een gedeeltelijke (zonder `uid`/`dtstamp`),
@@ -98,70 +98,70 @@ het genereren van een UID en de tijdstempels voor het maken/wijzigen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| gedeeltelijk | Laat<VEvent, 'uid' \| 'dtstamp'> | weg  |
+| Naam         | Typ                              | Beschrijving |
+| ------------ | -------------------------------- | ------------ |
+| gedeeltelijk | Laat<VEvent, 'uid' \| 'dtstamp'> | weg          |
 
 ### evenementenVoorDag
 
 **Soort:** functie
 
 ```typescript
-function eventsForDay(events: VEvent[], day: Date): VEvent[]
+function eventsForDay(events: VEvent[], day: Date): VEvent[];
 ```
 
 Retourneert gebeurtenissen die op de opgegeven kalenderdag vallen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenementen | VEvent[] |  |
-| dag | Datum |  |
+| Naam        | Typ      | Beschrijving |
+| ----------- | -------- | ------------ |
+| evenementen | VEvent[] |              |
+| dag         | Datum    |              |
 
 ### evenementenForRange
 
 **Soort:** functie
 
 ```typescript
-function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[]
+function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 ```
 
 Retourneert gebeurtenissen (inclusief terugkerende gebeurtenissen) die overlappen met het gegeven
-datumbereik [begin, einde).  Gebeurtenissen met `status === 'CANCELLED'` zijn uitgesloten.
+datumbereik [begin, einde). Gebeurtenissen met `status === 'CANCELLED'` zijn uitgesloten.
 Terugkerende evenementen worden uitgebreid via hun RRULE / RDATE; EXDATE-uitsluitingen zijn
 vereerd.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenementen | VEvent[] |  |
-| begin | Datum |  |
-| einde | Datum |  |
+| Naam        | Typ      | Beschrijving |
+| ----------- | -------- | ------------ |
+| evenementen | VEvent[] |              |
+| begin       | Datum    |              |
+| einde       | Datum    |              |
 
 ### formaatDuur
 
 **Soort:** functie
 
 ```typescript
-function formatDuration(event: VEvent): string
+function formatDuration(event: VEvent): string;
 ```
 
 Retourneert een door mensen leesbare duurreeks voor een gebeurtenis, bijvoorbeeld "1u 30m".
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenement | VEvent |  |
+| Naam      | Typ    | Beschrijving |
+| --------- | ------ | ------------ |
+| evenement | VEvent |              |
 
 ### lay-outDag
 
 **Soort:** functie
 
 ```typescript
-function layoutDay(events: VEvent[]): SchedulerEventSlot[]
+function layoutDay(events: VEvent[]): SchedulerEventSlot[];
 ```
 
 Leg gebeurtenissen voor één dag vast met behulp van een eenvoudige, op kolommen gebaseerde botsing
@@ -170,16 +170,16 @@ en elk bezet `column` van `totalColumns` parallelle sporen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenementen | VEvent[] |  |
+| Naam        | Typ      | Beschrijving |
+| ----------- | -------- | ------------ |
+| evenementen | VEvent[] |              |
 
 ### moveEventPatch
 
 **Soort:** functie
 
 ```typescript
-function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>
+function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>;
 ```
 
 De `{ dtstart, dtend }`-patch die een gebeurtenis met `deltaMs` milliseconden verplaatst,
@@ -187,17 +187,17 @@ met behoud van de ISO-weergave voor de hele dag/getimede versie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenement | VEvent |  |
-| deltaM's | nummer |  |
+| Naam      | Typ    | Beschrijving |
+| --------- | ------ | ------------ |
+| evenement | VEvent |              |
+| deltaM's  | nummer |              |
 
 ### resizeEventPatch
 
 **Soort:** functie
 
 ```typescript
-function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
+function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>;
 ```
 
 De `{ dtend }`-patch die het einde van een gebeurtenis aanpast met `deltaMs`, vastgeklemd zodat de
@@ -205,10 +205,10 @@ evenement duurt minimaal 15 minuten (of één dag, voor evenementen die de hele 
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenement | VEvent |  |
-| deltaM's | nummer |  |
+| Naam      | Typ    | Beschrijving |
+| --------- | ------ | ------------ |
+| evenement | VEvent |              |
+| deltaM's  | nummer |              |
 
 ## `src/core/range`
 
@@ -217,7 +217,7 @@ evenement duurt minimaal 15 minuten (of één dag, voor evenementen die de hele 
 **Soort:** functie
 
 ```typescript
-function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
+function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 ```
 
 Stap voor stap de `anchor` per `direction` (-1 = vorige, +1 = volgende) weergave-eenheden.
@@ -225,18 +225,18 @@ Dag/drie dagen/week stap in dagen; maand/jaar stap in hun menstruatie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bekijken | PlannerBekijk |  |
-| anker | Datum |  |
-| richting | -1 \| 1 |  |
+| Naam     | Typ           | Beschrijving |
+| -------- | ------------- | ------------ |
+| bekijken | PlannerBekijk |              |
+| anker    | Datum         |              |
+| richting | -1 \| 1       |              |
 
 ### zichtbaarRangeFor
 
 **Soort:** functie
 
 ```typescript
-function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange
+function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange;
 ```
 
 Het zichtbare halfopen `[start, end)`-venster voor de gegeven `view` verankerd op
@@ -244,11 +244,11 @@ Het zichtbare halfopen `[start, end)`-venster voor de gegeven `view` verankerd o
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bekijken | PlannerBekijk |  |
-| anker | Datum |  |
-| weekStartsOn | WeekStart |  |
+| Naam         | Typ           | Beschrijving |
+| ------------ | ------------- | ------------ |
+| bekijken     | PlannerBekijk |              |
+| anker        | Datum         |              |
+| weekStartsOn | WeekStart     |              |
 
 ## `src/core/recurrence`
 
@@ -257,11 +257,11 @@ Het zichtbare halfopen `[start, end)`-venster voor de gegeven `view` verankerd o
 **Soort:** functie
 
 ```typescript
-function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[]
+function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[];
 ```
 
 Breid een enkele VEvent uit met een RRULE naar alle exemplaren die elkaar overlappen
-met [bereikStart, bereikEnd).  Retourneert virtuele VEvent-klonen — één per
+met [bereikStart, bereikEnd). Retourneert virtuele VEvent-klonen — één per
 voorkomen — met aangepaste dtstart / dtend.
 
 Behandelt ook RDATE (extra datums) en EXDATE (uitgesloten datums).
@@ -271,11 +271,11 @@ voorkom oneindige lussen op onbegrensde regels.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenement | VEvent |  |
-| bereikStart | Datum |  |
-| bereikEinde | Datum |  |
+| Naam        | Typ    | Beschrijving |
+| ----------- | ------ | ------------ |
+| evenement   | VEvent |              |
+| bereikStart | Datum  |              |
+| bereikEinde | Datum  |              |
 
 ## `src/core/types`
 

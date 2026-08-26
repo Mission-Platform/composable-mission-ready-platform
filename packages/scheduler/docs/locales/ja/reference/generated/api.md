@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement
+function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 ```
 
 `ForgeScheduler` — ニュートラル JSX で一度作成された完全なカレンダー/スケジューラ
@@ -41,9 +41,9 @@ Vue SFC からの置換: `@mission-platform/icons` シェブロンは次のよ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SchedulerProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<SchedulerProperties> |      |
 
 ### スケジューラのプロパティ
 
@@ -72,7 +72,7 @@ export type SchedulerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent
+function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent;
 ```
 
 イベントにパッチを適用し、`lastModified` および `sequence` (標準) をバンプします。
@@ -80,17 +80,17 @@ RFC 5545 リビジョンセマンティクス)。 `uid` は保存されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント |  |
-|パッチ | Partial<Omit<VEvent, 'uid'>> |  |
+| 名前     | タイプ                       | 説明 |
+| -------- | ---------------------------- | ---- |
+| イベント | VEイベント                   |      |
+| パッチ   | Partial<Omit<VEvent, 'uid'>> |      |
 
 ### イベントの作成
 
 **種類:** 関数
 
 ```typescript
-function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
+function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent;
 ```
 
 部分的なものからまったく新しい {@link VEvent} を構築します (`uid`/`dtstamp` なし)。
@@ -98,70 +98,70 @@ UID と作成/変更タイムスタンプを生成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|部分的 |省略<VEvent, 'uid' \| 'dtstamp'> |  |
+| 名前   | タイプ                           | 説明 |
+| ------ | -------------------------------- | ---- |
+| 部分的 | 省略<VEvent, 'uid' \| 'dtstamp'> |      |
 
 ### 一日のイベント
 
 **種類:** 関数
 
 ```typescript
-function eventsForDay(events: VEvent[], day: Date): VEvent[]
+function eventsForDay(events: VEvent[], day: Date): VEvent[];
 ```
 
 指定された暦日に該当するイベントを返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント[] |  |
-|日 |日付 |  |
+| 名前     | タイプ       | 説明 |
+| -------- | ------------ | ---- |
+| イベント | VEイベント[] |      |
+| 日       | 日付         |      |
 
 ### イベント範囲範囲
 
 **種類:** 関数
 
 ```typescript
-function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[]
+function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 ```
 
 Returns events (including recurring occurrences) that overlap with the given
-date range [start, end).  `status === 'CANCELLED'` のイベントは除外されます。
+date range [start, end). `status === 'CANCELLED'` のイベントは除外されます。
 Recurring events are expanded via their RRULE / RDATE; EXDATE exclusions are
 honoured.
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント[] |  |
-|開始 |日付 |  |
-|終わり |日付 |  |
+| 名前     | タイプ       | 説明 |
+| -------- | ------------ | ---- |
+| イベント | VEイベント[] |      |
+| 開始     | 日付         |      |
+| 終わり   | 日付         |      |
 
 ### フォーマット期間
 
 **種類:** 関数
 
 ```typescript
-function formatDuration(event: VEvent): string
+function formatDuration(event: VEvent): string;
 ```
 
 人間が判読できるイベントの期間文字列を返します。 「1時間30分」。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント |  |
+| 名前     | タイプ     | 説明 |
+| -------- | ---------- | ---- |
+| イベント | VEイベント |      |
 
 ### レイアウト日
 
 **種類:** 関数
 
 ```typescript
-function layoutDay(events: VEvent[]): SchedulerEventSlot[]
+function layoutDay(events: VEvent[]): SchedulerEventSlot[];
 ```
 
 シンプルな列ベースの衝突を使用して 1 日のイベントをレイアウトする
@@ -170,16 +170,16 @@ function layoutDay(events: VEvent[]): SchedulerEventSlot[]
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント[] |  |
+| 名前     | タイプ       | 説明 |
+| -------- | ------------ | ---- |
+| イベント | VEイベント[] |      |
 
 ### 移動イベントパッチ
 
 **種類:** 関数
 
 ```typescript
-function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>
+function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>;
 ```
 
 イベントを `deltaMs` ミリ秒ずつ移動する `{ dtstart, dtend }` パッチ、
@@ -187,17 +187,17 @@ function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント |  |
-|デルタムス |番号 |  |
+| 名前       | タイプ     | 説明 |
+| ---------- | ---------- | ---- |
+| イベント   | VEイベント |      |
+| デルタムス | 番号       |      |
 
 ### サイズ変更イベントパッチ
 
 **種類:** 関数
 
 ```typescript
-function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
+function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>;
 ```
 
 `deltaMs` によってイベントの終了のサイズを変更する `{ dtend }` パッチ。
@@ -205,10 +205,10 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント |  |
-|デルタムス |番号 |  |
+| 名前       | タイプ     | 説明 |
+| ---------- | ---------- | ---- |
+| イベント   | VEイベント |      |
+| デルタムス | 番号       |      |
 
 ## `src/core/range`
 
@@ -217,7 +217,7 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 **種類:** 関数
 
 ```typescript
-function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
+function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 ```
 
 `anchor` を `direction` 単位でステップ実行します (-1 = 前、+1 = 次) ビュー単位。
@@ -225,18 +225,18 @@ function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|見る |スケジューラービュー |  |
-|アンカー |日付 |  |
-|方向 | -1 \| 1 |  |
+| 名前     | タイプ               | 説明 |
+| -------- | -------------------- | ---- |
+| 見る     | スケジューラービュー |      |
+| アンカー | 日付                 |      |
+| 方向     | -1 \| 1              |      |
 
 ### 可視範囲用
 
 **種類:** 関数
 
 ```typescript
-function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange
+function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange;
 ```
 
 にアンカーされている指定された `view` の、表示されている半分開いた `[start, end)` ウィンドウ
@@ -244,11 +244,11 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|見る |スケジューラービュー |  |
-|アンカー |日付 |  |
-|週の始まり |週の開始 |  |
+| 名前       | タイプ               | 説明 |
+| ---------- | -------------------- | ---- |
+| 見る       | スケジューラービュー |      |
+| アンカー   | 日付                 |      |
+| 週の始まり | 週の開始             |      |
 
 ## `src/core/recurrence`
 
@@ -257,11 +257,11 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 **種類:** 関数
 
 ```typescript
-function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[]
+function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[];
 ```
 
 RRULE を持つ単一の VEvent を、重複するすべてのオカレンスに展開します。
-[rangeStart, rangeEnd) を使用します。  仮想 VEvent クローンを返します — 1 つにつき 1 つ
+[rangeStart, rangeEnd) を使用します。 仮想 VEvent クローンを返します — 1 つにつき 1 つ
 発生 — 調整された dtstart / dtend を使用します。
 
 RDATE (追加日付) および EXDATE (除外日付) も処理します。
@@ -271,11 +271,11 @@ RDATE (追加日付) および EXDATE (除外日付) も処理します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イベント | VEイベント |  |
-|範囲開始 |日付 |  |
-|範囲終了 |日付 |  |
+| 名前     | タイプ     | 説明 |
+| -------- | ---------- | ---- |
+| イベント | VEイベント |      |
+| 範囲開始 | 日付       |      |
+| 範囲終了 | 日付       |      |
 
 ## `src/core/types`
 

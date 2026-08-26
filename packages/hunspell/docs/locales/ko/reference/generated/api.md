@@ -16,7 +16,11 @@
 **종류:** 기능
 
 ```typescript
-function useHunspellMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHunspellMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Hunspell 맞춤법 검사를 Monaco 편집기에 통합하는 Vue 컴포저블입니다.
@@ -29,11 +33,11 @@ Hunspell 맞춤법 검사를 Monaco 편집기에 통합하는 Vue 컴포저블�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 편집자참조 | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| 활성화 | MaybeRefOrGetter<boolean> |  |
-| 언어참조 | MaybeRefOrGetter<string> |  |
+| 이름       | 유형                                                               | 설명 |
+| ---------- | ------------------------------------------------------------------ | ---- |
+| 편집자참조 | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |      |
+| 활성화     | MaybeRefOrGetter<boolean>                                          |      |
+| 언어참조   | MaybeRefOrGetter<string>                                           |      |
 
 ## `src/wasm/hunspell.d`
 

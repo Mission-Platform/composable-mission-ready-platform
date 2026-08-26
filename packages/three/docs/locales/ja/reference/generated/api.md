@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement
+function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
 ForgeThreeCanvas — <canvas> をレンダリングするフレームワークに依存しないコンポーネント
@@ -24,9 +24,9 @@ ForgeThreeCanvas — <canvas> をレンダリングするフレームワーク�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ForgeThreeCanvasProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ForgeThreeCanvasProperties> |      |
 
 ### ForgeThreeCanvasプロパティ
 
@@ -55,7 +55,10 @@ export interface ThreeContext
 **種類:** 関数
 
 ```typescript
-function useThree(canvasReference: ReferenceLike<HTMLCanvasElement | null>, onReady?: (context: ThreeContext) => void | (() => void)): void
+function useThree(
+  canvasReference: ReferenceLike<HTMLCanvasElement | null>,
+  onReady?: (context: ThreeContext) => void | (() => void),
+): void;
 ```
 
 フレームワークに依存しない Three.js フック。
@@ -66,7 +69,7 @@ SSR セーフ: ブラウザー API またはキャンバスが使用できない
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キャンバス参照 | ReferenceLike<HTMLCanvasElement \| null> |  |
-|準備完了 | (コンテキスト: ThreeContext) => void \| (() => 無効) |  |
+| 名前           | タイプ                                               | 説明 |
+| -------------- | ---------------------------------------------------- | ---- |
+| キャンバス参照 | ReferenceLike<HTMLCanvasElement \| null>             |      |
+| 準備完了       | (コンテキスト: ThreeContext) => void \| (() => 無効) |      |

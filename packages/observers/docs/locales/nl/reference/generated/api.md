@@ -16,7 +16,11 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/observe
 **Soort:** functie
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 Kaderneutrale IntersectionObserver-haak.
@@ -28,11 +32,11 @@ Automatisch opschonen: verbreekt de verbinding met de waarnemer bij het ontkoppe
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| doel | MpRef<Element \| null> |  |
-| terugbellen | IntersectionObserverCallback |  |
-| opties | IntersectionObserverInit |  |
+| Naam        | Typ                          | Beschrijving |
+| ----------- | ---------------------------- | ------------ |
+| doel        | MpRef<Element \| null>       |              |
+| terugbellen | IntersectionObserverCallback |              |
+| opties      | IntersectionObserverInit     |              |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -41,7 +45,11 @@ Automatisch opschonen: verbreekt de verbinding met de waarnemer bij het ontkoppe
 **Soort:** functie
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 Kaderneutrale MutationObserver-haak.
@@ -52,11 +60,11 @@ Automatisch opschonen: verbreekt de verbinding met de waarnemer bij het ontkoppe
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| doel | MpRef<Node \| null> |  |
-| terugbellen | MutatieCallback |  |
-| opties | MutatieObserverInit |  |
+| Naam        | Typ                 | Beschrijving |
+| ----------- | ------------------- | ------------ |
+| doel        | MpRef<Node \| null> |              |
+| terugbellen | MutatieCallback     |              |
+| opties      | MutatieObserverInit |              |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -65,7 +73,7 @@ Automatisch opschonen: verbreekt de verbinding met de waarnemer bij het ontkoppe
 **Soort:** functie
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 Kaderneutrale PerformanceObserver-hook.
@@ -77,7 +85,7 @@ Automatisch opschonen: verbreekt de verbinding met de waarnemer bij het ontkoppe
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| terugbellen | PerformanceObserverCallback |  |
-| opties | PerformanceObserverInit |  |
+| Naam        | Typ                         | Beschrijving |
+| ----------- | --------------------------- | ------------ |
+| terugbellen | PerformanceObserverCallback |              |
+| opties      | PerformanceObserverInit     |              |

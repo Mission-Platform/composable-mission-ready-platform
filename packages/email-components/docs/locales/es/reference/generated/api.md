@@ -16,23 +16,23 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/emai
 **Tipo:** función
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 Afirme el subconjunto de salida conservador documentado para los componentes de correo electrónico.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| HTML | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| HTML   | cadena |             |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **Tipo:** constante
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 No se proporciona descripción.
@@ -42,7 +42,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 No se proporciona descripción.
@@ -52,7 +52,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 No se proporciona descripción.
@@ -62,7 +62,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 No se proporciona descripción.
@@ -72,7 +72,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 No se proporciona descripción.
@@ -82,7 +82,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 No se proporciona descripción.
@@ -92,7 +92,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 No se proporciona descripción.
@@ -104,16 +104,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailButtonProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailButtonProperties> |             |
 
 ### Propiedades del botón de correo electrónico
 
@@ -130,7 +130,8 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 No se proporciona descripción.
@@ -142,16 +143,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailDividerProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<EmailDividerProperties> |             |
 
 ### Propiedades del divisor de correo electrónico
 
@@ -170,16 +171,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailImageProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailImageProperties> |             |
 
 ### Propiedades de imagen de correo electrónico
 
@@ -198,16 +199,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailSpacerProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailSpacerProperties> |             |
 
 ### Propiedades del espaciador de correo electrónico
 
@@ -226,7 +227,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 El átomo de texto de correo electrónico único, que refleja el vocabulario `ForgeTypography`: cuerpo
@@ -235,9 +236,9 @@ declaraciones literales en línea, porque los clientes de correo electrónico ig
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailTypographyProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailTypographyProperties> |             |
 
 ### Correo electrónicoTipografíaPropiedades
 
@@ -266,16 +267,16 @@ Los elementos con los que se puede representar la escala de tipos de correo elec
 **Tipo:** función
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailCardProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailCardProperties> |             |
 
 ### Propiedades de la tarjeta de correo electrónico
 
@@ -294,16 +295,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailColumnProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailColumnProperties> |             |
 
 ### Propiedades de columna de correo electrónico
 
@@ -322,16 +323,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailListProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailListProperties> |             |
 
 ### Elemento de lista de correo electrónico
 
@@ -360,16 +361,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailRowProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailRowProperties> |             |
 
 ### Propiedades de fila de correo electrónico
 
@@ -398,16 +399,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailSocialLinksProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailSocialLinksProperties> |             |
 
 ### Correo electrónicoSocialEnlacesPropiedades
 
@@ -426,16 +427,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailFooterProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailFooterProperties> |             |
 
 ### Propiedades del pie de página del correo electrónico
 
@@ -454,16 +455,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailHeaderProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailHeaderProperties> |             |
 
 ### Propiedades del encabezado del correo electrónico
 
@@ -482,16 +483,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailPreheaderProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailPreheaderProperties> |             |
 
 ### Propiedades del encabezado del correo electrónico
 
@@ -510,16 +511,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailContainerProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailContainerProperties> |             |
 
 ### Propiedades del contenedor de correo electrónico
 
@@ -538,16 +539,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailDocumentProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<EmailDocumentProperties> |             |
 
 ### Propiedades del documento de correo electrónico
 
@@ -566,16 +567,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<EmailSectionProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<EmailSectionProperties> |             |
 
 ### Propiedades de la sección de correo electrónico
 

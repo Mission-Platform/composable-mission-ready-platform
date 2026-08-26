@@ -16,7 +16,11 @@
 **種類:** 関数
 
 ```typescript
-function useHarperMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Harper の文法とスタイル チェックを統合する Vue コンポーザブル
@@ -30,18 +34,18 @@ Monaco エディター インスタンス。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|エディタリファレンス |たぶんRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-|有効 |たぶんRefOrGetter<boolean> |  |
-|言語リファレンス |たぶんRefOrGetter<string> |  |
+| 名前                 | タイプ                                                              | 説明 |
+| -------------------- | ------------------------------------------------------------------- | ---- |
+| エディタリファレンス | たぶんRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |      |
+| 有効                 | たぶんRefOrGetter<boolean>                                          |      |
+| 言語リファレンス     | たぶんRefOrGetter<string>                                           |      |
 
 #### 契約
 
 - **@param:** - Monaco エディター インスタンスをラップする `MaybeRefOrGetter`。
 - **@param:** - チェックのオン/オフを切り替える `MaybeRefOrGetter<boolean>`。
 - **@param:** - エディター言語の `MaybeRefOrGetter<string>`
-(コードアクションプロバイダーを登録するときに使用されます)。
+  (コードアクションプロバイダーを登録するときに使用されます)。
 
 ## `src/types`
 

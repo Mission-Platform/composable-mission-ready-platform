@@ -16,33 +16,33 @@
 **종류:** 기능
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 브라우저 미리보기를 위해 공유 Forge 트리를 React 요소로 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | 이메일노드 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| node | 이메일노드 |      |
 
 ### toEmailReactComponent
 
 **종류:** 기능
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 Forge 이메일 구성 요소를 React 기능 구성 요소로 래핑합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | MpComponent<P> |  |
-| 이름 | 문자열 |  |
+| 이름     | 유형           | 설명 |
+| -------- | -------------- | ---- |
+| 구성요소 | MpComponent<P> |      |
+| 이름     | 문자열         |      |
 
 ## `src/adapters/solid`
 
@@ -51,32 +51,32 @@ Forge 이메일 구성 요소를 React 기능 구성 요소로 래핑합니다.
 **종류:** 기능
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 브라우저 미리보기를 위해 공유 Forge 트리를 Solid JSX로 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | 이메일노드 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| node | 이메일노드 |      |
 
 ### toEmailSolidComponent
 
 **종류:** 기능
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 Forge 구성 요소를 Solid 구성 요소로 래핑합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 컴포넌트<P> |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 구성요소 | 컴포넌트<P> |      |
 
 ## `src/adapters/svelte`
 
@@ -85,16 +85,16 @@ Forge 구성 요소를 Solid 구성 요소로 래핑합니다.
 **종류:** 기능
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 공유 Forge 트리를 Svelte 5 `{@render ...}`에 대한 원시 조각으로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | 이메일노드 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| node | 이메일노드 |      |
 
 ## `src/adapters/vue`
 
@@ -103,33 +103,33 @@ function renderToEmailSvelte(node: EmailNode): Snippet
 **종류:** 기능
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 브라우저 미리보기를 위해 공유 Forge 트리를 Vue VNode로 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | 이메일노드 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| node | 이메일노드 |      |
 
 ### toEmailVueComponent
 
 **종류:** 기능
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 Forge 이메일 구성 요소를 Vue 기능 구성 요소로 래핑합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | MpComponent<P> |  |
-| 이름 | 문자열 |  |
+| 이름     | 유형           | 설명 |
+| -------- | -------------- | ---- |
+| 구성요소 | MpComponent<P> |      |
+| 이름     | 문자열         |      |
 
 ## `src/adapters/web-components`
 
@@ -138,16 +138,16 @@ Forge 이메일 구성 요소를 Vue 기능 구성 요소로 래핑합니다.
 **종류:** 기능
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 웹 구성 요소 호스트에 대한 기본 Forge 템플릿 결과를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | 이메일노드 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| node | 이메일노드 |      |
 
 ## `src/markdown/render-markdown`
 
@@ -156,17 +156,17 @@ function renderToEmailWebComponent(node: EmailNode): TemplateResult
 **종류:** 기능
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 안전한 Markdown 토큰을 이메일 구성 요소에서 사용하는 것과 동일한 Forge 트리로 변환하세요.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 인하 | 문자열 |  |
-| 옵션 | MarkdownRenderOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 인하 | 문자열                |      |
+| 옵션 | MarkdownRenderOptions |      |
 
 ## `src/markdown/types`
 
@@ -197,16 +197,16 @@ export interface MarkdownRenderOptions
 **종류:** 기능
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 허용 목록에 있는 Forge 속성 집합을 결정적 순서로 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 이메일속성 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 속성 | 이메일속성 |      |
 
 ## `src/render/escape`
 
@@ -215,33 +215,33 @@ function serializeAttributes(properties: EmailProperties): string
 **종류:** 기능
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 HTML 직렬화를 위한 텍스트 및 속성 콘텐츠를 이스케이프합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### 유효성 검사Url
 
 **종류:** 기능
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 코드를 실행하거나 예상치 못한 리소스를 로드할 수 있는 체계를 거부하세요.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
-| 속성 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
+| 속성 | 문자열 |      |
 
 ## `src/render/render-email`
 
@@ -250,33 +250,33 @@ function validateUrl(value: string, attribute: string): string
 **종류:** 기능
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 Forge 이메일 트리를 프레임워크가 필요 없는 완전한 HTML 문서로 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | 이메일노드 |  |
-| 옵션 | 렌더이메일옵션 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| node | 이메일노드     |      |
+| 옵션 | 렌더이메일옵션 |      |
 
 ### 렌더이메일 조각
 
 **종류:** 기능
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 브라우저 어댑터 호스트를 위한 안전한 HTML 조각으로 Forge 트리를 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | 이메일노드 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| node | 이메일노드 |      |
 
 ## `src/render/style`
 
@@ -285,16 +285,16 @@ function renderEmailFragment(node: EmailNode): string
 **종류:** 기능
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 CSS 변수 없이 결정적 속성 순서로 인라인 스타일을 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 스타일 | 이메일스타일 \| 문자열 |  |
+| 이름   | 유형                   | 설명 |
+| ------ | ---------------------- | ---- |
+| 스타일 | 이메일스타일 \| 문자열 |      |
 
 ## `src/render/types`
 

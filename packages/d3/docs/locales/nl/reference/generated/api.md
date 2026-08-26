@@ -37,7 +37,7 @@ Een D3-selectie die een enkel element `E` omsluit, zonder gebonden datum.
 **Soort:** functie
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 Retourneer een ref om aan een element te koppelen (`ref={reference}`) en voer `draw` uit
@@ -50,10 +50,10 @@ netjes — identiek op React en Vue.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| teken | D3Draw<E> |  |
-| afhankelijkheden | MpDependencyList |  |
+| Naam             | Typ              | Beschrijving |
+| ---------------- | ---------------- | ------------ |
+| teken            | D3Draw<E>        |              |
+| afhankelijkheden | MpDependencyList |              |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ Het buitenste kaartvak plus de (optionele) marge ervan.
 **Soort:** functie
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 Bereken de binnenste plotrechthoek voor een diagram met de gegeven buitenmaat
@@ -81,9 +81,9 @@ produceer nooit negatieve dimensies (wat de D3-schalen afwijzen).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| doos | ChartBox |  |
+| Naam | Typ      | Beschrijving |
+| ---- | -------- | ------------ |
+| doos | ChartBox |              |
 
 ### Binnenafmetingen
 
@@ -121,7 +121,7 @@ gedeeltelijk object (ontbrekende zijden zijn standaard `0`).
 **Soort:** functie
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 Normaliseer een {@link MarginInput} in een volledige {@link Margin}. Een getal is
@@ -130,6 +130,6 @@ de rest naar `0`. `undefined` levert een nulmarge op.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | MargeInvoer |  |
+| Naam   | Typ         | Beschrijving |
+| ------ | ----------- | ------------ |
+| invoer | MargeInvoer |              |

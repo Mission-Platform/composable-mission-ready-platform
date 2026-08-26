@@ -16,7 +16,11 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/observers`.
 **Art:** Funktion
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 Framework-neutraler IntersectionObserver-Hook.
@@ -28,11 +32,11 @@ Automatische Bereinigung: Trennt den Beobachter beim Aufheben der Bereitstellung
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Ziel | MpRef<Element \| null> |  |
-| Rückruf | IntersectionObserverCallback |  |
-| Optionen | IntersectionObserverInit |  |
+| Name     | Geben Sie                    | ein Beschreibung |
+| -------- | ---------------------------- | ---------------- |
+| Ziel     | MpRef<Element \| null>       |                  |
+| Rückruf  | IntersectionObserverCallback |                  |
+| Optionen | IntersectionObserverInit     |                  |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -41,7 +45,11 @@ Automatische Bereinigung: Trennt den Beobachter beim Aufheben der Bereitstellung
 **Art:** Funktion
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 Framework-neutraler MutationObserver-Hook.
@@ -52,11 +60,11 @@ Automatische Bereinigung: Trennt den Beobachter beim Aufheben der Bereitstellung
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Ziel | MpRef<Node \| null> |  |
-| Rückruf | MutationCallback |  |
-| Optionen | MutationObserverInit |  |
+| Name     | Geben Sie            | ein Beschreibung |
+| -------- | -------------------- | ---------------- |
+| Ziel     | MpRef<Node \| null>  |                  |
+| Rückruf  | MutationCallback     |                  |
+| Optionen | MutationObserverInit |                  |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -65,7 +73,7 @@ Automatische Bereinigung: Trennt den Beobachter beim Aufheben der Bereitstellung
 **Art:** Funktion
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 Framework-neutraler PerformanceObserver-Hook.
@@ -77,7 +85,7 @@ Automatische Bereinigung: Trennt den Beobachter beim Aufheben der Bereitstellung
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Rückruf | PerformanceObserverCallback |  |
-| Optionen | PerformanceObserverInit |  |
+| Name     | Geben Sie                   | ein Beschreibung |
+| -------- | --------------------------- | ---------------- |
+| Rückruf  | PerformanceObserverCallback |                  |
+| Optionen | PerformanceObserverInit     |                  |

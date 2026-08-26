@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/map`
 **Tipo:** función
 
 ```typescript
-function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement
+function ForgeMapDraw(properties: Readonly<MapDrawProperties>): MpElement;
 ```
 
 `ForgeMapDraw`: una herramienta interactiva de dibujo/edición para el más cercano
@@ -29,9 +29,9 @@ Ranura `toolbar`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MapDrawProperties> |  |
+| Nombre      | Tipo                            | Descripción |
+| ----------- | ------------------------------- | ----------- |
+| propiedades | Sólo lectura<MapDrawProperties> |             |
 
 ### Propiedades de MapDraw
 
@@ -50,7 +50,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null
+function ForgeMapLayer(properties: Readonly<MapLayerProperties>): MpElement | null;
 ```
 
 `ForgeMapLayer`: agrega una capa MapLibre al ancestro `<MapLibre>` más cercano.
@@ -59,9 +59,9 @@ Escrito una vez en el dialecto JSX neutral.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MapLayerProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<MapLayerProperties> |             |
 
 ### Propiedades de capa de mapa
 
@@ -80,7 +80,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null
+function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null;
 ```
 
 `ForgeMapMarker`: agrega un MapLibre `Marker` al `<MapLibre>` más cercano
@@ -89,9 +89,9 @@ lienzo). Escrito una vez en el dialecto JSX neutral.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MapMarkerProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<MapMarkerProperties> |             |
 
 ### Propiedades del marcador de mapa
 
@@ -110,7 +110,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null
+function ForgeMapPopup(properties: Readonly<MapPopupProperties>): MpElement | null;
 ```
 
 `ForgeMapPopup`: agrega un `Popup` de MapLibre al ancestro `<MapLibre>` más cercano.
@@ -119,9 +119,9 @@ una vez en el dialecto JSX neutral.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MapPopupProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<MapPopupProperties> |             |
 
 ### Propiedades emergentes del mapa
 
@@ -140,7 +140,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement
+function ForgeMapSource(properties: Readonly<MapSourceProperties>): MpElement;
 ```
 
 `ForgeMapSource`: registra una fuente de datos MapLibre en el `<MapLibre>` más cercano
@@ -149,9 +149,9 @@ hacer referencia a esta fuente). Escrito una vez en el dialecto JSX neutral.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MapSourceProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<MapSourceProperties> |             |
 
 ### Propiedades de origen del mapa
 
@@ -170,7 +170,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement
+function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpElement;
 ```
 
 `ForgeMapLibre`: un contenedor de mapas MapLibre GL creado una vez en el JSX neutral
@@ -186,9 +186,9 @@ diseñar a través del módulo CSS `forge-map-libre.module.scss` ubicado conjunt
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MapLibreProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<MapLibreProperties> |             |
 
 ### MapaLibrePropiedades
 
@@ -244,7 +244,7 @@ ID de cadena única asociada con una característica dibujada.
 **Tipo:** función
 
 ```typescript
-function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn
+function useDrawing(map: Map | undefined, options: UseDrawingOptions = {}): UseDrawingReturn;
 ```
 
 Gestiona todos los estados de dibujo y edición del mapa. La tienda cablea el mapa.
@@ -253,10 +253,10 @@ para reenviar la instancia del mapa y representar fuentes/capas desde el estado 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| mapa | Mapa \| indefinido |  |
-| opciones | Usar opciones de dibujo |  |
+| Nombre   | Tipo                    | Descripción |
+| -------- | ----------------------- | ----------- |
+| mapa     | Mapa \| indefinido      |             |
+| opciones | Usar opciones de dibujo |             |
 
 ### Usar opciones de dibujo
 
@@ -285,14 +285,14 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function useLayer(map: Map | undefined, options: UseLayerOptions): void
+function useLayer(map: Map | undefined, options: UseLayerOptions): void;
 ```
 
 Agrega una capa MapLibre al mapa.
 
 La capa se crea una vez que el mapa está listo. Cuando sólo el `paint`, `layout`,
 `filter` o cambio de rango de zoom (mismos `id`, `type` y `source`), son
-sincronizado con la capa activa **en su lugar**: la capa *no* se elimina y
+sincronizado con la capa activa **en su lugar**: la capa _no_ se elimina y
 vuelto a agregar. Esto es importante porque las personas que llaman comúnmente reconstruyen el objeto de especificación en
 cada renderizado (por ejemplo, una herramienta de dibujo interactiva que reacciona a cada movimiento del mouse):
 derribar una capa y recrearla en cada renderizado agita la capacidad de MapLibre.
@@ -302,17 +302,18 @@ moverse o un cambio de mapa. Al desmontar, la capa se limpia automáticamente.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| mapa | Mapa \| indefinido |  |
-| opciones | Usar opciones de capa |  |
+| Nombre   | Tipo                  | Descripción |
+| -------- | --------------------- | ----------- |
+| mapa     | Mapa \| indefinido    |             |
+| opciones | Usar opciones de capa |             |
 
 #### Contrato
 
 - **@ejemplo:** ```ts
-const map = useMap();
-useLayer(map, { layer: circleLayerSpec });
-```
+  const map = useMap();
+  useLayer(map, { layer: circleLayerSpec });
+
+````
 
 ### Usar opciones de capa
 
@@ -320,7 +321,7 @@ useLayer(map, { layer: circleLayerSpec });
 
 ```typescript
 export interface UseLayerOptions
-```
+````
 
 No se proporciona descripción.
 
@@ -331,7 +332,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function useMap(): Map | undefined
+function useMap(): Map | undefined;
 ```
 
 Devuelve la instancia de MapLibre `Map` proporcionada por el `<MapLibre>` más cercano.
@@ -342,11 +343,12 @@ Debe llamarse dentro de un componente que sea descendiente de `<MapLibre>`.
 #### Contrato
 
 - **@ejemplo:** ```ts
-const map = useMap();
-useEffect(() => {
+  const map = useMap();
+  useEffect(() => {
   map?.flyTo({ center: [lng, lat] });
-}, [map]);
-```
+  }, [map]);
+
+````
 
 ## `src/composables/use-marker/use-marker`
 
@@ -356,24 +358,25 @@ useEffect(() => {
 
 ```typescript
 function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn
-```
+````
 
 Crea un MapLibre `Marker` que se agrega automáticamente al mapa y se elimina
 cuando el componente propietario está desmontado. La posición del marcador rastrea `lngLat`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| mapa | Mapa \| indefinido |  |
-| opciones | Usar opciones de marcador |  |
+| Nombre   | Tipo                      | Descripción |
+| -------- | ------------------------- | ----------- |
+| mapa     | Mapa \| indefinido        |             |
+| opciones | Usar opciones de marcador |             |
 
 #### Contrato
 
 - **@ejemplo:** ```ts
-const map = useMap();
-const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
-```
+  const map = useMap();
+  const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
+
+````
 
 ### Usar opciones de marcador
 
@@ -381,7 +384,7 @@ const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
 
 ```typescript
 export interface UseMarkerOptions extends MarkerOptions
-```
+````
 
 No se proporciona descripción.
 
@@ -402,7 +405,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn
+function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn;
 ```
 
 Crea un MapLibre `Popup` que se agrega y elimina automáticamente del
@@ -411,17 +414,18 @@ y estado abierto/cerrado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| mapa | Mapa \| indefinido |  |
-| opciones | Usar opciones emergentes |  |
+| Nombre   | Tipo                     | Descripción |
+| -------- | ------------------------ | ----------- |
+| mapa     | Mapa \| indefinido       |             |
+| opciones | Usar opciones emergentes |             |
 
 #### Contrato
 
 - **@ejemplo:** ```ts
-const map = useMap();
-const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
-```
+  const map = useMap();
+  const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
+
+````
 
 ### Usar opciones emergentes
 
@@ -429,7 +433,7 @@ const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' })
 
 ```typescript
 export interface UsePopupOptions extends PopupOptions
-```
+````
 
 No se proporciona descripción.
 
@@ -450,7 +454,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function useSource(map: Map | undefined, options: UseSourceOptions): void
+function useSource(map: Map | undefined, options: UseSourceOptions): void;
 ```
 
 Registra una fuente de datos MapLibre y la mantiene sincronizada con el mapa.
@@ -463,17 +467,18 @@ se realiza cuando el tipo de fuente o las opciones estructurales cambian.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| mapa | Mapa \| indefinido |  |
-| opciones | Usar opciones de origen |  |
+| Nombre   | Tipo                    | Descripción |
+| -------- | ----------------------- | ----------- |
+| mapa     | Mapa \| indefinido      |             |
+| opciones | Usar opciones de origen |             |
 
 #### Contrato
 
 - **@ejemplo:** ```ts
-const map = useMap();
-useSource(map, { id: 'earthquakes', source: geojsonSpec });
-```
+  const map = useMap();
+  useSource(map, { id: 'earthquakes', source: geojsonSpec });
+
+````
 
 ### Usar opciones de origen
 
@@ -481,7 +486,7 @@ useSource(map, { id: 'earthquakes', source: geojsonSpec });
 
 ```typescript
 export interface UseSourceOptions
-```
+````
 
 No se proporciona descripción.
 
@@ -492,7 +497,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const MapContext
+export const MapContext;
 ```
 
 Contexto que transporta la instancia MapLibre `Map` del ancestro `<MapLibre>` más cercano.

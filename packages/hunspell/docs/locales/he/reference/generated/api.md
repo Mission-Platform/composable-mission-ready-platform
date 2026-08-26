@@ -16,7 +16,11 @@
 פונקציה **סוג:**
 
 ```typescript
-function useHunspellMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHunspellMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue חיבור המשלב בדיקת איות של Hunspell בעורך של מונקו.
@@ -29,11 +33,11 @@ unmount, ובודק מחדש כאשר `language` משתנה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| עורך הפניה | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| מופעל | MaybeRefOrGetter<boolean> |  |
-| שפה הפניה | MaybeRefOrGetter<string> |  |
+| שם         | הקלד                                                               | תיאור |
+| ---------- | ------------------------------------------------------------------ | ----- |
+| עורך הפניה | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |       |
+| מופעל      | MaybeRefOrGetter<boolean>                                          |       |
+| שפה הפניה  | MaybeRefOrGetter<string>                                           |       |
 
 ## `src/wasm/hunspell.d`
 

@@ -37,7 +37,7 @@ Una selección D3 que envuelve un solo elemento `E`, sin datos vinculados.
 **Tipo:** función
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 Devuelve una referencia para adjuntarla a un elemento (`ref={reference}`) y ejecuta `draw`
@@ -50,10 +50,10 @@ ordenado: de manera idéntica en React y Vue.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| dibujar | D3Draw<E> |  |
-| dependencias | MpDependencyList |  |
+| Nombre       | Tipo             | Descripción |
+| ------------ | ---------------- | ----------- |
+| dibujar      | D3Draw<E>        |             |
+| dependencias | MpDependencyList |             |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ El cuadro exterior del gráfico más su margen (opcional).
 **Tipo:** función
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 Calcule el rectángulo de trazado interior para un gráfico del tamaño exterior dado y
@@ -81,9 +81,9 @@ nunca produzca dimensiones negativas (que las escalas D3 rechazan).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| caja | Cuadro de gráficos |  |
+| Nombre | Tipo               | Descripción |
+| ------ | ------------------ | ----------- |
+| caja   | Cuadro de gráficos |             |
 
 ### Dimensiones interiores
 
@@ -121,7 +121,7 @@ objeto parcial (los lados faltantes son por defecto `0`).
 **Tipo:** función
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 Normalice un {@link MarginInput} en un {@link Margin} completo. un número es
@@ -130,6 +130,6 @@ el resto a `0`. `undefined` produce un margen cero.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| entrada | Margen de entrada |  |
+| Nombre  | Tipo              | Descripción |
+| ------- | ----------------- | ----------- |
+| entrada | Margen de entrada |             |

@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 ロールダウンを構築する `external` / `deps.neverBundle` すべてを扱う述語
@@ -24,16 +24,16 @@ function createExternalMatcher(names: readonly string[]): (id: string) => boolea
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前 |読み取り専用文字列[] |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| 名前 | 読み取り専用文字列[] |      |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 すべての共有ライブラリがピア提供のものとして扱う必要があるデフォルトのパッケージ名。
@@ -44,7 +44,7 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
 **種類:** 関数
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 プレーンの tsdown 構成を構築する TypeScript (または単一バンドル) ライブラリ —
@@ -53,16 +53,16 @@ function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | Tsdownライブラリオプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| オプション | Tsdownライブラリオプション |      |
 
 ### 定義TsdownVueライブラリ
 
 **種類:** 関数
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 {@link defineTsdownLibrary} と似ていますが、ワイヤー `unplugin-vue` そして Vue-aware dts
@@ -70,16 +70,16 @@ function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | Tsdownライブラリオプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| オプション | Tsdownライブラリオプション |      |
 
 ### readPackageDependencyNames
 
 **種類:** 関数
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 読んでください `dependencies` そして `peerDependencies` package.jsonで宣言
@@ -88,16 +88,16 @@ function readPackageDependencyNames(rootDirectory: string): string[]
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルートディレクトリ |文字列 |  |
+| 名前               | タイプ | 説明 |
+| ------------------ | ------ | ---- |
+| ルートディレクトリ | 文字列 |      |
 
 ### 解決Tsdown出力ディレクトリ
 
 **種類:** 関数
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 最終パッケージ出力パスを分離されたビルド ルートにミラ​​ーリングします。を維持する
@@ -106,11 +106,11 @@ tsdown が兄弟ツリーをクリーンアップすることを許可せずに�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルートディレクトリ |文字列 |  |
-|出力ディレクトリ |文字列 |  |
-|出力ルート |文字列 |  |
+| 名前               | タイプ | 説明 |
+| ------------------ | ------ | ---- |
+| ルートディレクトリ | 文字列 |      |
+| 出力ディレクトリ   | 文字列 |      |
+| 出力ルート         | 文字列 |      |
 
 ### Tsdownライブラリオプション
 

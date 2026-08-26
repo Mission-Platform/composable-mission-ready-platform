@@ -17,11 +17,11 @@
 `@mission-platform/vite-config`) ו-`customConditions` ב-TypeScript (באמצעות
 `@mission-platform/typescript-config/framework-<name>` הגדרות קבועות מראש). כל ייבוא ​​נשאר חשוף.
 
-| מצב פעיל | פותר ל | ייצוא מפתח |
-| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| מצב פעיל   | פותר ל              | ייצוא מפתח                                                              |
+| :--------- | :------------------ | :---------------------------------------------------------------------- |
 | _(אף אחד)_ | ליבה ניטראלית מסגרת | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue` | מתאם Vue 3 | הליבה הנייטרלית בתוספת `createForgeI18NVue`, `useI18n` |
-| `mp:react` | מתאם React | הליבה הנייטרלית בתוספת `ForgeI18NProvider`, `useI18n` |
+| `mp:vue`   | מתאם Vue 3          | הליבה הנייטרלית בתוספת `createForgeI18NVue`, `useI18n`                  |
+| `mp:react` | מתאם React          | הליבה הנייטרלית בתוספת `ForgeI18NProvider`, `useI18n`                   |
 
 ## מושגי ליבה
 

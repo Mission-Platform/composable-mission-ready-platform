@@ -16,16 +16,18 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/resourc
 **Soort:** functie
 
 ```typescript
-function ForgeResourcePlanner(properties: Readonly<ResourcePlannerProperties>): MpElement
+function ForgeResourcePlanner(
+  properties: Readonly<ResourcePlannerProperties>,
+): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ResourcePlannerProperties> |  |
+| Naam          | Typ                                     | Beschrijving |
+| ------------- | --------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ResourcePlannerProperties> |              |
 
 ### PlannerBoekingReikwijdte
 
@@ -84,7 +86,9 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type AvailabilityInput = | ResourceAvailability[] | Record<string, Omit<ResourceAvailability, "resourceId">>;
+export type AvailabilityInput =
+  | ResourceAvailability[]
+  | Record<string, Omit<ResourceAvailability, "resourceId">>;
 ```
 
 Geen beschrijving opgegeven.
@@ -114,7 +118,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type CapacityStatus = "available" | "unavailable" | "over-capacity" | "conflict";
+export type CapacityStatus =
+  "available" | "unavailable" | "over-capacity" | "conflict";
 ```
 
 Geen beschrijving opgegeven.
@@ -266,51 +271,60 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function assignmentsForEvent(assignments: PlannerAssignment[], eventId: string): PlannerAssignment[]
+function assignmentsForEvent(
+  assignments: PlannerAssignment[],
+  eventId: string,
+): PlannerAssignment[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opdrachten | PlannerOpdracht[] |  |
-| gebeurtenisId | tekenreeks |  |
+| Naam          | Typ               | Beschrijving |
+| ------------- | ----------------- | ------------ |
+| opdrachten    | PlannerOpdracht[] |              |
+| gebeurtenisId | tekenreeks        |              |
 
 ### normaliseer opdrachten
 
 **Soort:** functie
 
 ```typescript
-function normalizeAssignments(assignments: PlannerAssignment[]): PlannerAssignment[]
+function normalizeAssignments(
+  assignments: PlannerAssignment[],
+): PlannerAssignment[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opdrachten | PlannerOpdracht[] |  |
+| Naam       | Typ               | Beschrijving |
+| ---------- | ----------------- | ------------ |
+| opdrachten | PlannerOpdracht[] |              |
 
 ### normalizePlannerEvents
 
 **Soort:** functie
 
 ```typescript
-function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment[], range?: { start: Date; end: Date }): PlannerEventRecord[]
+function normalizePlannerEvents(
+  events: VEvent[],
+  assignments: PlannerAssignment[],
+  range?: { start: Date; end: Date },
+): PlannerEventRecord[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenementen | VEvent[] |  |
-| opdrachten | PlannerOpdracht[] |  |
-| bereik | { begin: Datum; einde: Datum } |  |
+| Naam        | Typ                            | Beschrijving |
+| ----------- | ------------------------------ | ------------ |
+| evenementen | VEvent[]                       |              |
+| opdrachten  | PlannerOpdracht[]              |              |
+| bereik      | { begin: Datum; einde: Datum } |              |
 
 ## `src/utils/availability`
 
@@ -319,36 +333,44 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function availabilityForResource(input: AvailabilityInput, resourceId: string): ResourceAvailability
+function availabilityForResource(
+  input: AvailabilityInput,
+  resourceId: string,
+): ResourceAvailability;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | BeschikbaarheidInvoer |  |
-| resourceId | tekenreeks |  |
+| Naam       | Typ                   | Beschrijving |
+| ---------- | --------------------- | ------------ |
+| invoer     | BeschikbaarheidInvoer |              |
+| resourceId | tekenreeks            |              |
 
 ### uitbreidenBeschikbaarheid
 
 **Soort:** functie
 
 ```typescript
-function expandAvailability(resourceId: string, input: AvailabilityInput, range: { start: Date; end: Date }, options: AvailabilityOptions = {}): NormalizedAvailabilityInterval[]
+function expandAvailability(
+  resourceId: string,
+  input: AvailabilityInput,
+  range: { start: Date; end: Date },
+  options: AvailabilityOptions = {},
+): NormalizedAvailabilityInterval[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| resourceId | tekenreeks |  |
-| invoer | BeschikbaarheidInvoer |  |
-| bereik | { begin: Datum; einde: Datum } |  |
-| opties | BeschikbaarheidOpties |  |
+| Naam       | Typ                            | Beschrijving |
+| ---------- | ------------------------------ | ------------ |
+| resourceId | tekenreeks                     |              |
+| invoer     | BeschikbaarheidInvoer          |              |
+| bereik     | { begin: Datum; einde: Datum } |              |
+| opties     | BeschikbaarheidOpties          |              |
 
 ## `src/utils/capacity`
 
@@ -357,19 +379,24 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function calculateCapacityState(resourceId: string, segment: TimelineSegment | { start: Date; end: Date }, availability: NormalizedAvailabilityInterval[], events: PlannerEventRecord[]): CapacityState
+function calculateCapacityState(
+  resourceId: string,
+  segment: TimelineSegment | { start: Date; end: Date },
+  availability: NormalizedAvailabilityInterval[],
+  events: PlannerEventRecord[],
+): CapacityState;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| resourceId | tekenreeks |  |
-| segmenteren | TijdlijnSegment \| { begin: Datum; einde: Datum } |  |
-| beschikbaarheid | GenormaliseerdBeschikbaarheidsinterval[] |  |
-| evenementen | PlannerEventRecord[] |  |
+| Naam            | Typ                                               | Beschrijving |
+| --------------- | ------------------------------------------------- | ------------ |
+| resourceId      | tekenreeks                                        |              |
+| segmenteren     | TijdlijnSegment \| { begin: Datum; einde: Datum } |              |
+| beschikbaarheid | GenormaliseerdBeschikbaarheidsinterval[]          |              |
+| evenementen     | PlannerEventRecord[]                              |              |
 
 ## `src/utils/layout`
 
@@ -378,18 +405,22 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Date; end: Date }, width: number): PlannerEventGeometry[]
+function layoutResourceEvents(
+  records: PlannerEventRecord[],
+  range: { start: Date; end: Date },
+  width: number,
+): PlannerEventGeometry[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| records | PlannerEventRecord[] |  |
-| bereik | { begin: Datum; einde: Datum } |  |
-| breedte | nummer |  |
+| Naam    | Typ                            | Beschrijving |
+| ------- | ------------------------------ | ------------ |
+| records | PlannerEventRecord[]           |              |
+| bereik  | { begin: Datum; einde: Datum } |              |
+| breedte | nummer                         |              |
 
 ## `src/utils/mutations`
 
@@ -398,90 +429,110 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function applyAssignmentUpdate(assignments: PlannerAssignment[], update: PlannerAssignmentUpdate): PlannerAssignment[]
+function applyAssignmentUpdate(
+  assignments: PlannerAssignment[],
+  update: PlannerAssignmentUpdate,
+): PlannerAssignment[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opdrachten | PlannerOpdracht[] |  |
-| bijwerken | PlannerAssignmentUpdate |  |
+| Naam       | Typ                     | Beschrijving |
+| ---------- | ----------------------- | ------------ |
+| opdrachten | PlannerOpdracht[]       |              |
+| bijwerken  | PlannerAssignmentUpdate |              |
 
 ### movePlannerEventPatch
 
 **Soort:** functie
 
 ```typescript
-function movePlannerEventPatch(event: VEvent, deltaMs: number, options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function movePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenement | VEvent |  |
-| deltaM's | nummer |  |
-| opties | PlannerBewerkenOpties |  |
+| Naam      | Typ                   | Beschrijving |
+| --------- | --------------------- | ------------ |
+| evenement | VEvent                |              |
+| deltaM's  | nummer                |              |
+| opties    | PlannerBewerkenOpties |              |
 
 ### opnieuw toewijzenPlannerEvent
 
 **Soort:** functie
 
 ```typescript
-function reassignPlannerEvent(eventId: string, resourceId: string): PlannerAssignmentUpdate
+function reassignPlannerEvent(
+  eventId: string,
+  resourceId: string,
+): PlannerAssignmentUpdate;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| gebeurtenisId | tekenreeks |  |
-| resourceId | tekenreeks |  |
+| Naam          | Typ        | Beschrijving |
+| ------------- | ---------- | ------------ |
+| gebeurtenisId | tekenreeks |              |
+| resourceId    | tekenreeks |              |
 
 ### resizePlannerEventPatch
 
 **Soort:** functie
 
 ```typescript
-function resizePlannerEventPatch(event: VEvent, deltaMs: number, edge: "start" | "end" = "end", options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function resizePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  edge: "start" | "end" = "end",
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| evenement | VEvent |  |
-| deltaM's | nummer |  |
-| rand | "begin" \| "einde" |  |
-| opties | PlannerBewerkenOpties |  |
+| Naam      | Typ                   | Beschrijving |
+| --------- | --------------------- | ------------ |
+| evenement | VEvent                |              |
+| deltaM's  | nummer                |              |
+| rand      | "begin" \| "einde"    |              |
+| opties    | PlannerBewerkenOpties |              |
 
 ### selecteer PlannerRange
 
 **Soort:** functie
 
 ```typescript
-function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumDurationMs = 15 * 60_000): PlannerRangeSelection | undefined
+function selectPlannerRange(
+  resourceId: string,
+  start: Date,
+  end: Date,
+  minimumDurationMs = 15 * 60_000,
+): PlannerRangeSelection | undefined;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| resourceId | tekenreeks |  |
-| begin | Datum |  |
-| einde | Datum |  |
-| minimumDuurMs |  |  |
+| Naam          | Typ        | Beschrijving |
+| ------------- | ---------- | ------------ |
+| resourceId    | tekenreeks |              |
+| begin         | Datum      |              |
+| einde         | Datum      |              |
+| minimumDuurMs |            |              |
 
 ## `src/utils/timeline`
 
@@ -490,68 +541,80 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function clampToRange(value: Date, range: { start: Date; end: Date }): Date
+function clampToRange(value: Date, range: { start: Date; end: Date }): Date;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | Datum |  |
-| bereik | { begin: Datum; einde: Datum } |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| waarde | Datum                          |              |
+| bereik | { begin: Datum; einde: Datum } |              |
 
 ### tijdlijnsegmenten genereren
 
 **Soort:** functie
 
 ```typescript
-function generateTimelineSegments(scale: PlannerScale, range: { start: Date; end: Date }, options: TimelineOptions = {}): TimelineSegment[]
+function generateTimelineSegments(
+  scale: PlannerScale,
+  range: { start: Date; end: Date },
+  options: TimelineOptions = {},
+): TimelineSegment[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| schaal | PlannerSchaal |  |
-| bereik | { begin: Datum; einde: Datum } |  |
-| opties | Tijdlijnopties |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| schaal | PlannerSchaal                  |              |
+| bereik | { begin: Datum; einde: Datum } |              |
+| opties | Tijdlijnopties                 |              |
 
 ### positieToTijd
 
 **Soort:** functie
 
 ```typescript
-function positionToTime(position: number, range: { start: Date; end: Date }, width: number): Date
+function positionToTime(
+  position: number,
+  range: { start: Date; end: Date },
+  width: number,
+): Date;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| positie | nummer |  |
-| bereik | { begin: Datum; einde: Datum } |  |
-| breedte | nummer |  |
+| Naam    | Typ                            | Beschrijving |
+| ------- | ------------------------------ | ------------ |
+| positie | nummer                         |              |
+| bereik  | { begin: Datum; einde: Datum } |              |
+| breedte | nummer                         |              |
 
 ### tijdnaarpositie
 
 **Soort:** functie
 
 ```typescript
-function timeToPosition(time: Date, range: { start: Date; end: Date }, width: number): number
+function timeToPosition(
+  time: Date,
+  range: { start: Date; end: Date },
+  width: number,
+): number;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tijd | Datum |  |
-| bereik | { begin: Datum; einde: Datum } |  |
-| breedte | nummer |  |
+| Naam    | Typ                            | Beschrijving |
+| ------- | ------------------------------ | ------------ |
+| tijd    | Datum                          |              |
+| bereik  | { begin: Datum; einde: Datum } |              |
+| breedte | nummer                         |              |

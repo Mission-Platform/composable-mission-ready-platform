@@ -26,7 +26,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 No se proporciona descripción.
@@ -36,7 +36,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 Umbrales de píxeles de ancho mínimo para cada paso del punto de interrupción.
@@ -64,23 +64,23 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 Devuelve el valor de píxel para una clave de punto de interrupción determinada.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| clave | Clave de punto de interrupción |  |
+| Nombre | Tipo                           | Descripción |
+| ------ | ------------------------------ | ----------- |
+| clave  | Clave de punto de interrupción |             |
 
 ### maxMediaQuery
 
 **Tipo:** función
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 Devuelve una cadena de consulta de medios `max-width` (límite superior) para el determinado
@@ -88,9 +88,9 @@ punto de interrupción, es decir, "más pequeño que el siguiente paso".
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| clave | Clave de punto de interrupción |  |
+| Nombre | Tipo                           | Descripción |
+| ------ | ------------------------------ | ----------- |
+| clave  | Clave de punto de interrupción |             |
 
 #### Contrato
 
@@ -101,37 +101,37 @@ punto de interrupción, es decir, "más pequeño que el siguiente paso".
 **Tipo:** función
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 Devuelve una cadena de consulta de medios `min-width` para el punto de interrupción dado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| clave | Clave de punto de interrupción |  |
+| Nombre | Tipo                           | Descripción |
+| ------ | ------------------------------ | ----------- |
+| clave  | Clave de punto de interrupción |             |
 
 #### Contrato
 
 - **@ejemplo:** mediaQuery('lg') // → '(ancho mínimo: 1920px)'
-mediaQuery('xl') // → '(ancho mínimo: 2560px)'
+  mediaQuery('xl') // → '(ancho mínimo: 2560px)'
 
 ### resolverpunto de interrupción
 
 **Tipo:** función
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 Dado un ancho de píxel, devuelve la clave del punto de interrupción actualmente activo.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ancho | número |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| ancho  | número |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -140,7 +140,7 @@ Dado un ancho de píxel, devuelve la clave del punto de interrupción actualment
 **Tipo:** función
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt`: lo inverso de {@link ForgeShowAt}: oculta su ranura predeterminada cuando el
@@ -155,9 +155,9 @@ El ancho de la ventana gráfica reactiva se rastrea a través de los ganchos neu
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<HideAtProperties> |  |
+| Nombre      | Tipo                           | Descripción |
+| ----------- | ------------------------------ | ----------- |
+| propiedades | Sólo lectura<HideAtProperties> |             |
 
 ### Ocultar en propiedades
 
@@ -176,7 +176,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt`: representa condicionalmente su ranura predeterminada solo cuando la ventana gráfica está en
@@ -192,9 +192,9 @@ alternar sin introducir un cuadro de diseño adicional.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ShowAtProperties> |  |
+| Nombre      | Tipo                           | Descripción |
+| ----------- | ------------------------------ | ----------- |
+| propiedades | Sólo lectura<ShowAtProperties> |             |
 
 ### Mostrar en propiedades
 
@@ -223,7 +223,7 @@ La superposición no toma propiedades: lee la propia ventana gráfica en vivo.
 **Tipo:** función
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug`: una superposición de tiempo de desarrollo fijada en la parte inferior derecha
@@ -240,9 +240,9 @@ tanto React como Vue.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| _propiedades | Sólo lectura<BreakpointDebugProperties> |  |
+| Nombre       | Tipo                                    | Descripción |
+| ------------ | --------------------------------------- | ----------- |
+| _propiedades | Sólo lectura<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -251,7 +251,7 @@ tanto React como Vue.
 **Tipo:** función
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 Estado del punto de interrupción reactivo basado en el ancho del elemento del documento.

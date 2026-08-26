@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/icon
 **Tipo:** constante
 
 ```typescript
-export const ICON_CATALOG: readonly IconCatalogEntry[]
+export const ICON_CATALOG: readonly IconCatalogEntry[];
 ```
 
 El catálogo revisado para el conjunto de iconos existente.
@@ -26,7 +26,7 @@ El catálogo revisado para el conjunto de iconos existente.
 **Tipo:** constante
 
 ```typescript
-export const ICON_GAP_REVIEW
+export const ICON_GAP_REVIEW;
 ```
 
 Adiciones de alto valor para implementar después de que se establezca la taxonomía de origen.
@@ -46,16 +46,16 @@ Una asignación de categoría estable para cada fuente de íconos en este paquet
 **Tipo:** función
 
 ```typescript
-function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void
+function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void;
 ```
 
 Valide el catálogo estático antes de utilizarlo para generar metadatos del paquete.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| catálogo | solo lectura IconCatalogEntry[] |  |
+| Nombre   | Tipo                            | Descripción |
+| -------- | ------------------------------- | ----------- |
+| catálogo | solo lectura IconCatalogEntry[] |             |
 
 ## `src/components/communication/messaging/forge-icon-bell/forge-icon-bell`
 
@@ -64,7 +64,7 @@ Valide el catálogo estático antes de utilizarlo para generar metadatos del paq
 **Tipo:** función
 
 ```typescript
-function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
+function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement;
 ```
 
 `ForgeIconBell`: un ícono creado una vez en el dialecto JSX neutral.
@@ -75,9 +75,9 @@ Módulo CSS compartido `forge-icon-bell.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconBellProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconBellProperties> |             |
 
 ### Propiedades de IconBell
 
@@ -96,7 +96,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
+function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement;
 ```
 
 `ForgeIconChat`: un ícono creado una vez en el dialecto JSX neutral.
@@ -107,9 +107,9 @@ Módulo CSS compartido `forge-icon-chat.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconChatProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconChatProperties> |             |
 
 ### Propiedades de IconChat
 
@@ -128,7 +128,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
+function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement;
 ```
 
 `ForgeIconMail`: un ícono creado una vez en el dialecto JSX neutral.
@@ -139,9 +139,9 @@ Módulo CSS compartido `forge-icon-mail.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconMailProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconMailProperties> |             |
 
 ### Propiedades del icono de correo
 
@@ -160,7 +160,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
+function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement;
 ```
 
 `ForgeIconPhone`: un ícono creado una vez en el dialecto JSX neutral.
@@ -171,9 +171,9 @@ Módulo CSS compartido `forge-icon-phone.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconPhoneProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconPhoneProperties> |             |
 
 ### IconoTeléfonoPropiedades
 
@@ -192,7 +192,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
+function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement;
 ```
 
 `ForgeIconSend`: un ícono creado una vez en el dialecto JSX neutral.
@@ -203,9 +203,9 @@ Módulo CSS compartido `forge-icon-send.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconSendProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconSendProperties> |             |
 
 ### IconoEnviarPropiedades
 
@@ -224,7 +224,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
+function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement;
 ```
 
 `ForgeIconShare`: un ícono creado una vez en el dialecto JSX neutral.
@@ -235,9 +235,9 @@ Módulo CSS compartido `forge-icon-share.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconShareProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconShareProperties> |             |
 
 ### Propiedades de IconShare
 
@@ -256,7 +256,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
+function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement;
 ```
 
 `ForgeIconCopy`: un ícono creado una vez en el dialecto JSX neutral.
@@ -267,9 +267,9 @@ Módulo CSS compartido `forge-icon-copy.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconCopyProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconCopyProperties> |             |
 
 ### Propiedades de copia de icono
 
@@ -288,7 +288,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
+function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement;
 ```
 
 `ForgeIconEdit`: un ícono creado una vez en el dialecto JSX neutral.
@@ -299,9 +299,9 @@ Módulo CSS compartido `forge-icon-edit.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconEditProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconEditProperties> |             |
 
 ### IconoEditarPropiedades
 
@@ -320,7 +320,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
+function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement;
 ```
 
 `ForgeIconEyeOff`: un ícono creado una vez en el dialecto JSX neutral.
@@ -331,9 +331,9 @@ Módulo CSS compartido `forge-icon-eye-off.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconEyeOffProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconEyeOffProperties> |             |
 
 ### Propiedades del iconoEyeOff
 
@@ -352,7 +352,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
+function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement;
 ```
 
 `ForgeIconEye`: un ícono creado una vez en el dialecto JSX neutral.
@@ -363,9 +363,9 @@ Módulo CSS compartido `forge-icon-eye.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconEyeProperties> |  |
+| Nombre      | Tipo                            | Descripción |
+| ----------- | ------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconEyeProperties> |             |
 
 ### Propiedades del icono del ojo
 
@@ -384,16 +384,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement
+function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement;
 ```
 
 Vuelve a aplicar la edición de contenido deshecha más recientemente.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconRedoProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconRedoProperties> |             |
 
 ### IconoRehacerPropiedades
 
@@ -412,7 +412,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
+function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement;
 ```
 
 `ForgeIconTrash`: un ícono creado una vez en el dialecto JSX neutral.
@@ -423,9 +423,9 @@ Módulo CSS compartido `forge-icon-trash.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconTrashProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconTrashProperties> |             |
 
 ### Propiedades de la papelera de icono
 
@@ -444,16 +444,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement
+function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement;
 ```
 
 Invierte la edición de contenido más reciente.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconUndoProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconUndoProperties> |             |
 
 ### IconoDeshacerPropiedades
 
@@ -472,7 +472,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement
+function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement;
 ```
 
 `ForgeIconDownload`: un ícono creado una vez en el dialecto JSX neutral.
@@ -483,9 +483,9 @@ Módulo CSS compartido `forge-icon-download.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconDownloadProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconDownloadProperties> |             |
 
 ### IconoDescargarPropiedades
 
@@ -504,7 +504,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
+function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement;
 ```
 
 `ForgeIconUpload`: un ícono creado una vez en el dialecto JSX neutral.
@@ -515,9 +515,9 @@ Módulo CSS compartido `forge-icon-upload.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconUploadProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconUploadProperties> |             |
 
 ### IconoSubirPropiedades
 
@@ -536,7 +536,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
+function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement;
 ```
 
 `ForgeIconFilter`: un ícono creado una vez en el dialecto JSX neutral.
@@ -547,9 +547,9 @@ Módulo CSS compartido `forge-icon-filter.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconFilterProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconFilterProperties> |             |
 
 ### Propiedades del filtro de iconos
 
@@ -568,7 +568,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
+function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement;
 ```
 
 `ForgeIconSort`: un indicador de clasificación de dos galones creado una vez en el JSX neutral
@@ -580,9 +580,9 @@ Módulo CSS compartido `forge-icon-sort.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconSortProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconSortProperties> |             |
 
 ### Propiedades de clasificación de iconos
 
@@ -611,7 +611,7 @@ La dirección de clasificación activa, o `undefined` cuando no está ordenada.
 **Tipo:** función
 
 ```typescript
-function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement
+function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnAdd`: un ícono creado una vez en el dialecto JSX neutral.
@@ -622,9 +622,9 @@ Módulo CSS compartido `forge-icon-table-column-add.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconTableColumnAddProperties> |  |
+| Nombre      | Tipo                                       | Descripción |
+| ----------- | ------------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconTableColumnAddProperties> |             |
 
 ### IconoTablaColumnaAgregarPropiedades
 
@@ -643,7 +643,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement
+function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnRemove`: un ícono creado una vez en el dialecto JSX neutral.
@@ -654,9 +654,9 @@ Módulo CSS compartido `forge-icon-table-column-remove.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconTableColumnRemoveProperties> |  |
+| Nombre      | Tipo                                          | Descripción |
+| ----------- | --------------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconTableColumnRemoveProperties> |             |
 
 ### IconoTablaColumnaEliminarPropiedades
 
@@ -675,7 +675,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement
+function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement;
 ```
 
 `ForgeIconTableRowAdd`: un ícono creado una vez en el dialecto JSX neutral.
@@ -686,9 +686,9 @@ Módulo CSS compartido `forge-icon-table-row-add.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconTableRowAddProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconTableRowAddProperties> |             |
 
 ### IconTableRowAgregarPropiedades
 
@@ -707,7 +707,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement
+function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableRowRemove`: un ícono creado una vez en el dialecto JSX neutral.
@@ -718,9 +718,9 @@ Módulo CSS compartido `forge-icon-table-row-remove.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconTableRowRemoveProperties> |  |
+| Nombre      | Tipo                                       | Descripción |
+| ----------- | ------------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconTableRowRemoveProperties> |             |
 
 ### IconTableRowEliminarPropiedades
 
@@ -739,7 +739,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
+function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement;
 ```
 
 `ForgeIconTable`: un ícono creado una vez en el dialecto JSX neutral.
@@ -750,9 +750,9 @@ Módulo CSS compartido `forge-icon-table.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconTableProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconTableProperties> |             |
 
 ### Propiedades de la tabla de iconos
 
@@ -771,7 +771,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement
+function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement;
 ```
 
 `ForgeIconDrawCircle`: un ícono creado una vez en el dialecto JSX neutral.
@@ -782,9 +782,9 @@ Módulo CSS compartido `forge-icon-draw-circle.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconDrawCircleProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconDrawCircleProperties> |             |
 
 ### IconoDrawCirclePropiedades
 
@@ -803,7 +803,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement
+function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement;
 ```
 
 `ForgeIconDrawLine`: un ícono creado una vez en el dialecto JSX neutral.
@@ -814,9 +814,9 @@ Módulo CSS compartido `forge-icon-draw-line.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconDrawLineProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconDrawLineProperties> |             |
 
 ### Propiedades de IconDrawLine
 
@@ -835,7 +835,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement
+function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement;
 ```
 
 `ForgeIconDrawPolygon`: un ícono creado una vez en el dialecto JSX neutral.
@@ -846,9 +846,9 @@ Módulo CSS compartido `forge-icon-draw-polygon.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconDrawPolygonProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconDrawPolygonProperties> |             |
 
 ### Propiedades de IconDrawPolygon
 
@@ -867,7 +867,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement
+function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement;
 ```
 
 `ForgeIconDrawSquare`: un ícono creado una vez en el dialecto JSX neutral.
@@ -878,9 +878,9 @@ Módulo CSS compartido `forge-icon-draw-square.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconDrawSquareProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconDrawSquareProperties> |             |
 
 ### Propiedades del iconoDrawSquare
 
@@ -899,7 +899,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement
+function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement;
 ```
 
 `ForgeIconDrawTriangle`: un ícono creado una vez en el dialecto JSX neutral.
@@ -910,9 +910,9 @@ Módulo CSS compartido `forge-icon-draw-triangle.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconDrawTriangleProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconDrawTriangleProperties> |             |
 
 ### IconDrawTrianglePropiedades
 
@@ -931,7 +931,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
+function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement;
 ```
 
 `ForgeIconMove`: un ícono creado una vez en el dialecto JSX neutral.
@@ -942,9 +942,9 @@ Módulo CSS compartido `forge-icon-move.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconMoveProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconMoveProperties> |             |
 
 ### Propiedades de movimiento de icono
 
@@ -963,7 +963,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement
+function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement;
 ```
 
 `ForgeIconPalette`: un ícono creado una vez en el dialecto JSX neutral.
@@ -974,9 +974,9 @@ Módulo CSS compartido `forge-icon-palette.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconPaletteProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconPaletteProperties> |             |
 
 ### Propiedades de la paleta de iconos
 
@@ -995,7 +995,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
+function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement;
 ```
 
 `ForgeIconPencil`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1006,9 +1006,9 @@ Módulo CSS compartido `forge-icon-pencil.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconPencilProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconPencilProperties> |             |
 
 ### IconoLápizPropiedades
 
@@ -1027,7 +1027,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement
+function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCcw`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1038,9 +1038,9 @@ Módulo CSS compartido `forge-icon-rotate-ccw.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconRotateCcwProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconRotateCcwProperties> |             |
 
 ### IconoRotarCcwPropiedades
 
@@ -1059,7 +1059,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement
+function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCw`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1070,9 +1070,9 @@ Módulo CSS compartido `forge-icon-rotate-cw.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconRotateCwProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconRotateCwProperties> |             |
 
 ### IconoRotarCwPropiedades
 
@@ -1091,7 +1091,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement
+function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement;
 ```
 
 `ForgeIconScaleDown`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1102,9 +1102,9 @@ Módulo CSS compartido `forge-icon-scale-down.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconScaleDownProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconScaleDownProperties> |             |
 
 ### Propiedades de escala de icono
 
@@ -1123,7 +1123,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement
+function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement;
 ```
 
 `ForgeIconScaleUp`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1134,9 +1134,9 @@ Módulo CSS compartido `forge-icon-scale-up.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconScaleUpProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconScaleUpProperties> |             |
 
 ### Propiedades de IconScaleUp
 
@@ -1155,16 +1155,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement
+function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement;
 ```
 
 Un marcador de globo terráqueo con acento de país basado en datos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconCountryGlobeProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconCountryGlobeProperties> |             |
 
 ### IconoPaísGloboPropiedades
 
@@ -1183,16 +1183,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement
+function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement;
 ```
 
 Un ícono de bandera de país delimitado y basado en datos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconFlagProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconFlagProperties> |             |
 
 ### IconoCódigoPaís
 
@@ -1221,7 +1221,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement
+function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement;
 ```
 
 `ForgeIconGeodesic`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1232,9 +1232,9 @@ Módulo CSS compartido `forge-icon-geodesic.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconGeodesicProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconGeodesicProperties> |             |
 
 ### IconoGeodésicoPropiedades
 
@@ -1253,7 +1253,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
+function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement;
 ```
 
 `ForgeIconGlobe`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1264,9 +1264,9 @@ Módulo CSS compartido `forge-icon-globe.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconGlobeProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconGlobeProperties> |             |
 
 ### IconoGloboPropiedades
 
@@ -1285,7 +1285,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement
+function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement;
 ```
 
 `ForgeIconLanguage`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1296,9 +1296,9 @@ Módulo CSS compartido `forge-icon-language.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconLanguageProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconLanguageProperties> |             |
 
 ### Propiedades del idioma del icono
 
@@ -1317,7 +1317,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
+function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement;
 ```
 
 `ForgeIconMapPin`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1328,9 +1328,9 @@ Módulo CSS compartido `forge-icon-map-pin.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconMapPinProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconMapPinProperties> |             |
 
 ### Propiedades del iconoMapPin
 
@@ -1349,16 +1349,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement
+function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement;
 ```
 
 Un símbolo de pila de capa de mapa para alternar datos geográficos visibles.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconLayerProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconLayerProperties> |             |
 
 ### Propiedades de capa de icono
 
@@ -1377,16 +1377,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement
+function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement;
 ```
 
 Un marcador de mapa agrupado para puntos de interés densos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconMapMarkerClusterProperties> |  |
+| Nombre      | Tipo                                         | Descripción |
+| ----------- | -------------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconMapMarkerClusterProperties> |             |
 
 ### IconMapMarkerClusterPropiedades
 
@@ -1405,7 +1405,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
+function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement;
 ```
 
 `ForgeIconCamera`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1416,9 +1416,9 @@ Módulo CSS compartido `forge-icon-camera.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconCameraProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconCameraProperties> |             |
 
 ### IconoCámaraPropiedades
 
@@ -1437,7 +1437,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
+function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement;
 ```
 
 `ForgeIconImage`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1448,9 +1448,9 @@ Módulo CSS compartido `forge-icon-image.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconImageProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconImageProperties> |             |
 
 ### Propiedades de la imagen del icono
 
@@ -1469,7 +1469,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
+function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement;
 ```
 
 `ForgeIconPause`: un glifo de pausa completo (❙❙) creado una vez en el JSX neutral
@@ -1481,9 +1481,9 @@ Módulo CSS compartido `forge-icon-pause.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconPauseProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconPauseProperties> |             |
 
 ### IconoPausaPropiedades
 
@@ -1502,7 +1502,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
+function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement;
 ```
 
 `ForgeIconPlay`: un triángulo de juego completo (▶) creado una vez en el JSX neutral
@@ -1514,9 +1514,9 @@ Módulo CSS compartido `forge-icon-play.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconPlayProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconPlayProperties> |             |
 
 ### Propiedades de juego de iconos
 
@@ -1535,7 +1535,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
+function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement;
 ```
 
 `ForgeIconArrow`: una flecha direccional creada una vez en el dialecto JSX neutral.
@@ -1546,9 +1546,9 @@ Módulo CSS compartido `forge-icon-arrow.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconArrowProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconArrowProperties> |             |
 
 ### IconoFlechaDirección
 
@@ -1577,7 +1577,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement
+function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement;
 ```
 
 `ForgeIconChevron`: un galón direccional creado una vez en el dialecto JSX neutral.
@@ -1588,9 +1588,9 @@ Módulo CSS compartido `forge-icon-chevron.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconChevronProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconChevronProperties> |             |
 
 ### IconoChevronPropiedades
 
@@ -1619,7 +1619,7 @@ La dirección que señala el galón.
 **Tipo:** función
 
 ```typescript
-function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement
+function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement;
 ```
 
 `ForgeIconChevrons`: un doble galón direccional (« ») creado una vez en el
@@ -1631,9 +1631,9 @@ Módulo CSS compartido `forge-icon-chevrons.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconChevronsProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconChevronsProperties> |             |
 
 ### IconoChevronesDirección
 
@@ -1662,7 +1662,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
+function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement;
 ```
 
 `ForgeIconClose`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1673,9 +1673,9 @@ Módulo CSS compartido `forge-icon-close.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconCloseProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconCloseProperties> |             |
 
 ### IconoCerrarPropiedades
 
@@ -1694,7 +1694,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
+function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement;
 ```
 
 `ForgeIconHome`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1705,9 +1705,9 @@ Módulo CSS compartido `forge-icon-home.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconHomeProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconHomeProperties> |             |
 
 ### IconoInicioPropiedades
 
@@ -1726,7 +1726,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
+function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement;
 ```
 
 `ForgeIconJoin`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1737,9 +1737,9 @@ Módulo CSS compartido `forge-icon-join.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconJoinProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconJoinProperties> |             |
 
 ### IconoUnirPropiedades
 
@@ -1758,7 +1758,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
+function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement;
 ```
 
 `ForgeIconMenu`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1769,9 +1769,9 @@ Módulo CSS compartido `forge-icon-menu.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconMenuProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconMenuProperties> |             |
 
 ### IconoMenúPropiedades
 
@@ -1790,7 +1790,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
+function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement;
 ```
 
 `ForgeIconMinus`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1801,9 +1801,9 @@ Módulo CSS compartido `forge-icon-minus.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconMinusProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconMinusProperties> |             |
 
 ### Propiedades del icono menos
 
@@ -1822,7 +1822,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
+function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement;
 ```
 
 `ForgeIconPlus`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1833,9 +1833,9 @@ Módulo CSS compartido `forge-icon-plus.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconPlusProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconPlusProperties> |             |
 
 ### Propiedades de IconPlus
 
@@ -1854,7 +1854,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement
+function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement;
 ```
 
 `ForgeIconRefresh`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1865,9 +1865,9 @@ Módulo CSS compartido `forge-icon-refresh.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconRefreshProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconRefreshProperties> |             |
 
 ### Propiedades de actualización de icono
 
@@ -1886,7 +1886,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
+function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement;
 ```
 
 `ForgeIconSplit`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1897,9 +1897,9 @@ Módulo CSS compartido `forge-icon-split.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconSplitProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconSplitProperties> |             |
 
 ### Propiedades de división de iconos
 
@@ -1918,7 +1918,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement
+function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement;
 ```
 
 `ForgeIconExternalLink`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1929,9 +1929,9 @@ Módulo CSS compartido `forge-icon-external-link.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconExternalLinkProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconExternalLinkProperties> |             |
 
 ### Propiedades del enlace externo del icono
 
@@ -1950,7 +1950,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
+function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement;
 ```
 
 `ForgeIconLink`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1961,9 +1961,9 @@ Módulo CSS compartido `forge-icon-link.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconLinkProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconLinkProperties> |             |
 
 ### Propiedades de enlace de icono
 
@@ -1982,7 +1982,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
+function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement;
 ```
 
 `ForgeIconSearch`: un ícono creado una vez en el dialecto JSX neutral.
@@ -1993,9 +1993,9 @@ Módulo CSS compartido `forge-icon-search.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconSearchProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconSearchProperties> |             |
 
 ### Propiedades de búsqueda de iconos
 
@@ -2014,7 +2014,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
+function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement;
 ```
 
 `ForgeIconCloud`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2025,9 +2025,9 @@ Módulo CSS compartido `forge-icon-cloud.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconCloudProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconCloudProperties> |             |
 
 ### IconoNubePropiedades
 
@@ -2046,7 +2046,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
+function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement;
 ```
 
 `ForgeIconDebug`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2057,9 +2057,9 @@ Módulo CSS compartido `forge-icon-debug.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconDebugProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconDebugProperties> |             |
 
 ### Propiedades de depuración de iconos
 
@@ -2078,7 +2078,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
+function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement;
 ```
 
 `ForgeIconHeart`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2089,9 +2089,9 @@ Módulo CSS compartido `forge-icon-heart.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconHeartProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconHeartProperties> |             |
 
 ### IconoCorazónPropiedades
 
@@ -2110,7 +2110,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement
+function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement;
 ```
 
 `ForgeIconLightning`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2121,9 +2121,9 @@ Módulo CSS compartido `forge-icon-lightning.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconLightningProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconLightningProperties> |             |
 
 ### IconoRayoPropiedades
 
@@ -2142,7 +2142,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
+function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement;
 ```
 
 `ForgeIconPuzzle`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2153,9 +2153,9 @@ Módulo CSS compartido `forge-icon-puzzle.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconPuzzleProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconPuzzleProperties> |             |
 
 ### IconoRompecabezasPropiedades
 
@@ -2174,7 +2174,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
+function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement;
 ```
 
 `ForgeIconQrCode`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2185,9 +2185,9 @@ Módulo CSS compartido `forge-icon-qr-code.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconQrCodeProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconQrCodeProperties> |             |
 
 ### IconoQrCodePropiedades
 
@@ -2206,7 +2206,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement
+function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement;
 ```
 
 `ForgeIconSettings`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2217,9 +2217,9 @@ Módulo CSS compartido `forge-icon-settings.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconSettingsProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconSettingsProperties> |             |
 
 ### IconoConfiguraciónPropiedades
 
@@ -2238,7 +2238,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
+function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement;
 ```
 
 `ForgeIconStar`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2249,9 +2249,9 @@ Módulo CSS compartido `forge-icon-star.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconStarProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconStarProperties> |             |
 
 ### IconoEstrellaPropiedades
 
@@ -2270,7 +2270,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
+function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement;
 ```
 
 `ForgeIconWrench`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2281,9 +2281,9 @@ Módulo CSS compartido `forge-icon-wrench.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconWrenchProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconWrenchProperties> |             |
 
 ### Propiedades de IconWrench
 
@@ -2302,16 +2302,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement
+function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement;
 ```
 
 Una línea de ruta con marcadores de inicio y destino distintos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconRouteProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconRouteProperties> |             |
 
 ### IconoRutaPropiedades
 
@@ -2330,16 +2330,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement
+function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement;
 ```
 
 Un marcador de waypoint reutilizable para rutas y superposiciones de mapas.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconWaypointProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconWaypointProperties> |             |
 
 ### IconoWaypointPropiedades
 
@@ -2358,7 +2358,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement
+function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement;
 ```
 
 `ForgeIconLockOpen`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2369,9 +2369,9 @@ Módulo CSS compartido `forge-icon-lock-open.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconLockOpenProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconLockOpenProperties> |             |
 
 ### Propiedades de bloqueo de icono abierto
 
@@ -2390,7 +2390,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
+function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement;
 ```
 
 `ForgeIconLock`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2401,9 +2401,9 @@ Módulo CSS compartido `forge-icon-lock.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconLockProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconLockProperties> |             |
 
 ### Propiedades de bloqueo de icono
 
@@ -2422,7 +2422,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
+function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement;
 ```
 
 `ForgeIconUser`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2433,9 +2433,9 @@ Módulo CSS compartido `forge-icon-user.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconUserProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconUserProperties> |             |
 
 ### Propiedades de usuario de icono
 
@@ -2454,7 +2454,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement
+function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement;
 ```
 
 `ForgeIconAlertCritical`: el glifo de alerta crítica (un "!" dentro de un octágono,
@@ -2466,9 +2466,9 @@ Módulo CSS compartido `forge-icon-alert-critical.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconAlertCriticalProperties> |  |
+| Nombre      | Tipo                                      | Descripción |
+| ----------- | ----------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconAlertCriticalProperties> |             |
 
 ### Propiedades críticas de alerta de icono
 
@@ -2487,7 +2487,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement
+function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement;
 ```
 
 `ForgeIconAlertInfo`: el glifo de alerta informativa (una "i" dentro de un círculo)
@@ -2499,9 +2499,9 @@ Módulo CSS compartido `forge-icon-alert-info.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconAlertInfoProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconAlertInfoProperties> |             |
 
 ### Propiedades de información de alerta de icono
 
@@ -2520,7 +2520,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement
+function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement;
 ```
 
 `ForgeIconAlertNeutral`: el glifo de alerta neutral (un "–" dentro de un círculo)
@@ -2533,9 +2533,9 @@ Módulo CSS compartido `forge-icon-alert-neutral.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconAlertNeutralProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconAlertNeutralProperties> |             |
 
 ### IconAlertNeutralProperties
 
@@ -2554,7 +2554,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement
+function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement;
 ```
 
 `ForgeIconAlertWarning`: el glifo de alerta de advertencia (un "!" dentro de un triángulo)
@@ -2566,9 +2566,9 @@ Módulo CSS compartido `forge-icon-alert-warning.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconAlertWarningProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconAlertWarningProperties> |             |
 
 ### Propiedades de alerta de icono
 
@@ -2587,7 +2587,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
+function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement;
 ```
 
 `ForgeIconAlert`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2598,9 +2598,9 @@ Módulo CSS compartido `forge-icon-alert.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconAlertProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconAlertProperties> |             |
 
 ### Propiedades de alerta de icono
 
@@ -2619,7 +2619,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
+function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement;
 ```
 
 `ForgeIconCheck`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2630,9 +2630,9 @@ Módulo CSS compartido `forge-icon-check.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconCheckProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconCheckProperties> |             |
 
 ### Propiedades de comprobación de iconos
 
@@ -2651,7 +2651,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
+function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement;
 ```
 
 `ForgeIconError`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2662,9 +2662,9 @@ Módulo CSS compartido `forge-icon-error.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconErrorProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconErrorProperties> |             |
 
 ### Propiedades de error de icono
 
@@ -2683,7 +2683,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
+function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement;
 ```
 
 `ForgeIconInfo`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2694,9 +2694,9 @@ Módulo CSS compartido `forge-icon-info.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconInfoProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconInfoProperties> |             |
 
 ### Propiedades de información de icono
 
@@ -2715,7 +2715,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
+function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement;
 ```
 
 `ForgeIconNotice`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2726,9 +2726,9 @@ Módulo CSS compartido `forge-icon-notice.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconNoticeProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconNoticeProperties> |             |
 
 ### IconoAvisoPropiedades
 
@@ -2747,7 +2747,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement
+function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement;
 ```
 
 `ForgeIconWarning`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2758,9 +2758,9 @@ Módulo CSS compartido `forge-icon-warning.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconWarningProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconWarningProperties> |             |
 
 ### IconoAdvertenciaPropiedades
 
@@ -2779,7 +2779,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement
+function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement;
 ```
 
 `ForgeIconAlignCenter`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2790,9 +2790,9 @@ Módulo CSS compartido `forge-icon-align-center.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconAlignCenterProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconAlignCenterProperties> |             |
 
 ### Propiedades de IconAlignCenter
 
@@ -2811,7 +2811,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement
+function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement;
 ```
 
 `ForgeIconAlignJustify`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2822,9 +2822,9 @@ Módulo CSS compartido `forge-icon-align-justify.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconAlignJustifyProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconAlignJustifyProperties> |             |
 
 ### IconAlignJustifyProperties
 
@@ -2843,7 +2843,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement
+function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement;
 ```
 
 `ForgeIconAlignLeft`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2854,9 +2854,9 @@ Módulo CSS compartido `forge-icon-align-left.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconAlignLeftProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconAlignLeftProperties> |             |
 
 ### Propiedades de IconAlignLeft
 
@@ -2875,7 +2875,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement
+function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement;
 ```
 
 `ForgeIconAlignRight`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2886,9 +2886,9 @@ Módulo CSS compartido `forge-icon-align-right.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconAlignRightProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconAlignRightProperties> |             |
 
 ### Propiedades de IconAlignRight
 
@@ -2907,7 +2907,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement
+function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement;
 ```
 
 `ForgeIconBlockquote`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2918,9 +2918,9 @@ Módulo CSS compartido `forge-icon-blockquote.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconBlockquoteProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconBlockquoteProperties> |             |
 
 ### IconBlockquotePropiedades
 
@@ -2939,7 +2939,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
+function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement;
 ```
 
 `ForgeIconBold`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2950,9 +2950,9 @@ Módulo CSS compartido `forge-icon-bold.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconBoldProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconBoldProperties> |             |
 
 ### IconoNegritaPropiedades
 
@@ -2971,7 +2971,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement
+function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement;
 ```
 
 `ForgeIconBulletList`: un ícono creado una vez en el dialecto JSX neutral.
@@ -2982,9 +2982,9 @@ Módulo CSS compartido `forge-icon-bullet-list.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconBulletListProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconBulletListProperties> |             |
 
 ### Propiedades de la lista de balas de iconos
 
@@ -3003,7 +3003,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement
+function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement;
 ```
 
 `ForgeIconCodeBlock`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3014,9 +3014,9 @@ Módulo CSS compartido `forge-icon-code-block.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconCodeBlockProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconCodeBlockProperties> |             |
 
 ### Propiedades del bloque de código de icono
 
@@ -3035,7 +3035,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement
+function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement;
 ```
 
 `ForgeIconCodeInline`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3046,9 +3046,9 @@ Módulo CSS compartido `forge-icon-code-inline.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconCodeInlineProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconCodeInlineProperties> |             |
 
 ### IconCodeInlineProperties
 
@@ -3067,7 +3067,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement
+function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFive`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3078,9 +3078,9 @@ Módulo CSS compartido `forge-icon-heading-five.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconHeadingFiveProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconHeadingFiveProperties> |             |
 
 ### IconoEncabezadoCincoPropiedades
 
@@ -3099,7 +3099,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement
+function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFour`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3110,9 +3110,9 @@ Módulo CSS compartido `forge-icon-heading-four.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconHeadingFourProperties> |  |
+| Nombre      | Tipo                                    | Descripción |
+| ----------- | --------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconHeadingFourProperties> |             |
 
 ### IconoEncabezadoCuatroPropiedades
 
@@ -3131,7 +3131,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement
+function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement;
 ```
 
 `ForgeIconHeadingOne`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3142,9 +3142,9 @@ Módulo CSS compartido `forge-icon-heading-one.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconHeadingOneProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconHeadingOneProperties> |             |
 
 ### IconoEncabezadoUnoPropiedades
 
@@ -3163,7 +3163,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement
+function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement;
 ```
 
 `ForgeIconHeadingSix`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3174,9 +3174,9 @@ Módulo CSS compartido `forge-icon-heading-six.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconHeadingSixProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconHeadingSixProperties> |             |
 
 ### IconoEncabezadoSeisPropiedades
 
@@ -3195,7 +3195,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement
+function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement;
 ```
 
 `ForgeIconHeadingThree`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3206,9 +3206,9 @@ Módulo CSS compartido `forge-icon-heading-three.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconHeadingThreeProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconHeadingThreeProperties> |             |
 
 ### IconoEncabezadoTresPropiedades
 
@@ -3227,7 +3227,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement
+function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement;
 ```
 
 `ForgeIconHeadingTwo`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3238,9 +3238,9 @@ Módulo CSS compartido `forge-icon-heading-two.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconHeadingTwoProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconHeadingTwoProperties> |             |
 
 ### IconoEncabezadoDosPropiedades
 
@@ -3259,7 +3259,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement
+function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement;
 ```
 
 `ForgeIconHeading`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3270,9 +3270,9 @@ Módulo CSS compartido `forge-icon-heading.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconHeadingProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconHeadingProperties> |             |
 
 ### IconoEncabezadoPropiedades
 
@@ -3291,7 +3291,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
+function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement;
 ```
 
 `ForgeIconItalic`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3302,9 +3302,9 @@ Módulo CSS compartido `forge-icon-italic.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconItalicProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconItalicProperties> |             |
 
 ### IconoCursivaPropiedades
 
@@ -3323,7 +3323,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement
+function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement;
 ```
 
 `ForgeIconNumberedList`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3334,9 +3334,9 @@ Módulo CSS compartido `forge-icon-numbered-list.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconNumberedListProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconNumberedListProperties> |             |
 
 ### Propiedades de lista numerada de iconos
 
@@ -3355,7 +3355,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement
+function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement;
 ```
 
 `ForgeIconStrikethrough`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3366,9 +3366,9 @@ Módulo CSS compartido `forge-icon-strikethrough.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconStrikethroughProperties> |  |
+| Nombre      | Tipo                                      | Descripción |
+| ----------- | ----------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconStrikethroughProperties> |             |
 
 ### IconoTachadoPropiedades
 
@@ -3387,7 +3387,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement
+function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement;
 ```
 
 `ForgeIconUnderline`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3398,9 +3398,9 @@ Módulo CSS compartido `forge-icon-underline.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconUnderlineProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconUnderlineProperties> |             |
 
 ### IconoSubrayadoPropiedades
 
@@ -3419,7 +3419,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement
+function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement;
 ```
 
 `ForgeIconCalendar`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3430,9 +3430,9 @@ Módulo CSS compartido `forge-icon-calendar.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconCalendarProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<IconCalendarProperties> |             |
 
 ### IconoCalendarioPropiedades
 
@@ -3451,7 +3451,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
+function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement;
 ```
 
 `ForgeIconClock`: un ícono creado una vez en el dialecto JSX neutral.
@@ -3462,9 +3462,9 @@ Módulo CSS compartido `forge-icon-clock.module.scss`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconClockProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconClockProperties> |             |
 
 ### IconoRelojPropiedades
 
@@ -3483,7 +3483,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
+export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[];
 ```
 
 No se proporciona descripción.
@@ -3493,17 +3493,17 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void
+function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| composiciones | solo lectura IconSymbolDefinition[] |  |
-| identificadores disponibles | Sólo lecturaSet<string> |  |
+| Nombre                      | Tipo                                | Descripción |
+| --------------------------- | ----------------------------------- | ----------- |
+| composiciones               | solo lectura IconSymbolDefinition[] |             |
+| identificadores disponibles | Sólo lecturaSet<string>             |             |
 
 ## `src/sprite/country-flags`
 
@@ -3512,7 +3512,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const SUPPORTED_COUNTRY_CODES
+export const SUPPORTED_COUNTRY_CODES;
 ```
 
 Códigos de países con símbolos de banderas canónicas en el objeto publicado.
@@ -3524,7 +3524,7 @@ Códigos de países con símbolos de banderas canónicas en el objeto publicado.
 **Tipo:** constante
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS
+export const COUNTRY_FLAG_SYMBOL_IDS;
 ```
 
 No se proporciona descripción.
@@ -3534,7 +3534,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
+export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[];
 ```
 
 No se proporciona descripción.
@@ -3546,16 +3546,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement
+function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement;
 ```
 
 Envoltorio accesible compartido que hace referencia a la geometría de sprites canónica.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconUseProperties> |  |
+| Nombre      | Tipo                            | Descripción |
+| ----------- | ------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconUseProperties> |             |
 
 ### IconoUsoPropiedades
 
@@ -3574,7 +3574,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const IconSpriteContext
+export const IconSpriteContext;
 ```
 
 No se proporciona descripción.
@@ -3584,32 +3584,32 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement
+function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement;
 ```
 
 Monte un host de sprites en línea para un subárbol de componentes de iconos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<IconSpriteProperties> |  |
+| Nombre      | Tipo                               | Descripción |
+| ----------- | ---------------------------------- | ----------- |
+| propiedades | Sólo lectura<IconSpriteProperties> |             |
 
 ### utilizarIconHref
 
 **Tipo:** función
 
 ```typescript
-function useIconHref(symbolId: string): string
+function useIconHref(symbolId: string): string;
 ```
 
 Resuelva una URL de símbolo local o externa para un contenedor de iconos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ID de símbolo | cadena |  |
+| Nombre        | Tipo   | Descripción |
+| ------------- | ------ | ----------- |
+| ID de símbolo | cadena |             |
 
 ## `src/sprite/serialize`
 
@@ -3618,48 +3618,48 @@ Resuelva una URL de símbolo local o externa para un contenedor de iconos.
 **Tipo:** función
 
 ```typescript
-function serializeNode(node: IconSvgNode): string
+function serializeNode(node: IconSvgNode): string;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| node | IconoSvgNodo |  |
+| Nombre | Tipo         | Descripción |
+| ------ | ------------ | ----------- |
+| node   | IconoSvgNodo |             |
 
 ### serializarSprite
 
 **Tipo:** función
 
 ```typescript
-function serializeSprite(definitions: readonly IconSymbolDefinition[]): string
+function serializeSprite(definitions: readonly IconSymbolDefinition[]): string;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| definiciones | solo lectura IconSymbolDefinition[] |  |
+| Nombre       | Tipo                                | Descripción |
+| ------------ | ----------------------------------- | ----------- |
+| definiciones | solo lectura IconSymbolDefinition[] |             |
 
 ### serializarSímbolo
 
 **Tipo:** función
 
 ```typescript
-function serializeSymbol(definition: IconSymbolDefinition): string
+function serializeSymbol(definition: IconSymbolDefinition): string;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| definición | IconoSímboloDefinición |  |
+| Nombre     | Tipo                   | Descripción |
+| ---------- | ---------------------- | ----------- |
+| definición | IconoSímboloDefinición |             |
 
 ## `src/sprite/types`
 

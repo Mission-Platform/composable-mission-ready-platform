@@ -75,7 +75,7 @@ La stratégie de disposition que le conteneur utilise pour se dimensionner sur l
 **Genre :** fonction
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer` — une primitive de mise en page de page/section qui contraint et centre
@@ -95,9 +95,9 @@ dans le module CSS (qui intègre les points d'arrêt de la plate-forme sous form
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ContainerProperties> |  |
+| Nom        | Tapez                              | Descriptif |
+| ---------- | ---------------------------------- | ---------- |
+| propriétés | Lecture seule<ContainerProperties> |            |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -116,7 +116,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout` — le shell d'application de niveau supérieur créé une fois dans le
@@ -140,9 +140,9 @@ Assistant {@link classNames}.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ApplicationLayoutProperties> |  |
+| Nom        | Tapez                                      | Descriptif |
+| ---------- | ------------------------------------------ | ---------- |
+| propriétés | Lecture seule<ApplicationLayoutProperties> |            |
 
 ### Barre latéralePoint d'arrêt
 
@@ -191,7 +191,7 @@ Régions nommées exposées par `ForgeBentoLayout`.
 **Genre :** fonction
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout` expose les emplacements nommés `hero`, `feature` et `supporting`.
@@ -200,9 +200,9 @@ soutenir les régions à ses côtés ; toutes les régions s'empilent dans l'ord
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<BentoLayoutProperties> |  |
+| Nom        | Tapez                                | Descriptif |
+| ---------- | ------------------------------------ | ---------- |
+| propriétés | Lecture seule<BentoLayoutProperties> |            |
 
 ### PatternLayoutBreakpoint
 
@@ -241,7 +241,7 @@ export type PatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **Genre :** fonction
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout` expose `header`, `intro`, `primary`, `secondary` et
@@ -250,9 +250,9 @@ la piste dominante sur écran large tandis que la région secondaire reste adjac
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<FPatternLayoutProperties> |  |
+| Nom        | Tapez                                   | Descriptif |
+| ---------- | --------------------------------------- | ---------- |
+| propriétés | Lecture seule<FPatternLayoutProperties> |            |
 
 ### FPatternLayoutBreakpoint
 
@@ -311,7 +311,7 @@ export type FPatternLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside'
 **Genre :** fonction
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout` restitue les emplacements nommés `cell1`… `cell12` fournis dans
@@ -320,9 +320,9 @@ suit uniquement après le point d'arrêt réactif configuré.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<GridLayoutProperties> |  |
+| Nom        | Tapez                               | Descriptif |
+| ---------- | ----------------------------------- | ---------- |
+| propriétés | Lecture seule<GridLayoutProperties> |            |
 
 ### GridLayoutBreakpoint
 
@@ -339,7 +339,19 @@ Point d’arrêt de la fenêtre utilisé par la mise en page étroite de la gril
 **Genre :** type
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 Emplacements de cellules nommées ordonnés pris en charge (`cell1` à `cell12`).
@@ -381,7 +393,7 @@ export type GridLayoutTag = 'div' | 'section' | 'article' | 'main' | 'aside';
 **Genre :** fonction
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout` — un shell réactif à trois colonnes créé une fois dans le
@@ -410,9 +422,9 @@ emplacement de contenu simple).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<VerticalLayoutProperties> |  |
+| Nom        | Tapez                                   | Descriptif |
+| ---------- | --------------------------------------- | ---------- |
+| propriétés | Lecture seule<VerticalLayoutProperties> |            |
 
 ### VerticalLayoutBreakpoint
 
@@ -451,7 +463,7 @@ export type VerticalLayoutSize = DrawerSize;
 **Genre :** fonction
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` expose `topStart`, `topEnd`, `middle`, `bottomStart`,
@@ -460,9 +472,9 @@ les écrans placent les régions sur des côtés alternés en utilisant des zone
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ZPatternLayoutProperties> |  |
+| Nom        | Tapez                                   | Descriptif |
+| ---------- | --------------------------------------- | ---------- |
+| propriétés | Lecture seule<ZPatternLayoutProperties> |            |
 
 ### ZPatternLayoutBreakpoint
 

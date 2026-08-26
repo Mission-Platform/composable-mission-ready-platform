@@ -37,7 +37,7 @@ Une sélection D3 encapsulant un seul élément `E`, sans donnée liée.
 **Genre :** fonction
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 Renvoie une référence à attacher à un élément (`ref={reference}`) et exécutez `draw`
@@ -50,10 +50,10 @@ bien rangé - à l'identique sur React et Vue.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| dessiner | D3Draw<E> |  |
-| dépendances | MpDependencyList |  |
+| Nom         | Tapez            | Descriptif |
+| ----------- | ---------------- | ---------- |
+| dessiner    | D3Draw<E>        |            |
+| dépendances | MpDependencyList |            |
 
 ## `src/utils/margins`
 
@@ -72,7 +72,7 @@ La zone extérieure du graphique plus sa marge (facultative).
 **Genre :** fonction
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 Calculez le rectangle de traçage intérieur pour un graphique de la taille extérieure donnée et
@@ -81,9 +81,9 @@ ne produisez jamais de dimensions négatives (que les échelles D3 rejettent).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| boîte | Boîte à graphiques |  |
+| Nom   | Tapez              | Descriptif |
+| ----- | ------------------ | ---------- |
+| boîte | Boîte à graphiques |            |
 
 ### Dimensions intérieures
 
@@ -121,7 +121,7 @@ objet partiel (les côtés manquants sont par défaut `0`).
 **Genre :** fonction
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 Normalisez une {@link MarginInput} en une {@link Margin} complète. Un numéro est
@@ -130,6 +130,6 @@ le reste à `0`. `undefined` génère une marge nulle.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | MargeEntrée |  |
+| Nom    | Tapez       | Descriptif |
+| ------ | ----------- | ---------- |
+| entrée | MargeEntrée |            |
