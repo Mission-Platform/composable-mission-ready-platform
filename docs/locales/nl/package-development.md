@@ -1,22 +1,17 @@
-# Pakketontwikkeling
+# Package Development
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+This guide describes how to create, develop, and publish reusable packages within the Mission Platform monorepo.
+Packages are the foundational building blocks of the platform, residing in the `packages/` directory and managed via
+pnpm workspaces and Turborepo.
 
-> Engelse bron: [docs/package-development.md](../../package-development.md)
-> Taal: Nederlands (nl)
+## Creating a New Package
 
-Deze handleiding beschrijft hoe u herbruikbare pakketten kunt maken, ontwikkelen en publiceren binnen de monorepo van Mission Platform.
-Pakketten zijn de fundamentele bouwstenen van het platform en bevinden zich in de `packages/` directory en beheerd via
-pnpm werkruimten en Turborepo.
+The recommended way to create a package is using the Mission Platform Developer MCP tool, which ensures all
+configurations, scripts, and folder structures follow the platform's standards.
 
-## Een nieuw pakket maken
+### 1. Scaffold with MCP
 
-De aanbevolen manier om een pakket te maken is met behulp van de Mission Platform Developer MCP-tool, die zorgt voor alles
-configuraties, scripts en mapstructuren volgen de standaarden van het platform.
-
-### 1. Steiger met MCP
-
-Gebruik de `scaffold_package` hulpmiddel om het skelet te genereren.
+Use the `scaffold_package` tool to generate the skeleton.
 
 ```bash
 # Example: Creating a new 'date-utils' package
@@ -24,18 +19,18 @@ Gebruik de `scaffold_package` hulpmiddel om het skelet te genereren.
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
 ```
 
-Dit genereert een conventie-compliant `packages/date-utils/` map met:
+This generates a convention-compliant `packages/date-utils/` directory with:
 
-- `package.json` met scripts die geschikt zijn voor de werkruimte en gedeelde configuraties.
-- `tsconfig.json` het uitbreiden van de platformstandaarden.
-- `vite.config.ts` voor geoptimaliseerde builds.
-- `src/index.ts` vat bestand.
-- `llms.txt` voor AI-ondersteunde documentatie.
+- `package.json` with workspace-ready scripts and shared configurations.
+- `tsconfig.json` extending the platform defaults.
+- `vite.config.ts` for optimized builds.
+- `src/index.ts` barrel file.
+- `llms.txt` for AI-assisted documentation.
 
-### 2. Handmatige installatie (optioneel)
+### 2. Manual Setup (Optional)
 
-Als u de MCP-tool niet gebruikt, zorg er dan voor dat uw `package.json` gebruikt [pnpm catalogi](https://pnpm.io/catalogs) voor
-afhankelijkheidsbeheer en volgt de naamgevingsconventie:
+If you are not using the MCP tool, ensure your `package.json` uses [pnpm catalogs](https://pnpm.io/catalogs) for
+dependency management and follows the scoped naming convention:
 
 ```json
 {
@@ -55,10 +50,10 @@ afhankelijkheidsbeheer en volgt de naamgevingsconventie:
 }
 ```
 
-## Pakketstructuur
+## Package Structure
 
-Elk pakket volgt een strikte interne lay-out. Code-eenheden (componenten, composables, winkels of utils) MOETEN erin leven
-hun eigen benoemde submappen met co-located tests.
+Each package follows a strict internal layout. Units of code (components, composables, stores, or utils) MUST live in
+their own named subdirectories with co-located tests.
 
 ```text
 packages/<name>/
@@ -75,6 +70,8 @@ packages/<name>/
 │   │   └── date-validator/         # date-validator.ts + .spec.ts
 │   ├── locales/                    # i18n JSON files
 │   └── index.ts                    # Package public API (barrel)
+├── docs/                           # Package-owned guides and generated API reference
+│   └── reference/generated/        # Regenerated during prebuild
 ├── llms.txt                        # Technical overview for LLMs
 ├── package.json
 ├── tsconfig.json
@@ -82,59 +79,145 @@ packages/<name>/
 └── README.md
 ```
 
-## Ontwikkelingsworkflow
+## Stylelint for style-bearing packages
 
-### Auteursregels
+Packages that contain CSS, SCSS, or Vue style blocks must keep a discoverable Stylelint configuration and lint scripts:
 
-1. **TypeScript Overal**: alle broncode moet aanwezig zijn `.ts` of `.tsx` (gebruikmakend van `@mission-platform/forge`).
-2. **Framework-neutraliteit**: geef de voorkeur aan raamwerk-agnostische logica. Componenten moeten één keer in Forge JSX worden geschreven om te targeten
-   meerdere raamwerken.
-3. **Isolatie**: pakketten mogen nooit worden geïmporteerd uit `apps/`.
-4. **Testen**: Elke eenheid (composable, store, util, component) MOET een co-locatie hebben `.spec.ts` bestand.
+```text
+packages/<name>/
+├── src/
+│   └── styles/                     # CSS, SCSS, and Vue style sources
+├── stylelint.config.mjs            # Workspace-local ESM configuration
+└── package.json                    # Stylelint scripts and devDependencies
+```
 
-Voor gedetailleerde auteursinstructies, zie:
+Add the shared configuration and its direct syntax/configuration dependencies to `devDependencies`:
 
-- [Ontwerp van atomaire componenten](atomic-component-design.md)
-- [Composeerbaar schrijven](composable-authoring.md)
-- [Winkelontwerp](store-authoring.md)
+```json
+{
+  "devDependencies": {
+    "@mission-platform/stylelint-config": "workspace:*",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
+  }
+}
+```
+
+Use the shared configuration from `stylelint.config.mjs` instead of duplicating its `extends` entries:
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+Add scripts that cover the workspace's actual style sources, then run the check before publishing:
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
+```
+
+```bash
+pnpm exec turbo run lint:style --filter @mission-platform/<name>
+```
+
+## Development Workflow
+
+### Authoring Rules
+
+1. **TypeScript Everywhere**: All source code must be in `.ts` or `.tsx` (using `@mission-platform/forge`).
+2. **Framework Neutrality**: Favor framework-agnostic logic. Components should be authored once in Forge JSX to target
+   multiple frameworks.
+3. **Isolation**: Packages must never import from `apps/`.
+4. **Testing**: Every unit (composable, store, util, component) MUST have a co-located `.spec.ts` file.
+
+For detailed authoring instructions, see:
+
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
 - [Util Authoring](util-authoring.md)
 
-### Gebouw
+### Building
 
-Bouw het pakket met behulp van Turbo om ervoor te zorgen dat afhankelijkheden in de juiste volgorde worden opgebouwd:
+Build the package using Turbo to ensure dependencies are built in the correct order:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/<name>
 ```
 
-### Testen
+### Testing
 
-Voer tests uit met behulp van Vitest:
+Run tests using Vitest:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
 
-## Documentatie (`llms.txt`)
+### Router packages and Web Components targets
 
-Elk pakket bevat een `llms.txt` bestand in de root. Dit bestand geeft een beknopte, technische beschrijving van de
-API's, componenten en gedrag van het pakket, waardoor AI-assistenten het pakket beter kunnen begrijpen en gebruiken.
+Use `@mission-platform/router` for structured route targets, pure URL helpers, and neutral compiler markers. Shared
+packages must not define or register application routes. Applications select one Forge router target independently from
+their UI target, retain ownership of native route records and router instances, and bind any target-specific runtime
+context during bootstrap. The initial targets are `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`, and `-web-components`; unsupported capability combinations must remain compiler diagnostics.
 
-- **Titel**: gebruik de bereikpakketnaam.
-- **Componenten/API's**: Tabel of lijst met beschikbare symbolen met hun rekwisieten en verantwoordelijkheden.
-- **Voorbeelden**: korte codefragmenten voor veelvoorkomende gebruiksscenario's.
+For a framework-free package or app, select the Forge Web Components condition in both build and TypeScript configs:
 
-## Publiceren
+```ts
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
-Het Mission Platform maakt gebruik van [Wijzigingssets](https://github.com/changesets/changesets) voor versiebeheer en publicatie.
+export default {
+  resolve: { conditions: frameworkResolveConditions("web-component") },
+};
+```
 
-1. **Een wijzigingenset toevoegen**: Voer na het aanbrengen van de wijzigingen het volgende uit:
-```bash
+For Web Components applications, import the runtime from `@mission-platform/forge-router-web-components/runtime`, call
+`registerRouterElements()` once, call `setForgeRouter(appRouter)` after creating the app-owned router, pass structured
+`to` values as DOM properties, and use `MpMemoryHistory` in prerender/tests. A package that adds a reusable router
+element or changes Web Components behavior must add a neutral story under `src/**/*.stories.ts` and include the target in
+the Web Components Storybook workbench.
+
+## Documentation (`llms.txt`)
+
+Every package includes an `llms.txt` file at its root. This file provides a concise, technical description of the
+package's APIs, components, and behavior, enabling AI assistants to better understand and use the package.
+
+- **Title**: Use the scoped package name.
+- **Components/APIs**: Table or list of available symbols with their props and responsibilities.
+- **Examples**: Short code snippets for common use cases.
+
+## Package documentation ownership
+
+Package-specific installation, usage, limitations, contributor workflows, and API reference pages belong in the
+package's `docs/` directory, not in the repository-wide `docs/` tree. The docs site ingests these files directly and
+publishes them under a stable package namespace such as `/packages/barcode/index` or `/configs/eslint-config/index`.
+Project-wide concepts, architecture, workspace workflows, and cross-package troubleshooting remain in root `docs/`.
+
+Generated API pages live under `docs/reference/generated/` and are refreshed by the package `prebuild` hook; do not edit
+those files manually. To preview package documentation through the site, run the docs app build or use the all-workspace
+extractor described in the docs app README.
+
+## Publishing
+
+The Mission Platform uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+1. **Add a Changeset**: After making changes, run:
+   ```bash
    pnpm changeset
    ```
-   Selecteer het pakket en het type wijziging (patch, minor, major).
-2. **De wijzigingenset vastleggen**: voer de gegenereerde wijzigingen door `.changeset/*.md` bestand.
-3. **Versie en publicatie**: CI/CD zorgt voor de daadwerkelijke publicatie, maar u kunt lokaal voorbeelden van versies bekijken met:
-```bash
+   Select the package and the type of change (patch, minor, major).
+2. **Commit the Changeset**: Commit the generated `.changeset/*.md` file.
+3. **Version and Publish**: CI/CD handles the actual publishing, but you can locally preview versions with:
+   ```bash
    pnpm changeset version
    ```
