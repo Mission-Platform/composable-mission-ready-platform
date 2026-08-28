@@ -58,26 +58,20 @@
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
+        $padding-block: var(
+          --forge-list-navigation-list-size-#{$size}-padding-block,
+          var(--mp-navigation-list-size-#{$size}-padding-block)
+        );
+
         font-size: var(--forge-list-navigation-list-size-#{$size}-font, var(--mp-navigation-list-size-#{$size}-font));
 
         .forge-list__item,
         .forge-list__term,
         .forge-list__detail {
-          padding: var(
-              --forge-list-navigation-list-size-#{$size}-padding-block,
-              var(--mp-navigation-list-size-#{$size}-padding-block)
-            )
-            0;
+          padding: $padding-block 0;
 
           @container forge-list (width >= 48rem) {
-            padding: calc(
-                var(
-                    --forge-list-navigation-list-size-#{$size}-padding-block,
-                    var(--mp-navigation-list-size-#{$size}-padding-block)
-                  ) *
-                  1.5
-              )
-              0;
+            padding: calc($padding-block * 1.5) 0;
           }
         }
       }

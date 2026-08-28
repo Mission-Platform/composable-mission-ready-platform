@@ -72,7 +72,7 @@
     "stylelint": "catalog:stylelint",
     "stylelint-config-recommended-vue": "catalog:stylelint",
     "stylelint-config-standard-scss": "catalog:stylelint",
-    "typescript": "catalog:typescript",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vite": "catalog:vite",
     "vite-ssg": "catalog:vite",
     "vitest": "catalog:testing",

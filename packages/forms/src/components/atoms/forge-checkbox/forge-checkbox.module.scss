@@ -12,6 +12,9 @@
 
 @layer mp.forms {
   .forge-checkbox {
+    $control-size: var(--forge-checkbox-checkable-control-size, var(--mp-checkable-control-size));
+    $gap-inline: var(--forge-checkbox-checkable-gap-inline, var(--mp-checkable-gap-inline));
+
     display: flex;
     flex-direction: column;
     gap: var(--forge-checkbox-checkable-gap-stack, var(--mp-checkable-gap-stack));
@@ -124,18 +127,12 @@
     &__error {
       color: var(--forge-checkbox-field-error, var(--mp-field-error));
       margin: 0;
-      padding-left: calc(
-        var(--forge-checkbox-checkable-control-size, var(--mp-checkable-control-size)) +
-          var(--forge-checkbox-checkable-gap-inline, var(--mp-checkable-gap-inline))
-      );
+      padding-left: calc($control-size + $gap-inline);
     }
 
     &__hint {
       margin: 0;
-      padding-left: calc(
-        var(--forge-checkbox-checkable-control-size, var(--mp-checkable-control-size)) +
-          var(--forge-checkbox-checkable-gap-inline, var(--mp-checkable-gap-inline))
-      );
+      padding-left: calc($control-size + $gap-inline);
     }
   }
 }
