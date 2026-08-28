@@ -1,8 +1,8 @@
 import { ForgeCard, ForgeStack } from '@mission-platform/components';
-import { type MpElement } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import type { ICalendarEvent } from '../parsers/icalendar';
+import type { MpElement } from '@mission-platform/forge';
 
 export interface ForgeICalendarProperties {
   events: readonly ICalendarEvent[];

@@ -162,7 +162,7 @@ export function readVCard(source: string): VCard[] {
 }
 
 /** Alias for callers that prefer the parser terminology. */
-export const parseVCard = readVCard;
+export const parseVCard: typeof readVCard = readVCard;
 
 /** Serialize one or more parsed cards. */
 export function writeVCards(cards: readonly VCard[]): string {

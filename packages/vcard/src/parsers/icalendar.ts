@@ -127,7 +127,7 @@ export function readICalendar(source: string): ICalendar {
   return { components: root.components };
 }
 
-export const parseICalendar = readICalendar;
+export const parseICalendar: typeof readICalendar = readICalendar;
 
 function writeProperty(property: ICalendarProperty): string {
   const parameters = property.parameters
@@ -165,7 +165,7 @@ export function writeICalendar(calendar: ICalendar): string {
   return folded.join('\r\n');
 }
 
-export const serializeICalendar = writeICalendar;
+export const serializeICalendar: typeof writeICalendar = writeICalendar;
 
 function propertyValue(component: ICalendarComponent, name: string): string | undefined {
   return component.properties.find((property) => property.name === name)?.value;
