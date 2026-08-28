@@ -3,10 +3,11 @@
   "display": "Mission Platform — Node (tooling: vite.config, vitest.config, scripts)",
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ESNext",
     "lib": ["ESNext"],
-    "module": "esnext",
+    "module": "ESNext",
     "types": ["node"],
+    "strict": true,
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

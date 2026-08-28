@@ -46,7 +46,7 @@
     "format:write": "prettier --write ."
   },
   "peerDependencies": {
-    "typescript": ">=5.0.0"
+    "typescript": ">=7.0.0"
   },
   "dependencies": {
     "@vue/tsconfig": "catalog:vue"

@@ -4,9 +4,10 @@
   "extends": ["@vue/tsconfig/tsconfig.dom.json", "./tsconfig.base.json"],
   "compilerOptions": {
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "bundler",
-    "target": "esnext",
+    "target": "ESNext",
+    "strict": true,
     "declaration": true,
     "noEmit": false,
     "allowImportingTsExtensions": false,
