@@ -13,15 +13,15 @@ import type * as monaco from 'monaco-editor';
  *   getWorker: () => new HunspellWorker(),
  * }
  */
+// eslint-disable-next-line unicorn/prefer-global-this -- Required for globalThis type augmentation.
 declare global {
-  // Extends Window (for browser environments) and globalThis (for TypeScript's
-  // typeof globalThis index) so that `globalThis.HunspellEnvironment` is typed.
-
-  var HunspellEnvironment:
-    | {
-        getWorker: () => Worker;
-      }
-    | undefined;
+  interface GlobalThis {
+    HunspellEnvironment:
+      | {
+          getWorker: () => Worker;
+        }
+      | undefined;
+  }
 }
 
 type SpellIssue = {
@@ -29,6 +29,10 @@ type SpellIssue = {
   offset: number;
   length: number;
   suggestions: string[];
+};
+
+type HunspellEnvironment = {
+  getWorker: () => Worker;
 };
 
 /** A live Hunspell ↔ Monaco integration that can be re-checked or disposed. */
@@ -95,6 +99,9 @@ export function attachHunspellMonaco(
     worker.postMessage({ text: model.getValue() });
   }, 300);
 
+  const environment = (globalThis as typeof globalThis & { HunspellEnvironment?: HunspellEnvironment })
+    .HunspellEnvironment;
+
   function dispose(): void {
     contentListener?.dispose();
     contentListener = undefined;
@@ -108,7 +115,7 @@ export function attachHunspellMonaco(
     }
   }
 
-  if (!globalThis.HunspellEnvironment?.getWorker) {
+  if (!environment?.getWorker) {
     console.warn(
       '[attachHunspellMonaco] window.HunspellEnvironment.getWorker is not configured. ' +
         'Set window.HunspellEnvironment = { getWorker: () => new HunspellWorker() } in your app entry.',
@@ -116,7 +123,7 @@ export function attachHunspellMonaco(
     return { dispose, recheck: sendToWorker };
   }
 
-  const newWorker = globalThis.HunspellEnvironment.getWorker();
+  const newWorker = environment.getWorker();
   worker = newWorker;
 
   newWorker.addEventListener('message', (event_: MessageEvent<SpellIssue[]>) => {

@@ -15,13 +15,20 @@ import type * as monaco from 'monaco-editor';
  *   getWorker: () => new HarperWorker(),
  * }
  */
+// eslint-disable-next-line unicorn/prefer-global-this -- Required for globalThis type augmentation.
 declare global {
-  var HarperEnvironment:
-    | {
-        getWorker: () => Worker;
-      }
-    | undefined;
+  interface GlobalThis {
+    HarperEnvironment:
+      | {
+          getWorker: () => Worker;
+        }
+      | undefined;
+  }
 }
+
+type HarperEnvironment = {
+  getWorker: () => Worker;
+};
 
 /** A live Harper ↔ Monaco integration that can be re-checked or disposed. */
 export interface HarperMonacoHandle {
@@ -95,6 +102,8 @@ export function attachHarperMonaco(
     worker.postMessage({ text: model.getValue() });
   }, 300);
 
+  const environment = (globalThis as typeof globalThis & { HarperEnvironment?: HarperEnvironment }).HarperEnvironment;
+
   function dispose(): void {
     contentListener?.dispose();
     contentListener = undefined;
@@ -108,7 +117,7 @@ export function attachHarperMonaco(
     }
   }
 
-  if (!globalThis.HarperEnvironment?.getWorker) {
+  if (!environment?.getWorker) {
     console.warn(
       '[attachHarperMonaco] window.HarperEnvironment.getWorker is not configured. ' +
         'Set window.HarperEnvironment = { getWorker: () => new HarperWorker() } in your app entry.',
@@ -116,7 +125,7 @@ export function attachHarperMonaco(
     return { dispose, recheck: sendToWorker };
   }
 
-  const newWorker = globalThis.HarperEnvironment.getWorker();
+  const newWorker = environment.getWorker();
   worker = newWorker;
 
   newWorker.addEventListener('message', (event_: MessageEvent<HarperWorkerResponse>) => {
