@@ -1,8 +1,8 @@
-import { type MpElement } from '@mission-platform/forge';
-
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-star.module.scss';
+
+import type { MpElement } from '@mission-platform/forge';
 
 export interface IconStarProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */

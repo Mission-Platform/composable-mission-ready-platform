@@ -408,4 +408,4 @@ validateCompositions(ICON_COMPOSITIONS, availableIds);
 
 export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[] = [...catalogDefinitions, ...ICON_COMPOSITIONS];
 
-export const COUNTRY_FLAG_SYMBOL_IDS = countryFlagPalette.map(([countryCode]) => `icon-flag-${countryCode}`);
+export const COUNTRY_FLAG_SYMBOL_IDS: string[] = countryFlagPalette.map(([countryCode]) => `icon-flag-${countryCode}`);

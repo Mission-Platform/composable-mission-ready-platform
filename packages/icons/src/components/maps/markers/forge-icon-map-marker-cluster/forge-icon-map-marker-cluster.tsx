@@ -1,8 +1,8 @@
-import { type MpElement } from '@mission-platform/forge';
-
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-map-marker-cluster.module.scss';
+
+import type { MpElement } from '@mission-platform/forge';
 
 export interface IconMapMarkerClusterProperties {
   size?: number | string;

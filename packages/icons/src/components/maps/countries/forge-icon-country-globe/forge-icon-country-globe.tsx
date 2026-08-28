@@ -1,11 +1,10 @@
-import { type MpElement } from '@mission-platform/forge';
-
 import { SUPPORTED_COUNTRY_CODES } from '../../../../sprite/country-flags';
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-country-globe.module.scss';
 
 import type { IconCountryCode } from '../forge-icon-flag';
+import type { MpElement } from '@mission-platform/forge';
 
 export interface IconCountryGlobeProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */

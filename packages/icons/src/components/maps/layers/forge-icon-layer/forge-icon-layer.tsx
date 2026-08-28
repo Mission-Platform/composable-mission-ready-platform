@@ -1,8 +1,8 @@
-import { type MpElement } from '@mission-platform/forge';
-
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-layer.module.scss';
+
+import type { MpElement } from '@mission-platform/forge';
 
 export interface IconLayerProperties {
   size?: number | string;

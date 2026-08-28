@@ -1,11 +1,12 @@
-import { createContext, h, type MpChild, type MpElement, useContext } from '@mission-platform/forge';
+import { createContext, h, type MpChild, type MpContext, type MpElement, useContext } from '@mission-platform/forge';
 
 import { ICON_SYMBOL_DEFINITIONS } from './definitions';
 
 import type { IconSpriteContextValue, IconSpriteProperties, IconSvgNode } from './types';
 
 const DEFAULT_CONTEXT: IconSpriteContextValue = {};
-export const IconSpriteContext = createContext<IconSpriteContextValue>(DEFAULT_CONTEXT);
+export const IconSpriteContext: MpContext<IconSpriteContextValue> =
+  createContext<IconSpriteContextValue>(DEFAULT_CONTEXT);
 
 /** Mount one inline sprite host for a subtree of icon components. */
 export function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement {

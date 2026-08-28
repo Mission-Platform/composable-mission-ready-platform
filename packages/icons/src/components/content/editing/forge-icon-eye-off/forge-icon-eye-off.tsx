@@ -1,8 +1,8 @@
-import { type MpElement } from '@mission-platform/forge';
-
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-eye-off.module.scss';
+
+import type { MpElement } from '@mission-platform/forge';
 
 export interface IconEyeOffProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */

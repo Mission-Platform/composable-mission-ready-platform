@@ -1,8 +1,8 @@
-import { type MpElement } from '@mission-platform/forge';
-
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-send.module.scss';
+
+import type { MpElement } from '@mission-platform/forge';
 
 export interface IconSendProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */

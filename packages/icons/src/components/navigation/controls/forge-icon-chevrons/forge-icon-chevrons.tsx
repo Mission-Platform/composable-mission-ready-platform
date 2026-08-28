@@ -1,8 +1,8 @@
-import { type MpElement } from '@mission-platform/forge';
-
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-chevrons.module.scss';
+
+import type { MpElement } from '@mission-platform/forge';
 
 /** The direction the double chevron points. */
 export type IconChevronsDirection = 'up' | 'right' | 'down' | 'left';

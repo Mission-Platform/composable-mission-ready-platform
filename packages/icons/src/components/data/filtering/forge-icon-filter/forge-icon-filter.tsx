@@ -1,8 +1,8 @@
-import { type MpElement } from '@mission-platform/forge';
-
 import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-filter.module.scss';
+
+import type { MpElement } from '@mission-platform/forge';
 
 export interface IconFilterProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */
