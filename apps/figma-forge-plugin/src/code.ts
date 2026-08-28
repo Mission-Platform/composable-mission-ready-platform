@@ -8,6 +8,7 @@ import {
 } from './extractor';
 import {
   isForgePluginUiMessage,
+  isForgeBridgeConfig,
   unwrapForgePluginMessage,
   type ForgeBridgeConfig,
   type ForgePluginMainMessage,
@@ -32,20 +33,8 @@ function postMainMessage(host: FigmaSelectionHost, message: ForgePluginMainMessa
 
 async function readBridgeConfig(host: FigmaSelectionHost): Promise<ForgeBridgeConfig> {
   const stored = await host.clientStorage?.getAsync(BRIDGE_CONFIG_STORAGE_KEY);
-  if (!isBridgeConfig(stored)) return DEFAULT_BRIDGE_CONFIG;
+  if (!isForgeBridgeConfig(stored)) return DEFAULT_BRIDGE_CONFIG;
   return stored;
-}
-
-function isBridgeConfig(value: unknown): value is ForgeBridgeConfig {
-  if (typeof value !== 'object' || value === null) return false;
-  return (
-    'bridgeUrl' in value &&
-    typeof value.bridgeUrl === 'string' &&
-    'repositoryRootId' in value &&
-    typeof value.repositoryRootId === 'string' &&
-    'targetDirectory' in value &&
-    typeof value.targetDirectory === 'string'
-  );
 }
 
 export async function convertCurrentSelection(
@@ -93,6 +82,7 @@ export function startForgePlugin(host: FigmaSelectionHost, uiHtml: string): void
       postSelectionStatus();
       return;
     }
+    if (!isForgeBridgeConfig(pluginMessage.config)) return;
     await host.clientStorage?.setAsync(BRIDGE_CONFIG_STORAGE_KEY, pluginMessage.config);
     postMainMessage(host, { type: 'bridge-config-saved', config: pluginMessage.config });
   };

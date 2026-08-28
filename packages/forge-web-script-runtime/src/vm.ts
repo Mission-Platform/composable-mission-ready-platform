@@ -230,6 +230,10 @@ export interface ForgeWebScriptVmPreparedExecutor {
   readonly mode: Exclude<ForgeWebScriptVmExecutionMode, 'interpret'>;
   readonly instance: WebAssembly.Instance;
   readonly memory: WebAssembly.Memory;
+  /**
+   * Execute one call at a time. Calls are reusable after reset, but nested or
+   * concurrent calls on the same prepared executor are rejected.
+   */
   readonly execute: (
     functionName: string,
     arguments_: readonly ForgeWebScriptVmValue[],
@@ -240,6 +244,7 @@ export interface ForgeWebScriptVmPreparedExecutor {
   readonly metadata: Readonly<{
     readonly backend: 'wasm';
     readonly mode: Exclude<ForgeWebScriptVmExecutionMode, 'interpret'>;
+    /** Reusable sequentially; invocation re-entry is rejected. */
     readonly instancePolicy: 'reusable-with-reset';
     readonly abiVersion: typeof FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
     readonly loweringVersion: typeof FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;

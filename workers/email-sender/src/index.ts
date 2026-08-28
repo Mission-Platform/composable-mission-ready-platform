@@ -6,6 +6,8 @@ const EMAIL_SUBJECT = 'Mission Platform email showcase';
 const MAX_BODY_BYTES = 256 * 1024;
 const MAX_HTML_BYTES = 240 * 1024;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const LOCAL_HOSTNAMES = new Set(['127.0.0.1', '::1', '[::1]', 'localhost']);
+const LOCAL_ORIGINS = new Set(['http://127.0.0.1:5173', 'http://[::1]:5173', 'http://localhost:5173']);
 
 export interface EmailRequest {
   readonly html: string;
@@ -13,7 +15,27 @@ export interface EmailRequest {
   readonly to: string;
 }
 
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+interface RateLimiterBinding {
+  limit(input: { key: string }): Promise<{ success: boolean }>;
+}
+
+interface EmailPolicyEnvironment {
+  readonly EMAIL_ALLOWED_ORIGINS?: string;
+  readonly EMAIL_ALLOWED_RECIPIENTS?: string;
+  readonly EMAIL_DEPLOYMENT_TOKEN?: string;
+  readonly EMAIL_RATE_LIMITER?: RateLimiterBinding;
+}
+
+interface SmtpEnvironment {
+  readonly MAILPIT_HOST: string;
+  readonly MAILPIT_PORT: string;
+  readonly MAIL_FROM: string;
+  readonly MAILPIT_UI_URL: string;
+}
+
+type WorkerEnvironment = SmtpEnvironment & EmailPolicyEnvironment;
+
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 
 function jsonResponse(body: Record<string, unknown>, status = 200): Response {
   return Response.json(body, { status, headers: { 'cache-control': 'no-store' } });
@@ -94,9 +116,86 @@ async function parseRequest(request: Request): Promise<EmailRequest> {
   return parseEmailRequest(value);
 }
 
+function isLocalRequest(request: Request): boolean {
+  const { hostname, protocol } = new URL(request.url);
+  return protocol === 'http:' && isLoopbackHostname(hostname);
+}
+
+function parsePolicyList(value: string | undefined): Set<string> {
+  return new Set(
+    (value ?? '')
+      .split(',')
+      .map((entry) => entry.trim().toLowerCase())
+      .filter((entry) => entry.length > 0),
+  );
+}
+
+function constantTimeEqual(left: string, right: string): boolean {
+  const encoder = new TextEncoder();
+  const leftBytes = encoder.encode(left);
+  const rightBytes = encoder.encode(right);
+  let difference = leftBytes.length ^ rightBytes.length;
+  const length = Math.max(leftBytes.length, rightBytes.length);
+  for (let index = 0; index < length; index += 1) {
+    difference |= (leftBytes[index] ?? 0) ^ (rightBytes[index] ?? 0);
+  }
+  return difference === 0;
+}
+
+function isAuthorizedDeployment(request: Request, environment: WorkerEnvironment, localRequest: boolean): boolean {
+  if (localRequest) return true;
+  const expectedToken = environment.EMAIL_DEPLOYMENT_TOKEN;
+  const authorization = request.headers.get('authorization') ?? '';
+  const token = authorization.startsWith('Bearer ') ? authorization.slice('Bearer '.length).trim() : '';
+  return Boolean(expectedToken) && Boolean(token) && constantTimeEqual(token, expectedToken ?? '');
+}
+
+function isAllowedOrigin(request: Request, environment: WorkerEnvironment, localRequest: boolean): boolean {
+  const origin = request.headers.get('origin');
+  if (!origin) return localRequest;
+  const allowedOrigins = parsePolicyList(environment.EMAIL_ALLOWED_ORIGINS);
+  return localRequest
+    ? allowedOrigins.size > 0
+      ? allowedOrigins.has(origin.toLowerCase())
+      : LOCAL_ORIGINS.has(origin.toLowerCase())
+    : allowedOrigins.has(origin.toLowerCase());
+}
+
+function isAllowedRecipient(input: EmailRequest, environment: WorkerEnvironment, localRequest: boolean): boolean {
+  const allowedRecipients = parsePolicyList(environment.EMAIL_ALLOWED_RECIPIENTS);
+  return localRequest
+    ? allowedRecipients.size === 0 || allowedRecipients.has(input.to.toLowerCase())
+    : allowedRecipients.has(input.to.toLowerCase());
+}
+
+async function enforceRateLimit(
+  request: Request,
+  environment: WorkerEnvironment,
+): Promise<'allowed' | 'limited' | 'unconfigured'> {
+  const limiter = environment.EMAIL_RATE_LIMITER;
+  if (!limiter) return 'unconfigured';
+  const client = request.headers.get('CF-Connecting-IP') ?? 'anonymous';
+  try {
+    const result = await limiter.limit({ key: `email-send:${client}` });
+    return result.success ? 'allowed' : 'limited';
+  } catch {
+    return 'unconfigured';
+  }
+}
+
+function isLoopbackHostname(hostname: string): boolean {
+  return LOCAL_HOSTNAMES.has(hostname.toLowerCase());
+}
+
 const defaultDelivery: Delivery = async (environment, message) => {
   const port = Number.parseInt(environment.MAILPIT_PORT, 10);
-  if (!environment.MAILPIT_HOST || !Number.isInteger(port) || port <= 0 || port > 65_535) {
+  if (
+    !environment.MAILPIT_HOST ||
+    !isLoopbackHostname(environment.MAILPIT_HOST) ||
+    !Number.isInteger(port) ||
+    port <= 0 ||
+    port > 65_535
+  ) {
     throw new Error('MailPit SMTP configuration is invalid');
   }
   await sendSmtpMessage({ host: environment.MAILPIT_HOST, port }, message);
@@ -104,18 +203,32 @@ const defaultDelivery: Delivery = async (environment, message) => {
 
 export async function handleRequest(
   request: Request,
-  environment: Env,
+  environment: WorkerEnvironment,
   delivery: Delivery = defaultDelivery,
 ): Promise<Response> {
   const pathname = new URL(request.url).pathname;
   if (pathname !== '/api/email/send') return errorResponse('Not found', 404);
   if (request.method !== 'POST') return errorResponse('Only POST is supported', 405);
 
+  const localRequest = isLocalRequest(request);
+  if (!isAuthorizedDeployment(request, environment, localRequest)) {
+    return errorResponse('Email delivery is not authorized for this deployment', 401);
+  }
+  if (!isAllowedOrigin(request, environment, localRequest)) {
+    return errorResponse('Email delivery origin is not allowed', 403);
+  }
+  const rateLimit = await enforceRateLimit(request, environment);
+  if (rateLimit === 'unconfigured') return errorResponse('Email delivery rate limiting is not configured', 503);
+  if (rateLimit === 'limited') return errorResponse('Email delivery rate limit exceeded', 429);
+
   let input: EmailRequest;
   try {
     input = await parseRequest(request);
   } catch (error) {
     return errorResponse(error instanceof Error ? error.message : 'Invalid request', 400);
+  }
+  if (!isAllowedRecipient(input, environment, localRequest)) {
+    return errorResponse('Email recipient is not allowed', 403);
   }
 
   try {

@@ -97,13 +97,15 @@ describe('MonitorStore.writeMonitor', () => {
 });
 
 describe('MonitorStore.deleteMonitor', () => {
-  it('removes the monitor and its samples', () => {
+  it('removes the monitor, its samples, and its predecessor counters', () => {
     const sql = new FakeSql();
     store(sql).deleteMonitor('svc');
 
     expect(sql.calls).toEqual([
       { query: 'DELETE FROM monitors WHERE id = ?;', params: ['svc'] },
       { query: 'DELETE FROM samples WHERE service = ?;', params: ['svc'] },
+      { query: 'DELETE FROM probe_counters WHERE service_id = ?;', params: ['svc'] },
+      { query: 'UPDATE incidents SET service_id = NULL WHERE service_id = ?;', params: ['svc'] },
     ]);
   });
 });

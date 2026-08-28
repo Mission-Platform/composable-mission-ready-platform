@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { copyForgeFile, downloadForgeFile, fileNameFromPath, sendBundleToBridge } from './delivery';
+import { isAllowedForgeBridgeUrl } from './messages';
 
 import type { ForgeExportBundle, ForgeExportFile } from '@mission-platform/forge-figma';
 
@@ -17,6 +18,25 @@ const bundle: ForgeExportBundle = {
 };
 
 describe('Forge artifact delivery', () => {
+  it('only permits the local repository bridge endpoint', () => {
+    expect(isAllowedForgeBridgeUrl('http://127.0.0.1:8787/export')).toBe(true);
+    expect(isAllowedForgeBridgeUrl('http://localhost:8787/export?redirect=https://evil.test')).toBe(false);
+    expect(isAllowedForgeBridgeUrl('https://example.test/export')).toBe(false);
+    expect(isAllowedForgeBridgeUrl('http://127.0.0.1:8787/other')).toBe(false);
+  });
+
+  it('rejects an unsafe bridge configuration before making a request', async () => {
+    const fetcher = vi.fn<typeof fetch>();
+    await expect(
+      sendBundleToBridge(
+        { bridgeUrl: 'https://example.test/export', repositoryRootId: 'repo', targetDirectory: 'components' },
+        bundle,
+        false,
+        fetcher,
+      ),
+    ).rejects.toThrow(/not allowed/);
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   it('uses the authoritative bundle path for safe download names', () => {
     expect(fileNameFromPath('assets/hero image.png')).toBe('hero_image.png');
 

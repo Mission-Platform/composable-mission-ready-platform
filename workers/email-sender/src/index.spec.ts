@@ -1,23 +1,36 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { handleRequest } from '.';
+import { handleRequest, type Delivery } from '.';
 
 vi.mock('cloudflare:sockets', () => ({
   connect: vi.fn(),
 }));
 
 const environment = {
+  EMAIL_RATE_LIMITER: {
+    limit: vi.fn().mockResolvedValue({ success: true }),
+  },
   MAILPIT_HOST: '127.0.0.1',
   MAILPIT_PORT: '1025',
   MAIL_FROM: 'showcase@mission.local',
   MAILPIT_UI_URL: 'http://localhost:8025',
-} satisfies Env;
+};
+
+const deployedEnvironment = {
+  ...environment,
+  EMAIL_ALLOWED_ORIGINS: 'https://showcase.example.com',
+  EMAIL_ALLOWED_RECIPIENTS: 'ada@example.com',
+  EMAIL_DEPLOYMENT_TOKEN: 'deployment-secret',
+  EMAIL_RATE_LIMITER: {
+    limit: vi.fn().mockResolvedValue({ success: true }),
+  },
+};
 
 const completedHtml =
   '<!doctype html><html><head><title>Mission Platform email showcase</title></head><body><table><tr><td>Welcome, Ada</td></tr></table></body></html>';
 
-function request(path: string, body: unknown, init: RequestInit = {}): Request {
-  return new Request(`http://localhost${path}`, {
+function request(path: string, body: unknown, init: RequestInit = {}, baseUrl = 'http://localhost'): Request {
+  return new Request(`${baseUrl}${path}`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body),
@@ -25,9 +38,19 @@ function request(path: string, body: unknown, init: RequestInit = {}): Request {
   });
 }
 
+function successfulDelivery() {
+  return vi.fn<Delivery>(async () => {});
+}
+
+function failingDelivery() {
+  return vi.fn<Delivery>(async () => {
+    throw new Error('connection refused');
+  });
+}
+
 describe('email sender Worker', () => {
   it('forwards the completed example-rendered HTML without rendering another template', async () => {
-    const delivery = vi.fn().mockResolvedValue();
+    const delivery = successfulDelivery();
     const response = await handleRequest(
       request('/api/email/send', { html: completedHtml, to: 'ada@example.com', recipientName: 'Ada' }),
       environment,
@@ -42,7 +65,7 @@ describe('email sender Worker', () => {
   });
 
   it('rejects invalid methods, paths, payloads, and content types without delivery', async () => {
-    const delivery = vi.fn().mockResolvedValue();
+    const delivery = successfulDelivery();
 
     const methodResponse = await handleRequest(new Request('http://localhost/api/email/send'), environment, delivery);
     const pathResponse = await handleRequest(request('/api/unknown', {}), environment, delivery);
@@ -69,7 +92,7 @@ describe('email sender Worker', () => {
   });
 
   it('rejects incomplete or incompatible completed HTML without delivery', async () => {
-    const delivery = vi.fn().mockResolvedValue();
+    const delivery = successfulDelivery();
     const missingHtmlResponse = await handleRequest(
       request('/api/email/send', { to: 'ada@example.com', recipientName: 'Ada' }),
       environment,
@@ -87,7 +110,7 @@ describe('email sender Worker', () => {
   });
 
   it('returns a gateway error when MailPit delivery fails', async () => {
-    const delivery = vi.fn().mockRejectedValue(new Error('connection refused'));
+    const delivery = failingDelivery();
     const response = await handleRequest(
       request('/api/email/send', { html: completedHtml, to: 'ada@example.com', recipientName: 'Ada' }),
       environment,
@@ -97,5 +120,117 @@ describe('email sender Worker', () => {
     expect(response.status).toBe(502);
     const result = await response.json();
     expect(result).toEqual({ ok: false, error: 'MailPit delivery failed. Is the local SMTP service running?' });
+  });
+
+  it('requires deployment authorization for non-local requests', async () => {
+    const delivery = successfulDelivery();
+    const response = await handleRequest(
+      request(
+        '/api/email/send',
+        { html: completedHtml, to: 'ada@example.com', recipientName: 'Ada' },
+        {
+          headers: { 'content-type': 'application/json', origin: 'https://showcase.example.com' },
+        },
+        'https://showcase.example.com',
+      ),
+      deployedEnvironment,
+      delivery,
+    );
+
+    expect(response.status).toBe(401);
+    expect(delivery).not.toHaveBeenCalled();
+  });
+
+  it('enforces the configured origin and recipient policy for deployed requests', async () => {
+    const delivery = successfulDelivery();
+    const response = await handleRequest(
+      request(
+        '/api/email/send',
+        { html: completedHtml, to: 'other@example.com', recipientName: 'Ada' },
+        {
+          headers: {
+            authorization: 'Bearer deployment-secret',
+            'content-type': 'application/json',
+            origin: 'https://evil.example.com',
+          },
+        },
+        'https://showcase.example.com',
+      ),
+      deployedEnvironment,
+      delivery,
+    );
+
+    expect(response.status).toBe(403);
+    expect(delivery).not.toHaveBeenCalled();
+  });
+
+  it('rejects a recipient outside the configured deployed allowlist', async () => {
+    const delivery = successfulDelivery();
+    const response = await handleRequest(
+      request(
+        '/api/email/send',
+        { html: completedHtml, to: 'other@example.com', recipientName: 'Ada' },
+        {
+          headers: {
+            authorization: 'Bearer deployment-secret',
+            'content-type': 'application/json',
+            origin: 'https://showcase.example.com',
+          },
+        },
+        'https://showcase.example.com',
+      ),
+      deployedEnvironment,
+      delivery,
+    );
+
+    expect(response.status).toBe(403);
+    expect(delivery).not.toHaveBeenCalled();
+  });
+
+  it('allows an authorized deployed request within the configured policies', async () => {
+    const delivery = successfulDelivery();
+    const response = await handleRequest(
+      request(
+        '/api/email/send',
+        { html: completedHtml, to: 'ada@example.com', recipientName: 'Ada' },
+        {
+          headers: {
+            authorization: 'Bearer deployment-secret',
+            'content-type': 'application/json',
+            origin: 'https://showcase.example.com',
+          },
+        },
+        'https://showcase.example.com',
+      ),
+      deployedEnvironment,
+      delivery,
+    );
+
+    expect(response.status).toBe(200);
+    expect(delivery).toHaveBeenCalledOnce();
+  });
+
+  it('rejects deployed requests when the rate limiter denies them', async () => {
+    const delivery = successfulDelivery();
+    const rateLimiter = { limit: vi.fn().mockResolvedValue({ success: false }) };
+    const response = await handleRequest(
+      request(
+        '/api/email/send',
+        { html: completedHtml, to: 'ada@example.com', recipientName: 'Ada' },
+        {
+          headers: {
+            authorization: 'Bearer deployment-secret',
+            'content-type': 'application/json',
+            origin: 'https://showcase.example.com',
+          },
+        },
+        'https://showcase.example.com',
+      ),
+      { ...deployedEnvironment, EMAIL_RATE_LIMITER: rateLimiter } as Env,
+      delivery,
+    );
+
+    expect(response.status).toBe(429);
+    expect(delivery).not.toHaveBeenCalled();
   });
 });

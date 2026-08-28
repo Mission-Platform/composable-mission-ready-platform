@@ -13,6 +13,7 @@ import { runProbe } from './probes';
 import { ProbeScheduler } from './scheduler';
 import { SPEED_PROVIDER_META, SPEED_PROVIDERS } from './speed/providers';
 import { MonitorStore } from './storage';
+import { toPublicMonitorTarget } from './types';
 
 import type { SpeedProviderId, SpeedResult, SpeedStatus } from './speed/types';
 import type {
@@ -116,7 +117,7 @@ export class MonitorDurableObject extends DurableObject<Env> {
 
   // ── Monitor configuration (runtime CRUD) ────────────────────────────────────
 
-  /** List the configured monitors (used by `GET /api/monitors`). */
+  /** List the configured monitors (used by authenticated management APIs). */
   listMonitors(): MonitorTarget[] {
     return this.store.loadMonitors().map((entry) => entry.target);
   }
@@ -232,7 +233,7 @@ export class MonitorDurableObject extends DurableObject<Env> {
       const latencyTotal = samples.reduce((sum, sample) => sum + sample.latencyMs, 0);
 
       return {
-        target,
+        target: toPublicMonitorTarget(target),
         latest,
         uptime: samples.length > 0 ? up / samples.length : 0,
         avgLatencyMs: samples.length > 0 ? latencyTotal / samples.length : 0,

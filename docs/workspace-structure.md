@@ -15,7 +15,7 @@ composable_mission_ready_platform/
 ├── packages/               # Reusable libraries and building blocks
 ├── vite-plugins/           # Build-time extensions and compilers
 ├── workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── forge-plugins/          # Forge compiler plugins and adapters
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
@@ -77,6 +77,16 @@ Cloudflare Workers for server-side logic and optimised asset delivery.
 Deployable application Workers are configured by `apps/website/wrangler.jsonc`,
 `apps/my-care-notes/wrangler.jsonc`, and `apps/service-monitor/wrangler.jsonc`. The
 `api-proxy` and `forge-spa` packages are bundled dependencies rather than standalone Wrangler deployments.
+
+### 6. `forge-plugins/` (Forge Compiler Plugins)
+
+Framework-specific output plugins and adapters for the Forge compiler.
+
+- **`forge-cms-plugin-api/`**: CMS artifact generation and Vite/tsdown adapter integration.
+- **`forge-cms-astro/`**, **`forge-cms-ghost/`**, **`forge-cms-jekyll/`**, **`forge-cms-storyblok/`**, **`forge-cms-webflow/`**: CMS-specific integration adapters.
+- **`forge-plugin-api/`**: Shared Forge compiler plugin interfaces.
+- **`forge-vue/`**, **`forge-react/`**, **`forge-solid/`**, **`forge-svelte/`**, **`forge-web-components/`**: Framework-specific code generation and runtime adapters.
+- **`forge-router-plugin-api/`**, **`forge-router-vue/`**, **`forge-router-react/`**, **`forge-router-solid/`**, **`forge-router-svelte/`**, **`forge-router-web-components/`**, **`forge-router-redwood/`**: Router framework-specific integration adapters.
 
 ## Internal Package Conventions
 

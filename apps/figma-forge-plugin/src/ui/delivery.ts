@@ -1,6 +1,7 @@
 import { isForgeBridgeResponse, type ForgeBridgeResponse } from '@mission-platform/forge-figma-bridge/protocol';
 
-import type { ForgeBridgeConfig } from './messages';
+import { isForgeBridgeConfig, type ForgeBridgeConfig } from './messages';
+
 import type { ForgeExportBundle, ForgeExportFile, ForgeRepositoryExportRequest } from '@mission-platform/forge-figma';
 
 export interface ForgeDownloadEnvironment {
@@ -66,6 +67,7 @@ export async function sendBundleToBridge(
   overwrite: boolean,
   fetcher: typeof fetch = globalThis.fetch,
 ): Promise<ForgeBridgeResponse> {
+  if (!isForgeBridgeConfig(config)) throw new Error('The repository bridge URL or destination is not allowed.');
   const request: ForgeRepositoryExportRequest = {
     protocolVersion: 1,
     repositoryRootId: config.repositoryRootId,

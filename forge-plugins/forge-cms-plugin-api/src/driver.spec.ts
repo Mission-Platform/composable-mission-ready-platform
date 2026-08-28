@@ -4,6 +4,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import os from "node:os";
@@ -301,6 +302,60 @@ describe("generateCmsArtifacts", () => {
       },
     });
     expect(() => run(failing, workspace)).toThrow(/FORGE_TEST_UNSUPPORTED/);
+  });
+
+  it.each([
+    "../outside.txt",
+    "/tmp/outside.txt",
+    String.raw`nested\outside.txt`,
+    "nested//outside.txt",
+    "nested/../outside.txt",
+  ])("rejects an unsafe emitted artifact name %s", (fileName) => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    const unsafe = recordingTarget({
+      emitTemplate: () => ({
+        fileName,
+        contents: "",
+        artifactKind: "template",
+      }),
+    });
+
+    expect(() => run(unsafe, workspace)).toThrow(/strict relative path/);
+    expect(
+      existsSync(path.join(path.dirname(workspace.outDir), "outside.txt")),
+    ).toBe(false);
+  });
+
+  it("rejects an emitted artifact beneath a symlink", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    const outside = path.join(path.dirname(workspace.outDir), "outside");
+    mkdirSync(outside, { recursive: true });
+    const unsafe = recordingTarget({
+      emitTemplate: (_component, _ir, context) => {
+        symlinkSync(outside, path.join(context.outDir, "linked"), "dir");
+        return {
+          fileName: "linked/outside.txt",
+          contents: "",
+          artifactKind: "template",
+        };
+      },
+    });
+
+    expect(() => run(unsafe, workspace)).toThrow(/symlink/);
+    expect(existsSync(path.join(outside, "outside.txt"))).toBe(false);
+  });
+
+  it("rejects an output root that is a symlink", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    const outside = path.join(path.dirname(workspace.outDir), "outside-root");
+    mkdirSync(outside, { recursive: true });
+    rmSync(workspace.outDir, { recursive: true, force: true });
+    symlinkSync(outside, workspace.outDir, "dir");
+
+    expect(() => run(recordingTarget(), workspace)).toThrow(
+      /root contains a symlink/,
+    );
+    expect(existsSync(path.join(outside, "index.ts"))).toBe(false);
   });
 
   it("co-generates a framework island and exposes its specifier to the emitters", () => {

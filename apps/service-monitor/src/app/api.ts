@@ -6,11 +6,13 @@ import {
   resolveRetentionMs,
   resolveSpeedEnabled,
   resolveSpeedIntervalSeconds,
+  resolveMonitorValidationPolicy,
   sanitizeMonitor,
 } from '@/monitoring/config';
 import { isIncidentSeverity, isIncidentStatus, validMaintenanceRange } from '@/monitoring/incidents';
 import { isSpeedProviderId } from '@/monitoring/speed/types';
 import { getMonitor } from '@/monitoring/store';
+import { MAX_MONITOR_ID_LENGTH, MAX_MONITOR_REQUEST_BYTES } from '@/monitoring/validation';
 
 import type { SpeedProviderId, SpeedResponse, SpeedSeriesResponse } from '@/monitoring/speed/types';
 import type { MetricsResponse, MonitorsResponse, ServicesResponse } from '@/monitoring/types';
@@ -30,6 +32,25 @@ function json(body: unknown, init?: ResponseInit): Response {
 /** Return the authentication failure for an administrative API request. */
 function requireAuthentication(request: Request): Response | null {
   return authorizeMonitorRequest(request, env.MONITOR_API_TOKEN);
+}
+
+async function readJsonBody(request: Request): Promise<Record<string, unknown> | Response> {
+  const declaredLength = Number(request.headers.get('content-length') ?? '');
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_MONITOR_REQUEST_BYTES) {
+    return json({ error: 'Request body is too large.' }, { status: 413 });
+  }
+  try {
+    const text = await request.text();
+    if (new TextEncoder().encode(text).byteLength > MAX_MONITOR_REQUEST_BYTES) {
+      return json({ error: 'Request body is too large.' }, { status: 413 });
+    }
+    const body = JSON.parse(text) as unknown;
+    return typeof body === 'object' && body !== null && !Array.isArray(body)
+      ? (body as Record<string, unknown>)
+      : json({ error: 'Request body must be a JSON object.' }, { status: 400 });
+  } catch {
+    return json({ error: 'Request body must be valid JSON.' }, { status: 400 });
+  }
 }
 
 /** `/api/auth/session` — establish or clear the browser's administrative session. */
@@ -61,19 +82,23 @@ export async function handleServices(): Promise<Response> {
 export async function handleMetrics(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const service = url.searchParams.get('service');
-  if (!service) {
+  if (!service || service.length > MAX_MONITOR_ID_LENGTH) {
     return json({ error: 'Missing required "service" query parameter.' }, { status: 400 });
   }
 
+  const now = Date.now();
   const sinceParameter = Number.parseInt(url.searchParams.get('since') ?? '', 10);
-  const since = Number.isFinite(sinceParameter) ? sinceParameter : Date.now() - resolveRetentionMs();
+  const since = Math.min(
+    now,
+    Math.max(now - resolveRetentionMs(), Number.isFinite(sinceParameter) ? sinceParameter : now - resolveRetentionMs()),
+  );
 
   const monitor = getMonitor();
   const samples = await monitor.getMetrics(service, since);
 
   const payload: MetricsResponse = {
     service,
-    now: Date.now(),
+    now,
     since,
     samples,
   };
@@ -116,14 +141,11 @@ export async function handleMonitorUpsert(request: Request): Promise<Response> {
   const authenticationFailure = requireAuthentication(request);
   if (authenticationFailure) return authenticationFailure;
 
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return json({ error: 'Request body must be valid JSON.' }, { status: 400 });
-  }
+  const bodyResult = await readJsonBody(request);
+  if (bodyResult instanceof Response) return bodyResult;
+  const body = bodyResult;
 
-  const target = sanitizeMonitor(body);
+  const target = sanitizeMonitor(body, resolveMonitorValidationPolicy());
   if (!target) {
     return json(
       { error: 'Invalid monitor: "id" and "name" are required, plus a "url" (http/json/graphql) or "host".' },
@@ -186,12 +208,9 @@ export async function handleIncidentsRoute(request: Request): Promise<Response> 
 
   const monitor = getMonitor();
   if (request.method === 'GET') return json({ incidents: await monitor.listIncidents() });
-  let body: Record<string, unknown>;
-  try {
-    body = (await request.json()) as Record<string, unknown>;
-  } catch {
-    return json({ error: 'Request body must be valid JSON.' }, { status: 400 });
-  }
+  const bodyResult = await readJsonBody(request);
+  if (bodyResult instanceof Response) return bodyResult;
+  const body = bodyResult;
   if (request.method === 'POST') {
     if (typeof body.title !== 'string' || !body.title.trim())
       return json({ error: 'A title is required.' }, { status: 400 });
@@ -246,12 +265,9 @@ export async function handleMaintenanceRoute(request: Request): Promise<Response
 
   const monitor = getMonitor();
   if (request.method === 'GET') return json({ maintenance: await monitor.listMaintenance() });
-  let body: Record<string, unknown>;
-  try {
-    body = (await request.json()) as Record<string, unknown>;
-  } catch {
-    return json({ error: 'Request body must be valid JSON.' }, { status: 400 });
-  }
+  const bodyResult = await readJsonBody(request);
+  if (bodyResult instanceof Response) return bodyResult;
+  const body = bodyResult;
   if (typeof body.title !== 'string' || !body.title.trim())
     return json({ error: 'A title is required.' }, { status: 400 });
   if (!validMaintenanceRange(body.startsAt, body.endsAt))
@@ -309,13 +325,17 @@ export async function handleSpeedSeries(request: Request): Promise<Response> {
   }
   const provider: SpeedProviderId = providerParameter;
 
+  const now = Date.now();
   const sinceParameter = Number.parseInt(url.searchParams.get('since') ?? '', 10);
-  const since = Number.isFinite(sinceParameter) ? sinceParameter : Date.now() - resolveRetentionMs();
+  const since = Math.min(
+    now,
+    Math.max(now - resolveRetentionMs(), Number.isFinite(sinceParameter) ? sinceParameter : now - resolveRetentionMs()),
+  );
 
   const monitor = getMonitor();
   const samples = await monitor.getSpeedSeries(provider, since);
 
-  const payload: SpeedSeriesResponse = { provider, now: Date.now(), since, samples };
+  const payload: SpeedSeriesResponse = { provider, now, since, samples };
   return json(payload);
 }
 

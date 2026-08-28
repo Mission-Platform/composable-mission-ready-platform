@@ -16,6 +16,12 @@ import {
   defineTsdownLibrary,
   resolveTsdownOutputDirectory,
 } from "@mission-platform/tsdown-config";
+import {
+  assertForgeArtifactRoot,
+  ensureForgeArtifactDirectory,
+  resolveForgeArtifactPath,
+  validateForgeArtifactSegment,
+} from "@mission-platform/vite-plugin-forge";
 
 import { generateCmsArtifacts } from "./driver.js";
 
@@ -112,6 +118,8 @@ export function cmsCacheDirectory(
   rootDir: string,
   target: CmsOutputPlugin,
 ): string {
+  validateForgeArtifactSegment(target.id);
+  validateForgeArtifactSegment(target.framework.id);
   const cacheName = `${path.basename(rootDir)}-cms-${target.id}-${target.framework.id}`;
   return path.join(rootDir, "node_modules/.cache", cacheName);
 }
@@ -121,6 +129,8 @@ export function cmsOutputDirectory(
   rootDir: string,
   target: CmsOutputPlugin,
 ): string {
+  validateForgeArtifactSegment(target.id);
+  validateForgeArtifactSegment(target.framework.id);
   return path.resolve(rootDir, `dist/cms/${target.id}/${target.framework.id}`);
 }
 
@@ -128,6 +138,8 @@ function cmsSharedAssetsBundleDirectory(
   rootDir: string,
   target: CmsOutputPlugin,
 ): string {
+  validateForgeArtifactSegment(target.id);
+  validateForgeArtifactSegment(target.framework.id);
   return path.join(
     rootDir,
     "node_modules/.cache",
@@ -170,7 +182,10 @@ function cmsEntryDeclarationsTsdownPlugin(
   return {
     name: "mission-platform:cms-entry-dts",
     generateBundle() {
-      const declarations = path.join(cacheDirectory, "index.d.ts");
+      const declarations = resolveForgeArtifactPath(
+        cacheDirectory,
+        "index.d.ts",
+      );
       if (!fs.existsSync(declarations)) {
         return;
       }
@@ -197,18 +212,30 @@ function cmsAssetsTsdownPlugin(
       if (assets.length === 0) {
         return;
       }
-      const destinationRoot = resolveTsdownOutputDirectory(
-        rootDir,
-        path.resolve(rootDir, `dist/cms/${targetId}`),
-        outputRoot,
+      const safeCacheDirectory = assertForgeArtifactRoot(cacheDirectory);
+      const destinationRoot = assertForgeArtifactRoot(
+        resolveTsdownOutputDirectory(
+          rootDir,
+          path.resolve(rootDir, `dist/cms/${targetId}`),
+          outputRoot,
+        ),
       );
       for (const asset of assets) {
-        const source = path.join(cacheDirectory, asset.fileName);
+        const source = resolveForgeArtifactPath(
+          safeCacheDirectory,
+          asset.fileName,
+        );
         if (!fs.existsSync(source)) {
           continue;
         }
-        const destination = path.join(destinationRoot, asset.fileName);
-        fs.mkdirSync(path.dirname(destination), { recursive: true });
+        const destination = resolveForgeArtifactPath(
+          destinationRoot,
+          asset.fileName,
+        );
+        ensureForgeArtifactDirectory(
+          destinationRoot,
+          path.dirname(destination),
+        );
         fs.copyFileSync(source, destination);
       }
     },
@@ -219,7 +246,10 @@ function cmsCleanupTsdownPlugin(cacheDirectory: string): TsdownPlugin {
   return {
     name: "mission-platform:cms-cache-cleanup",
     closeBundle() {
-      fs.rmSync(cacheDirectory, { recursive: true, force: true });
+      fs.rmSync(assertForgeArtifactRoot(cacheDirectory), {
+        recursive: true,
+        force: true,
+      });
     },
   } as TsdownPlugin;
 }
@@ -248,6 +278,8 @@ export function defineTsdownForgeCms(
     outputRoot === undefined
       ? outDir
       : resolveTsdownOutputDirectory(rootDir, outDir, outputRoot);
+  assertForgeArtifactRoot(outDir);
+  assertForgeArtifactRoot(stagedOutDir);
   const componentsImport = options.componentsImport ?? target.packageName;
 
   const generated = generateCmsArtifacts({

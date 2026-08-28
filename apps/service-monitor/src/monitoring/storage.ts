@@ -1,6 +1,10 @@
 import type { SpeedProviderId, SpeedResult } from './speed/types';
 import type { HealthState, MonitorTarget, Sample } from './types';
 
+export const MAX_HISTORY_ITEMS = 2000;
+export const MAX_INCIDENT_HISTORY_ITEMS = 100;
+export const MAX_INCIDENT_UPDATES = 100;
+
 /** Row shape as stored in the Durable Object's SQLite database. */
 type SampleRow = {
   service: string;
@@ -156,6 +160,8 @@ export class MonitorStore {
   deleteMonitor(id: string): void {
     this.sql.exec(`DELETE FROM monitors WHERE id = ?;`, id);
     this.sql.exec(`DELETE FROM samples WHERE service = ?;`, id);
+    this.sql.exec(`DELETE FROM probe_counters WHERE service_id = ?;`, id);
+    this.sql.exec(`UPDATE incidents SET service_id = NULL WHERE service_id = ?;`, id);
   }
 
   /** Stamp a monitor's last-run timestamp after a probe completes. */
@@ -182,16 +188,18 @@ export class MonitorStore {
   }
 
   /** Read the raw sample series for a single service since a timestamp. */
-  getSamples(service: string, since: number): Sample[] {
+  getSamples(service: string, since: number, limit = MAX_HISTORY_ITEMS): Sample[] {
     return this.sql
       .exec<SampleRow>(
         `SELECT service, ts, state, status, latency_ms, error
-         FROM samples WHERE service = ? AND ts >= ? ORDER BY ts ASC;`,
+         FROM samples WHERE service = ? AND ts >= ? ORDER BY ts DESC LIMIT ?;`,
         service,
         since,
+        Math.min(Math.max(1, Math.floor(limit)), MAX_HISTORY_ITEMS),
       )
       .toArray()
-      .map(toSample);
+      .map(toSample)
+      .toReversed();
   }
 
   /** Append one speed-test measurement to the speed time series. */
@@ -216,16 +224,18 @@ export class MonitorStore {
   }
 
   /** Read the raw speed-test series for a single provider since a timestamp. */
-  getSpeedSamples(provider: SpeedProviderId, since: number): SpeedResult[] {
+  getSpeedSamples(provider: SpeedProviderId, since: number, limit = MAX_HISTORY_ITEMS): SpeedResult[] {
     return this.sql
       .exec<SpeedRow>(
         `SELECT provider, ts, download_mbps, upload_mbps, latency_ms, bytes, ok, error
-         FROM speed_samples WHERE provider = ? AND ts >= ? ORDER BY ts ASC;`,
+         FROM speed_samples WHERE provider = ? AND ts >= ? ORDER BY ts DESC LIMIT ?;`,
         provider,
         since,
+        Math.min(Math.max(1, Math.floor(limit)), MAX_HISTORY_ITEMS),
       )
       .toArray()
-      .map(toSpeedResult);
+      .map(toSpeedResult)
+      .toReversed();
   }
 }
 

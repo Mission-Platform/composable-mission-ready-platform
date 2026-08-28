@@ -28,20 +28,33 @@ const HOP_BY_HOP_HEADERS = new Set([
   'host',
 ]);
 
-export function isAllowedProxyRequest(request: Request): boolean {
-  const { pathname } = new URL(request.url);
+function getDecodedPathname(pathname: string): string | undefined {
   let decodedPathname: string;
   try {
     decodedPathname = decodeURIComponent(pathname);
   } catch {
-    return false;
+    return undefined;
   }
-  if (/(?:^|\/)\.\.(?:\/|$)/.test(decodedPathname)) return false;
+  if (/(?:^|\/)\.\.(?:\/|$)/.test(decodedPathname) || decodedPathname.includes('\\')) return undefined;
+  return decodedPathname;
+}
 
-  return (
-    ALLOWED_METHODS.has(request.method) &&
-    ALLOWED_ROUTE_PREFIXES.some((prefix) => pathname === prefix.slice(0, -1) || pathname.startsWith(prefix))
+function isAllowedPath(pathname: string): boolean {
+  const decodedPathname = getDecodedPathname(pathname);
+  if (!decodedPathname) return false;
+
+  return ALLOWED_ROUTE_PREFIXES.some(
+    (prefix) => decodedPathname === prefix.slice(0, -1) || decodedPathname.startsWith(prefix),
   );
+}
+
+function isAllowedProxyTarget(url: URL, method: string): boolean {
+  return url.origin === TARGET_ORIGIN && ALLOWED_METHODS.has(method) && isAllowedPath(url.pathname);
+}
+
+export function isAllowedProxyRequest(request: Request): boolean {
+  const { pathname } = new URL(request.url);
+  return ALLOWED_METHODS.has(request.method) && isAllowedPath(pathname);
 }
 
 function createSanitizedHeaders(headers: Headers): Headers {
@@ -79,7 +92,9 @@ async function fetchUpstream(request: Request): Promise<Response> {
     } catch {
       return new Response('Bad gateway', { status: 502 });
     }
-    if (redirectedUrl.origin !== TARGET_ORIGIN) return new Response('Bad gateway', { status: 502 });
+    if (redirectedUrl.username || redirectedUrl.password || !isAllowedProxyTarget(redirectedUrl, request.method)) {
+      return new Response('Bad gateway', { status: 502 });
+    }
 
     upstreamRequest = createUpstreamRequest(request, redirectedUrl);
   }

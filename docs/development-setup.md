@@ -12,7 +12,7 @@ Before cloning the repository, ensure your system meets the following requiremen
 | Tool        | Required Version | Purpose                                         |
 | :---------- | :--------------- | :---------------------------------------------- |
 | **Node.js** | `24.19.0`        | Runtime environment (Active LTS)                |
-| **pnpm**    | `11.21.0`        | Package manager and workspace orchestrator      |
+| **pnpm**    | `11.23.0`        | Package manager and workspace orchestrator      |
 | **Git**     | Latest stable    | Version control                                 |
 | **Rust**    | Stable toolchain | Optional standalone Rust benchmark development  |
 | **Docker**  | Latest stable    | Required only for the Emscripten Hunspell build |
@@ -31,7 +31,7 @@ Enable **pnpm** using Corepack:
 
 ```bash
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@11.23.0 --activate
 ```
 
 ## Initial Setup

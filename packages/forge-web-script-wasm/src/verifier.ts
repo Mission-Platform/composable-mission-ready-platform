@@ -1,3 +1,5 @@
+import { sha256ArtifactHash } from './hash.js';
+
 import type {
   ForgeWebScriptTargetFeatures,
   ForgeWebScriptWasmArtifactMetadata,
@@ -195,15 +197,6 @@ class Cursor {
     if (length > maxLength) throw new Error('WebAssembly name exceeds the verifier limit.');
     return new TextDecoder().decode(this.bytesValue(length));
   }
-}
-
-function hashBytes(bytes: Uint8Array): string {
-  let hash = 2_166_136_261;
-  for (const byte of bytes) {
-    hash ^= byte;
-    hash = Math.imul(hash, 16_777_619) >>> 0;
-  }
-  return hash.toString(16).padStart(8, '0');
 }
 
 function diagnostic(
@@ -754,7 +747,7 @@ function verifyVariant(
   if (
     variant === 'optimized' &&
     input.expectedContentHash !== undefined &&
-    hashBytes(bytes) !== input.expectedContentHash
+    sha256ArtifactHash(bytes) !== input.expectedContentHash
   )
     diagnostics.push(
       diagnostic('FWS-ARTIFACT-024', 'Artifact content hash does not match the backend result.', fileName),
@@ -864,7 +857,7 @@ export function verifyForgeWebScriptWasmArtifact(
   return {
     verified: diagnostics.every(({ severity }) => severity !== 'error'),
     diagnostics,
-    contentHash: hashBytes(input.wasm),
+    contentHash: sha256ArtifactHash(input.wasm),
     checkedVariants,
   };
 }

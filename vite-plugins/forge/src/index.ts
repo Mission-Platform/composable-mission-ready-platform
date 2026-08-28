@@ -96,6 +96,13 @@ export {
 } from './compiler/artifact-manifest.js';
 export { createForgeArtifactWriter, type ForgeArtifactWriter } from './compiler/artifact-writer.js';
 export {
+  assertForgeArtifactRoot,
+  ensureForgeArtifactDirectory,
+  resolveForgeArtifactPath,
+  validateForgeArtifactName,
+  validateForgeArtifactSegment,
+} from './compiler/artifact-path.js';
+export {
   createForgeGenerationContext,
   type ForgeGenerationContext,
   type ForgeGenerationContextOptions,

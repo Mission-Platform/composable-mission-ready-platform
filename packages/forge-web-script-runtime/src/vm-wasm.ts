@@ -1149,6 +1149,7 @@ export function prepareForgeWebScriptVmWasm(
   let activeFunctionName = '';
   let activeRedact: ForgeWebScriptTraceOptions['redact'];
   let traceFinished = false;
+  let executionInProgress = false;
   // eslint-disable-next-line unicorn/consistent-function-scoping -- Keep observability scoped to one VM execution.
   const observe = (callback: () => void): void => {
     try {
@@ -1292,10 +1293,15 @@ export function prepareForgeWebScriptVmWasm(
   };
   instance = new WebAssembly.Instance(compiled, imports);
   memory = exports().memory as WebAssembly.Memory;
-  const reset = (): void => {
+  const resetState = (): void => {
     (exports().fws_reset as () => void)();
     steps = 0;
     pendingTrap = undefined;
+  };
+  const reset = (): void => {
+    if (executionInProgress)
+      throw new ForgeWebScriptTrap('InvalidAbi', 'VM WASM prepared executor cannot reset during execution.');
+    resetState();
   };
   const execute = (
     functionName: string,
@@ -1308,15 +1314,18 @@ export function prepareForgeWebScriptVmWasm(
       throw new ForgeWebScriptTrap('GuestTrap', `Function '${functionName}' does not exist.`);
     if (arguments_.length !== function_.parameters.length)
       throw new ForgeWebScriptTrap('GuestTrap', `Function '${functionName}' received an invalid argument count.`);
-    reset();
-    maxSteps = executionOptions.maxSteps;
-    activeFunctionName = functionName;
-    activeTrace =
-      executionOptions.trace === undefined
-        ? undefined
-        : createForgeWebScriptTraceRecorder(executionOptions.trace, functionName);
-    activeRedact = executionOptions.trace?.redact;
+    if (executionInProgress)
+      throw new ForgeWebScriptTrap('InvalidAbi', 'VM WASM prepared executor does not support nested execution.');
+    executionInProgress = true;
     try {
+      resetState();
+      maxSteps = executionOptions.maxSteps;
+      activeFunctionName = functionName;
+      activeTrace =
+        executionOptions.trace === undefined
+          ? undefined
+          : createForgeWebScriptTraceRecorder(executionOptions.trace, functionName);
+      activeRedact = executionOptions.trace?.redact;
       const requiredBytes = executionOptions.memory?.byteLength ?? 0;
       const requiredPages = Math.ceil(requiredBytes / PAGE_SIZE);
       if (requiredPages > memory!.buffer.byteLength / PAGE_SIZE)
@@ -1387,6 +1396,7 @@ export function prepareForgeWebScriptVmWasm(
       try {
         (exports().fws_reset as () => void)();
       } finally {
+        executionInProgress = false;
         maxSteps = undefined;
         activeTrace = undefined;
         activeFunctionName = '';
@@ -1396,8 +1406,10 @@ export function prepareForgeWebScriptVmWasm(
     }
   };
   const close = (): void => {
+    if (executionInProgress)
+      throw new ForgeWebScriptTrap('InvalidAbi', 'VM WASM prepared executor cannot close during execution.');
     closed = true;
-    reset();
+    resetState();
   };
   return {
     artifact,

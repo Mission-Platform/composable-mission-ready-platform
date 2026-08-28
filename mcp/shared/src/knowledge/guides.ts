@@ -700,6 +700,11 @@ contracts, recognized custom metadata, source/graph/content hashes, and the
 generated ESM adapter's checked pointer-length and cleanup paths. Optimized and
 unoptimized variants are checked independently when both are available.
 
+Artifact content identities use the versioned \`sha256-v1:<hex>\` format. A digest
+detects accidental or unauthorized content changes when compared with a trusted
+expected value; it does not authenticate the producer or replace signatures and
+deployment access controls.
+
 Use \`fws_inspect_manifest\` to understand a manifest and
 \`fws_verify_artifact\` to obtain the canonical structured result. A mutated,
 forged, unexpectedly imported/exported, or metadata-inconsistent artifact must

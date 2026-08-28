@@ -1,6 +1,6 @@
 import { env } from 'cloudflare:workers';
 
-import { MIN_INTERVAL_SECONDS } from './validation';
+import { MIN_INTERVAL_SECONDS, sanitizeMonitor as normalizeMonitor, type MonitorValidationPolicy } from './validation';
 
 import type { MonitorTarget } from './types';
 
@@ -119,13 +119,17 @@ const DEFAULT_SPEED_INTERVAL_SECONDS = 300;
 const MIN_SPEED_INTERVAL_SECONDS = 30;
 const DEFAULT_SPEED_BYTES = 10_000_000;
 const MIN_SPEED_BYTES = 100_000;
+const MAX_SPEED_BYTES = 25_000_000;
 
-function isTarget(value: unknown): value is MonitorTarget {
-  if (typeof value !== 'object' || value === null) {
-    return false;
-  }
-  const candidate = value as Record<string, unknown>;
-  return typeof candidate.id === 'string' && typeof candidate.name === 'string';
+/** Resolve the explicit egress policy for monitor destinations. */
+export function resolveMonitorValidationPolicy(): MonitorValidationPolicy {
+  const allowedDestinations = env.MONITOR_ALLOWED_DESTINATIONS?.split(',')
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+  return {
+    allowPrivateDestinations: env.MONITOR_ALLOW_PRIVATE_DESTINATIONS?.trim().toLowerCase() === 'true',
+    allowedDestinations,
+  };
 }
 
 /** Resolve the effective list of targets from the environment (or defaults). */
@@ -138,7 +142,10 @@ export function resolveTargets(): MonitorTarget[] {
   try {
     const parsed: unknown = JSON.parse(raw);
     if (Array.isArray(parsed)) {
-      const targets = parsed.filter(isTarget);
+      const policy = resolveMonitorValidationPolicy();
+      const targets = parsed
+        .map((target) => normalizeMonitor(target, policy))
+        .filter((target): target is MonitorTarget => target !== null);
       if (targets.length > 0) {
         return targets;
       }
@@ -183,5 +190,5 @@ export function resolveSpeedIntervalSeconds(): number {
 
 /** Effective payload size for each download measurement, in bytes. */
 export function resolveSpeedBytes(): number {
-  return parsePositiveInt(env.SPEED_TEST_BYTES, DEFAULT_SPEED_BYTES, MIN_SPEED_BYTES);
+  return Math.min(parsePositiveInt(env.SPEED_TEST_BYTES, DEFAULT_SPEED_BYTES, MIN_SPEED_BYTES), MAX_SPEED_BYTES);
 }

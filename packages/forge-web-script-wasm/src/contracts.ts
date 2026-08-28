@@ -395,6 +395,7 @@ export interface ForgeWebScriptWasmBackendResult {
   readonly iteratorExports?: readonly ForgeWebScriptWasmIteratorExport[];
   readonly featureRequirements?: ForgeWebScriptWasmFeatureRequirements;
   readonly sourceMap?: string;
+  /** Versioned SHA-256 digest in the `sha256-v1:<hex>` format. */
   readonly contentHash: string;
   readonly metadata: ForgeWebScriptWasmArtifactMetadata;
   readonly diagnostics: readonly ForgeWebScriptWasmDiagnostic[];

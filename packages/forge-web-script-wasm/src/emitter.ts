@@ -18,6 +18,7 @@ import type {
   ForgeWebScriptTargetFeatures,
   ForgeWebScriptWasmTypeName,
 } from './contracts.js';
+import { sha256ArtifactHash } from './hash.js';
 import { compileRegex, type CompiledRegex } from '@mission-platform/forge-web-script-regex';
 import {
   buildForgeWebScriptWasmCollectionRuntimeBodies,
@@ -771,15 +772,6 @@ function binaryOpcode(operator: ForgeWebScriptWasmBinaryOperator, type: ForgeWeb
     '>=': type === 'u32' ? 0x4f : 0x4e,
   };
   return table[operator] ?? 0x46;
-}
-
-function hashBytes(bytes: Uint8Array): string {
-  let hash = 2_166_136_261;
-  for (const byte of bytes) {
-    hash ^= byte;
-    hash = Math.imul(hash, 16_777_619) >>> 0;
-  }
-  return hash.toString(16).padStart(8, '0');
 }
 
 function featureRequirements(module: ForgeWebScriptWasmModule): ForgeWebScriptWasmFeatureRequirements {
@@ -2784,8 +2776,8 @@ export function compileForgeWebScriptWasm(
   const wasm = optimized.wasm;
   const contentHash =
     wasm === undefined
-      ? hashBytes(encoder.encode(`${metadata.compilerVersion}\0${metadata.graphHash ?? ''}`))
-      : hashBytes(wasm);
+      ? sha256ArtifactHash(encoder.encode(`${metadata.compilerVersion}\0${metadata.graphHash ?? ''}`))
+      : sha256ArtifactHash(wasm);
   const sourceMap = JSON.stringify({
     version: 3,
     file: input.optimizedIr.name,

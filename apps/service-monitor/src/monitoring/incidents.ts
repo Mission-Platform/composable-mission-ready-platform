@@ -1,3 +1,5 @@
+import { MAX_INCIDENT_HISTORY_ITEMS, MAX_INCIDENT_UPDATES } from './storage';
+
 import type {
   Incident,
   IncidentSeverity,
@@ -91,16 +93,14 @@ export class IncidentManager {
   listIncidents(): Incident[] {
     const incidents = this.sql
       .exec<IncidentRow>(
-        `SELECT * FROM incidents ORDER BY CASE WHEN status = 'resolved' THEN 1 ELSE 0 END, opened_at DESC;`,
+        `SELECT * FROM incidents ORDER BY CASE WHEN status = 'resolved' THEN 1 ELSE 0 END, opened_at DESC LIMIT ?;`,
+        MAX_INCIDENT_HISTORY_ITEMS,
       )
       .toArray()
       .map(toIncident);
-    const updates = this.sql
-      .exec<IncidentUpdateRow>(`SELECT * FROM incident_updates ORDER BY created_at ASC;`)
-      .toArray();
     return incidents.map((incident) => ({
       ...incident,
-      updates: updates.filter((update) => update.incident_id === incident.id).map(toIncidentUpdate),
+      updates: this.listIncidentUpdates(incident.id),
     }));
   }
 
@@ -156,7 +156,12 @@ export class IncidentManager {
     const incident = {
       ...current,
       ...input,
-      resolvedAt: input.status === 'resolved' ? Date.now() : current.resolvedAt,
+      resolvedAt:
+        (input.status ?? current.status) === 'resolved'
+          ? input.status === 'resolved'
+            ? Date.now()
+            : current.resolvedAt
+          : null,
     };
     this.sql.exec(
       `UPDATE incidents SET description = ?, status = ?, severity = ?, resolved_at = ? WHERE id = ?;`,
@@ -179,11 +184,13 @@ export class IncidentManager {
   private listIncidentUpdates(incidentId: string): IncidentUpdate[] {
     return this.sql
       .exec<IncidentUpdateRow>(
-        `SELECT * FROM incident_updates WHERE incident_id = ? ORDER BY created_at ASC;`,
+        `SELECT * FROM incident_updates WHERE incident_id = ? ORDER BY created_at DESC LIMIT ?;`,
         incidentId,
+        MAX_INCIDENT_UPDATES,
       )
       .toArray()
-      .map(toIncidentUpdate);
+      .map(toIncidentUpdate)
+      .toReversed();
   }
 
   addIncidentUpdate(
@@ -227,7 +234,10 @@ export class IncidentManager {
 
   listMaintenance(): MaintenanceWindow[] {
     return this.sql
-      .exec<MaintenanceRow>(`SELECT * FROM maintenance_windows ORDER BY starts_at ASC;`)
+      .exec<MaintenanceRow>(
+        `SELECT * FROM maintenance_windows ORDER BY starts_at ASC LIMIT ?;`,
+        MAX_INCIDENT_HISTORY_ITEMS,
+      )
       .toArray()
       .map(toMaintenance);
   }

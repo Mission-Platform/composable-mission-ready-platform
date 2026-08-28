@@ -11,13 +11,7 @@
  * like — it only knows how to place a {@link CmsArtifact}. Adding a platform
  * therefore requires no change here.
  */
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
+import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import {
@@ -25,6 +19,10 @@ import {
   buildForgeFileGraph,
   discoverComponentsFromGraph,
   parseOxcModule,
+  assertForgeArtifactRoot,
+  ensureForgeArtifactDirectory,
+  resolveForgeArtifactPath,
+  validateForgeArtifactName,
 } from "@mission-platform/vite-plugin-forge";
 
 import { analyzeContentComponent } from "./analyze.js";
@@ -111,8 +109,11 @@ function reportDiagnostics(
 
 /** Write one artifact beneath the target output directory. */
 function writeArtifact(outputDirectory: string, artifact: CmsArtifact): void {
-  const destination = path.join(outputDirectory, artifact.fileName);
-  mkdirSync(path.dirname(destination), { recursive: true });
+  const destination = resolveForgeArtifactPath(
+    outputDirectory,
+    artifact.fileName,
+  );
+  ensureForgeArtifactDirectory(outputDirectory, path.dirname(destination));
   writeFileSync(destination, artifact.contents, "utf8");
 }
 
@@ -168,15 +169,20 @@ export function generateCmsArtifacts(
   });
   const discovered = discoverComponentsFromGraph(graph, stripPrefix);
 
-  rmSync(outDir, { recursive: true, force: true, ...RM_RETRY_OPTIONS });
-  mkdirSync(outDir, { recursive: true });
+  const safeOutputDirectory = assertForgeArtifactRoot(outDir);
+  rmSync(safeOutputDirectory, {
+    recursive: true,
+    force: true,
+    ...RM_RETRY_OPTIONS,
+  });
+  ensureForgeArtifactDirectory(safeOutputDirectory, safeOutputDirectory);
 
   const island =
     emits("template") || emits("entry") || emits("declaration")
       ? generateIsland({
           plugin,
           componentsModule: options.componentsModule,
-          outDir,
+          outDir: safeOutputDirectory,
           stripPrefix,
         })
       : undefined;
@@ -184,7 +190,7 @@ export function generateCmsArtifacts(
   const diagnostics: CompilerDiagnostic[] = [];
   const context: CmsTargetContext = {
     rootDir: options.rootDir ?? path.dirname(outDir),
-    outDir,
+    outDir: safeOutputDirectory,
     componentsImport: options.componentsImport,
     framework: plugin.framework,
     islandEntry: island?.specifier,
@@ -243,10 +249,13 @@ export function generateCmsArtifacts(
   }
 
   for (const artifact of artifacts) {
-    writeArtifact(outDir, artifact);
+    validateForgeArtifactName(artifact.fileName);
+  }
+  for (const artifact of artifacts) {
+    writeArtifact(safeOutputDirectory, artifact);
   }
   if (!artifacts.some((artifact) => artifact.artifactKind === "entry")) {
-    writeArtifact(outDir, PLACEHOLDER_ENTRY);
+    writeArtifact(safeOutputDirectory, PLACEHOLDER_ENTRY);
   }
 
   reportDiagnostics(plugin.id, diagnostics);
@@ -256,7 +265,10 @@ export function generateCmsArtifacts(
     PLACEHOLDER_ENTRY;
 
   return {
-    entry: path.join(outDir, entryArtifact.fileName),
+    entry: resolveForgeArtifactPath(
+      safeOutputDirectory,
+      entryArtifact.fileName,
+    ),
     artifacts,
     components,
     diagnostics,
