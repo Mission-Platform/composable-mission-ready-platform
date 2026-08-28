@@ -1,6 +1,5 @@
-import { BehaviorSubject, type Observable } from 'rxjs';
-
 import { useObservable } from '@mission-platform/rxjs';
+import { BehaviorSubject, type Observable } from 'rxjs';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
