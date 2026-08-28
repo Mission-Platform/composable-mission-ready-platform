@@ -19,7 +19,7 @@ describe('storybook framework preset', () => {
   it.each([
     ['vue', '@storybook/vue3-vite'],
     ['react', '@storybook/react-vite'],
-    ['solid', 'storybook-solidjs-vite'],
+    ['solid', '@storybook/html-vite'],
     ['svelte', '@storybook/svelte-vite'],
     ['web-component', '@storybook/web-components-vite'],
   ] as const)('selects the %s renderer', (framework, renderer) => {

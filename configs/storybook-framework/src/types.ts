@@ -48,7 +48,6 @@ export type Meta<TComponentOrArguments = Args> = ComponentAnnotations<Renderer, 
  */
 // `StoryObj` is the canonical Storybook CSF type name that consumers expect, so
 // keep the abbreviation rather than renaming it to `StoryObject`.
-// eslint-disable-next-line unicorn/prevent-abbreviations
 export type StoryObj<TMetaOrComponentOrArgs = Args> =
   TMetaOrComponentOrArgs extends ComponentAnnotations<Renderer, infer TArguments>
     ? StoryAnnotations<Renderer, TArguments>

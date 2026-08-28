@@ -21,11 +21,11 @@ export type StorybookFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-com
 const FRAMEWORK_RENDERER: Record<StorybookFramework, string> = {
   vue: '@storybook/vue3-vite',
   react: '@storybook/react-vite',
-  // Solid uses the community `storybook-solidjs-vite` framework adapter (SB10
-  // compatible): it mounts Solid components properly (wiring `vite-plugin-solid`
-  // itself), unlike the generic html renderer which cannot mount Solid and
-  // errors with "Expecting an HTML snippet or DOM node from the story".
-  solid: 'storybook-solidjs-vite',
+  // Solid uses Storybook's generic HTML renderer plus an explicit Solid JSX
+  // transform and preview-side DOM mount bridge. This keeps the workspace on a
+  // TS7-only dependency graph instead of pulling `@typescript/typescript6`
+  // through the community `storybook-solidjs-vite` adapter.
+  solid: '@storybook/html-vite',
   svelte: '@storybook/svelte-vite',
   'web-component': '@storybook/web-components-vite',
 };
@@ -324,15 +324,16 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
       plugins.push(...(react() as unknown as Plugin[]));
       break;
     }
+    case 'solid': {
+      const { default: solid } = await import('vite-plugin-solid');
+      plugins.push(solid() as unknown as Plugin);
+      break;
+    }
     case 'svelte': {
       const { svelte } = await import('@sveltejs/vite-plugin-svelte');
       plugins.push(svelte() as unknown as Plugin);
       break;
     }
-    // Solid needs no explicit plugin here: the `storybook-solidjs-vite` framework
-    // adapter registers `vite-plugin-solid` itself, so the shared neutral
-    // `*.stories.tsx` compile through Solid's JSX transform. Adding it again would
-    // double-transform the story JSX.
     default: {
       break;
     }

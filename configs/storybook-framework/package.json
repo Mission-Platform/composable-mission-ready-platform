@@ -55,7 +55,6 @@
     "@vitejs/plugin-vue-jsx": "*",
     "@sveltejs/vite-plugin-svelte": "*",
     "svelte": "*",
-    "storybook-solidjs-vite": "*",
     "react": "*",
     "solid-js": "*",
     "vue": "*",
@@ -85,9 +84,6 @@
       "optional": true
     },
     "@vitejs/plugin-vue-jsx": {
-      "optional": true
-    },
-    "storybook-solidjs-vite": {
       "optional": true
     },
     "svelte": {
@@ -132,7 +128,6 @@
     "jsdom": "catalog:testing",
     "prettier": "catalog:prettier",
     "solid-js": "catalog:solid",
-    "storybook-solidjs-vite": "catalog:storybook",
     "svelte": "catalog:svelte",
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
