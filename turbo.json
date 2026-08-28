@@ -11,7 +11,13 @@
   "globalEnv": [
     "NODE_ENV",
     "CI",
-    "NODE_OPTIONS"
+    "NODE_OPTIONS",
+    "STORYBOOK_FRAMEWORK",
+    "MISSION_REPO_ROOT",
+    "SSR",
+    "PLAYWRIGHT_BASE_URL",
+    "AUDIT_PORT",
+    "AUDIT_WORKERS"
   ],
   "tasks": {
     "build": {

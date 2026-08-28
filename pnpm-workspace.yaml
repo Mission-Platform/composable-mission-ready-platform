@@ -55,10 +55,10 @@ catalogs:
     "harper.js": ^2.7.0
 
   eslint:
+    "@babel/core": ^8.0.1
+    "@babel/eslint-parser": ^8.0.1
     eslint-plugin-sonarjs: ^4.2.0
     eslint-plugin-unicorn: ^64.0.0
-    "@typescript-eslint/eslint-plugin": ^8.68.0
-    "@typescript-eslint/parser": ^8.68.0
     eslint: ^10.9.1
     eslint-config-prettier: ^10.1.8
     eslint-config-turbo: ^2.10.11
@@ -66,7 +66,6 @@ catalogs:
     eslint-plugin-import-x: ^4.17.1
     eslint-plugin-vue: ^10.10.0
     eslint-plugin-vuejs-accessibility: ^2.6.0
-    typescript-eslint: ^8.68.0
     vue-eslint-parser: ^10.4.1
 
   stylelint:
@@ -134,7 +133,6 @@ catalogs:
     "@storybook/vue3-vite": ^10.5.10
     "@storybook/html-vite": ^10.5.10
     "@storybook/web-components-vite": ^10.5.10
-    "storybook-solidjs-vite": ^10.7.1
     storybook: ^10.5.10
 
   react:
@@ -162,8 +160,7 @@ catalogs:
   typescript:
     "@types/js-yaml": ^4.0.9
     "@types/node": ^24.13.3
-    typescript: ~6.0.3
-    "typescript-language-server": "^6.0.0"
+    typescript: ~7.0.2
 
   cloudflare:
     rwsdk: ^1.7.2
