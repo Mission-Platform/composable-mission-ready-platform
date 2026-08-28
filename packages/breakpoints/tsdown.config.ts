@@ -21,6 +21,7 @@ const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 export default [
   defineTsdownLibrary({
     rootDir: import.meta.dirname,
+    dts: { build: false, generator: 'oxc' },
     clean: true,
     external: ['i18next'],
   }),

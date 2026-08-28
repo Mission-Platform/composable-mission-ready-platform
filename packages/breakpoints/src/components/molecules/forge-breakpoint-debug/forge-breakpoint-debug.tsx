@@ -42,11 +42,11 @@ export function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProper
       className={styles['bp-debug']}
     >
       <span className={styles['bp-debug__label']}>
-        {i18next.t(($) => $.breakpoint, { ns: 'mp.breakpoints', defaultValue: 'breakpoint:' })}
+        {i18next.t('breakpoint', { ns: 'mp.breakpoints', defaultValue: 'breakpoint:' })}
       </span>
       <span className={styles['bp-debug__current']}>{current}</span>
       <span className={styles['bp-debug__separator']}>
-        {i18next.t(($) => $.separator, { ns: 'mp.breakpoints', defaultValue: '|' })}
+        {i18next.t('separator', { ns: 'mp.breakpoints', defaultValue: '|' })}
       </span>
       {breakpointKeys.map((key) => (
         <span
@@ -55,7 +55,7 @@ export function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProper
         >
           {key}
           <span className={styles['bp-debug__px']}>
-            {i18next.t(($) => $.debug_px, {
+            {i18next.t('debug_px', {
               ns: 'mp.breakpoints',
               breakpoint: breakpoints[key],
               defaultValue: '({breakpoint}px)',
