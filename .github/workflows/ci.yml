@@ -53,7 +53,7 @@ jobs:
       - name: Lint all affected workspaces
         run: pnpm exec turbo run lint --affected
 
-      # test:coverage depends on each workspace's build and runs every affected
-      # package, app, worker, plugin, and config that exposes the task.
-      - name: Run affected coverage tests
-        run: pnpm exec turbo run test:coverage --affected
+      # The plain test task is available in every affected workspace, including
+      # workspaces that intentionally do not collect coverage.
+      - name: Run affected tests
+        run: pnpm exec turbo run test --affected

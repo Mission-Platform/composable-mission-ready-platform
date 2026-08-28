@@ -54,6 +54,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build Storybook
+        run: pnpm exec turbo run build-storybook --filter @mission-platform/storybook
+
       - name: Publish Storybook to Chromatic
         uses: chromaui/action@016b2b6bd92fef54e5764ea1f15ada32f65939ce # v11
         with:
