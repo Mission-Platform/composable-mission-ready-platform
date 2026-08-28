@@ -116,8 +116,8 @@ export interface TsdownLibraryOptions {
   /** Extra package names to externalise on top of deps/peerDeps + {@link DEFAULT_LIBRARY_EXTERNALS}. */
   external?: readonly string[];
   /**
-   * Emit declaration files. Defaults to `{ build: true }` so solution-style
-   * `tsconfig.json` files that only contain `references` still emit `.d.ts`.
+   * Emit declaration files. Defaults to non-project TypeScript 7 generation so
+   * declarations are written through tsdown's configured `outDir`.
    * Set `false` when a custom dts plugin (e.g. forge hook/component dts) owns
    * declaration emit.
    */
@@ -291,12 +291,16 @@ function resolveDtsOption(
   const rootDirectory = options?.rootDir ?? process.cwd();
   const outputRoot = options?.outputRoot;
 
-  // Most Mission Platform packages use a solution-style root `tsconfig.json`
-  // that only lists `references`. `build: true` makes rolldown-plugin-dts run
-  // `tsc -b` against those projects (or we point `tsconfig` at tsconfig.build.json).
-  const resolved: DtsOptions = dts === true ? { build: true } : { build: true, ...dts };
+  const resolved: DtsOptions = dts === true ? { build: false, generator: 'tsgo' } : { build: false, ...dts };
   if (outputRoot === undefined) {
     return resolved;
+  }
+
+  // Staged non-Vue declarations are generated from isolated modules. OXC keeps
+  // the temporary tree out of the package source and writes the bundle to the
+  // staged `dist`; Vue custom-language declarations use their synthesized path.
+  if (resolved.vue !== true && resolved.generator === 'tsgo') {
+    return { ...resolved, generator: 'oxc' };
   }
 
   const stagedDeclarationDirectory = resolveTsdownOutputDirectory(rootDirectory, 'dist', outputRoot);
@@ -334,6 +338,7 @@ function writeStagedTsconfig(rootDirectory: string, outputRoot: string, baseTsco
   const stagedConfig = {
     extends: path.resolve(baseTsconfig),
     compilerOptions: {
+      rootDir: path.resolve(rootDirectory, 'src'),
       declarationDir: resolveTsdownOutputDirectory(rootDirectory, 'dist', outputRoot),
       tsBuildInfoFile: path.join(outputRoot, 'tsconfig.build.tsbuildinfo'),
       incremental: true,
@@ -356,11 +361,18 @@ function resolveTsconfigOption(
         : true
       : tsconfig;
 
-  if (outputRoot === undefined || resolvedBase === false || resolvedBase === true) {
+  if (outputRoot === undefined || resolvedBase === false) {
     return resolvedBase;
   }
 
-  return writeStagedTsconfig(rootDirectory, outputRoot, resolvedBase);
+  const packageTsconfig = path.resolve(rootDirectory, 'tsconfig.build.json');
+  const baseTsconfig =
+    resolvedBase === true
+      ? fs.existsSync(packageTsconfig)
+        ? packageTsconfig
+        : path.resolve(rootDirectory, 'tsconfig.json')
+      : resolvedBase;
+  return writeStagedTsconfig(rootDirectory, outputRoot, baseTsconfig);
 }
 
 /**
