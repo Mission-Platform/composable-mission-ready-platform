@@ -1,13 +1,14 @@
 import { localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 import { describe, expect, it } from 'vitest';
 
-import { localJsxTypesModuleSource, parseTsx, printSourceFile, stripFrameworkDirective } from './ast';
+import { localJsxTypesModuleSource } from './ast';
 import {
   compileComponentModule,
   compileHookModule,
   moduleTargetsFramework,
   readFrameworkDirective,
 } from './compiler-test-helpers';
+import { parseOxcModule } from './oxc.js';
 
 const BADGE = [
   "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
@@ -2390,10 +2391,13 @@ describe('the compiler reads and applies `"use <framework>";` module directives'
     expect(moduleTargetsFramework('a.tsx', svelte, 'solid')).toBe(false);
   });
 
-  it('strips every built-in framework directive from the source module', () => {
-    for (const directive of ['react', 'vue', 'svelte', 'solid', 'web-components']) {
-      const source = parseTsx('a.tsx', `"use ${directive}";\nexport const a = 1;`);
-      expect(printSourceFile(stripFrameworkDirective(source))).not.toContain(`use ${directive}`);
+  it('parses and strips every built-in framework directive through the OXC compile path', () => {
+    const directives = ['react', 'vue', 'svelte', 'solid', 'web-components'] as const;
+    for (const directive of directives) {
+      const source = USE_VUE_WIDGET.replace('"use vue";', `"use ${directive}";`);
+      expect(parseOxcModule('a.tsx', source).facts.frameworkDirective).toBe(directive);
+      const compiled = compileComponentModule(source, { framework: directive, componentName: 'ForgeWidget' });
+      expect(compiled.code).not.toContain(`use ${directive}`);
     }
   });
 

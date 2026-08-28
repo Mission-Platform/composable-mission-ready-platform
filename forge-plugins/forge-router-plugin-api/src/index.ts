@@ -8,7 +8,7 @@ export {
   MP_ROUTER_MODULE,
   selectForgeRouterPlugin,
   unsupportedRouterCapabilities,
-} from './router.js';
+} from "./router.js";
 
 export type {
   GeneratedRouterDeclaration,
@@ -27,4 +27,4 @@ export type {
   RouterPluginSelection,
   RouterTargetContext,
   RouterTargetPlan,
-} from './router.js';
+} from "./router.js";

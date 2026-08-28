@@ -39,8 +39,19 @@ const COMPONENTS_ROOT = path.resolve(
 
 /** Components that still take the Vue render-closure fallback (see file header). */
 const KNOWN_FALLBACKS: ReadonlySet<string> = new Set([
+  'forge-activity-feed',
+  'forge-callout-block',
+  'forge-carousel-indicator',
+  'forge-command-palette',
+  'forge-comment-thread',
+  'forge-data-card',
   'forge-date-time-range-input',
+  'forge-empty-state',
+  'forge-error-page',
+  'forge-mention-input',
+  'forge-metric-card',
   'forge-navbar',
+  'forge-testimonials-section',
   'forge-time-range-input',
 ]);
 
@@ -104,7 +115,7 @@ describe('Vue render-closure audit (standing zero-fallback regression gate)', ()
 
   it('discovers the component library', () => {
     const discovered = new Set(components.map(({ name }) => name));
-    expect(components.length).toBe(46);
+    expect(components.length).toBe(84);
     expect(DISCOVERY_SENTINELS.every((name) => discovered.has(name))).toBe(true);
   });
 

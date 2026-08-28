@@ -1,5 +1,4 @@
 // Cloudflare's generated handler contract is conventionally named `Env`.
-// eslint-disable-next-line unicorn/prevent-abbreviations
 export interface Env {
   ASSETS: Fetcher;
 }

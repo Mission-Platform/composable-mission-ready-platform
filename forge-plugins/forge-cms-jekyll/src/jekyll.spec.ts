@@ -22,7 +22,7 @@ import {
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
 import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
-import { parseTsx } from "@mission-platform/vite-plugin-forge/compiler/ast.js";
+import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 import { load } from "js-yaml";
 import { describe, expect, it } from "vitest";
 
@@ -75,7 +75,7 @@ function contentOf(
   names: ContentComponentNamesInput,
 ): ContentComponent {
   return analyzeContentComponent(
-    parseTsx(`${names.folder}.tsx`, source),
+    parseOxcModule(`${names.folder}.tsx`, source),
     names,
   );
 }

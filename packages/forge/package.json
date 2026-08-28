@@ -54,7 +54,7 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "build:check": "vue-tsc --project tsconfig.build.json --noEmit",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -109,7 +109,6 @@
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
     "vitest": "catalog:testing",
-    "vue": "catalog:vue",
-    "vue-tsc": "catalog:vue"
+    "vue": "catalog:vue"
   }
 }

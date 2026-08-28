@@ -25,9 +25,8 @@ import {
   type JsxFramework,
 } from '@mission-platform/forge-plugin-api';
 import { emitDts } from 'svelte2tsx';
-import ts from 'typescript';
 
-import { LOCAL_JSX_TYPES_FILE, localJsxTypesModuleSource, moduleTargetsFramework, parseTsx } from './compiler/ast.js';
+import { LOCAL_JSX_TYPES_FILE, localJsxTypesModuleSource, moduleTargetsFramework } from './compiler/ast.js';
 import {
   discoverExternalExportsFromGraph,
   discoverComponentsFromGraph,
@@ -143,27 +142,35 @@ export function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): Fram
  * a companion type is actually declared in (a component's own module, or a
  * sibling helper such as `date-time`), so the entry re-exports it from there.
  */
-function readExportedTypeNames(parsed: ts.SourceFile): Set<string> {
+function readExportedTypeNames(fileName: string, source: string): Set<string> {
   const names = new Set<string>();
-  const isExported = (node: ts.HasModifiers): boolean =>
-    (ts.getModifiers(node) ?? []).some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword);
-  for (const statement of parsed.statements) {
-    if (
-      (ts.isTypeAliasDeclaration(statement) ||
-        ts.isInterfaceDeclaration(statement) ||
-        ts.isEnumDeclaration(statement)) &&
-      isExported(statement)
-    ) {
-      names.add(statement.name.text);
-    } else if (
-      ts.isExportDeclaration(statement) &&
-      statement.exportClause !== undefined &&
-      ts.isNamedExports(statement.exportClause)
-    ) {
-      for (const element of statement.exportClause.elements) {
-        if (statement.isTypeOnly || element.isTypeOnly) {
-          names.add(element.name.text);
+  const program = parseOxcModule(fileName, source).program;
+  for (const statement of oxcProgramBody(program)) {
+    if (statement.type !== 'ExportNamedDeclaration') {
+      continue;
+    }
+    const declaration = oxcObject(statement, 'declaration');
+    if (declaration !== undefined) {
+      if (
+        declaration.type === 'TSTypeAliasDeclaration' ||
+        declaration.type === 'TSInterfaceDeclaration' ||
+        declaration.type === 'TSEnumDeclaration'
+      ) {
+        const name = oxcIdentifierName(oxcObject(declaration, 'id'));
+        if (name !== undefined) {
+          names.add(name);
         }
+      }
+      continue;
+    }
+    const statementTypeOnly = statement.exportKind === 'type';
+    for (const element of oxcArray(statement, 'specifiers')) {
+      if (!(statementTypeOnly || element.exportKind === 'type')) {
+        continue;
+      }
+      const name = oxcIdentifierName(oxcObject(element, 'exported'));
+      if (name !== undefined) {
+        names.add(name);
       }
     }
   }
@@ -581,8 +588,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   for (const component of [...components, ...siblingComponents]) {
     const sourcePath = componentSourcePath(component);
     const source = readFileSync(sourcePath, 'utf8');
-    const parsed = parseTsx(sourcePath, source);
-    componentOwnTypes.set(component.folder, readExportedTypeNames(parsed));
+    componentOwnTypes.set(component.folder, readExportedTypeNames(sourcePath, source));
     const compiled = context.compile({
       source,
       moduleKind: 'component',
@@ -1114,7 +1120,7 @@ const FRAMEWORK_DTS_CONDITION: Record<JsxFramework, string> = {
  * Returns an empty object when there is no owning `package.json`, or when its
  * neutral declaration has not been emitted yet — leaving resolution unchanged.
  */
-function selfReferencePaths(generatedDir: string): ts.MapLike<string[]> {
+function selfReferencePaths(generatedDir: string): Record<string, string[]> {
   let directory = generatedDir;
   while (true) {
     const manifestPath = path.join(directory, 'package.json');
@@ -1134,8 +1140,27 @@ function selfReferencePaths(generatedDir: string): ts.MapLike<string[]> {
   }
 }
 
+/** Strip JSONC comments enough for package tsconfig alias reads. */
+function parseJsoncObject(text: string): Record<string, unknown> | undefined {
+  try {
+    const stripped = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    const value = JSON.parse(stripped) as unknown;
+    return typeof value === 'object' && value !== null && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Resolve the TypeScript 7 CLI entry used for declaration emit. */
+function resolveTscBin(): string {
+  const packageJson = createRequire(import.meta.url).resolve('typescript/package.json');
+  return path.join(path.dirname(packageJson), 'lib', 'tsc.js');
+}
+
 /** Read the owning package's TypeScript alias configuration for a generated tree. */
-function packageAliasCompilerOptions(generatedDir: string): Pick<ts.CompilerOptions, 'paths'> {
+function packageAliasCompilerOptions(generatedDir: string): { paths?: Record<string, string[]> } {
   let packageDirectory = generatedDir;
   while (true) {
     const manifestPath = path.join(packageDirectory, 'package.json');
@@ -1149,16 +1174,16 @@ function packageAliasCompilerOptions(generatedDir: string): Pick<ts.CompilerOpti
     packageDirectory = parent;
   }
 
-  const configFileName =
-    [path.join(packageDirectory, 'tsconfig.build.json'), path.join(packageDirectory, 'tsconfig.json')].find((file) =>
-      existsSync(file),
-    ) ?? ts.findConfigFile(packageDirectory, ts.sys.fileExists);
+  const configFileName = [
+    path.join(packageDirectory, 'tsconfig.build.json'),
+    path.join(packageDirectory, 'tsconfig.json'),
+  ].find((file) => existsSync(file));
   if (configFileName === undefined) {
     return {};
   }
 
-  const config = ts.readConfigFile(configFileName, ts.sys.readFile);
-  const compilerOptions = config.config?.compilerOptions as
+  const config = parseJsoncObject(readFileSync(configFileName, 'utf8'));
+  const compilerOptions = (config?.compilerOptions ?? undefined) as
     { baseUrl?: string; paths?: Record<string, string[]> } | undefined;
   if (compilerOptions?.paths === undefined) {
     return {};
@@ -1170,168 +1195,90 @@ function packageAliasCompilerOptions(generatedDir: string): Pick<ts.CompilerOpti
   const paths = Object.fromEntries(
     Object.entries(compilerOptions.paths).map(([pattern, targets]) => [
       pattern,
-      targets.map((target) => {
+      targets.flatMap((target) => {
         const wildcard = target.indexOf('*');
         const targetPrefix = wildcard === -1 ? target : target.slice(0, wildcard);
         const targetPath = path.resolve(baseUrl, targetPrefix);
         if (targetPath === sourceRoot || targetPath.startsWith(`${sourceRoot}${path.sep}`)) {
           const relativeToSource = path.relative(sourceRoot, targetPath);
-          return path.join(generatedDir, relativeToSource, target.slice(targetPrefix.length));
+          return [path.join(generatedDir, relativeToSource, target.slice(targetPrefix.length))];
         }
-        return path.resolve(baseUrl, target);
+        return [path.resolve(baseUrl, target)];
       }),
     ]),
   );
 
-  return {
-    paths,
-  };
-}
-
-/** Find all generated TypeScript roots, including modules in mirrored subdirectories. */
-function generatedTypeScriptRoots(directory: string): string[] {
-  const roots: string[] = [];
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    const entryPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) {
-      roots.push(...generatedTypeScriptRoots(entryPath));
-    } else if ((entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) && !entry.name.endsWith('.d.ts')) {
-      roots.push(entryPath);
-    }
-  }
-  return roots;
+  return { paths };
 }
 
 /**
  * Base compiler options for emitting a generated component tree's declarations
- * (mirrors the packages' `tsconfig.build.json`). `jsx: preserve` keeps the
- * classic-`h` React tree's JSX agnostic to the runtime factory during emit, and
- * `noEmitOnError: false` guarantees a `.d.ts` is produced even though the
- * generated components' JSX bodies are checked against React's stricter JSX
- * typing. Those body-level mismatches never reach the emitted `.d.ts` (every
- * function body is elided) and are filtered out by {@link isElidedDiagnostic}
- * so only genuine, declaration-affecting diagnostics surface as build warnings.
+ * via the TypeScript 7 CLI (mirrors the packages' `tsconfig.build.json`).
+ * `jsx: preserve` keeps classic-`h` JSX agnostic to the runtime factory during
+ * emit, and `noEmitOnError: false` guarantees a `.d.ts` is produced even when
+ * generated component bodies fail framework-specific JSX type checks.
  */
-const COMPONENT_DTS_COMPILER_OPTIONS: ts.CompilerOptions = {
-  module: ts.ModuleKind.ESNext,
-  moduleResolution: ts.ModuleResolutionKind.Bundler,
-  target: ts.ScriptTarget.ES2023,
-  lib: ['lib.es2023.d.ts', 'lib.dom.d.ts', 'lib.dom.iterable.d.ts'],
-  jsx: ts.JsxEmit.Preserve,
+const COMPONENT_DTS_COMPILER_OPTIONS = {
+  module: 'ESNext',
+  moduleResolution: 'bundler',
+  target: 'ES2023',
+  lib: ['ES2023', 'DOM', 'DOM.Iterable'],
+  jsx: 'preserve',
   skipLibCheck: true,
   esModuleInterop: true,
   strict: true,
   declaration: true,
   emitDeclarationOnly: true,
   noEmitOnError: false,
-  types: [],
-};
+  types: [] as string[],
+} as const;
 
 /**
- * Whether a diagnostic originates in a position that declaration emit **elides**,
- * so it never affects the emitted `.d.ts` and must not surface as a build warning:
- *
- * - Inside a function/method/arrow **body** (JSX only ever appears in one). These
- *   are the neutral tree's JSX bodies being type-checked against the framework's
- *   stricter JSX vocabulary — native `Event` handlers vs React's `SyntheticEvent`,
- *   lowercase DOM attributes (`tabindex`, `onMouseenter`) vs React's camelCase,
- *   `MpElement` children vs `ReactNode`, `RefObject<HTMLElement>` vs
- *   `Ref<HTMLDivElement>`, …
- * - Inside a **class property initializer** whose property carries an explicit
- *   type annotation. The initializer is dropped from the `.d.ts` (only the
- *   annotation is kept), so a name it references that is out of scope — e.g. the
- *   Web-Components element synthesiser seeding a reactive-state field from a
- *   destructured prop default (`openIds: any = defaultOpen`) — is invisible to
- *   consumers, exactly like a body-level reference.
- *
- * Genuinely declaration-affecting diagnostics (a duplicate export, an unresolved
- * import, a non-portable exported signature, a dangling type in a kept
- * interface) are *not* elided and remain reported.
- */
-function isElidedDiagnostic(diagnostic: ts.Diagnostic): boolean {
-  const { file, start } = diagnostic;
-  if (file === undefined || start === undefined) {
-    return false;
-  }
-  const findInnermost = (node: ts.Node): ts.Node => {
-    const child = ts.forEachChild(node, (candidate) =>
-      candidate.getStart(file) <= start && start < candidate.getEnd() ? candidate : undefined,
-    );
-    return child === undefined ? node : findInnermost(child);
-  };
-  let node: ts.Node | undefined = findInnermost(file);
-  while (node !== undefined && node !== file) {
-    const parent: ts.Node | undefined = node.parent;
-    if (parent !== undefined && ts.isFunctionLike(parent) && (parent as ts.FunctionLikeDeclarationBase).body === node) {
-      return true;
-    }
-    // A class-property initializer is elided from the `.d.ts` when the property
-    // has an explicit type annotation (the annotation is emitted, the value is
-    // not), so a name it references cannot reach a consumer.
-    if (
-      parent !== undefined &&
-      ts.isPropertyDeclaration(parent) &&
-      parent.type !== undefined &&
-      parent.initializer === node
-    ) {
-      return true;
-    }
-    node = parent;
-  }
-  return false;
-}
-
-/**
- * Emit declarations for a generated `.ts`/`.tsx` tree in-process with the
- * TypeScript compiler API, writing the CSS-module shim first so co-located
- * style imports resolve. Shared by every in-process toolchain (React, Solid,
- * Web-Components): each passes the `compilerOverrides` its own JSX dialect
- * needs — React relies on the base options' `jsx: preserve` as-is, Solid
- * additionally points the JSX namespace at `solid-js`, and Web-Components
- * needs no override at all (its generated tree is plain Lit `.ts`, no JSX).
- * Diagnostics rooted in an elided position (a function body, or a typed class
- * property's initializer) are filtered by {@link isElidedDiagnostic} (they
- * never reach the `.d.ts`); genuine, declaration-affecting diagnostics surface
- * as build warnings.
+ * Emit declarations for a generated `.ts`/`.tsx` tree with the TypeScript 7
+ * CLI, writing the CSS-module shim first so co-located style imports resolve.
+ * Shared by React, Solid, and Web-Components toolchains: each passes the
+ * `compilerOverrides` its JSX dialect needs. Type diagnostics are surfaced as
+ * build warnings (matching the Vue CLI path) rather than aborting emit.
  */
 function emitTscComponentDeclarations(
   this: { warn: (message: string) => void },
   options: JsxComponentsDtsOptions,
-  compilerOverrides: ts.CompilerOptions = {},
+  compilerOverrides: Record<string, unknown> = {},
 ): void {
-  const shimPath = path.join(options.generatedDir, CSS_MODULE_SHIM_FILE);
-  writeFileSync(shimPath, CSS_MODULE_SHIM, 'utf8');
+  writeFileSync(path.join(options.generatedDir, CSS_MODULE_SHIM_FILE), CSS_MODULE_SHIM, 'utf8');
 
-  const rootNames = generatedTypeScriptRoots(options.generatedDir);
-  const packageAliases = packageAliasCompilerOptions(options.generatedDir);
+  const { paths } = packageAliasCompilerOptions(options.generatedDir);
+  const tsconfig = {
+    compilerOptions: {
+      ...COMPONENT_DTS_COMPILER_OPTIONS,
+      customConditions: [FRAMEWORK_DTS_CONDITION[options.framework]],
+      paths: { ...paths, ...selfReferencePaths(options.generatedDir) },
+      ...compilerOverrides,
+      rootDir: options.generatedDir,
+      outDir: options.outDir,
+      declarationDir: options.outDir,
+    },
+    include: ['**/*.ts', '**/*.tsx'],
+  };
+  const tsconfigPath = path.join(options.generatedDir, 'tsconfig.dts.json');
+  writeFileSync(tsconfigPath, JSON.stringify(tsconfig, undefined, 2), 'utf8');
 
-  const program = ts.createProgram([...rootNames, shimPath], {
-    ...COMPONENT_DTS_COMPILER_OPTIONS,
-    customConditions: [FRAMEWORK_DTS_CONDITION[options.framework]],
-    ...packageAliases,
-    paths: { ...packageAliases.paths, ...selfReferencePaths(options.generatedDir) },
-    ...compilerOverrides,
-    rootDir: options.generatedDir,
-    outDir: options.outDir,
-    declarationDir: options.outDir,
-  });
-  const emitResult = program.emit(undefined, undefined, undefined, true);
-
-  const diagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
-  for (const diagnostic of diagnostics) {
-    // Skip diagnostics rooted in a function body: they are the neutral tree's
-    // JSX bodies checked against the framework's stricter JSX types and never
-    // reach the emitted (body-elided) `.d.ts`. Genuine, declaration-affecting
-    // diagnostics (duplicate exports, unresolved imports, non-portable
-    // signatures) remain.
-    if (isElidedDiagnostic(diagnostic)) {
-      continue;
+  try {
+    execFileSync(process.execPath, [resolveTscBin(), '-p', tsconfigPath], {
+      cwd: options.generatedDir,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+  } catch (error) {
+    const report = error as { stdout?: string; stderr?: string };
+    const message = [report.stdout, report.stderr].filter(Boolean).join('\n').trim();
+    if (message.length > 0) {
+      this.warn(message);
     }
-    this.warn(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
   }
 }
 
-/** Emit React declarations for the generated `.tsx` tree in-process with the TypeScript compiler API. */
+/** Emit React declarations for the generated `.tsx` tree with the TypeScript 7 CLI. */
 function emitReactComponentDeclarations(
   this: { warn: (message: string) => void },
   options: JsxComponentsDtsOptions,
@@ -1340,32 +1287,24 @@ function emitReactComponentDeclarations(
 }
 
 /**
- * Emit Solid declarations for the generated `.tsx` tree in-process with the
- * TypeScript compiler API. The Solid emitter renders genuine Solid JSX
- * (`<div onClick={…}>`, no synthetic event system), so the JSX namespace must
- * resolve against `solid-js` (`jsxImportSource: 'solid-js'`) rather than the
- * base options' implicit `JSX` global — otherwise every element is reported
- * untyped. Body-level JSX diagnostics are filtered exactly as for React; the
- * generated `index.tsx` entry yields `index.d.ts`.
+ * Emit Solid declarations for the generated `.tsx` tree with the TypeScript 7
+ * CLI. The Solid emitter renders genuine Solid JSX, so the JSX namespace must
+ * resolve against `solid-js` (`jsxImportSource: 'solid-js'`).
  */
 function emitSolidComponentDeclarations(
   this: { warn: (message: string) => void },
   options: JsxComponentsDtsOptions,
 ): void {
   emitTscComponentDeclarations.call(this, options, {
-    jsx: ts.JsxEmit.Preserve,
+    jsx: 'preserve',
     jsxImportSource: 'solid-js',
   });
 }
 
 /**
- * Emit Web-Components declarations for the generated `.ts` tree in-process
- * with the TypeScript compiler API. The generated tree carries no JSX at all
- * (each component is a Lit `LitElement` subclass authored in plain `.ts`), so
- * the shared toolchain needs no compiler overrides — it is the same emitter
- * React uses, run over a tree that happens to be JSX-free. The generated
- * `index.ts` entry re-exports each `<Neutral>Element` class, so `tsc` emits
- * `index.d.ts` from it.
+ * Emit Web-Components declarations for the generated `.ts` tree with the
+ * TypeScript 7 CLI. The generated tree carries no JSX (Lit element classes in
+ * plain `.ts`), so no JSX overrides are required.
  */
 function emitWebComponentsComponentDeclarations(
   this: { warn: (message: string) => void },
@@ -1390,7 +1329,7 @@ function emitVueComponentDeclarations(
     throw new Error('jsxComponentsDtsPlugin: `vueTscBin` is required to emit declarations for the Vue tree.');
   }
   writeFileSync(path.join(options.generatedDir, CSS_MODULE_SHIM_FILE), CSS_MODULE_SHIM, 'utf8');
-  const packageAliases = packageAliasCompilerOptions(options.generatedDir);
+  const { paths } = packageAliasCompilerOptions(options.generatedDir);
 
   const tsconfig = {
     compilerOptions: {
@@ -1411,8 +1350,7 @@ function emitVueComponentDeclarations(
       // Bare `@mission-platform/*` imports in the generated SFCs must resolve to
       // each package's Vue build, exactly as a consuming app resolves them.
       customConditions: [FRAMEWORK_DTS_CONDITION.vue],
-      ...packageAliases,
-      paths: { ...packageAliases.paths, ...selfReferencePaths(options.generatedDir) },
+      paths: { ...paths, ...selfReferencePaths(options.generatedDir) },
       skipLibCheck: true,
       esModuleInterop: true,
       strict: true,
@@ -1420,7 +1358,7 @@ function emitVueComponentDeclarations(
       emitDeclarationOnly: true,
       noEmitOnError: false,
       types: [],
-      rootDir: '.',
+      rootDir: options.generatedDir,
       outDir: options.outDir,
       declarationDir: options.outDir,
     },

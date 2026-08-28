@@ -3,7 +3,6 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { createContext, useContext } from '../runtime/context';
 
-
 import {
   dynamicElement,
   domTemplate,
@@ -22,6 +21,12 @@ import { TemplateInstance } from './web-components-renderer';
 
 import type { DomRenderResult, DomTemplateDefinition, TemplateResult } from './web-components';
 import type { MpContext } from '../runtime/context';
+
+type DynamicShape = 'span' | 'div';
+
+function dynamicShapeComponent({ shape }: { shape: DynamicShape }): DomRenderResult {
+  return dynamicElement(shape, {}, shape);
+}
 
 function contextReader<T>(context: MpContext<T>): () => TemplateResult {
   return (): TemplateResult => html`
@@ -662,10 +667,9 @@ describe('the native `html` tagged template + `render`', () => {
   });
 
   it('tracks current nodes for dynamic components whose array output changes shape', () => {
-    type Shape = 'span' | 'div';
-    const Component = ({ shape }: { shape: Shape }): DomRenderResult => dynamicElement(shape, {}, shape);
+    const Component = dynamicShapeComponent;
     const container = document.createElement('div');
-    const view = (shape: Shape): TemplateResult => html`
+    const view = (shape: DynamicShape): TemplateResult => html`
       ${[dynamicElement(Component, { shape })]}
     `;
 

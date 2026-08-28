@@ -13,11 +13,17 @@
  * real framework island rather than render it statically.
  */
 import {
-  findComponentFunction,
-  isSlotElement,
-  readSlotName,
-} from "@mission-platform/vite-plugin-forge/compiler/ast.js";
-import ts from "typescript";
+  isOxcNode,
+  oxcArray,
+  oxcIdentifierName,
+  oxcLiteralValue,
+  oxcNodeText,
+  oxcObject,
+  oxcProgramBody,
+  oxcTypeNode,
+  type OxcNode,
+  type OxcParsedModule,
+} from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 
 import { classifyType, collectTypeAliases } from "./classify.js";
 import { toDisplayName, toTechnicalName } from "./names.js";
@@ -34,6 +40,58 @@ import type {
 } from "./content-model.js";
 import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
+function isSlotNode(node: OxcNode): boolean {
+  const opening =
+    node.type === "JSXElement" ? oxcObject(node, "openingElement") : node;
+  if (opening === undefined) return false;
+  return (
+    (node.type === "JSXElement" || node.type === "JSXSelfClosingElement") &&
+    oxcIdentifierName(oxcObject(opening, "name")) === "Slot"
+  );
+}
+
+function readSlotName(node: OxcNode): string | undefined {
+  const opening =
+    node.type === "JSXElement" ? oxcObject(node, "openingElement") : node;
+  if (opening === undefined) return undefined;
+  for (const attribute of oxcArray(opening, "attributes")) {
+    if (
+      attribute.type !== "JSXAttribute" ||
+      oxcIdentifierName(oxcObject(attribute, "name")) !== "name"
+    )
+      continue;
+    const value = oxcObject(attribute, "value");
+    if (value?.type === "Literal")
+      return typeof value.value === "string" ? value.value : undefined;
+    if (value?.type === "JSXExpressionContainer") {
+      const expression = oxcObject(value, "expression");
+      return typeof oxcLiteralValue(expression) === "string"
+        ? (oxcLiteralValue(expression) as string)
+        : undefined;
+    }
+  }
+  return undefined;
+}
+
+function findComponentFunction(
+  module: OxcParsedModule,
+  name: string,
+): OxcNode | undefined {
+  for (const statement of oxcProgramBody(module.program)) {
+    const declaration =
+      statement.type === "ExportNamedDeclaration" ||
+      statement.type === "ExportDefaultDeclaration"
+        ? oxcObject(statement, "declaration")
+        : statement;
+    if (
+      declaration?.type === "FunctionDeclaration" &&
+      oxcIdentifierName(oxcObject(declaration, "id")) === name
+    )
+      return declaration;
+  }
+  return undefined;
+}
+
 /** The field key the default slot (a component's `children`) is exposed under. */
 export const DEFAULT_SLOT_FIELD = "content";
 
@@ -48,61 +106,88 @@ export const CMS_COLOR_TAG = "cmsColor";
 /** British spelling accepted for source annotations. */
 export const CMS_COLOUR_TAG = "cmsColour";
 
+function isCommentGap(gap: string): boolean {
+  return /^\s*(?:(?:export|default|declare|async)\s+)*$/.test(gap);
+}
+
 /** The first JSDoc description attached to a node, trimmed (`undefined` when absent). */
-function jsDocumentDescription(node: ts.Node): string | undefined {
-  const jsDocument = ts
-    .getJSDocCommentsAndTags(node)
-    .find((entry): entry is ts.JSDoc => ts.isJSDoc(entry));
-  if (jsDocument === undefined) {
-    return undefined;
+function commentsFor(module: OxcParsedModule, node: OxcNode): string[] {
+  const preceding = module.comments
+    .filter((comment) => comment.end <= node.start)
+    .toSorted((left, right) => right.end - left.end);
+  const nearest = preceding.find((comment) =>
+    isCommentGap(module.source.slice(comment.end, node.start)),
+  );
+  if (nearest === undefined) return [];
+
+  const associated = [nearest];
+  let next = nearest;
+  for (const comment of preceding.slice(preceding.indexOf(nearest) + 1)) {
+    if (!/^\s*$/.test(module.source.slice(comment.end, next.start))) break;
+    associated.push(comment);
+    next = comment;
   }
-  const text =
-    typeof jsDocument.comment === "string"
-      ? jsDocument.comment
-      : ts.getTextOfJSDocComment(jsDocument.comment);
-  const trimmed = text?.trim();
-  return trimmed !== undefined && trimmed.length > 0 ? trimmed : undefined;
+  return associated.map((comment) =>
+    comment.value
+      .replaceAll(/^\s*\* ?/gm, "")
+      .replaceAll(/^\s*\/\*+|\*\/\s*$/g, "")
+      .trim(),
+  );
+}
+
+function jsDocumentDescription(
+  module: OxcParsedModule,
+  node: OxcNode,
+): string | undefined {
+  const description = commentsFor(module, node)
+    .map((comment) =>
+      comment
+        .split("\n")
+        .filter((line) => !line.trim().startsWith("@"))
+        .join("\n")
+        .trim(),
+    )
+    .find((comment) => comment.length > 0);
+  return description === undefined || description.length === 0
+    ? undefined
+    : description;
 }
 
 /** Whether a node carries the `@cmsSetting` JSDoc tag. */
-function hasCmsSettingTag(node: ts.Node): boolean {
-  return ts
-    .getJSDocCommentsAndTags(node)
-    .some(
-      (entry) =>
-        ts.isJSDoc(entry) &&
-        (entry.tags ?? []).some((tag) => tag.tagName.text === CMS_SETTING_TAG),
-    );
+function hasCmsSettingTag(module: OxcParsedModule, node: OxcNode): boolean {
+  return commentsFor(module, node).some((comment) =>
+    new RegExp(String.raw`^@${CMS_SETTING_TAG}(?:\s|$)`, "m").test(comment),
+  );
 }
 
 /** Read and normalize a string-valued JSDoc tag, ignoring empty annotations. */
 function jsDocumentTagValue(
-  node: ts.Node | undefined,
+  module: OxcParsedModule,
+  node: OxcNode | undefined,
   tagNames: readonly string[],
 ): string | undefined {
-  if (node === undefined) {
-    return undefined;
+  if (node === undefined) return undefined;
+  for (const comment of commentsFor(module, node)) {
+    for (const tagName of tagNames) {
+      const match = comment.match(
+        new RegExp(String.raw`^@${tagName}(?:\s*:\s*|\s+)(.+)$`, "m"),
+      );
+      if (match?.[1] !== undefined) return match[1].trim().replace(/^:\s*/, "");
+    }
   }
-  const tag = ts
-    .getJSDocTags(node)
-    .find((entry) => tagNames.includes(entry.tagName.text));
-  if (tag === undefined || tag.comment === undefined) {
-    return undefined;
-  }
-  const text =
-    typeof tag.comment === "string"
-      ? tag.comment
-      : ts.getTextOfJSDocComment(tag.comment);
-  const value = text.trim().replace(/^:\s*/, "");
-  return value.length > 0 ? value : undefined;
+  return undefined;
 }
 
 /** Extract optional component-level metadata from its function JSDoc. */
 function componentMetadata(
-  component: ts.FunctionDeclaration | undefined,
+  module: OxcParsedModule,
+  component: OxcNode | undefined,
 ): ContentComponentMetadata | undefined {
-  const icon = jsDocumentTagValue(component, [CMS_ICON_TAG]);
-  const color = jsDocumentTagValue(component, [CMS_COLOR_TAG, CMS_COLOUR_TAG]);
+  const icon = jsDocumentTagValue(module, component, [CMS_ICON_TAG]);
+  const color = jsDocumentTagValue(module, component, [
+    CMS_COLOR_TAG,
+    CMS_COLOUR_TAG,
+  ]);
   if (icon === undefined && color === undefined) {
     return undefined;
   }
@@ -114,136 +199,159 @@ function componentMetadata(
 
 /** The literal value of an expression, if it is a string/number/boolean literal. */
 function literalValue(
-  expression: ts.Expression,
+  expression: OxcNode | undefined,
 ): ContentDefaultValue | undefined {
-  if (ts.isStringLiteralLike(expression)) {
-    return expression.text;
-  }
-  if (ts.isNumericLiteral(expression)) {
-    return Number(expression.text);
-  }
-  if (expression.kind === ts.SyntaxKind.TrueKeyword) {
-    return true;
-  }
-  if (expression.kind === ts.SyntaxKind.FalseKeyword) {
-    return false;
-  }
+  const value = oxcLiteralValue(expression);
   if (
-    ts.isPrefixUnaryExpression(expression) &&
-    expression.operator === ts.SyntaxKind.MinusToken &&
-    ts.isNumericLiteral(expression.operand)
-  ) {
-    return -Number(expression.operand.text);
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  )
+    return value;
+  if (expression?.type === "UnaryExpression" && expression.operator === "-") {
+    const operand = literalValue(oxcObject(expression, "argument"));
+    return typeof operand === "number" ? -operand : undefined;
   }
   return undefined;
 }
 
 /** Extract each prop's default value from a component body (`?? lit` and `{ x = lit }`). */
 function extractDefaults(
-  component: ts.FunctionDeclaration,
+  component: OxcNode,
   propertiesParameterName: string,
 ): Map<string, ContentDefaultValue> {
   const defaults = new Map<string, ContentDefaultValue>();
-  const visit = (node: ts.Node): void => {
+  const visit = (node: OxcNode): void => {
     // `const { x = 'v' } = properties` destructuring defaults.
-    if (
-      ts.isVariableDeclaration(node) &&
-      ts.isObjectBindingPattern(node.name) &&
-      node.initializer !== undefined &&
-      ts.isIdentifier(node.initializer) &&
-      node.initializer.text === propertiesParameterName
-    ) {
-      for (const element of node.name.elements) {
-        if (
-          ts.isIdentifier(element.name) &&
-          element.initializer !== undefined
-        ) {
-          const value = literalValue(element.initializer);
-          if (value !== undefined && !defaults.has(element.name.text)) {
-            defaults.set(element.name.text, value);
-          }
+    if (node.type === "VariableDeclarator") {
+      const binding = oxcObject(node, "id");
+      const initializer = oxcObject(node, "init");
+      if (
+        binding?.type === "ObjectPattern" &&
+        oxcIdentifierName(initializer) === propertiesParameterName
+      ) {
+        for (const element of oxcArray(binding, "properties")) {
+          const key = oxcObject(element, "key");
+          const valueNode = oxcObject(element, "value");
+          const value =
+            valueNode === undefined
+              ? undefined
+              : literalValue(oxcObject(valueNode, "right"));
+          const property = oxcIdentifierName(key);
+          if (
+            property !== undefined &&
+            value !== undefined &&
+            !defaults.has(property)
+          )
+            defaults.set(property, value);
         }
       }
     }
 
     // `properties.x ?? 'v'` fallback defaults.
-    if (
-      ts.isBinaryExpression(node) &&
-      node.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken &&
-      ts.isPropertyAccessExpression(node.left) &&
-      ts.isIdentifier(node.left.expression) &&
-      node.left.expression.text === propertiesParameterName
-    ) {
-      const value = literalValue(node.right);
-      if (value !== undefined && !defaults.has(node.left.name.text)) {
-        defaults.set(node.left.name.text, value);
+    if (node.type === "LogicalExpression" && node.operator === "??") {
+      const left = oxcObject(node, "left");
+      const object =
+        left === undefined
+          ? undefined
+          : oxcIdentifierName(oxcObject(left, "object"));
+      const property =
+        left === undefined
+          ? undefined
+          : oxcIdentifierName(oxcObject(left, "property"));
+      const value = literalValue(oxcObject(node, "right"));
+      if (
+        object === propertiesParameterName &&
+        property !== undefined &&
+        value !== undefined &&
+        !defaults.has(property)
+      )
+        defaults.set(property, value);
+    }
+    for (const child of Object.values(node)) {
+      if (isOxcNode(child)) visit(child);
+      else if (Array.isArray(child)) {
+        for (const item of child) {
+          if (isOxcNode(item)) visit(item);
+        }
       }
     }
-
-    ts.forEachChild(node, visit);
   };
-  visit(component.body ?? component);
+  visit(oxcObject(component, "body") ?? component);
   return defaults;
 }
 
 /** Whether the component renders the default slot (`properties.children` or a nameless `<Slot/>`). */
 function usesDefaultSlot(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   propertiesParameterName: string,
 ): boolean {
   let found = false;
-  const visit = (node: ts.Node): void => {
+  const visit = (node: OxcNode): void => {
     if (found) {
       return;
     }
-    if (isSlotElement(node) && readSlotName(node) === undefined) {
+    if (isSlotNode(node) && readSlotName(node) === undefined) {
       found = true;
       return;
     }
     if (
-      ts.isPropertyAccessExpression(node) &&
-      ts.isIdentifier(node.expression) &&
-      node.expression.text === propertiesParameterName &&
-      node.name.text === "children"
+      node.type === "MemberExpression" &&
+      oxcIdentifierName(oxcObject(node, "object")) ===
+        propertiesParameterName &&
+      oxcIdentifierName(oxcObject(node, "property")) === "children"
     ) {
       found = true;
       return;
     }
-    ts.forEachChild(node, visit);
+    for (const child of Object.values(node)) {
+      if (isOxcNode(child)) visit(child);
+      else if (Array.isArray(child)) {
+        for (const item of child) {
+          if (isOxcNode(item)) visit(item);
+        }
+      }
+    }
   };
-  ts.forEachChild(sourceFile, visit);
+  visit(sourceFile.program);
   return found;
 }
 
 /** Every named `<Slot name="…" />` the component renders, in source order. */
-function namedSlots(sourceFile: ts.SourceFile): string[] {
+function namedSlots(sourceFile: OxcParsedModule): string[] {
   const names: string[] = [];
-  const visit = (node: ts.Node): void => {
-    if (isSlotElement(node)) {
+  const visit = (node: OxcNode): void => {
+    if (isSlotNode(node)) {
       const name = readSlotName(node);
       if (name !== undefined && !names.includes(name)) {
         names.push(name);
       }
     }
-    ts.forEachChild(node, visit);
+    for (const child of Object.values(node)) {
+      if (isOxcNode(child)) visit(child);
+      else if (Array.isArray(child)) {
+        for (const item of child) {
+          if (isOxcNode(item)) visit(item);
+        }
+      }
+    }
   };
-  ts.forEachChild(sourceFile, visit);
+  visit(sourceFile.program);
   return names;
 }
 
 /** The props parameter name of a component function (defaults to `properties`). */
-function propertiesParameterName(
-  component: ts.FunctionDeclaration | undefined,
-): string {
-  const parameter = component?.parameters[0];
-  return parameter !== undefined && ts.isIdentifier(parameter.name)
-    ? parameter.name.text
+function propertiesParameterName(component: OxcNode | undefined): string {
+  const parameter =
+    component === undefined ? undefined : oxcArray(component, "params")[0];
+  return parameter !== undefined && oxcIdentifierName(parameter) !== undefined
+    ? (oxcIdentifierName(parameter) as string)
     : "properties";
 }
 
 /** The verbatim source text of a node, without relying on parent pointers. */
-function nodeText(sourceFile: ts.SourceFile, node: ts.Node): string {
-  return sourceFile.text.slice(node.pos, node.end).trim();
+function nodeText(sourceFile: OxcParsedModule, node: OxcNode): string {
+  return oxcNodeText(sourceFile.source, node).trim();
 }
 
 /** A writable view of a readonly record, used while a field is being assembled. */
@@ -326,7 +434,7 @@ export function isInteractiveModule(
  * a hydrated runtime.
  */
 export function analyzeContentComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: ContentComponentNamesInput,
   semantic?: SemanticModule,
 ): ContentComponent {
@@ -343,26 +451,28 @@ export function analyzeContentComponent(
   let position = 0;
 
   if (resolved.propertiesType !== undefined) {
-    for (const statement of sourceFile.statements) {
+    for (const statement of oxcProgramBody(sourceFile.program)) {
+      const declaration =
+        statement.type === "ExportNamedDeclaration"
+          ? oxcObject(statement, "declaration")
+          : statement;
       if (
-        !ts.isInterfaceDeclaration(statement) ||
-        statement.name.text !== resolved.propertiesType
-      ) {
+        declaration?.type !== "TSInterfaceDeclaration" ||
+        oxcIdentifierName(oxcObject(declaration, "id")) !==
+          resolved.propertiesType
+      )
         continue;
-      }
-      for (const member of statement.members) {
-        if (
-          !ts.isPropertySignature(member) ||
-          !ts.isIdentifier(member.name) ||
-          member.type === undefined
-        ) {
-          continue;
-        }
-        const property = member.name.text;
+      const body = oxcObject(declaration, "body");
+      if (body === undefined) continue;
+      for (const member of oxcArray(body, "body")) {
+        if (member.type !== "TSPropertySignature") continue;
+        const property = oxcIdentifierName(oxcObject(member, "key"));
+        const type = oxcTypeNode(oxcObject(member, "typeAnnotation"));
+        if (property === undefined || type === undefined) continue;
         if (property === "children") {
           continue;
         }
-        const kind: ClassifiedFieldKind = classifyType(member.type, aliases);
+        const kind: ClassifiedFieldKind = classifyType(type, aliases);
         if (kind === undefined) {
           continue;
         }
@@ -371,12 +481,12 @@ export function analyzeContentComponent(
             property,
             kind,
             position,
-            nodeText(sourceFile, member.type),
-            jsDocumentDescription(member),
+            nodeText(sourceFile, type),
+            jsDocumentDescription(sourceFile, member),
             defaults.get(property),
-            member.questionToken === undefined,
-            hasCmsSettingTag(member),
-            jsDocumentTagValue(member, [CMS_TAB_TAG]),
+            member.optional !== true,
+            hasCmsSettingTag(sourceFile, member),
+            jsDocumentTagValue(sourceFile, member, [CMS_TAB_TAG]),
             kind.kind === "children" ? property : undefined,
           ),
         );
@@ -421,7 +531,7 @@ export function analyzeContentComponent(
     slots.push("default");
   }
 
-  const metadata = componentMetadata(component);
+  const metadata = componentMetadata(sourceFile, component);
   const analyzed: Mutable<ContentComponent> = {
     names: resolved,
     fields,

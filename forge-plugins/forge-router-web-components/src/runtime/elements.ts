@@ -173,6 +173,7 @@ export function registerRouterElements(options: RegisterRouterElementsOptions = 
   }
 }
 
+// eslint-disable-next-line unicorn/prefer-global-this -- Required for global HTMLElement tag-name augmentation.
 declare global {
   interface HTMLElementTagNameMap {
     'forge-router-link': MpRouterLinkElement;

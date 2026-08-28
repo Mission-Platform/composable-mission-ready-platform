@@ -1,12 +1,11 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { parseTsx, readNeutralImports, readStyleImports } from '../compiler/ast.js';
+import { readNeutralImports, readStyleImports } from '../compiler/ast.js';
 
 import type { ForgeGenerationContext } from '../compiler/generation-context.js';
 import type { ForgeFileGraph } from '../compiler/graph.js';
 import type { GeneratedModule } from '@mission-platform/forge-plugin-api';
-import type { SourceFile } from 'typescript';
 
 export function createHelperModuleCarrier(input: {
   /** Graphs for the public package entry and transformed component barrel. */
@@ -22,7 +21,7 @@ export function createHelperModuleCarrier(input: {
   readonly carriedHelpers: Set<string>;
   readonly pendingIndexSources: Set<string>;
   readonly helperExportedTypes: Map<string, Set<string>>;
-  readonly readExportedTypeNames: (parsed: SourceFile) => Set<string>;
+  readonly readExportedTypeNames: (fileName: string, source: string) => Set<string>;
 }): (sourcePath: string) => void {
   const {
     graphs,
@@ -77,8 +76,7 @@ export function createHelperModuleCarrier(input: {
 
     if (path.basename(sourcePath, path.extname(sourcePath)) === 'index') {
       const indexSource = readFileSync(sourcePath, 'utf8');
-      const indexParsed = parseTsx(sourcePath, indexSource);
-      helperExportedTypes.set('index', readExportedTypeNames(indexParsed));
+      helperExportedTypes.set('index', readExportedTypeNames(sourcePath, indexSource));
       const graph = graphForSource(sourcePath);
       for (const edge of (graph?.edges ?? []).filter(
         (candidate) => candidate.from === sourcePath && candidate.resolved && candidate.to !== undefined,
@@ -103,7 +101,6 @@ export function createHelperModuleCarrier(input: {
 
     const base = path.basename(sourcePath, path.extname(sourcePath));
     const source = readFileSync(sourcePath, 'utf8');
-    const parsed = parseTsx(sourcePath, source);
     const neutral = readNeutralImports(sourcePath, source);
     const usesNeutral = neutral.values.length > 0 || neutral.types.length > 0;
 
@@ -127,7 +124,7 @@ export function createHelperModuleCarrier(input: {
     // Record the helper's exported types so companion types declared there
     // resolve to it rather than dangling off a component module.
     if (!helperExportedTypes.has(base)) {
-      helperExportedTypes.set(base, readExportedTypeNames(parsed));
+      helperExportedTypes.set(base, readExportedTypeNames(sourcePath, source));
     }
 
     // Follow the helper's own relative (non-component) imports transitively.

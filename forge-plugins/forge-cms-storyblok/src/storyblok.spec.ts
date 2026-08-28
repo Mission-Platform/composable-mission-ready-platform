@@ -18,7 +18,7 @@ import {
   REQUIRED,
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
-import { parseTsx } from "@mission-platform/vite-plugin-forge/compiler/ast.js";
+import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 import { describe, expect, it } from "vitest";
 
 import { analyzeStoryblokComponent, emitStoryblokComponent } from "./fields.js";
@@ -32,7 +32,7 @@ import type {
 
 function analyze(source: string, names: ContentComponentNamesInput) {
   return analyzeStoryblokComponent(
-    parseTsx(`${names.folder}.tsx`, source),
+    parseOxcModule(`${names.folder}.tsx`, source),
     names,
   );
 }
@@ -43,7 +43,7 @@ function contentOf(
   names: ContentComponentNamesInput,
 ): ContentComponent {
   return analyzeContentComponent(
-    parseTsx(`${names.folder}.tsx`, source),
+    parseOxcModule(`${names.folder}.tsx`, source),
     names,
   );
 }
@@ -121,7 +121,7 @@ describe("the Storyblok name helpers", () => {
 
 describe("emitStoryblokComponent maps the props interface to a blok schema", () => {
   const badge = emitStoryblokComponent(
-    parseTsx("forge-badge.tsx", BADGE),
+    parseOxcModule("forge-badge.tsx", BADGE),
     badgeNames,
   );
 
@@ -161,7 +161,7 @@ describe("emitStoryblokComponent maps the props interface to a blok schema", () 
 describe("Storyblok component editor metadata", () => {
   it("prefers component annotations for icon and colour", () => {
     const component = emitStoryblokComponent(
-      parseTsx("forge-annotated-setting.tsx", ANNOTATED_SETTING),
+      parseOxcModule("forge-annotated-setting.tsx", ANNOTATED_SETTING),
       annotatedSettingNames,
     );
 
@@ -171,25 +171,28 @@ describe("Storyblok component editor metadata", () => {
 
   it("uses deterministic name-derived metadata when annotations are absent", () => {
     const component = emitStoryblokComponent(
-      parseTsx("forge-badge.tsx", BADGE),
+      parseOxcModule("forge-badge.tsx", BADGE),
       badgeNames,
     );
 
     expect(component.icon).toBe("block-icon-badge");
     expect(component.color).toBe("#648278");
     expect(component).toEqual(
-      emitStoryblokComponent(parseTsx("forge-badge.tsx", BADGE), badgeNames),
+      emitStoryblokComponent(
+        parseOxcModule("forge-badge.tsx", BADGE),
+        badgeNames,
+      ),
     );
   });
 });
 
 describe("emitStoryblokComponent handles primitives and drops callbacks", () => {
   const button = emitStoryblokComponent(
-    parseTsx("forge-button.tsx", BUTTON),
+    parseOxcModule("forge-button.tsx", BUTTON),
     buttonNames,
   );
   const grid = emitStoryblokComponent(
-    parseTsx("forge-grid.tsx", GRID),
+    parseOxcModule("forge-grid.tsx", GRID),
     gridNames,
   );
 
@@ -210,7 +213,7 @@ describe("emitStoryblokComponent handles primitives and drops callbacks", () => 
 
 describe("emitStoryblokComponent maps `MpChild` props to named-slot `bloks` fields", () => {
   const layout = emitStoryblokComponent(
-    parseTsx("forge-layout.tsx", LAYOUT),
+    parseOxcModule("forge-layout.tsx", LAYOUT),
     layoutNames,
   );
 
@@ -486,7 +489,7 @@ describe("emitBlokDataType derives a precise `blok` interface", () => {
 describe("Storyblok editor tabs", () => {
   it("emits grouped tabs while leaving unannotated fields at the schema root", () => {
     const analyzed = analyzeStoryblokComponent(
-      parseTsx("forge-tabbed.tsx", TABBED),
+      parseOxcModule("forge-tabbed.tsx", TABBED),
       tabbedNames,
     );
 
@@ -532,11 +535,11 @@ describe("Storyblok editor tabs", () => {
       "",
     );
     const withRoot = analyzeStoryblokComponent(
-      parseTsx("forge-tabbed.tsx", TABBED),
+      parseOxcModule("forge-tabbed.tsx", TABBED),
       tabbedNames,
     ).component.schema;
     const withoutRoot = analyzeStoryblokComponent(
-      parseTsx("forge-tabbed.tsx", withoutRootField),
+      parseOxcModule("forge-tabbed.tsx", withoutRootField),
       tabbedNames,
     ).component.schema;
 
@@ -573,7 +576,7 @@ describe("the Storyblok CMS target", () => {
     diagnostics: [],
   };
   const badge = analyzeStoryblokComponent(
-    parseTsx("forge-badge.tsx", BADGE),
+    parseOxcModule("forge-badge.tsx", BADGE),
     badgeNames,
   );
 

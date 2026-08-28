@@ -25,7 +25,7 @@
  *
  * Like {@link Slot} and {@link Teleport}, the marker is never invoked directly.
  */
-import { type MpComponent, type MpElementType, type MpPropertyBag } from './types';
+import type { MpComponent, MpElementType, MpPropertyBag } from './types';
 
 /**
  * The properties accepted by the {@link Dynamic} element.

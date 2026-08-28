@@ -1,11 +1,4 @@
-import {
-  analyzeContentComponent,
-  type CmsArtifact,
-  type CmsOutputPlugin,
-  type CmsTargetContext,
-  type ContentComponent,
-  type ContentComponentNamesInput,
-} from "@mission-platform/forge-cms-plugin-api";
+import { analyzeContentComponent } from "@mission-platform/forge-cms-plugin-api";
 import {
   BADGE,
   EMPTY,
@@ -18,13 +11,20 @@ import {
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
 import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
-import { parseTsx } from "@mission-platform/vite-plugin-forge/compiler/ast.js";
+import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 import { describe, expect, it } from "vitest";
 
 import { emitWebflowEntry } from "./entry.js";
-import { type WebflowManifest } from "./manifest.js";
 import { forgeWebflowCms } from "./webflow.js";
 
+import type { WebflowManifest } from "./manifest.js";
+import type {
+  CmsArtifact,
+  CmsOutputPlugin,
+  CmsTargetContext,
+  ContentComponent,
+  ContentComponentNamesInput,
+} from "@mission-platform/forge-cms-plugin-api";
 import type {
   CompilerDiagnostic,
   SemanticModule,
@@ -83,7 +83,7 @@ function contentOf(
   names: ContentComponentNamesInput,
 ): ContentComponent {
   return analyzeContentComponent(
-    parseTsx(`${names.folder}.tsx`, source),
+    parseOxcModule(`${names.folder}.tsx`, source),
     names,
   );
 }

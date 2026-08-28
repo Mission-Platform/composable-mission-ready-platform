@@ -38,7 +38,7 @@
  * top of that stack — so a neutral component tree resolves context identically
  * on both adapters, keeping the cross-framework SSR parity intact.
  */
-import { type MpChild, type MpComponent } from './types';
+import type { MpChild, MpComponent } from './types';
 
 /**
  * The property the runtime adapters use to recognise a context {@link MpContext.Provider}

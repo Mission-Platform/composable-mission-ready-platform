@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 
-
 import { createVueRouterCapabilities, toMpLocation, toVueLocation } from '../runtime';
 
 import { forgeRouterVue } from './forge-router-vue';

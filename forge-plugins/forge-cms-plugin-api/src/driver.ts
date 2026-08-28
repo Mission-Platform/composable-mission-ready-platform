@@ -24,7 +24,7 @@ import {
   analyzeForgeModule,
   buildForgeFileGraph,
   discoverComponentsFromGraph,
-  parseTsx,
+  parseOxcModule,
 } from "@mission-platform/vite-plugin-forge";
 
 import { analyzeContentComponent } from "./analyze.js";
@@ -212,7 +212,7 @@ export function generateCmsArtifacts(
     diagnostics.push(...(semantic.diagnostics ?? []));
 
     const component = analyzeContentComponent(
-      parseTsx(sourcePath, source),
+      parseOxcModule(sourcePath, source),
       {
         neutralName: discoveredComponent.neutralName,
         publicName: discoveredComponent.publicName,

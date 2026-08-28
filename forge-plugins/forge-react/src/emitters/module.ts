@@ -277,7 +277,9 @@ export function emitReactModule(
   let neutralReplaced = false;
   for (const entry of ast.imports) {
     if (entry.source === NEUTRAL_MODULE) {
-      imports.push(...reactImports);
+      if (!neutralReplaced) {
+        imports.push(...reactImports);
+      }
       neutralReplaced = true;
       continue;
     }

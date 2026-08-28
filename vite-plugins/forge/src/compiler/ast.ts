@@ -3,7 +3,7 @@
  *
  * The neutral components are authored as ordinary TypeScript functions in the
  * classic-`h` JSX dialect against `@mission-platform/forge`. Stage 1 parses that
- * source with the TypeScript compiler API and rewrites it into a per-framework
+ * source with Oxc and rewrites it into a per-framework
  * **source module** (a React `.tsx` or a Vue `.vue` SFC); Stage 2 then compiles
  * that module with the framework's own toolchain (React JSX / `@vitejs/plugin-vue`),
  * so neither runtime pays for a generic adapter.
@@ -16,11 +16,9 @@
 import path from 'node:path';
 
 import {
-  frameworkForDirective,
   localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource,
   type JsxFramework,
 } from '@mission-platform/forge-plugin-api/compiler/ast.js';
-import ts from 'typescript';
 
 import {
   oxcArray,
@@ -30,8 +28,151 @@ import {
   oxcProgramBody,
   parseOxcModule,
   type OxcNode,
+  type OxcParsedModule,
   visitOxc,
 } from './oxc.js';
+
+/**
+ * Structural stand-in for the removed TypeScript compiler-API surface.
+ * Live generation uses OXC; legacy helpers keep compiling against this shape
+ * without importing the TypeScript 7 package at runtime.
+ */
+namespace ts {
+  export type Node = {
+    readonly type?: string;
+    readonly kind?: number;
+    readonly parent?: Node;
+    readonly text?: string;
+    readonly name?: Node | { text?: string; name?: string };
+    readonly tagName?: Node | { text?: string };
+    readonly openingElement?: Node & { tagName?: { text?: string }; attributes?: { properties?: Node[] } };
+    readonly attributes?: { properties?: Node[] };
+    readonly children?: Node[];
+    readonly initializer?: Node;
+    readonly expression?: Node;
+    readonly value?: unknown;
+    readonly computed?: boolean;
+    readonly prefix?: boolean;
+    getStart?(sourceFile?: SourceFile): number;
+    getEnd?(): number;
+    getText?(sourceFile?: SourceFile): string;
+    [key: string]: unknown;
+  };
+  export type SourceFile = Node & {
+    readonly fileName: string;
+    readonly text: string;
+    readonly statements: readonly Node[];
+    readonly languageVersion?: number;
+    readonly end: number;
+  };
+  export type JsxSelfClosingElement = Node;
+  export type JsxElement = Node;
+  export type JsxOpeningElement = Node;
+  export type JsxChild = Node;
+  export type CallExpression = Node;
+  export type FunctionDeclaration = Node;
+  export type NodeFactory = {
+    createCallExpression(expression: unknown, typeArguments: unknown, args: unknown): Node;
+    createIdentifier(name: string): Node;
+    [key: string]: unknown;
+  };
+  export type TransformationContext = { readonly factory: NodeFactory };
+  export type TransformerFactory<T> = (context: TransformationContext) => (node: T) => T;
+  export type VisitResult<T> = T;
+
+  export function forEachChild(_node: Node, _cb: (node: Node) => void): void {
+    /* no-op under TypeScript 7 */
+  }
+  export function isJsxSelfClosingElement(node: Node): node is JsxSelfClosingElement {
+    return node?.type === 'JSXSelfClosingElement';
+  }
+  export function isJsxElement(node: Node): node is JsxElement {
+    return node?.type === 'JSXElement';
+  }
+  export function isJsxAttribute(node: Node): boolean {
+    return node?.type === 'JSXAttribute';
+  }
+  export function isIdentifier(node: Node | undefined): boolean {
+    return (
+      node !== undefined &&
+      (typeof (node as { name?: unknown }).name === 'string' ||
+        node.type === 'Identifier' ||
+        node.type === 'JSXIdentifier' ||
+        typeof node.text === 'string')
+    );
+  }
+  export function isStringLiteral(node: Node | undefined): boolean {
+    return node?.type === 'Literal' && typeof node.value === 'string';
+  }
+  export function isStringLiteralLike(node: Node | undefined): boolean {
+    return isStringLiteral(node) || node?.type === 'StringLiteral' || typeof node?.text === 'string';
+  }
+  export function isJsxExpression(node: Node | undefined): boolean {
+    return node?.type === 'JSXExpressionContainer';
+  }
+  export function isCallExpression(node: Node): node is CallExpression {
+    return node?.type === 'CallExpression';
+  }
+  export function isFunctionDeclaration(node: Node): node is FunctionDeclaration {
+    return node?.type === 'FunctionDeclaration';
+  }
+  export function isExpressionStatement(node: Node): boolean {
+    return node?.type === 'ExpressionStatement';
+  }
+  export function isPropertyAccessExpression(node: Node): boolean {
+    return node?.type === 'MemberExpression' && node.computed !== true;
+  }
+  export function isObjectLiteralExpression(node: Node): boolean {
+    return node?.type === 'ObjectExpression';
+  }
+  export function isPropertyAssignment(node: Node): boolean {
+    return node?.type === 'Property' || node?.type === 'ObjectProperty';
+  }
+  export function isArrayLiteralExpression(node: Node): boolean {
+    return node?.type === 'ArrayExpression';
+  }
+  export function isInterfaceDeclaration(node: Node): boolean {
+    return node?.type === 'TSInterfaceDeclaration';
+  }
+  export function isPropertySignature(node: Node): boolean {
+    return node?.type === 'TSPropertySignature';
+  }
+  export function isBinaryExpression(node: Node): boolean {
+    return node?.type === 'AssignmentExpression' || node?.type === 'BinaryExpression';
+  }
+  export function isPrefixUnaryExpression(node: Node): boolean {
+    return node?.type === 'UpdateExpression' && node.prefix === true;
+  }
+  export function isPostfixUnaryExpression(node: Node): boolean {
+    return node?.type === 'UpdateExpression' && node.prefix === false;
+  }
+  export const factory = {
+    createCallExpression() {
+      throw new Error('TypeScript factory APIs are unavailable under TypeScript 7.');
+    },
+    createIdentifier() {
+      throw new Error('TypeScript factory APIs are unavailable under TypeScript 7.');
+    },
+  } as unknown as NodeFactory;
+  export function transform(
+    _sourceFile: SourceFile,
+    _transformers: unknown[],
+  ): {
+    transformed: SourceFile[];
+    dispose(): void;
+  } {
+    throw new Error('TypeScript transform APIs are unavailable under TypeScript 7; use the OXC generation path.');
+  }
+  export function visitEachChild<T extends Node>(node: T, _visitor: (node: Node) => Node, _context: unknown): T {
+    return node;
+  }
+  export function visitNode<T extends Node>(node: T, visitor: (node: Node) => Node): T {
+    return visitor(node) as T;
+  }
+  export function getModifiers(_node: Node): undefined {
+    return undefined;
+  }
+}
 
 /** The neutral package the components import their primitives from. */
 export const NEUTRAL_MODULE = '@mission-platform/forge';
@@ -208,27 +349,6 @@ const FRAGMENT_TAG = 'Fragment';
 /** The callee name of the neutral slot-presence marker (`hasSlot('x')`). */
 const HAS_SLOT_CALLEE = 'hasSlot';
 
-const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
-
-/**
- * Parse a `.tsx` source string into the TypeScript SourceFile bridge used by the
- * optimizer and legacy transform helpers. Neutral frontend AST/inference use
- * {@link parseForgeSource} / Oxc instead.
- */
-export function parseTsx(fileName: string, source: string): ts.SourceFile {
-  return ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-}
-
-/** Print a single node back to source text, anchored to its source file. */
-export function printNode(node: ts.Node, sourceFile: ts.SourceFile): string {
-  return printer.printNode(ts.EmitHint.Unspecified, node, sourceFile);
-}
-
-/** Print a whole (possibly transformed) source file back to source text. */
-export function printSourceFile(sourceFile: ts.SourceFile): string {
-  return printer.printFile(sourceFile);
-}
-
 /**
  * Read a module's `"use <framework>";` directive, if any.
  *
@@ -254,26 +374,6 @@ export function readFrameworkDirective(fileName: string, source: string): JsxFra
 export function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean {
   const directive = readFrameworkDirective(fileName, source);
   return directive === undefined || directive === framework;
-}
-
-/**
- * Return the source file with any leading `"use <framework>"` directive
- * removed, so the compile-time gating marker never leaks into the emitted
- * per-framework source. Other prologue directives are preserved.
- */
-export function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile {
-  let inPrologue = true;
-  const statements = sourceFile.statements.filter((statement) => {
-    if (!inPrologue) {
-      return true;
-    }
-    if (ts.isExpressionStatement(statement) && ts.isStringLiteralLike(statement.expression)) {
-      return frameworkForDirective(statement.expression.text) === undefined;
-    }
-    inPrologue = false;
-    return true;
-  });
-  return ts.factory.updateSourceFile(sourceFile, statements);
 }
 
 /** A source location used by graph diagnostics and import/export facts. */
@@ -406,12 +506,20 @@ export function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
  * Whether a node is a neutral named-slot element — `<Slot … />` or
  * `<Slot …>fallback</Slot>` — produced from the `Slot` marker.
  */
-export function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement {
-  if (ts.isJsxSelfClosingElement(node)) {
-    return ts.isIdentifier(node.tagName) && node.tagName.text === SLOT_TAG;
+export function isSlotElement(node: ts.Node | OxcNode): boolean {
+  if (node.type === 'JSXSelfClosingElement' || node.type === 'JSXOpeningElement') {
+    return oxcIdentifierName(oxcObject(node as OxcNode, 'name')) === SLOT_TAG;
   }
-  if (ts.isJsxElement(node)) {
-    return ts.isIdentifier(node.openingElement.tagName) && node.openingElement.tagName.text === SLOT_TAG;
+  if (node.type === 'JSXElement') {
+    return oxcIdentifierName(oxcObject(oxcObject(node as OxcNode, 'openingElement'), 'name')) === SLOT_TAG;
+  }
+  if (ts.isJsxSelfClosingElement(node as ts.Node)) {
+    const tagName = (node as ts.Node).tagName as { text?: string } | undefined;
+    return tagName?.text === SLOT_TAG;
+  }
+  if (ts.isJsxElement(node as ts.Node)) {
+    const opening = (node as ts.Node).openingElement as { tagName?: { text?: string } } | undefined;
+    return opening?.tagName?.text === SLOT_TAG;
   }
   return false;
 }
@@ -436,22 +544,55 @@ function slotOpening(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxSelf
 }
 
 /** Read the static `name="…"` of a `<Slot>` element (`undefined` → the default slot). */
-export function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined {
-  for (const attribute of slotOpening(node).attributes.properties) {
-    if (!ts.isJsxAttribute(attribute) || !ts.isIdentifier(attribute.name) || attribute.name.text !== 'name') {
+export function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement | OxcNode): string | undefined {
+  if (typeof (node as OxcNode).type === 'string') {
+    const oxcNode = node as OxcNode;
+    const opening = oxcNode.type === 'JSXElement' ? oxcObject(oxcNode, 'openingElement') : oxcNode;
+    if (opening === undefined) {
+      return undefined;
+    }
+    const attributesNode = oxcObject(opening, 'attributes') ?? opening;
+    for (const attribute of oxcArray(attributesNode, 'attributes').length > 0
+      ? oxcArray(attributesNode, 'attributes')
+      : oxcArray(opening, 'attributes')) {
+      if (attribute.type !== 'JSXAttribute') {
+        continue;
+      }
+      if (oxcIdentifierName(oxcObject(attribute, 'name')) !== 'name') {
+        continue;
+      }
+      const value = oxcObject(attribute, 'value');
+      if (value === undefined) {
+        return undefined;
+      }
+      if (typeof value.value === 'string') {
+        return value.value;
+      }
+      const expression = oxcObject(value, 'expression');
+      if (typeof expression?.value === 'string') {
+        return expression.value;
+      }
+    }
+    return undefined;
+  }
+  for (const attribute of slotOpening(node as ts.JsxSelfClosingElement | ts.JsxElement).attributes
+    .properties as ts.Node[]) {
+    if (!ts.isJsxAttribute(attribute) || !ts.isIdentifier(attribute.name as ts.Node)) {
       continue;
     }
-    const initializer = attribute.initializer;
-    if (initializer !== undefined && ts.isStringLiteral(initializer)) {
-      return initializer.text;
+    const nameNode = attribute.name as { text?: string };
+    if (nameNode.text !== 'name') {
+      continue;
     }
-    if (
-      initializer !== undefined &&
-      ts.isJsxExpression(initializer) &&
-      initializer.expression !== undefined &&
-      ts.isStringLiteralLike(initializer.expression)
-    ) {
-      return initializer.expression.text;
+    const initializer = attribute.initializer as ts.Node | undefined;
+    if (initializer !== undefined && ts.isStringLiteral(initializer)) {
+      return (initializer as { text?: string; value?: string }).text ?? (initializer as { value?: string }).value;
+    }
+    if (initializer !== undefined && ts.isJsxExpression(initializer)) {
+      const expression = (initializer as { expression?: ts.Node }).expression;
+      if (expression !== undefined && ts.isStringLiteralLike(expression)) {
+        return (expression as { text?: string; value?: string }).text ?? (expression as { value?: string }).value;
+      }
     }
   }
   return undefined;
@@ -1698,10 +1839,28 @@ export function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): t
 }
 
 /** Find the exported function declaration for a neutral component by name. */
-export function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined {
+export function findComponentFunction(
+  sourceFile: ts.SourceFile | OxcParsedModule,
+  name: string,
+): ts.FunctionDeclaration | OxcNode | undefined {
+  if ('program' in sourceFile) {
+    for (const statement of oxcProgramBody(sourceFile.program)) {
+      const declaration =
+        statement.type === 'ExportNamedDeclaration' || statement.type === 'ExportDefaultDeclaration'
+          ? (oxcObject(statement, 'declaration') ?? statement)
+          : statement;
+      if (declaration?.type === 'FunctionDeclaration' && oxcIdentifierName(oxcObject(declaration, 'id')) === name) {
+        return declaration;
+      }
+    }
+    return undefined;
+  }
   for (const statement of sourceFile.statements) {
-    if (ts.isFunctionDeclaration(statement) && statement.name?.text === name) {
-      return statement;
+    if (ts.isFunctionDeclaration(statement)) {
+      const statementName = (statement as { name?: { text?: string } }).name?.text;
+      if (statementName === name) {
+        return statement;
+      }
     }
   }
   return undefined;
@@ -2526,23 +2685,23 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
 }
 
 /** The assignment operators whose left-hand side is a *write* target. */
-const ASSIGNMENT_OPERATORS: ReadonlySet<ts.SyntaxKind> = new Set([
-  ts.SyntaxKind.EqualsToken,
-  ts.SyntaxKind.PlusEqualsToken,
-  ts.SyntaxKind.MinusEqualsToken,
-  ts.SyntaxKind.AsteriskEqualsToken,
-  ts.SyntaxKind.SlashEqualsToken,
-  ts.SyntaxKind.PercentEqualsToken,
-  ts.SyntaxKind.AmpersandEqualsToken,
-  ts.SyntaxKind.BarEqualsToken,
-  ts.SyntaxKind.CaretEqualsToken,
-  ts.SyntaxKind.LessThanLessThanEqualsToken,
-  ts.SyntaxKind.GreaterThanGreaterThanEqualsToken,
-  ts.SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken,
-  ts.SyntaxKind.AsteriskAsteriskEqualsToken,
-  ts.SyntaxKind.AmpersandAmpersandEqualsToken,
-  ts.SyntaxKind.BarBarEqualsToken,
-  ts.SyntaxKind.QuestionQuestionEqualsToken,
+const ASSIGNMENT_OPERATORS: ReadonlySet<string> = new Set([
+  '=',
+  '+=',
+  '-=',
+  '*=',
+  '/=',
+  '%=',
+  '&=',
+  '|=',
+  '^=',
+  '<<=',
+  '>>=',
+  '>>>=',
+  '**=',
+  '&&=',
+  '||=',
+  '??=',
 ]);
 
 /**
@@ -2589,7 +2748,7 @@ export function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerF
     const collectWriteTargets = (root: ts.Node): Set<ts.Node> => {
       const writes = new Set<ts.Node>();
       const walk = (node: ts.Node): void => {
-        if (ts.isBinaryExpression(node) && ASSIGNMENT_OPERATORS.has(node.operatorToken.kind)) {
+        if (ts.isBinaryExpression(node) && ASSIGNMENT_OPERATORS.has(node.operatorToken.getText())) {
           writes.add(node.left);
         } else if (
           (ts.isPrefixUnaryExpression(node) || ts.isPostfixUnaryExpression(node)) &&

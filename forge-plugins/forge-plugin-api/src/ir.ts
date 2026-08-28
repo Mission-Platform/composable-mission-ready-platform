@@ -176,7 +176,6 @@ export interface GenericModuleAst {
 }
 
 /** A neutral prop declaration inferred from a component signature or props type. */
-// eslint-disable-next-line unicorn/prevent-abbreviations -- PropIntention is established compiler terminology.
 export interface PropIntention {
   readonly name: string;
   readonly optional: boolean;
@@ -199,7 +198,6 @@ export interface StateIntention {
 }
 
 /** A ref intention independent of the target's ref representation. */
-// eslint-disable-next-line unicorn/prevent-abbreviations -- RefIntention is established compiler terminology.
 export interface RefIntention {
   readonly name: string;
   readonly elementType?: SourceBackedExpression;

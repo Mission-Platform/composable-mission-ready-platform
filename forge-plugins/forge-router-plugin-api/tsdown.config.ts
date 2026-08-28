@@ -1,10 +1,12 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from "node:fs";
+import path from "node:path";
 
-import { defineConfig } from 'tsdown';
+import { defineConfig } from "tsdown";
 
 const rootDirectory = import.meta.dirname;
-const package_ = JSON.parse(fs.readFileSync(path.join(rootDirectory, 'package.json'), 'utf8')) as {
+const package_ = JSON.parse(
+  fs.readFileSync(path.join(rootDirectory, "package.json"), "utf8"),
+) as {
   dependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
@@ -16,17 +18,19 @@ const externalNames = [
 ];
 
 export default defineConfig({
-  entry: [path.resolve(rootDirectory, 'src/index.ts')],
-  format: ['esm'],
-  platform: 'node',
+  entry: [path.resolve(rootDirectory, "src/index.ts")],
+  format: ["esm"],
+  platform: "node",
   dts: { build: true },
-  tsconfig: path.resolve(rootDirectory, 'tsconfig.build.json'),
+  tsconfig: path.resolve(rootDirectory, "tsconfig.build.json"),
   clean: true,
   sourcemap: true,
   fixedExtension: false,
-  outDir: path.resolve(rootDirectory, 'dist'),
+  outDir: path.resolve(rootDirectory, "dist"),
   unbundle: true,
   deps: {
-    neverBundle: (id) => externalNames.includes(id) || externalNames.some((name) => id.startsWith(`${name}/`)),
+    neverBundle: (id) =>
+      externalNames.includes(id) ||
+      externalNames.some((name) => id.startsWith(`${name}/`)),
   },
 });

@@ -1,1 +1,1 @@
-export { default } from '@mission-platform/eslint-config';
+export { default } from "@mission-platform/eslint-config";

@@ -1,4 +1,4 @@
-import { type MpChild, type MpElement, type MpElementType, type MpPropertyBag } from './types';
+import type { MpChild, MpElement, MpElementType, MpPropertyBag } from './types';
 
 export { Fragment } from './types';
 

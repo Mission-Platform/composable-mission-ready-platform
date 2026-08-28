@@ -28,7 +28,7 @@
  * it by identity (`type === Teleport`) and the compiler consumes the import, so
  * calling it directly is a bug.
  */
-import { type MpChild, type MpComponent } from './types';
+import type { MpChild, MpComponent } from './types';
 
 /** The properties accepted by the {@link Teleport} element. */
 export interface MpTeleportProperties {

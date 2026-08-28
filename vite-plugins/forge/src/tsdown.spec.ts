@@ -242,14 +242,8 @@ describe('Forge tsdown component helpers', () => {
 
     for (const config of [components, sprite]) {
       expect(config.dts).toMatchObject({
-        build: true,
-        newContext: true,
-        incremental: false,
-        compilerOptions: {
-          declarationDir: path.resolve(stageRoot, 'dist'),
-          incremental: false,
-          tsBuildInfoFile: path.join(stageRoot, 'tsconfig.build.tsbuildinfo'),
-        },
+        build: false,
+        generator: 'oxc',
       });
     }
 

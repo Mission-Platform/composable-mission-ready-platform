@@ -6,7 +6,7 @@
  * with no runtime adapter:
  *
  * 1. **Stage 1 — source-to-source.** {@link generateFrameworkSources} parses the
- *    neutral `.tsx` modules with the TypeScript compiler API and emits a
+ *    neutral `.tsx` modules with Oxc and emits a
  *    per-framework source tree: a React `.tsx` module (`class` → `className`,
  *    `h` → `React.createElement`) or a real Vue `.vue` single-file component
  *    (`<script setup>` with native `<template>` markup where the body allows it,
@@ -108,7 +108,8 @@ export {
   throwOnCompilerErrors,
 } from '@mission-platform/forge-plugin-api';
 
-export { findComponentFunction, isSlotElement, parseTsx, readSlotName } from './compiler/ast.js';
+export { findComponentFunction, isSlotElement, readSlotName } from './compiler/ast.js';
+export { parseOxcModule, type OxcComment, type OxcNode, type OxcParsedModule } from './compiler/oxc.js';
 export {
   discoverComponentsFromGraph,
   discoverComponents,

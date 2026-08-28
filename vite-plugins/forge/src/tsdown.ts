@@ -1,5 +1,5 @@
+import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
-import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import { defineTsdownLibrary, resolveTsdownOutputDirectory } from '@mission-platform/tsdown-config';
@@ -11,12 +11,7 @@ import {
 } from './build-integration.js';
 import { createForgeCompilerService, type ForgeCompilerService } from './compiler/service.js';
 import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
-import {
-  generateFrameworkSources,
-  jsxComponentsCssImportPlugin,
-  jsxComponentsDtsPlugin,
-  jsxComponentsEntryDtsPlugin,
-} from './generate.js';
+import { generateFrameworkSources, jsxComponentsCssImportPlugin, jsxComponentsEntryDtsPlugin } from './generate.js';
 
 import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
@@ -32,6 +27,28 @@ function flattenPlugins(plugins: UserConfig['plugins']): TsdownPlugin[] {
   }
   // Promises are resolved by tsdown itself — keep them as opaque plugin slots.
   return [plugins as TsdownPlugin];
+}
+
+function removeGeneratedDirectoryPlugin(generatedDirectory: string): TsdownPlugin {
+  return {
+    name: '@mission-platform/vite-plugin-forge:remove-generated-directory',
+    closeBundle() {
+      fs.rmSync(generatedDirectory, { recursive: true, force: true });
+    },
+  } as TsdownPlugin;
+}
+
+function removeCachedCompilerArtifacts(rootDir: string): void {
+  const cacheRoot = path.join(rootDir, 'node_modules/.cache');
+  if (!fs.existsSync(cacheRoot)) return;
+  const walk = (directory: string): void => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const fullPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) walk(fullPath);
+      else if (entry.name.endsWith('.d.ts') || entry.name.endsWith('.js')) fs.rmSync(fullPath, { force: true });
+    }
+  };
+  walk(cacheRoot);
 }
 
 /** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
@@ -133,7 +150,8 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
   const service = options.service ?? createForgeCompilerService();
   const framework = plugin.id as JsxFramework;
   const resolvedEntry = entryModule ?? path.resolve(rootDir, 'src/index.ts');
-  const cacheName = `${path.basename(rootDir)}-${framework}`;
+  const cacheName = `${path.basename(rootDir)}-${framework}-${randomUUID()}`;
+  removeCachedCompilerArtifacts(rootDir);
   const generatedDirectory = path.join(rootDir, 'node_modules/.cache', cacheName);
   const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
   const outDir = resolveTsdownOutputDirectory(rootDir, finalOutDir, outputRoot);
@@ -397,7 +415,7 @@ function defineTsdownForgeComponent(
     (argument) => argument === '--watch' || argument === '-w' || argument.startsWith('--watch='),
   );
 
-  const cacheName = `${path.basename(rootDir)}-${framework}`;
+  const cacheName = `${path.basename(rootDir)}-${framework}-${randomUUID()}`;
   const generatedDirectory = path.join(rootDir, 'node_modules/.cache', cacheName);
 
   const resolvedComponentsModule =
@@ -439,37 +457,19 @@ function defineTsdownForgeComponent(
     outputDirectory: resolveTsdownOutputDirectory(rootDir, path.resolve(rootDir, `dist/${framework}`), outputRoot),
   }) ?? []) as TsdownPlugin[];
 
-  // vue-tsc is resolved from `@mission-platform/forge` the same way the Vite helper does.
-  let vueTscBin: string | undefined;
-  try {
-    vueTscBin = createRequire(path.join(rootDir, 'package.json')).resolve('vue-tsc/bin/vue-tsc.js', {
-      paths: [path.join(rootDir, 'node_modules/@mission-platform/forge')],
-    });
-  } catch {
-    vueTscBin = undefined;
-  }
-
-  const dtsPlugin =
-    useEntryDts || declarationModule
-      ? jsxComponentsEntryDtsPlugin({
-          framework,
-          componentsModule: resolvedComponentsModule,
-          publicEntryModule: resolvedPublicEntryModule,
-          sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
-          declarationFileName: 'index',
-          declarationModule: declarationModule ?? '../components',
-          // Keep the neutral `Forge` prefix on the public API (do not strip it).
-          stripPrefix: '',
-        })
-      : jsxComponentsDtsPlugin({
-          framework,
-          generatedDir: generatedDirectory,
-          outDir: resolveTsdownOutputDirectory(rootDir, path.resolve(rootDir, `dist/${framework}`), outputRoot),
-          vueTscBin,
-          componentsModule: resolvedComponentsModule,
-          publicEntryModule: resolvedPublicEntryModule,
-          sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
-        });
+  // All framework targets use synthesized declarations. This avoids invoking
+  // the TypeScript 7 project builder against generated source trees and keeps
+  // every emitted declaration in the package's configured dist directory.
+  const dtsPlugin = jsxComponentsEntryDtsPlugin({
+    framework,
+    componentsModule: resolvedComponentsModule,
+    publicEntryModule: resolvedPublicEntryModule,
+    sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
+    declarationFileName: 'index',
+    declarationModule: declarationModule ?? '../components',
+    // Keep the neutral `Forge` prefix on the public API (do not strip it).
+    stripPrefix: '',
+  });
 
   const frameworkExternals = plugin.runtimeExternals ?? [];
   const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
@@ -498,6 +498,7 @@ function defineTsdownForgeComponent(
         ...stagePlugins,
         jsxComponentsCssImportPlugin() as TsdownPlugin,
         dtsPlugin as TsdownPlugin,
+        removeGeneratedDirectoryPlugin(generatedDirectory),
       ],
     },
   });
@@ -548,7 +549,6 @@ export function defineTsdownForgeEmailComponents(options: TsdownForgeEmailCompon
     entry: { index: resolvedComponentsModule },
     external,
     outputRoot,
-    dts: true,
     clean: false,
     overrides: {
       outDir: path.resolve(rootDir, 'dist/email'),

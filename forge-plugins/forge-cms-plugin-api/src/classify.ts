@@ -11,12 +11,15 @@
  * This is the single classification implementation in the repository — a fix to
  * union, alias, or marker handling benefits every target at once.
  */
-import ts from "typescript";
-
 import type { ContentFieldKind } from "./content-model.js";
+import type {
+  OxcNode,
+  OxcParsedModule,
+} from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 
 /** The result of classifying a prop (`undefined` → drop the prop). */
 export type ClassifiedFieldKind = ContentFieldKind | undefined;
+export type CmsTypeNode = OxcNode;
 
 /** Type references whose props are treated as nested content (`children`). */
 export const SLOT_TYPE_REFERENCES: ReadonlySet<string> = new Set([
@@ -48,32 +51,67 @@ export const LINK_TYPE_REFERENCES: ReadonlySet<string> = new Set([
 
 /** Map every top-level `type X = …` alias to its type node, for union resolution. */
 export function collectTypeAliases(
-  sourceFile: ts.SourceFile,
-): Map<string, ts.TypeNode> {
-  const aliases = new Map<string, ts.TypeNode>();
-  for (const statement of sourceFile.statements) {
-    if (ts.isTypeAliasDeclaration(statement)) {
-      aliases.set(statement.name.text, statement.type);
+  sourceFile: OxcParsedModule,
+): Map<string, CmsTypeNode> {
+  const aliases = new Map<string, CmsTypeNode>();
+  for (const statement of oxcProgramBody(sourceFile.program)) {
+    const declaration =
+      statement.type === "ExportNamedDeclaration"
+        ? oxcObject(statement, "declaration")
+        : statement;
+    if (declaration?.type === "TSTypeAliasDeclaration") {
+      const name = oxcIdentifierName(oxcObject(declaration, "id"));
+      const type = oxcObject(declaration, "typeAnnotation");
+      if (name !== undefined && type !== undefined) aliases.set(name, type);
     }
   }
   return aliases;
 }
 
 /** The string value of a string-literal type node, if it is one. */
-function stringLiteralOf(node: ts.TypeNode): string | undefined {
-  if (ts.isLiteralTypeNode(node) && ts.isStringLiteral(node.literal)) {
-    return node.literal.text;
-  }
-  return undefined;
+function oxcObject(
+  node: OxcNode | undefined,
+  key: string,
+): OxcNode | undefined {
+  const value = node?.[key];
+  return typeof value === "object" &&
+    value !== null &&
+    typeof (value as { type?: unknown }).type === "string"
+    ? (value as OxcNode)
+    : undefined;
+}
+
+function oxcArray(node: OxcNode | undefined, key: string): OxcNode[] {
+  const value = node?.[key];
+  return Array.isArray(value)
+    ? value.filter(
+        (entry): entry is OxcNode =>
+          typeof entry === "object" &&
+          entry !== null &&
+          typeof (entry as { type?: unknown }).type === "string",
+      )
+    : [];
+}
+
+function oxcIdentifierName(node: OxcNode | undefined): string | undefined {
+  return typeof node?.name === "string" ? node.name : undefined;
+}
+
+function oxcProgramBody(program: OxcNode): OxcNode[] {
+  return oxcArray(program, "body");
+}
+
+function stringLiteralOf(node: CmsTypeNode): string | undefined {
+  if (node.type !== "TSLiteralType") return undefined;
+  const literal = oxcObject(node, "literal");
+  return typeof literal?.value === "string" ? literal.value : undefined;
 }
 
 /** Whether a type node is a `true`/`false` literal. */
-function isBooleanLiteral(node: ts.TypeNode): boolean {
-  return (
-    ts.isLiteralTypeNode(node) &&
-    (node.literal.kind === ts.SyntaxKind.TrueKeyword ||
-      node.literal.kind === ts.SyntaxKind.FalseKeyword)
-  );
+function isBooleanLiteral(node: CmsTypeNode): boolean {
+  if (node.type !== "TSLiteralType") return false;
+  const literal = oxcObject(node, "literal");
+  return literal?.type === "Literal" && typeof literal.value === "boolean";
 }
 
 /** The marker kind a named type reference declares, when it declares one. */
@@ -95,21 +133,23 @@ function markerKind(name: string): ClassifiedFieldKind {
 
 /** Classify a prop's type node into a neutral content kind, resolving local aliases/unions. */
 export function classifyType(
-  node: ts.TypeNode,
-  aliases: Map<string, ts.TypeNode>,
+  node: CmsTypeNode,
+  aliases: Map<string, CmsTypeNode>,
   seen: Set<string> = new Set(),
 ): ClassifiedFieldKind {
-  if (ts.isParenthesizedTypeNode(node)) {
-    return classifyType(node.type, aliases, seen);
+  if (node.type === "TSParenthesizedType") {
+    const inner = oxcObject(node, "typeAnnotation");
+    return inner === undefined ? undefined : classifyType(inner, aliases, seen);
   }
 
   // Callback props are behaviour, not authorable content — drop them.
-  if (ts.isFunctionTypeNode(node)) {
+  if (node.type === "TSFunctionType") {
     return undefined;
   }
 
-  if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
-    const name = node.typeName.text;
+  if (node.type === "TSTypeReference") {
+    const name = oxcIdentifierName(oxcObject(node, "typeName"));
+    if (name === undefined) return undefined;
     const marker = markerKind(name);
     if (marker !== undefined) {
       return marker;
@@ -121,14 +161,14 @@ export function classifyType(
     return undefined;
   }
 
-  switch (node.kind) {
-    case ts.SyntaxKind.BooleanKeyword: {
+  switch (node.type) {
+    case "TSBooleanKeyword": {
       return { kind: "boolean" };
     }
-    case ts.SyntaxKind.NumberKeyword: {
+    case "TSNumberKeyword": {
       return { kind: "number" };
     }
-    case ts.SyntaxKind.StringKeyword: {
+    case "TSStringKeyword": {
       return { kind: "text" };
     }
     default: {
@@ -144,22 +184,19 @@ export function classifyType(
     return { kind: "boolean" };
   }
 
-  if (ts.isUnionTypeNode(node)) {
+  if (node.type === "TSUnionType") {
     const options: string[] = [];
     let hasText = false;
     let hasNumber = false;
     let booleanOnly = true;
-    for (const member of node.types) {
+    for (const member of oxcArray(node, "types")) {
       const value = stringLiteralOf(member);
       if (value !== undefined) {
         options.push(value);
         booleanOnly = false;
         continue;
       }
-      if (
-        isBooleanLiteral(member) ||
-        member.kind === ts.SyntaxKind.BooleanKeyword
-      ) {
+      if (isBooleanLiteral(member) || member.type === "TSBooleanKeyword") {
         continue;
       }
       booleanOnly = false;

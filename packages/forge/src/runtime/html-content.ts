@@ -5,7 +5,7 @@
  * child markup by each target adapter. Callers are responsible for ensuring
  * that the value is trusted or sanitized before passing it here.
  */
-import { type MpComponent, type MpPropertyBag } from './types';
+import type { MpComponent, MpPropertyBag } from './types';
 
 /**
  * Properties accepted by the {@link HtmlContent} primitive.

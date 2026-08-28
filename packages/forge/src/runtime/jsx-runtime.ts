@@ -1,12 +1,6 @@
 import { h } from './h';
-import {
-  
-  type MpChild,
-  type MpElement,
-  type MpElementType,
-  type MpPropertyBag,
-  type MpReservedProperties,
-} from './types';
+
+import type { MpChild, MpElement, MpElementType, MpPropertyBag, MpReservedProperties } from './types';
 
 /**
  * Automatic JSX runtime entry point for Oxc and TypeScript. It keeps the
@@ -33,8 +27,6 @@ export function jsxDEV(
   return jsx(type, properties, key);
 }
 
-
-
 /** JSX types used when TypeScript is configured with this automatic runtime. */
 export namespace JSX {
   export type Element = MpElement;
@@ -51,4 +43,4 @@ export namespace JSX {
   }
 }
 
-export {Fragment} from './types';
+export { Fragment } from './types';

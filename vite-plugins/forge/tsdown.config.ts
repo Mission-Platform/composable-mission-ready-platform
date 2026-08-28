@@ -15,7 +15,7 @@ const externalNames = [
 ];
 
 export default defineConfig({
-  entry: [path.resolve(rootDirectory, 'src/index.ts')],
+  entry: [path.resolve(rootDirectory, 'src/index.ts'), path.resolve(rootDirectory, 'src/compiler/oxc.ts')],
   format: ['esm'],
   platform: 'node',
   dts: { build: true },

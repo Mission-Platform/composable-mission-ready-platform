@@ -17,7 +17,7 @@ import {
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
 import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
-import { parseTsx } from "@mission-platform/vite-plugin-forge/compiler/ast.js";
+import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 import { describe, expect, it } from "vitest";
 
 import { forgeAstroCms } from "./astro.js";
@@ -46,7 +46,7 @@ function contentOf(
   ir: SemanticModule,
 ): ContentComponent {
   return analyzeContentComponent(
-    parseTsx(`${names.folder}.tsx`, source),
+    parseOxcModule(`${names.folder}.tsx`, source),
     names,
     ir,
   );

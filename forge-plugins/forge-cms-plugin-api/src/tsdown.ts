@@ -215,6 +215,15 @@ function cmsAssetsTsdownPlugin(
   } as TsdownPlugin;
 }
 
+function cmsCleanupTsdownPlugin(cacheDirectory: string): TsdownPlugin {
+  return {
+    name: "mission-platform:cms-cache-cleanup",
+    closeBundle() {
+      fs.rmSync(cacheDirectory, { recursive: true, force: true });
+    },
+  } as TsdownPlugin;
+}
+
 /** Create a tsdown config for one CMS target. */
 export function defineTsdownForgeCms(
   options: TsdownForgeCmsOptions,
@@ -294,6 +303,7 @@ export function defineTsdownForgeCms(
           generated.artifacts.filter((artifact) => artifact.asset === true),
           outputRoot,
         ),
+        cmsCleanupTsdownPlugin(cacheDirectory),
       ],
     },
   });

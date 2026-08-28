@@ -1,6 +1,9 @@
 import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
-import { parseTsx } from "@mission-platform/vite-plugin-forge/compiler/ast.js";
-import ts from "typescript";
+import {
+  parseOxcModule,
+  type OxcNode,
+  type OxcParsedModule,
+} from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -37,7 +40,7 @@ function analyze(
   semantic?: SemanticModule,
 ): ContentComponent {
   return analyzeContentComponent(
-    parseTsx(`${names.folder ?? "component"}.tsx`, source),
+    parseOxcModule(`${names.folder ?? "component"}.tsx`, source),
     names,
     semantic,
   );
@@ -68,20 +71,25 @@ function field(component: ContentComponent, property: string): ContentField {
 
 /** The type node of the first property of the named interface in a source file. */
 function firstPropertyType(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   interfaceName: string,
-): ts.TypeNode {
-  for (const statement of sourceFile.statements) {
-    if (
-      !ts.isInterfaceDeclaration(statement) ||
-      statement.name.text !== interfaceName
-    ) {
-      continue;
-    }
-    for (const member of statement.members) {
-      if (ts.isPropertySignature(member) && member.type !== undefined) {
-        return member.type;
-      }
+): OxcNode {
+  const body = sourceFile.program.body as unknown as OxcNode[];
+  for (const statement of body) {
+    const declaration =
+      statement.type === "ExportNamedDeclaration"
+        ? (statement.declaration as OxcNode | null)
+        : statement;
+    if (declaration?.type !== "TSInterfaceDeclaration") continue;
+    const id = declaration.id as OxcNode | null;
+    if (id?.name !== interfaceName) continue;
+    const interfaceBody = declaration.body as OxcNode;
+    const member = (interfaceBody.body as OxcNode[]).find(
+      (entry) => entry.type === "TSPropertySignature",
+    );
+    if (member !== undefined) {
+      const annotation = member.typeAnnotation as OxcNode | null;
+      if (annotation !== null) return annotation.typeAnnotation as OxcNode;
     }
   }
   throw new Error(`No property signature found on "${interfaceName}".`);
@@ -310,7 +318,7 @@ describe("interactivity", () => {
 
 describe("classifyType", () => {
   it("terminates on a recursive type alias instead of recursing forever", () => {
-    const sourceFile = parseTsx(
+    const sourceFile = parseOxcModule(
       "loop.tsx",
       [
         "export type Loop = Loop;",
@@ -328,7 +336,7 @@ describe("classifyType", () => {
   });
 
   it("recognises the richtext, asset, and link marker types", () => {
-    const sourceFile = parseTsx(
+    const sourceFile = parseOxcModule(
       "markers.tsx",
       [
         "export interface RichProperties {",

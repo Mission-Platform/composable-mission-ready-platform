@@ -7,7 +7,7 @@
  * per-framework marker components from the Solid adapter subpath, and the
  * framework-agnostic runtime helpers stay on the neutral package.
  */
-import { frameworkAdapterModule } from '@mission-platform/forge-plugin-api/compiler/ast.js';
+import { frameworkAdapterModule } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 
 /** The SolidJS runtime the reactive primitives and the `JSX` types come from. */
 export const SOLID_MODULE = "solid-js";

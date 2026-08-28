@@ -18,10 +18,18 @@ export interface OxcParseError {
   readonly end: number;
 }
 
+export interface OxcComment {
+  readonly type: string;
+  readonly value: string;
+  readonly start: number;
+  readonly end: number;
+}
+
 export interface OxcParsedModule {
   readonly fileName: string;
   readonly source: string;
   readonly program: OxcNode;
+  readonly comments: readonly OxcComment[];
   readonly facts: ForgeModuleFacts;
   readonly errors: readonly OxcParseError[];
 }
@@ -362,6 +370,7 @@ export function parseOxcModule(fileName: string, source: string): OxcParsedModul
     fileName,
     source,
     program,
+    comments: (result.comments ?? []) as OxcComment[],
     facts: { imports, exports, frameworkDirective: frameworkDirective(program), hasJsx: hasJsx(program) },
     errors,
   };

@@ -27,7 +27,7 @@
  * the adapters intercept it by identity (`type === Transition`) and the compiler
  * remaps its import, so calling it directly is a bug.
  */
-import { type MpChild, type MpComponent } from './types';
+import type { MpChild, MpComponent } from './types';
 
 /** The properties accepted by the {@link Transition} element. */
 export interface MpTransitionProperties {

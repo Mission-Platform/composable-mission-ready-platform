@@ -22,7 +22,7 @@ import type {
   StoryblokProjectionOptions,
   StoryblokSchemaField,
 } from "./types.js";
-import type ts from "typescript";
+import type { OxcParsedModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 
 /** The Storyblok field type a neutral content kind maps onto. */
 export function contentKindToStoryblokFieldType(
@@ -261,7 +261,7 @@ export function toStoryblokComponent(
 
 /** Analyse a neutral component module for Storyblok. */
 export function analyzeStoryblokComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: StoryblokComponentNames,
   options: StoryblokProjectionOptions = {},
 ): AnalyzedStoryblokComponent {
@@ -273,7 +273,7 @@ export function analyzeStoryblokComponent(
 
 /** Emit only the Storyblok component object (the blok configuration) for a component. */
 export function emitStoryblokComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: StoryblokComponentNames,
   options: StoryblokProjectionOptions = {},
 ): StoryblokComponent {

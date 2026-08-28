@@ -5,21 +5,23 @@ import type {
   SourceSpan,
   TsdownBuildContext,
   ViteBuildContext,
-} from '@mission-platform/forge-plugin-api';
-import type { TsdownPlugin } from 'tsdown';
-import type { Plugin as VitePlugin } from 'vite';
+} from "@mission-platform/forge-plugin-api";
+import type { TsdownPlugin } from "tsdown";
+import type { Plugin as VitePlugin } from "vite";
 
 /** The package whose imports are understood by the router compiler pass. */
-export const MP_ROUTER_MODULE = '@mission-platform/router' as const;
+export const MP_ROUTER_MODULE = "@mission-platform/router" as const;
 
 /** Stable marker shared with the neutral router package. */
-export const MP_ROUTER_COMPILER_MARKER = 'mission-platform:router-capability' as const;
+export const MP_ROUTER_COMPILER_MARKER =
+  "mission-platform:router-capability" as const;
 
 /** Independently lowerable operations exposed by the neutral router contract. */
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 
 /** How a neutral router binding is used in a source module. */
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 
 /** A neutral import that may be rewritten by a selected router target. */
 export interface RouterCapabilityImport {
@@ -40,10 +42,10 @@ export interface RouterCapabilityUse {
 
 /** Neutral IR passed to router target plugins. It describes consumption only. */
 export interface RouterCapabilityModule {
-  readonly kind: 'router-capability-module';
+  readonly kind: "router-capability-module";
   readonly source: string;
   readonly fileName: string;
-  readonly moduleKind: 'component' | 'composable';
+  readonly moduleKind: "component" | "composable";
   readonly imports: readonly RouterCapabilityImport[];
   readonly uses: readonly RouterCapabilityUse[];
 }
@@ -52,7 +54,7 @@ export interface RouterCapabilityModule {
 export interface RouterTargetContext {
   readonly routerTarget: string;
   readonly uiFramework: string;
-  readonly moduleKind: 'component' | 'composable';
+  readonly moduleKind: "component" | "composable";
   readonly fileName: string;
   readonly sourceRoot?: string;
   readonly conditions?: readonly string[];
@@ -98,8 +100,14 @@ export interface RouterOutputPlugin {
   readonly id: string;
   readonly routerPackage: string;
   readonly capabilities: readonly RouterCapability[];
-  readonly lower: (ir: RouterCapabilityModule, context: RouterTargetContext) => RouterTargetPlan;
-  readonly optimize: (plan: RouterTargetPlan, options: RouterOptimizeOptions) => RouterTargetPlan;
+  readonly lower: (
+    ir: RouterCapabilityModule,
+    context: RouterTargetContext,
+  ) => RouterTargetPlan;
+  readonly optimize: (
+    plan: RouterTargetPlan,
+    options: RouterOptimizeOptions,
+  ) => RouterTargetPlan;
   readonly generate: (plan: RouterTargetPlan) => GeneratedRouterModule;
   readonly build: RouterBuildAdapters;
 }
@@ -119,12 +127,12 @@ export interface RouterNativeImport {
  * at that module.
  */
 export const FORGE_ROUTER_RUNTIME_EXPORTS = [
-  'MpLink',
-  'MpRouterView',
-  'useMpRoute',
-  'useMpRouter',
-  'useMpNavigation',
-  'resolveMpLink',
+  "MpLink",
+  "MpRouterView",
+  "useMpRoute",
+  "useMpRouter",
+  "useMpNavigation",
+  "resolveMpLink",
 ] as const;
 
 /** Configuration for the standard source-rewriting router target factory. */
@@ -143,7 +151,9 @@ export interface ForgeRouterTargetOptions {
   readonly build?: RouterBuildAdapters;
 }
 
-function resolveTargetImports(options: ForgeRouterTargetOptions): Readonly<Record<string, RouterNativeImport>> {
+function resolveTargetImports(
+  options: ForgeRouterTargetOptions,
+): Readonly<Record<string, RouterNativeImport>> {
   const imports: Record<string, RouterNativeImport> = {};
   if (options.runtimeModule) {
     for (const name of FORGE_ROUTER_RUNTIME_EXPORTS) {
@@ -153,11 +163,22 @@ function resolveTargetImports(options: ForgeRouterTargetOptions): Readonly<Recor
   return { ...imports, ...options.imports };
 }
 
-function nativeImportCode(imports: readonly { readonly localName: string; readonly native: RouterNativeImport }[]): string {
-  const byModule = new Map<string, { localName: string; nativeName: string }[]>();
+function nativeImportCode(
+  imports: readonly {
+    readonly localName: string;
+    readonly native: RouterNativeImport;
+  }[],
+): string {
+  const byModule = new Map<
+    string,
+    { localName: string; nativeName: string }[]
+  >();
   for (const entry of imports) {
     const moduleImports = byModule.get(entry.native.module) ?? [];
-    moduleImports.push({ localName: entry.localName, nativeName: entry.native.name });
+    moduleImports.push({
+      localName: entry.localName,
+      nativeName: entry.native.name,
+    });
     byModule.set(entry.native.module, moduleImports);
   }
   return [...byModule.entries()]
@@ -165,9 +186,9 @@ function nativeImportCode(imports: readonly { readonly localName: string; readon
       const specifiers = entries.map(({ localName, nativeName }) =>
         localName === nativeName ? nativeName : `${nativeName} as ${localName}`,
       );
-      return `import { ${specifiers.join(', ')} } from '${module}';`;
+      return `import { ${specifiers.join(", ")} } from '${module}';`;
     })
-    .join('\n');
+    .join("\n");
 }
 
 /**
@@ -179,23 +200,31 @@ function nativeImportCode(imports: readonly { readonly localName: string; readon
  * signatures. Targets may still supply custom lower/generate phases for
  * file-based or server-only routers.
  */
-export function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin {
+export function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin {
   const imports = resolveTargetImports(options);
   return defineForgeRouterPlugin({
     id: options.id,
     routerPackage: options.routerPackage,
     capabilities: options.capabilities,
-    lower: (module, context) => ({ routerTarget: context.routerTarget, module }),
+    lower: (module, context) => ({
+      routerTarget: context.routerTarget,
+      module,
+    }),
     optimize: (plan) => plan,
     generate: (plan) => {
       const native = plan.module.imports.flatMap((entry) => {
         const mapping = imports[entry.importedName];
-        return mapping === undefined || entry.typeOnly ? [] : [{ localName: entry.localName, native: mapping }];
+        return mapping === undefined || entry.typeOnly
+          ? []
+          : [{ localName: entry.localName, native: mapping }];
       });
       const importText = nativeImportCode(native);
-      const neutralImport = /import\s+(?:type\s+)?\{[^}]*\}\s+from\s+['"]@mission-platform\/router['"];?/u;
+      const neutralImport =
+        /import\s+(?:type\s+)?\{[^}]*\}\s+from\s+['"]@mission-platform\/router['"];?/u;
       const code = plan.module.source.replace(neutralImport, importText);
-      return { code, lang: plan.module.fileName.split('.').pop() ?? 'ts' };
+      return { code, lang: plan.module.fileName.split(".").pop() ?? "ts" };
     },
     build: options.build ?? {},
   });
@@ -206,72 +235,89 @@ export interface RouterTargetExtensionContract {
   readonly id: string;
   readonly routerPackage: string;
   readonly capabilities: readonly RouterCapability[];
-  readonly status: 'extension';
+  readonly status: "extension";
   readonly notes: string;
 }
 
 /** Reserved target contracts for routers whose first-party adapters are not part of this milestone. */
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[] = [
-  {
-    id: 'tanstack',
-    routerPackage: '@tanstack/router',
-    capabilities: ['link', 'route', 'navigate', 'resolve', 'view'],
-    status: 'extension',
-    notes: 'Provide route-tree and loader conditions from the consuming application.',
-  },
-  {
-    id: 'nuxt',
-    routerPackage: '#app',
-    capabilities: ['link', 'route', 'navigate', 'resolve', 'view'],
-    status: 'extension',
-    notes: 'The Nuxt module must bind file-based routes and server payload semantics.',
-  },
-  {
-    id: 'next',
-    routerPackage: 'next/navigation',
-    capabilities: ['link', 'route', 'navigate', 'resolve', 'view'],
-    status: 'extension',
-    notes: 'The Next adapter must distinguish client navigation from server and app-router modules.',
-  },
-];
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[] =
+  [
+    {
+      id: "tanstack",
+      routerPackage: "@tanstack/router",
+      capabilities: ["link", "route", "navigate", "resolve", "view"],
+      status: "extension",
+      notes:
+        "Provide route-tree and loader conditions from the consuming application.",
+    },
+    {
+      id: "nuxt",
+      routerPackage: "#app",
+      capabilities: ["link", "route", "navigate", "resolve", "view"],
+      status: "extension",
+      notes:
+        "The Nuxt module must bind file-based routes and server payload semantics.",
+    },
+    {
+      id: "next",
+      routerPackage: "next/navigation",
+      capabilities: ["link", "route", "navigate", "resolve", "view"],
+      status: "extension",
+      notes:
+        "The Next adapter must distinguish client navigation from server and app-router modules.",
+    },
+  ];
 
 /** A router plugin can be supplied directly or selected by its stable id. */
 export type RouterPluginSelection = RouterOutputPlugin | string;
 
 /** Create a source-local diagnostic for a router compiler failure. */
 export function createRouterDiagnostic(
-  diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
   },
 ): CompilerDiagnostic {
   return {
     ...diagnostic,
-    phase: 'generation',
-    fileName: diagnostic.fileName ?? '<unknown>',
+    phase: "generation",
+    fileName: diagnostic.fileName ?? "<unknown>",
   };
 }
 
 /** Validate router plugin metadata before it enters a compiler pipeline. */
-export function defineForgeRouterPlugin<T extends RouterOutputPlugin>(plugin: T): T {
-  if (typeof plugin !== 'object' || plugin === null) {
-    throw new TypeError('A Forge router plugin must be an object.');
+export function defineForgeRouterPlugin<T extends RouterOutputPlugin>(
+  plugin: T,
+): T {
+  if (typeof plugin !== "object" || plugin === null) {
+    throw new TypeError("A Forge router plugin must be an object.");
   }
-  if (typeof plugin.id !== 'string' || plugin.id.length === 0) {
-    throw new TypeError('A Forge router plugin must define a non-empty id.');
+  if (typeof plugin.id !== "string" || plugin.id.length === 0) {
+    throw new TypeError("A Forge router plugin must define a non-empty id.");
   }
-  if (typeof plugin.routerPackage !== 'string' || plugin.routerPackage.length === 0) {
-    throw new TypeError(`Forge router plugin "${plugin.id}" must define routerPackage.`);
+  if (
+    typeof plugin.routerPackage !== "string" ||
+    plugin.routerPackage.length === 0
+  ) {
+    throw new TypeError(
+      `Forge router plugin "${plugin.id}" must define routerPackage.`,
+    );
   }
   if (!Array.isArray(plugin.capabilities)) {
-    throw new TypeError(`Forge router plugin "${plugin.id}" must define capabilities.`);
+    throw new TypeError(
+      `Forge router plugin "${plugin.id}" must define capabilities.`,
+    );
   }
-  for (const method of ['lower', 'optimize', 'generate'] as const) {
-    if (typeof plugin[method] !== 'function') {
-      throw new TypeError(`Forge router plugin "${plugin.id}" must define ${method}().`);
+  for (const method of ["lower", "optimize", "generate"] as const) {
+    if (typeof plugin[method] !== "function") {
+      throw new TypeError(
+        `Forge router plugin "${plugin.id}" must define ${method}().`,
+      );
     }
   }
-  if (typeof plugin.build !== 'object' || plugin.build === null) {
-    throw new TypeError(`Forge router plugin "${plugin.id}" must define build adapters.`);
+  if (typeof plugin.build !== "object" || plugin.build === null) {
+    throw new TypeError(
+      `Forge router plugin "${plugin.id}" must define build adapters.`,
+    );
   }
   return plugin;
 }
@@ -282,7 +328,7 @@ export function selectForgeRouterPlugin(
   plugins: readonly RouterOutputPlugin[] = [],
 ): RouterOutputPlugin | undefined {
   if (selection === undefined) return undefined;
-  if (typeof selection !== 'string') return selection;
+  if (typeof selection !== "string") return selection;
   return plugins.find((plugin) => plugin.id === selection);
 }
 
@@ -294,8 +340,8 @@ export function unsupportedRouterCapabilities(
   if (plugin === undefined) {
     return ir.uses.map((use) =>
       createRouterDiagnostic({
-        severity: 'error',
-        code: 'MP_ROUTER_TARGET_REQUIRED',
+        severity: "error",
+        code: "MP_ROUTER_TARGET_REQUIRED",
         message: `Router capability "${use.capability}" requires a selected native router target.`,
         fileName: ir.fileName,
         span: use.span,
@@ -307,8 +353,8 @@ export function unsupportedRouterCapabilities(
     .filter((capability) => !supported.has(capability))
     .map((capability) =>
       createRouterDiagnostic({
-        severity: 'error',
-        code: 'MP_ROUTER_CAPABILITY_UNSUPPORTED',
+        severity: "error",
+        code: "MP_ROUTER_CAPABILITY_UNSUPPORTED",
         message: `Router target "${plugin.id}" does not support the "${capability}" capability.`,
         fileName: ir.fileName,
         span: ir.uses.find((use) => use.capability === capability)?.span,

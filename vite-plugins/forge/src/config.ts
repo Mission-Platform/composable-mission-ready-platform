@@ -271,29 +271,38 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
   // `useEntryDts`/`declarationModule` are deliberate caller opt-outs (a
   // synthesised entry declaration whose props types are re-imported from the
   // shared neutral declarations, rather than each framework's own genuine
-  // types); every other build — react, vue, solid, svelte, web-components —
-  // gets its own native `.d.ts` from {@link jsxComponentsDtsPlugin}.
-  const dtsPlugin =
-    useEntryDts || declarationModule
-      ? jsxComponentsEntryDtsPlugin({
-          framework,
-          componentsModule: resolvedComponentsModule,
-          publicEntryModule: resolvedPublicEntryModule,
-          sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
-          declarationFileName: 'index',
-          declarationModule: declarationModule ?? '../components',
-          // Keep the neutral `Forge` prefix on the public API (do not strip it).
-          stripPrefix: '',
-        })
-      : jsxComponentsDtsPlugin({
-          framework,
-          generatedDir,
-          outDir: path.resolve(rootDir, `dist/${framework}`),
-          vueTscBin,
-          componentsModule: resolvedComponentsModule,
-          publicEntryModule: resolvedPublicEntryModule,
-          sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
-        });
+  // types); react, solid, svelte, web-components get their own native `.d.ts`
+  // from {@link jsxComponentsDtsPlugin}.
+  //
+  // `vue-tsc` cannot run under TypeScript 7: it `require()`s the CommonJS
+  // `typescript/lib/tsc` entry point directly, and TypeScript 7's restricted
+  // `exports` map no longer exposes that subpath (`ERR_PACKAGE_PATH_NOT_EXPORTED`).
+  // There is no genuinely TypeScript-7-backed Vue declaration compiler yet
+  // (upstream `@vue/language-tools` tracks a future stable TS7 API), so the
+  // Vue target always falls back to the synthesised entry declaration —
+  // never to a TypeScript 6 `vue-tsc` lane.
+  const useSynthesisedDts = useEntryDts || declarationModule !== undefined || framework === 'vue';
+
+  const dtsPlugin = useSynthesisedDts
+    ? jsxComponentsEntryDtsPlugin({
+        framework,
+        componentsModule: resolvedComponentsModule,
+        publicEntryModule: resolvedPublicEntryModule,
+        sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
+        declarationFileName: 'index',
+        declarationModule: declarationModule ?? '../components',
+        // Keep the neutral `Forge` prefix on the public API (do not strip it).
+        stripPrefix: '',
+      })
+    : jsxComponentsDtsPlugin({
+        framework,
+        generatedDir,
+        outDir: path.resolve(rootDir, `dist/${framework}`),
+        vueTscBin,
+        componentsModule: resolvedComponentsModule,
+        publicEntryModule: resolvedPublicEntryModule,
+        sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
+      });
 
   return defineLibraryConfig({
     rootDir,

@@ -21,6 +21,14 @@
       "types": "./dist/compiler/ast.d.ts",
       "import": "./dist/compiler/ast.js"
     },
+    "./compiler/oxc": {
+      "types": "./dist/compiler/oxc.d.ts",
+      "import": "./dist/compiler/oxc.js"
+    },
+    "./compiler/oxc.js": {
+      "types": "./dist/compiler/oxc.d.ts",
+      "import": "./dist/compiler/oxc.js"
+    },
     "./compiler/optimize": {
       "types": "./dist/compiler/optimize.d.ts",
       "import": "./dist/compiler/optimize.js"

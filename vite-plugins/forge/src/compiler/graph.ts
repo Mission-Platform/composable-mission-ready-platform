@@ -2,11 +2,9 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import ts from 'typescript';
-
 import { parseOxcModule, type OxcParsedModule } from './oxc.js';
 
-import type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan, inspectForgeModule } from './ast.js';
+import type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './ast.js';
 import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
 export type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './ast.js';
@@ -134,14 +132,29 @@ interface AliasConfiguration {
   readonly paths: ForgePathAliases;
 }
 
+function parseJsoncObject(text: string): Record<string, unknown> | undefined {
+  try {
+    const stripped = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    const value = JSON.parse(stripped) as unknown;
+    return typeof value === 'object' && value !== null && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function readAliasConfiguration(options: ForgeFileGraphOptions, sourceRoot: string): AliasConfiguration {
   let baseUrl = canonical(options.baseUrl ?? sourceRoot);
   let paths: ForgePathAliases = options.paths ?? {};
   const tsconfigPath = options.tsconfig === undefined ? undefined : canonical(options.tsconfig);
   if (tsconfigPath !== undefined) {
-    const configured = ts.readConfigFile(tsconfigPath, (fileName) => fs.readFileSync(fileName, 'utf8'));
-    if (configured.error === undefined && configured.config !== undefined) {
-      const compilerOptions = configured.config.compilerOptions ?? {};
+    const configured = parseJsoncObject(fs.readFileSync(tsconfigPath, 'utf8'));
+    if (configured !== undefined) {
+      const compilerOptions = (configured.compilerOptions ?? {}) as {
+        baseUrl?: unknown;
+        paths?: unknown;
+      };
       const configDirectory = path.dirname(tsconfigPath);
       if (options.baseUrl === undefined && typeof compilerOptions.baseUrl === 'string') {
         baseUrl = canonical(path.resolve(configDirectory, compilerOptions.baseUrl));

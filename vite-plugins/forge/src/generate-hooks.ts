@@ -5,15 +5,15 @@
  * aliased, multiline, and type-only exports use the same facts as component
  * discovery.
  */
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
-import ts from 'typescript';
-
 import { readNeutralImports } from './compiler/ast.js';
-import { type DiscoveredHelperExport } from './compiler/discover.js';
 import { createForgeGenerationContext, type ForgeGenerationContext } from './compiler/generation-context.js';
 
+import type { DiscoveredHelperExport } from './compiler/discover.js';
 import type {
   ForgeExportFact,
   ForgeFileGraph,
@@ -333,24 +333,31 @@ export interface HookLibraryDtsOptions {
   outDir: string;
 }
 
-/** Base compiler options for emitting a generated hook tree's declarations (mirrors the packages' `tsconfig.build.json`). */
-const HOOK_DTS_COMPILER_OPTIONS: ts.CompilerOptions = {
-  module: ts.ModuleKind.ESNext,
-  moduleResolution: ts.ModuleResolutionKind.Bundler,
-  target: ts.ScriptTarget.ES2023,
-  lib: ['lib.es2023.d.ts', 'lib.dom.d.ts', 'lib.dom.iterable.d.ts'],
+/** Base compiler options for emitting a generated hook tree's declarations via the TypeScript 7 CLI. */
+const HOOK_DTS_COMPILER_OPTIONS = {
+  module: 'ESNext',
+  moduleResolution: 'bundler',
+  target: 'ES2023',
+  lib: ['ES2023', 'DOM', 'DOM.Iterable'],
   skipLibCheck: true,
   esModuleInterop: true,
   strict: true,
   declaration: true,
   emitDeclarationOnly: true,
   noEmitOnError: false,
-  types: [],
-};
+  types: [] as string[],
+  jsx: 'preserve',
+} as const;
 
 /** The source extensions a generated framework tree is authored under (React also emits `.tsx`). */
 function hookSourceExtensions(framework: JsxFramework): readonly string[] {
   return framework === 'react' || framework === 'solid' || framework === 'svelte' ? ['.ts', '.tsx'] : ['.ts'];
+}
+
+/** Resolve the TypeScript 7 CLI entry used for declaration emit. */
+function resolveTscBin(): string {
+  const packageJson = createRequire(import.meta.url).resolve('typescript/package.json');
+  return path.join(path.dirname(packageJson), 'lib', 'tsc.js');
 }
 
 /**
@@ -360,13 +367,10 @@ function hookSourceExtensions(framework: JsxFramework): readonly string[] {
  * Each framework build ({@link generateHookLibrarySources} + the framework's
  * Stage-2 bundler) produces JS but no declarations, since the generated tree is
  * not a `tsc`-visible source file. Rather than re-export a single *common*
- * neutral declaration for every framework, this plugin runs the TypeScript
- * compiler API over the generated tree in `closeBundle` (a post-build step) and
- * writes the resulting `.d.ts` files (`index.d.ts` + one per module) into the
- * build's own `outDir`. Each framework build gets declarations typed against
- * its own generated runtime types. Type diagnostics are
- * surfaced as build warnings rather than failures so a `.d.ts` is always
- * produced.
+ * neutral declaration for every framework, this plugin runs the TypeScript 7
+ * CLI over the generated tree in `writeBundle` and writes the resulting `.d.ts`
+ * files into the build's own `outDir`. Type diagnostics are surfaced as build
+ * warnings rather than failures so a `.d.ts` is always produced.
  */
 export function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin {
   const extensions = hookSourceExtensions(options.framework);
@@ -377,23 +381,31 @@ export function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin {
     // Generate declarations after the framework tree has been written so every
     // target receives the same package-level contract.
     writeBundle() {
-      const rootNames = collectGeneratedSources(options.generatedDir, extensions);
+      const include = extensions.map((extension) => `**/*${extension}`);
+      const tsconfig = {
+        compilerOptions: {
+          ...HOOK_DTS_COMPILER_OPTIONS,
+          rootDir: '.',
+          outDir: options.outDir,
+          declarationDir: options.outDir,
+        },
+        include,
+      };
+      const tsconfigPath = path.join(options.generatedDir, 'tsconfig.dts.json');
+      writeFileSync(tsconfigPath, JSON.stringify(tsconfig, undefined, 2), 'utf8');
 
-      const program = ts.createProgram(rootNames, {
-        ...HOOK_DTS_COMPILER_OPTIONS,
-        // The React tree is authored in the classic-`h` JSX dialect; preserving
-        // JSX keeps declaration emit agnostic to the runtime factory (the hooks
-        // themselves carry no JSX, so this only future-proofs the emitter).
-        jsx: ts.JsxEmit.Preserve,
-        rootDir: options.generatedDir,
-        outDir: options.outDir,
-        declarationDir: options.outDir,
-      });
-      const emitResult = program.emit(undefined, undefined, undefined, true);
-
-      const diagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
-      for (const diagnostic of diagnostics) {
-        this.warn(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
+      try {
+        execFileSync(process.execPath, [resolveTscBin(), '-p', tsconfigPath], {
+          cwd: options.generatedDir,
+          encoding: 'utf8',
+          stdio: ['ignore', 'pipe', 'pipe'],
+        });
+      } catch (error) {
+        const report = error as { stdout?: string; stderr?: string };
+        const message = [report.stdout, report.stderr].filter(Boolean).join('\n').trim();
+        if (message.length > 0) {
+          this.warn(message);
+        }
       }
     },
   };

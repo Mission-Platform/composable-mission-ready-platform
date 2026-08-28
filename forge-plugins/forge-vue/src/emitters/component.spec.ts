@@ -281,10 +281,13 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
         returnNode: element("div", { selfClosing: true }),
       }),
       effects: [
-        effect("() => { const instance = create(); return () => instance.remove(); }", {
-          cleanup: "() => instance.remove()",
-          dependencies: [],
-        }),
+        effect(
+          "() => { const instance = create(); return () => instance.remove(); }",
+          {
+            cleanup: "() => instance.remove()",
+            dependencies: [],
+          },
+        ),
       ],
     });
 
