@@ -151,7 +151,9 @@
   }
 
   function isLine(drawing: UseDrawingReturn) {
-    const f = drawing.features.features.find((x) => (x as { id?: FeatureId }).id === drawing.selectedId);
+    const f = drawing.features.features.find(
+      (x: { id?: FeatureId; geometry: { type: string } }) => (x as { id?: FeatureId }).id === drawing.selectedId,
+    );
     return f?.geometry.type === 'LineString';
   }
 
