@@ -27,6 +27,17 @@ describe('ssg markdown pipeline', () => {
     expect(html).toContain('target="_blank"');
   });
 
+  it('escapes raw HTML and removes executable Markdown URLs', () => {
+    const source =
+      '# Title\n\n[unsafe](javascript:alert(1)) [encoded](%6aavascript:alert(1)) ![image](data:image/svg+xml,test)\n\n<img src="x" onerror="alert(1)">';
+    const { html } = renderDocumentationMarkdown(source, 'overview');
+
+    expect(html).not.toContain('javascript:');
+    expect(html).not.toContain('data:image');
+    expect(html).not.toContain('<img src="x" onerror=');
+    expect(html).toContain('&lt;img src=&quot;x&quot; onerror=&quot;alert(1)&quot;&gt;');
+  });
+
   it('resolves parent-relative links against the current slug directory', () => {
     expect(resolveInternalHref('../overview.md', 'configs/index', 'ja')).toBe('/ja/overview');
   });

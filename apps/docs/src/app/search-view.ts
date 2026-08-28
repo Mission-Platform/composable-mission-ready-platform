@@ -1,4 +1,3 @@
-
 import { documentPath, titleForSlug } from '../documentation';
 import { createDocumentationI18n, resolveDocumentationLocale } from '../i18n';
 import { search } from '../search';

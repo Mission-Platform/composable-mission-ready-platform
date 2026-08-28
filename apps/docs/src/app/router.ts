@@ -5,7 +5,6 @@ import {
   setForgeRouter,
 } from '@mission-platform/forge-router-web-components/runtime';
 
-
 import { DEFAULT_SLUG } from '../documentation';
 import { SUPPORTED_LOCALES } from '../i18n';
 

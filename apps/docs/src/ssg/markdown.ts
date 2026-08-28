@@ -53,6 +53,45 @@ function escapeHtml(value: string): string {
     .replaceAll("'", '&#39;');
 }
 
+function decodeUrlForInspection(value: string): string {
+  let decoded = value;
+  for (let index = 0; index < 8; index += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+
+  return decoded
+    .replaceAll(/&#x([a-f\d]+);|&#(\d+);/gi, (match, hexadecimal: string, decimal: string) => {
+      const codePoint = Number.parseInt(hexadecimal ?? decimal, hexadecimal ? 16 : 10);
+      return Number.isSafeInteger(codePoint) && codePoint <= 1_114_111 ? String.fromCodePoint(codePoint) : match;
+    })
+    .replaceAll(/[\u0000-\u0020\u007F-\u009F]/g, '')
+    .toLowerCase();
+}
+
+/** Match Forge Markdown's rejection of executable URL schemes. */
+function sanitizeUrl(value: string | undefined): string | undefined {
+  if (value === undefined) return undefined;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+
+  const inspected = decodeUrlForInspection(trimmed);
+  if (/^(?:javascript|vbscript|data):/.test(inspected)) return undefined;
+  const explicitScheme = /^[a-z][a-z\d+.-]*:/.exec(inspected)?.[0];
+  if (!explicitScheme) return trimmed;
+
+  try {
+    return new Set(['http:', 'https:', 'mailto:', 'tel:']).has(new URL(trimmed).protocol) ? trimmed : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function extractTitle(markdown: string, fallback: string): string {
   const match = markdown.match(/^#\s+(.+?)\s*$/m);
   return match ? match[1].trim() : fallback;
@@ -207,13 +246,24 @@ export function renderDocumentationMarkdown(
     const label =
       tokens?.map((token) => ('text' in token ? String(token.text ?? '') : (token.raw ?? ''))).join('') ?? '';
     const internal = href ? resolveInternalHref(href, slug, locale, context) : undefined;
-    const resolved = internal ?? href ?? '';
+    const resolved = sanitizeUrl(internal ?? href);
+    const hrefAttribute = resolved ? ` href="${escapeHtml(resolved)}"` : '';
     const titleAttribute = linkTitle ? ` title="${escapeHtml(linkTitle)}"` : '';
-    const internalAttribute = internal ? ' data-internal="true"' : '';
+    const internalAttribute = internal && resolved ? ' data-internal="true"' : '';
     const externalAttributes =
-      !internal && /^(https?:)?\/\//i.test(resolved) ? ' target="_blank" rel="noopener noreferrer"' : '';
-    return `<a href="${escapeHtml(resolved)}"${titleAttribute}${internalAttribute}${externalAttributes}>${escapeHtml(plainText(label))}</a>`;
+      !internal && resolved && /^(https?:)?\/\//i.test(resolved) ? ' target="_blank" rel="noopener noreferrer"' : '';
+    return `<a${hrefAttribute}${titleAttribute}${internalAttribute}${externalAttributes}>${escapeHtml(plainText(label))}</a>`;
   };
+
+  renderer.image = ({ href, title, text }: Tokens.Image): string => {
+    const source = sanitizeUrl(href);
+    const sourceAttribute = source ? ` src="${escapeHtml(source)}"` : '';
+    const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';
+    return `<img${sourceAttribute} alt="${escapeHtml(text)}"${titleAttribute}>`;
+  };
+
+  // Forge Markdown renders raw HTML as text. Keep the native fallback equally safe.
+  renderer.html = ({ text }: Tokens.HTML): string => escapeHtml(text);
 
   renderer.code = ({ text, lang }: Tokens.Code): string => `${highlightCode(text, lang)}\n`;
 

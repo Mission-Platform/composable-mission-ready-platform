@@ -1,9 +1,8 @@
-
 import { useMarkdown } from '../composables/use-markdown';
 import { descriptionForSlug, documentationSourceRoots, getDocument, titleForSlug } from '../documentation';
 import { resolveDocumentationLocale } from '../i18n';
 
-import { createElement } from './dom';
+import { createElement, supportsForgeCustomizedBuiltIn } from './dom';
 
 import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
@@ -33,6 +32,23 @@ export class DocsDocumentElement extends HTMLElement {
   public disconnectedCallback(): void {
     this.unsubscribe?.();
     this.unsubscribe = undefined;
+  }
+
+  private async renderNativeMarkdown(
+    article: HTMLElement,
+    source: string,
+    slug: string,
+    locale: ReturnType<typeof resolveDocumentationLocale>,
+    currentRoot: (typeof documentationSourceRoots)[number],
+  ): Promise<void> {
+    const { renderDocumentationMarkdown } = await import('../ssg/markdown');
+    if (!article.isConnected) return;
+    const rendered = renderDocumentationMarkdown(source, slug, locale, {
+      currentRoot,
+      roots: documentationSourceRoots,
+      hasDocument: (target, targetLocale) => getDocument(target, targetLocale) !== undefined,
+    });
+    article.innerHTML = rendered.html;
   }
 
   private render(route: MpResolvedLocation): void {
@@ -75,11 +91,18 @@ export class DocsDocumentElement extends HTMLElement {
       event.preventDefault();
       void this.router.push(href);
     });
-    const markdown = createElement<MarkdownElement>('forge-markdown', {
-      source: document.source,
-      resolveHref: resolveHref.value,
-    });
-    article.append(markdown);
+    if (supportsForgeCustomizedBuiltIn('forge-markdown')) {
+      const markdown = createElement<MarkdownElement>('forge-markdown', {
+        source: document.source,
+        resolveHref: resolveHref.value,
+      });
+      article.append(markdown);
+    } else {
+      // WebKit does not support customized built-in elements. Render the
+      // documentation pipeline into a native element rather than leaving an
+      // inert `div is="forge-markdown"` with no document content.
+      void this.renderNativeMarkdown(article, document.source, slug, locale, document.sourceRoot);
+    }
 
     const content = createElement<HTMLElement>('div', {}, [article]);
     content.className = 'docs-document__content-wrap';

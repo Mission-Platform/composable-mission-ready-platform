@@ -1,4 +1,3 @@
-
 import { descriptionForSlug, getDocument, titleForSlug } from '../documentation';
 import { resolveDocumentationLocale } from '../i18n';
 import { applyDocsRouteSeo, buildDocumentSeo, buildSearchSeo } from '../ssg/seo';

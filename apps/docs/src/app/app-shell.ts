@@ -1,4 +1,3 @@
-
 import { DEFAULT_SLUG, documentPath } from '../documentation';
 import {
   createDocumentationI18n,
@@ -10,7 +9,7 @@ import {
 } from '../i18n';
 import { LOCALE_BCP47 } from '../seo-site';
 
-import { createElement } from './dom';
+import { createElement, supportsForgeCustomizedBuiltIn } from './dom';
 import { createSidebar } from './sidebar';
 
 import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
@@ -63,10 +62,12 @@ export class DocsAppShellElement extends HTMLElement {
   private unsubscribe?: () => void;
   private query = '';
   private debounce?: ReturnType<typeof setTimeout>;
-  private searchInput?: SearchInputElement;
+  private searchInput?: SearchInputElement | HTMLInputElement;
   private languageSwitcher?: LanguageSwitcherElement;
   private sidebarOpen = false;
   private sidebarGapQuery?: MediaQueryList;
+  private nativeSidebarQuery?: MediaQueryList;
+  private nativeLayoutLocale?: DocumentationLocale;
 
   public setRouter(router: MpRouterAdapter): void {
     this.unsubscribe?.();
@@ -87,13 +88,20 @@ export class DocsAppShellElement extends HTMLElement {
     this.unsubscribe = undefined;
     if (this.debounce) clearTimeout(this.debounce);
     this.sidebarGapQuery?.removeEventListener('change', this.syncSidebarGap);
+    this.nativeSidebarQuery?.removeEventListener('change', this.syncNativeSidebar);
   }
 
   private syncRoute(route: MpResolvedLocation): void {
     const locale = routeLocale(route);
     this.query = this.queryFromRoute(route);
-    this.searchInput?.setAttribute('model-value', this.query);
-    this.searchInput && (this.searchInput.modelValue = this.query);
+    if (this.nativeLayoutLocale !== undefined && this.nativeLayoutLocale !== locale) {
+      this.render();
+    } else if (this.searchInput instanceof HTMLInputElement) {
+      this.searchInput.value = this.query;
+    } else {
+      this.searchInput?.setAttribute('model-value', this.query);
+      this.searchInput && (this.searchInput.modelValue = this.query);
+    }
     this.languageSwitcher && (this.languageSwitcher.locale = locale);
     document.documentElement.lang = LOCALE_BCP47[locale];
     document.documentElement.dir = LOCALE_DIR[locale];
@@ -168,12 +176,112 @@ export class DocsAppShellElement extends HTMLElement {
     if (toggle) toggle.hidden = !this.sidebarGapQuery?.matches;
   };
 
+  private createNativeSearchInput(placeholder: string): HTMLInputElement {
+    const input = createElement<HTMLInputElement>('input', {
+      type: 'search',
+      placeholder,
+    });
+    input.className = 'docs-navbar__search';
+    input.value = this.query;
+    input.addEventListener('input', () => this.updateQuery(input.value));
+    input.addEventListener('search', this.onSearch);
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') this.onSearch();
+    });
+    return input;
+  }
+
+  private syncNativeSidebar = (): void => {
+    const mobile = this.nativeSidebarQuery?.matches ?? false;
+    const layout = this.querySelector<HTMLElement>('.docs-app--native');
+    const sidebar = this.querySelector<HTMLElement>('.docs-app__sidebar--native');
+    const toggle = this.querySelector<HTMLButtonElement>('.docs-navbar__sidebar-toggle--native');
+    layout?.classList.toggle('docs-app--native-sidebar-open', mobile && this.sidebarOpen);
+    sidebar?.setAttribute('aria-hidden', String(mobile && !this.sidebarOpen));
+    toggle?.setAttribute('aria-expanded', String(this.sidebarOpen));
+  };
+
+  private renderNativeLayout(
+    outlet: HTMLElement,
+    locale: DocumentationLocale,
+    i18n: ReturnType<typeof createDocumentationI18n>,
+  ): void {
+    const layout = createElement<HTMLDivElement>('div');
+    layout.className = 'docs-app docs-app--native';
+
+    const header = createElement<HTMLElement>('header');
+    header.className = 'docs-navbar--native';
+    const brand = createElement<RouterLinkElement>('forge-router-link', { to: documentPath(DEFAULT_SLUG, locale) }, [
+      '◆ Mission Platform Docs',
+    ]);
+    brand.className = 'docs-navbar__brand';
+    brand.setRouter(this.router!);
+    this.searchInput = this.createNativeSearchInput(i18n.t('search.placeholder'));
+
+    const end = createElement<HTMLElement>('span');
+    end.className = 'docs-navbar__end';
+    const languageSwitcher = createElement<HTMLSelectElement>('select');
+    languageSwitcher.setAttribute('aria-label', i18n.t('a11y.language'));
+    for (const code of SUPPORTED_LOCALES) {
+      const option = createElement<HTMLOptionElement>('option', { value: code }, [LOCALE_LABELS[code]]);
+      option.selected = code === locale;
+      languageSwitcher.append(option);
+    }
+    languageSwitcher.addEventListener('change', () => this.switchLanguage(languageSwitcher.value));
+    end.append(
+      languageSwitcher,
+      createElement<HTMLAnchorElement>(
+        'a',
+        { href: 'https://mission-platform.dev', target: '_blank', rel: 'noopener noreferrer' },
+        ['mission-platform.dev'],
+      ),
+    );
+    const sidebarToggle = createElement<HTMLButtonElement>(
+      'button',
+      { ariaControls: 'docs-native-sidebar', ariaExpanded: this.sidebarOpen, type: 'button' },
+      ['Toggle navigation'],
+    );
+    sidebarToggle.className = 'docs-navbar__sidebar-toggle--native';
+    sidebarToggle.addEventListener('click', () => {
+      this.sidebarOpen = !this.sidebarOpen;
+      this.syncNativeSidebar();
+    });
+    header.append(brand, this.searchInput, sidebarToggle, end);
+
+    const body = createElement<HTMLElement>('div');
+    body.className = 'docs-app__body--native';
+    const sidebar = createElement<HTMLElement>('aside', { ariaHidden: !this.sidebarOpen, id: 'docs-native-sidebar' });
+    sidebar.className = 'docs-app__sidebar--native';
+    sidebar.append(
+      createSidebar(this.router!, () => {
+        this.sidebarOpen = false;
+        this.syncNativeSidebar();
+      }),
+    );
+    const content = createElement<HTMLElement>('main', {}, [outlet]);
+    content.className = 'docs-main';
+    body.append(sidebar, content);
+    layout.append(header, body);
+    this.replaceChildren(layout);
+    this.nativeLayoutLocale = locale;
+    this.nativeSidebarQuery ??=
+      globalThis.window === undefined ? undefined : globalThis.matchMedia('(max-width: 767.98px)');
+    this.nativeSidebarQuery?.addEventListener('change', this.syncNativeSidebar);
+    this.syncNativeSidebar();
+  }
+
   private render(): void {
     if (!this.router) return;
     const route = this.router.current.value;
     const locale = routeLocale(route);
     const i18n = createDocumentationI18n(locale);
-    const outlet = this.querySelector('forge-router-outlet') ?? createElement('forge-router-outlet');
+    const outlet = this.querySelector<HTMLElement>('forge-router-outlet') ?? createElement('forge-router-outlet');
+    if (!supportsForgeCustomizedBuiltIn('forge-application-layout')) {
+      this.renderNativeLayout(outlet, locale, i18n);
+      return;
+    }
+    this.nativeLayoutLocale = undefined;
+
     const layout = createElement<HTMLElement>('forge-application-layout', {
       stickyHeader: true,
       sidebarBreakpoint: 'md',
@@ -261,7 +369,9 @@ export class DocsAppShellElement extends HTMLElement {
     layout.append(navbar, startSidebar, content);
     this.replaceChildren(layout);
     this.sidebarGapQuery ??=
-      globalThis.window === undefined ? undefined : globalThis.matchMedia('(min-width: 768px) and (max-width: 1023.98px)');
+      globalThis.window === undefined
+        ? undefined
+        : globalThis.matchMedia('(min-width: 768px) and (max-width: 1023.98px)');
     this.sidebarGapQuery?.addEventListener('change', this.syncSidebarGap);
     this.syncSidebarGap();
   }
