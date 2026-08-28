@@ -21,7 +21,6 @@ export interface MpNavigationOptions extends MpLinkOptions {
 }
 
 /** Props accepted by the compiler marker represented by {@link MpLink}. */
-// eslint-disable-next-line unicorn/prevent-abbreviations
 export interface MpLinkProps extends MpLinkOptions {
   to: MpRouteLocationRaw;
   /** Child content is intentionally unknown so every UI target can lower it. */
@@ -39,7 +38,6 @@ export interface MpLinkDescriptor {
 }
 
 /** Props accepted by the neutral outlet/view compiler marker. */
-// eslint-disable-next-line unicorn/prevent-abbreviations
 export interface MpRouterViewProps {
   children?: unknown;
 }
