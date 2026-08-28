@@ -5,13 +5,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 
-import type { useTabs as UseTabsFunction } from './use-tabs';
-
 // ─── Module reset between tests ───────────────────────────────────────────────
 // useTabs holds module-level reactive state. We reset the module registry and
 // localStorage before each test to obtain an isolated, clean slate.
 
-let useTabs: typeof UseTabsFunction;
+let useTabs: typeof import('./use-tabs').useTabs;
 
 beforeEach(async () => {
   localStorage.clear();

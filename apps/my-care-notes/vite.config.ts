@@ -4,10 +4,11 @@ import { fileURLToPath } from 'node:url';
 import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
 import i18nPlugin, { readSupportedLocales } from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-import { type Plugin, type UserConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 import { APP_LOCALE_BCP47, APP_ORIGIN } from './src/seo-app';
+
+import type { Plugin, UserConfig } from 'vite';
 
 // Stub `monaco-editor` itself (incl. its deep `esm/...` entries and `?worker`
 // imports) — the sole source of the browser-only `.css` side-effect imports

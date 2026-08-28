@@ -4,8 +4,6 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { useSnippets as UseSnippetsFunction } from './use-snippets';
-
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /** Create a minimal File object from text for import tests. */
@@ -22,7 +20,7 @@ function buildMarkdown(name: string, content: string): string {
 // useSnippets stores shared module-level state (refs). We reset the module
 // registry and localStorage before each test to get an isolated clean slate.
 
-let useSnippets: typeof UseSnippetsFunction;
+let useSnippets: typeof import('./use-snippets').useSnippets;
 
 beforeEach(async () => {
   localStorage.clear();
