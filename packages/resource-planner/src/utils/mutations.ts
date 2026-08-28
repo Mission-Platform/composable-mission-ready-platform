@@ -74,7 +74,7 @@ export function selectPlannerRange(
   resourceId: string,
   start: Date,
   end: Date,
-  minimumDurationMs = 15 * 60_000,
+  minimumDurationMs: number = 15 * 60_000,
 ): PlannerRangeSelection | undefined {
   const rangeStart = Math.min(start.getTime(), end.getTime());
   const rangeEnd = Math.max(start.getTime(), end.getTime());
