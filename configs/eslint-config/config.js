@@ -1,3 +1,4 @@
+import babelParser from '@babel/eslint-parser';
 import prettierConfig from 'eslint-config-prettier/flat';
 import turboConfig from 'eslint-config-turbo/flat';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
@@ -7,8 +8,107 @@ import sonarjs from 'eslint-plugin-sonarjs';
 import unicorn from 'eslint-plugin-unicorn';
 import pluginVue from 'eslint-plugin-vue';
 import vueA11y from 'eslint-plugin-vuejs-accessibility';
-import tseslint from 'typescript-eslint';
 import vueParser from 'vue-eslint-parser';
+
+const typeScriptParserOptions = {
+  requireConfigFile: false,
+  babelOptions: {
+    babelrc: false,
+    configFile: false,
+    parserOpts: {
+      plugins: ['typescript'],
+    },
+  },
+};
+
+const typeScriptJsxParserOptions = {
+  ...typeScriptParserOptions,
+  babelOptions: {
+    ...typeScriptParserOptions.babelOptions,
+    parserOpts: {
+      plugins: ['typescript', 'jsx'],
+    },
+  },
+};
+
+const missionTypeScriptPlugin = {
+  rules: {
+    'no-explicit-any': {
+      meta: {
+        type: 'problem',
+        docs: {
+          description: 'Disallow the `any` type in TypeScript syntax parsed without the TypeScript compiler API.',
+        },
+        schema: [],
+        messages: {
+          unexpectedAny: 'Unexpected any. Specify a more precise type.',
+        },
+      },
+      create(context) {
+        return {
+          TSAnyKeyword(node) {
+            context.report({ node, messageId: 'unexpectedAny' });
+          },
+        };
+      },
+    },
+    'consistent-type-imports': {
+      meta: {
+        type: 'suggestion',
+        fixable: 'code',
+        docs: {
+          description:
+            'Prefer top-level `import type` declarations over inline `type` specifiers in TS7 syntax-only lint mode.',
+        },
+        schema: [
+          {
+            type: 'object',
+            properties: {
+              prefer: { enum: ['type-imports'] },
+            },
+            additionalProperties: true,
+          },
+        ],
+        messages: {
+          preferTopLevelTypeImport: 'Prefer a top-level `import type` declaration instead of inline `type` specifiers.',
+        },
+      },
+      create(context) {
+        return {
+          ImportDeclaration(node) {
+            if (node.importKind === 'type') {
+              return;
+            }
+            const specifiers = Array.isArray(node.specifiers) ? node.specifiers : [];
+            const hasInlineTypeSpecifier = specifiers.some(
+              (specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type',
+            );
+            const allSpecifiersAreInlineTypeImports =
+              specifiers.length > 0 &&
+              specifiers.every((specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type');
+            if (!hasInlineTypeSpecifier || !allSpecifiersAreInlineTypeImports) {
+              return;
+            }
+            context.report({
+              node,
+              messageId: 'preferTopLevelTypeImport',
+              fix(fixer) {
+                const sourceCode = context.sourceCode;
+                const specifierText = specifiers
+                  .map((specifier) => sourceCode.getText(specifier).replace(/^type\s+/u, ''))
+                  .join(', ');
+                return fixer.replaceText(
+                  node,
+                  `import type { ${specifierText} } from ${sourceCode.getText(node.source)};`,
+                );
+              },
+            });
+          },
+        };
+      },
+    },
+  },
+};
 
 /**
  * Base ESLint flat config for all Mission Platform packages and apps.
@@ -47,23 +147,57 @@ const config = [
   },
   {
     name: 'mission-platform/typescript',
-    files: ['**/*.ts', '**/*.tsx', '**/*.mts'],
+    files: ['**/*.ts', '**/*.mts'],
     languageOptions: {
-      parser: tseslint.parser,
+      parser: babelParser,
       parserOptions: {
-        projectService: true,
+        ...typeScriptParserOptions,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
       },
     },
     plugins: {
-      '@typescript-eslint': tseslint.plugin,
+      '@typescript-eslint': missionTypeScriptPlugin,
       'import-x': importX,
     },
     settings: {
       'import-x/resolver-next': [createTypeScriptImportResolver()],
     },
     rules: {
-      ...tseslint.configs.recommended.rules,
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+      'import-x/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true },
+        },
+      ],
+      'import-x/no-duplicates': 'error',
+      'import-x/first': 'error',
+      'import-x/no-useless-path-segments': ['error', { noUselessIndex: true }],
+    },
+  },
+  {
+    name: 'mission-platform/typescript-jsx',
+    files: ['**/*.tsx'],
+    languageOptions: {
+      parser: babelParser,
+      parserOptions: {
+        ...typeScriptJsxParserOptions,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+    plugins: {
+      '@typescript-eslint': missionTypeScriptPlugin,
+      'import-x': importX,
+    },
+    settings: {
+      'import-x/resolver-next': [createTypeScriptImportResolver()],
+    },
+    rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
       'import-x/order': [
@@ -89,20 +223,21 @@ const config = [
     languageOptions: {
       parser: vueParser,
       parserOptions: {
-        parser: tseslint.parser,
+        parser: babelParser,
+        ...typeScriptJsxParserOptions,
         extraFileExtensions: ['.vue'],
+        ecmaVersion: 'latest',
         sourceType: 'module',
       },
     },
     plugins: {
-      '@typescript-eslint': tseslint.plugin,
+      '@typescript-eslint': missionTypeScriptPlugin,
       'import-x': importX,
     },
     settings: {
       'import-x/resolver-next': [createTypeScriptImportResolver()],
     },
     rules: {
-      ...tseslint.configs.recommended.rules,
       'vue/multi-word-component-names': 'error',
       'vue/component-api-style': ['error', ['script-setup']],
       'vue/define-macros-order': ['error', { order: ['defineOptions', 'defineProps', 'defineEmits', 'defineSlots'] }],
@@ -110,7 +245,6 @@ const config = [
       // Disabled: conflicts with Prettier's htmlWhitespaceSensitivity: 'ignore' setting, which
       // collapses short single-line elements. Prettier is the source of truth for formatting.
       'vue/singleline-html-element-content-newline': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
       'import-x/order': [
@@ -189,7 +323,7 @@ const config = [
   // ── unicorn ───────────────────────────────────────────────────────────────
   // Apply unicorn to TypeScript and JavaScript files only.
   // Vue SFCs are excluded because unicorn rules that require type information
-  // conflict with the vue-eslint-parser / project-service setup.
+  // conflict with the vue-eslint-parser / syntax-only TS7 setup.
   {
     ...unicorn.configs['flat/recommended'],
     name: 'mission-platform/unicorn',
@@ -218,7 +352,7 @@ const config = [
     name: 'mission-platform/sonarjs',
     rules: {
       ...sonarjs.configs.recommended.rules,
-      // Handled by @typescript-eslint / ESLint core
+      // Handled by the shared TypeScript compatibility rules / ESLint core
       'sonarjs/no-unused-vars': 'off',
       // Allow nested ternaries and template literals (common in JSX / Vue templates)
       'sonarjs/no-nested-conditional': 'off',
