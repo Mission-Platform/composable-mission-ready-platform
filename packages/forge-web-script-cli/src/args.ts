@@ -5,7 +5,8 @@ import path from 'node:path';
 import type {
   ForgeWebScriptLinkMode,
   ForgeWebScriptOptimization,
-  ForgeWebScriptVmExecutionMode, ForgeWebScriptSoNBoundsChecks 
+  ForgeWebScriptVmExecutionMode,
+  ForgeWebScriptSoNBoundsChecks,
 } from '@mission-platform/forge-web-script';
 
 export type ForgeWebScriptCliCommand = 'check' | 'compile' | 'trace' | 'inspect-sonir';

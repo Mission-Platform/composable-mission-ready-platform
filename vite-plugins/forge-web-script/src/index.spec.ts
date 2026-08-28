@@ -99,6 +99,11 @@ describe("forgeWebScriptPlugin", () => {
     expect(moduleSource).toMatchObject({
       code: expect.stringContaining("export function loadSync"),
     });
+    expect(moduleSource).toMatchObject({
+      code: expect.stringContaining(
+        "const library = loadSync;\nexport default library;",
+      ),
+    });
     expect(wasm).toContain("Uint8Array.from");
     expect(sourceMap).toContain("sourcesContent");
     expect(declarations).toContain("graphMetadata");

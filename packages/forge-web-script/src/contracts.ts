@@ -4,7 +4,7 @@ import type {
   ForgeWebScriptAnalysisRule,
   ForgeWebScriptAnalysisSourceMap,
   ForgeWebScriptAnalysisPolicy,
-} from "./analysis";
+} from './analysis';
 import type { ForgeWebScriptFunction, ForgeWebScriptModule } from './ast.js';
 import type { ForgeWebScriptWatCache } from './cache.js';
 import type { ForgeWebScriptDiagnostic } from './diagnostics.js';

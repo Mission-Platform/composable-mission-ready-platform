@@ -4,7 +4,6 @@ import path from 'node:path';
 import { checkForgeWebScript, parseForgeWebScript } from '@mission-platform/forge-web-script';
 import { afterEach, describe, expect, it } from 'vitest';
 
-
 import { assertForgeWebScriptDiagnostic, assertForgeWebScriptNoDiagnostics } from './diagnostics.js';
 import {
   createForgeWebScriptTestHarness,

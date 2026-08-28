@@ -5,7 +5,6 @@ import { FORGE_WEB_SCRIPT_ABI_VERSION, FORGE_WEB_SCRIPT_LANGUAGE_VERSION } from 
 import type { ForgeWebScriptSourceSpan } from './diagnostics.js';
 import type { ForgeWebScriptIrExpression, ForgeWebScriptIrModule, ForgeWebScriptIrStatement } from './ir.js';
 
-
 export const FORGE_WEB_SCRIPT_SON_SCHEMA_VERSION = '1.0' as const;
 export type ForgeWebScriptSoNOptimization = 'debug' | 'release';
 export type ForgeWebScriptSoNBoundsChecks = 'runtime' | 'proven-safe' | 'excluded-by-profile';
@@ -510,100 +509,102 @@ function sonAnnotateBounds(module: ForgeWebScriptIrModule): number {
       }
       // Recurse
       switch (expression.kind) {
-      case 'call': {
-      expression.arguments.forEach(visitExpression);
-      break;
-      }
-      case 'binary': {
-        visitExpression(expression.left);
-        visitExpression(expression.right);
-      
-      break;
-      }
-      case 'unary': {
-      visitExpression(expression.operand);
-      break;
-      }
-      case 'struct-value': {
-      Object.values(expression.fields).forEach(visitExpression);
-      break;
-      }
-      case 'enum-value': {
-      expression.arguments.forEach(visitExpression);
-      break;
-      }
-      case 'match': {
-        visitExpression(expression.value);
-        for (const arm of expression.arms) visitExpression(arm.value);
-      
-      break;
-      }
-      case 'array-literal': 
-      case 'vector-literal': {
-      expression.elements.forEach(visitExpression);
-      break;
-      }
-      case 'index': {
-        visitExpression(expression.receiver);
-        visitExpression(expression.index);
-      
-      break;
-      }
-      // No default
+        case 'call': {
+          expression.arguments.forEach(visitExpression);
+          break;
+        }
+        case 'binary': {
+          visitExpression(expression.left);
+          visitExpression(expression.right);
+
+          break;
+        }
+        case 'unary': {
+          visitExpression(expression.operand);
+          break;
+        }
+        case 'struct-value': {
+          Object.values(expression.fields).forEach(visitExpression);
+          break;
+        }
+        case 'enum-value': {
+          expression.arguments.forEach(visitExpression);
+          break;
+        }
+        case 'match': {
+          visitExpression(expression.value);
+          for (const arm of expression.arms) visitExpression(arm.value);
+
+          break;
+        }
+        case 'array-literal':
+        case 'vector-literal': {
+          expression.elements.forEach(visitExpression);
+          break;
+        }
+        case 'index': {
+          visitExpression(expression.receiver);
+          visitExpression(expression.index);
+
+          break;
+        }
+        // No default
       }
     }
 
     function visitStatement(statement: ForgeWebScriptIrStatement): void {
       switch (statement.kind) {
-      case 'let': {
-        localTypes.set(statement.name, statement.type);
-        visitExpression(statement.value);
-      
-      break;
-      }
-      case 'assignment': {
-        visitExpression(statement.value);
-      
-      break;
-      }
-      case 'expression-statement': {
-        visitExpression(statement.expression);
-      
-      break;
-      }
-      default: { if (statement.kind === 'return' && statement.value !== undefined) {
-        visitExpression(statement.value);
-      } else switch (statement.kind) {
- case 'if': {
-        visitExpression(statement.condition);
-        statement.consequent.forEach(visitStatement);
-        statement.alternate?.forEach(visitStatement);
-      
- break;
- }
- case 'switch': {
-        visitExpression(statement.value);
-        for (const arm of statement.cases) arm.body.forEach(visitStatement);
-        statement.defaultCase?.forEach(visitStatement);
-      
- break;
- }
- case 'while': 
- case 'do-while': {
-        visitExpression(statement.condition);
-        statement.body.forEach(visitStatement);
-      
- break;
- }
- case 'iterator-loop': {
-        visitExpression(statement.iterator);
-        statement.body.forEach(visitStatement);
-      
- break;
- }
- // No default
- }
-      }
+        case 'let': {
+          localTypes.set(statement.name, statement.type);
+          visitExpression(statement.value);
+
+          break;
+        }
+        case 'assignment': {
+          visitExpression(statement.value);
+
+          break;
+        }
+        case 'expression-statement': {
+          visitExpression(statement.expression);
+
+          break;
+        }
+        default: {
+          if (statement.kind === 'return' && statement.value !== undefined) {
+            visitExpression(statement.value);
+          } else
+            switch (statement.kind) {
+              case 'if': {
+                visitExpression(statement.condition);
+                statement.consequent.forEach(visitStatement);
+                statement.alternate?.forEach(visitStatement);
+
+                break;
+              }
+              case 'switch': {
+                visitExpression(statement.value);
+                for (const arm of statement.cases) arm.body.forEach(visitStatement);
+                statement.defaultCase?.forEach(visitStatement);
+
+                break;
+              }
+              case 'while':
+              case 'do-while': {
+                visitExpression(statement.condition);
+                statement.body.forEach(visitStatement);
+
+                break;
+              }
+              case 'iterator-loop': {
+                visitExpression(statement.iterator);
+                statement.body.forEach(visitStatement);
+
+                break;
+              }
+              // No default
+            }
+        }
       }
     }
 

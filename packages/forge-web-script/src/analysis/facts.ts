@@ -65,8 +65,7 @@ function visitStatements(
       for (const { body } of statement.cases) visitStatements(body, visit);
       if (statement.defaultCase !== undefined) visitStatements(statement.defaultCase, visit);
     }
-    if (statement.kind === 'match-statement')
-      for (const { value } of statement.arms) visitExpression(value, () => {});
+    if (statement.kind === 'match-statement') for (const { value } of statement.arms) visitExpression(value, () => {});
   }
 }
 

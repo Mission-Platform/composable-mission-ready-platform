@@ -31,6 +31,10 @@ import type {
 
 const emptyOptions = normalizeForgeWebScriptWorkspaceOptions();
 
+function documentCacheKey(document: ForgeWebScriptDocument, workspaceOptions: ForgeWebScriptWorkspaceOptions): string {
+  return `${document.text}\0${document.fileName ?? ''}\0${optionsKey(workspaceOptions)}`;
+}
+
 export function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService {
   const documents = new Map<string, ForgeWebScriptDocument>();
   const options = new Map<string, ForgeWebScriptWorkspaceOptions>();
@@ -46,8 +50,6 @@ export function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspa
     if (document === undefined) throw new Error(`No open Forge Web Script document for '${uri}'.`);
     return document;
   };
-  const keyFor = (document: ForgeWebScriptDocument, workspaceOptions: ForgeWebScriptWorkspaceOptions): string =>
-    `${document.text}\0${document.fileName ?? ''}\0${optionsKey(workspaceOptions)}`;
   const invalidateWorkspace = (change?: ForgeWebScriptWorkspaceChange): void => {
     assertActive();
     if (change?.uri === undefined) {
@@ -87,7 +89,7 @@ export function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspa
     const document = getDocument(uri);
     const workspaceOptions = options.get(uri) ?? emptyOptions;
     const snapshot = workspaceIndex?.analysisSnapshot(uri);
-    const key = `${keyFor(document, workspaceOptions)}\0${snapshot?.identity ?? 'local'}`;
+    const key = `${documentCacheKey(document, workspaceOptions)}\0${snapshot?.identity ?? 'local'}`;
     const cached = cache.get(uri);
     if (cached?.key === key) return cached.analysis;
     const analysis = snapshot?.analysis ?? analyzeForgeWebScript(document, workspaceOptions);

@@ -92,6 +92,28 @@ export interface ForgeWebScriptLspDocument {
   readonly fileName?: string;
 }
 
+type WorkDoneProgressReporter = Awaited<ReturnType<Connection['window']['createWorkDoneProgress']>>;
+
+interface ProgressState {
+  reporter?: WorkDoneProgressReporter;
+  finished?: boolean;
+  ready: Promise<void>;
+}
+
+function sendProgressEvent(state: ProgressState, event: ForgeWebScriptLspProgressEvent): void {
+  const reporter = state.reporter;
+  if (reporter === undefined) return;
+  if (event.kind === 'begin') {
+    reporter.begin(event.title, event.percentage, event.message);
+  } else if (event.kind === 'report') {
+    if (event.percentage === undefined) reporter.report(event.message ?? '');
+    else if (event.message === undefined) reporter.report(event.percentage);
+    else reporter.report(event.percentage, event.message);
+  } else {
+    reporter.done();
+  }
+}
+
 export interface ForgeWebScriptLspServer {
   initialize(params: InitializeParams): InitializeResult;
   openDocument(document: ForgeWebScriptLspDocument): Promise<void>;
@@ -466,26 +488,7 @@ export function registerForgeWebScriptLsp(
 ): ForgeWebScriptLspServer {
   const documents = new TextDocuments(TextDocument);
   let clientSupportsWorkDoneProgress = false;
-  type WorkDoneProgressReporter = Awaited<ReturnType<Connection['window']['createWorkDoneProgress']>>;
-  interface ProgressState {
-    reporter?: WorkDoneProgressReporter;
-    finished?: boolean;
-    ready: Promise<void>;
-  }
   const progressReporters = new Map<string, ProgressState>();
-  const sendProgressEvent = (state: ProgressState, event: ForgeWebScriptLspProgressEvent): void => {
-    const reporter = state.reporter;
-    if (reporter === undefined) return;
-    if (event.kind === 'begin') {
-      reporter.begin(event.title, event.percentage, event.message);
-    } else if (event.kind === 'report') {
-      if (event.percentage === undefined) reporter.report(event.message ?? '');
-      else if (event.message === undefined) reporter.report(event.percentage);
-      else reporter.report(event.percentage, event.message);
-    } else {
-      reporter.done();
-    }
-  };
   const queueProgressEvent = (event: ForgeWebScriptLspProgressEvent): void => {
     if (!clientSupportsWorkDoneProgress) return;
     if (event.kind === 'begin') {

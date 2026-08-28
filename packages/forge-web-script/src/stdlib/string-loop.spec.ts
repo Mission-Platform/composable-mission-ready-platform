@@ -5,6 +5,31 @@ import { lowerForgeWebScriptToIr } from '../ir.js';
 import { parseForgeWebScript } from '../parser.js';
 import { validateForgeWebScript } from '../validate.js';
 
+type StringHelperExports = {
+  readonly memory: WebAssembly.Memory;
+  readonly fws_alloc: (size: number) => number;
+  readonly byteAt: (pointer: number, length: number, index: number) => number;
+  readonly startsWithPrefix: (
+    valuePointer: number,
+    valueLength: number,
+    prefixPointer: number,
+    prefixLength: number,
+  ) => number;
+  readonly sliceOf: (pointer: number, length: number, start: number, end: number) => readonly [number, number];
+  readonly toNumber: (pointer: number, length: number) => number;
+};
+
+function writeString(exports: StringHelperExports, value: string): [number, number] {
+  const bytes = new TextEncoder().encode(value);
+  const pointer = exports.fws_alloc(bytes.length);
+  new Uint8Array(exports.memory.buffer).set(bytes, pointer);
+  return [pointer, bytes.length];
+}
+
+function readString(exports: StringHelperExports, [pointer, length]: readonly [number, number]): string {
+  return new TextDecoder().decode(new Uint8Array(exports.memory.buffer, pointer, length));
+}
+
 describe('Forge iterator-first control flow and string helpers', () => {
   const source = `export fn countDigits(value: string) -> i32 {
   let mut index: i32 = 0;
@@ -81,30 +106,6 @@ describe('Forge iterator-first control flow and string helpers', () => {
 });
 
 describe('Forge string/byte standard-library helpers against runtime parameters (real compiler pipeline)', () => {
-  type StringHelperExports = {
-    readonly memory: WebAssembly.Memory;
-    readonly fws_alloc: (size: number) => number;
-    readonly byteAt: (pointer: number, length: number, index: number) => number;
-    readonly startsWithPrefix: (
-      valuePointer: number,
-      valueLength: number,
-      prefixPointer: number,
-      prefixLength: number,
-    ) => number;
-    readonly sliceOf: (pointer: number, length: number, start: number, end: number) => readonly [number, number];
-    readonly toNumber: (pointer: number, length: number) => number;
-  };
-
-  const writeString = (exports: StringHelperExports, value: string): [number, number] => {
-    const bytes = new TextEncoder().encode(value);
-    const pointer = exports.fws_alloc(bytes.length);
-    new Uint8Array(exports.memory.buffer).set(bytes, pointer);
-    return [pointer, bytes.length];
-  };
-
-  const readString = (exports: StringHelperExports, [pointer, length]: readonly [number, number]): string =>
-    new TextDecoder().decode(new Uint8Array(exports.memory.buffer, pointer, length));
-
   it('executes byte-at, starts-with, slice, and numeric conversion against runtime string parameters', () => {
     const source = `export fn byteAt(value: string, index: i32) -> i32 {
   return string_byte_at(value, index);

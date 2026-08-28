@@ -210,40 +210,41 @@ function inferRegisters(function_: ForgeWebScriptVmFunction, module: ForgeWebScr
       )
         fail(`unsupported opcode '${instruction.opcode}'`);
       switch (instruction.opcode) {
-      case 'const': {
-      set(instruction.destination ?? 0, instructionRep(instruction, module, functions));
-      break;
-      }
-      case 'move': {
-      set(instruction.destination, inferred[instruction.source]);
-      break;
-      }
-      case 'unary': {
-      set(
-          instruction.destination,
-          instruction.operation === 'not' ? { kind: 'bool' } : inferred[instruction.operand],
-        );
-      break;
-      }
-      case 'binary': {
-      set(instruction.destination, instructionRep(instruction, module, functions) ?? inferred[instruction.left]);
-      break;
-      }
-      case 'call': 
-      case 'call-capability': {
-        if (instruction.destination !== undefined)
-          set(instruction.destination, instructionRep(instruction, module, functions));
-      
-      break;
-      }
-      case 'load': 
-      case 'len': 
-      case 'byte-at': { {
-      set(instruction.destination, instructionRep(instruction, module, functions));
-      // No default
-      }
-      break;
-      }
+        case 'const': {
+          set(instruction.destination ?? 0, instructionRep(instruction, module, functions));
+          break;
+        }
+        case 'move': {
+          set(instruction.destination, inferred[instruction.source]);
+          break;
+        }
+        case 'unary': {
+          set(
+            instruction.destination,
+            instruction.operation === 'not' ? { kind: 'bool' } : inferred[instruction.operand],
+          );
+          break;
+        }
+        case 'binary': {
+          set(instruction.destination, instructionRep(instruction, module, functions) ?? inferred[instruction.left]);
+          break;
+        }
+        case 'call':
+        case 'call-capability': {
+          if (instruction.destination !== undefined)
+            set(instruction.destination, instructionRep(instruction, module, functions));
+
+          break;
+        }
+        case 'load':
+        case 'len':
+        case 'byte-at': {
+          {
+            set(instruction.destination, instructionRep(instruction, module, functions));
+            // No default
+          }
+          break;
+        }
       }
     }
   }
@@ -446,7 +447,9 @@ function emitInstruction(
     case 'move': {
       const source = flattenReference(reference(instruction.source));
       for (let index = 0; index < source.length; index += 1)
-        result.push(...localSet(reference(instruction.destination), localGet(reference(instruction.source), index), index));
+        result.push(
+          ...localSet(reference(instruction.destination), localGet(reference(instruction.source), index), index),
+        );
       break;
     }
     case 'load': {
@@ -686,7 +689,10 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
     { kind: 'unit' },
   );
   const capabilityIndexes = new Map<string, number>();
-  const imports: Array<{ readonly module: string; readonly name: string; readonly typeIndex: number }> = [ { module: RUNTIME_IMPORT_MODULE, name: STEP_IMPORT, typeIndex: stepType }, { module: RUNTIME_IMPORT_MODULE, name: COMPARE_IMPORT, typeIndex: compareType }];
+  const imports: Array<{ readonly module: string; readonly name: string; readonly typeIndex: number }> = [
+    { module: RUNTIME_IMPORT_MODULE, name: STEP_IMPORT, typeIndex: stepType },
+    { module: RUNTIME_IMPORT_MODULE, name: COMPARE_IMPORT, typeIndex: compareType },
+  ];
   const byteAtIndex = imports.length;
   imports.push({ module: RUNTIME_IMPORT_MODULE, name: BYTE_AT_IMPORT, typeIndex: byteAtType });
   const trapIndex = imports.length;
@@ -697,7 +703,10 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
     imports.push({
       module: CAPABILITY_IMPORT_MODULE,
       name: imported.name,
-      typeIndex: addType(imported.parameters.map((parameter) => typeForValue(parameter)), resultRep(imported.result)),
+      typeIndex: addType(
+        imported.parameters.map((parameter) => typeForValue(parameter)),
+        resultRep(imported.result),
+      ),
     });
   }
   for (const function_ of module.functions) {
@@ -708,7 +717,10 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
       reps,
       locals: declared.locals,
       result: resultRep(function_.result),
-      typeIndex: addType(function_.parameters.map((parameter) => typeForValue(parameter)), resultRep(function_.result)),
+      typeIndex: addType(
+        function_.parameters.map((parameter) => typeForValue(parameter)),
+        resultRep(function_.result),
+      ),
     });
   }
   const userFunctionIndexes = new Map<string, number>();
@@ -721,7 +733,9 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
     userInfos.set(function_.name, { ...old, typeIndex: userFunctionIndexes.get(function_.name)! });
   }
   const functionTypeIndexes = module.functions.map((function_) =>
-    typeKeys.get(JSON.stringify([function_.parameters.map((parameter) => typeForValue(parameter)), resultRep(function_.result)]))!,
+    typeKeys.get(
+      JSON.stringify([function_.parameters.map((parameter) => typeForValue(parameter)), resultRep(function_.result)]),
+    )!,
   );
   const allocType = addType([{ kind: 'number', type: 'i32' }], { kind: 'number', type: 'i32' });
   const deallocType = addType(
@@ -991,15 +1005,14 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
   output.push(...section(7, [unsignedLeb(exports.length), ...exports.flat()].flat()));
   output.push(...section(10, [...unsignedLeb(codeBodies.length), ...codeBodies.flat()]));
   if (dataSegments.length > 0) {
-    const segments = dataSegments
-      .flatMap((segment) => [
-        0x00,
-        0x41,
-        ...signedLeb(segment.offset),
-        0x0b,
-        ...unsignedLeb(segment.bytes.byteLength),
-        ...bytes([...segment.bytes]),
-      ]);
+    const segments = dataSegments.flatMap((segment) => [
+      0x00,
+      0x41,
+      ...signedLeb(segment.offset),
+      0x0b,
+      ...unsignedLeb(segment.bytes.byteLength),
+      ...bytes([...segment.bytes]),
+    ]);
     output.push(...section(11, [0x01, ...segments]));
   }
   return new Uint8Array(output);
@@ -1089,7 +1102,12 @@ function importValue(
   memory: WebAssembly.Memory,
   allocate: (size: number) => number,
 ): readonly (number | bigint)[] {
-  if (!sameRep(rep, repFromConstant(value)) && !(rep.kind === 'bytes' && value.kind === 'bytes') && !(rep.kind === 'aggregate' && value.kind === 'aggregate')) throw new ForgeWebScriptTrap('GuestTrap', 'VM WASM received an argument with an invalid type.');
+  if (
+    !sameRep(rep, repFromConstant(value)) &&
+    !(rep.kind === 'bytes' && value.kind === 'bytes') &&
+    !(rep.kind === 'aggregate' && value.kind === 'aggregate')
+  )
+    throw new ForgeWebScriptTrap('GuestTrap', 'VM WASM received an argument with an invalid type.');
   if (value.kind === 'aggregate' && rep.kind === 'aggregate') {
     const pointer = allocate(value.bytes.byteLength);
     new Uint8Array(memory.buffer).set(value.bytes, pointer);
@@ -1258,10 +1276,10 @@ export function prepareForgeWebScriptVmWasm(
       },
       [TRAP_IMPORT]: (functionIndex: number, instructionIndex: number) => {
         const instruction = artifact.module.functions[functionIndex]?.code[instructionIndex];
-        pendingTrap = instruction?.opcode === 'trap' ? new ForgeWebScriptTrap('GuestTrap', `${instruction.code}: ${instruction.message}`) : new ForgeWebScriptTrap(
-            'GuestTrap',
-            'VM WASM encountered an invalid trap instruction reference.',
-          );
+        pendingTrap =
+          instruction?.opcode === 'trap'
+            ? new ForgeWebScriptTrap('GuestTrap', `${instruction.code}: ${instruction.message}`)
+            : new ForgeWebScriptTrap('GuestTrap', 'VM WASM encountered an invalid trap instruction reference.');
         observe(() =>
           activeTrace?.recordTrap(pendingTrap?.code ?? 'GuestTrap', pendingTrap?.message ?? 'VM WASM trap', steps),
         );
@@ -1310,7 +1328,9 @@ export function prepareForgeWebScriptVmWasm(
       const exportName = functionExports.get(functionName);
       if (exportName === undefined)
         throw new ForgeWebScriptTrap('GuestTrap', `Function '${functionName}' does not exist.`);
-      const resultValues = (exports()[exportName] as (...values: readonly (number | bigint)[]) => unknown)(...arguments__);
+      const resultValues = (exports()[exportName] as (...values: readonly (number | bigint)[]) => unknown)(
+        ...arguments__,
+      );
       if (pendingTrap !== undefined) throw pendingTrap;
       const flatResult =
         flatTypes(resultRep(function_.result)).length === 0

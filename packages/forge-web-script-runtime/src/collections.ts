@@ -583,7 +583,7 @@ export function forgeWebScriptIteratorLast<TValue>(
     iterator.at !== undefined &&
     iterator.length !== undefined
   ) {
-    return iterator.length === 0 ? forgeWebScriptNone() : iterator.at(- 1);
+    return iterator.length === 0 ? forgeWebScriptNone() : iterator.at(-1);
   }
   let last = forgeWebScriptNone<TValue>();
   let item = iterator.next();

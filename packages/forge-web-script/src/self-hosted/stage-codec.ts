@@ -54,7 +54,8 @@ class BinaryWriter {
   }
 
   public u32(value: number): void {
-    if (!Number.isSafeInteger(value) || value < 0 || value > 4_294_967_295) invalid('binary field exceeds u32 range');
+    if (!Number.isSafeInteger(value) || value < 0 || value > 4_294_967_295)
+      invalid(`binary field exceeds u32 range: ${String(value)}`);
     this.bytes.push(value & 0xff, (value >>> 8) & 0xff, (value >>> 16) & 0xff, (value >>> 24) & 0xff);
   }
 
@@ -876,7 +877,7 @@ export function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModul
       writer.string(variant.name);
       writer.u32(variant.fields.length);
       for (const field of variant.fields) writeParameter(writer, field);
-      writer.u32(variant.tag);
+      writer.i32(variant.tag);
       writeSpan(writer, variant.span);
     }
     writeSpan(writer, entry.span);
@@ -979,7 +980,7 @@ export function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWe
       kind: 'enum-variant' as const,
       name: reader.string(),
       fields: Array.from({ length: reader.u32() }, () => readParameter(reader)),
-      tag: reader.u32(),
+      tag: reader.i32(),
       span: readSpan(reader),
     })),
     span: readSpan(reader),

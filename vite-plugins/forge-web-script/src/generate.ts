@@ -16,12 +16,13 @@ export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY = "forge-web-script-source-map";
 
 /**
  * Generate the normal consumer module. The generated module re-exports the
- * compiled functions and exposes the same ABI manifest through `abiManifest`.
+ * compiled functions, exposes the same ABI manifest through `abiManifest`, and
+ * provides a synchronous library loader as its default export.
  */
 export function createForgeWebScriptModuleSource(
   compiled: ForgeWebScriptCompiledModule,
 ): string {
-  return `${compiled.artifact.esmSource}\nexport const abiManifest = manifest;\n`;
+  return `${compiled.artifact.esmSource}\nconst library = loadSync;\nexport default library;\nexport const abiManifest = manifest;\n`;
 }
 
 /** Generate a module containing the JSON-serializable ABI manifest. */

@@ -9,7 +9,6 @@ import {
 } from './ast.js';
 import { createDiagnostic, type ForgeWebScriptDiagnostic } from './diagnostics.js';
 
-
 interface Binding {
   readonly type: ForgeWebScriptTypeName;
   readonly mutable: boolean;

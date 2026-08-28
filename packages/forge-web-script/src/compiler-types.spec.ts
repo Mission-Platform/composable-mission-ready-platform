@@ -1,10 +1,13 @@
-import * as ts from 'typescript';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
 import { describe, it } from 'vitest';
 
 import { compileForgeWebScript } from './compiler.ts';
 
-function typeCheckGeneratedConsumer(declarations: string, includeRawConsumer = false): readonly ts.Diagnostic[] {
-  const root = '/virtual-forge-web-script-types';
+function typeCheckGeneratedConsumer(declarations: string, includeRawConsumer = false): readonly string[] {
   const rawConsumer = includeRawConsumer
     ? `
 async function useRawRuntime(): Promise<ForgeWebScriptRawExports> {
@@ -27,11 +30,8 @@ async function useRawRuntime(): Promise<ForgeWebScriptRawExports> {
 }
 `
     : '';
-  const files = new Map([
-    [
-      `${root}/consumer.ts`,
-      `
-import {
+  const consumer = `
+import library, {
   load,
   loadRaw,
   loadRawSync,
@@ -54,6 +54,7 @@ const imports: ForgeWebScriptImports = {
 async function useRuntime(): Promise<bigint> {
   const exports: ForgeWebScriptExports = await load(imports);
   const syncExports: ForgeWebScriptExports = loadSync(imports);
+  const libraryExports: ForgeWebScriptExports = library(imports);
   const currentTime: () => bigint = exports.currentTime;
   const syncCurrentTime: () => bigint = syncExports.currentTime;
   const echo: (value: string) => string = exports.echo;
@@ -68,6 +69,7 @@ async function useRuntime(): Promise<bigint> {
   void wrongResultType;
   void syncCurrentTime;
   void syncEcho;
+  void libraryExports;
   void echo('hello');
   return currentTime();
 }
@@ -127,37 +129,45 @@ function inspectManifest(value: ForgeWebScriptManifest): void {
 
 void useRuntime();
 inspectManifest(manifest);
-`,
-    ],
-    [
-      `${root}/generated-runtime.d.ts`,
-      `declare module 'generated-runtime' {
-${declarations}
-}`,
-    ],
-  ]);
-  const options: ts.CompilerOptions = {
-    lib: ['lib.esnext.d.ts', 'lib.dom.d.ts'],
-    module: ts.ModuleKind.ESNext,
-    moduleResolution: ts.ModuleResolutionKind.Bundler,
-    noEmit: true,
-    strict: true,
-    target: ts.ScriptTarget.ESNext,
-  };
-  const host = ts.createCompilerHost(options);
-  const defaultReadFile = host.readFile.bind(host);
-  const defaultFileExists = host.fileExists.bind(host);
-  const defaultGetSourceFile = host.getSourceFile.bind(host);
-  host.readFile = (fileName) => files.get(fileName) ?? defaultReadFile(fileName);
-  host.fileExists = (fileName) => files.has(fileName) || defaultFileExists(fileName);
-  host.getSourceFile = (fileName, languageVersion, onError, shouldCreateNewSourceFile) => {
-    const source = files.get(fileName);
-    return source === undefined
-      ? defaultGetSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile)
-      : ts.createSourceFile(fileName, source, languageVersion, true);
-  };
-  const program = ts.createProgram([`${root}/consumer.ts`, `${root}/generated-runtime.d.ts`], options, host);
-  return ts.getPreEmitDiagnostics(program);
+`;
+  const runtimeDeclarations = `declare module 'generated-runtime' {
+${declarations.replaceAll(/^declare\s+/gmu, '')}
+}`;
+  const temporaryRoot = mkdtempSync(path.join(tmpdir(), 'forge-web-script-types-'));
+  const consumerPath = path.join(temporaryRoot, 'consumer.ts');
+  const declarationsPath = path.join(temporaryRoot, 'generated-runtime.d.ts');
+  writeFileSync(consumerPath, consumer);
+  writeFileSync(declarationsPath, runtimeDeclarations);
+
+  try {
+    execFileSync(
+      path.resolve(import.meta.dirname, '../node_modules/.bin/tsc'),
+      [
+        '--noEmit',
+        '--ignoreConfig',
+        '--strict',
+        '--module',
+        'ESNext',
+        '--moduleResolution',
+        'Bundler',
+        '--target',
+        'ESNext',
+        '--lib',
+        'esnext,dom',
+        '--pretty',
+        'false',
+        consumerPath,
+        declarationsPath,
+      ],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
+    );
+    return [];
+  } catch (error) {
+    const result = error as { stdout?: string; stderr?: string };
+    return `${result.stdout ?? ''}${result.stderr ?? ''}`.split(/\r?\n/u).filter((line) => line.length > 0);
+  } finally {
+    rmSync(temporaryRoot, { recursive: true, force: true });
+  }
 }
 
 describe('Forge Web Script generated type contracts', () => {
@@ -193,6 +203,8 @@ export fn echo(value: string) -> string { return value; }
     expect(artifact.declarations).toContain('readonly now: () => bigint;');
     expect(artifact.declarations).toContain('load(imports?: ForgeWebScriptImports): Promise<ForgeWebScriptExports>');
     expect(artifact.declarations).toContain('loadSync(imports?: ForgeWebScriptImports): ForgeWebScriptExports');
+    expect(artifact.declarations).toContain('declare const library: typeof loadSync;');
+    expect(artifact.declarations).toContain('export default library;');
     expect(artifact.declarations).toContain(
       'loadRaw(imports?: ForgeWebScriptRawImports): Promise<ForgeWebScriptRawExports>',
     );
@@ -225,6 +237,8 @@ export fn echo(value: string) -> string { return value; }
     expect(decl).toMatch(/export interface ForgeWebScriptImports/);
     expect(decl).toMatch(/export function load\(imports\?: ForgeWebScriptImports\): Promise<ForgeWebScriptExports>/);
     expect(decl).toMatch(/export function loadSync\(imports\?: ForgeWebScriptImports\): ForgeWebScriptExports/);
+    expect(decl).toMatch(/declare const library: typeof loadSync;/);
+    expect(decl).toMatch(/export default library;/);
   });
 
   it('generates i64/u64 as bigint in exported function signatures', () => {
@@ -258,7 +272,7 @@ export fn echo(value: string) -> string { return value; }
 
     expect(artifact.diagnostics).toEqual([]);
     const diagnostics = typeCheckGeneratedConsumer(artifact.declarations);
-    expect(diagnostics.map((diagnostic) => ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))).toEqual([]);
+    expect(diagnostics).toEqual([]);
   });
 
   it('keeps bytes as pointer-length tuples and projects string values as strings', () => {

@@ -240,8 +240,8 @@ export async function runForgeWebScriptCli(
   );
   try {
     const outputFiles = await writeForgeWebScriptArtifacts(outputDirectory, result.entryFileName, result.artifact);
-    if (options.format === 'json')
-      {io.stdout(
+    if (options.format === 'json') {
+      io.stdout(
         JSON.stringify({
           entryFileName: result.entryFileName,
           outputDirectory,
@@ -249,9 +249,10 @@ export async function runForgeWebScriptCli(
           boundsChecks: result.artifact.manifest?.boundsChecks ?? options.boundsChecks,
           ...(options.showOptimizerReport ? { optimizerReport: result.artifact.optimizationReport } : {}),
         }),
-      );}
-    else
-      {io.stdout(`Compiled ${result.entryFileName} to ${outputDirectory}: ${outputFiles.join(', ')}.`);}
+      );
+    } else {
+      io.stdout(`Compiled ${result.entryFileName} to ${outputDirectory}: ${outputFiles.join(', ')}.`);
+    }
     return 0;
   } catch (error: unknown) {
     io.stderr(`Unable to write Forge Web Script artifacts: ${error instanceof Error ? error.message : String(error)}`);

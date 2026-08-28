@@ -45,7 +45,11 @@ function namespacePrivateFunctions(
   const expression = (value: ForgeWebScriptExpression): ForgeWebScriptExpression => {
     switch (value.kind) {
       case 'call': {
-        return { ...value, callee: rename(value.callee), arguments: value.arguments.map((argument) => expression(argument)) };
+        return {
+          ...value,
+          callee: rename(value.callee),
+          arguments: value.arguments.map((argument) => expression(argument)),
+        };
       }
       case 'function-value': {
         return { ...value, name: rename(value.name) };

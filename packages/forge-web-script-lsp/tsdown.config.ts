@@ -12,4 +12,3 @@ export default defineTsdownLibrary({
   unbundle: false,
   external: ['vscode-languageserver', 'vscode-languageserver-textdocument', 'vscode-jsonrpc'],
 });
-

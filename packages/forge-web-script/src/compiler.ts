@@ -453,6 +453,8 @@ function createDeclarations(manifest: ForgeWebScriptAbiManifest): string {
     'export function clearDynamicLinkCache(): void;',
     'export function load(imports?: ForgeWebScriptImports): Promise<ForgeWebScriptExports>;',
     'export function loadSync(imports?: ForgeWebScriptImports): ForgeWebScriptExports;',
+    'declare const library: typeof loadSync;',
+    'export default library;',
     'export function loadRaw(imports?: ForgeWebScriptRawImports): Promise<ForgeWebScriptRawExports>;',
     'export function loadRawSync(imports?: ForgeWebScriptRawImports): ForgeWebScriptRawExports;',
   ].join('\n');
@@ -995,7 +997,9 @@ function compileForgeWebScriptModule(
       allowedCapabilities: analysis.policy.allowedCapabilities,
     },
   });
-  const verificationDiagnostics = rawVerification.diagnostics.map((diagnostic) => artifactVerificationDiagnostic(diagnostic));
+  const verificationDiagnostics = rawVerification.diagnostics.map((diagnostic) =>
+    artifactVerificationDiagnostic(diagnostic),
+  );
   const artifactVerification: ForgeWebScriptArtifactVerificationReport = {
     verified: rawVerification.verified,
     diagnostics: verificationDiagnostics,

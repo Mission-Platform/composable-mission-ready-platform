@@ -93,7 +93,11 @@ export function validateForgeWebScriptSoN(
       return false;
     if (
       candidate.functions.some(
-        (function_) => function_ === null || typeof function_ !== 'object' || typeof function_.name !== 'string' || !known.has(function_.entry),
+        (function_) =>
+          function_ === null ||
+          typeof function_ !== 'object' ||
+          typeof function_.name !== 'string' ||
+          !known.has(function_.entry),
       )
     )
       return false;

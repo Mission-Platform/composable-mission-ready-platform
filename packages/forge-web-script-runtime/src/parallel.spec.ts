@@ -20,7 +20,7 @@ import {
   selectForgeWebScriptParallelStrategy,
   FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES,
   FORGE_WEB_SCRIPT_THREADING_CAPABILITIES,
-} from ".";
+} from '.';
 
 const descriptor = {
   id: 'numbers',

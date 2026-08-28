@@ -10,6 +10,18 @@ const VALID_SOURCE = `export fn matches(pattern: string, value: string) -> bool 
   return regex_full_match(pattern, value);
 }`;
 
+type RegexRuntimeExports = {
+  readonly memory: WebAssembly.Memory;
+  readonly fws_alloc: (size: number) => number;
+};
+
+function writeRegexString(exports: RegexRuntimeExports, value: string): [number, number] {
+  const bytes = new TextEncoder().encode(value);
+  const pointer = exports.fws_alloc(bytes.length);
+  new Uint8Array(exports.memory.buffer).set(bytes, pointer);
+  return [pointer, bytes.length];
+}
+
 describe('Forge regex standard-library contract', () => {
   it('type-checks compiler-owned calls without capabilities', () => {
     const result = validateForgeWebScript(VALID_SOURCE, 'regex.fws');
@@ -63,18 +75,6 @@ describe('Forge regex standard-library contract', () => {
 });
 
 describe('Forge regex standard-library runtime execution (real compiler pipeline)', () => {
-  type RegexRuntimeExports = {
-    readonly memory: WebAssembly.Memory;
-    readonly fws_alloc: (size: number) => number;
-  };
-
-  const writeString = (exports: RegexRuntimeExports, value: string): [number, number] => {
-    const bytes = new TextEncoder().encode(value);
-    const pointer = exports.fws_alloc(bytes.length);
-    new Uint8Array(exports.memory.buffer).set(bytes, pointer);
-    return [pointer, bytes.length];
-  };
-
   it('executes literal-pattern full/prefix/search calls against runtime string parameters', () => {
     const source = `export fn fullMatch(value: string) -> bool {
   return regex_full_match("a+b", value);
@@ -97,11 +97,11 @@ export fn searchMatch(value: string, start: i32) -> bool {
       readonly prefixMatch: (pointer: number, length: number) => number;
       readonly searchMatch: (pointer: number, length: number, start: number) => number;
     };
-    expect(exports.fullMatch(...writeString(exports, 'aaab'))).toBe(1);
-    expect(exports.fullMatch(...writeString(exports, 'aaabx'))).toBe(0);
-    expect(exports.prefixMatch(...writeString(exports, 'abcd'))).toBe(1);
-    expect(exports.searchMatch(...writeString(exports, 'xxcdyy'), 0)).toBe(1);
-    expect(exports.searchMatch(...writeString(exports, 'xxxxxx'), 0)).toBe(0);
+    expect(exports.fullMatch(...writeRegexString(exports, 'aaab'))).toBe(1);
+    expect(exports.fullMatch(...writeRegexString(exports, 'aaabx'))).toBe(0);
+    expect(exports.prefixMatch(...writeRegexString(exports, 'abcd'))).toBe(1);
+    expect(exports.searchMatch(...writeRegexString(exports, 'xxcdyy'), 0)).toBe(1);
+    expect(exports.searchMatch(...writeRegexString(exports, 'xxxxxx'), 0)).toBe(0);
   });
 
   it('executes capture start/end for literal patterns against runtime string parameters', () => {
@@ -119,7 +119,7 @@ export fn captureEnd(value: string, group: i32) -> i32 {
       readonly captureStart: (pointer: number, length: number, group: number) => number;
       readonly captureEnd: (pointer: number, length: number, group: number) => number;
     };
-    const value = writeString(exports, 'a123b');
+    const value = writeRegexString(exports, 'a123b');
     expect(exports.captureStart(...value, 1)).toBe(1);
     expect(exports.captureEnd(...value, 1)).toBe(4);
   });

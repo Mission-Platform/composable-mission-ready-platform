@@ -80,7 +80,6 @@ function importedModule(): ForgeWebScriptWasmModule {
   );
 }
 
-
 function unsignedLeb(value: number): number[] {
   const result: number[] = [];
   let remaining = value;

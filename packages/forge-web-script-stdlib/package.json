@@ -12,7 +12,10 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "fws"],
+  "files": [
+    "dist",
+    "fws"
+  ],
   "scripts": {
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:bundle": "vite build",

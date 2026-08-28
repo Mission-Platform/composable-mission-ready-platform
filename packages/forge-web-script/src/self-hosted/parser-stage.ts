@@ -404,7 +404,10 @@ function createBuilder(parameterCount: number): BytecodeBuilder {
       code.push({ opcode: 'jump', target: -1 });
     },
     branch(condition, ifTrue, ifFalse) {
-      patches.push({ index: code.length, field: 'ifTrue', label: ifTrue }, { index: code.length, field: 'ifFalse', label: ifFalse });
+      patches.push(
+        { index: code.length, field: 'ifTrue', label: ifTrue },
+        { index: code.length, field: 'ifFalse', label: ifFalse },
+      );
       code.push({ opcode: 'branch', condition, ifTrue: -1, ifFalse: -1 });
     },
     ret(source) {

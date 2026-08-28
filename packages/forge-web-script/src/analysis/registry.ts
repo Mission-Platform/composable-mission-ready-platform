@@ -28,11 +28,13 @@ function findingKey(finding: ForgeWebScriptAnalysisFinding): string {
   ]);
 }
 
+function uniqueRules(values: readonly ForgeWebScriptAnalysisRule[]): readonly ForgeWebScriptAnalysisRule[] {
+  return values.filter((rule, index, all) => all.findIndex((candidate) => candidate.id === rule.id) === index);
+}
+
 export function createForgeWebScriptAnalysisRuleRegistry(
   rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
 ): ForgeWebScriptAnalysisRuleRegistry {
-  const uniqueRules = (values: readonly ForgeWebScriptAnalysisRule[]): readonly ForgeWebScriptAnalysisRule[] =>
-    values.filter((rule, index, all) => all.findIndex((candidate) => candidate.id === rule.id) === index);
   const run = (context: ForgeWebScriptAnalysisContext): ForgeWebScriptAnalysisReport => {
     const findings: ForgeWebScriptAnalysisFinding[] = [];
     for (const rule of uniqueRules(rules)) {

@@ -1384,7 +1384,11 @@ function buildParseBlock(pool: ConstPool, returnWord: number): ForgeWebScriptSel
   return function_('pm_parse_block', [], 'unit', b);
 }
 
-function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: number): ForgeWebScriptSelfHostedVmFunction {
+function buildParseFunction(
+  pool: ConstPool,
+  exportWord: number,
+  functionWord: number,
+): ForgeWebScriptSelfHostedVmFunction {
   const b = createBuilder(0);
   const kind = b.alloc();
   const cond = b.alloc();
