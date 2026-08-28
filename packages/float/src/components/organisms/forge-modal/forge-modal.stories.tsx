@@ -1,5 +1,4 @@
 import { ForgeButton, ForgeStack } from '@mission-platform/components';
-import { type MpChild } from '@mission-platform/forge';
 import { ForgeSelect } from '@mission-platform/forms';
 import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 import { ForgeTypography } from '@mission-platform/typography';
@@ -11,6 +10,7 @@ import { ForgeTooltip } from '../../molecules/forge-tooltip/forge-tooltip';
 
 import { ForgeModal } from './forge-modal';
 
+import type { MpChild } from '@mission-platform/forge';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /** All currently-open native `<dialog>`s, in DOM (and top-layer) order.

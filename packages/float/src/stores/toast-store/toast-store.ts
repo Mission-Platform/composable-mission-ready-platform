@@ -148,13 +148,13 @@ function withVariant(
 }
 
 /** Convenience: show an `info` toast. */
-export const infoToast = withVariant('info');
+export const infoToast: ReturnType<typeof withVariant> = withVariant('info');
 /** Convenience: show a `success` toast. */
-export const successToast = withVariant('success');
+export const successToast: ReturnType<typeof withVariant> = withVariant('success');
 /** Convenience: show a `warning` toast. */
-export const warningToast = withVariant('warning');
+export const warningToast: ReturnType<typeof withVariant> = withVariant('warning');
 /** Convenience: show an `error` toast. */
-export const errorToast = withVariant('error');
+export const errorToast: ReturnType<typeof withVariant> = withVariant('error');
 
 /** The public API returned by {@link useToast}. */
 export interface UseToastReturn {
