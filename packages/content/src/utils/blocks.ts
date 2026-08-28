@@ -14,7 +14,7 @@ export type WysiwygBlockAlign = 'alignLeft' | 'alignCenter' | 'alignRight' | 'al
 export const CODE_BLOCK_ATTRIBUTE = 'data-mp-code-block';
 
 /** CSS selector matching every code-block embed host. */
-export const CODE_BLOCK_SELECTOR = `[${CODE_BLOCK_ATTRIBUTE}]`;
+export const CODE_BLOCK_SELECTOR: string = `[${CODE_BLOCK_ATTRIBUTE}]`;
 
 /** A discovered code-block embed: its host element plus the code it renders. */
 export interface CodeBlockEmbed {

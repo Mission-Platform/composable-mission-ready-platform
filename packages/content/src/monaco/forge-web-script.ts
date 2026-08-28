@@ -29,7 +29,7 @@ type MonacoRuntime = typeof monaco;
 /** Register the Forge Web Script language and the lexical token provider. */
 export function registerForgeWebScriptLanguage(
   monacoRuntime: MonacoRuntime,
-  languageId = forgeWebScriptLanguageId,
+  languageId: string = forgeWebScriptLanguageId,
 ): monaco.IDisposable {
   const languageAlreadyRegistered = monacoRuntime.languages.getLanguages().some(({ id }) => id === languageId);
   if (!languageAlreadyRegistered) {
@@ -54,6 +54,10 @@ export function registerForgeWebScriptLanguage(
   };
 }
 
+function modelUri(model: monaco.editor.ITextModel): string {
+  return model.uri.toString();
+}
+
 /** Attach diagnostics, completion, hover, model synchronization, and tokenization to an editor. */
 export function attachForgeWebScriptMonaco(
   editor: monaco.editor.IStandaloneCodeEditor,
@@ -69,7 +73,6 @@ export function attachForgeWebScriptMonaco(
   let refreshGeneration = 0;
   let currentUri: string | undefined;
 
-  const modelUri = (model: monaco.editor.ITextModel): string => model.uri.toString();
   const modelFileName = (model: monaco.editor.ITextModel): string =>
     options.fileName ?? model.uri.path ?? modelUri(model);
   const currentModel = (): monaco.editor.ITextModel | undefined => {

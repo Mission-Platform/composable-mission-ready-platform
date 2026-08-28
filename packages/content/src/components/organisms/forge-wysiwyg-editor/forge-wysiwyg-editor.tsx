@@ -2,7 +2,6 @@ import { ForgeButton } from '@mission-platform/components';
 import { ForgeDialog } from '@mission-platform/float';
 import { type MpElement, Teleport, useEffect, useRef, useState } from '@mission-platform/forge';
 
-import { type ContentDocument } from '../../../ast';
 import { toHtml } from '../../../builders';
 import { parseHtml } from '../../../parsers';
 import {
@@ -37,6 +36,8 @@ import { ForgeWysiwygToolbar, type WysiwygToolbarItem } from '../../molecules/fo
 import { ForgeMonacoEditor } from '../forge-monaco-editor';
 
 import styles from './forge-wysiwyg-editor.module.scss';
+
+import type { ContentDocument } from '../../../ast';
 
 /** The toggle commands whose active state is mirrored onto the toolbar. */
 const TOGGLE_COMMANDS: readonly WysiwygCommand[] = ['bold', 'italic', 'underline', 'strikethrough'];

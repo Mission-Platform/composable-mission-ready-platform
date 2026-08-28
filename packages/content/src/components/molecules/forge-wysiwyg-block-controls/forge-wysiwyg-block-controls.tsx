@@ -7,11 +7,12 @@ import {
   ForgeIconArrow,
 } from '@mission-platform/icons';
 
-import { type WysiwygBlockAlign } from '../../../utils/blocks';
 import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
 import { ForgeWysiwygToolbarButton } from '../../atoms/forge-wysiwyg-toolbar-button';
 
 import styles from './forge-wysiwyg-block-controls.module.scss';
+
+import type { WysiwygBlockAlign } from '../../../utils/blocks';
 
 const ICON_SIZE = 'sm';
 

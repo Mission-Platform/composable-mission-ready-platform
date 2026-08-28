@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createEditorChangeStream } from './editor-stream';
-import { type EditorStats } from './text-stats';
+
+import type { EditorStats } from './text-stats';
 
 describe('createEditorChangeStream', () => {
   beforeEach(() => {

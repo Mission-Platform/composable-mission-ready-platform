@@ -18,12 +18,13 @@ import {
   ForgeIconUnderline,
 } from '@mission-platform/icons';
 
-import { type WysiwygCommand } from '../../../utils/commands';
 import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
 import { ForgeWysiwygToolbarButton } from '../../atoms/forge-wysiwyg-toolbar-button';
 import { ForgeWysiwygBlockMenu } from '../forge-wysiwyg-block-menu';
 
 import styles from './forge-wysiwyg-toolbar.module.scss';
+
+import type { WysiwygCommand } from '../../../utils/commands';
 
 const ICON_SIZE = 'sm';
 
