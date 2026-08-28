@@ -13,7 +13,8 @@
         "--dir",
         "<project_dir>",
         "exec",
-        "typescript-language-server",
+        "tsc",
+        "--lsp",
         "--stdio"
       ]
     },

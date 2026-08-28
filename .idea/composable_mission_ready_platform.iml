@@ -41,6 +41,7 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/pdf417-decode/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/pdf417-decode/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/crates/pdf417-encode/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/web-lua/dist-node" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
