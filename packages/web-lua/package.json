@@ -28,9 +28,6 @@
     "lint": "eslint .",
     "format": "prettier --check ."
   },
-  "dependencies": {
-    "@mission-platform/forge-web-script": "workspace:*"
-  },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",

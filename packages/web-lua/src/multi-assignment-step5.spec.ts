@@ -47,7 +47,7 @@ describe("WebLua Step 5 multi-assignment", () => {
 
   it("preserves a function alias beside a scalar in a local declaration", async () => {
     const output: string[] = [];
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.io.write"],
       hostAdapter: { output: (event) => output.push(event.message) },
     });

@@ -38,6 +38,64 @@ export fn vm_true() -> u32 {
   return 1;
 }
 
+fn vm_hash_byte(
+  index: u32,
+  a: u32,
+  b: u32,
+  c: u32,
+  d: u32,
+  e: u32,
+  f: u32,
+  g: u32,
+  h: u32,
+  i: u32,
+  j: u32,
+  k: u32,
+  l: u32,
+) -> u32 {
+  if index == 0 { return a; }
+  if index == 1 { return b; }
+  if index == 2 { return c; }
+  if index == 3 { return d; }
+  if index == 4 { return e; }
+  if index == 5 { return f; }
+  if index == 6 { return g; }
+  if index == 7 { return h; }
+  if index == 8 { return i; }
+  if index == 9 { return j; }
+  if index == 10 { return k; }
+  return l;
+}
+
+fn vm_hash_len(
+  a: u32,
+  b: u32,
+  c: u32,
+  d: u32,
+  e: u32,
+  f: u32,
+  g: u32,
+  h: u32,
+  i: u32,
+  j: u32,
+  k: u32,
+  l: u32,
+) -> u32 {
+  if a == 0 { return 0; }
+  if b == 0 { return 1; }
+  if c == 0 { return 2; }
+  if d == 0 { return 3; }
+  if e == 0 { return 4; }
+  if f == 0 { return 5; }
+  if g == 0 { return 6; }
+  if h == 0 { return 7; }
+  if i == 0 { return 8; }
+  if j == 0 { return 9; }
+  if k == 0 { return 10; }
+  if l == 0 { return 11; }
+  return 12;
+}
+
 fn vm_hash_name(
   a: u32,
   b: u32,
@@ -52,37 +110,33 @@ fn vm_hash_name(
   k: u32,
   l: u32,
 ) -> u32 {
+  let count: u32 = vm_hash_len(a, b, c, d, e, f, g, h, i, j, k, l);
   let mut hash: u32 = 216613626;
-  if a != 0 { hash = hash * 16777619 + a; }
-  if b != 0 { hash = hash * 16777619 + b; }
-  if c != 0 { hash = hash * 16777619 + c; }
-  if d != 0 { hash = hash * 16777619 + d; }
-  if e != 0 { hash = hash * 16777619 + e; }
-  if f != 0 { hash = hash * 16777619 + f; }
-  if g != 0 { hash = hash * 16777619 + g; }
-  if h != 0 { hash = hash * 16777619 + h; }
-  if i != 0 { hash = hash * 16777619 + i; }
-  if j != 0 { hash = hash * 16777619 + j; }
-  if k != 0 { hash = hash * 16777619 + k; }
-  if l != 0 { hash = hash * 16777619 + l; }
+  let mut index: u32 = 0;
+  while index < count {
+    let byte: u32 = vm_hash_byte(index, a, b, c, d, e, f, g, h, i, j, k, l);
+    hash = hash * 16777619;
+    hash = hash + byte;
+    index = index + 1;
+  }
   return hash;
 }
 
 fn vm_hash_pairs() -> u32 { return vm_hash_name(112, 97, 105, 114, 115, 0, 0, 0, 0, 0, 0, 0); }
 fn vm_hash_next() -> u32 { return vm_hash_name(110, 101, 120, 116, 0, 0, 0, 0, 0, 0, 0, 0); }
-fn vm_hash_setmetatable() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 115; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 109; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 98; hash = hash * 16777619 + 108; hash = hash * 16777619 + 101; return hash; }
-fn vm_hash_getmetatable() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 103; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 109; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 98; hash = hash * 16777619 + 108; hash = hash * 16777619 + 101; return hash; }
-fn vm_hash_index() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 105; hash = hash * 16777619 + 110; hash = hash * 16777619 + 100; hash = hash * 16777619 + 101; hash = hash * 16777619 + 120; return hash; }
-fn vm_hash_newindex() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 110; hash = hash * 16777619 + 101; hash = hash * 16777619 + 119; hash = hash * 16777619 + 105; hash = hash * 16777619 + 110; hash = hash * 16777619 + 100; hash = hash * 16777619 + 101; hash = hash * 16777619 + 120; return hash; }
-fn vm_hash_add() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 97; hash = hash * 16777619 + 100; hash = hash * 16777619 + 100; return hash; }
-fn vm_hash_sub() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 115; hash = hash * 16777619 + 117; hash = hash * 16777619 + 98; return hash; }
-fn vm_hash_mul() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 109; hash = hash * 16777619 + 117; hash = hash * 16777619 + 108; return hash; }
-fn vm_hash_div() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 100; hash = hash * 16777619 + 105; hash = hash * 16777619 + 118; return hash; }
+fn vm_hash_setmetatable() -> u32 { return vm_hash_name(115, 101, 116, 109, 101, 116, 97, 116, 97, 98, 108, 101); }
+fn vm_hash_getmetatable() -> u32 { return vm_hash_name(103, 101, 116, 109, 101, 116, 97, 116, 97, 98, 108, 101); }
+fn vm_hash_index() -> u32 { return vm_hash_name(95, 95, 105, 110, 100, 101, 120, 0, 0, 0, 0, 0); }
+fn vm_hash_newindex() -> u32 { return vm_hash_name(95, 95, 110, 101, 119, 105, 110, 100, 101, 120, 0, 0); }
+fn vm_hash_add() -> u32 { return vm_hash_name(95, 95, 97, 100, 100, 0, 0, 0, 0, 0, 0, 0); }
+fn vm_hash_sub() -> u32 { return vm_hash_name(95, 95, 115, 117, 98, 0, 0, 0, 0, 0, 0, 0); }
+fn vm_hash_mul() -> u32 { return vm_hash_name(95, 95, 109, 117, 108, 0, 0, 0, 0, 0, 0, 0); }
+fn vm_hash_div() -> u32 { return vm_hash_name(95, 95, 100, 105, 118, 0, 0, 0, 0, 0, 0, 0); }
 fn vm_hash_idiv() -> u32 { return vm_hash_name(95, 95, 105, 100, 105, 118, 0, 0, 0, 0, 0, 0); }
 fn vm_hash_pow() -> u32 { return vm_hash_name(95, 95, 112, 111, 119, 0, 0, 0, 0, 0, 0, 0); }
-fn vm_hash_eq() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 101; hash = hash * 16777619 + 113; return hash; }
-fn vm_hash_lt() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 108; hash = hash * 16777619 + 116; return hash; }
-fn vm_hash_le() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 108; hash = hash * 16777619 + 101; return hash; }
+fn vm_hash_eq() -> u32 { return vm_hash_name(95, 95, 101, 113, 0, 0, 0, 0, 0, 0, 0, 0); }
+fn vm_hash_lt() -> u32 { return vm_hash_name(95, 95, 108, 116, 0, 0, 0, 0, 0, 0, 0, 0); }
+fn vm_hash_le() -> u32 { return vm_hash_name(95, 95, 108, 101, 0, 0, 0, 0, 0, 0, 0, 0); }
 fn vm_hash_concat() -> u32 { return vm_hash_name(95, 95, 99, 111, 110, 99, 97, 116, 0, 0, 0, 0); }
 fn vm_hash_mod() -> u32 { return vm_hash_name(95, 95, 109, 111, 100, 0, 0, 0, 0, 0, 0, 0); }
 fn vm_hash_band() -> u32 { return vm_hash_name(95, 95, 98, 97, 110, 100, 0, 0, 0, 0, 0, 0); }
@@ -3517,6 +3571,11 @@ export fn execute(prototype: u32) -> unit {
     let opcode: u32 = memory_load_u32(instruction_address);
     let operand: u32 = memory_load_u32(instruction_address + 4);
     let mut advance: u32 = 1;
+    if vm_is_binary(opcode) == 1 {
+      let next_stack_depth: u32 = vm_binary_opcode(prototype, opcode, stack, stack_depth);
+      stack_depth = next_stack_depth;
+      memory_store_u32(prototype + 16, stack_depth);
+    } else {
     if opcode == 47 {
       memory_store_u32(prototype + 52, operand);
     } else {
@@ -3633,7 +3692,7 @@ export fn execute(prototype: u32) -> unit {
                             if stack_depth >= argument_count {
                               builtin_base = stack_depth - argument_count;
                             }
-                            stack_depth = vm_builtin_call(
+                            let metatable_stack_depth: u32 = vm_builtin_call(
                               prototype,
                               builtin,
                               heap,
@@ -3641,6 +3700,7 @@ export fn execute(prototype: u32) -> unit {
                               stack_depth,
                               argument_count,
                             );
+                            stack_depth = metatable_stack_depth;
                             memory_store_u32(prototype + 16, stack_depth);
                             if stack_depth >= builtin_base {
                               memory_store_u32(prototype + 56, stack_depth - builtin_base);
@@ -3652,7 +3712,7 @@ export fn execute(prototype: u32) -> unit {
                             if stack_depth >= argument_count {
                               builtin_base = stack_depth - argument_count;
                             }
-                            stack_depth = vm_builtin_call(
+                            let builtin_stack_depth: u32 = vm_builtin_call(
                               prototype,
                               memory_load_u32(function_record + 28),
                               heap,
@@ -3660,6 +3720,7 @@ export fn execute(prototype: u32) -> unit {
                               stack_depth,
                               argument_count,
                             );
+                            stack_depth = builtin_stack_depth;
                             memory_store_u32(prototype + 16, stack_depth);
                             if stack_depth >= builtin_base {
                               memory_store_u32(prototype + 56, stack_depth - builtin_base);
@@ -3772,26 +3833,31 @@ export fn execute(prototype: u32) -> unit {
                           }
                         } else {
                           if vm_is_bitwise_opcode(opcode) == 1 {
-                            stack_depth = vm_bitwise_opcode(prototype, opcode, stack, stack_depth);
+                            let bitwise_stack_depth: u32 = vm_bitwise_opcode(prototype, opcode, stack, stack_depth);
+                            stack_depth = bitwise_stack_depth;
                             memory_store_u32(prototype + 16, stack_depth);
                           } else {
                             if vm_is_table_opcode(opcode) == 1 {
-                              stack_depth = vm_table_opcode(prototype, opcode, heap, stack, stack_depth);
+                              let table_stack_depth: u32 = vm_table_opcode(prototype, opcode, heap, stack, stack_depth);
+                              stack_depth = table_stack_depth;
                               memory_store_u32(prototype + 16, stack_depth);
                             } else {
                               if vm_is_string_opcode(opcode) == 1 {
-                                stack_depth = vm_string_opcode(prototype, opcode, operand, heap, stack, stack_depth);
+                                let string_stack_depth: u32 = vm_string_opcode(prototype, opcode, operand, heap, stack, stack_depth);
+                                stack_depth = string_stack_depth;
                                 memory_store_u32(prototype + 16, stack_depth);
                               } else {
                                 if opcode == 48 {
                                   let before_varargs: u32 = stack_depth;
-                                  stack_depth = vm_push_varargs(prototype, stack, stack_depth, local_base);
+                                  let vararg_stack_depth: u32 = vm_push_varargs(prototype, stack, stack_depth, local_base);
+                                  stack_depth = vararg_stack_depth;
                                   memory_store_u32(prototype + 56, stack_depth - before_varargs);
                                   memory_store_u32(prototype + 16, stack_depth);
                                 } else {
                                   if opcode == 49 {
                                     let actual_count: u32 = memory_load_u32(prototype + 56);
-                                    stack_depth = vm_adjust_results(prototype, stack, stack_depth, operand, actual_count);
+                                    let adjusted_stack_depth: u32 = vm_adjust_results(prototype, stack, stack_depth, operand, actual_count);
+                                    stack_depth = adjusted_stack_depth;
                                     if memory_load_u32(prototype + 28) == 0 {
                                       memory_store_u32(prototype + 56, operand);
                                     }
@@ -3874,12 +3940,6 @@ export fn execute(prototype: u32) -> unit {
                   }
                 }
               }
-            }
-          }
-        }
-      }
-    }
-    }
     }
     memory_store_u32(prototype + 24, memory_load_u32(prototype + 24) + advance);
   }

@@ -40,7 +40,9 @@ describe("WebLua Step 5 string call sugar", () => {
 
     expect(frame).toMatchObject({ kind: "result", status: 0 });
     if (frame.kind === "result")
-      expect(guestString(runtime, frame.values[0])).toBe(String.raw`long\nstring`);
+      expect(guestString(runtime, frame.values[0])).toBe(
+        String.raw`long\nstring`,
+      );
     state.close();
   }, 120_000);
 

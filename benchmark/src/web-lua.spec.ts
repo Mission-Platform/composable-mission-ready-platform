@@ -13,16 +13,14 @@ describe("WebLua benchmark workload", () => {
     ).toBe(WEB_LUA_BENCHMARK_CORPUS.length);
   });
 
-  it("measures compile, initialization, execution, artifact, and memory evidence", async () => {
+  it("measures initialization, execution, and memory evidence", async () => {
     const report = await runWebLuaBenchmark({
       warmupIterations: 1,
       sampleIterations: 1,
     });
 
-    expect(report.contentHash).toMatch(/^[0-9a-f]+$/u);
-    expect(report.graphHash).toMatch(/^[0-9a-f]+$/u);
-    expect(report.artifactSizeBytes).toBeGreaterThan(0);
-    expect(report.compileMs).toBeGreaterThanOrEqual(0);
+    expect(report).not.toHaveProperty("compileMs");
+    expect(report).not.toHaveProperty("artifactSizeBytes");
     expect(report.initializeMs).toBeGreaterThanOrEqual(0);
     expect(report.memoryAfterBytes).toBeGreaterThanOrEqual(
       report.memoryBeforeBytes,

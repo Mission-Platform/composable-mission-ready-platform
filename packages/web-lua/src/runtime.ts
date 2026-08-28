@@ -1,19 +1,18 @@
+import library, { loadSync } from "../fws/foundation.fws";
+
 import {
   WEB_LUA_CAPABILITIES,
-  asWebLuaExports,
   assertMemoryRange,
   WEB_LUA_ABI_MANIFEST,
   WEB_LUA_CAPABILITY_POLICIES,
   WEB_LUA_IMPORT_POLICY,
   WEB_LUA_STATUS,
+  validateWebLuaExports,
   type WebLuaExports,
   type WebLuaValueKind,
 } from "./abi.js";
-import { WEB_LUA_BUILD_ARTIFACT } from "./build-artifact.js";
 
-import type { WebLuaArtifact } from "./compiler.js";
-
-export { WEB_LUA_CAPABILITIES, WEB_LUA_BUILD_ARTIFACT };
+export { WEB_LUA_CAPABILITIES };
 
 export type WebLuaCapability = (typeof WEB_LUA_CAPABILITIES)[number];
 
@@ -149,7 +148,6 @@ export interface WebLuaState {
 }
 
 export interface WebLuaRuntime {
-  readonly artifact: WebLuaArtifact;
   readonly exports: WebLuaExports;
   readonly abi: typeof WEB_LUA_ABI_MANIFEST;
   readonly importPolicy: typeof WEB_LUA_IMPORT_POLICY;
@@ -312,10 +310,8 @@ export interface WebLuaRuntime {
 }
 
 export async function createWebLuaRuntime(
-  artifact?: WebLuaArtifact,
   options: WebLuaRuntimeOptions = {},
 ): Promise<WebLuaRuntime> {
-  const resolvedArtifact = artifact ?? WEB_LUA_BUILD_ARTIFACT;
   const capabilities = [...new Set(options.capabilities)];
   const hasCapability = (capability: WebLuaCapability): boolean =>
     capabilities.includes(capability);
@@ -375,8 +371,8 @@ export async function createWebLuaRuntime(
     ["__wl_io_read", { capability: "lua.io.read", operation: "open-read" }],
     ["__wl_io_write", { capability: "lua.io.write", operation: "open-write" }],
   ]);
-  const packageLoad = (pathHandle: number): readonly [number, number] => {
-    const input = decodeGuestString(pathHandle);
+  const packageLoad = (path: number): readonly [number, number] => {
+    const input = decodeGuestString(path);
     if (input === undefined) return emptyBytes();
     const marker = capabilityMarker.get(input);
     if (marker !== undefined) {
@@ -424,8 +420,8 @@ export async function createWebLuaRuntime(
     new Uint8Array(exports.memory.buffer, pointer, bytes.byteLength).set(bytes);
     return [pointer, bytes.byteLength];
   };
-  const sourceToBytes = (sourceHandle: number): readonly [number, number] => {
-    const source = decodeGuestString(sourceHandle);
+  const sourceToBytes = (sourceValue: number): readonly [number, number] => {
+    const source = decodeGuestString(sourceValue);
     if (source === undefined || source.length === 0) return emptyBytes();
     const bytes = new TextEncoder().encode(source);
     const pointer = exports.fws_alloc(bytes.byteLength);
@@ -433,9 +429,10 @@ export async function createWebLuaRuntime(
     new Uint8Array(exports.memory.buffer, pointer, bytes.byteLength).set(bytes);
     return [pointer, bytes.byteLength];
   };
-  const ioWrite = (handle: number): void => {
+  const ioWrite = (value: number): void => {
     if (!hasCapability("lua.io.write")) return;
     try {
+      const handle = value;
       if (!Number.isSafeInteger(handle) || handle < 0) return;
       assertMemoryRange(exports.memory, handle, 20);
       const view = new DataView(exports.memory.buffer);
@@ -448,23 +445,19 @@ export async function createWebLuaRuntime(
       return;
     }
   };
-  const instance = new WebAssembly.Instance(
-    new WebAssembly.Module(
-      resolvedArtifact.artifact.wasm! as unknown as ArrayBuffer,
-    ),
-    {
-      "lua.io.write": {
-        io_write: ioWrite,
-      },
-      "lua.package.load": {
-        package_load: packageLoad,
-      },
-      "lua.core.source": {
-        string_to_bytes: sourceToBytes,
-      },
+  const loadLibrary = typeof library === "function" ? library : loadSync;
+  exports = loadLibrary<WebLuaExports>({
+    "lua.io.write": {
+      io_write: ioWrite,
     },
-  );
-  exports = asWebLuaExports(instance.exports);
+    "lua.package.load": {
+      package_load: packageLoad,
+    },
+    "lua.core.source": {
+      string_to_bytes: sourceToBytes,
+    },
+  });
+  validateWebLuaExports(exports);
   const errorCode = (status: number): WebLuaErrorCode => {
     if (status === WEB_LUA_STATUS.syntaxError) return "syntax-error";
     if (status === WEB_LUA_STATUS.runtimeError) return "runtime-error";
@@ -524,8 +517,8 @@ export async function createWebLuaRuntime(
     };
     const load = (source: Uint8Array | string): WebLuaLoadFrame => {
       assertOpen();
-      const prototype = withSource(source, (pointer, length) =>
-        exports.load(handle, pointer, length),
+      const prototype = withSource(source, (bytes) =>
+        exports.load(handle, bytes),
       );
       const status = exports.state_status(handle);
       if (prototype === 0 || status !== WEB_LUA_STATUS.ok)
@@ -685,7 +678,7 @@ export async function createWebLuaRuntime(
     typeof source === "string" ? new TextEncoder().encode(source) : source;
   const withSource = <T>(
     source: Uint8Array | string,
-    operation: (pointer: number, length: number) => T,
+    operation: (bytes: readonly [number, number]) => T,
   ): T => {
     const encoded = encodeSource(source);
     const pointer = exports.fws_alloc(encoded.byteLength);
@@ -694,7 +687,7 @@ export async function createWebLuaRuntime(
       encoded,
     );
     try {
-      return operation(pointer, encoded.byteLength);
+      return operation([pointer, encoded.byteLength]);
     } finally {
       exports.fws_dealloc(pointer, encoded.byteLength);
     }
@@ -734,7 +727,6 @@ export async function createWebLuaRuntime(
     }
   };
   return {
-    artifact: resolvedArtifact,
     exports,
     abi: WEB_LUA_ABI_MANIFEST,
     importPolicy: WEB_LUA_IMPORT_POLICY,
@@ -821,9 +813,7 @@ export async function createWebLuaRuntime(
     internString: exports.intern_string,
     findString: exports.find_string,
     internStringBytes: (state, source) =>
-      withSource(source, (pointer, length) =>
-        exports.intern_string_bytes(state, pointer, length),
-      ),
+      withSource(source, (bytes) => exports.intern_string_bytes(state, bytes)),
     stringByte: exports.string_byte_value,
     stringSize: exports.string_size,
     stringsEqual: (left, right) => exports.strings_equal(left, right) === 1,
@@ -844,13 +834,9 @@ export async function createWebLuaRuntime(
     collect: exports.collect_state,
     objectCount,
     lexTokenCount: (source) =>
-      withSource(source, (pointer, length) =>
-        exports.lex_token_count(pointer, length),
-      ),
+      withSource(source, (bytes) => exports.lex_token_count(bytes)),
     load: (state, source) =>
-      withSource(source, (pointer, length) =>
-        exports.load(state, pointer, length),
-      ),
+      withSource(source, (bytes) => exports.load(state, bytes)),
     call: exports.call,
     resume: exports.resume,
     close: exports.close_state,

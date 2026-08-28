@@ -20,7 +20,7 @@ function mainSourceAdapter(input: unknown): Uint8Array | undefined {
 describe("WebLua main.lua io boundary", () => {
   it("runs loadfile main.lua with deterministic command and guest file adapters", async () => {
     const requests: string[] = [];
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: [
         "lua.io.read",
         "lua.io.write",

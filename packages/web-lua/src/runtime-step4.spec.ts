@@ -5,27 +5,17 @@ import {
   WEB_LUA_CAPABILITY_POLICIES,
   WEB_LUA_IMPORT_POLICY,
 } from "./abi.js";
-import { compileWebLua } from "./compiler.js";
 import {
   createWebLuaRuntime,
-  WEB_LUA_BUILD_ARTIFACT,
   WebLuaStateClosedError,
   type WebLuaResultFrame,
 } from "./runtime.js";
 
-vi.mock("./compiler.js", async (importOriginal) => {
-  const original = await importOriginal<typeof import("./compiler.js")>();
-  return { ...original, compileWebLua: vi.fn(original.compileWebLua) };
-});
-
 describe("WebLua Step 4 embedded-runtime contract", () => {
-  it("uses the build-time guest artifact instead of compiling FWS at runtime", async () => {
-    vi.mocked(compileWebLua).mockClear();
-    vi.mocked(compileWebLua).mockResolvedValue(WEB_LUA_BUILD_ARTIFACT);
-
+  it("uses the generated foundation library at runtime", async () => {
     const runtime = await createWebLuaRuntime();
 
-    expect(compileWebLua).not.toHaveBeenCalled();
+    expect(runtime.exports.create_state()).toBeGreaterThan(0);
     runtime.dispose();
   });
 
@@ -62,7 +52,7 @@ describe("WebLua Step 4 embedded-runtime contract", () => {
 
   it("returns stable result frames and emits successful output", async () => {
     const onOutput = vi.fn();
-    const runtime = await createWebLuaRuntime(undefined, { onOutput });
+    const runtime = await createWebLuaRuntime({ onOutput });
     const state = runtime.openState();
     const frame = state.execute("return 3, 5, 8");
 
@@ -79,7 +69,7 @@ describe("WebLua Step 4 embedded-runtime contract", () => {
 
   it("routes guest print and warn through the write capability output callback", async () => {
     const deniedOutput = vi.fn();
-    const denied = await createWebLuaRuntime(undefined, {
+    const denied = await createWebLuaRuntime({
       hostAdapter: { output: deniedOutput },
     });
     const deniedState = denied.openState();
@@ -91,7 +81,7 @@ describe("WebLua Step 4 embedded-runtime contract", () => {
     deniedState.close();
 
     const output = vi.fn();
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.io.write"],
       hostAdapter: { output },
     });
@@ -116,7 +106,7 @@ describe("WebLua Step 4 embedded-runtime contract", () => {
 
   it("reports malformed, load, and runtime errors through stable frames", async () => {
     const onError = vi.fn();
-    const runtime = await createWebLuaRuntime(undefined, { onError });
+    const runtime = await createWebLuaRuntime({ onError });
     const state = runtime.openState();
 
     const malformed = state.load("\u001BLua");
@@ -140,7 +130,7 @@ describe("WebLua Step 4 embedded-runtime contract", () => {
 
   it("denies host effects deterministically until an explicit adapter is enabled", async () => {
     const deniedOutput = vi.fn();
-    const denied = await createWebLuaRuntime(undefined, {
+    const denied = await createWebLuaRuntime({
       onOutput: deniedOutput,
     });
     expect(denied.invokeCapability("lua.io.write", "write", "hello")).toEqual({
@@ -151,7 +141,7 @@ describe("WebLua Step 4 embedded-runtime contract", () => {
     expect(deniedOutput).not.toHaveBeenCalled();
 
     const adapter = vi.fn(() => "written");
-    const granted = await createWebLuaRuntime(undefined, {
+    const granted = await createWebLuaRuntime({
       capabilities: ["lua.io.write"],
       hostAdapter: { invoke: adapter },
     });

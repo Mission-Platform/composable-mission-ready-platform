@@ -39,7 +39,7 @@ describe("WebLua Step 5 string equality", () => {
 
   it('allows the all.lua version guard to fall through to print("start")', async () => {
     const output = vi.fn();
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.io.write"],
       hostAdapter: { output },
     });

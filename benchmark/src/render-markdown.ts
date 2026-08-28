@@ -6,7 +6,9 @@ import type {
 } from "./contracts.ts";
 
 function text(value: unknown): string {
-  return String(value).replaceAll("|", String.raw`\|`).replaceAll("\n", " ");
+  return String(value)
+    .replaceAll("|", String.raw`\|`)
+    .replaceAll("\n", " ");
 }
 
 function value(value: unknown): string {

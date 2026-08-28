@@ -1,25 +1,16 @@
 import { describe, expect, it } from "vitest";
 
 import { validateWebLuaExports, WEB_LUA_ABI_MANIFEST } from "../abi.js";
-import { compileWebLua } from "../compiler.js";
 import { createWebLuaRuntime } from "../runtime.js";
 
 describe("WebLua runtime foundation", () => {
-  it("compiles the complete foundation graph into a valid deterministic artifact", async () => {
-    const first = await compileWebLua();
-    const second = await compileWebLua();
+  it("loads the complete generated foundation library", async () => {
+    const runtime = await createWebLuaRuntime();
 
-    expect(first.artifact.diagnostics).toEqual([]);
-    expect(first.artifact.wasm).toBeDefined();
-    expect(
-      WebAssembly.validate(first.artifact.wasm! as unknown as ArrayBuffer),
-    ).toBe(true);
-    expect(first.contentHash).toBe(second.contentHash);
-    expect(first.graphHash).toBe(second.graphHash);
-    expect(first.artifact.manifest?.linkMode).toBe("static");
-    expect(first.abi.format).toBe("web-lua-abi");
-    expect(first.abi.requiredExports).toContain("load");
-    expect(first.abi.requiredExports).toContain("state_status");
+    expect(runtime.exports.create_state()).toBeGreaterThan(0);
+    expect(runtime.abi.format).toBe("web-lua-abi");
+    expect(runtime.abi.requiredExports).toContain("load");
+    expect(runtime.abi.requiredExports).toContain("state_status");
   }, 180_000);
 
   it("rejects an artifact that does not expose the complete runtime contract", () => {
@@ -885,7 +876,7 @@ describe("WebLua runtime foundation", () => {
       ["return 0x1.8p1", 3],
       ["return 0X1p-1", 0.5],
     ] as const) {
-      const isolated = await createWebLuaRuntime(runtime.artifact);
+      const isolated = await createWebLuaRuntime();
       const isolatedState = isolated.createState();
       const prototype = isolated.load(isolatedState, source);
       expect(isolated.status(isolatedState), source).toBe(0);

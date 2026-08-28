@@ -1,7 +1,6 @@
 import { performance } from "node:perf_hooks";
 
 import {
-  compileWebLua,
   createWebLuaRuntime,
   type WebLuaRuntime,
 } from "@mission-platform/web-lua/node";
@@ -44,10 +43,6 @@ export interface WebLuaBenchmarkCaseResult {
 }
 
 export interface WebLuaBenchmarkReport {
-  readonly contentHash: string;
-  readonly graphHash: string;
-  readonly artifactSizeBytes: number;
-  readonly compileMs: number;
   readonly initializeMs: number;
   readonly memoryBeforeBytes: number;
   readonly memoryAfterBytes: number;
@@ -70,23 +65,26 @@ async function executeCase(
   runtime: WebLuaRuntime,
   benchmarkCase: WebLuaBenchmarkCase,
 ): Promise<number> {
-  const state = runtime.createState();
+  const state = runtime.openState();
   try {
-    const prototype = runtime.load(state, benchmarkCase.source);
-    if (runtime.status(state) !== 0)
-      throw new Error(`WebLua benchmark failed to load '${benchmarkCase.id}'.`);
-    const result = runtime.call(state, prototype);
-    if (runtime.status(state) !== 0)
+    const loaded = state.load(benchmarkCase.source);
+    if (loaded.kind === "error")
       throw new Error(
-        `WebLua benchmark failed while executing '${benchmarkCase.id}'.`,
+        `WebLua benchmark failed to load '${benchmarkCase.id}': ${loaded.message}`,
       );
+    const frame = state.call(loaded);
+    if (frame.kind === "error")
+      throw new Error(
+        `WebLua benchmark failed while executing '${benchmarkCase.id}': ${frame.message}`,
+      );
+    const result = frame.result;
     if (result !== benchmarkCase.expected)
       throw new Error(
         `WebLua benchmark '${benchmarkCase.id}' returned ${result}, expected ${benchmarkCase.expected}.`,
       );
     return result;
   } finally {
-    runtime.close(state);
+    state.close();
   }
 }
 
@@ -95,11 +93,8 @@ export async function runWebLuaBenchmark(
 ): Promise<WebLuaBenchmarkReport> {
   const warmupIterations = positiveInteger(options.warmupIterations, 1);
   const sampleIterations = positiveInteger(options.sampleIterations, 3);
-  const compileStarted = performance.now();
-  const artifact = await compileWebLua();
-  const compileMs = performance.now() - compileStarted;
   const initializeStarted = performance.now();
-  const runtime = await createWebLuaRuntime(artifact);
+  const runtime = await createWebLuaRuntime();
   const initializeMs = performance.now() - initializeStarted;
   const memoryBeforeBytes = memoryBytes(runtime);
   const cases: WebLuaBenchmarkCaseResult[] = [];
@@ -116,14 +111,9 @@ export async function runWebLuaBenchmark(
         samplesMs.push(performance.now() - started);
       }
       cases.push({ id: benchmarkCase.id, result, samplesMs });
-      runtime.exports.fws_reset();
     }
     const memoryAfterBytes = memoryBytes(runtime);
     return {
-      contentHash: artifact.contentHash,
-      graphHash: artifact.graphHash,
-      artifactSizeBytes: artifact.artifact.wasm?.byteLength ?? 0,
-      compileMs,
       initializeMs,
       memoryBeforeBytes,
       memoryAfterBytes,
@@ -131,6 +121,6 @@ export async function runWebLuaBenchmark(
       cases,
     };
   } finally {
-    runtime.exports.fws_reset();
+    runtime.dispose();
   }
 }

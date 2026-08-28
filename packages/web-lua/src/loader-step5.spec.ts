@@ -18,7 +18,7 @@ describe("WebLua Step 5 loader", () => {
       expect(request.input).toBe("main.lua");
       return new TextEncoder().encode("return 41 + 1");
     };
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: { invoke },
     });
@@ -31,7 +31,7 @@ describe("WebLua Step 5 loader", () => {
   }, 120_000);
 
   it("executes a loaded file from a direct dofile statement", async () => {
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: {
         invoke: () => new TextEncoder().encode("child_value = 42"),
@@ -52,7 +52,7 @@ describe("WebLua Step 5 loader", () => {
   }, 120_000);
 
   it("resolves a nested load in the same guest state", async () => {
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: {
         invoke: (request: { readonly input: unknown }) => {
@@ -83,7 +83,7 @@ describe("WebLua Step 5 loader", () => {
   }, 120_000);
 
   it("reuses state globals across loaded chunks", async () => {
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: {
         invoke: () => new TextEncoder().encode("value = 9"),
@@ -100,7 +100,7 @@ describe("WebLua Step 5 loader", () => {
   }, 120_000);
 
   it("returns a load error for malformed returned source", async () => {
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: {
         invoke: () => new TextEncoder().encode("return ("),
@@ -116,7 +116,7 @@ describe("WebLua Step 5 loader", () => {
   }, 120_000);
 
   it("loads a callable that executes in the current state", async () => {
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: { invoke: () => new TextEncoder().encode("return 42") },
     });
@@ -131,7 +131,7 @@ describe("WebLua Step 5 loader", () => {
   }, 120_000);
 
   it("propagates every return value from a nested dofile", async () => {
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: {
         invoke: () => new TextEncoder().encode("return 17, 19, 23"),
@@ -149,7 +149,7 @@ describe("WebLua Step 5 loader", () => {
 
   it("caches guest-loaded modules in require", async () => {
     let loads = 0;
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: {
         invoke: (request: { readonly input: unknown }) => {
@@ -176,7 +176,7 @@ describe("WebLua Step 5 loader", () => {
   }, 120_000);
 
   it("loads text chunks and remains reusable after a nested load failure", async () => {
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: {
         invoke: (request: { readonly input: unknown }) => {
@@ -207,7 +207,7 @@ describe("WebLua Step 5 loader", () => {
   }, 120_000);
 
   it("remains reusable after a nested runtime error", async () => {
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: {
         invoke: (request: { readonly input: unknown }) => {

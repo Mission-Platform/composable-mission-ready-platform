@@ -3,6 +3,80 @@ import "../string.fws" as string;
 import "../table.fws" as table;
 import "../value.fws" as value;
 
+fn startup_hash_byte(
+  index: u32,
+  a: u32,
+  b: u32,
+  c: u32,
+  d: u32,
+  e: u32,
+  f: u32,
+  g: u32,
+  h: u32,
+  i: u32,
+  j: u32,
+  k: u32,
+  l: u32,
+  m: u32,
+  n: u32,
+  o: u32,
+  p: u32,
+) -> u32 {
+  if index == 0 { return a; }
+  if index == 1 { return b; }
+  if index == 2 { return c; }
+  if index == 3 { return d; }
+  if index == 4 { return e; }
+  if index == 5 { return f; }
+  if index == 6 { return g; }
+  if index == 7 { return h; }
+  if index == 8 { return i; }
+  if index == 9 { return j; }
+  if index == 10 { return k; }
+  if index == 11 { return l; }
+  if index == 12 { return m; }
+  if index == 13 { return n; }
+  if index == 14 { return o; }
+  return p;
+}
+
+fn startup_hash_len(
+  a: u32,
+  b: u32,
+  c: u32,
+  d: u32,
+  e: u32,
+  f: u32,
+  g: u32,
+  h: u32,
+  i: u32,
+  j: u32,
+  k: u32,
+  l: u32,
+  m: u32,
+  n: u32,
+  o: u32,
+  p: u32,
+) -> u32 {
+  if a == 0 { return 0; }
+  if b == 0 { return 1; }
+  if c == 0 { return 2; }
+  if d == 0 { return 3; }
+  if e == 0 { return 4; }
+  if f == 0 { return 5; }
+  if g == 0 { return 6; }
+  if h == 0 { return 7; }
+  if i == 0 { return 8; }
+  if j == 0 { return 9; }
+  if k == 0 { return 10; }
+  if l == 0 { return 11; }
+  if m == 0 { return 12; }
+  if n == 0 { return 13; }
+  if o == 0 { return 14; }
+  if p == 0 { return 15; }
+  return 16;
+}
+
 fn startup_hash(
   a: u32,
   b: u32,
@@ -21,23 +95,15 @@ fn startup_hash(
   o: u32,
   p: u32,
 ) -> u32 {
+  let count: u32 = startup_hash_len(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p);
   let mut hash: u32 = 216613626;
-  if a != 0 { hash = hash * 16777619 + a; }
-  if b != 0 { hash = hash * 16777619 + b; }
-  if c != 0 { hash = hash * 16777619 + c; }
-  if d != 0 { hash = hash * 16777619 + d; }
-  if e != 0 { hash = hash * 16777619 + e; }
-  if f != 0 { hash = hash * 16777619 + f; }
-  if g != 0 { hash = hash * 16777619 + g; }
-  if h != 0 { hash = hash * 16777619 + h; }
-  if i != 0 { hash = hash * 16777619 + i; }
-  if j != 0 { hash = hash * 16777619 + j; }
-  if k != 0 { hash = hash * 16777619 + k; }
-  if l != 0 { hash = hash * 16777619 + l; }
-  if m != 0 { hash = hash * 16777619 + m; }
-  if n != 0 { hash = hash * 16777619 + n; }
-  if o != 0 { hash = hash * 16777619 + o; }
-  if p != 0 { hash = hash * 16777619 + p; }
+  let mut index: u32 = 0;
+  while index < count {
+    let byte: u32 = startup_hash_byte(index, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p);
+    hash = hash * 16777619;
+    hash = hash + byte;
+    index = index + 1;
+  }
   return hash;
 }
 

@@ -67,7 +67,7 @@ describe("WebLua Step 5 format and dump/load", () => {
   });
 
   it("round-trips a loaded closure through guest dump and load", async () => {
-    const runtime = await createWebLuaRuntime(undefined, {
+    const runtime = await createWebLuaRuntime({
       capabilities: ["lua.package.load"],
       hostAdapter: { invoke: () => new TextEncoder().encode("return 42") },
     });

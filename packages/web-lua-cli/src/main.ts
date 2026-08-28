@@ -5,10 +5,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import {
-  createWebLuaRuntime,
-  WEB_LUA_BUILD_ARTIFACT,
-} from "@mission-platform/web-lua/node";
+import { createWebLuaRuntime } from "@mission-platform/web-lua/node";
 
 import {
   WEB_LUA_CLI_USAGE,
@@ -84,7 +81,7 @@ export interface WebLuaCliRuntimeOptions {
     readonly invoke?: (request: {
       readonly capability: string;
       readonly operation: string;
-      readonly input: unknown;
+      readonly input?: unknown;
     }) => unknown;
   };
   readonly onOutput?: (frame: WebLuaCliResultFrame) => void;
@@ -142,12 +139,12 @@ export async function runWebLuaCli(
   io: WebLuaCliIo = defaultIo,
   cwd = process.cwd(),
   runtimeFactory: WebLuaRuntimeFactory = (options) =>
-    (
-      createWebLuaRuntime as unknown as (
-        artifact: typeof WEB_LUA_BUILD_ARTIFACT,
-        options: WebLuaCliRuntimeOptions,
-      ) => Promise<WebLuaCliRuntime>
-    )(WEB_LUA_BUILD_ARTIFACT, options),
+    createWebLuaRuntime({
+      capabilities: options.capabilities,
+      hostAdapter: options.hostAdapter,
+      onOutput: options.onOutput,
+      onError: options.onError,
+    }),
   sourceReader: WebLuaSourceReader = readSource,
 ): Promise<number> {
   let options: WebLuaCliOptions;

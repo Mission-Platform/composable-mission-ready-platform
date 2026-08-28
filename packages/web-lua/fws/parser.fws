@@ -40,12 +40,22 @@ export fn node_full(kind: u32, first: u32, second: u32, third: u32, fourth: u32)
   return value;
 }
 
+fn self_identifier_byte(index: u32) -> u32 {
+  if index == 0 { return 115; }
+  if index == 1 { return 101; }
+  if index == 2 { return 108; }
+  return 102;
+}
+
 fn self_identifier_hash() -> u32 {
   let mut hash: u32 = 216613626;
-  hash = hash * 16777619 + 115;
-  hash = hash * 16777619 + 101;
-  hash = hash * 16777619 + 108;
-  hash = hash * 16777619 + 102;
+  let mut index: u32 = 0;
+  while index < 4 {
+    let byte: u32 = self_identifier_byte(index);
+    hash = hash * 16777619;
+    hash = hash + byte;
+    index = index + 1;
+  }
   return hash;
 }
 
@@ -331,40 +341,34 @@ fn parse_optional_const_attribute(source: bytes, position: u32) -> u32 {
 }
 
 fn parse_declaration_names_with_flags(source: bytes, position: u32, shared_flags: u32) -> u32 {
-  let mut current: u32 = lexer.lexer_skip(source, position);
-  let mut head: u32 = 0;
-  let mut tail: u32 = 0;
-  let mut scanning: u32 = 1;
-  while scanning == 1 {
-    if lexer.lexer_token_kind(source, current) != 20 {
-      return result(current, 0, 1);
-    }
-    let mut flags: u32 = shared_flags;
-    let entry: u32 = declaration_name(lexer.identifier_hash(source, current), flags);
-    current = lexer.lexer_token_end(source, current);
-    let postfix: u32 = parse_optional_const_attribute(source, current);
-    if memory_load_u32(postfix + 8) != 0 {
-      return postfix;
-    }
-    if memory_load_u32(postfix + 4) != 0 {
-      flags = flags + 1;
-      memory_store_u32(entry + 12, flags);
-    }
-    current = memory_load_u32(postfix);
-    if head == 0 {
-      head = entry;
-    } else {
-      memory_store_u32(tail + 8, entry);
-    }
-    tail = entry;
-    let separator: u32 = lexer.lexer_token_kind(source, current);
-    if separator == 29 {
-      current = lexer.lexer_token_end(source, current);
-    } else {
-      scanning = scanning - scanning;
-    }
+  let current: u32 = lexer.lexer_skip(source, position);
+  if lexer.lexer_token_kind(source, current) != 20 {
+    return result(current, 0, 1);
   }
-  return result(current, head, 0);
+  let mut flags: u32 = shared_flags;
+  let entry: u32 = declaration_name(lexer.identifier_hash(source, current), flags);
+  let postfix: u32 = parse_optional_const_attribute(source, lexer.lexer_token_end(source, current));
+  if memory_load_u32(postfix + 8) != 0 {
+    return postfix;
+  }
+  if memory_load_u32(postfix + 4) != 0 {
+    flags = flags + 1;
+    memory_store_u32(entry + 12, flags);
+  }
+  let after_name: u32 = memory_load_u32(postfix);
+  if lexer.lexer_token_kind(source, after_name) == 29 {
+    let remainder: u32 = parse_declaration_names_with_flags(
+      source,
+      lexer.lexer_token_end(source, after_name),
+      shared_flags,
+    );
+    if memory_load_u32(remainder + 8) != 0 {
+      return remainder;
+    }
+    memory_store_u32(entry + 8, memory_load_u32(remainder + 4));
+    return result(memory_load_u32(remainder), entry, 0);
+  }
+  return result(after_name, entry, 0);
 }
 
 fn parse_declaration_names(source: bytes, position: u32) -> u32 {
@@ -411,45 +415,27 @@ fn parse_assignment_names(source: bytes, position: u32) -> u32 {
 }
 
 export fn parse_parameters(source: bytes, position: u32) -> u32 {
-  let mut current: u32 = lexer.lexer_skip(source, position);
-  let mut head: u32 = 0;
-  let mut tail: u32 = 0;
+  let current: u32 = lexer.lexer_skip(source, position);
   if lexer.lexer_token_kind(source, current) == 8 {
     return result(current, 0, 0);
   }
-  let mut scanning: u32 = 1;
-  while scanning == 1 {
-    if lexer.lexer_token_kind(source, current) == 52 {
-      let entry: u32 = node(52, 0, 0);
-      if head == 0 {
-        head = entry;
-      } else {
-        memory_store_u32(tail + 8, entry);
-      }
-      tail = entry;
-      current = lexer.lexer_token_end(source, current);
-      scanning = scanning - scanning;
-    } else {
-    if lexer.lexer_token_kind(source, current) != 20 {
-      return result(current, 0, 1);
-    }
-    let entry: u32 = declaration_name(lexer.identifier_hash(source, current), 0);
-    if head == 0 {
-      head = entry;
-    } else {
-      memory_store_u32(tail + 8, entry);
-    }
-    tail = entry;
-    current = lexer.lexer_token_end(source, current);
-    let separator: u32 = lexer.lexer_token_kind(source, current);
-    if separator == 29 {
-      current = lexer.lexer_token_end(source, current);
-    } else {
-      scanning = scanning - scanning;
-    }
-    }
+  if lexer.lexer_token_kind(source, current) == 52 {
+    return result(lexer.lexer_token_end(source, current), node(52, 0, 0), 0);
   }
-  return result(current, head, 0);
+  if lexer.lexer_token_kind(source, current) != 20 {
+    return result(current, 0, 1);
+  }
+  let entry: u32 = declaration_name(lexer.identifier_hash(source, current), 0);
+  let after_name: u32 = lexer.lexer_token_end(source, current);
+  if lexer.lexer_token_kind(source, after_name) == 29 {
+    let remainder: u32 = parse_parameters(source, lexer.lexer_token_end(source, after_name));
+    if memory_load_u32(remainder + 8) != 0 || memory_load_u32(remainder + 4) == 0 {
+      return result(memory_load_u32(remainder), 0, 1);
+    }
+    memory_store_u32(entry + 8, memory_load_u32(remainder + 4));
+    return result(memory_load_u32(remainder), entry, 0);
+  }
+  return result(after_name, entry, 0);
 }
 
 export fn parameter_count(parameters: u32) -> u32 {
@@ -1128,6 +1114,42 @@ fn parse_if_tail(source: bytes, position: u32, loop_depth: u32) -> u32 {
   return result(lexer.lexer_token_end(source, end_position), else_block, 0);
 }
 
+fn parse_local_statement(source: bytes, position: u32) -> u32 {
+  let after_local: u32 = lexer.lexer_token_end(source, position);
+  if lexer.lexer_token_kind(source, after_local) == 28 {
+    let function_name_position: u32 = lexer.lexer_token_end(source, after_local);
+    if lexer.lexer_token_kind(source, function_name_position) != 20 {
+      return result(function_name_position, 0, 1);
+    }
+    let expression: u32 = parse_function_expression(source, lexer.lexer_token_end(source, function_name_position));
+    if memory_load_u32(expression + 8) != 0 {
+      return expression;
+    }
+    let expression_end: u32 = memory_load_u32(expression);
+    let expression_node: u32 = memory_load_u32(expression + 4);
+    let function_node: u32 = node(35, lexer.identifier_hash(source, function_name_position), expression_node);
+    return result(expression_end, function_node, 0);
+  }
+  let names: u32 = parse_declaration_names(source, after_local);
+  if memory_load_u32(names + 8) != 0 || memory_load_u32(names + 4) == 0 {
+    return result(memory_load_u32(names), 0, 1);
+  }
+  let names_end: u32 = memory_load_u32(names);
+  let names_node: u32 = memory_load_u32(names + 4);
+  let equals_position: u32 = lexer.lexer_skip(source, names_end);
+  if lexer.lexer_token_kind(source, equals_position) != 30 {
+    return result(equals_position, node(53, names_node, 0), 0);
+  }
+  let expressions: u32 = parse_expression_list(source, lexer.lexer_token_end(source, equals_position));
+  if memory_load_u32(expressions + 8) != 0 {
+    return expressions;
+  }
+  let expressions_end: u32 = memory_load_u32(expressions);
+  let expressions_node: u32 = memory_load_u32(expressions + 4);
+  let declaration: u32 = node(53, names_node, expressions_node);
+  return result(expressions_end, declaration, 0);
+}
+
 export fn parse_statement(source: bytes, position: u32) -> u32 {
   return parse_statement_ctx(source, position, 0);
 }
@@ -1214,43 +1236,7 @@ fn parse_statement_ctx(source: bytes, position: u32, loop_depth: u32) -> u32 {
     );
   }
   if kind == 21 {
-    let local_value_position: u32 = lexer.lexer_token_end(source, current);
-    if lexer.lexer_token_kind(source, local_value_position) == 28 {
-      let function_name_position: u32 = lexer.lexer_token_end(source, local_value_position);
-      if lexer.lexer_token_kind(source, function_name_position) != 20 {
-        return result(function_name_position, 0, 1);
-      }
-      let expression: u32 = parse_function_expression(source, lexer.lexer_token_end(source, function_name_position));
-      if memory_load_u32(expression + 8) != 0 {
-        return expression;
-      }
-      return result(
-        memory_load_u32(expression),
-        node(35, lexer.identifier_hash(source, function_name_position), memory_load_u32(expression + 4)),
-        0,
-      );
-    }
-    let names: u32 = parse_declaration_names(source, lexer.lexer_token_end(source, current));
-    if memory_load_u32(names + 8) != 0 || memory_load_u32(names + 4) == 0 {
-      return result(memory_load_u32(names), 0, 1);
-    }
-    let equals_position: u32 = lexer.lexer_skip(source, memory_load_u32(names));
-    if lexer.lexer_token_kind(source, equals_position) != 30 {
-      return result(
-        equals_position,
-        node(53, memory_load_u32(names + 4), 0),
-        0,
-      );
-    }
-    let expressions: u32 = parse_expression_list(source, lexer.lexer_token_end(source, equals_position));
-    if memory_load_u32(expressions + 8) != 0 {
-      return expressions;
-    }
-    return result(
-      memory_load_u32(expressions),
-      node(53, memory_load_u32(names + 4), memory_load_u32(expressions + 4)),
-    0,
-    );
+    return parse_local_statement(source, current);
   }
   if kind == 61 {
     let after_global: u32 = lexer.lexer_token_end(source, current);
@@ -1467,28 +1453,36 @@ fn parse_statement_ctx(source: bytes, position: u32, loop_depth: u32) -> u32 {
       return result(memory_load_u32(names), 0, 1);
     }
     let after_names: u32 = memory_load_u32(names);
+    let names_node: u32 = memory_load_u32(names + 4);
     let after_kind: u32 = lexer.lexer_token_kind(source, after_names);
     if after_kind == 30 {
-      let first_name: u32 = memory_load_u32(names + 4);
+      let first_name: u32 = names_node;
       if memory_load_u32(first_name + 8) != 0 {
         return result(after_names, 0, 1);
       }
-      let start: u32 = parse_expression(source, lexer.lexer_token_end(source, after_names));
+      let start_position: u32 = lexer.lexer_token_end(source, after_names);
+      let start: u32 = parse_expression(source, start_position);
       if memory_load_u32(start + 8) != 0 {
         return start;
       }
-      let first_comma: u32 = lexer.lexer_skip(source, memory_load_u32(start));
+      let start_end: u32 = memory_load_u32(start);
+      let start_node: u32 = memory_load_u32(start + 4);
+      let first_comma: u32 = lexer.lexer_skip(source, start_end);
       if lexer.lexer_token_kind(source, first_comma) != 29 {
         return result(first_comma, 0, 1);
       }
-      let finish: u32 = parse_expression(source, lexer.lexer_token_end(source, first_comma));
+      let finish_position: u32 = lexer.lexer_token_end(source, first_comma);
+      let finish: u32 = parse_expression(source, finish_position);
       if memory_load_u32(finish + 8) != 0 {
         return finish;
       }
-      let mut after_finish: u32 = lexer.lexer_skip(source, memory_load_u32(finish));
+      let finish_end: u32 = memory_load_u32(finish);
+      let finish_node: u32 = memory_load_u32(finish + 4);
+      let mut after_finish: u32 = lexer.lexer_skip(source, finish_end);
       let mut step: u32 = node(1, 1, 0);
       if lexer.lexer_token_kind(source, after_finish) == 29 {
-        let parsed_step: u32 = parse_expression(source, lexer.lexer_token_end(source, after_finish));
+        let step_position: u32 = lexer.lexer_token_end(source, after_finish);
+        let parsed_step: u32 = parse_expression(source, step_position);
         if memory_load_u32(parsed_step + 8) != 0 {
           return parsed_step;
         }
@@ -1502,29 +1496,34 @@ fn parse_statement_ctx(source: bytes, position: u32, loop_depth: u32) -> u32 {
       if memory_load_u32(body + 8) != 0 {
         return body;
       }
-      let end_position: u32 = lexer.lexer_skip(source, memory_load_u32(body));
+      let body_end: u32 = memory_load_u32(body);
+      let body_node: u32 = memory_load_u32(body + 4);
+      let end_position: u32 = lexer.lexer_skip(source, body_end);
       if lexer.lexer_token_kind(source, end_position) != 24 {
         return result(end_position, 0, 1);
       }
       let header: u32 = node_full(
         57,
         memory_load_u32(first_name + 4),
-        memory_load_u32(start + 4),
-        memory_load_u32(finish + 4),
+        start_node,
+        finish_node,
         step,
       );
       return result(
         lexer.lexer_token_end(source, end_position),
-        node(58, header, memory_load_u32(body + 4)),
+        node(58, header, body_node),
         0,
       );
     }
     if after_kind == 62 {
-      let expressions: u32 = parse_expression_list(source, lexer.lexer_token_end(source, after_names));
+      let expressions_position: u32 = lexer.lexer_token_end(source, after_names);
+      let expressions: u32 = parse_expression_list(source, expressions_position);
       if memory_load_u32(expressions + 8) != 0 {
         return expressions;
       }
-      let do_position: u32 = lexer.lexer_skip(source, memory_load_u32(expressions));
+      let expressions_end: u32 = memory_load_u32(expressions);
+      let expressions_node: u32 = memory_load_u32(expressions + 4);
+      let do_position: u32 = lexer.lexer_skip(source, expressions_end);
       if lexer.lexer_token_kind(source, do_position) != 27 {
         return result(do_position, 0, 1);
       }
@@ -1532,13 +1531,15 @@ fn parse_statement_ctx(source: bytes, position: u32, loop_depth: u32) -> u32 {
       if memory_load_u32(body + 8) != 0 {
         return body;
       }
-      let end_position: u32 = lexer.lexer_skip(source, memory_load_u32(body));
+      let body_end: u32 = memory_load_u32(body);
+      let body_node: u32 = memory_load_u32(body + 4);
+      let end_position: u32 = lexer.lexer_skip(source, body_end);
       if lexer.lexer_token_kind(source, end_position) != 24 {
         return result(end_position, 0, 1);
       }
       return result(
         lexer.lexer_token_end(source, end_position),
-        node_extra(62, memory_load_u32(names + 4), memory_load_u32(expressions + 4), memory_load_u32(body + 4)),
+        node_extra(62, names_node, expressions_node, body_node),
         0,
       );
     }
