@@ -10,7 +10,11 @@ import {
   encodeEan8Fws,
   encodeEan8FwsAsync,
   validateGs1DataBarValue,
-  validateGs1DataBarValueAsync, encodeEan13Fws, encodeEan13FwsAsync, encodeUpcaFws, encodeUpcaFwsAsync 
+  validateGs1DataBarValueAsync,
+  encodeEan13Fws,
+  encodeEan13FwsAsync,
+  encodeUpcaFws,
+  encodeUpcaFwsAsync,
 } from '.';
 
 const moduleBits = (value: string): number[] => Array.from(value, Number);

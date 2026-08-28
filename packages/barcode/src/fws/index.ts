@@ -1,14 +1,14 @@
 import { encodeBarcode, encodeBarcodeAsync, type BarcodeSymbology } from '../encoder';
 
 import { load as loadBarcode, loadSync as loadBarcodeSync } from './barcode.fws';
-import { loadSync as loadCodabarSync, load as loadCodabar  } from './codabar.fws';
-import { loadSync as loadCode128Sync, load as loadCode128  } from './code128.fws';
-import { loadSync as loadCode39Sync, load as loadCode39  } from './code39.fws';
-import { loadSync as loadCode93Sync, load as loadCode93  } from './code93.fws';
+import { loadSync as loadCodabarSync, load as loadCodabar } from './codabar.fws';
+import { loadSync as loadCode128Sync, load as loadCode128 } from './code128.fws';
+import { loadSync as loadCode39Sync, load as loadCode39 } from './code39.fws';
+import { loadSync as loadCode93Sync, load as loadCode93 } from './code93.fws';
 import { load as loadDataBar, loadSync as loadDataBarSync } from './databar.fws';
-import { loadSync as loadItfSync, load as loadItf  } from './itf.fws';
-import { loadSync as loadMsiSync, load as loadMsi  } from './msi.fws';
-import { loadSync as loadPharmacodeSync, load as loadPharmacode  } from './pharmacode.fws';
+import { loadSync as loadItfSync, load as loadItf } from './itf.fws';
+import { loadSync as loadMsiSync, load as loadMsi } from './msi.fws';
+import { loadSync as loadPharmacodeSync, load as loadPharmacode } from './pharmacode.fws';
 
 import type { ForgeBarcodeExports } from './barcode.fws';
 import type { ForgeDataBarExports } from './databar.fws';

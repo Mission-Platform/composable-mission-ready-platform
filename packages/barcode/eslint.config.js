@@ -16,12 +16,7 @@ export default [
     },
   },
   {
-    files: [
-      'src/decoder/index.ts',
-      'src/encoder/index.ts',
-      'src/fws/index.ts',
-      'src/fws/code93-decoder.spec.ts',
-    ],
+    files: ['src/decoder/index.ts', 'src/encoder/index.ts', 'src/fws/index.ts', 'src/fws/code93-decoder.spec.ts'],
     rules: {
       // Lazy FWS loaders intentionally expose the loaded module's method directly.
       'unicorn/no-await-expression-member': 'off',
