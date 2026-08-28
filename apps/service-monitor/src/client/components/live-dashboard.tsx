@@ -15,8 +15,8 @@ import { ServiceMonitorShell } from '../layouts/service-monitor-shell';
 import { ServiceCard } from './service-card';
 import { ServiceDetailPanel } from './service-detail-panel';
 import { SpeedPanel } from './speed-panel';
-import { type ChartPoint } from './time-series-chart';
 
+import type { ChartPoint } from './time-series-chart';
 import type { SpeedProviderId, SpeedResponse, SpeedResult, SpeedStatus } from '@/monitoring/speed/types';
 import type { Incident, Sample, ServicesResponse, ServiceStatus } from '@/monitoring/types';
 

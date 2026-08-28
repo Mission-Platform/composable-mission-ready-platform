@@ -3,13 +3,14 @@
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeIconClock } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
-import { type ReactNode } from 'react';
 
 import { formatMs, formatPercent } from '../utils/format';
 
-import { type ChartPoint, TimeSeriesChart } from './time-series-chart';
+import { TimeSeriesChart } from './time-series-chart';
 
+import type { ChartPoint } from './time-series-chart';
 import type { ServiceStatus } from '@/monitoring/types';
+import type { ReactNode } from 'react';
 
 interface ServiceDetailPanelProperties {
   readonly selected: ServiceStatus;

@@ -1,17 +1,18 @@
 'use client';
 
 import { ForgeButton } from '@mission-platform/components';
-import { type FormValues } from '@mission-platform/forms';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeIconPlus } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 import { useState } from 'react';
 
-import { type MonitorTarget, type ProbeType } from '@/monitoring/types';
 import { sanitizeMonitor } from '@/monitoring/validation';
 
 import { EMPTY_FORM, MonitorForm, TYPE_LABELS, URL_TYPES } from './monitor-form';
 import { MonitorListItem } from './monitor-list-item';
+
+import type { MonitorTarget, ProbeType } from '@/monitoring/types';
+import type { FormValues } from '@mission-platform/forms';
 
 interface MonitorManagerProperties {
   readonly monitors: MonitorTarget[];
