@@ -1,10 +1,6 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
-import ts from 'typescript';
-
-import { NEUTRAL_MODULE, resolveWorkspaceLocalImport } from './ast.js';
-
 export type FileNodeKind = 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset';
 export type FileEdgeKind = 'import' | 'export';
 
@@ -37,6 +33,8 @@ export interface FileGraph {
   classify(filePath: string, kind: FileNodeKind): FileGraphNode | undefined;
   node(filePath: string): FileGraphNode | undefined;
 }
+
+const NEUTRAL_MODULE = '@mission-platform/forge';
 
 const SOURCE_EXTENSIONS = [
   '',
@@ -71,21 +69,41 @@ function classify(filePath: string, componentPaths: ReadonlySet<string>, neutral
   return SOURCE_FILE_EXTENSIONS.has(extension) ? 'code' : 'asset';
 }
 
-function sourceFileKind(filePath: string): ts.ScriptKind {
-  return filePath.endsWith('.tsx') || filePath.endsWith('.jsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+/** Map a workspace `@/` alias to a path relative to the importing file. */
+function resolveWorkspaceLocalImport(specifier: string, fromFile: string, sourceRoot: string): string | undefined {
+  if (!specifier.startsWith('@/')) {
+    return undefined;
+  }
+  const absolute = path.join(sourceRoot, specifier.slice(2));
+  return path.relative(path.dirname(fromFile), absolute).split(path.sep).join('/');
 }
 
+function appendModuleSpecifiers(
+  source: string,
+  pattern: RegExp,
+  kind: FileEdgeKind,
+  result: { specifier: string; kind: FileEdgeKind }[],
+): void {
+  for (const match of source.matchAll(pattern)) {
+    const specifier = match[1];
+    if (specifier !== undefined) result.push({ specifier, kind });
+  }
+}
+
+/** Collect static import/export module specifiers without the TypeScript compiler API. */
 function moduleSpecifiers(filePath: string): { specifier: string; kind: FileEdgeKind }[] {
   const extension = path.extname(filePath).toLowerCase();
   if (!SOURCE_FILE_EXTENSIONS.has(extension)) return [];
   const source = readFileSync(filePath, 'utf8');
-  const sourceFile = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true, sourceFileKind(filePath));
   const result: { specifier: string; kind: FileEdgeKind }[] = [];
-  for (const statement of sourceFile.statements) {
-    if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier)) {
-      result.push({ specifier: statement.moduleSpecifier.text, kind: 'import' });
-    } else if (ts.isExportDeclaration(statement) && statement.moduleSpecifier !== undefined) {
-      result.push({ specifier: statement.moduleSpecifier.text, kind: 'export' });
+  appendModuleSpecifiers(source, /\bimport\s+(?:type\s+)?[^'"\n]*?\s+from\s+['"]([^'"]+)['"]/g, 'import', result);
+  appendModuleSpecifiers(source, /\bimport\s*['"]([^'"]+)['"]/g, 'import', result);
+  appendModuleSpecifiers(source, /\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)/g, 'import', result);
+  const exportPattern = /\bexport\s+(?:type\s+)?(?:[^'"\n]*?\s+from\s+)['"]([^'"]+)['"]/g;
+  for (const match of source.matchAll(exportPattern)) {
+    const specifier = match[1];
+    if (specifier !== undefined) {
+      result.push({ specifier, kind: 'export' });
     }
   }
   return result;
@@ -104,7 +122,7 @@ function resolveCandidate(fromFile: string, specifier: string, sourceRoot: strin
     if (existsSync(candidate) && statSync(candidate).isFile()) return candidate;
   }
   for (const extension of SOURCE_EXTENSIONS.slice(1)) {
-    const candidate = path.join(base, `index${extension}`);
+    const candidate = path.join(base as string, `index${extension}`);
     if (existsSync(candidate) && statSync(candidate).isFile()) return candidate;
   }
   return undefined;

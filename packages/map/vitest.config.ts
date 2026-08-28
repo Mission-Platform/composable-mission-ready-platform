@@ -1,6 +1,7 @@
 import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
 
 export default defineVitestConfig({
+  include: ['src/**/*.spec.ts', 'vite-plugins/forge/src/**/*.spec.ts'],
   coverageInclude: ['src/**/*.ts', 'src/**/*.tsx'],
   coverageExclude: ['src/**/*.stories.*', 'src/**/index.ts', 'src/jsx.d.ts'],
   overrides: {

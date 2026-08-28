@@ -1,7 +1,6 @@
-import { type MpElement } from '@mission-platform/forge';
-
 import { useMap, usePopup } from '@/composables';
 
+import type { MpElement } from '@mission-platform/forge';
 import type { LngLatLike, PopupOptions } from 'maplibre-gl';
 
 export interface MapPopupProperties {

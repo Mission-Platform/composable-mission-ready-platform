@@ -6,7 +6,7 @@
 // adapter). `<MapLibre>` provides the loaded MapLibre `Map` instance through this
 // context, and descendant components/composables read it via {@link useMap}.
 
-import { createContext } from '@mission-platform/forge';
+import { createContext, type MpContext } from '@mission-platform/forge';
 
 import type { Map } from 'maplibre-gl';
 
@@ -17,4 +17,4 @@ import type { Map } from 'maplibre-gl';
  * renders its children once the map exists, so a descendant that reads this
  * context always observes a ready `Map`.
  */
-export const MapContext = createContext<Map | undefined>(undefined);
+export const MapContext: MpContext<Map | undefined> = createContext<Map | undefined>(undefined);
