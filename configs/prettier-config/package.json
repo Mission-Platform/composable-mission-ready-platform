@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/prettier-config",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "license": "BSD-4-Clause",
   "description": "Shared Prettier configuration for all Mission Platform packages and apps",
   "type": "module",

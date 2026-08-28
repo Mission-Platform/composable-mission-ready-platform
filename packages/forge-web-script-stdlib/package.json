@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-web-script-stdlib",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Class-free FWS standard-library sources and deterministic collection contracts",
   "type": "module",
   "sideEffects": false,

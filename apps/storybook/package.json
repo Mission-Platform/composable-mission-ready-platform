@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/storybook",
   "private": true,
-  "version": "0.0.13",
+  "version": "0.0.14",
   "license": "BSD-4-Clause",
   "description": "Mission Platform Storybook workbench for framework-neutral component stories",
   "type": "module",

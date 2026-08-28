@@ -1,5 +1,11 @@
 # @mission-platform/stylelint-config
 
+## 0.1.4
+
+### Patch Changes
+
+- 8a15dbc: add generated package API references and build-time documentation extraction
+
 ## 0.1.3
 
 ### Patch Changes

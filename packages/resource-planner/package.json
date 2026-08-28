@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/resource-planner",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "BSD-4-Clause",
   "description": "Framework-neutral resource planning utilities and a multi-person timeline component for Mission Platform",
   "type": "module",

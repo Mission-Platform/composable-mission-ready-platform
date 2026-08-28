@@ -1,5 +1,45 @@
 # @mission-platform/content
 
+## 1.1.0
+
+### Minor Changes
+
+- 97c3f20: add typed custom-property overrides for visual components
+
+### Patch Changes
+
+- 7e40fba: use the cataloged DOMPurify dependency
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- 0c74365: Harden content rendering and scanner runtime behavior
+- 46fe17a: scope Forge build environment variables to package build tasks
+- e56f10c: preserve Unicode letters and numbers when generating Markdown slugs
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [89aab02]
+- Updated dependencies [9774a09]
+- Updated dependencies [8a15dbc]
+- Updated dependencies [46fe17a]
+- Updated dependencies [b88a08e]
+- Updated dependencies [9e59f09]
+- Updated dependencies [e0c66e1]
+- Updated dependencies [97c3f20]
+- Updated dependencies [31ed685]
+  - @mission-platform/components@3.1.0
+  - @mission-platform/float@1.1.0
+  - @mission-platform/forge-web-script-language-service@0.2.0
+  - @mission-platform/forge@1.1.0
+  - @mission-platform/harper@0.2.2
+  - @mission-platform/hunspell@0.4.2
+  - @mission-platform/icons@2.0.1
+  - @mission-platform/tokens@2.0.0
+  - @mission-platform/typography@1.1.0
+  - @mission-platform/forge-plugin-vue@0.2.0
+  - @mission-platform/forge-plugin-react@0.1.2
+  - @mission-platform/forge-plugin-solid@0.1.2
+  - @mission-platform/forge-plugin-svelte@0.1.2
+  - @mission-platform/forge-plugin-web-components@0.1.2
+
 ## 1.0.0
 
 ### Major Changes

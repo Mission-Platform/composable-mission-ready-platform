@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-router-web-components",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Forge router target for framework-free Web Components",
   "type": "module",
   "sideEffects": false,

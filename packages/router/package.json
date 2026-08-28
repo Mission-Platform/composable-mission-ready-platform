@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/router",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "BSD-4-Clause",
   "description": "Framework-neutral router capabilities and pure route/location contracts",
   "type": "module",

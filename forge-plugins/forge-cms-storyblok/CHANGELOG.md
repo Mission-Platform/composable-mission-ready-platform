@@ -1,5 +1,13 @@
 # @mission-platform/forge-cms-storyblok
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [89aab02]
+  - @mission-platform/forge-plugin-api@0.3.0
+  - @mission-platform/forge-cms-plugin-api@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,5 +1,19 @@
 # @mission-platform/rxjs
 
+## 1.0.1
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 26a9cfe: align package import ordering lint configuration
+- f331f02: fix story import ordering
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [89aab02]
+- Updated dependencies [8a15dbc]
+  - @mission-platform/forge@1.1.0
+
 ## 1.0.0
 
 ### Major Changes
@@ -22,7 +36,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc

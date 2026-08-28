@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/web-lua",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Guest-owned Lua runtime foundation compiled from Forge Web Script",
   "type": "module",
   "sideEffects": false,

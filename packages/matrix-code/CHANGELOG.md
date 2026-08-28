@@ -1,5 +1,29 @@
 # @mission-platform/matrix-code
 
+## 2.0.1
+
+### Patch Changes
+
+- 140f802: move barcode and phone-number implementations onto the Forge Web Script runtime
+- c32bb83: centralize package documentation generation in the repository build
+- 93ddb34: align generated Forge Web Script codecs with the updated compiler
+- 839f672: correct Forge Web Script matrix decoder edge cases
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- 46fe17a: scope Forge build environment variables to package build tasks
+- 31ed685: Run i18n extraction from each configured workspace through the root Turbo task
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [89aab02]
+- Updated dependencies [8a15dbc]
+- Updated dependencies [46fe17a]
+- Updated dependencies [9e59f09]
+- Updated dependencies [97c3f20]
+- Updated dependencies [31ed685]
+  - @mission-platform/components@3.1.0
+  - @mission-platform/forge@1.1.0
+  - @mission-platform/icons@2.0.1
+  - @mission-platform/typography@1.1.0
+
 ## 2.0.0
 
 ### Major Changes
@@ -72,7 +96,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc

@@ -1,5 +1,34 @@
 # @mission-platform/code-scanner
 
+## 1.2.0
+
+### Minor Changes
+
+- 06a8934: Replace the legacy `@mission-platform/code-scan-wasm` runtime with a statically linked Forge Web Script scanner graph.
+  The static build enables WebAssembly SIMD and aggressive link-time optimization; dynamic builds retain explicit decoder
+  module boundaries with cached dispatch. The public image, file, camera, synchronous, and asynchronous scanner APIs
+  remain compatible.
+- 97c3f20: add typed custom-property overrides for visual components
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 0c74365: Harden content rendering and scanner runtime behavior
+- 46fe17a: scope Forge build environment variables to package build tasks
+- 31ed685: Run i18n extraction from each configured workspace through the root Turbo task
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [89aab02]
+- Updated dependencies [8a15dbc]
+- Updated dependencies [46fe17a]
+- Updated dependencies [9e59f09]
+- Updated dependencies [97c3f20]
+- Updated dependencies [31ed685]
+  - @mission-platform/components@3.1.0
+  - @mission-platform/forge@1.1.0
+  - @mission-platform/icons@2.0.1
+  - @mission-platform/typography@1.1.0
+
 ## 1.1.0
 
 ### Minor Changes
@@ -60,7 +89,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc

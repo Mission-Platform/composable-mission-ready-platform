@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/email-components",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Server-rendered, email-client-compatible Vue, React, Svelte, Solid, and Web Component outputs built with Can I Email support constraints",
   "type": "module",
   "sideEffects": false,

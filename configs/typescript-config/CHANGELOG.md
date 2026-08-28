@@ -1,5 +1,11 @@
 # @mission-platform/typescript-config
 
+## 0.4.1
+
+### Patch Changes
+
+- 8a15dbc: add generated package API references and build-time documentation extraction
+
 ## 0.4.0
 
 ### Minor Changes

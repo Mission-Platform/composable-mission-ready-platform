@@ -1,5 +1,19 @@
 # @mission-platform/icons
 
+## 2.0.1
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- 46fe17a: scope Forge build environment variables to package build tasks
+- 9e59f09: split shared UI capabilities into focused workspaces and update their design tokens
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [89aab02]
+- Updated dependencies [8a15dbc]
+  - @mission-platform/forge@1.1.0
+
 ## 2.0.0
 
 ### Major Changes
@@ -79,7 +93,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc

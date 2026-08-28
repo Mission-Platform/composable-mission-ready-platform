@@ -1,5 +1,11 @@
 # @mission-platform/eslint-config
 
+## 1.0.2
+
+### Patch Changes
+
+- 8a15dbc: add generated package API references and build-time documentation extraction
+
 ## 1.0.1
 
 ### Patch Changes

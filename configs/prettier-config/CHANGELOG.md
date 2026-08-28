@@ -1,5 +1,11 @@
 # @mission-platform/prettier-config
 
+## 0.1.7
+
+### Patch Changes
+
+- 8a15dbc: add generated package API references and build-time documentation extraction
+
 ## 0.1.6
 
 ### Patch Changes

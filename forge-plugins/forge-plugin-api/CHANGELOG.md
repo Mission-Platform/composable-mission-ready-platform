@@ -1,5 +1,11 @@
 # @mission-platform/forge-plugin-api
 
+## 0.3.0
+
+### Minor Changes
+
+- 89aab02: add typed style generation support for Forge components
+
 ## 0.2.0
 
 ### Minor Changes

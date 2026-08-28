@@ -1,5 +1,16 @@
 # @mission-platform/forge-plugin-vue
 
+## 0.2.0
+
+### Minor Changes
+
+- 89aab02: add typed style generation support for Forge components
+
+### Patch Changes
+
+- Updated dependencies [89aab02]
+  - @mission-platform/forge-plugin-api@0.3.0
+
 ## 0.1.1
 
 ### Patch Changes

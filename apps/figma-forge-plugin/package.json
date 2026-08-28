@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/figma-forge-plugin",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Figma main-thread extraction and Forge source generation plugin.",
   "type": "module",
   "scripts": {

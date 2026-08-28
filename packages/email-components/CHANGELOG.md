@@ -1,5 +1,27 @@
 # @mission-platform/email-components
 
+## 1.1.0
+
+### Minor Changes
+
+- 9e59f09: split shared UI capabilities into focused workspaces and update their design tokens
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 7877dc0: align typography expectations with rendered email output
+- 46fe17a: scope Forge build environment variables to package build tasks
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [89aab02]
+- Updated dependencies [8a15dbc]
+- Updated dependencies [b88a08e]
+- Updated dependencies [9e59f09]
+- Updated dependencies [97c3f20]
+  - @mission-platform/email-renderer@0.1.2
+  - @mission-platform/forge@1.1.0
+  - @mission-platform/tokens@2.0.0
+
 ## 1.0.0
 
 ### Major Changes

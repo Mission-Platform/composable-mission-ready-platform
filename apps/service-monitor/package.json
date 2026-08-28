@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/service-monitor",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "BSD-4-Clause",
   "type": "module",
   "description": "Server-side service monitoring app built with RedwoodSDK on Cloudflare, backed by a Durable Object SQLite time-series store, with a React + RxJS live dashboard.",

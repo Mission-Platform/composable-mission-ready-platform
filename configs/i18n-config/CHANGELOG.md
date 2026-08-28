@@ -1,5 +1,14 @@
 # @mission-platform/i18n-config
 
+## 0.2.2
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- 0c74365: Harden content rendering and scanner runtime behavior
+- 31ed685: Run i18n extraction from each configured workspace through the root Turbo task
+
 ## 0.2.1
 
 ### Patch Changes
