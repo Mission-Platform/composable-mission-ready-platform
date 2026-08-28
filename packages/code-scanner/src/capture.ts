@@ -113,7 +113,7 @@ function drawToImageData(source: CanvasImageSource, width: number, height: numbe
  * Decode an image `Blob`/`File` into an {@link ImageLike} (RGBA pixels). Uses
  * `createImageBitmap` so it works off the main thread where supported.
  */
-export async function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike> {
+export async function blobToImageData(blob: Blob, roi: number = 1): Promise<ImageLike> {
   const bitmap = await createImageBitmap(blob);
   try {
     return drawToImageData(bitmap, bitmap.width, bitmap.height, roi);
@@ -129,7 +129,7 @@ export async function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike> {
  * full of clutter the ink-bounding-box locators can't tolerate, so passing the
  * reticle size the UI shows the user greatly raises the hit rate.
  */
-export function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike {
+export function videoFrameToImageData(video: HTMLVideoElement, roi: number = DEFAULT_ROI): ImageLike {
   const width = video.videoWidth;
   const height = video.videoHeight;
   if (width === 0 || height === 0) {

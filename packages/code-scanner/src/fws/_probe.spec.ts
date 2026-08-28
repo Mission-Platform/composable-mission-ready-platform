@@ -169,9 +169,7 @@ describe('probe scanner formats', () => {
         'qr.decode.utf8': {
           decode_utf8(pointer: number, length: number): RawString {
             if (instance === undefined) return [0, 0];
-            const encoded = new TextDecoder().decode(
-              new Uint8Array(wasmMemory(instance).buffer, pointer, length),
-            );
+            const encoded = new TextDecoder().decode(new Uint8Array(wasmMemory(instance).buffer, pointer, length));
             const bytes = new Uint8Array(encoded.length / 3);
             for (let i = 0; i < bytes.length; i += 1) bytes[i] = Number(encoded.slice(i * 3, i * 3 + 3));
             try {
@@ -187,9 +185,7 @@ describe('probe scanner formats', () => {
           },
           matrix_decode_utf8(pointer: number, length: number): RawString {
             if (instance === undefined) return [0, 0];
-            const encoded = new TextDecoder().decode(
-              new Uint8Array(wasmMemory(instance).buffer, pointer, length),
-            );
+            const encoded = new TextDecoder().decode(new Uint8Array(wasmMemory(instance).buffer, pointer, length));
             const bytes = new Uint8Array(encoded.length / 3);
             for (let i = 0; i < bytes.length; i += 1) bytes[i] = Number(encoded.slice(i * 3, i * 3 + 3));
             try {

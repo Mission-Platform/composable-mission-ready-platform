@@ -117,6 +117,12 @@ export interface CodeScannerProperties {
   properties?: Readonly<CodeScannerStyleProperties>;
 }
 
+function stopStream(stream: MediaStream): void {
+  for (const track of stream.getTracks()) {
+    track.stop();
+  }
+}
+
 /**
  * `ForgeCodeScanner` — locates and decodes a QR code, Data Matrix, or 1D barcode
  * from either an **uploaded image** or a **live camera stream**, authored once
@@ -169,12 +175,6 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
   const publish = (found: ScanResult): void => {
     setResult(found);
     onResult?.(found);
-  };
-
-  const stopStream = (stream: MediaStream): void => {
-    for (const track of stream.getTracks()) {
-      track.stop();
-    }
   };
 
   const stopCamera = (): void => {

@@ -505,6 +505,13 @@ describe('scanImageData — Data Matrix codes', () => {
   });
 });
 
+function disambiguate(symbology: BarcodeSymbology, value: string): string {
+  if (symbology === 'ean13' && value.length === 13 && value.startsWith('0')) {
+    return value.slice(1);
+  }
+  return value;
+}
+
 describe('scanImageData — 1D barcodes', () => {
   // The symbology precedence the scanner's decode stage applies — it returns the
   // first that reads. Mirrors `BARCODE_SYMBOLOGIES` in the FWS
@@ -515,12 +522,6 @@ describe('scanImageData — 1D barcodes', () => {
   // (mirrors the FWS symbology disambiguation): an EAN-13 whose number-system
   // digit is `0` *is* a UPC-A, so it is reported as the 12-digit UPC-A form (the
   // EAN-13 value with its leading zero stripped). Genuine EAN-13 is unchanged.
-  function disambiguate(symbology: BarcodeSymbology, value: string): string {
-    if (symbology === 'ean13' && value.length === 13 && value.startsWith('0')) {
-      return value.slice(1);
-    }
-    return value;
-  }
 
   /** The value the scanner would report for a clean module run, under its precedence. */
   function expectedForClean(modules: readonly number[]): string | null {

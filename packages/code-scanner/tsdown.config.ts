@@ -64,9 +64,7 @@ export default [
     unbundle: false,
     clean: true,
     overrides: {
-      plugins: [
-        forgeWebScriptPlugin(scannerForgeWebScriptOptions),
-      ],
+      plugins: [forgeWebScriptPlugin(scannerForgeWebScriptOptions)],
     },
   }),
   ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
@@ -85,9 +83,7 @@ export default [
         external: ['i18next'],
         declarationModule: '..',
         overrides: {
-          plugins: [
-            forgeWebScriptPlugin(scannerForgeWebScriptOptions),
-          ],
+          plugins: [forgeWebScriptPlugin(scannerForgeWebScriptOptions)],
         },
       })),
   ...defineTsdownForgeCmsAll({
