@@ -377,6 +377,10 @@ interface TokenIndexes {
   byComponentNamespace: Map<string, IndexedToken[]>;
 }
 
+function addTokenIndexEntry(map: Map<string, IndexedToken[]>, key: string, token: IndexedToken): void {
+  map.set(key, [...(map.get(key) ?? []), token]);
+}
+
 function buildTokenIndexes(tokens: IndexedToken[]): TokenIndexes {
   const indexes: TokenIndexes = {
     byGeneratedName: new Map(),
@@ -384,15 +388,12 @@ function buildTokenIndexes(tokens: IndexedToken[]): TokenIndexes {
     bySource: new Map(),
     byComponentNamespace: new Map(),
   };
-  const add = (map: Map<string, IndexedToken[]>, key: string, token: IndexedToken): void => {
-    map.set(key, [...(map.get(key) ?? []), token]);
-  };
   for (const token of tokens) {
-    for (const generatedName of token.generatedNames) add(indexes.byGeneratedName, generatedName, token);
-    add(indexes.byPath, token.path, token);
-    add(indexes.bySource, token.source.sourceId, token);
+    for (const generatedName of token.generatedNames) addTokenIndexEntry(indexes.byGeneratedName, generatedName, token);
+    addTokenIndexEntry(indexes.byPath, token.path, token);
+    addTokenIndexEntry(indexes.bySource, token.source.sourceId, token);
     if (token.source.kind === 'component' && token.source.namespace)
-      add(indexes.byComponentNamespace, token.source.namespace, token);
+      addTokenIndexEntry(indexes.byComponentNamespace, token.source.namespace, token);
   }
   return indexes;
 }

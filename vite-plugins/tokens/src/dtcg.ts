@@ -93,27 +93,30 @@ export function deepMergeTokens(base: DtcgGroup, override: DtcgGroup): DtcgGroup
   return result;
 }
 
+/** Build a {@link TokenRecord} for a single resolved leaf token. */
+function toTokenRecord(childPath: string[], token: DtcgToken, groupType?: string): TokenRecord {
+  return {
+    path: childPath,
+    group: childPath[0],
+    type: (token.$type as string | undefined) ?? groupType,
+    value: token.$value,
+    description: token.$description,
+  };
+}
+
 /**
  * Recursively flatten a DTCG document into {@link TokenRecord}s, carrying the
  * nearest ancestor `$type` down to each leaf token.
  */
 export function flattenTokens(document_: DtcgGroup): TokenRecord[] {
   const records: TokenRecord[] = [];
-  /** Build a {@link TokenRecord} for a single resolved leaf token. */
-  const toRecord = (childPath: string[], token: DtcgToken, groupType?: string): TokenRecord => ({
-    path: childPath,
-    group: childPath[0],
-    type: (token.$type as string | undefined) ?? groupType,
-    value: token.$value,
-    description: token.$description,
-  });
   // `visit` and `walk` are mutually recursive, so they are written as hoisted
   // function declarations (rather than `const` arrows) to avoid referencing
   // either before its definition.
   /** Handle a single group entry: push a leaf record or recurse into a nested group. */
   function visit(childPath: string[], child: unknown, groupType?: string): void {
     if (isToken(child)) {
-      records.push(toRecord(childPath, child, groupType));
+      records.push(toTokenRecord(childPath, child, groupType));
     } else if (typeof child === 'object' && child !== null) {
       walk(child as DtcgGroup, childPath, groupType);
     }
