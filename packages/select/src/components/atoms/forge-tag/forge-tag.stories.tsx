@@ -1,4 +1,3 @@
-
 import { ForgeTag } from './forge-tag';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

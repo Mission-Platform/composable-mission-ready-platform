@@ -16,7 +16,6 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "declaration": true,
-    "declarationDir": "./dist",
     "noEmit": false,
     "emitDeclarationOnly": true
   },

@@ -73,6 +73,10 @@ export type {
   SchemaFormDefinition,
 } from '@mission-platform/forms-core';
 
+function sameInsertTarget(a: InsertTarget | undefined, b: InsertTarget | undefined): boolean {
+  return a?.parentId === b?.parentId && a?.index === b?.index && a?.step === b?.step;
+}
+
 /** Size token — canonical 2xs → 2xl scale. */
 export type FormBuilderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
@@ -519,10 +523,6 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
     setDraggingId(undefined);
   };
 
-  /** Whether two insert targets address the exact same slot. */
-  const sameSlot = (a: InsertTarget | undefined, b: InsertTarget | undefined): boolean =>
-    a?.parentId === b?.parentId && a?.index === b?.index && a?.step === b?.step;
-
   // Resolve the drop slot for a hovered row from the pointer's position within
   // it: the **top half** lands the field *before* the row, the **bottom half**
   // *after* it. Anchoring to each row's own midpoint keeps placement stable — it
@@ -539,7 +539,7 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
 
   // Hovering a field row places the ghost at the resolved (before/after) slot.
   // `stopPropagation` keeps the owning container's handler from overriding the
-  // more specific position; the `sameSlot` guard avoids re-rendering on every
+  // more specific position; the `sameInsertTarget` guard avoids re-rendering on every
   // `dragover` tick while the resolved slot is unchanged.
   const onFieldDragOver =
     (field: BuilderField) =>
@@ -548,7 +548,7 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
       event.stopPropagation();
       if (disabled) return;
       const target = fieldDropTarget(field, event);
-      if (target && !sameSlot(target, dropIndicator)) setDropIndicator(target);
+      if (target && !sameInsertTarget(target, dropIndicator)) setDropIndicator(target);
     };
 
   // Hovering the empty area of a container (a step root or a field-set) places
@@ -560,7 +560,7 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
       event.stopPropagation();
       if (disabled) return;
       const target: InsertTarget = { step, parentId };
-      if (!sameSlot(target, dropIndicator)) setDropIndicator(target);
+      if (!sameInsertTarget(target, dropIndicator)) setDropIndicator(target);
     };
 
   const onDropOnContainer =

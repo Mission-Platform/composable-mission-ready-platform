@@ -4,7 +4,13 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build", "build:check"],
-      "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET", "FORGE_CMS_STORYBLOK_TARGET", "FORGE_CMS_ARTIFACT_MODE", "FORGE_BUILD_STAGE_ROOT"]
+      "env": [
+        "FORGE_BUILD_TARGET",
+        "FORGE_FRAMEWORK_TARGET",
+        "FORGE_CMS_STORYBLOK_TARGET",
+        "FORGE_CMS_ARTIFACT_MODE",
+        "FORGE_BUILD_STAGE_ROOT"
+      ]
     },
     "test": {
       "dependsOn": ["build"]

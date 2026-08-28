@@ -21,6 +21,7 @@ export default [
   defineTsdownLibrary({
     rootDir: import.meta.dirname,
     entry: 'src/components/index.ts',
+    dts: { build: false, generator: 'oxc' },
     clean: true,
     overrides: {
       outDir: path.resolve(import.meta.dirname, 'dist/components'),

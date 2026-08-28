@@ -31,6 +31,7 @@ export interface ThemeProviderProperties {
    * neutral provider always drives the shared document-level store (per-subtree
    * scoping is not modelled by the neutral dialect). Defaults to `true`.
    */
+  // eslint-disable-next-line unicorn/prefer-global-this -- Public API compatibility property.
   global?: boolean;
 }
 

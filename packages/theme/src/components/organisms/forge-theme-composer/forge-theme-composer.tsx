@@ -27,6 +27,7 @@ export interface ThemeComposerProperties {
    */
   modelValue?: ThemeComposerConfig;
   /** Apply the composed variables to `document.documentElement` instead of the wrapper. Defaults to `false`. */
+  // eslint-disable-next-line unicorn/prefer-global-this -- Public API compatibility property.
   global?: boolean;
   /** Persist the configuration to `localStorage`. Retained for API parity; not applied by the controlled neutral version. Defaults to `false`. */
   persist?: boolean;
