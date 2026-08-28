@@ -1,5 +1,6 @@
 import { validateUrl } from '@mission-platform/email-renderer';
-import { type MpChild, type MpElement } from '@mission-platform/forge';
+
+import type { MpChild, MpElement } from '@mission-platform/forge';
 
 export interface EmailImageProperties {
   /** The content rendered inside the component. */

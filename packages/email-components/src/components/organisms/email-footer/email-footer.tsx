@@ -1,7 +1,7 @@
-import { type MpChild, type MpElement } from '@mission-platform/forge';
-
 import { EmailDivider } from '@/components/atoms';
 import { combineStyleValues, colorValue, spacingValue, typographyStyle } from '@/tokens';
+
+import type { MpChild, MpElement } from '@mission-platform/forge';
 
 export interface EmailFooterProperties {
   /** The content rendered inside the component. */

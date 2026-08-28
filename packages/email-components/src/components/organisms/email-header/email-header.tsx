@@ -1,8 +1,8 @@
-import { type MpChild, type MpElement } from '@mission-platform/forge';
-
 import { EmailImage } from '@/components/atoms';
 import { EmailColumn, EmailRow } from '@/components/molecules';
 import { colorValue, spacingValue, typographyStyle } from '@/tokens';
+
+import type { MpChild, MpElement } from '@mission-platform/forge';
 
 export interface EmailHeaderProperties {
   /** The content rendered inside the component. */

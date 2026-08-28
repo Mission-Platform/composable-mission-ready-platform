@@ -1,6 +1,6 @@
-import { type MpChild, type MpElement } from '@mission-platform/forge';
-
 import { colorValue, containerWidthValue } from '@/tokens';
+
+import type { MpChild, MpElement } from '@mission-platform/forge';
 
 export interface EmailContainerProperties {
   /** The content rendered inside the component. */

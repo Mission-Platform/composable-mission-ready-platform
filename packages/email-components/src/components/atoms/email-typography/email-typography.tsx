@@ -1,7 +1,10 @@
 import { validateUrl } from '@mission-platform/email-renderer';
-import { Dynamic, type MpChild, type MpElement } from '@mission-platform/forge';
+import { Dynamic } from '@mission-platform/forge';
 
-import { colorValue, typographyStyle, type EmailColor, type EmailTypographyVariant } from '@/tokens';
+import { colorValue, typographyStyle } from '@/tokens';
+
+import type { EmailColor, EmailTypographyVariant } from '@/tokens';
+import type { MpChild, MpElement } from '@mission-platform/forge';
 
 /** The elements the email type scale may be rendered as. */
 export type EmailTypographyTag = 'p' | 'span' | 'div' | 'a' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';

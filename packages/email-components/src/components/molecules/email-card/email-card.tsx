@@ -1,14 +1,7 @@
-import { type MpChild, type MpElement } from '@mission-platform/forge';
+import { combineStyleValues, colorValue, radiusValue, spacingValue } from '@/tokens';
 
-import {
-  combineStyleValues,
-  colorValue,
-  radiusValue,
-  spacingValue,
-  type EmailColor,
-  type EmailRadiusScale,
-  type EmailSpacingScale,
-} from '@/tokens';
+import type { EmailColor, EmailRadiusScale, EmailSpacingScale } from '@/tokens';
+import type { MpChild, MpElement } from '@mission-platform/forge';
 
 export interface EmailCardProperties {
   /** The content rendered inside the component. */

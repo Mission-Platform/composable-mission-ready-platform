@@ -1,4 +1,4 @@
-import { type MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge';
 
 export interface EmailPreheaderProperties {
   readonly text: string;
