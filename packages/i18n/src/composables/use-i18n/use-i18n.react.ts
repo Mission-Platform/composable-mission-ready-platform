@@ -8,14 +8,15 @@ import { useTranslation } from 'react-i18next';
 
 import { getServerI18n } from '@/stores/create-forge-i18n';
 
-import type { i18n as I18nInstance, TFunction } from 'i18next';
+import type { ForgeI18nInstance, ForgeTranslationFunction } from '../../utils/types';
+import type { TFunction } from 'i18next';
 
 /** Return shape of {@link useI18n}. */
 export interface UseI18nReturn {
   /** i18next translation function. */
-  t: TFunction;
+  t: ForgeTranslationFunction;
   /** The underlying i18next instance. */
-  i18n: I18nInstance;
+  i18n: ForgeI18nInstance;
   /** The active locale. */
   locale: string;
   /** Change the active locale (delegates to `i18next.changeLanguage`). */
@@ -42,11 +43,11 @@ export function useI18n(namespace?: string): UseI18nReturn {
   const serverI18n = getServerI18n();
   const i18n = translationResult?.i18n ?? serverI18n ?? i18next;
   const rawT = translationResult?.t ?? i18n.t.bind(i18n);
-  const t = rawT as TFunction;
+  const t = rawT as ForgeTranslationFunction;
 
   return {
     t,
-    i18n,
+    i18n: i18n as ForgeI18nInstance,
     locale: i18n.language ?? 'en',
     setLocale: (next: string): Promise<TFunction> => i18n.changeLanguage(next),
   };

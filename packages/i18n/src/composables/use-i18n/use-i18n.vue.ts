@@ -7,12 +7,13 @@ import { getCurrentScope, markRaw, onScopeDispose, ref, type Ref } from 'vue';
 
 import { getServerI18n } from '@/stores/create-forge-i18n';
 
+import type { ForgeTranslationFunction } from '../../utils/types';
 import type { i18n as I18nInstance, TFunction } from 'i18next';
 
 /** Return shape of {@link useI18n}. */
 export interface UseI18nReturn {
   /** Reactive i18next translation function. */
-  t: TFunction;
+  t: ForgeTranslationFunction;
   /** The underlying i18next instance. */
   i18next: I18nInstance;
   /** Reactive current locale, kept in sync with i18next's `languageChanged` event. */
@@ -42,7 +43,7 @@ export function useI18n(namespace?: string): UseI18nReturn {
   const serverI18n = getServerI18n();
   const i18nextInstance = translationResult?.i18next ?? serverI18n ?? defaultI18next;
   const rawT = translationResult?.t ?? i18nextInstance.t.bind(i18nextInstance);
-  const t = rawT as TFunction;
+  const t = rawT as ForgeTranslationFunction;
 
   const locale = ref(i18nextInstance.language ?? 'en');
   const onLanguageChanged = (next: string): void => {

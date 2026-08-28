@@ -14,6 +14,9 @@ export type {
   ForgeMessageObject,
   ForgeMessageValue,
   ForgeNamespaceLocales,
+  ForgeI18nInstance,
+  ForgeTranslationFunction,
+  ForgeTranslationSource,
 } from './utils/types';
 export type { i18n as ForgeI18N } from 'i18next';
 

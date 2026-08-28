@@ -5,16 +5,17 @@ import defaultI18next from 'i18next';
 
 import { getServerI18n } from '@/stores/create-forge-i18n';
 
-import type { i18n as I18nInstance, TFunction } from 'i18next';
+import type { ForgeI18nInstance, ForgeTranslationFunction } from '../../utils/types';
+import type { TFunction } from 'i18next';
 
 /** Return shape of the framework-neutral {@link useI18n} fallback. */
 export interface UseI18nReturn {
   /** i18next translation function. */
-  t: TFunction;
+  t: ForgeTranslationFunction;
   /** The underlying i18next instance. */
-  i18n: I18nInstance;
+  i18n: ForgeI18nInstance;
   /** Alias kept compatible with the Vue adapter's return shape. */
-  i18next: I18nInstance;
+  i18next: ForgeI18nInstance;
   /** The active locale. */
   locale: string;
   /** Change the active locale (delegates to `i18next.changeLanguage`). */
@@ -42,12 +43,12 @@ export function useI18n(namespace?: string): UseI18nReturn {
       return options.defaultValue;
     }
     return typeof arguments_[0] === 'string' ? arguments_[0] : '';
-  }) as TFunction;
+  }) as ForgeTranslationFunction;
 
   return {
     t,
-    i18n,
-    i18next: i18n,
+    i18n: i18n as ForgeI18nInstance,
+    i18next: i18n as ForgeI18nInstance,
     locale: i18n.language ?? 'en',
     setLocale: (next: string): Promise<TFunction> => i18n.changeLanguage(next),
   };

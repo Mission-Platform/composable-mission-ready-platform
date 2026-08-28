@@ -20,6 +20,9 @@ export type {
   ForgeMessageObject,
   ForgeMessageValue,
   ForgeNamespaceLocales,
+  ForgeI18nInstance,
+  ForgeTranslationFunction,
+  ForgeTranslationSource,
 } from './utils/types';
 
 // Re-export the i18next instance type so consumers can type the wrapper's

@@ -9,7 +9,13 @@ import { FORGE_DEFAULT_NAMESPACE } from '../utils/namespace';
 
 // Type-only import: fully erased at compile time, so it never reaches the
 // browser bundle where Vite externalizes `node:async_hooks`.
-import type { ForgeLocaleModule, ForgeLocales, ForgeMessageObject, ForgeNamespaceLocales } from '../utils/types';
+import type {
+  ForgeI18nInstance,
+  ForgeLocaleModule,
+  ForgeLocales,
+  ForgeMessageObject,
+  ForgeNamespaceLocales,
+} from '../utils/types';
 import type { AsyncLocalStorage as AsyncLocalStorageType } from 'node:async_hooks';
 
 let serverI18nStorage: AsyncLocalStorageType<I18nInstance> | undefined;
@@ -153,7 +159,7 @@ export interface CreateForgeI18NOptions {
  *   },
  * })
  */
-export function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance {
+export function createForgeI18N(options: CreateForgeI18NOptions = {}): ForgeI18nInstance {
   const {
     locale = 'en',
     fallbackLocale = 'en',
@@ -238,5 +244,5 @@ export function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInsta
     setServerI18n(instance);
   }
 
-  return instance;
+  return instance as ForgeI18nInstance;
 }
