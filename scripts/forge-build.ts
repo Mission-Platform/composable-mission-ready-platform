@@ -93,6 +93,43 @@ async function removeStage(packageRoot: string, stageRoot: string): Promise<void
   await fs.rm(stageRoot, { recursive: true, force: true });
 }
 
+async function collectSourceCompilerArtifacts(directory: string, base = directory): Promise<Set<string>> {
+  const artifacts = new Set<string>();
+  for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
+    if (entry.name === 'dist' || entry.name === 'node_modules') continue;
+    const fullPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      for (const artifact of await collectSourceCompilerArtifacts(fullPath, base)) artifacts.add(artifact);
+    } else if (entry.isFile() && (entry.name.endsWith('.d.ts') || entry.name.endsWith('.js'))) {
+      artifacts.add(path.relative(base, fullPath));
+    }
+  }
+  return artifacts;
+}
+
+async function removeNewSourceCompilerArtifacts(packageRoot: string, before: Set<string>): Promise<void> {
+  const after = await collectSourceCompilerArtifacts(packageRoot);
+  for (const artifact of after) {
+    if (!before.has(artifact)) await fs.rm(path.join(packageRoot, artifact), { force: true });
+  }
+}
+
+async function removeCachedCompilerArtifacts(packageRoot: string): Promise<void> {
+  const cacheRoot = path.join(packageRoot, 'node_modules/.cache');
+  // `null` is the explicit missing-cache sentinel for this optional cleanup.
+  // eslint-disable-next-line unicorn/no-null
+  const cacheStats = await fs.stat(cacheRoot).catch(() => null);
+  if (cacheStats?.isDirectory() !== true) return;
+  const walk = async (directory: string): Promise<void> => {
+    for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
+      const fullPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) await walk(fullPath);
+      else if (entry.name.endsWith('.d.ts') || entry.name.endsWith('.js')) await fs.rm(fullPath, { force: true });
+    }
+  };
+  await walk(cacheRoot);
+}
+
 const STAGE_MANIFEST = '.forge-build-manifest.json';
 const ENTRY_NAMES = new Set(['index.js', 'index.mjs', 'index.cjs', 'index.ts', 'index.tsx', 'index.d.ts']);
 
@@ -377,6 +414,7 @@ export async function runForgeBuild(options: ForgeBuildOptions): Promise<BuildPr
   const abortParent = (): void => controller.abort();
   options.signal?.addEventListener('abort', abortParent, { once: true });
   const timeout = options.timeoutMs === undefined ? undefined : setTimeout(() => controller.abort(), options.timeoutMs);
+  const sourceCompilerArtifacts = await collectSourceCompilerArtifacts(packageRoot);
   const context: ForgeBuildCommandContext = {
     packageRoot,
     stageRoot,
@@ -401,6 +439,8 @@ export async function runForgeBuild(options: ForgeBuildOptions): Promise<BuildPr
     if (timeout !== undefined) clearTimeout(timeout);
     options.signal?.removeEventListener('abort', abortParent);
     await removeStage(packageRoot, stageRoot);
+    await removeNewSourceCompilerArtifacts(packageRoot, sourceCompilerArtifacts);
+    await removeCachedCompilerArtifacts(packageRoot);
   }
 }
 

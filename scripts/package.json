@@ -13,6 +13,13 @@
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/forge-plugin-api": "workspace:*",
+    "@mission-platform/forge-plugin-react": "workspace:*",
+    "@mission-platform/forge-plugin-solid": "workspace:*",
+    "@mission-platform/forge-plugin-svelte": "workspace:*",
+    "@mission-platform/forge-plugin-vue": "workspace:*",
+    "@mission-platform/forge-plugin-web-components": "workspace:*",
+    "@mission-platform/vite-plugin-forge": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@types/node": "catalog:typescript",
     "@types/pixelmatch": "^5.2.6",
