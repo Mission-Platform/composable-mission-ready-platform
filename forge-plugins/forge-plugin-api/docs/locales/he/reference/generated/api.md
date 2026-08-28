@@ -16,24 +16,24 @@
 פונקציה **סוג:**
 
 ```typescript
-function applySourceEdits(source: string, edits: readonly SourceEdit[]): string
+function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 ```
 
 החל עריכות מקור שאינן חופפות מבלי לחשוף צמתי מנתח.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| עריכות | עריכת מקור לקריאה בלבד[] |  |
+| שם     | הקלד                     | תיאור |
+| ------ | ------------------------ | ----- |
+| מקור   | מחרוזת                   |       |
+| עריכות | עריכת מקור לקריאה בלבד[] |       |
 
 ### CLASS_NAME_ATTRIBUTE
 
 **סוג:** קבוע
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 לא סופק תיאור.
@@ -43,7 +43,7 @@ export const CLASS_NAME_ATTRIBUTE
 **סוג:** קבוע
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 לא סופק תיאור.
@@ -53,23 +53,23 @@ export const COMPONENTS_JSX_MODULES
 פונקציה **סוג:**
 
 ```typescript
-function eventNameForProperty(propertyName: string): string
+function eventNameForProperty(propertyName: string): string;
 ```
 
 הגזר את שם האירוע המיוצג על ידי א Vue-סִגְנוֹן `on<Event>` לִתְמוֹך.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם נכס | מחרוזת |  |
+| שם     | הקלד   | תיאור |
+| ------ | ------ | ----- |
+| שם נכס | מחרוזת |       |
 
 ### ICONS_JSX_MODULE
 
 **סוג:** קבוע
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 לא סופק תיאור.
@@ -79,7 +79,7 @@ export const ICONS_JSX_MODULE
 **סוג:** קבוע
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 לא סופק תיאור.
@@ -89,7 +89,7 @@ export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 לא סופק תיאור.
@@ -99,7 +99,7 @@ export const LOCAL_EFFECT_FILE
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 לא סופק תיאור.
@@ -109,7 +109,7 @@ export const LOCAL_EFFECT_MODULE
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 לא סופק תיאור.
@@ -119,7 +119,7 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 לא סופק תיאור.
@@ -129,7 +129,7 @@ export const LOCAL_JSX_TYPES_FILE
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 לא סופק תיאור.
@@ -139,39 +139,39 @@ export const LOCAL_JSX_TYPES_MODULE
 פונקציה **סוג:**
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 שחרר את המשותף Vue עוזר אפקט; יעדים אחרים אינם צריכים את הקובץ הזה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסגרת | JsxFramework |  |
+| שם    | הקלד         | תיאור |
+| ----- | ------------ | ----- |
+| מסגרת | JsxFramework |       |
 
 ### localJsxTypesModuleSource
 
 פונקציה **סוג:**
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 שחרר הצהרות JSX פרימיטיביות מקומיות למסגרת ללא תלות מנתח.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסגרת | JsxFramework |  |
+| שם    | הקלד         | תיאור |
+| ----- | ------------ | ----- |
+| מסגרת | JsxFramework |       |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 לא סופק תיאור.
@@ -181,7 +181,7 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 לא סופק תיאור.
@@ -191,7 +191,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 לא סופק תיאור.
@@ -201,7 +201,7 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 לא סופק תיאור.
@@ -211,7 +211,7 @@ export const NEUTRAL_MODULE
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 לא סופק תיאור.
@@ -221,7 +221,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 לא סופק תיאור.
@@ -231,7 +231,7 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 לא סופק תיאור.
@@ -241,7 +241,7 @@ export const REACT_ADAPTER_MODULE
 **סוג:** קבוע
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 לא סופק תיאור.
@@ -271,7 +271,7 @@ export interface StyleImport
 **סוג:** קבוע
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 לא סופק תיאור.
@@ -281,7 +281,7 @@ export const VUE_ADAPTER_MODULE
 **סוג:** קבוע
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 לא סופק תיאור.
@@ -291,7 +291,7 @@ export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 לא סופק תיאור.
@@ -323,23 +323,23 @@ export interface HoistedStaticEntry
 פונקציה **סוג:**
 
 ```typescript
-function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult
+function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 ```
 
 הנף רשומות רינדור מסומנות והחזר את הערכים עבור מחולל היעד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | GenericModuleAst |  |
+| שם    | הקלד             | תיאור |
+| ----- | ---------------- | ----- |
+| מודול | GenericModuleAst |       |
 
 ### MP_HOIST_PREFIX
 
 **סוג:** קבוע
 
 ```typescript
-export const MP_HOIST_PREFIX
+export const MP_HOIST_PREFIX;
 ```
 
 לא סופק תיאור.
@@ -351,33 +351,36 @@ export const MP_HOIST_PREFIX
 פונקציה **סוג:**
 
 ```typescript
-function applyOptimizationEdits(module: GenericModuleAst, edits: readonly SourceEdit[]): GenericModuleAst
+function applyOptimizationEdits(
+  module: GenericModuleAst,
+  edits: readonly SourceEdit[],
+): GenericModuleAst;
 ```
 
 החל עריכות מקור על מקור מודול מבלי לחשוף סוג יישום AST.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | GenericModuleAst |  |
-| עריכות | עריכת מקור לקריאה בלבד[] |  |
+| שם     | הקלד                     | תיאור |
+| ------ | ------------------------ | ----- |
+| מודול  | GenericModuleAst         |       |
+| עריכות | עריכת מקור לקריאה בלבד[] |       |
 
 ### בוליאני קבוע
 
 פונקציה **סוג:**
 
 ```typescript
-function constantBoolean(expression: ExpressionLike): boolean | undefined
+function constantBoolean(expression: ExpressionLike): boolean | undefined;
 ```
 
 פתרו בוליאן מילולי מבלי להעריך את הקוד המחבר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ביטוי | ExpressionLike |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| ביטוי | ExpressionLike |       |
 
 ### תוצאה כללית אופטימיזציה
 
@@ -394,55 +397,55 @@ export interface GenericOptimizationResult
 פונקציה **סוג:**
 
 ```typescript
-function hasJsxKey(attributes: readonly GenericAttribute[]): boolean
+function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 ```
 
 האם רשימת תכונות JSX גנרית מכילה מפתח.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תכונות | קריאה בלבד GenericAttribute[] |  |
+| שם     | הקלד                          | תיאור |
+| ------ | ----------------------------- | ----- |
+| תכונות | קריאה בלבד GenericAttribute[] |       |
 
 ### hasMpStaticMarker
 
 פונקציה **סוג:**
 
 ```typescript
-function hasMpStaticMarker(node: GenericRenderNode): boolean
+function hasMpStaticMarker(node: GenericRenderNode): boolean;
 ```
 
 בין אם JSX גנרי node יש את הסמן הסטטי הפרטי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| שם   | הקלד              | תיאור |
+| ---- | ----------------- | ----- |
+| node | GenericRenderNode |       |
 
 ### isCompileTimeConstant
 
 פונקציה **סוג:**
 
 ```typescript
-function isCompileTimeConstant(expression: ExpressionLike): boolean
+function isCompileTimeConstant(expression: ExpressionLike): boolean;
 ```
 
 האם טקסט המקור הוא ביטוי מילולי טהור בזמן הידור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ביטוי | ExpressionLike |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| ביטוי | ExpressionLike |       |
 
 ### MP_STATIC_ATTR
 
 **סוג:** קבוע
 
 ```typescript
-export const MP_STATIC_ATTR
+export const MP_STATIC_ATTR;
 ```
 
 לא סופק תיאור.
@@ -452,17 +455,20 @@ export const MP_STATIC_ATTR
 פונקציה **סוג:**
 
 ```typescript
-function optimizeGenericModule(module: GenericModuleAst, _options: OptimizeOptions = {}): GenericOptimizationResult
+function optimizeGenericModule(
+  module: GenericModuleAst,
+  _options: OptimizeOptions = {},
+): GenericOptimizationResult;
 ```
 
 החל אופטימיזציה ברמת שיא תוך החזרת כל עריכת מקור בנפרד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | GenericModuleAst |  |
-| _אפשרויות | אופטימיזציה אפשרויות |  |
+| שם        | הקלד                 | תיאור |
+| --------- | -------------------- | ----- |
+| מודול     | GenericModuleAst     |       |
+| _אפשרויות | אופטימיזציה אפשרויות |       |
 
 ### OptimizeOptions
 
@@ -479,32 +485,34 @@ export interface OptimizeOptions
 פונקציה **סוג:**
 
 ```typescript
-function stripMpStaticAttributes(attributes: readonly GenericAttribute[]): readonly GenericAttribute[]
+function stripMpStaticAttributes(
+  attributes: readonly GenericAttribute[],
+): readonly GenericAttribute[];
 ```
 
 החזר רשימת תכונות גנרית נטולת סמנים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תכונות | קריאה בלבד GenericAttribute[] |  |
+| שם     | הקלד                          | תיאור |
+| ------ | ----------------------------- | ----- |
+| תכונות | קריאה בלבד GenericAttribute[] |       |
 
 ### stripMpStaticMarker
 
 פונקציה **סוג:**
 
 ```typescript
-function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode
+function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
 החזר עיבוד גנרי ללא סמן node, שמירה רקורסיבית על טווחי מקורות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| שם   | הקלד              | תיאור |
+| ---- | ----------------- | ----- |
+| node | GenericRenderNode |       |
 
 ## `src/diagnostics`
 
@@ -543,7 +551,14 @@ export type CompilerDiagnosticSeverity = "error" | "warning" | "info";
 **סוג:** סוג
 
 ```typescript
-export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering" | "optimization" | "generation" | "build";
+export type CompilerPhase =
+  | "frontend"
+  | "ir"
+  | "inference"
+  | "target-lowering"
+  | "optimization"
+  | "generation"
+  | "build";
 ```
 
 שלבי צנרת שיכולים לדווח על אבחון מהדר.
@@ -553,48 +568,52 @@ export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering
 פונקציה **סוג:**
 
 ```typescript
-function createCompilerDiagnostic(diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string }): CompilerDiagnostic
+function createCompilerDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string },
+): CompilerDiagnostic;
 ```
 
 צור אבחון מבלי לצמוד את חוזי השלב אליו TypeScript צמתים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | לְהַשְׁמִיט<CompilerDiagnostic, "fileName"> & { fileName?: string } |  |
+| שם    | הקלד                                                                | תיאור |
+| ----- | ------------------------------------------------------------------- | ----- |
+| אבחון | לְהַשְׁמִיט<CompilerDiagnostic, "fileName"> & { fileName?: string } |       |
 
 ### formatCompilerDiagnostic
 
 פונקציה **סוג:**
 
 ```typescript
-function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string
+function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
 עצב אבחון עבור שגיאת מהדר מבלי לאבד את מיקום המקור שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | CompilerDiagnostic |  |
+| שם    | הקלד               | תיאור |
+| ----- | ------------------ | ----- |
+| אבחון | CompilerDiagnostic |       |
 
 ### throwOnCompilerErrors
 
 פונקציה **סוג:**
 
 ```typescript
-function throwOnCompilerErrors(diagnostics: readonly CompilerDiagnostic[] | undefined): void
+function throwOnCompilerErrors(
+  diagnostics: readonly CompilerDiagnostic[] | undefined,
+): void;
 ```
 
 בטל צינור מהדר כאשר שלב דיווח על שגיאה אחת או יותר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | לקריאה בלבד CompilerDiagnostic[] \| לא מוגדר |  |
+| שם    | הקלד                                         | תיאור |
+| ----- | -------------------------------------------- | ----- |
+| אבחון | לקריאה בלבד CompilerDiagnostic[] \| לא מוגדר |       |
 
 ## `src/framework`
 
@@ -673,7 +692,8 @@ export type GeneratorContext = TargetContext;
 **סוג:** סוג
 
 ```typescript
-export type JsxFramework = "react" | "vue" | "svelte" | "solid" | "web-components";
+export type JsxFramework =
+  "react" | "vue" | "svelte" | "solid" | "web-components";
 ```
 
 מזהי מסגרת מובנים נוכחיים; תוספים עשויים להשתמש בכל מזהה מחרוזת נוסף.
@@ -779,7 +799,7 @@ export interface ViteBuildContext
 **סוג:** קבוע
 
 ```typescript
-export const defineForgeFramework
+export const defineForgeFramework;
 ```
 
 כינוי המדגיש שחבילות מסגרת רושמות יישומי יעד.
@@ -789,16 +809,16 @@ export const defineForgeFramework
 פונקציה **סוג:**
 
 ```typescript
-function defineForgeOutputPlugin(plugin: T): T
+function defineForgeOutputPlugin(plugin: T): T;
 ```
 
 אמת והחזר תוסף פלט מסגרת לרישום על ידי צרכנים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוסף | ט |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| תוסף | ט    |       |
 
 ### ForgePluginId
 
@@ -815,32 +835,36 @@ export type ForgePluginId = FrameworkOutputPlugin["id"];
 פונקציה **סוג:**
 
 ```typescript
-function validateForgeOutputPlugin(plugin: unknown): asserts plugin is FrameworkOutputPlugin
+function validateForgeOutputPlugin(
+  plugin: unknown,
+): asserts plugin is FrameworkOutputPlugin;
 ```
 
 אמת מטא-נתונים של יעד ללא תלות ברישום מסגרת כלשהו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוסף | לא ידוע |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| תוסף | לא ידוע |       |
 
 ### validateForgeOutputPluginSelection
 
 פונקציה **סוג:**
 
 ```typescript
-function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
+function validateForgeOutputPluginSelection(
+  plugins: readonly T[],
+): readonly T[];
 ```
 
 אימות בחירת יעד בבעלות המתקשר, כולל מזהים ריקים ושכפולים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוספים | קריאה בלבד T[] |  |
+| שם     | הקלד           | תיאור |
+| ------ | -------------- | ----- |
+| תוספים | קריאה בלבד T[] |       |
 
 ## `src/ir`
 
@@ -849,34 +873,40 @@ function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
 פונקציה **סוג:**
 
 ```typescript
-function attributeExpressionText(node: GenericRenderNode, name: string): string | undefined
+function attributeExpressionText(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 קרא טקסט ביטוי של תכונה בשם, כאשר הוא נושא אחד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| שם | מחרוזת |  |
+| שם   | הקלד              | תיאור |
+| ---- | ----------------- | ----- |
+| node | GenericRenderNode |       |
+| שם   | מחרוזת            |       |
 
 ### attributeStringValue
 
 פונקציה **סוג:**
 
 ```typescript
-function attributeStringValue(node: GenericRenderNode, name: string): string | undefined
+function attributeStringValue(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 קרא את ערך המחרוזת הסטטית של תכונה בעלת שם, כאשר יש לו כזה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| שם | מחרוזת |  |
+| שם   | הקלד              | תיאור |
+| ---- | ----------------- | ----- |
+| node | GenericRenderNode |       |
+| שם   | מחרוזת            |       |
 
 ### DynamicNodeIntention
 
@@ -903,7 +933,7 @@ export interface EffectIntention
 **סוג:** קבוע
 
 ```typescript
-export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
+export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions;
 ```
 
 עובדות כוונות ריקות המשמשות מתקנים ומודולים שאין להם מה להסיק.
@@ -913,7 +943,7 @@ export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
 **סוג:** קבוע
 
 ```typescript
-export const EMPTY_SPAN: SourceSpan
+export const EMPTY_SPAN: SourceSpan;
 ```
 
 טווח רוחב אפס המשמש צמתים גנריים מסונתזים.
@@ -933,24 +963,28 @@ export interface EventIntention
 פונקציה **סוג:**
 
 ```typescript
-function findAttribute(node: GenericRenderNode, name: string): GenericJsxAttribute | undefined
+function findAttribute(
+  node: GenericRenderNode,
+  name: string,
+): GenericJsxAttribute | undefined;
 ```
 
 מצא את התכונה בעלת השם בעיבוד node.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| שם | מחרוזת |  |
+| שם   | הקלד              | תיאור |
+| ---- | ----------------- | ----- |
+| node | GenericRenderNode |       |
+| שם   | מחרוזת            |       |
 
 ### GenericAstNode
 
 **סוג:** סוג
 
 ```typescript
-export type GenericAstNode = GenericImport | GenericStatement | GenericRenderNode;
+export type GenericAstNode =
+  GenericImport | GenericStatement | GenericRenderNode;
 ```
 
 לא סופק תיאור.
@@ -980,7 +1014,8 @@ export type GenericAttributeValue = |
 **סוג:** סוג
 
 ```typescript
-export type GenericBindingKind = "identifier" | "object-pattern" | "array-pattern";
+export type GenericBindingKind =
+  "identifier" | "object-pattern" | "array-pattern";
 ```
 
 הצורה המחייבת של פרמטר האביזרים של רכיב.
@@ -1060,7 +1095,8 @@ export interface GenericParameter
 **סוג:** סוג
 
 ```typescript
-export type GenericRenderChild = GenericRenderNode | GenericTextNode | GenericExpressionNode;
+export type GenericRenderChild =
+  GenericRenderNode | GenericTextNode | GenericExpressionNode;
 ```
 
 לא סופק תיאור.
@@ -1090,7 +1126,18 @@ export interface GenericStatement
 **סוג:** סוג
 
 ```typescript
-export type GenericStatementKind = | "import" | "interface" | "type-alias" | "enum" | "variable" | "function" | "class" | "export" | "expression" | "return" | "other";
+export type GenericStatementKind =
+  | "import"
+  | "interface"
+  | "type-alias"
+  | "enum"
+  | "variable"
+  | "function"
+  | "class"
+  | "export"
+  | "expression"
+  | "return"
+  | "other";
 ```
 
 סיווג גס של משפט שנשמר ברמת המודול.
@@ -1120,48 +1167,50 @@ export interface GenericTextNode
 פונקציה **סוג:**
 
 ```typescript
-function isExpressionNode(child: GenericRenderChild): child is GenericExpressionNode
+function isExpressionNode(
+  child: GenericRenderChild,
+): child is GenericExpressionNode;
 ```
 
 האם ילד עיבוד הוא א `{ … }` שִׁרבּוּב.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ילד | GenericRenderChild |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ילד | GenericRenderChild |       |
 
 ### isRenderNode
 
 פונקציה **סוג:**
 
 ```typescript
-function isRenderNode(child: GenericRenderChild): child is GenericRenderNode
+function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
 האם צאצא לעיבוד הוא אלמנט/פרגמנט מקונן node.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ילד | GenericRenderChild |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ילד | GenericRenderChild |       |
 
 ### isTextNode
 
 פונקציה **סוג:**
 
 ```typescript
-function isTextNode(child: GenericRenderChild): child is GenericTextNode
+function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 ```
 
 האם עיבוד ילד הוא טקסט JSX מילולי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ילד | GenericRenderChild |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ילד | GenericRenderChild |       |
 
 ### ListKeyIntention
 
@@ -1208,16 +1257,16 @@ export interface RefIntention
 פונקציה **סוג:**
 
 ```typescript
-function renderNodeTagName(node: GenericRenderNode): string | undefined
+function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
 שם התג הפשוט של עיבוד node, או `undefined` עבור תג מחושב.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| שם   | הקלד              | תיאור |
+| ---- | ----------------- | ----- |
+| node | GenericRenderNode |       |
 
 ### כוונות סמנטיות
 
@@ -1254,18 +1303,22 @@ export interface SlotIntention
 פונקציה **סוג:**
 
 ```typescript
-function sourceBacked(text: string, syntax: SourceBackedExpression["syntax"] = "expression", span: SourceSpan = EMPTY_SPAN): SourceBackedExpression
+function sourceBacked(
+  text: string,
+  syntax: SourceBackedExpression["syntax"] = "expression",
+  span: SourceSpan = EMPTY_SPAN,
+): SourceBackedExpression;
 ```
 
 בנה ביטוי מגובה מקור מטקסט שכבר מודפס.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
-| תחביר | SourceBackedExpression["תחביר"] |  |
-| span | SourceSpan |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| טקסט  | מחרוזת                          |       |
+| תחביר | SourceBackedExpression["תחביר"] |       |
+| span  | SourceSpan                      |       |
 
 ### SourceBackedExpression
 
@@ -1302,14 +1355,17 @@ export interface StateIntention
 פונקציה **סוג:**
 
 ```typescript
-function walkRenderNodes(nodes: readonly GenericRenderNode[], visit: (node: GenericRenderNode) => void): void
+function walkRenderNodes(
+  nodes: readonly GenericRenderNode[],
+  visit: (node: GenericRenderNode) => void,
+): void;
 ```
 
 בצע עיבוד עץ לעומק ראשון, כולל סימון ביטוי מקונן.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| צמתים | לקריאה בלבד GenericRenderNode[] |  |
-| בקר | (node: GenericRenderNode) => ריק |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| צמתים | לקריאה בלבד GenericRenderNode[]  |       |
+| בקר   | (node: GenericRenderNode) => ריק |       |

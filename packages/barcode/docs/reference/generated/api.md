@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/barcode`.
 **Kind:** function
 
 ```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null
+function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
 ```
 
 Decode a run of module bits (`1` = bar, `0` = space) of the given `symbology`
@@ -26,17 +26,17 @@ included, Code 39/93 text is upper-cased, and UPC-E is returned in its
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| symbology | BarcodeSymbology |  |
-| modules | ArrayLike<number> |  |
+| Name      | Type              | Description |
+| --------- | ----------------- | ----------- |
+| symbology | BarcodeSymbology  |             |
+| modules   | ArrayLike<number> |             |
 
 ### decodeBarcodeAsync
 
 **Kind:** function
 
 ```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>
+function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
 ```
 
 Decode a run of module bits back into its payload, loading the native FWS
@@ -45,10 +45,10 @@ are returned as Promise rejections. See {@link decodeBarcode}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| symbology | BarcodeSymbology |  |
-| modules | ArrayLike<number> |  |
+| Name      | Type              | Description |
+| --------- | ----------------- | ----------- |
+| symbology | BarcodeSymbology  |             |
+| modules   | ArrayLike<number> |             |
 
 ## `src/encoder/index`
 
@@ -67,7 +67,22 @@ The result of {@link encodeBarcode}: module bits with their total width.
 **Kind:** type
 
 ```typescript
-export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'ean13' | 'ean8' | 'upca' | 'upce' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode';
+export type BarcodeSymbology =
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'ean13'
+  | 'ean8'
+  | 'upca'
+  | 'upce'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode';
 ```
 
 Supported linear barcode symbologies.
@@ -77,17 +92,17 @@ Supported linear barcode symbologies.
 **Kind:** function
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
+function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
 Encode `data` into a linear barcode using the package-local FWS graph.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| symbology | BarcodeSymbology |  |
-| data | string |  |
+| Name      | Type             | Description |
+| --------- | ---------------- | ----------- |
+| symbology | BarcodeSymbology |             |
+| data      | string           |             |
 
 #### Contract
 
@@ -98,17 +113,17 @@ Encode `data` into a linear barcode using the package-local FWS graph.
 **Kind:** function
 
 ```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>
+function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
 Encode `data` asynchronously using the package-local FWS graph.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| symbology | BarcodeSymbology |  |
-| data | string |  |
+| Name      | Type             | Description |
+| --------- | ---------------- | ----------- |
+| symbology | BarcodeSymbology |             |
+| data      | string           |             |
 
 ## `src/fws/index`
 
@@ -117,233 +132,246 @@ Encode `data` asynchronously using the package-local FWS graph.
 **Kind:** function
 
 ```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string
+function decodeEan13Fws(value: string | ArrayLike<number>): string;
 ```
 
 Decodes EAN-13 module bits and validates parity and check digit.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string \| ArrayLike<number> |  |
+| Name  | Type                        | Description |
+| ----- | --------------------------- | ----------- |
+| value | string \| ArrayLike<number> |             |
 
 ### decodeEan13FwsAsync
 
 **Kind:** function
 
 ```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 Asynchronously decodes EAN-13 module bits through FWS.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string \| ArrayLike<number> |  |
+| Name  | Type                        | Description |
+| ----- | --------------------------- | ----------- |
+| value | string \| ArrayLike<number> |             |
 
 ### decodeEan8Fws
 
 **Kind:** function
 
 ```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string
+function decodeEan8Fws(value: string | ArrayLike<number>): string;
 ```
 
 Decodes EAN-8 module bits and returns the payload with its check digit.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string \| ArrayLike<number> |  |
+| Name  | Type                        | Description |
+| ----- | --------------------------- | ----------- |
+| value | string \| ArrayLike<number> |             |
 
 ### decodeEan8FwsAsync
 
 **Kind:** function
 
 ```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 Asynchronously decodes EAN-8 module bits through FWS.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string \| ArrayLike<number> |  |
+| Name  | Type                        | Description |
+| ----- | --------------------------- | ----------- |
+| value | string \| ArrayLike<number> |             |
 
 ### encodeEan13Fws
 
 **Kind:** function
 
 ```typescript
-function encodeEan13Fws(value: string): string
+function encodeEan13Fws(value: string): string;
 ```
 
 Encodes a twelve-digit EAN-13 payload and computes its check digit in FWS.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
 
 ### encodeEan13FwsAsync
 
 **Kind:** function
 
 ```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>
+function encodeEan13FwsAsync(value: string): Promise<string>;
 ```
 
 Asynchronously encodes a twelve-digit EAN-13 payload with the FWS loader.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
 
 ### encodeEan8Fws
 
 **Kind:** function
 
 ```typescript
-function encodeEan8Fws(value: string): string
+function encodeEan8Fws(value: string): string;
 ```
 
 Encodes a seven-digit EAN-8 payload and computes its check digit in FWS.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
 
 ### encodeEan8FwsAsync
 
 **Kind:** function
 
 ```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>
+function encodeEan8FwsAsync(value: string): Promise<string>;
 ```
 
 Asynchronously encodes a seven-digit EAN-8 payload with the FWS loader.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
 
 ### encodeUpcaFws
 
 **Kind:** function
 
 ```typescript
-function encodeUpcaFws(value: string): string
+function encodeUpcaFws(value: string): string;
 ```
 
 Encodes a UPC-A payload through the zero-prefixed EAN-13 FWS graph.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
 
 ### encodeUpcaFwsAsync
 
 **Kind:** function
 
 ```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>
+function encodeUpcaFwsAsync(value: string): Promise<string>;
 ```
 
 Asynchronously encodes a UPC-A payload through FWS.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
 
 ### encodeVariableBarcodeFws
 
 **Kind:** function
 
 ```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string
+function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
 Encodes a supported variable-length barcode through its native FWS graph when available.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| symbology | VariableBarcodeSymbology |  |
-| value | string |  |
+| Name      | Type                     | Description |
+| --------- | ------------------------ | ----------- |
+| symbology | VariableBarcodeSymbology |             |
+| value     | string                   |             |
 
 ### encodeVariableBarcodeFwsAsync
 
 **Kind:** function
 
 ```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>
+function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
 ```
 
 Asynchronously encodes a supported variable-length barcode through FWS.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| symbology | VariableBarcodeSymbology |  |
-| value | string |  |
+| Name      | Type                     | Description |
+| --------- | ------------------------ | ----------- |
+| symbology | VariableBarcodeSymbology |             |
+| value     | string                   |             |
 
 ### validateGs1DataBarValue
 
 **Kind:** function
 
 ```typescript
-function validateGs1DataBarValue(value: string): boolean
+function validateGs1DataBarValue(value: string): boolean;
 ```
 
 Validates a GS1 DataBar/RSS-14 GTIN-14 value in the package-local FWS graph.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
 
 ### validateGs1DataBarValueAsync
 
 **Kind:** function
 
 ```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>
+function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
 ```
 
 Asynchronously validates a GS1 DataBar/RSS-14 GTIN-14 value through FWS.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
 
 ### VariableBarcodeSymbology
 
 **Kind:** type
 
 ```typescript
-export type VariableBarcodeSymbology = Extract< BarcodeSymbology, | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode' >;
+export type VariableBarcodeSymbology = Extract<
+  BarcodeSymbology,
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode'
+>;
 ```
 
 Variable-length symbologies supported by the direct barcode FWS adapter.

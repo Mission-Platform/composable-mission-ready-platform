@@ -26,7 +26,7 @@ Forge 后端嵌入的确定性表示。
 **种类：**常数
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 共享 Forge 正则表达式字节码合约的稳定版本。
@@ -36,7 +36,7 @@ export const FORGE_REGEX_BYTECODE_VERSION
 **种类：**常数
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 每条指令的宽度（以 32 位整数操作数表示）。
@@ -46,7 +46,7 @@ export const INSTR_WIDTH
 **种类：**常数
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 由 Forge 后端使用并由参考预言机镜像的操作码。
@@ -68,16 +68,16 @@ export type Opcode = (typeof Op)[keyof typeof Op];
 **种类：**功能
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 将支持的确定性正则表达式子集编译为 Forge 字节码。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图案|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 图案 | 字符串 |      |
 
 ### 正则表达式语法错误
 
@@ -96,17 +96,17 @@ export class RegexSyntaxError extends Error
 **种类：**功能
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 读取捕获端而不向调用者暴露字节码槽布局。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|捕获 |捕获\|空 |  |
-|组 |数量 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 捕获 | 捕获\|空 |      |
+| 组   | 数量     |      |
 
 ### 捕获
 
@@ -123,83 +123,83 @@ export type Captures = number[];
 **种类：**功能
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 读取捕获开始，而不向调用者暴露字节码槽布局。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|捕获 |捕获\|空 |  |
-|组 |数量 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 捕获 | 捕获\|空 |      |
+| 组   | 数量     |      |
 
 ### 完全匹配
 
 **种类：**功能
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 全字符串匹配，锚定在位置零。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|重新|编译正则表达式 |  |
-|输入 |字符串|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 重新 | 编译正则表达式 |      |
+| 输入 | 字符串         |      |
 
 ### 前缀匹配
 
 **种类：**功能
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 前缀匹配，锚定在位置零但不在末尾。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|重新|编译正则表达式 |  |
-|输入 |字符串|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 重新 | 编译正则表达式 |      |
+| 输入 | 字符串         |      |
 
 ### 搜索
 
 **种类：**功能
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 `start` 处或之后的最左边匹配。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|重新|编译正则表达式 |  |
-|输入 |字符串|  |
-|开始 |  |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 重新 | 编译正则表达式 |      |
+| 输入 | 字符串         |      |
+| 开始 |                |      |
 
 ### 测试
 
 **种类：**功能
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 全字符串布尔匹配。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|重新|编译正则表达式 |  |
-|输入 |字符串|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 重新 | 编译正则表达式 |      |
+| 输入 | 字符串         |      |

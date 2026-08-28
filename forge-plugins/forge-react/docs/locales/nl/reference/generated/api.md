@@ -16,18 +16,22 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-p
 **Soort:** functie
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 Transformeer de hele module naar de doelbron React.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
-| componentnaam | tekenreeks |  |
-| plannen | ReactModulePlan |  |
+| Naam          | Typ               | Beschrijving |
+| ------------- | ----------------- | ------------ |
+| module        | SemantischeModule |              |
+| componentnaam | tekenreeks        |              |
+| plannen       | ReactModulePlan   |              |
 
 ## `src/index`
 
@@ -36,7 +40,7 @@ Transformeer de hele module naar de doelbron React.
 **Soort:** functie
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 Maak de React-uitvoerplug-in en de bijbehorende JSX-buildadapters.
@@ -48,50 +52,58 @@ Maak de React-uitvoerplug-in en de bijbehorende JSX-buildadapters.
 **Soort:** functie
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 Beperk een plan dat eigendom is van het doelwit tot het React-plan.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |  |
+| Naam     | Typ                                   | Beschrijving |
+| -------- | ------------------------------------- | ------------ |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
 
 ### lagereReactModule
 
 **Soort:** functie
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Verlaag de neutrale IR in het React-plan van {@link TargetIntentions.lowered}.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ir | SemantischeModule |  |
-| context | DoelContext |  |
+| Naam    | Typ               | Beschrijving |
+| ------- | ----------------- | ------------ |
+| ir      | SemantischeModule |              |
+| context | DoelContext       |              |
 
 ### planReactModule
 
 **Soort:** functie
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 Bouw het React-plan voor één module.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
-| componentnaam | tekenreeks |  |
+| Naam          | Typ               | Beschrijving |
+| ------------- | ----------------- | ------------ |
+| module        | SemantischeModule |              |
+| componentnaam | tekenreeks        |              |
 
 ### ReactClientDirectivePlan
 
@@ -180,7 +192,10 @@ Hoe de component zijn rekwisietenobject bindt.
 **Soort:** functie
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Verfijn het React-plan.
@@ -191,17 +206,17 @@ inline, en als `stableKeyInference` is uitgeschakeld, wordt elke afgeleide sleut
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bedoelingen | DoelIntenties |  |
-| opties | TargetOptimizeOptions |  |
+| Naam        | Typ                   | Beschrijving |
+| ----------- | --------------------- | ------------ |
+| bedoelingen | DoelIntenties         |              |
+| opties      | TargetOptimizeOptions |              |
 
 ### REACT_OPTIMALISATIES
 
 **Soort:** constant
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 De identificatiegegevens vastgelegd in een plan dat door de React-optimizer is verfijnd.

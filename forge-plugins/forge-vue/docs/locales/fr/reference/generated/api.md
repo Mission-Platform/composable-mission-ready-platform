@@ -36,19 +36,24 @@ Résultat de l'émetteur Vue : le SFC principal plus les SFC auxiliaires qu'il 
 **Genre :** fonction
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 Transformez un module de composants neutres en un SFC Vue (plus tous les SFC auxiliaires).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | Module Sémantique |  |
-| Nom du composant | chaîne |  |
-| dossiers de composants | ReadonlySet<string> |  |
-| planifier | VueLoweredModule |  |
+| Nom                    | Tapez               | Descriptif |
+| ---------------------- | ------------------- | ---------- |
+| modules                | Module Sémantique   |            |
+| Nom du composant       | chaîne              |            |
+| dossiers de composants | ReadonlySet<string> |            |
+| planifier              | VueLoweredModule    |            |
 
 ## `src/emitters/hook-module`
 
@@ -57,16 +62,16 @@ Transformez un module de composants neutres en un SFC Vue (plus tous les SFC aux
 **Genre :** fonction
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 Compilez un module hook neutre sur sa source composable Vue (`.ts`).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | Module Sémantique |  |
+| Nom     | Tapez             | Descriptif |
+| ------- | ----------------- | ---------- |
+| modules | Module Sémantique |            |
 
 ## `src/index`
 
@@ -75,7 +80,7 @@ Compilez un module hook neutre sur sa source composable Vue (`.ts`).
 **Genre :** fonction
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 Créez le plug-in de sortie Vue et ses adaptateurs de compilateur Vite/Rolldown.
@@ -87,23 +92,28 @@ Créez le plug-in de sortie Vue et ses adaptateurs de compilateur Vite/Rolldown.
 **Genre :** fonction
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 Affinez un plan cible au plan Vue sans lancer de diffusion.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| abaissé | CibleLoweredModule \| indéfini |  |
+| Nom     | Tapez                          | Descriptif |
+| ------- | ------------------------------ | ---------- |
+| abaissé | CibleLoweredModule \| indéfini |            |
 
 ### LowerVueModule
 
 **Genre :** fonction
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Abaissez un module neutre dans le plan cible Vue. Le module neutre se déplace
@@ -111,10 +121,10 @@ reste intact afin que les phases ultérieures conservent un accès complet à l'
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| ir | Module Sémantique |  |
-| contexte | Contexte cible |  |
+| Nom      | Tapez             | Descriptif |
+| -------- | ----------------- | ---------- |
+| ir       | Module Sémantique |            |
+| contexte | Contexte cible    |            |
 
 ### VueComputedPlan
 
@@ -253,7 +263,7 @@ Un `useEffect` abaissé à un observateur Vue.
 **Genre :** constante
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 Réduisez les déclarations `computed` qui partagent une usine.
@@ -263,7 +273,7 @@ Réduisez les déclarations `computed` qui partagent une usine.
 **Genre :** constante
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Prune `vue` importe le plan affiné dont nous n'avons plus besoin.
@@ -273,7 +283,7 @@ Prune `vue` importe le plan affiné dont nous n'avons plus besoin.
 **Genre :** constante
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 Lever les sous-arbres entièrement statiques (constantes du module / `v-once`).
@@ -283,7 +293,7 @@ Lever les sous-arbres entièrement statiques (constantes du module / `v-once`).
 **Genre :** constante
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 Émet un état jamais réaffecté en tant que `const` simple au lieu d'un `ref`.
@@ -293,7 +303,10 @@ export const INLINE_SINGLE_USE_REFS
 **Genre :** fonction
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Affiner un plan Vue réduit. Les intentions portant un plan étranger (ou manquant) sont
@@ -301,17 +314,17 @@ est revenu intact, de sorte que l'optimiseur peut s'exécuter en toute sécurit�
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| intentions | Intentions cibles |  |
-| options | Options d'optimisation cible |  |
+| Nom        | Tapez                        | Descriptif |
+| ---------- | ---------------------------- | ---------- |
+| intentions | Intentions cibles            |            |
+| options    | Options d'optimisation cible |            |
 
 ### STABLE_LIST_KEYS
 
 **Genre :** constante
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 Conservez uniquement les clés de liste prouvées stables, en enregistrant les listes non saisies.
@@ -321,7 +334,7 @@ Conservez uniquement les clés de liste prouvées stables, en enregistrant les l
 **Genre :** constante
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 Chaque identifiant d'optimisation que la cible Vue peut enregistrer, dans l'ordre des applications.

@@ -26,7 +26,7 @@ export interface CompiledRegex
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 نسخة مستقرة من عقد الرمز الثانوي Forge regex المشترك.
@@ -36,7 +36,7 @@ export const FORGE_REGEX_BYTECODE_VERSION
 **النوع:** ثابت
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 العرض، في معاملات عددية 32 بت، لكل تعليمات.
@@ -46,7 +46,7 @@ export const INSTR_WIDTH
 **النوع:** ثابت
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 رموز التشغيل التي تستهلكها الواجهة الخلفية لـ Forge وتعكسها Oracle المرجعية.
@@ -68,16 +68,16 @@ export type Opcode = (typeof Op)[keyof typeof Op];
 **النوع:** الوظيفة
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 قم بتجميع مجموعة فرعية من التعبيرات المنطقية الحتمية المدعومة في Forge bytecode.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نمط | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| نمط   | سلسلة |       |
 
 ### RegexSyntaxError
 
@@ -96,17 +96,17 @@ export class RegexSyntaxError extends Error
 **النوع:** الوظيفة
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 اقرأ نهاية الالتقاط دون تعريض تخطيط فتحة الرمز الثانوي للمتصلين.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| يلتقط | يلتقط \| فارغة |  |
-| المجموعة | رقم |  |
+| الاسم    | اكتب           | الوصف |
+| -------- | -------------- | ----- |
+| يلتقط    | يلتقط \| فارغة |       |
+| المجموعة | رقم            |       |
 
 ### يلتقط
 
@@ -123,83 +123,83 @@ export type Captures = number[];
 **النوع:** الوظيفة
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 اقرأ بداية الالتقاط دون تعريض تخطيط فتحة الرمز الثانوي للمتصلين.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| يلتقط | يلتقط \| فارغة |  |
-| المجموعة | رقم |  |
+| الاسم    | اكتب           | الوصف |
+| -------- | -------------- | ----- |
+| يلتقط    | يلتقط \| فارغة |       |
+| المجموعة | رقم            |       |
 
 ### com.fullMatch
 
 **النوع:** الوظيفة
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 تطابق كامل السلسلة، مثبت في الموضع صفر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إعادة | CompiledRegex |  |
-| الإدخال | سلسلة |  |
+| الاسم   | اكتب          | الوصف |
+| ------- | ------------- | ----- |
+| إعادة   | CompiledRegex |       |
+| الإدخال | سلسلة         |       |
 
 ### prefixMatch
 
 **النوع:** الوظيفة
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 مطابقة البادئة، مثبتة في الموضع صفر ولكن ليس في النهاية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إعادة | CompiledRegex |  |
-| الإدخال | سلسلة |  |
+| الاسم   | اكتب          | الوصف |
+| ------- | ------------- | ----- |
+| إعادة   | CompiledRegex |       |
+| الإدخال | سلسلة         |       |
 
 ### يبحث
 
 **النوع:** الوظيفة
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 يتطابق أقصى اليسار عند `start` أو بعده.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إعادة | CompiledRegex |  |
-| الإدخال | سلسلة |  |
-| ابدأ |  |  |
+| الاسم   | اكتب          | الوصف |
+| ------- | ------------- | ----- |
+| إعادة   | CompiledRegex |       |
+| الإدخال | سلسلة         |       |
+| ابدأ    |               |       |
 
 ### امتحان
 
 **النوع:** الوظيفة
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 مطابقة منطقية لسلسلة كاملة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إعادة | CompiledRegex |  |
-| الإدخال | سلسلة |  |
+| الاسم   | اكتب          | الوصف |
+| ------- | ------------- | ----- |
+| إعادة   | CompiledRegex |       |
+| الإدخال | سلسلة         |       |

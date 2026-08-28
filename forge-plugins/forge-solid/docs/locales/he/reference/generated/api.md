@@ -16,16 +16,16 @@
 פונקציה **סוג:**
 
 ```typescript
-function emitSolidHookModule(module: SemanticModule): string
+function emitSolidHookModule(module: SemanticModule): string;
 ```
 
 הפוך מודול וו ניטרלי למקור SolidJS שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| מודול | SemanticModule |       |
 
 ## `src/emitters/module`
 
@@ -34,17 +34,20 @@ function emitSolidHookModule(module: SemanticModule): string
 פונקציה **סוג:**
 
 ```typescript
-function emitSolidModule(module: SemanticModule, options: SolidEmitOptions = {}): GeneratedSolidModule
+function emitSolidModule(
+  module: SemanticModule,
+  options: SolidEmitOptions = {},
+): GeneratedSolidModule;
 ```
 
 הפוך מודול רכיב ניטרלי למקור SolidJS שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
-| אפשרויות | SolidEmitOptions |  |
+| שם       | הקלד             | תיאור |
+| -------- | ---------------- | ----- |
+| מודול    | SemanticModule   |       |
+| אפשרויות | SolidEmitOptions |       |
 
 ### GeneratedSolidModule
 
@@ -73,7 +76,7 @@ export interface SolidEmitOptions
 פונקציה **סוג:**
 
 ```typescript
-function forgeSolidFramework(): FrameworkOutputPlugin
+function forgeSolidFramework(): FrameworkOutputPlugin;
 ```
 
 צור את הפלאגין Solid ואת מתאמי Vite/Rolldown JSX שלו.
@@ -85,40 +88,48 @@ function forgeSolidFramework(): FrameworkOutputPlugin
 פונקציה **סוג:**
 
 ```typescript
-function isSolidLowered(lowered: TargetLoweredModule | undefined): lowered is SolidLoweredModule
+function isSolidLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SolidLoweredModule;
 ```
 
 צמצם תוכנית יעד לתוכנית Solid; `false` עבור כל תוכנית של מסגרת אחרת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הוריד | TargetLoweredModule \| לא מוגדר |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| הוריד | TargetLoweredModule \| לא מוגדר |       |
 
 ### lowerSolidModule
 
 פונקציה **סוג:**
 
 ```typescript
-function lowerSolidModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerSolidModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 הורד IR ניטרלי לתוך עטיפת כוונת המטרה של Solid, נושאת את התוכנית.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| הקשר | היעד הקשר |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| ir   | SemanticModule |       |
+| הקשר | היעד הקשר      |       |
 
 ### planSolidImports
 
 פונקציה **סוג:**
 
 ```typescript
-function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string[]
+function planSolidImports(
+  plan: SolidLoweringPlan,
+  conditional: boolean,
+): string[];
 ```
 
 שמות הערך המדויקים של `solid-js` שתוכנית דורשת, בסדר אלפביתי כך א
@@ -127,33 +138,33 @@ function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוכנית | SolidLoweringPlan |  |
-| מותנה | בוליאני |  |
+| שם     | הקלד              | תיאור |
+| ------ | ----------------- | ----- |
+| תוכנית | SolidLoweringPlan |       |
+| מותנה  | בוליאני           |       |
 
 ### planSolidModule
 
 פונקציה **סוג:**
 
 ```typescript
-function planSolidModule(ir: SemanticModule): SolidLoweringPlan
+function planSolidModule(ir: SemanticModule): SolidLoweringPlan;
 ```
 
 בנה את תוכנית Solid עבור עובדות סמנטיות של מודול.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ir | SemanticModule |  |
+| שם  | הקלד           | תיאור |
+| --- | -------------- | ----- |
+| ir  | SemanticModule |       |
 
 ### SOLID_FRAMEWORK
 
 **סוג:** קבוע
 
 ```typescript
-export const SOLID_FRAMEWORK
+export const SOLID_FRAMEWORK;
 ```
 
 מזהה המסגרת של כל תוכנית Solid מופלה.
@@ -275,7 +286,7 @@ export interface SolidSlotPlan
 **סוג:** קבוע
 
 ```typescript
-export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
+export const COLLAPSE_SINGLE_CHILD_FRAGMENTS;
 ```
 
 זרוק קטע שעוטף אלמנט אחד בדיוק.
@@ -285,7 +296,7 @@ export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
 **סוג:** קבוע
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 חשב מחדש את ייבוא ​​`solid-js` מהתוכנית המעודנת.
@@ -295,7 +306,7 @@ export const DROP_UNUSED_IMPORTS
 **סוג:** קבוע
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 קדם את תתי העצים `__mpStatic` לקבועים ברמת המודול.
@@ -305,7 +316,7 @@ export const HOIST_STATIC_SUBTREES
 **סוג:** קבוע
 
 ```typescript
-export const MEMOIZE_DYNAMIC_EXPRESSIONS
+export const MEMOIZE_DYNAMIC_EXPRESSIONS;
 ```
 
 קדם ביטוי ילד דינמי חוזר לתזכיר בודד.
@@ -315,7 +326,7 @@ export const MEMOIZE_DYNAMIC_EXPRESSIONS
 **סוג:** קבוע
 
 ```typescript
-export const MP_MEMO_PREFIX
+export const MP_MEMO_PREFIX;
 ```
 
 קידומת לכריכות התזכיר שמציגה `solid:memoize-dynamic-expressions`.
@@ -325,7 +336,10 @@ export const MP_MEMO_PREFIX
 פונקציה **סוג:**
 
 ```typescript
-function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSolidModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 חידד תוכנית Solid מופחתת. מעטפת כוונות שאינה נושאת תוכנית Solid
@@ -333,17 +347,17 @@ function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כוונות | כוונות יעד |  |
-| אפשרויות | TargetOptimizeOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| כוונות   | כוונות יעד            |       |
+| אפשרויות | TargetOptimizeOptions |       |
 
 ### STABLE_LIST_KEYS
 
 **סוג:** קבוע
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 שמור רק על מקשי הרשימה שהחזית הוכחה יציבה.

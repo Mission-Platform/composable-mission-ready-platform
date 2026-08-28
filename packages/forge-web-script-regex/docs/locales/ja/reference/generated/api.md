@@ -26,7 +26,7 @@ Forge バックエンドによって埋め込まれた決定論的表現。
 **種類:** 定数
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 共有 Forge 正規表現バイトコード コントラクトの安定バージョン。
@@ -36,7 +36,7 @@ export const FORGE_REGEX_BYTECODE_VERSION
 **種類:** 定数
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 各命令の 32 ビット整数オペランドの幅。
@@ -46,7 +46,7 @@ export const INSTR_WIDTH
 **種類:** 定数
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 Forge バックエンドによって消費され、参照オラクルによってミラーリングされるオペコード。
@@ -68,16 +68,16 @@ export type Opcode = (typeof Op)[keyof typeof Op];
 **種類:** 関数
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 サポートされている決定論的正規表現サブセットを Forge バイトコードにコンパイルします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|パターン |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| パターン | 文字列 |      |
 
 ### RegexSyntaxError
 
@@ -96,17 +96,17 @@ export class RegexSyntaxError extends Error
 **種類:** 関数
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 バイトコード スロット レイアウトを呼び出し元に公開せずにキャプチャ エンドを読み取ります。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キャプチャ | \| をキャプチャしますヌル |  |
-|グループ |番号 |  |
+| 名前       | タイプ                    | 説明 |
+| ---------- | ------------------------- | ---- |
+| キャプチャ | \| をキャプチャしますヌル |      |
+| グループ   | 番号                      |      |
 
 ### キャプチャ
 
@@ -123,83 +123,83 @@ export type Captures = number[];
 **種類:** 関数
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 バイトコード スロット レイアウトを呼び出し元に公開せずにキャプチャ開始を読み取ります。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キャプチャ | \| をキャプチャしますヌル |  |
-|グループ |番号 |  |
+| 名前       | タイプ                    | 説明 |
+| ---------- | ------------------------- | ---- |
+| キャプチャ | \| をキャプチャしますヌル |      |
+| グループ   | 番号                      |      |
 
 ### フルマッチ
 
 **種類:** 関数
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 文字列全体が一致し、位置 0 に固定されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|再 |コンパイル済み正規表現 |  |
-|入力 |文字列 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 再   | コンパイル済み正規表現 |      |
+| 入力 | 文字列                 |      |
 
 ### プレフィックスマッチ
 
 **種類:** 関数
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 前方一致。位置 0 に固定されますが、最後には固定されません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|再 |コンパイル済み正規表現 |  |
-|入力 |文字列 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 再   | コンパイル済み正規表現 |      |
+| 入力 | 文字列                 |      |
 
 ### 検索
 
 **種類:** 関数
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 `start` 以降の左端の一致。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|再 |コンパイル済み正規表現 |  |
-|入力 |文字列 |  |
-|開始 |  |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 再   | コンパイル済み正規表現 |      |
+| 入力 | 文字列                 |      |
+| 開始 |                        |      |
 
 ### テスト
 
 **種類:** 関数
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 文字列全体のブール一致。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|再 |コンパイル済み正規表現 |  |
-|入力 |文字列 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 再   | コンパイル済み正規表現 |      |
+| 入力 | 文字列                 |      |

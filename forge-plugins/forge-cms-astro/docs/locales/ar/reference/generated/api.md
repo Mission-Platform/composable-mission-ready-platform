@@ -16,16 +16,16 @@
 **النوع:** الوظيفة
 
 ```typescript
-function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin
+function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin;
 ```
 
 ربط عرض Astro بمكوّن إضافي لإخراج إطار عمل مملوك للمتصل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجأستروكمسوبتيونس |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| خيارات | فورجأستروكمسوبتيونس |       |
 
 ### خيارات ForgeAstroCms
 
@@ -44,32 +44,32 @@ export interface ForgeAstroCmsOptions
 **النوع:** الوظيفة
 
 ```typescript
-function emitContentConfig(components: readonly ContentComponent[]): string
+function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
 تنبعث من استرو `content.config.ts` مع مجموعة واحدة لكل مكون.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكونات | للقراءة فقط ContentComponent[] |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| مكونات | للقراءة فقط ContentComponent[] |       |
 
 ### com.fieldToZod
 
 **النوع:** الوظيفة
 
 ```typescript
-function fieldToZod(field: ContentField): string
+function fieldToZod(field: ContentField): string;
 ```
 
 الزود (أو `image()`) يقوم المدقق بتعيين نوع حقل محايد عليه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المجال | حقل المحتوى |  |
+| الاسم  | اكتب        | الوصف |
+| ------ | ----------- | ----- |
+| المجال | حقل المحتوى |       |
 
 ## `src/template`
 
@@ -78,40 +78,46 @@ function fieldToZod(field: ContentField): string
 **النوع:** الوظيفة
 
 ```typescript
-function astroDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function astroDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 اجمع التشخيصات وتقارير خفض Astro لوحدة نمطية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأشعة تحت الحمراء | الوحدة الدلالية |  |
-| المكون | مكون المحتوى |  |
+| الاسم              | اكتب            | الوصف |
+| ------------------ | --------------- | ----- |
+| الأشعة تحت الحمراء | الوحدة الدلالية |       |
+| المكون             | مكون المحتوى    |       |
 
 ### com.astroMarkup
 
 **النوع:** الوظيفة
 
 ```typescript
-function astroMarkup(expression: string): string
+function astroMarkup(expression: string): string;
 ```
 
 أعد كتابة أسماء سمات JSX فقط وقم بإزالة الجزء الخارجي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعبير | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| تعبير | سلسلة |       |
 
 ### emitIslandAstroTemplate
 
 **النوع:** الوظيفة
 
 ```typescript
-function emitIslandAstroTemplate(component: ContentComponent, islandEntry: string): string
+function emitIslandAstroTemplate(
+  component: ContentComponent,
+  islandEntry: string,
+): string;
 ```
 
 تنبعث من الجزيرة المدعومة `.astro` قالب للمكون التفاعلي.
@@ -122,23 +128,23 @@ function emitIslandAstroTemplate(component: ContentComponent, islandEntry: strin
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
-| دخول الجزيرة | سلسلة |  |
+| الاسم        | اكتب         | الوصف |
+| ------------ | ------------ | ----- |
+| المكون       | مكون المحتوى |       |
+| دخول الجزيرة | سلسلة        |       |
 
 ### emitStaticAstroTemplate
 
 **النوع:** الوظيفة
 
 ```typescript
-function emitStaticAstroTemplate(ir: SemanticModule): string
+function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
 تنبعث منها ساكنة `.astro` قالب لعنصر العرض التقديمي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأشعة تحت الحمراء | الوحدة الدلالية |  |
+| الاسم              | اكتب            | الوصف |
+| ------------------ | --------------- | ----- |
+| الأشعة تحت الحمراء | الوحدة الدلالية |       |

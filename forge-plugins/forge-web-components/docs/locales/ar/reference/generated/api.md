@@ -16,16 +16,16 @@
 **النوع:** الوظيفة
 
 ```typescript
-function synthesiseElementClass(plan: WebComponentsLoweredModule): string
+function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 ```
 
 اطبع الفئة الفرعية `ForgeElement` وتسجيلها للخطة المخفضة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خطة | WebComponentsLoweredModule |  |
+| الاسم | اكتب                       | الوصف |
+| ----- | -------------------------- | ----- |
+| خطة   | WebComponentsLoweredModule |       |
 
 ## `src/emitters/module`
 
@@ -34,19 +34,24 @@ function synthesiseElementClass(plan: WebComponentsLoweredModule): string
 **النوع:** الوظيفة
 
 ```typescript
-function emitWebComponentModule(module: SemanticModule, componentName: string = "CustomElement", componentFolders: ReadonlySet<string> = new Set(), lowered?: WebComponentsLoweredModule): EmittedWebComponentModule
+function emitWebComponentModule(
+  module: SemanticModule,
+  componentName: string = "CustomElement",
+  componentFolders: ReadonlySet<string> = new Set(),
+  lowered?: WebComponentsLoweredModule,
+): EmittedWebComponentModule;
 ```
 
 تحويل الوحدة بأكملها إلى المصدر الهدف الأصلي لمكونات الويب.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
-| اسم المكون | سلسلة |  |
-| مجلدات المكونات | ReadonlySet<string> |  |
-| خفضت | WebComponentsLoweredModule |  |
+| الاسم           | اكتب                       | الوصف |
+| --------------- | -------------------------- | ----- |
+| الوحدة النمطية  | الوحدة الدلالية            |       |
+| اسم المكون      | سلسلة                      |       |
+| مجلدات المكونات | ReadonlySet<string>        |       |
+| خفضت            | WebComponentsLoweredModule |       |
 
 ## `src/index`
 
@@ -55,7 +60,7 @@ function emitWebComponentModule(module: SemanticModule, componentName: string = 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebComponentsFramework(): FrameworkOutputPlugin
+function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 ```
 
 قم بإنشاء البرنامج الإضافي لإخراج Web Components TypeScript فقط.
@@ -67,7 +72,7 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 يتم تحديد القدرات الداخلية حسب وقت التشغيل؛ يبقى اقتران النموذج اختياريًا.
@@ -77,7 +82,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 تم الاحتفاظ بافتراضيات التوافق للمكونات التي تم إنشاؤها.
@@ -87,7 +92,9 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
 **النوع:** الوظيفة
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebComponentsHostPlan
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+): WebComponentsHostPlan;
 ```
 
 استنتج مضيفًا مدمجًا مخصصًا فقط من جذر جوهري ثابت واحد.
@@ -98,66 +105,74 @@ function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebC
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| عقدة الإرجاع | GenericRenderNode \| غير محدد |  |
+| الاسم        | اكتب                          | الوصف |
+| ------------ | ----------------------------- | ----- |
+| عقدة الإرجاع | GenericRenderNode \| غير محدد |       |
 
 ### isWebComponentsLowered
 
 **النوع:** الوظيفة
 
 ```typescript
-function isWebComponentsLowered(lowered: TargetLoweredModule | undefined): lowered is WebComponentsLoweredModule
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
 ```
 
 تضييق نطاق الخطة المستهدفة لخطة مكونات الويب دون الإرسال.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خفضت | TargetLoweredModule \| غير محدد |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خفضت  | TargetLoweredModule \| غير محدد |       |
 
 ### LowerWebComponentsModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function lowerWebComponentsModule(module: SemanticModule, context: TargetContext): TargetIntentions
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 خفض الأشعة تحت الحمراء المحايدة في النوايا المستهدفة لمكونات الويب.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
-| السياق | سياق الهدف |  |
+| الاسم          | اكتب            | الوصف |
+| -------------- | --------------- | ----- |
+| الوحدة النمطية | الوحدة الدلالية |       |
+| السياق         | سياق الهدف      |       |
 
 ### lowerWebComponentsPlan
 
 **النوع:** الوظيفة
 
 ```typescript
-function lowerWebComponentsPlan(module: SemanticModule, context: TargetContext): WebComponentsLoweredModule
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
 ```
 
 قم ببناء الخطة المستهدفة لمكونات الويب لوحدة محايدة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
-| السياق | سياق الهدف |  |
+| الاسم          | اكتب            | الوصف |
+| -------------- | --------------- | ----- |
+| الوحدة النمطية | الوحدة الدلالية |       |
+| السياق         | سياق الهدف      |       |
 
 ### UNKNOWN_TYPE
 
 **النوع:** ثابت
 
 ```typescript
-export const UNKNOWN_TYPE
+export const UNKNOWN_TYPE;
 ```
 
 النوع المنبعث عند عدم توفر نوع معلن أو مستنتج.
@@ -167,7 +182,7 @@ export const UNKNOWN_TYPE
 **النوع:** ثابت
 
 ```typescript
-export const WEB_COMPONENTS_FRAMEWORK
+export const WEB_COMPONENTS_FRAMEWORK;
 ```
 
 معرف إطار عمل المكون الإضافي ومميز خطته المنخفضة.
@@ -177,7 +192,7 @@ export const WEB_COMPONENTS_FRAMEWORK
 **النوع:** ثابت
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS
+export const WEBCOMPONENTS_NATIVE_HOSTS;
 ```
 
 جدول التوافق للجذور التي يمكن تخصيصها بشكل آمن.
@@ -239,7 +254,14 @@ export interface WebComponentsGeneratedId
 **النوع:** النوع
 
 ```typescript
-export type WebComponentsHostFallbackReason = | "missing-root" | "fragment-root" | "dynamic-root" | "component-root" | "ambiguous-root" | "invalid-root" | "unsupported-root";
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
 ```
 
 الأسباب الثابتة لعدم قدرة أحد المكونات على استخدام مضيف مدمج مخصص.
@@ -279,7 +301,8 @@ export interface WebComponentsInternalsPolicy
 **النوع:** النوع
 
 ```typescript
-export type WebComponentsLifecycleCallback = "connectedCallback" | "disconnectedCallback" | "updatedCallback";
+export type WebComponentsLifecycleCallback =
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 ```
 
 عمليات الاسترجاعات الخاصة بدورة حياة العنصر المخصص التي يمكن للخطة إنشاؤها.
@@ -325,7 +348,7 @@ export interface WebComponentsPromotedLocal
 ثابت تقديم الرأس **ترقيته** إلى عضو عنصر.
 
 يتم إصدار كل من مُحضر المذكرة ورد اتصال دورة الحياة ومُهيئ الحقل
-*خارج* `render()`، لذا فإن المنطقة المحلية التي يعلن عنها رأس التجسيد غير موجودة
+_خارج_ `render()`، لذا فإن المنطقة المحلية التي يعلن عنها رأس التجسيد غير موجودة
 لهم. الترويج للإعلان للعضو هو ما يجعل مثل هذه القراءة
 قابلة للحل — من خلال `this.<name>` — بدلاً من التعلق.
 
@@ -392,15 +415,16 @@ parseTime(modelValue);`) التي لا يمكن إثبات أنها خالية �
 
 يتم تأجيل هذه البذرة إلى `ForgeElement.setup()`، الذي يستدعيه وقت التشغيل
 بعد اعتماد السمة وقبل العرض الأول، مرة واحدة بالضبط لكل عنصر
+
 - يجب ألا يتم إعادة زرع البذور في عملية إعادة الاتصال وتجاهل ما قام المستخدم بتغييره منذ ذلك الحين.
-عبارات الرأس يتم إعادة عرض احتياجات البذور هناك أولاً، بترتيب الرأس و
-مغلقة بشكل متعد، و **فقط** تلك.
+  عبارات الرأس يتم إعادة عرض احتياجات البذور هناك أولاً، بترتيب الرأس و
+  مغلقة بشكل متعد، و **فقط** تلك.
 
 إعادة التشغيل بدلاً من التخزين المؤقت أمر متعمد. في المصدر المحايد الرأس
-*هو* نص المكون، لذا فإن `const initial = parseTime(modelValue);` بالفعل
+_هو_ نص المكون، لذا فإن `const initial = parseTime(modelValue);` بالفعل
 يعمل على كل تقديم؛ تقييمه مرة أخرى أثناء الإعداد لا يؤدي إلى أي اتصال
 لا يتم تنفيذ المكون المؤلف بالفعل في كل تمريرة. التخزين المؤقت في أ
-سيؤدي الحقل بدلاً من ذلك إلى *تقليل* عدد التقييمات وإعطاء القيمة
+سيؤدي الحقل بدلاً من ذلك إلى _تقليل_ عدد التقييمات وإعطاء القيمة
 هوية المصدر لم يعد أبدا. فقط `const` عادي (أو وظيفة)
 يتم إعادة تشغيل الإعلان دائمًا - راجع {@link headReplay}.
 
@@ -451,41 +475,47 @@ export interface WebComponentsTemplatePlan
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeWebComponentsModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeWebComponentsModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 تحسين النوايا المستهدفة لمكونات الويب؛ أهداف أخرى تمر عبرها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نوايا | النوايا المستهدفة |  |
-| خيارات | تارجتوبتيميزيوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| نوايا  | النوايا المستهدفة    |       |
+| خيارات | تارجتوبتيميزيوبتيونس |       |
 
 ### optimwebComponentsPlan
 
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeWebComponentsPlan(plan: WebComponentsLoweredModule, options: TargetOptimizeOptions): WebComponentsLoweredModule
+function optimizeWebComponentsPlan(
+  plan: WebComponentsLoweredModule,
+  options: TargetOptimizeOptions,
+): WebComponentsLoweredModule;
 ```
 
 قم بتحسين خطة مكونات الويب المنخفضة، وتسجيل كل تمريرة تم تشغيلها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خطة | WebComponentsLoweredModule |  |
-| خيارات | تارجتوبتيميزيوبتيونس |  |
+| الاسم  | اكتب                       | الوصف |
+| ------ | -------------------------- | ----- |
+| خطة    | WebComponentsLoweredModule |       |
+| خيارات | تارجتوبتيميزيوبتيونس       |       |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
 **النوع:** ثابت
 
 ```typescript
-export const WEB_COMPONENTS_OPTIMIZATIONS
+export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
 المعرفات المسجلة في {@link WebComponentsLoweredModule.appliedOptimizations}.
@@ -495,7 +525,8 @@ export const WEB_COMPONENTS_OPTIMIZATIONS
 **النوع:** النوع
 
 ```typescript
-export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
+export type WebComponentsOptimization =
+  (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
 ```
 
 معرف تحسين مكونات الويب المسجل.
@@ -507,16 +538,16 @@ export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[ke
 **النوع:** الوظيفة
 
 ```typescript
-function emitWebComponentHookModule(module: SemanticModule): string
+function emitWebComponentHookModule(module: SemanticModule): string;
 ```
 
 تحويل وحدة ربط محايدة إلى مصدر مكونات الويب الخاصة بها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
+| الاسم          | اكتب            | الوصف |
+| -------------- | --------------- | ----- |
+| الوحدة النمطية | الوحدة الدلالية |       |
 
 ## `src/transformers/expression`
 
@@ -525,7 +556,7 @@ function emitWebComponentHookModule(module: SemanticModule): string
 **النوع:** ثابت
 
 ```typescript
-export const HAS_SLOT_RUNTIME
+export const HAS_SLOT_RUNTIME;
 ```
 
 مساعد وقت التشغيل الأصلي الذي تنخفض إليه العلامة، ويتم استدعاؤه باستخدام العنصر المضيف.
@@ -535,7 +566,7 @@ export const HAS_SLOT_RUNTIME
 **النوع:** الوظيفة
 
 ```typescript
-function isFunctionExpressionText(text: string): boolean
+function isFunctionExpressionText(text: string): boolean;
 ```
 
 ما إذا كان النص تعبيرًا **ذو قيمة دالة** — سهمًا أو أ
@@ -547,16 +578,16 @@ function isFunctionExpressionText(text: string): boolean
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| نص    | سلسلة |       |
 
 ### isPureExpressionText
 
 **النوع:** الوظيفة
 
 ```typescript
-function isPureExpressionText(text: string): boolean
+function isPureExpressionText(text: string): boolean;
 ```
 
 ما إذا كان التعبير **يمكن إثباته** خاليًا من التأثيرات: لا يوجد اتصال، لا `new`، لا
@@ -569,9 +600,9 @@ function isPureExpressionText(text: string): boolean
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| نص    | سلسلة |       |
 
 ## `src/transformers/props-binding`
 
@@ -580,26 +611,26 @@ function isPureExpressionText(text: string): boolean
 **النوع:** الوظيفة
 
 ```typescript
-function leadingObjectPattern(text: string): string | undefined
+function leadingObjectPattern(text: string): string | undefined;
 ```
 
-نمط الكائن الذي *يبدأ* `text`، مع تجاهل ما يلي.
+نمط الكائن الذي _يبدأ_ `text`، مع تجاهل ما يلي.
 
 يحمل النص المصدر للمعلمة تعليقًا توضيحيًا (`{ a, b }: Readonly<P>`)،
 لذلك يجب قطع النمط قبل أن يتحلل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| نص    | سلسلة |       |
 
 ### parsePropsBinding
 
 **النوع:** الوظيفة
 
 ```typescript
-function parsePropsBinding(patternText: string): PropsBinding | undefined
+function parsePropsBinding(patternText: string): PropsBinding | undefined;
 ```
 
 قم بتفكيك نمط كائن الدعائم.
@@ -610,9 +641,9 @@ function parsePropsBinding(patternText: string): PropsBinding | undefined
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص النمط | سلسلة |  |
+| الاسم    | اكتب  | الوصف |
+| -------- | ----- | ----- |
+| نص النمط | سلسلة |       |
 
 ### PropsBinding
 
@@ -639,7 +670,10 @@ export interface PropsBindingEntry
 **النوع:** الوظيفة
 
 ```typescript
-function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => boolean): string | undefined
+function propsBindingStatement(
+  binding: PropsBinding,
+  isRead: (name: string) => boolean,
+): string | undefined;
 ```
 
 أعد تشغيل نمط الدعائم كـ `const { … } = this;`، مقيدًا بالإدخالات
@@ -651,10 +685,10 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملزمة | بروبسبيندينج |  |
-| إقرأ | (الاسم: سلسلة) => منطقي |  |
+| الاسم | اكتب                    | الوصف |
+| ----- | ----------------------- | ----- |
+| ملزمة | بروبسبيندينج            |       |
+| إقرأ  | (الاسم: سلسلة) => منطقي |       |
 
 ## `src/transformers/props-type`
 
@@ -663,12 +697,15 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 **النوع:** الوظيفة
 
 ```typescript
-function indexedAccessType(reference: PropsTypeReference, member: string): string
+function indexedAccessType(
+  reference: PropsTypeReference,
+  member: string,
+): string;
 ```
 
 يتم إصدار التعليق التوضيحي للوصول المفهرس كعضو من نوع الدعائم.
 
-يتم الاحتفاظ باختيارية العضو تمامًا: العضو المطلوب *ليس*
+يتم الاحتفاظ باختيارية العضو تمامًا: العضو المطلوب _ليس_
 اتسعت مع `| undefined`. يتم ملء حقل العنصر مرة واحدة فقط
 يتبنى وقت التشغيل سمته، لذلك لا يتم ضبطه بشكل حقيقي في المُنشئ —
 ولكن يتم التعبير عن ذلك عن طريق إرسال الحقل كـ `declare` (يمتلك وقت التشغيل ملف
@@ -677,10 +714,10 @@ Accessor)، والذي يعفيه من `strictPropertyInitialization` دون إ�
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مرجع | PropsTypeReference |  |
-| عضو | سلسلة |  |
+| الاسم | اكتب               | الوصف |
+| ----- | ------------------ | ----- |
+| مرجع  | PropsTypeReference |       |
+| عضو   | سلسلة              |       |
 
 ### PropsTypeReference
 
@@ -697,7 +734,10 @@ export interface PropsTypeReference
 **النوع:** الوظيفة
 
 ```typescript
-function resolvePropsTypeReference(annotation: string | undefined, declarations: readonly GenericStatement[]): PropsTypeReference | undefined
+function resolvePropsTypeReference(
+  annotation: string | undefined,
+  declarations: readonly GenericStatement[],
+): PropsTypeReference | undefined;
 ```
 
 قم بحل التعليقات التوضيحية للدعائم مقابل الإعلانات المحتجزة للوحدة.
@@ -708,17 +748,17 @@ function resolvePropsTypeReference(annotation: string | undefined, declarations:
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| شرح | سلسلة \| غير محدد |  |
-| تصريحات | للقراءة فقط GenericStatement[] |  |
+| الاسم   | اكتب                           | الوصف |
+| ------- | ------------------------------ | ----- |
+| شرح     | سلسلة \| غير محدد              |       |
+| تصريحات | للقراءة فقط GenericStatement[] |       |
 
 ### typeMembers
 
 **النوع:** الوظيفة
 
 ```typescript
-function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
+function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 ```
 
 يتم الإعلان عن الأعضاء الذين يعلنهم نص الواجهة/الاسم المستعار للنوع، ويتم تعيينهم إلى ما إذا كان
@@ -726,22 +766,22 @@ function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
 
 يتم جمع الأعضاء في المستوى الأعلى من نص `{…}` الأول فقط
 حيث يمكن للعضو أن يبدأ بشكل شرعي (مباشرة بعد قوس الفتح، `;`
-أو `,`). وبالتالي فإن الأعضاء الذين ساهموا بقاعدة `extends`/`&` هم *ليسوا*
+أو `,`). وبالتالي فإن الأعضاء الذين ساهموا بقاعدة `extends`/`&` هم _ليسوا_
 مُبلغ - يعاملهم المتصل على أنهم مجهولون ويتراجع، وهو
 الاتجاه الآمن.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص الإعلان | سلسلة |  |
+| الاسم      | اكتب  | الوصف |
+| ---------- | ----- | ----- |
+| نص الإعلان | سلسلة |       |
 
 ### unwrapPropsTypeName
 
 **النوع:** الوظيفة
 
 ```typescript
-function unwrapPropsTypeName(text: string | undefined): string | undefined
+function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
 قم بتقليل التعليق التوضيحي للدعائم إلى الاسم العادي الذي تشير إليه، وإلغاء تغليف ملف
@@ -749,6 +789,6 @@ function unwrapPropsTypeName(text: string | undefined): string | undefined
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة \| غير محدد |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| نص    | سلسلة \| غير محدد |       |

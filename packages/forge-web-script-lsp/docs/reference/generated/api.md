@@ -11,16 +11,16 @@ Generated from public source declarations in `@mission-platform/forge-web-script
 **Kind:** function
 
 ```typescript
-function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeWebScriptLspServerOptions |  |
+| Name    | Type                           | Description |
+| ------- | ------------------------------ | ----------- |
+| options | ForgeWebScriptLspServerOptions |             |
 
 ### ForgeWebScriptLspDocument
 
@@ -77,17 +77,20 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function registerForgeWebScriptLsp(
+  connection: Connection,
+  options: ForgeWebScriptLspServerOptions = {},
+): ForgeWebScriptLspServer;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| connection | Connection |  |
-| options | ForgeWebScriptLspServerOptions |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| connection | Connection                     |             |
+| options    | ForgeWebScriptLspServerOptions |             |
 
 ## `src/workspace`
 
@@ -96,16 +99,18 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function createForgeWebScriptNodeWorkspaceHost(options: ForgeWebScriptNodeWorkspaceOptions): RootBoundedForgeWebScriptWorkspaceHost
+function createForgeWebScriptNodeWorkspaceHost(
+  options: ForgeWebScriptNodeWorkspaceOptions,
+): RootBoundedForgeWebScriptWorkspaceHost;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeWebScriptNodeWorkspaceOptions |  |
+| Name    | Type                               | Description |
+| ------- | ---------------------------------- | ----------- |
+| options | ForgeWebScriptNodeWorkspaceOptions |             |
 
 ### ForgeWebScriptNodeFileSystem
 

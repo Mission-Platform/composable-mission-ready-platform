@@ -16,41 +16,45 @@
 **種類:** 関数
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 ルーター コンパイラの障害に対するソース ローカル診断を作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 |省略<CompilerDiagnostic, 'phase' \| 'fileName'> & { 読み取り専用ファイル名?: 文字列;   } |  |
+| 名前 | タイプ                                                                                 | 説明 |
+| ---- | -------------------------------------------------------------------------------------- | ---- |
+| 診断 | 省略<CompilerDiagnostic, 'phase' \| 'fileName'> & { 読み取り専用ファイル名?: 文字列; } |      |
 
 ### 定義ForgeRouterプラグイン
 
 **種類:** 関数
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 ルーター プラグインのメタデータは、コンパイラー パイプラインに入る前に検証します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プラグイン |た |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| プラグイン | た     |      |
 
 ### 定義ForgeRouterTarget
 
 **種類:** 関数
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 ニュートラル ルーターのインポートを書き換える決定論的なターゲットを作成します。
@@ -63,16 +67,16 @@ function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutpu
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeRouterTargetOptions |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| オプション | ForgeRouterTargetOptions |      |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 パッケージと作成者の契約を保持する中立的なランタイム エクスポート。
@@ -87,7 +91,7 @@ export const FORGE_ROUTER_RUNTIME_EXPORTS
 **種類:** 定数
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 ファーストパーティ アダプターがこのマイルストーンの一部ではないルーターの予約済みターゲット契約。
@@ -127,7 +131,7 @@ export interface GeneratedRouterModule
 **種類:** 定数
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 ニュートラルルーターパッケージと共有される安定したマーカー。
@@ -137,7 +141,7 @@ export const MP_ROUTER_COMPILER_MARKER
 **種類:** 定数
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 インポートがルーター コンパイラ パスによって理解されるパッケージ。
@@ -157,7 +161,8 @@ export interface RouterBuildAdapters
 **種類：**タイプ
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 ニュートラル ルーター コントラクトによって公開される、独立して低下可能な操作。
@@ -197,7 +202,7 @@ export interface RouterCapabilityUse
 **種類：**タイプ
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 ニュートラルルーターバインディングがソースモジュールでどのように使用されるか。
@@ -277,31 +282,37 @@ export interface RouterTargetPlan
 **種類:** 関数
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 UI プラグインに結合せずに、直接または ID で選択されたルーター ターゲットを検索します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|選択 | RouterPluginSelection \|未定義 |  |
-|プラグイン |読み取り専用 RouterOutputPlugin[] |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| 選択       | RouterPluginSelection \|未定義    |      |
+| プラグイン | 読み取り専用 RouterOutputPlugin[] |      |
 
 ### サポートされていないルーター機能
 
 **種類:** 関数
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 ターゲットがモジュールをサイレントに誤コンパイルする前に、機能のギャップを報告します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|赤外線 |ルーター機能モジュール |  |
-|プラグイン | RouterOutputPlugin \|未定義 |  |
+| 名前       | タイプ                      | 説明 |
+| ---------- | --------------------------- | ---- |
+| 赤外線     | ルーター機能モジュール      |      |
+| プラグイン | RouterOutputPlugin \|未定義 |      |

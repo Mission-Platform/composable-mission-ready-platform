@@ -18,8 +18,8 @@ Returns true when the option holds a value.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
+| Name  | Type      | Description              |
+| ----- | --------- | ------------------------ |
 | value | Option<T> | Option value to inspect. |
 
 #### Contract
@@ -53,8 +53,8 @@ Returns true when the result is successful.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
+| Name  | Type         | Description              |
+| ----- | ------------ | ------------------------ |
 | value | Result<T, E> | Result value to inspect. |
 
 #### Contract
@@ -81,7 +81,7 @@ Result of a fallible operation.
 **Kind:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 Relative path to the async declaration module used by compiler consumers.
@@ -91,7 +91,7 @@ Relative path to the async declaration module used by compiler consumers.
 **Kind:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 Stable identity and representation contract for the standard library.
@@ -103,7 +103,7 @@ boundaries for values that cross the host/Wasm ABI.
 **Kind:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 Directory containing the shipped Forge Web Script declaration modules.

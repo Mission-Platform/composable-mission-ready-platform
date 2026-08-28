@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/typography`.
 **Kind:** function
 
 ```typescript
-function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement
+function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 ```
 
 `ForgeTypography` — the text-styling primitive authored once in the neutral JSX
@@ -41,16 +41,28 @@ actually overflows), positioned with **CSS Anchor Positioning** instead of
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<TypographyProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<TypographyProperties> |             |
 
 ### TypographyColor
 
 **Kind:** type
 
 ```typescript
-export type TypographyColor = | 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'inverse' | 'inherit' | 'neutral' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TypographyColor =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'disabled'
+  | 'inverse'
+  | 'inherit'
+  | 'neutral'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'error'
+  | 'critical';
 ```
 
 Text colour. The structural tokens (`primary`/`secondary`/`tertiary`/
@@ -143,7 +155,22 @@ When a link draws its underline.
 **Kind:** type
 
 ```typescript
-export type TypographyVariant = | 'display' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body-lg' | 'body-md' | 'body-sm' | 'body-xs' | 'label' | 'caption' | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */ | 'link';
+export type TypographyVariant =
+  | 'display'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body-lg'
+  | 'body-md'
+  | 'body-sm'
+  | 'body-xs'
+  | 'label'
+  | 'caption'
+  | 'code' /** Standalone link text: renders an `<a>` at the body scale with link styling. */
+  | 'link';
 ```
 
 The semantic/visual type-scale step the text is rendered at.
@@ -153,7 +180,8 @@ The semantic/visual type-scale step the text is rendered at.
 **Kind:** type
 
 ```typescript
-export type TypographyVerticalAlign = 'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
+export type TypographyVerticalAlign =
+  'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
 ```
 
 Vertical alignment of the (inline) text box (maps to CSS `vertical-align`).

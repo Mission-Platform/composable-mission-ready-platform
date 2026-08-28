@@ -36,19 +36,24 @@ export interface EmittedVueModule
 **النوع:** الوظيفة
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 قم بتحويل وحدة مكون محايد إلى Vue SFC (بالإضافة إلى أي SFCs مساعدة).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
-| اسم المكون | سلسلة |  |
-| مجلدات المكونات | ReadonlySet<string> |  |
-| خطة | VueLoweredModule |  |
+| الاسم           | اكتب                | الوصف |
+| --------------- | ------------------- | ----- |
+| الوحدة النمطية  | الوحدة الدلالية     |       |
+| اسم المكون      | سلسلة               |       |
+| مجلدات المكونات | ReadonlySet<string> |       |
+| خطة             | VueLoweredModule    |       |
 
 ## `src/emitters/hook-module`
 
@@ -57,16 +62,16 @@ function emitVueModule(module: SemanticModule, componentName: string, componentF
 **النوع:** الوظيفة
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 قم بتجميع وحدة ربط محايدة إلى مصدرها القابل للتركيب Vue (`.ts`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
+| الاسم          | اكتب            | الوصف |
+| -------------- | --------------- | ----- |
+| الوحدة النمطية | الوحدة الدلالية |       |
 
 ## `src/index`
 
@@ -75,7 +80,7 @@ function emitVueHookModule(module: SemanticModule): string
 **النوع:** الوظيفة
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 قم بإنشاء ملحق الإخراج Vue ومحولات برنامج التحويل البرمجي Vite/Rolldown الخاصة به.
@@ -87,23 +92,28 @@ function forgeVueFramework(): FrameworkOutputPlugin
 **النوع:** الوظيفة
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 تضييق نطاق الخطة المستهدفة إلى خطة Vue دون الإرسال.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خفضت | TargetLoweredModule \| غير محدد |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خفضت  | TargetLoweredModule \| غير محدد |       |
 
 ### LowerVueModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 قم بتضمين وحدة محايدة في الخطة المستهدفة Vue. تنتقل الوحدة المحايدة
@@ -111,10 +121,10 @@ function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetInten
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأشعة تحت الحمراء | الوحدة الدلالية |  |
-| السياق | سياق الهدف |  |
+| الاسم              | اكتب            | الوصف |
+| ------------------ | --------------- | ----- |
+| الأشعة تحت الحمراء | الوحدة الدلالية |       |
+| السياق             | سياق الهدف      |       |
 
 ### VueComputedPlan
 
@@ -253,7 +263,7 @@ export interface VueWatcherPlan
 **النوع:** ثابت
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 طي إعلانات `computed` التي تشترك في المصنع.
@@ -263,7 +273,7 @@ export const DEDUPE_COMPUTED
 **النوع:** ثابت
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 يستورد Prune `vue` الخطة المكررة التي لم تعد بحاجة إليها.
@@ -273,7 +283,7 @@ export const DROP_UNUSED_IMPORTS
 **النوع:** ثابت
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 رفع الأشجار الفرعية الثابتة بالكامل (ثوابت الوحدة / `v-once`).
@@ -283,7 +293,7 @@ export const HOIST_STATIC_SUBTREES
 **النوع:** ثابت
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 قم بإصدار حالة لم يتم إعادة تعيينها أبدًا كحالة `const` عادية بدلاً من `ref`.
@@ -293,7 +303,10 @@ export const INLINE_SINGLE_USE_REFS
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 قم بتحسين خطة Vue المنخفضة. النوايا التي تحمل خطة أجنبية (أو مفقودة) هي
@@ -301,17 +314,17 @@ function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimize
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نوايا | النوايا المستهدفة |  |
-| خيارات | تارجتوبتيميزيوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| نوايا  | النوايا المستهدفة    |       |
+| خيارات | تارجتوبتيميزيوبتيونس |       |
 
 ### STABLE_LIST_KEYS
 
 **النوع:** ثابت
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 احتفظ فقط بمفاتيح القائمة التي أثبتت ثباتها، وتسجيل القوائم التي تركت بدون مفاتيح.
@@ -321,7 +334,7 @@ export const STABLE_LIST_KEYS
 **النوع:** ثابت
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 كل معرف تحسين يمكن لهدف Vue تسجيله، بترتيب التطبيق.

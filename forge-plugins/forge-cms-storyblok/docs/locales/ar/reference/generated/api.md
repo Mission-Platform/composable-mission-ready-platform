@@ -16,25 +16,32 @@
 **النوع:** الوظيفة
 
 ```typescript
-function analyzeStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function analyzeStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 قم بتحليل وحدة مكون محايد لـ Storyblok.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| أسماء | StoryblokComponentNames |  |
-| خيارات | StoryblokProjectionOptions |  |
+| الاسم      | اكتب                       | الوصف |
+| ---------- | -------------------------- | ----- |
+| ملف المصدر | ts.SourceFile              |       |
+| أسماء      | StoryblokComponentNames    |       |
+| خيارات     | StoryblokProjectionOptions |       |
 
 ### contentFieldToStoryblokField
 
 **النوع:** الوظيفة
 
 ```typescript
-function contentFieldToStoryblokField(field: ContentField, options: StoryblokProjectionOptions = {}): StoryblokSchemaField
+function contentFieldToStoryblokField(
+  field: ContentField,
+  options: StoryblokProjectionOptions = {},
+): StoryblokSchemaField;
 ```
 
 قم بتعيين حقل محايد واحد على حقل مخطط Storyblok.
@@ -46,51 +53,60 @@ function contentFieldToStoryblokField(field: ContentField, options: StoryblokPro
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المجال | حقل المحتوى |  |
-| خيارات | StoryblokProjectionOptions |  |
+| الاسم  | اكتب                       | الوصف |
+| ------ | -------------------------- | ----- |
+| المجال | حقل المحتوى                |       |
+| خيارات | StoryblokProjectionOptions |       |
 
 ### contentKindToStoryblokFieldType
 
 **النوع:** الوظيفة
 
 ```typescript
-function contentKindToStoryblokFieldType(kind: ContentField["kind"]): StoryblokFieldType
+function contentKindToStoryblokFieldType(
+  kind: ContentField["kind"],
+): StoryblokFieldType;
 ```
 
 يتم تعيين نوع المحتوى المحايد في حقل Storyblok.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نوع | ContentField["نوع"] |  |
+| الاسم | اكتب                | الوصف |
+| ----- | ------------------- | ----- |
+| نوع   | ContentField["نوع"] |       |
 
 ### emitStoryblokComponent
 
 **النوع:** الوظيفة
 
 ```typescript
-function emitStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): StoryblokComponent
+function emitStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): StoryblokComponent;
 ```
 
 قم بإصدار كائن مكون Storyblok فقط (تكوين الكتلة) للمكون.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| أسماء | StoryblokComponentNames |  |
-| خيارات | StoryblokProjectionOptions |  |
+| الاسم      | اكتب                       | الوصف |
+| ---------- | -------------------------- | ----- |
+| ملف المصدر | ts.SourceFile              |       |
+| أسماء      | StoryblokComponentNames    |       |
+| خيارات     | StoryblokProjectionOptions |       |
 
 ### ResolveStoryblokMetadata
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveStoryblokMetadata(component: ContentComponent, options: StoryblokProjectionOptions = {}): ResolvedStoryblokMetadata
+function resolveStoryblokMetadata(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): ResolvedStoryblokMetadata;
 ```
 
 حل بيانات تعريف المحرر مرة واحدة لأحد المكونات.
@@ -101,27 +117,30 @@ function resolveStoryblokMetadata(component: ContentComponent, options: Storyblo
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
-| خيارات | StoryblokProjectionOptions |  |
+| الاسم  | اكتب                       | الوصف |
+| ------ | -------------------------- | ----- |
+| المكون | مكون المحتوى               |       |
+| خيارات | StoryblokProjectionOptions |       |
 
 ### toStoryblokComponent
 
 **النوع:** الوظيفة
 
 ```typescript
-function toStoryblokComponent(component: ContentComponent, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function toStoryblokComponent(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 قم بإسقاط مكون محتوى محايد على كائن وحقول مكون Storyblok الخاص به.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
-| خيارات | StoryblokProjectionOptions |  |
+| الاسم  | اكتب                       | الوصف |
+| ------ | -------------------------- | ----- |
+| المكون | مكون المحتوى               |       |
+| خيارات | StoryblokProjectionOptions |       |
 
 ## `src/runtime/solid`
 
@@ -130,16 +149,18 @@ function toStoryblokComponent(component: ContentComponent, options: StoryblokPro
 **النوع:** الوظيفة
 
 ```typescript
-function StoryblokComponent(properties: StoryblokComponentProperties): JSX.Element
+function StoryblokComponent(
+  properties: StoryblokComponentProperties,
+): JSX.Element;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | StoryblokComponentProperties |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| خصائص | StoryblokComponentProperties |       |
 
 ### StoryblokComponentProperties
 
@@ -156,7 +177,9 @@ export interface StoryblokComponentProperties
 **النوع:** النوع
 
 ```typescript
-export type StoryblokComponentRegistry = Readonly< Record<string, StoryblokComponentType> >;
+export type StoryblokComponentRegistry = Readonly<
+  Record<string, StoryblokComponentType>
+>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -176,16 +199,18 @@ export type StoryblokComponentType = (properties:
 **النوع:** الوظيفة
 
 ```typescript
-function StoryblokProvider(properties: StoryblokProviderProperties): JSX.Element
+function StoryblokProvider(
+  properties: StoryblokProviderProperties,
+): JSX.Element;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | StoryblokProviderProperties |  |
+| الاسم | اكتب                        | الوصف |
+| ----- | --------------------------- | ----- |
+| خصائص | StoryblokProviderProperties |       |
 
 ### StoryblokProviderProperties
 
@@ -204,16 +229,16 @@ export interface StoryblokProviderProperties
 **النوع:** الوظيفة
 
 ```typescript
-function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin
+function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin;
 ```
 
 ربط عرض Storyblok بمكوّن إضافي لإخراج إطار عمل مملوك للمتصل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجستوريبلوككمسوبتيونس |  |
+| الاسم  | اكتب                    | الوصف |
+| ------ | ----------------------- | ----- |
+| خيارات | فورجستوريبلوككمسوبتيونس |       |
 
 ### ForgeStoryblokCmsOptions
 
@@ -230,16 +255,18 @@ export interface ForgeStoryblokCmsOptions
 **النوع:** الوظيفة
 
 ```typescript
-function forgeStoryblokCmsTargets(options: ForgeStoryblokCmsTargetsOptions): CmsOutputPlugin[]
+function forgeStoryblokCmsTargets(
+  options: ForgeStoryblokCmsTargetsOptions,
+): CmsOutputPlugin[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجي ستوري بلوك كم تارجيتسوبتيونس |  |
+| الاسم  | اكتب                               | الوصف |
+| ------ | ---------------------------------- | ----- |
+| خيارات | فورجي ستوري بلوك كم تارجيتسوبتيونس |       |
 
 ### ForgeStoryblokCmsTargetsOptions
 
@@ -291,7 +318,17 @@ export type StoryblokComponentNames = ContentComponentNamesInput;
 **النوع:** النوع
 
 ```typescript
-export type StoryblokFieldType = | "text" | "richtext" | "number" | "boolean" | "option" | "asset" | "multilink" | "bloks" | "tab" | "plugin";
+export type StoryblokFieldType =
+  | "text"
+  | "richtext"
+  | "number"
+  | "boolean"
+  | "option"
+  | "asset"
+  | "multilink"
+  | "bloks"
+  | "tab"
+  | "plugin";
 ```
 
 يقوم حقل Storyblok بكتابة خريطة أنواع المحتوى المحايدة عليها.
@@ -343,7 +380,7 @@ export interface StoryblokSchemaField
 **النوع:** الوظيفة
 
 ```typescript
-function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
+function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string;
 ```
 
 بناء كتبته `blok` نوع الدعامة للمجمع - `SbBlokData & { … }` مع واحد
@@ -354,16 +391,20 @@ function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تحليل | تحليل StoryblokComponent |  |
+| الاسم | اكتب                     | الوصف |
+| ----- | ------------------------ | ----- |
+| تحليل | تحليل StoryblokComponent |       |
 
 ### emitStoryblokBlokWrapper
 
 **النوع:** الوظيفة
 
 ```typescript
-function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicName: string, options: StoryblokBlokWrapperOptions): string
+function emitStoryblokBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  options: StoryblokBlokWrapperOptions,
+): string;
 ```
 
 قم بإصدار مصدر غلاف إطار العمل الذي يربط Storyblok `blok` دعم على
@@ -372,11 +413,11 @@ function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicNa
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تحليل | تحليل StoryblokComponent |  |
-| الاسم العام | سلسلة |  |
-| خيارات | StoryblokBlokWrapperOptions |  |
+| الاسم       | اكتب                        | الوصف |
+| ----------- | --------------------------- | ----- |
+| تحليل       | تحليل StoryblokComponent    |       |
+| الاسم العام | سلسلة                       |       |
+| خيارات      | StoryblokBlokWrapperOptions |       |
 
 ### StoryblokBlokWrapperOptions
 

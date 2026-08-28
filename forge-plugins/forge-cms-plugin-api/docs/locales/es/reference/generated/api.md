@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/forg
 **Tipo:** constante
 
 ```typescript
-export const BADGE
+export const BADGE;
 ```
 
 Opciones de unión literal, descripciones de JSDoc y valores predeterminados de `?? literal`.
@@ -26,7 +26,7 @@ Opciones de unión literal, descripciones de JSDoc y valores predeterminados de 
 **Tipo:** constante
 
 ```typescript
-export const badgeNames: ContentComponentNamesInput
+export const badgeNames: ContentComponentNamesInput;
 ```
 
 No se proporciona descripción.
@@ -36,7 +36,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const BUTTON
+export const BUTTON;
 ```
 
 Una unión que se degrada al texto más un accesorio de devolución de llamada eliminado.
@@ -46,7 +46,7 @@ Una unión que se degrada al texto más un accesorio de devolución de llamada e
 **Tipo:** constante
 
 ```typescript
-export const buttonNames: ContentComponentNamesInput
+export const buttonNames: ContentComponentNamesInput;
 ```
 
 No se proporciona descripción.
@@ -56,7 +56,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const COUNTER
+export const COUNTER;
 ```
 
 Un componente interactivo: el estado y un controlador de eventos fuerzan una isla hidratada.
@@ -66,7 +66,7 @@ Un componente interactivo: el estado y un controlador de eventos fuerzan una isl
 **Tipo:** constante
 
 ```typescript
-export const counterNames: ContentComponentNamesInput
+export const counterNames: ContentComponentNamesInput;
 ```
 
 No se proporciona descripción.
@@ -76,7 +76,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const EMPTY
+export const EMPTY;
 ```
 
 Un componente sin ningún accesorio.
@@ -86,7 +86,7 @@ Un componente sin ningún accesorio.
 **Tipo:** constante
 
 ```typescript
-export const emptyNames: ContentComponentNamesInput
+export const emptyNames: ContentComponentNamesInput;
 ```
 
 No se proporciona descripción.
@@ -96,7 +96,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const GRID
+export const GRID;
 ```
 
 Un accesorio numérico con un valor numérico predeterminado.
@@ -106,7 +106,7 @@ Un accesorio numérico con un valor numérico predeterminado.
 **Tipo:** constante
 
 ```typescript
-export const gridNames: ContentComponentNamesInput
+export const gridNames: ContentComponentNamesInput;
 ```
 
 No se proporciona descripción.
@@ -116,7 +116,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const LAYOUT
+export const LAYOUT;
 ```
 
 Una ranura con nombre junto a la ranura predeterminada.
@@ -126,7 +126,7 @@ Una ranura con nombre junto a la ranura predeterminada.
 **Tipo:** constante
 
 ```typescript
-export const layoutNames: ContentComponentNamesInput
+export const layoutNames: ContentComponentNamesInput;
 ```
 
 No se proporciona descripción.
@@ -136,7 +136,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const REQUIRED
+export const REQUIRED;
 ```
 
 Un accesorio obligatorio (no opcional) junto con uno opcional.
@@ -146,7 +146,7 @@ Un accesorio obligatorio (no opcional) junto con uno opcional.
 **Tipo:** constante
 
 ```typescript
-export const requiredNames: ContentComponentNamesInput
+export const requiredNames: ContentComponentNamesInput;
 ```
 
 No se proporciona descripción.
@@ -156,7 +156,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const SITE_HEADER
+export const SITE_HEADER;
 ```
 
 Un componente con un accesorio de configuración para todo el sitio.
@@ -166,7 +166,7 @@ Un componente con un accesorio de configuración para todo el sitio.
 **Tipo:** constante
 
 ```typescript
-export const siteHeaderNames: ContentComponentNamesInput
+export const siteHeaderNames: ContentComponentNamesInput;
 ```
 
 No se proporciona descripción.
@@ -178,16 +178,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function stubFramework(id = "react"): FrameworkOutputPlugin
+function stubFramework(id = "react"): FrameworkOutputPlugin;
 ```
 
 Cree un complemento de marco auxiliar con una identificación reemplazable.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| identificación |  |  |
+| Nombre         | Tipo | Descripción |
+| -------------- | ---- | ----------- |
+| identificación |      |             |
 
 ## `src/analyze`
 
@@ -196,7 +196,11 @@ Cree un complemento de marco auxiliar con una identificación reemplazable.
 **Tipo:** función
 
 ```typescript
-function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentComponentNamesInput, semantic?: SemanticModule): ContentComponent
+function analyzeContentComponent(
+  sourceFile: ts.SourceFile,
+  names: ContentComponentNamesInput,
+  semantic?: SemanticModule,
+): ContentComponent;
 ```
 
 Analizar un módulo de componente neutral y devolver su contenido neutral para la plataforma.
@@ -205,18 +209,18 @@ un tiempo de ejecución hidratado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| archivo fuente | ts.SourceFile |  |
-| nombres | ContentComponentNamesEntrada |  |
-| semántico | Módulo Semántico |  |
+| Nombre         | Tipo                         | Descripción |
+| -------------- | ---------------------------- | ----------- |
+| archivo fuente | ts.SourceFile                |             |
+| nombres        | ContentComponentNamesEntrada |             |
+| semántico      | Módulo Semántico             |             |
 
 ### CMS_COLOR_TAG
 
 **Tipo:** constante
 
 ```typescript
-export const CMS_COLOR_TAG
+export const CMS_COLOR_TAG;
 ```
 
 No se proporciona descripción.
@@ -226,7 +230,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const CMS_COLOUR_TAG
+export const CMS_COLOUR_TAG;
 ```
 
 Se acepta ortografía británica para las anotaciones de fuentes.
@@ -236,7 +240,7 @@ Se acepta ortografía británica para las anotaciones de fuentes.
 **Tipo:** constante
 
 ```typescript
-export const CMS_ICON_TAG
+export const CMS_ICON_TAG;
 ```
 
 Las etiquetas JSDoc para metadatos del editor de nivel de componente opcional.
@@ -246,7 +250,7 @@ Las etiquetas JSDoc para metadatos del editor de nivel de componente opcional.
 **Tipo:** constante
 
 ```typescript
-export const CMS_SETTING_TAG
+export const CMS_SETTING_TAG;
 ```
 
 La etiqueta JSDoc que promueve un accesorio en una configuración de CMS para todo el sitio.
@@ -256,7 +260,7 @@ La etiqueta JSDoc que promueve un accesorio en una configuración de CMS para to
 **Tipo:** constante
 
 ```typescript
-export const CMS_TAB_TAG
+export const CMS_TAB_TAG;
 ```
 
 La etiqueta JSDoc que asigna un accesorio a una pestaña del editor.
@@ -266,7 +270,7 @@ La etiqueta JSDoc que asigna un accesorio a una pestaña del editor.
 **Tipo:** constante
 
 ```typescript
-export const DEFAULT_SLOT_FIELD
+export const DEFAULT_SLOT_FIELD;
 ```
 
 La clave de campo bajo la cual se expone la ranura predeterminada (`children` de un componente).
@@ -276,32 +280,34 @@ La clave de campo bajo la cual se expone la ranura predeterminada (`children` de
 **Tipo:** función
 
 ```typescript
-function deriveContentComponentNames(names: ContentComponentNamesInput): ContentComponentNames
+function deriveContentComponentNames(
+  names: ContentComponentNamesInput,
+): ContentComponentNames;
 ```
 
 Derive el conjunto de nombres completo del subconjunto proporcionado por la persona que llama.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombres | ContentComponentNamesEntrada |  |
+| Nombre  | Tipo                         | Descripción |
+| ------- | ---------------------------- | ----------- |
+| nombres | ContentComponentNamesEntrada |             |
 
 ### es un módulo interactivo
 
 **Tipo:** función
 
 ```typescript
-function isInteractiveModule(semantic: SemanticModule | undefined): boolean
+function isInteractiveModule(semantic: SemanticModule | undefined): boolean;
 ```
 
 Es cierto cuando el IR neutral tiene un comportamiento que solo un tiempo de ejecución real puede proporcionar.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| semántico | Módulo semántico \| indefinido |  |
+| Nombre    | Tipo                           | Descripción |
+| --------- | ------------------------------ | ----------- |
+| semántico | Módulo semántico \| indefinido |             |
 
 ## `src/classify`
 
@@ -310,7 +316,7 @@ Es cierto cuando el IR neutral tiene un comportamiento que solo un tiempo de eje
 **Tipo:** constante
 
 ```typescript
-export const ASSET_TYPE_REFERENCES: ReadonlySet<string>
+export const ASSET_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Escriba referencias que marquen un accesorio como recurso multimedia.
@@ -330,41 +336,47 @@ El resultado de clasificar un accesorio (`undefined` → soltar el accesorio).
 **Tipo:** función
 
 ```typescript
-function classifyType(node: ts.TypeNode, aliases: Map<string, ts.TypeNode>, seen: Set<string> = new Set()): ClassifiedFieldKind
+function classifyType(
+  node: ts.TypeNode,
+  aliases: Map<string, ts.TypeNode>,
+  seen: Set<string> = new Set(),
+): ClassifiedFieldKind;
 ```
 
 Clasifique el tipo de accesorio node en un tipo de contenido neutral, resolviendo alias/uniones locales.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| node | ts.TypeNode |  |
-| alias | Mapa<string, ts.TypeNode> |  |
-| visto | Establecer<string> |  |
+| Nombre | Tipo                      | Descripción |
+| ------ | ------------------------- | ----------- |
+| node   | ts.TypeNode               |             |
+| alias  | Mapa<string, ts.TypeNode> |             |
+| visto  | Establecer<string>        |             |
 
 ### recopilarTipoAliases
 
 **Tipo:** función
 
 ```typescript
-function collectTypeAliases(sourceFile: ts.SourceFile): Map<string, ts.TypeNode>
+function collectTypeAliases(
+  sourceFile: ts.SourceFile,
+): Map<string, ts.TypeNode>;
 ```
 
 Asigne cada alias `type X = …` de nivel superior a su tipo node, para resolución de unión.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| archivo fuente | ts.SourceFile |  |
+| Nombre         | Tipo          | Descripción |
+| -------------- | ------------- | ----------- |
+| archivo fuente | ts.SourceFile |             |
 
 ### LINK_TYPE_REFERENCES
 
 **Tipo:** constante
 
 ```typescript
-export const LINK_TYPE_REFERENCES: ReadonlySet<string>
+export const LINK_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Escriba referencias que marquen un accesorio como enlace/URL.
@@ -374,7 +386,7 @@ Escriba referencias que marquen un accesorio como enlace/URL.
 **Tipo:** constante
 
 ```typescript
-export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
+export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Escriba referencias que marquen un accesorio como texto enriquecido formateado en lugar de texto sin formato.
@@ -384,7 +396,7 @@ Escriba referencias que marquen un accesorio como texto enriquecido formateado e
 **Tipo:** constante
 
 ```typescript
-export const SLOT_TYPE_REFERENCES: ReadonlySet<string>
+export const SLOT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Referencias de tipo cuyos accesorios se tratan como contenido anidado (`children`).
@@ -406,7 +418,8 @@ Un solo archivo que un objetivo le pide al conductor que escriba.
 **Tipo:** tipo
 
 ```typescript
-export type CmsArtifactKind = "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
+export type CmsArtifactKind =
+  "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
 ```
 
 El papel que desempeña un artefacto emitido en el árbol de salida del objetivo.
@@ -446,16 +459,16 @@ Todo lo que un emisor puede necesitar sobre la compilación en la que se ejecuta
 **Tipo:** función
 
 ```typescript
-function cmsTargetDirectory(plugin: CmsOutputPlugin): string
+function cmsTargetDirectory(plugin: CmsOutputPlugin): string;
 ```
 
 El segmento de directorio en el que se escribe la salida por marco de un objetivo.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| complemento | Complemento CmsOutput |  |
+| Nombre      | Tipo                  | Descripción |
+| ----------- | --------------------- | ----------- |
+| complemento | Complemento CmsOutput |             |
 
 ### CmsTargetId
 
@@ -472,7 +485,7 @@ Los ID de destino del CMS integrados están abiertos a cualquier ID de cadena ad
 **Tipo:** función
 
 ```typescript
-function defineForgeCmsPlugin(plugin: T): T
+function defineForgeCmsPlugin(plugin: T): T;
 ```
 
 Validar y devolver un complemento de salida de CMS.
@@ -482,9 +495,9 @@ Llega al conductor y emite silenciosamente un árbol parcial.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| complemento | T |  |
+| Nombre      | Tipo | Descripción |
+| ----------- | ---- | ----------- |
+| complemento | T    |             |
 
 ## `src/config`
 
@@ -493,16 +506,18 @@ Llega al conductor y emite silenciosamente un árbol parcial.
 **Tipo:** función
 
 ```typescript
-function defineViteForgeCmsLibrary(options: ViteForgeCmsLibraryOptions): UserConfig
+function defineViteForgeCmsLibrary(
+  options: ViteForgeCmsLibraryOptions,
+): UserConfig;
 ```
 
 Cree una configuración de biblioteca Vite para un destino CMS.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de biblioteca de ViteForgeCms |  |
+| Nombre   | Tipo                                   | Descripción |
+| -------- | -------------------------------------- | ----------- |
+| opciones | Opciones de biblioteca de ViteForgeCms |             |
 
 ### Opciones de biblioteca de ViteForgeCms
 
@@ -551,7 +566,13 @@ Cada nombre que puede solicitar una plataforma de contenidos, deriva de un compo
 **Tipo:** tipo
 
 ```typescript
-export type ContentComponentNamesInput = Pick< ContentComponentNames, "neutralName" | "publicName" > & Partial< Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir"> >;
+export type ContentComponentNamesInput = Pick<
+  ContentComponentNames,
+  "neutralName" | "publicName"
+> &
+  Partial<
+    Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir">
+  >;
 ```
 
 El subconjunto de {@link ContentComponentNames} que proporciona una persona que llama; el resto es derivado.
@@ -605,32 +626,32 @@ El discriminador de un {@link ContentFieldKind}.
 **Tipo:** función
 
 ```typescript
-function contentFields(component: ContentComponent): readonly ContentField[]
+function contentFields(component: ContentComponent): readonly ContentField[];
 ```
 
 Los campos de un componente que no son espacios (escalar, contenido autorable).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| componente | Componente de contenido |  |
+| Nombre     | Tipo                    | Descripción |
+| ---------- | ----------------------- | ----------- |
+| componente | Componente de contenido |             |
 
 ### campos de ranura
 
 **Tipo:** función
 
 ```typescript
-function slotFields(component: ContentComponent): readonly ContentField[]
+function slotFields(component: ContentComponent): readonly ContentField[];
 ```
 
 Los campos de un componente que llevan contenido anidado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| componente | Componente de contenido |  |
+| Nombre     | Tipo                    | Descripción |
+| ---------- | ----------------------- | ----------- |
+| componente | Componente de contenido |             |
 
 ## `src/driver`
 
@@ -639,7 +660,9 @@ Los campos de un componente que llevan contenido anidado.
 **Tipo:** función
 
 ```typescript
-function generateCmsArtifacts(options: GenerateCmsArtifactsOptions): GeneratedCmsTree
+function generateCmsArtifacts(
+  options: GenerateCmsArtifactsOptions,
+): GeneratedCmsTree;
 ```
 
 Ejecute el ciclo completo de descubrimiento → IR → modelo de contenido → emisión → escritura para un CMS
@@ -647,9 +670,9 @@ target, devolviendo la ruta del módulo de entrada y todo lo que se escribió.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | GenerarCmsArtifactsOptions |  |
+| Nombre   | Tipo                       | Descripción |
+| -------- | -------------------------- | ----------- |
+| opciones | GenerarCmsArtifactsOptions |             |
 
 ### Generar CmsArtifactsOptions
 
@@ -688,7 +711,9 @@ El árbol de islas generado, o `undefined` cuando el objetivo no utiliza islas.
 **Tipo:** función
 
 ```typescript
-function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undefined
+function generateIsland(
+  options: GenerateIslandOptions,
+): GeneratedIsland | undefined;
 ```
 
 Cogenerar el árbol de la isla marco para un objetivo y devolver el especificador.
@@ -696,9 +721,9 @@ una plantilla emitida debe importarla por.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Generar opciones de isla |  |
+| Nombre   | Tipo                     | Descripción |
+| -------- | ------------------------ | ----------- |
+| opciones | Generar opciones de isla |             |
 
 ### Generar opciones de isla
 
@@ -715,7 +740,7 @@ Opciones para {@link generateIsland}.
 **Tipo:** constante
 
 ```typescript
-export const ISLAND_DIRECTORY
+export const ISLAND_DIRECTORY;
 ```
 
 El nombre del directorio, relativo al directorio de salida de destino, en el que se generan las islas.
@@ -727,48 +752,48 @@ El nombre del directorio, relativo al directorio de salida de destino, en el que
 **Tipo:** función
 
 ```typescript
-function toDisplayName(publicName: string): string
+function toDisplayName(publicName: string): string;
 ```
 
 Convierta un nombre público a su nombre para mostrar (`InView` → `In View`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombrepúblico | cadena |  |
+| Nombre        | Tipo   | Descripción |
+| ------------- | ------ | ----------- |
+| nombrepúblico | cadena |             |
 
 ### aKebabName
 
 **Tipo:** función
 
 ```typescript
-function toKebabName(publicName: string): string
+function toKebabName(publicName: string): string;
 ```
 
 Convierta un nombre público en un nombre con formato kebab (`InView` → `in-view`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombrepúblico | cadena |  |
+| Nombre        | Tipo   | Descripción |
+| ------------- | ------ | ----------- |
+| nombrepúblico | cadena |             |
 
 ### al nombre técnico
 
 **Tipo:** función
 
 ```typescript
-function toTechnicalName(publicName: string): string
+function toTechnicalName(publicName: string): string;
 ```
 
 Convierta un nombre público a su nombre técnico (`InView` → `in_view`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombrepúblico | cadena |  |
+| Nombre        | Tipo   | Descripción |
+| ------------- | ------ | ----------- |
+| nombrepúblico | cadena |             |
 
 ## `src/tsdown`
 
@@ -777,83 +802,85 @@ Convierta un nombre público a su nombre técnico (`InView` → `in_view`).
 **Tipo:** función
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 El directorio de caché en el que se escribe el árbol generado por un objetivo.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| raízDir | cadena |  |
-| objetivo | Complemento CmsOutput |  |
+| Nombre   | Tipo                  | Descripción |
+| -------- | --------------------- | ----------- |
+| raízDir  | cadena                |             |
+| objetivo | Complemento CmsOutput |             |
 
 ### cmsDirectorioSalida
 
 **Tipo:** función
 
 ```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 El directorio de distribución al que se emiten los módulos por marco de un destino.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| raízDir | cadena |  |
-| objetivo | Complemento CmsOutput |  |
+| Nombre   | Tipo                  | Descripción |
+| -------- | --------------------- | ----------- |
+| raízDir  | cadena                |             |
+| objetivo | Complemento CmsOutput |             |
 
 ### definirTsdownForgeCms
 
 **Tipo:** función
 
 ```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig
+function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
 ```
 
 Cree una configuración tsdown para un destino CMS.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | TsdownForgeCmsOptions |  |
+| Nombre   | Tipo                  | Descripción |
+| -------- | --------------------- | ----------- |
+| opciones | TsdownForgeCmsOptions |             |
 
 ### definirTsdownForgeCmsAll
 
 **Tipo:** función
 
 ```typescript
-function defineTsdownForgeCmsAll(options: TsdownForgeCmsAllOptions): UserConfig[]
+function defineTsdownForgeCmsAll(
+  options: TsdownForgeCmsAllOptions,
+): UserConfig[];
 ```
 
 Cree configuraciones de tsdown para cada destino de CMS solicitado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | TsdownForgeCmsAllOptions |  |
+| Nombre   | Tipo                     | Descripción |
+| -------- | ------------------------ | ----------- |
+| opciones | TsdownForgeCmsAllOptions |             |
 
 ### resolverComponentesMódulo
 
 **Tipo:** función
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string
+function resolveComponentsModule(rootDir: string, explicit?: string): string;
 ```
 
 Localice el cilindro de componentes neutros de un paquete.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| raízDir | cadena |  |
-| explícito | cadena |  |
+| Nombre    | Tipo   | Descripción |
+| --------- | ------ | ----------- |
+| raízDir   | cadena |             |
+| explícito | cadena |             |
 
 ### TsdownForgeCmsAllOptions
 

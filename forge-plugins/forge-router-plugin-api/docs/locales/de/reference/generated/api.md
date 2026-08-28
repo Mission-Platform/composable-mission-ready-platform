@@ -16,41 +16,45 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-route
 **Art:** Funktion
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 Erstellen Sie eine quelllokale Diagnose für einen Router-Compiler-Fehler.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Diagnose | Lassen Sie <CompilerDiagnostic, 'phase' \| 'fileName'> & { readonly fileName?: string;   } |  |
+| Name     | Geben Sie                                                                                | ein Beschreibung |
+| -------- | ---------------------------------------------------------------------------------------- | ---------------- |
+| Diagnose | Lassen Sie <CompilerDiagnostic, 'phase' \| 'fileName'> & { readonly fileName?: string; } |                  |
 
 ### defineForgeRouterPlugin
 
 **Art:** Funktion
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 Validieren Sie die Metadaten des Router-Plugins, bevor sie in eine Compiler-Pipeline gelangen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Plugin | T |  |
+| Name   | Geben Sie | ein Beschreibung |
+| ------ | --------- | ---------------- |
+| Plugin | T         |                  |
 
 ### defineForgeRouterTarget
 
 **Art:** Funktion
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 Erstellen Sie ein deterministisches Ziel, das neutrale Routerimporte neu schreibt.
@@ -63,16 +67,16 @@ dateibasierte oder reine Server-Router.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeRouterTargetOptions |  |
+| Name     | Geben Sie                | ein Beschreibung |
+| -------- | ------------------------ | ---------------- |
+| Optionen | ForgeRouterTargetOptions |                  |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 Neutrale Laufzeitexporte, die den Paketautorenvertrag beibehalten.
@@ -87,7 +91,7 @@ in diesem Modul.
 **Art:** konstant
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 Reservierte Zielverträge für Router, deren Erstanbieteradapter nicht Teil dieses Meilensteins sind.
@@ -127,7 +131,7 @@ Ein generiertes Quellmodul, das von einem Router-Ziel zurückgegeben wird.
 **Art:** konstant
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Stabiler Marker, der mit dem neutralen Router-Paket geteilt wird.
@@ -137,7 +141,7 @@ Stabiler Marker, der mit dem neutralen Router-Paket geteilt wird.
 **Art:** konstant
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 Das Paket, dessen Importe vom Router-Compiler-Durchlauf verstanden werden.
@@ -157,7 +161,8 @@ Erstellen Sie Hooks, die einem Router-Ziel gehören. Es wird keine Router-Abhän
 **Art:** Typ
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 Unabhängig absenkbare Vorgänge, die durch den neutralen Router-Vertrag offengelegt werden.
@@ -197,7 +202,7 @@ Eine Verwendung eines neutralen Router-Markers, wobei die Quellkoordinaten für 
 **Art:** Typ
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 Wie eine neutrale Routerbindung in einem Quellmodul verwendet wird.
@@ -277,31 +282,37 @@ Zielgenauer Plan zwischen Absenken und Generieren erstellt.
 **Art:** Funktion
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 Finden Sie ein direktes oder per ID ausgewähltes Routerziel, ohne es an UI-Plugins zu koppeln.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Auswahl | RouterPluginSelection \| undefiniert |  |
-| Plugins | schreibgeschützt RouterOutputPlugin[] |  |
+| Name    | Geben Sie                             | ein Beschreibung |
+| ------- | ------------------------------------- | ---------------- |
+| Auswahl | RouterPluginSelection \| undefiniert  |                  |
+| Plugins | schreibgeschützt RouterOutputPlugin[] |                  |
 
 ### nicht unterstützte RouterCapabilities
 
 **Art:** Funktion
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 Melden Sie Funktionslücken, bevor ein Ziel die Möglichkeit hat, ein Modul stillschweigend falsch zu kompilieren.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| ir | RouterCapabilityModule |  |
-| Plugin | RouterOutputPlugin \| undefiniert |  |
+| Name   | Geben Sie                         | ein Beschreibung |
+| ------ | --------------------------------- | ---------------- |
+| ir     | RouterCapabilityModule            |                  |
+| Plugin | RouterOutputPlugin \| undefiniert |                  |

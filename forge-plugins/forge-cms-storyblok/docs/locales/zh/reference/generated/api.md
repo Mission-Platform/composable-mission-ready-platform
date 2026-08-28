@@ -16,25 +16,32 @@
 **种类：**功能
 
 ```typescript
-function analyzeStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function analyzeStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 分析 Storyblok 的中性组件模块。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|源文件 | ts.SourceFile |  |
-|名称 | Storyblok 组件名称 |  |
-|选项 | StoryblokProjectionOptions |  |
+| 名称   | 类型                       | 描述 |
+| ------ | -------------------------- | ---- |
+| 源文件 | ts.SourceFile              |      |
+| 名称   | Storyblok 组件名称         |      |
+| 选项   | StoryblokProjectionOptions |      |
 
 ### 内容字段到故事块字段
 
 **种类：**功能
 
 ```typescript
-function contentFieldToStoryblokField(field: ContentField, options: StoryblokProjectionOptions = {}): StoryblokSchemaField
+function contentFieldToStoryblokField(
+  field: ContentField,
+  options: StoryblokProjectionOptions = {},
+): StoryblokSchemaField;
 ```
 
 将一个中性字段映射到 Storyblok 架构字段。
@@ -46,51 +53,60 @@ function contentFieldToStoryblokField(field: ContentField, options: StoryblokPro
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|领域 |内容字段 |  |
-|选项 | StoryblokProjectionOptions |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 领域 | 内容字段                   |      |
+| 选项 | StoryblokProjectionOptions |      |
 
 ### contentKindToStoryblokFieldType
 
 **种类：**功能
 
 ```typescript
-function contentKindToStoryblokFieldType(kind: ContentField["kind"]): StoryblokFieldType
+function contentKindToStoryblokFieldType(
+  kind: ContentField["kind"],
+): StoryblokFieldType;
 ```
 
 Storyblok 字段类型映射到中性内容类型。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|善良|内容字段[“种类”] |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 善良 | 内容字段[“种类”] |      |
 
 ### 发出Storyblok组件
 
 **种类：**功能
 
 ```typescript
-function emitStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): StoryblokComponent
+function emitStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): StoryblokComponent;
 ```
 
 仅发出组件的 Storyblok 组件对象（blok 配置）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|源文件 | ts.SourceFile |  |
-|名称 | Storyblok 组件名称 |  |
-|选项 | StoryblokProjectionOptions |  |
+| 名称   | 类型                       | 描述 |
+| ------ | -------------------------- | ---- |
+| 源文件 | ts.SourceFile              |      |
+| 名称   | Storyblok 组件名称         |      |
+| 选项   | StoryblokProjectionOptions |      |
 
 ### 解决故事块元数据
 
 **种类：**功能
 
 ```typescript
-function resolveStoryblokMetadata(component: ContentComponent, options: StoryblokProjectionOptions = {}): ResolvedStoryblokMetadata
+function resolveStoryblokMetadata(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): ResolvedStoryblokMetadata;
 ```
 
 为组件解析一次编辑器元数据。
@@ -101,27 +117,30 @@ function resolveStoryblokMetadata(component: ContentComponent, options: Storyblo
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
-|选项 | StoryblokProjectionOptions |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 组件 | 内容组件                   |      |
+| 选项 | StoryblokProjectionOptions |      |
 
 ### toStoryblokComponent
 
 **种类：**功能
 
 ```typescript
-function toStoryblokComponent(component: ContentComponent, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function toStoryblokComponent(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 将中性内容组件投影到其 Storyblok 组件对象和字段上。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
-|选项 | StoryblokProjectionOptions |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 组件 | 内容组件                   |      |
+| 选项 | StoryblokProjectionOptions |      |
 
 ## `src/runtime/solid`
 
@@ -130,16 +149,18 @@ function toStoryblokComponent(component: ContentComponent, options: StoryblokPro
 **种类：**功能
 
 ```typescript
-function StoryblokComponent(properties: StoryblokComponentProperties): JSX.Element
+function StoryblokComponent(
+  properties: StoryblokComponentProperties,
+): JSX.Element;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | StoryblokComponent 属性 |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | StoryblokComponent 属性 |      |
 
 ### StoryblokComponent 属性
 
@@ -156,7 +177,9 @@ export interface StoryblokComponentProperties
 **种类：**类型
 
 ```typescript
-export type StoryblokComponentRegistry = Readonly< Record<string, StoryblokComponentType> >;
+export type StoryblokComponentRegistry = Readonly<
+  Record<string, StoryblokComponentType>
+>;
 ```
 
 没有提供描述。
@@ -176,16 +199,18 @@ export type StoryblokComponentType = (properties:
 **种类：**功能
 
 ```typescript
-function StoryblokProvider(properties: StoryblokProviderProperties): JSX.Element
+function StoryblokProvider(
+  properties: StoryblokProviderProperties,
+): JSX.Element;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | StoryblokProvider 属性 |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | StoryblokProvider 属性 |      |
 
 ### StoryblokProvider 属性
 
@@ -204,16 +229,16 @@ export interface StoryblokProviderProperties
 **种类：**功能
 
 ```typescript
-function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin
+function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin;
 ```
 
 将 Storyblok 投影绑定到调用者拥有的框架输出插件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeStoryblokCmsOptions |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 选项 | ForgeStoryblokCmsOptions |      |
 
 ### ForgeStoryblokCmsOptions
 
@@ -230,16 +255,18 @@ export interface ForgeStoryblokCmsOptions
 **种类：**功能
 
 ```typescript
-function forgeStoryblokCmsTargets(options: ForgeStoryblokCmsTargetsOptions): CmsOutputPlugin[]
+function forgeStoryblokCmsTargets(
+  options: ForgeStoryblokCmsTargetsOptions,
+): CmsOutputPlugin[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeStoryblokCmsTargetsOptions | ForgeStoryblokCmsTargetsOptions |  |
+| 名称 | 类型                            | 描述                            |
+| ---- | ------------------------------- | ------------------------------- |
+| 选项 | ForgeStoryblokCmsTargetsOptions | ForgeStoryblokCmsTargetsOptions |     |
 
 ### ForgeStoryblokCmsTargetsOptions
 
@@ -291,7 +318,17 @@ export type StoryblokComponentNames = ContentComponentNamesInput;
 **种类：**类型
 
 ```typescript
-export type StoryblokFieldType = | "text" | "richtext" | "number" | "boolean" | "option" | "asset" | "multilink" | "bloks" | "tab" | "plugin";
+export type StoryblokFieldType =
+  | "text"
+  | "richtext"
+  | "number"
+  | "boolean"
+  | "option"
+  | "asset"
+  | "multilink"
+  | "bloks"
+  | "tab"
+  | "plugin";
 ```
 
 Storyblok 字段键入映射到的中性内容类型。
@@ -343,7 +380,7 @@ Storyblok 架构字段（组件的一个条目的值） `schema`).
 **种类：**功能
 
 ```typescript
-function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
+function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string;
 ```
 
 构建类型化的 `blok` 包装器的 prop 类型 — `SbBlokData & { … }` 与一个
@@ -354,16 +391,20 @@ function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|分析|分析StoryblokComponent |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 分析 | 分析StoryblokComponent |      |
 
 ### 发出StoryblokBlockWrapper
 
 **种类：**功能
 
 ```typescript
-function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicName: string, options: StoryblokBlokWrapperOptions): string
+function emitStoryblokBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  options: StoryblokBlokWrapperOptions,
+): string;
 ```
 
 发出绑定 Storyblok 的框架 blok 包装源 `blok` 支撑到
@@ -372,11 +413,11 @@ function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicNa
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|分析|分析StoryblokComponent |  |
-|公共名称 |字符串|  |
-|选项 | StoryblokBlokWrapperOptions |  |
+| 名称     | 类型                        | 描述 |
+| -------- | --------------------------- | ---- |
+| 分析     | 分析StoryblokComponent      |      |
+| 公共名称 | 字符串                      |      |
+| 选项     | StoryblokBlokWrapperOptions |      |
 
 ### StoryblokBlockWrapperOptions
 

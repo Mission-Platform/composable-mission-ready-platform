@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function ForgeTag(properties: Readonly<TagProperties>): MpElement
+function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 ```
 
 `ForgeTag` — 一个紧凑的圆形标签，用中性 JSX 方言创作一次
@@ -34,9 +34,9 @@ callback-prop `onRemove`（Vue `remove` 发出替代品）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<TagProperties> |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 属性 | 只读<TagProperties> |      |
 
 ### 标签属性
 
@@ -63,7 +63,8 @@ export type TagSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**类型
 
 ```typescript
-export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TagVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 标签的语气。
@@ -75,16 +76,16 @@ export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'suc
 **种类：**功能
 
 ```typescript
-function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement
+function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ForgeLanguageSwitcherProperties> |  |
+| 名称 | 类型                                  | 描述 |
+| ---- | ------------------------------------- | ---- |
+| 属性 | 只读<ForgeLanguageSwitcherProperties> |      |
 
 ### Forge语言切换选项
 
@@ -113,7 +114,7 @@ export interface ForgeLanguageSwitcherProperties
 **种类：**功能
 
 ```typescript
-function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement
+function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement;
 ```
 
 `ForgeMultiselect` — 带有搜索字段的基于标签的多选组合框，
@@ -145,9 +146,9 @@ React/Vue); `useI18n` 字符串变为纯文本；并且 `v-model` + 发出
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MultiselectProperties> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 属性 | 只读<MultiselectProperties> |      |
 
 ### 多选选项
 
@@ -186,7 +187,7 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
+function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
 `ForgeSelect` — 在中性 JSX 中创作一次的自定义组合框/选择
@@ -220,9 +221,9 @@ function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<SelectProperties> |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 属性 | 只读<SelectProperties> |      |
 
 ### 选择选项
 

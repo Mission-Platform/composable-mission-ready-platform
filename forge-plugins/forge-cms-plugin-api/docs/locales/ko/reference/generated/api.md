@@ -16,7 +16,7 @@
 **종류:** 상수
 
 ```typescript
-export const BADGE
+export const BADGE;
 ```
 
 리터럴 유니온 옵션, JSDoc 설명 및 `?? literal` 기본값.
@@ -26,7 +26,7 @@ export const BADGE
 **종류:** 상수
 
 ```typescript
-export const badgeNames: ContentComponentNamesInput
+export const badgeNames: ContentComponentNamesInput;
 ```
 
 설명이 제공되지 않았습니다.
@@ -36,7 +36,7 @@ export const badgeNames: ContentComponentNamesInput
 **종류:** 상수
 
 ```typescript
-export const BUTTON
+export const BUTTON;
 ```
 
 텍스트와 드롭된 콜백 소품으로 저하되는 공용체입니다.
@@ -46,7 +46,7 @@ export const BUTTON
 **종류:** 상수
 
 ```typescript
-export const buttonNames: ContentComponentNamesInput
+export const buttonNames: ContentComponentNamesInput;
 ```
 
 설명이 제공되지 않았습니다.
@@ -56,7 +56,7 @@ export const buttonNames: ContentComponentNamesInput
 **종류:** 상수
 
 ```typescript
-export const COUNTER
+export const COUNTER;
 ```
 
 대화형 구성 요소: 상태 및 이벤트 핸들러는 수화된 섬을 강제합니다.
@@ -66,7 +66,7 @@ export const COUNTER
 **종류:** 상수
 
 ```typescript
-export const counterNames: ContentComponentNamesInput
+export const counterNames: ContentComponentNamesInput;
 ```
 
 설명이 제공되지 않았습니다.
@@ -76,7 +76,7 @@ export const counterNames: ContentComponentNamesInput
 **종류:** 상수
 
 ```typescript
-export const EMPTY
+export const EMPTY;
 ```
 
 소품이 전혀 없는 구성 요소입니다.
@@ -86,7 +86,7 @@ export const EMPTY
 **종류:** 상수
 
 ```typescript
-export const emptyNames: ContentComponentNamesInput
+export const emptyNames: ContentComponentNamesInput;
 ```
 
 설명이 제공되지 않았습니다.
@@ -96,7 +96,7 @@ export const emptyNames: ContentComponentNamesInput
 **종류:** 상수
 
 ```typescript
-export const GRID
+export const GRID;
 ```
 
 숫자 기본값이 있는 숫자 소품입니다.
@@ -106,7 +106,7 @@ export const GRID
 **종류:** 상수
 
 ```typescript
-export const gridNames: ContentComponentNamesInput
+export const gridNames: ContentComponentNamesInput;
 ```
 
 설명이 제공되지 않았습니다.
@@ -116,7 +116,7 @@ export const gridNames: ContentComponentNamesInput
 **종류:** 상수
 
 ```typescript
-export const LAYOUT
+export const LAYOUT;
 ```
 
 기본 슬롯 옆에 명명된 슬롯입니다.
@@ -126,7 +126,7 @@ export const LAYOUT
 **종류:** 상수
 
 ```typescript
-export const layoutNames: ContentComponentNamesInput
+export const layoutNames: ContentComponentNamesInput;
 ```
 
 설명이 제공되지 않았습니다.
@@ -136,7 +136,7 @@ export const layoutNames: ContentComponentNamesInput
 **종류:** 상수
 
 ```typescript
-export const REQUIRED
+export const REQUIRED;
 ```
 
 선택적인 소품과 함께 필수(선택 사항이 아닌) 소품입니다.
@@ -146,7 +146,7 @@ export const REQUIRED
 **종류:** 상수
 
 ```typescript
-export const requiredNames: ContentComponentNamesInput
+export const requiredNames: ContentComponentNamesInput;
 ```
 
 설명이 제공되지 않았습니다.
@@ -156,7 +156,7 @@ export const requiredNames: ContentComponentNamesInput
 **종류:** 상수
 
 ```typescript
-export const SITE_HEADER
+export const SITE_HEADER;
 ```
 
 사이트 전체 설정 소품이 있는 구성 요소입니다.
@@ -166,7 +166,7 @@ export const SITE_HEADER
 **종류:** 상수
 
 ```typescript
-export const siteHeaderNames: ContentComponentNamesInput
+export const siteHeaderNames: ContentComponentNamesInput;
 ```
 
 설명이 제공되지 않았습니다.
@@ -178,16 +178,16 @@ export const siteHeaderNames: ContentComponentNamesInput
 **종류:** 기능
 
 ```typescript
-function stubFramework(id = "react"): FrameworkOutputPlugin
+function stubFramework(id = "react"): FrameworkOutputPlugin;
 ```
 
 재정의 가능한 ID를 사용하여 스텁 프레임워크 플러그인을 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 아이디 |  |  |
+| 이름   | 유형 | 설명 |
+| ------ | ---- | ---- |
+| 아이디 |      |      |
 
 ## `src/analyze`
 
@@ -196,7 +196,11 @@ function stubFramework(id = "react"): FrameworkOutputPlugin
 **종류:** 기능
 
 ```typescript
-function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentComponentNamesInput, semantic?: SemanticModule): ContentComponent
+function analyzeContentComponent(
+  sourceFile: ts.SourceFile,
+  names: ContentComponentNamesInput,
+  semantic?: SemanticModule,
+): ContentComponent;
 ```
 
 중립 구성 요소 모듈을 분석하여 플랫폼 중립 콘텐츠를 반환합니다.
@@ -205,18 +209,18 @@ function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentCompon
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 이름 | ContentComponentNames입력 |  |
-| 의미 | 의미 모듈 |  |
+| 이름     | 유형                      | 설명 |
+| -------- | ------------------------- | ---- |
+| 소스파일 | ts.소스파일               |      |
+| 이름     | ContentComponentNames입력 |      |
+| 의미     | 의미 모듈                 |      |
 
 ### CMS_COLOR_TAG
 
 **종류:** 상수
 
 ```typescript
-export const CMS_COLOR_TAG
+export const CMS_COLOR_TAG;
 ```
 
 설명이 제공되지 않았습니다.
@@ -226,7 +230,7 @@ export const CMS_COLOR_TAG
 **종류:** 상수
 
 ```typescript
-export const CMS_COLOUR_TAG
+export const CMS_COLOUR_TAG;
 ```
 
 소스 주석에는 영국식 철자가 허용됩니다.
@@ -236,7 +240,7 @@ export const CMS_COLOUR_TAG
 **종류:** 상수
 
 ```typescript
-export const CMS_ICON_TAG
+export const CMS_ICON_TAG;
 ```
 
 선택적 구성 요소 수준 편집기 메타데이터에 대한 JSDoc 태그입니다.
@@ -246,7 +250,7 @@ export const CMS_ICON_TAG
 **종류:** 상수
 
 ```typescript
-export const CMS_SETTING_TAG
+export const CMS_SETTING_TAG;
 ```
 
 소품을 사이트 전체 CMS 설정으로 승격시키는 JSDoc 태그입니다.
@@ -256,7 +260,7 @@ export const CMS_SETTING_TAG
 **종류:** 상수
 
 ```typescript
-export const CMS_TAB_TAG
+export const CMS_TAB_TAG;
 ```
 
 편집기 탭에 소품을 할당하는 JSDoc 태그입니다.
@@ -266,7 +270,7 @@ export const CMS_TAB_TAG
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_SLOT_FIELD
+export const DEFAULT_SLOT_FIELD;
 ```
 
 필드 키는 기본 슬롯(구성요소의 `children`) 아래에 노출됩니다.
@@ -276,32 +280,34 @@ export const DEFAULT_SLOT_FIELD
 **종류:** 기능
 
 ```typescript
-function deriveContentComponentNames(names: ContentComponentNamesInput): ContentComponentNames
+function deriveContentComponentNames(
+  names: ContentComponentNamesInput,
+): ContentComponentNames;
 ```
 
 호출자가 제공한 하위 집합에서 전체 이름 집합을 파생시킵니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이름 | ContentComponentNames입력 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 이름 | ContentComponentNames입력 |      |
 
 ### isInteractive모듈
 
 **종류:** 기능
 
 ```typescript
-function isInteractiveModule(semantic: SemanticModule | undefined): boolean
+function isInteractiveModule(semantic: SemanticModule | undefined): boolean;
 ```
 
 중립 IR이 실제 런타임에서만 제공할 수 있는 동작을 수행하는 경우 참입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 의미 | 의미 모듈 \| 정의되지 않음 |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 의미 | 의미 모듈 \| 정의되지 않음 |      |
 
 ## `src/classify`
 
@@ -310,7 +316,7 @@ function isInteractiveModule(semantic: SemanticModule | undefined): boolean
 **종류:** 상수
 
 ```typescript
-export const ASSET_TYPE_REFERENCES: ReadonlySet<string>
+export const ASSET_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 소품을 미디어 자산으로 표시하는 참조를 입력하세요.
@@ -330,41 +336,47 @@ prop을 분류한 결과(`undefined` → 소품을 떨어뜨립니다).
 **종류:** 기능
 
 ```typescript
-function classifyType(node: ts.TypeNode, aliases: Map<string, ts.TypeNode>, seen: Set<string> = new Set()): ClassifiedFieldKind
+function classifyType(
+  node: ts.TypeNode,
+  aliases: Map<string, ts.TypeNode>,
+  seen: Set<string> = new Set(),
+): ClassifiedFieldKind;
 ```
 
 소품 유형 분류 node 중립적인 콘텐츠 종류로 변환하여 로컬 별칭/공용체를 해결합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | ts.TypeNode |  |
-| 별칭 | 지도<string, ts.TypeNode> |  |
-| 본 | 세트<string> |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| node | ts.TypeNode               |      |
+| 별칭 | 지도<string, ts.TypeNode> |      |
+| 본   | 세트<string>              |      |
 
 ### CollectTypeAliases
 
 **종류:** 기능
 
 ```typescript
-function collectTypeAliases(sourceFile: ts.SourceFile): Map<string, ts.TypeNode>
+function collectTypeAliases(
+  sourceFile: ts.SourceFile,
+): Map<string, ts.TypeNode>;
 ```
 
 모든 최상위 수준 매핑 `type X = …` 해당 유형에 대한 별칭 node, 노조 결의를 위해.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 소스파일 | ts.소스파일 |      |
 
 ### LINK_TYPE_REFERENCES
 
 **종류:** 상수
 
 ```typescript
-export const LINK_TYPE_REFERENCES: ReadonlySet<string>
+export const LINK_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 소품을 링크/URL로 표시하는 참조를 입력하세요.
@@ -374,7 +386,7 @@ export const LINK_TYPE_REFERENCES: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
+export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 소품을 일반 텍스트가 아닌 서식 있는 서식 있는 텍스트로 표시하는 참조를 입력하세요.
@@ -384,7 +396,7 @@ export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const SLOT_TYPE_REFERENCES: ReadonlySet<string>
+export const SLOT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 props가 중첩된 콘텐츠로 처리되는 유형 참조(`children`).
@@ -406,7 +418,8 @@ export interface CmsArtifact
 **종류:** 유형
 
 ```typescript
-export type CmsArtifactKind = "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
+export type CmsArtifactKind =
+  "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
 ```
 
 방출된 아티팩트가 대상의 출력 트리에서 수행하는 역할입니다.
@@ -446,16 +459,16 @@ export interface CmsTargetContext
 **종류:** 기능
 
 ```typescript
-function cmsTargetDirectory(plugin: CmsOutputPlugin): string
+function cmsTargetDirectory(plugin: CmsOutputPlugin): string;
 ```
 
 대상의 프레임워크별 출력이 기록되는 디렉터리 세그먼트입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 플러그인 | Cms출력플러그인 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 플러그인 | Cms출력플러그인 |      |
 
 ### Cms대상 ID
 
@@ -472,7 +485,7 @@ export type CmsTargetId = "storyblok" | "astro" | "ghost" | "jekyll" | "webflow"
 **종류:** 기능
 
 ```typescript
-function defineForgeCmsPlugin(plugin: T): T
+function defineForgeCmsPlugin(plugin: T): T;
 ```
 
 CMS 출력 플러그인을 검증하고 반환합니다.
@@ -482,9 +495,9 @@ CMS 출력 플러그인을 검증하고 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 플러그인 | 티 |  |
+| 이름     | 유형 | 설명 |
+| -------- | ---- | ---- |
+| 플러그인 | 티   |      |
 
 ## `src/config`
 
@@ -493,16 +506,18 @@ CMS 출력 플러그인을 검증하고 반환합니다.
 **종류:** 기능
 
 ```typescript
-function defineViteForgeCmsLibrary(options: ViteForgeCmsLibraryOptions): UserConfig
+function defineViteForgeCmsLibrary(
+  options: ViteForgeCmsLibraryOptions,
+): UserConfig;
 ```
 
 만들기 Vite 하나의 CMS 대상에 대한 라이브러리 구성.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ViteForgeCmsLibraryOptions |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 옵션 | ViteForgeCmsLibraryOptions |      |
 
 ### ViteForgeCmsLibrary옵션
 
@@ -551,7 +566,13 @@ export interface ContentComponentNames
 **종류:** 유형
 
 ```typescript
-export type ContentComponentNamesInput = Pick< ContentComponentNames, "neutralName" | "publicName" > & Partial< Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir"> >;
+export type ContentComponentNamesInput = Pick<
+  ContentComponentNames,
+  "neutralName" | "publicName"
+> &
+  Partial<
+    Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir">
+  >;
 ```
 
 호출자가 제공하는 {@link ContentComponentNames}의 하위 집합입니다. 나머지는 파생됩니다.
@@ -605,32 +626,32 @@ export type ContentFieldKindName = ContentFieldKind["kind"];
 **종류:** 기능
 
 ```typescript
-function contentFields(component: ContentComponent): readonly ContentField[]
+function contentFields(component: ContentComponent): readonly ContentField[];
 ```
 
 슬롯이 아닌 구성 요소의 필드(스칼라, 작성 가능한 콘텐츠)입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ### 슬롯필드
 
 **종류:** 기능
 
 ```typescript
-function slotFields(component: ContentComponent): readonly ContentField[]
+function slotFields(component: ContentComponent): readonly ContentField[];
 ```
 
 중첩된 콘텐츠를 전달하는 구성 요소의 필드입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ## `src/driver`
 
@@ -639,7 +660,9 @@ function slotFields(component: ContentComponent): readonly ContentField[]
 **종류:** 기능
 
 ```typescript
-function generateCmsArtifacts(options: GenerateCmsArtifactsOptions): GeneratedCmsTree
+function generateCmsArtifacts(
+  options: GenerateCmsArtifactsOptions,
+): GeneratedCmsTree;
 ```
 
 하나의 CMS에 대해 전체 검색 → IR → 콘텐츠 모델 → 방출 → 쓰기 루프를 실행합니다.
@@ -647,9 +670,9 @@ target, 항목 모듈 경로와 작성된 모든 내용을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 생성CmsArtifacts옵션 |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 옵션 | 생성CmsArtifacts옵션 |      |
 
 ### 생성Cms아티팩트옵션
 
@@ -688,7 +711,9 @@ export interface GeneratedIsland
 **종류:** 기능
 
 ```typescript
-function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undefined
+function generateIsland(
+  options: GenerateIslandOptions,
+): GeneratedIsland | undefined;
 ```
 
 대상에 대한 프레임워크 아일랜드 트리를 공동 생성하고 지정자를 반환합니다.
@@ -696,9 +721,9 @@ function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undef
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 섬 생성 옵션 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 옵션 | 섬 생성 옵션 |      |
 
 ### 섬 생성옵션
 
@@ -715,7 +740,7 @@ export interface GenerateIslandOptions
 **종류:** 상수
 
 ```typescript
-export const ISLAND_DIRECTORY
+export const ISLAND_DIRECTORY;
 ```
 
 대상 출력 디렉터리에 상대적인 디렉터리 이름, 섬이 생성됩니다.
@@ -727,48 +752,48 @@ export const ISLAND_DIRECTORY
 **종류:** 기능
 
 ```typescript
-function toDisplayName(publicName: string): string
+function toDisplayName(publicName: string): string;
 ```
 
 공개 이름을 표시 이름(`InView` → `In View`).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공개이름 | 문자열 |  |
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 공개이름 | 문자열 |      |
 
 ### to케밥이름
 
 **종류:** 기능
 
 ```typescript
-function toKebabName(publicName: string): string
+function toKebabName(publicName: string): string;
 ```
 
 공개 이름을 케밥 형식의 이름으로 변환합니다(`InView` → `in-view`).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공개이름 | 문자열 |  |
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 공개이름 | 문자열 |      |
 
 ### 기술 이름
 
 **종류:** 기능
 
 ```typescript
-function toTechnicalName(publicName: string): string
+function toTechnicalName(publicName: string): string;
 ```
 
 공개 이름을 기술 이름(`InView` → `in_view`).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공개이름 | 문자열 |  |
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 공개이름 | 문자열 |      |
 
 ## `src/tsdown`
 
@@ -777,83 +802,85 @@ function toTechnicalName(publicName: string): string
 **종류:** 기능
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 대상의 생성된 트리가 기록되는 캐시 디렉터리입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 루트디렉터 | 문자열 |  |
-| 목표 | Cms출력플러그인 |  |
+| 이름       | 유형            | 설명 |
+| ---------- | --------------- | ---- |
+| 루트디렉터 | 문자열          |      |
+| 목표       | Cms출력플러그인 |      |
 
 ### cms출력디렉토리
 
 **종류:** 기능
 
 ```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 대상의 프레임워크별 모듈이 내보내지는 배포 디렉터리입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 루트디렉터 | 문자열 |  |
-| 목표 | Cms출력플러그인 |  |
+| 이름       | 유형            | 설명 |
+| ---------- | --------------- | ---- |
+| 루트디렉터 | 문자열          |      |
+| 목표       | Cms출력플러그인 |      |
 
 ### 정의TsdownForgeCms
 
 **종류:** 기능
 
 ```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig
+function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
 ```
 
 하나의 CMS 대상에 대한 tsdown 구성을 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | TsdownForgeCms옵션 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 옵션 | TsdownForgeCms옵션 |      |
 
 ### 정의TsdownForgeCmsAll
 
 **종류:** 기능
 
 ```typescript
-function defineTsdownForgeCmsAll(options: TsdownForgeCmsAllOptions): UserConfig[]
+function defineTsdownForgeCmsAll(
+  options: TsdownForgeCmsAllOptions,
+): UserConfig[];
 ```
 
 요청된 모든 CMS 대상에 대해 tsdown 구성을 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | TsdownForgeCmsAllOptions |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 옵션 | TsdownForgeCmsAllOptions |      |
 
 ### 해결구성요소모듈
 
 **종류:** 기능
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string
+function resolveComponentsModule(rootDir: string, explicit?: string): string;
 ```
 
 패키지의 중립 구성 요소 배럴을 찾습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 루트디렉터 | 문자열 |  |
-| 명시적인 | 문자열 |  |
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 루트디렉터 | 문자열 |      |
+| 명시적인   | 문자열 |      |
 
 ### TsdownForgeCmsAllOptions
 

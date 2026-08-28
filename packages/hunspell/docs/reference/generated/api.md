@@ -11,7 +11,11 @@ Generated from public source declarations in `@mission-platform/hunspell`.
 **Kind:** function
 
 ```typescript
-function useHunspellMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHunspellMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue composable that integrates Hunspell spell-checking into a Monaco editor.
@@ -24,60 +28,8 @@ unmount, and re-checks when the `language` changes.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| editorReference | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| enabled | MaybeRefOrGetter<boolean> |  |
-| languageReference | MaybeRefOrGetter<string> |  |
-
-## `src/wasm/hunspell.d`
-
-### HunspellChecker
-
-**Kind:** interface
-
-```typescript
-export interface HunspellChecker extends ClassHandle
-```
-
-No description provided.
-
-### HunspellModule
-
-**Kind:** type
-
-```typescript
-export type MainModule = WasmModule & typeof RuntimeExports & EmbindModule;
-```
-
-No description provided.
-
-### StringVector
-
-**Kind:** interface
-
-```typescript
-export interface StringVector extends ClassHandle, Iterable<string>
-```
-
-No description provided.
-
-### TokenResult
-
-**Kind:** type
-
-```typescript
-export type TokenResult =
-```
-
-No description provided.
-
-### TokenResultVector
-
-**Kind:** interface
-
-```typescript
-export interface TokenResultVector extends ClassHandle, Iterable<TokenResult>
-```
-
-No description provided.
+| Name              | Type                                                               | Description |
+| ----------------- | ------------------------------------------------------------------ | ----------- |
+| editorReference   | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |             |
+| enabled           | MaybeRefOrGetter<boolean>                                          |             |
+| languageReference | MaybeRefOrGetter<string>                                           |             |

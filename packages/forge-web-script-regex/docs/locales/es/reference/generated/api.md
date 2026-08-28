@@ -26,7 +26,7 @@ Representación determinista integrada por un backend de Forge.
 **Tipo:** constante
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 Versión estable del contrato de código de bytes de expresiones regulares de Forge compartido.
@@ -36,7 +36,7 @@ Versión estable del contrato de código de bytes de expresiones regulares de Fo
 **Tipo:** constante
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 Ancho, en operandos enteros de 32 bits, de cada instrucción.
@@ -46,7 +46,7 @@ Ancho, en operandos enteros de 32 bits, de cada instrucción.
 **Tipo:** constante
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 Códigos de operación consumidos por el backend de Forge y reflejados por el oráculo de referencia.
@@ -68,16 +68,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 Compile el subconjunto de expresiones regulares deterministas admitidos en el código de bytes de Forge.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| patrón | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| patrón | cadena |             |
 
 ### Error de sintaxis de expresiones regulares
 
@@ -96,17 +96,17 @@ Error de sintaxis propiedad del compilador con mensajes deterministas relativos 
 **Tipo:** función
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 Lea el final de una captura sin exponer el diseño de la ranura del código de bytes a las personas que llaman.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| capturas | Capturas \| nulo |  |
-| grupo | número |  |
+| Nombre   | Tipo             | Descripción |
+| -------- | ---------------- | ----------- |
+| capturas | Capturas \| nulo |             |
+| grupo    | número           |             |
 
 ### Capturas
 
@@ -123,83 +123,83 @@ Las ranuras de captura son `[start0, end0, start1, end1, ...]`; `-1` significa d
 **Tipo:** función
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 Lea el inicio de una captura sin exponer el diseño de la ranura del código de bytes a las personas que llaman.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| capturas | Capturas \| nulo |  |
-| grupo | número |  |
+| Nombre   | Tipo             | Descripción |
+| -------- | ---------------- | ----------- |
+| capturas | Capturas \| nulo |             |
+| grupo    | número           |             |
 
 ### partido completo
 
 **Tipo:** función
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Coincidencia de cuerda entera, anclada en la posición cero.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| re | CompiladoRegex |  |
-| entrada | cadena |  |
+| Nombre  | Tipo           | Descripción |
+| ------- | -------------- | ----------- |
+| re      | CompiladoRegex |             |
+| entrada | cadena         |             |
 
 ### prefijoCoincidencia
 
 **Tipo:** función
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Coincidencia de prefijo, anclado en la posición cero pero no al final.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| re | CompiladoRegex |  |
-| entrada | cadena |  |
+| Nombre  | Tipo           | Descripción |
+| ------- | -------------- | ----------- |
+| re      | CompiladoRegex |             |
+| entrada | cadena         |             |
 
 ### buscar
 
 **Tipo:** función
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 Coincidencia más a la izquierda en `start` o después.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| re | CompiladoRegex |  |
-| entrada | cadena |  |
-| inicio |  |  |
+| Nombre  | Tipo           | Descripción |
+| ------- | -------------- | ----------- |
+| re      | CompiladoRegex |             |
+| entrada | cadena         |             |
+| inicio  |                |             |
 
 ### prueba
 
 **Tipo:** función
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 Coincidencia booleana de cadena completa.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| re | CompiladoRegex |  |
-| entrada | cadena |  |
+| Nombre  | Tipo           | Descripción |
+| ------- | -------------- | ----------- |
+| re      | CompiladoRegex |             |
+| entrada | cadena         |             |

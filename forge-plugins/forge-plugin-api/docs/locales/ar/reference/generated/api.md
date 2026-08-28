@@ -16,24 +16,24 @@
 **النوع:** الوظيفة
 
 ```typescript
-function applySourceEdits(source: string, edits: readonly SourceEdit[]): string
+function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 ```
 
 قم بتطبيق تعديلات المصدر غير المتداخلة دون الكشف عن عقد المحلل اللغوي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| التعديلات | للقراءة فقط تحرير المصدر[] |  |
+| الاسم     | اكتب                       | الوصف |
+| --------- | -------------------------- | ----- |
+| المصدر    | سلسلة                      |       |
+| التعديلات | للقراءة فقط تحرير المصدر[] |       |
 
 ### CLASS_NAME_ATTRIBUTE
 
 **النوع:** ثابت
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -43,7 +43,7 @@ export const CLASS_NAME_ATTRIBUTE
 **النوع:** ثابت
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 لم يتم تقديم أي وصف.
@@ -53,23 +53,23 @@ export const COMPONENTS_JSX_MODULES
 **النوع:** الوظيفة
 
 ```typescript
-function eventNameForProperty(propertyName: string): string
+function eventNameForProperty(propertyName: string): string;
 ```
 
 اشتق اسم الحدث الذي يمثله أ Vue-أسلوب `on<Event>` دعم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم العقار | سلسلة |  |
+| الاسم      | اكتب  | الوصف |
+| ---------- | ----- | ----- |
+| اسم العقار | سلسلة |       |
 
 ### ICONS_JSX_MODULE
 
 **النوع:** ثابت
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -79,7 +79,7 @@ export const ICONS_JSX_MODULE
 **النوع:** ثابت
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -89,7 +89,7 @@ export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -99,7 +99,7 @@ export const LOCAL_EFFECT_FILE
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -109,7 +109,7 @@ export const LOCAL_EFFECT_MODULE
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -119,7 +119,7 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -129,7 +129,7 @@ export const LOCAL_JSX_TYPES_FILE
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -139,39 +139,39 @@ export const LOCAL_JSX_TYPES_MODULE
 **النوع:** الوظيفة
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 تنبعث المشتركة Vue مساعد التأثير؛ الأهداف الأخرى لا تحتاج إلى هذا الملف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإطار | JsxFramework |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| الإطار | JsxFramework |       |
 
 ### localJsxTypesModuleSource
 
 **النوع:** الوظيفة
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 قم بإصدار إعلانات JSX البدائية لإطار العمل المحلي دون تبعيات المحلل اللغوي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإطار | JsxFramework |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| الإطار | JsxFramework |       |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -181,7 +181,7 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -191,7 +191,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -201,7 +201,7 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -211,7 +211,7 @@ export const NEUTRAL_MODULE
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -221,7 +221,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -231,7 +231,7 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -241,7 +241,7 @@ export const REACT_ADAPTER_MODULE
 **النوع:** ثابت
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -271,7 +271,7 @@ export interface StyleImport
 **النوع:** ثابت
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -281,7 +281,7 @@ export const VUE_ADAPTER_MODULE
 **النوع:** ثابت
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -291,7 +291,7 @@ export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -323,23 +323,23 @@ export interface HoistedStaticEntry
 **النوع:** الوظيفة
 
 ```typescript
-function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult
+function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 ```
 
 ارفع سجلات العرض المميزة وأرجع الإدخالات للمولد المستهدف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | GenericModuleAst |  |
+| الاسم          | اكتب             | الوصف |
+| -------------- | ---------------- | ----- |
+| الوحدة النمطية | GenericModuleAst |       |
 
 ### MP_HOIST_PREFIX
 
 **النوع:** ثابت
 
 ```typescript
-export const MP_HOIST_PREFIX
+export const MP_HOIST_PREFIX;
 ```
 
 لم يتم تقديم أي وصف.
@@ -351,33 +351,36 @@ export const MP_HOIST_PREFIX
 **النوع:** الوظيفة
 
 ```typescript
-function applyOptimizationEdits(module: GenericModuleAst, edits: readonly SourceEdit[]): GenericModuleAst
+function applyOptimizationEdits(
+  module: GenericModuleAst,
+  edits: readonly SourceEdit[],
+): GenericModuleAst;
 ```
 
 قم بتطبيق تعديلات المصدر على مصدر الوحدة النمطية دون الكشف عن نوع تنفيذ AST.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | GenericModuleAst |  |
-| التعديلات | للقراءة فقط تحرير المصدر[] |  |
+| الاسم          | اكتب                       | الوصف |
+| -------------- | -------------------------- | ----- |
+| الوحدة النمطية | GenericModuleAst           |       |
+| التعديلات      | للقراءة فقط تحرير المصدر[] |       |
 
 ### ConstantBoolean
 
 **النوع:** الوظيفة
 
 ```typescript
-function constantBoolean(expression: ExpressionLike): boolean | undefined
+function constantBoolean(expression: ExpressionLike): boolean | undefined;
 ```
 
 حل قيمة منطقية حرفية دون تقييم التعليمات البرمجية المؤلفة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعبير | التعبير مثل |  |
+| الاسم | اكتب        | الوصف |
+| ----- | ----------- | ----- |
+| تعبير | التعبير مثل |       |
 
 ### نتيجة التحسين العامة
 
@@ -394,55 +397,55 @@ export interface GenericOptimizationResult
 **النوع:** الوظيفة
 
 ```typescript
-function hasJsxKey(attributes: readonly GenericAttribute[]): boolean
+function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 ```
 
 ما إذا كانت قائمة سمات JSX العامة تحتوي على مفتاح أم لا.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الصفات | للقراءة فقط GenericAttribute[] |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| الصفات | للقراءة فقط GenericAttribute[] |       |
 
 ### hasMpStaticMarker
 
 **النوع:** الوظيفة
 
 ```typescript
-function hasMpStaticMarker(node: GenericRenderNode): boolean
+function hasMpStaticMarker(node: GenericRenderNode): boolean;
 ```
 
 سواء كانت JSX عامة node لديه علامة ثابتة خاصة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| node  | GenericRenderNode |       |
 
 ### isCompileTimeConstant
 
 **النوع:** الوظيفة
 
 ```typescript
-function isCompileTimeConstant(expression: ExpressionLike): boolean
+function isCompileTimeConstant(expression: ExpressionLike): boolean;
 ```
 
 ما إذا كان النص المصدر عبارة عن تعبير حرفي خالص في وقت الترجمة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعبير | التعبير مثل |  |
+| الاسم | اكتب        | الوصف |
+| ----- | ----------- | ----- |
+| تعبير | التعبير مثل |       |
 
 ### MP_STATIC_ATTR
 
 **النوع:** ثابت
 
 ```typescript
-export const MP_STATIC_ATTR
+export const MP_STATIC_ATTR;
 ```
 
 لم يتم تقديم أي وصف.
@@ -452,17 +455,20 @@ export const MP_STATIC_ATTR
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeGenericModule(module: GenericModuleAst, _options: OptimizeOptions = {}): GenericOptimizationResult
+function optimizeGenericModule(
+  module: GenericModuleAst,
+  _options: OptimizeOptions = {},
+): GenericOptimizationResult;
 ```
 
 قم بتطبيق التحسين على مستوى السجل أثناء إرجاع أي تعديلات للمصدر بشكل منفصل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | GenericModuleAst |  |
-| _خيارات | خيارات التحسين |  |
+| الاسم          | اكتب             | الوصف |
+| -------------- | ---------------- | ----- |
+| الوحدة النمطية | GenericModuleAst |       |
+| _خيارات        | خيارات التحسين   |       |
 
 ### خيارات التحسين
 
@@ -479,32 +485,34 @@ export interface OptimizeOptions
 **النوع:** الوظيفة
 
 ```typescript
-function stripMpStaticAttributes(attributes: readonly GenericAttribute[]): readonly GenericAttribute[]
+function stripMpStaticAttributes(
+  attributes: readonly GenericAttribute[],
+): readonly GenericAttribute[];
 ```
 
 قم بإرجاع قائمة سمات عامة خالية من العلامات.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الصفات | للقراءة فقط GenericAttribute[] |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| الصفات | للقراءة فقط GenericAttribute[] |       |
 
 ### stripMpStaticMarker
 
 **النوع:** الوظيفة
 
 ```typescript
-function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode
+function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
 قم بإرجاع عرض عام خالٍ من العلامات node، الحفاظ بشكل متكرر على امتدادات المصدر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| node  | GenericRenderNode |       |
 
 ## `src/diagnostics`
 
@@ -543,7 +551,14 @@ export type CompilerDiagnosticSeverity = "error" | "warning" | "info";
 **النوع:** النوع
 
 ```typescript
-export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering" | "optimization" | "generation" | "build";
+export type CompilerPhase =
+  | "frontend"
+  | "ir"
+  | "inference"
+  | "target-lowering"
+  | "optimization"
+  | "generation"
+  | "build";
 ```
 
 مراحل خط الأنابيب التي يمكنها الإبلاغ عن تشخيص المترجم.
@@ -553,48 +568,52 @@ export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering
 **النوع:** الوظيفة
 
 ```typescript
-function createCompilerDiagnostic(diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string }): CompilerDiagnostic
+function createCompilerDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string },
+): CompilerDiagnostic;
 ```
 
 إنشاء تشخيص دون اقتران عقود المرحلة ل TypeScript العقد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | حذف<CompilerDiagnostic, "fileName"> & { اسم الملف؟: سلسلة } |  |
+| الاسم   | اكتب                                                        | الوصف |
+| ------- | ----------------------------------------------------------- | ----- |
+| التشخيص | حذف<CompilerDiagnostic, "fileName"> & { اسم الملف؟: سلسلة } |       |
 
 ### formatCompilerDiagnostic
 
 **النوع:** الوظيفة
 
 ```typescript
-function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string
+function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
 قم بتنسيق تشخيص لخطأ في برنامج التحويل البرمجي دون فقدان موقع المصدر الخاص به.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | تشخيص المترجم |  |
+| الاسم   | اكتب          | الوصف |
+| ------- | ------------- | ----- |
+| التشخيص | تشخيص المترجم |       |
 
 ### throwOnCompilerErrors
 
 **النوع:** الوظيفة
 
 ```typescript
-function throwOnCompilerErrors(diagnostics: readonly CompilerDiagnostic[] | undefined): void
+function throwOnCompilerErrors(
+  diagnostics: readonly CompilerDiagnostic[] | undefined,
+): void;
 ```
 
 قم بإحباط خط أنابيب برنامج التحويل البرمجي عندما تقوم إحدى المراحل بالإبلاغ عن خطأ واحد أو أكثر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | للقراءة فقط CompilerDiagnostic[] \| غير محدد |  |
+| الاسم   | اكتب                                         | الوصف |
+| ------- | -------------------------------------------- | ----- |
+| التشخيص | للقراءة فقط CompilerDiagnostic[] \| غير محدد |       |
 
 ## `src/framework`
 
@@ -673,7 +692,8 @@ export type GeneratorContext = TargetContext;
 **النوع:** النوع
 
 ```typescript
-export type JsxFramework = "react" | "vue" | "svelte" | "solid" | "web-components";
+export type JsxFramework =
+  "react" | "vue" | "svelte" | "solid" | "web-components";
 ```
 
 معرفات الإطار المضمنة الحالية؛ قد تستخدم المكونات الإضافية أي معرف سلسلة إضافي.
@@ -779,7 +799,7 @@ export interface ViteBuildContext
 **النوع:** ثابت
 
 ```typescript
-export const defineForgeFramework
+export const defineForgeFramework;
 ```
 
 الاسم المستعار يؤكد على أن حزم إطار العمل تسجل عمليات التنفيذ المستهدفة.
@@ -789,16 +809,16 @@ export const defineForgeFramework
 **النوع:** الوظيفة
 
 ```typescript
-function defineForgeOutputPlugin(plugin: T): T
+function defineForgeOutputPlugin(plugin: T): T;
 ```
 
 التحقق من صحة وإرجاع البرنامج المساعد لإخراج الإطار للتسجيل من قبل المستهلكين.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البرنامج المساعد | ت |  |
+| الاسم            | اكتب | الوصف |
+| ---------------- | ---- | ----- |
+| البرنامج المساعد | ت    |       |
 
 ### معرف البرنامج المساعد
 
@@ -815,32 +835,36 @@ export type ForgePluginId = FrameworkOutputPlugin["id"];
 **النوع:** الوظيفة
 
 ```typescript
-function validateForgeOutputPlugin(plugin: unknown): asserts plugin is FrameworkOutputPlugin
+function validateForgeOutputPlugin(
+  plugin: unknown,
+): asserts plugin is FrameworkOutputPlugin;
 ```
 
 التحقق من صحة البيانات التعريفية المستهدفة بشكل مستقل عن أي سجل إطاري.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البرنامج المساعد | غير معروف |  |
+| الاسم            | اكتب      | الوصف |
+| ---------------- | --------- | ----- |
+| البرنامج المساعد | غير معروف |       |
 
 ### validateForgeOutputPluginSelection
 
 **النوع:** الوظيفة
 
 ```typescript
-function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
+function validateForgeOutputPluginSelection(
+  plugins: readonly T[],
+): readonly T[];
 ```
 
 التحقق من صحة تحديد الهدف المملوك للمتصل، بما في ذلك المعرفات الفارغة والمكررة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإضافات | للقراءة فقط T[] |  |
+| الاسم    | اكتب            | الوصف |
+| -------- | --------------- | ----- |
+| الإضافات | للقراءة فقط T[] |       |
 
 ## `src/ir`
 
@@ -849,34 +873,40 @@ function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
 **النوع:** الوظيفة
 
 ```typescript
-function attributeExpressionText(node: GenericRenderNode, name: string): string | undefined
+function attributeExpressionText(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 قراءة نص تعبير السمة المسماة، عندما تحمل واحدة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| الاسم | سلسلة |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| node  | GenericRenderNode |       |
+| الاسم | سلسلة             |       |
 
 ### attributeStringValue
 
 **النوع:** الوظيفة
 
 ```typescript
-function attributeStringValue(node: GenericRenderNode, name: string): string | undefined
+function attributeStringValue(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 قراءة قيمة السلسلة الثابتة للسمة المسماة، عندما تحتوي على واحدة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| الاسم | سلسلة |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| node  | GenericRenderNode |       |
+| الاسم | سلسلة             |       |
 
 ### DynamicNodeIntention
 
@@ -903,7 +933,7 @@ export interface EffectIntention
 **النوع:** ثابت
 
 ```typescript
-export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
+export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions;
 ```
 
 حقائق نية فارغة تستخدمها التركيبات والوحدات النمطية دون أي شيء يمكن استنتاجه.
@@ -913,7 +943,7 @@ export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
 **النوع:** ثابت
 
 ```typescript
-export const EMPTY_SPAN: SourceSpan
+export const EMPTY_SPAN: SourceSpan;
 ```
 
 نطاق ذو عرض صفري تستخدمه العقد العامة المركبة.
@@ -933,24 +963,28 @@ export interface EventIntention
 **النوع:** الوظيفة
 
 ```typescript
-function findAttribute(node: GenericRenderNode, name: string): GenericJsxAttribute | undefined
+function findAttribute(
+  node: GenericRenderNode,
+  name: string,
+): GenericJsxAttribute | undefined;
 ```
 
 ابحث عن السمة المسماة في العرض node.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| الاسم | سلسلة |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| node  | GenericRenderNode |       |
+| الاسم | سلسلة             |       |
 
 ### GenericAstNode
 
 **النوع:** النوع
 
 ```typescript
-export type GenericAstNode = GenericImport | GenericStatement | GenericRenderNode;
+export type GenericAstNode =
+  GenericImport | GenericStatement | GenericRenderNode;
 ```
 
 لم يتم تقديم أي وصف.
@@ -980,7 +1014,8 @@ export type GenericAttributeValue = |
 **النوع:** النوع
 
 ```typescript
-export type GenericBindingKind = "identifier" | "object-pattern" | "array-pattern";
+export type GenericBindingKind =
+  "identifier" | "object-pattern" | "array-pattern";
 ```
 
 نموذج الربط لمعلمة الدعائم الخاصة بالمكون.
@@ -1060,7 +1095,8 @@ export interface GenericParameter
 **النوع:** النوع
 
 ```typescript
-export type GenericRenderChild = GenericRenderNode | GenericTextNode | GenericExpressionNode;
+export type GenericRenderChild =
+  GenericRenderNode | GenericTextNode | GenericExpressionNode;
 ```
 
 لم يتم تقديم أي وصف.
@@ -1090,7 +1126,18 @@ export interface GenericStatement
 **النوع:** النوع
 
 ```typescript
-export type GenericStatementKind = | "import" | "interface" | "type-alias" | "enum" | "variable" | "function" | "class" | "export" | "expression" | "return" | "other";
+export type GenericStatementKind =
+  | "import"
+  | "interface"
+  | "type-alias"
+  | "enum"
+  | "variable"
+  | "function"
+  | "class"
+  | "export"
+  | "expression"
+  | "return"
+  | "other";
 ```
 
 تصنيف تقريبي لبيان مستوى الوحدة المحتفظ به.
@@ -1120,48 +1167,50 @@ export interface GenericTextNode
 **النوع:** الوظيفة
 
 ```typescript
-function isExpressionNode(child: GenericRenderChild): child is GenericExpressionNode
+function isExpressionNode(
+  child: GenericRenderChild,
+): child is GenericExpressionNode;
 ```
 
 ما إذا كان الطفل المقدم هو a `{ … }` الاستيفاء.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| طفل | GenericRenderChild |  |
+| الاسم | اكتب               | الوصف |
+| ----- | ------------------ | ----- |
+| طفل   | GenericRenderChild |       |
 
 ### isRenderNode
 
 **النوع:** الوظيفة
 
 ```typescript
-function isRenderNode(child: GenericRenderChild): child is GenericRenderNode
+function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
 ما إذا كان الطفل الذي يتم تقديمه عبارة عن عنصر/جزء متداخل node.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| طفل | GenericRenderChild |  |
+| الاسم | اكتب               | الوصف |
+| ----- | ------------------ | ----- |
+| طفل   | GenericRenderChild |       |
 
 ### isTextNode
 
 **النوع:** الوظيفة
 
 ```typescript
-function isTextNode(child: GenericRenderChild): child is GenericTextNode
+function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 ```
 
 ما إذا كان الطفل الذي يتم عرضه هو نص JSX حرفيًا.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| طفل | GenericRenderChild |  |
+| الاسم | اكتب               | الوصف |
+| ----- | ------------------ | ----- |
+| طفل   | GenericRenderChild |       |
 
 ### ListKeyIntention
 
@@ -1208,16 +1257,16 @@ export interface RefIntention
 **النوع:** الوظيفة
 
 ```typescript
-function renderNodeTagName(node: GenericRenderNode): string | undefined
+function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
 اسم العلامة العادي للعرض node، أو `undefined` للعلامة المحسوبة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| node  | GenericRenderNode |       |
 
 ### النوايا الدلالية
 
@@ -1254,18 +1303,22 @@ export interface SlotIntention
 **النوع:** الوظيفة
 
 ```typescript
-function sourceBacked(text: string, syntax: SourceBackedExpression["syntax"] = "expression", span: SourceSpan = EMPTY_SPAN): SourceBackedExpression
+function sourceBacked(
+  text: string,
+  syntax: SourceBackedExpression["syntax"] = "expression",
+  span: SourceSpan = EMPTY_SPAN,
+): SourceBackedExpression;
 ```
 
 أنشئ تعبيرًا مدعومًا بالمصدر من نص مطبوع بالفعل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
-| بناء الجملة | SourceBackedExpression["بناء الجملة"] |  |
-| فترة | سورس سبان |  |
+| الاسم       | اكتب                                  | الوصف |
+| ----------- | ------------------------------------- | ----- |
+| نص          | سلسلة                                 |       |
+| بناء الجملة | SourceBackedExpression["بناء الجملة"] |       |
+| فترة        | سورس سبان                             |       |
 
 ### SourceBackedExpression
 
@@ -1302,14 +1355,17 @@ export interface StateIntention
 **النوع:** الوظيفة
 
 ```typescript
-function walkRenderNodes(nodes: readonly GenericRenderNode[], visit: (node: GenericRenderNode) => void): void
+function walkRenderNodes(
+  nodes: readonly GenericRenderNode[],
+  visit: (node: GenericRenderNode) => void,
+): void;
 ```
 
 قم بالسير على عمق شجرة العرض أولاً، بما في ذلك علامات التعبير المتداخلة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العقد | للقراءة فقط GenericRenderNode[] |  |
-| زيارة | (node: GenericRenderNode) => باطل |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| العقد | للقراءة فقط GenericRenderNode[]   |       |
+| زيارة | (node: GenericRenderNode) => باطل |       |

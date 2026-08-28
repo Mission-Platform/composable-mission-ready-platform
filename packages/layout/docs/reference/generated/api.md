@@ -70,7 +70,7 @@ The layout strategy the container uses to size itself on the inline axis:
 **Kind:** function
 
 ```typescript
-function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement
+function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement;
 ```
 
 `ForgeContainer` — a page/section layout primitive that constrains and centres
@@ -90,9 +90,9 @@ in the CSS Module (which inlines the platform breakpoints as media queries).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ContainerProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<ContainerProperties> |             |
 
 ## `src/components/templates/forge-application-layout/forge-application-layout`
 
@@ -111,7 +111,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement
+function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement;
 ```
 
 `ForgeApplicationLayout` — the top-level application shell authored once in the
@@ -135,9 +135,9 @@ CSS). The hashed module class names are assembled with the framework-neutral
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ApplicationLayoutProperties> |  |
+| Name       | Type                                  | Description |
+| ---------- | ------------------------------------- | ----------- |
+| properties | Readonly<ApplicationLayoutProperties> |             |
 
 ### SidebarBreakpoint
 
@@ -186,7 +186,7 @@ Named regions exposed by `ForgeBentoLayout`.
 **Kind:** function
 
 ```typescript
-function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement
+function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): MpElement;
 ```
 
 `ForgeBentoLayout` exposes `hero`, `feature`, and `supporting` named slots.
@@ -195,9 +195,9 @@ supporting regions alongside it; all regions stack in source order on narrow scr
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<BentoLayoutProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<BentoLayoutProperties> |             |
 
 ### PatternLayoutBreakpoint
 
@@ -236,7 +236,7 @@ Semantic container elements supported by the pattern layouts.
 **Kind:** function
 
 ```typescript
-function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement
+function ForgeFPatternLayout(properties: Readonly<FPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeFPatternLayout` exposes `header`, `intro`, `primary`, `secondary`, and
@@ -245,9 +245,9 @@ the dominant wide-screen track while the secondary region remains adjacent to it
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<FPatternLayoutProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<FPatternLayoutProperties> |             |
 
 ### FPatternLayoutBreakpoint
 
@@ -306,7 +306,7 @@ Semantic container elements supported by `ForgeFPatternLayout`.
 **Kind:** function
 
 ```typescript
-function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement
+function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpElement;
 ```
 
 `ForgeGridLayout` renders the supplied `cell1` … `cell12` named slots in
@@ -315,9 +315,9 @@ tracks only after the configured responsive breakpoint.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<GridLayoutProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<GridLayoutProperties> |             |
 
 ### GridLayoutBreakpoint
 
@@ -334,7 +334,19 @@ Viewport breakpoint used by the grid's narrow-layout fallback.
 **Kind:** type
 
 ```typescript
-export type GridLayoutCell = | 'cell1' | 'cell2' | 'cell3' | 'cell4' | 'cell5' | 'cell6' | 'cell7' | 'cell8' | 'cell9' | 'cell10' | 'cell11' | 'cell12';
+export type GridLayoutCell =
+  | 'cell1'
+  | 'cell2'
+  | 'cell3'
+  | 'cell4'
+  | 'cell5'
+  | 'cell6'
+  | 'cell7'
+  | 'cell8'
+  | 'cell9'
+  | 'cell10'
+  | 'cell11'
+  | 'cell12';
 ```
 
 Supported ordered named cell slots (`cell1` through `cell12`).
@@ -376,7 +388,7 @@ Semantic container elements supported by `ForgeGridLayout`.
 **Kind:** function
 
 ```typescript
-function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement
+function ForgeVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement;
 ```
 
 `ForgeVerticalLayout` — a responsive three-column shell authored once in the
@@ -405,9 +417,9 @@ plain content slot).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<VerticalLayoutProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<VerticalLayoutProperties> |             |
 
 ### VerticalLayoutBreakpoint
 
@@ -446,7 +458,7 @@ Named size scale for the side columns (mirrors `ForgeDrawer`'s `DrawerSize`).
 **Kind:** function
 
 ```typescript
-function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement
+function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutProperties>): MpElement;
 ```
 
 `ForgeZPatternLayout` exposes `topStart`, `topEnd`, `middle`, `bottomStart`,
@@ -455,9 +467,9 @@ screens place the regions on alternating sides using CSS grid areas.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ZPatternLayoutProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<ZPatternLayoutProperties> |             |
 
 ### ZPatternLayoutBreakpoint
 

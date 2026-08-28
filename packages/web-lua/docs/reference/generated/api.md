@@ -11,57 +11,45 @@ Generated from public source declarations in `@mission-platform/web-lua`.
 **Kind:** function
 
 ```typescript
-function assertMemoryRange(memory: WebAssembly.Memory, pointer: number, length: number): void
+function assertMemoryRange(
+  memory: WebAssembly.Memory,
+  pointer: number,
+  length: number,
+): void;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| memory | WebAssembly.Memory |  |
-| pointer | number |  |
-| length | number |  |
-
-### asWebLuaExports
-
-**Kind:** function
-
-```typescript
-function asWebLuaExports(exports: WebAssembly.Exports): WebLuaExports
-```
-
-No description provided.
-
-#### Parameters
-
-| Name | Type | Description |
-| --- | --- | --- |
-| exports | WebAssembly.Exports |  |
+| Name    | Type               | Description |
+| ------- | ------------------ | ----------- |
+| memory  | WebAssembly.Memory |             |
+| pointer | number             |             |
+| length  | number             |             |
 
 ### validateWebLuaExports
 
 **Kind:** function
 
 ```typescript
-function validateWebLuaExports(exports: WebAssembly.Exports | object): void
+function validateWebLuaExports(exports: WebAssembly.Exports | object): void;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| exports | WebAssembly.Exports \| object |  |
+| Name    | Type                          | Description |
+| ------- | ----------------------------- | ----------- |
+| exports | WebAssembly.Exports \| object |             |
 
 ### WEB_LUA_ABI_MANIFEST
 
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_ABI_MANIFEST: WebLuaAbiManifest
+export const WEB_LUA_ABI_MANIFEST: WebLuaAbiManifest;
 ```
 
 No description provided.
@@ -71,7 +59,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_ABI_VERSION
+export const WEB_LUA_ABI_VERSION;
 ```
 
 No description provided.
@@ -81,7 +69,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_CAPABILITIES
+export const WEB_LUA_CAPABILITIES;
 ```
 
 No description provided.
@@ -91,7 +79,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_CAPABILITY_POLICIES: readonly WebLuaCapabilityPolicy[]
+export const WEB_LUA_CAPABILITY_POLICIES: readonly WebLuaCapabilityPolicy[];
 ```
 
 No description provided.
@@ -101,7 +89,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_CAPABILITY_POLICY_VERSION
+export const WEB_LUA_CAPABILITY_POLICY_VERSION;
 ```
 
 No description provided.
@@ -111,7 +99,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_GUEST_EXPORTS
+export const WEB_LUA_GUEST_EXPORTS;
 ```
 
 No description provided.
@@ -121,7 +109,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_IMPORT_POLICY_VERSION
+export const WEB_LUA_IMPORT_POLICY_VERSION;
 ```
 
 No description provided.
@@ -131,7 +119,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_IMPORT_POLICY: WebLuaImportPolicy
+export const WEB_LUA_IMPORT_POLICY: WebLuaImportPolicy;
 ```
 
 No description provided.
@@ -141,7 +129,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_REQUIRED_EXPORTS
+export const WEB_LUA_REQUIRED_EXPORTS;
 ```
 
 No description provided.
@@ -151,7 +139,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_RUNTIME_EXPORTS
+export const WEB_LUA_RUNTIME_EXPORTS;
 ```
 
 No description provided.
@@ -161,7 +149,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_STATUS
+export const WEB_LUA_STATUS;
 ```
 
 No description provided.
@@ -188,10 +176,10 @@ No description provided.
 
 ### WebLuaExports
 
-**Kind:** interface
+**Kind:** type
 
 ```typescript
-export interface WebLuaExports
+export type WebLuaExports = ForgeWebScriptExports;
 ```
 
 No description provided.
@@ -211,41 +199,17 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type WebLuaValueKind = | "nil" | "boolean" | "integer" | "float" | "string" | "table" | "function" | "thread" | "userdata" | "unknown";
-```
-
-No description provided.
-
-## `src/build-artifact`
-
-### WEB_LUA_BUILD_ARTIFACT
-
-**Kind:** constant
-
-```typescript
-export const WEB_LUA_BUILD_ARTIFACT: WebLuaArtifact
-```
-
-Compiled by forgeWebScriptPlugin during the package build.
-
-## `src/compiler`
-
-### compileWebLua
-
-**Kind:** function
-
-```typescript
-function compileWebLua(): Promise<WebLuaArtifact>
-```
-
-No description provided.
-
-### WebLuaArtifact
-
-**Kind:** interface
-
-```typescript
-export interface WebLuaArtifact
+export type WebLuaValueKind =
+  | "nil"
+  | "boolean"
+  | "integer"
+  | "float"
+  | "string"
+  | "table"
+  | "function"
+  | "thread"
+  | "userdata"
+  | "unknown";
 ```
 
 No description provided.
@@ -257,17 +221,18 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function createWebLuaRuntime(artifact?: WebLuaArtifact, options: WebLuaRuntimeOptions = {}): Promise<WebLuaRuntime>
+function createWebLuaRuntime(
+  options: WebLuaRuntimeOptions = {},
+): Promise<WebLuaRuntime>;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| artifact | WebLuaArtifact |  |
-| options | WebLuaRuntimeOptions |  |
+| Name    | Type                 | Description |
+| ------- | -------------------- | ----------- |
+| options | WebLuaRuntimeOptions |             |
 
 ### WebLuaCapability
 
@@ -324,7 +289,14 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type WebLuaErrorCode = | "syntax-error" | "runtime-error" | "division-by-zero" | "malformed-chunk" | "yielded" | "closed" | "unknown";
+export type WebLuaErrorCode =
+  | "syntax-error"
+  | "runtime-error"
+  | "division-by-zero"
+  | "malformed-chunk"
+  | "yielded"
+  | "closed"
+  | "unknown";
 ```
 
 No description provided.

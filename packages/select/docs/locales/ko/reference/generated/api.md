@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function ForgeTag(properties: Readonly<TagProperties>): MpElement
+function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 ```
 
 `ForgeTag` — 중립 JSX 방언으로 한 번 작성된 작고 둥근 레이블
@@ -34,9 +34,9 @@ callback-prop `onRemove`(Vue `remove` 대체 방출)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<TagProperties> |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 속성 | 읽기 전용<TagProperties> |      |
 
 ### 태그속성
 
@@ -63,7 +63,8 @@ export type TagSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 유형
 
 ```typescript
-export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TagVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 태그의 톤.
@@ -75,16 +76,16 @@ export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'suc
 **종류:** 기능
 
 ```typescript
-function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement
+function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ForgeLanguageSwitcherProperties> |  |
+| 이름 | 유형                                       | 설명 |
+| ---- | ------------------------------------------ | ---- |
+| 속성 | 읽기 전용<ForgeLanguageSwitcherProperties> |      |
 
 ### ForgeLanguageSwitcher옵션
 
@@ -113,7 +114,7 @@ export interface ForgeLanguageSwitcherProperties
 **종류:** 기능
 
 ```typescript
-function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement
+function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement;
 ```
 
 `ForgeMultiselect` — 검색 필드가 있는 태그 기반 다중 선택 콤보 상자,
@@ -145,9 +146,9 @@ React/Vue); `useI18n` 문자열은 일반 텍스트가 됩니다. `v-model` +는
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MultiselectProperties> |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 속성 | 읽기 전용<MultiselectProperties> |      |
 
 ### 다중 선택 옵션
 
@@ -186,7 +187,7 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 기능
 
 ```typescript
-function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
+function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
 `ForgeSelect` — 중립 JSX에서 한 번 작성된 사용자 정의 콤보 상자/선택
@@ -220,9 +221,9 @@ function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<SelectProperties> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 속성 | 읽기 전용<SelectProperties> |      |
 
 ### 선택옵션
 

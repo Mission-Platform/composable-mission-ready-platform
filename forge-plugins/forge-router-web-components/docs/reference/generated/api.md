@@ -33,16 +33,16 @@ Node, string, or DOM factory in `route.component` is rendered directly.
 **Kind:** function
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 Register the router primitives once; safe to call from hydration and tests.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | RegisterRouterElementsOptions |  |
+| Name    | Type                          | Description |
+| ------- | ----------------------------- | ----------- |
+| options | RegisterRouterElementsOptions |             |
 
 ## `src/runtime/history`
 
@@ -51,39 +51,39 @@ Register the router primitives once; safe to call from hydration and tests.
 **Kind:** function
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| win | Window |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| win  | Window |             |
 
 ### createMemoryHistory
 
 **Kind:** function
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| initialUrl |  |  |
+| Name       | Type | Description |
+| ---------- | ---- | ----------- |
+| initialUrl |      |             |
 
 ### createWebHistory
 
 **Kind:** function
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 No description provided.
@@ -115,7 +115,7 @@ A deterministic history implementation for tests, SSR, and prerendering.
 **Kind:** constant
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 No description provided.
@@ -129,7 +129,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 No description provided.
@@ -143,7 +143,7 @@ No description provided.
 **Kind:** component
 
 ```typescript
-export const MpLink
+export MpLink = 'forge-router-link'
 ```
 
 Custom-element tag used for compiled neutral links.
@@ -153,7 +153,7 @@ Custom-element tag used for compiled neutral links.
 **Kind:** component
 
 ```typescript
-export const MpRouterView
+export MpRouterView = 'forge-router-outlet'
 ```
 
 Custom-element tag used for compiled neutral outlets.
@@ -163,7 +163,7 @@ Custom-element tag used for compiled neutral outlets.
 **Kind:** constant
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 No description provided.
@@ -177,39 +177,39 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Resolve a neutral target through the bound Web Components router.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
+| Name | Type               | Description |
+| ---- | ------------------ | ----------- |
+| to   | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
 **Kind:** function
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 Bind the app-owned router for compiled framework-free package capabilities.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| router | MpWebComponentsRouter<View> |  |
+| Name   | Type                        | Description |
+| ------ | --------------------------- | ----------- |
+| router | MpWebComponentsRouter<View> |             |
 
 ### useForgeNavigation
 
 **Kind:** constant
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 No description provided.
@@ -223,7 +223,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 No description provided.
@@ -237,7 +237,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 No description provided.
@@ -251,7 +251,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Read only imperative navigation/resolve capabilities.
@@ -261,7 +261,7 @@ Read only imperative navigation/resolve capabilities.
 **Kind:** function
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 Read the current app-owned route as a neutral location.
@@ -271,7 +271,7 @@ Read the current app-owned route as a neutral location.
 **Kind:** function
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Read the neutral capability object backed by the Web Components runtime.
@@ -283,7 +283,7 @@ Read the neutral capability object backed by the Web Components runtime.
 **Kind:** function
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 Create the complete framework-free router runtime. Route matching and URL
@@ -292,9 +292,9 @@ history, guards, redirects, subscriptions, and browser scroll behavior.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | MpWebComponentsRouterOptions<View> |  |
+| Name    | Type                               | Description |
+| ------- | ---------------------------------- | ----------- |
+| options | MpWebComponentsRouterOptions<View> |             |
 
 ### MpWebComponentsRouter
 
@@ -321,17 +321,17 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| router | MpRouterAdapter |  |
-| to | MpRouteLocationRaw |  |
+| Name   | Type               | Description |
+| ------ | ------------------ | ----------- |
+| router | MpRouterAdapter    |             |
+| to     | MpRouteLocationRaw |             |
 
 ## `src/utils/forge-router-web-components`
 
@@ -340,7 +340,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 Forge router target backed by the framework-free history/outlet runtime.

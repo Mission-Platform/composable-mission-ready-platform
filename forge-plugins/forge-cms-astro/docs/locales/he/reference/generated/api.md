@@ -16,16 +16,16 @@
 פונקציה **סוג:**
 
 ```typescript
-function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin
+function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin;
 ```
 
 קשר את הקרנת Astro לתוסף פלט מסגרת בבעלות מתקשר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeAstroCmsOptions |  |
+| שם       | הקלד                 | תיאור |
+| -------- | -------------------- | ----- |
+| אפשרויות | ForgeAstroCmsOptions |       |
 
 ### ForgeAstroCmsOptions
 
@@ -44,32 +44,32 @@ export interface ForgeAstroCmsOptions
 פונקציה **סוג:**
 
 ```typescript
-function emitContentConfig(components: readonly ContentComponent[]): string
+function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
 פולט אסטרו `content.config.ts` עם אוסף אחד לכל רכיב.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיבים | ContentComponent לקריאה בלבד[] |  |
+| שם     | הקלד                           | תיאור |
+| ------ | ------------------------------ | ----- |
+| רכיבים | ContentComponent לקריאה בלבד[] |       |
 
 ### fieldToZod
 
 פונקציה **סוג:**
 
 ```typescript
-function fieldToZod(field: ContentField): string
+function fieldToZod(field: ContentField): string;
 ```
 
 המזלות (או `image()`) validator סוג שדה ניטרלי ממפה על.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שדה | ContentField |  |
+| שם  | הקלד         | תיאור |
+| --- | ------------ | ----- |
+| שדה | ContentField |       |
 
 ## `src/template`
 
@@ -78,40 +78,46 @@ function fieldToZod(field: ContentField): string
 פונקציה **סוג:**
 
 ```typescript
-function astroDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function astroDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 אסוף את האבחון שמדווח על הורדת Astro עבור מודול.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| רכיב | ContentComponent |  |
+| שם   | הקלד             | תיאור |
+| ---- | ---------------- | ----- |
+| ir   | SemanticModule   |       |
+| רכיב | ContentComponent |       |
 
 ### astroMarkup
 
 פונקציה **סוג:**
 
 ```typescript
-function astroMarkup(expression: string): string
+function astroMarkup(expression: string): string;
 ```
 
 כתוב מחדש שמות של תכונות JSX בלבד והסר את הקטע החיצוני.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ביטוי | מחרוזת |  |
+| שם    | הקלד   | תיאור |
+| ----- | ------ | ----- |
+| ביטוי | מחרוזת |       |
 
 ### emitIslandAstroTemplate
 
 פונקציה **סוג:**
 
 ```typescript
-function emitIslandAstroTemplate(component: ContentComponent, islandEntry: string): string
+function emitIslandAstroTemplate(
+  component: ContentComponent,
+  islandEntry: string,
+): string;
 ```
 
 פולט את האי בגיבוי `.astro` תבנית עבור רכיב אינטראקטיבי.
@@ -122,23 +128,23 @@ IR ניטראלי שקומפלט על ידי תוסף המסגרת המחובר 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
-| כניסה לאי | מחרוזת |  |
+| שם        | הקלד             | תיאור |
+| --------- | ---------------- | ----- |
+| רכיב      | ContentComponent |       |
+| כניסה לאי | מחרוזת           |       |
 
 ### emitStaticAstroTemplate
 
 פונקציה **סוג:**
 
 ```typescript
-function emitStaticAstroTemplate(ir: SemanticModule): string
+function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
 שחרר את הסטטי `.astro` תבנית עבור רכיב מצגת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ir | SemanticModule |  |
+| שם  | הקלד           | תיאור |
+| --- | -------------- | ----- |
+| ir  | SemanticModule |       |

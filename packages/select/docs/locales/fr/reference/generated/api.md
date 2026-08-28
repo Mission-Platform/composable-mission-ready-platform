@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function ForgeTag(properties: Readonly<TagProperties>): MpElement
+function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 ```
 
 `ForgeTag` — une étiquette compacte et arrondie créée une fois dans le dialecte JSX neutre
@@ -34,9 +34,9 @@ callback-prop `onRemove` (le substitut d'émission Vue `remove`).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<TagProperties> |  |
+| Nom        | Tapez                        | Descriptif |
+| ---------- | ---------------------------- | ---------- |
+| propriétés | Lecture seule<TagProperties> |            |
 
 ### Propriétés des balises
 
@@ -63,7 +63,8 @@ export type TagSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **Genre :** type
 
 ```typescript
-export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TagVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Ton du tag.
@@ -75,16 +76,16 @@ Ton du tag.
 **Genre :** fonction
 
 ```typescript
-function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement
+function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ForgeLanguageSwitcherProperties> |  |
+| Nom        | Tapez                                          | Descriptif |
+| ---------- | ---------------------------------------------- | ---------- |
+| propriétés | Lecture seule<ForgeLanguageSwitcherProperties> |            |
 
 ### ForgeLanguageSwitcherOption
 
@@ -113,7 +114,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement
+function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement;
 ```
 
 `ForgeMultiselect` — une liste déroulante à sélection multiple basée sur des balises avec un champ de recherche,
@@ -145,9 +146,9 @@ deviennent des accessoires de rappel.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<MultiselectProperties> |  |
+| Nom        | Tapez                                | Descriptif |
+| ---------- | ------------------------------------ | ---------- |
+| propriétés | Lecture seule<MultiselectProperties> |            |
 
 ### Option de sélection multiple
 
@@ -186,7 +187,7 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **Genre :** fonction
 
 ```typescript
-function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
+function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
 `ForgeSelect` — une combobox/select personnalisée créée une fois dans le JSX neutre
@@ -220,9 +221,9 @@ conservés sous forme d'emplacements nommés neutres.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<SelectProperties> |  |
+| Nom        | Tapez                           | Descriptif |
+| ---------- | ------------------------------- | ---------- |
+| propriétés | Lecture seule<SelectProperties> |            |
 
 ### SélectionnezOption
 

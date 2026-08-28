@@ -16,16 +16,16 @@
 **種類:** 関数
 
 ```typescript
-function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin
+function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin;
 ```
 
 Astro プロジェクションを呼び出し元所有のフレームワーク出力プラグインにバインドします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeAstroCmsオプション |  |
+| 名前       | タイプ                  | 説明 |
+| ---------- | ----------------------- | ---- |
+| オプション | ForgeAstroCmsオプション |      |
 
 ### ForgeAstroCmsオプション
 
@@ -44,32 +44,32 @@ export interface ForgeAstroCmsOptions
 **種類:** 関数
 
 ```typescript
-function emitContentConfig(components: readonly ContentComponent[]): string
+function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
 アストロを放出する `content.config.ts` コンポーネントごとに 1 つのコレクションがあります。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |読み取り専用 ContentComponent[] |  |
+| 名前           | タイプ                          | 説明 |
+| -------------- | ------------------------------- | ---- |
+| コンポーネント | 読み取り専用 ContentComponent[] |      |
 
 ### フィールドToZod
 
 **種類:** 関数
 
 ```typescript
-function fieldToZod(field: ContentField): string
+function fieldToZod(field: ContentField): string;
 ```
 
 ゾッド（または `image()`) 中立フィールドの種類がマッピングされるバリデーター。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フィールド |コンテンツフィールド |  |
+| 名前       | タイプ               | 説明 |
+| ---------- | -------------------- | ---- |
+| フィールド | コンテンツフィールド |      |
 
 ## `src/template`
 
@@ -78,40 +78,46 @@ function fieldToZod(field: ContentField): string
 **種類:** 関数
 
 ```typescript
-function astroDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function astroDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 モジュールの Astro 低下レポートの診断を収集します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|赤外線 |セマンティックモジュール |  |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| 赤外線         | セマンティックモジュール |      |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ### アストロマークアップ
 
 **種類:** 関数
 
 ```typescript
-function astroMarkup(expression: string): string
+function astroMarkup(expression: string): string;
 ```
 
 JSX のみの属性名を書き換えて、外側のフラグメントを削除します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|式 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 式   | 文字列 |      |
 
 ### 放出島アストロテンプレート
 
 **種類:** 関数
 
 ```typescript
-function emitIslandAstroTemplate(component: ContentComponent, islandEntry: string): string
+function emitIslandAstroTemplate(
+  component: ContentComponent,
+  islandEntry: string,
+): string;
 ```
 
 島をバックに放射する `.astro` インタラクティブコンポーネントのテンプレート。
@@ -122,23 +128,23 @@ function emitIslandAstroTemplate(component: ContentComponent, islandEntry: strin
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
-|島エントリー |文字列 |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
+| 島エントリー   | 文字列                   |      |
 
 ### 放出静的アストロテンプレート
 
 **種類:** 関数
 
 ```typescript
-function emitStaticAstroTemplate(ir: SemanticModule): string
+function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
 静電気を放出する `.astro` プレゼンテーションコンポーネントのテンプレート。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|赤外線 |セマンティックモジュール |  |
+| 名前   | タイプ                   | 説明 |
+| ------ | ------------------------ | ---- |
+| 赤外線 | セマンティックモジュール |      |

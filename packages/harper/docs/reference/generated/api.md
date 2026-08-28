@@ -11,7 +11,11 @@ Generated from public source declarations in `@mission-platform/harper`.
 **Kind:** function
 
 ```typescript
-function useHarperMonaco(editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>, enabled: MaybeRefOrGetter<boolean>, languageReference: MaybeRefOrGetter<string>): void
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void;
 ```
 
 Vue composable that integrates Harper grammar and style checking into a
@@ -25,18 +29,18 @@ unmount, and re-checks when the `language` changes.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| editorReference | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> |  |
-| enabled | MaybeRefOrGetter<boolean> |  |
-| languageReference | MaybeRefOrGetter<string> |  |
+| Name              | Type                                                               | Description                                                   |
+| ----------------- | ------------------------------------------------------------------ | ------------------------------------------------------------- |
+| editorReference   | MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor \| undefined> | - A `MaybeRefOrGetter` wrapping the Monaco editor instance.   |
+| enabled           | MaybeRefOrGetter<boolean>                                          | - A `MaybeRefOrGetter<boolean>` that toggles checking on/off. |
+| languageReference | MaybeRefOrGetter<string>                                           | - A `MaybeRefOrGetter<string>` for the editor language        |
 
 #### Contract
 
 - **@param:** - A `MaybeRefOrGetter` wrapping the Monaco editor instance.
 - **@param:** - A `MaybeRefOrGetter<boolean>` that toggles checking on/off.
 - **@param:** - A `MaybeRefOrGetter<string>` for the editor language
-(used when registering the code-action provider).
+  (used when registering the code-action provider).
 
 ## `src/types`
 

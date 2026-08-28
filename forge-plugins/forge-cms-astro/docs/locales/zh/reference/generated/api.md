@@ -16,16 +16,16 @@
 **种类：**功能
 
 ```typescript
-function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin
+function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin;
 ```
 
 将 Astro 投影绑定到调用者拥有的框架输出插件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeAstroCms选项 |  |
+| 名称 | 类型              | 描述 |
+| ---- | ----------------- | ---- |
+| 选项 | ForgeAstroCms选项 |      |
 
 ### ForgeAstroCms选项
 
@@ -44,32 +44,32 @@ export interface ForgeAstroCmsOptions
 **种类：**功能
 
 ```typescript
-function emitContentConfig(components: readonly ContentComponent[]): string
+function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
 发出 Astro `content.config.ts` 每个组件一个集合。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|只读内容组件[] |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 组件 | 只读内容组件[] |      |
 
 ### 字段ToZod
 
 **种类：**功能
 
 ```typescript
-function fieldToZod(field: ContentField): string
+function fieldToZod(field: ContentField): string;
 ```
 
 佐德（或 `image()`) 中性字段类型映射到的验证器。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|领域 |内容字段 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 领域 | 内容字段 |      |
 
 ## `src/template`
 
@@ -78,40 +78,46 @@ function fieldToZod(field: ContentField): string
 **种类：**功能
 
 ```typescript
-function astroDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function astroDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 收集 Astro 降低模块的诊断报告。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|红外|语义模块 |  |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 红外 | 语义模块 |      |
+| 组件 | 内容组件 |      |
 
 ### 天文标记
 
 **种类：**功能
 
 ```typescript
-function astroMarkup(expression: string): string
+function astroMarkup(expression: string): string;
 ```
 
 重写仅 JSX 的属性名称并剥离外部片段。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|表达|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 表达 | 字符串 |      |
 
 ### 发出IslandAstro模板
 
 **种类：**功能
 
 ```typescript
-function emitIslandAstroTemplate(component: ContentComponent, islandEntry: string): string
+function emitIslandAstroTemplate(
+  component: ContentComponent,
+  islandEntry: string,
+): string;
 ```
 
 发射岛屿支持的 `.astro` 交互式组件的模板。
@@ -122,23 +128,23 @@ function emitIslandAstroTemplate(component: ContentComponent, islandEntry: strin
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
-|岛屿入口|字符串|  |
+| 名称     | 类型     | 描述 |
+| -------- | -------- | ---- |
+| 组件     | 内容组件 |      |
+| 岛屿入口 | 字符串   |      |
 
 ### 发射静态Astro模板
 
 **种类：**功能
 
 ```typescript
-function emitStaticAstroTemplate(ir: SemanticModule): string
+function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
 发出静电 `.astro` 演示组件的模板。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|红外|语义模块 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 红外 | 语义模块 |      |

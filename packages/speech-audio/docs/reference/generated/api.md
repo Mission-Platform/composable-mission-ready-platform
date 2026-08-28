@@ -21,7 +21,7 @@ Reactive state and controls returned by {@link useMidi}.
 **Kind:** function
 
 ```typescript
-function useMidi(): MidiControls
+function useMidi(): MidiControls;
 ```
 
 Framework-neutral Web MIDI hook. Requests MIDI access, tracks the available
@@ -48,7 +48,7 @@ Reactive state and controls returned by {@link useSound}.
 **Kind:** function
 
 ```typescript
-function useSound(source?: string): SoundControls
+function useSound(source?: string): SoundControls;
 ```
 
 Framework-neutral sound playback hook. Plays an audio clip from `source` via
@@ -61,9 +61,9 @@ unmount.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| source | string |  |
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| source | string |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -92,7 +92,7 @@ Options applied when starting a {@link useSpeechRecognition} session.
 **Kind:** function
 
 ```typescript
-function useSpeechRecognition(): SpeechRecognitionControls
+function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
 Framework-neutral speech-to-text hook built on the browser's native
@@ -130,7 +130,7 @@ Reactive state and controls returned by {@link useSpeechSynthesis}.
 **Kind:** function
 
 ```typescript
-function useSpeechSynthesis(): SpeechSynthesisControls
+function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
 Framework-neutral text-to-speech hook built on the browser's native

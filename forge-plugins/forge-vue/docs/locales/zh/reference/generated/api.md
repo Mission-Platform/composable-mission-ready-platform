@@ -36,19 +36,24 @@ Vue 发射器的结果：主 SFC 加上它生成的任何辅助 SFC。
 **种类：**功能
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 将中性组件模块转换为 Vue SFC（以及任何辅助 SFC）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
-|组件名称 |字符串|  |
-|组件文件夹 |只读设置<string> |  |
-|计划| VueLowered 模块 |  |
+| 名称       | 类型             | 描述 |
+| ---------- | ---------------- | ---- |
+| 模块       | 语义模块         |      |
+| 组件名称   | 字符串           |      |
+| 组件文件夹 | 只读设置<string> |      |
+| 计划       | VueLowered 模块  |      |
 
 ## `src/emitters/hook-module`
 
@@ -57,16 +62,16 @@ function emitVueModule(module: SemanticModule, componentName: string, componentF
 **种类：**功能
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 将中性挂钩模块编译为其 Vue 可组合源 (`.ts`)。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 模块 | 语义模块 |      |
 
 ## `src/index`
 
@@ -75,7 +80,7 @@ function emitVueHookModule(module: SemanticModule): string
 **种类：**功能
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 创建 Vue 输出插件及其 Vite/Rolldown 编译器适配器。
@@ -87,23 +92,28 @@ function forgeVueFramework(): FrameworkOutputPlugin
 **种类：**功能
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 将目标计划缩小为 Vue 计划，无需强制转换。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|降低| TargetLoweredModule \|未定义 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 降低 | TargetLoweredModule \|未定义 |      |
 
 ### 下层Vue模块
 
 **种类：**功能
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 将中性模块降低到 Vue 目标计划中。中性模块行程
@@ -111,10 +121,10 @@ function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetInten
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|红外|语义模块 |  |
-|背景 |目标上下文 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 红外 | 语义模块   |      |
+| 背景 | 目标上下文 |      |
 
 ### Vue计算计划
 
@@ -253,7 +263,7 @@ export interface VueWatcherPlan
 **种类：**常数
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 折叠共享工厂的 `computed` 声明。
@@ -263,7 +273,7 @@ export const DEDUPE_COMPUTED
 **种类：**常数
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Prune `vue` 不再需要输入精炼计划。
@@ -273,7 +283,7 @@ Prune `vue` 不再需要输入精炼计划。
 **种类：**常数
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 提升完全静态子树（模块常量/`v-once`）。
@@ -283,7 +293,7 @@ export const HOIST_STATIC_SUBTREES
 **种类：**常数
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 将永不重新分配的状态作为普通 `const` 而不是 `ref` 发出。
@@ -293,7 +303,10 @@ export const INLINE_SINGLE_USE_REFS
 **种类：**功能
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 细化降低的 Vue 计划。携带外国（或缺失）计划的意图是
@@ -301,17 +314,17 @@ function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimize
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|意向 |目标意图|  |
-|选项 |目标优化选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 意向 | 目标意图     |      |
+| 选项 | 目标优化选项 |      |
 
 ### STABLE_LIST_KEYS
 
 **种类：**常数
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 仅保留已证明稳定的列表键，记录未键控的列表。
@@ -321,7 +334,7 @@ export const STABLE_LIST_KEYS
 **种类：**常数
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 Vue 目标可以按应用程序顺序记录的每个优化标识符。

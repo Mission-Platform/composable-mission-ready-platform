@@ -26,7 +26,7 @@ Deterministische Darstellung, eingebettet in ein Forge-Backend.
 **Art:** konstant
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 Stabile Version des gemeinsam genutzten Forge-Regex-Bytecode-Vertrags.
@@ -36,7 +36,7 @@ Stabile Version des gemeinsam genutzten Forge-Regex-Bytecode-Vertrags.
 **Art:** konstant
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 Breite jeder Anweisung in 32-Bit-Ganzzahloperanden.
@@ -46,7 +46,7 @@ Breite jeder Anweisung in 32-Bit-Ganzzahloperanden.
 **Art:** konstant
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 Opcodes, die vom Forge-Backend verbraucht und vom Referenzorakel gespiegelt werden.
@@ -68,16 +68,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 Kompilieren Sie die unterstützte deterministische Regex-Teilmenge in Forge-Bytecode.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Muster | Zeichenfolge |  |
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| Muster | Zeichenfolge |                  |
 
 ### RegexSyntaxError
 
@@ -96,17 +96,17 @@ Compilerbedingter Syntaxfehler mit deterministischen, quellenbezogenen Meldungen
 **Art:** Funktion
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 Lesen Sie ein Capture-Ende, ohne das Bytecode-Slot-Layout den Aufrufern zugänglich zu machen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| erfasst | Erfasst \| null |  |
-| Gruppe | Zahl |  |
+| Name    | Geben Sie       | ein Beschreibung |
+| ------- | --------------- | ---------------- |
+| erfasst | Erfasst \| null |                  |
+| Gruppe  | Zahl            |                  |
 
 ### Aufnahmen
 
@@ -123,83 +123,83 @@ Capture-Slots sind `[start0, end0, start1, end1, ...]`; `-1` bedeutet nicht gese
 **Art:** Funktion
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 Lesen Sie einen Capture-Start, ohne das Bytecode-Slot-Layout den Aufrufern zugänglich zu machen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| erfasst | Erfasst \| null |  |
-| Gruppe | Zahl |  |
+| Name    | Geben Sie       | ein Beschreibung |
+| ------- | --------------- | ---------------- |
+| erfasst | Erfasst \| null |                  |
+| Gruppe  | Zahl            |                  |
 
 ### fullMatch
 
 **Art:** Funktion
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Ganzer String-Match, verankert an Position Null.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| re | CompiledRegex |  |
-| Eingabe | Zeichenfolge |  |
+| Name    | Geben Sie     | ein Beschreibung |
+| ------- | ------------- | ---------------- |
+| re      | CompiledRegex |                  |
+| Eingabe | Zeichenfolge  |                  |
 
 ### PräfixMatch
 
 **Art:** Funktion
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Präfixübereinstimmung, verankert an Position Null, aber nicht am Ende.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| re | CompiledRegex |  |
-| Eingabe | Zeichenfolge |  |
+| Name    | Geben Sie     | ein Beschreibung |
+| ------- | ------------- | ---------------- |
+| re      | CompiledRegex |                  |
+| Eingabe | Zeichenfolge  |                  |
 
 ### suchen
 
 **Art:** Funktion
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 Übereinstimmung ganz links bei oder nach `start`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| re | CompiledRegex |  |
-| Eingabe | Zeichenfolge |  |
-| Start |  |  |
+| Name    | Geben Sie     | ein Beschreibung |
+| ------- | ------------- | ---------------- |
+| re      | CompiledRegex |                  |
+| Eingabe | Zeichenfolge  |                  |
+| Start   |               |                  |
 
 ### prüfen
 
 **Art:** Funktion
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 Boolesche Übereinstimmung mit der gesamten Zeichenfolge.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| re | CompiledRegex |  |
-| Eingabe | Zeichenfolge |  |
+| Name    | Geben Sie     | ein Beschreibung |
+| ------- | ------------- | ---------------- |
+| re      | CompiledRegex |                  |
+| Eingabe | Zeichenfolge  |                  |

@@ -11,23 +11,23 @@ Generated from public source declarations in `@mission-platform/email-components
 **Kind:** function
 
 ```typescript
-function assertCompatibleEmailHtml(html: string): void
+function assertCompatibleEmailHtml(html: string): void;
 ```
 
 Assert the conservative output subset documented for email components.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| html | string |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| html | string |             |
 
 ### CAN_I_EMAIL_FEATURES_URL
 
 **Kind:** constant
 
 ```typescript
-export const CAN_I_EMAIL_FEATURES_URL
+export const CAN_I_EMAIL_FEATURES_URL;
 ```
 
 No description provided.
@@ -37,7 +37,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const CAN_I_EMAIL_INLINE_STYLES_URL
+export const CAN_I_EMAIL_INLINE_STYLES_URL;
 ```
 
 No description provided.
@@ -47,7 +47,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const CAN_I_EMAIL_MAX_WIDTH_URL
+export const CAN_I_EMAIL_MAX_WIDTH_URL;
 ```
 
 No description provided.
@@ -57,7 +57,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const CAN_I_EMAIL_MEDIA_QUERIES_URL
+export const CAN_I_EMAIL_MEDIA_QUERIES_URL;
 ```
 
 No description provided.
@@ -67,7 +67,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const CAN_I_EMAIL_TABLES_URL
+export const CAN_I_EMAIL_TABLES_URL;
 ```
 
 No description provided.
@@ -77,7 +77,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const COMPATIBILITY_REVIEWED
+export const COMPATIBILITY_REVIEWED;
 ```
 
 No description provided.
@@ -87,7 +87,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const EMAIL_ALLOWED_TAGS
+export const EMAIL_ALLOWED_TAGS;
 ```
 
 No description provided.
@@ -99,16 +99,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement
+function EmailButton(properties: Readonly<EmailButtonProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailButtonProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<EmailButtonProperties> |             |
 
 ### EmailButtonProperties
 
@@ -125,7 +125,8 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type EmailButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type EmailButtonVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 No description provided.
@@ -137,16 +138,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement
+function EmailDivider(properties: Readonly<EmailDividerProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailDividerProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<EmailDividerProperties> |             |
 
 ### EmailDividerProperties
 
@@ -165,16 +166,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailImage(properties: Readonly<EmailImageProperties>): MpElement
+function EmailImage(properties: Readonly<EmailImageProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailImageProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<EmailImageProperties> |             |
 
 ### EmailImageProperties
 
@@ -193,16 +194,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement
+function EmailSpacer(properties: Readonly<EmailSpacerProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailSpacerProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<EmailSpacerProperties> |             |
 
 ### EmailSpacerProperties
 
@@ -221,7 +222,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement
+function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement;
 ```
 
 The single email text atom, mirroring the `ForgeTypography` vocabulary: body
@@ -230,9 +231,9 @@ literal inline declarations, because email clients ignore CSS classes.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailTypographyProperties> |  |
+| Name       | Type                                | Description |
+| ---------- | ----------------------------------- | ----------- |
+| properties | Readonly<EmailTypographyProperties> |             |
 
 ### EmailTypographyProperties
 
@@ -261,16 +262,16 @@ The elements the email type scale may be rendered as.
 **Kind:** function
 
 ```typescript
-function EmailCard(properties: Readonly<EmailCardProperties>): MpElement
+function EmailCard(properties: Readonly<EmailCardProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailCardProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<EmailCardProperties> |             |
 
 ### EmailCardProperties
 
@@ -289,16 +290,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement
+function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailColumnProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<EmailColumnProperties> |             |
 
 ### EmailColumnProperties
 
@@ -317,16 +318,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailList(properties: Readonly<EmailListProperties>): MpElement
+function EmailList(properties: Readonly<EmailListProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailListProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<EmailListProperties> |             |
 
 ### EmailListItem
 
@@ -355,16 +356,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailRow(properties: Readonly<EmailRowProperties>): MpElement
+function EmailRow(properties: Readonly<EmailRowProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailRowProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<EmailRowProperties> |             |
 
 ### EmailRowProperties
 
@@ -393,16 +394,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement
+function EmailSocialLinks(properties: Readonly<EmailSocialLinksProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailSocialLinksProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<EmailSocialLinksProperties> |             |
 
 ### EmailSocialLinksProperties
 
@@ -421,16 +422,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement
+function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailFooterProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<EmailFooterProperties> |             |
 
 ### EmailFooterProperties
 
@@ -449,16 +450,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement
+function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailHeaderProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<EmailHeaderProperties> |             |
 
 ### EmailHeaderProperties
 
@@ -477,16 +478,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement
+function EmailPreheader(properties: Readonly<EmailPreheaderProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailPreheaderProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<EmailPreheaderProperties> |             |
 
 ### EmailPreheaderProperties
 
@@ -505,16 +506,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement
+function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailContainerProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<EmailContainerProperties> |             |
 
 ### EmailContainerProperties
 
@@ -533,16 +534,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement
+function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailDocumentProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<EmailDocumentProperties> |             |
 
 ### EmailDocumentProperties
 
@@ -561,16 +562,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement
+function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<EmailSectionProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<EmailSectionProperties> |             |
 
 ### EmailSectionProperties
 

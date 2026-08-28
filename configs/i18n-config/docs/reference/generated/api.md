@@ -11,24 +11,24 @@ Generated from public source declarations in `@mission-platform/i18n-config`.
 **Kind:** function
 
 ```typescript
-function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig
+function createI18nConfig(defaultNS: string, options: I18nConfigOptions = {}): I18nConfig;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| defaultNS | string |  |
-| options | I18nConfigOptions |  |
+| Name      | Type              | Description |
+| --------- | ----------------- | ----------- |
+| defaultNS | string            |             |
+| options   | I18nConfigOptions |             |
 
 ### DEFAULT_LOCALE
 
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_LOCALE
+export const DEFAULT_LOCALE;
 ```
 
 No description provided.
@@ -58,7 +58,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const SUPPORTED_LOCALES
+export const SUPPORTED_LOCALES;
 ```
 
 No description provided.

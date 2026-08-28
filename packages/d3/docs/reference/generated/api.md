@@ -32,7 +32,7 @@ A D3 selection wrapping a single element `E`, with no bound datum.
 **Kind:** function
 
 ```typescript
-function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>
+function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
 Return a ref to attach to an element (`ref={reference}`) and run `draw`
@@ -45,10 +45,10 @@ tidy — identically on React and Vue.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| draw | D3Draw<E> |  |
-| dependencies | MpDependencyList |  |
+| Name         | Type             | Description |
+| ------------ | ---------------- | ----------- |
+| draw         | D3Draw<E>        |             |
+| dependencies | MpDependencyList |             |
 
 ## `src/utils/margins`
 
@@ -67,7 +67,7 @@ The outer chart box plus its (optional) margin.
 **Kind:** function
 
 ```typescript
-function innerDimensions(box: ChartBox): InnerDimensions
+function innerDimensions(box: ChartBox): InnerDimensions;
 ```
 
 Compute the inner plotting rectangle for a chart of the given outer size and
@@ -76,9 +76,9 @@ never produce negative dimensions (which D3 scales reject).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| box | ChartBox |  |
+| Name | Type     | Description |
+| ---- | -------- | ----------- |
+| box  | ChartBox |             |
 
 ### InnerDimensions
 
@@ -116,7 +116,7 @@ partial object (missing sides default to `0`).
 **Kind:** function
 
 ```typescript
-function resolveMargin(input?: MarginInput): Margin
+function resolveMargin(input?: MarginInput): Margin;
 ```
 
 Normalise a {@link MarginInput} into a full {@link Margin}. A number is
@@ -125,6 +125,6 @@ the rest to `0`. `undefined` yields a zero margin.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | MarginInput |  |
+| Name  | Type        | Description |
+| ----- | ----------- | ----------- |
+| input | MarginInput |             |

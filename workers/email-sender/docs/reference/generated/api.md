@@ -31,15 +31,15 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>
+function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| request | Request |  |
-| environment | Env |  |
-| delivery | Delivery |  |
+| Name        | Type     | Description |
+| ----------- | -------- | ----------- |
+| request     | Request  |             |
+| environment | Env      |             |
+| delivery    | Delivery |             |

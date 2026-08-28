@@ -16,7 +16,7 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-cms-ghos
 **Genere:** costante
 
 ```typescript
-export const FORGE_GHOST_FIELD_UNSUPPORTED
+export const FORGE_GHOST_FIELD_UNSUPPORTED;
 ```
 
 Un tipo di campo Ghost non può esprimersi in modo nativo; si degrada al testo renderizzato.
@@ -26,7 +26,7 @@ Un tipo di campo Ghost non può esprimersi in modo nativo; si degrada al testo r
 **Genere:** costante
 
 ```typescript
-export const FORGE_GHOST_SETTING_LIMIT
+export const FORGE_GHOST_SETTING_LIMIT;
 ```
 
 Sono stati proiettati più campi `@cmsSetting` di quelli consentiti da `config.custom` di Ghost.
@@ -36,18 +36,22 @@ Sono stati proiettati più campi `@cmsSetting` di quelli consentiti da `config.c
 **Tipo:** funzione
 
 ```typescript
-function ghostWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function ghostWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 Costruire un avviso sulla fase di generazione; il target Ghost non emette mai errori.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| codice | stringa |  |
-| messaggio | stringa |  |
-| nomefile | stringa |  |
+| Nome      | Digitare | Descrizione |
+| --------- | -------- | ----------- |
+| codice    | stringa  |             |
+| messaggio | stringa  |             |
+| nomefile  | stringa  |             |
 
 ## `src/ghost`
 
@@ -56,16 +60,16 @@ Costruire un avviso sulla fase di generazione; il target Ghost non emette mai er
 **Tipo:** funzione
 
 ```typescript
-function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin
+function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin;
 ```
 
 Associa la proiezione del tema Ghost a un plug-in di output del framework di proprietà del chiamante.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | ForgeGhostCmsOptions |  |
+| Nome    | Digitare             | Descrizione |
+| ------- | -------------------- | ----------- |
+| opzioni | ForgeGhostCmsOptions |             |
 
 ### ForgeGhostCmsOptions
 
@@ -84,7 +88,11 @@ Opzioni per {@link forgeGhostCms}.
 **Tipo:** funzione
 
 ```typescript
-function buildGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): GhostThemeConfig
+function buildGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): GhostThemeConfig;
 ```
 
 Crea il frammento `config.custom` da ogni campo con tag `@cmsSetting`.
@@ -95,18 +103,18 @@ la stessa manopola e Ghost ha solo uno spazio dei nomi per loro.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componenti | sola lettura ContentComponent[] |  |
-| temaNome | stringa |  |
-| diagnostica | Diagnostica del compilatore[] |  |
+| Nome        | Digitare                        | Descrizione |
+| ----------- | ------------------------------- | ----------- |
+| componenti  | sola lettura ContentComponent[] |             |
+| temaNome    | stringa                         |             |
+| diagnostica | Diagnostica del compilatore[]   |             |
 
 ### DEFAULT_GHOST_THEME_NAME
 
 **Genere:** costante
 
 ```typescript
-export const DEFAULT_GHOST_THEME_NAME
+export const DEFAULT_GHOST_THEME_NAME;
 ```
 
 Il nome del tema predefinito utilizzato quando il chiamante non ne fornisce uno.
@@ -116,41 +124,47 @@ Il nome del tema predefinito utilizzato quando il chiamante non ne fornisce uno.
 **Tipo:** funzione
 
 ```typescript
-function emitGhostComponentsManifest(components: readonly ContentComponent[]): string
+function emitGhostComponentsManifest(
+  components: readonly ContentComponent[],
+): string;
 ```
 
 Emetti il ​​contratto con parametri parziali come JSON ben stampato.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componenti | sola lettura ContentComponent[] |  |
+| Nome       | Digitare                        | Descrizione |
+| ---------- | ------------------------------- | ----------- |
+| componenti | sola lettura ContentComponent[] |             |
 
 ### emitGhostThemeConfig
 
 **Tipo:** funzione
 
 ```typescript
-function emitGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): string
+function emitGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): string;
 ```
 
 Emetti il ​​frammento `config.custom` come JSON ben stampato.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componenti | sola lettura ContentComponent[] |  |
-| temaNome | stringa |  |
-| diagnostica | Diagnostica del compilatore[] |  |
+| Nome        | Digitare                        | Descrizione |
+| ----------- | ------------------------------- | ----------- |
+| componenti  | sola lettura ContentComponent[] |             |
+| temaNome    | stringa                         |             |
+| diagnostica | Diagnostica del compilatore[]   |             |
 
 ### GHOST_COMPONENTS_MANIFEST
 
 **Genere:** costante
 
 ```typescript
-export const GHOST_COMPONENTS_MANIFEST
+export const GHOST_COMPONENTS_MANIFEST;
 ```
 
 File in cui viene scritto il contratto a parametri parziali.
@@ -160,7 +174,7 @@ File in cui viene scritto il contratto a parametri parziali.
 **Genere:** costante
 
 ```typescript
-export const GHOST_SETTING_LIMIT
+export const GHOST_SETTING_LIMIT;
 ```
 
 Il numero massimo di voci accettate da Ghost in `config.custom`.
@@ -174,7 +188,7 @@ Admin: da qui il troncamento e l'avvertimento qui.
 **Genere:** costante
 
 ```typescript
-export const GHOST_THEME_CONFIG_MANIFEST
+export const GHOST_THEME_CONFIG_MANIFEST;
 ```
 
 Il file in cui viene scritto il frammento `config.custom`.
@@ -224,7 +238,7 @@ Una voce del blocco `config.custom` di un tema.
 **Tipo:** funzione
 
 ```typescript
-function ghostSettingType(field: ContentField): GhostSettingType
+function ghostSettingType(field: ContentField): GhostSettingType;
 ```
 
 Il tipo di impostazione Fantasma si restringe a un tipo di campo neutro.
@@ -235,16 +249,17 @@ renderebbe la proiezione non deterministica.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| campo | Campo contenuto |  |
+| Nome  | Digitare        | Descrizione |
+| ----- | --------------- | ----------- |
+| campo | Campo contenuto |             |
 
 ### GhostSettingType
 
 **Genere:** tipo
 
 ```typescript
-export type GhostSettingType = "select" | "boolean" | "color" | "image" | "text";
+export type GhostSettingType =
+  "select" | "boolean" | "color" | "image" | "text";
 ```
 
 I cinque tipi di impostazione accettati dal blocco `config.custom` di Ghost.
@@ -274,16 +289,18 @@ Il frammento `config.custom` in cui si fonde `package.json` di un tema.
 **Tipo:** funzione
 
 ```typescript
-function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
+function toGhostComponentEntry(
+  component: ContentComponent,
+): GhostComponentEntry;
 ```
 
 Proietta un componente sulla relativa voce `forge-components.json`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
+| Nome       | Digitare                | Descrizione |
+| ---------- | ----------------------- | ----------- |
+| componente | Componente di contenuto |             |
 
 ## `src/template`
 
@@ -292,7 +309,7 @@ Proietta un componente sulla relativa voce `forge-components.json`.
 **Tipo:** funzione
 
 ```typescript
-function emitGhostPartial(component: ContentComponent): string
+function emitGhostPartial(component: ContentComponent): string;
 ```
 
 Emette il parziale Handlebars per un componente.
@@ -303,48 +320,51 @@ il componente è cambiato.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
+| Nome       | Digitare                | Descrizione |
+| ---------- | ----------------------- | ----------- |
+| componente | Componente di contenuto |             |
 
 ### ghostPartialFileName
 
 **Tipo:** funzione
 
 ```typescript
-function ghostPartialFileName(component: ContentComponent): string
+function ghostPartialFileName(component: ContentComponent): string;
 ```
 
 Il percorso relativo al tema in cui è scritto il partial.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
+| Nome       | Digitare                | Descrizione |
+| ---------- | ----------------------- | ----------- |
+| componente | Componente di contenuto |             |
 
 ### ghostPartialName
 
 **Tipo:** funzione
 
 ```typescript
-function ghostPartialName(component: ContentComponent): string
+function ghostPartialName(component: ContentComponent): string;
 ```
 
 Il nome parziale con cui viene richiamato un componente (`{{> forge/badge}}`).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
+| Nome       | Digitare                | Descrizione |
+| ---------- | ----------------------- | ----------- |
+| componente | Componente di contenuto |             |
 
 ### ghostTemplateDiagnostics
 
 **Tipo:** funzione
 
 ```typescript
-function ghostTemplateDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function ghostTemplateDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 La diagnostica che emette i risultati parziali di un componente.
@@ -355,7 +375,7 @@ a che fare con ciò deve avvenire prima che venga invocato il partial.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
-| nomefile | stringa |  |
+| Nome       | Digitare                | Descrizione |
+| ---------- | ----------------------- | ----------- |
+| componente | Componente di contenuto |             |
+| nomefile   | stringa                 |             |

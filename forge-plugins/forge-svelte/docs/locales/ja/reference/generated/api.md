@@ -16,7 +16,12 @@
 **種類:** 関数
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 ニュートラル コンポーネント モジュールを Svelte 5 SFC として出力します。すでに実行されている呼び出し元
@@ -25,12 +30,12 @@ function emitSvelteModule(module: SemanticModule, componentName: string = "Compo
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
-|コンポーネント名 |文字列 |  |
-|コンポーネントフォルダー | ReadonlySet<string> |  |
-|計画 | SvelteLoweredModule |  |
+| 名前                     | タイプ                   | 説明 |
+| ------------------------ | ------------------------ | ---- |
+| モジュール               | セマンティックモジュール |      |
+| コンポーネント名         | 文字列                   |      |
+| コンポーネントフォルダー | ReadonlySet<string>      |      |
+| 計画                     | SvelteLoweredModule      |      |
 
 ### SvelteModule出力
 
@@ -49,16 +54,16 @@ export interface SvelteModuleOutput
 **種類:** 関数
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 ニュートラル フック/コンポーザブル モジュールを、Svelte ターゲット `.ts` ソースとして出力します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| モジュール | セマンティックモジュール |      |
 
 ## `src/index`
 
@@ -67,7 +72,7 @@ function emitSvelteHookModule(module: SemanticModule): string
 **種類:** 関数
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 Svelte 出力プラグインとその Vite/Rolldown コンパイラ アダプタを作成します。
@@ -79,33 +84,38 @@ Svelte 出力プラグインとその Vite/Rolldown コンパイラ アダプタ
 **種類:** 関数
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 ターゲット プランが Svelte プランであるかどうか — すべての消費者が絞り込む識別子です。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|下げた | TargetLoweredModule \|未定義 |  |
+| 名前   | タイプ                       | 説明 |
+| ------ | ---------------------------- | ---- |
+| 下げた | TargetLoweredModule \|未定義 |      |
 
 ### lowerSvelteModule
 
 **種類:** 関数
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 中立モジュールの Svelte プランを構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|赤外線 |セマンティックモジュール |  |
-|コンテキスト |ターゲットコンテキスト |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| 赤外線       | セマンティックモジュール |      |
+| コンテキスト | ターゲットコンテキスト   |      |
 
 ### SvelteBindingPlan
 
@@ -281,7 +291,10 @@ export interface SvelteTargetIntentions extends TargetIntentions
 **種類:** 関数
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 引き下げられた Svelte プランを改良します。 Svelte プランを持たない意図 (外国の
@@ -289,17 +302,17 @@ function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptim
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|意図 |ターゲットインテンション |  |
-|オプション |ターゲット最適化オプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| 意図       | ターゲットインテンション   |      |
+| オプション | ターゲット最適化オプション |      |
 
 ### SVELTE_OPTIMIZATIONS
 
 **種類:** 定数
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 このターゲットが適用できるすべての最適化は、アプリケーションの順序で適用されます。

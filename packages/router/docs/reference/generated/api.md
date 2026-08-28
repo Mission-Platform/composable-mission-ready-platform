@@ -11,39 +11,39 @@ Generated from public source declarations in `@mission-platform/router`.
 **Kind:** function
 
 ```typescript
-function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities
+function createMpRouterCapabilities(overrides: MpRouterCapabilityOverrides = {}): MpRouterCapabilities;
 ```
 
 Create a neutral capability object for a target adapter, SSR, or a test.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| overrides | MpRouterCapabilityOverrides |  |
+| Name      | Type                        | Description |
+| --------- | --------------------------- | ----------- |
+| overrides | MpRouterCapabilityOverrides |             |
 
 ### isMpRouterCapabilityError
 
 **Kind:** function
 
 ```typescript
-function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError
+function isMpRouterCapabilityError(error: unknown): error is MpRouterCapabilityError;
 ```
 
 Whether an unknown error is the deterministic neutral-router fallback error.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| error | unknown |  |
+| Name  | Type    | Description |
+| ----- | ------- | ----------- |
+| error | unknown |             |
 
 ### MP_ROUTER_COMPILER_MARKER
 
 **Kind:** constant
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Stable metadata consumed by Forge router compiler plugins.
@@ -53,16 +53,16 @@ Stable metadata consumed by Forge router compiler plugins.
 **Kind:** component
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 Neutral link marker. Native targets replace this function during compilation.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | MpLinkProps |  |
+| Name       | Type        | Description |
+| ---------- | ----------- | ----------- |
+| properties | MpLinkProps |             |
 
 ### MpLinkDescriptor
 
@@ -149,16 +149,16 @@ A partial implementation useful to target adapters and SSR/test harnesses.
 **Kind:** component
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 Neutral outlet/view marker. Native targets replace this function during compilation.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | MpRouterViewProps |  |
+| Name       | Type              | Description |
+| ---------- | ----------------- | ----------- |
+| properties | MpRouterViewProps |             |
 
 ### MpRouterViewDescriptor
 
@@ -185,7 +185,10 @@ Props accepted by the neutral outlet/view compiler marker.
 **Kind:** function
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string
+function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string;
 ```
 
 Resolve a target through the app-owned router. The optional capability
@@ -193,17 +196,17 @@ argument makes the helper deterministic in SSR/tests and target adapters.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
-| capabilities | Pick<MpRouterCapabilities, 'resolve'> |  |
+| Name         | Type                                  | Description |
+| ------------ | ------------------------------------- | ----------- |
+| to           | MpRouteLocationRaw                    |             |
+| capabilities | Pick<MpRouterCapabilities, 'resolve'> |             |
 
 ### useMpNavigation
 
 **Kind:** function
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Read only the imperative navigation capability.
@@ -213,7 +216,7 @@ Read only the imperative navigation capability.
 **Kind:** function
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Read the current app-owned route. The uncompiled fallback is SSR-safe and
@@ -224,7 +227,7 @@ returns `null`; a compiler target replaces this call with native route state.
 **Kind:** function
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Read the app-provided neutral capability object.
@@ -236,7 +239,7 @@ Read the app-provided neutral capability object.
 **Kind:** constant
 
 ```typescript
-export const applicationCompatibilityFixtures
+export const applicationCompatibilityFixtures;
 ```
 
 No description provided.
@@ -246,7 +249,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Route records mirroring the documentation app's locale/search/catch-all table.
@@ -256,7 +259,7 @@ Route records mirroring the documentation app's locale/search/catch-all table.
 **Kind:** constant
 
 ```typescript
-export const documentationCompatibilityFixture: ForgeCompatibilityFixture
+export const documentationCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Route records mirroring the documentation app's locale/search/catch-all table.
@@ -286,7 +289,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture
+export const myCareNotesCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Route records mirroring My Care Notes' language segment and URL-driven overlays.
@@ -296,7 +299,7 @@ Route records mirroring My Care Notes' language segment and URL-driven overlays.
 **Kind:** constant
 
 ```typescript
-export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[]
+export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[];
 ```
 
 Shared behavior rows consumed by every runtime's contract test suite.
@@ -306,7 +309,7 @@ Shared behavior rows consumed by every runtime's contract test suite.
 **Kind:** constant
 
 ```typescript
-export const websiteCompatibilityFixture: ForgeCompatibilityFixture
+export const websiteCompatibilityFixture: ForgeCompatibilityFixture;
 ```
 
 Route records mirroring the website's optional prefixed-locale home route.
@@ -700,7 +703,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver
+function createRouteResolver(routes: readonly MpRoute[]): MpRouteResolver;
 ```
 
 Create a {@link MpRouteResolver} bound to a route tree, flattening it once so
@@ -708,16 +711,16 @@ repeated `match`/`resolve` calls reuse the same absolute route list.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| routes | readonly MpRoute[] |  |
+| Name   | Type               | Description |
+| ------ | ------------------ | ----------- |
+| routes | readonly MpRoute[] |             |
 
 ### defineRoutes
 
 **Kind:** function
 
 ```typescript
-function defineRoutes(routes: T): T
+function defineRoutes(routes: T): T;
 ```
 
 Identity helper that defines a framework-neutral route tree with full type
@@ -725,40 +728,40 @@ inference. Use it so editors type-check route `name`s, `meta`, and children.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| routes | T |  |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| routes | T    |             |
 
 #### Contract
 
 - **@example:** const routes = defineRoutes([
   { path: '/', name: 'home', component: Home },
   { path: '/users/:id', name: 'user', component: User },
-])
+  ])
 
 ### findRouteByName
 
 **Kind:** function
 
 ```typescript
-function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined
+function findRouteByName(routes: readonly MpRoute[], name: string): MpFlatRoute | undefined;
 ```
 
 Find the first flattened route with the given name.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| routes | readonly MpRoute[] |  |
-| name | string |  |
+| Name   | Type               | Description |
+| ------ | ------------------ | ----------- |
+| routes | readonly MpRoute[] |             |
+| name   | string             |             |
 
 ### flattenRoutes
 
 **Kind:** function
 
 ```typescript
-function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[]
+function flattenRoutes(routes: readonly MpRoute[]): MpFlatRoute[];
 ```
 
 Flatten a nested route tree into a depth-first list of absolute routes, with
@@ -767,16 +770,16 @@ its ancestors.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| routes | readonly MpRoute[] |  |
+| Name   | Type               | Description |
+| ------ | ------------------ | ----------- |
+| routes | readonly MpRoute[] |             |
 
 ### matchRoutes
 
 **Kind:** function
 
 ```typescript
-function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined
+function matchRoutes(routes: readonly MpRoute[], pathname: string): MpRouteMatch | undefined;
 ```
 
 Match a pathname against a route tree, returning the first route (in
@@ -784,10 +787,10 @@ depth-first definition order) whose pattern matches, or `undefined`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| routes | readonly MpRoute[] |  |
-| pathname | string |  |
+| Name     | Type               | Description |
+| -------- | ------------------ | ----------- |
+| routes   | readonly MpRoute[] |             |
+| pathname | string             |             |
 
 ### MpFlatRoute
 
@@ -824,7 +827,7 @@ A resolver bound to a single route tree.
 **Kind:** function
 
 ```typescript
-function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation
+function resolveLocation(to: MpRouteLocationRaw, routes: readonly MpRoute[] = []): MpResolvedLocation;
 ```
 
 Resolve any framework-neutral {@link MpRouteLocationRaw} into a fully-formed
@@ -834,15 +837,15 @@ locations build their path from the matching route.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
-| routes | readonly MpRoute[] |  |
+| Name   | Type               | Description |
+| ------ | ------------------ | ----------- |
+| to     | MpRouteLocationRaw |             |
+| routes | readonly MpRoute[] |             |
 
 #### Contract
 
 - **@example:** resolveLocation({ name: 'user', params: { id: 42 } }, routes)
-// → { path: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
+  // → { path: '/users/42', fullPath: '/users/42', params: { id: '42' }, … }
 
 ## `src/location`
 
@@ -871,44 +874,44 @@ The decomposed parts of a URL: pathname, query, and hash.
 **Kind:** function
 
 ```typescript
-function normalizeHash(hash: string): string
+function normalizeHash(hash: string): string;
 ```
 
 Normalise a hash fragment to include a single leading `#`, or be empty.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| hash | string |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| hash | string |             |
 
 ### parseLocation
 
 **Kind:** function
 
 ```typescript
-function parseLocation(url: string): MpLocationParts
+function parseLocation(url: string): MpLocationParts;
 ```
 
 Split an app-relative URL into its {@link MpLocationParts}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| url | string |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| url  | string |             |
 
 #### Contract
 
 - **@example:** parseLocation('/users/42?tab=info#bio')
-// → { path: '/users/42', query: { tab: 'info' }, hash: '#bio' }
+  // → { path: '/users/42', query: { tab: 'info' }, hash: '#bio' }
 
 ### stringifyLocation
 
 **Kind:** function
 
 ```typescript
-function stringifyLocation(location: MpLocationInput): string
+function stringifyLocation(location: MpLocationInput): string;
 ```
 
 Assemble an app-relative URL string from location parts. The pathname is
@@ -917,14 +920,14 @@ hash prefixed with `#` when non-empty.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| location | MpLocationInput |  |
+| Name     | Type            | Description |
+| -------- | --------------- | ----------- |
+| location | MpLocationInput |             |
 
 #### Contract
 
 - **@example:** stringifyLocation({ path: '/users/42', query: { tab: 'info' }, hash: 'bio' })
-// → '/users/42?tab=info#bio'
+  // → '/users/42?tab=info#bio'
 
 ## `src/path`
 
@@ -933,7 +936,10 @@ hash prefixed with `#` when non-empty.
 **Kind:** function
 
 ```typescript
-function buildPath(pattern: string, parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {}): string
+function buildPath(
+  pattern: string,
+  parameters: Record<string, MpParameterValue | readonly MpParameterValue[]> = {},
+): string;
 ```
 
 Build a concrete pathname from a pattern and a set of parameters, encoding
@@ -942,23 +948,23 @@ missing required parameter throws.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| pattern | string |  |
-| parameters | Record<string, MpParameterValue \| readonly MpParameterValue[]> |  |
+| Name       | Type                                                            | Description |
+| ---------- | --------------------------------------------------------------- | ----------- |
+| pattern    | string                                                          |             |
+| parameters | Record<string, MpParameterValue \| readonly MpParameterValue[]> |             |
 
 #### Contract
 
-- **@example:** buildPath('/users/:id', { id: 42 })            // → '/users/42'
-buildPath('/users/:id?', {})                   // → '/users'
-buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
+- **@example:** buildPath('/users/:id', { id: 42 }) // → '/users/42'
+  buildPath('/users/:id?', {}) // → '/users'
+  buildPath('/files/:rest*', { rest: ['a', 'b'] }) // → '/files/a/b'
 
 ### compilePath
 
 **Kind:** function
 
 ```typescript
-function compilePath(pattern: string): MpCompiledPath
+function compilePath(pattern: string): MpCompiledPath;
 ```
 
 Compile a path pattern into a {@link MpCompiledPath} with the ordered
@@ -966,9 +972,9 @@ parameter keys and a matching regular expression.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| pattern | string |  |
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| pattern | string |             |
 
 #### Contract
 
@@ -979,7 +985,7 @@ parameter keys and a matching regular expression.
 **Kind:** function
 
 ```typescript
-function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined
+function matchPath(pattern: string, pathname: string): MpRouteParameters | undefined;
 ```
 
 Match a pathname against a pattern, returning the extracted parameters or
@@ -987,15 +993,15 @@ Match a pathname against a pattern, returning the extracted parameters or
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| pattern | string |  |
-| pathname | string |  |
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| pattern  | string |             |
+| pathname | string |             |
 
 #### Contract
 
 - **@example:** matchPath('/users/:id', '/users/42') // → { id: '42' }
-matchPath('/users/:id', '/posts/42') // → undefined
+  matchPath('/users/:id', '/posts/42') // → undefined
 
 ### MpCompiledPath
 
@@ -1022,7 +1028,7 @@ A single parameter key extracted from a compiled path pattern.
 **Kind:** function
 
 ```typescript
-function normalizePath(path: string): string
+function normalizePath(path: string): string;
 ```
 
 Normalise a path pattern (or pathname) to a canonical, leading-slash form
@@ -1030,16 +1036,16 @@ with no trailing slash (except the root, which stays `/`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| path | string |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| path | string |             |
 
 ### WILDCARD_PARAM_KEY
 
 **Kind:** constant
 
 ```typescript
-export const WILDCARD_PARAM_KEY
+export const WILDCARD_PARAM_KEY;
 ```
 
 The key a standalone `*` catch-all segment is captured under.
@@ -1051,7 +1057,7 @@ The key a standalone `*` catch-all segment is captured under.
 **Kind:** function
 
 ```typescript
-function parseQuery(search: string): MpQueryParameters
+function parseQuery(search: string): MpQueryParameters;
 ```
 
 Parse a query string into a {@link MpQueryParameters} map. A leading `?` is
@@ -1059,9 +1065,9 @@ optional. Repeated keys collapse into an array of values, in order.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| search | string |  |
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| search | string |             |
 
 #### Contract
 
@@ -1072,7 +1078,7 @@ optional. Repeated keys collapse into an array of values, in order.
 **Kind:** function
 
 ```typescript
-function stringifyQuery(query: MpQueryInput): string
+function stringifyQuery(query: MpQueryInput): string;
 ```
 
 Serialise a {@link MpQueryInput} map into a query string with a leading `?`,
@@ -1081,14 +1087,14 @@ values (and array items) are dropped; arrays emit one `key=value` pair each.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| query | MpQueryInput |  |
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| query | MpQueryInput |             |
 
 #### Contract
 
 - **@example:** stringifyQuery({ tag: ['a', 'b'], page: 2 }) // → '?tag=a&tag=b&page=2'
-stringifyQuery({})                            // → ''
+  stringifyQuery({}) // → ''
 
 ## `src/types`
 
@@ -1313,7 +1319,8 @@ Structural reactive state used by adapters without prescribing a framework primi
 **Kind:** component
 
 ```typescript
-export type MpRedirect = MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
 ```
 
 A redirect target, optionally computed from the destination route.
@@ -1365,7 +1372,10 @@ No description provided.
 **Kind:** component
 
 ```typescript
-export type MpRouteGuard = ( to: MpResolvedLocation, from: MpResolvedLocation | null, ) => MpGuardOutcome | Promise<MpGuardOutcome>;
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
 ```
 
 A route guard evaluated by a runtime-owned navigation state machine.
@@ -1468,7 +1478,11 @@ No description provided.
 **Kind:** component
 
 ```typescript
-export type MpScrollBehavior = ( to: MpResolvedLocation, from: MpResolvedLocation | null, savedPosition?: MpScrollPosition, ) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
 ```
 
 No description provided.

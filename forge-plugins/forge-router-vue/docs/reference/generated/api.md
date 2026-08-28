@@ -11,49 +11,49 @@ Generated from public source declarations in `@mission-platform/forge-router-vue
 **Kind:** function
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 Build neutral capabilities from an app-owned Vue Router instance.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| router | Router |  |
-| current |  |  |
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| router  | Router |             |
+| current |        |             |
 
 ### resolveMpLink
 
 **Kind:** function
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Resolve a neutral target through the app-owned Vue Router.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
+| Name | Type               | Description |
+| ---- | ------------------ | ----------- |
+| to   | MpRouteLocationRaw |             |
 
 ### resolvePathTarget
 
 **Kind:** function
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 Path-only fallback used when a Vue Router instance is unavailable (SSR/tests).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
+| Name | Type               | Description |
+| ---- | ------------------ | ----------- |
+| to   | MpRouteLocationRaw |             |
 
 ### toMpLocation
 
@@ -68,39 +68,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 Convert native Vue route state into the neutral resolved location.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| route | {   path: string;   fullPath: string;   params: Record<string, unknown>;   query: LocationQuery;   hash: string;   name?: string \| symbol \| null;   meta?: Record<string, unknown>; } |  |
+| Name  | Type                                                                                                                                                                      | Description |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| route | { path: string; fullPath: string; params: Record<string, unknown>; query: LocationQuery; hash: string; name?: string \| symbol \| null; meta?: Record<string, unknown>; } |             |
 
 ### toVueLocation
 
 **Kind:** function
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 Translate a neutral target into a Vue Router location.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
+| Name | Type               | Description |
+| ---- | ------------------ | ----------- |
+| to   | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 
 **Kind:** function
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Read only imperative navigation/resolve capabilities.
@@ -110,7 +110,7 @@ Read only imperative navigation/resolve capabilities.
 **Kind:** function
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Read the current app-owned route as {@link MpResolvedLocation}.
@@ -120,7 +120,7 @@ Read the current app-owned route as {@link MpResolvedLocation}.
 **Kind:** function
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Read the neutral capability object backed by Vue Router.
@@ -132,7 +132,7 @@ Read the neutral capability object backed by Vue Router.
 **Kind:** constant
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 Forge router target for an application-owned Vue Router instance.

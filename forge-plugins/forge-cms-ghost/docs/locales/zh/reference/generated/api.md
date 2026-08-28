@@ -16,7 +16,7 @@
 **种类：**常数
 
 ```typescript
-export const FORGE_GHOST_FIELD_UNSUPPORTED
+export const FORGE_GHOST_FIELD_UNSUPPORTED;
 ```
 
 领域类鬼魂无法进行原生表达；它会降级为渲染文本。
@@ -26,7 +26,7 @@ export const FORGE_GHOST_FIELD_UNSUPPORTED
 **种类：**常数
 
 ```typescript
-export const FORGE_GHOST_SETTING_LIMIT
+export const FORGE_GHOST_SETTING_LIMIT;
 ```
 
 更多的 `@cmsSetting` 场的投影比幽灵的 `config.custom` 允许。
@@ -36,18 +36,22 @@ export const FORGE_GHOST_SETTING_LIMIT
 **种类：**功能
 
 ```typescript
-function ghostWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function ghostWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 建立生成阶段警告； Ghost 目标永远不会发出错误。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|代码|字符串|  |
-|留言 |字符串|  |
-|文件名 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 代码   | 字符串 |      |
+| 留言   | 字符串 |      |
+| 文件名 | 字符串 |      |
 
 ## `src/ghost`
 
@@ -56,16 +60,16 @@ function ghostWarning(code: string, message: string, fileName: string): Compiler
 **种类：**功能
 
 ```typescript
-function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin
+function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin;
 ```
 
 将 Ghost 主题投影绑定到调用者拥有的框架输出插件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeGhostCms 选项 |  |
+| 名称 | 类型               | 描述 |
+| ---- | ------------------ | ---- |
+| 选项 | ForgeGhostCms 选项 |      |
 
 ### ForgeGhostCms选项
 
@@ -84,7 +88,11 @@ export interface ForgeGhostCmsOptions
 **种类：**功能
 
 ```typescript
-function buildGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): GhostThemeConfig
+function buildGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): GhostThemeConfig;
 ```
 
 构建 `config.custom` 来自每一个的片段 `@cmsSetting`- 标记字段。
@@ -95,18 +103,18 @@ function buildGhostThemeConfig(components: readonly ContentComponent[], themeNam
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|只读内容组件[] |  |
-|主题名称 |字符串|  |
-|诊断 |编译器诊断[] |  |
+| 名称     | 类型           | 描述 |
+| -------- | -------------- | ---- |
+| 组件     | 只读内容组件[] |      |
+| 主题名称 | 字符串         |      |
+| 诊断     | 编译器诊断[]   |      |
 
 ### DEFAULT_GHOST_THEME_NAME
 
 **种类：**常数
 
 ```typescript
-export const DEFAULT_GHOST_THEME_NAME
+export const DEFAULT_GHOST_THEME_NAME;
 ```
 
 当调用者未提供主题名称时使用的默认主题名称。
@@ -116,41 +124,47 @@ export const DEFAULT_GHOST_THEME_NAME
 **种类：**功能
 
 ```typescript
-function emitGhostComponentsManifest(components: readonly ContentComponent[]): string
+function emitGhostComponentsManifest(
+  components: readonly ContentComponent[],
+): string;
 ```
 
 将部分参数合约作为打印精美的 JSON 发出。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|只读内容组件[] |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 组件 | 只读内容组件[] |      |
 
 ### 发射幽灵主题配置
 
 **种类：**功能
 
 ```typescript
-function emitGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): string
+function emitGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): string;
 ```
 
 发出 `config.custom` 片段作为漂亮打印的 JSON。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|只读内容组件[] |  |
-|主题名称 |字符串|  |
-|诊断 |编译器诊断[] |  |
+| 名称     | 类型           | 描述 |
+| -------- | -------------- | ---- |
+| 组件     | 只读内容组件[] |      |
+| 主题名称 | 字符串         |      |
+| 诊断     | 编译器诊断[]   |      |
 
 ### GHOST_COMPONENTS_MANIFEST
 
 **种类：**常数
 
 ```typescript
-export const GHOST_COMPONENTS_MANIFEST
+export const GHOST_COMPONENTS_MANIFEST;
 ```
 
 部分参数合约写入的文件。
@@ -160,7 +174,7 @@ export const GHOST_COMPONENTS_MANIFEST
 **种类：**常数
 
 ```typescript
-export const GHOST_SETTING_LIMIT
+export const GHOST_SETTING_LIMIT;
 ```
 
 Ghost 接受的最大条目数 `config.custom`.
@@ -174,7 +188,7 @@ Ghost 会拒绝上传时超出的主题，这会导致
 **种类：**常数
 
 ```typescript
-export const GHOST_THEME_CONFIG_MANIFEST
+export const GHOST_THEME_CONFIG_MANIFEST;
 ```
 
 该文件的 `config.custom` 片段被写入。
@@ -224,7 +238,7 @@ export interface GhostSetting
 **种类：**功能
 
 ```typescript
-function ghostSettingType(field: ContentField): GhostSettingType
+function ghostSettingType(field: ContentField): GhostSettingType;
 ```
 
 幽灵设置类型中性场类型缩小到。
@@ -235,16 +249,17 @@ color 是一个普通的字符串 TypeScript 并根据道具名称进行猜测
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|领域 |内容字段 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 领域 | 内容字段 |      |
 
 ### Ghost设置类型
 
 **种类：**类型
 
 ```typescript
-export type GhostSettingType = "select" | "boolean" | "color" | "image" | "text";
+export type GhostSettingType =
+  "select" | "boolean" | "color" | "image" | "text";
 ```
 
 Ghost 的五种设置类型 `config.custom` 块接受。
@@ -274,16 +289,18 @@ export interface GhostThemeConfig
 **种类：**功能
 
 ```typescript
-function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
+function toGhostComponentEntry(
+  component: ContentComponent,
+): GhostComponentEntry;
 ```
 
 将一个组件投影到其 `forge-components.json` 入口。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 组件 | 内容组件 |      |
 
 ## `src/template`
 
@@ -292,7 +309,7 @@ function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
 **种类：**功能
 
 ```typescript
-function emitGhostPartial(component: ContentComponent): string
+function emitGhostPartial(component: ContentComponent): string;
 ```
 
 发出一个组件的 Handlebars 部分。
@@ -303,48 +320,51 @@ function emitGhostPartial(component: ContentComponent): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 组件 | 内容组件 |      |
 
 ### 幽灵部分文件名
 
 **种类：**功能
 
 ```typescript
-function ghostPartialFileName(component: ContentComponent): string
+function ghostPartialFileName(component: ContentComponent): string;
 ```
 
 写入部分的主题相对路径。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 组件 | 内容组件 |      |
 
 ### 幽灵部分名称
 
 **种类：**功能
 
 ```typescript
-function ghostPartialName(component: ContentComponent): string
+function ghostPartialName(component: ContentComponent): string;
 ```
 
 调用组件的部分名称 (`{{> forge/badge}}`).
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 组件 | 内容组件 |      |
 
 ### 幽灵模板诊断
 
 **种类：**功能
 
 ```typescript
-function ghostTemplateDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function ghostTemplateDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 发出一个组件的部分结果的诊断。
@@ -355,7 +375,7 @@ API，因此该值将作为渲染文本和主题所需的任何算术保留下�
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
-|文件名 |字符串|  |
+| 名称   | 类型     | 描述 |
+| ------ | -------- | ---- |
+| 组件   | 内容组件 |      |
+| 文件名 | 字符串   |      |

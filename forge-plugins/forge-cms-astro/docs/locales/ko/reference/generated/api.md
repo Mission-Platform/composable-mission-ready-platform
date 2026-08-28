@@ -16,16 +16,16 @@
 **종류:** 기능
 
 ```typescript
-function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin
+function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin;
 ```
 
 호출자가 소유한 프레임워크 출력 플러그인에 Astro 투영을 바인딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeAstroCms옵션 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 옵션 | ForgeAstroCms옵션 |      |
 
 ### ForgeAstroCms옵션
 
@@ -44,32 +44,32 @@ export interface ForgeAstroCmsOptions
 **종류:** 기능
 
 ```typescript
-function emitContentConfig(components: readonly ContentComponent[]): string
+function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
 Astro를 방출하다 `content.config.ts` 구성 요소당 하나의 컬렉션이 있습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 읽기 전용 ContentComponent[] |  |
+| 이름     | 유형                         | 설명 |
+| -------- | ---------------------------- | ---- |
+| 구성요소 | 읽기 전용 ContentComponent[] |      |
 
 ### fieldToZod
 
 **종류:** 기능
 
 ```typescript
-function fieldToZod(field: ContentField): string
+function fieldToZod(field: ContentField): string;
 ```
 
 조드(혹은 `image()`) 검증인은 중립 필드 종류를 매핑합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 필드 | 콘텐츠 필드 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 필드 | 콘텐츠 필드 |      |
 
 ## `src/template`
 
@@ -78,40 +78,46 @@ function fieldToZod(field: ContentField): string
 **종류:** 기능
 
 ```typescript
-function astroDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function astroDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 모듈에 대한 Astro 하강 보고서 진단 정보를 수집합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| IR | 의미 모듈 |  |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| IR       | 의미 모듈       |      |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ### AstroMarkup
 
 **종류:** 기능
 
 ```typescript
-function astroMarkup(expression: string): string
+function astroMarkup(expression: string): string;
 ```
 
 JSX 전용 속성 이름을 다시 작성하고 외부 조각을 제거합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 표현 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 표현 | 문자열 |      |
 
 ### EmitIslandAstroTemplate
 
 **종류:** 기능
 
 ```typescript
-function emitIslandAstroTemplate(component: ContentComponent, islandEntry: string): string
+function emitIslandAstroTemplate(
+  component: ContentComponent,
+  islandEntry: string,
+): string;
 ```
 
 섬을 배경으로 방출 `.astro` 대화형 구성 요소에 대한 템플릿입니다.
@@ -122,23 +128,23 @@ function emitIslandAstroTemplate(component: ContentComponent, islandEntry: strin
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
-| 섬입구 | 문자열 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
+| 섬입구   | 문자열          |      |
 
 ### EmitStaticAstroTemplate
 
 **종류:** 기능
 
 ```typescript
-function emitStaticAstroTemplate(ir: SemanticModule): string
+function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
 정적 방출 `.astro` 프리젠테이션 구성 요소에 대한 템플릿입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| IR | 의미 모듈 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| IR   | 의미 모듈 |      |

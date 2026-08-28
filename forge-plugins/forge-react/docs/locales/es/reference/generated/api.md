@@ -16,18 +16,22 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/forg
 **Tipo:** función
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 Transforme todo el módulo en la fuente de destino React.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| módulo | Módulo Semántico |  |
-| nombredelcomponente | cadena |  |
-| plano | Plan de módulo de reacción |  |
+| Nombre              | Tipo                       | Descripción |
+| ------------------- | -------------------------- | ----------- |
+| módulo              | Módulo Semántico           |             |
+| nombredelcomponente | cadena                     |             |
+| plano               | Plan de módulo de reacción |             |
 
 ## `src/index`
 
@@ -36,7 +40,7 @@ Transforme todo el módulo en la fuente de destino React.
 **Tipo:** función
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 Cree el complemento de salida React y sus adaptadores de compilación JSX nativos.
@@ -48,50 +52,58 @@ Cree el complemento de salida React y sus adaptadores de compilación JSX nativo
 **Tipo:** función
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 Limite un plan propiedad del objetivo al React.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| bajado | TargetLoweredModule\| indefinido |  |
+| Nombre | Tipo                             | Descripción |
+| ------ | -------------------------------- | ----------- |
+| bajado | TargetLoweredModule\| indefinido |             |
 
 ### módulo de reacción inferior
 
 **Tipo:** función
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Baje el IR neutral al plan React de {@link TargetIntentions.lowered}.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ir | Módulo Semántico |  |
-| contexto | Contexto objetivo |  |
+| Nombre   | Tipo              | Descripción |
+| -------- | ----------------- | ----------- |
+| ir       | Módulo Semántico  |             |
+| contexto | Contexto objetivo |             |
 
 ### planReactMódulo
 
 **Tipo:** función
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 Cree el plan React para un módulo.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| módulo | Módulo Semántico |  |
-| nombredelcomponente | cadena |  |
+| Nombre              | Tipo             | Descripción |
+| ------------------- | ---------------- | ----------- |
+| módulo              | Módulo Semántico |             |
+| nombredelcomponente | cadena           |             |
 
 ### ReactClientDirectivePlan
 
@@ -180,7 +192,10 @@ Cómo el componente vincula su objeto de accesorios.
 **Tipo:** función
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Refinar el plan React.
@@ -191,17 +206,17 @@ en línea, y con `stableKeyInference` deshabilitado se mantienen todas las clave
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| intenciones | Intenciones objetivo |  |
-| opciones | Opciones de optimización de destino |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| intenciones | Intenciones objetivo                |             |
+| opciones    | Opciones de optimización de destino |             |
 
 ### REACT_OPTIMIZACIONES
 
 **Tipo:** constante
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 Los identificadores registrados en un plan que el optimizador React ha refinado.

@@ -11,16 +11,16 @@ Generated from public source declarations in `@mission-platform/forge-plugin-sol
 **Kind:** function
 
 ```typescript
-function emitSolidHookModule(module: SemanticModule): string
+function emitSolidHookModule(module: SemanticModule): string;
 ```
 
 Transform a neutral hook module into its SolidJS source.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| module | SemanticModule |             |
 
 ## `src/emitters/module`
 
@@ -29,17 +29,20 @@ Transform a neutral hook module into its SolidJS source.
 **Kind:** function
 
 ```typescript
-function emitSolidModule(module: SemanticModule, options: SolidEmitOptions = {}): GeneratedSolidModule
+function emitSolidModule(
+  module: SemanticModule,
+  options: SolidEmitOptions = {},
+): GeneratedSolidModule;
 ```
 
 Transform a neutral component module into its SolidJS source.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
-| options | SolidEmitOptions |  |
+| Name    | Type             | Description |
+| ------- | ---------------- | ----------- |
+| module  | SemanticModule   |             |
+| options | SolidEmitOptions |             |
 
 ### GeneratedSolidModule
 
@@ -68,7 +71,7 @@ Options controlling how a module is emitted.
 **Kind:** function
 
 ```typescript
-function forgeSolidFramework(): FrameworkOutputPlugin
+function forgeSolidFramework(): FrameworkOutputPlugin;
 ```
 
 Create the Solid output plugin and its Vite/Rolldown JSX adapters.
@@ -80,40 +83,48 @@ Create the Solid output plugin and its Vite/Rolldown JSX adapters.
 **Kind:** function
 
 ```typescript
-function isSolidLowered(lowered: TargetLoweredModule | undefined): lowered is SolidLoweredModule
+function isSolidLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SolidLoweredModule;
 ```
 
 Narrow a target plan to the Solid one; `false` for any other framework's plan.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| lowered | TargetLoweredModule \| undefined |  |
+| Name    | Type                             | Description |
+| ------- | -------------------------------- | ----------- |
+| lowered | TargetLoweredModule \| undefined |             |
 
 ### lowerSolidModule
 
 **Kind:** function
 
 ```typescript
-function lowerSolidModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerSolidModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Lower neutral IR into Solid's target-intention wrapper, carrying the plan.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| context | TargetContext |  |
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| ir      | SemanticModule |             |
+| context | TargetContext  |             |
 
 ### planSolidImports
 
 **Kind:** function
 
 ```typescript
-function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string[]
+function planSolidImports(
+  plan: SolidLoweringPlan,
+  conditional: boolean,
+): string[];
 ```
 
 The exact `solid-js` value names a plan requires, alphabetically ordered so a
@@ -122,33 +133,33 @@ re-run produces an identical list. Recomputing this is what makes
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| plan | SolidLoweringPlan |  |
-| conditional | boolean |  |
+| Name        | Type              | Description |
+| ----------- | ----------------- | ----------- |
+| plan        | SolidLoweringPlan |             |
+| conditional | boolean           |             |
 
 ### planSolidModule
 
 **Kind:** function
 
 ```typescript
-function planSolidModule(ir: SemanticModule): SolidLoweringPlan
+function planSolidModule(ir: SemanticModule): SolidLoweringPlan;
 ```
 
 Build the Solid plan for a module's semantic facts.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| ir | SemanticModule |  |
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| ir   | SemanticModule |             |
 
 ### SOLID_FRAMEWORK
 
 **Kind:** constant
 
 ```typescript
-export const SOLID_FRAMEWORK
+export const SOLID_FRAMEWORK;
 ```
 
 The framework identifier every Solid plan is discriminated on.
@@ -270,7 +281,7 @@ A slot read, expressed as the props member Solid reads it from.
 **Kind:** constant
 
 ```typescript
-export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
+export const COLLAPSE_SINGLE_CHILD_FRAGMENTS;
 ```
 
 Drop a fragment that wraps exactly one element.
@@ -280,7 +291,7 @@ Drop a fragment that wraps exactly one element.
 **Kind:** constant
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Recompute the `solid-js` imports from the refined plan.
@@ -290,7 +301,7 @@ Recompute the `solid-js` imports from the refined plan.
 **Kind:** constant
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 Promote `__mpStatic` subtrees to module-level constants.
@@ -300,7 +311,7 @@ Promote `__mpStatic` subtrees to module-level constants.
 **Kind:** constant
 
 ```typescript
-export const MEMOIZE_DYNAMIC_EXPRESSIONS
+export const MEMOIZE_DYNAMIC_EXPRESSIONS;
 ```
 
 Promote a repeated dynamic child expression to a single memo.
@@ -310,7 +321,7 @@ Promote a repeated dynamic child expression to a single memo.
 **Kind:** constant
 
 ```typescript
-export const MP_MEMO_PREFIX
+export const MP_MEMO_PREFIX;
 ```
 
 Prefix for the memo bindings `solid:memoize-dynamic-expressions` introduces.
@@ -320,7 +331,10 @@ Prefix for the memo bindings `solid:memoize-dynamic-expressions` introduces.
 **Kind:** function
 
 ```typescript
-function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSolidModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Refine a lowered Solid plan. An intention wrapper that carries no Solid plan
@@ -328,17 +342,17 @@ Refine a lowered Solid plan. An intention wrapper that carries no Solid plan
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| intentions | TargetIntentions |  |
-| options | TargetOptimizeOptions |  |
+| Name       | Type                  | Description |
+| ---------- | --------------------- | ----------- |
+| intentions | TargetIntentions      |             |
+| options    | TargetOptimizeOptions |             |
 
 ### STABLE_LIST_KEYS
 
 **Kind:** constant
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 Keep only the list keys the frontend proved stable.

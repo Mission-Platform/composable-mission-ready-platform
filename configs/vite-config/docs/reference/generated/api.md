@@ -21,7 +21,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 Build a Rollup/Rolldown `external` predicate that treats every name in
@@ -29,16 +29,16 @@ Build a Rollup/Rolldown `external` predicate that treats every name in
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| names | readonly string[] |  |
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| names | readonly string[] |             |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Default Rollup externals every shared library should treat as peer-provided.
@@ -49,7 +49,7 @@ Apps consuming the library are expected to supply these themselves.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>
+export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 ```
 
 Default Rollup output globals for UMD/IIFE consumers. We only target ESM but
@@ -60,7 +60,7 @@ Rollup still warns without this map when externals are declared.
 **Kind:** function
 
 ```typescript
-function defineAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 Build a Vite config for Mission Platform Vue 3 apps: the Vue plugin and the
@@ -69,16 +69,16 @@ bundling tweaks via {@link AppConfigOptions.overrides}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | AppConfigOptions |  |
+| Name    | Type             | Description |
+| ------- | ---------------- | ----------- |
+| options | AppConfigOptions |             |
 
 ### defineFrameworkAppConfig
 
 **Kind:** function
 
 ```typescript
-function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig
+function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
 Wrap {@link defineAppConfig} with the `resolve.conditions` needed to make bare
@@ -88,16 +88,16 @@ use this helper can set the same `resolve.conditions` directly.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | FrameworkAppConfigOptions |  |
+| Name    | Type                      | Description |
+| ------- | ------------------------- | ----------- |
+| options | FrameworkAppConfigOptions |             |
 
 ### defineLibraryConfig
 
 **Kind:** function
 
 ```typescript
-function defineLibraryConfig(options: LibraryConfigOptions): UserConfig
+function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
 Build a Vite config tailored to the Mission Platform Vue library packages:
@@ -111,16 +111,16 @@ box. Packages that need a single bundled artifact can opt out per call.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | LibraryConfigOptions |  |
+| Name    | Type                 | Description |
+| ------- | -------------------- | ----------- |
+| options | LibraryConfigOptions |             |
 
 ### defineWebComponentAppConfig
 
 **Kind:** function
 
 ```typescript
-function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig
+function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
 Build a Vite app config for framework-free Web Components applications.
@@ -132,9 +132,9 @@ bare Forge package imports select their custom-element artifacts everywhere.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | AppConfigOptions |  |
+| Name    | Type             | Description |
+| ------- | ---------------- | ----------- |
+| options | AppConfigOptions |             |
 
 ### FrameworkAppConfigOptions
 
@@ -151,7 +151,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function frameworkCondition(framework: MissionPlatformFramework): string
+function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 Map a {@link MissionPlatformFramework} to the custom export condition the
@@ -161,16 +161,16 @@ Node/Vite conditions (`import`, `default`, `browser`, ...).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| framework | MissionPlatformFramework |  |
+| Name      | Type                     | Description |
+| --------- | ------------------------ | ----------- |
+| framework | MissionPlatformFramework |             |
 
 ### frameworkResolveConditions
 
 **Kind:** function
 
 ```typescript
-function frameworkResolveConditions(framework: MissionPlatformFramework): string[]
+function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
 Build the ordered `resolve.conditions` list an app should use to select a
@@ -182,16 +182,16 @@ Pass the result to Vite's `resolve.conditions` (see {@link defineFrameworkAppCon
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| framework | MissionPlatformFramework |  |
+| Name      | Type                     | Description |
+| --------- | ------------------------ | ----------- |
+| framework | MissionPlatformFramework |             |
 
 ### ignoreVueI18nBlocksPlugin
 
 **Kind:** function
 
 ```typescript
-function ignoreVueI18nBlocksPlugin(): Plugin
+function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
 Vite plugin that turns Vue SFC `<i18n>` custom blocks into no-op modules.
@@ -232,7 +232,7 @@ both Vite bundling (via `resolve.conditions`) and — through the matching
 **Kind:** function
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 Read the `dependencies` and `peerDependencies` declared in the package.json
@@ -241,9 +241,9 @@ its own bundle so consumers can dedupe and tree-shake them.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| rootDirectory | string |  |
+| Name          | Type   | Description |
+| ------------- | ------ | ----------- |
+| rootDirectory | string |             |
 
 ## `src/vitest`
 
@@ -252,7 +252,7 @@ its own bundle so consumers can dedupe and tree-shake them.
 **Kind:** function
 
 ```typescript
-function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig
+function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Build a Vitest config for Mission Platform packages and apps. Provides the
@@ -261,9 +261,9 @@ preconfigured for `src/**\/*.vue` components.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | VitestConfigOptions |  |
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| options | VitestConfigOptions |             |
 
 ### VitestConfigOptions
 

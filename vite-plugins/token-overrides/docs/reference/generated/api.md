@@ -11,15 +11,15 @@ Generated from public source declarations in `@mission-platform/vite-plugin-toke
 **Kind:** function
 
 ```typescript
-function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin
+function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite plugin that auto-generates an app's design-token *override* stylesheet.
+Vite plugin that auto-generates an app's design-token _override_ stylesheet.
 
 It reads a DTCG-style override document (`options.source`), transforms it with
 {@link buildTokenOverrideScss}, and writes the resulting `:root { --<prefix>-*: … }`
 SCSS partial to `options.outFile`. Import that generated file from your
-stylesheet *after* `@mission-platform/tokens` so the overrides win the cascade.
+stylesheet _after_ `@mission-platform/tokens` so the overrides win the cascade.
 
 Generation runs in the rollup `buildStart` hook (so it covers `vite build`,
 `vite build --watch`, and dev-server start alike) and re-runs when the source
@@ -28,40 +28,40 @@ artefact — add it to `.gitignore`/`.prettierignore` rather than committing it.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TokenOverridesPluginOptions |  |
+| Name    | Type                        | Description |
+| ------- | --------------------------- | ----------- |
+| options | TokenOverridesPluginOptions |             |
 
 #### Contract
 
 - **@example:** ```ts
-// vite.config.ts
-import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
+  // vite.config.ts
+  import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
+  export default defineConfig({
   plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
-```
+  });
+
+````
 ```scss
 // styles.css / styles.scss
 - **@import:** '@mission-platform/tokens';
 - **@import:** '../design-tokens/overrides.generated.scss';
-```
+````
 
 ### tokenOverridesPlugin
 
 **Kind:** function
 
 ```typescript
-function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin
+function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite plugin that auto-generates an app's design-token *override* stylesheet.
+Vite plugin that auto-generates an app's design-token _override_ stylesheet.
 
 It reads a DTCG-style override document (`options.source`), transforms it with
 {@link buildTokenOverrideScss}, and writes the resulting `:root { --<prefix>-*: … }`
 SCSS partial to `options.outFile`. Import that generated file from your
-stylesheet *after* `@mission-platform/tokens` so the overrides win the cascade.
+stylesheet _after_ `@mission-platform/tokens` so the overrides win the cascade.
 
 Generation runs in the rollup `buildStart` hook (so it covers `vite build`,
 `vite build --watch`, and dev-server start alike) and re-runs when the source
@@ -70,25 +70,25 @@ artefact — add it to `.gitignore`/`.prettierignore` rather than committing it.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TokenOverridesPluginOptions |  |
+| Name    | Type                        | Description |
+| ------- | --------------------------- | ----------- |
+| options | TokenOverridesPluginOptions |             |
 
 #### Contract
 
 - **@example:** ```ts
-// vite.config.ts
-import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
+  // vite.config.ts
+  import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
+  export default defineConfig({
   plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
-```
+  });
+
+````
 ```scss
 // styles.css / styles.scss
 - **@import:** '@mission-platform/tokens';
 - **@import:** '../design-tokens/overrides.generated.scss';
-```
+````
 
 ### TokenOverridesPluginOptions
 
@@ -107,19 +107,19 @@ Options for {@link tokenOverridesPlugin}.
 **Kind:** function
 
 ```typescript
-function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverrideScssOptions = {}): string
+function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverrideScssOptions = {}): string;
 ```
 
 Build an SCSS/CSS override partial: a single `:root { … }` block of
-`--<prefix>-*` custom properties flattened from `document_`. Import it *after*
+`--<prefix>-*` custom properties flattened from `document_`. Import it _after_
 the base `@mission-platform/tokens` so the declarations win the cascade.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| document_ | OverrideGroup |  |
-| options | TokenOverrideScssOptions |  |
+| Name      | Type                     | Description |
+| --------- | ------------------------ | ----------- |
+| document_ | OverrideGroup            |             |
+| options   | TokenOverrideScssOptions |             |
 
 ### FlatOverride
 
@@ -136,7 +136,7 @@ A flattened override ready to emit as a single custom-property declaration.
 **Kind:** function
 
 ```typescript
-function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride[]
+function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride[];
 ```
 
 Recursively flatten an override document into {@link FlatOverride}s. Keys that
@@ -147,10 +147,10 @@ wrapper (`component.button.*` becomes `--<prefix>-button-*`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| document_ | OverrideGroup |  |
-| prefix |  |  |
+| Name      | Type          | Description |
+| --------- | ------------- | ----------- |
+| document_ | OverrideGroup |             |
+| prefix    |               |             |
 
 ### LightDarkValue
 

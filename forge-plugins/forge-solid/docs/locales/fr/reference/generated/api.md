@@ -16,16 +16,16 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function emitSolidHookModule(module: SemanticModule): string
+function emitSolidHookModule(module: SemanticModule): string;
 ```
 
 Transformez un module hook neutre en sa source SolidJS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | Module Sémantique |  |
+| Nom     | Tapez             | Descriptif |
+| ------- | ----------------- | ---------- |
+| modules | Module Sémantique |            |
 
 ## `src/emitters/module`
 
@@ -34,17 +34,20 @@ Transformez un module hook neutre en sa source SolidJS.
 **Genre :** fonction
 
 ```typescript
-function emitSolidModule(module: SemanticModule, options: SolidEmitOptions = {}): GeneratedSolidModule
+function emitSolidModule(
+  module: SemanticModule,
+  options: SolidEmitOptions = {},
+): GeneratedSolidModule;
 ```
 
 Transformez un module de composant neutre en sa source SolidJS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | Module Sémantique |  |
-| options | SolidEmitOptions |  |
+| Nom     | Tapez             | Descriptif |
+| ------- | ----------------- | ---------- |
+| modules | Module Sémantique |            |
+| options | SolidEmitOptions  |            |
 
 ### ModuleSolideGénéré
 
@@ -73,7 +76,7 @@ Options contrôlant la manière dont un module est émis.
 **Genre :** fonction
 
 ```typescript
-function forgeSolidFramework(): FrameworkOutputPlugin
+function forgeSolidFramework(): FrameworkOutputPlugin;
 ```
 
 Créez le plug-in de sortie Solid et ses adaptateurs Vite/Rolldown JSX.
@@ -85,40 +88,48 @@ Créez le plug-in de sortie Solid et ses adaptateurs Vite/Rolldown JSX.
 **Genre :** fonction
 
 ```typescript
-function isSolidLowered(lowered: TargetLoweredModule | undefined): lowered is SolidLoweredModule
+function isSolidLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SolidLoweredModule;
 ```
 
 Affinez un plan cible à celui Solid ; `false` pour tout autre plan de framework.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| abaissé | CibleLoweredModule \| indéfini |  |
+| Nom     | Tapez                          | Descriptif |
+| ------- | ------------------------------ | ---------- |
+| abaissé | CibleLoweredModule \| indéfini |            |
 
 ### modulesolideinférieur
 
 **Genre :** fonction
 
 ```typescript
-function lowerSolidModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerSolidModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Abaissez l'IR neutre dans le wrapper d'intention de cible de Solid, contenant le plan.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| ir | Module Sémantique |  |
-| contexte | Contexte cible |  |
+| Nom      | Tapez             | Descriptif |
+| -------- | ----------------- | ---------- |
+| ir       | Module Sémantique |            |
+| contexte | Contexte cible    |            |
 
 ### planSolidImports
 
 **Genre :** fonction
 
 ```typescript
-function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string[]
+function planSolidImports(
+  plan: SolidLoweringPlan,
+  conditional: boolean,
+): string[];
 ```
 
 La valeur exacte `solid-js` nomme un plan requis, classés par ordre alphabétique afin qu'un
@@ -127,33 +138,33 @@ la réexécution produit une liste identique. Recalculer c'est ce qui fait
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| planifier | Plan de réduction solide |  |
-| conditionnel | booléen |  |
+| Nom          | Tapez                    | Descriptif |
+| ------------ | ------------------------ | ---------- |
+| planifier    | Plan de réduction solide |            |
+| conditionnel | booléen                  |            |
 
 ### planSolideModule
 
 **Genre :** fonction
 
 ```typescript
-function planSolidModule(ir: SemanticModule): SolidLoweringPlan
+function planSolidModule(ir: SemanticModule): SolidLoweringPlan;
 ```
 
 Créez le plan Solid pour les faits sémantiques d'un module.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| ir | Module Sémantique |  |
+| Nom | Tapez             | Descriptif |
+| --- | ----------------- | ---------- |
+| ir  | Module Sémantique |            |
 
 ### SOLID_FRAMEWORK
 
 **Genre :** constante
 
 ```typescript
-export const SOLID_FRAMEWORK
+export const SOLID_FRAMEWORK;
 ```
 
 L'identifiant du cadre sur lequel chaque plan Solid est discriminé.
@@ -275,7 +286,7 @@ Un emplacement lu, exprimé par le membre props Solid à partir duquel il le lit
 **Genre :** constante
 
 ```typescript
-export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
+export const COLLAPSE_SINGLE_CHILD_FRAGMENTS;
 ```
 
 Déposez un fragment qui enveloppe exactement un élément.
@@ -285,7 +296,7 @@ Déposez un fragment qui enveloppe exactement un élément.
 **Genre :** constante
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Recalculez les importations `solid-js` à partir du plan affiné.
@@ -295,7 +306,7 @@ Recalculez les importations `solid-js` à partir du plan affiné.
 **Genre :** constante
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 Promouvez les sous-arbres `__mpStatic` en constantes au niveau du module.
@@ -305,7 +316,7 @@ Promouvez les sous-arbres `__mpStatic` en constantes au niveau du module.
 **Genre :** constante
 
 ```typescript
-export const MEMOIZE_DYNAMIC_EXPRESSIONS
+export const MEMOIZE_DYNAMIC_EXPRESSIONS;
 ```
 
 Transformez une expression enfant dynamique répétée en un seul mémo.
@@ -315,7 +326,7 @@ Transformez une expression enfant dynamique répétée en un seul mémo.
 **Genre :** constante
 
 ```typescript
-export const MP_MEMO_PREFIX
+export const MP_MEMO_PREFIX;
 ```
 
 Préfixe pour les liaisons de mémo introduites par `solid:memoize-dynamic-expressions`.
@@ -325,7 +336,10 @@ Préfixe pour les liaisons de mémo introduites par `solid:memoize-dynamic-expre
 **Genre :** fonction
 
 ```typescript
-function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSolidModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Affiner un plan Solid réduit. Un wrapper d'intention qui ne comporte aucun plan Solid
@@ -333,17 +347,17 @@ Affiner un plan Solid réduit. Un wrapper d'intention qui ne comporte aucun plan
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| intentions | Intentions cibles |  |
-| options | Options d'optimisation cible |  |
+| Nom        | Tapez                        | Descriptif |
+| ---------- | ---------------------------- | ---------- |
+| intentions | Intentions cibles            |            |
+| options    | Options d'optimisation cible |            |
 
 ### STABLE_LIST_KEYS
 
 **Genre :** constante
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 Conservez uniquement les clés de liste dont le frontend s'est avéré stable.

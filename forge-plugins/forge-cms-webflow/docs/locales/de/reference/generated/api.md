@@ -16,23 +16,23 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-cms-w
 **Art:** Funktion
 
 ```typescript
-function declarationFileName(component: ContentComponent): string
+function declarationFileName(component: ContentComponent): string;
 ```
 
 Die Datei, in die die Deklaration einer Komponente geschrieben wird.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | ContentComponent |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| Komponente | ContentComponent |                  |
 
 ### DEFAULT_ISLAND_ENTRY
 
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_ISLAND_ENTRY
+export const DEFAULT_ISLAND_ENTRY;
 ```
 
 Der Inselspezifizierer, der verwendet wird, wenn der Treiber keine mitgeneriert hat (Tests, Probeläufe).
@@ -42,7 +42,7 @@ Der Inselspezifizierer, der verwendet wird, wenn der Treiber keine mitgeneriert 
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_WEBFLOW_GROUP
+export const DEFAULT_WEBFLOW_GROUP;
 ```
 
 Die Komponentengruppe, unter der der Designer die Komponenten einer Bibliothek ablegt.
@@ -52,7 +52,10 @@ Die Komponentengruppe, unter der der Designer die Komponenten einer Bibliothek a
 **Art:** Funktion
 
 ```typescript
-function emitWebflowDeclaration(component: ContentComponent, options: WebflowDeclarationOptions = {}): string
+function emitWebflowDeclaration(
+  component: ContentComponent,
+  options: WebflowDeclarationOptions = {},
+): string;
 ```
 
 Geben Sie die Codekomponentendeklaration für eine Komponente aus.
@@ -64,17 +67,20 @@ verfassbare Requisiten, die das ausgegebene Modul frei von ungenutzten Bindungen
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | ContentComponent |  |
-| Optionen | WebflowDeclarationOptions |  |
+| Name       | Geben Sie                 | ein Beschreibung |
+| ---------- | ------------------------- | ---------------- |
+| Komponente | ContentComponent          |                  |
+| Optionen   | WebflowDeclarationOptions |                  |
 
 ### webflowDeclarationDiagnostics
 
 **Art:** Funktion
 
 ```typescript
-function webflowDeclarationDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function webflowDeclarationDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 Die Diagnose, die die Deklaration einer Komponente ausgibt, erzeugt.
@@ -84,10 +90,10 @@ Gegenstück, ein stiller Build bedeutet also eine verlustfreie Projektion.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | ContentComponent |  |
-| Dateiname | Zeichenfolge |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| Komponente | ContentComponent |                  |
+| Dateiname  | Zeichenfolge     |                  |
 
 ### WebflowDeclarationOptions
 
@@ -104,7 +110,7 @@ Optionen für {@link emitWebflowDeclaration}.
 **Art:** Funktion
 
 ```typescript
-function webflowDescription(component: ContentComponent): string | undefined
+function webflowDescription(component: ContentComponent): string | undefined;
 ```
 
 Die Beschreibung, die der Designer für die Komponente anzeigt.
@@ -116,48 +122,48 @@ sind dokumentiert, erhält eine dokumentierte Komponente und eine, deren Requisi
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | ContentComponent |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| Komponente | ContentComponent |                  |
 
 ### webflowDisplayName
 
 **Art:** Funktion
 
 ```typescript
-function webflowDisplayName(name: string): string
+function webflowDisplayName(name: string): string;
 ```
 
 Die dem Menschen zugewandte Bezeichnung einer Requisite wird im Designer angezeigt.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Name | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Name | Zeichenfolge |                  |
 
 ### webflowPropertyName
 
 **Art:** Funktion
 
 ```typescript
-function webflowPropertyName(field: ContentField): string
+function webflowPropertyName(field: ContentField): string;
 ```
 
 Der Deklarationsschlüssel, unter dem ein Feld erstellt wird – sein React-Requisitenname.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Feld | ContentField |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Feld | ContentField |                  |
 
 ### webflowPropertyType
 
 **Art:** Funktion
 
 ```typescript
-function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
+function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType;
 ```
 
 Ordnen Sie eine neutrale Inhaltsart dem Requisitenvokabular von Webflow zu.
@@ -167,16 +173,23 @@ wird zu Text degradiert und {@link webflowDeclarationDiagnostics} meldet dies.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| freundlich | ContentFieldKind |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| freundlich | ContentFieldKind |                  |
 
 ### WebflowPropertyType
 
 **Art:** Typ
 
 ```typescript
-export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichText" | "props.Slot" | "props.Text" | "props.Variant" | "props.Visibility";
+export type WebflowPropertyType =
+  | "props.Image"
+  | "props.Link"
+  | "props.RichText"
+  | "props.Slot"
+  | "props.Text"
+  | "props.Variant"
+  | "props.Visibility";
 ```
 
 Die `@webflow/data-types`-Fabrik, mit der ein neutraler Feldtyp erstellt wird.
@@ -188,7 +201,7 @@ Die `@webflow/data-types`-Fabrik, mit der ein neutraler Feldtyp erstellt wird.
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEBFLOW_NUMBER_AS_TEXT
+export const FORGE_WEBFLOW_NUMBER_AS_TEXT;
 ```
 
 Ein numerisches Feld wurde als Webflow-Textstütze erstellt; Webflow hat keinen numerischen Typ.
@@ -198,18 +211,22 @@ Ein numerisches Feld wurde als Webflow-Textstütze erstellt; Webflow hat keinen 
 **Art:** Funktion
 
 ```typescript
-function webflowWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function webflowWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 Erstellen Sie eine Warnung für die Generierungsphase. Das Webflow-Ziel gibt niemals Fehler aus.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Code | Zeichenfolge |  |
-| Nachricht | Zeichenfolge |  |
-| Dateiname | Zeichenfolge |  |
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| Code      | Zeichenfolge |                  |
+| Nachricht | Zeichenfolge |                  |
+| Dateiname | Zeichenfolge |                  |
 
 ## `src/entry`
 
@@ -218,32 +235,32 @@ Erstellen Sie eine Warnung für die Generierungsphase. Das Webflow-Ziel gibt nie
 **Art:** Funktion
 
 ```typescript
-function emitWebflowEntry(components: readonly ContentComponent[]): string
+function emitWebflowEntry(components: readonly ContentComponent[]): string;
 ```
 
 Geben Sie das `index.ts`-Fass aus und exportieren Sie jede ausgegebene Erklärung erneut.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponenten | readonly ContentComponent[] |  |
+| Name        | Geben Sie                   | ein Beschreibung |
+| ----------- | --------------------------- | ---------------- |
+| Komponenten | readonly ContentComponent[] |                  |
 
 ### EintragExportName
 
 **Art:** Funktion
 
 ```typescript
-function entryExportName(component: ContentComponent): string
+function entryExportName(component: ContentComponent): string;
 ```
 
 Der Barrel-Exportname, unter dem die Deklaration einer Komponente erneut exportiert wird.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | ContentComponent |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| Komponente | ContentComponent |                  |
 
 ## `src/manifest`
 
@@ -252,24 +269,27 @@ Der Barrel-Exportname, unter dem die Deklaration einer Komponente erneut exporti
 **Art:** Funktion
 
 ```typescript
-function buildWebflowManifest(libraryName: string, frameworkId: string): WebflowManifest
+function buildWebflowManifest(
+  libraryName: string,
+  frameworkId: string,
+): WebflowManifest;
 ```
 
 Erstellen Sie das `webflow.json`-Fragment für eine Bibliothek.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Bibliotheksname | Zeichenfolge |  |
-| FrameworkId | Zeichenfolge |  |
+| Name            | Geben Sie    | ein Beschreibung |
+| --------------- | ------------ | ---------------- |
+| Bibliotheksname | Zeichenfolge |                  |
+| FrameworkId     | Zeichenfolge |                  |
 
 ### DEFAULT_WEBFLOW_LIBRARY_NAME
 
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_WEBFLOW_LIBRARY_NAME
+export const DEFAULT_WEBFLOW_LIBRARY_NAME;
 ```
 
 Der Bibliotheksname, der verwendet wird, wenn der Aufrufer keinen angibt.
@@ -279,7 +299,7 @@ Der Bibliotheksname, der verwendet wird, wenn der Aufrufer keinen angibt.
 **Art:** Funktion
 
 ```typescript
-function emitWebflowManifest(libraryName: string, frameworkId: string): string
+function emitWebflowManifest(libraryName: string, frameworkId: string): string;
 ```
 
 Geben Sie `webflow.json` aus.
@@ -290,17 +310,17 @@ oder hundert und kann niemals aus der Synchronisierung mit dem emittierten Baum 
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Bibliotheksname | Zeichenfolge |  |
-| FrameworkId | Zeichenfolge |  |
+| Name            | Geben Sie    | ein Beschreibung |
+| --------------- | ------------ | ---------------- |
+| Bibliotheksname | Zeichenfolge |                  |
+| FrameworkId     | Zeichenfolge |                  |
 
 ### WEBFLOW_LIBRARY_MANIFEST
 
 **Art:** konstant
 
 ```typescript
-export const WEBFLOW_LIBRARY_MANIFEST
+export const WEBFLOW_LIBRARY_MANIFEST;
 ```
 
 Die Datei, in die das Bibliotheksfragment geschrieben wird.
@@ -310,7 +330,7 @@ Die Datei, in die das Bibliotheksfragment geschrieben wird.
 **Art:** Funktion
 
 ```typescript
-function webflowComponentsGlob(frameworkId: string): string
+function webflowComponentsGlob(frameworkId: string): string;
 ```
 
 Der Glob, der jeder erstellten Deklaration eines Ziellaufs entspricht.
@@ -322,9 +342,9 @@ Der Verbraucher verschmilzt es.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| FrameworkId | Zeichenfolge |  |
+| Name        | Geben Sie    | ein Beschreibung |
+| ----------- | ------------ | ---------------- |
+| FrameworkId | Zeichenfolge |                  |
 
 ### WebflowLibrary
 
@@ -353,16 +373,16 @@ Das `webflow.json`-Fragment einer konsumierenden Site wird in ihrem eigenen Mani
 **Art:** Funktion
 
 ```typescript
-function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin
+function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin;
 ```
 
 Binden Sie die Webflow-Codekomponentenprojektion an ein React-Ausgabe-Plugin im Besitz des Aufrufers.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeWebflowCmsOptions |  |
+| Name     | Geben Sie              | ein Beschreibung |
+| -------- | ---------------------- | ---------------- |
+| Optionen | ForgeWebflowCmsOptions |                  |
 
 ### ForgeWebflowCmsOptions
 
@@ -379,7 +399,7 @@ Optionen für {@link forgeWebflowCms}.
 **Art:** konstant
 
 ```typescript
-export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[]
+export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[];
 ```
 
 Module, die die ausgegebenen Deklarationen importieren, die von der Webflow-Toolchain bereitgestellt werden.

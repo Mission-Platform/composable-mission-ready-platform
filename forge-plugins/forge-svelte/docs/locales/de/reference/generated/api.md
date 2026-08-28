@@ -16,7 +16,12 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-plugi
 **Art:** Funktion
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 Drucken Sie ein neutrales Komponentenmodul als Svelte 5 SFC. Ein Anrufer, der bereits ausgeführt wurde
@@ -25,12 +30,12 @@ gesenkt, so dass der Emittent immer von demselben Vertrag gesteuert wird.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
-| Komponentenname | Zeichenfolge |  |
-| Komponentenordner | ReadonlySet<string> |  |
-| planen | SvelteLoweredModule |  |
+| Name              | Geben Sie           | ein Beschreibung |
+| ----------------- | ------------------- | ---------------- |
+| Modul             | SemanticModule      |                  |
+| Komponentenname   | Zeichenfolge        |                  |
+| Komponentenordner | ReadonlySet<string> |                  |
+| planen            | SvelteLoweredModule |                  |
 
 ### SvelteModuleOutput
 
@@ -49,16 +54,16 @@ Ein generiertes `.svelte`-Modul und alle daneben geschriebenen Hilfsmodule.
 **Art:** Funktion
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 Drucken Sie ein neutrales Hook-/zusammensetzbares Modul als Svelte-Ziel-`.ts`-Quelle.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
+| Name  | Geben Sie      | ein Beschreibung |
+| ----- | -------------- | ---------------- |
+| Modul | SemanticModule |                  |
 
 ## `src/index`
 
@@ -67,7 +72,7 @@ Drucken Sie ein neutrales Hook-/zusammensetzbares Modul als Svelte-Ziel-`.ts`-Qu
 **Art:** Funktion
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 Erstellen Sie das Svelte-Ausgabe-Plugin und seine Vite/Rolldown-Compiler-Adapter.
@@ -79,33 +84,38 @@ Erstellen Sie das Svelte-Ausgabe-Plugin und seine Vite/Rolldown-Compiler-Adapter
 **Art:** Funktion
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 Ob es sich bei einem Zielplan um den Svelte-Plan handelt – der Unterscheidungsfaktor, auf den sich jeder Verbraucher einschränkt.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| abgesenkt | TargetLoweredModule \| undefiniert |  |
+| Name      | Geben Sie                          | ein Beschreibung |
+| --------- | ---------------------------------- | ---------------- |
+| abgesenkt | TargetLoweredModule \| undefiniert |                  |
 
 ### LowerSvelteModule
 
 **Art:** Funktion
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 Erstellen Sie den Svelte-Plan für ein neutrales Modul.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| Kontext | Zielkontext |  |
+| Name    | Geben Sie      | ein Beschreibung |
+| ------- | -------------- | ---------------- |
+| ir      | SemanticModule |                  |
+| Kontext | Zielkontext    |                  |
 
 ### SvelteBindingPlan
 
@@ -281,7 +291,10 @@ Zielabsichten mit einem vollständig typisierten Svelte-Plan.
 **Art:** Funktion
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Verfeinern Sie einen abgesenkten Svelte-Plan. Absichten, die keinen Svelte-Plan (einen ausländischen Plan) enthalten
@@ -289,17 +302,17 @@ Ziel oder ein Aufrufer, der `lower` übersprungen hat) werden unverändert zurü
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Absichten | Zielabsichten |  |
-| Optionen | TargetOptimizeOptions |  |
+| Name      | Geben Sie             | ein Beschreibung |
+| --------- | --------------------- | ---------------- |
+| Absichten | Zielabsichten         |                  |
+| Optionen  | TargetOptimizeOptions |                  |
 
 ### SVELTE_OPTIMIZATIONS
 
 **Art:** konstant
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 Jede Optimierung, die dieses Ziel anwenden kann, in der Reihenfolge der Anwendung.

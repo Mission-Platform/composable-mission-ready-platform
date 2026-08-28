@@ -16,7 +16,12 @@
 **النوع:** الوظيفة
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 قم بطباعة وحدة مكون محايد كـ Svelte 5 SFC. المتصل الذي تم تشغيله بالفعل
@@ -25,12 +30,12 @@ function emitSvelteModule(module: SemanticModule, componentName: string = "Compo
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
-| اسم المكون | سلسلة |  |
-| مجلدات المكونات | ReadonlySet<string> |  |
-| خطة | SvelteLoweredModule |  |
+| الاسم           | اكتب                | الوصف |
+| --------------- | ------------------- | ----- |
+| الوحدة النمطية  | الوحدة الدلالية     |       |
+| اسم المكون      | سلسلة               |       |
+| مجلدات المكونات | ReadonlySet<string> |       |
+| خطة             | SvelteLoweredModule |       |
 
 ### SvelteModuleOutput
 
@@ -49,16 +54,16 @@ export interface SvelteModuleOutput
 **النوع:** الوظيفة
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 قم بطباعة وحدة ربط/قابلة للتركيب محايدة كمصدر Svelte-target `.ts`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
+| الاسم          | اكتب            | الوصف |
+| -------------- | --------------- | ----- |
+| الوحدة النمطية | الوحدة الدلالية |       |
 
 ## `src/index`
 
@@ -67,7 +72,7 @@ function emitSvelteHookModule(module: SemanticModule): string
 **النوع:** الوظيفة
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 قم بإنشاء ملحق الإخراج Svelte ومحولات برنامج التحويل البرمجي Vite/Rolldown الخاصة به.
@@ -79,33 +84,38 @@ function forgeSvelteFramework(): FrameworkOutputPlugin
 **النوع:** الوظيفة
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 سواء كانت الخطة المستهدفة هي خطة Svelte — فإن التمييز الذي يضيق عليه كل مستهلك.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خفضت | TargetLoweredModule \| غير محدد |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خفضت  | TargetLoweredModule \| غير محدد |       |
 
 ### LowerSvelteModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 قم ببناء خطة Svelte لوحدة نمطية محايدة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأشعة تحت الحمراء | الوحدة الدلالية |  |
-| السياق | سياق الهدف |  |
+| الاسم              | اكتب            | الوصف |
+| ------------------ | --------------- | ----- |
+| الأشعة تحت الحمراء | الوحدة الدلالية |       |
+| السياق             | سياق الهدف      |       |
 
 ### SvelteBindingPlan
 
@@ -281,7 +291,10 @@ export interface SvelteTargetIntentions extends TargetIntentions
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 قم بتحسين خطة Svelte المنخفضة. النوايا التي لا تحمل أي خطة Svelte (أجنبي
@@ -289,17 +302,17 @@ function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptim
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نوايا | النوايا المستهدفة |  |
-| خيارات | تارجتوبتيميزيوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| نوايا  | النوايا المستهدفة    |       |
+| خيارات | تارجتوبتيميزيوبتيونس |       |
 
 ### SVELTE_OPTIMIZATIONS
 
 **النوع:** ثابت
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 كل تحسين يمكن أن ينطبق عليه هذا الهدف، بترتيب التطبيق.

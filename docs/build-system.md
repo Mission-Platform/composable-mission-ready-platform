@@ -106,14 +106,14 @@ maps, including `mp:*` conditions and CMS subpaths, continue to resolve against 
 
 ### Package tasks
 
-| Task          | Description                                                                                              |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       | Aggregate neutral, framework, declaration, email, and configured CMS output through the shared Forge runner. |
-| `build:forge` | Targeted neutral Forge output compatibility alias.                                                      |
-| `build:react`, `build:vue`, `build:svelte` | Targeted framework compatibility aliases.                                      |
-| `build:solid`, `build:web-components` | Targeted framework compatibility aliases.                                         |
-| `build:check` | Validates types for a workspace without publishing output.                                               |
-| `build:watch` | Starts an incremental build in watch mode for a workspace.                                               |
+| Task                                       | Description                                                                                                  |
+| :----------------------------------------- | :----------------------------------------------------------------------------------------------------------- |
+| `build`                                    | Aggregate neutral, framework, declaration, email, and configured CMS output through the shared Forge runner. |
+| `build:forge`                              | Targeted neutral Forge output compatibility alias.                                                           |
+| `build:react`, `build:vue`, `build:svelte` | Targeted framework compatibility aliases.                                                                    |
+| `build:solid`, `build:web-components`      | Targeted framework compatibility aliases.                                                                    |
+| `build:check`                              | Validates types for a workspace without publishing output.                                                   |
+| `build:watch`                              | Starts an incremental build in watch mode for a workspace.                                                   |
 
 Turbo hashes the target selectors (`FORGE_BUILD_TARGET` and the legacy Forge/CMS selectors) together with the shared
 runner and staging sources. Consequently, aggregate and targeted builds cannot reuse one another's cached result. Final
@@ -147,6 +147,38 @@ Build configurations are centralized in the `configs/` directory to maintain con
 | `@mission-platform/tsdown-config`     | Shared tsdown logic for library packages.                    |
 | `@mission-platform/typescript-config` | Base `tsconfig.json` presets for apps, libraries, and tests. |
 | `@mission-platform/postcss-config`    | Standardized CSS processing (Autoprefixer, etc.).            |
+
+## TypeScript 7 toolchain
+
+The workspace catalog pins the compiler to stable TypeScript `7.0.2`. Workspace checks and declaration builds use the
+native `tsc` executable, while editor integrations use TypeScript's native language server:
+
+```bash
+pnpm exec tsc --version
+pnpm exec tsc --lsp --stdio
+```
+
+Shared presets in `@mission-platform/typescript-config` remain the source of truth for target, module resolution,
+ambient types, strictness, project references, and declaration output. Forge and CMS tooling does not use the removed
+TypeScript compiler API; it consumes the repository-owned parser-neutral/OXC contracts instead. This boundary also powers
+the package documentation scanner and keeps generated Forge output independent of compiler API internals.
+
+Compiled JavaScript and declaration files are emitted only into the owning package's `dist` directory. Forge's generated
+framework source tree is temporary build input and is removed after the bundle completes; it must not leave `*.js` or
+`*.d.ts` files under `src` or package-level cache directories.
+
+Vue-target package declarations are synthesized by the Forge `tsdown` declaration plugin. This path emits package
+declarations without invoking `vue-tsc`; it does not provide type checking for arbitrary application SFC templates.
+Application SFC checks remain an explicit acceptance gate and currently require an upstream TypeScript 7-compatible
+`vue-tsc` release. The available `vue-tsc@3.3.11` fails against TypeScript `7.0.2` with
+`ERR_PACKAGE_PATH_NOT_EXPORTED` for `typescript/lib/tsc`, while native `tsc` intentionally does not type-check `.vue`
+files. Do not add a TypeScript 6 compatibility alias to work around this boundary.
+
+The shared ESLint configuration uses `@babel/eslint-parser` for TypeScript, TSX, and Vue syntax and a small
+repository-owned compatibility plugin for the retained `@typescript-eslint/no-explicit-any` and
+`@typescript-eslint/consistent-type-imports` rule IDs. This is intentionally syntax-only: the current
+`typescript-eslint` release rejects TypeScript 7, so type-aware lint rules are replaced by the shared TypeScript
+`noUnusedLocals` and `noUnusedParameters` checks until a compatible upstream release is available.
 
 ## Local Development vs. Production
 

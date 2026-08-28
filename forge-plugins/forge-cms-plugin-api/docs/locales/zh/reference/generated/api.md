@@ -16,7 +16,7 @@
 **种类：**常数
 
 ```typescript
-export const BADGE
+export const BADGE;
 ```
 
 文字联合选项、JSDoc 描述以及 `?? literal` 默认值。
@@ -26,7 +26,7 @@ export const BADGE
 **种类：**常数
 
 ```typescript
-export const badgeNames: ContentComponentNamesInput
+export const badgeNames: ContentComponentNamesInput;
 ```
 
 没有提供描述。
@@ -36,7 +36,7 @@ export const badgeNames: ContentComponentNamesInput
 **种类：**常数
 
 ```typescript
-export const BUTTON
+export const BUTTON;
 ```
 
 联合体降级为文本加上删除的回调道具。
@@ -46,7 +46,7 @@ export const BUTTON
 **种类：**常数
 
 ```typescript
-export const buttonNames: ContentComponentNamesInput
+export const buttonNames: ContentComponentNamesInput;
 ```
 
 没有提供描述。
@@ -56,7 +56,7 @@ export const buttonNames: ContentComponentNamesInput
 **种类：**常数
 
 ```typescript
-export const COUNTER
+export const COUNTER;
 ```
 
 交互式组件：状态和事件处理程序强制形成一个水合岛。
@@ -66,7 +66,7 @@ export const COUNTER
 **种类：**常数
 
 ```typescript
-export const counterNames: ContentComponentNamesInput
+export const counterNames: ContentComponentNamesInput;
 ```
 
 没有提供描述。
@@ -76,7 +76,7 @@ export const counterNames: ContentComponentNamesInput
 **种类：**常数
 
 ```typescript
-export const EMPTY
+export const EMPTY;
 ```
 
 一个根本没有 props 的组件。
@@ -86,7 +86,7 @@ export const EMPTY
 **种类：**常数
 
 ```typescript
-export const emptyNames: ContentComponentNamesInput
+export const emptyNames: ContentComponentNamesInput;
 ```
 
 没有提供描述。
@@ -96,7 +96,7 @@ export const emptyNames: ContentComponentNamesInput
 **种类：**常数
 
 ```typescript
-export const GRID
+export const GRID;
 ```
 
 具有数字默认值的数字属性。
@@ -106,7 +106,7 @@ export const GRID
 **种类：**常数
 
 ```typescript
-export const gridNames: ContentComponentNamesInput
+export const gridNames: ContentComponentNamesInput;
 ```
 
 没有提供描述。
@@ -116,7 +116,7 @@ export const gridNames: ContentComponentNamesInput
 **种类：**常数
 
 ```typescript
-export const LAYOUT
+export const LAYOUT;
 ```
 
 默认插槽旁边的命名插槽。
@@ -126,7 +126,7 @@ export const LAYOUT
 **种类：**常数
 
 ```typescript
-export const layoutNames: ContentComponentNamesInput
+export const layoutNames: ContentComponentNamesInput;
 ```
 
 没有提供描述。
@@ -136,7 +136,7 @@ export const layoutNames: ContentComponentNamesInput
 **种类：**常数
 
 ```typescript
-export const REQUIRED
+export const REQUIRED;
 ```
 
 一个必需的（非可选的）道具和一个可选的道具。
@@ -146,7 +146,7 @@ export const REQUIRED
 **种类：**常数
 
 ```typescript
-export const requiredNames: ContentComponentNamesInput
+export const requiredNames: ContentComponentNamesInput;
 ```
 
 没有提供描述。
@@ -156,7 +156,7 @@ export const requiredNames: ContentComponentNamesInput
 **种类：**常数
 
 ```typescript
-export const SITE_HEADER
+export const SITE_HEADER;
 ```
 
 具有站点范围设置道具的组件。
@@ -166,7 +166,7 @@ export const SITE_HEADER
 **种类：**常数
 
 ```typescript
-export const siteHeaderNames: ContentComponentNamesInput
+export const siteHeaderNames: ContentComponentNamesInput;
 ```
 
 没有提供描述。
@@ -178,16 +178,16 @@ export const siteHeaderNames: ContentComponentNamesInput
 **种类：**功能
 
 ```typescript
-function stubFramework(id = "react"): FrameworkOutputPlugin
+function stubFramework(id = "react"): FrameworkOutputPlugin;
 ```
 
 创建一个具有可重写 id 的存根框架插件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编号 |  |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 编号 |      |      |
 
 ## `src/analyze`
 
@@ -196,7 +196,11 @@ function stubFramework(id = "react"): FrameworkOutputPlugin
 **种类：**功能
 
 ```typescript
-function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentComponentNamesInput, semantic?: SemanticModule): ContentComponent
+function analyzeContentComponent(
+  sourceFile: ts.SourceFile,
+  names: ContentComponentNamesInput,
+  semantic?: SemanticModule,
+): ContentComponent;
 ```
 
 分析中立组件模块，返回其平台中立内容
@@ -205,18 +209,18 @@ model：有序的可创作字段、它呈现的槽以及是否需要
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|源文件 | ts.SourceFile |  |
-|名称 |内容组件名称输入 |  |
-|语义|语义模块 |  |
+| 名称   | 类型             | 描述 |
+| ------ | ---------------- | ---- |
+| 源文件 | ts.SourceFile    |      |
+| 名称   | 内容组件名称输入 |      |
+| 语义   | 语义模块         |      |
 
 ### CMS_COLOR_TAG
 
 **种类：**常数
 
 ```typescript
-export const CMS_COLOR_TAG
+export const CMS_COLOR_TAG;
 ```
 
 没有提供描述。
@@ -226,7 +230,7 @@ export const CMS_COLOR_TAG
 **种类：**常数
 
 ```typescript
-export const CMS_COLOUR_TAG
+export const CMS_COLOUR_TAG;
 ```
 
 源注释接受英式拼写。
@@ -236,7 +240,7 @@ export const CMS_COLOUR_TAG
 **种类：**常数
 
 ```typescript
-export const CMS_ICON_TAG
+export const CMS_ICON_TAG;
 ```
 
 用于可选组件级编辑器元数据的 JSDoc 标记。
@@ -246,7 +250,7 @@ export const CMS_ICON_TAG
 **种类：**常数
 
 ```typescript
-export const CMS_SETTING_TAG
+export const CMS_SETTING_TAG;
 ```
 
 将 prop 提升为站点范围 CMS 设置的 JSDoc 标记。
@@ -256,7 +260,7 @@ export const CMS_SETTING_TAG
 **种类：**常数
 
 ```typescript
-export const CMS_TAB_TAG
+export const CMS_TAB_TAG;
 ```
 
 将 prop 分配给编辑器选项卡的 JSDoc 标记。
@@ -266,7 +270,7 @@ export const CMS_TAB_TAG
 **种类：**常数
 
 ```typescript
-export const DEFAULT_SLOT_FIELD
+export const DEFAULT_SLOT_FIELD;
 ```
 
 该字段键默认插槽（组件的 `children`) 暴露在下。
@@ -276,32 +280,34 @@ export const DEFAULT_SLOT_FIELD
 **种类：**功能
 
 ```typescript
-function deriveContentComponentNames(names: ContentComponentNamesInput): ContentComponentNames
+function deriveContentComponentNames(
+  names: ContentComponentNamesInput,
+): ContentComponentNames;
 ```
 
 从调用者提供的子集中派生完整名称集。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|名称 |内容组件名称输入 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 名称 | 内容组件名称输入 |      |
 
 ### 是交互模块
 
 **种类：**功能
 
 ```typescript
-function isInteractiveModule(semantic: SemanticModule | undefined): boolean
+function isInteractiveModule(semantic: SemanticModule | undefined): boolean;
 ```
 
 当中性 IR 携带只有真正的运行时才能提供的行为时为真。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|语义|语义模块\|未定义 |  |
+| 名称 | 类型             | 描述 |
+| ---- | ---------------- | ---- |
+| 语义 | 语义模块\|未定义 |      |
 
 ## `src/classify`
 
@@ -310,7 +316,7 @@ function isInteractiveModule(semantic: SemanticModule | undefined): boolean
 **种类：**常数
 
 ```typescript
-export const ASSET_TYPE_REFERENCES: ReadonlySet<string>
+export const ASSET_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 键入将道具标记为媒体资产的引用。
@@ -330,41 +336,47 @@ export type ClassifiedFieldKind = ContentFieldKind | undefined;
 **种类：**功能
 
 ```typescript
-function classifyType(node: ts.TypeNode, aliases: Map<string, ts.TypeNode>, seen: Set<string> = new Set()): ClassifiedFieldKind
+function classifyType(
+  node: ts.TypeNode,
+  aliases: Map<string, ts.TypeNode>,
+  seen: Set<string> = new Set(),
+): ClassifiedFieldKind;
 ```
 
 对道具类型进行分类 node 转换为中性内容类型，解析本地别名/联合。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node | ts.TypeNode |  |
-|别名 |地图<string, ts.TypeNode> |  |
-|见过|放<string> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| node | ts.TypeNode               |      |
+| 别名 | 地图<string, ts.TypeNode> |      |
+| 见过 | 放<string>                |      |
 
 ### 收集类型别名
 
 **种类：**功能
 
 ```typescript
-function collectTypeAliases(sourceFile: ts.SourceFile): Map<string, ts.TypeNode>
+function collectTypeAliases(
+  sourceFile: ts.SourceFile,
+): Map<string, ts.TypeNode>;
 ```
 
 映射每个顶层 `type X = …` 其类型的别名 node，用于工会决议。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|源文件 | ts.SourceFile |  |
+| 名称   | 类型          | 描述 |
+| ------ | ------------- | ---- |
+| 源文件 | ts.SourceFile |      |
 
 ### LINK_TYPE_REFERENCES
 
 **种类：**常数
 
 ```typescript
-export const LINK_TYPE_REFERENCES: ReadonlySet<string>
+export const LINK_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 输入将 prop 标记为链接/URL 的引用。
@@ -374,7 +386,7 @@ export const LINK_TYPE_REFERENCES: ReadonlySet<string>
 **种类：**常数
 
 ```typescript
-export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
+export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 将 prop 标记为格式化富文本而不是纯文本的类型引用。
@@ -384,7 +396,7 @@ export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
 **种类：**常数
 
 ```typescript
-export const SLOT_TYPE_REFERENCES: ReadonlySet<string>
+export const SLOT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 其 props 被视为嵌套内容的类型引用 (`children`).
@@ -406,7 +418,8 @@ export interface CmsArtifact
 **种类：**类型
 
 ```typescript
-export type CmsArtifactKind = "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
+export type CmsArtifactKind =
+  "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
 ```
 
 发出的工件在目标的输出树中扮演的角色。
@@ -446,16 +459,16 @@ export interface CmsTargetContext
 **种类：**功能
 
 ```typescript
-function cmsTargetDirectory(plugin: CmsOutputPlugin): string
+function cmsTargetDirectory(plugin: CmsOutputPlugin): string;
 ```
 
 目标的每框架输出写入的目录段。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|插件 | CmsOutput插件 |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 插件 | CmsOutput插件 |      |
 
 ### CMS目标ID
 
@@ -472,7 +485,7 @@ export type CmsTargetId = "storyblok" | "astro" | "ghost" | "jekyll" | "webflow"
 **种类：**功能
 
 ```typescript
-function defineForgeCmsPlugin(plugin: T): T
+function defineForgeCmsPlugin(plugin: T): T;
 ```
 
 验证并返回 CMS 输出插件。
@@ -482,9 +495,9 @@ function defineForgeCmsPlugin(plugin: T): T
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|插件 | T |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 插件 | T    |      |
 
 ## `src/config`
 
@@ -493,16 +506,18 @@ function defineForgeCmsPlugin(plugin: T): T
 **种类：**功能
 
 ```typescript
-function defineViteForgeCmsLibrary(options: ViteForgeCmsLibraryOptions): UserConfig
+function defineViteForgeCmsLibrary(
+  options: ViteForgeCmsLibraryOptions,
+): UserConfig;
 ```
 
 创建一个 Vite 一个 CMS 目标的库配置。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ViteForgeCmsLibrary选项 |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 选项 | ViteForgeCmsLibrary选项 |      |
 
 ### ViteForgeCmsLibrary选项
 
@@ -551,7 +566,13 @@ export interface ContentComponentNames
 **种类：**类型
 
 ```typescript
-export type ContentComponentNamesInput = Pick< ContentComponentNames, "neutralName" | "publicName" > & Partial< Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir"> >;
+export type ContentComponentNamesInput = Pick<
+  ContentComponentNames,
+  "neutralName" | "publicName"
+> &
+  Partial<
+    Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir">
+  >;
 ```
 
 调用者提供的 {@link ContentComponentNames} 子集；其余的都是派生出来的。
@@ -605,32 +626,32 @@ export type ContentFieldKindName = ContentFieldKind["kind"];
 **种类：**功能
 
 ```typescript
-function contentFields(component: ContentComponent): readonly ContentField[]
+function contentFields(component: ContentComponent): readonly ContentField[];
 ```
 
 组件的字段不是槽（标量、可创作内容）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 组件 | 内容组件 |      |
 
 ### 插槽字段
 
 **种类：**功能
 
 ```typescript
-function slotFields(component: ContentComponent): readonly ContentField[]
+function slotFields(component: ContentComponent): readonly ContentField[];
 ```
 
 携带嵌套内容的组件的字段。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 组件 | 内容组件 |      |
 
 ## `src/driver`
 
@@ -639,7 +660,9 @@ function slotFields(component: ContentComponent): readonly ContentField[]
 **种类：**功能
 
 ```typescript
-function generateCmsArtifacts(options: GenerateCmsArtifactsOptions): GeneratedCmsTree
+function generateCmsArtifacts(
+  options: GenerateCmsArtifactsOptions,
+): GeneratedCmsTree;
 ```
 
 为一个 CMS 运行完整的发现 → IR → 内容模型 → 发出 → 写入循环
@@ -647,9 +670,9 @@ target，返回入口模块路径和写入的所有内容。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |生成 CmsArtifacts 选项 |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 选项 | 生成 CmsArtifacts 选项 |      |
 
 ### 生成CmsArtifacts选项
 
@@ -688,7 +711,9 @@ export interface GeneratedIsland
 **种类：**功能
 
 ```typescript
-function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undefined
+function generateIsland(
+  options: GenerateIslandOptions,
+): GeneratedIsland | undefined;
 ```
 
 共同生成目标的框架岛树，返回说明符
@@ -696,9 +721,9 @@ function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undef
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |生成岛屿选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 选项 | 生成岛屿选项 |      |
 
 ### 生成岛屿选项
 
@@ -715,7 +740,7 @@ export interface GenerateIslandOptions
 **种类：**常数
 
 ```typescript
-export const ISLAND_DIRECTORY
+export const ISLAND_DIRECTORY;
 ```
 
 相对于目标输出目录的目录名称，岛将生成到其中。
@@ -727,48 +752,48 @@ export const ISLAND_DIRECTORY
 **种类：**功能
 
 ```typescript
-function toDisplayName(publicName: string): string
+function toDisplayName(publicName: string): string;
 ```
 
 将公共名称转换为其显示名称 (`InView` → `In View`).
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|公共名称 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 公共名称 | 字符串 |      |
 
 ### 烤肉串名称
 
 **种类：**功能
 
 ```typescript
-function toKebabName(publicName: string): string
+function toKebabName(publicName: string): string;
 ```
 
 将公共名称转换为短横线命名（`InView` → `in-view`).
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|公共名称 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 公共名称 | 字符串 |      |
 
 ### 至技术名称
 
 **种类：**功能
 
 ```typescript
-function toTechnicalName(publicName: string): string
+function toTechnicalName(publicName: string): string;
 ```
 
 将公共名称转换为其技术名称 (`InView` → `in_view`).
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|公共名称 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 公共名称 | 字符串 |      |
 
 ## `src/tsdown`
 
@@ -777,83 +802,85 @@ function toTechnicalName(publicName: string): string
 **种类：**功能
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 目标生成的树被写入的缓存目录。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|根目录 |字符串|  |
-|目标| CmsOutput插件 |  |
+| 名称   | 类型          | 描述 |
+| ------ | ------------- | ---- |
+| 根目录 | 字符串        |      |
+| 目标   | CmsOutput插件 |      |
 
 ### cms输出目录
 
 **种类：**功能
 
 ```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 目标的每个框架模块被发送到的分发目录。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|根目录 |字符串|  |
-|目标| CmsOutput插件 |  |
+| 名称   | 类型          | 描述 |
+| ------ | ------------- | ---- |
+| 根目录 | 字符串        |      |
+| 目标   | CmsOutput插件 |      |
 
 ### 定义TsdownForgeCms
 
 **种类：**功能
 
 ```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig
+function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
 ```
 
 为一个 CMS 目标创建 tsdown 配置。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | TsdownForgeCmsOptions | TsdownForgeCmsOptions |  |
+| 名称 | 类型                  | 描述                  |
+| ---- | --------------------- | --------------------- |
+| 选项 | TsdownForgeCmsOptions | TsdownForgeCmsOptions |     |
 
 ### 定义TsdownForgeCmsAll
 
 **种类：**功能
 
 ```typescript
-function defineTsdownForgeCmsAll(options: TsdownForgeCmsAllOptions): UserConfig[]
+function defineTsdownForgeCmsAll(
+  options: TsdownForgeCmsAllOptions,
+): UserConfig[];
 ```
 
 为每个请求的 CMS 目标创建 tsdown 配置。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | TsdownForgeCmsAllOptions | TsdownForgeCmsAllOptions |  |
+| 名称 | 类型                     | 描述                     |
+| ---- | ------------------------ | ------------------------ |
+| 选项 | TsdownForgeCmsAllOptions | TsdownForgeCmsAllOptions |     |
 
 ### 解析组件模块
 
 **种类：**功能
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string
+function resolveComponentsModule(rootDir: string, explicit?: string): string;
 ```
 
 找到包装中的中性元件桶。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|根目录 |字符串|  |
-|明确 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 根目录 | 字符串 |      |
+| 明确   | 字符串 |      |
 
 ### TsdownForgeCmsAllOptions
 

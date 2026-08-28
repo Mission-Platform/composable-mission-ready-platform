@@ -16,7 +16,12 @@
 פונקציה **סוג:**
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 הדפס מודול רכיב ניטרלי כ-Svelte 5 SFC. מתקשר שכבר רץ
@@ -25,12 +30,12 @@ function emitSvelteModule(module: SemanticModule, componentName: string = "Compo
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
-| שם רכיב | מחרוזת |  |
-| componentFolders | ReadonlySet<string> |  |
-| תוכנית | SvelteLoweredModule |  |
+| שם               | הקלד                | תיאור |
+| ---------------- | ------------------- | ----- |
+| מודול            | SemanticModule      |       |
+| שם רכיב          | מחרוזת              |       |
+| componentFolders | ReadonlySet<string> |       |
+| תוכנית           | SvelteLoweredModule |       |
 
 ### SvelteModuleOutput
 
@@ -49,16 +54,16 @@ export interface SvelteModuleOutput
 פונקציה **סוג:**
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 הדפס וו ניטרלי/מודול הניתן לחיבור כמקור Svelte-יעד `.ts`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| מודול | SemanticModule |       |
 
 ## `src/index`
 
@@ -67,7 +72,7 @@ function emitSvelteHookModule(module: SemanticModule): string
 פונקציה **סוג:**
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 צור את הפלאגין Svelte ואת מתאמי המהדר Vite/Rolldown שלו.
@@ -79,33 +84,38 @@ function forgeSvelteFramework(): FrameworkOutputPlugin
 פונקציה **סוג:**
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 בין אם תוכנית היעד היא תוכנית Svelte - האפליה שכל צרכן מצמצם עליו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הוריד | TargetLoweredModule \| לא מוגדר |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| הוריד | TargetLoweredModule \| לא מוגדר |       |
 
 ### lowerSvelteModule
 
 פונקציה **סוג:**
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 בנה את תוכנית Svelte עבור מודול ניטרלי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| הקשר | היעד הקשר |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| ir   | SemanticModule |       |
+| הקשר | היעד הקשר      |       |
 
 ### SvelteBindingPlan
 
@@ -281,7 +291,10 @@ export interface SvelteTargetIntentions extends TargetIntentions
 פונקציה **סוג:**
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 חידד תוכנית Svelte מונמכת. כוונות שאינן נושאות תוכנית Svelte (זר
@@ -289,17 +302,17 @@ function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptim
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כוונות | כוונות יעד |  |
-| אפשרויות | TargetOptimizeOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| כוונות   | כוונות יעד            |       |
+| אפשרויות | TargetOptimizeOptions |       |
 
 ### SVELTE_OPTIMIZATIONS
 
 **סוג:** קבוע
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 כל אופטימיזציה שהיעד הזה יכול להחיל, לפי סדר היישום.

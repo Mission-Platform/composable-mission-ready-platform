@@ -11,41 +11,45 @@ Generated from public source declarations in `@mission-platform/forge-router-plu
 **Kind:** function
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 Create a source-local diagnostic for a router compiler failure.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostic | Omit<CompilerDiagnostic, 'phase' \| 'fileName'> & {     readonly fileName?: string;   } |  |
+| Name       | Type                                                                              | Description |
+| ---------- | --------------------------------------------------------------------------------- | ----------- |
+| diagnostic | Omit<CompilerDiagnostic, 'phase' \| 'fileName'> & { readonly fileName?: string; } |             |
 
 ### defineForgeRouterPlugin
 
 **Kind:** function
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 Validate router plugin metadata before it enters a compiler pipeline.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| plugin | T |  |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| plugin | T    |             |
 
 ### defineForgeRouterTarget
 
 **Kind:** function
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 Create a deterministic target that rewrites neutral router imports.
@@ -58,16 +62,16 @@ file-based or server-only routers.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeRouterTargetOptions |  |
+| Name    | Type                     | Description |
+| ------- | ------------------------ | ----------- |
+| options | ForgeRouterTargetOptions |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **Kind:** constant
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 Neutral runtime exports that preserve the package-author contract.
@@ -82,7 +86,7 @@ at that module.
 **Kind:** constant
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 Reserved target contracts for routers whose first-party adapters are not part of this milestone.
@@ -122,7 +126,7 @@ A generated source module returned by a router target.
 **Kind:** constant
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Stable marker shared with the neutral router package.
@@ -132,7 +136,7 @@ Stable marker shared with the neutral router package.
 **Kind:** constant
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 The package whose imports are understood by the router compiler pass.
@@ -152,7 +156,8 @@ Build hooks owned by a router target; no router dependency is loaded by core.
 **Kind:** type
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 Independently lowerable operations exposed by the neutral router contract.
@@ -192,7 +197,7 @@ One use of a neutral router marker, retaining source coordinates for diagnostics
 **Kind:** type
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 How a neutral router binding is used in a source module.
@@ -272,31 +277,37 @@ Target-specific plan produced between lowering and generation.
 **Kind:** function
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 Find a direct or id-selected router target without coupling it to UI plugins.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| selection | RouterPluginSelection \| undefined |  |
-| plugins | readonly RouterOutputPlugin[] |  |
+| Name      | Type                               | Description |
+| --------- | ---------------------------------- | ----------- |
+| selection | RouterPluginSelection \| undefined |             |
+| plugins   | readonly RouterOutputPlugin[]      |             |
 
 ### unsupportedRouterCapabilities
 
 **Kind:** function
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 Report capability gaps before a target has a chance to silently miscompile a module.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| ir | RouterCapabilityModule |  |
-| plugin | RouterOutputPlugin \| undefined |  |
+| Name   | Type                            | Description |
+| ------ | ------------------------------- | ----------- |
+| ir     | RouterCapabilityModule          |             |
+| plugin | RouterOutputPlugin \| undefined |             |

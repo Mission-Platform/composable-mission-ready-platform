@@ -16,16 +16,16 @@
 **種類:** 関数
 
 ```typescript
-function emitSolidHookModule(module: SemanticModule): string
+function emitSolidHookModule(module: SemanticModule): string;
 ```
 
 ニュートラル フック モジュールを SolidJS ソースに変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| モジュール | セマンティックモジュール |      |
 
 ## `src/emitters/module`
 
@@ -34,17 +34,20 @@ function emitSolidHookModule(module: SemanticModule): string
 **種類:** 関数
 
 ```typescript
-function emitSolidModule(module: SemanticModule, options: SolidEmitOptions = {}): GeneratedSolidModule
+function emitSolidModule(
+  module: SemanticModule,
+  options: SolidEmitOptions = {},
+): GeneratedSolidModule;
 ```
 
 ニュートラルコンポーネントモジュールをSolidJSソースに変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
-|オプション | SolidEmitオプション |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| モジュール | セマンティックモジュール |      |
+| オプション | SolidEmitオプション      |      |
 
 ### 生成されたソリッドモジュール
 
@@ -73,7 +76,7 @@ export interface SolidEmitOptions
 **種類:** 関数
 
 ```typescript
-function forgeSolidFramework(): FrameworkOutputPlugin
+function forgeSolidFramework(): FrameworkOutputPlugin;
 ```
 
 Solid 出力プラグインとその Vite/Rolldown JSX アダプターを作成します。
@@ -85,40 +88,48 @@ Solid 出力プラグインとその Vite/Rolldown JSX アダプターを作成�
 **種類:** 関数
 
 ```typescript
-function isSolidLowered(lowered: TargetLoweredModule | undefined): lowered is SolidLoweredModule
+function isSolidLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SolidLoweredModule;
 ```
 
 ターゲット プランを Solid プランに絞り込みます。他のフレームワークのプランの場合は `false`。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|下げた | TargetLoweredModule \|未定義 |  |
+| 名前   | タイプ                       | 説明 |
+| ------ | ---------------------------- | ---- |
+| 下げた | TargetLoweredModule \|未定義 |      |
 
 ### 下部ソリッドモジュール
 
 **種類:** 関数
 
 ```typescript
-function lowerSolidModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerSolidModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 ニュートラル IR を Solid のターゲット意図ラッパーに下げ、計画を実行します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|赤外線 |セマンティックモジュール |  |
-|コンテキスト |ターゲットコンテキスト |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| 赤外線       | セマンティックモジュール |      |
+| コンテキスト | ターゲットコンテキスト   |      |
 
 ### planSolidImports
 
 **種類:** 関数
 
 ```typescript
-function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string[]
+function planSolidImports(
+  plan: SolidLoweringPlan,
+  conditional: boolean,
+): string[];
 ```
 
 プランに必要な正確な `solid-js` 値の名前は、アルファベット順に並べられています。
@@ -127,33 +138,33 @@ function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|計画 |ソリッドローリングプラン |  |
-|条件付き |ブール値 |  |
+| 名前     | タイプ                   | 説明 |
+| -------- | ------------------------ | ---- |
+| 計画     | ソリッドローリングプラン |      |
+| 条件付き | ブール値                 |      |
 
 ### プランソリッドモジュール
 
 **種類:** 関数
 
 ```typescript
-function planSolidModule(ir: SemanticModule): SolidLoweringPlan
+function planSolidModule(ir: SemanticModule): SolidLoweringPlan;
 ```
 
 モジュールのセマンティック ファクトの Solid プランを構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|赤外線 |セマンティックモジュール |  |
+| 名前   | タイプ                   | 説明 |
+| ------ | ------------------------ | ---- |
+| 赤外線 | セマンティックモジュール |      |
 
 ### SOLID_FRAMEWORK
 
 **種類:** 定数
 
 ```typescript
-export const SOLID_FRAMEWORK
+export const SOLID_FRAMEWORK;
 ```
 
 Solid プランごとに識別されるフレームワーク識別子。
@@ -275,7 +286,7 @@ export interface SolidSlotPlan
 **種類:** 定数
 
 ```typescript
-export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
+export const COLLAPSE_SINGLE_CHILD_FRAGMENTS;
 ```
 
 ちょうど 1 つの要素をラップするフラグメントをドロップします。
@@ -285,7 +296,7 @@ export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
 **種類:** 定数
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 洗練された計画から `solid-js` インポートを再計算します。
@@ -295,7 +306,7 @@ export const DROP_UNUSED_IMPORTS
 **種類:** 定数
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 `__mpStatic` サブツリーをモジュール レベルの定数にプロモートします。
@@ -305,7 +316,7 @@ export const HOIST_STATIC_SUBTREES
 **種類:** 定数
 
 ```typescript
-export const MEMOIZE_DYNAMIC_EXPRESSIONS
+export const MEMOIZE_DYNAMIC_EXPRESSIONS;
 ```
 
 繰り返される動的子式を単一のメモにプロモートします。
@@ -315,7 +326,7 @@ export const MEMOIZE_DYNAMIC_EXPRESSIONS
 **種類:** 定数
 
 ```typescript
-export const MP_MEMO_PREFIX
+export const MP_MEMO_PREFIX;
 ```
 
 `solid:memoize-dynamic-expressions` が導入するメモ バインディングのプレフィックス。
@@ -325,7 +336,10 @@ export const MP_MEMO_PREFIX
 **種類:** 関数
 
 ```typescript
-function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSolidModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 引き下げられた Solid プランを改良します。 Solid プランを持たないインテンション ラッパー
@@ -333,17 +347,17 @@ function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|意図 |ターゲットインテンション |  |
-|オプション |ターゲット最適化オプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| 意図       | ターゲットインテンション   |      |
+| オプション | ターゲット最適化オプション |      |
 
 ### STABLE_LIST_KEYS
 
 **種類:** 定数
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 フロントエンドが安定していることが証明されたリスト キーのみを保持します。

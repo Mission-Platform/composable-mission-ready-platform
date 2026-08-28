@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-c
 **Soort:** constant
 
 ```typescript
-export const BADGE
+export const BADGE;
 ```
 
 Letterlijke unie-opties, JSDoc-beschrijvingen en `?? literal`-standaardwaarden.
@@ -26,7 +26,7 @@ Letterlijke unie-opties, JSDoc-beschrijvingen en `?? literal`-standaardwaarden.
 **Soort:** constant
 
 ```typescript
-export const badgeNames: ContentComponentNamesInput
+export const badgeNames: ContentComponentNamesInput;
 ```
 
 Geen beschrijving opgegeven.
@@ -36,7 +36,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const BUTTON
+export const BUTTON;
 ```
 
 Een vakbond die vernedert tot tekst plus een verwijderde callback-prop.
@@ -46,7 +46,7 @@ Een vakbond die vernedert tot tekst plus een verwijderde callback-prop.
 **Soort:** constant
 
 ```typescript
-export const buttonNames: ContentComponentNamesInput
+export const buttonNames: ContentComponentNamesInput;
 ```
 
 Geen beschrijving opgegeven.
@@ -56,7 +56,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const COUNTER
+export const COUNTER;
 ```
 
 Een interactief onderdeel: de staat en een gebeurtenishandler forceren een gehydrateerd eiland.
@@ -66,7 +66,7 @@ Een interactief onderdeel: de staat en een gebeurtenishandler forceren een gehyd
 **Soort:** constant
 
 ```typescript
-export const counterNames: ContentComponentNamesInput
+export const counterNames: ContentComponentNamesInput;
 ```
 
 Geen beschrijving opgegeven.
@@ -76,7 +76,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const EMPTY
+export const EMPTY;
 ```
 
 Een onderdeel zonder rekwisieten.
@@ -86,7 +86,7 @@ Een onderdeel zonder rekwisieten.
 **Soort:** constant
 
 ```typescript
-export const emptyNames: ContentComponentNamesInput
+export const emptyNames: ContentComponentNamesInput;
 ```
 
 Geen beschrijving opgegeven.
@@ -96,7 +96,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const GRID
+export const GRID;
 ```
 
 Een numerieke prop met een numerieke standaardwaarde.
@@ -106,7 +106,7 @@ Een numerieke prop met een numerieke standaardwaarde.
 **Soort:** constant
 
 ```typescript
-export const gridNames: ContentComponentNamesInput
+export const gridNames: ContentComponentNamesInput;
 ```
 
 Geen beschrijving opgegeven.
@@ -116,7 +116,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const LAYOUT
+export const LAYOUT;
 ```
 
 Een benoemd slot naast het standaardslot.
@@ -126,7 +126,7 @@ Een benoemd slot naast het standaardslot.
 **Soort:** constant
 
 ```typescript
-export const layoutNames: ContentComponentNamesInput
+export const layoutNames: ContentComponentNamesInput;
 ```
 
 Geen beschrijving opgegeven.
@@ -136,7 +136,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const REQUIRED
+export const REQUIRED;
 ```
 
 Een vereiste (niet-optionele) prop naast een optionele.
@@ -146,7 +146,7 @@ Een vereiste (niet-optionele) prop naast een optionele.
 **Soort:** constant
 
 ```typescript
-export const requiredNames: ContentComponentNamesInput
+export const requiredNames: ContentComponentNamesInput;
 ```
 
 Geen beschrijving opgegeven.
@@ -156,7 +156,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const SITE_HEADER
+export const SITE_HEADER;
 ```
 
 Een component met een instellingsprop voor de hele site.
@@ -166,7 +166,7 @@ Een component met een instellingsprop voor de hele site.
 **Soort:** constant
 
 ```typescript
-export const siteHeaderNames: ContentComponentNamesInput
+export const siteHeaderNames: ContentComponentNamesInput;
 ```
 
 Geen beschrijving opgegeven.
@@ -178,7 +178,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function stubFramework(id = "react"): FrameworkOutputPlugin
+function stubFramework(id = "react"): FrameworkOutputPlugin;
 ```
 
 Maak een stub-framework-plug-in met een overschrijfbare ID.
@@ -186,8 +186,8 @@ Maak een stub-framework-plug-in met een overschrijfbare ID.
 #### Parameters
 
 | Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ID |  |  |
+| ---- | --- | ------------ |
+| ID   |     |              |
 
 ## `src/analyze`
 
@@ -196,7 +196,11 @@ Maak een stub-framework-plug-in met een overschrijfbare ID.
 **Soort:** functie
 
 ```typescript
-function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentComponentNamesInput, semantic?: SemanticModule): ContentComponent
+function analyzeContentComponent(
+  sourceFile: ts.SourceFile,
+  names: ContentComponentNamesInput,
+  semantic?: SemanticModule,
+): ContentComponent;
 ```
 
 Analyseer een neutrale componentmodule en retourneer de platformneutrale inhoud ervan
@@ -205,18 +209,18 @@ een gehydrateerde looptijd.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
-| namen | ContentComponentNamesInvoer |  |
-| semantisch | SemantischeModule |  |
+| Naam        | Typ                         | Beschrijving |
+| ----------- | --------------------------- | ------------ |
+| bronbestand | ts.Bronbestand              |              |
+| namen       | ContentComponentNamesInvoer |              |
+| semantisch  | SemantischeModule           |              |
 
 ### CMS_COLOR_TAG
 
 **Soort:** constant
 
 ```typescript
-export const CMS_COLOR_TAG
+export const CMS_COLOR_TAG;
 ```
 
 Geen beschrijving opgegeven.
@@ -226,7 +230,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const CMS_COLOUR_TAG
+export const CMS_COLOUR_TAG;
 ```
 
 Britse spelling geaccepteerd voor bronannotaties.
@@ -236,7 +240,7 @@ Britse spelling geaccepteerd voor bronannotaties.
 **Soort:** constant
 
 ```typescript
-export const CMS_ICON_TAG
+export const CMS_ICON_TAG;
 ```
 
 De JSDoc-tags voor optionele metagegevens van de editor op componentniveau.
@@ -246,7 +250,7 @@ De JSDoc-tags voor optionele metagegevens van de editor op componentniveau.
 **Soort:** constant
 
 ```typescript
-export const CMS_SETTING_TAG
+export const CMS_SETTING_TAG;
 ```
 
 De JSDoc-tag die een prop promoot naar een CMS-instelling voor de hele site.
@@ -256,7 +260,7 @@ De JSDoc-tag die een prop promoot naar een CMS-instelling voor de hele site.
 **Soort:** constant
 
 ```typescript
-export const CMS_TAB_TAG
+export const CMS_TAB_TAG;
 ```
 
 De JSDoc-tag die een prop aan een editortabblad toewijst.
@@ -266,7 +270,7 @@ De JSDoc-tag die een prop aan een editortabblad toewijst.
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_SLOT_FIELD
+export const DEFAULT_SLOT_FIELD;
 ```
 
 De veldsleutel waaronder het standaardslot (`children` van een component) wordt weergegeven.
@@ -276,32 +280,34 @@ De veldsleutel waaronder het standaardslot (`children` van een component) wordt 
 **Soort:** functie
 
 ```typescript
-function deriveContentComponentNames(names: ContentComponentNamesInput): ContentComponentNames
+function deriveContentComponentNames(
+  names: ContentComponentNamesInput,
+): ContentComponentNames;
 ```
 
 Leid de volledige naamset af van de door de beller geleverde subset.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| namen | ContentComponentNamesInvoer |  |
+| Naam  | Typ                         | Beschrijving |
+| ----- | --------------------------- | ------------ |
+| namen | ContentComponentNamesInvoer |              |
 
 ### isInteractieveModule
 
 **Soort:** functie
 
 ```typescript
-function isInteractiveModule(semantic: SemanticModule | undefined): boolean
+function isInteractiveModule(semantic: SemanticModule | undefined): boolean;
 ```
 
 Waar als de neutrale IR gedrag vertoont dat alleen een echte runtime kan bieden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| semantisch | SemantischeModule \| ongedefinieerd |  |
+| Naam       | Typ                                 | Beschrijving |
+| ---------- | ----------------------------------- | ------------ |
+| semantisch | SemantischeModule \| ongedefinieerd |              |
 
 ## `src/classify`
 
@@ -310,7 +316,7 @@ Waar als de neutrale IR gedrag vertoont dat alleen een echte runtime kan bieden.
 **Soort:** constant
 
 ```typescript
-export const ASSET_TYPE_REFERENCES: ReadonlySet<string>
+export const ASSET_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Typ referenties die een rekwisiet als media-item markeren.
@@ -330,41 +336,47 @@ Het resultaat van het classificeren van een rekwisiet (`undefined` → laat het 
 **Soort:** functie
 
 ```typescript
-function classifyType(node: ts.TypeNode, aliases: Map<string, ts.TypeNode>, seen: Set<string> = new Set()): ClassifiedFieldKind
+function classifyType(
+  node: ts.TypeNode,
+  aliases: Map<string, ts.TypeNode>,
+  seen: Set<string> = new Set(),
+): ClassifiedFieldKind;
 ```
 
 Classificeer het type node van een prop in een neutraal inhoudstype, waarbij lokale aliassen/vakbonden worden opgelost.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | ts.TypeNode |  |
-| aliassen | Kaart<string, ts.TypeNode> |  |
-| gezien | Stel<string> in |  |
+| Naam     | Typ                        | Beschrijving |
+| -------- | -------------------------- | ------------ |
+| node     | ts.TypeNode                |              |
+| aliassen | Kaart<string, ts.TypeNode> |              |
+| gezien   | Stel<string> in            |              |
 
 ### collectTypeAliassen
 
 **Soort:** functie
 
 ```typescript
-function collectTypeAliases(sourceFile: ts.SourceFile): Map<string, ts.TypeNode>
+function collectTypeAliases(
+  sourceFile: ts.SourceFile,
+): Map<string, ts.TypeNode>;
 ```
 
 Wijs elke `type X = …`-alias op het hoogste niveau toe aan het type node, voor unieresolutie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bronbestand | ts.Bronbestand |              |
 
 ### LINK_TYPE_REFERENTIES
 
 **Soort:** constant
 
 ```typescript
-export const LINK_TYPE_REFERENCES: ReadonlySet<string>
+export const LINK_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Typ referenties die een prop markeren als een link/URL.
@@ -374,7 +386,7 @@ Typ referenties die een prop markeren als een link/URL.
 **Soort:** constant
 
 ```typescript
-export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
+export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Typ verwijzingen die een rekwisiet markeren als opgemaakte RTF in plaats van platte tekst.
@@ -384,7 +396,7 @@ Typ verwijzingen die een rekwisiet markeren als opgemaakte RTF in plaats van pla
 **Soort:** constant
 
 ```typescript
-export const SLOT_TYPE_REFERENCES: ReadonlySet<string>
+export const SLOT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Typereferenties waarvan de rekwisieten worden behandeld als geneste inhoud (`children`).
@@ -406,7 +418,8 @@ Een enkel bestand dat een doel aan het stuurprogramma vraagt ​​te schrijven.
 **Soort:** type
 
 ```typescript
-export type CmsArtifactKind = "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
+export type CmsArtifactKind =
+  "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
 ```
 
 De rol die een uitgezonden artefact speelt in de uitvoerboom van het doel.
@@ -446,16 +459,16 @@ Alles wat een emitter nodig heeft over de build waarin hij draait.
 **Soort:** functie
 
 ```typescript
-function cmsTargetDirectory(plugin: CmsOutputPlugin): string
+function cmsTargetDirectory(plugin: CmsOutputPlugin): string;
 ```
 
 Het mapsegment waarin de uitvoer per raamwerk van een doel wordt geschreven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plug-in | CmsOutputPlugin |  |
+| Naam    | Typ             | Beschrijving |
+| ------- | --------------- | ------------ |
+| plug-in | CmsOutputPlugin |              |
 
 ### CmsTargetId
 
@@ -472,7 +485,7 @@ De ingebouwde CMS-doel-ID's, open voor elke extra tekenreeks-ID.
 **Soort:** functie
 
 ```typescript
-function defineForgeCmsPlugin(plugin: T): T
+function defineForgeCmsPlugin(plugin: T): T;
 ```
 
 Valideer en retourneer een CMS-uitvoerplug-in.
@@ -482,9 +495,9 @@ bereik de bestuurder en stoot stilletjes een gedeeltelijke boom uit.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plug-in | T |  |
+| Naam    | Typ | Beschrijving |
+| ------- | --- | ------------ |
+| plug-in | T   |              |
 
 ## `src/config`
 
@@ -493,16 +506,18 @@ bereik de bestuurder en stoot stilletjes een gedeeltelijke boom uit.
 **Soort:** functie
 
 ```typescript
-function defineViteForgeCmsLibrary(options: ViteForgeCmsLibraryOptions): UserConfig
+function defineViteForgeCmsLibrary(
+  options: ViteForgeCmsLibraryOptions,
+): UserConfig;
 ```
 
 Maak een Vite-bibliotheekconfiguratie voor één CMS-doel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ViteForgeCmsLibraryOptions |  |
+| Naam   | Typ                        | Beschrijving |
+| ------ | -------------------------- | ------------ |
+| opties | ViteForgeCmsLibraryOptions |              |
 
 ### ViteForgeCmsLibraryOptions
 
@@ -551,7 +566,13 @@ Elke naam waar een contentplatform om vraagt, afgeleid van één component.
 **Soort:** type
 
 ```typescript
-export type ContentComponentNamesInput = Pick< ContentComponentNames, "neutralName" | "publicName" > & Partial< Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir"> >;
+export type ContentComponentNamesInput = Pick<
+  ContentComponentNames,
+  "neutralName" | "publicName"
+> &
+  Partial<
+    Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir">
+  >;
 ```
 
 De subset van {@link ContentComponentNames} die een beller levert; de rest is afgeleid.
@@ -605,32 +626,32 @@ De discriminator van een {@link ContentFieldKind}.
 **Soort:** functie
 
 ```typescript
-function contentFields(component: ContentComponent): readonly ContentField[]
+function contentFields(component: ContentComponent): readonly ContentField[];
 ```
 
 De velden van een component die geen slots zijn (scalaire, auteurbare inhoud).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
+| Naam        | Typ             | Beschrijving |
+| ----------- | --------------- | ------------ |
+| bestanddeel | InhoudComponent |              |
 
 ### slotFields
 
 **Soort:** functie
 
 ```typescript
-function slotFields(component: ContentComponent): readonly ContentField[]
+function slotFields(component: ContentComponent): readonly ContentField[];
 ```
 
 De velden van een component die geneste inhoud bevatten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
+| Naam        | Typ             | Beschrijving |
+| ----------- | --------------- | ------------ |
+| bestanddeel | InhoudComponent |              |
 
 ## `src/driver`
 
@@ -639,7 +660,9 @@ De velden van een component die geneste inhoud bevatten.
 **Soort:** functie
 
 ```typescript
-function generateCmsArtifacts(options: GenerateCmsArtifactsOptions): GeneratedCmsTree
+function generateCmsArtifacts(
+  options: GenerateCmsArtifactsOptions,
+): GeneratedCmsTree;
 ```
 
 Voer de volledige ontdekking → IR → inhoudsmodel → emit → schrijflus uit voor één CMS
@@ -647,9 +670,9 @@ target, waarbij het pad van de invoermodule wordt geretourneerd en alles wat is 
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | Genereer CmsArtifactsOptions |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| opties | Genereer CmsArtifactsOptions |              |
 
 ### Genereer CmsArtifactsOptions
 
@@ -688,7 +711,9 @@ De gegenereerde eilandboom, of `undefined` als het doel geen eilanden gebruikt.
 **Soort:** functie
 
 ```typescript
-function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undefined
+function generateIsland(
+  options: GenerateIslandOptions,
+): GeneratedIsland | undefined;
 ```
 
 Mede genereren van de raamwerk-eilandboom voor een doel, waarbij de specificatie wordt geretourneerd
@@ -696,9 +721,9 @@ een verzonden sjabloon zou deze moeten importeren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | GenereerIslandOptions |  |
+| Naam   | Typ                   | Beschrijving |
+| ------ | --------------------- | ------------ |
+| opties | GenereerIslandOptions |              |
 
 ### GenereerIslandOptions
 
@@ -715,7 +740,7 @@ Opties voor {@link genererenIsland}.
 **Soort:** constant
 
 ```typescript
-export const ISLAND_DIRECTORY
+export const ISLAND_DIRECTORY;
 ```
 
 De mapnaam, relatief ten opzichte van de doeluitvoermap, waarin eilanden worden gegenereerd.
@@ -727,48 +752,48 @@ De mapnaam, relatief ten opzichte van de doeluitvoermap, waarin eilanden worden 
 **Soort:** functie
 
 ```typescript
-function toDisplayName(publicName: string): string
+function toDisplayName(publicName: string): string;
 ```
 
 Converteer een openbare naam naar de weergavenaam (`InView` → `In View`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| publiekeNaam | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| publiekeNaam | tekenreeks |              |
 
 ### naarKebabNaam
 
 **Soort:** functie
 
 ```typescript
-function toKebabName(publicName: string): string
+function toKebabName(publicName: string): string;
 ```
 
 Converteer een openbare naam naar een naam met kebab-omhulsel (`InView` → `in-view`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| publiekeNaam | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| publiekeNaam | tekenreeks |              |
 
 ### naarTechnischeNaam
 
 **Soort:** functie
 
 ```typescript
-function toTechnicalName(publicName: string): string
+function toTechnicalName(publicName: string): string;
 ```
 
 Converteer een openbare naam naar de technische naam (`InView` → `in_view`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| publiekeNaam | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| publiekeNaam | tekenreeks |              |
 
 ## `src/tsdown`
 
@@ -777,83 +802,85 @@ Converteer een openbare naam naar de technische naam (`InView` → `in_view`).
 **Soort:** functie
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 De cachemap waarnaar de gegenereerde boom van een doel wordt geschreven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| rootDir | tekenreeks |  |
-| doel | CmsOutputPlugin |  |
+| Naam    | Typ             | Beschrijving |
+| ------- | --------------- | ------------ |
+| rootDir | tekenreeks      |              |
+| doel    | CmsOutputPlugin |              |
 
 ### cmsOutputDirectory
 
 **Soort:** functie
 
 ```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 De distributiemap waar de per-framework modules van een doel naartoe worden verzonden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| rootDir | tekenreeks |  |
-| doel | CmsOutputPlugin |  |
+| Naam    | Typ             | Beschrijving |
+| ------- | --------------- | ------------ |
+| rootDir | tekenreeks      |              |
+| doel    | CmsOutputPlugin |              |
 
 ### definieerTsdownForgeCms
 
 **Soort:** functie
 
 ```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig
+function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
 ```
 
 Maak een tsdown-configuratie voor één CMS-doel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TsdownForgeCmsOptions |  |
+| Naam   | Typ                   | Beschrijving |
+| ------ | --------------------- | ------------ |
+| opties | TsdownForgeCmsOptions |              |
 
 ### definieerTsdownForgeCmsAll
 
 **Soort:** functie
 
 ```typescript
-function defineTsdownForgeCmsAll(options: TsdownForgeCmsAllOptions): UserConfig[]
+function defineTsdownForgeCmsAll(
+  options: TsdownForgeCmsAllOptions,
+): UserConfig[];
 ```
 
 Maak tsdown-configuraties voor elk aangevraagd CMS-doel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TsdownForgeCmsAllOptions |  |
+| Naam   | Typ                      | Beschrijving |
+| ------ | ------------------------ | ------------ |
+| opties | TsdownForgeCmsAllOptions |              |
 
 ### solveComponentsModule
 
 **Soort:** functie
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string
+function resolveComponentsModule(rootDir: string, explicit?: string): string;
 ```
 
 Zoek de neutrale componentencilinder van een pakket.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| rootDir | tekenreeks |  |
-| expliciet | tekenreeks |  |
+| Naam      | Typ        | Beschrijving |
+| --------- | ---------- | ------------ |
+| rootDir   | tekenreeks |              |
+| expliciet | tekenreeks |              |
 
 ### TsdownForgeCmsAllOptions
 

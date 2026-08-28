@@ -16,25 +16,32 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function analyzeStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function analyzeStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 Analysez un module de composant neutre pour Storyblok.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| fichier source | ts.SourceFichier |  |
-| noms | Noms des composants Storyblok |  |
-| options | Options de projection Storyblok |  |
+| Nom            | Tapez                           | Descriptif |
+| -------------- | ------------------------------- | ---------- |
+| fichier source | ts.SourceFichier                |            |
+| noms           | Noms des composants Storyblok   |            |
+| options        | Options de projection Storyblok |            |
 
 ### contentFieldToStoryblokField
 
 **Genre :** fonction
 
 ```typescript
-function contentFieldToStoryblokField(field: ContentField, options: StoryblokProjectionOptions = {}): StoryblokSchemaField
+function contentFieldToStoryblokField(
+  field: ContentField,
+  options: StoryblokProjectionOptions = {},
+): StoryblokSchemaField;
 ```
 
 Mappez un champ neutre sur un champ de schéma Storyblok.
@@ -46,51 +53,60 @@ donc `type`/`pos`/`description`/`translatable`/`options`/`default_value`/
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| champ | Champ de contenu |  |
-| options | Options de projection Storyblok |  |
+| Nom     | Tapez                           | Descriptif |
+| ------- | ------------------------------- | ---------- |
+| champ   | Champ de contenu                |            |
+| options | Options de projection Storyblok |            |
 
 ### contentKindToStoryblokFieldType
 
 **Genre :** fonction
 
 ```typescript
-function contentKindToStoryblokFieldType(kind: ContentField["kind"]): StoryblokFieldType
+function contentKindToStoryblokFieldType(
+  kind: ContentField["kind"],
+): StoryblokFieldType;
 ```
 
 Le type de champ Storyblok sur lequel un type de contenu neutre est mappé.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| genre | ContentField["genre"] |  |
+| Nom   | Tapez                 | Descriptif |
+| ----- | --------------------- | ---------- |
+| genre | ContentField["genre"] |            |
 
 ### émettreStoryblokComponent
 
 **Genre :** fonction
 
 ```typescript
-function emitStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): StoryblokComponent
+function emitStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): StoryblokComponent;
 ```
 
 Émettez uniquement l'objet composant Storyblok (la configuration blok) pour un composant.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| fichier source | ts.SourceFichier |  |
-| noms | Noms des composants Storyblok |  |
-| options | Options de projection Storyblok |  |
+| Nom            | Tapez                           | Descriptif |
+| -------------- | ------------------------------- | ---------- |
+| fichier source | ts.SourceFichier                |            |
+| noms           | Noms des composants Storyblok   |            |
+| options        | Options de projection Storyblok |            |
 
 ### solveStoryblokMetadata
 
 **Genre :** fonction
 
 ```typescript
-function resolveStoryblokMetadata(component: ContentComponent, options: StoryblokProjectionOptions = {}): ResolvedStoryblokMetadata
+function resolveStoryblokMetadata(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): ResolvedStoryblokMetadata;
 ```
 
 Résolvez les métadonnées de l'éditeur une fois pour un composant.
@@ -101,27 +117,30 @@ Le hachage du nom lui donne une couleur Storyblok reproductible.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composant | Composant de contenu |  |
-| options | Options de projection Storyblok |  |
+| Nom       | Tapez                           | Descriptif |
+| --------- | ------------------------------- | ---------- |
+| composant | Composant de contenu            |            |
+| options   | Options de projection Storyblok |            |
 
 ### versStoryblokComponent
 
 **Genre :** fonction
 
 ```typescript
-function toStoryblokComponent(component: ContentComponent, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function toStoryblokComponent(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 Projetez un composant de contenu neutre sur son objet et ses champs de composant Storyblok.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composant | Composant de contenu |  |
-| options | Options de projection Storyblok |  |
+| Nom       | Tapez                           | Descriptif |
+| --------- | ------------------------------- | ---------- |
+| composant | Composant de contenu            |            |
+| options   | Options de projection Storyblok |            |
 
 ## `src/runtime/solid`
 
@@ -130,16 +149,18 @@ Projetez un composant de contenu neutre sur son objet et ses champs de composant
 **Genre :** fonction
 
 ```typescript
-function StoryblokComponent(properties: StoryblokComponentProperties): JSX.Element
+function StoryblokComponent(
+  properties: StoryblokComponentProperties,
+): JSX.Element;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Propriétés du composant Storyblok |  |
+| Nom        | Tapez                             | Descriptif |
+| ---------- | --------------------------------- | ---------- |
+| propriétés | Propriétés du composant Storyblok |            |
 
 ### Propriétés du composant Storyblok
 
@@ -156,7 +177,9 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type StoryblokComponentRegistry = Readonly< Record<string, StoryblokComponentType> >;
+export type StoryblokComponentRegistry = Readonly<
+  Record<string, StoryblokComponentType>
+>;
 ```
 
 Aucune description fournie.
@@ -176,16 +199,18 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function StoryblokProvider(properties: StoryblokProviderProperties): JSX.Element
+function StoryblokProvider(
+  properties: StoryblokProviderProperties,
+): JSX.Element;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Propriétés du fournisseur Storyblok |  |
+| Nom        | Tapez                               | Descriptif |
+| ---------- | ----------------------------------- | ---------- |
+| propriétés | Propriétés du fournisseur Storyblok |            |
 
 ### Propriétés du fournisseur Storyblok
 
@@ -204,16 +229,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin
+function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin;
 ```
 
 Liez la projection Storyblok à un plugin de sortie de framework appartenant à l'appelant.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeStoryblokCmsOptions |  |
+| Nom     | Tapez                    | Descriptif |
+| ------- | ------------------------ | ---------- |
+| options | ForgeStoryblokCmsOptions |            |
 
 ### ForgeStoryblokCmsOptions
 
@@ -230,16 +255,18 @@ Options pour {@link forgeStoryblokCms}.
 **Genre :** fonction
 
 ```typescript
-function forgeStoryblokCmsTargets(options: ForgeStoryblokCmsTargetsOptions): CmsOutputPlugin[]
+function forgeStoryblokCmsTargets(
+  options: ForgeStoryblokCmsTargetsOptions,
+): CmsOutputPlugin[];
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeStoryblokCmsTargetsOptions |  |
+| Nom     | Tapez                           | Descriptif |
+| ------- | ------------------------------- | ---------- |
+| options | ForgeStoryblokCmsTargetsOptions |            |
 
 ### ForgeStoryblokCmsTargetsOptions
 
@@ -291,7 +318,17 @@ maintient la signature face à Storyblok lisible.
 **Genre :** type
 
 ```typescript
-export type StoryblokFieldType = | "text" | "richtext" | "number" | "boolean" | "option" | "asset" | "multilink" | "bloks" | "tab" | "plugin";
+export type StoryblokFieldType =
+  | "text"
+  | "richtext"
+  | "number"
+  | "boolean"
+  | "option"
+  | "asset"
+  | "multilink"
+  | "bloks"
+  | "tab"
+  | "plugin";
 ```
 
 Le champ Storyblok saisit les types de contenu neutres sur lesquels mapper.
@@ -343,7 +380,7 @@ Un champ de schéma Storyblok (la valeur d'une entrée dans `schema` d'un compos
 **Genre :** fonction
 
 ```typescript
-function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
+function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string;
 ```
 
 Construisez le type d'accessoire typé `blok` pour un wrapper - `SbBlokData & { … }` avec un
@@ -354,16 +391,20 @@ nu `SbBlokData`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| analysé | ComposantAnalyséStoryblok |  |
+| Nom     | Tapez                     | Descriptif |
+| ------- | ------------------------- | ---------- |
+| analysé | ComposantAnalyséStoryblok |            |
 
 ### émettreStoryblokBlokWrapper
 
 **Genre :** fonction
 
 ```typescript
-function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicName: string, options: StoryblokBlokWrapperOptions): string
+function emitStoryblokBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  options: StoryblokBlokWrapperOptions,
+): string;
 ```
 
 Émettez la source du wrapper framework blok qui lie le prop `blok` de Storyblok sur
@@ -372,11 +413,11 @@ ou un élément personnalisé natif de composant Web (`.ts`).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| analysé | ComposantAnalyséStoryblok |  |
-| nompublic | chaîne |  |
-| options | StoryblokBlokWrapperOptions |  |
+| Nom       | Tapez                       | Descriptif |
+| --------- | --------------------------- | ---------- |
+| analysé   | ComposantAnalyséStoryblok   |            |
+| nompublic | chaîne                      |            |
+| options   | StoryblokBlokWrapperOptions |            |
 
 ### StoryblokBlokWrapperOptions
 

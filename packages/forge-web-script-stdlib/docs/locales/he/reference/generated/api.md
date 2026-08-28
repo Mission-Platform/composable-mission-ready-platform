@@ -23,8 +23,8 @@ fn is_some(value: Option<T>) -> bool
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
+| שם  | הקלד      | תיאור              |
+| --- | --------- | ------------------ |
 | ערך | אפשרות<T> | ערך אפשרות לבדיקה. |
 
 #### חוֹזֶה
@@ -58,8 +58,8 @@ fn is_ok(value: Result<T, E>) -> bool
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
+| שם  | הקלד        | תיאור             |
+| --- | ----------- | ----------------- |
 | ערך | תוצאה<T, E> | ערך תוצאה לבדיקה. |
 
 #### חוֹזֶה
@@ -86,7 +86,7 @@ enum Result
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 נתיב יחסי למודול הצהרת אסינכרון המשמש צרכני מהדר.
@@ -96,7 +96,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 חוזה זהות וייצוג יציב עבור הספרייה הסטנדרטית.
@@ -108,7 +108,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 ספרייה המכילה את מודולי ההצהרה של Forge Web Script שנשלחו.

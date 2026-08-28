@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function ForgeTag(properties: Readonly<TagProperties>): MpElement
+function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 ```
 
 `ForgeTag` — ニュートラルな JSX 方言で一度作成された、コンパクトで丸みを帯びたラベル
@@ -34,9 +34,9 @@ callback-prop `onRemove` (Vue `remove` は代替を発行します)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<TagProperties> |  |
+| 名前       | タイプ                      | 説明 |
+| ---------- | --------------------------- | ---- |
+| プロパティ | 読み取り専用<TagProperties> |      |
 
 ### タグのプロパティ
 
@@ -63,7 +63,8 @@ export type TagSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類：**タイプ
 
 ```typescript
-export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TagVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 タグのトーン。
@@ -75,16 +76,16 @@ export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'suc
 **種類:** 関数
 
 ```typescript
-function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement
+function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ForgeLanguageSwitcherProperties> |  |
+| 名前       | タイプ                                        | 説明 |
+| ---------- | --------------------------------------------- | ---- |
+| プロパティ | 読み取り専用<ForgeLanguageSwitcherProperties> |      |
 
 ### ForgeLanguageSwitcherオプション
 
@@ -113,7 +114,7 @@ export interface ForgeLanguageSwitcherProperties
 **種類:** 関数
 
 ```typescript
-function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement
+function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement;
 ```
 
 `ForgeMultiselect` — 検索フィールドを備えたタグベースの複数選択コンボボックス、
@@ -145,9 +146,9 @@ React/Vue); `useI18n` 文字列はプレーン テキストになります。そ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MultiselectProperties> |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| プロパティ | 読み取り専用<MultiselectProperties> |      |
 
 ### 複数選択オプション
 
@@ -186,7 +187,7 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
+function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
 `ForgeSelect` — ニュートラル JSX で一度作成されたカスタム コンボボックス/選択
@@ -220,9 +221,9 @@ function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<SelectProperties> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| プロパティ | 読み取り専用<SelectProperties> |      |
 
 ### オプションの選択
 

@@ -16,24 +16,24 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/forg
 **Tipo:** función
 
 ```typescript
-function applySourceEdits(source: string, edits: readonly SourceEdit[]): string
+function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 ```
 
 Aplique ediciones de fuentes que no se superpongan sin exponer los nodos del analizador.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fuente | cadena |  |
-| ediciones | FuenteEditar[] de sólo lectura |  |
+| Nombre    | Tipo                           | Descripción |
+| --------- | ------------------------------ | ----------- |
+| fuente    | cadena                         |             |
+| ediciones | FuenteEditar[] de sólo lectura |             |
 
 ### CLASS_NAME_ATTRIBUTE
 
 **Tipo:** constante
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 No se proporciona descripción.
@@ -43,7 +43,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 No se proporciona descripción.
@@ -53,23 +53,23 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function eventNameForProperty(propertyName: string): string
+function eventNameForProperty(propertyName: string): string;
 ```
 
 Derive el nombre del evento representado por un accesorio `on<Event>` de estilo Vue.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombre de propiedad | cadena |  |
+| Nombre              | Tipo   | Descripción |
+| ------------------- | ------ | ----------- |
+| nombre de propiedad | cadena |             |
 
 ### ICONOS_JSX_MODULE
 
 **Tipo:** constante
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 No se proporciona descripción.
@@ -79,7 +79,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 No se proporciona descripción.
@@ -89,7 +89,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 No se proporciona descripción.
@@ -99,7 +99,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 No se proporciona descripción.
@@ -109,7 +109,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 No se proporciona descripción.
@@ -119,7 +119,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 No se proporciona descripción.
@@ -129,7 +129,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 No se proporciona descripción.
@@ -139,39 +139,39 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 Emita el efecto auxiliar compartido Vue; otros objetivos no necesitan este archivo.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| marco | Marco Jsx |  |
+| Nombre | Tipo      | Descripción |
+| ------ | --------- | ----------- |
+| marco  | Marco Jsx |             |
 
 ### localJsxTypesModuleSource
 
 **Tipo:** función
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 Emita declaraciones primitivas JSX locales del marco sin dependencias del analizador.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| marco | Marco Jsx |  |
+| Nombre | Tipo      | Descripción |
+| ------ | --------- | ----------- |
+| marco  | Marco Jsx |             |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **Tipo:** constante
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 No se proporciona descripción.
@@ -181,7 +181,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 No se proporciona descripción.
@@ -191,7 +191,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 No se proporciona descripción.
@@ -201,7 +201,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 No se proporciona descripción.
@@ -211,7 +211,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 No se proporciona descripción.
@@ -221,7 +221,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 No se proporciona descripción.
@@ -231,7 +231,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 No se proporciona descripción.
@@ -241,7 +241,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 No se proporciona descripción.
@@ -271,7 +271,7 @@ Una importación de hoja de estilo llevada a un árbol plano generado.
 **Tipo:** constante
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 No se proporciona descripción.
@@ -281,7 +281,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 No se proporciona descripción.
@@ -291,7 +291,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 No se proporciona descripción.
@@ -323,23 +323,23 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult
+function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 ```
 
 Levante los registros de renderizado marcados y devuelva las entradas para el generador de destino.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| módulo | Módulo genéricoAst |  |
+| Nombre | Tipo               | Descripción |
+| ------ | ------------------ | ----------- |
+| módulo | Módulo genéricoAst |             |
 
 ### MP_HOIST_PREFIX
 
 **Tipo:** constante
 
 ```typescript
-export const MP_HOIST_PREFIX
+export const MP_HOIST_PREFIX;
 ```
 
 No se proporciona descripción.
@@ -351,33 +351,36 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function applyOptimizationEdits(module: GenericModuleAst, edits: readonly SourceEdit[]): GenericModuleAst
+function applyOptimizationEdits(
+  module: GenericModuleAst,
+  edits: readonly SourceEdit[],
+): GenericModuleAst;
 ```
 
 Aplique ediciones de código fuente a un código fuente de módulo sin exponer un tipo de implementación de AST.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| módulo | Módulo genéricoAst |  |
-| ediciones | FuenteEditar[] de sólo lectura |  |
+| Nombre    | Tipo                           | Descripción |
+| --------- | ------------------------------ | ----------- |
+| módulo    | Módulo genéricoAst             |             |
+| ediciones | FuenteEditar[] de sólo lectura |             |
 
 ### constante booleano
 
 **Tipo:** función
 
 ```typescript
-function constantBoolean(expression: ExpressionLike): boolean | undefined
+function constantBoolean(expression: ExpressionLike): boolean | undefined;
 ```
 
 Resuelva un booleano literal sin evaluar el código creado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| expresión | Expresión como |  |
+| Nombre    | Tipo           | Descripción |
+| --------- | -------------- | ----------- |
+| expresión | Expresión como |             |
 
 ### Resultado de optimización genérico
 
@@ -394,55 +397,55 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function hasJsxKey(attributes: readonly GenericAttribute[]): boolean
+function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 ```
 
 Si una lista de atributos JSX genérica contiene una clave.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| atributos | Atributo genérico de sólo lectura[] |  |
+| Nombre    | Tipo                                | Descripción |
+| --------- | ----------------------------------- | ----------- |
+| atributos | Atributo genérico de sólo lectura[] |             |
 
 ### tieneMpStaticMarker
 
 **Tipo:** función
 
 ```typescript
-function hasMpStaticMarker(node: GenericRenderNode): boolean
+function hasMpStaticMarker(node: GenericRenderNode): boolean;
 ```
 
 Si un JSX node genérico tiene el marcador estático privado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| node | Nodo de renderizado genérico |  |
+| Nombre | Tipo                         | Descripción |
+| ------ | ---------------------------- | ----------- |
+| node   | Nodo de renderizado genérico |             |
 
 ### esCompileTimeConstant
 
 **Tipo:** función
 
 ```typescript
-function isCompileTimeConstant(expression: ExpressionLike): boolean
+function isCompileTimeConstant(expression: ExpressionLike): boolean;
 ```
 
 Si el texto fuente es una expresión literal pura en tiempo de compilación.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| expresión | Expresión como |  |
+| Nombre    | Tipo           | Descripción |
+| --------- | -------------- | ----------- |
+| expresión | Expresión como |             |
 
 ### MP_STATIC_ATTR
 
 **Tipo:** constante
 
 ```typescript
-export const MP_STATIC_ATTR
+export const MP_STATIC_ATTR;
 ```
 
 No se proporciona descripción.
@@ -452,17 +455,20 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function optimizeGenericModule(module: GenericModuleAst, _options: OptimizeOptions = {}): GenericOptimizationResult
+function optimizeGenericModule(
+  module: GenericModuleAst,
+  _options: OptimizeOptions = {},
+): GenericOptimizationResult;
 ```
 
 Aplique la optimización a nivel de registro y devuelva las ediciones de origen por separado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| módulo | Módulo genéricoAst |  |
-| _opciones | Opciones de optimización |  |
+| Nombre    | Tipo                     | Descripción |
+| --------- | ------------------------ | ----------- |
+| módulo    | Módulo genéricoAst       |             |
+| _opciones | Opciones de optimización |             |
 
 ### Opciones de optimización
 
@@ -479,32 +485,34 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function stripMpStaticAttributes(attributes: readonly GenericAttribute[]): readonly GenericAttribute[]
+function stripMpStaticAttributes(
+  attributes: readonly GenericAttribute[],
+): readonly GenericAttribute[];
 ```
 
 Devuelve una lista de atributos genéricos sin marcadores.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| atributos | Atributo genérico de sólo lectura[] |  |
+| Nombre    | Tipo                                | Descripción |
+| --------- | ----------------------------------- | ----------- |
+| atributos | Atributo genérico de sólo lectura[] |             |
 
 ### tiraMpStaticMarker
 
 **Tipo:** función
 
 ```typescript
-function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode
+function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
 Devuelve una representación genérica sin marcadores node, preservando recursivamente los intervalos de origen.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| node | Nodo de renderizado genérico |  |
+| Nombre | Tipo                         | Descripción |
+| ------ | ---------------------------- | ----------- |
+| node   | Nodo de renderizado genérico |             |
 
 ## `src/diagnostics`
 
@@ -543,7 +551,14 @@ Gravedad de un diagnóstico del compilador.
 **Tipo:** tipo
 
 ```typescript
-export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering" | "optimization" | "generation" | "build";
+export type CompilerPhase =
+  | "frontend"
+  | "ir"
+  | "inference"
+  | "target-lowering"
+  | "optimization"
+  | "generation"
+  | "build";
 ```
 
 Fases de la canalización que pueden informar un diagnóstico del compilador.
@@ -553,48 +568,52 @@ Fases de la canalización que pueden informar un diagnóstico del compilador.
 **Tipo:** función
 
 ```typescript
-function createCompilerDiagnostic(diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string }): CompilerDiagnostic
+function createCompilerDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string },
+): CompilerDiagnostic;
 ```
 
 Cree un diagnóstico sin acoplar los contratos de fase a los nodos TypeScript.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| diagnóstico | Omitir<CompilerDiagnostic, "fileName"> & {nombredearchivo?: cadena} |  |
+| Nombre      | Tipo                                                                | Descripción |
+| ----------- | ------------------------------------------------------------------- | ----------- |
+| diagnóstico | Omitir<CompilerDiagnostic, "fileName"> & {nombredearchivo?: cadena} |             |
 
 ### formatoCompilerDiagnostic
 
 **Tipo:** función
 
 ```typescript
-function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string
+function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
 Formatee un diagnóstico de un error del compilador sin perder su ubicación de origen.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| diagnóstico | CompiladorDiagnóstico |  |
+| Nombre      | Tipo                  | Descripción |
+| ----------- | --------------------- | ----------- |
+| diagnóstico | CompiladorDiagnóstico |             |
 
 ### throwOnCompilerErrors
 
 **Tipo:** función
 
 ```typescript
-function throwOnCompilerErrors(diagnostics: readonly CompilerDiagnostic[] | undefined): void
+function throwOnCompilerErrors(
+  diagnostics: readonly CompilerDiagnostic[] | undefined,
+): void;
 ```
 
 Cancelar una canalización del compilador cuando una fase informó uno o más errores.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| diagnóstico | solo lectura CompilerDiagnostic[] \| indefinido |  |
+| Nombre      | Tipo                                            | Descripción |
+| ----------- | ----------------------------------------------- | ----------- |
+| diagnóstico | solo lectura CompilerDiagnostic[] \| indefinido |             |
 
 ## `src/framework`
 
@@ -673,7 +692,8 @@ El contexto pasó a los generadores de origen después de la reducción y optimi
 **Tipo:** tipo
 
 ```typescript
-export type JsxFramework = "react" | "vue" | "svelte" | "solid" | "web-components";
+export type JsxFramework =
+  "react" | "vue" | "svelte" | "solid" | "web-components";
 ```
 
 ID de marco integrados actuales; Los complementos pueden utilizar cualquier ID de cadena adicional.
@@ -779,7 +799,7 @@ Contexto compartido para paquetes de complementos Vite propiedad del marco.
 **Tipo:** constante
 
 ```typescript
-export const defineForgeFramework
+export const defineForgeFramework;
 ```
 
 Alias ​​que enfatiza que los paquetes de marco registran implementaciones de destino.
@@ -789,16 +809,16 @@ Alias ​​que enfatiza que los paquetes de marco registran implementaciones de
 **Tipo:** función
 
 ```typescript
-function defineForgeOutputPlugin(plugin: T): T
+function defineForgeOutputPlugin(plugin: T): T;
 ```
 
 Validar y devolver un complemento de salida del marco para que los consumidores lo registren.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| complemento | T |  |
+| Nombre      | Tipo | Descripción |
+| ----------- | ---- | ----------- |
+| complemento | T    |             |
 
 ### ForgePluginId
 
@@ -815,32 +835,36 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function validateForgeOutputPlugin(plugin: unknown): asserts plugin is FrameworkOutputPlugin
+function validateForgeOutputPlugin(
+  plugin: unknown,
+): asserts plugin is FrameworkOutputPlugin;
 ```
 
 Valide los metadatos de destino independientemente de cualquier registro de marco.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| complemento | desconocido |  |
+| Nombre      | Tipo        | Descripción |
+| ----------- | ----------- | ----------- |
+| complemento | desconocido |             |
 
 ### validarForgeOutputPluginSelection
 
 **Tipo:** función
 
 ```typescript
-function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
+function validateForgeOutputPluginSelection(
+  plugins: readonly T[],
+): readonly T[];
 ```
 
 Valide una selección de objetivos propiedad de la persona que llama, incluidas las identificaciones vacías y duplicadas.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| complementos | sólo lectura T[] |  |
+| Nombre       | Tipo             | Descripción |
+| ------------ | ---------------- | ----------- |
+| complementos | sólo lectura T[] |             |
 
 ## `src/ir`
 
@@ -849,34 +873,40 @@ Valide una selección de objetivos propiedad de la persona que llama, incluidas 
 **Tipo:** función
 
 ```typescript
-function attributeExpressionText(node: GenericRenderNode, name: string): string | undefined
+function attributeExpressionText(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 Leer el texto de expresión de un atributo con nombre, cuando lo contiene.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| node | Nodo de renderizado genérico |  |
-| nombre | cadena |  |
+| Nombre | Tipo                         | Descripción |
+| ------ | ---------------------------- | ----------- |
+| node   | Nodo de renderizado genérico |             |
+| nombre | cadena                       |             |
 
 ### atributoStringValue
 
 **Tipo:** función
 
 ```typescript
-function attributeStringValue(node: GenericRenderNode, name: string): string | undefined
+function attributeStringValue(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 Leer el valor de cadena estática de un atributo con nombre, cuando lo tenga.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| node | Nodo de renderizado genérico |  |
-| nombre | cadena |  |
+| Nombre | Tipo                         | Descripción |
+| ------ | ---------------------------- | ----------- |
+| node   | Nodo de renderizado genérico |             |
+| nombre | cadena                       |             |
 
 ### Intención de nodo dinámico
 
@@ -903,7 +933,7 @@ Un ciclo de vida del efecto y su expresión de limpieza opcional.
 **Tipo:** constante
 
 ```typescript
-export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
+export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions;
 ```
 
 Hechos de intención vacía utilizados por accesorios y módulos sin nada que inferir.
@@ -913,7 +943,7 @@ Hechos de intención vacía utilizados por accesorios y módulos sin nada que in
 **Tipo:** constante
 
 ```typescript
-export const EMPTY_SPAN: SourceSpan
+export const EMPTY_SPAN: SourceSpan;
 ```
 
 Un tramo de ancho cero utilizado por nodos genéricos sintetizados.
@@ -933,24 +963,28 @@ Un enlace de evento que puede representarse mediante diferentes sintaxis de atri
 **Tipo:** función
 
 ```typescript
-function findAttribute(node: GenericRenderNode, name: string): GenericJsxAttribute | undefined
+function findAttribute(
+  node: GenericRenderNode,
+  name: string,
+): GenericJsxAttribute | undefined;
 ```
 
 Busque el atributo nombrado en un render node.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| node | Nodo de renderizado genérico |  |
-| nombre | cadena |  |
+| Nombre | Tipo                         | Descripción |
+| ------ | ---------------------------- | ----------- |
+| node   | Nodo de renderizado genérico |             |
+| nombre | cadena                       |             |
 
 ### GenéricoAstNode
 
 **Tipo:** tipo
 
 ```typescript
-export type GenericAstNode = GenericImport | GenericStatement | GenericRenderNode;
+export type GenericAstNode =
+  GenericImport | GenericStatement | GenericRenderNode;
 ```
 
 No se proporciona descripción.
@@ -980,7 +1014,8 @@ El valor que lleva un atributo JSX.
 **Tipo:** tipo
 
 ```typescript
-export type GenericBindingKind = "identifier" | "object-pattern" | "array-pattern";
+export type GenericBindingKind =
+  "identifier" | "object-pattern" | "array-pattern";
 ```
 
 La forma vinculante del parámetro de accesorios de un componente.
@@ -1060,7 +1095,8 @@ Un parámetro de componente, su forma vinculante y su tipo declarado.
 **Tipo:** tipo
 
 ```typescript
-export type GenericRenderChild = GenericRenderNode | GenericTextNode | GenericExpressionNode;
+export type GenericRenderChild =
+  GenericRenderNode | GenericTextNode | GenericExpressionNode;
 ```
 
 No se proporciona descripción.
@@ -1090,7 +1126,18 @@ Una declaración neutral del marco retenida por la interfaz.
 **Tipo:** tipo
 
 ```typescript
-export type GenericStatementKind = | "import" | "interface" | "type-alias" | "enum" | "variable" | "function" | "class" | "export" | "expression" | "return" | "other";
+export type GenericStatementKind =
+  | "import"
+  | "interface"
+  | "type-alias"
+  | "enum"
+  | "variable"
+  | "function"
+  | "class"
+  | "export"
+  | "expression"
+  | "return"
+  | "other";
 ```
 
 Clasificación aproximada de una declaración retenida a nivel de módulo.
@@ -1120,48 +1167,50 @@ Texto literal entre etiquetas JSX.
 **Tipo:** función
 
 ```typescript
-function isExpressionNode(child: GenericRenderChild): child is GenericExpressionNode
+function isExpressionNode(
+  child: GenericRenderChild,
+): child is GenericExpressionNode;
 ```
 
 Si un hijo renderizado es una interpolación `{ … }`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| niño | GenericRenderChild |  |
+| Nombre | Tipo               | Descripción |
+| ------ | ------------------ | ----------- |
+| niño   | GenericRenderChild |             |
 
 ### esRenderNode
 
 **Tipo:** función
 
 ```typescript
-function isRenderNode(child: GenericRenderChild): child is GenericRenderNode
+function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
 Si un elemento secundario de renderizado es un elemento/fragmento anidado node.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| niño | GenericRenderChild |  |
+| Nombre | Tipo               | Descripción |
+| ------ | ------------------ | ----------- |
+| niño   | GenericRenderChild |             |
 
 ### esNodoDeTexto
 
 **Tipo:** función
 
 ```typescript
-function isTextNode(child: GenericRenderChild): child is GenericTextNode
+function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 ```
 
 Si un elemento secundario renderizado es texto JSX literal.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| niño | GenericRenderChild |  |
+| Nombre | Tipo               | Descripción |
+| ------ | ------------------ | ----------- |
+| niño   | GenericRenderChild |             |
 
 ### ListaClaveIntención
 
@@ -1208,16 +1257,16 @@ Una intención de árbitro independiente de la representación de árbitro del o
 **Tipo:** función
 
 ```typescript
-function renderNodeTagName(node: GenericRenderNode): string | undefined
+function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
 El nombre de etiqueta simple de una representación node o `undefined` para una etiqueta calculada.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| node | Nodo de renderizado genérico |  |
+| Nombre | Tipo                         | Descripción |
+| ------ | ---------------------------- | ----------- |
+| node   | Nodo de renderizado genérico |             |
 
 ### Intenciones Semánticas
 
@@ -1254,18 +1303,22 @@ Una ranura leída o una ranura pasada a un componente secundario.
 **Tipo:** función
 
 ```typescript
-function sourceBacked(text: string, syntax: SourceBackedExpression["syntax"] = "expression", span: SourceSpan = EMPTY_SPAN): SourceBackedExpression
+function sourceBacked(
+  text: string,
+  syntax: SourceBackedExpression["syntax"] = "expression",
+  span: SourceSpan = EMPTY_SPAN,
+): SourceBackedExpression;
 ```
 
 Cree una expresión respaldada en código fuente a partir de texto ya impreso.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| texto | cadena |  |
-| sintaxis | SourceBackedExpression["sintaxis"] |  |
-| lapso | FuenteSpan |  |
+| Nombre   | Tipo                               | Descripción |
+| -------- | ---------------------------------- | ----------- |
+| texto    | cadena                             |             |
+| sintaxis | SourceBackedExpression["sintaxis"] |             |
+| lapso    | FuenteSpan                         |             |
 
 ### Expresión respaldada por origen
 
@@ -1302,14 +1355,17 @@ Una celda de estado y su definidor asociado, independientes de las primitivas de
 **Tipo:** función
 
 ```typescript
-function walkRenderNodes(nodes: readonly GenericRenderNode[], visit: (node: GenericRenderNode) => void): void
+function walkRenderNodes(
+  nodes: readonly GenericRenderNode[],
+  visit: (node: GenericRenderNode) => void,
+): void;
 ```
 
 Recorra un árbol de renderizado en profundidad, incluido el marcado de expresión anidada.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nodos | sólo lectura GenericRenderNode[] |  |
-| visita | (node: GenericRenderNode) => vacío |  |
+| Nombre | Tipo                               | Descripción |
+| ------ | ---------------------------------- | ----------- |
+| nodos  | sólo lectura GenericRenderNode[]   |             |
+| visita | (node: GenericRenderNode) => vacío |             |

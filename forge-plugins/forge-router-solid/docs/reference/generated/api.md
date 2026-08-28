@@ -16,44 +16,39 @@ function createSolidRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: SolidNavigate;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Build neutral capabilities from Solid Router primitives (framework-free for tests).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | {   location: { pathname: string; search: string; hash: string };   params?: Record<string, string \| undefined>;   navigate: SolidNavigate;   outlet?: unknown; } |  |
+| Name  | Type                                                                                                                                                       | Description |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| input | { location: { pathname: string; search: string; hash: string }; params?: Record<string, string \| undefined>; navigate: SolidNavigate; outlet?: unknown; } |             |
 
 ### MpLink
 
 **Kind:** component
 
 ```typescript
-function MpLink(properties: {
-  href?: string;
-  to?: MpRouteLocationRaw;
-  children?: unknown;
-  replace?: boolean;
-}): unknown
+export function MpLink(properties:
 ```
 
 Solid anchor component proxy bound through {@link setForgeSolidRouter}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | {   href?: string;   to?: MpRouteLocationRaw;   children?: unknown;   replace?: boolean; } |  |
+| Name       | Type                                                                               | Description |
+| ---------- | ---------------------------------------------------------------------------------- | ----------- |
+| properties | { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean; } |             |
 
 ### MpRouterView
 
 **Kind:** component
 
 ```typescript
-function MpRouterView(): unknown
+export function MpRouterView(): unknown;
 ```
 
 Solid outlet proxy bound through {@link setForgeSolidRouter}.
@@ -63,23 +58,23 @@ Solid outlet proxy bound through {@link setForgeSolidRouter}.
 **Kind:** function
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Resolve a neutral target to an href string.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
+| Name | Type               | Description |
+| ---- | ------------------ | ----------- |
+| to   | MpRouteLocationRaw |             |
 
 ### setForgeSolidRouter
 
 **Kind:** function
 
 ```typescript
-function setForgeSolidRouter(surface: SolidRouterSurface): void
+function setForgeSolidRouter(surface: SolidRouterSurface): void;
 ```
 
 Bind the app-owned Solid Router module so compiled packages keep the neutral
@@ -87,9 +82,9 @@ hook/call shapes (`useMpRouter().navigate`, `useMpRoute().query`, …).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| surface | SolidRouterSurface |  |
+| Name    | Type               | Description |
+| ------- | ------------------ | ----------- |
+| surface | SolidRouterSurface |             |
 
 ### SolidRouterSurface
 
@@ -106,40 +101,43 @@ Minimal Solid Router surface used by the runtime shim.
 **Kind:** function
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, parameters: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(
+  location: { pathname: string; search: string; hash: string },
+  parameters: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 Build a neutral location from Solid Router location/params snapshots.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| location | { pathname: string; search: string; hash: string } |  |
-| parameters | Record<string, string \| undefined> |  |
+| Name       | Type                                               | Description |
+| ---------- | -------------------------------------------------- | ----------- |
+| location   | { pathname: string; search: string; hash: string } |             |
+| parameters | Record<string, string \| undefined>                |             |
 
 ### toSolidHref
 
 **Kind:** function
 
 ```typescript
-function toSolidHref(to: MpRouteLocationRaw): string
+function toSolidHref(to: MpRouteLocationRaw): string;
 ```
 
 Serialize a neutral target for Solid Router navigation.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
+| Name | Type               | Description |
+| ---- | ------------------ | ----------- |
+| to   | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 
 **Kind:** function
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Read only imperative navigation/resolve capabilities.
@@ -149,7 +147,7 @@ Read only imperative navigation/resolve capabilities.
 **Kind:** function
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Read the current app-owned route as {@link MpResolvedLocation}.
@@ -159,7 +157,7 @@ Read the current app-owned route as {@link MpResolvedLocation}.
 **Kind:** function
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Read the neutral capability object backed by Solid Router.
@@ -171,7 +169,7 @@ Read the neutral capability object backed by Solid Router.
 **Kind:** constant
 
 ```typescript
-export const forgeRouterSolid
+export const forgeRouterSolid;
 ```
 
 Forge router target for an application-owned SolidJS Router instance.

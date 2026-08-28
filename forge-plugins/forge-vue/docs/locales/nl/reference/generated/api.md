@@ -36,19 +36,24 @@ Het resultaat van de Vue-zender: de primaire SFC plus eventuele aanvullende SFC'
 **Soort:** functie
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 Transformeer een neutrale componentmodule in een Vue SFC (plus eventuele hulp-SFC's).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
-| componentnaam | tekenreeks |  |
-| componentMappen | Alleen-lezenSet<string> |  |
-| plannen | VueLoweredModule |  |
+| Naam            | Typ                     | Beschrijving |
+| --------------- | ----------------------- | ------------ |
+| module          | SemantischeModule       |              |
+| componentnaam   | tekenreeks              |              |
+| componentMappen | Alleen-lezenSet<string> |              |
+| plannen         | VueLoweredModule        |              |
 
 ## `src/emitters/hook-module`
 
@@ -57,16 +62,16 @@ Transformeer een neutrale componentmodule in een Vue SFC (plus eventuele hulp-SF
 **Soort:** functie
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 Compileer een neutrale haakmodule met de Vue samenstelbare bron (`.ts`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| module | SemantischeModule |              |
 
 ## `src/index`
 
@@ -75,7 +80,7 @@ Compileer een neutrale haakmodule met de Vue samenstelbare bron (`.ts`).
 **Soort:** functie
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 Maak de Vue-uitvoerplug-in en de bijbehorende Vite/Rolldown-compileradapters.
@@ -87,23 +92,28 @@ Maak de Vue-uitvoerplug-in en de bijbehorende Vite/Rolldown-compileradapters.
 **Soort:** functie
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 Beperk een doelplan tot het Vue-plan zonder te casten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |  |
+| Naam     | Typ                                   | Beschrijving |
+| -------- | ------------------------------------- | ------------ |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
 
 ### lagereVueModule
 
 **Soort:** functie
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Laat een neutrale module in het Vue-doelplan zakken. De neutrale module beweegt
@@ -111,10 +121,10 @@ onaangeroerd zodat latere fasen volledige toegang tot de IR behouden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ir | SemantischeModule |  |
-| context | DoelContext |  |
+| Naam    | Typ               | Beschrijving |
+| ------- | ----------------- | ------------ |
+| ir      | SemantischeModule |              |
+| context | DoelContext       |              |
 
 ### VueComputedPlan
 
@@ -253,7 +263,7 @@ Een `useEffect` verlaagd tot een Vue-watcher.
 **Soort:** constant
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 `computed`-declaraties samenvouwen die een fabriek delen.
@@ -263,7 +273,7 @@ export const DEDUPE_COMPUTED
 **Soort:** constant
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Prune `vue` importeert het verfijnde plan dat niet langer nodig is.
@@ -273,7 +283,7 @@ Prune `vue` importeert het verfijnde plan dat niet langer nodig is.
 **Soort:** constant
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 Hijs volledig statische subbomen (moduleconstanten / `v-once`).
@@ -283,7 +293,7 @@ Hijs volledig statische subbomen (moduleconstanten / `v-once`).
 **Soort:** constant
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 Zend een nooit opnieuw toegewezen status uit als een gewone `const` in plaats van een `ref`.
@@ -293,7 +303,10 @@ Zend een nooit opnieuw toegewezen status uit als een gewone `const` in plaats va
 **Soort:** functie
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Verfijn een verlaagd Vue-abonnement. Intenties met een buitenlands (of ontbrekend) plan zijn dat wel
@@ -301,17 +314,17 @@ onaangeroerd terug, zodat de optimizer veilig in elke pijplijn kan worden gebrui
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bedoelingen | DoelIntenties |  |
-| opties | TargetOptimizeOptions |  |
+| Naam        | Typ                   | Beschrijving |
+| ----------- | --------------------- | ------------ |
+| bedoelingen | DoelIntenties         |              |
+| opties      | TargetOptimizeOptions |              |
 
 ### STABLE_LIST_KEYS
 
 **Soort:** constant
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 Bewaar alleen lijstsleutels waarvan bewezen is dat ze stabiel zijn, en registreer de lijsten die niet zijn ingetoetst.
@@ -321,7 +334,7 @@ Bewaar alleen lijstsleutels waarvan bewezen is dat ze stabiel zijn, en registree
 **Soort:** constant
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 Elke optimalisatie-ID die het Vue-doel kan registreren, in toepassingsvolgorde.

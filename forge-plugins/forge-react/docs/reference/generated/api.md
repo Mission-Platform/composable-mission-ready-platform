@@ -11,18 +11,22 @@ Generated from public source declarations in `@mission-platform/forge-plugin-rea
 **Kind:** function
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 Transform the whole module into the React target source.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
-| componentName | string |  |
-| plan | ReactModulePlan |  |
+| Name          | Type            | Description |
+| ------------- | --------------- | ----------- |
+| module        | SemanticModule  |             |
+| componentName | string          |             |
+| plan          | ReactModulePlan |             |
 
 ## `src/index`
 
@@ -31,7 +35,7 @@ Transform the whole module into the React target source.
 **Kind:** function
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 Create the React output plugin and its native JSX build adapters.
@@ -43,50 +47,58 @@ Create the React output plugin and its native JSX build adapters.
 **Kind:** function
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 Narrow a target-owned plan to the React one.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| lowered | TargetLoweredModule \| undefined |  |
+| Name    | Type                             | Description |
+| ------- | -------------------------------- | ----------- |
+| lowered | TargetLoweredModule \| undefined |             |
 
 ### lowerReactModule
 
 **Kind:** function
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Lower the neutral IR into the React plan carried by {@link TargetIntentions.lowered}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| context | TargetContext |  |
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| ir      | SemanticModule |             |
+| context | TargetContext  |             |
 
 ### planReactModule
 
 **Kind:** function
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 Build the React plan for one module.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
-| componentName | string |  |
+| Name          | Type           | Description |
+| ------------- | -------------- | ----------- |
+| module        | SemanticModule |             |
+| componentName | string         |             |
 
 ### ReactClientDirectivePlan
 
@@ -175,7 +187,10 @@ How the component binds its props object.
 **Kind:** function
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Refine the React plan.
@@ -186,17 +201,17 @@ inline, and with `stableKeyInference` disabled every inferred key is kept.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| intentions | TargetIntentions |  |
-| options | TargetOptimizeOptions |  |
+| Name       | Type                  | Description |
+| ---------- | --------------------- | ----------- |
+| intentions | TargetIntentions      |             |
+| options    | TargetOptimizeOptions |             |
 
 ### REACT_OPTIMIZATIONS
 
 **Kind:** constant
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 The identifiers recorded on a plan the React optimizer has refined.

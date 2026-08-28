@@ -16,24 +16,24 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-p
 **Soort:** functie
 
 ```typescript
-function applySourceEdits(source: string, edits: readonly SourceEdit[]): string
+function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 ```
 
 Pas niet-overlappende bronbewerkingen toe zonder parserknooppunten bloot te leggen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| bewerkingen | alleen-lezen SourceEdit[] |  |
+| Naam        | Typ                       | Beschrijving |
+| ----------- | ------------------------- | ------------ |
+| bron        | tekenreeks                |              |
+| bewerkingen | alleen-lezen SourceEdit[] |              |
 
 ### CLASS_NAME_ATTRIBUTE
 
 **Soort:** constant
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 Geen beschrijving opgegeven.
@@ -43,7 +43,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 Geen beschrijving opgegeven.
@@ -53,23 +53,23 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function eventNameForProperty(propertyName: string): string
+function eventNameForProperty(propertyName: string): string;
 ```
 
 Leid de gebeurtenisnaam af die wordt weergegeven door een Vue-stijl `on<Event>`-prop.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschapNaam | tekenreeks |  |
+| Naam           | Typ        | Beschrijving |
+| -------------- | ---------- | ------------ |
+| eigenschapNaam | tekenreeks |              |
 
 ### ICONS_JSX_MODULE
 
 **Soort:** constant
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 Geen beschrijving opgegeven.
@@ -79,7 +79,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -89,7 +89,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 Geen beschrijving opgegeven.
@@ -99,7 +99,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 Geen beschrijving opgegeven.
@@ -109,7 +109,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -119,7 +119,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 Geen beschrijving opgegeven.
@@ -129,7 +129,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 Geen beschrijving opgegeven.
@@ -139,39 +139,39 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 Zend de gedeelde Vue-effecthelper uit; andere doelen hebben dit bestand niet nodig.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kader | JsxFramework |  |
+| Naam  | Typ          | Beschrijving |
+| ----- | ------------ | ------------ |
+| kader | JsxFramework |              |
 
 ### localJsxTypesModuleSource
 
 **Soort:** functie
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 Zend raamwerk-lokale JSX-primitieve declaraties uit zonder parser-afhankelijkheden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kader | JsxFramework |  |
+| Naam  | Typ          | Beschrijving |
+| ----- | ------------ | ------------ |
+| kader | JsxFramework |              |
 
 ### NEUTRAAL_COMPILE_TIME_MARKERS
 
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -181,7 +181,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -191,7 +191,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -201,7 +201,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 Geen beschrijving opgegeven.
@@ -211,7 +211,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -221,7 +221,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -231,7 +231,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 Geen beschrijving opgegeven.
@@ -241,7 +241,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 Geen beschrijving opgegeven.
@@ -271,7 +271,7 @@ Een stylesheet-import uitgevoerd in een gegenereerde platte boom.
 **Soort:** constant
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 Geen beschrijving opgegeven.
@@ -281,7 +281,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -291,7 +291,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -323,23 +323,23 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult
+function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 ```
 
 Hijs gemarkeerde renderrecords en retourneer de vermeldingen voor de doelgenerator.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | GeneriekeModuleAst |  |
+| Naam   | Typ                | Beschrijving |
+| ------ | ------------------ | ------------ |
+| module | GeneriekeModuleAst |              |
 
 ### MP_HOIST_PREFIX
 
 **Soort:** constant
 
 ```typescript
-export const MP_HOIST_PREFIX
+export const MP_HOIST_PREFIX;
 ```
 
 Geen beschrijving opgegeven.
@@ -351,33 +351,36 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function applyOptimizationEdits(module: GenericModuleAst, edits: readonly SourceEdit[]): GenericModuleAst
+function applyOptimizationEdits(
+  module: GenericModuleAst,
+  edits: readonly SourceEdit[],
+): GenericModuleAst;
 ```
 
 Pas bronbewerkingen toe op een modulebron zonder een AST-implementatietype bloot te leggen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | GeneriekeModuleAst |  |
-| bewerkingen | alleen-lezen SourceEdit[] |  |
+| Naam        | Typ                       | Beschrijving |
+| ----------- | ------------------------- | ------------ |
+| module      | GeneriekeModuleAst        |              |
+| bewerkingen | alleen-lezen SourceEdit[] |              |
 
 ### constanteBooleaans
 
 **Soort:** functie
 
 ```typescript
-function constantBoolean(expression: ExpressionLike): boolean | undefined
+function constantBoolean(expression: ExpressionLike): boolean | undefined;
 ```
 
 Los een letterlijke Booleaanse waarde op zonder de geschreven code te evalueren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| uitdrukking | ExpressieLike |  |
+| Naam        | Typ           | Beschrijving |
+| ----------- | ------------- | ------------ |
+| uitdrukking | ExpressieLike |              |
 
 ### GeneriekOptimalisatieResultaat
 
@@ -394,55 +397,55 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function hasJsxKey(attributes: readonly GenericAttribute[]): boolean
+function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 ```
 
 Of een generieke JSX-attributenlijst een sleutel bevat.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| attributen | alleen-lezen GenericAttribute[] |  |
+| Naam       | Typ                             | Beschrijving |
+| ---------- | ------------------------------- | ------------ |
+| attributen | alleen-lezen GenericAttribute[] |              |
 
 ### heeftMpStaticMarker
 
 **Soort:** functie
 
 ```typescript
-function hasMpStaticMarker(node: GenericRenderNode): boolean
+function hasMpStaticMarker(node: GenericRenderNode): boolean;
 ```
 
 Of een generieke JSX node de eigen statische marker heeft.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | GeneriekRenderNode |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| node | GeneriekRenderNode |              |
 
 ### isCompileTimeConstant
 
 **Soort:** functie
 
 ```typescript
-function isCompileTimeConstant(expression: ExpressionLike): boolean
+function isCompileTimeConstant(expression: ExpressionLike): boolean;
 ```
 
 Of de brontekst een pure letterlijke uitdrukking tijdens het compileren is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| uitdrukking | ExpressieLike |  |
+| Naam        | Typ           | Beschrijving |
+| ----------- | ------------- | ------------ |
+| uitdrukking | ExpressieLike |              |
 
 ### MP_STATIC_ATTR
 
 **Soort:** constant
 
 ```typescript
-export const MP_STATIC_ATTR
+export const MP_STATIC_ATTR;
 ```
 
 Geen beschrijving opgegeven.
@@ -452,17 +455,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function optimizeGenericModule(module: GenericModuleAst, _options: OptimizeOptions = {}): GenericOptimizationResult
+function optimizeGenericModule(
+  module: GenericModuleAst,
+  _options: OptimizeOptions = {},
+): GenericOptimizationResult;
 ```
 
 Pas optimalisatie op recordniveau toe en retourneer eventuele bronbewerkingen afzonderlijk.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | GeneriekeModuleAst |  |
-| _opties | Optimalisatieopties |  |
+| Naam    | Typ                 | Beschrijving |
+| ------- | ------------------- | ------------ |
+| module  | GeneriekeModuleAst  |              |
+| _opties | Optimalisatieopties |              |
 
 ### Optimaliseer Opties
 
@@ -479,32 +485,34 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function stripMpStaticAttributes(attributes: readonly GenericAttribute[]): readonly GenericAttribute[]
+function stripMpStaticAttributes(
+  attributes: readonly GenericAttribute[],
+): readonly GenericAttribute[];
 ```
 
 Retourneert een markeringsvrije generieke attributenlijst.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| attributen | alleen-lezen GenericAttribute[] |  |
+| Naam       | Typ                             | Beschrijving |
+| ---------- | ------------------------------- | ------------ |
+| attributen | alleen-lezen GenericAttribute[] |              |
 
 ### stripMpStaticMarker
 
 **Soort:** functie
 
 ```typescript
-function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode
+function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
 Retourneert een generieke weergave zonder markeringen node, waarbij de bronreeksen recursief behouden blijven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | GeneriekRenderNode |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| node | GeneriekRenderNode |              |
 
 ## `src/diagnostics`
 
@@ -543,7 +551,14 @@ Ernst van een compilerdiagnostiek.
 **Soort:** type
 
 ```typescript
-export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering" | "optimization" | "generation" | "build";
+export type CompilerPhase =
+  | "frontend"
+  | "ir"
+  | "inference"
+  | "target-lowering"
+  | "optimization"
+  | "generation"
+  | "build";
 ```
 
 Pijplijnfasen die een compilerdiagnostiek kunnen rapporteren.
@@ -553,48 +568,52 @@ Pijplijnfasen die een compilerdiagnostiek kunnen rapporteren.
 **Soort:** functie
 
 ```typescript
-function createCompilerDiagnostic(diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string }): CompilerDiagnostic
+function createCompilerDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string },
+): CompilerDiagnostic;
 ```
 
 Creëer een diagnose zonder de fasecontracten te koppelen aan TypeScript-knooppunten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostisch | Laat<CompilerDiagnostic, "fileName"> & { bestandsnaam?: string } |  |
+| Naam         | Typ                                                              | Beschrijving |
+| ------------ | ---------------------------------------------------------------- | ------------ |
+| diagnostisch | Laat<CompilerDiagnostic, "fileName"> & { bestandsnaam?: string } |              |
 
 ### formatCompilerDiagnostisch
 
 **Soort:** functie
 
 ```typescript
-function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string
+function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
 Formatteer een diagnose voor een compilerfout zonder de bronlocatie te verliezen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostisch | CompilerDiagnostisch |  |
+| Naam         | Typ                  | Beschrijving |
+| ------------ | -------------------- | ------------ |
+| diagnostisch | CompilerDiagnostisch |              |
 
 ### throwOnCompilerErrors
 
 **Soort:** functie
 
 ```typescript
-function throwOnCompilerErrors(diagnostics: readonly CompilerDiagnostic[] | undefined): void
+function throwOnCompilerErrors(
+  diagnostics: readonly CompilerDiagnostic[] | undefined,
+): void;
 ```
 
 Breek een compilerpijplijn af wanneer een fase een of meer fouten rapporteert.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostiek | alleen-lezen CompilerDiagnostic[] \| ongedefinieerd |  |
+| Naam        | Typ                                                 | Beschrijving |
+| ----------- | --------------------------------------------------- | ------------ |
+| diagnostiek | alleen-lezen CompilerDiagnostic[] \| ongedefinieerd |              |
 
 ## `src/framework`
 
@@ -673,7 +692,8 @@ Context doorgegeven aan brongeneratoren na doelverlaging en optimalisatie.
 **Soort:** type
 
 ```typescript
-export type JsxFramework = "react" | "vue" | "svelte" | "solid" | "web-components";
+export type JsxFramework =
+  "react" | "vue" | "svelte" | "solid" | "web-components";
 ```
 
 Huidige ingebouwde raamwerk-ID's; plug-ins kunnen elke extra string-ID gebruiken.
@@ -779,7 +799,7 @@ Gedeelde context voor Vite-plug-inbundels die eigendom zijn van het framework.
 **Soort:** constant
 
 ```typescript
-export const defineForgeFramework
+export const defineForgeFramework;
 ```
 
 Alias ​​die benadrukt dat raamwerkpakketten doelimplementaties registreren.
@@ -789,16 +809,16 @@ Alias ​​die benadrukt dat raamwerkpakketten doelimplementaties registreren.
 **Soort:** functie
 
 ```typescript
-function defineForgeOutputPlugin(plugin: T): T
+function defineForgeOutputPlugin(plugin: T): T;
 ```
 
 Valideer en retourneer een framework-uitvoerplug-in voor registratie door consumenten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plug-in | T |  |
+| Naam    | Typ | Beschrijving |
+| ------- | --- | ------------ |
+| plug-in | T   |              |
 
 ### ForgePluginId
 
@@ -815,32 +835,36 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function validateForgeOutputPlugin(plugin: unknown): asserts plugin is FrameworkOutputPlugin
+function validateForgeOutputPlugin(
+  plugin: unknown,
+): asserts plugin is FrameworkOutputPlugin;
 ```
 
 Valideer doelmetagegevens onafhankelijk van enig raamwerkregister.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plug-in | onbekend |  |
+| Naam    | Typ      | Beschrijving |
+| ------- | -------- | ------------ |
+| plug-in | onbekend |              |
 
 ### validateForgeOutputPluginSelection
 
 **Soort:** functie
 
 ```typescript
-function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
+function validateForgeOutputPluginSelection(
+  plugins: readonly T[],
+): readonly T[];
 ```
 
 Valideer een doelselectie die eigendom is van de beller, inclusief lege en dubbele ID's.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plug-ins | alleen-lezen T[] |  |
+| Naam     | Typ              | Beschrijving |
+| -------- | ---------------- | ------------ |
+| plug-ins | alleen-lezen T[] |              |
 
 ## `src/ir`
 
@@ -849,34 +873,40 @@ Valideer een doelselectie die eigendom is van de beller, inclusief lege en dubbe
 **Soort:** functie
 
 ```typescript
-function attributeExpressionText(node: GenericRenderNode, name: string): string | undefined
+function attributeExpressionText(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 Lees de expressietekst van een benoemd attribuut, wanneer deze er een bevat.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | GeneriekRenderNode |  |
-| naam | tekenreeks |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| node | GeneriekRenderNode |              |
+| naam | tekenreeks         |              |
 
 ### attribuutStringWaarde
 
 **Soort:** functie
 
 ```typescript
-function attributeStringValue(node: GenericRenderNode, name: string): string | undefined
+function attributeStringValue(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 Lees de statische tekenreekswaarde van een benoemd attribuut, als deze er een heeft.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | GeneriekRenderNode |  |
-| naam | tekenreeks |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| node | GeneriekRenderNode |              |
+| naam | tekenreeks         |              |
 
 ### DynamicNodeIntentie
 
@@ -903,7 +933,7 @@ Een effectlevenscyclus en de optionele opschoonexpressie.
 **Soort:** constant
 
 ```typescript
-export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
+export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions;
 ```
 
 Lege intentiefeiten gebruikt door armaturen en door modules waar niets uit afgeleid kan worden.
@@ -913,7 +943,7 @@ Lege intentiefeiten gebruikt door armaturen en door modules waar niets uit afgel
 **Soort:** constant
 
 ```typescript
-export const EMPTY_SPAN: SourceSpan
+export const EMPTY_SPAN: SourceSpan;
 ```
 
 Een overspanning met nulbreedte die wordt gebruikt door gesynthetiseerde generieke knooppunten.
@@ -933,24 +963,28 @@ Een gebeurtenisbinding die kan worden weergegeven door verschillende doelattribu
 **Soort:** functie
 
 ```typescript
-function findAttribute(node: GenericRenderNode, name: string): GenericJsxAttribute | undefined
+function findAttribute(
+  node: GenericRenderNode,
+  name: string,
+): GenericJsxAttribute | undefined;
 ```
 
 Zoek het benoemde attribuut op een render node.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | GeneriekRenderNode |  |
-| naam | tekenreeks |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| node | GeneriekRenderNode |              |
+| naam | tekenreeks         |              |
 
 ### GeneriekAstNode
 
 **Soort:** type
 
 ```typescript
-export type GenericAstNode = GenericImport | GenericStatement | GenericRenderNode;
+export type GenericAstNode =
+  GenericImport | GenericStatement | GenericRenderNode;
 ```
 
 Geen beschrijving opgegeven.
@@ -980,7 +1014,8 @@ De waarde die wordt gedragen door een JSX-attribuut.
 **Soort:** type
 
 ```typescript
-export type GenericBindingKind = "identifier" | "object-pattern" | "array-pattern";
+export type GenericBindingKind =
+  "identifier" | "object-pattern" | "array-pattern";
 ```
 
 De bindende vorm van de props-parameter van een component.
@@ -1060,7 +1095,8 @@ Een componentparameter, de bindende vorm en het gedeclareerde type.
 **Soort:** type
 
 ```typescript
-export type GenericRenderChild = GenericRenderNode | GenericTextNode | GenericExpressionNode;
+export type GenericRenderChild =
+  GenericRenderNode | GenericTextNode | GenericExpressionNode;
 ```
 
 Geen beschrijving opgegeven.
@@ -1090,7 +1126,18 @@ Een raamwerkneutrale verklaring die door de frontend wordt behouden.
 **Soort:** type
 
 ```typescript
-export type GenericStatementKind = | "import" | "interface" | "type-alias" | "enum" | "variable" | "function" | "class" | "export" | "expression" | "return" | "other";
+export type GenericStatementKind =
+  | "import"
+  | "interface"
+  | "type-alias"
+  | "enum"
+  | "variable"
+  | "function"
+  | "class"
+  | "export"
+  | "expression"
+  | "return"
+  | "other";
 ```
 
 Grove classificatie van een behouden verklaring op moduleniveau.
@@ -1120,48 +1167,50 @@ Letterlijke tekst tussen JSX-tags.
 **Soort:** functie
 
 ```typescript
-function isExpressionNode(child: GenericRenderChild): child is GenericExpressionNode
+function isExpressionNode(
+  child: GenericRenderChild,
+): child is GenericExpressionNode;
 ```
 
 Of een render-kind een `{ … }`-interpolatie is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kind | GeneriekRenderChild |  |
+| Naam | Typ                 | Beschrijving |
+| ---- | ------------------- | ------------ |
+| kind | GeneriekRenderChild |              |
 
 ### isRenderNode
 
 **Soort:** functie
 
 ```typescript
-function isRenderNode(child: GenericRenderChild): child is GenericRenderNode
+function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
 Of een render-kind een genest element/fragment node is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kind | GeneriekRenderChild |  |
+| Naam | Typ                 | Beschrijving |
+| ---- | ------------------- | ------------ |
+| kind | GeneriekRenderChild |              |
 
 ### isTextNode
 
 **Soort:** functie
 
 ```typescript
-function isTextNode(child: GenericRenderChild): child is GenericTextNode
+function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 ```
 
 Of een render-kind letterlijke JSX-tekst is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kind | GeneriekRenderChild |  |
+| Naam | Typ                 | Beschrijving |
+| ---- | ------------------- | ------------ |
+| kind | GeneriekRenderChild |              |
 
 ### LijstSleutelIntentie
 
@@ -1208,16 +1257,16 @@ Een ref-intentie die onafhankelijk is van de ref-representatie van het doelwit.
 **Soort:** functie
 
 ```typescript
-function renderNodeTagName(node: GenericRenderNode): string | undefined
+function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
 De gewone tagnaam van een weergave node, of `undefined` voor een berekende tag.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | GeneriekRenderNode |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| node | GeneriekRenderNode |              |
 
 ### SemantischeIntenties
 
@@ -1254,18 +1303,22 @@ Een slot gelezen of doorgegeven aan een onderliggende component.
 **Soort:** functie
 
 ```typescript
-function sourceBacked(text: string, syntax: SourceBackedExpression["syntax"] = "expression", span: SourceSpan = EMPTY_SPAN): SourceBackedExpression
+function sourceBacked(
+  text: string,
+  syntax: SourceBackedExpression["syntax"] = "expression",
+  span: SourceSpan = EMPTY_SPAN,
+): SourceBackedExpression;
 ```
 
 Bouw een brongebaseerde expressie op basis van reeds afgedrukte tekst.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
-| syntaxis | SourceBackedExpression["syntaxis"] |  |
-| spanwijdte | BronSpan |  |
+| Naam       | Typ                                | Beschrijving |
+| ---------- | ---------------------------------- | ------------ |
+| tekst      | tekenreeks                         |              |
+| syntaxis   | SourceBackedExpression["syntaxis"] |              |
+| spanwijdte | BronSpan                           |              |
 
 ### BronBackedExpression
 
@@ -1302,14 +1355,17 @@ Een toestandscel en de bijbehorende setter, onafhankelijk van primitieven voor d
 **Soort:** functie
 
 ```typescript
-function walkRenderNodes(nodes: readonly GenericRenderNode[], visit: (node: GenericRenderNode) => void): void
+function walkRenderNodes(
+  nodes: readonly GenericRenderNode[],
+  visit: (node: GenericRenderNode) => void,
+): void;
 ```
 
 Voer een renderboom eerst in de diepte uit, inclusief geneste expressiemarkeringen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| knooppunten | alleen-lezen GenericRenderNode[] |  |
-| bezoek | (node: GenericRenderNode) => ongeldig |  |
+| Naam        | Typ                                   | Beschrijving |
+| ----------- | ------------------------------------- | ------------ |
+| knooppunten | alleen-lezen GenericRenderNode[]      |              |
+| bezoek      | (node: GenericRenderNode) => ongeldig |              |

@@ -23,8 +23,8 @@ Gibt true zurück, wenn die Option einen Wert enthält.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
+| Name | Geben Sie | ein Beschreibung          |
+| ---- | --------- | ------------------------- |
 | Wert | Option<T> | Zu prüfender Optionswert. |
 
 #### Vertrag
@@ -58,8 +58,8 @@ Gibt true zurück, wenn das Ergebnis erfolgreich ist.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
+| Name | Geben Sie      | ein Beschreibung               |
+| ---- | -------------- | ------------------------------ |
 | Wert | Ergebnis<T, E> | Zu überprüfender Ergebniswert. |
 
 #### Vertrag
@@ -86,7 +86,7 @@ Ergebnis einer fehlbaren Operation.
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 Relativer Pfad zum asynchronen Deklarationsmodul, das von Compiler-Konsumenten verwendet wird.
@@ -96,7 +96,7 @@ Relativer Pfad zum asynchronen Deklarationsmodul, das von Compiler-Konsumenten v
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 Stabiler Identitäts- und Vertretungsvertrag für die Standardbibliothek.
@@ -108,7 +108,7 @@ Grenzen für Werte, die den Host/Wasm-ABI überschreiten.
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 Verzeichnis, das die mitgelieferten Forge Web Script-Deklarationsmodule enthält.

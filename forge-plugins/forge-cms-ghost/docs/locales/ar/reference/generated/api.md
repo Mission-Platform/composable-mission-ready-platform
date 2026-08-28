@@ -16,7 +16,7 @@
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_GHOST_FIELD_UNSUPPORTED
+export const FORGE_GHOST_FIELD_UNSUPPORTED;
 ```
 
 لا يستطيع الشبح من النوع الميداني التعبير أصلاً؛ فإنه يتحلل إلى النص المقدم.
@@ -26,7 +26,7 @@ export const FORGE_GHOST_FIELD_UNSUPPORTED
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_GHOST_SETTING_LIMIT
+export const FORGE_GHOST_SETTING_LIMIT;
 ```
 
 أكثر `@cmsSetting` تم توقع الحقول من حقول Ghost `config.custom` يسمح.
@@ -36,18 +36,22 @@ export const FORGE_GHOST_SETTING_LIMIT
 **النوع:** الوظيفة
 
 ```typescript
-function ghostWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function ghostWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 إنشاء تحذير لمرحلة الجيل؛ الهدف الشبح لا يصدر أخطاء أبدًا.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| كود | سلسلة |  |
-| رسالة | سلسلة |  |
-| اسم الملف | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| كود       | سلسلة |       |
+| رسالة     | سلسلة |       |
+| اسم الملف | سلسلة |       |
 
 ## `src/ghost`
 
@@ -56,16 +60,16 @@ function ghostWarning(code: string, message: string, fileName: string): Compiler
 **النوع:** الوظيفة
 
 ```typescript
-function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin
+function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin;
 ```
 
 ربط عرض سمة Ghost بمكوّن إضافي لإخراج إطار عمل مملوك للمتصل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورججوستكمسوبتيونس |  |
+| الاسم  | اكتب               | الوصف |
+| ------ | ------------------ | ----- |
+| خيارات | فورججوستكمسوبتيونس |       |
 
 ### ForgeGhostCmsOptions
 
@@ -84,7 +88,11 @@ export interface ForgeGhostCmsOptions
 **النوع:** الوظيفة
 
 ```typescript
-function buildGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): GhostThemeConfig
+function buildGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): GhostThemeConfig;
 ```
 
 بناء `config.custom` قطعة من كل `@cmsSetting`-الحقل الموسوم.
@@ -95,18 +103,18 @@ function buildGhostThemeConfig(components: readonly ContentComponent[], themeNam
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكونات | للقراءة فقط ContentComponent[] |  |
-| اسم الموضوع | سلسلة |  |
-| التشخيص | مترجم التشخيص[] |  |
+| الاسم       | اكتب                           | الوصف |
+| ----------- | ------------------------------ | ----- |
+| مكونات      | للقراءة فقط ContentComponent[] |       |
+| اسم الموضوع | سلسلة                          |       |
+| التشخيص     | مترجم التشخيص[]                |       |
 
 ### DEFAULT_GHOST_THEME_NAME
 
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_GHOST_THEME_NAME
+export const DEFAULT_GHOST_THEME_NAME;
 ```
 
 اسم السمة الافتراضي المستخدم عندما لا يقدم المتصل اسمًا.
@@ -116,41 +124,47 @@ export const DEFAULT_GHOST_THEME_NAME
 **النوع:** الوظيفة
 
 ```typescript
-function emitGhostComponentsManifest(components: readonly ContentComponent[]): string
+function emitGhostComponentsManifest(
+  components: readonly ContentComponent[],
+): string;
 ```
 
 قم بإصدار عقد المعلمة الجزئية كـ JSON مطبوع بشكل جميل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكونات | للقراءة فقط ContentComponent[] |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| مكونات | للقراءة فقط ContentComponent[] |       |
 
 ### emitGhostThemeConfig
 
 **النوع:** الوظيفة
 
 ```typescript
-function emitGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): string
+function emitGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): string;
 ```
 
 تنبعث منها `config.custom` جزء مثل JSON مطبوع بشكل جميل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكونات | للقراءة فقط ContentComponent[] |  |
-| اسم الموضوع | سلسلة |  |
-| التشخيص | مترجم التشخيص[] |  |
+| الاسم       | اكتب                           | الوصف |
+| ----------- | ------------------------------ | ----- |
+| مكونات      | للقراءة فقط ContentComponent[] |       |
+| اسم الموضوع | سلسلة                          |       |
+| التشخيص     | مترجم التشخيص[]                |       |
 
 ### GHOST_COMPONENTS_MANIFEST
 
 **النوع:** ثابت
 
 ```typescript
-export const GHOST_COMPONENTS_MANIFEST
+export const GHOST_COMPONENTS_MANIFEST;
 ```
 
 الملف الذي تم كتابة عقد المعلمة الجزئية إليه.
@@ -160,7 +174,7 @@ export const GHOST_COMPONENTS_MANIFEST
 **النوع:** ثابت
 
 ```typescript
-export const GHOST_SETTING_LIMIT
+export const GHOST_SETTING_LIMIT;
 ```
 
 الحد الأقصى لعدد الإدخالات التي يقبلها Ghost `config.custom`.
@@ -174,7 +188,7 @@ export const GHOST_SETTING_LIMIT
 **النوع:** ثابت
 
 ```typescript
-export const GHOST_THEME_CONFIG_MANIFEST
+export const GHOST_THEME_CONFIG_MANIFEST;
 ```
 
 الملف `config.custom` تتم كتابة جزء ل.
@@ -224,7 +238,7 @@ export interface GhostSetting
 **النوع:** الوظيفة
 
 ```typescript
-function ghostSettingType(field: ContentField): GhostSettingType
+function ghostSettingType(field: ContentField): GhostSettingType;
 ```
 
 نوع إعداد Ghost هو نوع حقل محايد يضيق عليه.
@@ -235,16 +249,17 @@ function ghostSettingType(field: ContentField): GhostSettingType
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المجال | حقل المحتوى |  |
+| الاسم  | اكتب        | الوصف |
+| ------ | ----------- | ----- |
+| المجال | حقل المحتوى |       |
 
 ### GhostSettingType
 
 **النوع:** النوع
 
 ```typescript
-export type GhostSettingType = "select" | "boolean" | "color" | "image" | "text";
+export type GhostSettingType =
+  "select" | "boolean" | "color" | "image" | "text";
 ```
 
 الإعدادات الخمسة هي Ghost's `config.custom` تقبل الكتلة.
@@ -274,16 +289,18 @@ export interface GhostThemeConfig
 **النوع:** الوظيفة
 
 ```typescript
-function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
+function toGhostComponentEntry(
+  component: ContentComponent,
+): GhostComponentEntry;
 ```
 
 قم بإسقاط مكون واحد عليه `forge-components.json` دخول.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المكون | مكون المحتوى |       |
 
 ## `src/template`
 
@@ -292,7 +309,7 @@ function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
 **النوع:** الوظيفة
 
 ```typescript
-function emitGhostPartial(component: ContentComponent): string
+function emitGhostPartial(component: ContentComponent): string;
 ```
 
 قم بإصدار المقاود جزئيًا لمكون واحد.
@@ -303,48 +320,51 @@ function emitGhostPartial(component: ContentComponent): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المكون | مكون المحتوى |       |
 
 ### GhostPartialFileName
 
 **النوع:** الوظيفة
 
 ```typescript
-function ghostPartialFileName(component: ContentComponent): string
+function ghostPartialFileName(component: ContentComponent): string;
 ```
 
 المسار النسبي للموضوع الذي تمت كتابة الجزء الجزئي إليه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المكون | مكون المحتوى |       |
 
 ### GhostPartialName
 
 **النوع:** الوظيفة
 
 ```typescript
-function ghostPartialName(component: ContentComponent): string
+function ghostPartialName(component: ContentComponent): string;
 ```
 
 الاسم الجزئي الذي يتم استدعاء المكون تحته (`{{> forge/badge}}`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المكون | مكون المحتوى |       |
 
 ### GhostTemplateDiagnostics
 
 **النوع:** الوظيفة
 
 ```typescript
-function ghostTemplateDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function ghostTemplateDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 التشخيص الذي ينبعث منه إنتاج جزئي لمكون واحد.
@@ -355,7 +375,7 @@ function ghostTemplateDiagnostics(component: ContentComponent, fileName: string)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
-| اسم الملف | سلسلة |  |
+| الاسم     | اكتب         | الوصف |
+| --------- | ------------ | ----- |
+| المكون    | مكون المحتوى |       |
+| اسم الملف | سلسلة        |       |

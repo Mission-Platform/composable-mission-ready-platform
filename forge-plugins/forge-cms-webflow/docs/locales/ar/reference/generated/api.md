@@ -16,23 +16,23 @@
 **النوع:** الوظيفة
 
 ```typescript
-function declarationFileName(component: ContentComponent): string
+function declarationFileName(component: ContentComponent): string;
 ```
 
 الملف الذي يتم كتابة إعلان المكون إليه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المكون | مكون المحتوى |       |
 
 ### DEFAULT_ISLAND_ENTRY
 
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_ISLAND_ENTRY
+export const DEFAULT_ISLAND_ENTRY;
 ```
 
 يتم استخدام مُحدد الجزيرة عندما يقوم برنامج التشغيل بإنشاء لا شيء بشكل مشترك (الاختبارات، عمليات التشغيل الجافة).
@@ -42,7 +42,7 @@ export const DEFAULT_ISLAND_ENTRY
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_WEBFLOW_GROUP
+export const DEFAULT_WEBFLOW_GROUP;
 ```
 
 تقوم مجموعة المكونات التي يقوم المصمم بحفظ مكونات المكتبة ضمنها.
@@ -52,7 +52,10 @@ export const DEFAULT_WEBFLOW_GROUP
 **النوع:** الوظيفة
 
 ```typescript
-function emitWebflowDeclaration(component: ContentComponent, options: WebflowDeclarationOptions = {}): string
+function emitWebflowDeclaration(
+  component: ContentComponent,
+  options: WebflowDeclarationOptions = {},
+): string;
 ```
 
 قم بإصدار إعلان مكون التعليمات البرمجية لمكون واحد.
@@ -64,17 +67,20 @@ function emitWebflowDeclaration(component: ContentComponent, options: WebflowDec
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
-| خيارات | WebflowDeclarationOptions |  |
+| الاسم  | اكتب                      | الوصف |
+| ------ | ------------------------- | ----- |
+| المكون | مكون المحتوى              |       |
+| خيارات | WebflowDeclarationOptions |       |
 
 ### webflowDeclarationDiagnostics
 
 **النوع:** الوظيفة
 
 ```typescript
-function webflowDeclarationDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function webflowDeclarationDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 تنتج التشخيصات التي ينبعث منها إعلان مكون واحد.
@@ -84,10 +90,10 @@ function webflowDeclarationDiagnostics(component: ContentComponent, fileName: st
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
-| اسم الملف | سلسلة |  |
+| الاسم     | اكتب         | الوصف |
+| --------- | ------------ | ----- |
+| المكون    | مكون المحتوى |       |
+| اسم الملف | سلسلة        |       |
 
 ### WebflowDeclarationOptions
 
@@ -104,7 +110,7 @@ export interface WebflowDeclarationOptions
 **النوع:** الوظيفة
 
 ```typescript
-function webflowDescription(component: ContentComponent): string | undefined
+function webflowDescription(component: ContentComponent): string | undefined;
 ```
 
 الوصف الذي يعرضه المصمم للمكون.
@@ -116,48 +122,48 @@ function webflowDescription(component: ContentComponent): string | undefined
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المكون | مكون المحتوى |       |
 
 ### webflowDisplayName
 
 **النوع:** الوظيفة
 
 ```typescript
-function webflowDisplayName(name: string): string
+function webflowDisplayName(name: string): string;
 ```
 
 يتم عرض العلامة ذات الوجه البشري تحت الدعامة في المصمم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| الاسم | سلسلة |       |
 
 ### webflowPropertyName
 
 **النوع:** الوظيفة
 
 ```typescript
-function webflowPropertyName(field: ContentField): string
+function webflowPropertyName(field: ContentField): string;
 ```
 
 مفتاح الإعلان الذي تم تأليف الحقل تحته هو React اسم الدعامة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المجال | حقل المحتوى |  |
+| الاسم  | اكتب        | الوصف |
+| ------ | ----------- | ----- |
+| المجال | حقل المحتوى |       |
 
 ### webflowPropertyType
 
 **النوع:** الوظيفة
 
 ```typescript
-function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
+function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType;
 ```
 
 قم بتعيين نوع محتوى محايد على مفردات دعم Webflow.
@@ -167,16 +173,23 @@ function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نوع | كونتينتفيلدكيند |  |
+| الاسم | اكتب            | الوصف |
+| ----- | --------------- | ----- |
+| نوع   | كونتينتفيلدكيند |       |
 
 ### WebflowPropertyType
 
 **النوع:** النوع
 
 ```typescript
-export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichText" | "props.Slot" | "props.Text" | "props.Variant" | "props.Visibility";
+export type WebflowPropertyType =
+  | "props.Image"
+  | "props.Link"
+  | "props.RichText"
+  | "props.Slot"
+  | "props.Text"
+  | "props.Variant"
+  | "props.Visibility";
 ```
 
 ال `@webflow/data-types` المصنع تم تأليف نوع حقل محايد به.
@@ -188,7 +201,7 @@ export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichTe
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEBFLOW_NUMBER_AS_TEXT
+export const FORGE_WEBFLOW_NUMBER_AS_TEXT;
 ```
 
 تم إنشاء حقل رقمي كدعم نص Webflow؛ لا يحتوي Webflow على نوع رقمي.
@@ -198,18 +211,22 @@ export const FORGE_WEBFLOW_NUMBER_AS_TEXT
 **النوع:** الوظيفة
 
 ```typescript
-function webflowWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function webflowWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 إنشاء تحذير لمرحلة الجيل؛ هدف Webflow لا يصدر أي أخطاء أبدًا.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| كود | سلسلة |  |
-| رسالة | سلسلة |  |
-| اسم الملف | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| كود       | سلسلة |       |
+| رسالة     | سلسلة |       |
+| اسم الملف | سلسلة |       |
 
 ## `src/entry`
 
@@ -218,32 +235,32 @@ function webflowWarning(code: string, message: string, fileName: string): Compil
 **النوع:** الوظيفة
 
 ```typescript
-function emitWebflowEntry(components: readonly ContentComponent[]): string
+function emitWebflowEntry(components: readonly ContentComponent[]): string;
 ```
 
 تنبعث منها `index.ts` برميل إعادة تصدير كل إعلان المنبعثة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكونات | للقراءة فقط ContentComponent[] |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| مكونات | للقراءة فقط ContentComponent[] |       |
 
 ### اسم_الاستيراد_التصديري
 
 **النوع:** الوظيفة
 
 ```typescript
-function entryExportName(component: ContentComponent): string
+function entryExportName(component: ContentComponent): string;
 ```
 
 يتم إعادة تصدير اسم تصدير البرميل لإعلان المكون بموجبه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المكون | مكون المحتوى |       |
 
 ## `src/manifest`
 
@@ -252,24 +269,27 @@ function entryExportName(component: ContentComponent): string
 **النوع:** الوظيفة
 
 ```typescript
-function buildWebflowManifest(libraryName: string, frameworkId: string): WebflowManifest
+function buildWebflowManifest(
+  libraryName: string,
+  frameworkId: string,
+): WebflowManifest;
 ```
 
 بناء `webflow.json` جزء للمكتبة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم المكتبة | سلسلة |  |
-| معرف الإطار | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| اسم المكتبة | سلسلة |       |
+| معرف الإطار | سلسلة |       |
 
 ### DEFAULT_WEBFLOW_LIBRARY_NAME
 
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_WEBFLOW_LIBRARY_NAME
+export const DEFAULT_WEBFLOW_LIBRARY_NAME;
 ```
 
 اسم المكتبة المستخدم عندما لا يقوم المتصل بتوفيره.
@@ -279,7 +299,7 @@ export const DEFAULT_WEBFLOW_LIBRARY_NAME
 **النوع:** الوظيفة
 
 ```typescript
-function emitWebflowManifest(libraryName: string, frameworkId: string): string
+function emitWebflowManifest(libraryName: string, frameworkId: string): string;
 ```
 
 تنبعث `webflow.json`.
@@ -290,17 +310,17 @@ function emitWebflowManifest(libraryName: string, frameworkId: string): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم المكتبة | سلسلة |  |
-| معرف الإطار | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| اسم المكتبة | سلسلة |       |
+| معرف الإطار | سلسلة |       |
 
 ### WEBFLOW_LIBRARY_MANIFEST
 
 **النوع:** ثابت
 
 ```typescript
-export const WEBFLOW_LIBRARY_MANIFEST
+export const WEBFLOW_LIBRARY_MANIFEST;
 ```
 
 الملف الذي تمت كتابة جزء المكتبة إليه.
@@ -310,7 +330,7 @@ export const WEBFLOW_LIBRARY_MANIFEST
 **النوع:** الوظيفة
 
 ```typescript
-function webflowComponentsGlob(frameworkId: string): string
+function webflowComponentsGlob(frameworkId: string): string;
 ```
 
 الكرة الأرضية التي تطابق كل إعلان تم إنشاؤه لتشغيل هدف واحد.
@@ -322,9 +342,9 @@ function webflowComponentsGlob(frameworkId: string): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف الإطار | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| معرف الإطار | سلسلة |       |
 
 ### WebflowLibrary
 
@@ -353,16 +373,16 @@ export interface WebflowManifest
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin
+function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin;
 ```
 
 ربط إسقاط Webflow Code Component بمملوك للمتصل React البرنامج المساعد الإخراج.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجيويبفلوكمسوبتيونس |  |
+| الاسم  | اكتب                  | الوصف |
+| ------ | --------------------- | ----- |
+| خيارات | فورجيويبفلوكمسوبتيونس |       |
 
 ### ForgeWebflowCmsOptions
 
@@ -379,7 +399,7 @@ export interface ForgeWebflowCmsOptions
 **النوع:** ثابت
 
 ```typescript
-export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[]
+export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[];
 ```
 
 الوحدات النمطية التي تستوردها الإعلانات المنبعثة التي توفرها سلسلة أدوات Webflow.

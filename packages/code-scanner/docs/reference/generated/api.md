@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/code-scanner`.
 **Kind:** function
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
+function blobToImageData(blob: Blob, roi: number = 1): Promise<ImageLike>;
 ```
 
 Decode an image `Blob`/`File` into an {@link ImageLike} (RGBA pixels). Uses
@@ -19,17 +19,17 @@ Decode an image `Blob`/`File` into an {@link ImageLike} (RGBA pixels). Uses
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| blob | Blob |  |
-| roi |  |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| blob | Blob   |             |
+| roi  | number |             |
 
 ### scanFile
 
 **Kind:** function
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>
+function scanFile(file: Blob): Promise<ScanResult | null>;
 ```
 
 Decode `file` and scan it for a code, synchronously running the WebAssembly
@@ -38,15 +38,15 @@ scanner (which self-initialises from its inlined binary in a production build).
 #### Parameters
 
 | Name | Type | Description |
-| --- | --- | --- |
-| file | Blob |  |
+| ---- | ---- | ----------- |
+| file | Blob |             |
 
 ### scanFileAsync
 
 **Kind:** function
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>
+function scanFileAsync(file: Blob): Promise<ScanResult | null>;
 ```
 
 Decode `file` and scan it for a code, initialising the scanner and decoders
@@ -55,15 +55,15 @@ asynchronously — safe in any environment (no inlined binary required).
 #### Parameters
 
 | Name | Type | Description |
-| --- | --- | --- |
-| file | Blob |  |
+| ---- | ---- | ----------- |
+| file | Blob |             |
 
 ### videoFrameToImageData
 
 **Kind:** function
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike
+function videoFrameToImageData(video: HTMLVideoElement, roi: number = DEFAULT_ROI): ImageLike;
 ```
 
 Capture the current frame of a playing `<video>` element as an
@@ -74,10 +74,10 @@ reticle size the UI shows the user greatly raises the hit rate.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| video | HTMLVideoElement |  |
-| roi |  |  |
+| Name  | Type             | Description |
+| ----- | ---------------- | ----------- |
+| video | HTMLVideoElement |             |
+| roi   | number           |             |
 
 ## `src/debug`
 
@@ -86,7 +86,7 @@ reticle size the UI shows the user greatly raises the hit rate.
 **Kind:** function
 
 ```typescript
-function isCodeScannerDebugEnabled(): boolean
+function isCodeScannerDebugEnabled(): boolean;
 ```
 
 Whether scanner diagnostic logging is currently enabled.
@@ -96,16 +96,16 @@ Whether scanner diagnostic logging is currently enabled.
 **Kind:** function
 
 ```typescript
-function setCodeScannerDebug(value: boolean): void
+function setCodeScannerDebug(value: boolean): void;
 ```
 
 Enable or disable the scanner's JS-side diagnostic logging at runtime.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | boolean |  |
+| Name  | Type    | Description                                                            |
+| ----- | ------- | ---------------------------------------------------------------------- |
+| value | boolean | - `true` to log each scan stage to the console, `false` to silence it. |
 
 #### Contract
 
@@ -118,7 +118,11 @@ Enable or disable the scanner's JS-side diagnostic logging at runtime.
 **Kind:** function
 
 ```typescript
-function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LOW_PERCENTILE, highPercentile: number = DEFAULT_HIGH_PERCENTILE): LumaImage
+function contrastStretchLuma(
+  luma: LumaImage,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+): LumaImage;
 ```
 
 Contrast-stretch a {@link LumaImage}, mapping its `lowPercentile`..`highPercentile`
@@ -138,18 +142,18 @@ value — is returned unchanged, since there is nothing to stretch.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| luma | LumaImage |  |
-| lowPercentile | number |  |
-| highPercentile | number |  |
+| Name           | Type      | Description |
+| -------------- | --------- | ----------- |
+| luma           | LumaImage |             |
+| lowPercentile  | number    |             |
+| highPercentile | number    |             |
 
 ### imageDataToLuma
 
 **Kind:** function
 
 ```typescript
-function imageDataToLuma(image: ImageLike): LumaImage
+function imageDataToLuma(image: ImageLike): LumaImage;
 ```
 
 Convert an RGBA {@link ImageLike} (e.g. a canvas `ImageData`) into a
@@ -158,9 +162,9 @@ single-channel {@link LumaImage} using the Rec. 601 luma weights
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| image | ImageLike |  |
+| Name  | Type      | Description |
+| ----- | --------- | ----------- |
+| image | ImageLike |             |
 
 ### LumaImage
 
@@ -179,7 +183,7 @@ A single-channel grayscale image: `width * height` luma bytes.
 **Kind:** function
 
 ```typescript
-function createScannerRawPointerSession(): ScannerRawPointerSession
+function createScannerRawPointerSession(): ScannerRawPointerSession;
 ```
 
 No description provided.
@@ -189,7 +193,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function createScannerRawPointerSessionAsync(): Promise<ScannerRawPointerSession>
+function createScannerRawPointerSessionAsync(): Promise<ScannerRawPointerSession>;
 ```
 
 No description provided.
@@ -199,7 +203,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
+function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
 ```
 
 Locate and decode the first supported code in `image`, instantiating the
@@ -207,57 +211,57 @@ scanner graph synchronously on first use.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| image | ImageLike |  |
-| roi | Roi |  |
+| Name  | Type      | Description                                                        |
+| ----- | --------- | ------------------------------------------------------------------ |
+| image | ImageLike |                                                                    |
+| roi   | Roi       | optional region of interest (image pixels) to restrict the scan to |
 
 #### Contract
 
 - **@param:** optional region of interest (image pixels) to restrict the scan to
-— cropped before binarisation, so surrounding clutter is ignored.
+  — cropped before binarisation, so surrounding clutter is ignored.
 - **@returns:** the {@link ScanResult}, or `null` when no code is found. When a code
-is located but its payload can't be decoded, `result.value` is `null`.
+  is located but its payload can't be decoded, `result.value` is `null`.
 
 ### scanImageDataAll
 
 **Kind:** function
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[]
+function scanImageDataAll(image: ImageLike): ScanResult[];
 ```
 
-Locate and decode *every* distinct code in `image` (not just the first),
+Locate and decode _every_ distinct code in `image` (not just the first),
 instantiating the scanner graph synchronously on first use.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| image | ImageLike |  |
+| Name  | Type      | Description |
+| ----- | --------- | ----------- |
+| image | ImageLike |             |
 
 #### Contract
 
 - **@returns:** the decoded {@link ScanResult}s in discovery order, deduplicated;
-empty when nothing is decoded.
+  empty when nothing is decoded.
 
 ### scanImageDataAllAsync
 
 **Kind:** function
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
+function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
 ```
 
-Locate and decode *every* distinct code in `image`, loading the scanner graph
+Locate and decode _every_ distinct code in `image`, loading the scanner graph
 asynchronously on first use. Initialisation and scan failures are
 returned as Promise rejections.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| image | ImageLike |  |
+| Name  | Type      | Description |
+| ----- | --------- | ----------- |
+| image | ImageLike |             |
 
 #### Contract
 
@@ -268,7 +272,7 @@ returned as Promise rejections.
 **Kind:** function
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>
+function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
 ```
 
 Locate and decode the first supported code in `image`, loading the scanner
@@ -277,10 +281,10 @@ failures are returned as Promise rejections.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| image | ImageLike |  |
-| roi | Roi |  |
+| Name  | Type      | Description                                              |
+| ----- | --------- | -------------------------------------------------------- |
+| image | ImageLike |                                                          |
+| roi   | Roi       | optional region of interest — see {@link scanImageData}. |
 
 #### Contract
 
@@ -321,7 +325,7 @@ export interface Roi
 
 A rectangular region of interest, in image pixels, to restrict a scan to (e.g.
 a reticle a live camera UI draws over the frame). The crop happens in wasm
-*before* binarisation, so surrounding clutter never reaches the locators. A
+_before_ binarisation, so surrounding clutter never reaches the locators. A
 region overhanging an edge is clamped; one entirely outside the frame finds
 nothing.
 
@@ -343,4 +347,4 @@ The code families the scanner can locate and decode.
 export interface ScanResult
 ```
 
-The outcome of a successful *detection*.
+The outcome of a successful _detection_.

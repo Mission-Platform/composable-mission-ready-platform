@@ -16,18 +16,22 @@
 **种类：**功能
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 将整个模块改造成 React 目标源。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
-|组件名称 |字符串|  |
-|计划| ReactModulePlan | 反应模块计划  |
+| 名称     | 类型            | 描述         |
+| -------- | --------------- | ------------ |
+| 模块     | 语义模块        |              |
+| 组件名称 | 字符串          |              |
+| 计划     | ReactModulePlan | 反应模块计划 |
 
 ## `src/index`
 
@@ -36,7 +40,7 @@ function emitReactModule(module: SemanticModule, componentName?: string, plan: R
 **种类：**功能
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 创建 React 输出插件及其本机 JSX 构建适配器。
@@ -48,50 +52,58 @@ function forgeReactFramework(): FrameworkOutputPlugin
 **种类：**功能
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 将目标拥有的计划缩小到 React 一。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|降低| TargetLoweredModule \|未定义 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 降低 | TargetLoweredModule \|未定义 |      |
 
 ### 下层React模块
 
 **种类：**功能
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 将中性 IR 降低到 React 由 {@link TargetIntentions.lowered} 执行的计划。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|红外|语义模块 |  |
-|背景 |目标上下文 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 红外 | 语义模块   |      |
+| 背景 | 目标上下文 |      |
 
 ### planReact模块
 
 **种类：**功能
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 构建 React 计划一个模块。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
-|组件名称 |字符串|  |
+| 名称     | 类型     | 描述 |
+| -------- | -------- | ---- |
+| 模块     | 语义模块 |      |
+| 组件名称 | 字符串   |      |
 
 ### ReactClient指令计划
 
@@ -180,7 +192,10 @@ export interface ReactPropsParameter
 **种类：**功能
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 细化 React 计划。
@@ -191,17 +206,17 @@ function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|意向 |目标意图|  |
-|选项 |目标优化选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 意向 | 目标意图     |      |
+| 选项 | 目标优化选项 |      |
 
 ### REACT_OPTIMIZATIONS
 
 **种类：**常数
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 计划中记录的标识符 React 优化器已经完善。

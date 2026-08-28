@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-c
 **Soort:** constant
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 Het samengestelde schema dat elke gegenereerde site leest uit `site.data`.
@@ -26,7 +26,7 @@ Het samengestelde schema dat elke gegenereerde site leest uit `site.data`.
 **Soort:** constant
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 Het configuratiefragment dat een site samenvoegt tot zijn eigen `_config.yml`.
@@ -36,16 +36,16 @@ Het configuratiefragment dat een site samenvoegt tot zijn eigen `_config.yml`.
 **Soort:** functie
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 Bind Jekyll (Liquid)-projectie aan een framework-uitvoerplug-in die eigendom is van de beller.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeJekyllCmsOptions |  |
+| Naam   | Typ                   | Beschrijving |
+| ------ | --------------------- | ------------ |
+| opties | ForgeJekyllCmsOptions |              |
 
 ### ForgeJekyllCmsOptions
 
@@ -64,7 +64,10 @@ Opties voor {@link forgeJekyllCms}.
 **Soort:** functie
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emit `_data/forge-components.yml`: het schema van elke uitgezonden include.
@@ -75,17 +78,20 @@ gegenereerde documentatiepagina zou ze moeten vermelden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| componenten | alleen-lezen ContentComponent[] |  |
-| naamruimte | tekenreeks |  |
+| Naam        | Typ                             | Beschrijving |
+| ----------- | ------------------------------- | ------------ |
+| componenten | alleen-lezen ContentComponent[] |              |
+| naamruimte  | tekenreeks                      |              |
 
 ### emitJekyllConfig
 
 **Soort:** functie
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Zend het `_config.yml`-fragment uit dat de gegenereerde include's registreert.
@@ -99,26 +105,26 @@ filters, en zouden anders lege waarden zien.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| componenten | alleen-lezen ContentComponent[] |  |
-| naamruimte | tekenreeks |  |
+| Naam        | Typ                             | Beschrijving |
+| ----------- | ------------------------------- | ------------ |
+| componenten | alleen-lezen ContentComponent[] |              |
+| naamruimte  | tekenreeks                      |              |
 
 ### fieldToJekyllType
 
 **Soort:** functie
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 Het Jekyll-gegevenstype waarin een neutraal veld wordt gepubliceerd.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| veld | InhoudVeld |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| veld | InhoudVeld |              |
 
 ### JekyllFieldType
 
@@ -135,16 +141,16 @@ De woordenschat waaronder de neutrale veldsoorten worden gepubliceerd in `_data`
 **Soort:** functie
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 Een YAML-scalair voor een neutrale standaardwaarde.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | ContentDefaultValue |  |
+| Naam   | Typ                 | Beschrijving |
+| ------ | ------------------- | ------------ |
+| waarde | ContentDefaultValue |              |
 
 ## `src/template`
 
@@ -153,7 +159,7 @@ Een YAML-scalair voor een neutrale standaardwaarde.
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 De naamruimte die wordt gebruikt als de beller er geen kiest.
@@ -163,58 +169,70 @@ De naamruimte die wordt gebruikt als de beller er geen kiest.
 **Soort:** functie
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emit the Liquid bevat voor één component.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
-| naamruimte | tekenreeks |  |
+| Naam        | Typ             | Beschrijving |
+| ----------- | --------------- | ------------ |
+| bestanddeel | InhoudComponent |              |
+| naamruimte  | tekenreeks      |              |
 
 ### includeBestandsnaam
 
 **Soort:** functie
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 De artefactbestandsnaam van include.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
-| naamruimte | tekenreeks |  |
+| Naam        | Typ             | Beschrijving |
+| ----------- | --------------- | ------------ |
+| bestanddeel | InhoudComponent |              |
+| naamruimte  | tekenreeks      |              |
 
 ### includePath
 
 **Soort:** functie
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Het include-pad waarmee een component wordt geadresseerd, relatief ten opzichte van `_includes`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
-| naamruimte | tekenreeks |  |
+| Naam        | Typ             | Beschrijving |
+| ----------- | --------------- | ------------ |
+| bestanddeel | InhoudComponent |              |
+| naamruimte  | tekenreeks      |              |
 
 ### jekyllDiagnostiek
 
 **Soort:** functie
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 Verzamel de diagnostiek die de vloeistofverlagingsrapporten voor een component rapporteren.
@@ -227,17 +245,17 @@ weergegeven waar de opmaak werd verwacht.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ir | SemantischeModule |  |
-| bestanddeel | InhoudComponent |  |
+| Naam        | Typ               | Beschrijving |
+| ----------- | ----------------- | ------------ |
+| ir          | SemantischeModule |              |
+| bestanddeel | InhoudComponent   |              |
 
 ### vloeistofLiteraal
 
 **Soort:** functie
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 Een vloeibare letterlijke waarde voor een neutrale standaardwaarde.
@@ -248,6 +266,6 @@ dan het afdwingen van de standaardwaarde tot een string.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | ContentDefaultValue |  |
+| Naam   | Typ                 | Beschrijving |
+| ------ | ------------------- | ------------ |
+| waarde | ContentDefaultValue |              |

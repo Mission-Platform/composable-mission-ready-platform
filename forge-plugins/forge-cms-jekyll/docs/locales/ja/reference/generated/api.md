@@ -16,7 +16,7 @@
 **種類:** 定数
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 生成された各サイトの読み取り元となる集約スキーマ `site.data`.
@@ -26,7 +26,7 @@ export const COMPONENTS_DATA_FILE
 **種類:** 定数
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 サイトが独自の構成フラグメントにマージする構成フラグメント `_config.yml`.
@@ -36,16 +36,16 @@ export const CONFIG_FILE
 **種類:** 関数
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 Jekyll (Liquid) プロジェクションを呼び出し元所有のフレームワーク出力プラグインにバインドします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeJekyllCmsオプション |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| オプション | ForgeJekyllCmsオプション |      |
 
 ### ForgeJekyllCmsOptions
 
@@ -64,7 +64,10 @@ export interface ForgeJekyllCmsOptions
 **種類:** 関数
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 放出する `_data/forge-components.yml`: 発行されたすべてのインクルードのスキーマ。
@@ -75,17 +78,20 @@ function emitComponentsData(components: readonly ContentComponent[], namespace: 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |読み取り専用 ContentComponent[] |  |
-|名前空間 |文字列 |  |
+| 名前           | タイプ                          | 説明 |
+| -------------- | ------------------------------- | ---- |
+| コンポーネント | 読み取り専用 ContentComponent[] |      |
+| 名前空間       | 文字列                          |      |
 
 ### 放出JekyllConfig
 
 **種類:** 関数
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 を発する `_config.yml` 生成されたインクルードを登録するフラグメント。
@@ -99,26 +105,26 @@ Jekyll はサイト構成を `site.*`なので、名前空間を公開します
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |読み取り専用 ContentComponent[] |  |
-|名前空間 |文字列 |  |
+| 名前           | タイプ                          | 説明 |
+| -------------- | ------------------------------- | ---- |
+| コンポーネント | 読み取り専用 ContentComponent[] |      |
+| 名前空間       | 文字列                          |      |
 
 ### フィールドToJekyllType
 
 **種類:** 関数
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 ニュートラル フィールドがパブリッシュされる Jekyll データ型。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フィールド |コンテンツフィールド |  |
+| 名前       | タイプ               | 説明 |
+| ---------- | -------------------- | ---- |
+| フィールド | コンテンツフィールド |      |
 
 ### ジキルフィールドタイプ
 
@@ -135,16 +141,16 @@ export type JekyllFieldType = "string" | "number" | "boolean" | "enum" | "slot";
 **種類:** 関数
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 ニュートラルなデフォルト値の YAML スカラー。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |コンテンツデフォルト値 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 値   | コンテンツデフォルト値 |      |
 
 ## `src/template`
 
@@ -153,7 +159,7 @@ function yamlScalar(value: ContentDefaultValue): string
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 呼び出し元が名前空間を選択しない場合に使用される名前空間。
@@ -163,58 +169,70 @@ export const DEFAULT_INCLUDE_NAMESPACE
 **種類:** 関数
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 1 つのコンポーネントのリキッド インクルードを放出します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
-|名前空間 |文字列 |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
+| 名前空間       | 文字列                   |      |
 
 ### includeファイル名
 
 **種類:** 関数
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 コンポーネントのインクルードのアーティファクト ファイル名。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
-|名前空間 |文字列 |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
+| 名前空間       | 文字列                   |      |
 
 ### includePath
 
 **種類:** 関数
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 コンポーネントがアドレス指定されるインクルード パス (相対パス) `_includes`.
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
-|名前空間 |文字列 |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
+| 名前空間       | 文字列                   |      |
 
 ### jekyll診断
 
 **種類:** 関数
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 コンポーネントの液体低下レポートの診断を収集します。
@@ -227,17 +245,17 @@ function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): rea
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|赤外線 |セマンティックモジュール |  |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| 赤外線         | セマンティックモジュール |      |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ### 液体リテラル
 
 **種類:** 関数
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 中立的なデフォルト値の液体リテラル。
@@ -248,6 +266,6 @@ function liquidLiteral(value: ContentDefaultValue): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |コンテンツデフォルト値 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 値   | コンテンツデフォルト値 |      |

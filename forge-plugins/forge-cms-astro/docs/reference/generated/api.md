@@ -11,16 +11,16 @@ Generated from public source declarations in `@mission-platform/forge-cms-astro`
 **Kind:** function
 
 ```typescript
-function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin
+function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin;
 ```
 
 Bind Astro projection to a caller-owned framework output plugin.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeAstroCmsOptions |  |
+| Name    | Type                 | Description |
+| ------- | -------------------- | ----------- |
+| options | ForgeAstroCmsOptions |             |
 
 ### ForgeAstroCmsOptions
 
@@ -39,32 +39,32 @@ Options for {@link forgeAstroCms}.
 **Kind:** function
 
 ```typescript
-function emitContentConfig(components: readonly ContentComponent[]): string
+function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
 Emit an Astro `content.config.ts` with one collection per component.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| components | readonly ContentComponent[] |  |
+| Name       | Type                        | Description |
+| ---------- | --------------------------- | ----------- |
+| components | readonly ContentComponent[] |             |
 
 ### fieldToZod
 
 **Kind:** function
 
 ```typescript
-function fieldToZod(field: ContentField): string
+function fieldToZod(field: ContentField): string;
 ```
 
 The zod (or `image()`) validator a neutral field kind maps onto.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| field | ContentField |  |
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| field | ContentField |             |
 
 ## `src/template`
 
@@ -73,40 +73,46 @@ The zod (or `image()`) validator a neutral field kind maps onto.
 **Kind:** function
 
 ```typescript
-function astroDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function astroDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 Collect the diagnostics the Astro lowering reports for a module.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| component | ContentComponent |  |
+| Name      | Type             | Description |
+| --------- | ---------------- | ----------- |
+| ir        | SemanticModule   |             |
+| component | ContentComponent |             |
 
 ### astroMarkup
 
 **Kind:** function
 
 ```typescript
-function astroMarkup(expression: string): string
+function astroMarkup(expression: string): string;
 ```
 
 Rewrite JSX-only attribute names and strip the outer fragment.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| expression | string |  |
+| Name       | Type   | Description |
+| ---------- | ------ | ----------- |
+| expression | string |             |
 
 ### emitIslandAstroTemplate
 
 **Kind:** function
 
 ```typescript
-function emitIslandAstroTemplate(component: ContentComponent, islandEntry: string): string
+function emitIslandAstroTemplate(
+  component: ContentComponent,
+  islandEntry: string,
+): string;
 ```
 
 Emit the island-backed `.astro` template for an interactive component.
@@ -117,23 +123,23 @@ neutral IR compiled by the bound framework plugin — and hydrated with
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | ContentComponent |  |
-| islandEntry | string |  |
+| Name        | Type             | Description |
+| ----------- | ---------------- | ----------- |
+| component   | ContentComponent |             |
+| islandEntry | string           |             |
 
 ### emitStaticAstroTemplate
 
 **Kind:** function
 
 ```typescript
-function emitStaticAstroTemplate(ir: SemanticModule): string
+function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
 Emit the static `.astro` template for a presentational component.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| ir | SemanticModule |  |
+| Name | Type           | Description |
+| ---- | -------------- | ----------- |
+| ir   | SemanticModule |             |

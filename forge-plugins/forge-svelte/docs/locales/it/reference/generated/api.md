@@ -16,7 +16,12 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-plugin-s
 **Tipo:** funzione
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 Stampa un modulo componente neutro come Svelte 5 SFC. Un chiamante che ha già funzionato
@@ -25,12 +30,12 @@ abbassato, quindi l'emettitore è sempre pilotato dallo stesso contratto.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modulo | Modulo Semantico |  |
-| nomecomponente | stringa |  |
-| componenteCartelle | Sola letturaSet<string> |  |
-| piano | Modulo SvelteLowered |  |
+| Nome               | Digitare                | Descrizione |
+| ------------------ | ----------------------- | ----------- |
+| modulo             | Modulo Semantico        |             |
+| nomecomponente     | stringa                 |             |
+| componenteCartelle | Sola letturaSet<string> |             |
+| piano              | Modulo SvelteLowered    |             |
 
 ### SvelteModuleOutput
 
@@ -49,16 +54,16 @@ Un modulo `.svelte` generato ed eventuali moduli ausiliari scritti accanto ad es
 **Tipo:** funzione
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 Stampa un modulo hook/componibile neutro come origine `.ts` di destinazione Svelte.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modulo | Modulo Semantico |  |
+| Nome   | Digitare         | Descrizione |
+| ------ | ---------------- | ----------- |
+| modulo | Modulo Semantico |             |
 
 ## `src/index`
 
@@ -67,7 +72,7 @@ Stampa un modulo hook/componibile neutro come origine `.ts` di destinazione Svel
 **Tipo:** funzione
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 Creare il plug-in di output Svelte e i relativi adattatori del compilatore Vite/Rolldown.
@@ -79,33 +84,38 @@ Creare il plug-in di output Svelte e i relativi adattatori del compilatore Vite/
 **Tipo:** funzione
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 Se un piano target è quello Svelte: la discriminante su cui ogni consumatore si restringe.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| abbassato | TargetLoweredModule \| indefinito |  |
+| Nome      | Digitare                          | Descrizione |
+| --------- | --------------------------------- | ----------- |
+| abbassato | TargetLoweredModule \| indefinito |             |
 
 ### lowerSvelteModule
 
 **Tipo:** funzione
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 Costruisci il piano Svelte per un modulo neutro.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| io | Modulo Semantico |  |
-| contesto | Contesto di destinazione |  |
+| Nome     | Digitare                 | Descrizione |
+| -------- | ------------------------ | ----------- |
+| io       | Modulo Semantico         |             |
+| contesto | Contesto di destinazione |             |
 
 ### SvelteBindingPlan
 
@@ -281,7 +291,10 @@ Intenzioni target che trasportano un piano Svelte completamente tipizzato.
 **Tipo:** funzione
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Perfezionare un piano Svelte ridotto. Intenzioni che non comportano alcun piano Svelte (un file straniero
@@ -289,17 +302,17 @@ destinazione o un chiamante che ha saltato `lower`) vengono restituiti intatti.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| intenzioni | Intenzioni target |  |
-| opzioni | TargetOptimizeOptions |  |
+| Nome       | Digitare              | Descrizione |
+| ---------- | --------------------- | ----------- |
+| intenzioni | Intenzioni target     |             |
+| opzioni    | TargetOptimizeOptions |             |
 
 ### SVELTE_OTTIMIZZAZIONI
 
 **Genere:** costante
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 Ogni ottimizzazione applicabile a questo obiettivo, nell'ordine dell'applicazione.

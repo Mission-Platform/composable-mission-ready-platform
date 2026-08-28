@@ -36,19 +36,24 @@ export interface EmittedVueModule
 פונקציה **סוג:**
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 הפוך מודול רכיב ניטרלי ל-Vue SFC (בתוספת כל SFC עזר).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
-| שם רכיב | מחרוזת |  |
-| componentFolders | ReadonlySet<string> |  |
-| תוכנית | VueLoweredModule |  |
+| שם               | הקלד                | תיאור |
+| ---------------- | ------------------- | ----- |
+| מודול            | SemanticModule      |       |
+| שם רכיב          | מחרוזת              |       |
+| componentFolders | ReadonlySet<string> |       |
+| תוכנית           | VueLoweredModule    |       |
 
 ## `src/emitters/hook-module`
 
@@ -57,16 +62,16 @@ function emitVueModule(module: SemanticModule, componentName: string, componentF
 פונקציה **סוג:**
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 הרכיב מודול וו ניטרלי למקור הניתן לחיבור Vue (`.ts`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| מודול | SemanticModule |       |
 
 ## `src/index`
 
@@ -75,7 +80,7 @@ function emitVueHookModule(module: SemanticModule): string
 פונקציה **סוג:**
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 צור את הפלאגין Vue ואת מתאמי המהדר Vite/Rolldown שלו.
@@ -87,23 +92,28 @@ function forgeVueFramework(): FrameworkOutputPlugin
 פונקציה **סוג:**
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 צמצם תוכנית יעד לתוכנית Vue ללא ליהוק.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הוריד | TargetLoweredModule \| לא מוגדר |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| הוריד | TargetLoweredModule \| לא מוגדר |       |
 
 ### LowerVueModule
 
 פונקציה **סוג:**
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 הורד מודול ניטרלי לתוכנית היעד Vue. המודול הנייטרלי נוסע
@@ -111,10 +121,10 @@ function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetInten
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| הקשר | היעד הקשר |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| ir   | SemanticModule |       |
+| הקשר | היעד הקשר      |       |
 
 ### VueComputedPlan
 
@@ -253,7 +263,7 @@ export interface VueWatcherPlan
 **סוג:** קבוע
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 כווץ הצהרות `computed` שחולקות מפעל.
@@ -263,7 +273,7 @@ export const DEDUPE_COMPUTED
 **סוג:** קבוע
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Prune `vue` מייבאת את התוכנית המעודנת שכבר אינה צריכה.
@@ -273,7 +283,7 @@ Prune `vue` מייבאת את התוכנית המעודנת שכבר אינה צ
 **סוג:** קבוע
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 הנף תת-עצים סטטיים לחלוטין (קבועי מודול / `v-once`).
@@ -283,7 +293,7 @@ export const HOIST_STATIC_SUBTREES
 **סוג:** קבוע
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 שלח מצב שמעולם לא הוקצה מחדש כ-`const` רגיל במקום `ref`.
@@ -293,7 +303,10 @@ export const INLINE_SINGLE_USE_REFS
 פונקציה **סוג:**
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 חידד תוכנית Vue מופחתת. כוונות הנושאות תוכנית זרה (או חסרה) הן
@@ -301,17 +314,17 @@ function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimize
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כוונות | כוונות יעד |  |
-| אפשרויות | TargetOptimizeOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| כוונות   | כוונות יעד            |       |
+| אפשרויות | TargetOptimizeOptions |       |
 
 ### STABLE_LIST_KEYS
 
 **סוג:** קבוע
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 שמור רק על מקשי הרשימה שהוכחו יציבים, תוך הקלטת הרשימות שנותרו ללא מקשים.
@@ -321,7 +334,7 @@ export const STABLE_LIST_KEYS
 **סוג:** קבוע
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 כל מזהה אופטימיזציה שהיעד של Vue יכול להקליט, לפי סדר היישום.

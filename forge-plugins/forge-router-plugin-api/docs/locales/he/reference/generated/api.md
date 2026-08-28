@@ -16,41 +16,45 @@
 פונקציה **סוג:**
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 צור אבחון מקור מקומי עבור כשל מהדר בנתב.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | לְהַשְׁמִיט<CompilerDiagnostic, 'phase' \| 'fileName'> & { readonly fileName?: string;   } |  |
+| שם    | הקלד                                                                                     | תיאור |
+| ----- | ---------------------------------------------------------------------------------------- | ----- |
+| אבחון | לְהַשְׁמִיט<CompilerDiagnostic, 'phase' \| 'fileName'> & { readonly fileName?: string; } |       |
 
 ### defineForgeRouterPlugin
 
 פונקציה **סוג:**
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 אמת את המטא נתונים של תוסף הנתב לפני שהוא נכנס לצינור מהדר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוסף | ט |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| תוסף | ט    |       |
 
 ### defineForgeRouterTarget
 
 פונקציה **סוג:**
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 צור יעד דטרמיניסטי המשכתב מחדש יבוא ניטרלי של נתב.
@@ -63,16 +67,16 @@ function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutpu
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeRouterTargetOptions |  |
+| שם       | הקלד                     | תיאור |
+| -------- | ------------------------ | ----- |
+| אפשרויות | ForgeRouterTargetOptions |       |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 ייצוא זמן ריצה ניטרלי המשמר את חוזה מחבר החבילה.
@@ -87,7 +91,7 @@ export const FORGE_ROUTER_RUNTIME_EXPORTS
 **סוג:** קבוע
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 חוזי יעד שמורים לנתבים שמתאמי הצד הראשון שלהם אינם חלק מאבן דרך זו.
@@ -127,7 +131,7 @@ export interface GeneratedRouterModule
 **סוג:** קבוע
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 סמן יציב משותף עם חבילת הנתב הנייטרלית.
@@ -137,7 +141,7 @@ export const MP_ROUTER_COMPILER_MARKER
 **סוג:** קבוע
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 החבילה שהיבוא שלה מובן למעבר המהדר של הנתב.
@@ -157,7 +161,8 @@ export interface RouterBuildAdapters
 **סוג:** סוג
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 פעולות הניתנות להורדה עצמאית הנחשפות על ידי חוזה הנתב הנייטרלי.
@@ -197,7 +202,7 @@ export interface RouterCapabilityUse
 **סוג:** סוג
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 כיצד נעשה שימוש בקישור נתב ניטרלי במודול מקור.
@@ -277,31 +282,37 @@ export interface RouterTargetPlan
 פונקציה **סוג:**
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 מצא יעד נתב ישיר או שנבחר מזהה מבלי לחבר אותו לתוספי ממשק משתמש.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בחירה | RouterPluginSelection \| לא מוגדר |  |
-| תוספים | Readonly RouterOutputPlugin[] |  |
+| שם     | הקלד                              | תיאור |
+| ------ | --------------------------------- | ----- |
+| בחירה  | RouterPluginSelection \| לא מוגדר |       |
+| תוספים | Readonly RouterOutputPlugin[]     |       |
 
 ### יכולות נתב לא נתמכות
 
 פונקציה **סוג:**
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 דווח על פערי יכולת לפני שלמטרה יש סיכוי להרכיב מודול באופן שקט.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ir | RouterCapabilityModule |  |
-| תוסף | RouterOutputPlugin \| לא מוגדר |  |
+| שם   | הקלד                           | תיאור |
+| ---- | ------------------------------ | ----- |
+| ir   | RouterCapabilityModule         |       |
+| תוסף | RouterOutputPlugin \| לא מוגדר |       |

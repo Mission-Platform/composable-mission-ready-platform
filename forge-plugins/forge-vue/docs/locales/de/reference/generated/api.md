@@ -36,19 +36,24 @@ Das Ergebnis des Vue-Emitters: der primäre SFC plus alle von ihm generierten Hi
 **Art:** Funktion
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 Verwandeln Sie ein neutrales Komponentenmodul in einen Vue SFC (plus alle Hilfs-SFCs).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
-| Komponentenname | Zeichenfolge |  |
-| Komponentenordner | ReadonlySet<string> |  |
-| planen | VueLoweredModule |  |
+| Name              | Geben Sie           | ein Beschreibung |
+| ----------------- | ------------------- | ---------------- |
+| Modul             | SemanticModule      |                  |
+| Komponentenname   | Zeichenfolge        |                  |
+| Komponentenordner | ReadonlySet<string> |                  |
+| planen            | VueLoweredModule    |                  |
 
 ## `src/emitters/hook-module`
 
@@ -57,16 +62,16 @@ Verwandeln Sie ein neutrales Komponentenmodul in einen Vue SFC (plus alle Hilfs-
 **Art:** Funktion
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 Kompilieren Sie ein neutrales Hook-Modul mit seiner zusammensetzbaren Vue-Quelle (`.ts`).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
+| Name  | Geben Sie      | ein Beschreibung |
+| ----- | -------------- | ---------------- |
+| Modul | SemanticModule |                  |
 
 ## `src/index`
 
@@ -75,7 +80,7 @@ Kompilieren Sie ein neutrales Hook-Modul mit seiner zusammensetzbaren Vue-Quelle
 **Art:** Funktion
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 Erstellen Sie das Vue-Ausgabe-Plugin und seine Vite/Rolldown-Compiler-Adapter.
@@ -87,23 +92,28 @@ Erstellen Sie das Vue-Ausgabe-Plugin und seine Vite/Rolldown-Compiler-Adapter.
 **Art:** Funktion
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 Grenzen Sie einen Zielplan ohne Umwandlung auf den Vue-Plan ein.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| abgesenkt | TargetLoweredModule \| undefiniert |  |
+| Name      | Geben Sie                          | ein Beschreibung |
+| --------- | ---------------------------------- | ---------------- |
+| abgesenkt | TargetLoweredModule \| undefiniert |                  |
 
 ### LowerVueModule
 
 **Art:** Funktion
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Senken Sie ein neutrales Modul in den Vue-Zielplan ab. Das Neutralmodul fährt
@@ -111,10 +121,10 @@ bleibt unberührt, sodass spätere Phasen weiterhin vollen Zugriff auf die IR ha
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| Kontext | Zielkontext |  |
+| Name    | Geben Sie      | ein Beschreibung |
+| ------- | -------------- | ---------------- |
+| ir      | SemanticModule |                  |
+| Kontext | Zielkontext    |                  |
 
 ### VueComputedPlan
 
@@ -253,7 +263,7 @@ Ein `useEffect` wurde auf einen Vue-Beobachter gesenkt.
 **Art:** konstant
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 Reduzieren Sie `computed`-Deklarationen, die eine Factory gemeinsam nutzen.
@@ -263,7 +273,7 @@ Reduzieren Sie `computed`-Deklarationen, die eine Factory gemeinsam nutzen.
 **Art:** konstant
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Prune `vue` importiert den verfeinerten Plan, der nicht mehr benötigt wird.
@@ -273,7 +283,7 @@ Prune `vue` importiert den verfeinerten Plan, der nicht mehr benötigt wird.
 **Art:** konstant
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 Heben Sie vollständig statische Teilbäume an (Modulkonstanten / `v-once`).
@@ -283,7 +293,7 @@ Heben Sie vollständig statische Teilbäume an (Modulkonstanten / `v-once`).
 **Art:** konstant
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 Gibt den nie neu zugewiesenen Status als einfaches `const` statt als `ref` aus.
@@ -293,7 +303,10 @@ Gibt den nie neu zugewiesenen Status als einfaches `const` statt als `ref` aus.
 **Art:** Funktion
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Verfeinern Sie einen abgesenkten Vue-Plan. Absichten, die einen ausländischen (oder fehlenden) Plan beinhalten, sind
@@ -301,17 +314,17 @@ wird unverändert zurückgegeben, sodass der Optimierer sicher in jeder Pipeline
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Absichten | Zielabsichten |  |
-| Optionen | TargetOptimizeOptions |  |
+| Name      | Geben Sie             | ein Beschreibung |
+| --------- | --------------------- | ---------------- |
+| Absichten | Zielabsichten         |                  |
+| Optionen  | TargetOptimizeOptions |                  |
 
 ### STABLE_LIST_KEYS
 
 **Art:** konstant
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 Behalten Sie nur Listenschlüssel bei, die sich als stabil erwiesen haben, und zeichnen Sie die Listen auf, die nicht verschlüsselt sind.
@@ -321,7 +334,7 @@ Behalten Sie nur Listenschlüssel bei, die sich als stabil erwiesen haben, und z
 **Art:** konstant
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 Jede Optimierungskennung, die das Vue-Ziel aufzeichnen kann, in der Reihenfolge der Anwendung.

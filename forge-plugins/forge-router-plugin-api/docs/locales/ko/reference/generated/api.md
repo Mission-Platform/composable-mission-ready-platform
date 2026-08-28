@@ -16,41 +16,45 @@
 **종류:** 기능
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 라우터 컴파일러 오류에 대한 소스-로컬 진단을 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 생략<CompilerDiagnostic, 'phase' \| 'fileName'> & { 읽기 전용 파일 이름?: 문자열;   } |  |
+| 이름 | 유형                                                                                | 설명 |
+| ---- | ----------------------------------------------------------------------------------- | ---- |
+| 진단 | 생략<CompilerDiagnostic, 'phase' \| 'fileName'> & { 읽기 전용 파일 이름?: 문자열; } |      |
 
 ### 정의ForgeRouter플러그인
 
 **종류:** 기능
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 라우터 플러그인 메타데이터가 컴파일러 파이프라인에 들어가기 전에 유효성을 검사합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 플러그인 | 티 |  |
+| 이름     | 유형 | 설명 |
+| -------- | ---- | ---- |
+| 플러그인 | 티   |      |
 
 ### DefineForgeRouterTarget
 
 **종류:** 기능
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 중립 라우터 가져오기를 다시 작성하는 결정적 대상을 만듭니다.
@@ -63,16 +67,16 @@ function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutpu
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeRouterTarget옵션 |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 옵션 | ForgeRouterTarget옵션 |      |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 패키지 작성자 계약을 유지하는 중립 런타임 내보내기입니다.
@@ -87,7 +91,7 @@ export const FORGE_ROUTER_RUNTIME_EXPORTS
 **종류:** 상수
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 자사 어댑터가 이 마일스톤의 일부가 아닌 라우터에 대해 예약된 대상 계약입니다.
@@ -127,7 +131,7 @@ export interface GeneratedRouterModule
 **종류:** 상수
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 중립 라우터 패키지와 공유되는 안정적인 마커입니다.
@@ -137,7 +141,7 @@ export const MP_ROUTER_COMPILER_MARKER
 **종류:** 상수
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 라우터 컴파일러 패스에서 가져오기를 이해하는 패키지입니다.
@@ -157,7 +161,8 @@ export interface RouterBuildAdapters
 **종류:** 유형
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 중립 라우터 계약에 의해 노출되는 독립적으로 낮은 작업이 가능합니다.
@@ -197,7 +202,7 @@ export interface RouterCapabilityUse
 **종류:** 유형
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 소스 모듈에서 중립 라우터 바인딩이 사용되는 방법.
@@ -277,31 +282,37 @@ export interface RouterTargetPlan
 **종류:** 기능
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 UI 플러그인에 연결하지 않고 직접 또는 ID가 선택한 라우터 대상을 찾습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 선택 | 라우터 플러그인 선택 \| 정의되지 않음 |  |
-| 플러그인 | 읽기 전용 RouterOutputPlugin[] |  |
+| 이름     | 유형                                  | 설명 |
+| -------- | ------------------------------------- | ---- |
+| 선택     | 라우터 플러그인 선택 \| 정의되지 않음 |      |
+| 플러그인 | 읽기 전용 RouterOutputPlugin[]        |      |
 
 ### 지원되지 않는 라우터 기능
 
 **종류:** 기능
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 대상이 자동으로 모듈을 잘못 컴파일하기 전에 기능 격차를 보고합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| IR | RouterCapability모듈 |  |
-| 플러그인 | RouterOutputPlugin \| 정의되지 않음 |  |
+| 이름     | 유형                                | 설명 |
+| -------- | ----------------------------------- | ---- |
+| IR       | RouterCapability모듈                |      |
+| 플러그인 | RouterOutputPlugin \| 정의되지 않음 |      |

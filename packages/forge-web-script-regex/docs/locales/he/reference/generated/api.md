@@ -26,7 +26,7 @@ export interface CompiledRegex
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 גרסה יציבה של חוזה קוד בתים משותף של Forge regex.
@@ -36,7 +36,7 @@ export const FORGE_REGEX_BYTECODE_VERSION
 **סוג:** קבוע
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 רוחב, באופרנדים שלמים של 32 סיביות, של כל הוראה.
@@ -46,7 +46,7 @@ export const INSTR_WIDTH
 **סוג:** קבוע
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 קודים הנצרכים על ידי Forge backend ומשתקפים על ידי האורקל הייחוס.
@@ -68,16 +68,16 @@ export type Opcode = (typeof Op)[keyof typeof Op];
 פונקציה **סוג:**
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 קומפל את תת-ערכת ה-Regex הדטרמיניסטית הנתמכת לתוך Forge bytecode.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| דפוס | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| דפוס | מחרוזת |       |
 
 ### RegexSyntaxError
 
@@ -96,17 +96,17 @@ export class RegexSyntaxError extends Error
 פונקציה **סוג:**
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 קרא סוף לכידה מבלי לחשוף את פריסת חריץ ה-bytecode למתקשרים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| לוכדת | לוכד \| null |  |
-| קבוצה | מספר |  |
+| שם    | הקלד         | תיאור |
+| ----- | ------------ | ----- |
+| לוכדת | לוכד \| null |       |
+| קבוצה | מספר         |       |
 
 ### לוכדים
 
@@ -123,83 +123,83 @@ export type Captures = number[];
 פונקציה **סוג:**
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 קרא התחלת לכידה מבלי לחשוף את פריסת חריץ ה-bytecode למתקשרים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| לוכדת | לוכד \| null |  |
-| קבוצה | מספר |  |
+| שם    | הקלד         | תיאור |
+| ----- | ------------ | ----- |
+| לוכדת | לוכד \| null |       |
+| קבוצה | מספר         |       |
 
 ### fullMatch
 
 פונקציה **סוג:**
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 משחק מיתרים שלמים, מעוגן בעמדה אפס.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מחדש | CompiledRegex |  |
-| קלט | מחרוזת |  |
+| שם   | הקלד          | תיאור |
+| ---- | ------------- | ----- |
+| מחדש | CompiledRegex |       |
+| קלט  | מחרוזת        |       |
 
 ### prefixMatch
 
 פונקציה **סוג:**
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 התאמת קידומת, מעוגנת בעמדה אפס אבל לא בסוף.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מחדש | CompiledRegex |  |
-| קלט | מחרוזת |  |
+| שם   | הקלד          | תיאור |
+| ---- | ------------- | ----- |
+| מחדש | CompiledRegex |       |
+| קלט  | מחרוזת        |       |
 
 ### לְחַפֵּשׂ
 
 פונקציה **סוג:**
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 ההתאמה השמאלית ביותר ב-`start` או אחריו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מחדש | CompiledRegex |  |
-| קלט | מחרוזת |  |
-| להתחיל |  |  |
+| שם     | הקלד          | תיאור |
+| ------ | ------------- | ----- |
+| מחדש   | CompiledRegex |       |
+| קלט    | מחרוזת        |       |
+| להתחיל |               |       |
 
 ### מִבְחָן
 
 פונקציה **סוג:**
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 התאמה בוליאנית של מיתרים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מחדש | CompiledRegex |  |
-| קלט | מחרוזת |  |
+| שם   | הקלד          | תיאור |
+| ---- | ------------- | ----- |
+| מחדש | CompiledRegex |       |
+| קלט  | מחרוזת        |       |

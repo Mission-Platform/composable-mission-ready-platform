@@ -16,25 +16,32 @@
 **종류:** 기능
 
 ```typescript
-function analyzeStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function analyzeStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 Storyblok의 중립 구성요소 모듈을 분석합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 이름 | StoryblokComponentNames |  |
-| 옵션 | Storyblok프로젝션 옵션 |  |
+| 이름     | 유형                    | 설명 |
+| -------- | ----------------------- | ---- |
+| 소스파일 | ts.소스파일             |      |
+| 이름     | StoryblokComponentNames |      |
+| 옵션     | Storyblok프로젝션 옵션  |      |
 
 ### contentFieldToStoryblokField
 
 **종류:** 기능
 
 ```typescript
-function contentFieldToStoryblokField(field: ContentField, options: StoryblokProjectionOptions = {}): StoryblokSchemaField
+function contentFieldToStoryblokField(
+  field: ContentField,
+  options: StoryblokProjectionOptions = {},
+): StoryblokSchemaField;
 ```
 
 하나의 중립 필드를 Storyblok 스키마 필드에 매핑합니다.
@@ -46,51 +53,60 @@ function contentFieldToStoryblokField(field: ContentField, options: StoryblokPro
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 필드 | 콘텐츠 필드 |  |
-| 옵션 | Storyblok프로젝션 옵션 |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 필드 | 콘텐츠 필드            |      |
+| 옵션 | Storyblok프로젝션 옵션 |      |
 
 ### contentKindToStoryblokFieldType
 
 **종류:** 기능
 
 ```typescript
-function contentKindToStoryblokFieldType(kind: ContentField["kind"]): StoryblokFieldType
+function contentKindToStoryblokFieldType(
+  kind: ContentField["kind"],
+): StoryblokFieldType;
 ```
 
 Storyblok 필드에는 중립 콘텐츠 종류가 매핑됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 종류 | ContentField["종류"] |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 종류 | ContentField["종류"] |      |
 
 ### EmitStoryblokComponent
 
 **종류:** 기능
 
 ```typescript
-function emitStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): StoryblokComponent
+function emitStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): StoryblokComponent;
 ```
 
 구성 요소에 대한 Storyblok 구성 요소 개체(블록 구성)만 내보냅니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 이름 | StoryblokComponentNames |  |
-| 옵션 | Storyblok프로젝션 옵션 |  |
+| 이름     | 유형                    | 설명 |
+| -------- | ----------------------- | ---- |
+| 소스파일 | ts.소스파일             |      |
+| 이름     | StoryblokComponentNames |      |
+| 옵션     | Storyblok프로젝션 옵션  |      |
 
 ### 해결Storyblok메타데이터
 
 **종류:** 기능
 
 ```typescript
-function resolveStoryblokMetadata(component: ContentComponent, options: StoryblokProjectionOptions = {}): ResolvedStoryblokMetadata
+function resolveStoryblokMetadata(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): ResolvedStoryblokMetadata;
 ```
 
 구성 요소에 대해 편집기 메타데이터를 한 번 확인합니다.
@@ -101,27 +117,30 @@ function resolveStoryblokMetadata(component: ContentComponent, options: Storyblo
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
-| 옵션 | Storyblok프로젝션 옵션 |  |
+| 이름     | 유형                   | 설명 |
+| -------- | ---------------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소        |      |
+| 옵션     | Storyblok프로젝션 옵션 |      |
 
 ### toStoryblokComponent
 
 **종류:** 기능
 
 ```typescript
-function toStoryblokComponent(component: ContentComponent, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function toStoryblokComponent(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 중립 콘텐츠 구성 요소를 Storyblok 구성 요소 개체 및 필드에 투영합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
-| 옵션 | Storyblok프로젝션 옵션 |  |
+| 이름     | 유형                   | 설명 |
+| -------- | ---------------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소        |      |
+| 옵션     | Storyblok프로젝션 옵션 |      |
 
 ## `src/runtime/solid`
 
@@ -130,16 +149,18 @@ function toStoryblokComponent(component: ContentComponent, options: StoryblokPro
 **종류:** 기능
 
 ```typescript
-function StoryblokComponent(properties: StoryblokComponentProperties): JSX.Element
+function StoryblokComponent(
+  properties: StoryblokComponentProperties,
+): JSX.Element;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | StoryblokComponentProperties |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | StoryblokComponentProperties |      |
 
 ### StoryblokComponent속성
 
@@ -156,7 +177,9 @@ export interface StoryblokComponentProperties
 **종류:** 유형
 
 ```typescript
-export type StoryblokComponentRegistry = Readonly< Record<string, StoryblokComponentType> >;
+export type StoryblokComponentRegistry = Readonly<
+  Record<string, StoryblokComponentType>
+>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -176,16 +199,18 @@ export type StoryblokComponentType = (properties:
 **종류:** 기능
 
 ```typescript
-function StoryblokProvider(properties: StoryblokProviderProperties): JSX.Element
+function StoryblokProvider(
+  properties: StoryblokProviderProperties,
+): JSX.Element;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | StoryblokProvider속성 |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 속성 | StoryblokProvider속성 |      |
 
 ### StoryblokProvider속성
 
@@ -204,16 +229,16 @@ export interface StoryblokProviderProperties
 **종류:** 기능
 
 ```typescript
-function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin
+function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin;
 ```
 
 호출자가 소유한 프레임워크 출력 플러그인에 Storyblok 프로젝션을 바인딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeStoryblokCms옵션 |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 옵션 | ForgeStoryblokCms옵션 |      |
 
 ### ForgeStoryblokCms옵션
 
@@ -230,16 +255,18 @@ export interface ForgeStoryblokCmsOptions
 **종류:** 기능
 
 ```typescript
-function forgeStoryblokCmsTargets(options: ForgeStoryblokCmsTargetsOptions): CmsOutputPlugin[]
+function forgeStoryblokCmsTargets(
+  options: ForgeStoryblokCmsTargetsOptions,
+): CmsOutputPlugin[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeStoryblokCmsTargets옵션 |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 옵션 | ForgeStoryblokCmsTargets옵션 |      |
 
 ### ForgeStoryblokCmsTargets옵션
 
@@ -291,7 +318,17 @@ Storyblok에 표시된 서명을 읽을 수 있도록 유지합니다.
 **종류:** 유형
 
 ```typescript
-export type StoryblokFieldType = | "text" | "richtext" | "number" | "boolean" | "option" | "asset" | "multilink" | "bloks" | "tab" | "plugin";
+export type StoryblokFieldType =
+  | "text"
+  | "richtext"
+  | "number"
+  | "boolean"
+  | "option"
+  | "asset"
+  | "multilink"
+  | "bloks"
+  | "tab"
+  | "plugin";
 ```
 
 Storyblok 필드는 중립 콘텐츠 종류 맵을 입력합니다.
@@ -343,7 +380,7 @@ Storyblok 스키마 필드(구성 요소의 한 항목 값 `schema`).
 **종류:** 기능
 
 ```typescript
-function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
+function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string;
 ```
 
 입력된 빌드 `blok` 래퍼의 소품 유형 — `SbBlokData & { … }` 하나로
@@ -354,16 +391,20 @@ function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 분석 | 분석된StoryblokComponent |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 분석 | 분석된StoryblokComponent |      |
 
 ### EmitStoryblokBlokWrapper
 
 **종류:** 기능
 
 ```typescript
-function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicName: string, options: StoryblokBlokWrapperOptions): string
+function emitStoryblokBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  options: StoryblokBlokWrapperOptions,
+): string;
 ```
 
 Storyblok을 바인딩하는 프레임워크 블록 래퍼 소스를 내보냅니다. `blok` 받쳐주다
@@ -372,11 +413,11 @@ Storyblok을 바인딩하는 프레임워크 블록 래퍼 소스를 내보냅�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 분석 | 분석된StoryblokComponent |  |
-| 공개이름 | 문자열 |  |
-| 옵션 | StoryblokBlokWrapper옵션 |  |
+| 이름     | 유형                     | 설명 |
+| -------- | ------------------------ | ---- |
+| 분석     | 분석된StoryblokComponent |      |
+| 공개이름 | 문자열                   |      |
+| 옵션     | StoryblokBlokWrapper옵션 |      |
 
 ### StoryblokBlokWrapper옵션
 

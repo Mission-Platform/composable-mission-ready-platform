@@ -36,19 +36,24 @@ El resultado del emisor Vue: el SFC principal más cualquier SFC auxiliar que ge
 **Tipo:** función
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 Transforme un módulo de componente neutro en un SFC Vue (más cualquier SFC auxiliar).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| módulo | Módulo Semántico |  |
-| nombredelcomponente | cadena |  |
-| carpetas de componentes | Sólo lecturaSet<string> |  |
-| plano | Módulo VueBajado |  |
+| Nombre                  | Tipo                    | Descripción |
+| ----------------------- | ----------------------- | ----------- |
+| módulo                  | Módulo Semántico        |             |
+| nombredelcomponente     | cadena                  |             |
+| carpetas de componentes | Sólo lecturaSet<string> |             |
+| plano                   | Módulo VueBajado        |             |
 
 ## `src/emitters/hook-module`
 
@@ -57,16 +62,16 @@ Transforme un módulo de componente neutro en un SFC Vue (más cualquier SFC aux
 **Tipo:** función
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 Compile un módulo de enlace neutro en su fuente componible Vue (`.ts`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| módulo | Módulo Semántico |  |
+| Nombre | Tipo             | Descripción |
+| ------ | ---------------- | ----------- |
+| módulo | Módulo Semántico |             |
 
 ## `src/index`
 
@@ -75,7 +80,7 @@ Compile un módulo de enlace neutro en su fuente componible Vue (`.ts`).
 **Tipo:** función
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 Cree el complemento de salida Vue y sus adaptadores del compilador Vite/Rolldown.
@@ -87,23 +92,28 @@ Cree el complemento de salida Vue y sus adaptadores del compilador Vite/Rolldown
 **Tipo:** función
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 Limite un plan de destino al plan Vue sin realizar casting.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| bajado | TargetLoweredModule\| indefinido |  |
+| Nombre | Tipo                             | Descripción |
+| ------ | -------------------------------- | ----------- |
+| bajado | TargetLoweredModule\| indefinido |             |
 
 ### módulo Vue inferior
 
 **Tipo:** función
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Baje un módulo neutral al plan objetivo Vue. El módulo neutro viaja
@@ -111,10 +121,10 @@ en intacto para que las fases posteriores mantengan acceso completo al IR.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ir | Módulo Semántico |  |
-| contexto | Contexto objetivo |  |
+| Nombre   | Tipo              | Descripción |
+| -------- | ----------------- | ----------- |
+| ir       | Módulo Semántico  |             |
+| contexto | Contexto objetivo |             |
 
 ### VuePlan Computado
 
@@ -253,7 +263,7 @@ Un `useEffect` reducido a un observador Vue.
 **Tipo:** constante
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 Contraer declaraciones `computed` que comparten una fábrica.
@@ -263,7 +273,7 @@ Contraer declaraciones `computed` que comparten una fábrica.
 **Tipo:** constante
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Prune `vue` importa el plan refinado que ya no necesita.
@@ -273,7 +283,7 @@ Prune `vue` importa el plan refinado que ya no necesita.
 **Tipo:** constante
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 Elevar subárboles totalmente estáticos (constantes de módulo/`v-once`).
@@ -283,7 +293,7 @@ Elevar subárboles totalmente estáticos (constantes de módulo/`v-once`).
 **Tipo:** constante
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 Emite un estado nunca reasignado como `const` simple en lugar de `ref`.
@@ -293,7 +303,10 @@ Emite un estado nunca reasignado como `const` simple en lugar de `ref`.
 **Tipo:** función
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Refinar un plan Vue reducido. Las intenciones que llevan un plan extranjero (o faltante) son
@@ -301,17 +314,17 @@ devuelto intacto, por lo que es seguro ejecutar el optimizador en cualquier cana
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| intenciones | Intenciones objetivo |  |
-| opciones | Opciones de optimización de destino |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| intenciones | Intenciones objetivo                |             |
+| opciones    | Opciones de optimización de destino |             |
 
 ### STABLE_LIST_KEYS
 
 **Tipo:** constante
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 Mantenga sólo las claves de lista que demuestren ser estables y registre las listas que no estén claves.
@@ -321,7 +334,7 @@ Mantenga sólo las claves de lista que demuestren ser estables y registre las li
 **Tipo:** constante
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 Cada identificador de optimización que el objetivo Vue puede registrar, en el orden de la aplicación.

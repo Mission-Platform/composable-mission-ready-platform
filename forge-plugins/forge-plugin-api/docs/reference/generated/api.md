@@ -11,24 +11,24 @@ Generated from public source declarations in `@mission-platform/forge-plugin-api
 **Kind:** function
 
 ```typescript
-function applySourceEdits(source: string, edits: readonly SourceEdit[]): string
+function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 ```
 
 Apply non-overlapping source edits without exposing parser nodes.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| source | string |  |
-| edits | readonly SourceEdit[] |  |
+| Name   | Type                  | Description |
+| ------ | --------------------- | ----------- |
+| source | string                |             |
+| edits  | readonly SourceEdit[] |             |
 
 ### CLASS_NAME_ATTRIBUTE
 
 **Kind:** constant
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 No description provided.
@@ -38,55 +38,55 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function eventNameForProperty(propertyName: string): string
+function eventNameForProperty(propertyName: string): string;
 ```
 
 Derive the event name represented by a Vue-style `on<Event>` prop.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| propertyName | string |  |
+| Name         | Type   | Description |
+| ------------ | ------ | ----------- |
+| propertyName | string |             |
 
 ### frameworkAdapterModule
 
 **Kind:** function
 
 ```typescript
-function frameworkAdapterModule(framework: JsxFramework): string
+function frameworkAdapterModule(framework: JsxFramework): string;
 ```
 
 Derive the Forge adapter/runtime module for any built-in target framework.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| framework | JsxFramework |  |
+| Name      | Type         | Description |
+| --------- | ------------ | ----------- |
+| framework | JsxFramework |             |
 
 ### frameworkForDirective
 
 **Kind:** function
 
 ```typescript
-function frameworkForDirective(directive: string): JsxFramework | undefined
+function frameworkForDirective(directive: string): JsxFramework | undefined;
 ```
 
 Resolve a leading `use <framework>` directive for any built-in target.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| directive | string |  |
+| Name      | Type   | Description |
+| --------- | ------ | ----------- |
+| directive | string |             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
 **Kind:** constant
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 No description provided.
@@ -96,7 +96,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 No description provided.
@@ -106,7 +106,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 No description provided.
@@ -116,7 +116,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 No description provided.
@@ -126,23 +126,23 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 Emit framework-local JSX primitive declarations without parser dependencies.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| framework | JsxFramework |  |
+| Name      | Type         | Description |
+| --------- | ------------ | ----------- |
+| framework | JsxFramework |             |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 No description provided.
@@ -152,7 +152,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 No description provided.
@@ -162,7 +162,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 No description provided.
@@ -172,7 +172,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 No description provided.
@@ -182,7 +182,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 No description provided.
@@ -192,7 +192,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 No description provided.
@@ -202,7 +202,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 No description provided.
@@ -232,7 +232,7 @@ A stylesheet import carried into a generated flat tree.
 **Kind:** constant
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 No description provided.
@@ -242,7 +242,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 No description provided.
@@ -274,23 +274,23 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult
+function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 ```
 
 Hoist marked render records and return the entries for the target generator.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | GenericModuleAst |  |
+| Name   | Type             | Description |
+| ------ | ---------------- | ----------- |
+| module | GenericModuleAst |             |
 
 ### MP_HOIST_PREFIX
 
 **Kind:** constant
 
 ```typescript
-export const MP_HOIST_PREFIX
+export const MP_HOIST_PREFIX;
 ```
 
 No description provided.
@@ -302,33 +302,36 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function applyOptimizationEdits(module: GenericModuleAst, edits: readonly SourceEdit[]): GenericModuleAst
+function applyOptimizationEdits(
+  module: GenericModuleAst,
+  edits: readonly SourceEdit[],
+): GenericModuleAst;
 ```
 
 Apply source edits to a module source without exposing an AST implementation type.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | GenericModuleAst |  |
-| edits | readonly SourceEdit[] |  |
+| Name   | Type                  | Description |
+| ------ | --------------------- | ----------- |
+| module | GenericModuleAst      |             |
+| edits  | readonly SourceEdit[] |             |
 
 ### constantBoolean
 
 **Kind:** function
 
 ```typescript
-function constantBoolean(expression: ExpressionLike): boolean | undefined
+function constantBoolean(expression: ExpressionLike): boolean | undefined;
 ```
 
 Resolve a literal boolean without evaluating authored code.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| expression | ExpressionLike |  |
+| Name       | Type           | Description |
+| ---------- | -------------- | ----------- |
+| expression | ExpressionLike |             |
 
 ### GenericOptimizationResult
 
@@ -345,55 +348,55 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function hasJsxKey(attributes: readonly GenericAttribute[]): boolean
+function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 ```
 
 Whether a generic JSX attribute list contains a key.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| attributes | readonly GenericAttribute[] |  |
+| Name       | Type                        | Description |
+| ---------- | --------------------------- | ----------- |
+| attributes | readonly GenericAttribute[] |             |
 
 ### hasMpStaticMarker
 
 **Kind:** function
 
 ```typescript
-function hasMpStaticMarker(node: GenericRenderNode): boolean
+function hasMpStaticMarker(node: GenericRenderNode): boolean;
 ```
 
 Whether a generic JSX node has the private static marker.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### isCompileTimeConstant
 
 **Kind:** function
 
 ```typescript
-function isCompileTimeConstant(expression: ExpressionLike): boolean
+function isCompileTimeConstant(expression: ExpressionLike): boolean;
 ```
 
 Whether source text is a pure compile-time literal expression.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| expression | ExpressionLike |  |
+| Name       | Type           | Description |
+| ---------- | -------------- | ----------- |
+| expression | ExpressionLike |             |
 
 ### MP_STATIC_ATTR
 
 **Kind:** constant
 
 ```typescript
-export const MP_STATIC_ATTR
+export const MP_STATIC_ATTR;
 ```
 
 No description provided.
@@ -403,17 +406,20 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function optimizeGenericModule(module: GenericModuleAst, _options: OptimizeOptions = {}): GenericOptimizationResult
+function optimizeGenericModule(
+  module: GenericModuleAst,
+  _options: OptimizeOptions = {},
+): GenericOptimizationResult;
 ```
 
 Apply record-level optimisation while returning any source edits separately.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | GenericModuleAst |  |
-| _options | OptimizeOptions |  |
+| Name     | Type             | Description |
+| -------- | ---------------- | ----------- |
+| module   | GenericModuleAst |             |
+| _options | OptimizeOptions  |             |
 
 ### OptimizeOptions
 
@@ -430,32 +436,34 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function stripMpStaticAttributes(attributes: readonly GenericAttribute[]): readonly GenericAttribute[]
+function stripMpStaticAttributes(
+  attributes: readonly GenericAttribute[],
+): readonly GenericAttribute[];
 ```
 
 Return a marker-free generic attribute list.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| attributes | readonly GenericAttribute[] |  |
+| Name       | Type                        | Description |
+| ---------- | --------------------------- | ----------- |
+| attributes | readonly GenericAttribute[] |             |
 
 ### stripMpStaticMarker
 
 **Kind:** function
 
 ```typescript
-function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode
+function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
 Return a marker-free generic render node, recursively preserving source spans.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ## `src/diagnostics`
 
@@ -494,7 +502,14 @@ Severity of a compiler diagnostic.
 **Kind:** type
 
 ```typescript
-export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering" | "optimization" | "generation" | "build";
+export type CompilerPhase =
+  | "frontend"
+  | "ir"
+  | "inference"
+  | "target-lowering"
+  | "optimization"
+  | "generation"
+  | "build";
 ```
 
 Pipeline phases that can report a compiler diagnostic.
@@ -504,48 +519,52 @@ Pipeline phases that can report a compiler diagnostic.
 **Kind:** function
 
 ```typescript
-function createCompilerDiagnostic(diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string }): CompilerDiagnostic
+function createCompilerDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string },
+): CompilerDiagnostic;
 ```
 
 Create a diagnostic without coupling the phase contracts to TypeScript nodes.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostic | Omit<CompilerDiagnostic, "fileName"> & { fileName?: string } |  |
+| Name       | Type                                                         | Description |
+| ---------- | ------------------------------------------------------------ | ----------- |
+| diagnostic | Omit<CompilerDiagnostic, "fileName"> & { fileName?: string } |             |
 
 ### formatCompilerDiagnostic
 
 **Kind:** function
 
 ```typescript
-function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string
+function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
 Format a diagnostic for a compiler error without losing its source location.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostic | CompilerDiagnostic |  |
+| Name       | Type               | Description |
+| ---------- | ------------------ | ----------- |
+| diagnostic | CompilerDiagnostic |             |
 
 ### throwOnCompilerErrors
 
 **Kind:** function
 
 ```typescript
-function throwOnCompilerErrors(diagnostics: readonly CompilerDiagnostic[] | undefined): void
+function throwOnCompilerErrors(
+  diagnostics: readonly CompilerDiagnostic[] | undefined,
+): void;
 ```
 
 Abort a compiler pipeline when a phase reported one or more errors.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostics | readonly CompilerDiagnostic[] \| undefined |  |
+| Name        | Type                                       | Description |
+| ----------- | ------------------------------------------ | ----------- |
+| diagnostics | readonly CompilerDiagnostic[] \| undefined |             |
 
 ## `src/framework`
 
@@ -624,7 +643,8 @@ Context passed to source generators after target lowering and optimization.
 **Kind:** type
 
 ```typescript
-export type JsxFramework = "react" | "vue" | "svelte" | "solid" | "web-components";
+export type JsxFramework =
+  "react" | "vue" | "svelte" | "solid" | "web-components";
 ```
 
 Current built-in framework IDs; plugins may use any additional string ID.
@@ -730,7 +750,7 @@ Shared context for framework-owned Vite plugin bundles.
 **Kind:** constant
 
 ```typescript
-export const defineForgeFramework
+export const defineForgeFramework;
 ```
 
 Alias emphasizing that framework packages register target implementations.
@@ -740,16 +760,16 @@ Alias emphasizing that framework packages register target implementations.
 **Kind:** function
 
 ```typescript
-function defineForgeOutputPlugin(plugin: T): T
+function defineForgeOutputPlugin(plugin: T): T;
 ```
 
 Validate and return a framework output plugin for registration by consumers.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| plugin | T |  |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| plugin | T    |             |
 
 ### ForgePluginId
 
@@ -766,32 +786,36 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function validateForgeOutputPlugin(plugin: unknown): asserts plugin is FrameworkOutputPlugin
+function validateForgeOutputPlugin(
+  plugin: unknown,
+): asserts plugin is FrameworkOutputPlugin;
 ```
 
 Validate target metadata independently of any framework registry.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| plugin | unknown |  |
+| Name   | Type    | Description |
+| ------ | ------- | ----------- |
+| plugin | unknown |             |
 
 ### validateForgeOutputPluginSelection
 
 **Kind:** function
 
 ```typescript
-function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
+function validateForgeOutputPluginSelection(
+  plugins: readonly T[],
+): readonly T[];
 ```
 
 Validate a caller-owned target selection, including empty and duplicate IDs.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| plugins | readonly T[] |  |
+| Name    | Type         | Description |
+| ------- | ------------ | ----------- |
+| plugins | readonly T[] |             |
 
 ## `src/ir`
 
@@ -800,34 +824,40 @@ Validate a caller-owned target selection, including empty and duplicate IDs.
 **Kind:** function
 
 ```typescript
-function attributeExpressionText(node: GenericRenderNode, name: string): string | undefined
+function attributeExpressionText(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 Read a named attribute's expression text, when it carries one.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| name | string |  |
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| name | string            |             |
 
 ### attributeStringValue
 
 **Kind:** function
 
 ```typescript
-function attributeStringValue(node: GenericRenderNode, name: string): string | undefined
+function attributeStringValue(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 Read a named attribute's static string value, when it has one.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| name | string |  |
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| name | string            |             |
 
 ### DynamicNodeIntention
 
@@ -854,7 +884,7 @@ An effect lifecycle and its optional cleanup expression.
 **Kind:** constant
 
 ```typescript
-export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
+export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions;
 ```
 
 Empty intention facts used by fixtures and by modules with nothing to infer.
@@ -864,7 +894,7 @@ Empty intention facts used by fixtures and by modules with nothing to infer.
 **Kind:** constant
 
 ```typescript
-export const EMPTY_SPAN: SourceSpan
+export const EMPTY_SPAN: SourceSpan;
 ```
 
 A zero-width span used by synthesized generic nodes.
@@ -884,24 +914,28 @@ An event binding that can be represented by different target attribute syntaxes.
 **Kind:** function
 
 ```typescript
-function findAttribute(node: GenericRenderNode, name: string): GenericJsxAttribute | undefined
+function findAttribute(
+  node: GenericRenderNode,
+  name: string,
+): GenericJsxAttribute | undefined;
 ```
 
 Find the named attribute on a render node.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| name | string |  |
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| name | string            |             |
 
 ### GenericAstNode
 
 **Kind:** type
 
 ```typescript
-export type GenericAstNode = GenericImport | GenericStatement | GenericRenderNode;
+export type GenericAstNode =
+  GenericImport | GenericStatement | GenericRenderNode;
 ```
 
 No description provided.
@@ -931,7 +965,8 @@ The value carried by a JSX attribute.
 **Kind:** type
 
 ```typescript
-export type GenericBindingKind = "identifier" | "object-pattern" | "array-pattern";
+export type GenericBindingKind =
+  "identifier" | "object-pattern" | "array-pattern";
 ```
 
 The binding form of a component's props parameter.
@@ -1011,7 +1046,8 @@ A component parameter, its binding form, and its declared type.
 **Kind:** type
 
 ```typescript
-export type GenericRenderChild = GenericRenderNode | GenericTextNode | GenericExpressionNode;
+export type GenericRenderChild =
+  GenericRenderNode | GenericTextNode | GenericExpressionNode;
 ```
 
 No description provided.
@@ -1041,7 +1077,18 @@ A framework-neutral statement retained by the frontend.
 **Kind:** type
 
 ```typescript
-export type GenericStatementKind = | "import" | "interface" | "type-alias" | "enum" | "variable" | "function" | "class" | "export" | "expression" | "return" | "other";
+export type GenericStatementKind =
+  | "import"
+  | "interface"
+  | "type-alias"
+  | "enum"
+  | "variable"
+  | "function"
+  | "class"
+  | "export"
+  | "expression"
+  | "return"
+  | "other";
 ```
 
 Coarse classification of a retained module-level statement.
@@ -1071,48 +1118,50 @@ Literal text between JSX tags.
 **Kind:** function
 
 ```typescript
-function isExpressionNode(child: GenericRenderChild): child is GenericExpressionNode
+function isExpressionNode(
+  child: GenericRenderChild,
+): child is GenericExpressionNode;
 ```
 
 Whether a render child is a `{ … }` interpolation.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| child | GenericRenderChild |  |
+| Name  | Type               | Description |
+| ----- | ------------------ | ----------- |
+| child | GenericRenderChild |             |
 
 ### isRenderNode
 
 **Kind:** function
 
 ```typescript
-function isRenderNode(child: GenericRenderChild): child is GenericRenderNode
+function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
 Whether a render child is a nested element/fragment node.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| child | GenericRenderChild |  |
+| Name  | Type               | Description |
+| ----- | ------------------ | ----------- |
+| child | GenericRenderChild |             |
 
 ### isTextNode
 
 **Kind:** function
 
 ```typescript
-function isTextNode(child: GenericRenderChild): child is GenericTextNode
+function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 ```
 
 Whether a render child is literal JSX text.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| child | GenericRenderChild |  |
+| Name  | Type               | Description |
+| ----- | ------------------ | ----------- |
+| child | GenericRenderChild |             |
 
 ### ListKeyIntention
 
@@ -1159,16 +1208,16 @@ A ref intention independent of the target's ref representation.
 **Kind:** function
 
 ```typescript
-function renderNodeTagName(node: GenericRenderNode): string | undefined
+function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
 The plain tag name of a render node, or `undefined` for a computed tag.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### SemanticIntentions
 
@@ -1205,18 +1254,22 @@ A slot read or slot passed to a child component.
 **Kind:** function
 
 ```typescript
-function sourceBacked(text: string, syntax: SourceBackedExpression["syntax"] = "expression", span: SourceSpan = EMPTY_SPAN): SourceBackedExpression
+function sourceBacked(
+  text: string,
+  syntax: SourceBackedExpression["syntax"] = "expression",
+  span: SourceSpan = EMPTY_SPAN,
+): SourceBackedExpression;
 ```
 
 Build a source-backed expression from already-printed text.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| text | string |  |
-| syntax | SourceBackedExpression["syntax"] |  |
-| span | SourceSpan |  |
+| Name   | Type                             | Description |
+| ------ | -------------------------------- | ----------- |
+| text   | string                           |             |
+| syntax | SourceBackedExpression["syntax"] |             |
+| span   | SourceSpan                       |             |
 
 ### SourceBackedExpression
 
@@ -1253,14 +1306,17 @@ A state cell and its associated setter, independent of target reactivity primiti
 **Kind:** function
 
 ```typescript
-function walkRenderNodes(nodes: readonly GenericRenderNode[], visit: (node: GenericRenderNode) => void): void
+function walkRenderNodes(
+  nodes: readonly GenericRenderNode[],
+  visit: (node: GenericRenderNode) => void,
+): void;
 ```
 
 Walk a render tree depth-first, including nested expression markup.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| nodes | readonly GenericRenderNode[] |  |
-| visit | (node: GenericRenderNode) => void |  |
+| Name  | Type                              | Description |
+| ----- | --------------------------------- | ----------- |
+| nodes | readonly GenericRenderNode[]      |             |
+| visit | (node: GenericRenderNode) => void |             |

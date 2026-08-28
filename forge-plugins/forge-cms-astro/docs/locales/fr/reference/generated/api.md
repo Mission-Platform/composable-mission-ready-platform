@@ -16,16 +16,16 @@ Généré à partir de déclarations de source publique dans `@mission-platform/
 **Genre :** fonction
 
 ```typescript
-function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin
+function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin;
 ```
 
 Liez la projection Astro à un plugin de sortie de framework appartenant à l'appelant.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeAstroCmsOptions |  |
+| Nom     | Tapez                | Descriptif |
+| ------- | -------------------- | ---------- |
+| options | ForgeAstroCmsOptions |            |
 
 ### ForgeAstroCmsOptions
 
@@ -44,32 +44,32 @@ Options pour {@link forgeAstroCms}.
 **Genre :** fonction
 
 ```typescript
-function emitContentConfig(components: readonly ContentComponent[]): string
+function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
 Émettre un Astro `content.config.ts` avec une collection par composant.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composants | lecture seule ContentComponent[] |  |
+| Nom        | Tapez                            | Descriptif |
+| ---------- | -------------------------------- | ---------- |
+| composants | lecture seule ContentComponent[] |            |
 
 ### champVersZod
 
 **Genre :** fonction
 
 ```typescript
-function fieldToZod(field: ContentField): string
+function fieldToZod(field: ContentField): string;
 ```
 
 Le zod (ou `image()`) validateur sur lequel un type de champ neutre est cartographié.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| champ | Champ de contenu |  |
+| Nom   | Tapez            | Descriptif |
+| ----- | ---------------- | ---------- |
+| champ | Champ de contenu |            |
 
 ## `src/template`
 
@@ -78,40 +78,46 @@ Le zod (ou `image()`) validateur sur lequel un type de champ neutre est cartogra
 **Genre :** fonction
 
 ```typescript
-function astroDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function astroDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 Collectez les diagnostics des rapports de descente Astro pour un module.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| ir | Module Sémantique |  |
-| composant | Composant de contenu |  |
+| Nom       | Tapez                | Descriptif |
+| --------- | -------------------- | ---------- |
+| ir        | Module Sémantique    |            |
+| composant | Composant de contenu |            |
 
 ### astroMarkup
 
 **Genre :** fonction
 
 ```typescript
-function astroMarkup(expression: string): string
+function astroMarkup(expression: string): string;
 ```
 
 Réécrivez les noms d'attributs JSX uniquement et supprimez le fragment externe.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| expressions | chaîne |  |
+| Nom         | Tapez  | Descriptif |
+| ----------- | ------ | ---------- |
+| expressions | chaîne |            |
 
 ### émettreIslandAstroTemplate
 
 **Genre :** fonction
 
 ```typescript
-function emitIslandAstroTemplate(component: ContentComponent, islandEntry: string): string
+function emitIslandAstroTemplate(
+  component: ContentComponent,
+  islandEntry: string,
+): string;
 ```
 
 Émettez l'île soutenue `.astro` modèle pour un composant interactif.
@@ -122,23 +128,23 @@ IR neutre compilé par le plugin framework lié - et hydraté avec
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composant | Composant de contenu |  |
-| îleEntrée | chaîne |  |
+| Nom       | Tapez                | Descriptif |
+| --------- | -------------------- | ---------- |
+| composant | Composant de contenu |            |
+| îleEntrée | chaîne               |            |
 
 ### émettreStaticAstroTemplate
 
 **Genre :** fonction
 
 ```typescript
-function emitStaticAstroTemplate(ir: SemanticModule): string
+function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
 Émettre de la statique `.astro` modèle pour un composant de présentation.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| ir | Module Sémantique |  |
+| Nom | Tapez             | Descriptif |
+| --- | ----------------- | ---------- |
+| ir  | Module Sémantique |            |

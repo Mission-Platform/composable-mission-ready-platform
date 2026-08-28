@@ -16,16 +16,16 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-plugi
 **Art:** Funktion
 
 ```typescript
-function synthesiseElementClass(plan: WebComponentsLoweredModule): string
+function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 ```
 
 Drucken Sie die Unterklasse `ForgeElement` und ihre Registrierung für einen abgesenkten Plan.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| planen | WebComponentsLoweredModule |  |
+| Name   | Geben Sie                  | ein Beschreibung |
+| ------ | -------------------------- | ---------------- |
+| planen | WebComponentsLoweredModule |                  |
 
 ## `src/emitters/module`
 
@@ -34,19 +34,24 @@ Drucken Sie die Unterklasse `ForgeElement` und ihre Registrierung für einen abg
 **Art:** Funktion
 
 ```typescript
-function emitWebComponentModule(module: SemanticModule, componentName: string = "CustomElement", componentFolders: ReadonlySet<string> = new Set(), lowered?: WebComponentsLoweredModule): EmittedWebComponentModule
+function emitWebComponentModule(
+  module: SemanticModule,
+  componentName: string = "CustomElement",
+  componentFolders: ReadonlySet<string> = new Set(),
+  lowered?: WebComponentsLoweredModule,
+): EmittedWebComponentModule;
 ```
 
 Transformieren Sie das gesamte Modul in die native Web-Components-Zielquelle.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
-| Komponentenname | Zeichenfolge |  |
-| Komponentenordner | ReadonlySet<string> |  |
-| abgesenkt | WebComponentsLoweredModule |  |
+| Name              | Geben Sie                  | ein Beschreibung |
+| ----------------- | -------------------------- | ---------------- |
+| Modul             | SemanticModule             |                  |
+| Komponentenname   | Zeichenfolge               |                  |
+| Komponentenordner | ReadonlySet<string>        |                  |
+| abgesenkt         | WebComponentsLoweredModule |                  |
 
 ## `src/index`
 
@@ -55,7 +60,7 @@ Transformieren Sie das gesamte Modul in die native Web-Components-Zielquelle.
 **Art:** Funktion
 
 ```typescript
-function forgeWebComponentsFramework(): FrameworkOutputPlugin
+function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 ```
 
 Erstellen Sie das reine TypeScript-Webkomponenten-Ausgabe-Plugin.
@@ -67,7 +72,7 @@ Erstellen Sie das reine TypeScript-Webkomponenten-Ausgabe-Plugin.
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 Interna werden durch die Laufzeit funktionsgesteuert; Form Association bleibt Opt-in.
@@ -77,7 +82,7 @@ Interna werden durch die Laufzeit funktionsgesteuert; Form Association bleibt Op
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 Kompatibilitätsstandardwerte werden für generierte Komponenten beibehalten.
@@ -87,7 +92,9 @@ Kompatibilitätsstandardwerte werden für generierte Komponenten beibehalten.
 **Art:** Funktion
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebComponentsHostPlan
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+): WebComponentsHostPlan;
 ```
 
 Leiten Sie einen benutzerdefinierten integrierten Host nur von einem einzigen, statischen intrinsischen Root ab.
@@ -98,66 +105,74 @@ Basis für alle unterstützten DOM-Implementierungen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| returnNode | GenericRenderNode \| undefiniert |  |
+| Name       | Geben Sie                        | ein Beschreibung |
+| ---------- | -------------------------------- | ---------------- |
+| returnNode | GenericRenderNode \| undefiniert |                  |
 
 ### isWebComponentsLowered
 
 **Art:** Funktion
 
 ```typescript
-function isWebComponentsLowered(lowered: TargetLoweredModule | undefined): lowered is WebComponentsLoweredModule
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
 ```
 
 Grenzen Sie einen Zielplan ohne Casting auf den Webkomponenten-Plan ein.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| abgesenkt | TargetLoweredModule \| undefiniert |  |
+| Name      | Geben Sie                          | ein Beschreibung |
+| --------- | ---------------------------------- | ---------------- |
+| abgesenkt | TargetLoweredModule \| undefiniert |                  |
 
 ### LowerWebComponentsModule
 
 **Art:** Funktion
 
 ```typescript
-function lowerWebComponentsModule(module: SemanticModule, context: TargetContext): TargetIntentions
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Senken Sie die neutrale IR in die Zielabsichten der Web-Komponenten.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
-| Kontext | Zielkontext |  |
+| Name    | Geben Sie      | ein Beschreibung |
+| ------- | -------------- | ---------------- |
+| Modul   | SemanticModule |                  |
+| Kontext | Zielkontext    |                  |
 
 ### LowerWebComponentsPlan
 
 **Art:** Funktion
 
 ```typescript
-function lowerWebComponentsPlan(module: SemanticModule, context: TargetContext): WebComponentsLoweredModule
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
 ```
 
 Erstellen Sie den Web-Components-Zielplan für ein neutrales Modul.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
-| Kontext | Zielkontext |  |
+| Name    | Geben Sie      | ein Beschreibung |
+| ------- | -------------- | ---------------- |
+| Modul   | SemanticModule |                  |
+| Kontext | Zielkontext    |                  |
 
 ### UNBEKANNTER_TYP
 
 **Art:** konstant
 
 ```typescript
-export const UNKNOWN_TYPE
+export const UNKNOWN_TYPE;
 ```
 
 Der Typ, der ausgegeben wird, wenn weder ein deklarierter noch ein abgeleiteter Typ verfügbar ist.
@@ -167,7 +182,7 @@ Der Typ, der ausgegeben wird, wenn weder ein deklarierter noch ein abgeleiteter 
 **Art:** konstant
 
 ```typescript
-export const WEB_COMPONENTS_FRAMEWORK
+export const WEB_COMPONENTS_FRAMEWORK;
 ```
 
 Die Framework-ID des Plugins und der Diskriminator seines niedrigeren Plans.
@@ -177,7 +192,7 @@ Die Framework-ID des Plugins und der Diskriminator seines niedrigeren Plans.
 **Art:** konstant
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS
+export const WEBCOMPONENTS_NATIVE_HOSTS;
 ```
 
 Die Kompatibilitätstabelle für Roots, die problemlos integriert werden können.
@@ -239,7 +254,14 @@ Eine neutrale `useId()`-Bindung, herabgesetzt auf ein Instanzfeld, das einmal pr
 **Art:** Typ
 
 ```typescript
-export type WebComponentsHostFallbackReason = | "missing-root" | "fragment-root" | "dynamic-root" | "component-root" | "ambiguous-root" | "invalid-root" | "unsupported-root";
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
 ```
 
 Stabile Gründe, warum eine Komponente keinen angepassten integrierten Host verwenden kann.
@@ -279,7 +301,8 @@ ElementInternals-Funktionen, die von einer generierten Komponente angefordert we
 **Art:** Typ
 
 ```typescript
-export type WebComponentsLifecycleCallback = "connectedCallback" | "disconnectedCallback" | "updatedCallback";
+export type WebComponentsLifecycleCallback =
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 ```
 
 Die Lebenszyklusrückrufe für benutzerdefinierte Elemente, die ein Plan generieren kann.
@@ -325,7 +348,7 @@ export interface WebComponentsPromotedLocal
 Eine Render-Head-Konstante, die zu einem Elementmitglied **heraufgestuft** wurde.
 
 Es werden ein Memo-Getter, ein Lebenszyklus-Callback und ein Feldinitialisierer ausgegeben
-*außerhalb* `render()`, also gibt es für ein vom Render-Head deklariertes Local kein Existieren
+_außerhalb_ `render()`, also gibt es für ein vom Render-Head deklariertes Local kein Existieren
 sie. Die Werbung für die Erklärung gegenüber einem Mitglied ist das, was eine solche Lektüre ausmacht
 auflösbar – durch `this.<name>` – statt baumelnd.
 
@@ -397,10 +420,10 @@ Die Kopfaussagen, die der Seed benötigt, werden dort zuerst in der Kopfreihenfo
 transitiv geschlossen, und **nur** diese.
 
 Das Wiedergeben statt Zwischenspeichern ist bewusst. In der neutralen Quelle der Kopf
-*ist* der Komponentenkörper, also `const initial = parseTime(modelValue);` bereits
+_ist_ der Komponentenkörper, also `const initial = parseTime(modelValue);` bereits
 läuft bei jedem Rendern; Eine erneute Auswertung während des Setups führt zu keinem Aufruf
 Die erstellte Komponente führt nicht bereits bei jedem Durchgang eine Leistung aus. Zwischenspeichern in einem
-Das Feld würde stattdessen die Anzahl der Bewertungen *reduzieren* und den Wert an angeben
+Das Feld würde stattdessen die Anzahl der Bewertungen _reduzieren_ und den Wert an angeben
 Identität, die die Quelle nie versprochen hat. Nur ein einfaches `const` (oder eine Funktion)
 Die Deklaration wird jemals wiederholt – siehe {@link headReplay}.
 
@@ -451,41 +474,47 @@ Der abgesenkte `render()`-Plan: seine Hauptaussagen und seine Lit-HTML-Vorlage.
 **Art:** Funktion
 
 ```typescript
-function optimizeWebComponentsModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeWebComponentsModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Optimieren Sie die Zielabsichten der Web-Komponenten. andere Ziele passieren.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Absichten | Zielabsichten |  |
-| Optionen | TargetOptimizeOptions |  |
+| Name      | Geben Sie             | ein Beschreibung |
+| --------- | --------------------- | ---------------- |
+| Absichten | Zielabsichten         |                  |
+| Optionen  | TargetOptimizeOptions |                  |
 
 ### optimiereWebComponentsPlan
 
 **Art:** Funktion
 
 ```typescript
-function optimizeWebComponentsPlan(plan: WebComponentsLoweredModule, options: TargetOptimizeOptions): WebComponentsLoweredModule
+function optimizeWebComponentsPlan(
+  plan: WebComponentsLoweredModule,
+  options: TargetOptimizeOptions,
+): WebComponentsLoweredModule;
 ```
 
 Verfeinern Sie einen reduzierten Web-Komponenten-Plan und zeichnen Sie jeden ausgeführten Durchgang auf.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| planen | WebComponentsLoweredModule |  |
-| Optionen | TargetOptimizeOptions |  |
+| Name     | Geben Sie                  | ein Beschreibung |
+| -------- | -------------------------- | ---------------- |
+| planen   | WebComponentsLoweredModule |                  |
+| Optionen | TargetOptimizeOptions      |                  |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
 **Art:** konstant
 
 ```typescript
-export const WEB_COMPONENTS_OPTIMIZATIONS
+export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
 In {@link WebComponentsLoweredModule.appliedOptimizations} aufgezeichnete Bezeichner.
@@ -495,7 +524,8 @@ In {@link WebComponentsLoweredModule.appliedOptimizations} aufgezeichnete Bezeic
 **Art:** Typ
 
 ```typescript
-export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
+export type WebComponentsOptimization =
+  (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
 ```
 
 Eine aufgezeichnete Web-Components-Optimierungskennung.
@@ -507,16 +537,16 @@ Eine aufgezeichnete Web-Components-Optimierungskennung.
 **Art:** Funktion
 
 ```typescript
-function emitWebComponentHookModule(module: SemanticModule): string
+function emitWebComponentHookModule(module: SemanticModule): string;
 ```
 
 Transformieren Sie ein neutrales Hook-Modul in seine Web-Components-Quelle.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
+| Name  | Geben Sie      | ein Beschreibung |
+| ----- | -------------- | ---------------- |
+| Modul | SemanticModule |                  |
 
 ## `src/transformers/expression`
 
@@ -525,7 +555,7 @@ Transformieren Sie ein neutrales Hook-Modul in seine Web-Components-Quelle.
 **Art:** konstant
 
 ```typescript
-export const HAS_SLOT_RUNTIME
+export const HAS_SLOT_RUNTIME;
 ```
 
 Der native Laufzeithelfer, auf den der Marker abgesetzt wird und der mit dem Host-Element aufgerufen wird.
@@ -535,7 +565,7 @@ Der native Laufzeithelfer, auf den der Marker abgesetzt wird und der mit dem Hos
 **Art:** Funktion
 
 ```typescript
-function isFunctionExpressionText(text: string): boolean
+function isFunctionExpressionText(text: string): boolean;
 ```
 
 Ob der Text ein **funktionswertiger** Ausdruck ist – ein Pfeil oder ein
@@ -547,16 +577,16 @@ ist: Der Körper läuft immer noch genau dann, wenn er aufgerufen wird.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Text | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Text | Zeichenfolge |                  |
 
 ### isPureExpressionText
 
 **Art:** Funktion
 
 ```typescript
-function isPureExpressionText(text: string): boolean
+function isPureExpressionText(text: string): boolean;
 ```
 
 Ob ein Ausdruck **nachweislich** frei von Effekten ist: kein Aufruf, kein `new`, nein
@@ -569,9 +599,9 @@ Anweisung und sie bleibt in `render()`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Text | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Text | Zeichenfolge |                  |
 
 ## `src/transformers/props-binding`
 
@@ -580,26 +610,26 @@ Anweisung und sie bleibt in `render()`.
 **Art:** Funktion
 
 ```typescript
-function leadingObjectPattern(text: string): string | undefined
+function leadingObjectPattern(text: string): string | undefined;
 ```
 
-Das Objektmuster, das `text` *startet* und alles Folgende verwirft.
+Das Objektmuster, das `text` _startet_ und alles Folgende verwirft.
 
 Der Quelltext eines Parameters trägt seine Anmerkung (`{ a, b }: Readonly<P>`).
 Daher muss das Muster ausgeschnitten werden, bevor es zerlegt werden kann.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Text | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Text | Zeichenfolge |                  |
 
 ### parsePropsBinding
 
 **Art:** Funktion
 
 ```typescript
-function parsePropsBinding(patternText: string): PropsBinding | undefined
+function parsePropsBinding(patternText: string): PropsBinding | undefined;
 ```
 
 Zerlegen Sie ein Requisitenobjektmuster.
@@ -610,9 +640,9 @@ sein bisheriges Verhalten, anstatt auf eine Teillesung zu reagieren.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| MusterText | Zeichenfolge |  |
+| Name       | Geben Sie    | ein Beschreibung |
+| ---------- | ------------ | ---------------- |
+| MusterText | Zeichenfolge |                  |
 
 ### PropsBinding
 
@@ -639,7 +669,10 @@ Ein Eintrag eines Requisitenobjektmusters.
 **Art:** Funktion
 
 ```typescript
-function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => boolean): string | undefined
+function propsBindingStatement(
+  binding: PropsBinding,
+  isRead: (name: string) => boolean,
+): string | undefined;
 ```
 
 Wiederholen Sie ein Requisitenmuster als `const { … } = this;`, beschränkt auf die Einträge
@@ -651,10 +684,10 @@ es ist also die Standardeinstellung – Byte-identisch mit der erstellten.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Bindung | PropsBinding |  |
-| isRead | (Name: Zeichenfolge) => boolean |  |
+| Name    | Geben Sie                       | ein Beschreibung |
+| ------- | ------------------------------- | ---------------- |
+| Bindung | PropsBinding                    |                  |
+| isRead  | (Name: Zeichenfolge) => boolean |                  |
 
 ## `src/transformers/props-type`
 
@@ -663,12 +696,15 @@ es ist also die Standardeinstellung – Byte-identisch mit der erstellten.
 **Art:** Funktion
 
 ```typescript
-function indexedAccessType(reference: PropsTypeReference, member: string): string
+function indexedAccessType(
+  reference: PropsTypeReference,
+  member: string,
+): string;
 ```
 
 Die Annotation mit indiziertem Zugriff, als die ein Mitglied des Typs props ausgegeben wird.
 
-Die eigene Optionalität des Mitglieds wird genau beibehalten: Ein erforderliches Mitglied ist *nicht*
+Die eigene Optionalität des Mitglieds wird genau beibehalten: Ein erforderliches Mitglied ist _nicht_
 erweitert um `| undefined`. Das Feld des Elements wird nur einmal ausgefüllt
 Die Laufzeit übernimmt ihr Attribut, sodass es im Konstruktor tatsächlich nicht festgelegt ist.
 aber das wird ausgedrückt, indem das Feld als `declare` ausgegeben wird (die Laufzeit besitzt das
@@ -677,10 +713,10 @@ Jeder Lesevorgang einer erforderlichen Requisite, möglicherweise `undefined`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Referenz | PropsTypeReference |  |
-| Mitglied | Zeichenfolge |  |
+| Name     | Geben Sie          | ein Beschreibung |
+| -------- | ------------------ | ---------------- |
+| Referenz | PropsTypeReference |                  |
+| Mitglied | Zeichenfolge       |                  |
 
 ### PropsTypeReference
 
@@ -697,7 +733,10 @@ Der Requisitentyp der Felder einer Komponente kann mit Anmerkungen versehen werd
 **Art:** Funktion
 
 ```typescript
-function resolvePropsTypeReference(annotation: string | undefined, declarations: readonly GenericStatement[]): PropsTypeReference | undefined
+function resolvePropsTypeReference(
+  annotation: string | undefined,
+  declarations: readonly GenericStatement[],
+): PropsTypeReference | undefined;
 ```
 
 Lösen Sie die Requisitenanmerkung anhand der beibehaltenen Deklarationen des Moduls auf.
@@ -708,17 +747,17 @@ In beiden Fällen würde die Referenz im generierten Modul nicht aufgelöst werd
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Anmerkung | Zeichenfolge \| undefiniert |  |
-| Erklärungen | readonly GenericStatement[] |  |
+| Name        | Geben Sie                   | ein Beschreibung |
+| ----------- | --------------------------- | ---------------- |
+| Anmerkung   | Zeichenfolge \| undefiniert |                  |
+| Erklärungen | readonly GenericStatement[] |                  |
 
 ### typeMembers
 
 **Art:** Funktion
 
 ```typescript
-function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
+function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 ```
 
 Die Mitglieder, die ein beibehaltener Schnittstellen-/Typ-Alias-Körper deklariert und dem ob zugeordnet ist
@@ -726,22 +765,22 @@ Jeder ist optional (`name?: T`).
 
 Es werden nur Mitglieder auf der obersten Ebene des ersten `{…}`-Körpers erfasst, und zwar nur
 wo ein Mitglied rechtmäßig beginnen darf (direkt nach der öffnenden Klammer, ein `;`
-oder ein `,`). Mitglieder, die von einer `extends`/`&`-Basis beigesteuert wurden, sind daher *nicht*
+oder ein `,`). Mitglieder, die von einer `extends`/`&`-Basis beigesteuert wurden, sind daher _nicht_
 gemeldet – der Anrufer behandelt sie als unbekannt und greift zurück, was der Fall ist
 sichere Richtung.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Deklarationstext | Zeichenfolge |  |
+| Name             | Geben Sie    | ein Beschreibung |
+| ---------------- | ------------ | ---------------- |
+| Deklarationstext | Zeichenfolge |                  |
 
 ### unwrapPropsTypeName
 
 **Art:** Funktion
 
 ```typescript
-function unwrapPropsTypeName(text: string | undefined): string | undefined
+function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
 Reduzieren Sie eine Requisitenanmerkung auf den einfachen Namen, auf den sie verweist, und entpacken Sie den
@@ -749,6 +788,6 @@ Klammern und mitgliedererhaltende generische Wrapper, die eine Komponente schrei
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Text | Zeichenfolge \| undefiniert |  |
+| Name | Geben Sie                   | ein Beschreibung |
+| ---- | --------------------------- | ---------------- |
+| Text | Zeichenfolge \| undefiniert |                  |

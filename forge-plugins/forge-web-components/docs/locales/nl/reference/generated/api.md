@@ -16,16 +16,16 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-p
 **Soort:** functie
 
 ```typescript
-function synthesiseElementClass(plan: WebComponentsLoweredModule): string
+function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 ```
 
 Druk de `ForgeElement`-subklasse en de registratie ervan voor een verlaagd abonnement af.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plannen | WebComponentsLoweredModule |  |
+| Naam    | Typ                        | Beschrijving |
+| ------- | -------------------------- | ------------ |
+| plannen | WebComponentsLoweredModule |              |
 
 ## `src/emitters/module`
 
@@ -34,19 +34,24 @@ Druk de `ForgeElement`-subklasse en de registratie ervan voor een verlaagd abonn
 **Soort:** functie
 
 ```typescript
-function emitWebComponentModule(module: SemanticModule, componentName: string = "CustomElement", componentFolders: ReadonlySet<string> = new Set(), lowered?: WebComponentsLoweredModule): EmittedWebComponentModule
+function emitWebComponentModule(
+  module: SemanticModule,
+  componentName: string = "CustomElement",
+  componentFolders: ReadonlySet<string> = new Set(),
+  lowered?: WebComponentsLoweredModule,
+): EmittedWebComponentModule;
 ```
 
 Transformeer de hele module naar de oorspronkelijke doelbron voor webcomponenten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
-| componentnaam | tekenreeks |  |
-| componentMappen | Alleen-lezenSet<string> |  |
-| verlaagd | WebComponentsLoweredModule |  |
+| Naam            | Typ                        | Beschrijving |
+| --------------- | -------------------------- | ------------ |
+| module          | SemantischeModule          |              |
+| componentnaam   | tekenreeks                 |              |
+| componentMappen | Alleen-lezenSet<string>    |              |
+| verlaagd        | WebComponentsLoweredModule |              |
 
 ## `src/index`
 
@@ -55,7 +60,7 @@ Transformeer de hele module naar de oorspronkelijke doelbron voor webcomponenten
 **Soort:** functie
 
 ```typescript
-function forgeWebComponentsFramework(): FrameworkOutputPlugin
+function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 ```
 
 Maak de uitvoerplug-in Web Components die alleen voor TypeScript beschikbaar is.
@@ -67,7 +72,7 @@ Maak de uitvoerplug-in Web Components die alleen voor TypeScript beschikbaar is.
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 Internals worden door de runtime beperkt; formuliervereniging blijft opt-in.
@@ -77,7 +82,7 @@ Internals worden door de runtime beperkt; formuliervereniging blijft opt-in.
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 Standaardwaarden voor compatibiliteit blijven behouden voor gegenereerde componenten.
@@ -87,7 +92,9 @@ Standaardwaarden voor compatibiliteit blijven behouden voor gegenereerde compone
 **Soort:** functie
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebComponentsHostPlan
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+): WebComponentsHostPlan;
 ```
 
 Leid een op maat gemaakte ingebouwde host alleen af ​​op basis van een enkele, statische intrinsieke root.
@@ -98,66 +105,74 @@ basis voor de ondersteunde DOM-implementaties.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| returnNode | GenericRenderNode \| ongedefinieerd |  |
+| Naam       | Typ                                 | Beschrijving |
+| ---------- | ----------------------------------- | ------------ |
+| returnNode | GenericRenderNode \| ongedefinieerd |              |
 
 ### isWebComponentsVerlaagd
 
 **Soort:** functie
 
 ```typescript
-function isWebComponentsLowered(lowered: TargetLoweredModule | undefined): lowered is WebComponentsLoweredModule
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
 ```
 
 Beperk een doelplan tot het webcomponentenplan zonder te casten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |  |
+| Naam     | Typ                                   | Beschrijving |
+| -------- | ------------------------------------- | ------------ |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
 
 ### lagereWebComponentsModule
 
 **Soort:** functie
 
 ```typescript
-function lowerWebComponentsModule(module: SemanticModule, context: TargetContext): TargetIntentions
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Verlaag de neutrale IR in de doelintenties van de webcomponenten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
-| context | DoelContext |  |
+| Naam    | Typ               | Beschrijving |
+| ------- | ----------------- | ------------ |
+| module  | SemantischeModule |              |
+| context | DoelContext       |              |
 
 ### lagereWebComponentsPlan
 
 **Soort:** functie
 
 ```typescript
-function lowerWebComponentsPlan(module: SemanticModule, context: TargetContext): WebComponentsLoweredModule
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
 ```
 
 Bouw het Web-Components doelplan voor een neutrale module.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
-| context | DoelContext |  |
+| Naam    | Typ               | Beschrijving |
+| ------- | ----------------- | ------------ |
+| module  | SemantischeModule |              |
+| context | DoelContext       |              |
 
 ### ONBEKEND_TYPE
 
 **Soort:** constant
 
 ```typescript
-export const UNKNOWN_TYPE
+export const UNKNOWN_TYPE;
 ```
 
 Het type dat wordt verzonden wanneer er geen gedeclareerd of afgeleid type beschikbaar is.
@@ -167,7 +182,7 @@ Het type dat wordt verzonden wanneer er geen gedeclareerd of afgeleid type besch
 **Soort:** constant
 
 ```typescript
-export const WEB_COMPONENTS_FRAMEWORK
+export const WEB_COMPONENTS_FRAMEWORK;
 ```
 
 De raamwerk-ID van de plug-in en de discriminator van het verlaagde plan.
@@ -177,7 +192,7 @@ De raamwerk-ID van de plug-in en de discriminator van het verlaagde plan.
 **Soort:** constant
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS
+export const WEBCOMPONENTS_NATIVE_HOSTS;
 ```
 
 De compatibiliteitstabel voor wortels die veilig ingebouwd kunnen worden op maat.
@@ -239,7 +254,14 @@ Een neutrale `useId()`-binding, verlaagd naar een instantieveld dat eenmaal per 
 **Soort:** type
 
 ```typescript
-export type WebComponentsHostFallbackReason = | "missing-root" | "fragment-root" | "dynamic-root" | "component-root" | "ambiguous-root" | "invalid-root" | "unsupported-root";
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
 ```
 
 Stabiele redenen waarom een ​​component geen aangepaste ingebouwde host kan gebruiken.
@@ -279,7 +301,8 @@ ElementInternals-mogelijkheden aangevraagd door een gegenereerde component.
 **Soort:** type
 
 ```typescript
-export type WebComponentsLifecycleCallback = "connectedCallback" | "disconnectedCallback" | "updatedCallback";
+export type WebComponentsLifecycleCallback =
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 ```
 
 De levenscyclus-callbacks van aangepaste elementen die een plan kan genereren.
@@ -325,7 +348,7 @@ export interface WebComponentsPromotedLocal
 Een weergavekopconstante **gepromoveerd** naar een elementlid.
 
 Er worden allemaal een memo-getter, een lifecycle callback en een veldinitialisator uitgezonden
-*buiten* `render()`, dus een lokale versie waarvan de renderkop aangeeft dat deze niet bestaat
+_buiten_ `render()`, dus een lokale versie waarvan de renderkop aangeeft dat deze niet bestaat
 zij. Het promoten van de verklaring bij een lid is wat een dergelijke lezing tot stand brengt
 oplosbaar — via `this.<name>` — in plaats van te bungelen.
 
@@ -397,10 +420,10 @@ De hoofdverklaringen die het zaad nodig heeft, worden daar eerst herhaald, in ho
 transitief gesloten, en **alleen** die.
 
 Herspelen in plaats van caching is opzettelijk. In de neutrale bron het hoofd
-*is* de componentbody, dus al `const initial = parseTime(modelValue);`
+_is_ de componentbody, dus al `const initial = parseTime(modelValue);`
 draait op elke weergave; Als u het nogmaals evalueert tijdens de installatie, wordt er geen oproep uitgevoerd
 de geschreven component presteert niet al bij elke doorgang. Het cachen in een
-veld zou in plaats daarvan het aantal evaluaties *verminderen* en de waarde an geven
+veld zou in plaats daarvan het aantal evaluaties _verminderen_ en de waarde an geven
 identiteit die de bron nooit heeft beloofd. Alleen een gewone `const` (of een functie)
 declaratie wordt altijd opnieuw afgespeeld — zie {@link headReplay}.
 
@@ -451,41 +474,47 @@ Het verlaagde `render()`-plan: de hoofdinstructies en het lit-html-sjabloon.
 **Soort:** functie
 
 ```typescript
-function optimizeWebComponentsModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeWebComponentsModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Optimaliseer de doelintenties van de webcomponenten; andere doelen passeren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bedoelingen | DoelIntenties |  |
-| opties | TargetOptimizeOptions |  |
+| Naam        | Typ                   | Beschrijving |
+| ----------- | --------------------- | ------------ |
+| bedoelingen | DoelIntenties         |              |
+| opties      | TargetOptimizeOptions |              |
 
 ### optimaliseerWebComponentsPlan
 
 **Soort:** functie
 
 ```typescript
-function optimizeWebComponentsPlan(plan: WebComponentsLoweredModule, options: TargetOptimizeOptions): WebComponentsLoweredModule
+function optimizeWebComponentsPlan(
+  plan: WebComponentsLoweredModule,
+  options: TargetOptimizeOptions,
+): WebComponentsLoweredModule;
 ```
 
 Verfijn een verlaagd webcomponentenplan en registreer elke uitgevoerde passage.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plannen | WebComponentsLoweredModule |  |
-| opties | TargetOptimizeOptions |  |
+| Naam    | Typ                        | Beschrijving |
+| ------- | -------------------------- | ------------ |
+| plannen | WebComponentsLoweredModule |              |
+| opties  | TargetOptimizeOptions      |              |
 
 ### WEB_COMPONENTS_OPTIMIZATIES
 
 **Soort:** constant
 
 ```typescript
-export const WEB_COMPONENTS_OPTIMIZATIONS
+export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
 Identificatiegegevens vastgelegd in {@link WebComponentsLoweredModule.appliedOptimizations}.
@@ -495,7 +524,8 @@ Identificatiegegevens vastgelegd in {@link WebComponentsLoweredModule.appliedOpt
 **Soort:** type
 
 ```typescript
-export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
+export type WebComponentsOptimization =
+  (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
 ```
 
 Een geregistreerde optimalisatie-ID voor webcomponenten.
@@ -507,16 +537,16 @@ Een geregistreerde optimalisatie-ID voor webcomponenten.
 **Soort:** functie
 
 ```typescript
-function emitWebComponentHookModule(module: SemanticModule): string
+function emitWebComponentHookModule(module: SemanticModule): string;
 ```
 
 Transformeer een neutrale hook-module in zijn Web-Components-bron.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| module | SemantischeModule |              |
 
 ## `src/transformers/expression`
 
@@ -525,7 +555,7 @@ Transformeer een neutrale hook-module in zijn Web-Components-bron.
 **Soort:** constant
 
 ```typescript
-export const HAS_SLOT_RUNTIME
+export const HAS_SLOT_RUNTIME;
 ```
 
 De native runtime-helper waarnaar de markering wordt verlaagd, aangeroepen met het hostelement.
@@ -535,7 +565,7 @@ De native runtime-helper waarnaar de markering wordt verlaagd, aangeroepen met h
 **Soort:** functie
 
 ```typescript
-function isFunctionExpressionText(text: string): boolean
+function isFunctionExpressionText(text: string): boolean;
 ```
 
 Of de tekst een **functiewaarde**-expressie is: een pijl of een
@@ -547,16 +577,16 @@ is: het lichaam loopt nog steeds precies wanneer het wordt opgeroepen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| tekst | tekenreeks |              |
 
 ### isPureExpressionText
 
 **Soort:** functie
 
 ```typescript
-function isPureExpressionText(text: string): boolean
+function isPureExpressionText(text: string): boolean;
 ```
 
 Of een uitdrukking **aantoonbaar** vrij is van effecten: geen oproep, geen `new`, nee
@@ -569,9 +599,9 @@ instructie en deze blijft in `render()`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| tekst | tekenreeks |              |
 
 ## `src/transformers/props-binding`
 
@@ -580,26 +610,26 @@ instructie en deze blijft in `render()`.
 **Soort:** functie
 
 ```typescript
-function leadingObjectPattern(text: string): string | undefined
+function leadingObjectPattern(text: string): string | undefined;
 ```
 
-Het objectpatroon dat `text` *start*, waarbij alles wat volgt wordt weggegooid.
+Het objectpatroon dat `text` _start_, waarbij alles wat volgt wordt weggegooid.
 
 De brontekst van een parameter draagt zijn annotatie (`{ a, b }: Readonly<P>`),
 dus het patroon moet worden uitgesneden voordat het kan worden ontleed.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| tekst | tekenreeks |              |
 
 ### parsePropsBinding
 
 **Soort:** functie
 
 ```typescript
-function parsePropsBinding(patternText: string): PropsBinding | undefined
+function parsePropsBinding(patternText: string): PropsBinding | undefined;
 ```
 
 Ontleed een rekwisietenobjectpatroon.
@@ -610,9 +640,9 @@ zijn eerdere gedrag in plaats van te handelen op basis van een gedeeltelijke met
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| patroonTekst | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| patroonTekst | tekenreeks |              |
 
 ### RekwisietenBindend
 
@@ -639,7 +669,10 @@ Eén invoer van een rekwisietenobjectpatroon.
 **Soort:** functie
 
 ```typescript
-function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => boolean): string | undefined
+function propsBindingStatement(
+  binding: PropsBinding,
+  isRead: (name: string) => boolean,
+): string | undefined;
 ```
 
 Speel een rekwisietenpatroon opnieuw af als `const { … } = this;`, beperkt tot de vermeldingen
@@ -651,10 +684,10 @@ dus de standaard is byte-identiek aan de geschreven versie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bindend | RekwisietenBinden |  |
-| isLees | (naam: string) => boolean |  |
+| Naam    | Typ                       | Beschrijving |
+| ------- | ------------------------- | ------------ |
+| bindend | RekwisietenBinden         |              |
+| isLees  | (naam: string) => boolean |              |
 
 ## `src/transformers/props-type`
 
@@ -663,12 +696,15 @@ dus de standaard is byte-identiek aan de geschreven versie.
 **Soort:** functie
 
 ```typescript
-function indexedAccessType(reference: PropsTypeReference, member: string): string
+function indexedAccessType(
+  reference: PropsTypeReference,
+  member: string,
+): string;
 ```
 
 De geïndexeerde toegangsannotatie waarmee een lid van het props-type wordt verzonden.
 
-De eigen optioneelheid van het lid blijft precies behouden: een verplicht lid is *niet*
+De eigen optioneelheid van het lid blijft precies behouden: een verplicht lid is _niet_
 verbreed met `| undefined`. Het veld van het element wordt pas ingevuld zodra de
 runtime neemt zijn attribuut over, dus het is echt uitgeschakeld in de constructor -
 maar dat wordt uitgedrukt door het veld uit te zenden als `declare` (de runtime is eigenaar van de
@@ -677,10 +713,10 @@ elke lezing van een vereiste prop, mogelijk `undefined`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| referentie | PropsTypeReferentie |  |
-| lid | tekenreeks |  |
+| Naam       | Typ                 | Beschrijving |
+| ---------- | ------------------- | ------------ |
+| referentie | PropsTypeReferentie |              |
+| lid        | tekenreeks          |              |
 
 ### PropsTypeReferentie
 
@@ -697,7 +733,10 @@ Het rekwisietentype waartegen de velden van een component kunnen worden geannote
 **Soort:** functie
 
 ```typescript
-function resolvePropsTypeReference(annotation: string | undefined, declarations: readonly GenericStatement[]): PropsTypeReference | undefined
+function resolvePropsTypeReference(
+  annotation: string | undefined,
+  declarations: readonly GenericStatement[],
+): PropsTypeReference | undefined;
 ```
 
 Los de props-annotatie op tegen de bewaarde declaraties van de module.
@@ -708,17 +747,17 @@ in beide gevallen zou de verwijzing niet worden omgezet in de gegenereerde modul
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| annotatie | tekenreeks \| ongedefinieerd |  |
-| verklaringen | alleen-lezen GenericStatement[] |  |
+| Naam         | Typ                             | Beschrijving |
+| ------------ | ------------------------------- | ------------ |
+| annotatie    | tekenreeks \| ongedefinieerd    |              |
+| verklaringen | alleen-lezen GenericStatement[] |              |
 
 ### typeLeden
 
 **Soort:** functie
 
 ```typescript
-function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
+function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 ```
 
 De leden die een behouden interface/type-alias-instantie declareert, toegewezen aan of
@@ -726,22 +765,22 @@ elk is optioneel (`name?: T`).
 
 Alleen leden op het hoogste niveau van de eerste `{…}`-instantie worden verzameld, en alleen
 waar een lid legitiem mag starten (direct na het openingsaccolade, een `;`
-of een `,`). Leden die zijn bijgedragen door een `extends`/`&`-basis zijn daarom *niet*
+of een `,`). Leden die zijn bijgedragen door een `extends`/`&`-basis zijn daarom _niet_
 gerapporteerd - de beller behandelt ze als onbekend en valt terug, wat de
 veilige richting.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| aangifteTekst | tekenreeks |  |
+| Naam          | Typ        | Beschrijving |
+| ------------- | ---------- | ------------ |
+| aangifteTekst | tekenreeks |              |
 
 ### unwrapPropsTypeName
 
 **Soort:** functie
 
 ```typescript
-function unwrapPropsTypeName(text: string | undefined): string | undefined
+function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
 Reduceer een rekwisietannotatie tot de gewone naam waarnaar deze verwijst, en pak de
@@ -749,6 +788,6 @@ haakjes en ledenbehoudende generieke wrappers die een component kan schrijven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks \| ongedefinieerd |  |
+| Naam  | Typ                          | Beschrijving |
+| ----- | ---------------------------- | ------------ |
+| tekst | tekenreeks \| ongedefinieerd |              |

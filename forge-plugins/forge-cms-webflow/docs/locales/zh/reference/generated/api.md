@@ -16,23 +16,23 @@
 **种类：**功能
 
 ```typescript
-function declarationFileName(component: ContentComponent): string
+function declarationFileName(component: ContentComponent): string;
 ```
 
 写入组件声明的文件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 组件 | 内容组件 |      |
 
 ### DEFAULT_ISLAND_ENTRY
 
 **种类：**常数
 
 ```typescript
-export const DEFAULT_ISLAND_ENTRY
+export const DEFAULT_ISLAND_ENTRY;
 ```
 
 当驱动程序共同生成无（测试、试运行）时使用的岛屿说明符。
@@ -42,7 +42,7 @@ export const DEFAULT_ISLAND_ENTRY
 **种类：**常数
 
 ```typescript
-export const DEFAULT_WEBFLOW_GROUP
+export const DEFAULT_WEBFLOW_GROUP;
 ```
 
 设计器将库的组件归档到的组件组。
@@ -52,7 +52,10 @@ export const DEFAULT_WEBFLOW_GROUP
 **种类：**功能
 
 ```typescript
-function emitWebflowDeclaration(component: ContentComponent, options: WebflowDeclarationOptions = {}): string
+function emitWebflowDeclaration(
+  component: ContentComponent,
+  options: WebflowDeclarationOptions = {},
+): string;
 ```
 
 发出一个组件的代码组件声明。
@@ -64,17 +67,20 @@ function emitWebflowDeclaration(component: ContentComponent, options: WebflowDec
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
-|选项 | WebflowDeclarationOptions | WebflowDeclarationOptions | WebflowDeclarationOptions  |
+| 名称 | 类型                      | 描述                      |
+| ---- | ------------------------- | ------------------------- |
+| 组件 | 内容组件                  |                           |
+| 选项 | WebflowDeclarationOptions | WebflowDeclarationOptions | WebflowDeclarationOptions |
 
 ### webflow声明诊断
 
 **种类：**功能
 
 ```typescript
-function webflowDeclarationDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function webflowDeclarationDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 发出一个组件声明所产生的诊断信息。
@@ -84,10 +90,10 @@ function webflowDeclarationDiagnostics(component: ContentComponent, fileName: st
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
-|文件名 |字符串|  |
+| 名称   | 类型     | 描述 |
+| ------ | -------- | ---- |
+| 组件   | 内容组件 |      |
+| 文件名 | 字符串   |      |
 
 ### Webflow声明选项
 
@@ -104,7 +110,7 @@ export interface WebflowDeclarationOptions
 **种类：**功能
 
 ```typescript
-function webflowDescription(component: ContentComponent): string | undefined
+function webflowDescription(component: ContentComponent): string | undefined;
 ```
 
 设计器显示的组件描述。
@@ -116,48 +122,48 @@ function webflowDescription(component: ContentComponent): string | undefined
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 组件 | 内容组件 |      |
 
 ### webflow显示名称
 
 **种类：**功能
 
 ```typescript
-function webflowDisplayName(name: string): string
+function webflowDisplayName(name: string): string;
 ```
 
 道具的面向人的标签显示在设计器中。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|名称 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 名称 | 字符串 |      |
 
 ### webflow属性名称
 
 **种类：**功能
 
 ```typescript
-function webflowPropertyName(field: ContentField): string
+function webflowPropertyName(field: ContentField): string;
 ```
 
 字段的声明键是在其下编写的 React 道具名称。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|领域 |内容字段 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 领域 | 内容字段 |      |
 
 ### webflow属性类型
 
 **种类：**功能
 
 ```typescript
-function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
+function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType;
 ```
 
 将中性内容类型映射到 Webflow 的 prop 词汇表上。
@@ -167,16 +173,23 @@ function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|善良|内容字段类型 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 善良 | 内容字段类型 |      |
 
 ### Webflow属性类型
 
 **种类：**类型
 
 ```typescript
-export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichText" | "props.Slot" | "props.Text" | "props.Variant" | "props.Visibility";
+export type WebflowPropertyType =
+  | "props.Image"
+  | "props.Link"
+  | "props.RichText"
+  | "props.Slot"
+  | "props.Text"
+  | "props.Variant"
+  | "props.Visibility";
 ```
 
 这 `@webflow/data-types` 创作中性场类型的工厂。
@@ -188,7 +201,7 @@ export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichTe
 **种类：**常数
 
 ```typescript
-export const FORGE_WEBFLOW_NUMBER_AS_TEXT
+export const FORGE_WEBFLOW_NUMBER_AS_TEXT;
 ```
 
 数字字段被创作为 Webflow 文本道具； Webflow 没有数字类型。
@@ -198,18 +211,22 @@ export const FORGE_WEBFLOW_NUMBER_AS_TEXT
 **种类：**功能
 
 ```typescript
-function webflowWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function webflowWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 建立生成阶段警告； Webflow 目标永远不会发出错误。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|代码|字符串|  |
-|留言 |字符串|  |
-|文件名 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 代码   | 字符串 |      |
+| 留言   | 字符串 |      |
+| 文件名 | 字符串 |      |
 
 ## `src/entry`
 
@@ -218,32 +235,32 @@ function webflowWarning(code: string, message: string, fileName: string): Compil
 **种类：**功能
 
 ```typescript
-function emitWebflowEntry(components: readonly ContentComponent[]): string
+function emitWebflowEntry(components: readonly ContentComponent[]): string;
 ```
 
 发出 `index.ts` 桶重新导出每个发出的声明。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|只读内容组件[] |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 组件 | 只读内容组件[] |      |
 
 ### 条目导出名称
 
 **种类：**功能
 
 ```typescript
-function entryExportName(component: ContentComponent): string
+function entryExportName(component: ContentComponent): string;
 ```
 
 组件声明重新导出时使用的桶导出名称。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 组件 | 内容组件 |      |
 
 ## `src/manifest`
 
@@ -252,24 +269,27 @@ function entryExportName(component: ContentComponent): string
 **种类：**功能
 
 ```typescript
-function buildWebflowManifest(libraryName: string, frameworkId: string): WebflowManifest
+function buildWebflowManifest(
+  libraryName: string,
+  frameworkId: string,
+): WebflowManifest;
 ```
 
 构建 `webflow.json` 图书馆的片段。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图书馆名称 |字符串|  |
-|框架 ID |字符串|  |
+| 名称       | 类型   | 描述 |
+| ---------- | ------ | ---- |
+| 图书馆名称 | 字符串 |      |
+| 框架 ID    | 字符串 |      |
 
 ### DEFAULT_WEBFLOW_LIBRARY_NAME
 
 **种类：**常数
 
 ```typescript
-export const DEFAULT_WEBFLOW_LIBRARY_NAME
+export const DEFAULT_WEBFLOW_LIBRARY_NAME;
 ```
 
 当调用者不提供库名称时使用的库名称。
@@ -279,7 +299,7 @@ export const DEFAULT_WEBFLOW_LIBRARY_NAME
 **种类：**功能
 
 ```typescript
-function emitWebflowManifest(libraryName: string, frameworkId: string): string
+function emitWebflowManifest(libraryName: string, frameworkId: string): string;
 ```
 
 发射 `webflow.json`.
@@ -290,17 +310,17 @@ function emitWebflowManifest(libraryName: string, frameworkId: string): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图书馆名称 |字符串|  |
-|框架 ID |字符串|  |
+| 名称       | 类型   | 描述 |
+| ---------- | ------ | ---- |
+| 图书馆名称 | 字符串 |      |
+| 框架 ID    | 字符串 |      |
 
 ### WEBFLOW_LIBRARY_MANIFEST
 
 **种类：**常数
 
 ```typescript
-export const WEBFLOW_LIBRARY_MANIFEST
+export const WEBFLOW_LIBRARY_MANIFEST;
 ```
 
 库片段写入的文件。
@@ -310,7 +330,7 @@ export const WEBFLOW_LIBRARY_MANIFEST
 **种类：**功能
 
 ```typescript
-function webflowComponentsGlob(frameworkId: string): string
+function webflowComponentsGlob(frameworkId: string): string;
 ```
 
 与一个目标运行的每个构建声明相匹配的 glob。
@@ -322,9 +342,9 @@ function webflowComponentsGlob(frameworkId: string): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|框架 ID |字符串|  |
+| 名称    | 类型   | 描述 |
+| ------- | ------ | ---- |
+| 框架 ID | 字符串 |      |
 
 ### Webflow库
 
@@ -353,16 +373,16 @@ export interface WebflowManifest
 **种类：**功能
 
 ```typescript
-function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin
+function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin;
 ```
 
 将 Webflow 代码组件投影绑定到调用者拥有的 React 输出插件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebflowCmsOptions |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 选项 | ForgeWebflowCmsOptions |      |
 
 ### ForgeWebflowCms选项
 
@@ -379,7 +399,7 @@ export interface ForgeWebflowCmsOptions
 **种类：**常数
 
 ```typescript
-export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[]
+export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[];
 ```
 
 对 Webflow 工具链提供的发出的声明导入进行模块。

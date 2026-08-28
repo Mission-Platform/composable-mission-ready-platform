@@ -11,17 +11,17 @@ Generated from public source declarations in `@mission-platform/rxjs`.
 **Kind:** function
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-Subscribe to `source` and return its latest emission as state. Returns
-`undefined` until the first emission arrives.
+No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| source | Observable<T> |  |
+| Name         | Type          | Description |
+| ------------ | ------------- | ----------- |
+| source       | Observable<T> |             |
+| initialValue | T             |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -40,7 +40,11 @@ Anything that can be unsubscribed — matches RxJS's `Unsubscribable`.
 **Kind:** function
 
 ```typescript
-function useSubscribe(source: Observable<T>, observerOrNext?: Partial<Observer<T>> | ((value: T) => void), dependencies: MpDependencyList = []): void
+function useSubscribe(
+  source: Observable<T>,
+  observerOrNext?: Partial<Observer<T>> | ((value: T) => void),
+  dependencies: MpDependencyList = [],
+): void;
 ```
 
 Subscribe to `source` with the given `observer` (or `next` callback) for the
@@ -49,18 +53,18 @@ lifetime of the component, re-subscribing when `source` (or any extra
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| source | Observable<T> |  |
-| observerOrNext | Partial<Observer<T>> \| ((value: T) => void) |  |
-| dependencies | MpDependencyList |  |
+| Name           | Type                                         | Description |
+| -------------- | -------------------------------------------- | ----------- |
+| source         | Observable<T>                                |             |
+| observerOrNext | Partial<Observer<T>> \| ((value: T) => void) |             |
+| dependencies   | MpDependencyList                             |             |
 
 ### useSubscription
 
 **Kind:** function
 
 ```typescript
-function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void
+function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void;
 ```
 
 Run `subscribe` after mount and unsubscribe from its result on unmount (and
@@ -69,7 +73,7 @@ it can wrap a bare `source.subscribe(...)` call or a whole pipeline.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| subscribe | () => Unsubscribable |  |
-| dependencies | MpDependencyList |  |
+| Name         | Type                 | Description |
+| ------------ | -------------------- | ----------- |
+| subscribe    | () => Unsubscribable |             |
+| dependencies | MpDependencyList     |             |

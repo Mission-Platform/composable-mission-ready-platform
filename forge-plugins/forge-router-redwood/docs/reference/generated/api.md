@@ -17,39 +17,39 @@ function createRedwoodRouterCapabilities(input: {
   navigate: RedwoodRouterSurface['navigate'];
   routes?: RedwoodRouterSurface['routes'];
   link?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Build neutral capabilities from Redwood primitives (framework-free for tests).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | {   location: { pathname: string; search: string; hash?: string };   params?: MpRouteParameters;   navigate: RedwoodRouterSurface['navigate'];   routes?: RedwoodRouterSurface['routes'];   link?: unknown; } |  |
+| Name  | Type                                                                                                                                                                                                | Description |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| input | { location: { pathname: string; search: string; hash?: string }; params?: MpRouteParameters; navigate: RedwoodRouterSurface['navigate']; routes?: RedwoodRouterSurface['routes']; link?: unknown; } |             |
 
 ### MpLink
 
 **Kind:** component
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown
+export function MpLink(properties:
 ```
 
 Link component proxy; apps bind the native Redwood `Link` through {@link setForgeRedwoodRouter}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | { to: MpRouteLocationRaw; replace?: boolean; children?: unknown } |  |
+| Name       | Type                                                              | Description |
+| ---------- | ----------------------------------------------------------------- | ----------- |
+| properties | { to: MpRouteLocationRaw; replace?: boolean; children?: unknown } |             |
 
 ### MpRouterView
 
 **Kind:** component
 
 ```typescript
-export const MpRouterView
+export MpRouterView = undefined
 ```
 
 Redwood has no portable outlet; the compiler reports `view` as unsupported.
@@ -69,23 +69,23 @@ Minimal Redwood/router surface used by the runtime shim.
 **Kind:** function
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Resolve a neutral target to an href string.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
+| Name | Type               | Description |
+| ---- | ------------------ | ----------- |
+| to   | MpRouteLocationRaw |             |
 
 ### setForgeRedwoodRouter
 
 **Kind:** function
 
 ```typescript
-function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
+function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void;
 ```
 
 Bind the app-owned Redwood router module. Compiled package code reads through
@@ -93,50 +93,53 @@ this seam so hook/call shapes match the neutral contract.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| surface | RedwoodRouterSurface |  |
+| Name    | Type                 | Description |
+| ------- | -------------------- | ----------- |
+| surface | RedwoodRouterSurface |             |
 
 ### toMpLocationFromRedwood
 
 **Kind:** function
 
 ```typescript
-function toMpLocationFromRedwood(location: { pathname: string; search: string; hash?: string }, parameters: MpRouteParameters = {}): MpResolvedLocation
+function toMpLocationFromRedwood(
+  location: { pathname: string; search: string; hash?: string },
+  parameters: MpRouteParameters = {},
+): MpResolvedLocation;
 ```
 
 Build a neutral location from a Redwood location snapshot.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| location | { pathname: string; search: string; hash?: string } |  |
-| parameters | MpRouteParameters |  |
+| Name       | Type                                                | Description |
+| ---------- | --------------------------------------------------- | ----------- |
+| location   | { pathname: string; search: string; hash?: string } |             |
+| parameters | MpRouteParameters                                   |             |
 
 ### toRedwoodHref
 
 **Kind:** function
 
 ```typescript
-function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string
+function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string;
 ```
 
 Serialize a neutral target for Redwood navigation.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
-| routes | RedwoodRouterSurface['routes'] |  |
+| Name   | Type                           | Description |
+| ------ | ------------------------------ | ----------- |
+| to     | MpRouteLocationRaw             |             |
+| routes | RedwoodRouterSurface['routes'] |             |
 
 ### useMpNavigation
 
 **Kind:** function
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Read only imperative navigation/resolve capabilities.
@@ -146,7 +149,7 @@ Read only imperative navigation/resolve capabilities.
 **Kind:** function
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Read the current app-owned route as {@link MpResolvedLocation}.
@@ -156,7 +159,7 @@ Read the current app-owned route as {@link MpResolvedLocation}.
 **Kind:** function
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Read the neutral capability object backed by Redwood Router.
@@ -168,7 +171,7 @@ Read the neutral capability object backed by Redwood Router.
 **Kind:** constant
 
 ```typescript
-export const forgeRouterRedwood
+export const forgeRouterRedwood;
 ```
 
 Forge router target for RedwoodSDK's application-owned router context.

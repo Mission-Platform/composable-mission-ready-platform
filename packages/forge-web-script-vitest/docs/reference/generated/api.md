@@ -11,50 +11,56 @@ Generated from public source declarations in `@mission-platform/forge-web-script
 **Kind:** function
 
 ```typescript
-function assertForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic
+function assertForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostics | readonly ForgeWebScriptDiagnostic[] |  |
-| expectation | ForgeWebScriptDiagnosticExpectation |  |
+| Name        | Type                                | Description |
+| ----------- | ----------------------------------- | ----------- |
+| diagnostics | readonly ForgeWebScriptDiagnostic[] |             |
+| expectation | ForgeWebScriptDiagnosticExpectation |             |
 
 ### assertForgeWebScriptNoDiagnostics
 
 **Kind:** function
 
 ```typescript
-function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void
+function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostics | readonly ForgeWebScriptDiagnostic[] |  |
+| Name        | Type                                | Description |
+| ----------- | ----------------------------------- | ----------- |
+| diagnostics | readonly ForgeWebScriptDiagnostic[] |             |
 
 ### findForgeWebScriptDiagnostic
 
 **Kind:** function
 
 ```typescript
-function findForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic | undefined
+function findForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic | undefined;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostics | readonly ForgeWebScriptDiagnostic[] |  |
-| expectation | ForgeWebScriptDiagnosticExpectation |  |
+| Name        | Type                                | Description |
+| ----------- | ----------------------------------- | ----------- |
+| diagnostics | readonly ForgeWebScriptDiagnostic[] |             |
+| expectation | ForgeWebScriptDiagnosticExpectation |             |
 
 ### ForgeWebScriptDiagnosticExpectation
 
@@ -71,32 +77,32 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string
+function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 Format a diagnostic without discarding its structured location metadata.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostic | ForgeWebScriptDiagnostic |  |
+| Name       | Type                     | Description |
+| ---------- | ------------------------ | ----------- |
+| diagnostic | ForgeWebScriptDiagnostic |             |
 
 ### formatForgeWebScriptDiagnostics
 
 **Kind:** function
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string
+function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostics | readonly ForgeWebScriptDiagnostic[] |  |
+| Name        | Type                                | Description |
+| ----------- | ----------------------------------- | ----------- |
+| diagnostics | readonly ForgeWebScriptDiagnostic[] |             |
 
 ## `src/harness`
 
@@ -105,16 +111,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness
+function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness;
 ```
 
 Create a shared-fixture harness with optional compiler, capability, and target settings.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeWebScriptTestHarnessOptions |  |
+| Name    | Type                             | Description |
+| ------- | -------------------------------- | ----------- |
+| options | ForgeWebScriptTestHarnessOptions |             |
 
 ### ForgeWebScriptCapabilityFunction
 
@@ -131,7 +137,9 @@ A host callback supplied for a manifest-declared capability import.
 **Kind:** type
 
 ```typescript
-export type ForgeWebScriptCapabilityImports = Readonly< Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>> >;
+export type ForgeWebScriptCapabilityImports = Readonly<
+  Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>>
+>;
 ```
 
 Host functions keyed by capability and manifest alias; undeclared imports are rejected.
@@ -151,7 +159,7 @@ Compilation output plus diagnostics, suitable for valid and diagnostic fixtures.
 **Kind:** function
 
 ```typescript
-function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string
+function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string;
 ```
 
 Convert a fixture path to a stable test/module name. Relative paths are
@@ -159,10 +167,10 @@ rooted at fixtureRoot and separators are normalized to hyphens.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| fileName | string |  |
-| fixtureRoot | string |  |
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| fileName    | string |             |
+| fixtureRoot | string |             |
 
 ### ForgeWebScriptInspectionResult
 
@@ -233,7 +241,7 @@ Compiler and fixture-root options shared by the conformance harness helpers.
 **Kind:** function
 
 ```typescript
-function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig
+function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Compose the standard Mission Platform Vitest config with Forge Web Script.
@@ -242,9 +250,9 @@ generated FWS fixture queries such as `?forge-web-script-wat` remain available.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeWebScriptVitestConfigOptions |  |
+| Name    | Type                              | Description |
+| ------- | --------------------------------- | ----------- |
+| options | ForgeWebScriptVitestConfigOptions |             |
 
 ### ForgeWebScriptVitestConfigOptions
 
@@ -261,13 +269,13 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin;
 ```
 
 Install the production Forge Web Script plugin in a Vite/Vitest config.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeWebScriptPluginOptions |  |
+| Name    | Type                        | Description |
+| ------- | --------------------------- | ----------- |
+| options | ForgeWebScriptPluginOptions |             |

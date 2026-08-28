@@ -16,18 +16,22 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-plugi
 **Art:** Funktion
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 Transformieren Sie das gesamte Modul in die Zielquelle React.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
-| Komponentenname | Zeichenfolge |  |
-| planen | ReactModulePlan |  |
+| Name            | Geben Sie       | ein Beschreibung |
+| --------------- | --------------- | ---------------- |
+| Modul           | SemanticModule  |                  |
+| Komponentenname | Zeichenfolge    |                  |
+| planen          | ReactModulePlan |                  |
 
 ## `src/index`
 
@@ -36,7 +40,7 @@ Transformieren Sie das gesamte Modul in die Zielquelle React.
 **Art:** Funktion
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 Erstellen Sie das React-Ausgabe-Plugin und seine nativen JSX-Build-Adapter.
@@ -48,50 +52,58 @@ Erstellen Sie das React-Ausgabe-Plugin und seine nativen JSX-Build-Adapter.
 **Art:** Funktion
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 Schränken Sie einen Plan im Besitz des Ziels auf den Plan React ein.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| abgesenkt | TargetLoweredModule \| undefiniert |  |
+| Name      | Geben Sie                          | ein Beschreibung |
+| --------- | ---------------------------------- | ---------------- |
+| abgesenkt | TargetLoweredModule \| undefiniert |                  |
 
 ### LowerReactModule
 
 **Art:** Funktion
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Senken Sie die neutrale IR in den React-Plan, der von {@link TargetIntentions.lowered} getragen wird.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| Kontext | Zielkontext |  |
+| Name    | Geben Sie      | ein Beschreibung |
+| ------- | -------------- | ---------------- |
+| ir      | SemanticModule |                  |
+| Kontext | Zielkontext    |                  |
 
 ### planReactModule
 
 **Art:** Funktion
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 Erstellen Sie den React-Plan für ein Modul.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | SemanticModule |  |
-| Komponentenname | Zeichenfolge |  |
+| Name            | Geben Sie      | ein Beschreibung |
+| --------------- | -------------- | ---------------- |
+| Modul           | SemanticModule |                  |
+| Komponentenname | Zeichenfolge   |                  |
 
 ### ReactClientDirectivePlan
 
@@ -180,7 +192,10 @@ Wie die Komponente ihr Props-Objekt bindet.
 **Art:** Funktion
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Verfeinern Sie den React-Plan.
@@ -191,17 +206,17 @@ Inline und bei deaktiviertem `stableKeyInference` wird jeder abgeleitete Schlüs
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Absichten | Zielabsichten |  |
-| Optionen | TargetOptimizeOptions |  |
+| Name      | Geben Sie             | ein Beschreibung |
+| --------- | --------------------- | ---------------- |
+| Absichten | Zielabsichten         |                  |
+| Optionen  | TargetOptimizeOptions |                  |
 
 ### REACT_OPTIMIZATIONS
 
 **Art:** konstant
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 Die in einem Plan aufgezeichneten Kennungen, die der React-Optimierer verfeinert hat.

@@ -16,24 +16,24 @@
 **種類:** 関数
 
 ```typescript
-function applySourceEdits(source: string, edits: readonly SourceEdit[]): string
+function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 ```
 
 パーサー ノードを公開せずに、重複しないソース編集を適用します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|編集 |読み取り専用  |
+| 名前   | タイプ       | 説明 |
+| ------ | ------------ | ---- |
+| ソース | 文字列       |      |
+| 編集   | 読み取り専用 |
 
 ### CLASS_NAME_ATTRIBUTE
 
 **種類:** 定数
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 説明はありません。
@@ -43,7 +43,7 @@ export const CLASS_NAME_ATTRIBUTE
 **種類:** 定数
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 説明はありません。
@@ -53,23 +53,23 @@ export const COMPONENTS_JSX_MODULES
 **種類:** 関数
 
 ```typescript
-function eventNameForProperty(propertyName: string): string
+function eventNameForProperty(propertyName: string): string;
 ```
 
 で表されるイベント名を導出します。 Vue-スタイル `on<Event>` 小道具。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ名 |文字列 |  |
+| 名前         | タイプ | 説明 |
+| ------------ | ------ | ---- |
+| プロパティ名 | 文字列 |      |
 
 ### ICONS_JSX_MODULE
 
 **種類:** 定数
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 説明はありません。
@@ -79,7 +79,7 @@ export const ICONS_JSX_MODULE
 **種類:** 定数
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 説明はありません。
@@ -89,7 +89,7 @@ export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
 **種類:** 定数
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 説明はありません。
@@ -99,7 +99,7 @@ export const LOCAL_EFFECT_FILE
 **種類:** 定数
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 説明はありません。
@@ -109,7 +109,7 @@ export const LOCAL_EFFECT_MODULE
 **種類:** 定数
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 説明はありません。
@@ -119,7 +119,7 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 説明はありません。
@@ -129,7 +129,7 @@ export const LOCAL_JSX_TYPES_FILE
 **種類:** 定数
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 説明はありません。
@@ -139,39 +139,39 @@ export const LOCAL_JSX_TYPES_MODULE
 **種類:** 関数
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 共有されたものを出力する Vue エフェクトヘルパー;他のターゲットにはこのファイルは必要ありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フレームワーク | Jsxフレームワーク |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| フレームワーク | Jsxフレームワーク |      |
 
 ### localJsxTypesモジュールソース
 
 **種類:** 関数
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 パーサーの依存関係を持たずにフレームワークローカルの JSX プリミティブ宣言を発行します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フレームワーク | Jsxフレームワーク |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| フレームワーク | Jsxフレームワーク |      |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 説明はありません。
@@ -181,7 +181,7 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 説明はありません。
@@ -191,7 +191,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 説明はありません。
@@ -201,7 +201,7 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 説明はありません。
@@ -211,7 +211,7 @@ export const NEUTRAL_MODULE
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 説明はありません。
@@ -221,7 +221,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 説明はありません。
@@ -231,7 +231,7 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 説明はありません。
@@ -241,7 +241,7 @@ export const REACT_ADAPTER_MODULE
 **種類:** 定数
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 説明はありません。
@@ -271,7 +271,7 @@ export interface StyleImport
 **種類:** 定数
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 説明はありません。
@@ -281,7 +281,7 @@ export const VUE_ADAPTER_MODULE
 **種類:** 定数
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 説明はありません。
@@ -291,7 +291,7 @@ export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 説明はありません。
@@ -323,23 +323,23 @@ export interface HoistedStaticEntry
 **種類:** 関数
 
 ```typescript
-function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult
+function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 ```
 
 マークされたレンダー レコードをホイストし、ターゲット ジェネレーターのエントリを返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | GenericModuleAst |  |
+| 名前       | タイプ           | 説明 |
+| ---------- | ---------------- | ---- |
+| モジュール | GenericModuleAst |      |
 
 ### MP_HOIST_PREFIX
 
 **種類:** 定数
 
 ```typescript
-export const MP_HOIST_PREFIX
+export const MP_HOIST_PREFIX;
 ```
 
 説明はありません。
@@ -351,33 +351,36 @@ export const MP_HOIST_PREFIX
 **種類:** 関数
 
 ```typescript
-function applyOptimizationEdits(module: GenericModuleAst, edits: readonly SourceEdit[]): GenericModuleAst
+function applyOptimizationEdits(
+  module: GenericModuleAst,
+  edits: readonly SourceEdit[],
+): GenericModuleAst;
 ```
 
 AST 実装タイプを公開せずに、ソース編集をモジュール ソースに適用します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | GenericModuleAst |  |
-|編集 |読み取り専用  |
+| 名前       | タイプ           | 説明 |
+| ---------- | ---------------- | ---- |
+| モジュール | GenericModuleAst |      |
+| 編集       | 読み取り専用     |
 
 ### 定数ブール値
 
 **種類:** 関数
 
 ```typescript
-function constantBoolean(expression: ExpressionLike): boolean | undefined
+function constantBoolean(expression: ExpressionLike): boolean | undefined;
 ```
 
 作成されたコードを評価せずにリテラルのブール値を解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|式 |式のような |  |
+| 名前 | タイプ     | 説明 |
+| ---- | ---------- | ---- |
+| 式   | 式のような |      |
 
 ### GenericOptimizationResult
 
@@ -394,55 +397,55 @@ export interface GenericOptimizationResult
 **種類:** 関数
 
 ```typescript
-function hasJsxKey(attributes: readonly GenericAttribute[]): boolean
+function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 ```
 
 汎用 JSX 属性リストにキーが含まれているかどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|属性 |読み取り専用 GenericAttribute[] |  |
+| 名前 | タイプ                          | 説明 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 読み取り専用 GenericAttribute[] |      |
 
 ### hasMpStaticMarker
 
 **種類:** 関数
 
 ```typescript
-function hasMpStaticMarker(node: GenericRenderNode): boolean
+function hasMpStaticMarker(node: GenericRenderNode): boolean;
 ```
 
 汎用 JSX かどうか node プライベート静的マーカーがあります。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |ジェネリックレンダーノード |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| node | ジェネリックレンダーノード |      |
 
 ### isCompileTimeConstant
 
 **種類:** 関数
 
 ```typescript
-function isCompileTimeConstant(expression: ExpressionLike): boolean
+function isCompileTimeConstant(expression: ExpressionLike): boolean;
 ```
 
 ソース テキストが純粋なコンパイル時のリテラル式であるかどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|式 |式のような |  |
+| 名前 | タイプ     | 説明 |
+| ---- | ---------- | ---- |
+| 式   | 式のような |      |
 
 ### MP_STATIC_ATTR
 
 **種類:** 定数
 
 ```typescript
-export const MP_STATIC_ATTR
+export const MP_STATIC_ATTR;
 ```
 
 説明はありません。
@@ -452,17 +455,20 @@ export const MP_STATIC_ATTR
 **種類:** 関数
 
 ```typescript
-function optimizeGenericModule(module: GenericModuleAst, _options: OptimizeOptions = {}): GenericOptimizationResult
+function optimizeGenericModule(
+  module: GenericModuleAst,
+  _options: OptimizeOptions = {},
+): GenericOptimizationResult;
 ```
 
 ソース編集を個別に返しながら、レコードレベルの最適化を適用します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | GenericModuleAst |  |
-| _オプション |最適化オプション |  |
+| 名前        | タイプ           | 説明 |
+| ----------- | ---------------- | ---- |
+| モジュール  | GenericModuleAst |      |
+| _オプション | 最適化オプション |      |
 
 ### 最適化オプション
 
@@ -479,32 +485,34 @@ export interface OptimizeOptions
 **種類:** 関数
 
 ```typescript
-function stripMpStaticAttributes(attributes: readonly GenericAttribute[]): readonly GenericAttribute[]
+function stripMpStaticAttributes(
+  attributes: readonly GenericAttribute[],
+): readonly GenericAttribute[];
 ```
 
 マーカーのない汎用属性リストを返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|属性 |読み取り専用 GenericAttribute[] |  |
+| 名前 | タイプ                          | 説明 |
+| ---- | ------------------------------- | ---- |
+| 属性 | 読み取り専用 GenericAttribute[] |      |
 
 ### ストリップMp静的マーカー
 
 **種類:** 関数
 
 ```typescript
-function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode
+function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
 マーカーのない汎用レンダーを返します node、ソース スパンを再帰的に保存します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |ジェネリックレンダーノード |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| node | ジェネリックレンダーノード |      |
 
 ## `src/diagnostics`
 
@@ -543,7 +551,14 @@ export type CompilerDiagnosticSeverity = "error" | "warning" | "info";
 **種類：**タイプ
 
 ```typescript
-export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering" | "optimization" | "generation" | "build";
+export type CompilerPhase =
+  | "frontend"
+  | "ir"
+  | "inference"
+  | "target-lowering"
+  | "optimization"
+  | "generation"
+  | "build";
 ```
 
 コンパイラ診断を報告できるパイプライン フェーズ。
@@ -553,48 +568,52 @@ export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering
 **種類:** 関数
 
 ```typescript
-function createCompilerDiagnostic(diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string }): CompilerDiagnostic
+function createCompilerDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string },
+): CompilerDiagnostic;
 ```
 
 フェーズ契約を結合せずに診断を作成します。 TypeScript ノード。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 |省略<CompilerDiagnostic, "fileName"> & { ファイル名?: 文字列 } |  |
+| 名前 | タイプ                                                         | 説明 |
+| ---- | -------------------------------------------------------------- | ---- |
+| 診断 | 省略<CompilerDiagnostic, "fileName"> & { ファイル名?: 文字列 } |      |
 
 ### フォーマットコンパイラ診断
 
 **種類:** 関数
 
 ```typescript
-function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string
+function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
 ソースの場所を失うことなく、コンパイラ エラーの診断をフォーマットします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 |コンパイラ診断 |  |
+| 名前 | タイプ         | 説明 |
+| ---- | -------------- | ---- |
+| 診断 | コンパイラ診断 |      |
 
 ### throwOnCompilerErrors
 
 **種類:** 関数
 
 ```typescript
-function throwOnCompilerErrors(diagnostics: readonly CompilerDiagnostic[] | undefined): void
+function throwOnCompilerErrors(
+  diagnostics: readonly CompilerDiagnostic[] | undefined,
+): void;
 ```
 
 フェーズが 1 つ以上のエラーを報告した場合、コンパイラ パイプラインを中止します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | readonly CompilerDiagnostic[] \|未定義 |  |
+| 名前 | タイプ                                 | 説明 |
+| ---- | -------------------------------------- | ---- |
+| 診断 | readonly CompilerDiagnostic[] \|未定義 |      |
 
 ## `src/framework`
 
@@ -673,7 +692,8 @@ export type GeneratorContext = TargetContext;
 **種類：**タイプ
 
 ```typescript
-export type JsxFramework = "react" | "vue" | "svelte" | "solid" | "web-components";
+export type JsxFramework =
+  "react" | "vue" | "svelte" | "solid" | "web-components";
 ```
 
 現在の組み込みフレームワーク ID。プラグインは追加の文字列 ID を使用できます。
@@ -779,7 +799,7 @@ export interface ViteBuildContext
 **種類:** 定数
 
 ```typescript
-export const defineForgeFramework
+export const defineForgeFramework;
 ```
 
 フレームワーク パッケージがターゲット実装を登録することを強調するエイリアス。
@@ -789,16 +809,16 @@ export const defineForgeFramework
 **種類:** 関数
 
 ```typescript
-function defineForgeOutputPlugin(plugin: T): T
+function defineForgeOutputPlugin(plugin: T): T;
 ```
 
 コンシューマによる登録のためにフレームワーク出力プラグインを検証して返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プラグイン |た |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| プラグイン | た     |      |
 
 ### ForgePluginId
 
@@ -815,32 +835,36 @@ export type ForgePluginId = FrameworkOutputPlugin["id"];
 **種類:** 関数
 
 ```typescript
-function validateForgeOutputPlugin(plugin: unknown): asserts plugin is FrameworkOutputPlugin
+function validateForgeOutputPlugin(
+  plugin: unknown,
+): asserts plugin is FrameworkOutputPlugin;
 ```
 
 フレームワーク レジストリから独立してターゲット メタデータを検証します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プラグイン |不明 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| プラグイン | 不明   |      |
 
 ### validateForgeOutputPluginSelection
 
 **種類:** 関数
 
 ```typescript
-function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
+function validateForgeOutputPluginSelection(
+  plugins: readonly T[],
+): readonly T[];
 ```
 
 空の ID や重複した ID を含む、呼び出し元が所有するターゲットの選択を検証します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プラグイン |読み取り専用 T[] |  |
+| 名前       | タイプ           | 説明 |
+| ---------- | ---------------- | ---- |
+| プラグイン | 読み取り専用 T[] |      |
 
 ## `src/ir`
 
@@ -849,34 +873,40 @@ function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
 **種類:** 関数
 
 ```typescript
-function attributeExpressionText(node: GenericRenderNode, name: string): string | undefined
+function attributeExpressionText(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 名前付き属性の式テキストが含まれている場合は、その式テキストを読み取ります。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |ジェネリックレンダーノード |  |
-|名前 |文字列 |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| node | ジェネリックレンダーノード |      |
+| 名前 | 文字列                     |      |
 
 ### 属性文字列値
 
 **種類:** 関数
 
 ```typescript
-function attributeStringValue(node: GenericRenderNode, name: string): string | undefined
+function attributeStringValue(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 名前付き属性の静的文字列値がある場合は、その値を読み取ります。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |ジェネリックレンダーノード |  |
-|名前 |文字列 |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| node | ジェネリックレンダーノード |      |
+| 名前 | 文字列                     |      |
 
 ### 動的ノードの意図
 
@@ -903,7 +933,7 @@ export interface EffectIntention
 **種類:** 定数
 
 ```typescript
-export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
+export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions;
 ```
 
 推測するものが何もない、フィクスチャおよびモジュールによって使用される空のインテンション ファクト。
@@ -913,7 +943,7 @@ export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
 **種類:** 定数
 
 ```typescript
-export const EMPTY_SPAN: SourceSpan
+export const EMPTY_SPAN: SourceSpan;
 ```
 
 合成された汎用ノードによって使用されるゼロ幅のスパン。
@@ -933,24 +963,28 @@ export interface EventIntention
 **種類:** 関数
 
 ```typescript
-function findAttribute(node: GenericRenderNode, name: string): GenericJsxAttribute | undefined
+function findAttribute(
+  node: GenericRenderNode,
+  name: string,
+): GenericJsxAttribute | undefined;
 ```
 
 レンダリングで名前付きアトリビュートを検索する node.
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |ジェネリックレンダーノード |  |
-|名前 |文字列 |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| node | ジェネリックレンダーノード |      |
+| 名前 | 文字列                     |      |
 
 ### GenericAstNode
 
 **種類：**タイプ
 
 ```typescript
-export type GenericAstNode = GenericImport | GenericStatement | GenericRenderNode;
+export type GenericAstNode =
+  GenericImport | GenericStatement | GenericRenderNode;
 ```
 
 説明はありません。
@@ -980,7 +1014,8 @@ JSX 属性によって保持される値。
 **種類：**タイプ
 
 ```typescript
-export type GenericBindingKind = "identifier" | "object-pattern" | "array-pattern";
+export type GenericBindingKind =
+  "identifier" | "object-pattern" | "array-pattern";
 ```
 
 コンポーネントの props パラメータのバインディング形式。
@@ -1060,7 +1095,8 @@ export interface GenericParameter
 **種類：**タイプ
 
 ```typescript
-export type GenericRenderChild = GenericRenderNode | GenericTextNode | GenericExpressionNode;
+export type GenericRenderChild =
+  GenericRenderNode | GenericTextNode | GenericExpressionNode;
 ```
 
 説明はありません。
@@ -1090,7 +1126,18 @@ export interface GenericStatement
 **種類：**タイプ
 
 ```typescript
-export type GenericStatementKind = | "import" | "interface" | "type-alias" | "enum" | "variable" | "function" | "class" | "export" | "expression" | "return" | "other";
+export type GenericStatementKind =
+  | "import"
+  | "interface"
+  | "type-alias"
+  | "enum"
+  | "variable"
+  | "function"
+  | "class"
+  | "export"
+  | "expression"
+  | "return"
+  | "other";
 ```
 
 保持されたモジュールレベルのステートメントの大まかな分類。
@@ -1120,48 +1167,50 @@ JSX タグ間のリテラル テキスト。
 **種類:** 関数
 
 ```typescript
-function isExpressionNode(child: GenericRenderChild): child is GenericExpressionNode
+function isExpressionNode(
+  child: GenericRenderChild,
+): child is GenericExpressionNode;
 ```
 
 レンダー子が `{ … }` 補間。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|子供 |ジェネリックレンダーチャイルド |  |
+| 名前 | タイプ                         | 説明 |
+| ---- | ------------------------------ | ---- |
+| 子供 | ジェネリックレンダーチャイルド |      |
 
 ### isRenderNode
 
 **種類:** 関数
 
 ```typescript
-function isRenderNode(child: GenericRenderChild): child is GenericRenderNode
+function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
 レンダリングの子がネストされた要素/フラグメントであるかどうか node.
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|子供 |ジェネリックレンダーチャイルド |  |
+| 名前 | タイプ                         | 説明 |
+| ---- | ------------------------------ | ---- |
+| 子供 | ジェネリックレンダーチャイルド |      |
 
 ### isTextNode
 
 **種類:** 関数
 
 ```typescript
-function isTextNode(child: GenericRenderChild): child is GenericTextNode
+function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 ```
 
 レンダリングの子がリテラルの JSX テキストであるかどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|子供 |ジェネリックレンダーチャイルド |  |
+| 名前 | タイプ                         | 説明 |
+| ---- | ------------------------------ | ---- |
+| 子供 | ジェネリックレンダーチャイルド |      |
 
 ### ListKeyIntention
 
@@ -1208,16 +1257,16 @@ export interface RefIntention
 **種類:** 関数
 
 ```typescript
-function renderNodeTagName(node: GenericRenderNode): string | undefined
+function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
 レンダーのプレーンなタグ名 node、 または `undefined` 計算されたタグの場合。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node |ジェネリックレンダーノード |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| node | ジェネリックレンダーノード |      |
 
 ### セマンティックインテンション
 
@@ -1254,18 +1303,22 @@ export interface SlotIntention
 **種類:** 関数
 
 ```typescript
-function sourceBacked(text: string, syntax: SourceBackedExpression["syntax"] = "expression", span: SourceSpan = EMPTY_SPAN): SourceBackedExpression
+function sourceBacked(
+  text: string,
+  syntax: SourceBackedExpression["syntax"] = "expression",
+  span: SourceSpan = EMPTY_SPAN,
+): SourceBackedExpression;
 ```
 
 すでに出力されているテキストからソースに裏付けられた式を構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
-|構文 | SourceBackedExpression["構文"] |  |
-|スパン |ソーススパン |  |
+| 名前     | タイプ                         | 説明 |
+| -------- | ------------------------------ | ---- |
+| テキスト | 文字列                         |      |
+| 構文     | SourceBackedExpression["構文"] |      |
+| スパン   | ソーススパン                   |      |
 
 ### SourceBackedExpression
 
@@ -1302,14 +1355,17 @@ export interface StateIntention
 **種類:** 関数
 
 ```typescript
-function walkRenderNodes(nodes: readonly GenericRenderNode[], visit: (node: GenericRenderNode) => void): void
+function walkRenderNodes(
+  nodes: readonly GenericRenderNode[],
+  visit: (node: GenericRenderNode) => void,
+): void;
 ```
 
 ネストされた式マークアップを含め、レンダー ツリーを深さ優先でウォークします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ノード | GenericRenderNode[] | readonly  |
-|訪問 | (node: GenericRenderNode) => void |  |
+| 名前   | タイプ                            | 説明     |
+| ------ | --------------------------------- | -------- |
+| ノード | GenericRenderNode[]               | readonly |
+| 訪問   | (node: GenericRenderNode) => void |          |

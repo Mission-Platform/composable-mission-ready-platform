@@ -16,7 +16,7 @@
 **סוג:** קבוע
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 הסכימה המצטברת שכל אתר שנוצר קורא ממנה `site.data`.
@@ -26,7 +26,7 @@ export const COMPONENTS_DATA_FILE
 **סוג:** קבוע
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 קטע התצורה של אתר מתמזג לשלו `_config.yml`.
@@ -36,16 +36,16 @@ export const CONFIG_FILE
 פונקציה **סוג:**
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 קשר את הקרנת Jekyll (נוזל) לתוסף פלט מסגרת בבעלות מתקשר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeJekyllCmsOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| אפשרויות | ForgeJekyllCmsOptions |       |
 
 ### ForgeJekyllCmsOptions
 
@@ -64,7 +64,10 @@ export interface ForgeJekyllCmsOptions
 פונקציה **סוג:**
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 לִפְלוֹט `_data/forge-components.yml`: הסכימה של כל הנפלט כוללת.
@@ -75,17 +78,20 @@ function emitComponentsData(components: readonly ContentComponent[], namespace: 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיבים | ContentComponent לקריאה בלבד[] |  |
-| מרחב שמות | מחרוזת |  |
+| שם        | הקלד                           | תיאור |
+| --------- | ------------------------------ | ----- |
+| רכיבים    | ContentComponent לקריאה בלבד[] |       |
+| מרחב שמות | מחרוזת                         |       |
 
 ### emitJekyllConfig
 
 פונקציה **סוג:**
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 פולט את `_config.yml` קטע הרושם את שנוצר כולל.
@@ -99,26 +105,26 @@ Jekyll ממזגת את תצורת האתר לתוך `site.*`, אז פרסום מ
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיבים | ContentComponent לקריאה בלבד[] |  |
-| מרחב שמות | מחרוזת |  |
+| שם        | הקלד                           | תיאור |
+| --------- | ------------------------------ | ----- |
+| רכיבים    | ContentComponent לקריאה בלבד[] |       |
+| מרחב שמות | מחרוזת                         |       |
 
 ### fieldToJekyllType
 
 פונקציה **סוג:**
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 סוג הנתונים של Jekyll שדה ניטרלי מתפרסם בתור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שדה | ContentField |  |
+| שם  | הקלד         | תיאור |
+| --- | ------------ | ----- |
+| שדה | ContentField |       |
 
 ### JekyllFieldType
 
@@ -135,16 +141,16 @@ export type JekyllFieldType = "string" | "number" | "boolean" | "enum" | "slot";
 פונקציה **סוג:**
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 Scalar של YAML עבור ערך ברירת מחדל ניטרלי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | ContentDefaultValue |  |
+| שם  | הקלד                | תיאור |
+| --- | ------------------- | ----- |
+| ערך | ContentDefaultValue |       |
 
 ## `src/template`
 
@@ -153,7 +159,7 @@ Scalar של YAML עבור ערך ברירת מחדל ניטרלי.
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 מרחב השמות המשמש כאשר המתקשר לא בוחר אחד.
@@ -163,58 +169,70 @@ export const DEFAULT_INCLUDE_NAMESPACE
 פונקציה **סוג:**
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 פלט את Liquid include עבור רכיב אחד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
-| מרחב שמות | מחרוזת |  |
+| שם        | הקלד             | תיאור |
+| --------- | ---------------- | ----- |
+| רכיב      | ContentComponent |       |
+| מרחב שמות | מחרוזת           |       |
 
 ### includeFileName
 
 פונקציה **סוג:**
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 שם קובץ החפצים של רכיב כולל.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
-| מרחב שמות | מחרוזת |  |
+| שם        | הקלד             | תיאור |
+| --------- | ---------------- | ----- |
+| רכיב      | ContentComponent |       |
+| מרחב שמות | מחרוזת           |       |
 
 ### includePath
 
 פונקציה **סוג:**
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 נתיב הכלול שרכיב מטופל בו, ביחס אליו `_includes`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
-| מרחב שמות | מחרוזת |  |
+| שם        | הקלד             | תיאור |
+| --------- | ---------------- | ----- |
+| רכיב      | ContentComponent |       |
+| מרחב שמות | מחרוזת           |       |
 
 ### jekyllDiagnostics
 
 פונקציה **סוג:**
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 אסוף את האבחון שמדווח על הורדת נוזלים עבור רכיב.
@@ -227,17 +245,17 @@ function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): rea
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| רכיב | ContentComponent |  |
+| שם   | הקלד             | תיאור |
+| ---- | ---------------- | ----- |
+| ir   | SemanticModule   |       |
+| רכיב | ContentComponent |       |
 
 ### נוזלי ליטרל
 
 פונקציה **סוג:**
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 Liquid literal עבור ערך ברירת מחדל ניטרלי.
@@ -248,6 +266,6 @@ Liquid literal עבור ערך ברירת מחדל ניטרלי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | ContentDefaultValue |  |
+| שם  | הקלד                | תיאור |
+| --- | ------------------- | ----- |
+| ערך | ContentDefaultValue |       |

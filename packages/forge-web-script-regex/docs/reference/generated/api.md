@@ -21,7 +21,7 @@ Deterministic representation embedded by a Forge backend.
 **Kind:** constant
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 Stable version of the shared Forge regex bytecode contract.
@@ -31,7 +31,7 @@ Stable version of the shared Forge regex bytecode contract.
 **Kind:** constant
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 Width, in 32-bit integer operands, of every instruction.
@@ -41,7 +41,7 @@ Width, in 32-bit integer operands, of every instruction.
 **Kind:** constant
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 Opcodes consumed by the Forge backend and mirrored by the reference oracle.
@@ -63,16 +63,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 Compile the supported deterministic regex subset into Forge bytecode.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| pattern | string |  |
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| pattern | string |             |
 
 ### RegexSyntaxError
 
@@ -91,17 +91,17 @@ Compiler-owned syntax error with deterministic source-relative messages.
 **Kind:** function
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 Read a capture end without exposing the bytecode slot layout to callers.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| captures | Captures \| null |  |
-| group | number |  |
+| Name     | Type             | Description |
+| -------- | ---------------- | ----------- |
+| captures | Captures \| null |             |
+| group    | number           |             |
 
 ### Captures
 
@@ -118,83 +118,83 @@ Capture slots are `[start0, end0, start1, end1, ...]`; `-1` means unset.
 **Kind:** function
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 Read a capture start without exposing the bytecode slot layout to callers.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| captures | Captures \| null |  |
-| group | number |  |
+| Name     | Type             | Description |
+| -------- | ---------------- | ----------- |
+| captures | Captures \| null |             |
+| group    | number           |             |
 
 ### fullMatch
 
 **Kind:** function
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Whole-string match, anchored at position zero.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| re | CompiledRegex |  |
-| input | string |  |
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
 
 ### prefixMatch
 
 **Kind:** function
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Prefix match, anchored at position zero but not at the end.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| re | CompiledRegex |  |
-| input | string |  |
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
 
 ### search
 
 **Kind:** function
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 Leftmost match at or after `start`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| re | CompiledRegex |  |
-| input | string |  |
-| start |  |  |
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
+| start |               |             |
 
 ### test
 
 **Kind:** function
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 Whole-string boolean match.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| re | CompiledRegex |  |
-| input | string |  |
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |

@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/theme`.
 **Kind:** function
 
 ```typescript
-function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement
+function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
 `ForgeThemeToggle` — cycles the active theme through `light → dark → auto`,
@@ -34,9 +34,9 @@ through the default slot.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ThemeToggleProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<ThemeToggleProperties> |             |
 
 ### ThemeToggleProperties
 
@@ -65,7 +65,7 @@ Size token — canonical 2xs → 2xl scale.
 **Kind:** function
 
 ```typescript
-function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement
+function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
 `ForgeThemeComposer` — composes runtime `--mp-*` design-token overrides (brand
@@ -91,9 +91,9 @@ wrapper is a fixed `<div>`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ThemeComposerProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<ThemeComposerProperties> |             |
 
 ### ThemeComposerProperties
 
@@ -122,7 +122,7 @@ Size token — canonical 2xs → 2xl scale.
 **Kind:** function
 
 ```typescript
-function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement
+function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement;
 ```
 
 `ForgeThemeProvider` — configures the shared theme store from its props and
@@ -146,9 +146,9 @@ document-level store with a fixed `<div>` wrapper.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ThemeProviderProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<ThemeProviderProperties> |             |
 
 ### ThemeProviderProperties
 
@@ -177,7 +177,7 @@ Size token — canonical 2xs → 2xl scale (inherited through the renderless wra
 **Kind:** constant
 
 ```typescript
-export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>
+export const ATTRIBUTE_TO_CSS_VAR: Record<ThemeComposerAttribute, string>;
 ```
 
 Maps each friendly attribute to the `--mp-*` CSS custom property it overrides.
@@ -187,7 +187,7 @@ Maps each friendly attribute to the `--mp-*` CSS custom property it overrides.
 **Kind:** function
 
 ```typescript
-function configToCssVariables(config: ThemeComposerConfig): Record<string, string>
+function configToCssVariables(config: ThemeComposerConfig): Record<string, string>;
 ```
 
 Converts a {@link ThemeComposerConfig} into a flat map of CSS custom
@@ -196,111 +196,137 @@ properties (`--mp-*` → value). Attributes take precedence first, then the raw
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
+| Name   | Type                | Description |
+| ------ | ------------------- | ----------- |
+| config | ThemeComposerConfig |             |
 
 ### configToStyleString
 
 **Kind:** function
 
 ```typescript
-function configToStyleString(config: ThemeComposerConfig): string
+function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
 Resolve a config to the full inline `style` string (custom properties + `color-scheme`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
+| Name   | Type                | Description |
+| ------ | ------------------- | ----------- |
+| config | ThemeComposerConfig |             |
 
 ### cssVariablesToString
 
 **Kind:** function
 
 ```typescript
-function cssVariablesToString(variables: Record<string, string>): string
+function cssVariablesToString(variables: Record<string, string>): string;
 ```
 
 Serialises a CSS custom-property map into an inline `style` string.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| variables | Record<string, string> |  |
+| Name      | Type                   | Description |
+| --------- | ---------------------- | ----------- |
+| variables | Record<string, string> |             |
 
 ### mergeConfig
 
 **Kind:** function
 
 ```typescript
-function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig
+function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig): ThemeComposerConfig;
 ```
 
 Shallow-merge a partial configuration into the current one (clearing `undefined`/empty values).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
-| partial | ThemeComposerConfig |  |
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| config  | ThemeComposerConfig |             |
+| partial | ThemeComposerConfig |             |
 
 ### removeConfigToken
 
 **Kind:** function
 
 ```typescript
-function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig
+function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeComposerConfig;
 ```
 
 Remove a single raw token override.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
-| key | string |  |
+| Name   | Type                | Description |
+| ------ | ------------------- | ----------- |
+| config | ThemeComposerConfig |             |
+| key    | string              |             |
 
 ### setConfigAttribute
 
 **Kind:** function
 
 ```typescript
-function setConfigAttribute(config: ThemeComposerConfig, attribute: K, value: ThemeComposerConfig[K]): ThemeComposerConfig
+function setConfigAttribute(
+  config: ThemeComposerConfig,
+  attribute: K,
+  value: ThemeComposerConfig[K],
+): ThemeComposerConfig;
 ```
 
 Set a single friendly attribute (pass `undefined` to clear it).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
-| attribute | K |  |
-| value | ThemeComposerConfig[K] |  |
+| Name      | Type                   | Description |
+| --------- | ---------------------- | ----------- |
+| config    | ThemeComposerConfig    |             |
+| attribute | K                      |             |
+| value     | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
 **Kind:** function
 
 ```typescript
-function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig
+function setConfigToken(config: ThemeComposerConfig, key: string, value: string): ThemeComposerConfig;
 ```
 
 Set a single raw token override. The key may omit the `--mp-` prefix.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| config | ThemeComposerConfig |  |
-| key | string |  |
-| value | string |  |
+| Name   | Type                | Description |
+| ------ | ------------------- | ----------- |
+| config | ThemeComposerConfig |             |
+| key    | string              |             |
+| value  | string              |             |
+
+### ThemeComposerAttribute
+
+**Kind:** type
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+The friendly attribute keys that map to a `--mp-*` custom property.
+
+### ThemeComposerConfig
+
+**Kind:** interface
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+A high-level, typed description of the theme attributes a consumer can compose
+at runtime. Every attribute maps to one of the platform's `--mp-*`
+design-token CSS custom properties (see {@link ATTRIBUTE_TO_CSS_VAR}).
 
 ## `src/stores/theme-store/theme-store`
 
@@ -309,7 +335,7 @@ Set a single raw token override. The key may omit the `--mp-` prefix.
 **Kind:** function
 
 ```typescript
-function configureTheme(config: ThemeConfig): void
+function configureTheme(config: ThemeConfig): void;
 ```
 
 (Re)configure the shared store from a `ForgeThemeProvider`'s props: switch the
@@ -318,16 +344,16 @@ adopt the provider's `defaultTheme`. Re-applies and notifies subscribers.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| config | ThemeConfig |  |
+| Name   | Type        | Description |
+| ------ | ----------- | ----------- |
+| config | ThemeConfig |             |
 
 ### cycleTheme
 
 **Kind:** function
 
 ```typescript
-function cycleTheme(): void
+function cycleTheme(): void;
 ```
 
 Cycle through `light → dark → auto → light`.
@@ -337,7 +363,7 @@ Cycle through `light → dark → auto → light`.
 **Kind:** function
 
 ```typescript
-function getThemeSnapshot(): ThemeSnapshot
+function getThemeSnapshot(): ThemeSnapshot;
 ```
 
 Read an immutable snapshot of the store's current state.
@@ -357,32 +383,32 @@ The concrete theme actually applied to the UI (never `'auto'`).
 **Kind:** function
 
 ```typescript
-function setTheme(next: Theme): void
+function setTheme(next: Theme): void;
 ```
 
 Set the theme preference explicitly.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| next | Theme |  |
+| Name | Type  | Description |
+| ---- | ----- | ----------- |
+| next | Theme |             |
 
 ### subscribeTheme
 
 **Kind:** function
 
 ```typescript
-function subscribeTheme(listener: () => void): () => void
+function subscribeTheme(listener: () => void): () => void;
 ```
 
 Subscribe to store changes; returns an unsubscribe function.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| listener | () => void |  |
+| Name     | Type       | Description |
+| -------- | ---------- | ----------- |
+| listener | () => void |             |
 
 ### Theme
 
@@ -419,7 +445,7 @@ An immutable snapshot of the store's current state, returned by {@link getThemeS
 **Kind:** function
 
 ```typescript
-function toggleTheme(): void
+function toggleTheme(): void;
 ```
 
 Toggle between light and dark, based on the currently resolved theme.

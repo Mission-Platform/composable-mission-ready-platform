@@ -16,16 +16,16 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-plugin-w
 **Tipo:** funzione
 
 ```typescript
-function synthesiseElementClass(plan: WebComponentsLoweredModule): string
+function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 ```
 
 Stampa la sottoclasse `ForgeElement` e la sua registrazione per un piano ribassato.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| piano | WebComponentsLoweredModule |  |
+| Nome  | Digitare                   | Descrizione |
+| ----- | -------------------------- | ----------- |
+| piano | WebComponentsLoweredModule |             |
 
 ## `src/emitters/module`
 
@@ -34,19 +34,24 @@ Stampa la sottoclasse `ForgeElement` e la sua registrazione per un piano ribassa
 **Tipo:** funzione
 
 ```typescript
-function emitWebComponentModule(module: SemanticModule, componentName: string = "CustomElement", componentFolders: ReadonlySet<string> = new Set(), lowered?: WebComponentsLoweredModule): EmittedWebComponentModule
+function emitWebComponentModule(
+  module: SemanticModule,
+  componentName: string = "CustomElement",
+  componentFolders: ReadonlySet<string> = new Set(),
+  lowered?: WebComponentsLoweredModule,
+): EmittedWebComponentModule;
 ```
 
 Trasforma l'intero modulo nell'origine di destinazione dei componenti Web nativi.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modulo | Modulo Semantico |  |
-| nomecomponente | stringa |  |
-| componenteCartelle | Sola letturaSet<string> |  |
-| abbassato | WebComponentsLoweredModule |  |
+| Nome               | Digitare                   | Descrizione |
+| ------------------ | -------------------------- | ----------- |
+| modulo             | Modulo Semantico           |             |
+| nomecomponente     | stringa                    |             |
+| componenteCartelle | Sola letturaSet<string>    |             |
+| abbassato          | WebComponentsLoweredModule |             |
 
 ## `src/index`
 
@@ -55,7 +60,7 @@ Trasforma l'intero modulo nell'origine di destinazione dei componenti Web nativi
 **Tipo:** funzione
 
 ```typescript
-function forgeWebComponentsFramework(): FrameworkOutputPlugin
+function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 ```
 
 Creare il plug-in di output dei componenti Web solo per TypeScript.
@@ -67,7 +72,7 @@ Creare il plug-in di output dei componenti Web solo per TypeScript.
 **Genere:** costante
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 I componenti interni sono vincolati dalla capacità del runtime; l'associazione del modulo rimane attiva.
@@ -77,7 +82,7 @@ I componenti interni sono vincolati dalla capacità del runtime; l'associazione 
 **Genere:** costante
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 Impostazioni predefinite di compatibilità conservate per i componenti generati.
@@ -87,7 +92,9 @@ Impostazioni predefinite di compatibilità conservate per i componenti generati.
 **Tipo:** funzione
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebComponentsHostPlan
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+): WebComponentsHostPlan;
 ```
 
 Dedurre un host integrato personalizzato solo da una singola radice intrinseca statica.
@@ -98,66 +105,74 @@ base attraverso le implementazioni DOM supportate.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| returnNode | GenericRenderNode \| indefinito |  |
+| Nome       | Digitare                        | Descrizione |
+| ---------- | ------------------------------- | ----------- |
+| returnNode | GenericRenderNode \| indefinito |             |
 
 ### isWebComponentsLowered
 
 **Tipo:** funzione
 
 ```typescript
-function isWebComponentsLowered(lowered: TargetLoweredModule | undefined): lowered is WebComponentsLoweredModule
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
 ```
 
 Restringi un piano target al piano Componenti Web senza trasmettere.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| abbassato | TargetLoweredModule \| indefinito |  |
+| Nome      | Digitare                          | Descrizione |
+| --------- | --------------------------------- | ----------- |
+| abbassato | TargetLoweredModule \| indefinito |             |
 
 ### lowerWebComponentsModule
 
 **Tipo:** funzione
 
 ```typescript
-function lowerWebComponentsModule(module: SemanticModule, context: TargetContext): TargetIntentions
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Abbassare l'IR neutro nelle intenzioni target dei componenti Web.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modulo | Modulo Semantico |  |
-| contesto | Contesto di destinazione |  |
+| Nome     | Digitare                 | Descrizione |
+| -------- | ------------------------ | ----------- |
+| modulo   | Modulo Semantico         |             |
+| contesto | Contesto di destinazione |             |
 
 ### lowerWebComponentsPlan
 
 **Tipo:** funzione
 
 ```typescript
-function lowerWebComponentsPlan(module: SemanticModule, context: TargetContext): WebComponentsLoweredModule
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
 ```
 
 Costruisci il piano target dei componenti Web per un modulo neutro.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modulo | Modulo Semantico |  |
-| contesto | Contesto di destinazione |  |
+| Nome     | Digitare                 | Descrizione |
+| -------- | ------------------------ | ----------- |
+| modulo   | Modulo Semantico         |             |
+| contesto | Contesto di destinazione |             |
 
 ### TIPO_SCONOSCIUTO
 
 **Genere:** costante
 
 ```typescript
-export const UNKNOWN_TYPE
+export const UNKNOWN_TYPE;
 ```
 
 Il tipo emesso quando non è disponibile né un tipo dichiarato né uno dedotto.
@@ -167,7 +182,7 @@ Il tipo emesso quando non è disponibile né un tipo dichiarato né uno dedotto.
 **Genere:** costante
 
 ```typescript
-export const WEB_COMPONENTS_FRAMEWORK
+export const WEB_COMPONENTS_FRAMEWORK;
 ```
 
 L'ID del framework del plugin e il discriminatore del suo piano ribassato.
@@ -177,7 +192,7 @@ L'ID del framework del plugin e il discriminatore del suo piano ribassato.
 **Genere:** costante
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS
+export const WEBCOMPONENTS_NATIVE_HOSTS;
 ```
 
 La tabella di compatibilità per root che può essere tranquillamente personalizzata integrata.
@@ -239,7 +254,14 @@ Un'associazione `useId()` neutra, ridotta a un campo di istanza seminato una vol
 **Genere:** tipo
 
 ```typescript
-export type WebComponentsHostFallbackReason = | "missing-root" | "fragment-root" | "dynamic-root" | "component-root" | "ambiguous-root" | "invalid-root" | "unsupported-root";
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
 ```
 
 Motivi stabili per cui un componente non può utilizzare un host integrato personalizzato.
@@ -279,7 +301,8 @@ Funzionalità ElementInternals richieste da un componente generato.
 **Genere:** tipo
 
 ```typescript
-export type WebComponentsLifecycleCallback = "connectedCallback" | "disconnectedCallback" | "updatedCallback";
+export type WebComponentsLifecycleCallback =
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 ```
 
 I callback del ciclo di vita degli elementi personalizzati che un piano può generare.
@@ -325,7 +348,7 @@ export interface WebComponentsPromotedLocal
 Una costante render-head **promossa** a membro dell'elemento.
 
 Vengono emessi un memo getter, una richiamata del ciclo di vita e un inizializzatore di campo
-*esterno* `render()`, quindi un locale per il quale la testa di rendering dichiara non esiste
+_esterno_ `render()`, quindi un locale per il quale la testa di rendering dichiara non esiste
 loro. Promuovere la dichiarazione a un membro è ciò che rende tale lettura
 risolvibile — tramite `this.<name>` — invece di penzolare.
 
@@ -397,10 +420,10 @@ Le dichiarazioni principali di cui il seme ha bisogno vengono riprodotte per pri
 transitivamente chiusi, e **solo** quelli.
 
 La riproduzione anziché la memorizzazione nella cache è intenzionale. Nella fonte neutra la testa
-*è* il corpo del componente, quindi già `const initial = parseTime(modelValue);`
+_è_ il corpo del componente, quindi già `const initial = parseTime(modelValue);`
 funziona su ogni rendering; valutarlo ancora una volta durante l'installazione non esegue alcuna chiamata
 il componente creato non viene già eseguito a ogni passaggio. Memorizzandolo nella cache in a
-il campo *ridurrebbe* invece il numero di valutazioni e darebbe il valore an
+il campo _ridurrebbe_ invece il numero di valutazioni e darebbe il valore an
 identità che la fonte non ha mai promesso. Solo un semplice `const` (o una funzione)
 la dichiarazione viene mai riprodotta: vedi {@link headReplay}.
 
@@ -451,41 +474,47 @@ Il piano `render()` abbassato: le sue istruzioni head e il suo modello lit-html.
 **Tipo:** funzione
 
 ```typescript
-function optimizeWebComponentsModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeWebComponentsModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Ottimizzare le intenzioni target dei componenti Web; passano gli altri bersagli.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| intenzioni | Intenzioni target |  |
-| opzioni | TargetOptimizeOptions |  |
+| Nome       | Digitare              | Descrizione |
+| ---------- | --------------------- | ----------- |
+| intenzioni | Intenzioni target     |             |
+| opzioni    | TargetOptimizeOptions |             |
 
 ### ottimizzareWebComponentsPlan
 
 **Tipo:** funzione
 
 ```typescript
-function optimizeWebComponentsPlan(plan: WebComponentsLoweredModule, options: TargetOptimizeOptions): WebComponentsLoweredModule
+function optimizeWebComponentsPlan(
+  plan: WebComponentsLoweredModule,
+  options: TargetOptimizeOptions,
+): WebComponentsLoweredModule;
 ```
 
 Perfeziona un piano di componenti Web ridotto, registrando ogni passaggio eseguito.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| piano | WebComponentsLoweredModule |  |
-| opzioni | TargetOptimizeOptions |  |
+| Nome    | Digitare                   | Descrizione |
+| ------- | -------------------------- | ----------- |
+| piano   | WebComponentsLoweredModule |             |
+| opzioni | TargetOptimizeOptions      |             |
 
 ### WEB_COMPONENTI_OTTIMIZZAZIONI
 
 **Genere:** costante
 
 ```typescript
-export const WEB_COMPONENTS_OPTIMIZATIONS
+export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
 Identificatori registrati in {@link WebComponentsLoweredModule.appliedOptimizations}.
@@ -495,7 +524,8 @@ Identificatori registrati in {@link WebComponentsLoweredModule.appliedOptimizati
 **Genere:** tipo
 
 ```typescript
-export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
+export type WebComponentsOptimization =
+  (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
 ```
 
 Un identificatore di ottimizzazione dei componenti Web registrato.
@@ -507,16 +537,16 @@ Un identificatore di ottimizzazione dei componenti Web registrato.
 **Tipo:** funzione
 
 ```typescript
-function emitWebComponentHookModule(module: SemanticModule): string
+function emitWebComponentHookModule(module: SemanticModule): string;
 ```
 
 Trasforma un modulo hook neutro nella sua sorgente Web-Components.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modulo | Modulo Semantico |  |
+| Nome   | Digitare         | Descrizione |
+| ------ | ---------------- | ----------- |
+| modulo | Modulo Semantico |             |
 
 ## `src/transformers/expression`
 
@@ -525,7 +555,7 @@ Trasforma un modulo hook neutro nella sua sorgente Web-Components.
 **Genere:** costante
 
 ```typescript
-export const HAS_SLOT_RUNTIME
+export const HAS_SLOT_RUNTIME;
 ```
 
 L'helper di runtime nativo a cui si abbassa il marcatore, chiamato con l'elemento host.
@@ -535,7 +565,7 @@ L'helper di runtime nativo a cui si abbassa il marcatore, chiamato con l'element
 **Tipo:** funzione
 
 ```typescript
-function isFunctionExpressionText(text: string): boolean
+function isFunctionExpressionText(text: string): boolean;
 ```
 
 Se il testo è un'espressione **con valori di funzione**: una freccia o un
@@ -547,16 +577,16 @@ può essere promosso a membro dell'elemento (vedere `../lower`) indipendentement
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| testo | stringa |  |
+| Nome  | Digitare | Descrizione |
+| ----- | -------- | ----------- |
+| testo | stringa  |             |
 
 ### èPureExpressionText
 
 **Tipo:** funzione
 
 ```typescript
-function isPureExpressionText(text: string): boolean
+function isPureExpressionText(text: string): boolean;
 ```
 
 Se un'espressione è **dimostrabilmente** priva di effetti: no call, no `new`, no
@@ -569,9 +599,9 @@ istruzione e rimane in `render()`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| testo | stringa |  |
+| Nome  | Digitare | Descrizione |
+| ----- | -------- | ----------- |
+| testo | stringa  |             |
 
 ## `src/transformers/props-binding`
 
@@ -580,26 +610,26 @@ istruzione e rimane in `render()`.
 **Tipo:** funzione
 
 ```typescript
-function leadingObjectPattern(text: string): string | undefined
+function leadingObjectPattern(text: string): string | undefined;
 ```
 
-Il modello di oggetto che *inizia* `text`, scartando tutto ciò che segue.
+Il modello di oggetto che _inizia_ `text`, scartando tutto ciò che segue.
 
 Il testo sorgente di un parametro porta la sua annotazione (`{ a, b }: Readonly<P>`),
 quindi il modello deve essere ritagliato prima di poter essere scomposto.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| testo | stringa |  |
+| Nome  | Digitare | Descrizione |
+| ----- | -------- | ----------- |
+| testo | stringa  |             |
 
 ### parsePropsBinding
 
 **Tipo:** funzione
 
 ```typescript
-function parsePropsBinding(patternText: string): PropsBinding | undefined
+function parsePropsBinding(patternText: string): PropsBinding | undefined;
 ```
 
 Decomporre un modello di oggetti di scena.
@@ -610,9 +640,9 @@ il suo comportamento precedente invece di agire su una lettura parziale.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modelloTesto | stringa |  |
+| Nome         | Digitare | Descrizione |
+| ------------ | -------- | ----------- |
+| modelloTesto | stringa  |             |
 
 ### PropsBinding
 
@@ -639,7 +669,10 @@ Una voce di un modello di oggetti di scena.
 **Tipo:** funzione
 
 ```typescript
-function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => boolean): string | undefined
+function propsBindingStatement(
+  binding: PropsBinding,
+  isRead: (name: string) => boolean,
+): string | undefined;
 ```
 
 Riproduci un modello di oggetti di scena come `const { … } = this;`, limitato alle voci
@@ -651,10 +684,10 @@ quindi è predefinito: identico in byte a quello creato.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| vincolante | Oggetti di scenaRilegatura |  |
-| èLeggi | (nome: stringa) => booleano |  |
+| Nome       | Digitare                    | Descrizione |
+| ---------- | --------------------------- | ----------- |
+| vincolante | Oggetti di scenaRilegatura  |             |
+| èLeggi     | (nome: stringa) => booleano |             |
 
 ## `src/transformers/props-type`
 
@@ -663,12 +696,15 @@ quindi è predefinito: identico in byte a quello creato.
 **Tipo:** funzione
 
 ```typescript
-function indexedAccessType(reference: PropsTypeReference, member: string): string
+function indexedAccessType(
+  reference: PropsTypeReference,
+  member: string,
+): string;
 ```
 
 L'annotazione di accesso indicizzato come viene emesso un membro del tipo props.
 
-L'opzionalità del membro viene mantenuta esattamente: un membro obbligatorio *non*
+L'opzionalità del membro viene mantenuta esattamente: un membro obbligatorio _non_
 ampliato con `| undefined`. Il campo dell'elemento viene popolato solo una volta
 il runtime adotta il suo attributo, quindi è veramente non impostato nel costruttore —
 ma ciò viene espresso emettendo il campo come `declare` (il runtime possiede il file
@@ -677,10 +713,10 @@ ogni lettura di una prop richiesta possibilmente-`undefined`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| riferimento | PropsTypeReference |  |
-| membro | stringa |  |
+| Nome        | Digitare           | Descrizione |
+| ----------- | ------------------ | ----------- |
+| riferimento | PropsTypeReference |             |
+| membro      | stringa            |             |
 
 ### PropsTypeReference
 
@@ -697,7 +733,10 @@ export interface PropsTypeReference
 **Tipo:** funzione
 
 ```typescript
-function resolvePropsTypeReference(annotation: string | undefined, declarations: readonly GenericStatement[]): PropsTypeReference | undefined
+function resolvePropsTypeReference(
+  annotation: string | undefined,
+  declarations: readonly GenericStatement[],
+): PropsTypeReference | undefined;
 ```
 
 Risolvi l'annotazione props rispetto alle dichiarazioni conservate del modulo.
@@ -708,17 +747,17 @@ in entrambi i casi il riferimento non verrebbe risolto nel modulo generato.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| annotazione | stringa \| indefinito |  |
-| dichiarazioni | sola lettura GenericStatement[] |  |
+| Nome          | Digitare                        | Descrizione |
+| ------------- | ------------------------------- | ----------- |
+| annotazione   | stringa \| indefinito           |             |
+| dichiarazioni | sola lettura GenericStatement[] |             |
 
 ### typeMembers
 
 **Tipo:** funzione
 
 ```typescript
-function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
+function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 ```
 
 I membri dichiarati da un corpo di interfaccia/tipo-alias mantenuto, mappati su if
@@ -726,22 +765,22 @@ ognuno è facoltativo (`name?: T`).
 
 Vengono raccolti solo i membri al livello più alto del primo corpo `{…}`, e solo
 dove un membro può legittimamente iniziare (subito dopo la graffa di apertura, un `;`
-o un `,`). I membri forniti da una base `extends`/`&` pertanto *non*
+o un `,`). I membri forniti da una base `extends`/`&` pertanto _non_
 segnalato: il chiamante lo tratta come sconosciuto e ricade, che è il
 direzione sicura.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| dichiarazioneTesto | stringa |  |
+| Nome               | Digitare | Descrizione |
+| ------------------ | -------- | ----------- |
+| dichiarazioneTesto | stringa  |             |
 
 ### unwrapPropsTypeName
 
 **Tipo:** funzione
 
 ```typescript
-function unwrapPropsTypeName(text: string | undefined): string | undefined
+function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
 Riduci un'annotazione props al nome semplice a cui fa riferimento, scartando il file
@@ -749,6 +788,6 @@ parentesi e wrapper generici che preservano i membri che un componente può scri
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| testo | stringa \| indefinito |  |
+| Nome  | Digitare              | Descrizione |
+| ----- | --------------------- | ----------- |
+| testo | stringa \| indefinito |             |

@@ -16,16 +16,16 @@
 פונקציה **סוג:**
 
 ```typescript
-function synthesiseElementClass(plan: WebComponentsLoweredModule): string
+function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 ```
 
 הדפס את תת-המחלקה `ForgeElement` והרישום שלה לתוכנית מופחתת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוכנית | WebComponentsLoweredModule |  |
+| שם     | הקלד                       | תיאור |
+| ------ | -------------------------- | ----- |
+| תוכנית | WebComponentsLoweredModule |       |
 
 ## `src/emitters/module`
 
@@ -34,19 +34,24 @@ function synthesiseElementClass(plan: WebComponentsLoweredModule): string
 פונקציה **סוג:**
 
 ```typescript
-function emitWebComponentModule(module: SemanticModule, componentName: string = "CustomElement", componentFolders: ReadonlySet<string> = new Set(), lowered?: WebComponentsLoweredModule): EmittedWebComponentModule
+function emitWebComponentModule(
+  module: SemanticModule,
+  componentName: string = "CustomElement",
+  componentFolders: ReadonlySet<string> = new Set(),
+  lowered?: WebComponentsLoweredModule,
+): EmittedWebComponentModule;
 ```
 
 הפוך את כל המודול למקור היעד המקורי של Web-Components.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
-| שם רכיב | מחרוזת |  |
-| componentFolders | ReadonlySet<string> |  |
-| הוריד | WebComponentsLoweredModule |  |
+| שם               | הקלד                       | תיאור |
+| ---------------- | -------------------------- | ----- |
+| מודול            | SemanticModule             |       |
+| שם רכיב          | מחרוזת                     |       |
+| componentFolders | ReadonlySet<string>        |       |
+| הוריד            | WebComponentsLoweredModule |       |
 
 ## `src/index`
 
@@ -55,7 +60,7 @@ function emitWebComponentModule(module: SemanticModule, componentName: string = 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebComponentsFramework(): FrameworkOutputPlugin
+function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 ```
 
 צור את הפלט TypeScript בלבד של רכיבי אינטרנט.
@@ -67,7 +72,7 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 פנימיים מוגנים על ידי זמן הריצה; שיוך טופס נשאר בהצטרפות.
@@ -77,7 +82,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 ברירת המחדל של תאימות נשמרת עבור רכיבים שנוצרו.
@@ -87,7 +92,9 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
 פונקציה **סוג:**
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebComponentsHostPlan
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+): WebComponentsHostPlan;
 ```
 
 הסק מארח מובנה מותאם אישית רק משורש פנימי סטטי בודד.
@@ -98,66 +105,74 @@ HTML אינו מבטיח שהוא בטוח או שימושי מובנה מותא
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| returnNode | GenericRenderNode \| לא מוגדר |  |
+| שם         | הקלד                          | תיאור |
+| ---------- | ----------------------------- | ----- |
+| returnNode | GenericRenderNode \| לא מוגדר |       |
 
 ### isWebComponentsLowered
 
 פונקציה **סוג:**
 
 ```typescript
-function isWebComponentsLowered(lowered: TargetLoweredModule | undefined): lowered is WebComponentsLoweredModule
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
 ```
 
 צמצם תוכנית יעד לתוכנית Web-Components ללא ליהוק.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הוריד | TargetLoweredModule \| לא מוגדר |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| הוריד | TargetLoweredModule \| לא מוגדר |       |
 
 ### lowerWebComponentsModule
 
 פונקציה **סוג:**
 
 ```typescript
-function lowerWebComponentsModule(module: SemanticModule, context: TargetContext): TargetIntentions
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 הורד IR ניטרלי לתוך כוונות היעד של Web-Components.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
-| הקשר | היעד הקשר |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| מודול | SemanticModule |       |
+| הקשר  | היעד הקשר      |       |
 
 ### lowerWebComponentsPlan
 
 פונקציה **סוג:**
 
 ```typescript
-function lowerWebComponentsPlan(module: SemanticModule, context: TargetContext): WebComponentsLoweredModule
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
 ```
 
 בנו את תוכנית היעד של Web-Components עבור מודול ניטרלי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
-| הקשר | היעד הקשר |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| מודול | SemanticModule |       |
+| הקשר  | היעד הקשר      |       |
 
 ### UNKNOWN_TYPE
 
 **סוג:** קבוע
 
 ```typescript
-export const UNKNOWN_TYPE
+export const UNKNOWN_TYPE;
 ```
 
 הסוג הנפלט כאשר אין סוג מוצהר או משוער זמין.
@@ -167,7 +182,7 @@ export const UNKNOWN_TYPE
 **סוג:** קבוע
 
 ```typescript
-export const WEB_COMPONENTS_FRAMEWORK
+export const WEB_COMPONENTS_FRAMEWORK;
 ```
 
 מזהה המסגרת של התוסף, והמפלה של התוכנית הנמוכה שלו.
@@ -177,7 +192,7 @@ export const WEB_COMPONENTS_FRAMEWORK
 **סוג:** קבוע
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS
+export const WEBCOMPONENTS_NATIVE_HOSTS;
 ```
 
 טבלת התאימות לשורשים שניתן להתאים באופן בטוח מובנה.
@@ -239,7 +254,14 @@ export interface WebComponentsGeneratedId
 **סוג:** סוג
 
 ```typescript
-export type WebComponentsHostFallbackReason = | "missing-root" | "fragment-root" | "dynamic-root" | "component-root" | "ambiguous-root" | "invalid-root" | "unsupported-root";
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
 ```
 
 סיבות יציבות לכך שרכיב אינו יכול להשתמש במארח מובנה מותאם אישית.
@@ -279,7 +301,8 @@ export interface WebComponentsInternalsPolicy
 **סוג:** סוג
 
 ```typescript
-export type WebComponentsLifecycleCallback = "connectedCallback" | "disconnectedCallback" | "updatedCallback";
+export type WebComponentsLifecycleCallback =
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 ```
 
 החזרות מחזור חיים של רכיבים מותאמים אישית שתוכנית יכולה ליצור.
@@ -325,7 +348,7 @@ export interface WebComponentsPromotedLocal
 קבוע עיבוד ראש **מקודם** לחבר אלמנט.
 
 משגר תזכירים, התקשרות חוזרת למחזור החיים ומאתחל שדה כולם נפלטים
-*מחוץ* `render()`, אז מקומי שראש העיבוד מצהיר אינו קיים עבור
+_מחוץ_ `render()`, אז מקומי שראש העיבוד מצהיר אינו קיים עבור
 אותם. קידום ההצהרה לחבר הוא מה שגורם לקריאה כזו
 ניתן לפתרון - דרך `this.<name>` - במקום להשתלשל.
 
@@ -392,15 +415,16 @@ parseTime(modelValue);`) שלא ניתן היה להוכיח שהוא נטול �
 
 זרע כזה נדחה ל-`ForgeElement.setup()`, שזמן הריצה קורא לו
 לאחר אימוץ תכונות ולפני העיבוד הראשון, פעם אחת בדיוק לכל אלמנט
+
 - חיבור מחדש לא חייב לחדש ולבטל את מה שהמשתמש שינה מאז.
-הצהרות הראש שהזרע צריך משוחזרות שם תחילה, לפי סדר ראש ו
-סגור באופן טרנזיטיבי, ו**רק** אלה.
+  הצהרות הראש שהזרע צריך משוחזרות שם תחילה, לפי סדר ראש ו
+  סגור באופן טרנזיטיבי, ו**רק** אלה.
 
 הפעלה חוזרת במקום שמירה במטמון היא מכוונת. במקור הנייטרלי הראש
-*הוא* גוף הרכיב, אז `const initial = parseTime(modelValue);` כבר
+_הוא_ גוף הרכיב, אז `const initial = parseTime(modelValue);` כבר
 פועל על כל עיבוד; הערכתו פעם נוספת במהלך ההגדרה אינה מבצעת שיחה
 הרכיב המחבר אינו פועל כבר בכל מעבר. מאחסן אותו ב-a
-במקום זאת *מקטין* את מספר ההערכות ונותן את הערך an
+במקום זאת _מקטין_ את מספר ההערכות ונותן את הערך an
 זהות שהמקור מעולם לא הבטיח. רק `const` רגיל (או פונקציה)
 ההצהרה מושמעת אי פעם מחדש - ראה {@link headReplay}.
 
@@ -451,41 +475,47 @@ export interface WebComponentsTemplatePlan
 פונקציה **סוג:**
 
 ```typescript
-function optimizeWebComponentsModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeWebComponentsModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 בצע אופטימיזציה של כוונות היעד של רכיבי האינטרנט; מטרות אחרות עוברות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כוונות | כוונות יעד |  |
-| אפשרויות | TargetOptimizeOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| כוונות   | כוונות יעד            |       |
+| אפשרויות | TargetOptimizeOptions |       |
 
 ### optimizeWebComponentsPlan
 
 פונקציה **סוג:**
 
 ```typescript
-function optimizeWebComponentsPlan(plan: WebComponentsLoweredModule, options: TargetOptimizeOptions): WebComponentsLoweredModule
+function optimizeWebComponentsPlan(
+  plan: WebComponentsLoweredModule,
+  options: TargetOptimizeOptions,
+): WebComponentsLoweredModule;
 ```
 
 צמצם תוכנית רכיבי אינטרנט מופחתת, ותעד כל מעבר שרץ.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוכנית | WebComponentsLoweredModule |  |
-| אפשרויות | TargetOptimizeOptions |  |
+| שם       | הקלד                       | תיאור |
+| -------- | -------------------------- | ----- |
+| תוכנית   | WebComponentsLoweredModule |       |
+| אפשרויות | TargetOptimizeOptions      |       |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
 **סוג:** קבוע
 
 ```typescript
-export const WEB_COMPONENTS_OPTIMIZATIONS
+export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
 מזהים שתועדו ב-{@link WebComponentsLoweredModule.appliedOptimizations}.
@@ -495,7 +525,8 @@ export const WEB_COMPONENTS_OPTIMIZATIONS
 **סוג:** סוג
 
 ```typescript
-export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
+export type WebComponentsOptimization =
+  (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
 ```
 
 מזהה אופטימיזציה של Web-Components מוקלט.
@@ -507,16 +538,16 @@ export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[ke
 פונקציה **סוג:**
 
 ```typescript
-function emitWebComponentHookModule(module: SemanticModule): string
+function emitWebComponentHookModule(module: SemanticModule): string;
 ```
 
 הפוך מודול וו ניטרלי למקור רכיבי האינטרנט שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| מודול | SemanticModule |       |
 
 ## `src/transformers/expression`
 
@@ -525,7 +556,7 @@ function emitWebComponentHookModule(module: SemanticModule): string
 **סוג:** קבוע
 
 ```typescript
-export const HAS_SLOT_RUNTIME
+export const HAS_SLOT_RUNTIME;
 ```
 
 עוזר זמן הריצה המקורי שהסמן מוריד אליו, נקרא עם אלמנט המארח.
@@ -535,7 +566,7 @@ export const HAS_SLOT_RUNTIME
 פונקציה **סוג:**
 
 ```typescript
-function isFunctionExpressionText(text: string): boolean
+function isFunctionExpressionText(text: string): boolean;
 ```
 
 בין אם הטקסט הוא ביטוי **בעל ערך פונקציה** - חץ או א
@@ -547,16 +578,16 @@ function isFunctionExpressionText(text: string): boolean
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| טקסט | מחרוזת |       |
 
 ### isPureExpressionText
 
 פונקציה **סוג:**
 
 ```typescript
-function isPureExpressionText(text: string): boolean
+function isPureExpressionText(text: string): boolean;
 ```
 
 האם ביטוי הוא **בהוכחה** נקי מאפקטים: ללא שיחה, ללא `new`, לא
@@ -569,9 +600,9 @@ function isPureExpressionText(text: string): boolean
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| טקסט | מחרוזת |       |
 
 ## `src/transformers/props-binding`
 
@@ -580,7 +611,7 @@ function isPureExpressionText(text: string): boolean
 פונקציה **סוג:**
 
 ```typescript
-function leadingObjectPattern(text: string): string | undefined
+function leadingObjectPattern(text: string): string | undefined;
 ```
 
 דפוס האובייקט ש*מתחיל* `text`, מבטל את כל מה שאחריו.
@@ -590,16 +621,16 @@ function leadingObjectPattern(text: string): string | undefined
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| טקסט | מחרוזת |       |
 
 ### parsePropsBinding
 
 פונקציה **סוג:**
 
 ```typescript
-function parsePropsBinding(patternText: string): PropsBinding | undefined
+function parsePropsBinding(patternText: string): PropsBinding | undefined;
 ```
 
 לפרק תבנית אובייקט אבזרים.
@@ -610,9 +641,9 @@ function parsePropsBinding(patternText: string): PropsBinding | undefined
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תבנית טקסט | מחרוזת |  |
+| שם         | הקלד   | תיאור |
+| ---------- | ------ | ----- |
+| תבנית טקסט | מחרוזת |       |
 
 ### PropsBinding
 
@@ -639,7 +670,10 @@ export interface PropsBindingEntry
 פונקציה **סוג:**
 
 ```typescript
-function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => boolean): string | undefined
+function propsBindingStatement(
+  binding: PropsBinding,
+  isRead: (name: string) => boolean,
+): string | undefined;
 ```
 
 הפעל מחדש דפוס אביזרים כמו `const { … } = this;`, מוגבל לערכים
@@ -651,10 +685,10 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מחייב | PropsBinding |  |
-| isRead | (שם: מחרוזת) => בוליאני |  |
+| שם     | הקלד                    | תיאור |
+| ------ | ----------------------- | ----- |
+| מחייב  | PropsBinding            |       |
+| isRead | (שם: מחרוזת) => בוליאני |       |
 
 ## `src/transformers/props-type`
 
@@ -663,12 +697,15 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 פונקציה **סוג:**
 
 ```typescript
-function indexedAccessType(reference: PropsTypeReference, member: string): string
+function indexedAccessType(
+  reference: PropsTypeReference,
+  member: string,
+): string;
 ```
 
 ההערה עם גישה לאינדקס שחבר מסוג האביזרים נפלט בתור.
 
-האופציונליות של החבר עצמו נשמרת בדיוק: חבר נדרש *לא*
+האופציונליות של החבר עצמו נשמרת בדיוק: חבר נדרש _לא_
 התרחב עם `| undefined`. השדה של האלמנט מאוכלס רק פעם אחת
 זמן הריצה מאמץ את התכונה שלו, כך שהוא באמת לא מוגדר בקונסטרוקטור -
 אבל זה מתבטא על ידי פליטת השדה כ-`declare` (זמן הריצה הוא הבעלים של
@@ -677,10 +714,10 @@ accessor), אשר פוטר אותו מ-`strictPropertyInitialization` מבלי �
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הפניה | PropsTypeReference |  |
-| חבר | מחרוזת |  |
+| שם    | הקלד               | תיאור |
+| ----- | ------------------ | ----- |
+| הפניה | PropsTypeReference |       |
+| חבר   | מחרוזת             |       |
 
 ### PropsTypeReference
 
@@ -697,7 +734,10 @@ export interface PropsTypeReference
 פונקציה **סוג:**
 
 ```typescript
-function resolvePropsTypeReference(annotation: string | undefined, declarations: readonly GenericStatement[]): PropsTypeReference | undefined
+function resolvePropsTypeReference(
+  annotation: string | undefined,
+  declarations: readonly GenericStatement[],
+): PropsTypeReference | undefined;
 ```
 
 פתרו את הערת האביזרים כנגד ההצהרות השמורות של המודול.
@@ -708,17 +748,17 @@ function resolvePropsTypeReference(annotation: string | undefined, declarations:
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ביאור | מחרוזת \| לא מוגדר |  |
-| הצהרות | קריאה בלבד GenericStatement[] |  |
+| שם     | הקלד                          | תיאור |
+| ------ | ----------------------------- | ----- |
+| ביאור  | מחרוזת \| לא מוגדר            |       |
+| הצהרות | קריאה בלבד GenericStatement[] |       |
 
 ### typeMembers
 
 פונקציה **סוג:**
 
 ```typescript
-function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
+function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 ```
 
 האיברים שגוף ממשק/כינוי מסוג שמור מצהיר, ממופה ל-אם
@@ -726,22 +766,22 @@ function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
 
 רק חברים ברמה העליונה של הגוף הראשון `{…}` נאספים, ורק
 היכן שחבר רשאי להתחיל באופן לגיטימי (מיד אחרי סד הפתיחה, `;`
-או `,`). לכן חברים שנתרמו על ידי בסיס `extends`/`&` *לא*
+או `,`). לכן חברים שנתרמו על ידי בסיס `extends`/`&` _לא_
 דיווח - המתקשר מתייחס אליהם כאל לא ידוע ונופל אחורה, וזהו
 כיוון בטוח.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| DeclarationText | מחרוזת |  |
+| שם              | הקלד   | תיאור |
+| --------------- | ------ | ----- |
+| DeclarationText | מחרוזת |       |
 
 ### unwrapPropsTypeName
 
 פונקציה **סוג:**
 
 ```typescript
-function unwrapPropsTypeName(text: string | undefined): string | undefined
+function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
 צמצם את הערת האביזרים לשם הפשוט שאליו הוא מפנה, פתח את העטיפה
@@ -749,6 +789,6 @@ function unwrapPropsTypeName(text: string | undefined): string | undefined
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת \| לא מוגדר |  |
+| שם   | הקלד               | תיאור |
+| ---- | ------------------ | ----- |
+| טקסט | מחרוזת \| לא מוגדר |       |

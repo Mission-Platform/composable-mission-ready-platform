@@ -16,16 +16,16 @@
 **종류:** 기능
 
 ```typescript
-function emitSolidHookModule(module: SemanticModule): string
+function emitSolidHookModule(module: SemanticModule): string;
 ```
 
 중립 후크 모듈을 SolidJS 소스로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| 모듈 | 의미 모듈 |      |
 
 ## `src/emitters/module`
 
@@ -34,17 +34,20 @@ function emitSolidHookModule(module: SemanticModule): string
 **종류:** 기능
 
 ```typescript
-function emitSolidModule(module: SemanticModule, options: SolidEmitOptions = {}): GeneratedSolidModule
+function emitSolidModule(
+  module: SemanticModule,
+  options: SolidEmitOptions = {},
+): GeneratedSolidModule;
 ```
 
 중립 구성 요소 모듈을 SolidJS 소스로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
-| 옵션 | SolidEmit옵션 |  |
+| 이름 | 유형          | 설명 |
+| ---- | ------------- | ---- |
+| 모듈 | 의미 모듈     |      |
+| 옵션 | SolidEmit옵션 |      |
 
 ### 생성된Solid모듈
 
@@ -73,7 +76,7 @@ export interface SolidEmitOptions
 **종류:** 기능
 
 ```typescript
-function forgeSolidFramework(): FrameworkOutputPlugin
+function forgeSolidFramework(): FrameworkOutputPlugin;
 ```
 
 Solid 출력 플러그인과 해당 Vite/Rolldown JSX 어댑터를 만듭니다.
@@ -85,40 +88,48 @@ Solid 출력 플러그인과 해당 Vite/Rolldown JSX 어댑터를 만듭니다.
 **종류:** 기능
 
 ```typescript
-function isSolidLowered(lowered: TargetLoweredModule | undefined): lowered is SolidLoweredModule
+function isSolidLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SolidLoweredModule;
 ```
 
 목표 계획을 Solid로 좁힙니다. 다른 프레임워크 계획의 경우 `false`입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |  |
+| 이름   | 유형                               | 설명 |
+| ------ | ---------------------------------- | ---- |
+| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |      |
 
 ### lowerSolid모듈
 
 **종류:** 기능
 
 ```typescript
-function lowerSolidModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerSolidModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 중립 IR을 Solid의 목표 의도 래퍼로 낮추어 계획을 전달합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| IR | 의미 모듈 |  |
-| 맥락 | 타겟컨텍스트 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| IR   | 의미 모듈    |      |
+| 맥락 | 타겟컨텍스트 |      |
 
 ### planSolidImports
 
 **종류:** 기능
 
 ```typescript
-function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string[]
+function planSolidImports(
+  plan: SolidLoweringPlan,
+  conditional: boolean,
+): string[];
 ```
 
 계획에 필요한 정확한 `solid-js` 값 이름은 알파벳순으로 정렬되어 있습니다.
@@ -127,33 +138,33 @@ function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 계획 | 솔리드하강계획 |  |
-| 조건부 | 부울 |  |
+| 이름   | 유형           | 설명 |
+| ------ | -------------- | ---- |
+| 계획   | 솔리드하강계획 |      |
+| 조건부 | 부울           |      |
 
 ### 계획SolidModule
 
 **종류:** 기능
 
 ```typescript
-function planSolidModule(ir: SemanticModule): SolidLoweringPlan
+function planSolidModule(ir: SemanticModule): SolidLoweringPlan;
 ```
 
 모듈의 의미론적 사실에 대한 Solid 계획을 구축하십시오.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| IR | 의미 모듈 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| IR   | 의미 모듈 |      |
 
 ### SOLID_FRAMEWORK
 
 **종류:** 상수
 
 ```typescript
-export const SOLID_FRAMEWORK
+export const SOLID_FRAMEWORK;
 ```
 
 모든 Solid 계획은 프레임워크 식별자로 구별됩니다.
@@ -275,7 +286,7 @@ Solid이 읽는 소품 멤버로 표현되는 슬롯 읽기입니다.
 **종류:** 상수
 
 ```typescript
-export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
+export const COLLAPSE_SINGLE_CHILD_FRAGMENTS;
 ```
 
 정확히 하나의 요소를 래핑하는 조각을 삭제합니다.
@@ -285,7 +296,7 @@ export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
 **종류:** 상수
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 개선된 계획에서 `solid-js` 가져오기를 다시 계산합니다.
@@ -295,7 +306,7 @@ export const DROP_UNUSED_IMPORTS
 **종류:** 상수
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 `__mpStatic` 하위 트리를 모듈 수준 상수로 승격합니다.
@@ -305,7 +316,7 @@ export const HOIST_STATIC_SUBTREES
 **종류:** 상수
 
 ```typescript
-export const MEMOIZE_DYNAMIC_EXPRESSIONS
+export const MEMOIZE_DYNAMIC_EXPRESSIONS;
 ```
 
 반복되는 동적인 자식 표현을 하나의 메모로 승격시킵니다.
@@ -315,7 +326,7 @@ export const MEMOIZE_DYNAMIC_EXPRESSIONS
 **종류:** 상수
 
 ```typescript
-export const MP_MEMO_PREFIX
+export const MP_MEMO_PREFIX;
 ```
 
 `solid:memoize-dynamic-expressions`이 도입한 메모 바인딩의 접두사입니다.
@@ -325,7 +336,10 @@ export const MP_MEMO_PREFIX
 **종류:** 기능
 
 ```typescript
-function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSolidModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 낮아진 Solid 계획을 구체화합니다. Solid 계획이 없는 의도 래퍼
@@ -333,17 +347,17 @@ function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 의도 | 타겟의도 |  |
-| 옵션 | TargetOptimizeOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 의도 | 타겟의도              |      |
+| 옵션 | TargetOptimizeOptions |      |
 
 ### STABLE_LIST_KEYS
 
 **종류:** 상수
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 프런트엔드가 안정적이라고 입증된 목록 키만 유지하세요.

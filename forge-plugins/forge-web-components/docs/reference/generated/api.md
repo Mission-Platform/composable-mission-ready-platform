@@ -11,16 +11,16 @@ Generated from public source declarations in `@mission-platform/forge-plugin-web
 **Kind:** function
 
 ```typescript
-function synthesiseElementClass(plan: WebComponentsLoweredModule): string
+function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 ```
 
 Print the `ForgeElement` subclass and its registration for a lowered plan.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| plan | WebComponentsLoweredModule |  |
+| Name | Type                       | Description |
+| ---- | -------------------------- | ----------- |
+| plan | WebComponentsLoweredModule |             |
 
 ## `src/emitters/module`
 
@@ -29,19 +29,24 @@ Print the `ForgeElement` subclass and its registration for a lowered plan.
 **Kind:** function
 
 ```typescript
-function emitWebComponentModule(module: SemanticModule, componentName: string = "CustomElement", componentFolders: ReadonlySet<string> = new Set(), lowered?: WebComponentsLoweredModule): EmittedWebComponentModule
+function emitWebComponentModule(
+  module: SemanticModule,
+  componentName: string = "CustomElement",
+  componentFolders: ReadonlySet<string> = new Set(),
+  lowered?: WebComponentsLoweredModule,
+): EmittedWebComponentModule;
 ```
 
 Transform the whole module into the native Web-Components target source.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
-| componentName | string |  |
-| componentFolders | ReadonlySet<string> |  |
-| lowered | WebComponentsLoweredModule |  |
+| Name             | Type                       | Description |
+| ---------------- | -------------------------- | ----------- |
+| module           | SemanticModule             |             |
+| componentName    | string                     |             |
+| componentFolders | ReadonlySet<string>        |             |
+| lowered          | WebComponentsLoweredModule |             |
 
 ## `src/index`
 
@@ -50,7 +55,7 @@ Transform the whole module into the native Web-Components target source.
 **Kind:** function
 
 ```typescript
-function forgeWebComponentsFramework(): FrameworkOutputPlugin
+function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 ```
 
 Create the TypeScript-only Web Components output plugin.
@@ -62,7 +67,7 @@ Create the TypeScript-only Web Components output plugin.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 Internals are capability-gated by the runtime; form association stays opt-in.
@@ -72,7 +77,7 @@ Internals are capability-gated by the runtime; form association stays opt-in.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 Compatibility defaults preserved for generated components.
@@ -82,7 +87,10 @@ Compatibility defaults preserved for generated components.
 **Kind:** function
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined, component?: GenericComponent): WebComponentsHostPlan
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
 ```
 
 Infer a customized-built-in host only from a single, static intrinsic root.
@@ -93,67 +101,75 @@ base across the supported DOM implementations.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| returnNode | GenericRenderNode \| undefined |  |
-| component | GenericComponent |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| returnNode | GenericRenderNode \| undefined |             |
+| component  | GenericComponent               |             |
 
 ### isWebComponentsLowered
 
 **Kind:** function
 
 ```typescript
-function isWebComponentsLowered(lowered: TargetLoweredModule | undefined): lowered is WebComponentsLoweredModule
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
 ```
 
 Narrow a target plan to the Web-Components plan without casting.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| lowered | TargetLoweredModule \| undefined |  |
+| Name    | Type                             | Description |
+| ------- | -------------------------------- | ----------- |
+| lowered | TargetLoweredModule \| undefined |             |
 
 ### lowerWebComponentsModule
 
 **Kind:** function
 
 ```typescript
-function lowerWebComponentsModule(module: SemanticModule, context: TargetContext): TargetIntentions
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Lower neutral IR into the Web-Components target intentions.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
-| context | TargetContext |  |
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| module  | SemanticModule |             |
+| context | TargetContext  |             |
 
 ### lowerWebComponentsPlan
 
 **Kind:** function
 
 ```typescript
-function lowerWebComponentsPlan(module: SemanticModule, context: TargetContext): WebComponentsLoweredModule
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
 ```
 
 Build the Web-Components target plan for a neutral module.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
-| context | TargetContext |  |
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| module  | SemanticModule |             |
+| context | TargetContext  |             |
 
 ### UNKNOWN_TYPE
 
 **Kind:** constant
 
 ```typescript
-export const UNKNOWN_TYPE
+export const UNKNOWN_TYPE;
 ```
 
 The type emitted when neither a declared nor an inferred type is available.
@@ -163,7 +179,7 @@ The type emitted when neither a declared nor an inferred type is available.
 **Kind:** constant
 
 ```typescript
-export const WEB_COMPONENTS_FRAMEWORK
+export const WEB_COMPONENTS_FRAMEWORK;
 ```
 
 The plugin's framework ID, and the discriminator of its lowered plan.
@@ -173,7 +189,7 @@ The plugin's framework ID, and the discriminator of its lowered plan.
 **Kind:** constant
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS
+export const WEBCOMPONENTS_NATIVE_HOSTS;
 ```
 
 The compatibility table for roots that can safely be customized built-ins.
@@ -235,7 +251,14 @@ A neutral `useId()` binding, lowered to an instance field seeded once per elemen
 **Kind:** type
 
 ```typescript
-export type WebComponentsHostFallbackReason = | "missing-root" | "fragment-root" | "dynamic-root" | "component-root" | "ambiguous-root" | "invalid-root" | "unsupported-root";
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
 ```
 
 Stable reasons why a component cannot use a customized built-in host.
@@ -275,7 +298,8 @@ ElementInternals capabilities requested by a generated component.
 **Kind:** type
 
 ```typescript
-export type WebComponentsLifecycleCallback = "connectedCallback" | "disconnectedCallback" | "updatedCallback";
+export type WebComponentsLifecycleCallback =
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 ```
 
 The custom-element lifecycle callbacks a plan can generate.
@@ -321,7 +345,7 @@ export interface WebComponentsPromotedLocal
 A render-head constant **promoted** to an element member.
 
 A memo getter, a lifecycle callback and a field initializer are all emitted
-*outside* `render()`, so a local the render head declares does not exist for
+_outside_ `render()`, so a local the render head declares does not exist for
 them. Promoting the declaration to a member is what makes such a read
 resolvable — through `this.<name>` — instead of dangling.
 
@@ -393,10 +417,10 @@ The head statements the seed needs are replayed there first, in head order and
 transitively closed, and **only** those.
 
 Replaying rather than caching is deliberate. In the neutral source the head
-*is* the component body, so `const initial = parseTime(modelValue);` already
+_is_ the component body, so `const initial = parseTime(modelValue);` already
 runs on every render; evaluating it once more during setup performs no call
 the authored component does not already perform on each pass. Caching it in a
-field would instead *reduce* the number of evaluations and give the value an
+field would instead _reduce_ the number of evaluations and give the value an
 identity the source never promised. Only a plain `const` (or a function)
 declaration is ever replayed — see {@link headReplay}.
 
@@ -447,41 +471,47 @@ The lowered `render()` plan: its head statements and its lit-html template.
 **Kind:** function
 
 ```typescript
-function optimizeWebComponentsModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeWebComponentsModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Optimize the Web-Components target intentions; other targets pass through.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| intentions | TargetIntentions |  |
-| options | TargetOptimizeOptions |  |
+| Name       | Type                  | Description |
+| ---------- | --------------------- | ----------- |
+| intentions | TargetIntentions      |             |
+| options    | TargetOptimizeOptions |             |
 
 ### optimizeWebComponentsPlan
 
 **Kind:** function
 
 ```typescript
-function optimizeWebComponentsPlan(plan: WebComponentsLoweredModule, options: TargetOptimizeOptions): WebComponentsLoweredModule
+function optimizeWebComponentsPlan(
+  plan: WebComponentsLoweredModule,
+  options: TargetOptimizeOptions,
+): WebComponentsLoweredModule;
 ```
 
 Refine a lowered Web-Components plan, recording each pass that ran.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| plan | WebComponentsLoweredModule |  |
-| options | TargetOptimizeOptions |  |
+| Name    | Type                       | Description |
+| ------- | -------------------------- | ----------- |
+| plan    | WebComponentsLoweredModule |             |
+| options | TargetOptimizeOptions      |             |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
 **Kind:** constant
 
 ```typescript
-export const WEB_COMPONENTS_OPTIMIZATIONS
+export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
 Identifiers recorded in {@link WebComponentsLoweredModule.appliedOptimizations}.
@@ -491,7 +521,8 @@ Identifiers recorded in {@link WebComponentsLoweredModule.appliedOptimizations}.
 **Kind:** type
 
 ```typescript
-export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
+export type WebComponentsOptimization =
+  (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
 ```
 
 A recorded Web-Components optimization identifier.
@@ -503,16 +534,16 @@ A recorded Web-Components optimization identifier.
 **Kind:** function
 
 ```typescript
-function emitWebComponentHookModule(module: SemanticModule): string
+function emitWebComponentHookModule(module: SemanticModule): string;
 ```
 
 Transform a neutral hook module into its Web-Components source.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| module | SemanticModule |             |
 
 ## `src/transformers/expression`
 
@@ -521,7 +552,7 @@ Transform a neutral hook module into its Web-Components source.
 **Kind:** constant
 
 ```typescript
-export const HAS_SLOT_RUNTIME
+export const HAS_SLOT_RUNTIME;
 ```
 
 The native runtime helper the marker lowers to, called with the host element.
@@ -531,7 +562,7 @@ The native runtime helper the marker lowers to, called with the host element.
 **Kind:** function
 
 ```typescript
-function isFunctionExpressionText(text: string): boolean
+function isFunctionExpressionText(text: string): boolean;
 ```
 
 Whether the text is a **function-valued** expression — an arrow or a
@@ -543,16 +574,16 @@ is: the body still runs exactly when it is called.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| text | string |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |
 
 ### isPureExpressionText
 
 **Kind:** function
 
 ```typescript
-function isPureExpressionText(text: string): boolean
+function isPureExpressionText(text: string): boolean;
 ```
 
 Whether an expression is **provably** free of effects: no call, no `new`, no
@@ -565,9 +596,9 @@ statement and it stays in `render()`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| text | string |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |
 
 ## `src/transformers/props-binding`
 
@@ -576,26 +607,26 @@ statement and it stays in `render()`.
 **Kind:** function
 
 ```typescript
-function leadingObjectPattern(text: string): string | undefined
+function leadingObjectPattern(text: string): string | undefined;
 ```
 
-The object pattern that *starts* `text`, discarding whatever follows.
+The object pattern that _starts_ `text`, discarding whatever follows.
 
 A parameter's source text carries its annotation (`{ a, b }: Readonly<P>`),
 so the pattern has to be cut out before it can be decomposed.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| text | string |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |
 
 ### parsePropsBinding
 
 **Kind:** function
 
 ```typescript
-function parsePropsBinding(patternText: string): PropsBinding | undefined
+function parsePropsBinding(patternText: string): PropsBinding | undefined;
 ```
 
 Decompose a props object pattern.
@@ -606,9 +637,9 @@ its previous behaviour instead of acting on a partial reading.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| patternText | string |  |
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| patternText | string |             |
 
 ### PropsBinding
 
@@ -635,7 +666,10 @@ One entry of a props object pattern.
 **Kind:** function
 
 ```typescript
-function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => boolean): string | undefined
+function propsBindingStatement(
+  binding: PropsBinding,
+  isRead: (name: string) => boolean,
+): string | undefined;
 ```
 
 Replay a props pattern as `const { … } = this;`, restricted to the entries
@@ -647,10 +681,10 @@ so its default — byte-identical to the authored one.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| binding | PropsBinding |  |
-| isRead | (name: string) => boolean |  |
+| Name    | Type                      | Description |
+| ------- | ------------------------- | ----------- |
+| binding | PropsBinding              |             |
+| isRead  | (name: string) => boolean |             |
 
 ## `src/transformers/props-type`
 
@@ -659,12 +693,15 @@ so its default — byte-identical to the authored one.
 **Kind:** function
 
 ```typescript
-function indexedAccessType(reference: PropsTypeReference, member: string): string
+function indexedAccessType(
+  reference: PropsTypeReference,
+  member: string,
+): string;
 ```
 
 The indexed-access annotation a member of the props type is emitted as.
 
-The member's own optionality is kept exactly: a required member is *not*
+The member's own optionality is kept exactly: a required member is _not_
 widened with `| undefined`. The element's field is only populated once the
 runtime adopts its attribute, so it is genuinely unset in the constructor —
 but that is expressed by emitting the field as `declare` (the runtime owns the
@@ -673,10 +710,10 @@ every read of a required prop possibly-`undefined`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| reference | PropsTypeReference |  |
-| member | string |  |
+| Name      | Type               | Description |
+| --------- | ------------------ | ----------- |
+| reference | PropsTypeReference |             |
+| member    | string             |             |
 
 ### PropsTypeReference
 
@@ -693,7 +730,10 @@ The props type a component's fields can be annotated against.
 **Kind:** function
 
 ```typescript
-function resolvePropsTypeReference(annotation: string | undefined, declarations: readonly GenericStatement[]): PropsTypeReference | undefined
+function resolvePropsTypeReference(
+  annotation: string | undefined,
+  declarations: readonly GenericStatement[],
+): PropsTypeReference | undefined;
 ```
 
 Resolve the props annotation against the module's retained declarations.
@@ -704,17 +744,17 @@ in either case the reference would not resolve in the generated module.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| annotation | string \| undefined |  |
-| declarations | readonly GenericStatement[] |  |
+| Name         | Type                        | Description |
+| ------------ | --------------------------- | ----------- |
+| annotation   | string \| undefined         |             |
+| declarations | readonly GenericStatement[] |             |
 
 ### typeMembers
 
 **Kind:** function
 
 ```typescript
-function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
+function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 ```
 
 The members a retained interface/type-alias body declares, mapped to whether
@@ -722,22 +762,22 @@ each one is optional (`name?: T`).
 
 Only members at the top level of the first `{…}` body are collected, and only
 where a member may legitimately start (right after the opening brace, a `;`
-or a `,`). Members contributed by an `extends`/`&` base are therefore *not*
+or a `,`). Members contributed by an `extends`/`&` base are therefore _not_
 reported — the caller treats them as unknown and falls back, which is the
 safe direction.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| declarationText | string |  |
+| Name            | Type   | Description |
+| --------------- | ------ | ----------- |
+| declarationText | string |             |
 
 ### unwrapPropsTypeName
 
 **Kind:** function
 
 ```typescript
-function unwrapPropsTypeName(text: string | undefined): string | undefined
+function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
 Reduce a props annotation to the plain name it references, unwrapping the
@@ -745,6 +785,6 @@ parentheses and member-preserving generic wrappers a component may write.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| text | string \| undefined |  |
+| Name | Type                | Description |
+| ---- | ------------------- | ----------- |
+| text | string \| undefined |             |

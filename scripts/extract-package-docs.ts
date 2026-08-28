@@ -10,7 +10,7 @@ import { readFile, readdir, mkdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, extname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-import ts from 'typescript';
+import { parseSync } from 'oxc-parser';
 
 export type ExtractedSymbolKind = 'function' | 'class' | 'interface' | 'type' | 'constant' | 'component' | 'fws-export';
 
@@ -122,6 +122,7 @@ function sourceCandidates(packageRoot: string, target: string): string[] {
   const candidates = [withoutDeclaration, sourceTarget].flatMap((candidate) => [
     candidate,
     ...sourceExtensions.map((extension) => `${candidate}${extension}`),
+    ...sourceExtensions.map((extension) => `${candidate}/index${extension}`),
   ]);
   return candidates.map((candidate) => resolve(packageRoot, candidate));
 }
@@ -142,104 +143,365 @@ async function typeScriptEntries(packageRoot: string, manifest: PackageManifest)
   return entries.toSorted().filter((entry, index, all) => all.indexOf(entry) === index);
 }
 
-function jsDocTags(node: ts.Node): readonly { readonly name: string; readonly text: string }[] {
-  return ts.getJSDocTags(node).map((tag) => ({
-    name: tag.tagName.text,
-    text: typeof tag.comment === 'string' ? tag.comment.trim() : (ts.getTextOfJSDocComment(tag.comment)?.trim() ?? ''),
-  }));
+interface OxcNode {
+  readonly type: string;
+  readonly start: number;
+  readonly end: number;
+  readonly [key: string]: unknown;
 }
 
-function jsDocDescription(node: ts.Node): string {
-  const documentation = ts.getJSDocCommentsAndTags(node).find((entry): entry is ts.JSDoc => ts.isJSDoc(entry));
-  if (documentation === undefined) return '';
-  const text =
-    typeof documentation.comment === 'string' ? documentation.comment : ts.getTextOfJSDocComment(documentation.comment);
-  return text?.trim() ?? '';
+interface OxcComment {
+  readonly type: string;
+  readonly value: string;
+  readonly start: number;
+  readonly end: number;
 }
 
-function declarationFor(checker: ts.TypeChecker, symbol: ts.Symbol, packageRoot: string): ts.Declaration | undefined {
-  const resolved = (symbol.flags & ts.SymbolFlags.Alias) === 0 ? symbol : checker.getAliasedSymbol(symbol);
-  return resolved.declarations?.find((declaration) => {
-    const path = resolve(declaration.getSourceFile().fileName);
-    return (
-      path.startsWith(`${resolve(packageRoot)}${sep}`) &&
-      !path.includes(`${sep}test${sep}`) &&
-      !path.endsWith('.spec.ts')
-    );
+interface ParsedModule {
+  readonly fileName: string;
+  readonly source: string;
+  readonly program: OxcNode;
+  readonly comments: readonly OxcComment[];
+}
+
+interface ParsedDocumentation {
+  readonly description: string;
+  readonly tags: readonly { readonly name: string; readonly text: string }[];
+  readonly parameterDescriptions: ReadonlyMap<string, string>;
+}
+
+interface ScannedDeclaration {
+  readonly name: string;
+  readonly kind: ExtractedSymbolKind;
+  readonly node: OxcNode;
+  readonly signatureNode: OxcNode;
+  readonly module: ParsedModule;
+  readonly documentation: ParsedDocumentation;
+  readonly sourceModule: string;
+  readonly defaultExport?: boolean;
+}
+
+interface ExportBinding {
+  readonly exportedName: string;
+  readonly localName?: string;
+  readonly source?: string;
+  readonly star: boolean;
+}
+
+interface ScannedModule {
+  readonly parsed: ParsedModule;
+  readonly declarations: ReadonlyMap<string, ScannedDeclaration>;
+  readonly exports: readonly ExportBinding[];
+}
+
+function oxcObject(node: OxcNode | undefined, key: string): OxcNode | undefined {
+  const value = node?.[key];
+  return typeof value === 'object' && value !== null && typeof (value as { type?: unknown }).type === 'string'
+    ? (value as OxcNode)
+    : undefined;
+}
+
+function oxcArray(node: OxcNode | undefined, key: string): readonly OxcNode[] {
+  const value = node?.[key];
+  return Array.isArray(value)
+    ? value.filter(
+        (entry): entry is OxcNode =>
+          typeof entry === 'object' && entry !== null && typeof (entry as { type?: unknown }).type === 'string',
+      )
+    : [];
+}
+
+function oxcName(node: OxcNode | undefined): string | undefined {
+  if (node === undefined) return undefined;
+  const name = node.name;
+  return typeof name === 'string' ? name : undefined;
+}
+
+function oxcLiteral(node: OxcNode | undefined): string | undefined {
+  const value = node?.value;
+  return typeof value === 'string' ? value : undefined;
+}
+
+function parserLanguage(fileName: string): 'ts' | 'tsx' {
+  return /\.tsx$/u.test(fileName) ? 'tsx' : 'ts';
+}
+
+function parseSource(fileName: string, source: string): ParsedModule {
+  const result = parseSync(fileName, source, { lang: parserLanguage(fileName), sourceType: 'module', astType: 'ts' });
+  return {
+    fileName,
+    source,
+    program: result.program as unknown as OxcNode,
+    comments: (result.comments ?? []) as OxcComment[],
+  };
+}
+
+function documentationFor(module: ParsedModule, start: number): ParsedDocumentation {
+  const comment = module.comments
+    .filter((candidate) => candidate.type === 'Block' && candidate.value.startsWith('*') && candidate.end <= start)
+    .toSorted((left, right) => right.end - left.end)
+    .find((candidate) => module.source.slice(candidate.end, start).trim() === '');
+  if (comment === undefined) return { description: '', tags: [], parameterDescriptions: new Map() };
+
+  const lines = comment.value.split('\n').map((line) => line.replace(/^\s*\* ?/u, '').trimEnd());
+  while (lines[0]?.trim() === '') lines.shift();
+  while (lines.at(-1)?.trim() === '') lines.pop();
+  const description: string[] = [];
+  const tags: { name: string; text: string }[] = [];
+  const parameterDescriptions = new Map<string, string>();
+  let currentTag: { name: string; text: string } | undefined;
+  for (const line of lines) {
+    const tag = /^@(\S+)(?:\s+(.*))?$/u.exec(line.trim());
+    if (tag !== null) {
+      currentTag = { name: tag[1], text: tag[2]?.trim() ?? '' };
+      tags.push(currentTag);
+      if (['param', 'parameter', 'arg', 'argument'].includes(currentTag.name)) {
+        const parameter = /^(?:\{[^}]+\}\s+)?([^\s]+)(?:\s+(.*))?$/u.exec(currentTag.text);
+        const subject = parameter?.[1] ?? currentTag.text;
+        const text = parameter?.[2]?.trim() ?? '';
+        currentTag.text = text;
+        if (subject !== '') parameterDescriptions.set(subject, text);
+      } else if (/^(?:returns?|throws?|exception|type|extends|implements|template)$/u.test(currentTag.name)) {
+        currentTag.text = currentTag.text.replace(/^\{[^}]+\}(?:\s+|$)/u, '').trim();
+      }
+    } else if (currentTag === undefined) {
+      description.push(line);
+    } else if (line.trim() !== '') {
+      currentTag.text = `${currentTag.text}\n${line.trim()}`.trim();
+    }
+  }
+  return { description: description.join('\n').trim(), tags, parameterDescriptions };
+}
+
+function declarationKind(node: OxcNode): ExtractedSymbolKind | undefined {
+  switch (node.type) {
+    case 'FunctionDeclaration': {
+      return 'function';
+    }
+    case 'TSDeclareFunction': {
+      return 'function';
+    }
+    case 'ClassDeclaration': {
+      return 'class';
+    }
+    case 'TSInterfaceDeclaration': {
+      return 'interface';
+    }
+    case 'TSTypeAliasDeclaration': {
+      return 'type';
+    }
+    case 'TSEnumDeclaration': {
+      return 'type';
+    }
+    case 'VariableDeclarator': {
+      return 'constant';
+    }
+    default: {
+      return undefined;
+    }
+  }
+}
+
+function declarationSignature(module: ParsedModule, declaration: ScannedDeclaration): string {
+  const node = declaration.node;
+  if (declaration.kind === 'function') {
+    const name = oxcName(oxcObject(node, 'id')) ?? '<anonymous>';
+    const parameters = oxcArray(node, 'params')
+      .map((parameter) => module.source.slice(parameter.start, parameter.end))
+      .join(', ');
+    const returnType = oxcObject(node, 'returnType');
+    const returnText =
+      returnType === undefined ? '' : `: ${module.source.slice(returnType.start + 1, returnType.end).trim()}`;
+    return `function ${name}(${parameters})${returnText}`;
+  }
+  if (declaration.kind === 'constant') {
+    const variableDeclaration = declaration.signatureNode;
+    const keyword =
+      variableDeclaration.kind === 'let' || variableDeclaration.kind === 'var' ? variableDeclaration.kind : 'const';
+    const name = oxcName(oxcObject(node, 'id')) ?? node.name;
+    const typeAnnotation =
+      oxcObject(node, 'id') === undefined ? undefined : oxcObject(oxcObject(node, 'id'), 'typeAnnotation');
+    const typeText =
+      typeAnnotation === undefined
+        ? ''
+        : `: ${module.source.slice(typeAnnotation.start + 1, typeAnnotation.end).trim()}`;
+    return `export ${keyword} ${name}${typeText}`;
+  }
+  const text = module.source.slice(node.start, node.end).replaceAll(/\s+/gu, ' ').trim();
+  const bodyStart = text.indexOf('{');
+  const signature = bodyStart === -1 ? text : text.slice(0, bodyStart).trim();
+  const exportedSignature = signature.startsWith('export ') ? signature : `export ${signature}`;
+  return declaration.defaultExport === true && !exportedSignature.startsWith('export default ')
+    ? exportedSignature.replace(/^export\s+/u, 'export default ')
+    : exportedSignature;
+}
+
+function parameterBinding(parameter: OxcNode): OxcNode {
+  let binding = parameter;
+  while (binding.type === 'AssignmentPattern' || binding.type === 'RestElement') {
+    const next = oxcObject(binding, binding.type === 'AssignmentPattern' ? 'left' : 'argument');
+    if (next === undefined) break;
+    binding = next;
+  }
+  return binding;
+}
+
+function parameterDetails(
+  module: ParsedModule,
+  parameter: OxcNode,
+): {
+  readonly name: string;
+  readonly typeAnnotation?: OxcNode;
+} {
+  const binding = parameterBinding(parameter);
+  const name = oxcName(binding) ?? module.source.slice(binding.start, binding.end).trim();
+  const typeAnnotation = oxcObject(parameter, 'typeAnnotation') ?? oxcObject(binding, 'typeAnnotation');
+  return { name, ...(typeAnnotation === undefined ? {} : { typeAnnotation }) };
+}
+
+function parametersFor(module: ParsedModule, declaration: ScannedDeclaration): readonly ExtractedParameter[] {
+  const parameters = oxcArray(declaration.node, 'params');
+  return parameters.map((parameter) => {
+    const { name, typeAnnotation } = parameterDetails(module, parameter);
+    return {
+      name,
+      ...(typeAnnotation === undefined
+        ? {}
+        : { type: module.source.slice(typeAnnotation.start + 1, typeAnnotation.end).trim() }),
+      ...(declaration.documentation.parameterDescriptions.get(name) === undefined
+        ? {}
+        : { description: declaration.documentation.parameterDescriptions.get(name) }),
+    };
   });
 }
 
-function symbolKind(node: ts.Declaration): ExtractedSymbolKind | undefined {
-  if (ts.isFunctionDeclaration(node) || ts.isMethodDeclaration(node)) return 'function';
-  if (ts.isClassDeclaration(node) || ts.isClassExpression(node)) return 'class';
-  if (ts.isInterfaceDeclaration(node)) return 'interface';
-  if (ts.isTypeAliasDeclaration(node) || ts.isEnumDeclaration(node)) return 'type';
-  if (ts.isVariableDeclaration(node)) return 'constant';
+function sourceModule(packageRoot: string, fileName: string): string {
+  return relative(packageRoot, fileName)
+    .replaceAll(sep, '/')
+    .replace(/\.[^.]+$/u, '');
+}
+
+function scanModule(module: ParsedModule, packageRoot: string): ScannedModule {
+  const declarations = new Map<string, ScannedDeclaration>();
+  const exports: ExportBinding[] = [];
+  const body = Array.isArray(module.program.body) ? (module.program.body as OxcNode[]) : [];
+  for (const statement of body) {
+    const declaration = oxcObject(statement, 'declaration') ?? statement;
+    const unwrapped = oxcObject(statement, 'declaration') === undefined ? statement : declaration;
+    if (unwrapped.type === 'VariableDeclaration') {
+      for (const variable of oxcArray(unwrapped, 'declarations')) {
+        const name = oxcName(oxcObject(variable, 'id'));
+        if (name === undefined) continue;
+        const kind = declarationKind(variable);
+        if (kind === undefined) continue;
+        declarations.set(name, {
+          name,
+          kind: name.startsWith('Mp') ? 'component' : kind,
+          node: variable,
+          signatureNode: unwrapped,
+          module,
+          documentation: documentationFor(module, statement.start),
+          sourceModule: sourceModule(packageRoot, module.fileName),
+        });
+        if (statement.type === 'ExportNamedDeclaration')
+          exports.push({ exportedName: name, localName: name, star: false });
+      }
+      continue;
+    }
+    const name =
+      oxcName(oxcObject(unwrapped, 'id')) ?? (unwrapped.type === 'Identifier' ? oxcName(unwrapped) : undefined);
+    const kind = declarationKind(unwrapped);
+    if (kind !== undefined && name !== undefined) {
+      declarations.set(name, {
+        name,
+        kind: name.startsWith('Mp') ? 'component' : kind,
+        node: unwrapped,
+        signatureNode: unwrapped,
+        module,
+        documentation: documentationFor(module, statement.start),
+        sourceModule: sourceModule(packageRoot, module.fileName),
+      });
+      if (statement.type === 'ExportNamedDeclaration')
+        exports.push({ exportedName: name, localName: name, star: false });
+    }
+    if (statement.type === 'ExportDefaultDeclaration') {
+      const defaultName = name ?? 'default';
+      const existing = declarations.get(defaultName) ?? (name === undefined ? undefined : declarations.get(name));
+      if (existing !== undefined) {
+        declarations.set('default', { ...existing, defaultExport: true });
+        exports.push({ exportedName: 'default', localName: 'default', star: false });
+      }
+    }
+    if (statement.type === 'ExportNamedDeclaration' || statement.type === 'ExportDefaultDeclaration') {
+      const source = oxcLiteral(oxcObject(statement, 'source'));
+      for (const specifier of oxcArray(statement, 'specifiers')) {
+        const localName = oxcName(oxcObject(specifier, 'local'));
+        const exportedName = oxcName(oxcObject(specifier, 'exported'));
+        if (localName !== undefined && exportedName !== undefined)
+          exports.push({ exportedName, localName, ...(source === undefined ? {} : { source }), star: false });
+      }
+    }
+    if (statement.type === 'ExportAllDeclaration') {
+      const source = oxcLiteral(oxcObject(statement, 'source'));
+      if (source !== undefined) exports.push({ exportedName: '', source, star: true });
+    }
+  }
+  return { parsed: module, declarations, exports };
+}
+
+function relativeModuleCandidates(fileName: string, specifier: string): string[] {
+  const base = resolve(dirname(fileName), specifier.replace(/\.[mc]?js$/u, ''));
+  return [
+    base,
+    ...sourceExtensions.map((extension) => `${base}${extension}`),
+    ...sourceExtensions.map((extension) => `${base}/index${extension}`),
+  ];
+}
+
+async function resolveLocalModule(
+  fileName: string,
+  packageRoot: string,
+  specifier: string,
+): Promise<string | undefined> {
+  if (!specifier.startsWith('.')) return undefined;
+  for (const candidate of relativeModuleCandidates(fileName, specifier)) {
+    if (!candidate.startsWith(`${resolve(packageRoot)}${sep}`)) continue;
+    if (await fileExists(candidate)) return candidate;
+  }
   return undefined;
 }
 
-function declarationSignature(node: ts.Declaration): string {
-  if (ts.isFunctionDeclaration(node) || ts.isMethodDeclaration(node)) {
-    const name = node.name?.getText() ?? '<anonymous>';
-    const parameters = node.parameters.map((parameter) => parameter.getText()).join(', ');
-    return `function ${name}(${parameters})${node.type === undefined ? '' : `: ${node.type.getText()}`}`;
+async function exportedDeclarations(
+  fileName: string,
+  packageRoot: string,
+  modules: Map<string, ScannedModule>,
+  resolving: Set<string>,
+): Promise<ReadonlyMap<string, ScannedDeclaration>> {
+  if (resolving.has(fileName)) return new Map();
+  let module = modules.get(fileName);
+  if (module === undefined) {
+    module = scanModule(parseSource(fileName, await readFile(fileName, 'utf8')), packageRoot);
+    modules.set(fileName, module);
   }
-  if (ts.isVariableDeclaration(node)) {
-    const list = node.parent;
-    const flags = ts.isVariableDeclarationList(list) ? list.flags : 0;
-    const keyword = (flags & ts.NodeFlags.Const) === 0 ? ((flags & ts.NodeFlags.Let) === 0 ? 'var' : 'let') : 'const';
-    const name = node.name.getText();
-    const type = node.type === undefined ? '' : `: ${node.type.getText()}`;
-    return `export ${keyword} ${name}${type}`;
+  const nextResolving = new Set(resolving).add(fileName);
+  const result = new Map<string, ScannedDeclaration>();
+  for (const binding of module.exports) {
+    if (binding.source === undefined) {
+      const declaration = module.declarations.get(binding.localName ?? binding.exportedName);
+      if (declaration !== undefined) result.set(binding.exportedName, declaration);
+      continue;
+    }
+    const targetFile = await resolveLocalModule(fileName, packageRoot, binding.source);
+    if (targetFile === undefined) continue;
+    const target = await exportedDeclarations(targetFile, packageRoot, modules, nextResolving);
+    if (binding.star) {
+      for (const [name, declaration] of target) if (name !== 'default') result.set(name, declaration);
+    } else {
+      const declaration = target.get(binding.localName ?? binding.exportedName);
+      if (declaration !== undefined) result.set(binding.exportedName, declaration);
+    }
   }
-  const text = node.getText().replaceAll(/\s+/gu, ' ').trim();
-  const bodyStart = text.indexOf('{');
-  return bodyStart === -1 ? text : text.slice(0, bodyStart).trim();
-}
-
-function parametersFor(
-  node: ts.Declaration,
-  tags: readonly { readonly name: string; readonly text: string }[],
-): readonly ExtractedParameter[] {
-  if (!('parameters' in node) || !Array.isArray(node.parameters)) return [];
-  const parameterTags = new Map(
-    tags
-      .filter(({ name }) => ['param', 'parameter', 'arg', 'argument'].includes(name))
-      .map((tag) => [tag.name, tag.text]),
-  );
-  return node.parameters.map((parameter) => ({
-    name: parameter.name.getText(),
-    ...(parameter.type === undefined ? {} : { type: parameter.type.getText() }),
-    ...(parameterTags.get(parameter.name.getText()) === undefined
-      ? {}
-      : { description: parameterTags.get(parameter.name.getText()) }),
-  }));
-}
-
-function extractSourceFile(sourceFile: ts.SourceFile, checker: ts.TypeChecker, packageRoot: string): ExtractedSymbol[] {
-  const moduleSymbol = checker.getSymbolAtLocation(sourceFile);
-  if (moduleSymbol === undefined) return [];
-  return checker.getExportsOfModule(moduleSymbol).flatMap((exported) => {
-    const declaration = declarationFor(checker, exported, packageRoot);
-    const kind = declaration === undefined ? undefined : symbolKind(declaration);
-    if (declaration === undefined || kind === undefined) return [];
-    const tags = jsDocTags(declaration);
-    const description = jsDocDescription(declaration) || 'No description provided.';
-    const sourceModule = relative(packageRoot, declaration.getSourceFile().fileName)
-      .replaceAll(sep, '/')
-      .replace(/\.[^.]+$/u, '');
-    return [
-      {
-        name: exported.name,
-        kind: (declaration as ts.NamedDeclaration).name?.getText().startsWith('Mp') === true ? 'component' : kind,
-        signature: declarationSignature(declaration),
-        description,
-        parameters: parametersFor(declaration, tags),
-        tags,
-        sourceModule,
-      },
-    ];
-  });
+  return result;
 }
 
 /** Extract exported declarations from the package's TypeScript entrypoints. */
@@ -249,29 +511,22 @@ export async function extractTypeScriptSymbols(
 ): Promise<readonly ExtractedSymbol[]> {
   const entries = await typeScriptEntries(packageRoot, manifest);
   if (entries.length === 0) return [];
-  const options: ts.CompilerOptions = {
-    allowJs: false,
-    jsx: ts.JsxEmit.Preserve,
-    module: ts.ModuleKind.ESNext,
-    moduleResolution: ts.ModuleResolutionKind.Bundler,
-    noEmit: true,
-    skipLibCheck: true,
-    target: ts.ScriptTarget.ES2022,
-  };
-  const host = ts.createCompilerHost(options);
-  host.resolveModuleNames = (moduleNames, containingFile) =>
-    moduleNames.map((moduleName) => {
-      const resolved = ts.resolveModuleName(moduleName, containingFile, options, host).resolvedModule;
-      if (resolved === undefined || !resolve(resolved.resolvedFileName).startsWith(`${resolve(packageRoot)}${sep}`))
-        return;
-      return resolved;
-    });
-  const program = ts.createProgram(entries, options, host);
-  const checker = program.getTypeChecker();
-  const symbols = entries.flatMap((entry) => {
-    const sourceFile = program.getSourceFile(entry);
-    return sourceFile === undefined ? [] : extractSourceFile(sourceFile, checker, packageRoot);
-  });
+  const modules = new Map<string, ScannedModule>();
+  const symbolGroups = await Promise.all(
+    entries.map(async (entry) => {
+      const declarations = await exportedDeclarations(entry, packageRoot, modules, new Set());
+      return [...declarations].map(([name, declaration]) => ({
+        name,
+        kind: declaration.kind,
+        signature: declarationSignature(declaration.module, declaration),
+        description: declaration.documentation.description || 'No description provided.',
+        parameters: parametersFor(declaration.module, declaration),
+        tags: declaration.documentation.tags,
+        sourceModule: declaration.sourceModule,
+      }));
+    }),
+  );
+  const symbols = symbolGroups.flat();
   const seen = new Set<string>();
   const sortedSymbols = symbols.toSorted((left, right) =>
     `${left.sourceModule}:${left.name}`.localeCompare(`${right.sourceModule}:${right.name}`),
@@ -537,7 +792,8 @@ async function main(): Promise<void> {
   const packageArgument =
     inlinePackageArgument ?? (packageFlagIndex === -1 ? undefined : process.argv[packageFlagIndex + 1]);
   if (packageArgument === undefined || process.argv.includes('--all')) {
-    await Promise.all((await discoverPackageRoots(repoRoot)).map((packageRoot) => extractPackageDocs(repoRoot, packageRoot)));
+    const packageRoots = await discoverPackageRoots(repoRoot);
+    await Promise.all(packageRoots.map((packageRoot) => extractPackageDocs(repoRoot, packageRoot)));
     return;
   }
   await extractPackageDocs(repoRoot, resolve(process.cwd(), packageArgument));

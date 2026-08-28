@@ -16,18 +16,22 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-plugin-r
 **Tipo:** funzione
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 Trasforma l'intero modulo nell'origine di destinazione React.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modulo | Modulo Semantico |  |
-| nomecomponente | stringa |  |
-| piano | ReactModulePlan |  |
+| Nome           | Digitare         | Descrizione |
+| -------------- | ---------------- | ----------- |
+| modulo         | Modulo Semantico |             |
+| nomecomponente | stringa          |             |
+| piano          | ReactModulePlan  |             |
 
 ## `src/index`
 
@@ -36,7 +40,7 @@ Trasforma l'intero modulo nell'origine di destinazione React.
 **Tipo:** funzione
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 Crea il plug-in di output React e i relativi adattatori di build JSX nativi.
@@ -48,50 +52,58 @@ Crea il plug-in di output React e i relativi adattatori di build JSX nativi.
 **Tipo:** funzione
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 Restringi un piano di proprietà della destinazione a quello React.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| abbassato | TargetLoweredModule \| indefinito |  |
+| Nome      | Digitare                          | Descrizione |
+| --------- | --------------------------------- | ----------- |
+| abbassato | TargetLoweredModule \| indefinito |             |
 
 ### lowerReactModule
 
 **Tipo:** funzione
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Abbassa l'IR neutro nel piano React portato da {@link TargetIntentions.lowered}.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| io | Modulo Semantico |  |
-| contesto | Contesto di destinazione |  |
+| Nome     | Digitare                 | Descrizione |
+| -------- | ------------------------ | ----------- |
+| io       | Modulo Semantico         |             |
+| contesto | Contesto di destinazione |             |
 
 ### planReactModule
 
 **Tipo:** funzione
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 Crea il piano React per un modulo.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modulo | Modulo Semantico |  |
-| nomecomponente | stringa |  |
+| Nome           | Digitare         | Descrizione |
+| -------------- | ---------------- | ----------- |
+| modulo         | Modulo Semantico |             |
+| nomecomponente | stringa          |             |
 
 ### ReactClientDirectivePlan
 
@@ -180,7 +192,10 @@ Come il componente lega il suo oggetto props.
 **Tipo:** funzione
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Perfezionare il piano React.
@@ -191,17 +206,17 @@ inline e con `stableKeyInference` disabilitato viene mantenuta ogni chiave dedot
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| intenzioni | Intenzioni target |  |
-| opzioni | TargetOptimizeOptions |  |
+| Nome       | Digitare              | Descrizione |
+| ---------- | --------------------- | ----------- |
+| intenzioni | Intenzioni target     |             |
+| opzioni    | TargetOptimizeOptions |             |
 
 ### REACT_OTTIMIZZAZIONI
 
 **Genere:** costante
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 Gli identificatori registrati su un piano perfezionato dall'ottimizzatore React.

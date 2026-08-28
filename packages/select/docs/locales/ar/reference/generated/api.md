@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTag(properties: Readonly<TagProperties>): MpElement
+function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 ```
 
 `ForgeTag` — تسمية مدمجة ومستديرة تم تأليفها مرة واحدة بلهجة JSX المحايدة
@@ -34,9 +34,9 @@ function ForgeTag(properties: Readonly<TagProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<TagProperties> |  |
+| الاسم | اكتب                       | الوصف |
+| ----- | -------------------------- | ----- |
+| خصائص | للقراءة فقط<TagProperties> |       |
 
 ### خصائص العلامة
 
@@ -63,7 +63,8 @@ export type TagSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** النوع
 
 ```typescript
-export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TagVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 لهجة العلامة.
@@ -75,16 +76,16 @@ export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'suc
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement
+function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ForgeLanguageSwitcherProperties> |  |
+| الاسم | اكتب                                         | الوصف |
+| ----- | -------------------------------------------- | ----- |
+| خصائص | للقراءة فقط<ForgeLanguageSwitcherProperties> |       |
 
 ### ForgeLanguageSwitcherOption
 
@@ -113,7 +114,7 @@ export interface ForgeLanguageSwitcherProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement
+function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement;
 ```
 
 `ForgeMultiselect` - مربع تحرير وسرد متعدد التحديد قائم على العلامات مع حقل بحث،
@@ -145,9 +146,9 @@ React/Vue); تصبح سلاسل `useI18n` نصًا عاديًا؛ وينبعث `
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MultiselectProperties> |  |
+| الاسم | اكتب                               | الوصف |
+| ----- | ---------------------------------- | ----- |
+| خصائص | للقراءة فقط<MultiselectProperties> |       |
 
 ### خيار التحديد المتعدد
 
@@ -186,7 +187,7 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
+function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
 `ForgeSelect` - مربع تحرير/تحديد مخصص تم تأليفه مرة واحدة في JSX المحايد
@@ -220,9 +221,9 @@ function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<SelectProperties> |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| خصائص | للقراءة فقط<SelectProperties> |       |
 
 ### حدد الخيار
 

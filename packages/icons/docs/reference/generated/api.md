@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/icons`.
 **Kind:** constant
 
 ```typescript
-export const ICON_CATALOG: readonly IconCatalogEntry[]
+export const ICON_CATALOG: readonly IconCatalogEntry[];
 ```
 
 The reviewed catalog for the existing icon set.
@@ -21,7 +21,7 @@ The reviewed catalog for the existing icon set.
 **Kind:** constant
 
 ```typescript
-export const ICON_GAP_REVIEW
+export const ICON_GAP_REVIEW;
 ```
 
 High-value additions to implement after the source taxonomy is established.
@@ -41,16 +41,16 @@ A stable category assignment for every icon source in this package.
 **Kind:** function
 
 ```typescript
-function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void
+function validateIconCatalog(catalog: readonly IconCatalogEntry[] = ICON_CATALOG): void;
 ```
 
 Validate the static catalog before it is used to generate package metadata.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| catalog | readonly IconCatalogEntry[] |  |
+| Name    | Type                        | Description |
+| ------- | --------------------------- | ----------- |
+| catalog | readonly IconCatalogEntry[] |             |
 
 ## `src/components/communication/messaging/forge-icon-bell/forge-icon-bell`
 
@@ -59,7 +59,7 @@ Validate the static catalog before it is used to generate package metadata.
 **Kind:** function
 
 ```typescript
-function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement
+function ForgeIconBell(properties: Readonly<IconBellProperties>): MpElement;
 ```
 
 `ForgeIconBell` — an icon authored once in the neutral JSX dialect.
@@ -70,9 +70,9 @@ co-located CSS Module `forge-icon-bell.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconBellProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconBellProperties> |             |
 
 ### IconBellProperties
 
@@ -91,7 +91,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement
+function ForgeIconChat(properties: Readonly<IconChatProperties>): MpElement;
 ```
 
 `ForgeIconChat` — an icon authored once in the neutral JSX dialect.
@@ -102,9 +102,9 @@ co-located CSS Module `forge-icon-chat.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconChatProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconChatProperties> |             |
 
 ### IconChatProperties
 
@@ -123,7 +123,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement
+function ForgeIconMail(properties: Readonly<IconMailProperties>): MpElement;
 ```
 
 `ForgeIconMail` — an icon authored once in the neutral JSX dialect.
@@ -134,9 +134,9 @@ co-located CSS Module `forge-icon-mail.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconMailProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconMailProperties> |             |
 
 ### IconMailProperties
 
@@ -155,7 +155,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement
+function ForgeIconPhone(properties: Readonly<IconPhoneProperties>): MpElement;
 ```
 
 `ForgeIconPhone` — an icon authored once in the neutral JSX dialect.
@@ -166,9 +166,9 @@ co-located CSS Module `forge-icon-phone.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconPhoneProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconPhoneProperties> |             |
 
 ### IconPhoneProperties
 
@@ -187,7 +187,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement
+function ForgeIconSend(properties: Readonly<IconSendProperties>): MpElement;
 ```
 
 `ForgeIconSend` — an icon authored once in the neutral JSX dialect.
@@ -198,9 +198,9 @@ co-located CSS Module `forge-icon-send.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconSendProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconSendProperties> |             |
 
 ### IconSendProperties
 
@@ -219,7 +219,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement
+function ForgeIconShare(properties: Readonly<IconShareProperties>): MpElement;
 ```
 
 `ForgeIconShare` — an icon authored once in the neutral JSX dialect.
@@ -230,9 +230,9 @@ co-located CSS Module `forge-icon-share.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconShareProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconShareProperties> |             |
 
 ### IconShareProperties
 
@@ -251,7 +251,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement
+function ForgeIconCopy(properties: Readonly<IconCopyProperties>): MpElement;
 ```
 
 `ForgeIconCopy` — an icon authored once in the neutral JSX dialect.
@@ -262,9 +262,9 @@ co-located CSS Module `forge-icon-copy.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconCopyProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconCopyProperties> |             |
 
 ### IconCopyProperties
 
@@ -283,7 +283,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement
+function ForgeIconEdit(properties: Readonly<IconEditProperties>): MpElement;
 ```
 
 `ForgeIconEdit` — an icon authored once in the neutral JSX dialect.
@@ -294,9 +294,9 @@ co-located CSS Module `forge-icon-edit.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconEditProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconEditProperties> |             |
 
 ### IconEditProperties
 
@@ -315,7 +315,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement
+function ForgeIconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement;
 ```
 
 `ForgeIconEyeOff` — an icon authored once in the neutral JSX dialect.
@@ -326,9 +326,9 @@ co-located CSS Module `forge-icon-eye-off.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconEyeOffProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconEyeOffProperties> |             |
 
 ### IconEyeOffProperties
 
@@ -347,7 +347,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement
+function ForgeIconEye(properties: Readonly<IconEyeProperties>): MpElement;
 ```
 
 `ForgeIconEye` — an icon authored once in the neutral JSX dialect.
@@ -358,9 +358,9 @@ co-located CSS Module `forge-icon-eye.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconEyeProperties> |  |
+| Name       | Type                        | Description |
+| ---------- | --------------------------- | ----------- |
+| properties | Readonly<IconEyeProperties> |             |
 
 ### IconEyeProperties
 
@@ -379,16 +379,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement
+function ForgeIconRedo(properties: Readonly<IconRedoProperties>): MpElement;
 ```
 
 Reapplies the most recently undone content edit.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconRedoProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconRedoProperties> |             |
 
 ### IconRedoProperties
 
@@ -407,7 +407,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement
+function ForgeIconTrash(properties: Readonly<IconTrashProperties>): MpElement;
 ```
 
 `ForgeIconTrash` — an icon authored once in the neutral JSX dialect.
@@ -418,9 +418,9 @@ co-located CSS Module `forge-icon-trash.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconTrashProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconTrashProperties> |             |
 
 ### IconTrashProperties
 
@@ -439,16 +439,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement
+function ForgeIconUndo(properties: Readonly<IconUndoProperties>): MpElement;
 ```
 
 Reverses the most recent content edit.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconUndoProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconUndoProperties> |             |
 
 ### IconUndoProperties
 
@@ -467,7 +467,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement
+function ForgeIconDownload(properties: Readonly<IconDownloadProperties>): MpElement;
 ```
 
 `ForgeIconDownload` — an icon authored once in the neutral JSX dialect.
@@ -478,9 +478,9 @@ co-located CSS Module `forge-icon-download.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconDownloadProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconDownloadProperties> |             |
 
 ### IconDownloadProperties
 
@@ -499,7 +499,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement
+function ForgeIconUpload(properties: Readonly<IconUploadProperties>): MpElement;
 ```
 
 `ForgeIconUpload` — an icon authored once in the neutral JSX dialect.
@@ -510,9 +510,9 @@ co-located CSS Module `forge-icon-upload.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconUploadProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconUploadProperties> |             |
 
 ### IconUploadProperties
 
@@ -531,7 +531,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement
+function ForgeIconFilter(properties: Readonly<IconFilterProperties>): MpElement;
 ```
 
 `ForgeIconFilter` — an icon authored once in the neutral JSX dialect.
@@ -542,9 +542,9 @@ co-located CSS Module `forge-icon-filter.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconFilterProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconFilterProperties> |             |
 
 ### IconFilterProperties
 
@@ -563,7 +563,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement
+function ForgeIconSort(properties: Readonly<IconSortProperties>): MpElement;
 ```
 
 `ForgeIconSort` — a two-chevron sort indicator authored once in the neutral JSX
@@ -575,9 +575,9 @@ co-located CSS Module `forge-icon-sort.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconSortProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconSortProperties> |             |
 
 ### IconSortProperties
 
@@ -606,7 +606,7 @@ The active sort direction, or `undefined` when unsorted.
 **Kind:** function
 
 ```typescript
-function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement
+function ForgeIconTableColumnAdd(properties: Readonly<IconTableColumnAddProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnAdd` — an icon authored once in the neutral JSX dialect.
@@ -617,9 +617,9 @@ co-located CSS Module `forge-icon-table-column-add.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconTableColumnAddProperties> |  |
+| Name       | Type                                   | Description |
+| ---------- | -------------------------------------- | ----------- |
+| properties | Readonly<IconTableColumnAddProperties> |             |
 
 ### IconTableColumnAddProperties
 
@@ -638,7 +638,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement
+function ForgeIconTableColumnRemove(properties: Readonly<IconTableColumnRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableColumnRemove` — an icon authored once in the neutral JSX dialect.
@@ -649,9 +649,9 @@ co-located CSS Module `forge-icon-table-column-remove.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconTableColumnRemoveProperties> |  |
+| Name       | Type                                      | Description |
+| ---------- | ----------------------------------------- | ----------- |
+| properties | Readonly<IconTableColumnRemoveProperties> |             |
 
 ### IconTableColumnRemoveProperties
 
@@ -670,7 +670,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement
+function ForgeIconTableRowAdd(properties: Readonly<IconTableRowAddProperties>): MpElement;
 ```
 
 `ForgeIconTableRowAdd` — an icon authored once in the neutral JSX dialect.
@@ -681,9 +681,9 @@ co-located CSS Module `forge-icon-table-row-add.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconTableRowAddProperties> |  |
+| Name       | Type                                | Description |
+| ---------- | ----------------------------------- | ----------- |
+| properties | Readonly<IconTableRowAddProperties> |             |
 
 ### IconTableRowAddProperties
 
@@ -702,7 +702,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement
+function ForgeIconTableRowRemove(properties: Readonly<IconTableRowRemoveProperties>): MpElement;
 ```
 
 `ForgeIconTableRowRemove` — an icon authored once in the neutral JSX dialect.
@@ -713,9 +713,9 @@ co-located CSS Module `forge-icon-table-row-remove.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconTableRowRemoveProperties> |  |
+| Name       | Type                                   | Description |
+| ---------- | -------------------------------------- | ----------- |
+| properties | Readonly<IconTableRowRemoveProperties> |             |
 
 ### IconTableRowRemoveProperties
 
@@ -734,7 +734,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement
+function ForgeIconTable(properties: Readonly<IconTableProperties>): MpElement;
 ```
 
 `ForgeIconTable` — an icon authored once in the neutral JSX dialect.
@@ -745,9 +745,9 @@ co-located CSS Module `forge-icon-table.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconTableProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconTableProperties> |             |
 
 ### IconTableProperties
 
@@ -766,7 +766,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement
+function ForgeIconDrawCircle(properties: Readonly<IconDrawCircleProperties>): MpElement;
 ```
 
 `ForgeIconDrawCircle` — an icon authored once in the neutral JSX dialect.
@@ -777,9 +777,9 @@ co-located CSS Module `forge-icon-draw-circle.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconDrawCircleProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<IconDrawCircleProperties> |             |
 
 ### IconDrawCircleProperties
 
@@ -798,7 +798,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement
+function ForgeIconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement;
 ```
 
 `ForgeIconDrawLine` — an icon authored once in the neutral JSX dialect.
@@ -809,9 +809,9 @@ co-located CSS Module `forge-icon-draw-line.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconDrawLineProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconDrawLineProperties> |             |
 
 ### IconDrawLineProperties
 
@@ -830,7 +830,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement
+function ForgeIconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>): MpElement;
 ```
 
 `ForgeIconDrawPolygon` — an icon authored once in the neutral JSX dialect.
@@ -841,9 +841,9 @@ co-located CSS Module `forge-icon-draw-polygon.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconDrawPolygonProperties> |  |
+| Name       | Type                                | Description |
+| ---------- | ----------------------------------- | ----------- |
+| properties | Readonly<IconDrawPolygonProperties> |             |
 
 ### IconDrawPolygonProperties
 
@@ -862,7 +862,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement
+function ForgeIconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement;
 ```
 
 `ForgeIconDrawSquare` — an icon authored once in the neutral JSX dialect.
@@ -873,9 +873,9 @@ co-located CSS Module `forge-icon-draw-square.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconDrawSquareProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<IconDrawSquareProperties> |             |
 
 ### IconDrawSquareProperties
 
@@ -894,7 +894,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement
+function ForgeIconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement;
 ```
 
 `ForgeIconDrawTriangle` — an icon authored once in the neutral JSX dialect.
@@ -905,9 +905,9 @@ co-located CSS Module `forge-icon-draw-triangle.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconDrawTriangleProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<IconDrawTriangleProperties> |             |
 
 ### IconDrawTriangleProperties
 
@@ -926,7 +926,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement
+function ForgeIconMove(properties: Readonly<IconMoveProperties>): MpElement;
 ```
 
 `ForgeIconMove` — an icon authored once in the neutral JSX dialect.
@@ -937,9 +937,9 @@ co-located CSS Module `forge-icon-move.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconMoveProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconMoveProperties> |             |
 
 ### IconMoveProperties
 
@@ -958,7 +958,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement
+function ForgeIconPalette(properties: Readonly<IconPaletteProperties>): MpElement;
 ```
 
 `ForgeIconPalette` — an icon authored once in the neutral JSX dialect.
@@ -969,9 +969,9 @@ co-located CSS Module `forge-icon-palette.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconPaletteProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<IconPaletteProperties> |             |
 
 ### IconPaletteProperties
 
@@ -990,7 +990,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement
+function ForgeIconPencil(properties: Readonly<IconPencilProperties>): MpElement;
 ```
 
 `ForgeIconPencil` — an icon authored once in the neutral JSX dialect.
@@ -1001,9 +1001,9 @@ co-located CSS Module `forge-icon-pencil.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconPencilProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconPencilProperties> |             |
 
 ### IconPencilProperties
 
@@ -1022,7 +1022,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement
+function ForgeIconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCcw` — an icon authored once in the neutral JSX dialect.
@@ -1033,9 +1033,9 @@ co-located CSS Module `forge-icon-rotate-ccw.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconRotateCcwProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<IconRotateCcwProperties> |             |
 
 ### IconRotateCcwProperties
 
@@ -1054,7 +1054,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement
+function ForgeIconRotateCw(properties: Readonly<IconRotateCwProperties>): MpElement;
 ```
 
 `ForgeIconRotateCw` — an icon authored once in the neutral JSX dialect.
@@ -1065,9 +1065,9 @@ co-located CSS Module `forge-icon-rotate-cw.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconRotateCwProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconRotateCwProperties> |             |
 
 ### IconRotateCwProperties
 
@@ -1086,7 +1086,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement
+function ForgeIconScaleDown(properties: Readonly<IconScaleDownProperties>): MpElement;
 ```
 
 `ForgeIconScaleDown` — an icon authored once in the neutral JSX dialect.
@@ -1097,9 +1097,9 @@ co-located CSS Module `forge-icon-scale-down.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconScaleDownProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<IconScaleDownProperties> |             |
 
 ### IconScaleDownProperties
 
@@ -1118,7 +1118,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement
+function ForgeIconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement;
 ```
 
 `ForgeIconScaleUp` — an icon authored once in the neutral JSX dialect.
@@ -1129,9 +1129,9 @@ co-located CSS Module `forge-icon-scale-up.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconScaleUpProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<IconScaleUpProperties> |             |
 
 ### IconScaleUpProperties
 
@@ -1150,16 +1150,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement
+function ForgeIconCountryGlobe(properties: Readonly<IconCountryGlobeProperties>): MpElement;
 ```
 
 A globe marker with a data-driven country accent.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconCountryGlobeProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<IconCountryGlobeProperties> |             |
 
 ### IconCountryGlobeProperties
 
@@ -1178,16 +1178,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement
+function ForgeIconFlag(properties: Readonly<IconFlagProperties>): MpElement;
 ```
 
 A bounded, data-driven country flag icon.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconFlagProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconFlagProperties> |             |
 
 ### IconCountryCode
 
@@ -1216,7 +1216,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement
+function ForgeIconGeodesic(properties: Readonly<IconGeodesicProperties>): MpElement;
 ```
 
 `ForgeIconGeodesic` — an icon authored once in the neutral JSX dialect.
@@ -1227,9 +1227,9 @@ co-located CSS Module `forge-icon-geodesic.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconGeodesicProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconGeodesicProperties> |             |
 
 ### IconGeodesicProperties
 
@@ -1248,7 +1248,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement
+function ForgeIconGlobe(properties: Readonly<IconGlobeProperties>): MpElement;
 ```
 
 `ForgeIconGlobe` — an icon authored once in the neutral JSX dialect.
@@ -1259,9 +1259,9 @@ co-located CSS Module `forge-icon-globe.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconGlobeProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconGlobeProperties> |             |
 
 ### IconGlobeProperties
 
@@ -1280,7 +1280,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement
+function ForgeIconLanguage(properties: Readonly<IconLanguageProperties>): MpElement;
 ```
 
 `ForgeIconLanguage` — an icon authored once in the neutral JSX dialect.
@@ -1291,9 +1291,9 @@ co-located CSS Module `forge-icon-language.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconLanguageProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconLanguageProperties> |             |
 
 ### IconLanguageProperties
 
@@ -1312,7 +1312,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement
+function ForgeIconMapPin(properties: Readonly<IconMapPinProperties>): MpElement;
 ```
 
 `ForgeIconMapPin` — an icon authored once in the neutral JSX dialect.
@@ -1323,9 +1323,9 @@ co-located CSS Module `forge-icon-map-pin.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconMapPinProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconMapPinProperties> |             |
 
 ### IconMapPinProperties
 
@@ -1344,16 +1344,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement
+function ForgeIconLayer(properties: Readonly<IconLayerProperties>): MpElement;
 ```
 
 A map-layer stack symbol for toggling visible geographic data.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconLayerProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconLayerProperties> |             |
 
 ### IconLayerProperties
 
@@ -1372,16 +1372,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement
+function ForgeIconMapMarkerCluster(properties: Readonly<IconMapMarkerClusterProperties>): MpElement;
 ```
 
 A grouped map marker for dense points of interest.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconMapMarkerClusterProperties> |  |
+| Name       | Type                                     | Description |
+| ---------- | ---------------------------------------- | ----------- |
+| properties | Readonly<IconMapMarkerClusterProperties> |             |
 
 ### IconMapMarkerClusterProperties
 
@@ -1400,7 +1400,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement
+function ForgeIconCamera(properties: Readonly<IconCameraProperties>): MpElement;
 ```
 
 `ForgeIconCamera` — an icon authored once in the neutral JSX dialect.
@@ -1411,9 +1411,9 @@ co-located CSS Module `forge-icon-camera.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconCameraProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconCameraProperties> |             |
 
 ### IconCameraProperties
 
@@ -1432,7 +1432,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement
+function ForgeIconImage(properties: Readonly<IconImageProperties>): MpElement;
 ```
 
 `ForgeIconImage` — an icon authored once in the neutral JSX dialect.
@@ -1443,9 +1443,9 @@ co-located CSS Module `forge-icon-image.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconImageProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconImageProperties> |             |
 
 ### IconImageProperties
 
@@ -1464,7 +1464,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement
+function ForgeIconPause(properties: Readonly<IconPauseProperties>): MpElement;
 ```
 
 `ForgeIconPause` — a filled pause (❙❙) glyph authored once in the neutral JSX
@@ -1476,9 +1476,9 @@ co-located CSS Module `forge-icon-pause.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconPauseProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconPauseProperties> |             |
 
 ### IconPauseProperties
 
@@ -1497,7 +1497,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement
+function ForgeIconPlay(properties: Readonly<IconPlayProperties>): MpElement;
 ```
 
 `ForgeIconPlay` — a filled play (▶) triangle authored once in the neutral JSX
@@ -1509,9 +1509,9 @@ co-located CSS Module `forge-icon-play.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconPlayProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconPlayProperties> |             |
 
 ### IconPlayProperties
 
@@ -1530,7 +1530,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement
+function ForgeIconArrow(properties: Readonly<IconArrowProperties>): MpElement;
 ```
 
 `ForgeIconArrow` — a directional arrow authored once in the neutral JSX dialect.
@@ -1541,9 +1541,9 @@ co-located CSS Module `forge-icon-arrow.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconArrowProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconArrowProperties> |             |
 
 ### IconArrowDirection
 
@@ -1572,7 +1572,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement
+function ForgeIconChevron(properties: Readonly<IconChevronProperties>): MpElement;
 ```
 
 `ForgeIconChevron` — a directional chevron authored once in the neutral JSX dialect.
@@ -1583,9 +1583,9 @@ co-located CSS Module `forge-icon-chevron.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconChevronProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<IconChevronProperties> |             |
 
 ### IconChevronProperties
 
@@ -1614,7 +1614,7 @@ The direction the chevron points.
 **Kind:** function
 
 ```typescript
-function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement
+function ForgeIconChevrons(properties: Readonly<IconChevronsProperties>): MpElement;
 ```
 
 `ForgeIconChevrons` — a directional double chevron (« ») authored once in the
@@ -1626,9 +1626,9 @@ co-located CSS Module `forge-icon-chevrons.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconChevronsProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconChevronsProperties> |             |
 
 ### IconChevronsDirection
 
@@ -1657,7 +1657,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement
+function ForgeIconClose(properties: Readonly<IconCloseProperties>): MpElement;
 ```
 
 `ForgeIconClose` — an icon authored once in the neutral JSX dialect.
@@ -1668,9 +1668,9 @@ co-located CSS Module `forge-icon-close.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconCloseProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconCloseProperties> |             |
 
 ### IconCloseProperties
 
@@ -1689,7 +1689,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement
+function ForgeIconHome(properties: Readonly<IconHomeProperties>): MpElement;
 ```
 
 `ForgeIconHome` — an icon authored once in the neutral JSX dialect.
@@ -1700,9 +1700,9 @@ co-located CSS Module `forge-icon-home.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconHomeProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconHomeProperties> |             |
 
 ### IconHomeProperties
 
@@ -1721,7 +1721,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement
+function ForgeIconJoin(properties: Readonly<IconJoinProperties>): MpElement;
 ```
 
 `ForgeIconJoin` — an icon authored once in the neutral JSX dialect.
@@ -1732,9 +1732,9 @@ co-located CSS Module `forge-icon-join.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconJoinProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconJoinProperties> |             |
 
 ### IconJoinProperties
 
@@ -1753,7 +1753,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement
+function ForgeIconMenu(properties: Readonly<IconMenuProperties>): MpElement;
 ```
 
 `ForgeIconMenu` — an icon authored once in the neutral JSX dialect.
@@ -1764,9 +1764,9 @@ co-located CSS Module `forge-icon-menu.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconMenuProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconMenuProperties> |             |
 
 ### IconMenuProperties
 
@@ -1785,7 +1785,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement
+function ForgeIconMinus(properties: Readonly<IconMinusProperties>): MpElement;
 ```
 
 `ForgeIconMinus` — an icon authored once in the neutral JSX dialect.
@@ -1796,9 +1796,9 @@ co-located CSS Module `forge-icon-minus.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconMinusProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconMinusProperties> |             |
 
 ### IconMinusProperties
 
@@ -1817,7 +1817,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement
+function ForgeIconPlus(properties: Readonly<IconPlusProperties>): MpElement;
 ```
 
 `ForgeIconPlus` — an icon authored once in the neutral JSX dialect.
@@ -1828,9 +1828,9 @@ co-located CSS Module `forge-icon-plus.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconPlusProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconPlusProperties> |             |
 
 ### IconPlusProperties
 
@@ -1849,7 +1849,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement
+function ForgeIconRefresh(properties: Readonly<IconRefreshProperties>): MpElement;
 ```
 
 `ForgeIconRefresh` — an icon authored once in the neutral JSX dialect.
@@ -1860,9 +1860,9 @@ co-located CSS Module `forge-icon-refresh.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconRefreshProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<IconRefreshProperties> |             |
 
 ### IconRefreshProperties
 
@@ -1881,7 +1881,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement
+function ForgeIconSplit(properties: Readonly<IconSplitProperties>): MpElement;
 ```
 
 `ForgeIconSplit` — an icon authored once in the neutral JSX dialect.
@@ -1892,9 +1892,9 @@ co-located CSS Module `forge-icon-split.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconSplitProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconSplitProperties> |             |
 
 ### IconSplitProperties
 
@@ -1913,7 +1913,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement
+function ForgeIconExternalLink(properties: Readonly<IconExternalLinkProperties>): MpElement;
 ```
 
 `ForgeIconExternalLink` — an icon authored once in the neutral JSX dialect.
@@ -1924,9 +1924,9 @@ co-located CSS Module `forge-icon-external-link.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconExternalLinkProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<IconExternalLinkProperties> |             |
 
 ### IconExternalLinkProperties
 
@@ -1945,7 +1945,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement
+function ForgeIconLink(properties: Readonly<IconLinkProperties>): MpElement;
 ```
 
 `ForgeIconLink` — an icon authored once in the neutral JSX dialect.
@@ -1956,9 +1956,9 @@ co-located CSS Module `forge-icon-link.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconLinkProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconLinkProperties> |             |
 
 ### IconLinkProperties
 
@@ -1977,7 +1977,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement
+function ForgeIconSearch(properties: Readonly<IconSearchProperties>): MpElement;
 ```
 
 `ForgeIconSearch` — an icon authored once in the neutral JSX dialect.
@@ -1988,9 +1988,9 @@ co-located CSS Module `forge-icon-search.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconSearchProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconSearchProperties> |             |
 
 ### IconSearchProperties
 
@@ -2009,7 +2009,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement
+function ForgeIconCloud(properties: Readonly<IconCloudProperties>): MpElement;
 ```
 
 `ForgeIconCloud` — an icon authored once in the neutral JSX dialect.
@@ -2020,9 +2020,9 @@ co-located CSS Module `forge-icon-cloud.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconCloudProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconCloudProperties> |             |
 
 ### IconCloudProperties
 
@@ -2041,7 +2041,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement
+function ForgeIconDebug(properties: Readonly<IconDebugProperties>): MpElement;
 ```
 
 `ForgeIconDebug` — an icon authored once in the neutral JSX dialect.
@@ -2052,9 +2052,9 @@ co-located CSS Module `forge-icon-debug.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconDebugProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconDebugProperties> |             |
 
 ### IconDebugProperties
 
@@ -2073,7 +2073,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement
+function ForgeIconHeart(properties: Readonly<IconHeartProperties>): MpElement;
 ```
 
 `ForgeIconHeart` — an icon authored once in the neutral JSX dialect.
@@ -2084,9 +2084,9 @@ co-located CSS Module `forge-icon-heart.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconHeartProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconHeartProperties> |             |
 
 ### IconHeartProperties
 
@@ -2105,7 +2105,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement
+function ForgeIconLightning(properties: Readonly<IconLightningProperties>): MpElement;
 ```
 
 `ForgeIconLightning` — an icon authored once in the neutral JSX dialect.
@@ -2116,9 +2116,9 @@ co-located CSS Module `forge-icon-lightning.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconLightningProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<IconLightningProperties> |             |
 
 ### IconLightningProperties
 
@@ -2137,7 +2137,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement
+function ForgeIconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElement;
 ```
 
 `ForgeIconPuzzle` — an icon authored once in the neutral JSX dialect.
@@ -2148,9 +2148,9 @@ co-located CSS Module `forge-icon-puzzle.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconPuzzleProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconPuzzleProperties> |             |
 
 ### IconPuzzleProperties
 
@@ -2169,7 +2169,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement
+function ForgeIconQrCode(properties: Readonly<IconQrCodeProperties>): MpElement;
 ```
 
 `ForgeIconQrCode` — an icon authored once in the neutral JSX dialect.
@@ -2180,9 +2180,9 @@ co-located CSS Module `forge-icon-qr-code.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconQrCodeProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconQrCodeProperties> |             |
 
 ### IconQrCodeProperties
 
@@ -2201,7 +2201,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement
+function ForgeIconSettings(properties: Readonly<IconSettingsProperties>): MpElement;
 ```
 
 `ForgeIconSettings` — an icon authored once in the neutral JSX dialect.
@@ -2212,9 +2212,9 @@ co-located CSS Module `forge-icon-settings.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconSettingsProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconSettingsProperties> |             |
 
 ### IconSettingsProperties
 
@@ -2233,7 +2233,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement
+function ForgeIconStar(properties: Readonly<IconStarProperties>): MpElement;
 ```
 
 `ForgeIconStar` — an icon authored once in the neutral JSX dialect.
@@ -2244,9 +2244,9 @@ co-located CSS Module `forge-icon-star.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconStarProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconStarProperties> |             |
 
 ### IconStarProperties
 
@@ -2265,7 +2265,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement
+function ForgeIconWrench(properties: Readonly<IconWrenchProperties>): MpElement;
 ```
 
 `ForgeIconWrench` — an icon authored once in the neutral JSX dialect.
@@ -2276,9 +2276,9 @@ co-located CSS Module `forge-icon-wrench.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconWrenchProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconWrenchProperties> |             |
 
 ### IconWrenchProperties
 
@@ -2297,16 +2297,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement
+function ForgeIconRoute(properties: Readonly<IconRouteProperties>): MpElement;
 ```
 
 A route line with distinct start and destination markers.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconRouteProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconRouteProperties> |             |
 
 ### IconRouteProperties
 
@@ -2325,16 +2325,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement
+function ForgeIconWaypoint(properties: Readonly<IconWaypointProperties>): MpElement;
 ```
 
 A reusable waypoint marker for routes and map overlays.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconWaypointProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconWaypointProperties> |             |
 
 ### IconWaypointProperties
 
@@ -2353,7 +2353,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement
+function ForgeIconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement;
 ```
 
 `ForgeIconLockOpen` — an icon authored once in the neutral JSX dialect.
@@ -2364,9 +2364,9 @@ co-located CSS Module `forge-icon-lock-open.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconLockOpenProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconLockOpenProperties> |             |
 
 ### IconLockOpenProperties
 
@@ -2385,7 +2385,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement
+function ForgeIconLock(properties: Readonly<IconLockProperties>): MpElement;
 ```
 
 `ForgeIconLock` — an icon authored once in the neutral JSX dialect.
@@ -2396,9 +2396,9 @@ co-located CSS Module `forge-icon-lock.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconLockProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconLockProperties> |             |
 
 ### IconLockProperties
 
@@ -2417,7 +2417,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement
+function ForgeIconUser(properties: Readonly<IconUserProperties>): MpElement;
 ```
 
 `ForgeIconUser` — an icon authored once in the neutral JSX dialect.
@@ -2428,9 +2428,9 @@ co-located CSS Module `forge-icon-user.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconUserProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconUserProperties> |             |
 
 ### IconUserProperties
 
@@ -2449,7 +2449,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement
+function ForgeIconAlertCritical(properties: Readonly<IconAlertCriticalProperties>): MpElement;
 ```
 
 `ForgeIconAlertCritical` — the critical alert glyph (an "!" inside an octagon,
@@ -2461,9 +2461,9 @@ co-located CSS Module `forge-icon-alert-critical.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconAlertCriticalProperties> |  |
+| Name       | Type                                  | Description |
+| ---------- | ------------------------------------- | ----------- |
+| properties | Readonly<IconAlertCriticalProperties> |             |
 
 ### IconAlertCriticalProperties
 
@@ -2482,7 +2482,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement
+function ForgeIconAlertInfo(properties: Readonly<IconAlertInfoProperties>): MpElement;
 ```
 
 `ForgeIconAlertInfo` — the informational alert glyph (an "i" inside a circle)
@@ -2494,9 +2494,9 @@ co-located CSS Module `forge-icon-alert-info.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconAlertInfoProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<IconAlertInfoProperties> |             |
 
 ### IconAlertInfoProperties
 
@@ -2515,7 +2515,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement
+function ForgeIconAlertNeutral(properties: Readonly<IconAlertNeutralProperties>): MpElement;
 ```
 
 `ForgeIconAlertNeutral` — the neutral alert glyph (a "–" inside a circle)
@@ -2528,9 +2528,9 @@ co-located CSS Module `forge-icon-alert-neutral.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconAlertNeutralProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<IconAlertNeutralProperties> |             |
 
 ### IconAlertNeutralProperties
 
@@ -2549,7 +2549,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement
+function ForgeIconAlertWarning(properties: Readonly<IconAlertWarningProperties>): MpElement;
 ```
 
 `ForgeIconAlertWarning` — the warning alert glyph (an "!" inside a triangle)
@@ -2561,9 +2561,9 @@ co-located CSS Module `forge-icon-alert-warning.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconAlertWarningProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<IconAlertWarningProperties> |             |
 
 ### IconAlertWarningProperties
 
@@ -2582,7 +2582,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement
+function ForgeIconAlert(properties: Readonly<IconAlertProperties>): MpElement;
 ```
 
 `ForgeIconAlert` — an icon authored once in the neutral JSX dialect.
@@ -2593,9 +2593,9 @@ co-located CSS Module `forge-icon-alert.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconAlertProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconAlertProperties> |             |
 
 ### IconAlertProperties
 
@@ -2614,7 +2614,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement
+function ForgeIconCheck(properties: Readonly<IconCheckProperties>): MpElement;
 ```
 
 `ForgeIconCheck` — an icon authored once in the neutral JSX dialect.
@@ -2625,9 +2625,9 @@ co-located CSS Module `forge-icon-check.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconCheckProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconCheckProperties> |             |
 
 ### IconCheckProperties
 
@@ -2646,7 +2646,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement
+function ForgeIconError(properties: Readonly<IconErrorProperties>): MpElement;
 ```
 
 `ForgeIconError` — an icon authored once in the neutral JSX dialect.
@@ -2657,9 +2657,9 @@ co-located CSS Module `forge-icon-error.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconErrorProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconErrorProperties> |             |
 
 ### IconErrorProperties
 
@@ -2678,7 +2678,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement
+function ForgeIconInfo(properties: Readonly<IconInfoProperties>): MpElement;
 ```
 
 `ForgeIconInfo` — an icon authored once in the neutral JSX dialect.
@@ -2689,9 +2689,9 @@ co-located CSS Module `forge-icon-info.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconInfoProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconInfoProperties> |             |
 
 ### IconInfoProperties
 
@@ -2710,7 +2710,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement
+function ForgeIconNotice(properties: Readonly<IconNoticeProperties>): MpElement;
 ```
 
 `ForgeIconNotice` — an icon authored once in the neutral JSX dialect.
@@ -2721,9 +2721,9 @@ co-located CSS Module `forge-icon-notice.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconNoticeProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconNoticeProperties> |             |
 
 ### IconNoticeProperties
 
@@ -2742,7 +2742,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement
+function ForgeIconWarning(properties: Readonly<IconWarningProperties>): MpElement;
 ```
 
 `ForgeIconWarning` — an icon authored once in the neutral JSX dialect.
@@ -2753,9 +2753,9 @@ co-located CSS Module `forge-icon-warning.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconWarningProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<IconWarningProperties> |             |
 
 ### IconWarningProperties
 
@@ -2774,7 +2774,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement
+function ForgeIconAlignCenter(properties: Readonly<IconAlignCenterProperties>): MpElement;
 ```
 
 `ForgeIconAlignCenter` — an icon authored once in the neutral JSX dialect.
@@ -2785,9 +2785,9 @@ co-located CSS Module `forge-icon-align-center.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconAlignCenterProperties> |  |
+| Name       | Type                                | Description |
+| ---------- | ----------------------------------- | ----------- |
+| properties | Readonly<IconAlignCenterProperties> |             |
 
 ### IconAlignCenterProperties
 
@@ -2806,7 +2806,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement
+function ForgeIconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement;
 ```
 
 `ForgeIconAlignJustify` — an icon authored once in the neutral JSX dialect.
@@ -2817,9 +2817,9 @@ co-located CSS Module `forge-icon-align-justify.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconAlignJustifyProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<IconAlignJustifyProperties> |             |
 
 ### IconAlignJustifyProperties
 
@@ -2838,7 +2838,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement
+function ForgeIconAlignLeft(properties: Readonly<IconAlignLeftProperties>): MpElement;
 ```
 
 `ForgeIconAlignLeft` — an icon authored once in the neutral JSX dialect.
@@ -2849,9 +2849,9 @@ co-located CSS Module `forge-icon-align-left.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconAlignLeftProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<IconAlignLeftProperties> |             |
 
 ### IconAlignLeftProperties
 
@@ -2870,7 +2870,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement
+function ForgeIconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement;
 ```
 
 `ForgeIconAlignRight` — an icon authored once in the neutral JSX dialect.
@@ -2881,9 +2881,9 @@ co-located CSS Module `forge-icon-align-right.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconAlignRightProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<IconAlignRightProperties> |             |
 
 ### IconAlignRightProperties
 
@@ -2902,7 +2902,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement
+function ForgeIconBlockquote(properties: Readonly<IconBlockquoteProperties>): MpElement;
 ```
 
 `ForgeIconBlockquote` — an icon authored once in the neutral JSX dialect.
@@ -2913,9 +2913,9 @@ co-located CSS Module `forge-icon-blockquote.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconBlockquoteProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<IconBlockquoteProperties> |             |
 
 ### IconBlockquoteProperties
 
@@ -2934,7 +2934,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement
+function ForgeIconBold(properties: Readonly<IconBoldProperties>): MpElement;
 ```
 
 `ForgeIconBold` — an icon authored once in the neutral JSX dialect.
@@ -2945,9 +2945,9 @@ co-located CSS Module `forge-icon-bold.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconBoldProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<IconBoldProperties> |             |
 
 ### IconBoldProperties
 
@@ -2966,7 +2966,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement
+function ForgeIconBulletList(properties: Readonly<IconBulletListProperties>): MpElement;
 ```
 
 `ForgeIconBulletList` — an icon authored once in the neutral JSX dialect.
@@ -2977,9 +2977,9 @@ co-located CSS Module `forge-icon-bullet-list.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconBulletListProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<IconBulletListProperties> |             |
 
 ### IconBulletListProperties
 
@@ -2998,7 +2998,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement
+function ForgeIconCodeBlock(properties: Readonly<IconCodeBlockProperties>): MpElement;
 ```
 
 `ForgeIconCodeBlock` — an icon authored once in the neutral JSX dialect.
@@ -3009,9 +3009,9 @@ co-located CSS Module `forge-icon-code-block.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconCodeBlockProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<IconCodeBlockProperties> |             |
 
 ### IconCodeBlockProperties
 
@@ -3030,7 +3030,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement
+function ForgeIconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement;
 ```
 
 `ForgeIconCodeInline` — an icon authored once in the neutral JSX dialect.
@@ -3041,9 +3041,9 @@ co-located CSS Module `forge-icon-code-inline.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconCodeInlineProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<IconCodeInlineProperties> |             |
 
 ### IconCodeInlineProperties
 
@@ -3062,7 +3062,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement
+function ForgeIconHeadingFive(properties: Readonly<IconHeadingFiveProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFive` — an icon authored once in the neutral JSX dialect.
@@ -3073,9 +3073,9 @@ co-located CSS Module `forge-icon-heading-five.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconHeadingFiveProperties> |  |
+| Name       | Type                                | Description |
+| ---------- | ----------------------------------- | ----------- |
+| properties | Readonly<IconHeadingFiveProperties> |             |
 
 ### IconHeadingFiveProperties
 
@@ -3094,7 +3094,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement
+function ForgeIconHeadingFour(properties: Readonly<IconHeadingFourProperties>): MpElement;
 ```
 
 `ForgeIconHeadingFour` — an icon authored once in the neutral JSX dialect.
@@ -3105,9 +3105,9 @@ co-located CSS Module `forge-icon-heading-four.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconHeadingFourProperties> |  |
+| Name       | Type                                | Description |
+| ---------- | ----------------------------------- | ----------- |
+| properties | Readonly<IconHeadingFourProperties> |             |
 
 ### IconHeadingFourProperties
 
@@ -3126,7 +3126,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement
+function ForgeIconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement;
 ```
 
 `ForgeIconHeadingOne` — an icon authored once in the neutral JSX dialect.
@@ -3137,9 +3137,9 @@ co-located CSS Module `forge-icon-heading-one.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconHeadingOneProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<IconHeadingOneProperties> |             |
 
 ### IconHeadingOneProperties
 
@@ -3158,7 +3158,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement
+function ForgeIconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement;
 ```
 
 `ForgeIconHeadingSix` — an icon authored once in the neutral JSX dialect.
@@ -3169,9 +3169,9 @@ co-located CSS Module `forge-icon-heading-six.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconHeadingSixProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<IconHeadingSixProperties> |             |
 
 ### IconHeadingSixProperties
 
@@ -3190,7 +3190,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement
+function ForgeIconHeadingThree(properties: Readonly<IconHeadingThreeProperties>): MpElement;
 ```
 
 `ForgeIconHeadingThree` — an icon authored once in the neutral JSX dialect.
@@ -3201,9 +3201,9 @@ co-located CSS Module `forge-icon-heading-three.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconHeadingThreeProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<IconHeadingThreeProperties> |             |
 
 ### IconHeadingThreeProperties
 
@@ -3222,7 +3222,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement
+function ForgeIconHeadingTwo(properties: Readonly<IconHeadingTwoProperties>): MpElement;
 ```
 
 `ForgeIconHeadingTwo` — an icon authored once in the neutral JSX dialect.
@@ -3233,9 +3233,9 @@ co-located CSS Module `forge-icon-heading-two.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconHeadingTwoProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<IconHeadingTwoProperties> |             |
 
 ### IconHeadingTwoProperties
 
@@ -3254,7 +3254,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement
+function ForgeIconHeading(properties: Readonly<IconHeadingProperties>): MpElement;
 ```
 
 `ForgeIconHeading` — an icon authored once in the neutral JSX dialect.
@@ -3265,9 +3265,9 @@ co-located CSS Module `forge-icon-heading.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconHeadingProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<IconHeadingProperties> |             |
 
 ### IconHeadingProperties
 
@@ -3286,7 +3286,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement
+function ForgeIconItalic(properties: Readonly<IconItalicProperties>): MpElement;
 ```
 
 `ForgeIconItalic` — an icon authored once in the neutral JSX dialect.
@@ -3297,9 +3297,9 @@ co-located CSS Module `forge-icon-italic.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconItalicProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconItalicProperties> |             |
 
 ### IconItalicProperties
 
@@ -3318,7 +3318,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement
+function ForgeIconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement;
 ```
 
 `ForgeIconNumberedList` — an icon authored once in the neutral JSX dialect.
@@ -3329,9 +3329,9 @@ co-located CSS Module `forge-icon-numbered-list.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconNumberedListProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<IconNumberedListProperties> |             |
 
 ### IconNumberedListProperties
 
@@ -3350,7 +3350,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement
+function ForgeIconStrikethrough(properties: Readonly<IconStrikethroughProperties>): MpElement;
 ```
 
 `ForgeIconStrikethrough` — an icon authored once in the neutral JSX dialect.
@@ -3361,9 +3361,9 @@ co-located CSS Module `forge-icon-strikethrough.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconStrikethroughProperties> |  |
+| Name       | Type                                  | Description |
+| ---------- | ------------------------------------- | ----------- |
+| properties | Readonly<IconStrikethroughProperties> |             |
 
 ### IconStrikethroughProperties
 
@@ -3382,7 +3382,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement
+function ForgeIconUnderline(properties: Readonly<IconUnderlineProperties>): MpElement;
 ```
 
 `ForgeIconUnderline` — an icon authored once in the neutral JSX dialect.
@@ -3393,9 +3393,9 @@ co-located CSS Module `forge-icon-underline.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconUnderlineProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<IconUnderlineProperties> |             |
 
 ### IconUnderlineProperties
 
@@ -3414,7 +3414,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement
+function ForgeIconCalendar(properties: Readonly<IconCalendarProperties>): MpElement;
 ```
 
 `ForgeIconCalendar` — an icon authored once in the neutral JSX dialect.
@@ -3425,9 +3425,9 @@ co-located CSS Module `forge-icon-calendar.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconCalendarProperties> |  |
+| Name       | Type                             | Description |
+| ---------- | -------------------------------- | ----------- |
+| properties | Readonly<IconCalendarProperties> |             |
 
 ### IconCalendarProperties
 
@@ -3446,7 +3446,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement
+function ForgeIconClock(properties: Readonly<IconClockProperties>): MpElement;
 ```
 
 `ForgeIconClock` — an icon authored once in the neutral JSX dialect.
@@ -3457,9 +3457,9 @@ co-located CSS Module `forge-icon-clock.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconClockProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<IconClockProperties> |             |
 
 ### IconClockProperties
 
@@ -3478,7 +3478,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[]
+export const ICON_COMPOSITIONS: readonly IconSymbolDefinition[];
 ```
 
 No description provided.
@@ -3488,17 +3488,17 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void
+function validateCompositions(compositions: readonly IconSymbolDefinition[], availableIds: ReadonlySet<string>): void;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| compositions | readonly IconSymbolDefinition[] |  |
-| availableIds | ReadonlySet<string> |  |
+| Name         | Type                            | Description |
+| ------------ | ------------------------------- | ----------- |
+| compositions | readonly IconSymbolDefinition[] |             |
+| availableIds | ReadonlySet<string>             |             |
 
 ## `src/sprite/country-flags`
 
@@ -3507,7 +3507,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const SUPPORTED_COUNTRY_CODES
+export const SUPPORTED_COUNTRY_CODES;
 ```
 
 Country codes with canonical flag symbols in the published sprite.
@@ -3519,7 +3519,7 @@ Country codes with canonical flag symbols in the published sprite.
 **Kind:** constant
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS
+export const COUNTRY_FLAG_SYMBOL_IDS: string[];
 ```
 
 No description provided.
@@ -3529,7 +3529,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[]
+export const ICON_SYMBOL_DEFINITIONS: readonly IconSymbolDefinition[];
 ```
 
 No description provided.
@@ -3541,16 +3541,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement
+function ForgeIconUse(properties: Readonly<IconUseProperties>): MpElement;
 ```
 
 Shared accessible wrapper that references canonical sprite geometry.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconUseProperties> |  |
+| Name       | Type                        | Description |
+| ---------- | --------------------------- | ----------- |
+| properties | Readonly<IconUseProperties> |             |
 
 ### IconUseProperties
 
@@ -3569,7 +3569,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const IconSpriteContext
+export const IconSpriteContext: MpContext<IconSpriteContextValue>;
 ```
 
 No description provided.
@@ -3579,32 +3579,32 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement
+function IconSpriteProvider(properties: Readonly<IconSpriteProperties>): MpElement;
 ```
 
 Mount one inline sprite host for a subtree of icon components.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<IconSpriteProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<IconSpriteProperties> |             |
 
 ### useIconHref
 
 **Kind:** function
 
 ```typescript
-function useIconHref(symbolId: string): string
+function useIconHref(symbolId: string): string;
 ```
 
 Resolve a local or external symbol URL for an icon wrapper.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| symbolId | string |  |
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| symbolId | string |             |
 
 ## `src/sprite/serialize`
 
@@ -3613,48 +3613,48 @@ Resolve a local or external symbol URL for an icon wrapper.
 **Kind:** function
 
 ```typescript
-function serializeNode(node: IconSvgNode): string
+function serializeNode(node: IconSvgNode): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | IconSvgNode |  |
+| Name | Type        | Description |
+| ---- | ----------- | ----------- |
+| node | IconSvgNode |             |
 
 ### serializeSprite
 
 **Kind:** function
 
 ```typescript
-function serializeSprite(definitions: readonly IconSymbolDefinition[]): string
+function serializeSprite(definitions: readonly IconSymbolDefinition[]): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| definitions | readonly IconSymbolDefinition[] |  |
+| Name        | Type                            | Description |
+| ----------- | ------------------------------- | ----------- |
+| definitions | readonly IconSymbolDefinition[] |             |
 
 ### serializeSymbol
 
 **Kind:** function
 
 ```typescript
-function serializeSymbol(definition: IconSymbolDefinition): string
+function serializeSymbol(definition: IconSymbolDefinition): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| definition | IconSymbolDefinition |  |
+| Name       | Type                 | Description |
+| ---------- | -------------------- | ----------- |
+| definition | IconSymbolDefinition |             |
 
 ## `src/sprite/types`
 

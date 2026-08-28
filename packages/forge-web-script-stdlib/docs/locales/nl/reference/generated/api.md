@@ -23,8 +23,8 @@ Retourneert waar als de optie een waarde heeft.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
+| Naam   | Typ      | Beschrijving                   |
+| ------ | -------- | ------------------------------ |
 | waarde | Optie<T> | Optiewaarde om te inspecteren. |
 
 #### Contract
@@ -58,8 +58,8 @@ Retourneert waar als het resultaat succesvol is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
+| Naam   | Typ             | Beschrijving                       |
+| ------ | --------------- | ---------------------------------- |
 | waarde | Resultaat<T, E> | Resultaatwaarde om te inspecteren. |
 
 #### Contract
@@ -86,7 +86,7 @@ Resultaat van een feilbare operatie.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 Relatief pad naar de asynchrone declaratiemodule die wordt gebruikt door compilerconsumenten.
@@ -96,7 +96,7 @@ Relatief pad naar de asynchrone declaratiemodule die wordt gebruikt door compile
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 Stabiel identiteits- en vertegenwoordigingscontract voor de standaardbibliotheek.
@@ -108,7 +108,7 @@ grenzen voor waarden die de host/Wasm ABI overschrijden.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 Directory met de verzonden Forge Web Script-declaratiemodules.

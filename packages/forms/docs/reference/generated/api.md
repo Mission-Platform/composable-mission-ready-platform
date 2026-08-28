@@ -21,7 +21,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement
+function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 ```
 
 `ForgeCheckbox` — checkbox control authored once in the neutral JSX dialect and
@@ -43,9 +43,9 @@ string; and the `v-model` + `change` emit become the established
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<CheckboxProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<CheckboxProperties> |             |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -54,7 +54,7 @@ string; and the `v-model` + `change` emit become the established
 **Kind:** function
 
 ```typescript
-function ForgeInput(properties: Readonly<InputProperties>): MpElement
+function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 ```
 
 `ForgeInput` — text field authored once in the neutral JSX dialect and
@@ -74,9 +74,9 @@ the `v-model` + `change`/`blur`/`focus` emits become the
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<InputProperties> |  |
+| Name       | Type                      | Description |
+| ---------- | ------------------------- | ----------- |
+| properties | Readonly<InputProperties> |             |
 
 ### InputAutocapitalize
 
@@ -125,7 +125,7 @@ Supported native input types.
 **Kind:** function
 
 ```typescript
-function ForgeRadio(properties: Readonly<RadioProperties>): MpElement
+function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 ```
 
 `ForgeRadio` — radio control authored once in the neutral JSX dialect and
@@ -142,9 +142,9 @@ The original Vue SFC's `v-model` + `change` emit become the established
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<RadioProperties> |  |
+| Name       | Type                      | Description |
+| ---------- | ------------------------- | ----------- |
+| properties | Readonly<RadioProperties> |             |
 
 ### RadioProperties
 
@@ -163,7 +163,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement
+function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 ```
 
 `ForgeRangeInput` — a dual-thumb min/max range selector authored once in the
@@ -188,9 +188,9 @@ props.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<RangeInputProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<RangeInputProperties> |             |
 
 ### RangeInputProperties
 
@@ -229,7 +229,7 @@ The selected `[lower, upper]` bounds.
 **Kind:** function
 
 ```typescript
-function ForgeRating(properties: Readonly<RatingProperties>): MpElement
+function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 ```
 
 `ForgeRating` — star rating input/display authored once in the neutral JSX
@@ -249,9 +249,9 @@ uses the neutral `useState` hook; and the `v-model` + `change` emit become the
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<RatingProperties> |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| properties | Readonly<RatingProperties> |             |
 
 ### RatingProperties
 
@@ -280,7 +280,7 @@ Size token controlling the star dimensions — canonical 2xs → 2xl scale.
 **Kind:** function
 
 ```typescript
-function ForgeSlider(properties: Readonly<SliderProperties>): MpElement
+function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 ```
 
 `ForgeSlider` — range slider authored once in the neutral JSX dialect and
@@ -302,9 +302,9 @@ co-located `pointer-drag` helper; the original Composition-API `ref`s become
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<SliderProperties> |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| properties | Readonly<SliderProperties> |             |
 
 ### SliderProperties
 
@@ -333,7 +333,7 @@ Size token controlling the track / thumb dimensions — canonical 2xs → 2xl sc
 **Kind:** function
 
 ```typescript
-function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement
+function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement;
 ```
 
 `ForgeSwitch` — toggle switch authored once in the neutral JSX dialect and
@@ -351,9 +351,9 @@ props.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<SwitchProperties> |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| properties | Readonly<SwitchProperties> |             |
 
 ### SwitchProperties
 
@@ -382,7 +382,7 @@ Size token controlling the track/thumb dimensions (canonical `2xs … 2xl` scale
 **Kind:** function
 
 ```typescript
-function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement
+function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 ```
 
 `ForgeTextarea` — multi-line text field authored once in the neutral JSX
@@ -403,9 +403,9 @@ through the framework-neutral {@link hasSlot} helper; and the `v-model` +
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<TextareaProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<TextareaProperties> |             |
 
 ### TextareaAutocapitalize
 
@@ -474,7 +474,7 @@ Visual size of the calendar, matching the shared size scale.
 **Kind:** function
 
 ```typescript
-function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement
+function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 ```
 
 `ForgeCalendar` — a month-grid date picker authored once in the neutral JSX
@@ -502,9 +502,9 @@ external-sync `watch` becomes a {@link useEffect}; the
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<CalendarProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<CalendarProperties> |             |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -533,7 +533,7 @@ Size token (canonical `2xs … 2xl` scale).
 **Kind:** function
 
 ```typescript
-function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement
+function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 ```
 
 `ForgeColorInput` — colour picker authored once in the neutral JSX dialect and
@@ -553,9 +553,9 @@ a {@link useEffect}; and the `v-model` + `change` emit become the
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ColorInputProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<ColorInputProperties> |             |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -584,7 +584,7 @@ Field size (canonical `2xs … 2xl` scale).
 **Kind:** function
 
 ```typescript
-function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement
+function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 ```
 
 `ForgeDateInput` — a date picker authored once in the neutral JSX dialect and
@@ -607,9 +607,9 @@ become the `onUpdateModelValue`/`onChange` callback props.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<DateInputProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<DateInputProperties> |             |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -638,7 +638,7 @@ Field size (canonical `2xs … 2xl` scale).
 **Kind:** function
 
 ```typescript
-function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement
+function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateRangeInput` — a date-range picker authored once in the neutral JSX
@@ -667,9 +667,9 @@ framework-native `useId` hook; the calendar glyph is the write-once `@mission-pl
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<DateRangeInputProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<DateRangeInputProperties> |             |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -688,7 +688,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement
+function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement;
 ```
 
 `ForgeFieldSet` — a semantic grouping container authored once in the neutral
@@ -709,9 +709,9 @@ becomes a plain flex `<div>`, and the `legend` named slot is reduced to the
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<FieldSetProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<FieldSetProperties> |             |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -740,7 +740,7 @@ Field size token — canonical 2xs → 2xl scale.
 **Kind:** function
 
 ```typescript
-function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement
+function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 ```
 
 `ForgeFileInput` — file input authored once in the neutral JSX dialect and
@@ -760,9 +760,9 @@ become the `onUpdateModelValue`/`onChange` callback props.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<FileInputProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<FileInputProperties> |             |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -771,7 +771,7 @@ become the `onUpdateModelValue`/`onChange` callback props.
 **Kind:** function
 
 ```typescript
-function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement
+function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement;
 ```
 
 `ForgeLocationInput` — a geographic coordinate input authored once in the
@@ -799,9 +799,9 @@ components.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<LocationInputProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<LocationInputProperties> |             |
 
 ### LocationInputProperties
 
@@ -844,7 +844,7 @@ export interface LocationValue
 ```
 
 The canonical value of a location field: signed decimal-degree coordinates
-plus the variant they are presented/serialised as.  `undefined` coordinates
+plus the variant they are presented/serialised as. `undefined` coordinates
 mean "no input".
 
 ## `src/components/molecules/forge-number-stepper/forge-number-stepper`
@@ -854,7 +854,7 @@ mean "no input".
 **Kind:** function
 
 ```typescript
-function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement
+function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement;
 ```
 
 `ForgeNumberStepper` — numeric stepper authored once in the neutral JSX dialect
@@ -874,9 +874,9 @@ callback props.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<NumberStepperProperties> |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| properties | Readonly<NumberStepperProperties> |             |
 
 ### NumberStepperProperties
 
@@ -905,7 +905,7 @@ Size token (canonical `2xs … 2xl` scale).
 **Kind:** function
 
 ```typescript
-function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement
+function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 ```
 
 `ForgeOtpInput` — segmented one-time-password input authored once in the
@@ -927,9 +927,9 @@ and the `v-model` + `complete` emit become the `onUpdateModelValue`/
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<OtpInputProperties> |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | Readonly<OtpInputProperties> |             |
 
 ### OtpInputProperties
 
@@ -968,7 +968,7 @@ Character set accepted by the OTP cells.
 **Kind:** function
 
 ```typescript
-function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement
+function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 ```
 
 `ForgePhoneInput` — an international phone-number field authored once in the
@@ -997,9 +997,9 @@ hook; the validity marker is the write-once `@mission-platform/icons`
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<PhoneInputProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<PhoneInputProperties> |             |
 
 ### PhoneChange
 
@@ -1050,7 +1050,7 @@ A selectable country/region in the phone input's country picker.
 **Kind:** function
 
 ```typescript
-function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement
+function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement;
 ```
 
 `ForgeRadioGroup` — groups several {@link ForgeRadio} controls under a shared
@@ -1073,9 +1073,9 @@ options.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<RadioGroupProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<RadioGroupProperties> |             |
 
 ### RadioGroupDirection
 
@@ -1114,7 +1114,7 @@ A single selectable option within a {@link ForgeRadioGroup}.
 **Kind:** function
 
 ```typescript
-function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement
+function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement;
 ```
 
 `ForgeSearchInput` — search field authored once in the neutral JSX dialect and
@@ -1134,9 +1134,9 @@ props; and the `v-model` + `search`/`clear` emits become the
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<SearchInputProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<SearchInputProperties> |             |
 
 ### SearchInputProperties
 
@@ -1165,7 +1165,7 @@ Size token (canonical `2xs … 2xl` scale).
 **Kind:** function
 
 ```typescript
-function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement
+function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement;
 ```
 
 `ForgeSegmentControl` — segmented control (single-select switcher) authored
@@ -1186,9 +1186,9 @@ established `onUpdateModelValue`/`onChange` callback props.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<SegmentControlProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<SegmentControlProperties> |             |
 
 ### SegmentControlProperties
 
@@ -1227,7 +1227,7 @@ A single selectable segment.
 **Kind:** function
 
 ```typescript
-function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement
+function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 ```
 
 `ForgeTimeInput` — a time picker authored once in the neutral JSX dialect and
@@ -1251,9 +1251,9 @@ slots (`<Slot>`) with their presence detected through the framework-neutral
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<TimeInputProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<TimeInputProperties> |             |
 
 ### TimeInputProperties
 
@@ -1282,7 +1282,7 @@ Field size (canonical `2xs … 2xl` scale).
 **Kind:** function
 
 ```typescript
-function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement
+function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeTimeRangeInput` — a time-range picker authored once in the neutral JSX
@@ -1308,9 +1308,9 @@ presence detected with the framework-neutral {@link hasSlot} helper; the
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<TimeRangeInputProperties> |  |
+| Name       | Type                               | Description |
+| ---------- | ---------------------------------- | ----------- |
+| properties | Readonly<TimeRangeInputProperties> |             |
 
 ### TimeRangeInputProperties
 
@@ -1359,7 +1359,7 @@ Field size (canonical `2xs … 2xl` scale).
 **Kind:** function
 
 ```typescript
-function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement
+function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement;
 ```
 
 `ForgeDateTimeRangeInput` — a date-time-range picker authored once in the
@@ -1385,13 +1385,14 @@ framework-native `useId` hook; the calendar/timezone glyphs are the write-once
 `@mission-platform/icons` `ForgeIconCalendar`/`ForgeIconGlobe`; the `start`/`end` SFC
 slots become the `startContent`/`endContent` named slots (`<Slot>`, presence
 detected with the framework-neutral {@link hasSlot} helper); and the `v-model`
-+ `change` emits become the `onUpdateModelValue`/`onChange` callback props.
+
+- `change` emits become the `onUpdateModelValue`/`onChange` callback props.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<DateTimeRangeInputProperties> |  |
+| Name       | Type                                   | Description |
+| ---------- | -------------------------------------- | ----------- |
+| properties | Readonly<DateTimeRangeInputProperties> |             |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1400,7 +1401,7 @@ detected with the framework-neutral {@link hasSlot} helper); and the `v-model`
 **Kind:** function
 
 ```typescript
-function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement
+function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement;
 ```
 
 `ForgeFormBuilder` — a visual, drag-and-drop authoring surface for JSON-Schema
@@ -1428,9 +1429,9 @@ container), driven by a `dropIndicator` insert-target updated on `dragover`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<FormBuilderProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<FormBuilderProperties> |             |
 
 ### FormBuilderProperties
 
@@ -1449,7 +1450,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement
+function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 ```
 
 `ForgeFormWizard` — a multi-step form shell authored once in the neutral JSX
@@ -1477,9 +1478,9 @@ props. The active index stays **controlled** (`modelValue`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<FormWizardProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<FormWizardProperties> |             |
 
 ### FormWizardProperties
 
@@ -1508,7 +1509,7 @@ A single wizard step.
 **Kind:** function
 
 ```typescript
-function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement
+function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement;
 ```
 
 `ForgeSchemaFormDialog` — a {@link ForgeSchemaForm} hosted inside a
@@ -1525,9 +1526,9 @@ whether to close on a valid submit.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<SchemaFormDialogProperties> |  |
+| Name       | Type                                 | Description |
+| ---------- | ------------------------------------ | ----------- |
+| properties | Readonly<SchemaFormDialogProperties> |             |
 
 ### SchemaFormDialogProperties
 
@@ -1546,7 +1547,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement
+function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement;
 ```
 
 `ForgeSchemaForm` — a JSON-Schema-driven form authored once in the neutral JSX
@@ -1571,9 +1572,9 @@ an overridable `actions` slot.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<SchemaFormProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<SchemaFormProperties> |             |
 
 ### SchemaFormFieldRenderer
 

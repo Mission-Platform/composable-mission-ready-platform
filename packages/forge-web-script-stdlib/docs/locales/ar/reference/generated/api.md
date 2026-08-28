@@ -23,8 +23,8 @@ fn is_some(value: Option<T>) -> bool
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
+| الاسم  | اكتب      | الوصف              |
+| ------ | --------- | ------------------ |
 | القيمة | الخيار<T> | قيمة الخيار للفحص. |
 
 #### عقد
@@ -58,8 +58,8 @@ fn is_ok(value: Result<T, E>) -> bool
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
+| الاسم  | اكتب          | الوصف               |
+| ------ | ------------- | ------------------- |
 | القيمة | النتيجة<T, E> | قيمة النتيجة للفحص. |
 
 #### عقد
@@ -86,7 +86,7 @@ enum Result
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 المسار النسبي لوحدة الإعلان غير المتزامن التي يستخدمها مستهلكو المترجم.
@@ -96,7 +96,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 عقد هوية وتمثيل ثابت للمكتبة القياسية.
@@ -108,7 +108,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 الدليل الذي يحتوي على وحدات إعلان Forge Web Script التي تم شحنها.

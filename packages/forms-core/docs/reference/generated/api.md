@@ -57,38 +57,38 @@ canvas creates a new {@link BuilderField} of the given `type`.
 **Kind:** function
 
 ```typescript
-function evaluateCondition(condition: FieldCondition, values: FormValues): boolean
+function evaluateCondition(condition: FieldCondition, values: FormValues): boolean;
 ```
 
 Evaluate a {@link FieldCondition} against the form `values`, returning whether
-it currently holds.  Combinator groups follow JSON Schema semantics:
-`allOf` = AND, `anyOf` = OR, `oneOf` = exactly-one (XOR).  Multiple keywords
-present on the same group are themselves AND-ed.  An empty group passes.
+it currently holds. Combinator groups follow JSON Schema semantics:
+`allOf` = AND, `anyOf` = OR, `oneOf` = exactly-one (XOR). Multiple keywords
+present on the same group are themselves AND-ed. An empty group passes.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| condition | FieldCondition |  |
-| values | FormValues |  |
+| Name      | Type           | Description |
+| --------- | -------------- | ----------- |
+| condition | FieldCondition |             |
+| values    | FormValues     |             |
 
 ### isFieldVisible
 
 **Kind:** function
 
 ```typescript
-function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean
+function isFieldVisible(field: { visibleWhen?: FieldCondition }, values: FormValues): boolean;
 ```
 
 Whether a field with an optional `visibleWhen` condition should currently be
-rendered.  Fields without a condition are always visible.
+rendered. Fields without a condition are always visible.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| field | { visibleWhen?: FieldCondition } |  |
-| values | FormValues |  |
+| Name   | Type                             | Description |
+| ------ | -------------------------------- | ----------- |
+| field  | { visibleWhen?: FieldCondition } |             |
+| values | FormValues                       |             |
 
 ## `src/form-schema`
 
@@ -97,16 +97,16 @@ rendered.  Fields without a condition are always visible.
 **Kind:** function
 
 ```typescript
-function builderFieldToProperty(field: BuilderField): JsonSchemaProperty
+function builderFieldToProperty(field: BuilderField): JsonSchemaProperty;
 ```
 
 Converts a single {@link BuilderField} into a {@link JsonSchemaProperty}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| field | BuilderField |  |
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| field | BuilderField |             |
 
 ### createField
 
@@ -118,7 +118,7 @@ function createField(options: {
   label?: string;
   key?: string;
   usedKeys?: Iterable<string>;
-}): BuilderField
+}): BuilderField;
 ```
 
 Creates a new {@link BuilderField} of the given `type`. The key is derived
@@ -127,16 +127,16 @@ start with an empty `children` array; option widgets get two starter options.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | {   type: FormFieldType;   label?: string;   key?: string;   usedKeys?: Iterable<string>; } |  |
+| Name    | Type                                                                                | Description |
+| ------- | ----------------------------------------------------------------------------------- | ----------- |
+| options | { type: FormFieldType; label?: string; key?: string; usedKeys?: Iterable<string>; } |             |
 
 ### DEFAULT_FIELD_TYPES
 
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[]
+export const DEFAULT_FIELD_TYPES: FieldTypeDescriptor[];
 ```
 
 The field types offered in the builder palette, in display order. The palette
@@ -149,27 +149,30 @@ date/time → other → grouping).
 **Kind:** function
 
 ```typescript
-function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined
+function fieldKeyError(key: string, siblingKeys: Iterable<string>): string | undefined;
 ```
 
 Validates a field key against its siblings: it must be non-empty and unique
 within its container. Returns a human-readable message, or `undefined` when
-the key is valid. `siblingKeys` are the keys of the *other* fields in the
+the key is valid. `siblingKeys` are the keys of the _other_ fields in the
 same container (excluding the field being validated).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| key | string |  |
-| siblingKeys | Iterable<string> |  |
+| Name        | Type             | Description |
+| ----------- | ---------------- | ----------- |
+| key         | string           |             |
+| siblingKeys | Iterable<string> |             |
 
 ### fieldsToDefinition
 
 **Kind:** function
 
 ```typescript
-function fieldsToDefinition(fields: BuilderField[] | BuilderField[][], options: FieldsToSchemaOptions = {}): SchemaFormDefinition
+function fieldsToDefinition(
+  fields: BuilderField[] | BuilderField[][],
+  options: FieldsToSchemaOptions = {},
+): SchemaFormDefinition;
 ```
 
 Builds the schema definition, choosing single-step or wizard from `options`.
@@ -178,34 +181,34 @@ it is the flat top-level list (`BuilderField[]`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| fields | BuilderField[] \| BuilderField[][] |  |
-| options | FieldsToSchemaOptions |  |
+| Name    | Type                               | Description |
+| ------- | ---------------------------------- | ----------- |
+| fields  | BuilderField[] \| BuilderField[][] |             |
+| options | FieldsToSchemaOptions              |             |
 
 ### fieldsToSchema
 
 **Kind:** function
 
 ```typescript
-function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema
+function fieldsToSchema(fields: BuilderField[], options: FieldsToSchemaOptions = {}): FormJsonSchema;
 ```
 
 Builds a single-step {@link FormJsonSchema} from top-level fields.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| fields | BuilderField[] |  |
-| options | FieldsToSchemaOptions |  |
+| Name    | Type                  | Description |
+| ------- | --------------------- | ----------- |
+| fields  | BuilderField[]        |             |
+| options | FieldsToSchemaOptions |             |
 
 ### fieldsToWizardSchema
 
 **Kind:** function
 
 ```typescript
-function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[]
+function fieldsToWizardSchema(steps: BuilderField[][], options: FieldsToSchemaOptions = {}): FormJsonSchema[];
 ```
 
 Builds a multi-step wizard ({@link FormJsonSchema}[]) from a per-step field
@@ -213,145 +216,145 @@ matrix: `steps[i]` holds the top-level fields assigned to wizard step `i`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| steps | BuilderField[][] |  |
-| options | FieldsToSchemaOptions |  |
+| Name    | Type                  | Description |
+| ------- | --------------------- | ----------- |
+| steps   | BuilderField[][]      |             |
+| options | FieldsToSchemaOptions |             |
 
 ### isDateWidget
 
 **Kind:** function
 
 ```typescript
-function isDateWidget(widget: FormFieldType): boolean
+function isDateWidget(widget: FormFieldType): boolean;
 ```
 
 Whether the widget captures a calendar date (accepts `minDate` / `maxDate`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ### isFieldsetWidget
 
 **Kind:** function
 
 ```typescript
-function isFieldsetWidget(widget: FormFieldType): boolean
+function isFieldsetWidget(widget: FormFieldType): boolean;
 ```
 
 Whether the widget is a grouping field set.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ### isFileWidget
 
 **Kind:** function
 
 ```typescript
-function isFileWidget(widget: FormFieldType): boolean
+function isFileWidget(widget: FormFieldType): boolean;
 ```
 
 Whether the widget uploads a file (accepts `accept` / `multiple` / `capture`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ### isLocationWidget
 
 **Kind:** function
 
 ```typescript
-function isLocationWidget(widget: FormFieldType): boolean
+function isLocationWidget(widget: FormFieldType): boolean;
 ```
 
 Whether the widget captures a geographic coordinate (accepts `locationFormat`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ### isMultilineWidget
 
 **Kind:** function
 
 ```typescript
-function isMultilineWidget(widget: FormFieldType): boolean
+function isMultilineWidget(widget: FormFieldType): boolean;
 ```
 
 Whether the widget renders a multi-line area (accepts a `rows` count).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ### isNumberWidget
 
 **Kind:** function
 
 ```typescript
-function isNumberWidget(widget: FormFieldType): boolean
+function isNumberWidget(widget: FormFieldType): boolean;
 ```
 
 Whether the widget is numeric (`number` / `stepper`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ### isTextWidget
 
 **Kind:** function
 
 ```typescript
-function isTextWidget(widget: FormFieldType): boolean
+function isTextWidget(widget: FormFieldType): boolean;
 ```
 
 Whether the widget is text-typed (accepts `minLength` / `maxLength` / `pattern`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ### isTimeWidget
 
 **Kind:** function
 
 ```typescript
-function isTimeWidget(widget: FormFieldType): boolean
+function isTimeWidget(widget: FormFieldType): boolean;
 ```
 
 Whether the widget captures a time of day (accepts the `showSeconds` toggle).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ### nextFieldId
 
 **Kind:** function
 
 ```typescript
-function nextFieldId(): string
+function nextFieldId(): string;
 ```
 
 Generates a fresh, collision-resistant builder-field id.
@@ -361,55 +364,55 @@ Generates a fresh, collision-resistant builder-field id.
 **Kind:** function
 
 ```typescript
-function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>
+function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined>;
 ```
 
 The per-step conditional-visibility rules of a wizard definition.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| definition | SchemaFormDefinition \| undefined |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| definition | SchemaFormDefinition \| undefined |             |
 
 ### schemaStepDescriptions
 
 **Kind:** function
 
 ```typescript
-function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepDescriptions(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 The per-step descriptions of a wizard definition.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| definition | SchemaFormDefinition \| undefined |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| definition | SchemaFormDefinition \| undefined |             |
 
 ### schemaStepTitles
 
 **Kind:** function
 
 ```typescript
-function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[]
+function schemaStepTitles(definition: SchemaFormDefinition | undefined): string[];
 ```
 
 The per-step titles of a wizard definition (empty for a single-step form).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| definition | SchemaFormDefinition \| undefined |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| definition | SchemaFormDefinition \| undefined |             |
 
 ### schemaToFields
 
 **Kind:** function
 
 ```typescript
-function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][]
+function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][];
 ```
 
 Hydrates a {@link SchemaFormDefinition} back into the builder's working field
@@ -419,74 +422,74 @@ definition becomes a flat list (`BuilderField[]`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| definition | SchemaFormDefinition \| undefined |  |
+| Name       | Type                              | Description |
+| ---------- | --------------------------------- | ----------- |
+| definition | SchemaFormDefinition \| undefined |             |
 
 ### slugify
 
 **Kind:** function
 
 ```typescript
-function slugify(label: string): string
+function slugify(label: string): string;
 ```
 
 Turns a human label into a safe `snake_case` schema key.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| label | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| label | string |             |
 
 ### uniqueKey
 
 **Kind:** function
 
 ```typescript
-function uniqueKey(base: string, used: Iterable<string>): string
+function uniqueKey(base: string, used: Iterable<string>): string;
 ```
 
 Returns `base`, or `base_2`, `base_3`, … until it no longer collides.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| base | string |  |
-| used | Iterable<string> |  |
+| Name | Type             | Description |
+| ---- | ---------------- | ----------- |
+| base | string           |             |
+| used | Iterable<string> |             |
 
 ### widgetHasOptions
 
 **Kind:** function
 
 ```typescript
-function widgetHasOptions(widget: FormFieldType): boolean
+function widgetHasOptions(widget: FormFieldType): boolean;
 ```
 
 Whether the widget exposes an author-defined option list.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ### widgetToJsonType
 
 **Kind:** function
 
 ```typescript
-function widgetToJsonType(widget: FormFieldType): JsonSchemaType
+function widgetToJsonType(widget: FormFieldType): JsonSchemaType;
 ```
 
 The JSON Schema primitive type a widget serialises to.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| widget | FormFieldType |  |
+| Name   | Type          | Description |
+| ------ | ------------- | ----------- |
+| widget | FormFieldType |             |
 
 ## `src/json-schema`
 
@@ -495,7 +498,7 @@ The JSON Schema primitive type a widget serialises to.
 **Kind:** function
 
 ```typescript
-function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator
+function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator;
 ```
 
 Compile a {@link FormJsonSchema} into a reusable validator backed by Ajv.
@@ -503,7 +506,7 @@ Both presence rules and value constraints come straight from the JSON Schema.
 
 Generated error messages are localised through the optional `translate`
 function (mirroring vue-i18n's `t(key, named)`); when omitted, built-in
-English messages are used.  Author-supplied `errorMessage` overrides always
+English messages are used. Author-supplied `errorMessage` overrides always
 win and are returned verbatim.
 
 Fields gated by a `ui.visibleWhen` condition that does not currently hold are
@@ -512,10 +515,10 @@ submission.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| schema | FormJsonSchema |  |
-| translate | SchemaFormTranslate |  |
+| Name      | Type                | Description |
+| --------- | ------------------- | ----------- |
+| schema    | FormJsonSchema      |             |
+| translate | SchemaFormTranslate |             |
 
 ### FormValidator
 
@@ -532,7 +535,7 @@ The validator returned by {@link createFormValidator}.
 **Kind:** function
 
 ```typescript
-function jsonSchemaDefaults(schema: FormJsonSchema): FormValues
+function jsonSchemaDefaults(schema: FormJsonSchema): FormValues;
 ```
 
 Compute the default value for each field from the JSON Schema, honouring
@@ -541,28 +544,28 @@ Field sets recurse into a nested object of their children's defaults.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| schema | FormJsonSchema |  |
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| schema | FormJsonSchema |             |
 
 ### jsonSchemaToFields
 
 **Kind:** function
 
 ```typescript
-function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[]
+function jsonSchemaToFields(schema: FormJsonSchema): FormFieldSchema[];
 ```
 
 Convert a {@link FormJsonSchema} into the ordered list of render-ready
-{@link FormFieldSchema} descriptors consumed by the field renderer.  Nested
+{@link FormFieldSchema} descriptors consumed by the field renderer. Nested
 `object` (field set) properties are recursed into, so a field set carries its
 own ordered `fields`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| schema | FormJsonSchema |  |
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| schema | FormJsonSchema |             |
 
 ## `src/types`
 
@@ -581,7 +584,7 @@ Native `autocapitalize` hint values for text-like inputs.
 **Kind:** constant
 
 ```typescript
-export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>
+export const AUTOCOMPLETE_OPTIONS: ReadonlyArray<{ group: string; label: string; value: AutocompleteToken }>;
 ```
 
 Selectable `autocomplete` tokens grouped for a builder dropdown. The `group`
@@ -605,13 +608,70 @@ section-prefixed forms the spec also allows.
 **Kind:** type
 
 ```typescript
-export type AutocompleteToken = | 'off' | 'on' | 'name' | 'honorific-prefix' | 'given-name' | 'additional-name' | 'family-name' | 'honorific-suffix' | 'nickname' | 'email' | 'username' | 'new-password' | 'current-password' | 'one-time-code' | 'organization-title' | 'organization' | 'street-address' | 'address-line1' | 'address-line2' | 'address-line3' | 'address-level4' | 'address-level3' | 'address-level2' | 'address-level1' | 'country' | 'country-name' | 'postal-code' | 'cc-name' | 'cc-given-name' | 'cc-additional-name' | 'cc-family-name' | 'cc-number' | 'cc-exp' | 'cc-exp-month' | 'cc-exp-year' | 'cc-csc' | 'cc-type' | 'transaction-currency' | 'transaction-amount' | 'language' | 'bday' | 'bday-day' | 'bday-month' | 'bday-year' | 'sex' | 'tel' | 'tel-country-code' | 'tel-national' | 'tel-area-code' | 'tel-local' | 'tel-local-prefix' | 'tel-local-suffix' | 'tel-extension' | 'impp' | 'url' | 'photo' | 'webauthn';
+export type AutocompleteToken =
+  | 'off'
+  | 'on'
+  | 'name'
+  | 'honorific-prefix'
+  | 'given-name'
+  | 'additional-name'
+  | 'family-name'
+  | 'honorific-suffix'
+  | 'nickname'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'one-time-code'
+  | 'organization-title'
+  | 'organization'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'address-line3'
+  | 'address-level4'
+  | 'address-level3'
+  | 'address-level2'
+  | 'address-level1'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-given-name'
+  | 'cc-additional-name'
+  | 'cc-family-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-exp-month'
+  | 'cc-exp-year'
+  | 'cc-csc'
+  | 'cc-type'
+  | 'transaction-currency'
+  | 'transaction-amount'
+  | 'language'
+  | 'bday'
+  | 'bday-day'
+  | 'bday-month'
+  | 'bday-year'
+  | 'sex'
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national'
+  | 'tel-area-code'
+  | 'tel-local'
+  | 'tel-local-prefix'
+  | 'tel-local-suffix'
+  | 'tel-extension'
+  | 'impp'
+  | 'url'
+  | 'photo'
+  | 'webauthn';
 ```
 
 The standard HTML `autocomplete` tokens, as catalogued by MDN
 (https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete).
 
-These are the named *detail* tokens a single text-like input can advertise so
+These are the named _detail_ tokens a single text-like input can advertise so
 browsers and password managers can offer the right saved value. The list
 intentionally omits the grouping/section modifiers (`section-*`, `shipping`,
 `billing`, `home`, `work`, …) that only ever prefix one of these tokens — a
@@ -636,7 +696,7 @@ Either a leaf comparison or a boolean combinator of nested conditions.
 export interface FieldConditionGroup
 ```
 
-A combinator grouping nested {@link FieldCondition}s.  Mirrors JSON Schema's
+A combinator grouping nested {@link FieldCondition}s. Mirrors JSON Schema's
 boolean keywords:
 
 - `allOf` — passes when **every** nested condition passes (logical AND).
@@ -653,8 +713,8 @@ Multiple keywords on the same group are themselves AND-ed together.
 export interface FieldConditionLeaf
 ```
 
-A single leaf condition that tests one field's current value.  Exactly one
-comparator is normally set; when several are present they must *all* hold for
+A single leaf condition that tests one field's current value. Exactly one
+comparator is normally set; when several are present they must _all_ hold for
 the leaf to pass.
 
 ### FieldUiOptions
@@ -686,8 +746,8 @@ Per-field error map, keyed by `FormFieldSchema.key`.
 export interface FormFieldSchema
 ```
 
-A resolved, render-ready field descriptor.  SchemaForm derives one of these
-per property from the {@link FormJsonSchema}; it is *not* part of the public
+A resolved, render-ready field descriptor. SchemaForm derives one of these
+per property from the {@link FormJsonSchema}; it is _not_ part of the public
 input surface and carries no validation logic of its own.
 
 ### FormFieldType
@@ -695,12 +755,36 @@ input surface and carries no validation logic of its own.
 **Kind:** type
 
 ```typescript
-export type FormFieldType = | 'text' | 'email' | 'password' | 'number' | 'stepper' | 'url' | 'tel' | 'textarea' | 'markdown' | 'code' | 'checkbox' | 'switch' | 'select' | 'radio' | 'multiselect' | 'date' | 'time' | 'datetime' | 'daterange' | 'timerange' | 'datetimerange' | 'location' | 'file' | 'fieldset';
+export type FormFieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'stepper'
+  | 'url'
+  | 'tel'
+  | 'textarea'
+  | 'markdown'
+  | 'code'
+  | 'checkbox'
+  | 'switch'
+  | 'select'
+  | 'radio'
+  | 'multiselect'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'daterange'
+  | 'timerange'
+  | 'datetimerange'
+  | 'location'
+  | 'file'
+  | 'fieldset';
 ```
 
-The visual control rendered for a field.  This is a presentation concern, so
+The visual control rendered for a field. This is a presentation concern, so
 it lives under the non-standard `ui.widget` extension rather than being a
-JSON Schema keyword.  When omitted, SchemaForm infers a sensible widget from
+JSON Schema keyword. When omitted, SchemaForm infers a sensible widget from
 the property's `type`, `format`, and `enum`.
 
 ### FormJsonSchema
@@ -712,8 +796,8 @@ export interface FormJsonSchema
 ```
 
 A single form (or, in a wizard, a single step): a JSON Schema `object`
-document.  When used directly it describes a one-step form; when used as an
-entry of a top-level array it describes one wizard step.  Validation is
+document. When used directly it describes a one-step form; when used as an
+entry of a top-level array it describes one wizard step. Validation is
 performed against it with Ajv internally.
 
 ### FormValues
@@ -734,7 +818,7 @@ The reactive form data bag, keyed by field key.
 export interface JsonSchemaProperty
 ```
 
-A single JSON Schema property descriptor.  Standard validation keywords map
+A single JSON Schema property descriptor. Standard validation keywords map
 directly onto generated Ajv rules.
 
 ### JsonSchemaStringFormat
@@ -767,7 +851,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 ```
 
 The coordinate representation a {@link LocationValue} is entered/serialised
-as.  Defined here (rather than imported from a Vue component) so the shared
+as. Defined here (rather than imported from a Vue component) so the shared
 core stays framework-agnostic; it is structurally identical to the
 `@mission-platform/components` location-input type.
 
@@ -779,7 +863,7 @@ core stays framework-agnostic; it is structurally identical to the
 export interface LocationValue
 ```
 
-A geographic coordinate captured by the `location` widget.  `lat`/`lng` are
+A geographic coordinate captured by the `location` widget. `lat`/`lng` are
 `undefined` while empty so a blank value cleanly means "no input".
 
 ### SchemaFormDefinition
@@ -804,7 +888,7 @@ The sole input to a schema-driven form / `useSchemaForm`.
 export type SchemaFormTranslate = (key: string, named?: Record<string, unknown>) => string;
 ```
 
-Translation function used to localise generated validation messages.  It
+Translation function used to localise generated validation messages. It
 mirrors vue-i18n's `t(key, named)` signature: given a message key and an
 optional bag of named interpolation values, it returns the localised string.
 When omitted, SchemaForm falls back to built-in English messages.

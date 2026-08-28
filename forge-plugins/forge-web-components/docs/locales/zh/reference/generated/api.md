@@ -16,16 +16,16 @@
 **种类：**功能
 
 ```typescript
-function synthesiseElementClass(plan: WebComponentsLoweredModule): string
+function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 ```
 
 打印 `ForgeElement` 子类及其注册以降低计划。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|计划| WebComponentsLoweredModule | WebComponentsLoweredModule  |
+| 名称 | 类型                       | 描述                       |
+| ---- | -------------------------- | -------------------------- |
+| 计划 | WebComponentsLoweredModule | WebComponentsLoweredModule |
 
 ## `src/emitters/module`
 
@@ -34,19 +34,24 @@ function synthesiseElementClass(plan: WebComponentsLoweredModule): string
 **种类：**功能
 
 ```typescript
-function emitWebComponentModule(module: SemanticModule, componentName: string = "CustomElement", componentFolders: ReadonlySet<string> = new Set(), lowered?: WebComponentsLoweredModule): EmittedWebComponentModule
+function emitWebComponentModule(
+  module: SemanticModule,
+  componentName: string = "CustomElement",
+  componentFolders: ReadonlySet<string> = new Set(),
+  lowered?: WebComponentsLoweredModule,
+): EmittedWebComponentModule;
 ```
 
 将整个模块转换为本机 Web 组件目标源。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
-|组件名称 |字符串|  |
-|组件文件夹 |只读设置<string> |  |
-|降低| WebComponentsLoweredModule | WebComponentsLoweredModule  |
+| 名称       | 类型                       | 描述                       |
+| ---------- | -------------------------- | -------------------------- |
+| 模块       | 语义模块                   |                            |
+| 组件名称   | 字符串                     |                            |
+| 组件文件夹 | 只读设置<string>           |                            |
+| 降低       | WebComponentsLoweredModule | WebComponentsLoweredModule |
 
 ## `src/index`
 
@@ -55,7 +60,7 @@ function emitWebComponentModule(module: SemanticModule, componentName: string = 
 **种类：**功能
 
 ```typescript
-function forgeWebComponentsFramework(): FrameworkOutputPlugin
+function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 ```
 
 创建仅 TypeScript Web 组件输出插件。
@@ -67,7 +72,7 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin
 **种类：**常数
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 内部功能由运行时控制；表单关联保持选择加入状态。
@@ -77,7 +82,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **种类：**常数
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 为生成的组件保留兼容性默认值。
@@ -87,7 +92,9 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
 **种类：**功能
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebComponentsHostPlan
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+): WebComponentsHostPlan;
 ```
 
 仅从单个静态内在根推断定制的内置主机。
@@ -98,66 +105,74 @@ HTML 不保证它是安全或有用的定制内置
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|返回节点 |通用渲染节点 \|未定义 |  |
+| 名称     | 类型                  | 描述 |
+| -------- | --------------------- | ---- |
+| 返回节点 | 通用渲染节点 \|未定义 |      |
 
 ### isWebComponentsLowered
 
 **种类：**功能
 
 ```typescript
-function isWebComponentsLowered(lowered: TargetLoweredModule | undefined): lowered is WebComponentsLoweredModule
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
 ```
 
 将目标计划缩小为不进行强制转换的 Web 组件计划。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|降低| TargetLoweredModule \|未定义 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 降低 | TargetLoweredModule \|未定义 |      |
 
 ### 下Web组件模块
 
 **种类：**功能
 
 ```typescript
-function lowerWebComponentsModule(module: SemanticModule, context: TargetContext): TargetIntentions
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 将中性 IR 降低到 Web 组件目标意图中。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
-|背景 |目标上下文 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 模块 | 语义模块   |      |
+| 背景 | 目标上下文 |      |
 
 ### 下层Web组件计划
 
 **种类：**功能
 
 ```typescript
-function lowerWebComponentsPlan(module: SemanticModule, context: TargetContext): WebComponentsLoweredModule
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
 ```
 
 为中立模块构建 Web 组件目标计划。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
-|背景 |目标上下文 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 模块 | 语义模块   |      |
+| 背景 | 目标上下文 |      |
 
 ### 未知类型
 
 **种类：**常数
 
 ```typescript
-export const UNKNOWN_TYPE
+export const UNKNOWN_TYPE;
 ```
 
 当声明的类型和推断的类型都不可用时发出的类型。
@@ -167,7 +182,7 @@ export const UNKNOWN_TYPE
 **种类：**常数
 
 ```typescript
-export const WEB_COMPONENTS_FRAMEWORK
+export const WEB_COMPONENTS_FRAMEWORK;
 ```
 
 插件的框架 ID 及其降低计划的鉴别器。
@@ -177,7 +192,7 @@ export const WEB_COMPONENTS_FRAMEWORK
 **种类：**常数
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS
+export const WEBCOMPONENTS_NATIVE_HOSTS;
 ```
 
 可以安全地定制内置的根的兼容性表。
@@ -239,7 +254,14 @@ export interface WebComponentsGeneratedId
 **种类：**类型
 
 ```typescript
-export type WebComponentsHostFallbackReason = | "missing-root" | "fragment-root" | "dynamic-root" | "component-root" | "ambiguous-root" | "invalid-root" | "unsupported-root";
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
 ```
 
 组件不能使用自定义内置主机的稳定原因。
@@ -279,7 +301,8 @@ export interface WebComponentsInternalsPolicy
 **种类：**类型
 
 ```typescript
-export type WebComponentsLifecycleCallback = "connectedCallback" | "disconnectedCallback" | "updatedCallback";
+export type WebComponentsLifecycleCallback =
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 ```
 
 计划可以生成的自定义元素生命周期回调。
@@ -325,7 +348,7 @@ export interface WebComponentsPromotedLocal
 渲染头常量**提升**为元素成员。
 
 备忘录 getter、生命周期回调和字段初始值设定项均已发出
-*外部* `render()`，因此渲染头声明的本地不存在
+_外部_ `render()`，因此渲染头声明的本地不存在
 他们。向会员宣传该声明是造成这种阅读的原因
 可解析 — 通过 `this.<name>` — 而不是悬空。
 
@@ -451,41 +474,47 @@ export interface WebComponentsTemplatePlan
 **种类：**功能
 
 ```typescript
-function optimizeWebComponentsModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeWebComponentsModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 优化Web-Components目标意图；其他目标通过。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|意向 |目标意图|  |
-|选项 |目标优化选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 意向 | 目标意图     |      |
+| 选项 | 目标优化选项 |      |
 
 ### 优化Web组件计划
 
 **种类：**功能
 
 ```typescript
-function optimizeWebComponentsPlan(plan: WebComponentsLoweredModule, options: TargetOptimizeOptions): WebComponentsLoweredModule
+function optimizeWebComponentsPlan(
+  plan: WebComponentsLoweredModule,
+  options: TargetOptimizeOptions,
+): WebComponentsLoweredModule;
 ```
 
 完善降低的 Web 组件计划，记录运行的每个通道。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|计划| WebComponentsLoweredModule | WebComponentsLoweredModule  |
-|选项 |目标优化选项 |  |
+| 名称 | 类型                       | 描述                       |
+| ---- | -------------------------- | -------------------------- |
+| 计划 | WebComponentsLoweredModule | WebComponentsLoweredModule |
+| 选项 | 目标优化选项               |                            |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
 **种类：**常数
 
 ```typescript
-export const WEB_COMPONENTS_OPTIMIZATIONS
+export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
 标识符记录在{@link WebComponentsLoweredModule.appliedOptimizations}中。
@@ -495,7 +524,8 @@ export const WEB_COMPONENTS_OPTIMIZATIONS
 **种类：**类型
 
 ```typescript
-export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
+export type WebComponentsOptimization =
+  (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
 ```
 
 记录的 Web 组件优化标识符。
@@ -507,16 +537,16 @@ export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[ke
 **种类：**功能
 
 ```typescript
-function emitWebComponentHookModule(module: SemanticModule): string
+function emitWebComponentHookModule(module: SemanticModule): string;
 ```
 
 将中性挂钩模块转换为其 Web 组件源。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 模块 | 语义模块 |      |
 
 ## `src/transformers/expression`
 
@@ -525,7 +555,7 @@ function emitWebComponentHookModule(module: SemanticModule): string
 **种类：**常数
 
 ```typescript
-export const HAS_SLOT_RUNTIME
+export const HAS_SLOT_RUNTIME;
 ```
 
 标记降低到的本机运行时帮助程序，通过宿主元素调用。
@@ -535,7 +565,7 @@ export const HAS_SLOT_RUNTIME
 **种类：**功能
 
 ```typescript
-function isFunctionExpressionText(text: string): boolean
+function isFunctionExpressionText(text: string): boolean;
 ```
 
 文本是否是**函数值**表达式 - 箭头还是箭头
@@ -547,16 +577,16 @@ function isFunctionExpressionText(text: string): boolean
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 文字 | 字符串 |      |
 
 ### isPureExpressionText
 
 **种类：**功能
 
 ```typescript
-function isPureExpressionText(text: string): boolean
+function isPureExpressionText(text: string): boolean;
 ```
 
 表达式是否**可证明**没有效果：无调用、无 `new`、无
@@ -569,9 +599,9 @@ function isPureExpressionText(text: string): boolean
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 文字 | 字符串 |      |
 
 ## `src/transformers/props-binding`
 
@@ -580,26 +610,26 @@ function isPureExpressionText(text: string): boolean
 **种类：**功能
 
 ```typescript
-function leadingObjectPattern(text: string): string | undefined
+function leadingObjectPattern(text: string): string | undefined;
 ```
 
-*开始* `text` 的对象模式，丢弃后面的任何内容。
+_开始_ `text` 的对象模式，丢弃后面的任何内容。
 
 参数的源文本带有其注释（`{ a, b }: Readonly<P>`），
 所以在分解之前必须先将图案剪掉。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 文字 | 字符串 |      |
 
 ### parsePropsBinding
 
 **种类：**功能
 
 ```typescript
-function parsePropsBinding(patternText: string): PropsBinding | undefined
+function parsePropsBinding(patternText: string): PropsBinding | undefined;
 ```
 
 分解 props 对象模式。
@@ -610,9 +640,9 @@ function parsePropsBinding(patternText: string): PropsBinding | undefined
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图案文本 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 图案文本 | 字符串 |      |
 
 ### 道具绑定
 
@@ -639,7 +669,10 @@ props 对象模式的一项。
 **种类：**功能
 
 ```typescript
-function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => boolean): string | undefined
+function propsBindingStatement(
+  binding: PropsBinding,
+  isRead: (name: string) => boolean,
+): string | undefined;
 ```
 
 将 props 模式重播为 `const { … } = this;`，仅限于条目
@@ -651,10 +684,10 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|绑定|道具绑定 |  |
-|正在阅读 | （名称：字符串）=> 布尔值 |  |
+| 名称     | 类型                      | 描述 |
+| -------- | ------------------------- | ---- |
+| 绑定     | 道具绑定                  |      |
+| 正在阅读 | （名称：字符串）=> 布尔值 |      |
 
 ## `src/transformers/props-type`
 
@@ -663,7 +696,10 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 **种类：**功能
 
 ```typescript
-function indexedAccessType(reference: PropsTypeReference, member: string): string
+function indexedAccessType(
+  reference: PropsTypeReference,
+  member: string,
+): string;
 ```
 
 props 类型的成员的索引访问注释被发出。
@@ -677,10 +713,10 @@ props 类型的成员的索引访问注释被发出。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|参考|道具类型参考 |  |
-|会员|字符串|  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 参考 | 道具类型参考 |      |
+| 会员 | 字符串       |      |
 
 ### Props类型参考
 
@@ -697,7 +733,10 @@ export interface PropsTypeReference
 **种类：**功能
 
 ```typescript
-function resolvePropsTypeReference(annotation: string | undefined, declarations: readonly GenericStatement[]): PropsTypeReference | undefined
+function resolvePropsTypeReference(
+  annotation: string | undefined,
+  declarations: readonly GenericStatement[],
+): PropsTypeReference | undefined;
 ```
 
 根据模块的保留声明解析 props 注释。
@@ -708,17 +747,17 @@ function resolvePropsTypeReference(annotation: string | undefined, declarations:
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|注释|字符串\|未定义 |  |
-|声明|只读通用语句[] |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 注释 | 字符串\|未定义 |      |
+| 声明 | 只读通用语句[] |      |
 
 ### 类型成员
 
 **种类：**功能
 
 ```typescript
-function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
+function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 ```
 
 保留的接口/类型别名主体声明的成员，映射到是否
@@ -732,16 +771,16 @@ function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|声明文本 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 声明文本 | 字符串 |      |
 
 ### unwrapProps类型名称
 
 **种类：**功能
 
 ```typescript
-function unwrapPropsTypeName(text: string | undefined): string | undefined
+function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
 将 props 注释减少为它引用的普通名称，展开
@@ -749,6 +788,6 @@ function unwrapPropsTypeName(text: string | undefined): string | undefined
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串\|未定义 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 文字 | 字符串\|未定义 |      |

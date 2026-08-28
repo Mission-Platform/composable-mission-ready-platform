@@ -16,24 +16,24 @@
 **种类：**功能
 
 ```typescript
-function applySourceEdits(source: string, edits: readonly SourceEdit[]): string
+function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 ```
 
 应用不重叠的源编辑而不暴露解析器节点。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|编辑|只读 SourceEdit[] |  |
+| 名称 | 类型              | 描述 |
+| ---- | ----------------- | ---- |
+| 来源 | 字符串            |      |
+| 编辑 | 只读 SourceEdit[] |      |
 
 ### CLASS_NAME_ATTRIBUTE
 
 **种类：**常数
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 没有提供描述。
@@ -43,7 +43,7 @@ export const CLASS_NAME_ATTRIBUTE
 **种类：**常数
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 没有提供描述。
@@ -53,23 +53,23 @@ export const COMPONENTS_JSX_MODULES
 **种类：**功能
 
 ```typescript
-function eventNameForProperty(propertyName: string): string
+function eventNameForProperty(propertyName: string): string;
 ```
 
 派生由 a 表示的事件名称 Vue-风格 `on<Event>` 支柱。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性名称 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 属性名称 | 字符串 |      |
 
 ### ICONS_JSX_MODULE
 
 **种类：**常数
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 没有提供描述。
@@ -79,7 +79,7 @@ export const ICONS_JSX_MODULE
 **种类：**常数
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 没有提供描述。
@@ -89,7 +89,7 @@ export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
 **种类：**常数
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 没有提供描述。
@@ -99,7 +99,7 @@ export const LOCAL_EFFECT_FILE
 **种类：**常数
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 没有提供描述。
@@ -109,7 +109,7 @@ export const LOCAL_EFFECT_MODULE
 **种类：**常数
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 没有提供描述。
@@ -119,7 +119,7 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
 **种类：**常数
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 没有提供描述。
@@ -129,7 +129,7 @@ export const LOCAL_JSX_TYPES_FILE
 **种类：**常数
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 没有提供描述。
@@ -139,39 +139,39 @@ export const LOCAL_JSX_TYPES_MODULE
 **种类：**功能
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 发出共享的 Vue 效果助手；其他目标不需要此文件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|框架| Jsx框架 |  |
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 框架 | Jsx框架 |      |
 
 ### localJsxTypesModuleSource
 
 **种类：**功能
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 发出框架本地 JSX 原语声明，无需解析器依赖。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|框架| Jsx框架 |  |
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 框架 | Jsx框架 |      |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **种类：**常数
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 没有提供描述。
@@ -181,7 +181,7 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 **种类：**常数
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 没有提供描述。
@@ -191,7 +191,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
 **种类：**常数
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 没有提供描述。
@@ -201,7 +201,7 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
 **种类：**常数
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 没有提供描述。
@@ -211,7 +211,7 @@ export const NEUTRAL_MODULE
 **种类：**常数
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 没有提供描述。
@@ -221,7 +221,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 **种类：**常数
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 没有提供描述。
@@ -231,7 +231,7 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
 **种类：**常数
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 没有提供描述。
@@ -241,7 +241,7 @@ export const REACT_ADAPTER_MODULE
 **种类：**常数
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 没有提供描述。
@@ -271,7 +271,7 @@ export interface StyleImport
 **种类：**常数
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 没有提供描述。
@@ -281,7 +281,7 @@ export const VUE_ADAPTER_MODULE
 **种类：**常数
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 没有提供描述。
@@ -291,7 +291,7 @@ export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
 **种类：**常数
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 没有提供描述。
@@ -323,23 +323,23 @@ export interface HoistedStaticEntry
 **种类：**功能
 
 ```typescript
-function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult
+function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 ```
 
 提升标记的渲染记录并返回目标生成器的条目。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|通用模块Ast |  |
+| 名称 | 类型        | 描述 |
+| ---- | ----------- | ---- |
+| 模块 | 通用模块Ast |      |
 
 ### MP_HOIST_PREFIX
 
 **种类：**常数
 
 ```typescript
-export const MP_HOIST_PREFIX
+export const MP_HOIST_PREFIX;
 ```
 
 没有提供描述。
@@ -351,33 +351,36 @@ export const MP_HOIST_PREFIX
 **种类：**功能
 
 ```typescript
-function applyOptimizationEdits(module: GenericModuleAst, edits: readonly SourceEdit[]): GenericModuleAst
+function applyOptimizationEdits(
+  module: GenericModuleAst,
+  edits: readonly SourceEdit[],
+): GenericModuleAst;
 ```
 
 将源代码编辑应用于模块源，而不暴露 AST 实现类型。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|通用模块Ast |  |
-|编辑|只读 SourceEdit[] |  |
+| 名称 | 类型              | 描述 |
+| ---- | ----------------- | ---- |
+| 模块 | 通用模块Ast       |      |
+| 编辑 | 只读 SourceEdit[] |      |
 
 ### 常量布尔值
 
 **种类：**功能
 
 ```typescript
-function constantBoolean(expression: ExpressionLike): boolean | undefined
+function constantBoolean(expression: ExpressionLike): boolean | undefined;
 ```
 
 解析文字布尔值而不评估编写的代码。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|表达|类似表达 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 表达 | 类似表达 |      |
 
 ### 通用优化结果
 
@@ -394,55 +397,55 @@ export interface GenericOptimizationResult
 **种类：**功能
 
 ```typescript
-function hasJsxKey(attributes: readonly GenericAttribute[]): boolean
+function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 ```
 
 通用 JSX 属性列表是否包含键。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读 GenericAttribute[] |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读 GenericAttribute[] |      |
 
 ### 有Mp静态标记
 
 **种类：**功能
 
 ```typescript
-function hasMpStaticMarker(node: GenericRenderNode): boolean
+function hasMpStaticMarker(node: GenericRenderNode): boolean;
 ```
 
 是否通用 JSX node 具有私有静态标记。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |通用渲染节点 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 通用渲染节点 |      |
 
 ### isCompileTimeConstant
 
 **种类：**功能
 
 ```typescript
-function isCompileTimeConstant(expression: ExpressionLike): boolean
+function isCompileTimeConstant(expression: ExpressionLike): boolean;
 ```
 
 源文本是否是纯编译时文字表达式。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|表达|类似表达 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 表达 | 类似表达 |      |
 
 ### MP_STATIC_ATTR
 
 **种类：**常数
 
 ```typescript
-export const MP_STATIC_ATTR
+export const MP_STATIC_ATTR;
 ```
 
 没有提供描述。
@@ -452,17 +455,20 @@ export const MP_STATIC_ATTR
 **种类：**功能
 
 ```typescript
-function optimizeGenericModule(module: GenericModuleAst, _options: OptimizeOptions = {}): GenericOptimizationResult
+function optimizeGenericModule(
+  module: GenericModuleAst,
+  _options: OptimizeOptions = {},
+): GenericOptimizationResult;
 ```
 
 应用记录级优化，同时单独返回任何源编辑。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|通用模块Ast |  |
-| _选项 |优化选项 |  |
+| 名称  | 类型        | 描述 |
+| ----- | ----------- | ---- |
+| 模块  | 通用模块Ast |      |
+| _选项 | 优化选项    |      |
 
 ### 优化选项
 
@@ -479,32 +485,34 @@ export interface OptimizeOptions
 **种类：**功能
 
 ```typescript
-function stripMpStaticAttributes(attributes: readonly GenericAttribute[]): readonly GenericAttribute[]
+function stripMpStaticAttributes(
+  attributes: readonly GenericAttribute[],
+): readonly GenericAttribute[];
 ```
 
 返回无标记通用属性列表。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读 GenericAttribute[] |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 属性 | 只读 GenericAttribute[] |      |
 
 ### 剥离Mp静态标记
 
 **种类：**功能
 
 ```typescript
-function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode
+function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
 返回无标记的通用渲染 node，递归地保留源跨度。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |通用渲染节点 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 通用渲染节点 |      |
 
 ## `src/diagnostics`
 
@@ -543,7 +551,14 @@ export type CompilerDiagnosticSeverity = "error" | "warning" | "info";
 **种类：**类型
 
 ```typescript
-export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering" | "optimization" | "generation" | "build";
+export type CompilerPhase =
+  | "frontend"
+  | "ir"
+  | "inference"
+  | "target-lowering"
+  | "optimization"
+  | "generation"
+  | "build";
 ```
 
 可以报​​告编译器诊断的管道阶段。
@@ -553,48 +568,52 @@ export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering
 **种类：**功能
 
 ```typescript
-function createCompilerDiagnostic(diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string }): CompilerDiagnostic
+function createCompilerDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string },
+): CompilerDiagnostic;
 ```
 
 创建诊断而不将阶段契约耦合到 TypeScript 节点。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断|忽略<CompilerDiagnostic, "fileName"> & { 文件名?: 字符串 } |  |
+| 名称 | 类型                                                       | 描述 |
+| ---- | ---------------------------------------------------------- | ---- |
+| 诊断 | 忽略<CompilerDiagnostic, "fileName"> & { 文件名?: 字符串 } |      |
 
 ### 格式编译器诊断
 
 **种类：**功能
 
 ```typescript
-function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string
+function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
 对编译器错误的诊断进行格式化，而不会丢失其源位置。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断|编译器诊断 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 诊断 | 编译器诊断 |      |
 
 ### 抛出编译器错误
 
 **种类：**功能
 
 ```typescript
-function throwOnCompilerErrors(diagnostics: readonly CompilerDiagnostic[] | undefined): void
+function throwOnCompilerErrors(
+  diagnostics: readonly CompilerDiagnostic[] | undefined,
+): void;
 ```
 
 当某个阶段报告一个或多个错误时中止编译器管道。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断 |只读编译器诊断[] \|未定义 |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 诊断 | 只读编译器诊断[] \|未定义 |      |
 
 ## `src/framework`
 
@@ -673,7 +692,8 @@ export type GeneratorContext = TargetContext;
 **种类：**类型
 
 ```typescript
-export type JsxFramework = "react" | "vue" | "svelte" | "solid" | "web-components";
+export type JsxFramework =
+  "react" | "vue" | "svelte" | "solid" | "web-components";
 ```
 
 当前内置框架ID；插件可以使用任何附加的字符串 ID。
@@ -779,7 +799,7 @@ export interface ViteBuildContext
 **种类：**常数
 
 ```typescript
-export const defineForgeFramework
+export const defineForgeFramework;
 ```
 
 别名强调框架包注册目标实现。
@@ -789,16 +809,16 @@ export const defineForgeFramework
 **种类：**功能
 
 ```typescript
-function defineForgeOutputPlugin(plugin: T): T
+function defineForgeOutputPlugin(plugin: T): T;
 ```
 
 验证并返回框架输出插件以供消费者注册。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|插件 | T |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 插件 | T    |      |
 
 ### Forge插件ID
 
@@ -815,32 +835,36 @@ export type ForgePluginId = FrameworkOutputPlugin["id"];
 **种类：**功能
 
 ```typescript
-function validateForgeOutputPlugin(plugin: unknown): asserts plugin is FrameworkOutputPlugin
+function validateForgeOutputPlugin(
+  plugin: unknown,
+): asserts plugin is FrameworkOutputPlugin;
 ```
 
 独立于任何框架注册表验证目标元数据。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|插件 |未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 插件 | 未知 |      |
 
 ### validateForgeOutputPluginSelection
 
 **种类：**功能
 
 ```typescript
-function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
+function validateForgeOutputPluginSelection(
+  plugins: readonly T[],
+): readonly T[];
 ```
 
 验证调用者拥有的目标选择，包括空 ID 和重复 ID。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|插件 |只读 T[] |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 插件 | 只读 T[] |      |
 
 ## `src/ir`
 
@@ -849,34 +873,40 @@ function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
 **种类：**功能
 
 ```typescript
-function attributeExpressionText(node: GenericRenderNode, name: string): string | undefined
+function attributeExpressionText(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 当命名属性带有一个时，读取它的表达式文本。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |通用渲染节点 |  |
-|名称 |字符串|  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 通用渲染节点 |      |
+| 名称 | 字符串       |      |
 
 ### 属性字符串值
 
 **种类：**功能
 
 ```typescript
-function attributeStringValue(node: GenericRenderNode, name: string): string | undefined
+function attributeStringValue(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 读取命名属性的静态字符串值（如果有）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |通用渲染节点 |  |
-|名称 |字符串|  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 通用渲染节点 |      |
+| 名称 | 字符串       |      |
 
 ### 动态节点意图
 
@@ -903,7 +933,7 @@ export interface EffectIntention
 **种类：**常数
 
 ```typescript
-export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
+export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions;
 ```
 
 固定装置和模块使用的空意图事实，没有任何可推断的内容。
@@ -913,7 +943,7 @@ export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
 **种类：**常数
 
 ```typescript
-export const EMPTY_SPAN: SourceSpan
+export const EMPTY_SPAN: SourceSpan;
 ```
 
 合成通用节点使用的零宽度跨度。
@@ -933,24 +963,28 @@ export interface EventIntention
 **种类：**功能
 
 ```typescript
-function findAttribute(node: GenericRenderNode, name: string): GenericJsxAttribute | undefined
+function findAttribute(
+  node: GenericRenderNode,
+  name: string,
+): GenericJsxAttribute | undefined;
 ```
 
 在渲染上查找命名属性 node.
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |通用渲染节点 |  |
-|名称 |字符串|  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 通用渲染节点 |      |
+| 名称 | 字符串       |      |
 
 ### 通用AstNode
 
 **种类：**类型
 
 ```typescript
-export type GenericAstNode = GenericImport | GenericStatement | GenericRenderNode;
+export type GenericAstNode =
+  GenericImport | GenericStatement | GenericRenderNode;
 ```
 
 没有提供描述。
@@ -980,7 +1014,8 @@ JSX 属性携带的值。
 **种类：**类型
 
 ```typescript
-export type GenericBindingKind = "identifier" | "object-pattern" | "array-pattern";
+export type GenericBindingKind =
+  "identifier" | "object-pattern" | "array-pattern";
 ```
 
 组件 props 参数的绑定形式。
@@ -1060,7 +1095,8 @@ export interface GenericParameter
 **种类：**类型
 
 ```typescript
-export type GenericRenderChild = GenericRenderNode | GenericTextNode | GenericExpressionNode;
+export type GenericRenderChild =
+  GenericRenderNode | GenericTextNode | GenericExpressionNode;
 ```
 
 没有提供描述。
@@ -1090,7 +1126,18 @@ export interface GenericStatement
 **种类：**类型
 
 ```typescript
-export type GenericStatementKind = | "import" | "interface" | "type-alias" | "enum" | "variable" | "function" | "class" | "export" | "expression" | "return" | "other";
+export type GenericStatementKind =
+  | "import"
+  | "interface"
+  | "type-alias"
+  | "enum"
+  | "variable"
+  | "function"
+  | "class"
+  | "export"
+  | "expression"
+  | "return"
+  | "other";
 ```
 
 保留的模块级语句的粗分类。
@@ -1120,48 +1167,50 @@ JSX 标记之间的文字文本。
 **种类：**功能
 
 ```typescript
-function isExpressionNode(child: GenericRenderChild): child is GenericExpressionNode
+function isExpressionNode(
+  child: GenericRenderChild,
+): child is GenericExpressionNode;
 ```
 
 渲染子项是否是 `{ … }` 插值。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|孩子 |通用渲染子|  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 孩子 | 通用渲染子 |      |
 
 ### 是渲染节点
 
 **种类：**功能
 
 ```typescript
-function isRenderNode(child: GenericRenderChild): child is GenericRenderNode
+function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
 渲染子项是否是嵌套元素/片段 node.
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|孩子 |通用渲染子|  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 孩子 | 通用渲染子 |      |
 
 ### 是文本节点
 
 **种类：**功能
 
 ```typescript
-function isTextNode(child: GenericRenderChild): child is GenericTextNode
+function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 ```
 
 渲染子项是否是原义 JSX 文本。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|孩子 |通用渲染子|  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 孩子 | 通用渲染子 |      |
 
 ### 列出关键意图
 
@@ -1208,16 +1257,16 @@ export interface RefIntention
 **种类：**功能
 
 ```typescript
-function renderNodeTagName(node: GenericRenderNode): string | undefined
+function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
 渲染的普通标签名称 node， 或者 `undefined` 对于计算标签。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| node |通用渲染节点 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| node | 通用渲染节点 |      |
 
 ### 语义意图
 
@@ -1254,18 +1303,22 @@ export interface SlotIntention
 **种类：**功能
 
 ```typescript
-function sourceBacked(text: string, syntax: SourceBackedExpression["syntax"] = "expression", span: SourceSpan = EMPTY_SPAN): SourceBackedExpression
+function sourceBacked(
+  text: string,
+  syntax: SourceBackedExpression["syntax"] = "expression",
+  span: SourceSpan = EMPTY_SPAN,
+): SourceBackedExpression;
 ```
 
 从已打印的文本构建源支持的表达式。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
-|语法| SourceBackedExpression["语法"] |  |
-|跨度|来源跨度 |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 文字 | 字符串                         |      |
+| 语法 | SourceBackedExpression["语法"] |      |
+| 跨度 | 来源跨度                       |      |
 
 ### 源支持表达式
 
@@ -1302,14 +1355,17 @@ export interface StateIntention
 **种类：**功能
 
 ```typescript
-function walkRenderNodes(nodes: readonly GenericRenderNode[], visit: (node: GenericRenderNode) => void): void
+function walkRenderNodes(
+  nodes: readonly GenericRenderNode[],
+  visit: (node: GenericRenderNode) => void,
+): void;
 ```
 
 深度优先遍历渲染树，包括嵌套表达式标记。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|节点 |只读 GenericRenderNode[] |  |
-|访问 | （node: GenericRenderNode) => 无效 |  |
+| 名称 | 类型                               | 描述 |
+| ---- | ---------------------------------- | ---- |
+| 节点 | 只读 GenericRenderNode[]           |      |
+| 访问 | （node: GenericRenderNode) => 无效 |      |

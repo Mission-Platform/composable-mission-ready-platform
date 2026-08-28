@@ -15,23 +15,23 @@ function createSvelteKitRouterCapabilities(input: {
   page: { url: Pick<URL, 'pathname' | 'search' | 'hash'>; params: Record<string, string> };
   goto: SvelteKitRouterSurface['goto'];
   resolvePath?: (path: string) => string;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Build neutral capabilities from SvelteKit primitives (framework-free for tests).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | {   page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> };   goto: SvelteKitRouterSurface['goto'];   resolvePath?: (path: string) => string; } |  |
+| Name  | Type                                                                                                                                                                          | Description |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| input | { page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; resolvePath?: (path: string) => string; } |             |
 
 ### MpLink
 
 **Kind:** component
 
 ```typescript
-export const MpLink
+export MpLink = 'a'
 ```
 
 SvelteKit uses normal anchors for links. The compiler keeps this marker so
@@ -42,7 +42,7 @@ Svelte output can type-check package authors' neutral `MpLink` usage.
 **Kind:** component
 
 ```typescript
-export const MpRouterView
+export MpRouterView = undefined
 ```
 
 Outlet is application-owned in SvelteKit; capability diagnostics reject `view`.
@@ -52,23 +52,23 @@ Outlet is application-owned in SvelteKit; capability diagnostics reject `view`.
 **Kind:** function
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Resolve a neutral target to an href string.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
+| Name | Type               | Description |
+| ---- | ------------------ | ----------- |
+| to   | MpRouteLocationRaw |             |
 
 ### setForgeSvelteKitRouter
 
 **Kind:** function
 
 ```typescript
-function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
+function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 ```
 
 Bind SvelteKit page/navigation APIs for compiled package capabilities.
@@ -76,9 +76,9 @@ Apps typically call this once from a root layout with `$app` modules.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| surface | SvelteKitRouterSurface |  |
+| Name    | Type                   | Description |
+| ------- | ---------------------- | ----------- |
+| surface | SvelteKitRouterSurface |             |
 
 ### SvelteKitRouterSurface
 
@@ -98,40 +98,40 @@ Minimal SvelteKit surface used by the runtime shim.
 function toMpLocationFromSvelte(page: {
   url: Pick<URL, 'pathname' | 'search' | 'hash'>;
   params: Record<string, string>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 Build a neutral location from a SvelteKit page snapshot.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| page | {   url: Pick<URL, 'pathname' \| 'search' \| 'hash'>;   params: Record<string, string>; } |  |
+| Name | Type                                                                                  | Description |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
+| page | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string>; } |             |
 
 ### toSvelteHref
 
 **Kind:** function
 
 ```typescript
-function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string
+function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string;
 ```
 
 Serialize a neutral target for SvelteKit navigation.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| to | MpRouteLocationRaw |  |
-| resolvePath | (path: string) => string |  |
+| Name        | Type                     | Description |
+| ----------- | ------------------------ | ----------- |
+| to          | MpRouteLocationRaw       |             |
+| resolvePath | (path: string) => string |             |
 
 ### useMpNavigation
 
 **Kind:** function
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Read only imperative navigation/resolve capabilities.
@@ -141,7 +141,7 @@ Read only imperative navigation/resolve capabilities.
 **Kind:** function
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Route reads are supported through the bound page surface for navigate/resolve packages.
@@ -151,7 +151,7 @@ Route reads are supported through the bound page surface for navigate/resolve pa
 **Kind:** function
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Read the neutral capability object backed by SvelteKit navigation.
@@ -163,7 +163,7 @@ Read the neutral capability object backed by SvelteKit navigation.
 **Kind:** constant
 
 ```typescript
-export const forgeRouterSvelte
+export const forgeRouterSvelte;
 ```
 
 Forge router target for SvelteKit's application-owned page/navigation APIs.

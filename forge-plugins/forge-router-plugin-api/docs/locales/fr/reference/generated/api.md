@@ -16,41 +16,45 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 Créez un diagnostic source-local pour une défaillance du compilateur de routeur.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| diagnostic | Omit<CompilerDiagnostic, 'phase' \| 'fileName'> & { nom de fichier en lecture seule ? : chaîne ;   } |  |
+| Nom        | Tapez                                                                                              | Descriptif |
+| ---------- | -------------------------------------------------------------------------------------------------- | ---------- |
+| diagnostic | Omit<CompilerDiagnostic, 'phase' \| 'fileName'> & { nom de fichier en lecture seule ? : chaîne ; } |            |
 
 ### définirForgeRouterPlugin
 
 **Genre :** fonction
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 Validez les métadonnées du plug-in du routeur avant qu'elles n'entrent dans un pipeline du compilateur.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| plugin | T |  |
+| Nom    | Tapez | Descriptif |
+| ------ | ----- | ---------- |
+| plugin | T     |            |
 
 ### définirForgeRouterTarget
 
 **Genre :** fonction
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 Créez une cible déterministe qui réécrit les importations de routeurs neutres.
@@ -63,16 +67,16 @@ routeurs basés sur des fichiers ou sur serveur uniquement.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeRouterTargetOptions |  |
+| Nom     | Tapez                    | Descriptif |
+| ------- | ------------------------ | ---------- |
+| options | ForgeRouterTargetOptions |            |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 Exportations d'exécution neutres qui préservent le contrat auteur du package.
@@ -87,7 +91,7 @@ Cibles qui ne peuvent pas renommer les hooks natifs 1:1 (par exemple celui de Re
 **Genre :** constante
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 Contrats cibles réservés aux routeurs dont les adaptateurs propriétaires ne font pas partie de cette étape.
@@ -127,7 +131,7 @@ Un module source généré renvoyé par une cible de routeur.
 **Genre :** constante
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Marqueur stable partagé avec le package de routeur neutre.
@@ -137,7 +141,7 @@ Marqueur stable partagé avec le package de routeur neutre.
 **Genre :** constante
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 Le package dont les importations sont comprises par la passe du compilateur du routeur.
@@ -157,7 +161,8 @@ Créez des hooks appartenant à une cible de routeur ; aucune dépendance de ro
 **Genre :** type
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 Opérations abaissables indépendamment exposées par le contrat de routeur neutre.
@@ -197,7 +202,7 @@ Une utilisation d'un marqueur de routeur neutre, conservant les coordonnées de 
 **Genre :** type
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 Comment une liaison de routeur neutre est utilisée dans un module source.
@@ -277,31 +282,37 @@ Plan spécifique à la cible réalisé entre la descente et la génération.
 **Genre :** fonction
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 Recherchez une cible de routeur directe ou sélectionnée par identifiant sans la coupler aux plugins d'interface utilisateur.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| sélection | Sélection du plugin de routeur \| indéfini |  |
-| plugins | lecture seule RouterOutputPlugin[] |  |
+| Nom       | Tapez                                      | Descriptif |
+| --------- | ------------------------------------------ | ---------- |
+| sélection | Sélection du plugin de routeur \| indéfini |            |
+| plugins   | lecture seule RouterOutputPlugin[]         |            |
 
 ### capacités de routeur non prises en charge
 
 **Genre :** fonction
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 Signalez les lacunes en matière de capacités avant qu'une cible n'ait la possibilité de mal compiler silencieusement un module.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| ir | Module de capacité de routeur |  |
-| plugin | RouterOutputPlugin \| indéfini |  |
+| Nom    | Tapez                          | Descriptif |
+| ------ | ------------------------------ | ---------- |
+| ir     | Module de capacité de routeur  |            |
+| plugin | RouterOutputPlugin \| indéfini |            |

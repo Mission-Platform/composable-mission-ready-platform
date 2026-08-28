@@ -26,7 +26,7 @@ Deterministische representatie ingebed door een Forge-backend.
 **Soort:** constant
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 Stabiele versie van het gedeelde Forge regex bytecode-contract.
@@ -36,7 +36,7 @@ Stabiele versie van het gedeelde Forge regex bytecode-contract.
 **Soort:** constant
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 Breedte, in 32-bits gehele operanden, van elke instructie.
@@ -46,7 +46,7 @@ Breedte, in 32-bits gehele operanden, van elke instructie.
 **Soort:** constant
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 Opcodes die worden gebruikt door de Forge-backend en gespiegeld door het referentie-orakel.
@@ -68,16 +68,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 Compileer de ondersteunde deterministische regex-subset in Forge-bytecode.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| patroon | tekenreeks |  |
+| Naam    | Typ        | Beschrijving |
+| ------- | ---------- | ------------ |
+| patroon | tekenreeks |              |
 
 ### RegexSyntaxError
 
@@ -96,17 +96,17 @@ Syntaxisfout van de compiler met deterministische bron-relatieve berichten.
 **Soort:** functie
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 Lees een opname-einde zonder de bytecode-slotindeling aan bellers bloot te stellen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vangt | Vangt \| nul |  |
-| groep | nummer |  |
+| Naam  | Typ          | Beschrijving |
+| ----- | ------------ | ------------ |
+| vangt | Vangt \| nul |              |
+| groep | nummer       |              |
 
 ### Opnames
 
@@ -123,83 +123,83 @@ Capture-slots zijn `[start0, end0, start1, end1, ...]`; `-1` betekent uitgeschak
 **Soort:** functie
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 Lees een opnamestart zonder de lay-out van de bytecodeslot aan bellers bloot te stellen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vangt | Vangt \| nul |  |
-| groep | nummer |  |
+| Naam  | Typ          | Beschrijving |
+| ----- | ------------ | ------------ |
+| vangt | Vangt \| nul |              |
+| groep | nummer       |              |
 
 ### volledige Match
 
 **Soort:** functie
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Hele string-match, verankerd op positie nul.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opnieuw | GecompileerdeRegex |  |
-| invoer | tekenreeks |  |
+| Naam    | Typ                | Beschrijving |
+| ------- | ------------------ | ------------ |
+| opnieuw | GecompileerdeRegex |              |
+| invoer  | tekenreeks         |              |
 
 ### voorvoegselMatch
 
 **Soort:** functie
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Voorvoegselmatch, verankerd op positie nul maar niet aan het einde.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opnieuw | GecompileerdeRegex |  |
-| invoer | tekenreeks |  |
+| Naam    | Typ                | Beschrijving |
+| ------- | ------------------ | ------------ |
+| opnieuw | GecompileerdeRegex |              |
+| invoer  | tekenreeks         |              |
 
 ### zoekopdracht
 
 **Soort:** functie
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 Meest linkse overeenkomst op of na `start`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opnieuw | GecompileerdeRegex |  |
-| invoer | tekenreeks |  |
-| begin |  |  |
+| Naam    | Typ                | Beschrijving |
+| ------- | ------------------ | ------------ |
+| opnieuw | GecompileerdeRegex |              |
+| invoer  | tekenreeks         |              |
+| begin   |                    |              |
 
 ### test
 
 **Soort:** functie
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 Booleaanse overeenkomst voor hele reeks.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opnieuw | GecompileerdeRegex |  |
-| invoer | tekenreeks |  |
+| Naam    | Typ                | Beschrijving |
+| ------- | ------------------ | ------------ |
+| opnieuw | GecompileerdeRegex |              |
+| invoer  | tekenreeks         |              |

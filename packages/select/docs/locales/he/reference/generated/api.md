@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function ForgeTag(properties: Readonly<TagProperties>): MpElement
+function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 ```
 
 `ForgeTag` - תווית קומפקטית ומעוגלת שנכתבה פעם אחת בניב JSX הנייטרלי
@@ -34,9 +34,9 @@ callback-prop `onRemove` (תחליף פולט Vue `remove`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<TagProperties> |  |
+| שם    | הקלד                       | תיאור |
+| ----- | -------------------------- | ----- |
+| נכסים | לקריאה בלבד<TagProperties> |       |
 
 ### TagProperties
 
@@ -63,7 +63,8 @@ export type TagSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **סוג:** סוג
 
 ```typescript
-export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TagVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 טון התג.
@@ -75,16 +76,16 @@ export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'suc
 פונקציה **סוג:**
 
 ```typescript
-function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement
+function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ForgeLanguageSwitcherProperties> |  |
+| שם    | הקלד                                         | תיאור |
+| ----- | -------------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ForgeLanguageSwitcherProperties> |       |
 
 ### ForgeLanguageSwitcherOption
 
@@ -113,7 +114,7 @@ export interface ForgeLanguageSwitcherProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement
+function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement;
 ```
 
 `ForgeMultiselect` - תיבת משולבת מרובת בחירה מבוססת תגים עם שדה חיפוש,
@@ -145,9 +146,9 @@ React/Vue); המחרוזות `useI18n` הופכות לטקסט רגיל; וה-`v
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MultiselectProperties> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| נכסים | לקריאה בלבד<MultiselectProperties> |       |
 
 ### MultiselectOption
 
@@ -186,7 +187,7 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
+function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
 `ForgeSelect` - תיבה משולבת/בחירה מותאמת אישית שנכתבה פעם אחת ב-JSX הנייטרלי
@@ -220,9 +221,9 @@ function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<SelectProperties> |  |
+| שם    | הקלד                          | תיאור |
+| ----- | ----------------------------- | ----- |
+| נכסים | לקריאה בלבד<SelectProperties> |       |
 
 ### בחר באפשרות
 

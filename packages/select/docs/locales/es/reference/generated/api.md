@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/sele
 **Tipo:** función
 
 ```typescript
-function ForgeTag(properties: Readonly<TagProperties>): MpElement
+function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 ```
 
 `ForgeTag`: una etiqueta compacta y redondeada creada una vez en el dialecto JSX neutral
@@ -34,9 +34,9 @@ callback-prop `onRemove` (el sustituto de emisión Vue `remove`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<TagProperties> |  |
+| Nombre      | Tipo                        | Descripción |
+| ----------- | --------------------------- | ----------- |
+| propiedades | Sólo lectura<TagProperties> |             |
 
 ### Propiedades de etiqueta
 
@@ -63,7 +63,8 @@ Escala de tamaño Canonical 2xs → 2xl.
 **Tipo:** tipo
 
 ```typescript
-export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TagVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Tono de la etiqueta.
@@ -75,16 +76,16 @@ Tono de la etiqueta.
 **Tipo:** función
 
 ```typescript
-function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement
+function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ForgeLanguageSwitcherProperties> |  |
+| Nombre      | Tipo                                          | Descripción |
+| ----------- | --------------------------------------------- | ----------- |
+| propiedades | Sólo lectura<ForgeLanguageSwitcherProperties> |             |
 
 ### Opción ForgeLanguageSwitcher
 
@@ -113,7 +114,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement
+function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement;
 ```
 
 `ForgeMultiselect`: un cuadro combinado de selección múltiple basado en etiquetas con un campo de búsqueda,
@@ -145,9 +146,9 @@ convertirse en accesorios de devolución de llamada.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MultiselectProperties> |  |
+| Nombre      | Tipo                                | Descripción |
+| ----------- | ----------------------------------- | ----------- |
+| propiedades | Sólo lectura<MultiselectProperties> |             |
 
 ### Opción de selección múltiple
 
@@ -186,7 +187,7 @@ Escala de tamaño de control canónico.
 **Tipo:** función
 
 ```typescript
-function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
+function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
 `ForgeSelect`: un cuadro combinado personalizado/selección creado una vez en el JSX neutral
@@ -220,9 +221,9 @@ conservados como espacios con nombre neutrales.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<SelectProperties> |  |
+| Nombre      | Tipo                           | Descripción |
+| ----------- | ------------------------------ | ----------- |
+| propiedades | Sólo lectura<SelectProperties> |             |
 
 ### Seleccionar opción
 

@@ -16,16 +16,16 @@
 **種類:** 関数
 
 ```typescript
-function synthesiseElementClass(plan: WebComponentsLoweredModule): string
+function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 ```
 
 `ForgeElement` サブクラスと、引き下げられたプランのその登録を出力します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|計画 | WebコンポーネントLoweredモジュール |  |
+| 名前 | タイプ                             | 説明 |
+| ---- | ---------------------------------- | ---- |
+| 計画 | WebコンポーネントLoweredモジュール |      |
 
 ## `src/emitters/module`
 
@@ -34,19 +34,24 @@ function synthesiseElementClass(plan: WebComponentsLoweredModule): string
 **種類:** 関数
 
 ```typescript
-function emitWebComponentModule(module: SemanticModule, componentName: string = "CustomElement", componentFolders: ReadonlySet<string> = new Set(), lowered?: WebComponentsLoweredModule): EmittedWebComponentModule
+function emitWebComponentModule(
+  module: SemanticModule,
+  componentName: string = "CustomElement",
+  componentFolders: ReadonlySet<string> = new Set(),
+  lowered?: WebComponentsLoweredModule,
+): EmittedWebComponentModule;
 ```
 
 モジュール全体をネイティブ Web コンポーネント ターゲット ソースに変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
-|コンポーネント名 |文字列 |  |
-|コンポーネントフォルダー | ReadonlySet<string> |  |
-|下げた | WebコンポーネントLoweredモジュール |  |
+| 名前                     | タイプ                             | 説明 |
+| ------------------------ | ---------------------------------- | ---- |
+| モジュール               | セマンティックモジュール           |      |
+| コンポーネント名         | 文字列                             |      |
+| コンポーネントフォルダー | ReadonlySet<string>                |      |
+| 下げた                   | WebコンポーネントLoweredモジュール |      |
 
 ## `src/index`
 
@@ -55,7 +60,7 @@ function emitWebComponentModule(module: SemanticModule, componentName: string = 
 **種類:** 関数
 
 ```typescript
-function forgeWebComponentsFramework(): FrameworkOutputPlugin
+function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 ```
 
 TypeScript 専用の Web コンポーネント出力プラグインを作成します。
@@ -67,7 +72,7 @@ TypeScript 専用の Web コンポーネント出力プラグインを作成し�
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 内部はランタイムによって機能ゲートされます。フォームの関連付けはオプトインのままです。
@@ -77,7 +82,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 互換性のデフォルトは、生成されたコンポーネントに対して保持されます。
@@ -87,7 +92,9 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
 **種類:** 関数
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebComponentsHostPlan
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+): WebComponentsHostPlan;
 ```
 
 カスタマイズされた組み込みホストは、単一の静的な組み込みルートからのみ推論されます。
@@ -98,66 +105,74 @@ HTML は、安全または有用なカスタマイズされた組み込みであ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|戻りノード | GenericRenderNode \|未定義 |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| 戻りノード | GenericRenderNode \|未定義 |      |
 
 ### isWebComponentsLowered
 
 **種類:** 関数
 
 ```typescript
-function isWebComponentsLowered(lowered: TargetLoweredModule | undefined): lowered is WebComponentsLoweredModule
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
 ```
 
 キャストを行わずに、対象プランを Web コンポーネント プランに絞り込みます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|下げた | TargetLoweredModule \|未定義 |  |
+| 名前   | タイプ                       | 説明 |
+| ------ | ---------------------------- | ---- |
+| 下げた | TargetLoweredModule \|未定義 |      |
 
 ### 下部Webコンポーネントモジュール
 
 **種類:** 関数
 
 ```typescript
-function lowerWebComponentsModule(module: SemanticModule, context: TargetContext): TargetIntentions
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Web コンポーネントのターゲット意図に対する中立的な IR を下げます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
-|コンテキスト |ターゲットコンテキスト |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| モジュール   | セマンティックモジュール |      |
+| コンテキスト | ターゲットコンテキスト   |      |
 
 ### 下位Webコンポーネント計画
 
 **種類:** 関数
 
 ```typescript
-function lowerWebComponentsPlan(module: SemanticModule, context: TargetContext): WebComponentsLoweredModule
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
 ```
 
 中立モジュールの Web コンポーネント ターゲット プランを構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
-|コンテキスト |ターゲットコンテキスト |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| モジュール   | セマンティックモジュール |      |
+| コンテキスト | ターゲットコンテキスト   |      |
 
 ### 不明なタイプ
 
 **種類:** 定数
 
 ```typescript
-export const UNKNOWN_TYPE
+export const UNKNOWN_TYPE;
 ```
 
 宣言された型も推論された型も利用できない場合に出力される型。
@@ -167,7 +182,7 @@ export const UNKNOWN_TYPE
 **種類:** 定数
 
 ```typescript
-export const WEB_COMPONENTS_FRAMEWORK
+export const WEB_COMPONENTS_FRAMEWORK;
 ```
 
 プラグインのフレームワーク ID、およびその引き下げられたプランの識別子。
@@ -177,7 +192,7 @@ export const WEB_COMPONENTS_FRAMEWORK
 **種類:** 定数
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS
+export const WEBCOMPONENTS_NATIVE_HOSTS;
 ```
 
 安全にカスタマイズできるルートの互換性テーブルが組み込まれています。
@@ -239,7 +254,14 @@ export interface WebComponentsGeneratedId
 **種類：**タイプ
 
 ```typescript
-export type WebComponentsHostFallbackReason = | "missing-root" | "fragment-root" | "dynamic-root" | "component-root" | "ambiguous-root" | "invalid-root" | "unsupported-root";
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
 ```
 
 コンポーネントがカスタマイズされた組み込みホストを使用できない安定した理由。
@@ -279,7 +301,8 @@ export interface WebComponentsInternalsPolicy
 **種類：**タイプ
 
 ```typescript
-export type WebComponentsLifecycleCallback = "connectedCallback" | "disconnectedCallback" | "updatedCallback";
+export type WebComponentsLifecycleCallback =
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 ```
 
 プランが生成できるカスタム要素のライフサイクル コールバック。
@@ -325,7 +348,7 @@ export interface WebComponentsPromotedLocal
 要素メンバーに**昇格**されたレンダーヘッド定数。
 
 メモゲッター、ライフサイクルコールバック、およびフィールド初期化子はすべて発行されます
-*外側* `render()` のため、レンダー ヘッドが宣言するローカルは存在しません
+_外側_ `render()` のため、レンダー ヘッドが宣言するローカルは存在しません
 彼ら。宣言をメンバーに宣伝すると、そのような読みが得られます。
 未解決ではなく、`this.<name>` を通じて解決可能です。
 
@@ -397,10 +420,10 @@ parseTime(modelValue);`) は影響がないことが証明できなかったの�
 推移的に閉じられたもの、および**のみ**。
 
 キャッシュではなくリプレイは意図的に行われます。中性ソースでは、ヘッド
-*は* コンポーネント本体なので、`const initial = parseTime(modelValue);` はすでにあります
+_は_ コンポーネント本体なので、`const initial = parseTime(modelValue);` はすでにあります
 すべてのレンダリングで実行されます。セットアップ中にもう一度評価しても呼び出しは実行されません
 作成されたコンポーネントは、各パスでまだ実行されていません。それをキャッシュする
-フィールドは代わりに評価の数を *減らし*、値に
+フィールドは代わりに評価の数を _減らし_、値に
 情報源が決して約束したことのない身元。プレーンな `const` (または関数) のみ
 宣言は常に再生されます。{@link headReplay} を参照してください。
 
@@ -451,41 +474,47 @@ export interface WebComponentsTemplatePlan
 **種類:** 関数
 
 ```typescript
-function optimizeWebComponentsModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeWebComponentsModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Web コンポーネントのターゲット意図を最適化します。他のターゲットは通過します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|意図 |ターゲットインテンション |  |
-|オプション |ターゲット最適化オプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| 意図       | ターゲットインテンション   |      |
+| オプション | ターゲット最適化オプション |      |
 
 ### 最適化Webコンポーネント計画
 
 **種類:** 関数
 
 ```typescript
-function optimizeWebComponentsPlan(plan: WebComponentsLoweredModule, options: TargetOptimizeOptions): WebComponentsLoweredModule
+function optimizeWebComponentsPlan(
+  plan: WebComponentsLoweredModule,
+  options: TargetOptimizeOptions,
+): WebComponentsLoweredModule;
 ```
 
 実行された各パスを記録して、下位の Web コンポーネント プランを調整します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|計画 | WebコンポーネントLoweredモジュール |  |
-|オプション |ターゲット最適化オプション |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| 計画       | WebコンポーネントLoweredモジュール |      |
+| オプション | ターゲット最適化オプション         |      |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
 **種類:** 定数
 
 ```typescript
-export const WEB_COMPONENTS_OPTIMIZATIONS
+export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
 識別子は {@link WebComponentsLoweredModule.appliedOptimizations} に記録されます。
@@ -495,7 +524,8 @@ export const WEB_COMPONENTS_OPTIMIZATIONS
 **種類：**タイプ
 
 ```typescript
-export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
+export type WebComponentsOptimization =
+  (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
 ```
 
 記録された Web コンポーネント最適化識別子。
@@ -507,16 +537,16 @@ export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[ke
 **種類:** 関数
 
 ```typescript
-function emitWebComponentHookModule(module: SemanticModule): string
+function emitWebComponentHookModule(module: SemanticModule): string;
 ```
 
 ニュートラル フック モジュールを Web コンポーネント ソースに変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| モジュール | セマンティックモジュール |      |
 
 ## `src/transformers/expression`
 
@@ -525,7 +555,7 @@ function emitWebComponentHookModule(module: SemanticModule): string
 **種類:** 定数
 
 ```typescript
-export const HAS_SLOT_RUNTIME
+export const HAS_SLOT_RUNTIME;
 ```
 
 マーカーが下位にあるネイティブ ランタイム ヘルパー。ホスト要素で呼び出されます。
@@ -535,7 +565,7 @@ export const HAS_SLOT_RUNTIME
 **種類:** 関数
 
 ```typescript
-function isFunctionExpressionText(text: string): boolean
+function isFunctionExpressionText(text: string): boolean;
 ```
 
 テキストが **関数値** 式 (矢印または
@@ -547,16 +577,16 @@ function isFunctionExpressionText(text: string): boolean
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| テキスト | 文字列 |      |
 
 ### isPureExpressionText
 
 **種類:** 関数
 
 ```typescript
-function isPureExpressionText(text: string): boolean
+function isPureExpressionText(text: string): boolean;
 ```
 
 式に効果が**証明可能** あるかどうか: 呼び出しなし、`new` なし、なし
@@ -569,9 +599,9 @@ function isPureExpressionText(text: string): boolean
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| テキスト | 文字列 |      |
 
 ## `src/transformers/props-binding`
 
@@ -580,26 +610,26 @@ function isPureExpressionText(text: string): boolean
 **種類:** 関数
 
 ```typescript
-function leadingObjectPattern(text: string): string | undefined
+function leadingObjectPattern(text: string): string | undefined;
 ```
 
-`text` で *開始* され、その後に続くものはすべて破棄されるオブジェクト パターン。
+`text` で _開始_ され、その後に続くものはすべて破棄されるオブジェクト パターン。
 
 パラメータのソース テキストにはその注釈 (`{ a, b }: Readonly<P>`) が含まれます。
 したがって、パターンが分解される前に切り取られる必要があります。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| テキスト | 文字列 |      |
 
 ### parsePropsBinding
 
 **種類:** 関数
 
 ```typescript
-function parsePropsBinding(patternText: string): PropsBinding | undefined
+function parsePropsBinding(patternText: string): PropsBinding | undefined;
 ```
 
 props オブジェクト パターンを分解します。
@@ -610,9 +640,9 @@ props オブジェクト パターンを分解します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|パターンテキスト |文字列 |  |
+| 名前             | タイプ | 説明 |
+| ---------------- | ------ | ---- |
+| パターンテキスト | 文字列 |      |
 
 ### 小道具バインディング
 
@@ -639,7 +669,10 @@ props オブジェクト パターンの 1 つのエントリ。
 **種類:** 関数
 
 ```typescript
-function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => boolean): string | undefined
+function propsBindingStatement(
+  binding: PropsBinding,
+  isRead: (name: string) => boolean,
+): string | undefined;
 ```
 
 プロパティ パターンを `const { … } = this;` として再生し、エントリに制限します
@@ -651,10 +684,10 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バインディング |小道具バインディング |  |
-|読みます | (名前: 文字列) => ブール値 |  |
+| 名前           | タイプ                     | 説明 |
+| -------------- | -------------------------- | ---- |
+| バインディング | 小道具バインディング       |      |
+| 読みます       | (名前: 文字列) => ブール値 |      |
 
 ## `src/transformers/props-type`
 
@@ -663,7 +696,10 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 **種類:** 関数
 
 ```typescript
-function indexedAccessType(reference: PropsTypeReference, member: string): string
+function indexedAccessType(
+  reference: PropsTypeReference,
+  member: string,
+): string;
 ```
 
 props 型のメンバーが出力されるインデックス付きアクセス アノテーション。
@@ -677,10 +713,10 @@ props 型のメンバーが出力されるインデックス付きアクセス �
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|参照 | PropsTypeReference |  |
-|メンバー |文字列 |  |
+| 名前     | タイプ             | 説明 |
+| -------- | ------------------ | ---- |
+| 参照     | PropsTypeReference |      |
+| メンバー | 文字列             |      |
 
 ### PropsTypeReference
 
@@ -697,7 +733,10 @@ export interface PropsTypeReference
 **種類:** 関数
 
 ```typescript
-function resolvePropsTypeReference(annotation: string | undefined, declarations: readonly GenericStatement[]): PropsTypeReference | undefined
+function resolvePropsTypeReference(
+  annotation: string | undefined,
+  declarations: readonly GenericStatement[],
+): PropsTypeReference | undefined;
 ```
 
 モジュールの保持された宣言に対して props アノテーションを解決します。
@@ -708,17 +747,17 @@ function resolvePropsTypeReference(annotation: string | undefined, declarations:
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|注釈 |文字列 \|未定義 |  |
-|宣言 |読み取り専用 GenericStatement[] |  |
+| 名前 | タイプ                          | 説明 |
+| ---- | ------------------------------- | ---- |
+| 注釈 | 文字列 \|未定義                 |      |
+| 宣言 | 読み取り専用 GenericStatement[] |      |
 
 ### タイプメンバー
 
 **種類:** 関数
 
 ```typescript
-function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
+function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 ```
 
 保持されたインターフェイス/タイプエイリアスの本体が宣言するメンバー。
@@ -726,22 +765,22 @@ function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
 
 最初の `{…}` ボディの最上位レベルのメンバーのみが収集され、
 メンバーが正当に開始できる場所 (左中括弧の直後、`;`)
-または `,`)。したがって、`extends`/`&` ベースによって提供されたメンバーは *ではありません*
+または `,`)。したがって、`extends`/`&` ベースによって提供されたメンバーは _ではありません_
 報告されました — 呼び出し元はそれらを不明なものとして扱い、フォールバックします。
 安全な方向。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|宣言テキスト |文字列 |  |
+| 名前         | タイプ | 説明 |
+| ------------ | ------ | ---- |
+| 宣言テキスト | 文字列 |      |
 
 ### unwrapPropsTypeName
 
 **種類:** 関数
 
 ```typescript
-function unwrapPropsTypeName(text: string | undefined): string | undefined
+function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
 props アノテーションを、それが参照するプレーンな名前に還元し、
@@ -749,6 +788,6 @@ props アノテーションを、それが参照するプレーンな名前に�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 \|未定義 |  |
+| 名前     | タイプ          | 説明 |
+| -------- | --------------- | ---- |
+| テキスト | 文字列 \|未定義 |      |

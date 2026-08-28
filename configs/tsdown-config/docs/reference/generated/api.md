@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/tsdown-config`.
 **Kind:** function
 
 ```typescript
-function createExternalMatcher(names: readonly string[]): (id: string) => boolean
+function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
 Build a Rolldown `external` / `deps.neverBundle` predicate that treats every
@@ -19,16 +19,16 @@ name in `names` (and any of their subpath imports, e.g. `pkg/sub`) as external.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| names | readonly string[] |  |
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| names | readonly string[] |             |
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[]
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Default package names every shared library should treat as peer-provided.
@@ -39,7 +39,7 @@ Mirrors `@mission-platform/vite-config`'s {@link DEFAULT_LIBRARY_EXTERNALS}.
 **Kind:** function
 
 ```typescript
-function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Build a tsdown config for a plain TypeScript (or single-bundle) library —
@@ -48,16 +48,16 @@ Archetype A/B. Mirrors `defineLibraryConfig` externalisation semantics from
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TsdownLibraryOptions |  |
+| Name    | Type                 | Description |
+| ------- | -------------------- | ----------- |
+| options | TsdownLibraryOptions |             |
 
 ### defineTsdownVueLibrary
 
 **Kind:** function
 
 ```typescript
-function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig
+function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
 Like {@link defineTsdownLibrary}, but wires `unplugin-vue` and Vue-aware dts
@@ -65,16 +65,16 @@ for packages that ship `.vue` SFCs (`i18n`, `router`, …).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TsdownLibraryOptions |  |
+| Name    | Type                 | Description |
+| ------- | -------------------- | ----------- |
+| options | TsdownLibraryOptions |             |
 
 ### readPackageDependencyNames
 
 **Kind:** function
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[]
+function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
 Read the `dependencies` and `peerDependencies` declared in the package.json
@@ -83,16 +83,16 @@ of its own bundle so consumers can dedupe and tree-shake them.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| rootDirectory | string |  |
+| Name          | Type   | Description |
+| ------------- | ------ | ----------- |
+| rootDirectory | string |             |
 
 ### resolveTsdownOutputDirectory
 
 **Kind:** function
 
 ```typescript
-function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string
+function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
 Mirror a final package output path into an isolated build root. Keeping the
@@ -101,11 +101,11 @@ independently promotable without allowing tsdown to clean a sibling tree.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| rootDirectory | string |  |
-| outputDirectory | string |  |
-| outputRoot | string |  |
+| Name            | Type   | Description |
+| --------------- | ------ | ----------- |
+| rootDirectory   | string |             |
+| outputDirectory | string |             |
+| outputRoot      | string |             |
 
 ### TsdownLibraryOptions
 

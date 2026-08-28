@@ -16,18 +16,22 @@
 **種類:** 関数
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 モジュール全体を次のように変換します。 React ターゲットソース。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
-|コンポーネント名 |文字列 |  |
-|計画 | Reactモジュール計画 |  |
+| 名前             | タイプ                   | 説明 |
+| ---------------- | ------------------------ | ---- |
+| モジュール       | セマンティックモジュール |      |
+| コンポーネント名 | 文字列                   |      |
+| 計画             | Reactモジュール計画      |      |
 
 ## `src/index`
 
@@ -36,7 +40,7 @@ function emitReactModule(module: SemanticModule, componentName?: string, plan: R
 **種類:** 関数
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 を作成します。 React 出力プラグインとそのネイティブ JSX ビルド アダプター。
@@ -48,50 +52,58 @@ function forgeReactFramework(): FrameworkOutputPlugin
 **種類:** 関数
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 ターゲットが所有するプランを次の範囲に絞り込みます。 React 1つ。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|下げた | TargetLoweredModule \|未定義 |  |
+| 名前   | タイプ                       | 説明 |
+| ------ | ---------------------------- | ---- |
+| 下げた | TargetLoweredModule \|未定義 |      |
 
 ### 下位Reactモジュール
 
 **種類:** 関数
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 中性IRを下げてください。 React 計画は {@link TargetIntentions. lowered} によって行われます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|赤外線 |セマンティックモジュール |  |
-|コンテキスト |ターゲットコンテキスト |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| 赤外線       | セマンティックモジュール |      |
+| コンテキスト | ターゲットコンテキスト   |      |
 
 ### planReactモジュール
 
 **種類:** 関数
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 を構築します React 1 つのモジュールを計画します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
-|コンポーネント名 |文字列 |  |
+| 名前             | タイプ                   | 説明 |
+| ---------------- | ------------------------ | ---- |
+| モジュール       | セマンティックモジュール |      |
+| コンポーネント名 | 文字列                   |      |
 
 ### ReactClientDirectivePlan
 
@@ -180,7 +192,10 @@ export interface ReactPropsParameter
 **種類:** 関数
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 を洗練する React プラン。
@@ -191,17 +206,17 @@ function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|意図 |ターゲットインテンション |  |
-|オプション |ターゲット最適化オプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| 意図       | ターゲットインテンション   |      |
+| オプション | ターゲット最適化オプション |      |
 
 ### REACT_OPTIMIZATIONS
 
 **種類:** 定数
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 計画に記録された識別子は、 React オプティマイザーが改良されました。

@@ -16,7 +16,12 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-p
 **Soort:** functie
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 Druk een neutrale componentmodule af als Svelte 5 SFC. Een beller die al actief was
@@ -25,12 +30,12 @@ de doelfasen passeren de verfijnde `plan`; een directe beller krijgt een vers
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
-| componentnaam | tekenreeks |  |
-| componentMappen | Alleen-lezenSet<string> |  |
-| plannen | SvelteLoweredModule |  |
+| Naam            | Typ                     | Beschrijving |
+| --------------- | ----------------------- | ------------ |
+| module          | SemantischeModule       |              |
+| componentnaam   | tekenreeks              |              |
+| componentMappen | Alleen-lezenSet<string> |              |
+| plannen         | SvelteLoweredModule     |              |
 
 ### SvelteModule-uitvoer
 
@@ -49,16 +54,16 @@ Een gegenereerde `.svelte`-module en eventuele hulpmodules die ernaast zijn gesc
 **Soort:** functie
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 Druk een neutrale hook/composable-module af als de Svelte-target `.ts`-bron.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| module | SemantischeModule |              |
 
 ## `src/index`
 
@@ -67,7 +72,7 @@ Druk een neutrale hook/composable-module af als de Svelte-target `.ts`-bron.
 **Soort:** functie
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 Maak de Svelte-uitvoerplug-in en de bijbehorende Vite/Rolldown-compileradapters.
@@ -79,33 +84,38 @@ Maak de Svelte-uitvoerplug-in en de bijbehorende Vite/Rolldown-compileradapters.
 **Soort:** functie
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 Of een doelplan nu het Svelte-plan is: de discriminator waar elke consument zich toe beperkt.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |  |
+| Naam     | Typ                                   | Beschrijving |
+| -------- | ------------------------------------- | ------------ |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
 
 ### lagereSvelteModule
 
 **Soort:** functie
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 Bouw het Svelte-plan voor een neutrale module.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ir | SemantischeModule |  |
-| context | DoelContext |  |
+| Naam    | Typ               | Beschrijving |
+| ------- | ----------------- | ------------ |
+| ir      | SemantischeModule |              |
+| context | DoelContext       |              |
 
 ### SvelteBindingPlan
 
@@ -281,7 +291,10 @@ Doelintenties met een volledig getypt Svelte-plan.
 **Soort:** functie
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Verfijn een verlaagd Svelte-plan. Intenties die geen Svelte-plan bevatten (een buitenlands
@@ -289,17 +302,17 @@ doel, of een beller die `lower` heeft overgeslagen) worden onaangeroerd geretour
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bedoelingen | DoelIntenties |  |
-| opties | TargetOptimizeOptions |  |
+| Naam        | Typ                   | Beschrijving |
+| ----------- | --------------------- | ------------ |
+| bedoelingen | DoelIntenties         |              |
+| opties      | TargetOptimizeOptions |              |
 
 ### SVELTE_OPTIMIZATIES
 
 **Soort:** constant
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 Elke optimalisatie die dit doel kan toepassen, in toepassingsvolgorde.

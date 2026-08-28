@@ -36,19 +36,24 @@ Vue エミッタの結果: プライマリ SFC とそれが生成した補助 SF
 **種類:** 関数
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 ニュートラル コンポーネント モジュールを Vue SFC (および補助 SFC) に変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
-|コンポーネント名 |文字列 |  |
-|コンポーネントフォルダー | ReadonlySet<string> |  |
-|計画 | VueLoweredモジュール |  |
+| 名前                     | タイプ                   | 説明 |
+| ------------------------ | ------------------------ | ---- |
+| モジュール               | セマンティックモジュール |      |
+| コンポーネント名         | 文字列                   |      |
+| コンポーネントフォルダー | ReadonlySet<string>      |      |
+| 計画                     | VueLoweredモジュール     |      |
 
 ## `src/emitters/hook-module`
 
@@ -57,16 +62,16 @@ function emitVueModule(module: SemanticModule, componentName: string, componentF
 **種類:** 関数
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 ニュートラル フック モジュールを Vue コンポーザブル ソース (`.ts`) にコンパイルします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール |セマンティックモジュール |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| モジュール | セマンティックモジュール |      |
 
 ## `src/index`
 
@@ -75,7 +80,7 @@ function emitVueHookModule(module: SemanticModule): string
 **種類:** 関数
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 Vue 出力プラグインとその Vite/Rolldown コンパイラ アダプタを作成します。
@@ -87,23 +92,28 @@ Vue 出力プラグインとその Vite/Rolldown コンパイラ アダプタを
 **種類:** 関数
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 キャストせずにターゲット プランを Vue プランに絞り込みます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|下げた | TargetLoweredModule \|未定義 |  |
+| 名前   | タイプ                       | 説明 |
+| ------ | ---------------------------- | ---- |
+| 下げた | TargetLoweredModule \|未定義 |      |
 
 ### 下位Vueモジュール
 
 **種類:** 関数
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 ニュートラル モジュールを Vue ターゲット プランに下げます。ニュートラルモジュールが移動します
@@ -111,10 +121,10 @@ function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetInten
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|赤外線 |セマンティックモジュール |  |
-|コンテキスト |ターゲットコンテキスト |  |
+| 名前         | タイプ                   | 説明 |
+| ------------ | ------------------------ | ---- |
+| 赤外線       | セマンティックモジュール |      |
+| コンテキスト | ターゲットコンテキスト   |      |
 
 ### VueComputedPlan
 
@@ -253,7 +263,7 @@ export interface VueWatcherPlan
 **種類:** 定数
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 ファクトリを共有する `computed` 宣言を折りたたみます。
@@ -263,7 +273,7 @@ export const DEDUPE_COMPUTED
 **種類:** 定数
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Prune `vue` は、不要になった洗練されたプランをインポートします。
@@ -273,7 +283,7 @@ Prune `vue` は、不要になった洗練されたプランをインポート�
 **種類:** 定数
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 完全に静的なサブツリーをホイストします (モジュール定数 / `v-once`)。
@@ -283,7 +293,7 @@ export const HOIST_STATIC_SUBTREES
 **種類:** 定数
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 再割り当てされない状態を `ref` ではなくプレーンの `const` として出力します。
@@ -293,7 +303,10 @@ export const INLINE_SINGLE_USE_REFS
 **種類:** 関数
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 引き下げられた Vue プランを改良します。外国の（または欠落した）計画を伴う意図は次のとおりです。
@@ -301,17 +314,17 @@ function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimize
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|意図 |ターゲットインテンション |  |
-|オプション |ターゲット最適化オプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| 意図       | ターゲットインテンション   |      |
+| オプション | ターゲット最適化オプション |      |
 
 ### STABLE_LIST_KEYS
 
 **種類:** 定数
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 安定していることが証明されたリストキーのみを保持し、キーなしのままのリストを記録します。
@@ -321,7 +334,7 @@ export const STABLE_LIST_KEYS
 **種類:** 定数
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 Vue ターゲットがアプリケーション順に記録できるすべての最適化識別子。

@@ -16,16 +16,16 @@
 **종류:** 기능
 
 ```typescript
-function synthesiseElementClass(plan: WebComponentsLoweredModule): string
+function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 ```
 
 `ForgeElement` 서브클래스와 낮은 계획에 대한 등록을 인쇄합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 계획 | WebComponentsLoweredModule |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 계획 | WebComponentsLoweredModule |      |
 
 ## `src/emitters/module`
 
@@ -34,19 +34,24 @@ function synthesiseElementClass(plan: WebComponentsLoweredModule): string
 **종류:** 기능
 
 ```typescript
-function emitWebComponentModule(module: SemanticModule, componentName: string = "CustomElement", componentFolders: ReadonlySet<string> = new Set(), lowered?: WebComponentsLoweredModule): EmittedWebComponentModule
+function emitWebComponentModule(
+  module: SemanticModule,
+  componentName: string = "CustomElement",
+  componentFolders: ReadonlySet<string> = new Set(),
+  lowered?: WebComponentsLoweredModule,
+): EmittedWebComponentModule;
 ```
 
 전체 모듈을 기본 웹 구성 요소 대상 소스로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
-| 구성 요소 이름 | 문자열 |  |
-| 구성요소폴더 | 읽기전용Set<string> |  |
-| 낮아진 | WebComponentsLoweredModule |  |
+| 이름           | 유형                       | 설명 |
+| -------------- | -------------------------- | ---- |
+| 모듈           | 의미 모듈                  |      |
+| 구성 요소 이름 | 문자열                     |      |
+| 구성요소폴더   | 읽기전용Set<string>        |      |
+| 낮아진         | WebComponentsLoweredModule |      |
 
 ## `src/index`
 
@@ -55,7 +60,7 @@ function emitWebComponentModule(module: SemanticModule, componentName: string = 
 **종류:** 기능
 
 ```typescript
-function forgeWebComponentsFramework(): FrameworkOutputPlugin
+function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 ```
 
 TypeScript 전용 웹 구성 요소 출력 플러그인을 만듭니다.
@@ -67,7 +72,7 @@ TypeScript 전용 웹 구성 요소 출력 플러그인을 만듭니다.
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 내부는 런타임에 따라 기능이 제한됩니다. 양식 연결은 선택 상태로 유지됩니다.
@@ -77,7 +82,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 생성된 구성요소에 대해 호환성 기본값이 유지됩니다.
@@ -87,7 +92,9 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
 **종류:** 기능
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebComponentsHostPlan
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+): WebComponentsHostPlan;
 ```
 
 단일 정적 내장 루트에서만 사용자 정의된 내장 호스트를 추론합니다.
@@ -98,66 +105,74 @@ HTML은 안전하거나 유용한 맞춤형 내장 기능을 보장하지 않습
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 리턴노드 | 일반 렌더 노드 \| 정의되지 않음 |  |
+| 이름     | 유형                            | 설명 |
+| -------- | ------------------------------- | ---- |
+| 리턴노드 | 일반 렌더 노드 \| 정의되지 않음 |      |
 
 ### isWebComponents낮음
 
 **종류:** 기능
 
 ```typescript
-function isWebComponentsLowered(lowered: TargetLoweredModule | undefined): lowered is WebComponentsLoweredModule
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
 ```
 
 캐스팅하지 않고 대상 계획을 웹 구성 요소 계획으로 좁힙니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |  |
+| 이름   | 유형                               | 설명 |
+| ------ | ---------------------------------- | ---- |
+| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |      |
 
 ### lowerWebComponents모듈
 
 **종류:** 기능
 
 ```typescript
-function lowerWebComponentsModule(module: SemanticModule, context: TargetContext): TargetIntentions
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 중립 IR을 웹 구성 요소 대상 의도로 낮춥니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
-| 맥락 | 타겟컨텍스트 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 모듈 | 의미 모듈    |      |
+| 맥락 | 타겟컨텍스트 |      |
 
 ### lowerWebComponents계획
 
 **종류:** 기능
 
 ```typescript
-function lowerWebComponentsPlan(module: SemanticModule, context: TargetContext): WebComponentsLoweredModule
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
 ```
 
 중립 모듈에 대한 웹 구성 요소 대상 계획을 구축합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
-| 맥락 | 타겟컨텍스트 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 모듈 | 의미 모듈    |      |
+| 맥락 | 타겟컨텍스트 |      |
 
 ### 알 수 없는_TYPE
 
 **종류:** 상수
 
 ```typescript
-export const UNKNOWN_TYPE
+export const UNKNOWN_TYPE;
 ```
 
 선언된 유형이나 추론된 유형을 모두 사용할 수 없을 때 내보내는 유형입니다.
@@ -167,7 +182,7 @@ export const UNKNOWN_TYPE
 **종류:** 상수
 
 ```typescript
-export const WEB_COMPONENTS_FRAMEWORK
+export const WEB_COMPONENTS_FRAMEWORK;
 ```
 
 플러그인의 프레임워크 ID 및 낮은 계획의 판별자입니다.
@@ -177,7 +192,7 @@ export const WEB_COMPONENTS_FRAMEWORK
 **종류:** 상수
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS
+export const WEBCOMPONENTS_NATIVE_HOSTS;
 ```
 
 안전하게 사용자 정의할 수 있는 루트에 대한 호환성 표가 내장되어 있습니다.
@@ -239,7 +254,14 @@ export interface WebComponentsGeneratedId
 **종류:** 유형
 
 ```typescript
-export type WebComponentsHostFallbackReason = | "missing-root" | "fragment-root" | "dynamic-root" | "component-root" | "ambiguous-root" | "invalid-root" | "unsupported-root";
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
 ```
 
 구성 요소가 사용자 정의된 내장 호스트를 사용할 수 없는 안정적인 이유입니다.
@@ -279,7 +301,8 @@ export interface WebComponentsInternalsPolicy
 **종류:** 유형
 
 ```typescript
-export type WebComponentsLifecycleCallback = "connectedCallback" | "disconnectedCallback" | "updatedCallback";
+export type WebComponentsLifecycleCallback =
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 ```
 
 계획이 생성할 수 있는 맞춤 요소 수명 주기 콜백입니다.
@@ -325,7 +348,7 @@ export interface WebComponentsPromotedLocal
 렌더 헤드 상수가 요소 멤버로 **승격**되었습니다.
 
 메모 getter, 수명 주기 콜백 및 필드 이니셜라이저가 모두 방출됩니다.
-*외부* `render()`, 따라서 렌더 헤드가 선언한 로컬이 존재하지 않습니다.
+_외부_ `render()`, 따라서 렌더 헤드가 선언한 로컬이 존재하지 않습니다.
 그들. 선언문을 회원에게 홍보하는 것이 그러한 읽기를 만드는 것입니다.
 매달려 있는 대신 `this.<name>`을 통해 해결 가능합니다.
 
@@ -397,10 +420,10 @@ export interface WebComponentsSetupPhase
 전이적으로 닫혀 있으며 **만** 해당됩니다.
 
 캐싱보다는 재생이 의도적입니다. 중립 소스에서는 머리
-*is* 구성요소 본체이므로 `const initial = parseTime(modelValue);`은 이미
+_is_ 구성요소 본체이므로 `const initial = parseTime(modelValue);`은 이미
 모든 렌더링에서 실행됩니다. 설정 중에 한 번 더 평가하면 호출이 수행되지 않습니다.
 제작된 구성 요소는 각 패스에서 아직 수행되지 않습니다. 캐싱
-필드는 대신 평가 횟수를 *줄이고* 값에
+필드는 대신 평가 횟수를 _줄이고_ 값에
 출처는 결코 약속하지 않았습니다. 일반 `const`(또는 함수)만
 선언은 항상 재생됩니다. {@link headReplay}를 참조하세요.
 
@@ -451,41 +474,47 @@ export interface WebComponentsTemplatePlan
 **종류:** 기능
 
 ```typescript
-function optimizeWebComponentsModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeWebComponentsModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 웹 구성 요소 대상 의도를 최적화합니다. 다른 타겟은 통과합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 의도 | 타겟의도 |  |
-| 옵션 | TargetOptimizeOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 의도 | 타겟의도              |      |
+| 옵션 | TargetOptimizeOptions |      |
 
 ### 최적화WebComponents계획
 
 **종류:** 기능
 
 ```typescript
-function optimizeWebComponentsPlan(plan: WebComponentsLoweredModule, options: TargetOptimizeOptions): WebComponentsLoweredModule
+function optimizeWebComponentsPlan(
+  plan: WebComponentsLoweredModule,
+  options: TargetOptimizeOptions,
+): WebComponentsLoweredModule;
 ```
 
 실행된 각 패스를 기록하여 낮은 웹 구성 요소 계획을 구체화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 계획 | WebComponentsLoweredModule |  |
-| 옵션 | TargetOptimizeOptions |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 계획 | WebComponentsLoweredModule |      |
+| 옵션 | TargetOptimizeOptions      |      |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
 **종류:** 상수
 
 ```typescript
-export const WEB_COMPONENTS_OPTIMIZATIONS
+export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
 {@link WebComponentsLoweredModule.appliedOptimizations}에 기록된 식별자입니다.
@@ -495,7 +524,8 @@ export const WEB_COMPONENTS_OPTIMIZATIONS
 **종류:** 유형
 
 ```typescript
-export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
+export type WebComponentsOptimization =
+  (typeof WEB_COMPONENTS_OPTIMIZATIONS)[keyof typeof WEB_COMPONENTS_OPTIMIZATIONS];
 ```
 
 기록된 웹 구성 요소 최적화 식별자입니다.
@@ -507,16 +537,16 @@ export type WebComponentsOptimization = (typeof WEB_COMPONENTS_OPTIMIZATIONS)[ke
 **종류:** 기능
 
 ```typescript
-function emitWebComponentHookModule(module: SemanticModule): string
+function emitWebComponentHookModule(module: SemanticModule): string;
 ```
 
 중립 후크 모듈을 웹 구성 요소 소스로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| 모듈 | 의미 모듈 |      |
 
 ## `src/transformers/expression`
 
@@ -525,7 +555,7 @@ function emitWebComponentHookModule(module: SemanticModule): string
 **종류:** 상수
 
 ```typescript
-export const HAS_SLOT_RUNTIME
+export const HAS_SLOT_RUNTIME;
 ```
 
 호스트 요소와 함께 호출되는 마커가 낮아지는 기본 런타임 도우미입니다.
@@ -535,7 +565,7 @@ export const HAS_SLOT_RUNTIME
 **종류:** 기능
 
 ```typescript
-function isFunctionExpressionText(text: string): boolean
+function isFunctionExpressionText(text: string): boolean;
 ```
 
 텍스트가 **함수 값** 표현식인지 여부(화살표 또는
@@ -547,16 +577,16 @@ is: 본문은 호출될 때 여전히 정확하게 실행됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
+| 이름   | 유형   | 설명 |
+| ------ | ------ | ---- |
+| 텍스트 | 문자열 |      |
 
 ### isPureExpressionText
 
 **종류:** 기능
 
 ```typescript
-function isPureExpressionText(text: string): boolean
+function isPureExpressionText(text: string): boolean;
 ```
 
 표현식에 효과가 **증명적으로** 없는지 여부: 호출 없음, `new` 없음, 없음
@@ -569,9 +599,9 @@ function isPureExpressionText(text: string): boolean
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
+| 이름   | 유형   | 설명 |
+| ------ | ------ | ---- |
+| 텍스트 | 문자열 |      |
 
 ## `src/transformers/props-binding`
 
@@ -580,7 +610,7 @@ function isPureExpressionText(text: string): boolean
 **종류:** 기능
 
 ```typescript
-function leadingObjectPattern(text: string): string | undefined
+function leadingObjectPattern(text: string): string | undefined;
 ```
 
 `text`을 *시작*하는 객체 패턴으로, 뒤에 오는 내용은 모두 삭제됩니다.
@@ -590,16 +620,16 @@ function leadingObjectPattern(text: string): string | undefined
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
+| 이름   | 유형   | 설명 |
+| ------ | ------ | ---- |
+| 텍스트 | 문자열 |      |
 
 ### ParsePropsBinding
 
 **종류:** 기능
 
 ```typescript
-function parsePropsBinding(patternText: string): PropsBinding | undefined
+function parsePropsBinding(patternText: string): PropsBinding | undefined;
 ```
 
 소품 객체 패턴을 분해합니다.
@@ -610,9 +640,9 @@ function parsePropsBinding(patternText: string): PropsBinding | undefined
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 패턴텍스트 | 문자열 |  |
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 패턴텍스트 | 문자열 |      |
 
 ### 소품바인딩
 
@@ -639,7 +669,10 @@ export interface PropsBindingEntry
 **종류:** 기능
 
 ```typescript
-function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => boolean): string | undefined
+function propsBindingStatement(
+  binding: PropsBinding,
+  isRead: (name: string) => boolean,
+): string | undefined;
 ```
 
 항목으로 제한된 소품 패턴을 `const { … } = this;`으로 재생합니다.
@@ -651,10 +684,10 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바인딩 | 소품바인딩 |  |
-| isRead | (이름: 문자열) => 부울 |  |
+| 이름   | 유형                   | 설명 |
+| ------ | ---------------------- | ---- |
+| 바인딩 | 소품바인딩             |      |
+| isRead | (이름: 문자열) => 부울 |      |
 
 ## `src/transformers/props-type`
 
@@ -663,12 +696,15 @@ function propsBindingStatement(binding: PropsBinding, isRead: (name: string) => 
 **종류:** 기능
 
 ```typescript
-function indexedAccessType(reference: PropsTypeReference, member: string): string
+function indexedAccessType(
+  reference: PropsTypeReference,
+  member: string,
+): string;
 ```
 
 props 유형의 멤버가 내보내지는 indexed-access 주석입니다.
 
-회원 자신의 선택성은 정확하게 유지됩니다. 필수 회원은 *아닙니다*
+회원 자신의 선택성은 정확하게 유지됩니다. 필수 회원은 _아닙니다_
 `| undefined`으로 확장되었습니다. 요소의 필드는 한 번만 채워집니다.
 런타임은 해당 속성을 채택하므로 생성자에서 실제로 설정되지 않습니다.
 하지만 이는 필드를 `declare`로 내보내는 것으로 표현됩니다(런타임은
@@ -677,10 +713,10 @@ props 유형의 멤버가 내보내지는 indexed-access 주석입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 참조 | 소품유형참조 |  |
-| 회원 | 문자열 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 참조 | 소품유형참조 |      |
+| 회원 | 문자열       |      |
 
 ### 소품 유형 참조
 
@@ -697,7 +733,10 @@ export interface PropsTypeReference
 **종류:** 기능
 
 ```typescript
-function resolvePropsTypeReference(annotation: string | undefined, declarations: readonly GenericStatement[]): PropsTypeReference | undefined
+function resolvePropsTypeReference(
+  annotation: string | undefined,
+  declarations: readonly GenericStatement[],
+): PropsTypeReference | undefined;
 ```
 
 모듈의 유지된 선언에 대해 props 주석을 해결합니다.
@@ -708,17 +747,17 @@ function resolvePropsTypeReference(annotation: string | undefined, declarations:
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 주석 | 문자열 \| 정의되지 않음 |  |
-| 선언 | 읽기 전용 GenericStatement[] |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 주석 | 문자열 \| 정의되지 않음      |      |
+| 선언 | 읽기 전용 GenericStatement[] |      |
 
 ### typeMembers
 
 **종류:** 기능
 
 ```typescript
-function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
+function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 ```
 
 유지된 인터페이스/유형 별칭 본문이 선언하고 매핑되는 멤버입니다.
@@ -726,22 +765,22 @@ function typeMembers(declarationText: string): ReadonlyMap<string, boolean>
 
 첫 번째 `{…}` 본문의 최상위 멤버만 수집되며,
 구성원이 합법적으로 시작할 수 있는 위치(여는 중괄호 바로 뒤, `;`
-또는 `,`). 따라서 `extends`/`&` 기반에 기여한 회원은 *아닙니다*
+또는 `,`). 따라서 `extends`/`&` 기반에 기여한 회원은 _아닙니다_
 보고됨 - 호출자는 이를 알 수 없는 것으로 간주하고 뒤로 물러납니다.
 안전한 방향.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 선언텍스트 | 문자열 |  |
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 선언텍스트 | 문자열 |      |
 
 ### unwrapPropsTypeName
 
 **종류:** 기능
 
 ```typescript
-function unwrapPropsTypeName(text: string | undefined): string | undefined
+function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
 props 주석을 참조하는 일반 이름으로 줄이고
@@ -749,6 +788,6 @@ props 주석을 참조하는 일반 이름으로 줄이고
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 \| 정의되지 않음 |  |
+| 이름   | 유형                    | 설명 |
+| ------ | ----------------------- | ---- |
+| 텍스트 | 문자열 \| 정의되지 않음 |      |

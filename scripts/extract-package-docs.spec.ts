@@ -43,6 +43,104 @@ describe('package API documentation extraction', () => {
     expect(identity?.signature).not.toContain('FORGE_WEB_SCRIPT_STDLIB_IDENTITY FORGE_WEB_SCRIPT_STDLIB_IDENTITY');
   });
 
+  it('follows local re-exports and preserves declaration documentation and aliases', async () => {
+    const packageRoot = await createTemporaryDirectory('extract-typescript-');
+    await mkdir(join(packageRoot, 'src', 'internal'), { recursive: true });
+    await writeFile(
+      join(packageRoot, 'src', 'internal', 'value.ts'),
+      `/**
+ * A documented value factory.
+ *
+ * @param input The source value.
+ * @returns The normalized value.
+ */
+export function createValue(input: string): string { return input.trim(); }
+`,
+      'utf8',
+    );
+    await writeFile(
+      join(packageRoot, 'src', 'internal', 'tsx.tsx'),
+      `/** A TSX declaration. */
+export interface Renderable { render(): JSX.Element; }
+`,
+      'utf8',
+    );
+    await writeFile(
+      join(packageRoot, 'src', 'index.ts'),
+      `export { createValue as makeValue } from './internal/value';
+export * from './internal/value';
+export type { Renderable } from './internal/tsx';
+`,
+      'utf8',
+    );
+
+    const symbols = await extractTypeScriptSymbols(packageRoot, {
+      name: '@mission-platform/extract-typescript-fixture',
+      exports: { '.': { types: './dist/index.d.ts' } },
+    });
+
+    expect(symbols.map(({ name }) => name)).toEqual(['Renderable', 'createValue', 'makeValue']);
+    expect(symbols.find(({ name }) => name === 'createValue')).toMatchObject({
+      description: 'A documented value factory.',
+      signature: 'function createValue(input: string): string',
+      tags: [
+        { name: 'param', text: 'The source value.' },
+        { name: 'returns', text: 'The normalized value.' },
+      ],
+      parameters: [{ name: 'input', type: 'string', description: 'The source value.' }],
+      sourceModule: 'src/internal/value',
+    });
+    expect(symbols.find(({ name }) => name === 'Renderable')).toMatchObject({
+      kind: 'interface',
+      signature: 'export interface Renderable',
+      sourceModule: 'src/internal/tsx',
+    });
+  });
+
+  it('only extracts JSDoc and unwraps defaulted and rest parameters', async () => {
+    const packageRoot = await createTemporaryDirectory('extract-parameters-');
+    await mkdir(join(packageRoot, 'src'), { recursive: true });
+    await writeFile(
+      join(packageRoot, 'src', 'index.ts'),
+      `/* This block comment is not API documentation. */
+export interface Undocumented {}
+
+/**
+ * Builds a value.
+ *
+ * @param options Build options.
+ * @param rest Additional values.
+ */
+export function build(options: BuildOptions = {}, ...rest: string[]): void {}
+`,
+      'utf8',
+    );
+
+    const symbols = await extractTypeScriptSymbols(packageRoot, {
+      name: '@mission-platform/extract-parameter-fixture',
+      exports: { '.': { types: './dist/index.d.ts' } },
+    });
+
+    expect(symbols.find(({ name }) => name === 'Undocumented')).toMatchObject({
+      description: 'No description provided.',
+    });
+    expect(symbols.find(({ name }) => name === 'build')).toMatchObject({
+      signature: 'function build(options: BuildOptions = {}, ...rest: string[]): void',
+      parameters: [
+        { name: 'options', type: 'BuildOptions', description: 'Build options.' },
+        { name: 'rest', type: 'string[]', description: 'Additional values.' },
+      ],
+    });
+    const markdown = renderReferenceMarkdown({
+      packageName: '@mission-platform/extract-parameter-fixture',
+      packageRoot,
+      symbols,
+    });
+    expect(markdown).toContain('| options | BuildOptions | Build options. |');
+    expect(markdown).toContain('| rest | string[] | Additional values. |');
+    expect(markdown).not.toContain('| options: BuildOptions = {} |');
+  });
+
   it('extracts documented public FWS declarations through the real parser', async () => {
     const packageRoot = await createTemporaryDirectory('extract-fws-');
     await mkdir(join(packageRoot, 'fws'), { recursive: true });
@@ -82,10 +180,10 @@ fn helper() -> unit {}
         options?: { readonly root?: string },
       ) => {
         readonly module?: {
-          readonly functions: readonly unknown[];
-          readonly enums: readonly unknown[];
-          readonly structs: readonly unknown[];
-          readonly interfaces: readonly unknown[];
+          readonly functions: readonly FwsSymbol[];
+          readonly enums: readonly FwsSymbol[];
+          readonly structs: readonly FwsSymbol[];
+          readonly interfaces: readonly FwsSymbol[];
         };
         readonly diagnostics: readonly { readonly severity: string; readonly message: string }[];
       };
@@ -138,3 +236,16 @@ fn helper() -> unit {}
     expect(markdown).toContain('- **@returns:** The value.');
   });
 });
+
+interface FwsSymbol {
+  readonly kind: string;
+  readonly name: string;
+  readonly documentation?: {
+    readonly description: string;
+    readonly tags: readonly { readonly name: string; readonly subject?: string; readonly text: string }[];
+  };
+  readonly exported?: boolean;
+  readonly parameters?: readonly { readonly name: string; readonly type: unknown }[];
+  readonly result?: unknown;
+  readonly iterable?: boolean;
+}

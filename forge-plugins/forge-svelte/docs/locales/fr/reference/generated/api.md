@@ -16,7 +16,12 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 Imprimez un module de composants neutres en tant que Svelte 5 SFC. Un appelant qui a déjà couru
@@ -25,12 +30,12 @@ abaissé celui-ci, de sorte que l'émetteur est toujours animé par le même con
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | Module Sémantique |  |
-| Nom du composant | chaîne |  |
-| dossiers de composants | ReadonlySet<string> |  |
-| planifier | SvelteLoweredModule |  |
+| Nom                    | Tapez               | Descriptif |
+| ---------------------- | ------------------- | ---------- |
+| modules                | Module Sémantique   |            |
+| Nom du composant       | chaîne              |            |
+| dossiers de composants | ReadonlySet<string> |            |
+| planifier              | SvelteLoweredModule |            |
 
 ### SvelteModuleOutput
 
@@ -49,16 +54,16 @@ Un module `.svelte` généré et tous les modules auxiliaires écrits à côté.
 **Genre :** fonction
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 Imprimez un module hook/composable neutre comme source `.ts` cible Svelte.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | Module Sémantique |  |
+| Nom     | Tapez             | Descriptif |
+| ------- | ----------------- | ---------- |
+| modules | Module Sémantique |            |
 
 ## `src/index`
 
@@ -67,7 +72,7 @@ Imprimez un module hook/composable neutre comme source `.ts` cible Svelte.
 **Genre :** fonction
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 Créez le plug-in de sortie Svelte et ses adaptateurs de compilateur Vite/Rolldown.
@@ -79,33 +84,38 @@ Créez le plug-in de sortie Svelte et ses adaptateurs de compilateur Vite/Rolldo
 **Genre :** fonction
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 Qu'un plan cible soit celui Svelte - le discriminateur sur lequel chaque consommateur se concentre.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| abaissé | CibleLoweredModule \| indéfini |  |
+| Nom     | Tapez                          | Descriptif |
+| ------- | ------------------------------ | ---------- |
+| abaissé | CibleLoweredModule \| indéfini |            |
 
 ### LowerSvelteModule
 
 **Genre :** fonction
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 Créez le plan Svelte pour un module neutre.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| ir | Module Sémantique |  |
-| contexte | Contexte cible |  |
+| Nom      | Tapez             | Descriptif |
+| -------- | ----------------- | ---------- |
+| ir       | Module Sémantique |            |
+| contexte | Contexte cible    |            |
 
 ### SvelteBindingPlan
 
@@ -281,7 +291,10 @@ Intentions cibles portant un plan Svelte entièrement typé.
 **Genre :** fonction
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Affiner un plan Svelte réduit. Intentions ne comportant pas de plan Svelte (un plan étranger
@@ -289,17 +302,17 @@ cible, ou un appelant qui a ignoré `lower`) sont renvoyés intacts.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| intentions | Intentions cibles |  |
-| options | Options d'optimisation cible |  |
+| Nom        | Tapez                        | Descriptif |
+| ---------- | ---------------------------- | ---------- |
+| intentions | Intentions cibles            |            |
+| options    | Options d'optimisation cible |            |
 
 ### SVELTE_OPTIMIZATIONS
 
 **Genre :** constante
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 Chaque optimisation que cette cible peut appliquer, dans l'ordre d'application.

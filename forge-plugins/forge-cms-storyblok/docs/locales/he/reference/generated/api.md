@@ -16,25 +16,32 @@
 פונקציה **סוג:**
 
 ```typescript
-function analyzeStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function analyzeStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 נתח מודול רכיב ניטרלי עבור Storyblok.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| שמות | StoryblokComponentNames |  |
-| אפשרויות | StoryblokProjectionOptions |  |
+| שם         | הקלד                       | תיאור |
+| ---------- | -------------------------- | ----- |
+| sourceFile | ts.SourceFile              |       |
+| שמות       | StoryblokComponentNames    |       |
+| אפשרויות   | StoryblokProjectionOptions |       |
 
 ### contentFieldToStoryblokField
 
 פונקציה **סוג:**
 
 ```typescript
-function contentFieldToStoryblokField(field: ContentField, options: StoryblokProjectionOptions = {}): StoryblokSchemaField
+function contentFieldToStoryblokField(
+  field: ContentField,
+  options: StoryblokProjectionOptions = {},
+): StoryblokSchemaField;
 ```
 
 מיפוי שדה ניטרלי אחד על גבי שדה סכימה של Storyblok.
@@ -46,51 +53,60 @@ function contentFieldToStoryblokField(field: ContentField, options: StoryblokPro
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שדה | ContentField |  |
-| אפשרויות | StoryblokProjectionOptions |  |
+| שם       | הקלד                       | תיאור |
+| -------- | -------------------------- | ----- |
+| שדה      | ContentField               |       |
+| אפשרויות | StoryblokProjectionOptions |       |
 
 ### contentKindToStoryblokFieldType
 
 פונקציה **סוג:**
 
 ```typescript
-function contentKindToStoryblokFieldType(kind: ContentField["kind"]): StoryblokFieldType
+function contentKindToStoryblokFieldType(
+  kind: ContentField["kind"],
+): StoryblokFieldType;
 ```
 
 שדה Storyblok הקלד תוכן נייטרלי ממפה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סוג | ContentField["סוג"] |  |
+| שם  | הקלד                | תיאור |
+| --- | ------------------- | ----- |
+| סוג | ContentField["סוג"] |       |
 
 ### emitStoryblokComponent
 
 פונקציה **סוג:**
 
 ```typescript
-function emitStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): StoryblokComponent
+function emitStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): StoryblokComponent;
 ```
 
 שלח רק את האובייקט של רכיב Storyblok (תצורת הבלוק) עבור רכיב.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| שמות | StoryblokComponentNames |  |
-| אפשרויות | StoryblokProjectionOptions |  |
+| שם         | הקלד                       | תיאור |
+| ---------- | -------------------------- | ----- |
+| sourceFile | ts.SourceFile              |       |
+| שמות       | StoryblokComponentNames    |       |
+| אפשרויות   | StoryblokProjectionOptions |       |
 
 ### resolveStoryblokMetadata
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveStoryblokMetadata(component: ContentComponent, options: StoryblokProjectionOptions = {}): ResolvedStoryblokMetadata
+function resolveStoryblokMetadata(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): ResolvedStoryblokMetadata;
 ```
 
 פתור מטא נתונים של עורך פעם אחת עבור רכיב.
@@ -101,27 +117,30 @@ function resolveStoryblokMetadata(component: ContentComponent, options: Storyblo
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
-| אפשרויות | StoryblokProjectionOptions |  |
+| שם       | הקלד                       | תיאור |
+| -------- | -------------------------- | ----- |
+| רכיב     | ContentComponent           |       |
+| אפשרויות | StoryblokProjectionOptions |       |
 
 ### toStoryblokComponent
 
 פונקציה **סוג:**
 
 ```typescript
-function toStoryblokComponent(component: ContentComponent, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function toStoryblokComponent(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 הקרן רכיב תוכן ניטרלי על האובייקט והשדות של רכיב Storyblok שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
-| אפשרויות | StoryblokProjectionOptions |  |
+| שם       | הקלד                       | תיאור |
+| -------- | -------------------------- | ----- |
+| רכיב     | ContentComponent           |       |
+| אפשרויות | StoryblokProjectionOptions |       |
 
 ## `src/runtime/solid`
 
@@ -130,16 +149,18 @@ function toStoryblokComponent(component: ContentComponent, options: StoryblokPro
 פונקציה **סוג:**
 
 ```typescript
-function StoryblokComponent(properties: StoryblokComponentProperties): JSX.Element
+function StoryblokComponent(
+  properties: StoryblokComponentProperties,
+): JSX.Element;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | StoryblokComponentProperties |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| נכסים | StoryblokComponentProperties |       |
 
 ### StoryblokComponentProperties
 
@@ -156,7 +177,9 @@ export interface StoryblokComponentProperties
 **סוג:** סוג
 
 ```typescript
-export type StoryblokComponentRegistry = Readonly< Record<string, StoryblokComponentType> >;
+export type StoryblokComponentRegistry = Readonly<
+  Record<string, StoryblokComponentType>
+>;
 ```
 
 לא סופק תיאור.
@@ -176,16 +199,18 @@ export type StoryblokComponentType = (properties:
 פונקציה **סוג:**
 
 ```typescript
-function StoryblokProvider(properties: StoryblokProviderProperties): JSX.Element
+function StoryblokProvider(
+  properties: StoryblokProviderProperties,
+): JSX.Element;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | StoryblokProviderProperties |  |
+| שם    | הקלד                        | תיאור |
+| ----- | --------------------------- | ----- |
+| נכסים | StoryblokProviderProperties |       |
 
 ### StoryblokProviderProperties
 
@@ -204,16 +229,16 @@ export interface StoryblokProviderProperties
 פונקציה **סוג:**
 
 ```typescript
-function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin
+function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin;
 ```
 
 קשר את הקרנת Storyblok לתוסף פלט מסגרת בבעלות מתקשר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeStoryblokCmsOptions |  |
+| שם       | הקלד                     | תיאור |
+| -------- | ------------------------ | ----- |
+| אפשרויות | ForgeStoryblokCmsOptions |       |
 
 ### ForgeStoryblokCmsOptions
 
@@ -230,16 +255,18 @@ export interface ForgeStoryblokCmsOptions
 פונקציה **סוג:**
 
 ```typescript
-function forgeStoryblokCmsTargets(options: ForgeStoryblokCmsTargetsOptions): CmsOutputPlugin[]
+function forgeStoryblokCmsTargets(
+  options: ForgeStoryblokCmsTargetsOptions,
+): CmsOutputPlugin[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeStoryblokCmsTargetsOptions |  |
+| שם       | הקלד                            | תיאור |
+| -------- | ------------------------------- | ----- |
+| אפשרויות | ForgeStoryblokCmsTargetsOptions |       |
 
 ### ForgeStoryblokCmsTargetsOptions
 
@@ -291,7 +318,17 @@ export type StoryblokComponentNames = ContentComponentNamesInput;
 **סוג:** סוג
 
 ```typescript
-export type StoryblokFieldType = | "text" | "richtext" | "number" | "boolean" | "option" | "asset" | "multilink" | "bloks" | "tab" | "plugin";
+export type StoryblokFieldType =
+  | "text"
+  | "richtext"
+  | "number"
+  | "boolean"
+  | "option"
+  | "asset"
+  | "multilink"
+  | "bloks"
+  | "tab"
+  | "plugin";
 ```
 
 שדה Storyblok מקליד את מפת סוגי התוכן הנייטרליים.
@@ -343,7 +380,7 @@ export interface StoryblokSchemaField
 פונקציה **סוג:**
 
 ```typescript
-function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
+function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string;
 ```
 
 בנה את המודפס `blok` סוג אביזר עבור עטיפה - `SbBlokData & { … }` עם אחד
@@ -354,16 +391,20 @@ function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מנותח | AnalyzedStoryblokComponent |  |
+| שם    | הקלד                       | תיאור |
+| ----- | -------------------------- | ----- |
+| מנותח | AnalyzedStoryblokComponent |       |
 
 ### emitStoryblokBlokWrapper
 
 פונקציה **סוג:**
 
 ```typescript
-function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicName: string, options: StoryblokBlokWrapperOptions): string
+function emitStoryblokBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  options: StoryblokBlokWrapperOptions,
+): string;
 ```
 
 פליט את מקור ה-framework block לעטוף שקושר את Storyblok's `blok` נשען על
@@ -372,11 +413,11 @@ function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicNa
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מנותח | AnalyzedStoryblokComponent |  |
-| publicName | מחרוזת |  |
-| אפשרויות | StoryblokBlokWrapperOptions |  |
+| שם         | הקלד                        | תיאור |
+| ---------- | --------------------------- | ----- |
+| מנותח      | AnalyzedStoryblokComponent  |       |
+| publicName | מחרוזת                      |       |
+| אפשרויות   | StoryblokBlokWrapperOptions |       |
 
 ### StoryblokBlokWrapperOptions
 

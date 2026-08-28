@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/api-proxy`.
 **Kind:** constant
 
 ```typescript
-export const ALLOWED_METHODS
+export const ALLOWED_METHODS;
 ```
 
 Keep the proxy read-only and limited to the documented API routes.
@@ -21,7 +21,7 @@ Keep the proxy read-only and limited to the documented API routes.
 **Kind:** constant
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES
+export const ALLOWED_ROUTE_PREFIXES;
 ```
 
 No description provided.
@@ -31,13 +31,13 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function isAllowedProxyRequest(request: Request): boolean
+function isAllowedProxyRequest(request: Request): boolean;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| request | Request |  |
+| Name    | Type    | Description |
+| ------- | ------- | ----------- |
+| request | Request |             |

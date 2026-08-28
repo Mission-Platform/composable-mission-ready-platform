@@ -23,9 +23,9 @@ fn is_some(value: Option<T>) -> bool
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|选项<T> |要检查的选项值。 |
+| 名称 | 类型    | 描述             |
+| ---- | ------- | ---------------- |
+| 价值 | 选项<T> | 要检查的选项值。 |
 
 #### 合同
 
@@ -58,9 +58,9 @@ fn is_ok(value: Result<T, E>) -> bool
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|结果<T, E> |要检查的结果值。 |
+| 名称 | 类型       | 描述             |
+| ---- | ---------- | ---------------- |
+| 价值 | 结果<T, E> | 要检查的结果值。 |
 
 #### 合同
 
@@ -86,7 +86,7 @@ enum Result
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 编译器使用者使用的异步声明模块的相对路径。
@@ -96,7 +96,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 标准库的稳定身份和表示契约。
@@ -108,7 +108,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 包含附带的 Forge Web 脚本声明模块的目录。

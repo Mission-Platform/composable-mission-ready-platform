@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/scheduler`.
 **Kind:** function
 
 ```typescript
-function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement
+function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 ```
 
 `ForgeScheduler` — a full calendar/scheduler authored once in the neutral JSX
@@ -36,9 +36,9 @@ props.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<SchedulerProperties> |  |
+| Name       | Type                          | Description |
+| ---------- | ----------------------------- | ----------- |
+| properties | Readonly<SchedulerProperties> |             |
 
 ### SchedulerProperties
 
@@ -67,7 +67,7 @@ Size token — canonical 2xs → 2xl scale.
 **Kind:** function
 
 ```typescript
-function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent
+function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VEvent;
 ```
 
 Apply a patch to an event, bumping `lastModified` and `sequence` (the standard
@@ -75,17 +75,17 @@ RFC 5545 revision semantics). `uid` is preserved.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| event | VEvent |  |
-| patch | Partial<Omit<VEvent, 'uid'>> |  |
+| Name  | Type                         | Description |
+| ----- | ---------------------------- | ----------- |
+| event | VEvent                       |             |
+| patch | Partial<Omit<VEvent, 'uid'>> |             |
 
 ### createEvent
 
 **Kind:** function
 
 ```typescript
-function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent
+function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent;
 ```
 
 Build a brand-new {@link VEvent} from a partial (without `uid`/`dtstamp`),
@@ -93,70 +93,70 @@ generating a UID and the creation/modification timestamps.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| partial | Omit<VEvent, 'uid' \| 'dtstamp'> |  |
+| Name    | Type                             | Description |
+| ------- | -------------------------------- | ----------- |
+| partial | Omit<VEvent, 'uid' \| 'dtstamp'> |             |
 
 ### eventsForDay
 
 **Kind:** function
 
 ```typescript
-function eventsForDay(events: VEvent[], day: Date): VEvent[]
+function eventsForDay(events: VEvent[], day: Date): VEvent[];
 ```
 
 Returns events that fall on the given calendar day.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| events | VEvent[] |  |
-| day | Date |  |
+| Name   | Type     | Description |
+| ------ | -------- | ----------- |
+| events | VEvent[] |             |
+| day    | Date     |             |
 
 ### eventsForRange
 
 **Kind:** function
 
 ```typescript
-function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[]
+function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 ```
 
 Returns events (including recurring occurrences) that overlap with the given
-date range [start, end).  Events with `status === 'CANCELLED'` are excluded.
+date range [start, end). Events with `status === 'CANCELLED'` are excluded.
 Recurring events are expanded via their RRULE / RDATE; EXDATE exclusions are
 honoured.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| events | VEvent[] |  |
-| start | Date |  |
-| end | Date |  |
+| Name   | Type     | Description |
+| ------ | -------- | ----------- |
+| events | VEvent[] |             |
+| start  | Date     |             |
+| end    | Date     |             |
 
 ### formatDuration
 
 **Kind:** function
 
 ```typescript
-function formatDuration(event: VEvent): string
+function formatDuration(event: VEvent): string;
 ```
 
 Returns a human-readable duration string for an event, e.g. "1h 30m".
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| event | VEvent |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| event | VEvent |             |
 
 ### layoutDay
 
 **Kind:** function
 
 ```typescript
-function layoutDay(events: VEvent[]): SchedulerEventSlot[]
+function layoutDay(events: VEvent[]): SchedulerEventSlot[];
 ```
 
 Lay out events for a single day using a simple column-based collision
@@ -165,16 +165,16 @@ and each occupies `column` of `totalColumns` parallel tracks.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| events | VEvent[] |  |
+| Name   | Type     | Description |
+| ------ | -------- | ----------- |
+| events | VEvent[] |             |
 
 ### moveEventPatch
 
 **Kind:** function
 
 ```typescript
-function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>
+function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' | 'dtend'>;
 ```
 
 The `{ dtstart, dtend }` patch that moves an event by `deltaMs` milliseconds,
@@ -182,17 +182,17 @@ preserving its all-day / timed ISO representation.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| event | VEvent |  |
-| deltaMs | number |  |
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| event   | VEvent |             |
+| deltaMs | number |             |
 
 ### resizeEventPatch
 
 **Kind:** function
 
 ```typescript
-function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
+function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>;
 ```
 
 The `{ dtend }` patch that resizes an event's end by `deltaMs`, clamped so the
@@ -200,10 +200,10 @@ event stays at least 15 minutes (or one day, for all-day events) long.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| event | VEvent |  |
-| deltaMs | number |  |
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| event   | VEvent |             |
+| deltaMs | number |             |
 
 ## `src/core/range`
 
@@ -212,7 +212,7 @@ event stays at least 15 minutes (or one day, for all-day events) long.
 **Kind:** function
 
 ```typescript
-function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date
+function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 ```
 
 Step the `anchor` by `direction` (-1 = previous, +1 = next) view units.
@@ -220,18 +220,18 @@ Day/three-day/week step in days; month/year step in their period.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| view | SchedulerView |  |
-| anchor | Date |  |
-| direction | -1 \| 1 |  |
+| Name      | Type          | Description |
+| --------- | ------------- | ----------- |
+| view      | SchedulerView |             |
+| anchor    | Date          |             |
+| direction | -1 \| 1       |             |
 
 ### visibleRangeFor
 
 **Kind:** function
 
 ```typescript
-function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange
+function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange;
 ```
 
 The visible half-open `[start, end)` window for the given `view` anchored at
@@ -239,11 +239,11 @@ The visible half-open `[start, end)` window for the given `view` anchored at
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| view | SchedulerView |  |
-| anchor | Date |  |
-| weekStartsOn | WeekStart |  |
+| Name         | Type          | Description |
+| ------------ | ------------- | ----------- |
+| view         | SchedulerView |             |
+| anchor       | Date          |             |
+| weekStartsOn | WeekStart     |             |
 
 ## `src/core/recurrence`
 
@@ -252,11 +252,11 @@ The visible half-open `[start, end)` window for the given `view` anchored at
 **Kind:** function
 
 ```typescript
-function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[]
+function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[];
 ```
 
 Expand a single VEvent with an RRULE into all occurrences that overlap
-with [rangeStart, rangeEnd).  Returns virtual VEvent clones — one per
+with [rangeStart, rangeEnd). Returns virtual VEvent clones — one per
 occurrence — with adjusted dtstart / dtend.
 
 Also handles RDATE (extra dates) and EXDATE (excluded dates).
@@ -266,11 +266,11 @@ prevent infinite loops on unbounded rules.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| event | VEvent |  |
-| rangeStart | Date |  |
-| rangeEnd | Date |  |
+| Name       | Type   | Description |
+| ---------- | ------ | ----------- |
+| event      | VEvent |             |
+| rangeStart | Date   |             |
+| rangeEnd   | Date   |             |
 
 ## `src/core/types`
 

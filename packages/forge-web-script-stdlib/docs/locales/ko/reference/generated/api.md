@@ -23,8 +23,8 @@ fn is_some(value: Option<T>) -> bool
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
+| 이름 | 유형    | 설명                  |
+| ---- | ------- | --------------------- |
 | 가치 | 옵션<T> | 검사할 옵션 값입니다. |
 
 #### 계약
@@ -58,8 +58,8 @@ fn is_ok(value: Result<T, E>) -> bool
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
+| 이름 | 유형       | 설명                  |
+| ---- | ---------- | --------------------- |
 | 가치 | 결과<T, E> | 검사할 결과 값입니다. |
 
 #### 계약
@@ -86,7 +86,7 @@ enum Result
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 컴파일러 소비자가 사용하는 비동기 선언 모듈의 상대 경로입니다.
@@ -96,7 +96,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 표준 라이브러리에 대한 안정적인 ID 및 표현 계약입니다.
@@ -108,7 +108,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 제공된 Forge 웹 스크립트 선언 모듈이 포함된 디렉터리입니다.

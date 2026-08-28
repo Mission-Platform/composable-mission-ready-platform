@@ -16,41 +16,45 @@
 **النوع:** الوظيفة
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 قم بإنشاء تشخيص محلي المصدر لفشل برنامج التحويل البرمجي لجهاز التوجيه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | حذف<CompilerDiagnostic, 'phase' \| 'fileName'> & { اسم الملف للقراءة فقط؟: سلسلة؛   } |  |
+| الاسم   | اكتب                                                                                | الوصف |
+| ------- | ----------------------------------------------------------------------------------- | ----- |
+| التشخيص | حذف<CompilerDiagnostic, 'phase' \| 'fileName'> & { اسم الملف للقراءة فقط؟: سلسلة؛ } |       |
 
 ### تعريفForgeRouterPlugin
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 التحقق من صحة البيانات التعريفية للمكون الإضافي لجهاز التوجيه قبل دخولها إلى مسار برنامج التحويل البرمجي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البرنامج المساعد | ت |  |
+| الاسم            | اكتب | الوصف |
+| ---------------- | ---- | ----- |
+| البرنامج المساعد | ت    |       |
 
 ### تعريفForgeRouterTarget
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 أنشئ هدفًا حتميًا يعيد كتابة واردات جهاز التوجيه المحايد.
@@ -63,16 +67,16 @@ function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutpu
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجي روترتارجيتوبشنز |  |
+| الاسم  | اكتب                  | الوصف |
+| ------ | --------------------- | ----- |
+| خيارات | فورجي روترتارجيتوبشنز |       |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 عمليات التصدير المحايدة في وقت التشغيل والتي تحافظ على عقد مؤلف الحزمة.
@@ -87,7 +91,7 @@ export const FORGE_ROUTER_RUNTIME_EXPORTS
 **النوع:** ثابت
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 العقود المستهدفة المحجوزة لأجهزة التوجيه التي لا تعد محولات الطرف الأول الخاصة بها جزءًا من هذا الإنجاز.
@@ -127,7 +131,7 @@ export interface GeneratedRouterModule
 **النوع:** ثابت
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 علامة ثابتة مشتركة مع حزمة جهاز التوجيه المحايدة.
@@ -137,7 +141,7 @@ export const MP_ROUTER_COMPILER_MARKER
 **النوع:** ثابت
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 الحزمة التي يتم فهم وارداتها من خلال ممر التحويل البرمجي لجهاز التوجيه.
@@ -157,7 +161,8 @@ export interface RouterBuildAdapters
 **النوع:** النوع
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 عمليات قابلة للخفض بشكل مستقل يتعرض لها عقد جهاز التوجيه المحايد.
@@ -197,7 +202,7 @@ export interface RouterCapabilityUse
 **النوع:** النوع
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 كيف يتم استخدام ربط جهاز التوجيه المحايد في الوحدة النمطية المصدر.
@@ -277,31 +282,37 @@ export interface RouterTargetPlan
 **النوع:** الوظيفة
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 ابحث عن هدف جهاز توجيه مباشر أو محدد بمعرف دون ربطه بمكونات واجهة المستخدم الإضافية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اختيار | اختيار RouterPlugin \| غير محدد |  |
-| الإضافات | للقراءة فقط RouterOutputPlugin[] |  |
+| الاسم    | اكتب                             | الوصف |
+| -------- | -------------------------------- | ----- |
+| اختيار   | اختيار RouterPlugin \| غير محدد  |       |
+| الإضافات | للقراءة فقط RouterOutputPlugin[] |       |
 
 ### قدرات التوجيه غير المدعومة
 
 **النوع:** الوظيفة
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 قم بالإبلاغ عن فجوات القدرات قبل أن تتاح للهدف فرصة إساءة ترجمة الوحدة بصمت.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأشعة تحت الحمراء | وحدة قدرة جهاز التوجيه |  |
-| البرنامج المساعد | RouterOutputPlugin \| غير محدد |  |
+| الاسم              | اكتب                           | الوصف |
+| ------------------ | ------------------------------ | ----- |
+| الأشعة تحت الحمراء | وحدة قدرة جهاز التوجيه         |       |
+| البرنامج المساعد   | RouterOutputPlugin \| غير محدد |       |

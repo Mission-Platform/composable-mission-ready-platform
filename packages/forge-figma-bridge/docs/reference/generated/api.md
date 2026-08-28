@@ -11,23 +11,23 @@ Generated from public source declarations in `@mission-platform/forge-figma-brid
 **Kind:** function
 
 ```typescript
-function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server
+function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeBridgeServerOptions |  |
+| Name    | Type                     | Description |
+| ------- | ------------------------ | ----------- |
+| options | ForgeBridgeServerOptions |             |
 
 ### DEFAULT_EXPORT_PATH
 
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_EXPORT_PATH
+export const DEFAULT_EXPORT_PATH;
 ```
 
 No description provided.
@@ -37,7 +37,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_MAX_FILE_BYTES
+export const DEFAULT_MAX_FILE_BYTES;
 ```
 
 No description provided.
@@ -47,7 +47,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_MAX_REQUEST_BYTES
+export const DEFAULT_MAX_REQUEST_BYTES;
 ```
 
 No description provided.
@@ -57,17 +57,17 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>
+function exportForgeRepositoryBundle(value: unknown, options: ForgeBridgeOptions): Promise<ForgeBridgeResponse>;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | unknown |  |
-| options | ForgeBridgeOptions |  |
+| Name    | Type               | Description |
+| ------- | ------------------ | ----------- |
+| value   | unknown            |             |
+| options | ForgeBridgeOptions |             |
 
 ### ForgeBridgeOptions
 
@@ -94,16 +94,18 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function startForgeBridgeServer(options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number }): Promise<Server>
+function startForgeBridgeServer(
+  options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
+): Promise<Server>;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number } |  |
+| Name    | Type                                                                          | Description |
+| ------- | ----------------------------------------------------------------------------- | ----------- |
+| options | ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number } |             |
 
 ## `src/protocol`
 
@@ -112,7 +114,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const FORGE_BRIDGE_PROTOCOL_VERSION
+export const FORGE_BRIDGE_PROTOCOL_VERSION;
 ```
 
 No description provided.
@@ -162,13 +164,13 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse
+function isForgeBridgeResponse(value: unknown): value is ForgeBridgeResponse;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | unknown |  |
+| Name  | Type    | Description |
+| ----- | ------- | ----------- |
+| value | unknown |             |

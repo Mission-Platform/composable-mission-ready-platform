@@ -16,25 +16,32 @@
 **種類:** 関数
 
 ```typescript
-function analyzeStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function analyzeStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 Storyblok の中立コンポーネント モジュールを分析します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|名前 |ストーリーブロックコンポーネント名 |  |
-|オプション |ストーリーブロック投影オプション |  |
+| 名前           | タイプ                             | 説明 |
+| -------------- | ---------------------------------- | ---- |
+| ソースファイル | ts.ソースファイル                  |      |
+| 名前           | ストーリーブロックコンポーネント名 |      |
+| オプション     | ストーリーブロック投影オプション   |      |
 
 ### コンテンツフィールドからストーリーブロックフィールドへ
 
 **種類:** 関数
 
 ```typescript
-function contentFieldToStoryblokField(field: ContentField, options: StoryblokProjectionOptions = {}): StoryblokSchemaField
+function contentFieldToStoryblokField(
+  field: ContentField,
+  options: StoryblokProjectionOptions = {},
+): StoryblokSchemaField;
 ```
 
 1 つの中立フィールドを Storyblok スキーマ フィールドにマップします。
@@ -46,51 +53,60 @@ function contentFieldToStoryblokField(field: ContentField, options: StoryblokPro
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フィールド |コンテンツフィールド |  |
-|オプション |ストーリーブロック投影オプション |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| フィールド | コンテンツフィールド             |      |
+| オプション | ストーリーブロック投影オプション |      |
 
 ### contentKindToStoryblokFieldType
 
 **種類:** 関数
 
 ```typescript
-function contentKindToStoryblokFieldType(kind: ContentField["kind"]): StoryblokFieldType
+function contentKindToStoryblokFieldType(
+  kind: ContentField["kind"],
+): StoryblokFieldType;
 ```
 
 Storyblok フィールド タイプには、ニュートラルなコンテンツの種類がマップされます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|種類 | ContentField["種類"] |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| 種類 | ContentField["種類"] |      |
 
 ### ストーリーブロックコンポーネントを放出する
 
 **種類:** 関数
 
 ```typescript
-function emitStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): StoryblokComponent
+function emitStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): StoryblokComponent;
 ```
 
 コンポーネントの Storyblok コンポーネント オブジェクト (ブロック構成) のみを出力します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|名前 |ストーリーブロックコンポーネント名 |  |
-|オプション |ストーリーブロック投影オプション |  |
+| 名前           | タイプ                             | 説明 |
+| -------------- | ---------------------------------- | ---- |
+| ソースファイル | ts.ソースファイル                  |      |
+| 名前           | ストーリーブロックコンポーネント名 |      |
+| オプション     | ストーリーブロック投影オプション   |      |
 
 ### ストーリーブロックメタデータを解決する
 
 **種類:** 関数
 
 ```typescript
-function resolveStoryblokMetadata(component: ContentComponent, options: StoryblokProjectionOptions = {}): ResolvedStoryblokMetadata
+function resolveStoryblokMetadata(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): ResolvedStoryblokMetadata;
 ```
 
 コンポーネントのエディターのメタデータを 1 回解決します。
@@ -101,27 +117,30 @@ function resolveStoryblokMetadata(component: ContentComponent, options: Storyblo
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
-|オプション |ストーリーブロック投影オプション |  |
+| 名前           | タイプ                           | 説明 |
+| -------------- | -------------------------------- | ---- |
+| コンポーネント | コンテンツコンポーネント         |      |
+| オプション     | ストーリーブロック投影オプション |      |
 
 ### toストーリーブロックコンポーネント
 
 **種類:** 関数
 
 ```typescript
-function toStoryblokComponent(component: ContentComponent, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function toStoryblokComponent(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 ニュートラル コンテンツ コンポーネントを Storyblok コンポーネント オブジェクトとフィールドに投影します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
-|オプション |ストーリーブロック投影オプション |  |
+| 名前           | タイプ                           | 説明 |
+| -------------- | -------------------------------- | ---- |
+| コンポーネント | コンテンツコンポーネント         |      |
+| オプション     | ストーリーブロック投影オプション |      |
 
 ## `src/runtime/solid`
 
@@ -130,16 +149,18 @@ function toStoryblokComponent(component: ContentComponent, options: StoryblokPro
 **種類:** 関数
 
 ```typescript
-function StoryblokComponent(properties: StoryblokComponentProperties): JSX.Element
+function StoryblokComponent(
+  properties: StoryblokComponentProperties,
+): JSX.Element;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |ストーリーブロックコンポーネントのプロパティ |  |
+| 名前       | タイプ                                       | 説明 |
+| ---------- | -------------------------------------------- | ---- |
+| プロパティ | ストーリーブロックコンポーネントのプロパティ |      |
 
 ### ストーリーブロックコンポーネントのプロパティ
 
@@ -156,7 +177,9 @@ export interface StoryblokComponentProperties
 **種類：**タイプ
 
 ```typescript
-export type StoryblokComponentRegistry = Readonly< Record<string, StoryblokComponentType> >;
+export type StoryblokComponentRegistry = Readonly<
+  Record<string, StoryblokComponentType>
+>;
 ```
 
 説明はありません。
@@ -176,16 +199,18 @@ export type StoryblokComponentType = (properties:
 **種類:** 関数
 
 ```typescript
-function StoryblokProvider(properties: StoryblokProviderProperties): JSX.Element
+function StoryblokProvider(
+  properties: StoryblokProviderProperties,
+): JSX.Element;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | StoryblokProviderProperties |  |
+| 名前       | タイプ                      | 説明 |
+| ---------- | --------------------------- | ---- |
+| プロパティ | StoryblokProviderProperties |      |
 
 ### ストーリーブロックプロバイダーのプロパティ
 
@@ -204,16 +229,16 @@ export interface StoryblokProviderProperties
 **種類:** 関数
 
 ```typescript
-function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin
+function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin;
 ```
 
 Storyblok プロジェクションを呼び出し元所有のフレームワーク出力プラグインにバインドします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeStoryblokCmsOptions |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| オプション | ForgeStoryblokCmsOptions |      |
 
 ### ForgeStoryblokCmsOptions
 
@@ -230,16 +255,18 @@ export interface ForgeStoryblokCmsOptions
 **種類:** 関数
 
 ```typescript
-function forgeStoryblokCmsTargets(options: ForgeStoryblokCmsTargetsOptions): CmsOutputPlugin[]
+function forgeStoryblokCmsTargets(
+  options: ForgeStoryblokCmsTargetsOptions,
+): CmsOutputPlugin[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeStoryblokCmsTargetsオプション |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| オプション | ForgeStoryblokCmsTargetsオプション |      |
 
 ### ForgeストーリーブロックCmsターゲットオプション
 
@@ -291,7 +318,17 @@ Storyblok 側の署名を読み取れるようにします。
 **種類：**タイプ
 
 ```typescript
-export type StoryblokFieldType = | "text" | "richtext" | "number" | "boolean" | "option" | "asset" | "multilink" | "bloks" | "tab" | "plugin";
+export type StoryblokFieldType =
+  | "text"
+  | "richtext"
+  | "number"
+  | "boolean"
+  | "option"
+  | "asset"
+  | "multilink"
+  | "bloks"
+  | "tab"
+  | "plugin";
 ```
 
 Storyblok フィールドには、中立的なコンテンツの種類がマッピングされるタイプが入力されます。
@@ -343,7 +380,7 @@ Storyblok スキーマ フィールド (コンポーネントの 1 つのエン�
 **種類:** 関数
 
 ```typescript
-function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
+function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string;
 ```
 
 型付きのものを構築する `blok` ラッパーの prop タイプ — `SbBlokData & { … }` 1つで
@@ -354,16 +391,20 @@ function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|分析された |分析されたストーリーブロックコンポーネント |  |
+| 名前       | タイプ                                     | 説明 |
+| ---------- | ------------------------------------------ | ---- |
+| 分析された | 分析されたストーリーブロックコンポーネント |      |
 
 ### 放出ストーリーブロックブロックラッパー
 
 **種類:** 関数
 
 ```typescript
-function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicName: string, options: StoryblokBlokWrapperOptions): string
+function emitStoryblokBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  options: StoryblokBlokWrapperOptions,
+): string;
 ```
 
 Storyblok をバインドするフレームワーク ブロック ラッパー ソースを出力します。 `blok` 上に支柱を立てる
@@ -372,11 +413,11 @@ Storyblok をバインドするフレームワーク ブロック ラッパー �
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|分析された |分析されたストーリーブロックコンポーネント |  |
-|公開名 |文字列 |  |
-|オプション |ストーリーブロックBlokWrapperオプション |  |
+| 名前       | タイプ                                     | 説明 |
+| ---------- | ------------------------------------------ | ---- |
+| 分析された | 分析されたストーリーブロックコンポーネント |      |
+| 公開名     | 文字列                                     |      |
+| オプション | ストーリーブロックBlokWrapperオプション    |      |
 
 ### ストーリーブロックBlokWrapperオプション
 

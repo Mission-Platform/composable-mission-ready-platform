@@ -23,8 +23,8 @@ Restituisce vero quando l'opzione contiene un valore.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
+| Nome   | Digitare   | Descrizione                         |
+| ------ | ---------- | ----------------------------------- |
 | valore | Opzione<T> | Valore dell'opzione da controllare. |
 
 #### Contrarre
@@ -58,8 +58,8 @@ Restituisce vero quando il risultato ha esito positivo.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
+| Nome   | Digitare        | Descrizione                          |
+| ------ | --------------- | ------------------------------------ |
 | valore | Risultato<T, E> | Valore del risultato da controllare. |
 
 #### Contrarre
@@ -86,7 +86,7 @@ Risultato di un'operazione fallibile.
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 Percorso relativo al modulo di dichiarazione asincrona utilizzato dai consumatori del compilatore.
@@ -96,7 +96,7 @@ Percorso relativo al modulo di dichiarazione asincrona utilizzato dai consumator
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 Contratto stabile di identità e rappresentanza per la libreria standard.
@@ -108,7 +108,7 @@ limiti per i valori che attraversano l'ABI host/Wasm.
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 Directory contenente i moduli di dichiarazione Forge Web Script forniti.

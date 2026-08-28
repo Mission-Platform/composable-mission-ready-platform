@@ -26,7 +26,7 @@ Rappresentazione deterministica incorporata da un backend Forge.
 **Genere:** costante
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 ### INSTR_LARGHEZZA
@@ -34,7 +34,7 @@ export const FORGE_REGEX_BYTECODE_VERSION
 **Genere:** costante
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 Larghezza, in operandi interi a 32 bit, di ogni istruzione.
@@ -44,7 +44,7 @@ Larghezza, in operandi interi a 32 bit, di ogni istruzione.
 **Genere:** costante
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 Codici operativi utilizzati dal backend Forge e rispecchiati dall'oracolo di riferimento.
@@ -66,16 +66,16 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 Compila il sottoinsieme regex deterministico supportato nel bytecode Forge.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modello | stringa |  |
+| Nome    | Digitare | Descrizione |
+| ------- | -------- | ----------- |
+| modello | stringa  |             |
 
 ### Errore di sintassi Regex
 
@@ -94,17 +94,17 @@ Errore di sintassi di proprietà del compilatore con messaggi deterministici rel
 **Tipo:** funzione
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 Leggi un'acquisizione finale senza esporre il layout dello slot bytecode ai chiamanti.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| cattura | Cattura \| nullo |  |
-| gruppo | numero |  |
+| Nome    | Digitare         | Descrizione |
+| ------- | ---------------- | ----------- |
+| cattura | Cattura \| nullo |             |
+| gruppo  | numero           |             |
 
 ### Cattura
 
@@ -121,83 +121,83 @@ Gli slot di acquisizione sono `[start0, end0, start1, end1, ...]`; `-1` signific
 **Tipo:** funzione
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 Leggi l'inizio di un'acquisizione senza esporre il layout dello slot bytecode ai chiamanti.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| cattura | Cattura \| nullo |  |
-| gruppo | numero |  |
+| Nome    | Digitare         | Descrizione |
+| ------- | ---------------- | ----------- |
+| cattura | Cattura \| nullo |             |
+| gruppo  | numero           |             |
 
 ### fullMatch
 
 **Tipo:** funzione
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Corrispondenza di stringa intera, ancorata alla posizione zero.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ri | Regex compilato |  |
-| ingresso | stringa |  |
+| Nome     | Digitare        | Descrizione |
+| -------- | --------------- | ----------- |
+| ri       | Regex compilato |             |
+| ingresso | stringa         |             |
 
 ### prefissoMatch
 
 **Tipo:** funzione
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Corrispondenza del prefisso, ancorata alla posizione zero ma non alla fine.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ri | Regex compilato |  |
-| ingresso | stringa |  |
+| Nome     | Digitare        | Descrizione |
+| -------- | --------------- | ----------- |
+| ri       | Regex compilato |             |
+| ingresso | stringa         |             |
 
 ### ricerca
 
 **Tipo:** funzione
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 Corrispondenza più a sinistra in corrispondenza o dopo `start`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ri | Regex compilato |  |
-| ingresso | stringa |  |
-| inizio |  |  |
+| Nome     | Digitare        | Descrizione |
+| -------- | --------------- | ----------- |
+| ri       | Regex compilato |             |
+| ingresso | stringa         |             |
+| inizio   |                 |             |
 
 ### test
 
 **Tipo:** funzione
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 Corrispondenza booleana di stringa intera.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ri | Regex compilato |  |
-| ingresso | stringa |  |
+| Nome     | Digitare        | Descrizione |
+| -------- | --------------- | ----------- |
+| ri       | Regex compilato |             |
+| ingresso | stringa         |             |

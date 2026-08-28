@@ -16,24 +16,24 @@
 **종류:** 기능
 
 ```typescript
-function applySourceEdits(source: string, edits: readonly SourceEdit[]): string
+function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 ```
 
 파서 노드를 노출하지 않고 겹치지 않는 소스 편집을 적용합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 편집 | 읽기 전용 SourceEdit[] |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 출처 | 문자열                 |      |
+| 편집 | 읽기 전용 SourceEdit[] |      |
 
 ### CLASS_NAME_ATTRIBUTE
 
 **종류:** 상수
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -43,7 +43,7 @@ export const CLASS_NAME_ATTRIBUTE
 **종류:** 상수
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 설명이 제공되지 않았습니다.
@@ -53,23 +53,23 @@ export const COMPONENTS_JSX_MODULES
 **종류:** 기능
 
 ```typescript
-function eventNameForProperty(propertyName: string): string
+function eventNameForProperty(propertyName: string): string;
 ```
 
 로 표시되는 이벤트 이름을 파생합니다. Vue-스타일 `on<Event>` 소품.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 재산명 | 문자열 |  |
+| 이름   | 유형   | 설명 |
+| ------ | ------ | ---- |
+| 재산명 | 문자열 |      |
 
 ### ICONS_JSX_MODULE
 
 **종류:** 상수
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -79,7 +79,7 @@ export const ICONS_JSX_MODULE
 **종류:** 상수
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -89,7 +89,7 @@ export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
 **종류:** 상수
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -99,7 +99,7 @@ export const LOCAL_EFFECT_FILE
 **종류:** 상수
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -109,7 +109,7 @@ export const LOCAL_EFFECT_MODULE
 **종류:** 상수
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -119,7 +119,7 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -129,7 +129,7 @@ export const LOCAL_JSX_TYPES_FILE
 **종류:** 상수
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -139,39 +139,39 @@ export const LOCAL_JSX_TYPES_MODULE
 **종류:** 기능
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 공유 방출 Vue 효과 도우미; 다른 대상에는 이 파일이 필요하지 않습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프레임워크 | Jsx프레임워크 |  |
+| 이름       | 유형          | 설명 |
+| ---------- | ------------- | ---- |
+| 프레임워크 | Jsx프레임워크 |      |
 
 ### localJsxTypesModuleSource
 
 **종류:** 기능
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 파서 종속성 없이 프레임워크 로컬 JSX 기본 선언을 내보냅니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프레임워크 | Jsx프레임워크 |  |
+| 이름       | 유형          | 설명 |
+| ---------- | ------------- | ---- |
+| 프레임워크 | Jsx프레임워크 |      |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -181,7 +181,7 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -191,7 +191,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -201,7 +201,7 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -211,7 +211,7 @@ export const NEUTRAL_MODULE
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -221,7 +221,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -231,7 +231,7 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -241,7 +241,7 @@ export const REACT_ADAPTER_MODULE
 **종류:** 상수
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -271,7 +271,7 @@ export interface StyleImport
 **종류:** 상수
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -281,7 +281,7 @@ export const VUE_ADAPTER_MODULE
 **종류:** 상수
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -291,7 +291,7 @@ export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -323,23 +323,23 @@ export interface HoistedStaticEntry
 **종류:** 기능
 
 ```typescript
-function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult
+function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 ```
 
 표시된 렌더 레코드를 끌어올리고 대상 생성기에 대한 항목을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 일반모듈Ast |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 모듈 | 일반모듈Ast |      |
 
 ### MP_HOIST_PREFIX
 
 **종류:** 상수
 
 ```typescript
-export const MP_HOIST_PREFIX
+export const MP_HOIST_PREFIX;
 ```
 
 설명이 제공되지 않았습니다.
@@ -351,33 +351,36 @@ export const MP_HOIST_PREFIX
 **종류:** 기능
 
 ```typescript
-function applyOptimizationEdits(module: GenericModuleAst, edits: readonly SourceEdit[]): GenericModuleAst
+function applyOptimizationEdits(
+  module: GenericModuleAst,
+  edits: readonly SourceEdit[],
+): GenericModuleAst;
 ```
 
 AST 구현 유형을 노출하지 않고 모듈 소스에 소스 편집 내용을 적용합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 일반모듈Ast |  |
-| 편집 | 읽기 전용 SourceEdit[] |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 모듈 | 일반모듈Ast            |      |
+| 편집 | 읽기 전용 SourceEdit[] |      |
 
 ### 상수부울
 
 **종류:** 기능
 
 ```typescript
-function constantBoolean(expression: ExpressionLike): boolean | undefined
+function constantBoolean(expression: ExpressionLike): boolean | undefined;
 ```
 
 작성된 코드를 평가하지 않고 리터럴 부울을 해결합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 표현 | 표현좋아요 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 표현 | 표현좋아요 |      |
 
 ### 일반 최적화 결과
 
@@ -394,55 +397,55 @@ export interface GenericOptimizationResult
 **종류:** 기능
 
 ```typescript
-function hasJsxKey(attributes: readonly GenericAttribute[]): boolean
+function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 ```
 
 일반 JSX 속성 목록에 키가 포함되어 있는지 여부.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용 GenericAttribute[] |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용 GenericAttribute[] |      |
 
 ### hasMpStaticMarker
 
 **종류:** 기능
 
 ```typescript
-function hasMpStaticMarker(node: GenericRenderNode): boolean
+function hasMpStaticMarker(node: GenericRenderNode): boolean;
 ```
 
 일반 JSX인지 여부 node 개인 정적 마커가 있습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| node | GenericRenderNode |      |
 
 ### isCompileTimeConstant
 
 **종류:** 기능
 
 ```typescript
-function isCompileTimeConstant(expression: ExpressionLike): boolean
+function isCompileTimeConstant(expression: ExpressionLike): boolean;
 ```
 
 소스 텍스트가 순수한 컴파일 타임 리터럴 표현식인지 여부입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 표현 | 표현좋아요 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 표현 | 표현좋아요 |      |
 
 ### MP_STATIC_ATTR
 
 **종류:** 상수
 
 ```typescript
-export const MP_STATIC_ATTR
+export const MP_STATIC_ATTR;
 ```
 
 설명이 제공되지 않았습니다.
@@ -452,17 +455,20 @@ export const MP_STATIC_ATTR
 **종류:** 기능
 
 ```typescript
-function optimizeGenericModule(module: GenericModuleAst, _options: OptimizeOptions = {}): GenericOptimizationResult
+function optimizeGenericModule(
+  module: GenericModuleAst,
+  _options: OptimizeOptions = {},
+): GenericOptimizationResult;
 ```
 
 소스 편집 내용을 별도로 반환하면서 레코드 수준 최적화를 적용합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 일반모듈Ast |  |
-| _옵션 | 최적화 옵션 |  |
+| 이름  | 유형        | 설명 |
+| ----- | ----------- | ---- |
+| 모듈  | 일반모듈Ast |      |
+| _옵션 | 최적화 옵션 |      |
 
 ### 최적화옵션
 
@@ -479,32 +485,34 @@ export interface OptimizeOptions
 **종류:** 기능
 
 ```typescript
-function stripMpStaticAttributes(attributes: readonly GenericAttribute[]): readonly GenericAttribute[]
+function stripMpStaticAttributes(
+  attributes: readonly GenericAttribute[],
+): readonly GenericAttribute[];
 ```
 
 마커가 없는 일반 속성 목록을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용 GenericAttribute[] |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 속성 | 읽기 전용 GenericAttribute[] |      |
 
 ### 스트립Mp정적마커
 
 **종류:** 기능
 
 ```typescript
-function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode
+function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 ```
 
 마커 없는 일반 렌더링 반환 node, 소스 범위를 재귀적으로 보존합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| node | GenericRenderNode |      |
 
 ## `src/diagnostics`
 
@@ -543,7 +551,14 @@ export type CompilerDiagnosticSeverity = "error" | "warning" | "info";
 **종류:** 유형
 
 ```typescript
-export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering" | "optimization" | "generation" | "build";
+export type CompilerPhase =
+  | "frontend"
+  | "ir"
+  | "inference"
+  | "target-lowering"
+  | "optimization"
+  | "generation"
+  | "build";
 ```
 
 컴파일러 진단을 보고할 수 있는 파이프라인 단계입니다.
@@ -553,48 +568,52 @@ export type CompilerPhase = | "frontend" | "ir" | "inference" | "target-lowering
 **종류:** 기능
 
 ```typescript
-function createCompilerDiagnostic(diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string }): CompilerDiagnostic
+function createCompilerDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "fileName"> & { fileName?: string },
+): CompilerDiagnostic;
 ```
 
 단계 계약을 결합하지 않고 진단을 생성합니다. TypeScript 노드.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 생략<CompilerDiagnostic, "fileName"> & { 파일 이름?: 문자열 } |  |
+| 이름 | 유형                                                          | 설명 |
+| ---- | ------------------------------------------------------------- | ---- |
+| 진단 | 생략<CompilerDiagnostic, "fileName"> & { 파일 이름?: 문자열 } |      |
 
 ### 형식컴파일러진단
 
 **종류:** 기능
 
 ```typescript
-function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string
+function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
 소스 위치를 잃지 않고 컴파일러 오류에 대한 진단 형식을 지정합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 컴파일러진단 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 진단 | 컴파일러진단 |      |
 
 ### throwOnCompilerErrors
 
 **종류:** 기능
 
 ```typescript
-function throwOnCompilerErrors(diagnostics: readonly CompilerDiagnostic[] | undefined): void
+function throwOnCompilerErrors(
+  diagnostics: readonly CompilerDiagnostic[] | undefined,
+): void;
 ```
 
 단계에서 하나 이상의 오류가 보고되면 컴파일러 파이프라인을 중단합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 읽기 전용 CompilerDiagnostic[] \| 정의되지 않음 |  |
+| 이름 | 유형                                            | 설명 |
+| ---- | ----------------------------------------------- | ---- |
+| 진단 | 읽기 전용 CompilerDiagnostic[] \| 정의되지 않음 |      |
 
 ## `src/framework`
 
@@ -673,7 +692,8 @@ export type GeneratorContext = TargetContext;
 **종류:** 유형
 
 ```typescript
-export type JsxFramework = "react" | "vue" | "svelte" | "solid" | "web-components";
+export type JsxFramework =
+  "react" | "vue" | "svelte" | "solid" | "web-components";
 ```
 
 현재 내장된 프레임워크 ID입니다. 플러그인은 추가 문자열 ID를 사용할 수 있습니다.
@@ -779,7 +799,7 @@ export interface ViteBuildContext
 **종류:** 상수
 
 ```typescript
-export const defineForgeFramework
+export const defineForgeFramework;
 ```
 
 프레임워크 패키지가 대상 구현을 등록한다는 점을 강조하는 별칭입니다.
@@ -789,16 +809,16 @@ export const defineForgeFramework
 **종류:** 기능
 
 ```typescript
-function defineForgeOutputPlugin(plugin: T): T
+function defineForgeOutputPlugin(plugin: T): T;
 ```
 
 소비자 등록을 위해 프레임워크 출력 플러그인을 검증하고 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 플러그인 | 티 |  |
+| 이름     | 유형 | 설명 |
+| -------- | ---- | ---- |
+| 플러그인 | 티   |      |
 
 ### Forge플러그인 ID
 
@@ -815,32 +835,36 @@ export type ForgePluginId = FrameworkOutputPlugin["id"];
 **종류:** 기능
 
 ```typescript
-function validateForgeOutputPlugin(plugin: unknown): asserts plugin is FrameworkOutputPlugin
+function validateForgeOutputPlugin(
+  plugin: unknown,
+): asserts plugin is FrameworkOutputPlugin;
 ```
 
 프레임워크 레지스트리와 독립적으로 대상 메타데이터의 유효성을 검사합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 플러그인 | 알 수 없음 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 플러그인 | 알 수 없음 |      |
 
 ### verifyForgeOutputPluginSelection
 
 **종류:** 기능
 
 ```typescript
-function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
+function validateForgeOutputPluginSelection(
+  plugins: readonly T[],
+): readonly T[];
 ```
 
 비어 있거나 중복된 ID를 포함하여 호출자가 소유한 대상 선택을 검증합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 플러그인 | 읽기 전용 T[] |  |
+| 이름     | 유형          | 설명 |
+| -------- | ------------- | ---- |
+| 플러그인 | 읽기 전용 T[] |      |
 
 ## `src/ir`
 
@@ -849,34 +873,40 @@ function validateForgeOutputPluginSelection(plugins: readonly T[]): readonly T[]
 **종류:** 기능
 
 ```typescript
-function attributeExpressionText(node: GenericRenderNode, name: string): string | undefined
+function attributeExpressionText(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 명명된 속성이 포함된 경우 해당 속성의 표현식 텍스트를 읽습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| 이름 | 문자열 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| node | GenericRenderNode |      |
+| 이름 | 문자열            |      |
 
 ### 속성문자열값
 
 **종류:** 기능
 
 ```typescript
-function attributeStringValue(node: GenericRenderNode, name: string): string | undefined
+function attributeStringValue(
+  node: GenericRenderNode,
+  name: string,
+): string | undefined;
 ```
 
 명명된 속성의 정적 문자열 값(있는 경우)을 읽습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| 이름 | 문자열 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| node | GenericRenderNode |      |
+| 이름 | 문자열            |      |
 
 ### 동적 노드 의도
 
@@ -903,7 +933,7 @@ export interface EffectIntention
 **종류:** 상수
 
 ```typescript
-export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
+export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions;
 ```
 
 추론할 것이 없는 고정 장치 및 모듈에서 사용되는 빈 의도 사실입니다.
@@ -913,7 +943,7 @@ export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions
 **종류:** 상수
 
 ```typescript
-export const EMPTY_SPAN: SourceSpan
+export const EMPTY_SPAN: SourceSpan;
 ```
 
 합성된 일반 노드에서 사용되는 너비가 0인 범위입니다.
@@ -933,24 +963,28 @@ export interface EventIntention
 **종류:** 기능
 
 ```typescript
-function findAttribute(node: GenericRenderNode, name: string): GenericJsxAttribute | undefined
+function findAttribute(
+  node: GenericRenderNode,
+  name: string,
+): GenericJsxAttribute | undefined;
 ```
 
 렌더링에서 명명된 속성 찾기 node.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
-| 이름 | 문자열 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| node | GenericRenderNode |      |
+| 이름 | 문자열            |      |
 
 ### GenericAstNode
 
 **종류:** 유형
 
 ```typescript
-export type GenericAstNode = GenericImport | GenericStatement | GenericRenderNode;
+export type GenericAstNode =
+  GenericImport | GenericStatement | GenericRenderNode;
 ```
 
 설명이 제공되지 않았습니다.
@@ -980,7 +1014,8 @@ JSX 속성이 전달하는 값입니다.
 **종류:** 유형
 
 ```typescript
-export type GenericBindingKind = "identifier" | "object-pattern" | "array-pattern";
+export type GenericBindingKind =
+  "identifier" | "object-pattern" | "array-pattern";
 ```
 
 구성 요소 props 매개변수의 바인딩 형식입니다.
@@ -1060,7 +1095,8 @@ export interface GenericParameter
 **종류:** 유형
 
 ```typescript
-export type GenericRenderChild = GenericRenderNode | GenericTextNode | GenericExpressionNode;
+export type GenericRenderChild =
+  GenericRenderNode | GenericTextNode | GenericExpressionNode;
 ```
 
 설명이 제공되지 않았습니다.
@@ -1090,7 +1126,18 @@ export interface GenericStatement
 **종류:** 유형
 
 ```typescript
-export type GenericStatementKind = | "import" | "interface" | "type-alias" | "enum" | "variable" | "function" | "class" | "export" | "expression" | "return" | "other";
+export type GenericStatementKind =
+  | "import"
+  | "interface"
+  | "type-alias"
+  | "enum"
+  | "variable"
+  | "function"
+  | "class"
+  | "export"
+  | "expression"
+  | "return"
+  | "other";
 ```
 
 보유된 모듈 수준 명령문의 대략적인 분류입니다.
@@ -1120,48 +1167,50 @@ JSX 태그 사이의 리터럴 텍스트입니다.
 **종류:** 기능
 
 ```typescript
-function isExpressionNode(child: GenericRenderChild): child is GenericExpressionNode
+function isExpressionNode(
+  child: GenericRenderChild,
+): child is GenericExpressionNode;
 ```
 
 렌더링 하위가 `{ … }` 보간.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 아이 | GenericRenderChild |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 아이 | GenericRenderChild |      |
 
 ### isRenderNode
 
 **종류:** 기능
 
 ```typescript
-function isRenderNode(child: GenericRenderChild): child is GenericRenderNode
+function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
 렌더링 하위 항목이 중첩된 요소/조각인지 여부 node.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 아이 | GenericRenderChild |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 아이 | GenericRenderChild |      |
 
 ### isTextNode
 
 **종류:** 기능
 
 ```typescript
-function isTextNode(child: GenericRenderChild): child is GenericTextNode
+function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 ```
 
 렌더링 하위 항목이 리터럴 JSX 텍스트인지 여부입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 아이 | GenericRenderChild |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 아이 | GenericRenderChild |      |
 
 ### ListKeyIntention
 
@@ -1208,16 +1257,16 @@ export interface RefIntention
 **종류:** 기능
 
 ```typescript
-function renderNodeTagName(node: GenericRenderNode): string | undefined
+function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
 렌더의 일반 태그 이름 node, 또는 `undefined` 계산된 태그의 경우.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | GenericRenderNode |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| node | GenericRenderNode |      |
 
 ### 의미적 의도
 
@@ -1254,18 +1303,22 @@ export interface SlotIntention
 **종류:** 기능
 
 ```typescript
-function sourceBacked(text: string, syntax: SourceBackedExpression["syntax"] = "expression", span: SourceSpan = EMPTY_SPAN): SourceBackedExpression
+function sourceBacked(
+  text: string,
+  syntax: SourceBackedExpression["syntax"] = "expression",
+  span: SourceSpan = EMPTY_SPAN,
+): SourceBackedExpression;
 ```
 
 이미 인쇄된 텍스트에서 소스 기반 표현식을 작성합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
-| 구문 | SourceBackedExpression["구문"] |  |
-| 범위 | 소스스팬 |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 텍스트 | 문자열                         |      |
+| 구문   | SourceBackedExpression["구문"] |      |
+| 범위   | 소스스팬                       |      |
 
 ### SourceBackedExpression
 
@@ -1302,14 +1355,17 @@ export interface StateIntention
 **종류:** 기능
 
 ```typescript
-function walkRenderNodes(nodes: readonly GenericRenderNode[], visit: (node: GenericRenderNode) => void): void
+function walkRenderNodes(
+  nodes: readonly GenericRenderNode[],
+  visit: (node: GenericRenderNode) => void,
+): void;
 ```
 
 중첩된 표현식 마크업을 포함하여 깊이 우선 렌더 트리를 탐색합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 노드 | 읽기 전용 GenericRenderNode[] |  |
-| 방문 | (node: GenericRenderNode) => void |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 노드 | 읽기 전용 GenericRenderNode[]     |      |
+| 방문 | (node: GenericRenderNode) => void |      |

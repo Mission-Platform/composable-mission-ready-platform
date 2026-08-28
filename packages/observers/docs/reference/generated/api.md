@@ -11,7 +11,11 @@ Generated from public source declarations in `@mission-platform/observers`.
 **Kind:** function
 
 ```typescript
-function useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void
+function useIntersectionObserver(
+  target: MpRef<Element | null>,
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit,
+): void;
 ```
 
 Framework-neutral IntersectionObserver hook.
@@ -23,11 +27,11 @@ Automatic cleanup: disconnects the observer on unmount.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| target | MpRef<Element \| null> |  |
-| callback | IntersectionObserverCallback |  |
-| options | IntersectionObserverInit |  |
+| Name     | Type                         | Description |
+| -------- | ---------------------------- | ----------- |
+| target   | MpRef<Element \| null>       |             |
+| callback | IntersectionObserverCallback |             |
+| options  | IntersectionObserverInit     |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -36,7 +40,11 @@ Automatic cleanup: disconnects the observer on unmount.
 **Kind:** function
 
 ```typescript
-function useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void
+function useMutationObserver(
+  target: MpRef<Node | null>,
+  callback: MutationCallback,
+  options?: MutationObserverInit,
+): void;
 ```
 
 Framework-neutral MutationObserver hook.
@@ -47,11 +55,11 @@ Automatic cleanup: disconnects the observer on unmount.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| target | MpRef<Node \| null> |  |
-| callback | MutationCallback |  |
-| options | MutationObserverInit |  |
+| Name     | Type                 | Description |
+| -------- | -------------------- | ----------- |
+| target   | MpRef<Node \| null>  |             |
+| callback | MutationCallback     |             |
+| options  | MutationObserverInit |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -60,7 +68,7 @@ Automatic cleanup: disconnects the observer on unmount.
 **Kind:** function
 
 ```typescript
-function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void
+function usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void;
 ```
 
 Framework-neutral PerformanceObserver hook.
@@ -72,7 +80,7 @@ Automatic cleanup: disconnects the observer on unmount.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| callback | PerformanceObserverCallback |  |
-| options | PerformanceObserverInit |  |
+| Name     | Type                        | Description |
+| -------- | --------------------------- | ----------- |
+| callback | PerformanceObserverCallback |             |
+| options  | PerformanceObserverInit     |             |

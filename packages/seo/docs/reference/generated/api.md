@@ -11,87 +11,87 @@ Generated from public source declarations in `@mission-platform/seo`.
 **Kind:** function
 
 ```typescript
-function article(input: ArticleInput): JsonLd
+function article(input: ArticleInput): JsonLd;
 ```
 
 Schema.org `Article` / `BlogPosting` / `NewsArticle` builder.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | ArticleInput |  |
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| input | ArticleInput |             |
 
 ### breadcrumbList
 
 **Kind:** function
 
 ```typescript
-function breadcrumbList(input: BreadcrumbListInput): JsonLd
+function breadcrumbList(input: BreadcrumbListInput): JsonLd;
 ```
 
 Schema.org `BreadcrumbList` — emit per-page to expose site hierarchy.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | BreadcrumbListInput |  |
+| Name  | Type                | Description |
+| ----- | ------------------- | ----------- |
+| input | BreadcrumbListInput |             |
 
 ### event
 
 **Kind:** function
 
 ```typescript
-function event(input: EventInput): JsonLd
+function event(input: EventInput): JsonLd;
 ```
 
 Schema.org `Event`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | EventInput |  |
+| Name  | Type       | Description |
+| ----- | ---------- | ----------- |
+| input | EventInput |             |
 
 ### faqPage
 
 **Kind:** function
 
 ```typescript
-function faqPage(input: FaqPageInput): JsonLd
+function faqPage(input: FaqPageInput): JsonLd;
 ```
 
 Schema.org `FAQPage`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | FaqPageInput |  |
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| input | FaqPageInput |             |
 
 ### imageObject
 
 **Kind:** function
 
 ```typescript
-function imageObject(input: ImageObjectInput): JsonLd
+function imageObject(input: ImageObjectInput): JsonLd;
 ```
 
 Schema.org `ImageObject`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | ImageObjectInput |  |
+| Name  | Type             | Description |
+| ----- | ---------------- | ----------- |
+| input | ImageObjectInput |             |
 
 ### jsonLd
 
 **Kind:** constant
 
 ```typescript
-export const jsonLd
+export const jsonLd;
 ```
 
 Namespace re-export so consumers can do `import { jsonLd } from
@@ -103,208 +103,208 @@ Namespace re-export so consumers can do `import { jsonLd } from
 **Kind:** function
 
 ```typescript
-function localBusiness(input: LocalBusinessInput): JsonLd
+function localBusiness(input: LocalBusinessInput): JsonLd;
 ```
 
 Schema.org `LocalBusiness` — extends `Organization` with location data.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | LocalBusinessInput |  |
+| Name  | Type               | Description |
+| ----- | ------------------ | ----------- |
+| input | LocalBusinessInput |             |
 
 ### organization
 
 **Kind:** function
 
 ```typescript
-function organization(input: OrganizationInput): JsonLd
+function organization(input: OrganizationInput): JsonLd;
 ```
 
 Schema.org `Organization`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | OrganizationInput |  |
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| input | OrganizationInput |             |
 
 ### organizationId
 
 **Kind:** function
 
 ```typescript
-function organizationId(orgUrl: string): string
+function organizationId(orgUrl: string): string;
 ```
 
 Canonical `@id` for the site-wide `Organization` (or `LocalBusiness`) node.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| orgUrl | string |  |
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| orgUrl | string |             |
 
 ### person
 
 **Kind:** function
 
 ```typescript
-function person(input: PersonInput): JsonLd
+function person(input: PersonInput): JsonLd;
 ```
 
 Schema.org `Person`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | PersonInput |  |
+| Name  | Type        | Description |
+| ----- | ----------- | ----------- |
+| input | PersonInput |             |
 
 ### product
 
 **Kind:** function
 
 ```typescript
-function product(input: ProductInput): JsonLd
+function product(input: ProductInput): JsonLd;
 ```
 
 Schema.org `Product`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | ProductInput |  |
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| input | ProductInput |             |
 
 ### recipe
 
 **Kind:** function
 
 ```typescript
-function recipe(input: RecipeInput): JsonLd
+function recipe(input: RecipeInput): JsonLd;
 ```
 
 Schema.org `Recipe`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | RecipeInput |  |
+| Name  | Type        | Description |
+| ----- | ----------- | ----------- |
+| input | RecipeInput |             |
 
 ### review
 
 **Kind:** function
 
 ```typescript
-function review(input: ReviewInput): JsonLd
+function review(input: ReviewInput): JsonLd;
 ```
 
 Schema.org `Review`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | ReviewInput |  |
+| Name  | Type        | Description |
+| ----- | ----------- | ----------- |
+| input | ReviewInput |             |
 
 ### softwareApplication
 
 **Kind:** function
 
 ```typescript
-function softwareApplication(input: SoftwareApplicationInput): JsonLd
+function softwareApplication(input: SoftwareApplicationInput): JsonLd;
 ```
 
 Schema.org `SoftwareApplication`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | SoftwareApplicationInput |  |
+| Name  | Type                     | Description |
+| ----- | ------------------------ | ----------- |
+| input | SoftwareApplicationInput |             |
 
 ### videoObject
 
 **Kind:** function
 
 ```typescript
-function videoObject(input: VideoObjectInput): JsonLd
+function videoObject(input: VideoObjectInput): JsonLd;
 ```
 
 Schema.org `VideoObject`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | VideoObjectInput |  |
+| Name  | Type             | Description |
+| ----- | ---------------- | ----------- |
+| input | VideoObjectInput |             |
 
 ### webPage
 
 **Kind:** function
 
 ```typescript
-function webPage(input: WebPageInput): JsonLd
+function webPage(input: WebPageInput): JsonLd;
 ```
 
 Schema.org `WebPage` — describes a single page within a site.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | WebPageInput |  |
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| input | WebPageInput |             |
 
 ### webPageId
 
 **Kind:** function
 
 ```typescript
-function webPageId(pageUrl: string): string
+function webPageId(pageUrl: string): string;
 ```
 
 Canonical `@id` for a `WebPage` node.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| pageUrl | string |  |
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| pageUrl | string |             |
 
 ### webSite
 
 **Kind:** function
 
 ```typescript
-function webSite(input: WebSiteInput): JsonLd
+function webSite(input: WebSiteInput): JsonLd;
 ```
 
 Schema.org `WebSite` — typically emitted once site-wide.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | WebSiteInput |  |
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| input | WebSiteInput |             |
 
 ### webSiteId
 
 **Kind:** function
 
 ```typescript
-function webSiteId(siteUrl: string): string
+function webSiteId(siteUrl: string): string;
 ```
 
 Canonical `@id` for the site-wide `WebSite` node.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| siteUrl | string |  |
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| siteUrl | string |             |
 
 ## `src/build-open-graph`
 
@@ -313,7 +313,7 @@ Canonical `@id` for the site-wide `WebSite` node.
 **Kind:** function
 
 ```typescript
-function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[]
+function buildOpenGraph(metadata: OpenGraphMetadata): SeoMetaTag[];
 ```
 
 Convert {@link OpenGraphMetadata} into a flat list of `<meta>` tag
@@ -323,9 +323,9 @@ image sub-properties grouped after each `og:image` URL.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| metadata | OpenGraphMetadata |  |
+| Name     | Type              | Description |
+| -------- | ----------------- | ----------- |
+| metadata | OpenGraphMetadata |             |
 
 ## `src/build-page-meta`
 
@@ -334,7 +334,7 @@ image sub-properties grouped after each `og:image` URL.
 **Kind:** function
 
 ```typescript
-function buildPageMeta(metadata: PageMetadata): BuiltPageMeta
+function buildPageMeta(metadata: PageMetadata): BuiltPageMeta;
 ```
 
 Convert {@link PageMetadata} into the resolved title, language, and flat
@@ -342,9 +342,9 @@ lists of `<meta>` / `<link>` tag descriptors.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| metadata | PageMetadata |  |
+| Name     | Type         | Description |
+| -------- | ------------ | ----------- |
+| metadata | PageMetadata |             |
 
 ### BuiltPageMeta
 
@@ -363,7 +363,7 @@ Result of {@link buildPageMeta} — everything the applier needs to sync.
 **Kind:** function
 
 ```typescript
-function buildRobotsTxt(input: RobotsTxtInput = {}): string
+function buildRobotsTxt(input: RobotsTxtInput = {}): string;
 ```
 
 Build a deterministic `robots.txt` string from a policy description.
@@ -373,9 +373,9 @@ and matches the convention used by most static-site generators.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | RobotsTxtInput |  |
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| input | RobotsTxtInput |             |
 
 ### RobotsGroup
 
@@ -407,23 +407,23 @@ Input describing a complete `robots.txt` policy.
 **Kind:** function
 
 ```typescript
-function buildSitemapIndex(input: SitemapIndexInput): string
+function buildSitemapIndex(input: SitemapIndexInput): string;
 ```
 
 Build a deterministic sitemap-index XML string.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | SitemapIndexInput |  |
+| Name  | Type              | Description |
+| ----- | ----------------- | ----------- |
+| input | SitemapIndexInput |             |
 
 ### buildSitemapXml
 
 **Kind:** function
 
 ```typescript
-function buildSitemapXml(input: SitemapXmlInput): string
+function buildSitemapXml(input: SitemapXmlInput): string;
 ```
 
 Build a deterministic `sitemap.xml` string. The output always ends with a
@@ -431,9 +431,9 @@ trailing newline so it concatenates cleanly with HTTP responses.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | SitemapXmlInput |  |
+| Name  | Type            | Description |
+| ----- | --------------- | ----------- |
+| input | SitemapXmlInput |             |
 
 ### SitemapAlternate
 
@@ -492,7 +492,7 @@ Input describing a complete sitemap.
 **Kind:** function
 
 ```typescript
-function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void
+function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 ```
 
 Reactively synchronise the full Mission Platform SEO surface — standard
@@ -508,9 +508,9 @@ be used both with reactive state and with static metadata.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| metadata | MaybeRefOrGetter<SeoMetadata> |  |
+| Name     | Type                          | Description |
+| -------- | ----------------------------- | ----------- |
+| metadata | MaybeRefOrGetter<SeoMetadata> |             |
 
 ## `src/mp-seo`
 
@@ -519,7 +519,7 @@ be used both with reactive state and with static metadata.
 **Kind:** component
 
 ```typescript
-export const MpSeo
+export MpSeo = defineComponent(
 ```
 
 Renderless `<Seo>` component — a declarative wrapper around {@link useSeo}.
@@ -534,14 +534,14 @@ synchronise them into the document head. Renders no DOM of its own.
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ### Seo
 
 **Kind:** component
 
 ```typescript
-export const MpSeo
+export MpSeo = defineComponent(
 ```
 
 Renderless `<Seo>` component — a declarative wrapper around {@link useSeo}.
@@ -556,7 +556,7 @@ synchronise them into the document head. Renders no DOM of its own.
   :page="{ title: 'About', description: '…', canonical: 'https://x.test/about' }"
   :open-graph="{ title: 'About', url: 'https://x.test/about', images: ['…'] }"
   :json-ld="[webSite({ name: 'X', url: 'https://x.test' })]"
-/>
+  />
 
 ## `src/types`
 

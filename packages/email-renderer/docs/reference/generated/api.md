@@ -11,33 +11,33 @@ Generated from public source declarations in `@mission-platform/email-renderer`.
 **Kind:** function
 
 ```typescript
-function renderToEmailReact(node: EmailNode): ReactElement
+function renderToEmailReact(node: EmailNode): ReactElement;
 ```
 
 Render the shared Forge tree as a React element for browser previews.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | EmailNode |  |
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| node | EmailNode |             |
 
 ### toEmailReactComponent
 
 **Kind:** function
 
 ```typescript
-function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>
+function toEmailReactComponent(component: MpComponent<P>, name?: string): FunctionComponent<P>;
 ```
 
 Wrap a Forge email component as a React function component.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | MpComponent<P> |  |
-| name | string |  |
+| Name      | Type           | Description |
+| --------- | -------------- | ----------- |
+| component | MpComponent<P> |             |
+| name      | string         |             |
 
 ## `src/adapters/solid`
 
@@ -46,32 +46,32 @@ Wrap a Forge email component as a React function component.
 **Kind:** function
 
 ```typescript
-function renderToEmailSolid(node: EmailNode): JSX.Element
+function renderToEmailSolid(node: EmailNode): JSX.Element;
 ```
 
 Render the shared Forge tree as Solid JSX for browser previews.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | EmailNode |  |
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| node | EmailNode |             |
 
 ### toEmailSolidComponent
 
 **Kind:** function
 
 ```typescript
-function toEmailSolidComponent(component: Component<P>): Component<P>
+function toEmailSolidComponent(component: Component<P>): Component<P>;
 ```
 
 Wrap a Forge component as a Solid component.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | Component<P> |  |
+| Name      | Type         | Description |
+| --------- | ------------ | ----------- |
+| component | Component<P> |             |
 
 ## `src/adapters/svelte`
 
@@ -80,16 +80,16 @@ Wrap a Forge component as a Solid component.
 **Kind:** function
 
 ```typescript
-function renderToEmailSvelte(node: EmailNode): Snippet
+function renderToEmailSvelte(node: EmailNode): Snippet;
 ```
 
 Convert a shared Forge tree into a Svelte 5 raw snippet for `{@render ...}`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | EmailNode |  |
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| node | EmailNode |             |
 
 ## `src/adapters/vue`
 
@@ -98,33 +98,33 @@ Convert a shared Forge tree into a Svelte 5 raw snippet for `{@render ...}`.
 **Kind:** function
 
 ```typescript
-function renderToEmailVue(node: EmailNode): VNode
+function renderToEmailVue(node: EmailNode): VNode;
 ```
 
 Render the shared Forge tree as a Vue VNode for browser previews.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | EmailNode |  |
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| node | EmailNode |             |
 
 ### toEmailVueComponent
 
 **Kind:** function
 
 ```typescript
-function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toEmailVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 Wrap a Forge email component as a Vue functional component.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | MpComponent<P> |  |
-| name | string |  |
+| Name      | Type           | Description |
+| --------- | -------------- | ----------- |
+| component | MpComponent<P> |             |
+| name      | string         |             |
 
 ## `src/adapters/web-components`
 
@@ -133,16 +133,16 @@ Wrap a Forge email component as a Vue functional component.
 **Kind:** function
 
 ```typescript
-function renderToEmailWebComponent(node: EmailNode): TemplateResult
+function renderToEmailWebComponent(node: EmailNode): TemplateResult;
 ```
 
 Create a native Forge template result for a Web Components host.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | EmailNode |  |
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| node | EmailNode |             |
 
 ## `src/markdown/render-markdown`
 
@@ -151,17 +151,17 @@ Create a native Forge template result for a Web Components host.
 **Kind:** function
 
 ```typescript
-function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument
+function renderMarkdown(markdown: string, options: MarkdownRenderOptions = {}): MarkdownDocument;
 ```
 
 Convert safe Markdown tokens into the same Forge tree used by email components.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| markdown | string |  |
-| options | MarkdownRenderOptions |  |
+| Name     | Type                  | Description |
+| -------- | --------------------- | ----------- |
+| markdown | string                |             |
+| options  | MarkdownRenderOptions |             |
 
 ## `src/markdown/types`
 
@@ -192,16 +192,16 @@ Options controlling Markdown tree generation.
 **Kind:** function
 
 ```typescript
-function serializeAttributes(properties: EmailProperties): string
+function serializeAttributes(properties: EmailProperties): string;
 ```
 
 Serialize an allowlisted set of Forge properties in deterministic order.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | EmailProperties |  |
+| Name       | Type            | Description |
+| ---------- | --------------- | ----------- |
+| properties | EmailProperties |             |
 
 ## `src/render/escape`
 
@@ -210,33 +210,33 @@ Serialize an allowlisted set of Forge properties in deterministic order.
 **Kind:** function
 
 ```typescript
-function escapeHtml(value: string): string
+function escapeHtml(value: string): string;
 ```
 
 Escape text and attribute content for HTML serialization.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
 
 ### validateUrl
 
 **Kind:** function
 
 ```typescript
-function validateUrl(value: string, attribute: string): string
+function validateUrl(value: string, attribute: string): string;
 ```
 
 Reject schemes that can execute code or load an unexpected resource.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | string |  |
-| attribute | string |  |
+| Name      | Type   | Description |
+| --------- | ------ | ----------- |
+| value     | string |             |
+| attribute | string |             |
 
 ## `src/render/render-email`
 
@@ -245,33 +245,33 @@ Reject schemes that can execute code or load an unexpected resource.
 **Kind:** function
 
 ```typescript
-function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string
+function renderEmail(node: EmailNode, options: RenderEmailOptions = {}): string;
 ```
 
 Render a Forge email tree into a complete, framework-free HTML document.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | EmailNode |  |
-| options | RenderEmailOptions |  |
+| Name    | Type               | Description |
+| ------- | ------------------ | ----------- |
+| node    | EmailNode          |             |
+| options | RenderEmailOptions |             |
 
 ### renderEmailFragment
 
 **Kind:** function
 
 ```typescript
-function renderEmailFragment(node: EmailNode): string
+function renderEmailFragment(node: EmailNode): string;
 ```
 
 Render a Forge tree as a safe HTML fragment for browser adapter hosts.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | EmailNode |  |
+| Name | Type      | Description |
+| ---- | --------- | ----------- |
+| node | EmailNode |             |
 
 ## `src/render/style`
 
@@ -280,16 +280,16 @@ Render a Forge tree as a safe HTML fragment for browser adapter hosts.
 **Kind:** function
 
 ```typescript
-function serializeStyle(style: EmailStyle | string): string
+function serializeStyle(style: EmailStyle | string): string;
 ```
 
 Serialize inline styles in deterministic property order without CSS variables.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| style | EmailStyle \| string |  |
+| Name  | Type                 | Description |
+| ----- | -------------------- | ----------- |
+| style | EmailStyle \| string |             |
 
 ## `src/render/types`
 

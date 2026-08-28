@@ -21,7 +21,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const breakpointKeys
+export const breakpointKeys;
 ```
 
 No description provided.
@@ -31,17 +31,17 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const breakpoints: Record<BreakpointKey, number>
+export const breakpoints: Record<BreakpointKey, number>;
 ```
 
 Min-width pixel thresholds for every breakpoint step.
 
 - `2xs` — extra-extra-small: < 480 px (effectively 0)
-- `xs`  — extra-small: ≥ 480 px
-- `sm`  — small: ≥ 768 px (tablet portrait)
-- `md`  — medium: ≥ 1024 px (tablet landscape / small laptop)
-- `lg`  — large: ≥ 1920 px (Full HD / 1080p — 1920×1080)
-- `xl`  — extra-large: ≥ 2560 px (QHD)
+- `xs` — extra-small: ≥ 480 px
+- `sm` — small: ≥ 768 px (tablet portrait)
+- `md` — medium: ≥ 1024 px (tablet landscape / small laptop)
+- `lg` — large: ≥ 1920 px (Full HD / 1080p — 1920×1080)
+- `xl` — extra-large: ≥ 2560 px (QHD)
 - `2xl` — extra-extra-large: ≥ 3840 px (4K UHD)
 
 ### BreakpointValues
@@ -59,23 +59,23 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function getBreakpointValue(key: BreakpointKey): number
+function getBreakpointValue(key: BreakpointKey): number;
 ```
 
 Returns the pixel value for a given breakpoint key.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| key | BreakpointKey |  |
+| Name | Type          | Description |
+| ---- | ------------- | ----------- |
+| key  | BreakpointKey |             |
 
 ### maxMediaQuery
 
 **Kind:** function
 
 ```typescript
-function maxMediaQuery(key: BreakpointKey): string
+function maxMediaQuery(key: BreakpointKey): string;
 ```
 
 Returns a `max-width` media query string (upper-bound) for the given
@@ -83,9 +83,9 @@ breakpoint — i.e. "smaller than the next step up".
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| key | BreakpointKey |  |
+| Name | Type          | Description |
+| ---- | ------------- | ----------- |
+| key  | BreakpointKey |             |
 
 #### Contract
 
@@ -96,37 +96,37 @@ breakpoint — i.e. "smaller than the next step up".
 **Kind:** function
 
 ```typescript
-function mediaQuery(key: BreakpointKey): string
+function mediaQuery(key: BreakpointKey): string;
 ```
 
 Returns a `min-width` media query string for the given breakpoint.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| key | BreakpointKey |  |
+| Name | Type          | Description |
+| ---- | ------------- | ----------- |
+| key  | BreakpointKey |             |
 
 #### Contract
 
 - **@example:** mediaQuery('lg') // → '(min-width: 1920px)'
-mediaQuery('xl') // → '(min-width: 2560px)'
+  mediaQuery('xl') // → '(min-width: 2560px)'
 
 ### resolveBreakpoint
 
 **Kind:** function
 
 ```typescript
-function resolveBreakpoint(width: number): BreakpointKey
+function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
 Given a pixel width, returns the currently active breakpoint key.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| width | number |  |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| width | number |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -135,7 +135,7 @@ Given a pixel width, returns the currently active breakpoint key.
 **Kind:** function
 
 ```typescript
-function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement
+function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
 `ForgeHideAt` — the inverse of {@link ForgeShowAt}: it hides its default slot when the
@@ -150,9 +150,9 @@ The reactive viewport width is tracked through the neutral hooks
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<HideAtProperties> |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| properties | Readonly<HideAtProperties> |             |
 
 ### HideAtProperties
 
@@ -171,7 +171,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement
+function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` — conditionally renders its default slot only when the viewport is at
@@ -187,9 +187,9 @@ toggle without introducing an extra layout box.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ShowAtProperties> |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| properties | Readonly<ShowAtProperties> |             |
 
 ### ShowAtProperties
 
@@ -218,7 +218,7 @@ The overlay takes no properties: it reads the live viewport itself.
 **Kind:** function
 
 ```typescript
-function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement
+function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
 `ForgeBreakpointDebug` — a development-time overlay pinned to the bottom-right
@@ -235,9 +235,9 @@ both React and Vue.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| _properties | Readonly<BreakpointDebugProperties> |  |
+| Name        | Type                                | Description |
+| ----------- | ----------------------------------- | ----------- |
+| _properties | Readonly<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -246,7 +246,7 @@ both React and Vue.
 **Kind:** function
 
 ```typescript
-function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number }
+function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; width: number };
 ```
 
 Reactive breakpoint state based on the document element's width.

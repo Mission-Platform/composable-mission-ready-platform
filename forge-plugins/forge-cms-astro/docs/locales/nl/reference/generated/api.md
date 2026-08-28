@@ -16,16 +16,16 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-c
 **Soort:** functie
 
 ```typescript
-function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin
+function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin;
 ```
 
 Bind Astro-projectie aan een framework-uitvoerplug-in die eigendom is van de beller.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeAstroCmsOptions |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| opties | ForgeAstroCmsOptions |              |
 
 ### ForgeAstroCmsOpties
 
@@ -44,32 +44,32 @@ Opties voor {@link forgeAstroCms}.
 **Soort:** functie
 
 ```typescript
-function emitContentConfig(components: readonly ContentComponent[]): string
+function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
 Zend een Astro uit `content.config.ts` met één collectie per onderdeel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| componenten | alleen-lezen ContentComponent[] |  |
+| Naam        | Typ                             | Beschrijving |
+| ----------- | ------------------------------- | ------------ |
+| componenten | alleen-lezen ContentComponent[] |              |
 
 ### veldToZod
 
 **Soort:** functie
 
 ```typescript
-function fieldToZod(field: ContentField): string
+function fieldToZod(field: ContentField): string;
 ```
 
 De zod (of `image()`) validator waarop een neutraal veldsoort wordt toegepast.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| veld | InhoudVeld |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| veld | InhoudVeld |              |
 
 ## `src/template`
 
@@ -78,40 +78,46 @@ De zod (of `image()`) validator waarop een neutraal veldsoort wordt toegepast.
 **Soort:** functie
 
 ```typescript
-function astroDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function astroDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 Verzamel de diagnosegegevens die de Astro-daalrapporten voor een module rapporteren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ir | SemantischeModule |  |
-| bestanddeel | InhoudComponent |  |
+| Naam        | Typ               | Beschrijving |
+| ----------- | ----------------- | ------------ |
+| ir          | SemantischeModule |              |
+| bestanddeel | InhoudComponent   |              |
 
 ### astroMarkup
 
 **Soort:** functie
 
 ```typescript
-function astroMarkup(expression: string): string
+function astroMarkup(expression: string): string;
 ```
 
 Herschrijf alleen JSX-attribuutnamen en verwijder het buitenste fragment.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| uitdrukking | tekenreeks |  |
+| Naam        | Typ        | Beschrijving |
+| ----------- | ---------- | ------------ |
+| uitdrukking | tekenreeks |              |
 
 ### emitIslandAstro-sjabloon
 
 **Soort:** functie
 
 ```typescript
-function emitIslandAstroTemplate(component: ContentComponent, islandEntry: string): string
+function emitIslandAstroTemplate(
+  component: ContentComponent,
+  islandEntry: string,
+): string;
 ```
 
 Zend de eiland-backed uit `.astro` sjabloon voor een interactief onderdeel.
@@ -122,23 +128,23 @@ neutrale IR samengesteld door de gebonden framework-plug-in - en gehydrateerd me
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
-| eilandEntry | tekenreeks |  |
+| Naam        | Typ             | Beschrijving |
+| ----------- | --------------- | ------------ |
+| bestanddeel | InhoudComponent |              |
+| eilandEntry | tekenreeks      |              |
 
 ### emitStaticAstro-sjabloon
 
 **Soort:** functie
 
 ```typescript
-function emitStaticAstroTemplate(ir: SemanticModule): string
+function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
 Zend de statische elektriciteit uit `.astro` sjabloon voor een presentatiecomponent.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ir | SemantischeModule |  |
+| Naam | Typ               | Beschrijving |
+| ---- | ----------------- | ------------ |
+| ir   | SemantischeModule |              |

@@ -16,7 +16,7 @@
 **النوع:** ثابت
 
 ```typescript
-export const BADGE
+export const BADGE;
 ```
 
 خيارات الاتحاد الحرفي، وأوصاف JSDoc، و `?? literal` الإعدادات الافتراضية.
@@ -26,7 +26,7 @@ export const BADGE
 **النوع:** ثابت
 
 ```typescript
-export const badgeNames: ContentComponentNamesInput
+export const badgeNames: ContentComponentNamesInput;
 ```
 
 لم يتم تقديم أي وصف.
@@ -36,7 +36,7 @@ export const badgeNames: ContentComponentNamesInput
 **النوع:** ثابت
 
 ```typescript
-export const BUTTON
+export const BUTTON;
 ```
 
 اتحاد مهين للنص بالإضافة إلى دعم رد الاتصال المسقط.
@@ -46,7 +46,7 @@ export const BUTTON
 **النوع:** ثابت
 
 ```typescript
-export const buttonNames: ContentComponentNamesInput
+export const buttonNames: ContentComponentNamesInput;
 ```
 
 لم يتم تقديم أي وصف.
@@ -56,7 +56,7 @@ export const buttonNames: ContentComponentNamesInput
 **النوع:** ثابت
 
 ```typescript
-export const COUNTER
+export const COUNTER;
 ```
 
 مكون تفاعلي: الحالة ومعالج الحدث يفرضان جزيرة رطبة.
@@ -66,7 +66,7 @@ export const COUNTER
 **النوع:** ثابت
 
 ```typescript
-export const counterNames: ContentComponentNamesInput
+export const counterNames: ContentComponentNamesInput;
 ```
 
 لم يتم تقديم أي وصف.
@@ -76,7 +76,7 @@ export const counterNames: ContentComponentNamesInput
 **النوع:** ثابت
 
 ```typescript
-export const EMPTY
+export const EMPTY;
 ```
 
 مكون بدون دعائم على الإطلاق.
@@ -86,7 +86,7 @@ export const EMPTY
 **النوع:** ثابت
 
 ```typescript
-export const emptyNames: ContentComponentNamesInput
+export const emptyNames: ContentComponentNamesInput;
 ```
 
 لم يتم تقديم أي وصف.
@@ -96,7 +96,7 @@ export const emptyNames: ContentComponentNamesInput
 **النوع:** ثابت
 
 ```typescript
-export const GRID
+export const GRID;
 ```
 
 دعامة رقمية ذات قيمة رقمية افتراضية.
@@ -106,7 +106,7 @@ export const GRID
 **النوع:** ثابت
 
 ```typescript
-export const gridNames: ContentComponentNamesInput
+export const gridNames: ContentComponentNamesInput;
 ```
 
 لم يتم تقديم أي وصف.
@@ -116,7 +116,7 @@ export const gridNames: ContentComponentNamesInput
 **النوع:** ثابت
 
 ```typescript
-export const LAYOUT
+export const LAYOUT;
 ```
 
 فتحة مسماة بجانب الفتحة الافتراضية.
@@ -126,7 +126,7 @@ export const LAYOUT
 **النوع:** ثابت
 
 ```typescript
-export const layoutNames: ContentComponentNamesInput
+export const layoutNames: ContentComponentNamesInput;
 ```
 
 لم يتم تقديم أي وصف.
@@ -136,7 +136,7 @@ export const layoutNames: ContentComponentNamesInput
 **النوع:** ثابت
 
 ```typescript
-export const REQUIRED
+export const REQUIRED;
 ```
 
 دعامة مطلوبة (غير اختيارية) إلى جانب دعامة اختيارية.
@@ -146,7 +146,7 @@ export const REQUIRED
 **النوع:** ثابت
 
 ```typescript
-export const requiredNames: ContentComponentNamesInput
+export const requiredNames: ContentComponentNamesInput;
 ```
 
 لم يتم تقديم أي وصف.
@@ -156,7 +156,7 @@ export const requiredNames: ContentComponentNamesInput
 **النوع:** ثابت
 
 ```typescript
-export const SITE_HEADER
+export const SITE_HEADER;
 ```
 
 مكون ذو دعامة إعداد على مستوى الموقع.
@@ -166,7 +166,7 @@ export const SITE_HEADER
 **النوع:** ثابت
 
 ```typescript
-export const siteHeaderNames: ContentComponentNamesInput
+export const siteHeaderNames: ContentComponentNamesInput;
 ```
 
 لم يتم تقديم أي وصف.
@@ -178,7 +178,7 @@ export const siteHeaderNames: ContentComponentNamesInput
 **النوع:** الوظيفة
 
 ```typescript
-function stubFramework(id = "react"): FrameworkOutputPlugin
+function stubFramework(id = "react"): FrameworkOutputPlugin;
 ```
 
 قم بإنشاء مكون إضافي لإطار عمل كعب الروتين بمعرف يمكن تجاوزه.
@@ -186,8 +186,8 @@ function stubFramework(id = "react"): FrameworkOutputPlugin
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف |  |  |
+| ----- | ---- | ----- |
+| معرف  |      |       |
 
 ## `src/analyze`
 
@@ -196,7 +196,11 @@ function stubFramework(id = "react"): FrameworkOutputPlugin
 **النوع:** الوظيفة
 
 ```typescript
-function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentComponentNamesInput, semantic?: SemanticModule): ContentComponent
+function analyzeContentComponent(
+  sourceFile: ts.SourceFile,
+  names: ContentComponentNamesInput,
+  semantic?: SemanticModule,
+): ContentComponent;
 ```
 
 تحليل وحدة مكون محايد، وإرجاع محتواها المحايد للنظام الأساسي
@@ -205,18 +209,18 @@ function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentCompon
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| أسماء | ContentComponentNamesInput |  |
-| الدلالية | الوحدة الدلالية |  |
+| الاسم      | اكتب                       | الوصف |
+| ---------- | -------------------------- | ----- |
+| ملف المصدر | ts.SourceFile              |       |
+| أسماء      | ContentComponentNamesInput |       |
+| الدلالية   | الوحدة الدلالية            |       |
 
 ### CMS_COLOR_TAG
 
 **النوع:** ثابت
 
 ```typescript
-export const CMS_COLOR_TAG
+export const CMS_COLOR_TAG;
 ```
 
 لم يتم تقديم أي وصف.
@@ -226,7 +230,7 @@ export const CMS_COLOR_TAG
 **النوع:** ثابت
 
 ```typescript
-export const CMS_COLOUR_TAG
+export const CMS_COLOUR_TAG;
 ```
 
 تم قبول التهجئة البريطانية للتعليقات التوضيحية للمصدر.
@@ -236,7 +240,7 @@ export const CMS_COLOUR_TAG
 **النوع:** ثابت
 
 ```typescript
-export const CMS_ICON_TAG
+export const CMS_ICON_TAG;
 ```
 
 علامات JSDoc لبيانات تعريف المحرر الاختيارية على مستوى المكون.
@@ -246,7 +250,7 @@ export const CMS_ICON_TAG
 **النوع:** ثابت
 
 ```typescript
-export const CMS_SETTING_TAG
+export const CMS_SETTING_TAG;
 ```
 
 علامة JSDoc التي تروج للدعامة لإعداد CMS على مستوى الموقع.
@@ -256,7 +260,7 @@ export const CMS_SETTING_TAG
 **النوع:** ثابت
 
 ```typescript
-export const CMS_TAB_TAG
+export const CMS_TAB_TAG;
 ```
 
 علامة JSDoc التي تقوم بتعيين خاصية لعلامة تبويب المحرر.
@@ -266,7 +270,7 @@ export const CMS_TAB_TAG
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_SLOT_FIELD
+export const DEFAULT_SLOT_FIELD;
 ```
 
 مفتاح الحقل هو الفتحة الافتراضية (مكون `children`) يتعرض تحت.
@@ -276,32 +280,34 @@ export const DEFAULT_SLOT_FIELD
 **النوع:** الوظيفة
 
 ```typescript
-function deriveContentComponentNames(names: ContentComponentNamesInput): ContentComponentNames
+function deriveContentComponentNames(
+  names: ContentComponentNamesInput,
+): ContentComponentNames;
 ```
 
 اشتق مجموعة الاسم الكامل من المجموعة الفرعية التي يوفرها المتصل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أسماء | ContentComponentNamesInput |  |
+| الاسم | اكتب                       | الوصف |
+| ----- | -------------------------- | ----- |
+| أسماء | ContentComponentNamesInput |       |
 
 ### isInteractiveModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function isInteractiveModule(semantic: SemanticModule | undefined): boolean
+function isInteractiveModule(semantic: SemanticModule | undefined): boolean;
 ```
 
 صحيح عندما يحمل IR المحايد سلوكًا لا يمكن أن يوفره إلا وقت التشغيل الحقيقي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الدلالية | الوحدة الدلالية \| غير محدد |  |
+| الاسم    | اكتب                        | الوصف |
+| -------- | --------------------------- | ----- |
+| الدلالية | الوحدة الدلالية \| غير محدد |       |
 
 ## `src/classify`
 
@@ -310,7 +316,7 @@ function isInteractiveModule(semantic: SemanticModule | undefined): boolean
 **النوع:** ثابت
 
 ```typescript
-export const ASSET_TYPE_REFERENCES: ReadonlySet<string>
+export const ASSET_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 اكتب المراجع التي تحدد الدعامة كأصل وسائط.
@@ -330,41 +336,47 @@ export type ClassifiedFieldKind = ContentFieldKind | undefined;
 **النوع:** الوظيفة
 
 ```typescript
-function classifyType(node: ts.TypeNode, aliases: Map<string, ts.TypeNode>, seen: Set<string> = new Set()): ClassifiedFieldKind
+function classifyType(
+  node: ts.TypeNode,
+  aliases: Map<string, ts.TypeNode>,
+  seen: Set<string> = new Set(),
+): ClassifiedFieldKind;
 ```
 
 تصنيف نوع الدعامة node إلى نوع محتوى محايد، وحل الأسماء المستعارة/النقابات المحلية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | ts.TypeNode |  |
-| الأسماء المستعارة | رسم خريطة<string, ts.TypeNode> |  |
-| رأيت | تعيين<string> |  |
+| الاسم             | اكتب                           | الوصف |
+| ----------------- | ------------------------------ | ----- |
+| node              | ts.TypeNode                    |       |
+| الأسماء المستعارة | رسم خريطة<string, ts.TypeNode> |       |
+| رأيت              | تعيين<string>                  |       |
 
 ### CollectTypeAliases
 
 **النوع:** الوظيفة
 
 ```typescript
-function collectTypeAliases(sourceFile: ts.SourceFile): Map<string, ts.TypeNode>
+function collectTypeAliases(
+  sourceFile: ts.SourceFile,
+): Map<string, ts.TypeNode>;
 ```
 
 خريطة كل المستوى الأعلى `type X = …` الاسم المستعار لنوعه node، من أجل حل الاتحاد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| ملف المصدر | ts.SourceFile |       |
 
 ### LINK_TYPE_REFERENCES
 
 **النوع:** ثابت
 
 ```typescript
-export const LINK_TYPE_REFERENCES: ReadonlySet<string>
+export const LINK_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 اكتب المراجع التي تحدد الدعامة كرابط/عنوان URL.
@@ -374,7 +386,7 @@ export const LINK_TYPE_REFERENCES: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
+export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 اكتب المراجع التي تحدد الدعامة كنص منسق منسق بدلاً من نص عادي.
@@ -384,7 +396,7 @@ export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const SLOT_TYPE_REFERENCES: ReadonlySet<string>
+export const SLOT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 اكتب المراجع التي يتم التعامل مع عناصرها كمحتوى متداخل (`children`).
@@ -406,7 +418,8 @@ export interface CmsArtifact
 **النوع:** النوع
 
 ```typescript
-export type CmsArtifactKind = "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
+export type CmsArtifactKind =
+  "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
 ```
 
 الدور الذي تلعبه القطعة الأثرية المنبعثة في شجرة مخرجات الهدف.
@@ -446,16 +459,16 @@ export interface CmsTargetContext
 **النوع:** الوظيفة
 
 ```typescript
-function cmsTargetDirectory(plugin: CmsOutputPlugin): string
+function cmsTargetDirectory(plugin: CmsOutputPlugin): string;
 ```
 
 مقطع الدليل الذي تتم كتابة مخرجات الهدف لكل إطار تحته.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البرنامج المساعد | كمسوتبوتبلوجين |  |
+| الاسم            | اكتب           | الوصف |
+| ---------------- | -------------- | ----- |
+| البرنامج المساعد | كمسوتبوتبلوجين |       |
 
 ### CmsTargetId
 
@@ -472,7 +485,7 @@ export type CmsTargetId = "storyblok" | "astro" | "ghost" | "jekyll" | "webflow"
 **النوع:** الوظيفة
 
 ```typescript
-function defineForgeCmsPlugin(plugin: T): T
+function defineForgeCmsPlugin(plugin: T): T;
 ```
 
 التحقق من صحة وإرجاع البرنامج المساعد لإخراج CMS.
@@ -482,9 +495,9 @@ function defineForgeCmsPlugin(plugin: T): T
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البرنامج المساعد | ت |  |
+| الاسم            | اكتب | الوصف |
+| ---------------- | ---- | ----- |
+| البرنامج المساعد | ت    |       |
 
 ## `src/config`
 
@@ -493,16 +506,18 @@ function defineForgeCmsPlugin(plugin: T): T
 **النوع:** الوظيفة
 
 ```typescript
-function defineViteForgeCmsLibrary(options: ViteForgeCmsLibraryOptions): UserConfig
+function defineViteForgeCmsLibrary(
+  options: ViteForgeCmsLibraryOptions,
+): UserConfig;
 ```
 
 إنشاء أ Vite تكوين المكتبة لهدف CMS واحد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | ViteForgeCmsLibraryOptions |  |
+| الاسم  | اكتب                       | الوصف |
+| ------ | -------------------------- | ----- |
+| خيارات | ViteForgeCmsLibraryOptions |       |
 
 ### ViteForgeCmsLibraryOptions
 
@@ -551,7 +566,13 @@ export interface ContentComponentNames
 **النوع:** النوع
 
 ```typescript
-export type ContentComponentNamesInput = Pick< ContentComponentNames, "neutralName" | "publicName" > & Partial< Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir"> >;
+export type ContentComponentNamesInput = Pick<
+  ContentComponentNames,
+  "neutralName" | "publicName"
+> &
+  Partial<
+    Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir">
+  >;
 ```
 
 المجموعة الفرعية من {@link ContentComponentNames} التي يقدمها المتصل؛ والباقي مشتق.
@@ -605,32 +626,32 @@ export type ContentFieldKindName = ContentFieldKind["kind"];
 **النوع:** الوظيفة
 
 ```typescript
-function contentFields(component: ContentComponent): readonly ContentField[]
+function contentFields(component: ContentComponent): readonly ContentField[];
 ```
 
 حقول المكون التي ليست فتحات (محتوى عددي وقابل للتأليف).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المكون | مكون المحتوى |       |
 
 ### SlotFields
 
 **النوع:** الوظيفة
 
 ```typescript
-function slotFields(component: ContentComponent): readonly ContentField[]
+function slotFields(component: ContentComponent): readonly ContentField[];
 ```
 
 حقول المكون الذي يحمل المحتوى المتداخل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| المكون | مكون المحتوى |       |
 
 ## `src/driver`
 
@@ -639,7 +660,9 @@ function slotFields(component: ContentComponent): readonly ContentField[]
 **النوع:** الوظيفة
 
 ```typescript
-function generateCmsArtifacts(options: GenerateCmsArtifactsOptions): GeneratedCmsTree
+function generateCmsArtifacts(
+  options: GenerateCmsArtifactsOptions,
+): GeneratedCmsTree;
 ```
 
 قم بتشغيل الاكتشاف الكامل → IR → نموذج المحتوى → إرسال → حلقة الكتابة لنظام إدارة محتوى واحد
@@ -647,9 +670,9 @@ function generateCmsArtifacts(options: GenerateCmsArtifactsOptions): GeneratedCm
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | إنشاء CmsArtifactsOptions |  |
+| الاسم  | اكتب                      | الوصف |
+| ------ | ------------------------- | ----- |
+| خيارات | إنشاء CmsArtifactsOptions |       |
 
 ### إنشاء CmsArtifactsOptions
 
@@ -688,7 +711,9 @@ export interface GeneratedIsland
 **النوع:** الوظيفة
 
 ```typescript
-function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undefined
+function generateIsland(
+  options: GenerateIslandOptions,
+): GeneratedIsland | undefined;
 ```
 
 شارك في إنشاء شجرة جزيرة إطار العمل لهدف ما، مع إرجاع المحدد
@@ -696,9 +721,9 @@ function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undef
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | إنشاء خيارات الجزيرة |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | إنشاء خيارات الجزيرة |       |
 
 ### إنشاء خيارات الجزيرة
 
@@ -715,7 +740,7 @@ export interface GenerateIslandOptions
 **النوع:** ثابت
 
 ```typescript
-export const ISLAND_DIRECTORY
+export const ISLAND_DIRECTORY;
 ```
 
 اسم الدليل، بالنسبة إلى دليل الإخراج الهدف، يتم إنشاء الجزر فيه.
@@ -727,48 +752,48 @@ export const ISLAND_DIRECTORY
 **النوع:** الوظيفة
 
 ```typescript
-function toDisplayName(publicName: string): string
+function toDisplayName(publicName: string): string;
 ```
 
 تحويل اسم عام إلى اسم العرض الخاص به (`InView` → `In View`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم العام | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| الاسم العام | سلسلة |       |
 
 ### toKebabName
 
 **النوع:** الوظيفة
 
 ```typescript
-function toKebabName(publicName: string): string
+function toKebabName(publicName: string): string;
 ```
 
 تحويل اسم عام إلى اسم مغلف بالكباب (`InView` → `in-view`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم العام | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| الاسم العام | سلسلة |       |
 
 ### إلىالاسم الفني
 
 **النوع:** الوظيفة
 
 ```typescript
-function toTechnicalName(publicName: string): string
+function toTechnicalName(publicName: string): string;
 ```
 
 تحويل اسم عام إلى اسمه الفني (`InView` → `in_view`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم العام | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| الاسم العام | سلسلة |       |
 
 ## `src/tsdown`
 
@@ -777,83 +802,85 @@ function toTechnicalName(publicName: string): string
 **النوع:** الوظيفة
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 دليل ذاكرة التخزين المؤقت الذي تتم كتابة الشجرة التي تم إنشاؤها للهدف إليه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الجذر | سلسلة |  |
-| الهدف | كمسوتبوتبلوجين |  |
+| الاسم | اكتب           | الوصف |
+| ----- | -------------- | ----- |
+| الجذر | سلسلة          |       |
+| الهدف | كمسوتبوتبلوجين |       |
 
 ### cmsOutputDirectory
 
 **النوع:** الوظيفة
 
 ```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 دليل التوزيع الذي يتم إرسال الوحدات النمطية لكل إطار عمل إليه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الجذر | سلسلة |  |
-| الهدف | كمسوتبوتبلوجين |  |
+| الاسم | اكتب           | الوصف |
+| ----- | -------------- | ----- |
+| الجذر | سلسلة          |       |
+| الهدف | كمسوتبوتبلوجين |       |
 
 ### تعريفTsdownForgeCms
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig
+function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
 ```
 
 قم بإنشاء تكوين tsdown لهدف CMS واحد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | تسداونفورجكمسوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | تسداونفورجكمسوبتيونس |       |
 
 ### تعريفTsdownForgeCmsAll
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineTsdownForgeCmsAll(options: TsdownForgeCmsAllOptions): UserConfig[]
+function defineTsdownForgeCmsAll(
+  options: TsdownForgeCmsAllOptions,
+): UserConfig[];
 ```
 
 قم بإنشاء تكوينات tsdown لكل هدف CMS مطلوب.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | تسداونفورجكمسالوبتيونس |  |
+| الاسم  | اكتب                   | الوصف |
+| ------ | ---------------------- | ----- |
+| خيارات | تسداونفورجكمسالوبتيونس |       |
 
 ### ResolveComponentsModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string
+function resolveComponentsModule(rootDir: string, explicit?: string): string;
 ```
 
 حدد موقع برميل المكونات المحايدة للحزمة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الجذر | سلسلة |  |
-| صريح | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| الجذر | سلسلة |       |
+| صريح  | سلسلة |       |
 
 ### TsdownForgeCmsAllOptions
 

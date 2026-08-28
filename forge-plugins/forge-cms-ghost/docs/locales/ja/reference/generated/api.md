@@ -16,7 +16,7 @@
 **種類:** 定数
 
 ```typescript
-export const FORGE_GHOST_FIELD_UNSUPPORTED
+export const FORGE_GHOST_FIELD_UNSUPPORTED;
 ```
 
 フィールドの種類 Ghost はネイティブに表現できません。レンダリングされたテキストに劣化します。
@@ -26,7 +26,7 @@ export const FORGE_GHOST_FIELD_UNSUPPORTED
 **種類:** 定数
 
 ```typescript
-export const FORGE_GHOST_SETTING_LIMIT
+export const FORGE_GHOST_SETTING_LIMIT;
 ```
 
 もっと `@cmsSetting` Ghost よりもフィールドが投影されました `config.custom` 許可します。
@@ -36,18 +36,22 @@ export const FORGE_GHOST_SETTING_LIMIT
 **種類:** 関数
 
 ```typescript
-function ghostWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function ghostWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 生成段階の警告を作成します。 Ghost ターゲットは決してエラーを出しません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コード |文字列 |  |
-|メッセージ |文字列 |  |
-|ファイル名 |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| コード     | 文字列 |      |
+| メッセージ | 文字列 |      |
+| ファイル名 | 文字列 |      |
 
 ## `src/ghost`
 
@@ -56,16 +60,16 @@ function ghostWarning(code: string, message: string, fileName: string): Compiler
 **種類:** 関数
 
 ```typescript
-function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin
+function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin;
 ```
 
 Ghost テーマ プロジェクションを呼び出し元所有のフレームワーク出力プラグインにバインドします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeGhostCmsオプション |  |
+| 名前       | タイプ                  | 説明 |
+| ---------- | ----------------------- | ---- |
+| オプション | ForgeGhostCmsオプション |      |
 
 ### ForgeGhostCmsオプション
 
@@ -84,7 +88,11 @@ export interface ForgeGhostCmsOptions
 **種類:** 関数
 
 ```typescript
-function buildGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): GhostThemeConfig
+function buildGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): GhostThemeConfig;
 ```
 
 を構築します `config.custom` あらゆるものからの断片 `@cmsSetting`-タグ付きフィールド。
@@ -95,18 +103,18 @@ function buildGhostThemeConfig(components: readonly ContentComponent[], themeNam
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |読み取り専用 ContentComponent[] |  |
-|テーマ名 |文字列 |  |
-|診断 |コンパイラ診断[] |  |
+| 名前           | タイプ                          | 説明 |
+| -------------- | ------------------------------- | ---- |
+| コンポーネント | 読み取り専用 ContentComponent[] |      |
+| テーマ名       | 文字列                          |      |
+| 診断           | コンパイラ診断[]                |      |
 
 ### DEFAULT_GHOST_THEME_NAME
 
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_GHOST_THEME_NAME
+export const DEFAULT_GHOST_THEME_NAME;
 ```
 
 呼び出し元がテーマ名を指定しない場合に使用されるデフォルトのテーマ名。
@@ -116,41 +124,47 @@ export const DEFAULT_GHOST_THEME_NAME
 **種類:** 関数
 
 ```typescript
-function emitGhostComponentsManifest(components: readonly ContentComponent[]): string
+function emitGhostComponentsManifest(
+  components: readonly ContentComponent[],
+): string;
 ```
 
 部分パラメータのコントラクトをきれいに印刷された JSON として出力します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |読み取り専用 ContentComponent[] |  |
+| 名前           | タイプ                          | 説明 |
+| -------------- | ------------------------------- | ---- |
+| コンポーネント | 読み取り専用 ContentComponent[] |      |
 
 ### 放出GhostThemeConfig
 
 **種類:** 関数
 
 ```typescript
-function emitGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): string
+function emitGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): string;
 ```
 
 を発する `config.custom` きれいに印刷された JSON としてフラグメント化されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |読み取り専用 ContentComponent[] |  |
-|テーマ名 |文字列 |  |
-|診断 |コンパイラ診断[] |  |
+| 名前           | タイプ                          | 説明 |
+| -------------- | ------------------------------- | ---- |
+| コンポーネント | 読み取り専用 ContentComponent[] |      |
+| テーマ名       | 文字列                          |      |
+| 診断           | コンパイラ診断[]                |      |
 
 ### GHOST_COMPONENTS_MANIFEST
 
 **種類:** 定数
 
 ```typescript
-export const GHOST_COMPONENTS_MANIFEST
+export const GHOST_COMPONENTS_MANIFEST;
 ```
 
 部分パラメータコントラクトが書き込まれるファイル。
@@ -160,7 +174,7 @@ export const GHOST_COMPONENTS_MANIFEST
 **種類:** 定数
 
 ```typescript
-export const GHOST_SETTING_LIMIT
+export const GHOST_SETTING_LIMIT;
 ```
 
 Ghost が受け入れるエントリの最大数 `config.custom`.
@@ -174,7 +188,7 @@ Ghost はアップロード時にそれを超えるテーマを拒否します�
 **種類:** 定数
 
 ```typescript
-export const GHOST_THEME_CONFIG_MANIFEST
+export const GHOST_THEME_CONFIG_MANIFEST;
 ```
 
 ファイルは、 `config.custom` フラグメントが書き込まれます。
@@ -224,7 +238,7 @@ export interface GhostSetting
 **種類:** 関数
 
 ```typescript
-function ghostSettingType(field: ContentField): GhostSettingType
+function ghostSettingType(field: ContentField): GhostSettingType;
 ```
 
 ゴースト設定タイプは、ニュートラル フィールドの種類を絞り込みます。
@@ -235,16 +249,17 @@ color は通常の文字列です TypeScript そしてプロップの名前か�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フィールド |コンテンツフィールド |  |
+| 名前       | タイプ               | 説明 |
+| ---------- | -------------------- | ---- |
+| フィールド | コンテンツフィールド |      |
 
 ### GhostSettingType
 
 **種類：**タイプ
 
 ```typescript
-export type GhostSettingType = "select" | "boolean" | "color" | "image" | "text";
+export type GhostSettingType =
+  "select" | "boolean" | "color" | "image" | "text";
 ```
 
 Ghost の 5 つの設定タイプ `config.custom` ブロックは受け入れます。
@@ -274,16 +289,18 @@ export interface GhostThemeConfig
 **種類:** 関数
 
 ```typescript
-function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
+function toGhostComponentEntry(
+  component: ContentComponent,
+): GhostComponentEntry;
 ```
 
 1 つのコンポーネントをそのコンポーネントに投影する `forge-components.json` エントリ。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ## `src/template`
 
@@ -292,7 +309,7 @@ function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
 **種類:** 関数
 
 ```typescript
-function emitGhostPartial(component: ContentComponent): string
+function emitGhostPartial(component: ContentComponent): string;
 ```
 
 1 つのコンポーネントのハンドルバー部分を出力します。
@@ -303,48 +320,51 @@ function emitGhostPartial(component: ContentComponent): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ### ゴースト部分ファイル名
 
 **種類:** 関数
 
 ```typescript
-function ghostPartialFileName(component: ContentComponent): string
+function ghostPartialFileName(component: ContentComponent): string;
 ```
 
 パーシャルが書き込まれるテーマの相対パス。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ### ゴースト部分名
 
 **種類:** 関数
 
 ```typescript
-function ghostPartialName(component: ContentComponent): string
+function ghostPartialName(component: ContentComponent): string;
 ```
 
 コンポーネントが呼び出される部分的な名前 (`{{> forge/badge}}`).
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ### ゴーストテンプレート診断
 
 **種類:** 関数
 
 ```typescript
-function ghostTemplateDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function ghostTemplateDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 1 つのコンポーネントの部分的な生成を生成する診断。
@@ -355,7 +375,7 @@ API なので、値はレンダリングされたテキストおよびテーマ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
-|ファイル名 |文字列 |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
+| ファイル名     | 文字列                   |      |

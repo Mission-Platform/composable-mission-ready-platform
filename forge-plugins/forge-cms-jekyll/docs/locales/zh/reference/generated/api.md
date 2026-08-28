@@ -16,7 +16,7 @@
 **种类：**常数
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 每个生成的站点从中读取的聚合架构 `site.data`.
@@ -26,7 +26,7 @@ export const COMPONENTS_DATA_FILE
 **种类：**常数
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 站点合并到自己的配置片段 `_config.yml`.
@@ -36,16 +36,16 @@ export const CONFIG_FILE
 **种类：**功能
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 将 Jekyll（液体）投影绑定到调用者拥有的框架输出插件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeJekyllCmsOptions |  |
+| 名称 | 类型                  | 描述 |
+| ---- | --------------------- | ---- |
+| 选项 | ForgeJekyllCmsOptions |      |
 
 ### ForgeJekyllCms选项
 
@@ -64,7 +64,10 @@ export interface ForgeJekyllCmsOptions
 **种类：**功能
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 发射 `_data/forge-components.yml`：每个发出的包含的架构。
@@ -75,17 +78,20 @@ function emitComponentsData(components: readonly ContentComponent[], namespace: 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|只读内容组件[] |  |
-|命名空间 |字符串|  |
+| 名称     | 类型           | 描述 |
+| -------- | -------------- | ---- |
+| 组件     | 只读内容组件[] |      |
+| 命名空间 | 字符串         |      |
 
 ### 发出 JekyllConfig
 
 **种类：**功能
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 发出 `_config.yml` 注册生成的包含片段。
@@ -99,26 +105,26 @@ Jekyll 将站点配置合并到 `site.*`，所以发布命名空间
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|只读内容组件[] |  |
-|命名空间 |字符串|  |
+| 名称     | 类型           | 描述 |
+| -------- | -------------- | ---- |
+| 组件     | 只读内容组件[] |      |
+| 命名空间 | 字符串         |      |
 
 ### fieldToJekyllType
 
 **种类：**功能
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 中性字段发布为 Jekyll 数据类型。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|领域 |内容字段 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 领域 | 内容字段 |      |
 
 ### Jekyll字段类型
 
@@ -135,16 +141,16 @@ export type JekyllFieldType = "string" | "number" | "boolean" | "enum" | "slot";
 **种类：**功能
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 中性默认值的 YAML 标量。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|内容默认值 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 价值 | 内容默认值 |      |
 
 ## `src/template`
 
@@ -153,7 +159,7 @@ function yamlScalar(value: ContentDefaultValue): string
 **种类：**常数
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 当调用者没有选择一个时使用的命名空间。
@@ -163,58 +169,70 @@ export const DEFAULT_INCLUDE_NAMESPACE
 **种类：**功能
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 排放一种成分的液体。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
-|命名空间 |字符串|  |
+| 名称     | 类型     | 描述 |
+| -------- | -------- | ---- |
+| 组件     | 内容组件 |      |
+| 命名空间 | 字符串   |      |
 
 ### 包含文件名
 
 **种类：**功能
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 组件包含的工件文件名。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
-|命名空间 |字符串|  |
+| 名称     | 类型     | 描述 |
+| -------- | -------- | ---- |
+| 组件     | 内容组件 |      |
+| 命名空间 | 字符串   |      |
 
 ### 包含路径
 
 **种类：**功能
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 组件寻址的包含路径，相对于 `_includes`.
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件|内容组件 |  |
-|命名空间 |字符串|  |
+| 名称     | 类型     | 描述 |
+| -------- | -------- | ---- |
+| 组件     | 内容组件 |      |
+| 命名空间 | 字符串   |      |
 
 ### jekyll诊断
 
 **种类：**功能
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 收集组件的液体降低报告的诊断信息。
@@ -227,17 +245,17 @@ function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): rea
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|红外|语义模块 |  |
-|组件|内容组件 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 红外 | 语义模块 |      |
+| 组件 | 内容组件 |      |
 
 ### 液体文字
 
 **种类：**功能
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 中性默认值的 Liquid 文字。
@@ -248,6 +266,6 @@ function liquidLiteral(value: ContentDefaultValue): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|内容默认值 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 价值 | 内容默认值 |      |

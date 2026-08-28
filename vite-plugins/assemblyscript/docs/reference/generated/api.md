@@ -21,7 +21,7 @@ Options controlling AssemblyScript compilation and code generation.
 **Kind:** function
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 Compile an AssemblyScript entry to WebAssembly and emit a single
@@ -33,9 +33,9 @@ inlined binary rather than a `.wasm` URL.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | AssemblyScriptCompileOptions |  |
+| Name    | Type                         | Description |
+| ------- | ---------------------------- | ----------- |
+| options | AssemblyScriptCompileOptions |             |
 
 ## `src/generate`
 
@@ -44,7 +44,7 @@ inlined binary rather than a `.wasm` URL.
 **Kind:** function
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 Build the self-contained generated module: the wasm binary inlined as base64,
@@ -54,17 +54,17 @@ a cross-environment base64 decoder, the extracted `instantiate` function
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| wasmBase64 | string |  |
-| instantiateSource | string |  |
+| Name              | Type   | Description |
+| ----------------- | ------ | ----------- |
+| wasmBase64        | string |             |
+| instantiateSource | string |             |
 
 ### extractInstantiate
 
 **Kind:** function
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 The AssemblyScript ESM bindings file auto-instantiates from a `.wasm` URL via
@@ -74,9 +74,9 @@ instantiation from an inlined (base64) binary instead of a URL.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| bindingsSource | string |  |
+| Name           | Type   | Description |
+| -------------- | ------ | ----------- |
+| bindingsSource | string |             |
 
 ## `src/index`
 
@@ -85,7 +85,7 @@ instantiation from an inlined (base64) binary instead of a URL.
 **Kind:** function
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Vite plugin that compiles an AssemblyScript (https://www.assemblyscript.org/)
@@ -98,9 +98,9 @@ Compilation runs in the rollup `buildStart` hook, so the generated module is
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | AssemblyScriptPluginOptions |  |
+| Name    | Type                        | Description |
+| ------- | --------------------------- | ----------- |
+| options | AssemblyScriptPluginOptions |             |
 
 ### AssemblyScriptPluginOptions
 
@@ -117,7 +117,7 @@ Options for {@link assemblyScriptPlugin}.
 **Kind:** function
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Vite plugin that compiles an AssemblyScript (https://www.assemblyscript.org/)
@@ -130,6 +130,6 @@ Compilation runs in the rollup `buildStart` hook, so the generated module is
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | AssemblyScriptPluginOptions |  |
+| Name    | Type                        | Description |
+| ------- | --------------------------- | ----------- |
+| options | AssemblyScriptPluginOptions |             |

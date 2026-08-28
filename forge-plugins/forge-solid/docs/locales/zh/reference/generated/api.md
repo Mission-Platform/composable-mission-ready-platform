@@ -16,16 +16,16 @@
 **种类：**功能
 
 ```typescript
-function emitSolidHookModule(module: SemanticModule): string
+function emitSolidHookModule(module: SemanticModule): string;
 ```
 
 将中性钩子模块转换为其 SolidJS 源。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 模块 | 语义模块 |      |
 
 ## `src/emitters/module`
 
@@ -34,17 +34,20 @@ function emitSolidHookModule(module: SemanticModule): string
 **种类：**功能
 
 ```typescript
-function emitSolidModule(module: SemanticModule, options: SolidEmitOptions = {}): GeneratedSolidModule
+function emitSolidModule(
+  module: SemanticModule,
+  options: SolidEmitOptions = {},
+): GeneratedSolidModule;
 ```
 
 将中性组件模块转换为其 SolidJS 源。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
-|选项 | SolidEmit 选项 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 模块 | 语义模块       |      |
+| 选项 | SolidEmit 选项 |      |
 
 ### 生成的实体模块
 
@@ -73,7 +76,7 @@ export interface SolidEmitOptions
 **种类：**功能
 
 ```typescript
-function forgeSolidFramework(): FrameworkOutputPlugin
+function forgeSolidFramework(): FrameworkOutputPlugin;
 ```
 
 创建 Solid 输出插件及其 Vite/Rolldown JSX 适配器。
@@ -85,40 +88,48 @@ function forgeSolidFramework(): FrameworkOutputPlugin
 **种类：**功能
 
 ```typescript
-function isSolidLowered(lowered: TargetLoweredModule | undefined): lowered is SolidLoweredModule
+function isSolidLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SolidLoweredModule;
 ```
 
 将目标计划缩小为 Solid 计划； `false` 适用于任何其他框架的计划。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|降低| TargetLoweredModule \|未定义 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 降低 | TargetLoweredModule \|未定义 |      |
 
 ### 下实体模块
 
 **种类：**功能
 
 ```typescript
-function lowerSolidModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerSolidModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 将中性 IR 降低到 Solid 的目标意图包装器中，携带该计划。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|红外|语义模块 |  |
-|背景 |目标上下文 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 红外 | 语义模块   |      |
+| 背景 | 目标上下文 |      |
 
 ### 计划固体进口
 
 **种类：**功能
 
 ```typescript
-function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string[]
+function planSolidImports(
+  plan: SolidLoweringPlan,
+  conditional: boolean,
+): string[];
 ```
 
 计划所需的确切 `solid-js` 值名称按字母顺序排列，以便
@@ -127,33 +138,33 @@ function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|计划|固体降低计划|  |
-|有条件|布尔 |  |
+| 名称   | 类型         | 描述 |
+| ------ | ------------ | ---- |
+| 计划   | 固体降低计划 |      |
+| 有条件 | 布尔         |      |
 
 ### 计划实体模块
 
 **种类：**功能
 
 ```typescript
-function planSolidModule(ir: SemanticModule): SolidLoweringPlan
+function planSolidModule(ir: SemanticModule): SolidLoweringPlan;
 ```
 
 为模块的语义事实构建 Solid 计划。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|红外|语义模块 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 红外 | 语义模块 |      |
 
 ### SOLID_FRAMEWORK
 
 **种类：**常数
 
 ```typescript
-export const SOLID_FRAMEWORK
+export const SOLID_FRAMEWORK;
 ```
 
 每个 Solid 计划都会受到歧视的框架标识符。
@@ -275,7 +286,7 @@ export interface SolidSlotPlan
 **种类：**常数
 
 ```typescript
-export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
+export const COLLAPSE_SINGLE_CHILD_FRAGMENTS;
 ```
 
 删除一个恰好包裹一个元素的片段。
@@ -285,7 +296,7 @@ export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
 **种类：**常数
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 从精炼计划中重新计算 `solid-js` 导入。
@@ -295,7 +306,7 @@ export const DROP_UNUSED_IMPORTS
 **种类：**常数
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 将 `__mpStatic` 子树提升为模块级常量。
@@ -305,7 +316,7 @@ export const HOIST_STATIC_SUBTREES
 **种类：**常数
 
 ```typescript
-export const MEMOIZE_DYNAMIC_EXPRESSIONS
+export const MEMOIZE_DYNAMIC_EXPRESSIONS;
 ```
 
 将重复的动态子表达式提升为单个备忘录。
@@ -315,7 +326,7 @@ export const MEMOIZE_DYNAMIC_EXPRESSIONS
 **种类：**常数
 
 ```typescript
-export const MP_MEMO_PREFIX
+export const MP_MEMO_PREFIX;
 ```
 
 `solid:memoize-dynamic-expressions` 引入的备忘录绑定的前缀。
@@ -325,7 +336,10 @@ export const MP_MEMO_PREFIX
 **种类：**功能
 
 ```typescript
-function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSolidModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 细化降低的 Solid 计划。不携带 Solid 计划的意图包装器
@@ -333,17 +347,17 @@ function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|意向 |目标意图|  |
-|选项 |目标优化选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 意向 | 目标意图     |      |
+| 选项 | 目标优化选项 |      |
 
 ### STABLE_LIST_KEYS
 
 **种类：**常数
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 仅保留前端已证明稳定的列表键。

@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/select`.
 **Kind:** function
 
 ```typescript
-function ForgeTag(properties: Readonly<TagProperties>): MpElement
+function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 ```
 
 `ForgeTag` — a compact, rounded label authored once in the neutral JSX dialect
@@ -29,9 +29,9 @@ callback-prop `onRemove` (the Vue `remove` emit substitute).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<TagProperties> |  |
+| Name       | Type                    | Description |
+| ---------- | ----------------------- | ----------- |
+| properties | Readonly<TagProperties> |             |
 
 ### TagProperties
 
@@ -58,7 +58,8 @@ Canonical 2xs → 2xl size scale.
 **Kind:** type
 
 ```typescript
-export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TagVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Tone of the tag.
@@ -70,16 +71,16 @@ Tone of the tag.
 **Kind:** function
 
 ```typescript
-function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement
+function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ForgeLanguageSwitcherProperties> |  |
+| Name       | Type                                      | Description |
+| ---------- | ----------------------------------------- | ----------- |
+| properties | Readonly<ForgeLanguageSwitcherProperties> |             |
 
 ### ForgeLanguageSwitcherOption
 
@@ -108,7 +109,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement
+function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement;
 ```
 
 `ForgeMultiselect` — a tag-based multi-select combobox with a search field,
@@ -140,9 +141,9 @@ become callback props.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<MultiselectProperties> |  |
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<MultiselectProperties> |             |
 
 ### MultiselectOption
 
@@ -181,7 +182,7 @@ Canonical control size scale.
 **Kind:** function
 
 ```typescript
-function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
+function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
 `ForgeSelect` — a custom combobox/select authored once in the neutral JSX
@@ -215,9 +216,9 @@ preserved as neutral named slots.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<SelectProperties> |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| properties | Readonly<SelectProperties> |             |
 
 ### SelectOption
 

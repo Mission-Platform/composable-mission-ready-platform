@@ -16,7 +16,7 @@
 **종류:** 상수
 
 ```typescript
-export const FORGE_GHOST_FIELD_UNSUPPORTED
+export const FORGE_GHOST_FIELD_UNSUPPORTED;
 ```
 
 필드형 고스트는 기본적으로 표현할 수 없습니다. 렌더링된 텍스트로 저하됩니다.
@@ -26,7 +26,7 @@ export const FORGE_GHOST_FIELD_UNSUPPORTED
 **종류:** 상수
 
 ```typescript
-export const FORGE_GHOST_SETTING_LIMIT
+export const FORGE_GHOST_SETTING_LIMIT;
 ```
 
 더 `@cmsSetting` 필드는 Ghost보다 예상되었습니다. `config.custom` 허용합니다.
@@ -36,18 +36,22 @@ export const FORGE_GHOST_SETTING_LIMIT
 **종류:** 기능
 
 ```typescript
-function ghostWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function ghostWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 세대 단계 경고를 구축합니다. Ghost 대상은 오류를 발생시키지 않습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 코드 | 문자열 |  |
-| 메시지 | 문자열 |  |
-| 파일 이름 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 코드      | 문자열 |      |
+| 메시지    | 문자열 |      |
+| 파일 이름 | 문자열 |      |
 
 ## `src/ghost`
 
@@ -56,16 +60,16 @@ function ghostWarning(code: string, message: string, fileName: string): Compiler
 **종류:** 기능
 
 ```typescript
-function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin
+function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin;
 ```
 
 호출자가 소유한 프레임워크 출력 플러그인에 Ghost 테마 프로젝션을 바인딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeGhostCms옵션 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 옵션 | ForgeGhostCms옵션 |      |
 
 ### ForgeGhostCms옵션
 
@@ -84,7 +88,11 @@ export interface ForgeGhostCmsOptions
 **종류:** 기능
 
 ```typescript
-function buildGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): GhostThemeConfig
+function buildGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): GhostThemeConfig;
 ```
 
 빌드 `config.custom` 모든 것의 조각 `@cmsSetting`-태그가 붙은 필드.
@@ -95,18 +103,18 @@ function buildGhostThemeConfig(components: readonly ContentComponent[], themeNam
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 읽기 전용 ContentComponent[] |  |
-| 테마이름 | 문자열 |  |
-| 진단 | 컴파일러진단[] |  |
+| 이름     | 유형                         | 설명 |
+| -------- | ---------------------------- | ---- |
+| 구성요소 | 읽기 전용 ContentComponent[] |      |
+| 테마이름 | 문자열                       |      |
+| 진단     | 컴파일러진단[]               |      |
 
 ### DEFAULT_GHOST_THEME_NAME
 
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_GHOST_THEME_NAME
+export const DEFAULT_GHOST_THEME_NAME;
 ```
 
 호출자가 테마를 제공하지 않을 때 사용되는 기본 테마 이름입니다.
@@ -116,41 +124,47 @@ export const DEFAULT_GHOST_THEME_NAME
 **종류:** 기능
 
 ```typescript
-function emitGhostComponentsManifest(components: readonly ContentComponent[]): string
+function emitGhostComponentsManifest(
+  components: readonly ContentComponent[],
+): string;
 ```
 
 부분 매개변수 계약을 예쁘게 인쇄된 JSON으로 내보냅니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 읽기 전용 ContentComponent[] |  |
+| 이름     | 유형                         | 설명 |
+| -------- | ---------------------------- | ---- |
+| 구성요소 | 읽기 전용 ContentComponent[] |      |
 
 ### EmitGhostThemeConfig
 
 **종류:** 기능
 
 ```typescript
-function emitGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): string
+function emitGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): string;
 ```
 
 방출하다 `config.custom` 예쁘게 인쇄된 JSON으로 조각화됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 읽기 전용 ContentComponent[] |  |
-| 테마이름 | 문자열 |  |
-| 진단 | 컴파일러진단[] |  |
+| 이름     | 유형                         | 설명 |
+| -------- | ---------------------------- | ---- |
+| 구성요소 | 읽기 전용 ContentComponent[] |      |
+| 테마이름 | 문자열                       |      |
+| 진단     | 컴파일러진단[]               |      |
 
 ### GHOST_COMPONENTS_MANIFEST
 
 **종류:** 상수
 
 ```typescript
-export const GHOST_COMPONENTS_MANIFEST
+export const GHOST_COMPONENTS_MANIFEST;
 ```
 
 부분 매개변수 계약이 기록되는 파일입니다.
@@ -160,7 +174,7 @@ export const GHOST_COMPONENTS_MANIFEST
 **종류:** 상수
 
 ```typescript
-export const GHOST_SETTING_LIMIT
+export const GHOST_SETTING_LIMIT;
 ```
 
 Ghost가 허용하는 최대 항목 수 `config.custom`.
@@ -174,7 +188,7 @@ Ghost는 업로드 시 테마를 초과하는 테마를 거부합니다.
 **종류:** 상수
 
 ```typescript
-export const GHOST_THEME_CONFIG_MANIFEST
+export const GHOST_THEME_CONFIG_MANIFEST;
 ```
 
 파일은 `config.custom` 조각이 기록됩니다.
@@ -224,7 +238,7 @@ export interface GhostSetting
 **종류:** 기능
 
 ```typescript
-function ghostSettingType(field: ContentField): GhostSettingType
+function ghostSettingType(field: ContentField): GhostSettingType;
 ```
 
 Ghost 설정 유형은 중립 필드 종류로 좁혀집니다.
@@ -235,16 +249,17 @@ Ghost 설정 유형은 중립 필드 종류로 좁혀집니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 필드 | 콘텐츠 필드 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 필드 | 콘텐츠 필드 |      |
 
 ### 고스트 설정 유형
 
 **종류:** 유형
 
 ```typescript
-export type GhostSettingType = "select" | "boolean" | "color" | "image" | "text";
+export type GhostSettingType =
+  "select" | "boolean" | "color" | "image" | "text";
 ```
 
 5가지 설정 유형 Ghost's `config.custom` 블록이 받아들입니다.
@@ -274,16 +289,18 @@ export interface GhostThemeConfig
 **종류:** 기능
 
 ```typescript
-function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
+function toGhostComponentEntry(
+  component: ContentComponent,
+): GhostComponentEntry;
 ```
 
 하나의 구성요소를 해당 구성요소에 투영합니다. `forge-components.json` 기입.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ## `src/template`
 
@@ -292,7 +309,7 @@ function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
 **종류:** 기능
 
 ```typescript
-function emitGhostPartial(component: ContentComponent): string
+function emitGhostPartial(component: ContentComponent): string;
 ```
 
 하나의 구성요소에 대한 핸들바 부분을 내보냅니다.
@@ -303,48 +320,51 @@ function emitGhostPartial(component: ContentComponent): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ### 고스트부분파일이름
 
 **종류:** 기능
 
 ```typescript
-function ghostPartialFileName(component: ContentComponent): string
+function ghostPartialFileName(component: ContentComponent): string;
 ```
 
 부분이 기록되는 테마 상대 경로입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ### 고스트부분이름
 
 **종류:** 기능
 
 ```typescript
-function ghostPartialName(component: ContentComponent): string
+function ghostPartialName(component: ContentComponent): string;
 ```
 
 구성 요소가 호출되는 부분 이름(`{{> forge/badge}}`).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ### ghostTemplate진단
 
 **종류:** 기능
 
 ```typescript
-function ghostTemplateDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function ghostTemplateDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 한 구성 요소의 부분을 내보내는 진단이 생성됩니다.
@@ -355,7 +375,7 @@ API, 값이 렌더링된 텍스트 및 테마가 원하는 산술로 유지됩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
-| 파일 이름 | 문자열 |  |
+| 이름      | 유형            | 설명 |
+| --------- | --------------- | ---- |
+| 구성요소  | 콘텐츠 구성요소 |      |
+| 파일 이름 | 문자열          |      |

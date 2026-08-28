@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/postcss-config`.
 **Kind:** constant
 
 ```typescript
-export const config: { plugins: AcceptedPlugin[] }
+export const config: { plugins: AcceptedPlugin[] };
 ```
 
 No description provided.

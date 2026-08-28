@@ -26,7 +26,7 @@ Représentation déterministe intégrée par un backend Forge.
 **Genre :** constante
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 Version stable du contrat de bytecode Forge regex partagé.
@@ -36,7 +36,7 @@ Version stable du contrat de bytecode Forge regex partagé.
 **Genre :** constante
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 Largeur, en opérandes entiers de 32 bits, de chaque instruction.
@@ -46,7 +46,7 @@ Largeur, en opérandes entiers de 32 bits, de chaque instruction.
 **Genre :** constante
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 Opcodes consommés par le backend Forge et reflétés par l'oracle de référence.
@@ -68,16 +68,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 Compilez le sous-ensemble d’expressions régulières déterministes pris en charge dans le bytecode Forge.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modèle | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| modèle | chaîne |            |
 
 ### Erreur de syntaxe Regex
 
@@ -96,17 +96,17 @@ Erreur de syntaxe appartenant au compilateur avec des messages déterministes re
 **Genre :** fonction
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 Lisez une fin de capture sans exposer la disposition des emplacements de bytecode aux appelants.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| capture | Captures \| nul |  |
-| groupe | numéro |  |
+| Nom     | Tapez           | Descriptif |
+| ------- | --------------- | ---------- |
+| capture | Captures \| nul |            |
+| groupe  | numéro          |            |
 
 ### Captures
 
@@ -123,83 +123,83 @@ Les emplacements de capture sont `[start0, end0, start1, end1, ...]` ; `-1` sig
 **Genre :** fonction
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 Lisez un démarrage de capture sans exposer la disposition des emplacements de bytecode aux appelants.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| capture | Captures \| nul |  |
-| groupe | numéro |  |
+| Nom     | Tapez           | Descriptif |
+| ------- | --------------- | ---------- |
+| capture | Captures \| nul |            |
+| groupe  | numéro          |            |
 
 ### match complet
 
 **Genre :** fonction
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Correspondance de chaîne entière, ancrée à la position zéro.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| re | CompiléRegex |  |
-| entrée | chaîne |  |
+| Nom    | Tapez        | Descriptif |
+| ------ | ------------ | ---------- |
+| re     | CompiléRegex |            |
+| entrée | chaîne       |            |
 
 ### préfixeMatch
 
 **Genre :** fonction
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 Correspondance de préfixe, ancrée à la position zéro mais pas à la fin.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| re | CompiléRegex |  |
-| entrée | chaîne |  |
+| Nom    | Tapez        | Descriptif |
+| ------ | ------------ | ---------- |
+| re     | CompiléRegex |            |
+| entrée | chaîne       |            |
 
 ### recherche
 
 **Genre :** fonction
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 Correspondance la plus à gauche à ou après `start`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| re | CompiléRegex |  |
-| entrée | chaîne |  |
-| démarrer |  |  |
+| Nom      | Tapez        | Descriptif |
+| -------- | ------------ | ---------- |
+| re       | CompiléRegex |            |
+| entrée   | chaîne       |            |
+| démarrer |              |            |
 
 ### test
 
 **Genre :** fonction
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 Correspondance booléenne de chaîne entière.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| re | CompiléRegex |  |
-| entrée | chaîne |  |
+| Nom    | Tapez        | Descriptif |
+| ------ | ------------ | ---------- |
+| re     | CompiléRegex |            |
+| entrée | chaîne       |            |

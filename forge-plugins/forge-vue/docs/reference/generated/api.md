@@ -31,19 +31,24 @@ The Vue emitter's result: the primary SFC plus any auxiliary SFCs it generated.
 **Kind:** function
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 Transform a neutral component module into a Vue SFC (plus any auxiliary SFCs).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
-| componentName | string |  |
-| componentFolders | ReadonlySet<string> |  |
-| plan | VueLoweredModule |  |
+| Name             | Type                | Description |
+| ---------------- | ------------------- | ----------- |
+| module           | SemanticModule      |             |
+| componentName    | string              |             |
+| componentFolders | ReadonlySet<string> |             |
+| plan             | VueLoweredModule    |             |
 
 ## `src/emitters/hook-module`
 
@@ -52,16 +57,16 @@ Transform a neutral component module into a Vue SFC (plus any auxiliary SFCs).
 **Kind:** function
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 Compile a neutral hook module to its Vue composable source (`.ts`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| module | SemanticModule |             |
 
 ## `src/index`
 
@@ -70,7 +75,7 @@ Compile a neutral hook module to its Vue composable source (`.ts`).
 **Kind:** function
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 Create the Vue output plugin and its Vite/Rolldown compiler adapters.
@@ -82,23 +87,28 @@ Create the Vue output plugin and its Vite/Rolldown compiler adapters.
 **Kind:** function
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 Narrow a target plan to the Vue plan without casting.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| lowered | TargetLoweredModule \| undefined |  |
+| Name    | Type                             | Description |
+| ------- | -------------------------------- | ----------- |
+| lowered | TargetLoweredModule \| undefined |             |
 
 ### lowerVueModule
 
 **Kind:** function
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Lower a neutral module into the Vue target plan. The neutral module travels
@@ -106,10 +116,10 @@ on untouched so later phases keep full access to the IR.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| context | TargetContext |  |
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| ir      | SemanticModule |             |
+| context | TargetContext  |             |
 
 ### VueComputedPlan
 
@@ -248,7 +258,7 @@ A `useEffect` lowered to a Vue watcher.
 **Kind:** constant
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 Collapse `computed` declarations that share a factory.
@@ -258,7 +268,7 @@ Collapse `computed` declarations that share a factory.
 **Kind:** constant
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Prune `vue` imports the refined plan no longer needs.
@@ -268,7 +278,7 @@ Prune `vue` imports the refined plan no longer needs.
 **Kind:** constant
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 Hoist fully static subtrees (module constants / `v-once`).
@@ -278,7 +288,7 @@ Hoist fully static subtrees (module constants / `v-once`).
 **Kind:** constant
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 Emit never-reassigned state as a plain `const` instead of a `ref`.
@@ -288,7 +298,10 @@ Emit never-reassigned state as a plain `const` instead of a `ref`.
 **Kind:** function
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Refine a lowered Vue plan. Intentions carrying a foreign (or missing) plan are
@@ -296,17 +309,17 @@ returned untouched, so the optimizer is safe to run in any pipeline.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| intentions | TargetIntentions |  |
-| options | TargetOptimizeOptions |  |
+| Name       | Type                  | Description |
+| ---------- | --------------------- | ----------- |
+| intentions | TargetIntentions      |             |
+| options    | TargetOptimizeOptions |             |
 
 ### STABLE_LIST_KEYS
 
 **Kind:** constant
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 Keep only list keys proven stable, recording the lists left unkeyed.
@@ -316,7 +329,7 @@ Keep only list keys proven stable, recording the lists left unkeyed.
 **Kind:** constant
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 Every optimization identifier the Vue target can record, in application order.

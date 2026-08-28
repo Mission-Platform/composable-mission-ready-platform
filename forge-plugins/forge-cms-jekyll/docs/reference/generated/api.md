@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/forge-cms-jekyll
 **Kind:** constant
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 The aggregate schema every generated site reads from `site.data`.
@@ -21,7 +21,7 @@ The aggregate schema every generated site reads from `site.data`.
 **Kind:** constant
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 The configuration fragment a site merges into its own `_config.yml`.
@@ -31,16 +31,16 @@ The configuration fragment a site merges into its own `_config.yml`.
 **Kind:** function
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 Bind Jekyll (Liquid) projection to a caller-owned framework output plugin.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeJekyllCmsOptions |  |
+| Name    | Type                  | Description |
+| ------- | --------------------- | ----------- |
+| options | ForgeJekyllCmsOptions |             |
 
 ### ForgeJekyllCmsOptions
 
@@ -59,7 +59,10 @@ Options for {@link forgeJekyllCms}.
 **Kind:** function
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emit `_data/forge-components.yml`: the schema of every emitted include.
@@ -70,17 +73,20 @@ generated documentation page should list them in.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| components | readonly ContentComponent[] |  |
-| namespace | string |  |
+| Name       | Type                        | Description |
+| ---------- | --------------------------- | ----------- |
+| components | readonly ContentComponent[] |             |
+| namespace  | string                      |             |
 
 ### emitJekyllConfig
 
 **Kind:** function
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emit the `_config.yml` fragment registering the generated includes.
@@ -94,26 +100,26 @@ filters, and would otherwise see empty values.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| components | readonly ContentComponent[] |  |
-| namespace | string |  |
+| Name       | Type                        | Description |
+| ---------- | --------------------------- | ----------- |
+| components | readonly ContentComponent[] |             |
+| namespace  | string                      |             |
 
 ### fieldToJekyllType
 
 **Kind:** function
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 The Jekyll data type a neutral field is published as.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| field | ContentField |  |
+| Name  | Type         | Description |
+| ----- | ------------ | ----------- |
+| field | ContentField |             |
 
 ### JekyllFieldType
 
@@ -130,16 +136,16 @@ The vocabulary the neutral field kinds are published under in `_data`.
 **Kind:** function
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 A YAML scalar for a neutral default value.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | ContentDefaultValue |  |
+| Name  | Type                | Description |
+| ----- | ------------------- | ----------- |
+| value | ContentDefaultValue |             |
 
 ## `src/template`
 
@@ -148,7 +154,7 @@ A YAML scalar for a neutral default value.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 The namespace used when the caller does not choose one.
@@ -158,58 +164,70 @@ The namespace used when the caller does not choose one.
 **Kind:** function
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emit the Liquid include for one component.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | ContentComponent |  |
-| namespace | string |  |
+| Name      | Type             | Description |
+| --------- | ---------------- | ----------- |
+| component | ContentComponent |             |
+| namespace | string           |             |
 
 ### includeFileName
 
 **Kind:** function
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 The artifact file name of a component's include.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | ContentComponent |  |
-| namespace | string |  |
+| Name      | Type             | Description |
+| --------- | ---------------- | ----------- |
+| component | ContentComponent |             |
+| namespace | string           |             |
 
 ### includePath
 
 **Kind:** function
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 The include path a component is addressed by, relative to `_includes`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | ContentComponent |  |
-| namespace | string |  |
+| Name      | Type             | Description |
+| --------- | ---------------- | ----------- |
+| component | ContentComponent |             |
+| namespace | string           |             |
 
 ### jekyllDiagnostics
 
 **Kind:** function
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 Collect the diagnostics the Liquid lowering reports for a component.
@@ -222,17 +240,17 @@ rendered where its markup was expected.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| component | ContentComponent |  |
+| Name      | Type             | Description |
+| --------- | ---------------- | ----------- |
+| ir        | SemanticModule   |             |
+| component | ContentComponent |             |
 
 ### liquidLiteral
 
 **Kind:** function
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 A Liquid literal for a neutral default value.
@@ -243,6 +261,6 @@ than coercing the default to a string.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | ContentDefaultValue |  |
+| Name  | Type                | Description |
+| ----- | ------------------- | ----------- |
+| value | ContentDefaultValue |             |

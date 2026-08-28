@@ -26,7 +26,7 @@ Forge 백엔드에 포함된 결정적 표현.
 **종류:** 상수
 
 ```typescript
-export const FORGE_REGEX_BYTECODE_VERSION
+export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
 공유 Forge 정규식 바이트코드 계약의 안정적인 버전입니다.
@@ -36,7 +36,7 @@ export const FORGE_REGEX_BYTECODE_VERSION
 **종류:** 상수
 
 ```typescript
-export const INSTR_WIDTH
+export const INSTR_WIDTH;
 ```
 
 모든 명령어의 너비(32비트 정수 피연산자)입니다.
@@ -46,7 +46,7 @@ export const INSTR_WIDTH
 **종류:** 상수
 
 ```typescript
-export const Op
+export const Op;
 ```
 
 Forge 백엔드에서 사용하고 참조 Oracle에서 미러링하는 Opcode입니다.
@@ -68,16 +68,16 @@ export type Opcode = (typeof Op)[keyof typeof Op];
 **종류:** 기능
 
 ```typescript
-function compileRegex(pattern: string): CompiledRegex
+function compileRegex(pattern: string): CompiledRegex;
 ```
 
 지원되는 결정적 정규식 하위 집합을 Forge 바이트코드로 컴파일합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 패턴 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 패턴 | 문자열 |      |
 
 ### 정규식 구문 오류
 
@@ -96,17 +96,17 @@ export class RegexSyntaxError extends Error
 **종류:** 기능
 
 ```typescript
-function captureEnd(captures: Captures | null, group: number): number
+function captureEnd(captures: Captures | null, group: number): number;
 ```
 
 호출자에게 바이트코드 슬롯 레이아웃을 노출하지 않고 캡처 끝을 읽습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 캡처 | 캡처 \| null |  |
-| 그룹 | 번호 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 캡처 | 캡처 \| null |      |
+| 그룹 | 번호         |      |
 
 ### 캡처
 
@@ -123,83 +123,83 @@ export type Captures = number[];
 **종류:** 기능
 
 ```typescript
-function captureStart(captures: Captures | null, group: number): number
+function captureStart(captures: Captures | null, group: number): number;
 ```
 
 호출자에게 바이트코드 슬롯 레이아웃을 노출하지 않고 캡처 시작을 읽습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 캡처 | 캡처 \| null |  |
-| 그룹 | 번호 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 캡처 | 캡처 \| null |      |
+| 그룹 | 번호         |      |
 
 ### 완전 일치
 
 **종류:** 기능
 
 ```typescript
-function fullMatch(re: CompiledRegex, input: string): Captures | null
+function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 전체 문자열 일치, 위치 0에 고정됨.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 다시 | 컴파일된정규식 |  |
-| 입력 | 문자열 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 다시 | 컴파일된정규식 |      |
+| 입력 | 문자열         |      |
 
 ### 접두사 일치
 
 **종류:** 기능
 
 ```typescript
-function prefixMatch(re: CompiledRegex, input: string): Captures | null
+function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
 접두사 일치, 위치 0에 고정되지만 끝에는 고정되지 않습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 다시 | 컴파일된정규식 |  |
-| 입력 | 문자열 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 다시 | 컴파일된정규식 |      |
+| 입력 | 문자열         |      |
 
 ### 찾다
 
 **종류:** 기능
 
 ```typescript
-function search(re: CompiledRegex, input: string, start = 0): Captures | null
+function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
 `start` 또는 그 이후의 가장 왼쪽 일치.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 다시 | 컴파일된정규식 |  |
-| 입력 | 문자열 |  |
-| 시작 |  |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 다시 | 컴파일된정규식 |      |
+| 입력 | 문자열         |      |
+| 시작 |                |      |
 
 ### 시험
 
 **종류:** 기능
 
 ```typescript
-function test(re: CompiledRegex, input: string): boolean
+function test(re: CompiledRegex, input: string): boolean;
 ```
 
 전체 문자열 부울 일치.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 다시 | 컴파일된정규식 |  |
-| 입력 | 문자열 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 다시 | 컴파일된정규식 |      |
+| 입력 | 문자열         |      |

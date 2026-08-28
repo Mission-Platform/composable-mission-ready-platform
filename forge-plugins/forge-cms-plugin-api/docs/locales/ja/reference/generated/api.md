@@ -16,7 +16,7 @@
 **種類:** 定数
 
 ```typescript
-export const BADGE
+export const BADGE;
 ```
 
 リテラル共用体のオプション、JSDoc の説明、および `?? literal` デフォルト。
@@ -26,7 +26,7 @@ export const BADGE
 **種類:** 定数
 
 ```typescript
-export const badgeNames: ContentComponentNamesInput
+export const badgeNames: ContentComponentNamesInput;
 ```
 
 説明はありません。
@@ -36,7 +36,7 @@ export const badgeNames: ContentComponentNamesInput
 **種類:** 定数
 
 ```typescript
-export const BUTTON
+export const BUTTON;
 ```
 
 テキストに劣化するユニオンと、ドロップされたコールバック プロップ。
@@ -46,7 +46,7 @@ export const BUTTON
 **種類:** 定数
 
 ```typescript
-export const buttonNames: ContentComponentNamesInput
+export const buttonNames: ContentComponentNamesInput;
 ```
 
 説明はありません。
@@ -56,7 +56,7 @@ export const buttonNames: ContentComponentNamesInput
 **種類:** 定数
 
 ```typescript
-export const COUNTER
+export const COUNTER;
 ```
 
 インタラクティブなコンポーネント: 状態とイベント ハンドラーにより、強制的に水和島が形成されます。
@@ -66,7 +66,7 @@ export const COUNTER
 **種類:** 定数
 
 ```typescript
-export const counterNames: ContentComponentNamesInput
+export const counterNames: ContentComponentNamesInput;
 ```
 
 説明はありません。
@@ -76,7 +76,7 @@ export const counterNames: ContentComponentNamesInput
 **種類:** 定数
 
 ```typescript
-export const EMPTY
+export const EMPTY;
 ```
 
 小道具がまったくないコンポーネント。
@@ -86,7 +86,7 @@ export const EMPTY
 **種類:** 定数
 
 ```typescript
-export const emptyNames: ContentComponentNamesInput
+export const emptyNames: ContentComponentNamesInput;
 ```
 
 説明はありません。
@@ -96,7 +96,7 @@ export const emptyNames: ContentComponentNamesInput
 **種類:** 定数
 
 ```typescript
-export const GRID
+export const GRID;
 ```
 
 数値のデフォルトを持つ数値プロパティ。
@@ -106,7 +106,7 @@ export const GRID
 **種類:** 定数
 
 ```typescript
-export const gridNames: ContentComponentNamesInput
+export const gridNames: ContentComponentNamesInput;
 ```
 
 説明はありません。
@@ -116,7 +116,7 @@ export const gridNames: ContentComponentNamesInput
 **種類:** 定数
 
 ```typescript
-export const LAYOUT
+export const LAYOUT;
 ```
 
 デフォルトのスロットと並ぶ名前付きスロット。
@@ -126,7 +126,7 @@ export const LAYOUT
 **種類:** 定数
 
 ```typescript
-export const layoutNames: ContentComponentNamesInput
+export const layoutNames: ContentComponentNamesInput;
 ```
 
 説明はありません。
@@ -136,7 +136,7 @@ export const layoutNames: ContentComponentNamesInput
 **種類:** 定数
 
 ```typescript
-export const REQUIRED
+export const REQUIRED;
 ```
 
 必須 (オプションではない) プロップとオプションのプロップ。
@@ -146,7 +146,7 @@ export const REQUIRED
 **種類:** 定数
 
 ```typescript
-export const requiredNames: ContentComponentNamesInput
+export const requiredNames: ContentComponentNamesInput;
 ```
 
 説明はありません。
@@ -156,7 +156,7 @@ export const requiredNames: ContentComponentNamesInput
 **種類:** 定数
 
 ```typescript
-export const SITE_HEADER
+export const SITE_HEADER;
 ```
 
 サイト全体の設定プロパティを持つコンポーネント。
@@ -166,7 +166,7 @@ export const SITE_HEADER
 **種類:** 定数
 
 ```typescript
-export const siteHeaderNames: ContentComponentNamesInput
+export const siteHeaderNames: ContentComponentNamesInput;
 ```
 
 説明はありません。
@@ -178,16 +178,16 @@ export const siteHeaderNames: ContentComponentNamesInput
 **種類:** 関数
 
 ```typescript
-function stubFramework(id = "react"): FrameworkOutputPlugin
+function stubFramework(id = "react"): FrameworkOutputPlugin;
 ```
 
 オーバーライド可能な ID を使用してスタブ フレームワーク プラグインを作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| ID |  |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| ID   |        |      |
 
 ## `src/analyze`
 
@@ -196,7 +196,11 @@ function stubFramework(id = "react"): FrameworkOutputPlugin
 **種類:** 関数
 
 ```typescript
-function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentComponentNamesInput, semantic?: SemanticModule): ContentComponent
+function analyzeContentComponent(
+  sourceFile: ts.SourceFile,
+  names: ContentComponentNamesInput,
+  semantic?: SemanticModule,
+): ContentComponent;
 ```
 
 中立的なコンポーネント モジュールを分析し、プラットフォームに中立的なコンテンツを返します。
@@ -205,18 +209,18 @@ function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentCompon
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|名前 |コンテンツコンポーネント名入力 |  |
-|セマンティック |セマンティックモジュール |  |
+| 名前           | タイプ                         | 説明 |
+| -------------- | ------------------------------ | ---- |
+| ソースファイル | ts.ソースファイル              |      |
+| 名前           | コンテンツコンポーネント名入力 |      |
+| セマンティック | セマンティックモジュール       |      |
 
 ### CMS_COLOR_TAG
 
 **種類:** 定数
 
 ```typescript
-export const CMS_COLOR_TAG
+export const CMS_COLOR_TAG;
 ```
 
 説明はありません。
@@ -226,7 +230,7 @@ export const CMS_COLOR_TAG
 **種類:** 定数
 
 ```typescript
-export const CMS_COLOUR_TAG
+export const CMS_COLOUR_TAG;
 ```
 
 出典注釈として英国のスペルが受け入れられます。
@@ -236,7 +240,7 @@ export const CMS_COLOUR_TAG
 **種類:** 定数
 
 ```typescript
-export const CMS_ICON_TAG
+export const CMS_ICON_TAG;
 ```
 
 オプションのコンポーネントレベルのエディターのメタデータの JSDoc タグ。
@@ -246,7 +250,7 @@ export const CMS_ICON_TAG
 **種類:** 定数
 
 ```typescript
-export const CMS_SETTING_TAG
+export const CMS_SETTING_TAG;
 ```
 
 プロップをサイト全体の CMS 設定に昇格させる JSDoc タグ。
@@ -256,7 +260,7 @@ export const CMS_SETTING_TAG
 **種類:** 定数
 
 ```typescript
-export const CMS_TAB_TAG
+export const CMS_TAB_TAG;
 ```
 
 プロパティをエディター タブに割り当てる JSDoc タグ。
@@ -266,7 +270,7 @@ export const CMS_TAB_TAG
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_SLOT_FIELD
+export const DEFAULT_SLOT_FIELD;
 ```
 
 フィールドキーはデフォルトのスロット（コンポーネントの `children`) 下に露出しています。
@@ -276,32 +280,34 @@ export const DEFAULT_SLOT_FIELD
 **種類:** 関数
 
 ```typescript
-function deriveContentComponentNames(names: ContentComponentNamesInput): ContentComponentNames
+function deriveContentComponentNames(
+  names: ContentComponentNamesInput,
+): ContentComponentNames;
 ```
 
 呼び出し元が指定したサブセットから完全な名前セットを導出します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前 |コンテンツコンポーネント名入力 |  |
+| 名前 | タイプ                         | 説明 |
+| ---- | ------------------------------ | ---- |
+| 名前 | コンテンツコンポーネント名入力 |      |
 
 ### isInteractiveModule
 
 **種類:** 関数
 
 ```typescript
-function isInteractiveModule(semantic: SemanticModule | undefined): boolean
+function isInteractiveModule(semantic: SemanticModule | undefined): boolean;
 ```
 
 ニュートラル IR が実際のランタイムのみが提供できる動作を実行する場合は True。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|セマンティック |セマンティックモジュール \|未定義 |  |
+| 名前           | タイプ                            | 説明 |
+| -------------- | --------------------------------- | ---- |
+| セマンティック | セマンティックモジュール \|未定義 |      |
 
 ## `src/classify`
 
@@ -310,7 +316,7 @@ function isInteractiveModule(semantic: SemanticModule | undefined): boolean
 **種類:** 定数
 
 ```typescript
-export const ASSET_TYPE_REFERENCES: ReadonlySet<string>
+export const ASSET_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 プロップをメディア アセットとしてマークするタイプ参照。
@@ -330,41 +336,47 @@ export type ClassifiedFieldKind = ContentFieldKind | undefined;
 **種類:** 関数
 
 ```typescript
-function classifyType(node: ts.TypeNode, aliases: Map<string, ts.TypeNode>, seen: Set<string> = new Set()): ClassifiedFieldKind
+function classifyType(
+  node: ts.TypeNode,
+  aliases: Map<string, ts.TypeNode>,
+  seen: Set<string> = new Set(),
+): ClassifiedFieldKind;
 ```
 
 プロップのタイプを分類する node 中立的なコンテンツの種類に変換し、ローカルのエイリアス/共用体を解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | ts.TypeNode |  |
-|別名 |地図<string, ts.TypeNode> |  |
-|見た |セット<string> |  |
+| 名前 | タイプ                    | 説明 |
+| ---- | ------------------------- | ---- |
+| node | ts.TypeNode               |      |
+| 別名 | 地図<string, ts.TypeNode> |      |
+| 見た | セット<string>            |      |
 
 ### collectTypeAliases
 
 **種類:** 関数
 
 ```typescript
-function collectTypeAliases(sourceFile: ts.SourceFile): Map<string, ts.TypeNode>
+function collectTypeAliases(
+  sourceFile: ts.SourceFile,
+): Map<string, ts.TypeNode>;
 ```
 
 すべてのトップレベルをマップする `type X = …` その型のエイリアス node、組合決議のため。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| ソースファイル | ts.ソースファイル |      |
 
 ### LINK_TYPE_REFERENCES
 
 **種類:** 定数
 
 ```typescript
-export const LINK_TYPE_REFERENCES: ReadonlySet<string>
+export const LINK_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 プロップをリンク/URL としてマークする参照を入力します。
@@ -374,7 +386,7 @@ export const LINK_TYPE_REFERENCES: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
+export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 プロップをプレーン テキストではなくフォーマットされたリッチ テキストとしてマークする型参照。
@@ -384,7 +396,7 @@ export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const SLOT_TYPE_REFERENCES: ReadonlySet<string>
+export const SLOT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 プロパティがネストされたコンテンツとして扱われる型参照 (`children`).
@@ -406,7 +418,8 @@ export interface CmsArtifact
 **種類：**タイプ
 
 ```typescript
-export type CmsArtifactKind = "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
+export type CmsArtifactKind =
+  "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
 ```
 
 放出されたアーティファクトがターゲットの出力ツリーで果たす役割。
@@ -446,16 +459,16 @@ export interface CmsTargetContext
 **種類:** 関数
 
 ```typescript
-function cmsTargetDirectory(plugin: CmsOutputPlugin): string
+function cmsTargetDirectory(plugin: CmsOutputPlugin): string;
 ```
 
 ターゲットのフレームワークごとの出力が書き込まれるディレクトリ セグメント。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プラグイン | Cms出力プラグイン |  |
+| 名前       | タイプ            | 説明 |
+| ---------- | ----------------- | ---- |
+| プラグイン | Cms出力プラグイン |      |
 
 ### CmsTargetId
 
@@ -472,7 +485,7 @@ export type CmsTargetId = "storyblok" | "astro" | "ghost" | "jekyll" | "webflow"
 **種類:** 関数
 
 ```typescript
-function defineForgeCmsPlugin(plugin: T): T
+function defineForgeCmsPlugin(plugin: T): T;
 ```
 
 CMS 出力プラグインを検証して返します。
@@ -482,9 +495,9 @@ CMS 出力プラグインを検証して返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プラグイン |た |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| プラグイン | た     |      |
 
 ## `src/config`
 
@@ -493,16 +506,18 @@ CMS 出力プラグインを検証して返します。
 **種類:** 関数
 
 ```typescript
-function defineViteForgeCmsLibrary(options: ViteForgeCmsLibraryOptions): UserConfig
+function defineViteForgeCmsLibrary(
+  options: ViteForgeCmsLibraryOptions,
+): UserConfig;
 ```
 
 を作成します Vite 1 つの CMS ターゲットのライブラリ構成。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ViteForgeCmsライブラリオプション |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| オプション | ViteForgeCmsライブラリオプション |      |
 
 ### ViteForgeCmsライブラリオプション
 
@@ -551,7 +566,13 @@ export interface ContentComponentNames
 **種類：**タイプ
 
 ```typescript
-export type ContentComponentNamesInput = Pick< ContentComponentNames, "neutralName" | "publicName" > & Partial< Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir"> >;
+export type ContentComponentNamesInput = Pick<
+  ContentComponentNames,
+  "neutralName" | "publicName"
+> &
+  Partial<
+    Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir">
+  >;
 ```
 
 呼び出し元が指定する {@link ContentComponentNames} のサブセット。残りは導出されます。
@@ -605,32 +626,32 @@ export type ContentFieldKindName = ContentFieldKind["kind"];
 **種類:** 関数
 
 ```typescript
-function contentFields(component: ContentComponent): readonly ContentField[]
+function contentFields(component: ContentComponent): readonly ContentField[];
 ```
 
 スロットではないコンポーネントのフィールド (スカラー、作成可能なコンテンツ)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ### スロットフィールド
 
 **種類:** 関数
 
 ```typescript
-function slotFields(component: ContentComponent): readonly ContentField[]
+function slotFields(component: ContentComponent): readonly ContentField[];
 ```
 
 ネストされたコンテンツを保持するコンポーネントのフィールド。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ## `src/driver`
 
@@ -639,7 +660,9 @@ function slotFields(component: ContentComponent): readonly ContentField[]
 **種類:** 関数
 
 ```typescript
-function generateCmsArtifacts(options: GenerateCmsArtifactsOptions): GeneratedCmsTree
+function generateCmsArtifacts(
+  options: GenerateCmsArtifactsOptions,
+): GeneratedCmsTree;
 ```
 
 1 つの CMS に対して、完全な検出 → IR → コンテンツ モデル → エミット → 書き込みループを実行します。
@@ -647,9 +670,9 @@ function generateCmsArtifacts(options: GenerateCmsArtifactsOptions): GeneratedCm
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | CmsArtifacts オプションを生成する |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| オプション | CmsArtifacts オプションを生成する |      |
 
 ### GenerateCmsArtifactsオプション
 
@@ -688,7 +711,9 @@ export interface GeneratedIsland
 **種類:** 関数
 
 ```typescript
-function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undefined
+function generateIsland(
+  options: GenerateIslandOptions,
+): GeneratedIsland | undefined;
 ```
 
 ターゲットのフレームワーク アイランド ツリーを同時生成し、指定子を返します。
@@ -696,9 +721,9 @@ function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undef
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | GenerateIslandOptions |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| オプション | GenerateIslandOptions |      |
 
 ### アイランドオプションの生成
 
@@ -715,7 +740,7 @@ export interface GenerateIslandOptions
 **種類:** 定数
 
 ```typescript
-export const ISLAND_DIRECTORY
+export const ISLAND_DIRECTORY;
 ```
 
 ターゲット出力ディレクトリを基準としたディレクトリ名。アイランドが生成されます。
@@ -727,48 +752,48 @@ export const ISLAND_DIRECTORY
 **種類:** 関数
 
 ```typescript
-function toDisplayName(publicName: string): string
+function toDisplayName(publicName: string): string;
 ```
 
 パブリック名を表示名に変換します (`InView` → `In View`).
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|公開名 |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| 公開名 | 文字列 |      |
 
 ### toケバブ名
 
 **種類:** 関数
 
 ```typescript
-function toKebabName(publicName: string): string
+function toKebabName(publicName: string): string;
 ```
 
 パブリック名をケバブケースの名前に変換します (`InView` → `in-view`).
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|公開名 |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| 公開名 | 文字列 |      |
 
 ### to技術名
 
 **種類:** 関数
 
 ```typescript
-function toTechnicalName(publicName: string): string
+function toTechnicalName(publicName: string): string;
 ```
 
 パブリック名を技術名に変換します (`InView` → `in_view`).
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|公開名 |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| 公開名 | 文字列 |      |
 
 ## `src/tsdown`
 
@@ -777,83 +802,85 @@ function toTechnicalName(publicName: string): string
 **種類:** 関数
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 ターゲットの生成されたツリーが書き込まれるキャッシュ ディレクトリ。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルートディレクトリ |文字列 |  |
-|ターゲット | Cms出力プラグイン |  |
+| 名前               | タイプ            | 説明 |
+| ------------------ | ----------------- | ---- |
+| ルートディレクトリ | 文字列            |      |
+| ターゲット         | Cms出力プラグイン |      |
 
 ### cms出力ディレクトリ
 
 **種類:** 関数
 
 ```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 ターゲットのフレームワークごとのモジュールが出力される配布ディレクトリ。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルートディレクトリ |文字列 |  |
-|ターゲット | Cms出力プラグイン |  |
+| 名前               | タイプ            | 説明 |
+| ------------------ | ----------------- | ---- |
+| ルートディレクトリ | 文字列            |      |
+| ターゲット         | Cms出力プラグイン |      |
 
 ### 定義TsdownForgeCms
 
 **種類:** 関数
 
 ```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig
+function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
 ```
 
 1 つの CMS ターゲットの tsdown 構成を作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | TsdownForgeCmsオプション |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| オプション | TsdownForgeCmsオプション |      |
 
 ### 定義TsdownForgeCmsAll
 
 **種類:** 関数
 
 ```typescript
-function defineTsdownForgeCmsAll(options: TsdownForgeCmsAllOptions): UserConfig[]
+function defineTsdownForgeCmsAll(
+  options: TsdownForgeCmsAllOptions,
+): UserConfig[];
 ```
 
 要求された CMS ターゲットごとに tsdown 構成を作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | TsdownForgeCmsAllOptions |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| オプション | TsdownForgeCmsAllOptions |      |
 
 ### コンポーネントモジュールの解決
 
 **種類:** 関数
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string
+function resolveComponentsModule(rootDir: string, explicit?: string): string;
 ```
 
 パッケージの中性コンポーネントのバレルを見つけます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルートディレクトリ |文字列 |  |
-|明示的な |文字列 |  |
+| 名前               | タイプ | 説明 |
+| ------------------ | ------ | ---- |
+| ルートディレクトリ | 文字列 |      |
+| 明示的な           | 文字列 |      |
 
 ### TsdownForgeCmsAllOptions
 

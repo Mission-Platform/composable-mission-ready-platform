@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** constante
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 Le schéma global que chaque site généré lit à partir de `site.data`.
@@ -26,7 +26,7 @@ Le schéma global que chaque site généré lit à partir de `site.data`.
 **Genre :** constante
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 Le fragment de configuration d'un site fusionne dans son propre `_config.yml`.
@@ -36,16 +36,16 @@ Le fragment de configuration d'un site fusionne dans son propre `_config.yml`.
 **Genre :** fonction
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 Liez la projection Jekyll (Liquid) à un plugin de sortie de framework appartenant à l'appelant.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeJekyllCmsOptions |  |
+| Nom     | Tapez                 | Descriptif |
+| ------- | --------------------- | ---------- |
+| options | ForgeJekyllCmsOptions |            |
 
 ### ForgeJekyllCmsOptions
 
@@ -64,7 +64,10 @@ Options pour {@link forgeJekyllCms}.
 **Genre :** fonction
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emit `_data/forge-components.yml` : le schéma de chaque inclusion émise.
@@ -75,17 +78,20 @@ la page de documentation générée devrait les répertorier.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composants | lecture seule ContentComponent[] |  |
-| espace de noms | chaîne |  |
+| Nom            | Tapez                            | Descriptif |
+| -------------- | -------------------------------- | ---------- |
+| composants     | lecture seule ContentComponent[] |            |
+| espace de noms | chaîne                           |            |
 
 ### émettreJekyllConfig
 
 **Genre :** fonction
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Émettez le fragment `_config.yml` enregistrant les inclusions générées.
@@ -99,26 +105,26 @@ filtres, et verrait autrement des valeurs vides.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composants | lecture seule ContentComponent[] |  |
-| espace de noms | chaîne |  |
+| Nom            | Tapez                            | Descriptif |
+| -------------- | -------------------------------- | ---------- |
+| composants     | lecture seule ContentComponent[] |            |
+| espace de noms | chaîne                           |            |
 
 ### champVersJekyllType
 
 **Genre :** fonction
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 Le type de données Jekyll sous lequel un champ neutre est publié.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| champ | Champ de contenu |  |
+| Nom   | Tapez            | Descriptif |
+| ----- | ---------------- | ---------- |
+| champ | Champ de contenu |            |
 
 ### JekyllFieldType
 
@@ -135,16 +141,16 @@ Le vocabulaire des types de champs neutres est publié dans `_data`.
 **Genre :** fonction
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 Un scalaire YAML pour une valeur par défaut neutre.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | ContentDefaultValue |  |
+| Nom    | Tapez               | Descriptif |
+| ------ | ------------------- | ---------- |
+| valeur | ContentDefaultValue |            |
 
 ## `src/template`
 
@@ -153,7 +159,7 @@ Un scalaire YAML pour une valeur par défaut neutre.
 **Genre :** constante
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 L'espace de noms utilisé lorsque l'appelant n'en choisit pas.
@@ -163,58 +169,70 @@ L'espace de noms utilisé lorsque l'appelant n'en choisit pas.
 **Genre :** fonction
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Émettez le liquide inclus pour un composant.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composant | Composant de contenu |  |
-| espace de noms | chaîne |  |
+| Nom            | Tapez                | Descriptif |
+| -------------- | -------------------- | ---------- |
+| composant      | Composant de contenu |            |
+| espace de noms | chaîne               |            |
 
 ### includeFileName
 
 **Genre :** fonction
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Le nom du fichier d'artefact de l'inclusion d'un composant.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composant | Composant de contenu |  |
-| espace de noms | chaîne |  |
+| Nom            | Tapez                | Descriptif |
+| -------------- | -------------------- | ---------- |
+| composant      | Composant de contenu |            |
+| espace de noms | chaîne               |            |
 
 ### includePath
 
 **Genre :** fonction
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Le chemin d'inclusion par lequel un composant est adressé, par rapport à `_includes`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| composant | Composant de contenu |  |
-| espace de noms | chaîne |  |
+| Nom            | Tapez                | Descriptif |
+| -------------- | -------------------- | ---------- |
+| composant      | Composant de contenu |            |
+| espace de noms | chaîne               |            |
 
 ### jekyllDiagnostics
 
 **Genre :** fonction
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 Collectez les diagnostics des rapports de baisse de liquide pour un composant.
@@ -227,17 +245,17 @@ rendu là où son balisage était attendu.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| ir | Module Sémantique |  |
-| composant | Composant de contenu |  |
+| Nom       | Tapez                | Descriptif |
+| --------- | -------------------- | ---------- |
+| ir        | Module Sémantique    |            |
+| composant | Composant de contenu |            |
 
 ### liquideLittéral
 
 **Genre :** fonction
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 Un littéral Liquid pour une valeur par défaut neutre.
@@ -248,6 +266,6 @@ que de forcer la valeur par défaut à une chaîne.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | ContentDefaultValue |  |
+| Nom    | Tapez               | Descriptif |
+| ------ | ------------------- | ---------- |
+| valeur | ContentDefaultValue |            |

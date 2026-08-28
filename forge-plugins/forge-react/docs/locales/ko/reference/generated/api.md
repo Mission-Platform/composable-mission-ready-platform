@@ -16,18 +16,22 @@
 **종류:** 기능
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 전체 모듈을 React 대상 소스.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
-| 구성 요소 이름 | 문자열 |  |
-| 계획 | React모듈 계획 |  |
+| 이름           | 유형           | 설명 |
+| -------------- | -------------- | ---- |
+| 모듈           | 의미 모듈      |      |
+| 구성 요소 이름 | 문자열         |      |
+| 계획           | React모듈 계획 |      |
 
 ## `src/index`
 
@@ -36,7 +40,7 @@ function emitReactModule(module: SemanticModule, componentName?: string, plan: R
 **종류:** 기능
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 생성 React 출력 플러그인 및 기본 JSX 빌드 어댑터.
@@ -48,50 +52,58 @@ function forgeReactFramework(): FrameworkOutputPlugin
 **종류:** 기능
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 목표 소유 계획을 다음으로 좁힙니다. React 하나.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |  |
+| 이름   | 유형                               | 설명 |
+| ------ | ---------------------------------- | ---- |
+| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |      |
 
 ### lowerReact모듈
 
 **종류:** 기능
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 중성 IR을 React {@link TargetIntentions.lowered}에서 수행하는 계획입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| IR | 의미 모듈 |  |
-| 맥락 | 타겟컨텍스트 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| IR   | 의미 모듈    |      |
+| 맥락 | 타겟컨텍스트 |      |
 
 ### planReact모듈
 
 **종류:** 기능
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 빌드 React 하나의 모듈을 계획합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
-| 구성 요소 이름 | 문자열 |  |
+| 이름           | 유형      | 설명 |
+| -------------- | --------- | ---- |
+| 모듈           | 의미 모듈 |      |
+| 구성 요소 이름 | 문자열    |      |
 
 ### ReactClient 지시어 계획
 
@@ -180,7 +192,10 @@ export interface ReactPropsParameter
 **종류:** 기능
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 구체화 React 계획.
@@ -191,17 +206,17 @@ function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 의도 | 타겟의도 |  |
-| 옵션 | TargetOptimizeOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 의도 | 타겟의도              |      |
+| 옵션 | TargetOptimizeOptions |      |
 
 ### REACT_OPTIMIZATIONS
 
 **종류:** 상수
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 계획에 기록된 식별자는 React 최적화 프로그램이 개선되었습니다.

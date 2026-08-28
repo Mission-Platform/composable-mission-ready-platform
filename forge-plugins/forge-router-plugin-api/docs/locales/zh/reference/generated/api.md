@@ -16,41 +16,45 @@
 **种类：**功能
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 为路由器编译器故障创建源本地诊断。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断|忽略<CompilerDiagnostic, 'phase' \| 'fileName'> & { 只读文件名？: 字符串;   } |  |
+| 名称 | 类型                                                                        | 描述 |
+| ---- | --------------------------------------------------------------------------- | ---- |
+| 诊断 | 忽略<CompilerDiagnostic, 'phase' \| 'fileName'> & { 只读文件名？: 字符串; } |      |
 
 ### 定义ForgeRouterPlugin
 
 **种类：**功能
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 在进入编译器管道之前验证路由器插件元数据。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|插件 | T |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 插件 | T    |      |
 
 ### 定义ForgeRouterTarget
 
 **种类：**功能
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 创建重写中性路由器导入的确定性目标。
@@ -63,16 +67,16 @@ function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutpu
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeRouterTargetOptions | ForgeRouterTargetOptions |  |
+| 名称 | 类型                     | 描述                     |
+| ---- | ------------------------ | ------------------------ |
+| 选项 | ForgeRouterTargetOptions | ForgeRouterTargetOptions |     |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **种类：**常数
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 保留包作者契约的中立运行时导出。
@@ -87,7 +91,7 @@ export const FORGE_ROUTER_RUNTIME_EXPORTS
 **种类：**常数
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 为其第一方适配器不属于此里程碑的路由器保留的目标合同。
@@ -127,7 +131,7 @@ export interface GeneratedRouterModule
 **种类：**常数
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 与中性路由器包共享的稳定标记。
@@ -137,7 +141,7 @@ export const MP_ROUTER_COMPILER_MARKER
 **种类：**常数
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 路由器编译器 pass 可以理解其导入的包。
@@ -157,7 +161,8 @@ export interface RouterBuildAdapters
 **种类：**类型
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 由中立路由器合约公开的可独立降低的操作。
@@ -197,7 +202,7 @@ export interface RouterCapabilityUse
 **种类：**类型
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 如何在源模块中使用中性路由器绑定。
@@ -277,31 +282,37 @@ export interface RouterTargetPlan
 **种类：**功能
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 查找直接或 id 选择的路由器目标，无需将其耦合到 UI 插件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选择| RouterPluginSelection \|未定义 |  |
-|插件 |只读 RouterOutputPlugin[] |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 选择 | RouterPluginSelection \|未定义 |      |
+| 插件 | 只读 RouterOutputPlugin[]      |      |
 
 ### 不支持的路由器功能
 
 **种类：**功能
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 在目标有机会默默地错误编译模块之前报告能力差距。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|红外|路由器功能模块 |  |
-|插件 |路由器输出插件\|未定义 |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 红外 | 路由器功能模块         |      |
+| 插件 | 路由器输出插件\|未定义 |      |

@@ -16,7 +16,7 @@
 **النوع:** ثابت
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 المخطط المجمع الذي يقرأ منه كل موقع تم إنشاؤه `site.data`.
@@ -26,7 +26,7 @@ export const COMPONENTS_DATA_FILE
 **النوع:** ثابت
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 جزء التكوين الذي يدمجه الموقع في موقعه الخاص `_config.yml`.
@@ -36,16 +36,16 @@ export const CONFIG_FILE
 **النوع:** الوظيفة
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 ربط عرض Jekyll (السائل) بمكوّن إضافي لإخراج إطار عمل مملوك للمتصل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجيجيكيلكمسوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | فورجيجيكيلكمسوبتيونس |       |
 
 ### ForgeJekyllCmsOptions
 
@@ -64,7 +64,10 @@ export interface ForgeJekyllCmsOptions
 **النوع:** الوظيفة
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 تنبعث `_data/forge-components.yml`: مخطط كل تضمين المنبعثة.
@@ -75,17 +78,20 @@ function emitComponentsData(components: readonly ContentComponent[], namespace: 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكونات | للقراءة فقط ContentComponent[] |  |
-| مساحة الاسم | سلسلة |  |
+| الاسم       | اكتب                           | الوصف |
+| ----------- | ------------------------------ | ----- |
+| مكونات      | للقراءة فقط ContentComponent[] |       |
+| مساحة الاسم | سلسلة                          |       |
 
 ### emitJekyllConfig
 
 **النوع:** الوظيفة
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 تنبعث منها `_config.yml` جزء تسجيل يتضمن الذي تم إنشاؤه.
@@ -99,26 +105,26 @@ function emitJekyllConfig(components: readonly ContentComponent[], namespace: st
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكونات | للقراءة فقط ContentComponent[] |  |
-| مساحة الاسم | سلسلة |  |
+| الاسم       | اكتب                           | الوصف |
+| ----------- | ------------------------------ | ----- |
+| مكونات      | للقراءة فقط ContentComponent[] |       |
+| مساحة الاسم | سلسلة                          |       |
 
 ### fieldToJekyllType
 
 **النوع:** الوظيفة
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 يتم نشر نوع بيانات Jekyll كحقل محايد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المجال | حقل المحتوى |  |
+| الاسم  | اكتب        | الوصف |
+| ------ | ----------- | ----- |
+| المجال | حقل المحتوى |       |
 
 ### JekyllFieldType
 
@@ -135,16 +141,16 @@ export type JekyllFieldType = "string" | "number" | "boolean" | "enum" | "slot";
 **النوع:** الوظيفة
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 مقياس YAML للقيمة الافتراضية المحايدة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | المحتوى الافتراضي القيمة |  |
+| الاسم  | اكتب                     | الوصف |
+| ------ | ------------------------ | ----- |
+| القيمة | المحتوى الافتراضي القيمة |       |
 
 ## `src/template`
 
@@ -153,7 +159,7 @@ function yamlScalar(value: ContentDefaultValue): string
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 مساحة الاسم المستخدمة عندما لا يختار المتصل واحدة.
@@ -163,58 +169,70 @@ export const DEFAULT_INCLUDE_NAMESPACE
 **النوع:** الوظيفة
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 انبعاث السائل يشمل مكونًا واحدًا.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
-| مساحة الاسم | سلسلة |  |
+| الاسم       | اكتب         | الوصف |
+| ----------- | ------------ | ----- |
+| المكون      | مكون المحتوى |       |
+| مساحة الاسم | سلسلة        |       |
 
 ### includeFileName
 
 **النوع:** الوظيفة
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 اسم الملف الاصطناعي الخاص بتضمين المكون.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
-| مساحة الاسم | سلسلة |  |
+| الاسم       | اكتب         | الوصف |
+| ----------- | ------------ | ----- |
+| المكون      | مكون المحتوى |       |
+| مساحة الاسم | سلسلة        |       |
 
 ### includePath
 
 **النوع:** الوظيفة
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 مسار التضمين الذي تتم معالجة المكون به، بالنسبة إلى `_includes`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | مكون المحتوى |  |
-| مساحة الاسم | سلسلة |  |
+| الاسم       | اكتب         | الوصف |
+| ----------- | ------------ | ----- |
+| المكون      | مكون المحتوى |       |
+| مساحة الاسم | سلسلة        |       |
 
 ### jekyllDiagnostics
 
 **النوع:** الوظيفة
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 اجمع التشخيصات وتقارير خفض السائل لأحد المكونات.
@@ -227,17 +245,17 @@ function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): rea
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأشعة تحت الحمراء | الوحدة الدلالية |  |
-| المكون | مكون المحتوى |  |
+| الاسم              | اكتب            | الوصف |
+| ------------------ | --------------- | ----- |
+| الأشعة تحت الحمراء | الوحدة الدلالية |       |
+| المكون             | مكون المحتوى    |       |
 
 ### LiquidLiteral
 
 **النوع:** الوظيفة
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 حرفي سائل لقيمة افتراضية محايدة.
@@ -248,6 +266,6 @@ function liquidLiteral(value: ContentDefaultValue): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | المحتوى الافتراضي القيمة |  |
+| الاسم  | اكتب                     | الوصف |
+| ------ | ------------------------ | ----- |
+| القيمة | المحتوى الافتراضي القيمة |       |

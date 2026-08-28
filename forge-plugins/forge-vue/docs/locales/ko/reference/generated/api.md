@@ -36,19 +36,24 @@ Vue 이미터의 결과: 기본 SFC와 생성된 보조 SFC.
 **종류:** 기능
 
 ```typescript
-function emitVueModule(module: SemanticModule, componentName: string, componentFolders?: ReadonlySet<string>, plan?: VueLoweredModule): EmittedVueModule
+function emitVueModule(
+  module: SemanticModule,
+  componentName: string,
+  componentFolders?: ReadonlySet<string>,
+  plan?: VueLoweredModule,
+): EmittedVueModule;
 ```
 
 중립 구성 요소 모듈을 Vue SFC(보조 SFC 포함)로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
-| 구성 요소 이름 | 문자열 |  |
-| 구성요소폴더 | 읽기전용Set<string> |  |
-| 계획 | VueLowered모듈 |  |
+| 이름           | 유형                | 설명 |
+| -------------- | ------------------- | ---- |
+| 모듈           | 의미 모듈           |      |
+| 구성 요소 이름 | 문자열              |      |
+| 구성요소폴더   | 읽기전용Set<string> |      |
+| 계획           | VueLowered모듈      |      |
 
 ## `src/emitters/hook-module`
 
@@ -57,16 +62,16 @@ function emitVueModule(module: SemanticModule, componentName: string, componentF
 **종류:** 기능
 
 ```typescript
-function emitVueHookModule(module: SemanticModule): string
+function emitVueHookModule(module: SemanticModule): string;
 ```
 
 중립 후크 모듈을 Vue 구성 가능한 소스(`.ts`)로 컴파일합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| 모듈 | 의미 모듈 |      |
 
 ## `src/index`
 
@@ -75,7 +80,7 @@ function emitVueHookModule(module: SemanticModule): string
 **종류:** 기능
 
 ```typescript
-function forgeVueFramework(): FrameworkOutputPlugin
+function forgeVueFramework(): FrameworkOutputPlugin;
 ```
 
 Vue 출력 플러그인과 해당 Vite/Rolldown 컴파일러 어댑터를 만듭니다.
@@ -87,23 +92,28 @@ Vue 출력 플러그인과 해당 Vite/Rolldown 컴파일러 어댑터를 만듭
 **종류:** 기능
 
 ```typescript
-function isVueLowered(lowered: TargetLoweredModule | undefined): lowered is VueLoweredModule
+function isVueLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is VueLoweredModule;
 ```
 
 캐스팅하지 않고 대상 계획을 Vue 계획으로 좁힙니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |  |
+| 이름   | 유형                               | 설명 |
+| ------ | ---------------------------------- | ---- |
+| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |      |
 
 ### lowerVue모듈
 
 **종류:** 기능
 
 ```typescript
-function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerVueModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 중립 모듈을 Vue 대상 계획으로 낮추십시오. 중립 모듈이 이동합니다.
@@ -111,10 +121,10 @@ function lowerVueModule(ir: SemanticModule, context: TargetContext): TargetInten
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| IR | 의미 모듈 |  |
-| 맥락 | 타겟컨텍스트 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| IR   | 의미 모듈    |      |
+| 맥락 | 타겟컨텍스트 |      |
 
 ### Vue계산 계획
 
@@ -253,7 +263,7 @@ export interface VueWatcherPlan
 **종류:** 상수
 
 ```typescript
-export const DEDUPE_COMPUTED
+export const DEDUPE_COMPUTED;
 ```
 
 팩토리를 공유하는 `computed` 선언을 축소합니다.
@@ -263,7 +273,7 @@ export const DEDUPE_COMPUTED
 **종류:** 상수
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Prune `vue`은 더 이상 필요하지 않은 세련된 계획을 가져옵니다.
@@ -273,7 +283,7 @@ Prune `vue`은 더 이상 필요하지 않은 세련된 계획을 가져옵니�
 **종류:** 상수
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 완전 정적 하위 트리를 호이스트합니다(모듈 상수 / `v-once`).
@@ -283,7 +293,7 @@ export const HOIST_STATIC_SUBTREES
 **종류:** 상수
 
 ```typescript
-export const INLINE_SINGLE_USE_REFS
+export const INLINE_SINGLE_USE_REFS;
 ```
 
 `ref` 대신 일반 `const`으로 재할당되지 않은 상태를 내보냅니다.
@@ -293,7 +303,10 @@ export const INLINE_SINGLE_USE_REFS
 **종류:** 기능
 
 ```typescript
-function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeVueModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 낮아진 Vue 계획을 구체화합니다. 외국(또는 누락) 계획을 담고 있는 의도는 다음과 같습니다.
@@ -301,17 +314,17 @@ function optimizeVueModule(intentions: TargetIntentions, options: TargetOptimize
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 의도 | 타겟의도 |  |
-| 옵션 | TargetOptimizeOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 의도 | 타겟의도              |      |
+| 옵션 | TargetOptimizeOptions |      |
 
 ### STABLE_LIST_KEYS
 
 **종류:** 상수
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 안정성이 입증된 목록 키만 유지하고 키가 없는 상태로 남겨진 목록을 기록합니다.
@@ -321,7 +334,7 @@ export const STABLE_LIST_KEYS
 **종류:** 상수
 
 ```typescript
-export const VUE_OPTIMIZATIONS: readonly string[]
+export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
 Vue 대상이 애플리케이션 순서대로 기록할 수 있는 모든 최적화 식별자입니다.

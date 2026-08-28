@@ -16,41 +16,45 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/forg
 **Tipo:** función
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 Cree un diagnóstico de origen local para una falla del compilador del enrutador.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| diagnóstico | Omitir<CompilerDiagnostic, 'phase' \| 'fileName'> & { nombre de archivo de solo lectura?: cadena;   } |  |
+| Nombre      | Tipo                                                                                                | Descripción |
+| ----------- | --------------------------------------------------------------------------------------------------- | ----------- |
+| diagnóstico | Omitir<CompilerDiagnostic, 'phase' \| 'fileName'> & { nombre de archivo de solo lectura?: cadena; } |             |
 
 ### definirForgeRouterPlugin
 
 **Tipo:** función
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 Valide los metadatos del complemento del enrutador antes de que ingrese al proceso del compilador.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| complemento | T |  |
+| Nombre      | Tipo | Descripción |
+| ----------- | ---- | ----------- |
+| complemento | T    |             |
 
 ### definirForgeRouterTarget
 
 **Tipo:** función
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 Cree un objetivo determinista que reescriba las importaciones de enrutadores neutrales.
@@ -63,16 +67,16 @@ enrutadores basados en archivos o solo de servidor.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de destino de ForgeRouter |  |
+| Nombre   | Tipo                               | Descripción |
+| -------- | ---------------------------------- | ----------- |
+| opciones | Opciones de destino de ForgeRouter |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **Tipo:** constante
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 Exportaciones de tiempo de ejecución neutrales que preservan el contrato del autor del paquete.
@@ -87,7 +91,7 @@ en ese módulo.
 **Tipo:** constante
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 Contratos de destino reservados para enrutadores cuyos adaptadores propios no forman parte de este hito.
@@ -127,7 +131,7 @@ Un módulo de origen generado devuelto por un destino de enrutador.
 **Tipo:** constante
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Marcador estable compartido con el paquete de enrutador neutral.
@@ -137,7 +141,7 @@ Marcador estable compartido con el paquete de enrutador neutral.
 **Tipo:** constante
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 El paquete cuyas importaciones son comprendidas por el paso del compilador del enrutador.
@@ -157,7 +161,8 @@ Construir ganchos propiedad de un objetivo de enrutador; El núcleo no carga nin
 **Tipo:** tipo
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 Operaciones reducibles de forma independiente expuestas por el contrato de enrutador neutral.
@@ -197,7 +202,7 @@ Un uso de un marcador de enrutador neutral, que conserva las coordenadas de orig
 **Tipo:** tipo
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 Cómo se utiliza un enlace de enrutador neutral en un módulo fuente.
@@ -277,31 +282,37 @@ Plan específico de destino elaborado entre bajada y generación.
 **Tipo:** función
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 Encuentre un destino de enrutador directo o seleccionado por ID sin acoplarlo a complementos de interfaz de usuario.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| selección | Selección de complemento de enrutador \| indefinido |  |
-| complementos | Sólo lectura RouterOutputPlugin[] |  |
+| Nombre       | Tipo                                                | Descripción |
+| ------------ | --------------------------------------------------- | ----------- |
+| selección    | Selección de complemento de enrutador \| indefinido |             |
+| complementos | Sólo lectura RouterOutputPlugin[]                   |             |
 
 ### Capacidades de enrutador no admitidas
 
 **Tipo:** función
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 Informe las brechas de capacidad antes de que un objetivo tenga la oportunidad de compilar mal un módulo de manera silenciosa.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ir | Módulo de capacidad del enrutador |  |
-| complemento | Complemento de salida del enrutador \| indefinido |  |
+| Nombre      | Tipo                                              | Descripción |
+| ----------- | ------------------------------------------------- | ----------- |
+| ir          | Módulo de capacidad del enrutador                 |             |
+| complemento | Complemento de salida del enrutador \| indefinido |             |

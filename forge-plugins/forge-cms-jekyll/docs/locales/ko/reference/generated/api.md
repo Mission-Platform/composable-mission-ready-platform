@@ -16,7 +16,7 @@
 **종류:** 상수
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 생성된 모든 사이트에서 읽는 집계 스키마 `site.data`.
@@ -26,7 +26,7 @@ export const COMPONENTS_DATA_FILE
 **종류:** 상수
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 사이트가 자체 사이트로 병합되는 구성 조각 `_config.yml`.
@@ -36,16 +36,16 @@ export const CONFIG_FILE
 **종류:** 기능
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 호출자가 소유한 프레임워크 출력 플러그인에 Jekyll(Liquid) 프로젝션을 바인딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeJekyllCms옵션 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 옵션 | ForgeJekyllCms옵션 |      |
 
 ### ForgeJekyllCms옵션
 
@@ -64,7 +64,10 @@ export interface ForgeJekyllCmsOptions
 **종류:** 기능
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 방출 `_data/forge-components.yml`: 내보낸 모든 포함의 스키마입니다.
@@ -75,17 +78,20 @@ function emitComponentsData(components: readonly ContentComponent[], namespace: 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 읽기 전용 ContentComponent[] |  |
-| 네임스페이스 | 문자열 |  |
+| 이름         | 유형                         | 설명 |
+| ------------ | ---------------------------- | ---- |
+| 구성요소     | 읽기 전용 ContentComponent[] |      |
+| 네임스페이스 | 문자열                       |      |
 
 ### EmitJekyllConfig
 
 **종류:** 기능
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 방출하다 `_config.yml` 생성된 포함을 등록하는 조각입니다.
@@ -99,26 +105,26 @@ Jekyll은 사이트 구성을 다음으로 병합합니다. `site.*`이므로 �
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 읽기 전용 ContentComponent[] |  |
-| 네임스페이스 | 문자열 |  |
+| 이름         | 유형                         | 설명 |
+| ------------ | ---------------------------- | ---- |
+| 구성요소     | 읽기 전용 ContentComponent[] |      |
+| 네임스페이스 | 문자열                       |      |
 
 ### fieldToJekyllType
 
 **종류:** 기능
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 중립 필드는 Jekyll 데이터 유형으로 게시됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 필드 | 콘텐츠 필드 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 필드 | 콘텐츠 필드 |      |
 
 ### JekyllFieldType
 
@@ -135,16 +141,16 @@ export type JekyllFieldType = "string" | "number" | "boolean" | "enum" | "slot";
 **종류:** 기능
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 중립 기본값에 대한 YAML 스칼라입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 콘텐츠기본값 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 가치 | 콘텐츠기본값 |      |
 
 ## `src/template`
 
@@ -153,7 +159,7 @@ function yamlScalar(value: ContentDefaultValue): string
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 호출자가 네임스페이스를 선택하지 않을 때 사용되는 네임스페이스입니다.
@@ -163,58 +169,70 @@ export const DEFAULT_INCLUDE_NAMESPACE
 **종류:** 기능
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 하나의 구성요소에 대해 액체 포함을 방출합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
-| 네임스페이스 | 문자열 |  |
+| 이름         | 유형            | 설명 |
+| ------------ | --------------- | ---- |
+| 구성요소     | 콘텐츠 구성요소 |      |
+| 네임스페이스 | 문자열          |      |
 
 ### 포함파일 이름
 
 **종류:** 기능
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 구성 요소 포함의 아티팩트 파일 이름입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
-| 네임스페이스 | 문자열 |  |
+| 이름         | 유형            | 설명 |
+| ------------ | --------------- | ---- |
+| 구성요소     | 콘텐츠 구성요소 |      |
+| 네임스페이스 | 문자열          |      |
 
 ### includePath
 
 **종류:** 기능
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 구성 요소의 주소가 지정되는 포함 경로입니다. `_includes`.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
-| 네임스페이스 | 문자열 |  |
+| 이름         | 유형            | 설명 |
+| ------------ | --------------- | ---- |
+| 구성요소     | 콘텐츠 구성요소 |      |
+| 네임스페이스 | 문자열          |      |
 
 ### jekyll진단
 
 **종류:** 기능
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 구성품에 대한 액체 하강 보고서 진단을 수집합니다.
@@ -227,17 +245,17 @@ function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): rea
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| IR | 의미 모듈 |  |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| IR       | 의미 모듈       |      |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ### 액체 리터럴
 
 **종류:** 기능
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 중립 기본값에 대한 Liquid 리터럴입니다.
@@ -248,6 +266,6 @@ function liquidLiteral(value: ContentDefaultValue): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 콘텐츠기본값 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 가치 | 콘텐츠기본값 |      |

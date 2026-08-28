@@ -11,40 +11,40 @@ Generated from public source declarations in `@mission-platform/vite-plugin-toke
 **Kind:** function
 
 ```typescript
-function aliasToCssVariable(alias: string, prefix: string): string
+function aliasToCssVariable(alias: string, prefix: string): string;
 ```
 
 Convert a DTCG alias (`{font.size.4xl}`) to a `var(--<prefix>-font-size-4xl)` reference.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| alias | string |  |
-| prefix | string |  |
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| alias  | string |             |
+| prefix | string |             |
 
 ### camelCase
 
 **Kind:** function
 
 ```typescript
-function camelCase(dashed: string): string
+function camelCase(dashed: string): string;
 ```
 
 camelCase a dashed string (`border-width` → `borderWidth`, `z-index` → `zIndex`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| dashed | string |  |
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| dashed | string |             |
 
 ### camelCaseName
 
 **Kind:** constant
 
 ```typescript
-export const camelCaseName
+export const camelCaseName;
 ```
 
 camelCase identifier for a token (`border-width-heavy` → `borderWidthHeavy`).
@@ -54,7 +54,7 @@ camelCase identifier for a token (`border-width-heavy` → `borderWidthHeavy`).
 **Kind:** constant
 
 ```typescript
-export const compareTokens
+export const compareTokens;
 ```
 
 Stable ASCII comparison of two tokens by their dashed name.
@@ -64,7 +64,7 @@ Stable ASCII comparison of two tokens by their dashed name.
 **Kind:** constant
 
 ```typescript
-export const dashedName
+export const dashedName;
 ```
 
 Dashed token name (`color-alert-100`) used for SCSS/CSS variable names + sorting.
@@ -104,7 +104,7 @@ A DTCG leaf token (`{ $value, $type?, $description? }`).
 **Kind:** function
 
 ```typescript
-function flattenTokens(document_: DtcgGroup): TokenRecord[]
+function flattenTokens(document_: DtcgGroup): TokenRecord[];
 ```
 
 Recursively flatten a DTCG document into {@link TokenRecord}s, carrying the
@@ -112,64 +112,64 @@ nearest ancestor `$type` down to each leaf token.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| document_ | DtcgGroup |  |
+| Name      | Type      | Description |
+| --------- | --------- | ----------- |
+| document_ | DtcgGroup |             |
 
 ### formatColorValue
 
 **Kind:** function
 
 ```typescript
-function formatColorValue(value: DtcgColorValue): string
+function formatColorValue(value: DtcgColorValue): string;
 ```
 
 Format a DTCG colour value as a CSS `oklab()` (or other color-space) string, unrounded.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | DtcgColorValue |  |
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| value | DtcgColorValue |             |
 
 ### formatCssColor
 
 **Kind:** function
 
 ```typescript
-function formatCssColor(value: DtcgColorValue): string
+function formatCssColor(value: DtcgColorValue): string;
 ```
 
 Round an OKLab/other color-space value to four significant figures per component.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | DtcgColorValue |  |
+| Name  | Type           | Description |
+| ----- | -------------- | ----------- |
+| value | DtcgColorValue |             |
 
 ### formatCssValue
 
 **Kind:** function
 
 ```typescript
-function formatCssValue(value: unknown): string
+function formatCssValue(value: unknown): string;
 ```
 
 Format a token `$value` as a CSS/SCSS literal (colours rounded; arrays become comma-separated lists).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | unknown |  |
+| Name  | Type    | Description |
+| ----- | ------- | ----------- |
+| value | unknown |             |
 
 ### groupLabel
 
 **Kind:** constant
 
 ```typescript
-export const groupLabel
+export const groupLabel;
 ```
 
 Title-case a group key for SCSS section headers (`border-width` → `Border Width`).
@@ -179,24 +179,24 @@ Title-case a group key for SCSS section headers (`border-width` → `Border Widt
 **Kind:** function
 
 ```typescript
-function resolveAlias(alias: string, document_: DtcgGroup): unknown
+function resolveAlias(alias: string, document_: DtcgGroup): unknown;
 ```
 
 Resolve a DTCG alias (`{font.size.4xl}`) to its literal `$value` in a document.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| alias | string |  |
-| document_ | DtcgGroup |  |
+| Name      | Type      | Description |
+| --------- | --------- | ----------- |
+| alias     | string    |             |
+| document_ | DtcgGroup |             |
 
 ### resolveTsValue
 
 **Kind:** function
 
 ```typescript
-function resolveTsValue(value: unknown): string | number
+function resolveTsValue(value: unknown): string | number;
 ```
 
 Resolve a DTCG `$value` to the literal JavaScript value used in the generated
@@ -206,9 +206,9 @@ numbers, arrays become comma-separated lists, and everything else
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | unknown |  |
+| Name  | Type    | Description |
+| ----- | ------- | ----------- |
+| value | unknown |             |
 
 ### TokenRecord
 
@@ -227,23 +227,23 @@ A single resolved DTCG token, flattened out of its nested group.
 **Kind:** function
 
 ```typescript
-function generateTokens(options: TokensPluginOptions): void
+function generateTokens(options: TokensPluginOptions): void;
 ```
 
 Generate every consumable token artefact from the DTCG sources:
-  • `scss/_<file>.scss`  — one self-contained SCSS partial per non-theme source
-  • `scss/_theme.scss`   — the combined `light-dark()` theme partial
-  • `ts/<file>.ts`       — one nested `as const` TypeScript module per source
-  • `_tokens.scss`       — SCSS barrel `@forward`ing every partial (incl. theme)
-  • `tokens.ts`          — TypeScript barrel re-exporting every per-file module
+• `scss/_<file>.scss` — one self-contained SCSS partial per non-theme source
+• `scss/_theme.scss` — the combined `light-dark()` theme partial
+• `ts/<file>.ts` — one nested `as const` TypeScript module per source
+• `_tokens.scss` — SCSS barrel `@forward`ing every partial (incl. theme)
+• `tokens.ts` — TypeScript barrel re-exporting every per-file module
 
 Everything is produced by the custom emitters; there is no external CLI.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TokensPluginOptions |  |
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| options | TokensPluginOptions |             |
 
 ### TokensPluginOptions
 
@@ -271,7 +271,7 @@ are written alongside them.
 **Kind:** function
 
 ```typescript
-function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string
+function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string;
 ```
 
 Build the single combined theme partial. The light and dark semantic colour
@@ -285,24 +285,24 @@ The partial also emits the opt-in `[data-theme]`/`.theme-*` scheme pins
 directly, so importing `scss/tokens` is enough to pin a subtree (or the whole
 document) to one scheme — no separate `scss/themes/{light,dark}` import is
 required and the behaviour no longer depends on import order. Because the
-`light-dark()` colour tokens above resolve against the *used* `color-scheme`,
+`light-dark()` colour tokens above resolve against the _used_ `color-scheme`,
 setting it on a `[data-theme]` element re-themes that element and all its
 descendants without redefining a single colour custom property.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| lightDocument | DtcgGroup |  |
-| darkDocument | DtcgGroup |  |
-| prefix |  |  |
+| Name          | Type      | Description |
+| ------------- | --------- | ----------- |
+| lightDocument | DtcgGroup |             |
+| darkDocument  | DtcgGroup |             |
+| prefix        |           |             |
 
 ### buildPropertyRule
 
 **Kind:** function
 
 ```typescript
-function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string
+function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string;
 ```
 
 Build the CSS `@property` registration for a single custom property.
@@ -319,38 +319,48 @@ typography fields) therefore register under `*` without an `initial-value`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| record | TokenRecord |  |
-| prefix | string |  |
-| useScssVariable |  |  |
-| cssNamespace | string |  |
+| Name            | Type        | Description |
+| --------------- | ----------- | ----------- |
+| record          | TokenRecord |             |
+| prefix          | string      |             |
+| useScssVariable |             |             |
+| cssNamespace    | string      |             |
 
 ### buildScssVariables
 
 **Kind:** function
 
 ```typescript
-function buildScssVariables(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariables(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| records | TokenRecord[] |  |
-| prefix |  |  |
-| cssNamespace | string |  |
-| componentNamespaces | ReadonlySet<string> |  |
+| Name                | Type                | Description |
+| ------------------- | ------------------- | ----------- |
+| records             | TokenRecord[]       |             |
+| prefix              |                     |             |
+| cssNamespace        | string              |             |
+| componentNamespaces | ReadonlySet<string> |             |
 
 ### buildScssVariablesScss
 
 **Kind:** function
 
 ```typescript
-function buildScssVariablesScss(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariablesScss(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 Build a CSS-free `$`-variables-only partial (header + the {@link buildScssVariables}
@@ -361,19 +371,19 @@ into every consuming stylesheet.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| records | TokenRecord[] |  |
-| prefix |  |  |
-| cssNamespace | string |  |
-| componentNamespaces | ReadonlySet<string> |  |
+| Name                | Type                | Description |
+| ------------------- | ------------------- | ----------- |
+| records             | TokenRecord[]       |             |
+| prefix              |                     |             |
+| cssNamespace        | string              |             |
+| componentNamespaces | ReadonlySet<string> |             |
 
 ### buildStructuralScss
 
 **Kind:** function
 
 ```typescript
-function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string
+function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string;
 ```
 
 Build a structural SCSS partial: the `:root { --<prefix>-* }` custom properties
@@ -391,19 +401,19 @@ companion `'<file>-vars'` partial.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| records | TokenRecord[] |  |
-| prefix |  |  |
-| file |  |  |
-| cssNamespace | string |  |
+| Name         | Type          | Description |
+| ------------ | ------------- | ----------- |
+| records      | TokenRecord[] |             |
+| prefix       |               |             |
+| file         |               |             |
+| cssNamespace | string        |             |
 
 ### buildTypographyRecords
 
 **Kind:** function
 
 ```typescript
-function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[]
+function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[];
 ```
 
 Flatten a DTCG composite typography group into per-field {@link TokenRecord}s.
@@ -416,26 +426,26 @@ Each field becomes a `typography-<variant>-<field>` token whose value is the
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| typographyGroup | DtcgGroup |  |
-| prefix |  |  |
+| Name            | Type      | Description |
+| --------------- | --------- | ----------- |
+| typographyGroup | DtcgGroup |             |
+| prefix          |           |             |
 
 ### typographyEntries
 
 **Kind:** function
 
 ```typescript
-function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>
+function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>;
 ```
 
 Return `[variant, value]` entries for a DTCG composite typography group.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| group | DtcgGroup |  |
+| Name  | Type      | Description |
+| ----- | --------- | ----------- |
+| group | DtcgGroup |             |
 
 ## `src/generators/typescript`
 
@@ -444,23 +454,28 @@ Return `[variant, value]` entries for a DTCG composite typography group.
 **Kind:** function
 
 ```typescript
-function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string
+function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| sources | Array<string \| TokenModuleDescriptor> |  |
+| Name    | Type                                   | Description |
+| ------- | -------------------------------------- | ----------- |
+| sources | Array<string \| TokenModuleDescriptor> |             |
 
 ### buildTokenModule
 
 **Kind:** function
 
 ```typescript
-function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?: DtcgGroup, exportName = camelCase(basename)): string
+function buildTokenModule(
+  basename: string,
+  document_: DtcgGroup,
+  aliasDocument?: DtcgGroup,
+  exportName = camelCase(basename),
+): string;
 ```
 
 Build a per-file TypeScript module exporting one nested `as const` object named
@@ -474,12 +489,12 @@ composite `typography` source resolves its `{font.*}` references against it).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| basename | string |  |
-| document_ | DtcgGroup |  |
-| aliasDocument | DtcgGroup |  |
-| exportName |  |  |
+| Name          | Type      | Description |
+| ------------- | --------- | ----------- |
+| basename      | string    |             |
+| document_     | DtcgGroup |             |
+| aliasDocument | DtcgGroup |             |
+| exportName    |           |             |
 
 ## `src/index`
 
@@ -488,7 +503,7 @@ composite `typography` source resolves its `{font.*}` references against it).
 **Kind:** function
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite plugin that generates the Mission Platform design-token artefacts from the
@@ -504,16 +519,16 @@ for `vite build`, `vite build --watch`, and the dev server alike.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TokensPluginOptions |  |
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| options | TokensPluginOptions |             |
 
 ### tokensPlugin
 
 **Kind:** function
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite plugin that generates the Mission Platform design-token artefacts from the
@@ -529,9 +544,9 @@ for `vite build`, `vite build --watch`, and the dev server alike.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TokensPluginOptions |  |
+| Name    | Type                | Description |
+| ------- | ------------------- | ----------- |
+| options | TokensPluginOptions |             |
 
 ## `src/reachability`
 
@@ -540,16 +555,16 @@ for `vite build`, `vite build --watch`, and the dev server alike.
 **Kind:** function
 
 ```typescript
-function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport
+function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport;
 ```
 
 Collect a deterministic conservative reachability report without changing token sources.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TokenReachabilityOptions |  |
+| Name    | Type                     | Description |
+| ------- | ------------------------ | ----------- |
+| options | TokenReachabilityOptions |             |
 
 ### TokenAliasEdge
 
@@ -616,14 +631,14 @@ Classification assigned by the conservative reachability audit.
 **Kind:** function
 
 ```typescript
-function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void
+function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void;
 ```
 
 Write a report with stable formatting suitable for review and source control.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| report | TokenReachabilityReport |  |
-| filePath | string |  |
+| Name     | Type                    | Description |
+| -------- | ----------------------- | ----------- |
+| report   | TokenReachabilityReport |             |
+| filePath | string                  |             |

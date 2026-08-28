@@ -23,9 +23,9 @@ Devuelve verdadero cuando la opción tiene un valor.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | Opción<T> | Valor de opción a inspeccionar. |
+| Nombre | Tipo      | Descripción                     |
+| ------ | --------- | ------------------------------- |
+| valor  | Opción<T> | Valor de opción a inspeccionar. |
 
 #### Contrato
 
@@ -58,9 +58,9 @@ Devuelve verdadero cuando el resultado es exitoso.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | Resultado<T, E> | Valor del resultado a inspeccionar. |
+| Nombre | Tipo            | Descripción                         |
+| ------ | --------------- | ----------------------------------- |
+| valor  | Resultado<T, E> | Valor del resultado a inspeccionar. |
 
 #### Contrato
 
@@ -86,7 +86,7 @@ Resultado de una operación falible.
 **Tipo:** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 Ruta relativa al módulo de declaración asíncrona utilizado por los consumidores del compilador.
@@ -96,7 +96,7 @@ Ruta relativa al módulo de declaración asíncrona utilizado por los consumidor
 **Tipo:** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 Contrato estable de identidad y representación de la biblioteca estándar.
@@ -108,7 +108,7 @@ límites para los valores que cruzan la ABI del host/Wasm.
 **Tipo:** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 Directorio que contiene los módulos de declaración de Forge Web Script enviados.

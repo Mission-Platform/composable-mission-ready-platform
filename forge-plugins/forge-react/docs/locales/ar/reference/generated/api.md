@@ -16,18 +16,22 @@
 **النوع:** الوظيفة
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 تحويل الوحدة بأكملها إلى React مصدر الهدف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
-| اسم المكون | سلسلة |  |
-| خطة | ReactModulePlan |  |
+| الاسم          | اكتب            | الوصف |
+| -------------- | --------------- | ----- |
+| الوحدة النمطية | الوحدة الدلالية |       |
+| اسم المكون     | سلسلة           |       |
+| خطة            | ReactModulePlan |       |
 
 ## `src/index`
 
@@ -36,7 +40,7 @@ function emitReactModule(module: SemanticModule, componentName?: string, plan: R
 **النوع:** الوظيفة
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 إنشاء React البرنامج المساعد للإخراج ومحولات بناء JSX الأصلية الخاصة به.
@@ -48,50 +52,58 @@ function forgeReactFramework(): FrameworkOutputPlugin
 **النوع:** الوظيفة
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 تضييق نطاق الخطة المملوكة للهدف إلى React واحد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خفضت | TargetLoweredModule \| غير محدد |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خفضت  | TargetLoweredModule \| غير محدد |       |
 
 ### LowerReactModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 قم بخفض الأشعة تحت الحمراء المحايدة إلى React الخطة التي تنفذها {@link TargetIntentions.lowered}.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأشعة تحت الحمراء | الوحدة الدلالية |  |
-| السياق | سياق الهدف |  |
+| الاسم              | اكتب            | الوصف |
+| ------------------ | --------------- | ----- |
+| الأشعة تحت الحمراء | الوحدة الدلالية |       |
+| السياق             | سياق الهدف      |       |
 
 ### PlanReactModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 بناء React خطة لوحدة واحدة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
-| اسم المكون | سلسلة |  |
+| الاسم          | اكتب            | الوصف |
+| -------------- | --------------- | ----- |
+| الوحدة النمطية | الوحدة الدلالية |       |
+| اسم المكون     | سلسلة           |       |
 
 ### ReactClientDirectivePlan
 
@@ -180,7 +192,10 @@ export interface ReactPropsParameter
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 صقل React يخطط.
@@ -191,17 +206,17 @@ function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نوايا | النوايا المستهدفة |  |
-| خيارات | تارجتوبتيميزيوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| نوايا  | النوايا المستهدفة    |       |
+| خيارات | تارجتوبتيميزيوبتيونس |       |
 
 ### رد الفعل_التحسينات
 
 **النوع:** ثابت
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 المعرفات المسجلة على خطة React تم تحسين المحسن.

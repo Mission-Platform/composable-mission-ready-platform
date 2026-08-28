@@ -47,7 +47,7 @@ export interface WebLuaCliOptions
 
 Nessuna descrizione fornita.
 
-### WebLuaCliUsageError
+### WebLuaCliUsageErrore
 
 **Gentile:** lezione
 
@@ -69,12 +69,12 @@ function runWebLuaCli(
   io: WebLuaCliIo = defaultIo,
   cwd = process.cwd(),
   runtimeFactory: WebLuaRuntimeFactory = (options) =>
-    (
-      createWebLuaRuntime as unknown as (
-        artifact: undefined,
-        options: WebLuaCliRuntimeOptions,
-      ) => Promise<WebLuaCliRuntime>
-    )(undefined, options),
+    createWebLuaRuntime({
+      capabilities: options.capabilities,
+      hostAdapter: options.hostAdapter,
+      onOutput: options.onOutput,
+      onError: options.onError,
+    }),
   sourceReader: WebLuaSourceReader = readSource,
 ): Promise<number>;
 ```

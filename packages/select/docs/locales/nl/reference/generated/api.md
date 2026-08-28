@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/select`
 **Soort:** functie
 
 ```typescript
-function ForgeTag(properties: Readonly<TagProperties>): MpElement
+function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 ```
 
 `ForgeTag` — een compact, afgerond label dat ooit in het neutrale JSX-dialect is geschreven
@@ -34,9 +34,9 @@ callback-prop `onRemove` (de Vue `remove` zendt vervanger uit).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<TagProperties> |  |
+| Naam          | Typ                         | Beschrijving |
+| ------------- | --------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<TagProperties> |              |
 
 ### Tageigenschappen
 
@@ -63,7 +63,8 @@ Canonieke 2xs → 2xl-formaatschaal.
 **Soort:** type
 
 ```typescript
-export type TagVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type TagVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Toon van het label.
@@ -75,16 +76,16 @@ Toon van het label.
 **Soort:** functie
 
 ```typescript
-function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement
+function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ForgeLanguageSwitcherProperties> |  |
+| Naam          | Typ                                           | Beschrijving |
+| ------------- | --------------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<ForgeLanguageSwitcherProperties> |              |
 
 ### ForgeLanguageSwitcherOption
 
@@ -113,7 +114,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement
+function ForgeMultiselect(properties: Readonly<MultiselectProperties>): MpElement;
 ```
 
 `ForgeMultiselect` - een op tags gebaseerde combobox met meerdere selecties en een zoekveld,
@@ -145,9 +146,9 @@ callback-rekwisieten worden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MultiselectProperties> |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MultiselectProperties> |              |
 
 ### MultiselectOptie
 
@@ -186,7 +187,7 @@ Canonieke controlegrootteschaal.
 **Soort:** functie
 
 ```typescript
-function ForgeSelect(properties: Readonly<SelectProperties>): MpElement
+function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
 `ForgeSelect` — een aangepaste combobox/select die één keer in de neutrale JSX is geschreven
@@ -220,9 +221,9 @@ bewaard als slots met een neutrale naam.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<SelectProperties> |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<SelectProperties> |              |
 
 ### Selecteer Optie
 

@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-cms-j
 **Art:** konstant
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 Das aggregierte Schema, das jede generierte Site aus `site.data` liest.
@@ -26,7 +26,7 @@ Das aggregierte Schema, das jede generierte Site aus `site.data` liest.
 **Art:** konstant
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 Das Konfigurationsfragment, das eine Site in ihr eigenes `_config.yml` einfügt.
@@ -36,16 +36,16 @@ Das Konfigurationsfragment, das eine Site in ihr eigenes `_config.yml` einfügt.
 **Art:** Funktion
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 Binden Sie die Jekyll-Projektion (Liquid) an ein Framework-Ausgabe-Plugin im Besitz des Aufrufers.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeJekyllCmsOptions |  |
+| Name     | Geben Sie             | ein Beschreibung |
+| -------- | --------------------- | ---------------- |
+| Optionen | ForgeJekyllCmsOptions |                  |
 
 ### ForgeJekyllCmsOptions
 
@@ -64,7 +64,10 @@ Optionen für {@link forgeJekyllCms}.
 **Art:** Funktion
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 `_data/forge-components.yml` ausgeben: das Schema jedes ausgegebenen Include.
@@ -75,17 +78,20 @@ Die generierte Dokumentationsseite sollte sie auflisten.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponenten | readonly ContentComponent[] |  |
-| Namensraum | Zeichenfolge |  |
+| Name        | Geben Sie                   | ein Beschreibung |
+| ----------- | --------------------------- | ---------------- |
+| Komponenten | readonly ContentComponent[] |                  |
+| Namensraum  | Zeichenfolge                |                  |
 
 ### emitJekyllConfig
 
 **Art:** Funktion
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Geben Sie das `_config.yml`-Fragment aus, das die generierten Includes registriert.
@@ -99,26 +105,26 @@ Filter verwenden und andernfalls leere Werte sehen würden.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponenten | readonly ContentComponent[] |  |
-| Namensraum | Zeichenfolge |  |
+| Name        | Geben Sie                   | ein Beschreibung |
+| ----------- | --------------------------- | ---------------- |
+| Komponenten | readonly ContentComponent[] |                  |
+| Namensraum  | Zeichenfolge                |                  |
 
 ### fieldToJekyllType
 
 **Art:** Funktion
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 Der Jekyll-Datentyp, als der ein neutrales Feld veröffentlicht wird.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Feld | ContentField |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Feld | ContentField |                  |
 
 ### JekyllFieldType
 
@@ -135,16 +141,16 @@ Das Vokabular der neutralen Feldarten wird in `_data` veröffentlicht.
 **Art:** Funktion
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 Ein YAML-Skalar für einen neutralen Standardwert.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | ContentDefaultValue |  |
+| Name | Geben Sie           | ein Beschreibung |
+| ---- | ------------------- | ---------------- |
+| Wert | ContentDefaultValue |                  |
 
 ## `src/template`
 
@@ -153,7 +159,7 @@ Ein YAML-Skalar für einen neutralen Standardwert.
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 Der Namespace, der verwendet wird, wenn der Anrufer keinen auswählt.
@@ -163,58 +169,70 @@ Der Namespace, der verwendet wird, wenn der Anrufer keinen auswählt.
 **Art:** Funktion
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emittieren Sie die Flüssigkeit für eine Komponente.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | ContentComponent |  |
-| Namensraum | Zeichenfolge |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| Komponente | ContentComponent |                  |
+| Namensraum | Zeichenfolge     |                  |
 
 ### includeFileName
 
 **Art:** Funktion
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Der Artefaktdateiname des Include einer Komponente.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | ContentComponent |  |
-| Namensraum | Zeichenfolge |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| Komponente | ContentComponent |                  |
+| Namensraum | Zeichenfolge     |                  |
 
 ### includePath
 
 **Art:** Funktion
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Der Include-Pfad, über den eine Komponente adressiert wird, relativ zu `_includes`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | ContentComponent |  |
-| Namensraum | Zeichenfolge |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| Komponente | ContentComponent |                  |
+| Namensraum | Zeichenfolge     |                  |
 
 ### jekyllDiagnostics
 
 **Art:** Funktion
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 Sammeln Sie die Diagnose der Flüssigkeitsabsenkungsberichte für eine Komponente.
@@ -227,17 +245,17 @@ dort gerendert, wo das Markup erwartet wurde.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| Komponente | ContentComponent |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| ir         | SemanticModule   |                  |
+| Komponente | ContentComponent |                  |
 
 ### liquidLiteral
 
 **Art:** Funktion
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 Ein Liquid-Literal für einen neutralen Standardwert.
@@ -248,6 +266,6 @@ als die Standardeinstellung auf eine Zeichenfolge zu erzwingen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | ContentDefaultValue |  |
+| Name | Geben Sie           | ein Beschreibung |
+| ---- | ------------------- | ---------------- |
+| Wert | ContentDefaultValue |                  |

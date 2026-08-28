@@ -16,23 +16,23 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-c
 **Soort:** functie
 
 ```typescript
-function declarationFileName(component: ContentComponent): string
+function declarationFileName(component: ContentComponent): string;
 ```
 
 Het bestand waarnaar de declaratie van een component wordt geschreven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
+| Naam        | Typ             | Beschrijving |
+| ----------- | --------------- | ------------ |
+| bestanddeel | InhoudComponent |              |
 
 ### DEFAULT_ISLAND_ENTRY
 
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_ISLAND_ENTRY
+export const DEFAULT_ISLAND_ENTRY;
 ```
 
 De eilandspecificatie die wordt gebruikt wanneer de bestuurder geen mede-genereerde (tests, proefritten).
@@ -42,7 +42,7 @@ De eilandspecificatie die wordt gebruikt wanneer de bestuurder geen mede-generee
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_WEBFLOW_GROUP
+export const DEFAULT_WEBFLOW_GROUP;
 ```
 
 De componentgroep waaronder de Designer de componenten van een bibliotheek opslaat.
@@ -52,7 +52,10 @@ De componentgroep waaronder de Designer de componenten van een bibliotheek opsla
 **Soort:** functie
 
 ```typescript
-function emitWebflowDeclaration(component: ContentComponent, options: WebflowDeclarationOptions = {}): string
+function emitWebflowDeclaration(
+  component: ContentComponent,
+  options: WebflowDeclarationOptions = {},
+): string;
 ```
 
 Verzend de Code Component-declaratie voor één component.
@@ -64,17 +67,20 @@ auteurswaardige rekwisieten, die de uitgezonden module vrijhouden van ongebruikt
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
-| opties | WebflowDeclarationOptions |  |
+| Naam        | Typ                       | Beschrijving |
+| ----------- | ------------------------- | ------------ |
+| bestanddeel | InhoudComponent           |              |
+| opties      | WebflowDeclarationOptions |              |
 
 ### webflowDeclaratieDiagnostiek
 
 **Soort:** functie
 
 ```typescript
-function webflowDeclarationDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function webflowDeclarationDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 De diagnostiek die de verklaring van één component afgeeft, produceert.
@@ -84,10 +90,10 @@ tegenhanger, dus een stille constructie betekent een verliesloze projectie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
-| bestandsnaam | tekenreeks |  |
+| Naam         | Typ             | Beschrijving |
+| ------------ | --------------- | ------------ |
+| bestanddeel  | InhoudComponent |              |
+| bestandsnaam | tekenreeks      |              |
 
 ### WebflowDeclarationOptions
 
@@ -104,7 +110,7 @@ Opties voor {@link emitWebflowDeclaration}.
 **Soort:** functie
 
 ```typescript
-function webflowDescription(component: ContentComponent): string | undefined
+function webflowDescription(component: ContentComponent): string | undefined;
 ```
 
 De beschrijving die de Designer voor het onderdeel toont.
@@ -116,48 +122,48 @@ helemaal geen `description`-sleutel in plaats van een verzonnen zin.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
+| Naam        | Typ             | Beschrijving |
+| ----------- | --------------- | ------------ |
+| bestanddeel | InhoudComponent |              |
 
 ### webflowDisplayName
 
 **Soort:** functie
 
 ```typescript
-function webflowDisplayName(name: string): string
+function webflowDisplayName(name: string): string;
 ```
 
 Het naar de mens gerichte label waaronder een rekwisiet wordt weergegeven in de Designer.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naam | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| naam | tekenreeks |              |
 
 ### webflowPropertyName
 
 **Soort:** functie
 
 ```typescript
-function webflowPropertyName(field: ContentField): string
+function webflowPropertyName(field: ContentField): string;
 ```
 
 De declaratiesleutel waaronder een veld is geschreven: de propnaam React.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| veld | InhoudVeld |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| veld | InhoudVeld |              |
 
 ### webflowPropertyType
 
 **Soort:** functie
 
 ```typescript
-function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
+function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType;
 ```
 
 Wijs een neutraal inhoudstype toe aan de propvocabulaire van Webflow.
@@ -167,16 +173,23 @@ wordt omgezet in tekst en {@link webflowDeclarationDiagnostics} rapporteert dit.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| soort | ContentFieldKind |  |
+| Naam  | Typ              | Beschrijving |
+| ----- | ---------------- | ------------ |
+| soort | ContentFieldKind |              |
 
 ### WebflowPropertyType
 
 **Soort:** type
 
 ```typescript
-export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichText" | "props.Slot" | "props.Text" | "props.Variant" | "props.Visibility";
+export type WebflowPropertyType =
+  | "props.Image"
+  | "props.Link"
+  | "props.RichText"
+  | "props.Slot"
+  | "props.Text"
+  | "props.Variant"
+  | "props.Visibility";
 ```
 
 De `@webflow/data-types`-fabriek waarmee een neutraal veldtype is geschreven.
@@ -188,7 +201,7 @@ De `@webflow/data-types`-fabriek waarmee een neutraal veldtype is geschreven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEBFLOW_NUMBER_AS_TEXT
+export const FORGE_WEBFLOW_NUMBER_AS_TEXT;
 ```
 
 Er is een numeriek veld geschreven als een Webflow-tekstprop; Webflow heeft geen numeriek type.
@@ -198,18 +211,22 @@ Er is een numeriek veld geschreven als een Webflow-tekstprop; Webflow heeft geen
 **Soort:** functie
 
 ```typescript
-function webflowWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function webflowWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 Bouw een generatiefasewaarschuwing; het Webflow-doel geeft nooit fouten weer.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| code | tekenreeks |  |
-| bericht | tekenreeks |  |
-| bestandsnaam | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| code         | tekenreeks |              |
+| bericht      | tekenreeks |              |
+| bestandsnaam | tekenreeks |              |
 
 ## `src/entry`
 
@@ -218,32 +235,32 @@ Bouw een generatiefasewaarschuwing; het Webflow-doel geeft nooit fouten weer.
 **Soort:** functie
 
 ```typescript
-function emitWebflowEntry(components: readonly ContentComponent[]): string
+function emitWebflowEntry(components: readonly ContentComponent[]): string;
 ```
 
 Zend het `index.ts`-vat uit en exporteer elke afgegeven aangifte opnieuw.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| componenten | alleen-lezen ContentComponent[] |  |
+| Naam        | Typ                             | Beschrijving |
+| ----------- | ------------------------------- | ------------ |
+| componenten | alleen-lezen ContentComponent[] |              |
 
 ### entryExportNaam
 
 **Soort:** functie
 
 ```typescript
-function entryExportName(component: ContentComponent): string
+function entryExportName(component: ContentComponent): string;
 ```
 
 De vatexportnaam waaronder de aangifte van een onderdeel opnieuw wordt geëxporteerd.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestanddeel | InhoudComponent |  |
+| Naam        | Typ             | Beschrijving |
+| ----------- | --------------- | ------------ |
+| bestanddeel | InhoudComponent |              |
 
 ## `src/manifest`
 
@@ -252,24 +269,27 @@ De vatexportnaam waaronder de aangifte van een onderdeel opnieuw wordt geëxport
 **Soort:** functie
 
 ```typescript
-function buildWebflowManifest(libraryName: string, frameworkId: string): WebflowManifest
+function buildWebflowManifest(
+  libraryName: string,
+  frameworkId: string,
+): WebflowManifest;
 ```
 
 Bouw het `webflow.json`-fragment voor een bibliotheek.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bibliotheekNaam | tekenreeks |  |
-| frameworkId | tekenreeks |  |
+| Naam            | Typ        | Beschrijving |
+| --------------- | ---------- | ------------ |
+| bibliotheekNaam | tekenreeks |              |
+| frameworkId     | tekenreeks |              |
 
 ### DEFAULT_WEBFLOW_LIBRARY_NAME
 
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_WEBFLOW_LIBRARY_NAME
+export const DEFAULT_WEBFLOW_LIBRARY_NAME;
 ```
 
 De bibliotheeknaam die wordt gebruikt als de beller er geen opgeeft.
@@ -279,7 +299,7 @@ De bibliotheeknaam die wordt gebruikt als de beller er geen opgeeft.
 **Soort:** functie
 
 ```typescript
-function emitWebflowManifest(libraryName: string, frameworkId: string): string
+function emitWebflowManifest(libraryName: string, frameworkId: string): string;
 ```
 
 `webflow.json` verzenden.
@@ -290,17 +310,17 @@ of honderd en kan nooit uit de pas lopen met de uitgezonden boom.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bibliotheekNaam | tekenreeks |  |
-| frameworkId | tekenreeks |  |
+| Naam            | Typ        | Beschrijving |
+| --------------- | ---------- | ------------ |
+| bibliotheekNaam | tekenreeks |              |
+| frameworkId     | tekenreeks |              |
 
 ### WEBFLOW_LIBRARY_MANIFEST
 
 **Soort:** constant
 
 ```typescript
-export const WEBFLOW_LIBRARY_MANIFEST
+export const WEBFLOW_LIBRARY_MANIFEST;
 ```
 
 Het bestand waarnaar het bibliotheekfragment wordt geschreven.
@@ -310,7 +330,7 @@ Het bestand waarnaar het bibliotheekfragment wordt geschreven.
 **Soort:** functie
 
 ```typescript
-function webflowComponentsGlob(frameworkId: string): string
+function webflowComponentsGlob(frameworkId: string): string;
 ```
 
 De glob die overeenkomt met elke gebouwde verklaring van één doelrun.
@@ -322,9 +342,9 @@ consument voegt het samen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| frameworkId | tekenreeks |  |
+| Naam        | Typ        | Beschrijving |
+| ----------- | ---------- | ------------ |
+| frameworkId | tekenreeks |              |
 
 ### WebflowBibliotheek
 
@@ -353,16 +373,16 @@ Het `webflow.json`-fragment van een consumerende site versmelt met zijn eigen ma
 **Soort:** functie
 
 ```typescript
-function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin
+function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin;
 ```
 
 Bind Webflow Code Component-projectie aan een React-uitvoerplug-in van de beller.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebflowCmsOpties |  |
+| Naam   | Typ                   | Beschrijving |
+| ------ | --------------------- | ------------ |
+| opties | ForgeWebflowCmsOpties |              |
 
 ### ForgeWebflowCmsOpties
 
@@ -379,7 +399,7 @@ Opties voor {@link forgeWebflowCms}.
 **Soort:** constant
 
 ```typescript
-export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[]
+export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[];
 ```
 
 Modules waarin de verzonden aangiften worden geïmporteerd die de Webflow-toolchain biedt.

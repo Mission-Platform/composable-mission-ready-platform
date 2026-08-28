@@ -16,16 +16,16 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-cms-astr
 **Tipo:** funzione
 
 ```typescript
-function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin
+function forgeAstroCms(options: ForgeAstroCmsOptions): CmsOutputPlugin;
 ```
 
 Associa la proiezione Astro a un plug-in di output del framework di proprietà del chiamante.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | ForgeAstroCmsOptions |  |
+| Nome    | Digitare             | Descrizione |
+| ------- | -------------------- | ----------- |
+| opzioni | ForgeAstroCmsOptions |             |
 
 ### ForgeAstroCmsOptions
 
@@ -44,32 +44,32 @@ Opzioni per {@link forgeAstroCms}.
 **Tipo:** funzione
 
 ```typescript
-function emitContentConfig(components: readonly ContentComponent[]): string
+function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
 Emetti un Astro `content.config.ts` con una raccolta per componente.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componenti | sola lettura ContentComponent[] |  |
+| Nome       | Digitare                        | Descrizione |
+| ---------- | ------------------------------- | ----------- |
+| componenti | sola lettura ContentComponent[] |             |
 
 ### campoToZod
 
 **Tipo:** funzione
 
 ```typescript
-function fieldToZod(field: ContentField): string
+function fieldToZod(field: ContentField): string;
 ```
 
 Lo zod (o `image()`) validatore su cui viene mappato un tipo di campo neutro.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| campo | Campo contenuto |  |
+| Nome  | Digitare        | Descrizione |
+| ----- | --------------- | ----------- |
+| campo | Campo contenuto |             |
 
 ## `src/template`
 
@@ -78,40 +78,46 @@ Lo zod (o `image()`) validatore su cui viene mappato un tipo di campo neutro.
 **Tipo:** funzione
 
 ```typescript
-function astroDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function astroDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 Raccogliere la diagnostica riportata dall'abbassamento Astro per un modulo.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| io | Modulo Semantico |  |
-| componente | Componente di contenuto |  |
+| Nome       | Digitare                | Descrizione |
+| ---------- | ----------------------- | ----------- |
+| io         | Modulo Semantico        |             |
+| componente | Componente di contenuto |             |
 
 ### astroMarkup
 
 **Tipo:** funzione
 
 ```typescript
-function astroMarkup(expression: string): string
+function astroMarkup(expression: string): string;
 ```
 
 Riscrivi i nomi degli attributi solo JSX ed elimina il frammento esterno.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| espressione | stringa |  |
+| Nome        | Digitare | Descrizione |
+| ----------- | -------- | ----------- |
+| espressione | stringa  |             |
 
 ### emitIslandAstroTemplate
 
 **Tipo:** funzione
 
 ```typescript
-function emitIslandAstroTemplate(component: ContentComponent, islandEntry: string): string
+function emitIslandAstroTemplate(
+  component: ContentComponent,
+  islandEntry: string,
+): string;
 ```
 
 Emetti l'isola-backed `.astro` modello per un componente interattivo.
@@ -122,23 +128,23 @@ IR neutro compilato dal plugin del framework associato e idratato con
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
-| isolaIngresso | stringa |  |
+| Nome          | Digitare                | Descrizione |
+| ------------- | ----------------------- | ----------- |
+| componente    | Componente di contenuto |             |
+| isolaIngresso | stringa                 |             |
 
 ### emitStaticAstroTemplate
 
 **Tipo:** funzione
 
 ```typescript
-function emitStaticAstroTemplate(ir: SemanticModule): string
+function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
 Emetti l'elettricità statica `.astro` modello per un componente di presentazione.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| io | Modulo Semantico |  |
+| Nome | Digitare         | Descrizione |
+| ---- | ---------------- | ----------- |
+| io   | Modulo Semantico |             |

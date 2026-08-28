@@ -16,25 +16,32 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-cms-stor
 **Tipo:** funzione
 
 ```typescript
-function analyzeStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function analyzeStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 Analizza un modulo componente neutro per Storyblok.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fileorigine | ts.FileSorgente |  |
-| nomi | NomiComponenti Storyblok |  |
-| opzioni | Opzioni di proiezione Storyblok |  |
+| Nome        | Digitare                        | Descrizione |
+| ----------- | ------------------------------- | ----------- |
+| fileorigine | ts.FileSorgente                 |             |
+| nomi        | NomiComponenti Storyblok        |             |
+| opzioni     | Opzioni di proiezione Storyblok |             |
 
 ### contentFieldToStoryblokField
 
 **Tipo:** funzione
 
 ```typescript
-function contentFieldToStoryblokField(field: ContentField, options: StoryblokProjectionOptions = {}): StoryblokSchemaField
+function contentFieldToStoryblokField(
+  field: ContentField,
+  options: StoryblokProjectionOptions = {},
+): StoryblokSchemaField;
 ```
 
 Mappare un campo neutro su un campo dello schema Storyblok.
@@ -46,51 +53,60 @@ quindi `type`/`pos`/`description`/`translatable`/`options`/`default_value`/
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| campo | Campo contenuto |  |
-| opzioni | Opzioni di proiezione Storyblok |  |
+| Nome    | Digitare                        | Descrizione |
+| ------- | ------------------------------- | ----------- |
+| campo   | Campo contenuto                 |             |
+| opzioni | Opzioni di proiezione Storyblok |             |
 
 ### contentKindToStoryblokFieldType
 
 **Tipo:** funzione
 
 ```typescript
-function contentKindToStoryblokFieldType(kind: ContentField["kind"]): StoryblokFieldType
+function contentKindToStoryblokFieldType(
+  kind: ContentField["kind"],
+): StoryblokFieldType;
 ```
 
 Il tipo di campo Storyblok su cui viene mappato un tipo di contenuto neutro.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| gentile | CampoContenuto["tipo"] |  |
+| Nome    | Digitare               | Descrizione |
+| ------- | ---------------------- | ----------- |
+| gentile | CampoContenuto["tipo"] |             |
 
 ### emitStoryblokComponent
 
 **Tipo:** funzione
 
 ```typescript
-function emitStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): StoryblokComponent
+function emitStoryblokComponent(
+  sourceFile: ts.SourceFile,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): StoryblokComponent;
 ```
 
 Emetti solo l'oggetto componente Storyblok (la configurazione del blocco) per un componente.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fileorigine | ts.FileSorgente |  |
-| nomi | NomiComponenti Storyblok |  |
-| opzioni | Opzioni di proiezione Storyblok |  |
+| Nome        | Digitare                        | Descrizione |
+| ----------- | ------------------------------- | ----------- |
+| fileorigine | ts.FileSorgente                 |             |
+| nomi        | NomiComponenti Storyblok        |             |
+| opzioni     | Opzioni di proiezione Storyblok |             |
 
 ### risolvereStoryblokMetadata
 
 **Tipo:** funzione
 
 ```typescript
-function resolveStoryblokMetadata(component: ContentComponent, options: StoryblokProjectionOptions = {}): ResolvedStoryblokMetadata
+function resolveStoryblokMetadata(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): ResolvedStoryblokMetadata;
 ```
 
 Risolvi i metadati dell'editor una volta per un componente.
@@ -101,27 +117,30 @@ L'hash del nome gli conferisce un colore Storyblok ripetibile.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
-| opzioni | Opzioni di proiezione Storyblok |  |
+| Nome       | Digitare                        | Descrizione |
+| ---------- | ------------------------------- | ----------- |
+| componente | Componente di contenuto         |             |
+| opzioni    | Opzioni di proiezione Storyblok |             |
 
 ### al componente Storyblok
 
 **Tipo:** funzione
 
 ```typescript
-function toStoryblokComponent(component: ContentComponent, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function toStoryblokComponent(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 Proietta un componente di contenuto neutro sull'oggetto e sui campi del componente Storyblok.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
-| opzioni | Opzioni di proiezione Storyblok |  |
+| Nome       | Digitare                        | Descrizione |
+| ---------- | ------------------------------- | ----------- |
+| componente | Componente di contenuto         |             |
+| opzioni    | Opzioni di proiezione Storyblok |             |
 
 ## `src/runtime/solid`
 
@@ -130,16 +149,18 @@ Proietta un componente di contenuto neutro sull'oggetto e sui campi del componen
 **Tipo:** funzione
 
 ```typescript
-function StoryblokComponent(properties: StoryblokComponentProperties): JSX.Element
+function StoryblokComponent(
+  properties: StoryblokComponentProperties,
+): JSX.Element;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | ProprietàComponente Storyblok |  |
+| Nome      | Digitare                      | Descrizione |
+| --------- | ----------------------------- | ----------- |
+| proprietà | ProprietàComponente Storyblok |             |
 
 ### StoryblokComponentProperties
 
@@ -156,7 +177,9 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type StoryblokComponentRegistry = Readonly< Record<string, StoryblokComponentType> >;
+export type StoryblokComponentRegistry = Readonly<
+  Record<string, StoryblokComponentType>
+>;
 ```
 
 Nessuna descrizione fornita.
@@ -176,16 +199,18 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function StoryblokProvider(properties: StoryblokProviderProperties): JSX.Element
+function StoryblokProvider(
+  properties: StoryblokProviderProperties,
+): JSX.Element;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | StoryblokProviderProperties |  |
+| Nome      | Digitare                    | Descrizione |
+| --------- | --------------------------- | ----------- |
+| proprietà | StoryblokProviderProperties |             |
 
 ### StoryblokProviderProperties
 
@@ -204,16 +229,16 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin
+function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin;
 ```
 
 Associa la proiezione Storyblok a un plug-in di output del framework di proprietà del chiamante.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | ForgeStoryblokCmsOptions |  |
+| Nome    | Digitare                 | Descrizione |
+| ------- | ------------------------ | ----------- |
+| opzioni | ForgeStoryblokCmsOptions |             |
 
 ### ForgeStoryblokCmsOptions
 
@@ -230,16 +255,18 @@ Opzioni per {@link forgeStoryblokCms}.
 **Tipo:** funzione
 
 ```typescript
-function forgeStoryblokCmsTargets(options: ForgeStoryblokCmsTargetsOptions): CmsOutputPlugin[]
+function forgeStoryblokCmsTargets(
+  options: ForgeStoryblokCmsTargetsOptions,
+): CmsOutputPlugin[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | ForgeStoryblokCmsTargetsOpzioni |  |
+| Nome    | Digitare                        | Descrizione |
+| ------- | ------------------------------- | ----------- |
+| opzioni | ForgeStoryblokCmsTargetsOpzioni |             |
 
 ### ForgeStoryblokCmsTargetsOpzioni
 
@@ -291,7 +318,17 @@ mantiene leggibile la firma rivolta verso Storyblok.
 **Genere:** tipo
 
 ```typescript
-export type StoryblokFieldType = | "text" | "richtext" | "number" | "boolean" | "option" | "asset" | "multilink" | "bloks" | "tab" | "plugin";
+export type StoryblokFieldType =
+  | "text"
+  | "richtext"
+  | "number"
+  | "boolean"
+  | "option"
+  | "asset"
+  | "multilink"
+  | "bloks"
+  | "tab"
+  | "plugin";
 ```
 
 Il campo Storyblok digita i tipi di contenuto neutro su cui vengono mappati.
@@ -343,7 +380,7 @@ Un campo dello schema Storyblok (il valore di una voce nel `schema` di un compon
 **Tipo:** funzione
 
 ```typescript
-function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
+function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string;
 ```
 
 Costruisci il tipo di prop `blok` digitato per un wrapper: `SbBlokData & { … }` con uno
@@ -354,16 +391,20 @@ nidificabile `bloks`), in modo che i consumatori ottengano un'interfaccia precis
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| analizzato | Componente Storyblok Analizzato |  |
+| Nome       | Digitare                        | Descrizione |
+| ---------- | ------------------------------- | ----------- |
+| analizzato | Componente Storyblok Analizzato |             |
 
 ### emitStoryblokBlokWrapper
 
 **Tipo:** funzione
 
 ```typescript
-function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicName: string, options: StoryblokBlokWrapperOptions): string
+function emitStoryblokBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  options: StoryblokBlokWrapperOptions,
+): string;
 ```
 
 Emetti l'origine wrapper del blocco framework che collega la prop `blok` di Storyblok a
@@ -372,11 +413,11 @@ o un elemento personalizzato del componente Web nativo (`.ts`).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| analizzato | Componente Storyblok Analizzato |  |
-| nomepubblico | stringa |  |
-| opzioni | StoryblokBlokWrapperOpzioni |  |
+| Nome         | Digitare                        | Descrizione |
+| ------------ | ------------------------------- | ----------- |
+| analizzato   | Componente Storyblok Analizzato |             |
+| nomepubblico | stringa                         |             |
+| opzioni      | StoryblokBlokWrapperOpzioni     |             |
 
 ### Opzioni StoryblokBlokWrapper
 

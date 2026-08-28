@@ -16,16 +16,16 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-p
 **Soort:** functie
 
 ```typescript
-function emitSolidHookModule(module: SemanticModule): string
+function emitSolidHookModule(module: SemanticModule): string;
 ```
 
 Transformeer een neutrale haakmodule in zijn SolidJS-bron.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| module | SemantischeModule |              |
 
 ## `src/emitters/module`
 
@@ -34,17 +34,20 @@ Transformeer een neutrale haakmodule in zijn SolidJS-bron.
 **Soort:** functie
 
 ```typescript
-function emitSolidModule(module: SemanticModule, options: SolidEmitOptions = {}): GeneratedSolidModule
+function emitSolidModule(
+  module: SemanticModule,
+  options: SolidEmitOptions = {},
+): GeneratedSolidModule;
 ```
 
 Transformeer een neutrale componentmodule in zijn SolidJS-bron.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | SemantischeModule |  |
-| opties | SolidEmitOpties |  |
+| Naam   | Typ               | Beschrijving |
+| ------ | ----------------- | ------------ |
+| module | SemantischeModule |              |
+| opties | SolidEmitOpties   |              |
 
 ### GegenereerdeSolidModule
 
@@ -73,7 +76,7 @@ Opties die bepalen hoe een module wordt uitgezonden.
 **Soort:** functie
 
 ```typescript
-function forgeSolidFramework(): FrameworkOutputPlugin
+function forgeSolidFramework(): FrameworkOutputPlugin;
 ```
 
 Maak de Solid-uitvoerplug-in en de bijbehorende Vite/Rolldown JSX-adapters.
@@ -85,40 +88,48 @@ Maak de Solid-uitvoerplug-in en de bijbehorende Vite/Rolldown JSX-adapters.
 **Soort:** functie
 
 ```typescript
-function isSolidLowered(lowered: TargetLoweredModule | undefined): lowered is SolidLoweredModule
+function isSolidLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SolidLoweredModule;
 ```
 
 Beperk een doelplan tot het Solid-plan; `false` voor elk ander raamwerkplan.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |  |
+| Naam     | Typ                                   | Beschrijving |
+| -------- | ------------------------------------- | ------------ |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
 
 ### lagereSolidModule
 
 **Soort:** functie
 
 ```typescript
-function lowerSolidModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerSolidModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 Laat de neutrale IR in de doelintentieverpakking van Solid zakken, met daarin het plan.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ir | SemantischeModule |  |
-| context | DoelContext |  |
+| Naam    | Typ               | Beschrijving |
+| ------- | ----------------- | ------------ |
+| ir      | SemantischeModule |              |
+| context | DoelContext       |              |
 
 ### planSolidImports
 
 **Soort:** functie
 
 ```typescript
-function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string[]
+function planSolidImports(
+  plan: SolidLoweringPlan,
+  conditional: boolean,
+): string[];
 ```
 
 De exacte `solid-js`-waardenamen die een plan vereist, alfabetisch gerangschikt als a
@@ -127,33 +138,33 @@ opnieuw uitvoeren levert een identieke lijst op. Dit opnieuw berekenen is wat ma
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plannen | SolideVerlagingsplan |  |
-| voorwaardelijk | booleaans |  |
+| Naam           | Typ                  | Beschrijving |
+| -------------- | -------------------- | ------------ |
+| plannen        | SolideVerlagingsplan |              |
+| voorwaardelijk | booleaans            |              |
 
 ### planSolidModule
 
 **Soort:** functie
 
 ```typescript
-function planSolidModule(ir: SemanticModule): SolidLoweringPlan
+function planSolidModule(ir: SemanticModule): SolidLoweringPlan;
 ```
 
 Bouw het Solid-plan voor de semantische feiten van een module.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ir | SemantischeModule |  |
+| Naam | Typ               | Beschrijving |
+| ---- | ----------------- | ------------ |
+| ir   | SemantischeModule |              |
 
 ### SOLID_KADER
 
 **Soort:** constant
 
 ```typescript
-export const SOLID_FRAMEWORK
+export const SOLID_FRAMEWORK;
 ```
 
 Op basis van de raamwerkidentificatie wordt elk Solid-plan gediscrimineerd.
@@ -275,7 +286,7 @@ Een slotlezing, uitgedrukt zoals het propslid Solid het voorleest.
 **Soort:** constant
 
 ```typescript
-export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
+export const COLLAPSE_SINGLE_CHILD_FRAGMENTS;
 ```
 
 Laat een fragment vallen dat precies één element omhult.
@@ -285,7 +296,7 @@ Laat een fragment vallen dat precies één element omhult.
 **Soort:** constant
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 Bereken de import van `solid-js` opnieuw op basis van het verfijnde plan.
@@ -295,7 +306,7 @@ Bereken de import van `solid-js` opnieuw op basis van het verfijnde plan.
 **Soort:** constant
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 Promoot `__mpStatic`-substructuren tot constanten op moduleniveau.
@@ -305,7 +316,7 @@ Promoot `__mpStatic`-substructuren tot constanten op moduleniveau.
 **Soort:** constant
 
 ```typescript
-export const MEMOIZE_DYNAMIC_EXPRESSIONS
+export const MEMOIZE_DYNAMIC_EXPRESSIONS;
 ```
 
 Promoot een herhaalde dynamische kinduitdrukking tot één enkele memo.
@@ -315,7 +326,7 @@ Promoot een herhaalde dynamische kinduitdrukking tot één enkele memo.
 **Soort:** constant
 
 ```typescript
-export const MP_MEMO_PREFIX
+export const MP_MEMO_PREFIX;
 ```
 
 Voorvoegsel voor de memobindingen die `solid:memoize-dynamic-expressions` introduceert.
@@ -325,7 +336,10 @@ Voorvoegsel voor de memobindingen die `solid:memoize-dynamic-expressions` introd
 **Soort:** functie
 
 ```typescript
-function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSolidModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Verfijn een verlaagd Solid-abonnement. Een intentieverpakking die geen Solid-plan bevat
@@ -333,17 +347,17 @@ Verfijn een verlaagd Solid-abonnement. Een intentieverpakking die geen Solid-pla
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bedoelingen | DoelIntenties |  |
-| opties | TargetOptimizeOptions |  |
+| Naam        | Typ                   | Beschrijving |
+| ----------- | --------------------- | ------------ |
+| bedoelingen | DoelIntenties         |              |
+| opties      | TargetOptimizeOptions |              |
 
 ### STABLE_LIST_KEYS
 
 **Soort:** constant
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 Bewaar alleen de lijstsleutels, de frontend bleek stabiel.

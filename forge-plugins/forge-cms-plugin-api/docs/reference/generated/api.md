@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/forge-cms-plugin
 **Kind:** constant
 
 ```typescript
-export const BADGE
+export const BADGE;
 ```
 
 Literal-union options, JSDoc descriptions, and `?? literal` defaults.
@@ -21,7 +21,7 @@ Literal-union options, JSDoc descriptions, and `?? literal` defaults.
 **Kind:** constant
 
 ```typescript
-export const badgeNames: ContentComponentNamesInput
+export const badgeNames: ContentComponentNamesInput;
 ```
 
 No description provided.
@@ -31,7 +31,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const BUTTON
+export const BUTTON;
 ```
 
 A union degrading to text plus a dropped callback prop.
@@ -41,7 +41,7 @@ A union degrading to text plus a dropped callback prop.
 **Kind:** constant
 
 ```typescript
-export const buttonNames: ContentComponentNamesInput
+export const buttonNames: ContentComponentNamesInput;
 ```
 
 No description provided.
@@ -51,7 +51,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const COUNTER
+export const COUNTER;
 ```
 
 An interactive component: state and an event handler force a hydrated island.
@@ -61,7 +61,7 @@ An interactive component: state and an event handler force a hydrated island.
 **Kind:** constant
 
 ```typescript
-export const counterNames: ContentComponentNamesInput
+export const counterNames: ContentComponentNamesInput;
 ```
 
 No description provided.
@@ -71,7 +71,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const EMPTY
+export const EMPTY;
 ```
 
 A component with no props at all.
@@ -81,7 +81,7 @@ A component with no props at all.
 **Kind:** constant
 
 ```typescript
-export const emptyNames: ContentComponentNamesInput
+export const emptyNames: ContentComponentNamesInput;
 ```
 
 No description provided.
@@ -91,7 +91,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const GRID
+export const GRID;
 ```
 
 A numeric prop with a numeric default.
@@ -101,7 +101,7 @@ A numeric prop with a numeric default.
 **Kind:** constant
 
 ```typescript
-export const gridNames: ContentComponentNamesInput
+export const gridNames: ContentComponentNamesInput;
 ```
 
 No description provided.
@@ -111,7 +111,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const LAYOUT
+export const LAYOUT;
 ```
 
 A named slot alongside the default slot.
@@ -121,7 +121,7 @@ A named slot alongside the default slot.
 **Kind:** constant
 
 ```typescript
-export const layoutNames: ContentComponentNamesInput
+export const layoutNames: ContentComponentNamesInput;
 ```
 
 No description provided.
@@ -131,7 +131,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const REQUIRED
+export const REQUIRED;
 ```
 
 A required (non-optional) prop alongside an optional one.
@@ -141,7 +141,7 @@ A required (non-optional) prop alongside an optional one.
 **Kind:** constant
 
 ```typescript
-export const requiredNames: ContentComponentNamesInput
+export const requiredNames: ContentComponentNamesInput;
 ```
 
 No description provided.
@@ -151,7 +151,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const SITE_HEADER
+export const SITE_HEADER;
 ```
 
 A component with a site-wide setting prop.
@@ -161,7 +161,7 @@ A component with a site-wide setting prop.
 **Kind:** constant
 
 ```typescript
-export const siteHeaderNames: ContentComponentNamesInput
+export const siteHeaderNames: ContentComponentNamesInput;
 ```
 
 No description provided.
@@ -173,7 +173,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function stubFramework(id = "react"): FrameworkOutputPlugin
+function stubFramework(id = "react"): FrameworkOutputPlugin;
 ```
 
 Create a stub framework plugin with an overridable id.
@@ -181,8 +181,8 @@ Create a stub framework plugin with an overridable id.
 #### Parameters
 
 | Name | Type | Description |
-| --- | --- | --- |
-| id |  |  |
+| ---- | ---- | ----------- |
+| id   |      |             |
 
 ## `src/analyze`
 
@@ -191,7 +191,11 @@ Create a stub framework plugin with an overridable id.
 **Kind:** function
 
 ```typescript
-function analyzeContentComponent(sourceFile: ts.SourceFile, names: ContentComponentNamesInput, semantic?: SemanticModule): ContentComponent
+function analyzeContentComponent(
+  sourceFile: OxcParsedModule,
+  names: ContentComponentNamesInput,
+  semantic?: SemanticModule,
+): ContentComponent;
 ```
 
 Analyse a neutral component module, returning its platform-neutral content
@@ -200,18 +204,18 @@ a hydrated runtime.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| names | ContentComponentNamesInput |  |
-| semantic | SemanticModule |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| sourceFile | OxcParsedModule            |             |
+| names      | ContentComponentNamesInput |             |
+| semantic   | SemanticModule             |             |
 
 ### CMS_COLOR_TAG
 
 **Kind:** constant
 
 ```typescript
-export const CMS_COLOR_TAG
+export const CMS_COLOR_TAG;
 ```
 
 No description provided.
@@ -221,7 +225,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const CMS_COLOUR_TAG
+export const CMS_COLOUR_TAG;
 ```
 
 British spelling accepted for source annotations.
@@ -231,7 +235,7 @@ British spelling accepted for source annotations.
 **Kind:** constant
 
 ```typescript
-export const CMS_ICON_TAG
+export const CMS_ICON_TAG;
 ```
 
 The JSDoc tags for optional component-level editor metadata.
@@ -241,7 +245,7 @@ The JSDoc tags for optional component-level editor metadata.
 **Kind:** constant
 
 ```typescript
-export const CMS_SETTING_TAG
+export const CMS_SETTING_TAG;
 ```
 
 The JSDoc tag that promotes a prop to a site-wide CMS setting.
@@ -251,7 +255,7 @@ The JSDoc tag that promotes a prop to a site-wide CMS setting.
 **Kind:** constant
 
 ```typescript
-export const CMS_TAB_TAG
+export const CMS_TAB_TAG;
 ```
 
 The JSDoc tag that assigns a prop to an editor tab.
@@ -261,7 +265,7 @@ The JSDoc tag that assigns a prop to an editor tab.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_SLOT_FIELD
+export const DEFAULT_SLOT_FIELD;
 ```
 
 The field key the default slot (a component's `children`) is exposed under.
@@ -271,32 +275,34 @@ The field key the default slot (a component's `children`) is exposed under.
 **Kind:** function
 
 ```typescript
-function deriveContentComponentNames(names: ContentComponentNamesInput): ContentComponentNames
+function deriveContentComponentNames(
+  names: ContentComponentNamesInput,
+): ContentComponentNames;
 ```
 
 Derive the full name set from the caller-supplied subset.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| names | ContentComponentNamesInput |  |
+| Name  | Type                       | Description |
+| ----- | -------------------------- | ----------- |
+| names | ContentComponentNamesInput |             |
 
 ### isInteractiveModule
 
 **Kind:** function
 
 ```typescript
-function isInteractiveModule(semantic: SemanticModule | undefined): boolean
+function isInteractiveModule(semantic: SemanticModule | undefined): boolean;
 ```
 
 True when the neutral IR carries behaviour that only a real runtime can provide.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| semantic | SemanticModule \| undefined |  |
+| Name     | Type                        | Description |
+| -------- | --------------------------- | ----------- |
+| semantic | SemanticModule \| undefined |             |
 
 ## `src/classify`
 
@@ -305,7 +311,7 @@ True when the neutral IR carries behaviour that only a real runtime can provide.
 **Kind:** constant
 
 ```typescript
-export const ASSET_TYPE_REFERENCES: ReadonlySet<string>
+export const ASSET_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Type references that mark a prop as a media asset.
@@ -325,41 +331,47 @@ The result of classifying a prop (`undefined` → drop the prop).
 **Kind:** function
 
 ```typescript
-function classifyType(node: ts.TypeNode, aliases: Map<string, ts.TypeNode>, seen: Set<string> = new Set()): ClassifiedFieldKind
+function classifyType(
+  node: CmsTypeNode,
+  aliases: Map<string, CmsTypeNode>,
+  seen: Set<string> = new Set(),
+): ClassifiedFieldKind;
 ```
 
 Classify a prop's type node into a neutral content kind, resolving local aliases/unions.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| node | ts.TypeNode |  |
-| aliases | Map<string, ts.TypeNode> |  |
-| seen | Set<string> |  |
+| Name    | Type                     | Description |
+| ------- | ------------------------ | ----------- |
+| node    | CmsTypeNode              |             |
+| aliases | Map<string, CmsTypeNode> |             |
+| seen    | Set<string>              |             |
 
 ### collectTypeAliases
 
 **Kind:** function
 
 ```typescript
-function collectTypeAliases(sourceFile: ts.SourceFile): Map<string, ts.TypeNode>
+function collectTypeAliases(
+  sourceFile: OxcParsedModule,
+): Map<string, CmsTypeNode>;
 ```
 
 Map every top-level `type X = …` alias to its type node, for union resolution.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
+| Name       | Type            | Description |
+| ---------- | --------------- | ----------- |
+| sourceFile | OxcParsedModule |             |
 
 ### LINK_TYPE_REFERENCES
 
 **Kind:** constant
 
 ```typescript
-export const LINK_TYPE_REFERENCES: ReadonlySet<string>
+export const LINK_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Type references that mark a prop as a link/URL.
@@ -369,7 +381,7 @@ Type references that mark a prop as a link/URL.
 **Kind:** constant
 
 ```typescript
-export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>
+export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Type references that mark a prop as formatted rich text rather than plain text.
@@ -379,7 +391,7 @@ Type references that mark a prop as formatted rich text rather than plain text.
 **Kind:** constant
 
 ```typescript
-export const SLOT_TYPE_REFERENCES: ReadonlySet<string>
+export const SLOT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
 Type references whose props are treated as nested content (`children`).
@@ -401,7 +413,8 @@ A single file a target asks the driver to write.
 **Kind:** type
 
 ```typescript
-export type CmsArtifactKind = "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
+export type CmsArtifactKind =
+  "schema" | "template" | "manifest" | "entry" | "declaration" | "module";
 ```
 
 The role an emitted artifact plays in the target's output tree.
@@ -441,16 +454,16 @@ Everything an emitter may need about the build it runs in.
 **Kind:** function
 
 ```typescript
-function cmsTargetDirectory(plugin: CmsOutputPlugin): string
+function cmsTargetDirectory(plugin: CmsOutputPlugin): string;
 ```
 
 The directory segment a target's per-framework output is written under.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| plugin | CmsOutputPlugin |  |
+| Name   | Type            | Description |
+| ------ | --------------- | ----------- |
+| plugin | CmsOutputPlugin |             |
 
 ### CmsTargetId
 
@@ -467,7 +480,7 @@ The built-in CMS target ids, open to any additional string id.
 **Kind:** function
 
 ```typescript
-function defineForgeCmsPlugin(plugin: T): T
+function defineForgeCmsPlugin(plugin: T): T;
 ```
 
 Validate and return a CMS output plugin.
@@ -477,9 +490,9 @@ reach the driver and silently emit a partial tree.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| plugin | T |  |
+| Name   | Type | Description |
+| ------ | ---- | ----------- |
+| plugin | T    |             |
 
 ## `src/config`
 
@@ -488,16 +501,18 @@ reach the driver and silently emit a partial tree.
 **Kind:** function
 
 ```typescript
-function defineViteForgeCmsLibrary(options: ViteForgeCmsLibraryOptions): UserConfig
+function defineViteForgeCmsLibrary(
+  options: ViteForgeCmsLibraryOptions,
+): UserConfig;
 ```
 
 Create a Vite library config for one CMS target.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ViteForgeCmsLibraryOptions |  |
+| Name    | Type                       | Description |
+| ------- | -------------------------- | ----------- |
+| options | ViteForgeCmsLibraryOptions |             |
 
 ### ViteForgeCmsLibraryOptions
 
@@ -546,7 +561,13 @@ Every name a content platform may ask for, derived from one component.
 **Kind:** type
 
 ```typescript
-export type ContentComponentNamesInput = Pick< ContentComponentNames, "neutralName" | "publicName" > & Partial< Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir"> >;
+export type ContentComponentNamesInput = Pick<
+  ContentComponentNames,
+  "neutralName" | "publicName"
+> &
+  Partial<
+    Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir">
+  >;
 ```
 
 The subset of {@link ContentComponentNames} a caller supplies; the rest is derived.
@@ -600,32 +621,32 @@ The discriminator of a {@link ContentFieldKind}.
 **Kind:** function
 
 ```typescript
-function contentFields(component: ContentComponent): readonly ContentField[]
+function contentFields(component: ContentComponent): readonly ContentField[];
 ```
 
 The fields of a component that are not slots (scalar, authorable content).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | ContentComponent |  |
+| Name      | Type             | Description |
+| --------- | ---------------- | ----------- |
+| component | ContentComponent |             |
 
 ### slotFields
 
 **Kind:** function
 
 ```typescript
-function slotFields(component: ContentComponent): readonly ContentField[]
+function slotFields(component: ContentComponent): readonly ContentField[];
 ```
 
 The fields of a component that carry nested content.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | ContentComponent |  |
+| Name      | Type             | Description |
+| --------- | ---------------- | ----------- |
+| component | ContentComponent |             |
 
 ## `src/driver`
 
@@ -634,7 +655,9 @@ The fields of a component that carry nested content.
 **Kind:** function
 
 ```typescript
-function generateCmsArtifacts(options: GenerateCmsArtifactsOptions): GeneratedCmsTree
+function generateCmsArtifacts(
+  options: GenerateCmsArtifactsOptions,
+): GeneratedCmsTree;
 ```
 
 Run the full discover → IR → content model → emit → write loop for one CMS
@@ -642,9 +665,9 @@ target, returning the entry module path and everything that was written.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | GenerateCmsArtifactsOptions |  |
+| Name    | Type                        | Description |
+| ------- | --------------------------- | ----------- |
+| options | GenerateCmsArtifactsOptions |             |
 
 ### GenerateCmsArtifactsOptions
 
@@ -683,7 +706,9 @@ The generated island tree, or `undefined` when the target does not use islands.
 **Kind:** function
 
 ```typescript
-function generateIsland(options: GenerateIslandOptions): GeneratedIsland | undefined
+function generateIsland(
+  options: GenerateIslandOptions,
+): GeneratedIsland | undefined;
 ```
 
 Co-generate the framework island tree for a target, returning the specifier
@@ -691,9 +716,9 @@ an emitted template should import it by.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | GenerateIslandOptions |  |
+| Name    | Type                  | Description |
+| ------- | --------------------- | ----------- |
+| options | GenerateIslandOptions |             |
 
 ### GenerateIslandOptions
 
@@ -710,7 +735,7 @@ Options for {@link generateIsland}.
 **Kind:** constant
 
 ```typescript
-export const ISLAND_DIRECTORY
+export const ISLAND_DIRECTORY;
 ```
 
 The directory name, relative to the target output directory, islands are generated into.
@@ -722,48 +747,48 @@ The directory name, relative to the target output directory, islands are generat
 **Kind:** function
 
 ```typescript
-function toDisplayName(publicName: string): string
+function toDisplayName(publicName: string): string;
 ```
 
 Convert a public name to its display name (`InView` → `In View`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| publicName | string |  |
+| Name       | Type   | Description |
+| ---------- | ------ | ----------- |
+| publicName | string |             |
 
 ### toKebabName
 
 **Kind:** function
 
 ```typescript
-function toKebabName(publicName: string): string
+function toKebabName(publicName: string): string;
 ```
 
 Convert a public name to a kebab-cased name (`InView` → `in-view`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| publicName | string |  |
+| Name       | Type   | Description |
+| ---------- | ------ | ----------- |
+| publicName | string |             |
 
 ### toTechnicalName
 
 **Kind:** function
 
 ```typescript
-function toTechnicalName(publicName: string): string
+function toTechnicalName(publicName: string): string;
 ```
 
 Convert a public name to its technical name (`InView` → `in_view`).
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| publicName | string |  |
+| Name       | Type   | Description |
+| ---------- | ------ | ----------- |
+| publicName | string |             |
 
 ## `src/tsdown`
 
@@ -772,83 +797,85 @@ Convert a public name to its technical name (`InView` → `in_view`).
 **Kind:** function
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 The cache directory a target's generated tree is written to.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| rootDir | string |  |
-| target | CmsOutputPlugin |  |
+| Name    | Type            | Description |
+| ------- | --------------- | ----------- |
+| rootDir | string          |             |
+| target  | CmsOutputPlugin |             |
 
 ### cmsOutputDirectory
 
 **Kind:** function
 
 ```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string
+function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
 ```
 
 The distribution directory a target's per-framework modules are emitted to.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| rootDir | string |  |
-| target | CmsOutputPlugin |  |
+| Name    | Type            | Description |
+| ------- | --------------- | ----------- |
+| rootDir | string          |             |
+| target  | CmsOutputPlugin |             |
 
 ### defineTsdownForgeCms
 
 **Kind:** function
 
 ```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig
+function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
 ```
 
 Create a tsdown config for one CMS target.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TsdownForgeCmsOptions |  |
+| Name    | Type                  | Description |
+| ------- | --------------------- | ----------- |
+| options | TsdownForgeCmsOptions |             |
 
 ### defineTsdownForgeCmsAll
 
 **Kind:** function
 
 ```typescript
-function defineTsdownForgeCmsAll(options: TsdownForgeCmsAllOptions): UserConfig[]
+function defineTsdownForgeCmsAll(
+  options: TsdownForgeCmsAllOptions,
+): UserConfig[];
 ```
 
 Create tsdown configs for every requested CMS target.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | TsdownForgeCmsAllOptions |  |
+| Name    | Type                     | Description |
+| ------- | ------------------------ | ----------- |
+| options | TsdownForgeCmsAllOptions |             |
 
 ### resolveComponentsModule
 
 **Kind:** function
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string
+function resolveComponentsModule(rootDir: string, explicit?: string): string;
 ```
 
 Locate the neutral components barrel of a package.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| rootDir | string |  |
-| explicit | string |  |
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| rootDir  | string |             |
+| explicit | string |             |
 
 ### TsdownForgeCmsAllOptions
 

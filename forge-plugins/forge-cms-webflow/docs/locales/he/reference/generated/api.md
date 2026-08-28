@@ -16,23 +16,23 @@
 פונקציה **סוג:**
 
 ```typescript
-function declarationFileName(component: ContentComponent): string
+function declarationFileName(component: ContentComponent): string;
 ```
 
 הקובץ אליו נכתבת הצהרת רכיב.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
+| שם   | הקלד             | תיאור |
+| ---- | ---------------- | ----- |
+| רכיב | ContentComponent |       |
 
 ### DEFAULT_ISLAND_ENTRY
 
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_ISLAND_ENTRY
+export const DEFAULT_ISLAND_ENTRY;
 ```
 
 מפרט האי בשימוש כאשר הנהג לא יצר אף אחד (בדיקות, ריצות יבשות).
@@ -42,7 +42,7 @@ export const DEFAULT_ISLAND_ENTRY
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_WEBFLOW_GROUP
+export const DEFAULT_WEBFLOW_GROUP;
 ```
 
 הרכיב מקבץ תחתיו מקבצים מעצב רכיבי ספרייה.
@@ -52,7 +52,10 @@ export const DEFAULT_WEBFLOW_GROUP
 פונקציה **סוג:**
 
 ```typescript
-function emitWebflowDeclaration(component: ContentComponent, options: WebflowDeclarationOptions = {}): string
+function emitWebflowDeclaration(
+  component: ContentComponent,
+  options: WebflowDeclarationOptions = {},
+): string;
 ```
 
 שלח את הצהרת רכיב הקוד עבור רכיב אחד.
@@ -64,17 +67,20 @@ function emitWebflowDeclaration(component: ContentComponent, options: WebflowDec
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
-| אפשרויות | WebflowDeclarationOptions |  |
+| שם       | הקלד                      | תיאור |
+| -------- | ------------------------- | ----- |
+| רכיב     | ContentComponent          |       |
+| אפשרויות | WebflowDeclarationOptions |       |
 
 ### webflowDeclarationDiagnostics
 
 פונקציה **סוג:**
 
 ```typescript
-function webflowDeclarationDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function webflowDeclarationDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 האבחון הפולט הצהרת רכיב אחד מייצר.
@@ -84,10 +90,10 @@ function webflowDeclarationDiagnostics(component: ContentComponent, fileName: st
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
-| שם קובץ | מחרוזת |  |
+| שם      | הקלד             | תיאור |
+| ------- | ---------------- | ----- |
+| רכיב    | ContentComponent |       |
+| שם קובץ | מחרוזת           |       |
 
 ### WebflowDeclarationOptions
 
@@ -104,7 +110,7 @@ export interface WebflowDeclarationOptions
 פונקציה **סוג:**
 
 ```typescript
-function webflowDescription(component: ContentComponent): string | undefined
+function webflowDescription(component: ContentComponent): string | undefined;
 ```
 
 התיאור שהמעצב מציג עבור הרכיב.
@@ -116,48 +122,48 @@ function webflowDescription(component: ContentComponent): string | undefined
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
+| שם   | הקלד             | תיאור |
+| ---- | ---------------- | ----- |
+| רכיב | ContentComponent |       |
 
 ### webflowDisplayName
 
 פונקציה **סוג:**
 
 ```typescript
-function webflowDisplayName(name: string): string
+function webflowDisplayName(name: string): string;
 ```
 
 התווית הפונה לאדם של אביזר מוצגת תחתיו ב-Designer.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| שם  | מחרוזת |       |
 
 ### webflowPropertyName
 
 פונקציה **סוג:**
 
 ```typescript
-function webflowPropertyName(field: ContentField): string
+function webflowPropertyName(field: ContentField): string;
 ```
 
 מפתח ההצהרה ששדה נכתב תחתיו - שלו React שם אביזר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שדה | ContentField |  |
+| שם  | הקלד         | תיאור |
+| --- | ------------ | ----- |
+| שדה | ContentField |       |
 
 ### webflowPropertyType
 
 פונקציה **סוג:**
 
 ```typescript
-function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
+function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType;
 ```
 
 מפה סוג תוכן ניטרלי על אוצר המילים של Webflow.
@@ -167,16 +173,23 @@ function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סוג | ContentFieldKind |  |
+| שם  | הקלד             | תיאור |
+| --- | ---------------- | ----- |
+| סוג | ContentFieldKind |       |
 
 ### WebflowPropertyType
 
 **סוג:** סוג
 
 ```typescript
-export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichText" | "props.Slot" | "props.Text" | "props.Variant" | "props.Visibility";
+export type WebflowPropertyType =
+  | "props.Image"
+  | "props.Link"
+  | "props.RichText"
+  | "props.Slot"
+  | "props.Text"
+  | "props.Variant"
+  | "props.Visibility";
 ```
 
 ה `@webflow/data-types` מפעל סוג שדה ניטרלי נכתב עם.
@@ -188,7 +201,7 @@ export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichTe
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEBFLOW_NUMBER_AS_TEXT
+export const FORGE_WEBFLOW_NUMBER_AS_TEXT;
 ```
 
 שדה מספרי נכתב כאביזר טקסט של Webflow; ל-Webflow אין סוג מספרי.
@@ -198,18 +211,22 @@ export const FORGE_WEBFLOW_NUMBER_AS_TEXT
 פונקציה **סוג:**
 
 ```typescript
-function webflowWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function webflowWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 בנו אזהרת שלב-דור; היעד של Webflow לעולם לא פולט שגיאות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קוד | מחרוזת |  |
-| הודעה | מחרוזת |  |
-| שם קובץ | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| קוד     | מחרוזת |       |
+| הודעה   | מחרוזת |       |
+| שם קובץ | מחרוזת |       |
 
 ## `src/entry`
 
@@ -218,32 +235,32 @@ function webflowWarning(code: string, message: string, fileName: string): Compil
 פונקציה **סוג:**
 
 ```typescript
-function emitWebflowEntry(components: readonly ContentComponent[]): string
+function emitWebflowEntry(components: readonly ContentComponent[]): string;
 ```
 
 פולט את `index.ts` חבית מייצאת מחדש כל הצהרה שנפלטה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיבים | ContentComponent לקריאה בלבד[] |  |
+| שם     | הקלד                           | תיאור |
+| ------ | ------------------------------ | ----- |
+| רכיבים | ContentComponent לקריאה בלבד[] |       |
 
 ### entryExportName
 
 פונקציה **סוג:**
 
 ```typescript
-function entryExportName(component: ContentComponent): string
+function entryExportName(component: ContentComponent): string;
 ```
 
 שם יצוא החבית שהצהרת רכיב מיוצאת תחתיו מחדש.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
+| שם   | הקלד             | תיאור |
+| ---- | ---------------- | ----- |
+| רכיב | ContentComponent |       |
 
 ## `src/manifest`
 
@@ -252,24 +269,27 @@ function entryExportName(component: ContentComponent): string
 פונקציה **סוג:**
 
 ```typescript
-function buildWebflowManifest(libraryName: string, frameworkId: string): WebflowManifest
+function buildWebflowManifest(
+  libraryName: string,
+  frameworkId: string,
+): WebflowManifest;
 ```
 
 בנה את `webflow.json` קטע עבור ספרייה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם הספרייה | מחרוזת |  |
-| frameworkId | מחרוזת |  |
+| שם          | הקלד   | תיאור |
+| ----------- | ------ | ----- |
+| שם הספרייה  | מחרוזת |       |
+| frameworkId | מחרוזת |       |
 
 ### DEFAULT_WEBFLOW_LIBRARY_NAME
 
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_WEBFLOW_LIBRARY_NAME
+export const DEFAULT_WEBFLOW_LIBRARY_NAME;
 ```
 
 שם הספרייה המשמש כאשר המתקשר אינו מספק אחד.
@@ -279,7 +299,7 @@ export const DEFAULT_WEBFLOW_LIBRARY_NAME
 פונקציה **סוג:**
 
 ```typescript
-function emitWebflowManifest(libraryName: string, frameworkId: string): string
+function emitWebflowManifest(libraryName: string, frameworkId: string): string;
 ```
 
 לִפְלוֹט `webflow.json`.
@@ -290,17 +310,17 @@ function emitWebflowManifest(libraryName: string, frameworkId: string): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם הספרייה | מחרוזת |  |
-| frameworkId | מחרוזת |  |
+| שם          | הקלד   | תיאור |
+| ----------- | ------ | ----- |
+| שם הספרייה  | מחרוזת |       |
+| frameworkId | מחרוזת |       |
 
 ### WEBFLOW_LIBRARY_MANIFEST
 
 **סוג:** קבוע
 
 ```typescript
-export const WEBFLOW_LIBRARY_MANIFEST
+export const WEBFLOW_LIBRARY_MANIFEST;
 ```
 
 הקובץ שאליו נכתב קטע הספרייה.
@@ -310,7 +330,7 @@ export const WEBFLOW_LIBRARY_MANIFEST
 פונקציה **סוג:**
 
 ```typescript
-function webflowComponentsGlob(frameworkId: string): string
+function webflowComponentsGlob(frameworkId: string): string;
 ```
 
 הגלובוס שמתאים לכל הצהרה בנויה של ריצת מטרה אחת.
@@ -322,9 +342,9 @@ function webflowComponentsGlob(frameworkId: string): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| frameworkId | מחרוזת |  |
+| שם          | הקלד   | תיאור |
+| ----------- | ------ | ----- |
+| frameworkId | מחרוזת |       |
 
 ### WebflowLibrary
 
@@ -353,16 +373,16 @@ export interface WebflowManifest
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin
+function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin;
 ```
 
 קשר הקרנת רכיב קוד Webflow למתקשר בבעלות מתקשר React תוסף פלט.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebflowCmsOptions |  |
+| שם       | הקלד                   | תיאור |
+| -------- | ---------------------- | ----- |
+| אפשרויות | ForgeWebflowCmsOptions |       |
 
 ### ForgeWebflowCmsOptions
 
@@ -379,7 +399,7 @@ export interface ForgeWebflowCmsOptions
 **סוג:** קבוע
 
 ```typescript
-export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[]
+export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[];
 ```
 
 מודולים לייבוא ​​ההצהרות הנפלטות ששרשרת הכלים של Webflow מספקת.

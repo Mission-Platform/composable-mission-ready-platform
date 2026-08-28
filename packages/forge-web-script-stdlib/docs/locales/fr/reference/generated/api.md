@@ -23,8 +23,8 @@ Renvoie vrai lorsque l'option contient une valeur.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
+| Nom    | Tapez     | Descriptif                      |
+| ------ | --------- | ------------------------------- |
 | valeur | Option<T> | Valeur de l'option à inspecter. |
 
 #### Contracter
@@ -58,8 +58,8 @@ Renvoie vrai lorsque le résultat est réussi.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
+| Nom    | Tapez          | Descriptif                      |
+| ------ | -------------- | ------------------------------- |
 | valeur | Résultat<T, E> | Valeur du résultat à inspecter. |
 
 #### Contracter
@@ -86,7 +86,7 @@ Résultat d’une opération faillible.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 Chemin relatif vers le module de déclaration asynchrone utilisé par les consommateurs du compilateur.
@@ -96,7 +96,7 @@ Chemin relatif vers le module de déclaration asynchrone utilisé par les consom
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 Contrat d'identité et de représentation stable pour la bibliothèque standard.
@@ -108,7 +108,7 @@ limites pour les valeurs qui traversent l’ABI hôte/Wasm.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 Répertoire contenant les modules de déclaration Forge Web Script livrés.

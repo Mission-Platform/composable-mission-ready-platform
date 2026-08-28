@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/vite-plugin-seo`
 **Kind:** function
 
 ```typescript
-function seoPlugin(options: SeoPluginOptions): Plugin
+function seoPlugin(options: SeoPluginOptions): Plugin;
 ```
 
 Create a Vite plugin that writes `robots.txt` and `sitemap.xml` into the
@@ -20,24 +20,24 @@ every build and dev-server run.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | SeoPluginOptions |  |
+| Name    | Type             | Description |
+| ------- | ---------------- | ----------- |
+| options | SeoPluginOptions |             |
 
 #### Contract
 
 - **@example:** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  export default defineConfig({
   plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
   ],
-});
-```
+  });
+
+````
 
 ### seoPlugin
 
@@ -45,7 +45,7 @@ export default defineConfig({
 
 ```typescript
 function seoPlugin(options: SeoPluginOptions): Plugin
-```
+````
 
 Create a Vite plugin that writes `robots.txt` and `sitemap.xml` into the
 project's `publicDir` (or {@link SeoPluginOptions.outDir}) at the start of
@@ -53,24 +53,24 @@ every build and dev-server run.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | SeoPluginOptions |  |
+| Name    | Type             | Description |
+| ------- | ---------------- | ----------- |
+| options | SeoPluginOptions |             |
 
 #### Contract
 
 - **@example:** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  export default defineConfig({
   plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
   ],
-});
-```
+  });
+
+````
 
 ### SeoPluginOptions
 
@@ -78,6 +78,6 @@ export default defineConfig({
 
 ```typescript
 export interface SeoPluginOptions
-```
+````
 
 Options for {@link seoPlugin}.

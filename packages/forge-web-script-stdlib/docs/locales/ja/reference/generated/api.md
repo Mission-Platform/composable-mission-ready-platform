@@ -23,9 +23,9 @@ fn is_some(value: Option<T>) -> bool
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |オプション<T> |検査するオプションの値。 |
+| 名前 | タイプ        | 説明                     |
+| ---- | ------------- | ------------------------ |
+| 値   | オプション<T> | 検査するオプションの値。 |
 
 #### 契約
 
@@ -58,9 +58,9 @@ fn is_ok(value: Result<T, E>) -> bool
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |結果<T, E> |検査する結果の値。 |
+| 名前 | タイプ     | 説明               |
+| ---- | ---------- | ------------------ |
+| 値   | 結果<T, E> | 検査する結果の値。 |
 
 #### 契約
 
@@ -86,7 +86,7 @@ enum Result
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
+export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE;
 ```
 
 コンパイラーコンシューマーによって使用される非同期宣言モジュールへの相対パス。
@@ -96,7 +96,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_ASYNC_SOURCE
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
+export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY;
 ```
 
 標準ライブラリの安定した ID および表現契約。
@@ -108,7 +108,7 @@ export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT
+export const FORGE_WEB_SCRIPT_STDLIB_SOURCE_ROOT;
 ```
 
 付属の Forge Web Script 宣言モジュールを含むディレクトリ。

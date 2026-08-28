@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/phone-number`.
 **Kind:** function
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 Convenience accessor for the shared {@link PhoneNumberUtil} instance.
@@ -21,30 +21,30 @@ Convenience accessor for the shared {@link PhoneNumberUtil} instance.
 **Kind:** function
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 Convenience accessor for the shared, synchronous {@link PhoneNumberUtil} instance.
 
 ### PhoneNumberFormat
 
-**Kind:** constant
+**Kind:** type
 
 ```typescript
-export const PhoneNumberFormat
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-Output format, mirroring libphonenumber's `PhoneNumberFormat`.
+No description provided.
 
 ### PhoneNumberType
 
-**Kind:** constant
+**Kind:** type
 
 ```typescript
-export const PhoneNumberType
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-Line type of a phone number, mirroring libphonenumber's `PhoneNumberType`.
+No description provided.
 
 ### PhoneNumberUtil
 
@@ -81,8 +81,8 @@ Maps a supported region code to its international dialing country code.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
+| Name   | Type   | Description                           |
+| ------ | ------ | ------------------------------------- |
 | region | string | ISO region code such as "US" or "GB". |
 
 #### Contract
@@ -102,8 +102,8 @@ Returns the national trunk prefix used when dialing within a region.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
+| Name   | Type   | Description      |
+| ------ | ------ | ---------------- |
 | region | string | ISO region code. |
 
 #### Contract
@@ -123,9 +123,9 @@ Maps a country calling code to a representative ISO region.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| code | i32 | International dialing country code. |
+| Name | Type | Description                         |
+| ---- | ---- | ----------------------------------- |
+| code | i32  | International dialing country code. |
 
 #### Contract
 
@@ -144,10 +144,10 @@ Returns true when the region code equals the expected value.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| region | string | Candidate ISO region code. |
-| expected | string | Expected ISO region code. |
+| Name     | Type   | Description                |
+| -------- | ------ | -------------------------- |
+| region   | string | Candidate ISO region code. |
+| expected | string | Expected ISO region code.  |
 
 #### Contract
 

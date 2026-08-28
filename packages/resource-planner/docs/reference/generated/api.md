@@ -11,16 +11,18 @@ Generated from public source declarations in `@mission-platform/resource-planner
 **Kind:** function
 
 ```typescript
-function ForgeResourcePlanner(properties: Readonly<ResourcePlannerProperties>): MpElement
+function ForgeResourcePlanner(
+  properties: Readonly<ResourcePlannerProperties>,
+): MpElement;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<ResourcePlannerProperties> |  |
+| Name       | Type                                | Description |
+| ---------- | ----------------------------------- | ----------- |
+| properties | Readonly<ResourcePlannerProperties> |             |
 
 ### PlannerBookingScope
 
@@ -79,7 +81,9 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type AvailabilityInput = | ResourceAvailability[] | Record<string, Omit<ResourceAvailability, "resourceId">>;
+export type AvailabilityInput =
+  | ResourceAvailability[]
+  | Record<string, Omit<ResourceAvailability, "resourceId">>;
 ```
 
 No description provided.
@@ -109,7 +113,8 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type CapacityStatus = "available" | "unavailable" | "over-capacity" | "conflict";
+export type CapacityStatus =
+  "available" | "unavailable" | "over-capacity" | "conflict";
 ```
 
 No description provided.
@@ -261,51 +266,60 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function assignmentsForEvent(assignments: PlannerAssignment[], eventId: string): PlannerAssignment[]
+function assignmentsForEvent(
+  assignments: PlannerAssignment[],
+  eventId: string,
+): PlannerAssignment[];
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| assignments | PlannerAssignment[] |  |
-| eventId | string |  |
+| Name        | Type                | Description |
+| ----------- | ------------------- | ----------- |
+| assignments | PlannerAssignment[] |             |
+| eventId     | string              |             |
 
 ### normalizeAssignments
 
 **Kind:** function
 
 ```typescript
-function normalizeAssignments(assignments: PlannerAssignment[]): PlannerAssignment[]
+function normalizeAssignments(
+  assignments: PlannerAssignment[],
+): PlannerAssignment[];
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| assignments | PlannerAssignment[] |  |
+| Name        | Type                | Description |
+| ----------- | ------------------- | ----------- |
+| assignments | PlannerAssignment[] |             |
 
 ### normalizePlannerEvents
 
 **Kind:** function
 
 ```typescript
-function normalizePlannerEvents(events: VEvent[], assignments: PlannerAssignment[], range?: { start: Date; end: Date }): PlannerEventRecord[]
+function normalizePlannerEvents(
+  events: VEvent[],
+  assignments: PlannerAssignment[],
+  range?: { start: Date; end: Date },
+): PlannerEventRecord[];
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| events | VEvent[] |  |
-| assignments | PlannerAssignment[] |  |
-| range | { start: Date; end: Date } |  |
+| Name        | Type                       | Description |
+| ----------- | -------------------------- | ----------- |
+| events      | VEvent[]                   |             |
+| assignments | PlannerAssignment[]        |             |
+| range       | { start: Date; end: Date } |             |
 
 ## `src/utils/availability`
 
@@ -314,36 +328,44 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function availabilityForResource(input: AvailabilityInput, resourceId: string): ResourceAvailability
+function availabilityForResource(
+  input: AvailabilityInput,
+  resourceId: string,
+): ResourceAvailability;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | AvailabilityInput |  |
-| resourceId | string |  |
+| Name       | Type              | Description |
+| ---------- | ----------------- | ----------- |
+| input      | AvailabilityInput |             |
+| resourceId | string            |             |
 
 ### expandAvailability
 
 **Kind:** function
 
 ```typescript
-function expandAvailability(resourceId: string, input: AvailabilityInput, range: { start: Date; end: Date }, options: AvailabilityOptions = {}): NormalizedAvailabilityInterval[]
+function expandAvailability(
+  resourceId: string,
+  input: AvailabilityInput,
+  range: { start: Date; end: Date },
+  options: AvailabilityOptions = {},
+): NormalizedAvailabilityInterval[];
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| resourceId | string |  |
-| input | AvailabilityInput |  |
-| range | { start: Date; end: Date } |  |
-| options | AvailabilityOptions |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| resourceId | string                     |             |
+| input      | AvailabilityInput          |             |
+| range      | { start: Date; end: Date } |             |
+| options    | AvailabilityOptions        |             |
 
 ## `src/utils/capacity`
 
@@ -352,19 +374,24 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function calculateCapacityState(resourceId: string, segment: TimelineSegment | { start: Date; end: Date }, availability: NormalizedAvailabilityInterval[], events: PlannerEventRecord[]): CapacityState
+function calculateCapacityState(
+  resourceId: string,
+  segment: TimelineSegment | { start: Date; end: Date },
+  availability: NormalizedAvailabilityInterval[],
+  events: PlannerEventRecord[],
+): CapacityState;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| resourceId | string |  |
-| segment | TimelineSegment \| { start: Date; end: Date } |  |
-| availability | NormalizedAvailabilityInterval[] |  |
-| events | PlannerEventRecord[] |  |
+| Name         | Type                                          | Description |
+| ------------ | --------------------------------------------- | ----------- |
+| resourceId   | string                                        |             |
+| segment      | TimelineSegment \| { start: Date; end: Date } |             |
+| availability | NormalizedAvailabilityInterval[]              |             |
+| events       | PlannerEventRecord[]                          |             |
 
 ## `src/utils/layout`
 
@@ -373,18 +400,22 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function layoutResourceEvents(records: PlannerEventRecord[], range: { start: Date; end: Date }, width: number): PlannerEventGeometry[]
+function layoutResourceEvents(
+  records: PlannerEventRecord[],
+  range: { start: Date; end: Date },
+  width: number,
+): PlannerEventGeometry[];
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| records | PlannerEventRecord[] |  |
-| range | { start: Date; end: Date } |  |
-| width | number |  |
+| Name    | Type                       | Description |
+| ------- | -------------------------- | ----------- |
+| records | PlannerEventRecord[]       |             |
+| range   | { start: Date; end: Date } |             |
+| width   | number                     |             |
 
 ## `src/utils/mutations`
 
@@ -393,90 +424,110 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function applyAssignmentUpdate(assignments: PlannerAssignment[], update: PlannerAssignmentUpdate): PlannerAssignment[]
+function applyAssignmentUpdate(
+  assignments: PlannerAssignment[],
+  update: PlannerAssignmentUpdate,
+): PlannerAssignment[];
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| assignments | PlannerAssignment[] |  |
-| update | PlannerAssignmentUpdate |  |
+| Name        | Type                    | Description |
+| ----------- | ----------------------- | ----------- |
+| assignments | PlannerAssignment[]     |             |
+| update      | PlannerAssignmentUpdate |             |
 
 ### movePlannerEventPatch
 
 **Kind:** function
 
 ```typescript
-function movePlannerEventPatch(event: VEvent, deltaMs: number, options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function movePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| event | VEvent |  |
-| deltaMs | number |  |
-| options | PlannerEditOptions |  |
+| Name    | Type               | Description |
+| ------- | ------------------ | ----------- |
+| event   | VEvent             |             |
+| deltaMs | number             |             |
+| options | PlannerEditOptions |             |
 
 ### reassignPlannerEvent
 
 **Kind:** function
 
 ```typescript
-function reassignPlannerEvent(eventId: string, resourceId: string): PlannerAssignmentUpdate
+function reassignPlannerEvent(
+  eventId: string,
+  resourceId: string,
+): PlannerAssignmentUpdate;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| eventId | string |  |
-| resourceId | string |  |
+| Name       | Type   | Description |
+| ---------- | ------ | ----------- |
+| eventId    | string |             |
+| resourceId | string |             |
 
 ### resizePlannerEventPatch
 
 **Kind:** function
 
 ```typescript
-function resizePlannerEventPatch(event: VEvent, deltaMs: number, edge: "start" | "end" = "end", options: PlannerEditOptions = {}): Partial<Pick<VEvent, "dtstart" | "dtend">>
+function resizePlannerEventPatch(
+  event: VEvent,
+  deltaMs: number,
+  edge: "start" | "end" = "end",
+  options: PlannerEditOptions = {},
+): Partial<Pick<VEvent, "dtstart" | "dtend">>;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| event | VEvent |  |
-| deltaMs | number |  |
-| edge | "start" \| "end" |  |
-| options | PlannerEditOptions |  |
+| Name    | Type               | Description |
+| ------- | ------------------ | ----------- |
+| event   | VEvent             |             |
+| deltaMs | number             |             |
+| edge    | "start" \| "end"   |             |
+| options | PlannerEditOptions |             |
 
 ### selectPlannerRange
 
 **Kind:** function
 
 ```typescript
-function selectPlannerRange(resourceId: string, start: Date, end: Date, minimumDurationMs = 15 * 60_000): PlannerRangeSelection | undefined
+function selectPlannerRange(
+  resourceId: string,
+  start: Date,
+  end: Date,
+  minimumDurationMs: number = 15 * 60_000,
+): PlannerRangeSelection | undefined;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| resourceId | string |  |
-| start | Date |  |
-| end | Date |  |
-| minimumDurationMs |  |  |
+| Name              | Type   | Description |
+| ----------------- | ------ | ----------- |
+| resourceId        | string |             |
+| start             | Date   |             |
+| end               | Date   |             |
+| minimumDurationMs | number |             |
 
 ## `src/utils/timeline`
 
@@ -485,68 +536,80 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function clampToRange(value: Date, range: { start: Date; end: Date }): Date
+function clampToRange(value: Date, range: { start: Date; end: Date }): Date;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | Date |  |
-| range | { start: Date; end: Date } |  |
+| Name  | Type                       | Description |
+| ----- | -------------------------- | ----------- |
+| value | Date                       |             |
+| range | { start: Date; end: Date } |             |
 
 ### generateTimelineSegments
 
 **Kind:** function
 
 ```typescript
-function generateTimelineSegments(scale: PlannerScale, range: { start: Date; end: Date }, options: TimelineOptions = {}): TimelineSegment[]
+function generateTimelineSegments(
+  scale: PlannerScale,
+  range: { start: Date; end: Date },
+  options: TimelineOptions = {},
+): TimelineSegment[];
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| scale | PlannerScale |  |
-| range | { start: Date; end: Date } |  |
-| options | TimelineOptions |  |
+| Name    | Type                       | Description |
+| ------- | -------------------------- | ----------- |
+| scale   | PlannerScale               |             |
+| range   | { start: Date; end: Date } |             |
+| options | TimelineOptions            |             |
 
 ### positionToTime
 
 **Kind:** function
 
 ```typescript
-function positionToTime(position: number, range: { start: Date; end: Date }, width: number): Date
+function positionToTime(
+  position: number,
+  range: { start: Date; end: Date },
+  width: number,
+): Date;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| position | number |  |
-| range | { start: Date; end: Date } |  |
-| width | number |  |
+| Name     | Type                       | Description |
+| -------- | -------------------------- | ----------- |
+| position | number                     |             |
+| range    | { start: Date; end: Date } |             |
+| width    | number                     |             |
 
 ### timeToPosition
 
 **Kind:** function
 
 ```typescript
-function timeToPosition(time: Date, range: { start: Date; end: Date }, width: number): number
+function timeToPosition(
+  time: Date,
+  range: { start: Date; end: Date },
+  width: number,
+): number;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| time | Date |  |
-| range | { start: Date; end: Date } |  |
-| width | number |  |
+| Name  | Type                       | Description |
+| ----- | -------------------------- | ----------- |
+| time  | Date                       |             |
+| range | { start: Date; end: Date } |             |
+| width | number                     |             |

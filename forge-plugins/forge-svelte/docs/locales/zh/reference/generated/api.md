@@ -16,7 +16,12 @@
 **种类：**功能
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 将中性组件模块打印为 Svelte 5 SFC。已经运行的调用者
@@ -25,12 +30,12 @@ function emitSvelteModule(module: SemanticModule, componentName: string = "Compo
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
-|组件名称 |字符串|  |
-|组件文件夹 |只读设置<string> |  |
-|计划| SvelteLowered 模块 |  |
+| 名称       | 类型               | 描述 |
+| ---------- | ------------------ | ---- |
+| 模块       | 语义模块           |      |
+| 组件名称   | 字符串             |      |
+| 组件文件夹 | 只读设置<string>   |      |
+| 计划       | SvelteLowered 模块 |      |
 
 ### Svelte模块输出
 
@@ -49,16 +54,16 @@ export interface SvelteModuleOutput
 **种类：**功能
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 打印中性挂钩/可组合模块作为其 Svelte 目标 `.ts` 源。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块|语义模块 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 模块 | 语义模块 |      |
 
 ## `src/index`
 
@@ -67,7 +72,7 @@ function emitSvelteHookModule(module: SemanticModule): string
 **种类：**功能
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 创建 Svelte 输出插件及其 Vite/Rolldown 编译器适配器。
@@ -79,33 +84,38 @@ function forgeSvelteFramework(): FrameworkOutputPlugin
 **种类：**功能
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 目标计划是否是 Svelte 计划——每个消费者都会缩小范围的鉴别因素。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|降低| TargetLoweredModule \|未定义 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 降低 | TargetLoweredModule \|未定义 |      |
 
 ### 下层Svelte模块
 
 **种类：**功能
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 为中立模块构建 Svelte 计划。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|红外|语义模块 |  |
-|背景 |目标上下文 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 红外 | 语义模块   |      |
+| 背景 | 目标上下文 |      |
 
 ### 精简绑定计划
 
@@ -281,7 +291,10 @@ export interface SvelteTargetIntentions extends TargetIntentions
 **种类：**功能
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 细化降低的 Svelte 计划。不携带 Svelte 计划的意向（国外
@@ -289,17 +302,17 @@ function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptim
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|意向 |目标意图|  |
-|选项 |目标优化选项 |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 意向 | 目标意图     |      |
+| 选项 | 目标优化选项 |      |
 
 ### SVELTE_优化
 
 **种类：**常数
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 此目标可以按应用程序顺序应用的每个优化。

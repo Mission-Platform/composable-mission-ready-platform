@@ -16,41 +16,45 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-router-p
 **Tipo:** funzione
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 Creare una diagnostica locale di origine per un errore del compilatore del router.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| diagnostico | Omit<CompilerDiagnostic, 'phase' \| 'fileName'> & { nomefile di sola lettura?: string;   } |  |
+| Nome        | Digitare                                                                                 | Descrizione |
+| ----------- | ---------------------------------------------------------------------------------------- | ----------- |
+| diagnostico | Omit<CompilerDiagnostic, 'phase' \| 'fileName'> & { nomefile di sola lettura?: string; } |             |
 
 ### defineForgeRouterPlugin
 
 **Tipo:** funzione
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 Convalida i metadati del plug-in del router prima che entrino nella pipeline del compilatore.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| plugin | T|  |
+| Nome   | Digitare | Descrizione |
+| ------ | -------- | ----------- |
+| plugin | T        |             |
 
 ### defineForgeRouterTarget
 
 **Tipo:** funzione
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 Creare un target deterministico che riscriva le importazioni di router neutrali.
@@ -63,16 +67,16 @@ router basati su file o solo server.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | ForgeRouterTargetOptions |  |
+| Nome    | Digitare                 | Descrizione |
+| ------- | ------------------------ | ----------- |
+| opzioni | ForgeRouterTargetOptions |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **Genere:** costante
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 Esportazioni di runtime neutre che preservano il contratto dell'autore del pacchetto.
@@ -87,7 +91,7 @@ a quel modulo.
 **Genere:** costante
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 Contratti target riservati per router i cui adattatori proprietari non rientrano in questo traguardo.
@@ -127,7 +131,7 @@ Un modulo di origine generato restituito da una destinazione del router.
 **Genere:** costante
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Indicatore stabile condiviso con il pacchetto router neutro.
@@ -137,7 +141,7 @@ Indicatore stabile condiviso con il pacchetto router neutro.
 **Genere:** costante
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 Il pacchetto le cui importazioni sono comprese dal passaggio del compilatore del router.
@@ -157,7 +161,8 @@ Costruisci hook di proprietà di un router target; nessuna dipendenza del router
 **Genere:** tipo
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 Operazioni abbassabili in modo indipendente esposte dal contratto del router neutro.
@@ -197,7 +202,7 @@ Un utilizzo di un indicatore di router neutro, che conserva le coordinate di ori
 **Genere:** tipo
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 Come viene utilizzato un collegamento router neutro in un modulo di origine.
@@ -277,31 +282,37 @@ Piano specifico per obiettivo prodotto tra l'abbassamento e la generazione.
 **Tipo:** funzione
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 Trova un router target diretto o selezionato tramite ID senza associarlo ai plug-in dell'interfaccia utente.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| selezione | SelezionePluginRouter\| indefinito |  |
-| plugin | sola lettura RouterOutputPlugin[] |  |
+| Nome      | Digitare                           | Descrizione |
+| --------- | ---------------------------------- | ----------- |
+| selezione | SelezionePluginRouter\| indefinito |             |
+| plugin    | sola lettura RouterOutputPlugin[]  |             |
 
 ### capacità del router non supportate
 
 **Tipo:** funzione
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 Segnala le lacune di capacità prima che un target abbia la possibilità di compilare silenziosamente un modulo in modo errato.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| io | RouterCapabilityModule |  |
-| plugin | RouterOutputPlugin \| indefinito |  |
+| Nome   | Digitare                         | Descrizione |
+| ------ | -------------------------------- | ----------- |
+| io     | RouterCapabilityModule           |             |
+| plugin | RouterOutputPlugin \| indefinito |             |

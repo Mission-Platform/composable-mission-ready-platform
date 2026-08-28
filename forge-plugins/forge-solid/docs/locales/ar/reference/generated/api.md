@@ -16,16 +16,16 @@
 **النوع:** الوظيفة
 
 ```typescript
-function emitSolidHookModule(module: SemanticModule): string
+function emitSolidHookModule(module: SemanticModule): string;
 ```
 
 قم بتحويل وحدة ربط محايدة إلى مصدر SolidJS الخاص بها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
+| الاسم          | اكتب            | الوصف |
+| -------------- | --------------- | ----- |
+| الوحدة النمطية | الوحدة الدلالية |       |
 
 ## `src/emitters/module`
 
@@ -34,17 +34,20 @@ function emitSolidHookModule(module: SemanticModule): string
 **النوع:** الوظيفة
 
 ```typescript
-function emitSolidModule(module: SemanticModule, options: SolidEmitOptions = {}): GeneratedSolidModule
+function emitSolidModule(
+  module: SemanticModule,
+  options: SolidEmitOptions = {},
+): GeneratedSolidModule;
 ```
 
 تحويل وحدة مكون محايد إلى مصدر SolidJS الخاص بها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | الوحدة الدلالية |  |
-| خيارات | خيارات سوليد إيميت |  |
+| الاسم          | اكتب               | الوصف |
+| -------------- | ------------------ | ----- |
+| الوحدة النمطية | الوحدة الدلالية    |       |
+| خيارات         | خيارات سوليد إيميت |       |
 
 ### GeneratedSolidModule
 
@@ -73,7 +76,7 @@ export interface SolidEmitOptions
 **النوع:** الوظيفة
 
 ```typescript
-function forgeSolidFramework(): FrameworkOutputPlugin
+function forgeSolidFramework(): FrameworkOutputPlugin;
 ```
 
 قم بإنشاء ملحق الإخراج Solid ومحولات Vite/Rolldown JSX الخاصة به.
@@ -85,40 +88,48 @@ function forgeSolidFramework(): FrameworkOutputPlugin
 **النوع:** الوظيفة
 
 ```typescript
-function isSolidLowered(lowered: TargetLoweredModule | undefined): lowered is SolidLoweredModule
+function isSolidLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SolidLoweredModule;
 ```
 
 تضييق نطاق الخطة المستهدفة إلى الخطة Solid؛ `false` لأي خطة إطار عمل أخرى.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خفضت | TargetLoweredModule \| غير محدد |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خفضت  | TargetLoweredModule \| غير محدد |       |
 
 ### LowerSolidModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function lowerSolidModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerSolidModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 قم بخفض الأشعة تحت الحمراء المحايدة إلى غلاف الهدف المستهدف الخاص بـ Solid، حاملًا الخطة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأشعة تحت الحمراء | الوحدة الدلالية |  |
-| السياق | سياق الهدف |  |
+| الاسم              | اكتب            | الوصف |
+| ------------------ | --------------- | ----- |
+| الأشعة تحت الحمراء | الوحدة الدلالية |       |
+| السياق             | سياق الهدف      |       |
 
 ### PlanSolidImports
 
 **النوع:** الوظيفة
 
 ```typescript
-function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string[]
+function planSolidImports(
+  plan: SolidLoweringPlan,
+  conditional: boolean,
+): string[];
 ```
 
 أسماء قيمة `solid-js` الدقيقة التي تتطلبها الخطة، مرتبة أبجديًا على النحو التالي:
@@ -127,33 +138,33 @@ function planSolidImports(plan: SolidLoweringPlan, conditional: boolean): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خطة | خطة خفض الصلبة |  |
-| مشروط | منطقية |  |
+| الاسم | اكتب           | الوصف |
+| ----- | -------------- | ----- |
+| خطة   | خطة خفض الصلبة |       |
+| مشروط | منطقية         |       |
 
 ### PlanSolidModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function planSolidModule(ir: SemanticModule): SolidLoweringPlan
+function planSolidModule(ir: SemanticModule): SolidLoweringPlan;
 ```
 
 قم ببناء خطة Solid للحقائق الدلالية للوحدة النمطية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأشعة تحت الحمراء | الوحدة الدلالية |  |
+| الاسم              | اكتب            | الوصف |
+| ------------------ | --------------- | ----- |
+| الأشعة تحت الحمراء | الوحدة الدلالية |       |
 
 ### SOLID_FRAMEWORK
 
 **النوع:** ثابت
 
 ```typescript
-export const SOLID_FRAMEWORK
+export const SOLID_FRAMEWORK;
 ```
 
 معرف إطار العمل الذي يتم التمييز عليه في كل خطة Solid.
@@ -275,7 +286,7 @@ export interface SolidSlotPlan
 **النوع:** ثابت
 
 ```typescript
-export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
+export const COLLAPSE_SINGLE_CHILD_FRAGMENTS;
 ```
 
 قم بإسقاط جزء يلتف حول عنصر واحد بالضبط.
@@ -285,7 +296,7 @@ export const COLLAPSE_SINGLE_CHILD_FRAGMENTS
 **النوع:** ثابت
 
 ```typescript
-export const DROP_UNUSED_IMPORTS
+export const DROP_UNUSED_IMPORTS;
 ```
 
 أعد حساب واردات `solid-js` من الخطة المكررة.
@@ -295,7 +306,7 @@ export const DROP_UNUSED_IMPORTS
 **النوع:** ثابت
 
 ```typescript
-export const HOIST_STATIC_SUBTREES
+export const HOIST_STATIC_SUBTREES;
 ```
 
 ترقية الأشجار الفرعية `__mpStatic` إلى ثوابت مستوى الوحدة النمطية.
@@ -305,7 +316,7 @@ export const HOIST_STATIC_SUBTREES
 **النوع:** ثابت
 
 ```typescript
-export const MEMOIZE_DYNAMIC_EXPRESSIONS
+export const MEMOIZE_DYNAMIC_EXPRESSIONS;
 ```
 
 قم بترويج تعبير فرعي ديناميكي متكرر في مذكرة واحدة.
@@ -315,7 +326,7 @@ export const MEMOIZE_DYNAMIC_EXPRESSIONS
 **النوع:** ثابت
 
 ```typescript
-export const MP_MEMO_PREFIX
+export const MP_MEMO_PREFIX;
 ```
 
 بادئة لربط المذكرات يقدمها `solid:memoize-dynamic-expressions`.
@@ -325,7 +336,10 @@ export const MP_MEMO_PREFIX
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSolidModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 قم بتحسين خطة Solid المنخفضة. برنامج تضمين الهدف الذي لا يحمل خطة Solid
@@ -333,17 +347,17 @@ function optimizeSolidModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نوايا | النوايا المستهدفة |  |
-| خيارات | تارجتوبتيميزيوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| نوايا  | النوايا المستهدفة    |       |
+| خيارات | تارجتوبتيميزيوبتيونس |       |
 
 ### STABLE_LIST_KEYS
 
 **النوع:** ثابت
 
 ```typescript
-export const STABLE_LIST_KEYS
+export const STABLE_LIST_KEYS;
 ```
 
 احتفظ فقط بمفاتيح القائمة التي أثبتت الواجهة الأمامية استقرارها.

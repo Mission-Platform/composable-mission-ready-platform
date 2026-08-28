@@ -16,18 +16,22 @@
 פונקציה **סוג:**
 
 ```typescript
-function emitReactModule(module: SemanticModule, componentName?: string, plan: ReactModulePlan = planReactModule(module, componentName)): string
+function emitReactModule(
+  module: SemanticModule,
+  componentName?: string,
+  plan: ReactModulePlan = planReactModule(module, componentName),
+): string;
 ```
 
 הפוך את כל המודול ל- React מקור יעד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
-| שם רכיב | מחרוזת |  |
-| תוכנית | ReactModulePlan |  |
+| שם      | הקלד            | תיאור |
+| ------- | --------------- | ----- |
+| מודול   | SemanticModule  |       |
+| שם רכיב | מחרוזת          |       |
+| תוכנית  | ReactModulePlan |       |
 
 ## `src/index`
 
@@ -36,7 +40,7 @@ function emitReactModule(module: SemanticModule, componentName?: string, plan: R
 פונקציה **סוג:**
 
 ```typescript
-function forgeReactFramework(): FrameworkOutputPlugin
+function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
 צור את React תוסף פלט ומתאמי ה-JSX המקוריים שלו.
@@ -48,50 +52,58 @@ function forgeReactFramework(): FrameworkOutputPlugin
 פונקציה **סוג:**
 
 ```typescript
-function isReactLowered(lowered: TargetLoweredModule | undefined): lowered is ReactLoweredModule
+function isReactLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is ReactLoweredModule;
 ```
 
 צמצם תוכנית בבעלות מטרה ל- React אֶחָד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הוריד | TargetLoweredModule \| לא מוגדר |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| הוריד | TargetLoweredModule \| לא מוגדר |       |
 
 ### lowerReactModule
 
 פונקציה **סוג:**
 
 ```typescript
-function lowerReactModule(ir: SemanticModule, context: TargetContext): TargetIntentions
+function lowerReactModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
 ```
 
 הורד את ה-IR הנייטרלי לתוך React התוכנית בוצעה על ידי {@link TargetIntentions.lowered}.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| הקשר | היעד הקשר |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| ir   | SemanticModule |       |
+| הקשר | היעד הקשר      |       |
 
 ### planReactModule
 
 פונקציה **סוג:**
 
 ```typescript
-function planReactModule(module: SemanticModule, componentName?: string): ReactModulePlan
+function planReactModule(
+  module: SemanticModule,
+  componentName?: string,
+): ReactModulePlan;
 ```
 
 בנה את React לתכנן מודול אחד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | SemanticModule |  |
-| שם רכיב | מחרוזת |  |
+| שם      | הקלד           | תיאור |
+| ------- | -------------- | ----- |
+| מודול   | SemanticModule |       |
+| שם רכיב | מחרוזת         |       |
 
 ### ReactClientDirectivePlan
 
@@ -180,7 +192,10 @@ export interface ReactPropsParameter
 פונקציה **סוג:**
 
 ```typescript
-function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeReactModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 לחדד את React לְתַכְנֵן.
@@ -191,17 +206,17 @@ function optimizeReactModule(intentions: TargetIntentions, options: TargetOptimi
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כוונות | כוונות יעד |  |
-| אפשרויות | TargetOptimizeOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| כוונות   | כוונות יעד            |       |
+| אפשרויות | TargetOptimizeOptions |       |
 
 ### REACT_OPTIMIZATIONS
 
 **סוג:** קבוע
 
 ```typescript
-export const REACT_OPTIMIZATIONS
+export const REACT_OPTIMIZATIONS;
 ```
 
 המזהים שנרשמו בתוכנית את React האופטימיזציה השתכללה.

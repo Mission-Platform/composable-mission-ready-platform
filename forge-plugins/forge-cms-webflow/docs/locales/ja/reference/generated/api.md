@@ -16,23 +16,23 @@
 **種類:** 関数
 
 ```typescript
-function declarationFileName(component: ContentComponent): string
+function declarationFileName(component: ContentComponent): string;
 ```
 
 コンポーネントの宣言が書き込まれるファイル。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ### DEFAULT_ISLAND_ENTRY
 
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_ISLAND_ENTRY
+export const DEFAULT_ISLAND_ENTRY;
 ```
 
 ドライバーが何も生成しなかった場合 (テスト、予行演習) に使用されるアイランド指定子。
@@ -42,7 +42,7 @@ export const DEFAULT_ISLAND_ENTRY
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_WEBFLOW_GROUP
+export const DEFAULT_WEBFLOW_GROUP;
 ```
 
 Designer がライブラリのコンポーネントをファイルするコンポーネント グループ。
@@ -52,7 +52,10 @@ Designer がライブラリのコンポーネントをファイルするコン�
 **種類:** 関数
 
 ```typescript
-function emitWebflowDeclaration(component: ContentComponent, options: WebflowDeclarationOptions = {}): string
+function emitWebflowDeclaration(
+  component: ContentComponent,
+  options: WebflowDeclarationOptions = {},
+): string;
 ```
 
 1 つのコンポーネントのコード コンポーネント宣言を出力します。
@@ -64,17 +67,20 @@ authorable props。発行されたモジュールに未使用のバインディ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
-|オプション | WebflowDeclarationオプション |  |
+| 名前           | タイプ                       | 説明 |
+| -------------- | ---------------------------- | ---- |
+| コンポーネント | コンテンツコンポーネント     |      |
+| オプション     | WebflowDeclarationオプション |      |
 
 ### webflow宣言診断
 
 **種類:** 関数
 
 ```typescript
-function webflowDeclarationDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function webflowDeclarationDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 1 つのコンポーネントの宣言を発行する診断が生成されます。
@@ -84,10 +90,10 @@ function webflowDeclarationDiagnostics(component: ContentComponent, fileName: st
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
-|ファイル名 |文字列 |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
+| ファイル名     | 文字列                   |      |
 
 ### Webflow宣言オプション
 
@@ -104,7 +110,7 @@ export interface WebflowDeclarationOptions
 **種類:** 関数
 
 ```typescript
-function webflowDescription(component: ContentComponent): string | undefined
+function webflowDescription(component: ContentComponent): string | undefined;
 ```
 
 デザイナーがコンポーネントに対して表示する説明。
@@ -116,48 +122,48 @@ function webflowDescription(component: ContentComponent): string | undefined
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ### webflow表示名
 
 **種類:** 関数
 
 ```typescript
-function webflowDisplayName(name: string): string
+function webflowDisplayName(name: string): string;
 ```
 
 デザイナーではプロップの下に人間に面したラベルが表示されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 名前 | 文字列 |      |
 
 ### webflowプロパティ名
 
 **種類:** 関数
 
 ```typescript
-function webflowPropertyName(field: ContentField): string
+function webflowPropertyName(field: ContentField): string;
 ```
 
 フィールドが作成される宣言キー - その React プロップ名。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フィールド |コンテンツフィールド |  |
+| 名前       | タイプ               | 説明 |
+| ---------- | -------------------- | ---- |
+| フィールド | コンテンツフィールド |      |
 
 ### webflowPropertyType
 
 **種類:** 関数
 
 ```typescript
-function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
+function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType;
 ```
 
 中立的なコンテンツの種類を Webflow の小道具語彙にマッピングします。
@@ -167,16 +173,23 @@ function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|種類 |コンテンツフィールドの種類 |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| 種類 | コンテンツフィールドの種類 |      |
 
 ### WebflowPropertyType
 
 **種類：**タイプ
 
 ```typescript
-export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichText" | "props.Slot" | "props.Text" | "props.Variant" | "props.Visibility";
+export type WebflowPropertyType =
+  | "props.Image"
+  | "props.Link"
+  | "props.RichText"
+  | "props.Slot"
+  | "props.Text"
+  | "props.Variant"
+  | "props.Visibility";
 ```
 
 の `@webflow/data-types` 中立フィールドの種類が作成されるファクトリ。
@@ -188,7 +201,7 @@ export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichTe
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEBFLOW_NUMBER_AS_TEXT
+export const FORGE_WEBFLOW_NUMBER_AS_TEXT;
 ```
 
 数値フィールドは Webflow テキスト プロップとして作成されました。 Webflow には数値型がありません。
@@ -198,18 +211,22 @@ export const FORGE_WEBFLOW_NUMBER_AS_TEXT
 **種類:** 関数
 
 ```typescript
-function webflowWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function webflowWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 生成段階の警告を作成します。 Webflow ターゲットはエラーを発行しません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コード |文字列 |  |
-|メッセージ |文字列 |  |
-|ファイル名 |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| コード     | 文字列 |      |
+| メッセージ | 文字列 |      |
+| ファイル名 | 文字列 |      |
 
 ## `src/entry`
 
@@ -218,32 +235,32 @@ function webflowWarning(code: string, message: string, fileName: string): Compil
 **種類:** 関数
 
 ```typescript
-function emitWebflowEntry(components: readonly ContentComponent[]): string
+function emitWebflowEntry(components: readonly ContentComponent[]): string;
 ```
 
 を発する `index.ts` バレルは発行されたすべての宣言を再エクスポートします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |読み取り専用 ContentComponent[] |  |
+| 名前           | タイプ                          | 説明 |
+| -------------- | ------------------------------- | ---- |
+| コンポーネント | 読み取り専用 ContentComponent[] |      |
 
 ### エントリエクスポート名
 
 **種類:** 関数
 
 ```typescript
-function entryExportName(component: ContentComponent): string
+function entryExportName(component: ContentComponent): string;
 ```
 
 コンポーネントの宣言が再エクスポートされるバレルエクスポート名。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント |コンテンツコンポーネント |  |
+| 名前           | タイプ                   | 説明 |
+| -------------- | ------------------------ | ---- |
+| コンポーネント | コンテンツコンポーネント |      |
 
 ## `src/manifest`
 
@@ -252,24 +269,27 @@ function entryExportName(component: ContentComponent): string
 **種類:** 関数
 
 ```typescript
-function buildWebflowManifest(libraryName: string, frameworkId: string): WebflowManifest
+function buildWebflowManifest(
+  libraryName: string,
+  frameworkId: string,
+): WebflowManifest;
 ```
 
 を構築します `webflow.json` ライブラリのフラグメント。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ライブラリ名 |文字列 |  |
-|フレームワークID |文字列 |  |
+| 名前             | タイプ | 説明 |
+| ---------------- | ------ | ---- |
+| ライブラリ名     | 文字列 |      |
+| フレームワークID | 文字列 |      |
 
 ### DEFAULT_WEBFLOW_LIBRARY_NAME
 
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_WEBFLOW_LIBRARY_NAME
+export const DEFAULT_WEBFLOW_LIBRARY_NAME;
 ```
 
 呼び出し元がライブラリ名を指定しない場合に使用されるライブラリ名。
@@ -279,7 +299,7 @@ export const DEFAULT_WEBFLOW_LIBRARY_NAME
 **種類:** 関数
 
 ```typescript
-function emitWebflowManifest(libraryName: string, frameworkId: string): string
+function emitWebflowManifest(libraryName: string, frameworkId: string): string;
 ```
 
 放出する `webflow.json`.
@@ -290,17 +310,17 @@ function emitWebflowManifest(libraryName: string, frameworkId: string): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ライブラリ名 |文字列 |  |
-|フレームワークID |文字列 |  |
+| 名前             | タイプ | 説明 |
+| ---------------- | ------ | ---- |
+| ライブラリ名     | 文字列 |      |
+| フレームワークID | 文字列 |      |
 
 ### WEBFLOW_LIBRARY_MANIFEST
 
 **種類:** 定数
 
 ```typescript
-export const WEBFLOW_LIBRARY_MANIFEST
+export const WEBFLOW_LIBRARY_MANIFEST;
 ```
 
 ライブラリフラグメントが書き込まれるファイル。
@@ -310,7 +330,7 @@ export const WEBFLOW_LIBRARY_MANIFEST
 **種類:** 関数
 
 ```typescript
-function webflowComponentsGlob(frameworkId: string): string
+function webflowComponentsGlob(frameworkId: string): string;
 ```
 
 1 つのターゲット実行のすべてのビルド宣言と一致するグロブ。
@@ -322,9 +342,9 @@ function webflowComponentsGlob(frameworkId: string): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フレームワークID |文字列 |  |
+| 名前             | タイプ | 説明 |
+| ---------------- | ------ | ---- |
+| フレームワークID | 文字列 |      |
 
 ### ウェブフローライブラリ
 
@@ -353,16 +373,16 @@ export interface WebflowManifest
 **種類:** 関数
 
 ```typescript
-function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin
+function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin;
 ```
 
 Webflow コードコンポーネントプロジェクションを呼び出し元が所有するものにバインドする React 出力プラグイン。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebflowCmsOptions |  |
+| 名前       | タイプ                 | 説明 |
+| ---------- | ---------------------- | ---- |
+| オプション | ForgeWebflowCmsOptions |      |
 
 ### ForgeWebflowCmsOptions
 
@@ -379,7 +399,7 @@ export interface ForgeWebflowCmsOptions
 **種類:** 定数
 
 ```typescript
-export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[]
+export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[];
 ```
 
 Webflow ツールチェーンが提供する、発行された宣言インポートをモジュール化します。

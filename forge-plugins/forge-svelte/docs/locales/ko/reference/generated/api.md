@@ -16,7 +16,12 @@
 **종류:** 기능
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 중립 구성 요소 모듈을 Svelte 5 SFC로 인쇄합니다. 이미 달려온 발신자
@@ -25,12 +30,12 @@ function emitSvelteModule(module: SemanticModule, componentName: string = "Compo
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
-| 구성 요소 이름 | 문자열 |  |
-| 구성요소폴더 | 읽기전용Set<string> |  |
-| 계획 | SvelteLowered모듈 |  |
+| 이름           | 유형                | 설명 |
+| -------------- | ------------------- | ---- |
+| 모듈           | 의미 모듈           |      |
+| 구성 요소 이름 | 문자열              |      |
+| 구성요소폴더   | 읽기전용Set<string> |      |
+| 계획           | SvelteLowered모듈   |      |
 
 ### Svelte모듈 출력
 
@@ -49,16 +54,16 @@ export interface SvelteModuleOutput
 **종류:** 기능
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 중립 후크/구성 가능 모듈을 Svelte 대상 `.ts` 소스로 인쇄합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | 의미 모듈 |  |
+| 이름 | 유형      | 설명 |
+| ---- | --------- | ---- |
+| 모듈 | 의미 모듈 |      |
 
 ## `src/index`
 
@@ -67,7 +72,7 @@ function emitSvelteHookModule(module: SemanticModule): string
 **종류:** 기능
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 Svelte 출력 플러그인과 해당 Vite/Rolldown 컴파일러 어댑터를 만듭니다.
@@ -79,33 +84,38 @@ Svelte 출력 플러그인과 해당 Vite/Rolldown 컴파일러 어댑터를 만
 **종류:** 기능
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 목표 계획이 Svelte인지 여부 - 모든 소비자가 범위를 좁히는 판별자입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |  |
+| 이름   | 유형                               | 설명 |
+| ------ | ---------------------------------- | ---- |
+| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |      |
 
 ### lowerSvelte모듈
 
 **종류:** 기능
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 중립 모듈에 대한 Svelte 계획을 구축하십시오.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| IR | 의미 모듈 |  |
-| 맥락 | 타겟컨텍스트 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| IR   | 의미 모듈    |      |
+| 맥락 | 타겟컨텍스트 |      |
 
 ### SvelteBindingPlan
 
@@ -281,7 +291,10 @@ export interface SvelteTargetIntentions extends TargetIntentions
 **종류:** 기능
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 낮아진 Svelte 계획을 구체화합니다. Svelte 계획이 없는 의도(해외
@@ -289,17 +302,17 @@ function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptim
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 의도 | 타겟의도 |  |
-| 옵션 | TargetOptimizeOptions |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 의도 | 타겟의도              |      |
+| 옵션 | TargetOptimizeOptions |      |
 
 ### SVELTE_OPTIMIZATIONS
 
 **종류:** 상수
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 이 대상이 적용할 수 있는 모든 최적화는 응용 프로그램 순서대로 적용됩니다.

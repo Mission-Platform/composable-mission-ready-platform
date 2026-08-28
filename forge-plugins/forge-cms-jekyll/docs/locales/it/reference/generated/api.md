@@ -16,7 +16,7 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-cms-jeky
 **Genere:** costante
 
 ```typescript
-export const COMPONENTS_DATA_FILE
+export const COMPONENTS_DATA_FILE;
 ```
 
 Lo schema aggregato letto da ogni sito generato da `site.data`.
@@ -26,7 +26,7 @@ Lo schema aggregato letto da ogni sito generato da `site.data`.
 **Genere:** costante
 
 ```typescript
-export const CONFIG_FILE
+export const CONFIG_FILE;
 ```
 
 Il frammento di configurazione che un sito unisce nel proprio `_config.yml`.
@@ -36,16 +36,16 @@ Il frammento di configurazione che un sito unisce nel proprio `_config.yml`.
 **Tipo:** funzione
 
 ```typescript
-function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin
+function forgeJekyllCms(options: ForgeJekyllCmsOptions): CmsOutputPlugin;
 ```
 
 Associa la proiezione Jekyll (Liquid) a un plug-in di output del framework di proprietà del chiamante.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | ForgeJekyllCmsOptions |  |
+| Nome    | Digitare              | Descrizione |
+| ------- | --------------------- | ----------- |
+| opzioni | ForgeJekyllCmsOptions |             |
 
 ### ForgeJekyllCmsOptions
 
@@ -64,7 +64,10 @@ Opzioni per {@link forgeJekyllCms}.
 **Tipo:** funzione
 
 ```typescript
-function emitComponentsData(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitComponentsData(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emetti `_data/forge-components.yml`: lo schema di ogni include emesso.
@@ -75,17 +78,20 @@ la pagina di documentazione generata dovrebbe elencarli.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componenti | sola lettura ContentComponent[] |  |
-| spazio dei nomi | stringa |  |
+| Nome            | Digitare                        | Descrizione |
+| --------------- | ------------------------------- | ----------- |
+| componenti      | sola lettura ContentComponent[] |             |
+| spazio dei nomi | stringa                         |             |
 
 ### emitJekyllConfig
 
 **Tipo:** funzione
 
 ```typescript
-function emitJekyllConfig(components: readonly ContentComponent[], namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitJekyllConfig(
+  components: readonly ContentComponent[],
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emette il frammento `_config.yml` registrando gli include generati.
@@ -99,26 +105,26 @@ filtri e altrimenti vedrebbero valori vuoti.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componenti | sola lettura ContentComponent[] |  |
-| spazio dei nomi | stringa |  |
+| Nome            | Digitare                        | Descrizione |
+| --------------- | ------------------------------- | ----------- |
+| componenti      | sola lettura ContentComponent[] |             |
+| spazio dei nomi | stringa                         |             |
 
 ### campoToJekyllType
 
 **Tipo:** funzione
 
 ```typescript
-function fieldToJekyllType(field: ContentField): JekyllFieldType
+function fieldToJekyllType(field: ContentField): JekyllFieldType;
 ```
 
 Il tipo di dati Jekyll con cui viene pubblicato un campo neutro.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| campo | Campo contenuto |  |
+| Nome  | Digitare        | Descrizione |
+| ----- | --------------- | ----------- |
+| campo | Campo contenuto |             |
 
 ### JekyllFieldType
 
@@ -135,16 +141,16 @@ Il vocabolario dei tipi di campo neutro è pubblicato in `_data`.
 **Tipo:** funzione
 
 ```typescript
-function yamlScalar(value: ContentDefaultValue): string
+function yamlScalar(value: ContentDefaultValue): string;
 ```
 
 Uno scalare YAML per un valore predefinito neutro.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | ContenutoDefaultValue |  |
+| Nome   | Digitare              | Descrizione |
+| ------ | --------------------- | ----------- |
+| valore | ContenutoDefaultValue |             |
 
 ## `src/template`
 
@@ -153,7 +159,7 @@ Uno scalare YAML per un valore predefinito neutro.
 **Genere:** costante
 
 ```typescript
-export const DEFAULT_INCLUDE_NAMESPACE
+export const DEFAULT_INCLUDE_NAMESPACE;
 ```
 
 Lo spazio dei nomi utilizzato quando il chiamante non ne sceglie uno.
@@ -163,58 +169,70 @@ Lo spazio dei nomi utilizzato quando il chiamante non ne sceglie uno.
 **Tipo:** funzione
 
 ```typescript
-function emitLiquidInclude(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function emitLiquidInclude(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Emettere il liquido incluso per un componente.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
-| spazio dei nomi | stringa |  |
+| Nome            | Digitare                | Descrizione |
+| --------------- | ----------------------- | ----------- |
+| componente      | Componente di contenuto |             |
+| spazio dei nomi | stringa                 |             |
 
 ### includeNomeFile
 
 **Tipo:** funzione
 
 ```typescript
-function includeFileName(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includeFileName(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Il nome del file artefatto di un componente include.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
-| spazio dei nomi | stringa |  |
+| Nome            | Digitare                | Descrizione |
+| --------------- | ----------------------- | ----------- |
+| componente      | Componente di contenuto |             |
+| spazio dei nomi | stringa                 |             |
 
 ### includePath
 
 **Tipo:** funzione
 
 ```typescript
-function includePath(component: ContentComponent, namespace: string = DEFAULT_INCLUDE_NAMESPACE): string
+function includePath(
+  component: ContentComponent,
+  namespace: string = DEFAULT_INCLUDE_NAMESPACE,
+): string;
 ```
 
 Il percorso di inclusione da cui viene indirizzato un componente, relativo a `_includes`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | Componente di contenuto |  |
-| spazio dei nomi | stringa |  |
+| Nome            | Digitare                | Descrizione |
+| --------------- | ----------------------- | ----------- |
+| componente      | Componente di contenuto |             |
+| spazio dei nomi | stringa                 |             |
 
 ### jekyllDiagnostics
 
 **Tipo:** funzione
 
 ```typescript
-function jekyllDiagnostics(ir: SemanticModule, component: ContentComponent): readonly CompilerDiagnostic[]
+function jekyllDiagnostics(
+  ir: SemanticModule,
+  component: ContentComponent,
+): readonly CompilerDiagnostic[];
 ```
 
 Raccogliere la diagnostica dei report di abbassamento del liquido per un componente.
@@ -227,17 +245,17 @@ reso dove era previsto il markup.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| io | Modulo Semantico |  |
-| componente | Componente di contenuto |  |
+| Nome       | Digitare                | Descrizione |
+| ---------- | ----------------------- | ----------- |
+| io         | Modulo Semantico        |             |
+| componente | Componente di contenuto |             |
 
 ### liquidoLetteral
 
 **Tipo:** funzione
 
 ```typescript
-function liquidLiteral(value: ContentDefaultValue): string
+function liquidLiteral(value: ContentDefaultValue): string;
 ```
 
 Un valore letterale Liquid per un valore predefinito neutro.
@@ -248,6 +266,6 @@ piuttosto che forzare il valore predefinito su una stringa.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | ContenutoDefaultValue |  |
+| Nome   | Digitare              | Descrizione |
+| ------ | --------------------- | ----------- |
+| valore | ContenutoDefaultValue |             |

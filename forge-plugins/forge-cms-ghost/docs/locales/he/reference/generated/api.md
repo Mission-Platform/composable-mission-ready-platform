@@ -16,7 +16,7 @@
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_GHOST_FIELD_UNSUPPORTED
+export const FORGE_GHOST_FIELD_UNSUPPORTED;
 ```
 
 רוח רפאים מסוג שדה אינה יכולה לבטא באופן טבעי; זה מדרדר לטקסט מעובד.
@@ -26,7 +26,7 @@ export const FORGE_GHOST_FIELD_UNSUPPORTED
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_GHOST_SETTING_LIMIT
+export const FORGE_GHOST_SETTING_LIMIT;
 ```
 
 יוֹתֵר `@cmsSetting` הוקרנו שדות משל Ghost `config.custom` מאפשר.
@@ -36,18 +36,22 @@ export const FORGE_GHOST_SETTING_LIMIT
 פונקציה **סוג:**
 
 ```typescript
-function ghostWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function ghostWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 בנו אזהרת שלב-דור; מטרת הרפאים אף פעם לא פולטת שגיאות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קוד | מחרוזת |  |
-| הודעה | מחרוזת |  |
-| שם קובץ | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| קוד     | מחרוזת |       |
+| הודעה   | מחרוזת |       |
+| שם קובץ | מחרוזת |       |
 
 ## `src/ghost`
 
@@ -56,16 +60,16 @@ function ghostWarning(code: string, message: string, fileName: string): Compiler
 פונקציה **סוג:**
 
 ```typescript
-function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin
+function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin;
 ```
 
 קשר הקרנת ערכת נושא של Ghost לתוסף פלט מסגרת בבעלות מתקשר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeGhostCmsOptions |  |
+| שם       | הקלד                 | תיאור |
+| -------- | -------------------- | ----- |
+| אפשרויות | ForgeGhostCmsOptions |       |
 
 ### ForgeGhostCmsOptions
 
@@ -84,7 +88,11 @@ export interface ForgeGhostCmsOptions
 פונקציה **סוג:**
 
 ```typescript
-function buildGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): GhostThemeConfig
+function buildGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): GhostThemeConfig;
 ```
 
 בנה את `config.custom` שבר מכל `@cmsSetting`-שדה מתויג.
@@ -95,18 +103,18 @@ function buildGhostThemeConfig(components: readonly ContentComponent[], themeNam
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיבים | ContentComponent לקריאה בלבד[] |  |
-| שם נושא | מחרוזת |  |
-| אבחון | CompilerDiagnostic[] |  |
+| שם      | הקלד                           | תיאור |
+| ------- | ------------------------------ | ----- |
+| רכיבים  | ContentComponent לקריאה בלבד[] |       |
+| שם נושא | מחרוזת                         |       |
+| אבחון   | CompilerDiagnostic[]           |       |
 
 ### DEFAULT_GHOST_THEME_NAME
 
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_GHOST_THEME_NAME
+export const DEFAULT_GHOST_THEME_NAME;
 ```
 
 שם ערכת הנושא המוגדר כברירת מחדל המשמש כאשר המתקשר אינו מספק אחד.
@@ -116,41 +124,47 @@ export const DEFAULT_GHOST_THEME_NAME
 פונקציה **סוג:**
 
 ```typescript
-function emitGhostComponentsManifest(components: readonly ContentComponent[]): string
+function emitGhostComponentsManifest(
+  components: readonly ContentComponent[],
+): string;
 ```
 
 שלח את חוזה הפרמטר החלקי בתור JSON מודפס יפה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיבים | ContentComponent לקריאה בלבד[] |  |
+| שם     | הקלד                           | תיאור |
+| ------ | ------------------------------ | ----- |
+| רכיבים | ContentComponent לקריאה בלבד[] |       |
 
 ### emitGhostThemeConfig
 
 פונקציה **סוג:**
 
 ```typescript
-function emitGhostThemeConfig(components: readonly ContentComponent[], themeName: string, diagnostics: CompilerDiagnostic[]): string
+function emitGhostThemeConfig(
+  components: readonly ContentComponent[],
+  themeName: string,
+  diagnostics: CompilerDiagnostic[],
+): string;
 ```
 
 פולט את `config.custom` קטע כ-JSON מודפס יפה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיבים | ContentComponent לקריאה בלבד[] |  |
-| שם נושא | מחרוזת |  |
-| אבחון | CompilerDiagnostic[] |  |
+| שם      | הקלד                           | תיאור |
+| ------- | ------------------------------ | ----- |
+| רכיבים  | ContentComponent לקריאה בלבד[] |       |
+| שם נושא | מחרוזת                         |       |
+| אבחון   | CompilerDiagnostic[]           |       |
 
 ### GHOST_COMPONENTS_MANIFEST
 
 **סוג:** קבוע
 
 ```typescript
-export const GHOST_COMPONENTS_MANIFEST
+export const GHOST_COMPONENTS_MANIFEST;
 ```
 
 הקובץ שאליו נכתב חוזה הפרמטר החלקי.
@@ -160,7 +174,7 @@ export const GHOST_COMPONENTS_MANIFEST
 **סוג:** קבוע
 
 ```typescript
-export const GHOST_SETTING_LIMIT
+export const GHOST_SETTING_LIMIT;
 ```
 
 המספר המרבי של כניסות ש-Ghost מקבלת `config.custom`.
@@ -174,7 +188,7 @@ Forge המצליח לבנות לכישלון שהסופר מגלה רק ב-Ghost
 **סוג:** קבוע
 
 ```typescript
-export const GHOST_THEME_CONFIG_MANIFEST
+export const GHOST_THEME_CONFIG_MANIFEST;
 ```
 
 הקובץ ה `config.custom` קטע נכתב ל.
@@ -224,7 +238,7 @@ export interface GhostSetting
 פונקציה **סוג:**
 
 ```typescript
-function ghostSettingType(field: ContentField): GhostSettingType
+function ghostSettingType(field: ContentField): GhostSettingType;
 ```
 
 ההגדרה Ghost סוג סוג שדה ניטרלי מצטמצם.
@@ -235,16 +249,17 @@ function ghostSettingType(field: ContentField): GhostSettingType
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שדה | ContentField |  |
+| שם  | הקלד         | תיאור |
+| --- | ------------ | ----- |
+| שדה | ContentField |       |
 
 ### GhostSettingType
 
 **סוג:** סוג
 
 ```typescript
-export type GhostSettingType = "select" | "boolean" | "color" | "image" | "text";
+export type GhostSettingType =
+  "select" | "boolean" | "color" | "image" | "text";
 ```
 
 חמשת סוגי ההגדרות של Ghost `config.custom` בלוק מקבל.
@@ -274,16 +289,18 @@ export interface GhostThemeConfig
 פונקציה **סוג:**
 
 ```typescript
-function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
+function toGhostComponentEntry(
+  component: ContentComponent,
+): GhostComponentEntry;
 ```
 
 השליך רכיב אחד עליו `forge-components.json` כְּנִיסָה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
+| שם   | הקלד             | תיאור |
+| ---- | ---------------- | ----- |
+| רכיב | ContentComponent |       |
 
 ## `src/template`
 
@@ -292,7 +309,7 @@ function toGhostComponentEntry(component: ContentComponent): GhostComponentEntry
 פונקציה **סוג:**
 
 ```typescript
-function emitGhostPartial(component: ContentComponent): string
+function emitGhostPartial(component: ContentComponent): string;
 ```
 
 פלט את הכידון חלקי עבור רכיב אחד.
@@ -303,48 +320,51 @@ function emitGhostPartial(component: ContentComponent): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
+| שם   | הקלד             | תיאור |
+| ---- | ---------------- | ----- |
+| רכיב | ContentComponent |       |
 
 ### ghostPartialFileName
 
 פונקציה **סוג:**
 
 ```typescript
-function ghostPartialFileName(component: ContentComponent): string
+function ghostPartialFileName(component: ContentComponent): string;
 ```
 
 הנתיב היחסי לנושא אליו נכתב החלק.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
+| שם   | הקלד             | תיאור |
+| ---- | ---------------- | ----- |
+| רכיב | ContentComponent |       |
 
 ### ghostPartialName
 
 פונקציה **סוג:**
 
 ```typescript
-function ghostPartialName(component: ContentComponent): string
+function ghostPartialName(component: ContentComponent): string;
 ```
 
 השם החלקי של רכיב מופעל תחת (`{{> forge/badge}}`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
+| שם   | הקלד             | תיאור |
+| ---- | ---------------- | ----- |
+| רכיב | ContentComponent |       |
 
 ### ghostTemplateDiagnostics
 
 פונקציה **סוג:**
 
 ```typescript
-function ghostTemplateDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function ghostTemplateDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 האבחון הפולט רכיבים חלקיים של רכיב אחד.
@@ -355,7 +375,7 @@ API, כך שהערך שורד כטקסט מעובד וכל אריתמטיקה ש
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | ContentComponent |  |
-| שם קובץ | מחרוזת |  |
+| שם      | הקלד             | תיאור |
+| ------- | ---------------- | ----- |
+| רכיב    | ContentComponent |       |
+| שם קובץ | מחרוזת           |       |

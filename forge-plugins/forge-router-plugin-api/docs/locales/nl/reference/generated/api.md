@@ -16,41 +16,45 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-r
 **Soort:** functie
 
 ```typescript
-function createRouterDiagnostic(diagnostic: Omit<CompilerDiagnostic, 'phase' | 'fileName'> & {
+function createRouterDiagnostic(
+  diagnostic: Omit<CompilerDiagnostic, "phase" | "fileName"> & {
     readonly fileName?: string;
-  }): CompilerDiagnostic
+  },
+): CompilerDiagnostic;
 ```
 
 Maak een bron-lokale diagnose voor een fout in de routercompiler.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostisch | Laat<CompilerDiagnostic, 'phase' \| 'fileName'> weg & { alleen-lezen bestandsnaam?: string;   } |  |
+| Naam         | Typ                                                                                           | Beschrijving |
+| ------------ | --------------------------------------------------------------------------------------------- | ------------ |
+| diagnostisch | Laat<CompilerDiagnostic, 'phase' \| 'fileName'> weg & { alleen-lezen bestandsnaam?: string; } |              |
 
 ### definieerForgeRouterPlugin
 
 **Soort:** functie
 
 ```typescript
-function defineForgeRouterPlugin(plugin: T): T
+function defineForgeRouterPlugin(plugin: T): T;
 ```
 
 Valideer de metagegevens van de routerplug-in voordat deze in een compilerpijplijn terechtkomen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plug-in | T |  |
+| Naam    | Typ | Beschrijving |
+| ------- | --- | ------------ |
+| plug-in | T   |              |
 
 ### definieerForgeRouterTarget
 
 **Soort:** functie
 
 ```typescript
-function defineForgeRouterTarget(options: ForgeRouterTargetOptions): RouterOutputPlugin
+function defineForgeRouterTarget(
+  options: ForgeRouterTargetOptions,
+): RouterOutputPlugin;
 ```
 
 Creëer een deterministisch doel dat neutrale routerimporten herschrijft.
@@ -63,16 +67,16 @@ op bestanden gebaseerde of server-only routers.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeRouterTargetOptions |  |
+| Naam   | Typ                      | Beschrijving |
+| ------ | ------------------------ | ------------ |
+| opties | ForgeRouterTargetOptions |              |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_ROUTER_RUNTIME_EXPORTS
+export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
 Neutrale runtime-exports waarbij het pakketauteurcontract behouden blijft.
@@ -87,7 +91,7 @@ bij die module.
 **Soort:** constant
 
 ```typescript
-export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[]
+export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
 
 Gereserveerde doelcontracten voor routers waarvan de first-party adapters geen deel uitmaken van deze mijlpaal.
@@ -127,7 +131,7 @@ Een gegenereerde bronmodule die wordt geretourneerd door een routerdoel.
 **Soort:** constant
 
 ```typescript
-export const MP_ROUTER_COMPILER_MARKER
+export const MP_ROUTER_COMPILER_MARKER;
 ```
 
 Stabiele markering gedeeld met het neutrale routerpakket.
@@ -137,7 +141,7 @@ Stabiele markering gedeeld met het neutrale routerpakket.
 **Soort:** constant
 
 ```typescript
-export const MP_ROUTER_MODULE
+export const MP_ROUTER_MODULE;
 ```
 
 Het pakket waarvan de invoer wordt begrepen door de routercompilerpas.
@@ -157,7 +161,8 @@ Bouw haken die eigendom zijn van een routerdoelwit; er wordt geen routerafhankel
 **Soort:** type
 
 ```typescript
-export type RouterCapability = 'link' | 'route' | 'navigate' | 'resolve' | 'view';
+export type RouterCapability =
+  "link" | "route" | "navigate" | "resolve" | "view";
 ```
 
 Onafhankelijk verlaagde operaties blootgelegd door het neutrale routercontract.
@@ -197,7 +202,7 @@ Eén gebruik van een neutrale routermarkering, waarbij de broncoördinaten worde
 **Soort:** type
 
 ```typescript
-export type RouterCapabilityUseKind = 'call' | 'jsx' | 'reference';
+export type RouterCapabilityUseKind = "call" | "jsx" | "reference";
 ```
 
 Hoe een neutrale routerbinding wordt gebruikt in een bronmodule.
@@ -277,31 +282,37 @@ Doelspecifiek plan geproduceerd tussen verlaging en opwekking.
 **Soort:** functie
 
 ```typescript
-function selectForgeRouterPlugin(selection: RouterPluginSelection | undefined, plugins: readonly RouterOutputPlugin[] = []): RouterOutputPlugin | undefined
+function selectForgeRouterPlugin(
+  selection: RouterPluginSelection | undefined,
+  plugins: readonly RouterOutputPlugin[] = [],
+): RouterOutputPlugin | undefined;
 ```
 
 Vind een direct of ID-geselecteerd routerdoel zonder dit aan UI-plug-ins te koppelen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| selectie | RouterPluginSelectie \| ongedefinieerd |  |
-| plug-ins | alleen-lezen RouterOutputPlugin[] |  |
+| Naam     | Typ                                    | Beschrijving |
+| -------- | -------------------------------------- | ------------ |
+| selectie | RouterPluginSelectie \| ongedefinieerd |              |
+| plug-ins | alleen-lezen RouterOutputPlugin[]      |              |
 
 ### niet-ondersteunde routermogelijkheden
 
 **Soort:** functie
 
 ```typescript
-function unsupportedRouterCapabilities(ir: RouterCapabilityModule, plugin: RouterOutputPlugin | undefined): readonly CompilerDiagnostic[]
+function unsupportedRouterCapabilities(
+  ir: RouterCapabilityModule,
+  plugin: RouterOutputPlugin | undefined,
+): readonly CompilerDiagnostic[];
 ```
 
 Rapporteer hiaten in de capaciteit voordat een doelwit de kans krijgt om stilletjes een module verkeerd te compileren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ir | RouterCapabilityModule |  |
-| plug-in | RouterOutputPlugin\| ongedefinieerd |  |
+| Naam    | Typ                                 | Beschrijving |
+| ------- | ----------------------------------- | ------------ |
+| ir      | RouterCapabilityModule              |              |
+| plug-in | RouterOutputPlugin\| ongedefinieerd |              |

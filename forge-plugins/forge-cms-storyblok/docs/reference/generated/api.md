@@ -11,25 +11,32 @@ Generated from public source declarations in `@mission-platform/forge-cms-storyb
 **Kind:** function
 
 ```typescript
-function analyzeStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function analyzeStoryblokComponent(
+  sourceFile: OxcParsedModule,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 Analyse a neutral component module for Storyblok.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| names | StoryblokComponentNames |  |
-| options | StoryblokProjectionOptions |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| sourceFile | OxcParsedModule            |             |
+| names      | StoryblokComponentNames    |             |
+| options    | StoryblokProjectionOptions |             |
 
 ### contentFieldToStoryblokField
 
 **Kind:** function
 
 ```typescript
-function contentFieldToStoryblokField(field: ContentField, options: StoryblokProjectionOptions = {}): StoryblokSchemaField
+function contentFieldToStoryblokField(
+  field: ContentField,
+  options: StoryblokProjectionOptions = {},
+): StoryblokSchemaField;
 ```
 
 Map one neutral field onto a Storyblok schema field.
@@ -41,51 +48,60 @@ so `type`/`pos`/`description`/`translatable`/`options`/`default_value`/
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| field | ContentField |  |
-| options | StoryblokProjectionOptions |  |
+| Name    | Type                       | Description |
+| ------- | -------------------------- | ----------- |
+| field   | ContentField               |             |
+| options | StoryblokProjectionOptions |             |
 
 ### contentKindToStoryblokFieldType
 
 **Kind:** function
 
 ```typescript
-function contentKindToStoryblokFieldType(kind: ContentField["kind"]): StoryblokFieldType
+function contentKindToStoryblokFieldType(
+  kind: ContentField["kind"],
+): StoryblokFieldType;
 ```
 
 The Storyblok field type a neutral content kind maps onto.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| kind | ContentField["kind"] |  |
+| Name | Type                 | Description |
+| ---- | -------------------- | ----------- |
+| kind | ContentField["kind"] |             |
 
 ### emitStoryblokComponent
 
 **Kind:** function
 
 ```typescript
-function emitStoryblokComponent(sourceFile: ts.SourceFile, names: StoryblokComponentNames, options: StoryblokProjectionOptions = {}): StoryblokComponent
+function emitStoryblokComponent(
+  sourceFile: OxcParsedModule,
+  names: StoryblokComponentNames,
+  options: StoryblokProjectionOptions = {},
+): StoryblokComponent;
 ```
 
 Emit only the Storyblok component object (the blok configuration) for a component.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| names | StoryblokComponentNames |  |
-| options | StoryblokProjectionOptions |  |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| sourceFile | OxcParsedModule            |             |
+| names      | StoryblokComponentNames    |             |
+| options    | StoryblokProjectionOptions |             |
 
 ### resolveStoryblokMetadata
 
 **Kind:** function
 
 ```typescript
-function resolveStoryblokMetadata(component: ContentComponent, options: StoryblokProjectionOptions = {}): ResolvedStoryblokMetadata
+function resolveStoryblokMetadata(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): ResolvedStoryblokMetadata;
 ```
 
 Resolve editor metadata once for a component.
@@ -96,27 +112,30 @@ name hash gives it a repeatable Storyblok colour.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | ContentComponent |  |
-| options | StoryblokProjectionOptions |  |
+| Name      | Type                       | Description |
+| --------- | -------------------------- | ----------- |
+| component | ContentComponent           |             |
+| options   | StoryblokProjectionOptions |             |
 
 ### toStoryblokComponent
 
 **Kind:** function
 
 ```typescript
-function toStoryblokComponent(component: ContentComponent, options: StoryblokProjectionOptions = {}): AnalyzedStoryblokComponent
+function toStoryblokComponent(
+  component: ContentComponent,
+  options: StoryblokProjectionOptions = {},
+): AnalyzedStoryblokComponent;
 ```
 
 Project a neutral content component onto its Storyblok component object and fields.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| component | ContentComponent |  |
-| options | StoryblokProjectionOptions |  |
+| Name      | Type                       | Description |
+| --------- | -------------------------- | ----------- |
+| component | ContentComponent           |             |
+| options   | StoryblokProjectionOptions |             |
 
 ## `src/runtime/solid`
 
@@ -125,16 +144,18 @@ Project a neutral content component onto its Storyblok component object and fiel
 **Kind:** function
 
 ```typescript
-function StoryblokComponent(properties: StoryblokComponentProperties): JSX.Element
+function StoryblokComponent(
+  properties: StoryblokComponentProperties,
+): JSX.Element;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | StoryblokComponentProperties |  |
+| Name       | Type                         | Description |
+| ---------- | ---------------------------- | ----------- |
+| properties | StoryblokComponentProperties |             |
 
 ### StoryblokComponentProperties
 
@@ -151,7 +172,9 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type StoryblokComponentRegistry = Readonly< Record<string, StoryblokComponentType> >;
+export type StoryblokComponentRegistry = Readonly<
+  Record<string, StoryblokComponentType>
+>;
 ```
 
 No description provided.
@@ -171,16 +194,18 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function StoryblokProvider(properties: StoryblokProviderProperties): JSX.Element
+function StoryblokProvider(
+  properties: StoryblokProviderProperties,
+): JSX.Element;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | StoryblokProviderProperties |  |
+| Name       | Type                        | Description |
+| ---------- | --------------------------- | ----------- |
+| properties | StoryblokProviderProperties |             |
 
 ### StoryblokProviderProperties
 
@@ -199,16 +224,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin
+function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin;
 ```
 
 Bind Storyblok projection to a caller-owned framework output plugin.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeStoryblokCmsOptions |  |
+| Name    | Type                     | Description |
+| ------- | ------------------------ | ----------- |
+| options | ForgeStoryblokCmsOptions |             |
 
 ### ForgeStoryblokCmsOptions
 
@@ -225,16 +250,18 @@ Options for {@link forgeStoryblokCms}.
 **Kind:** function
 
 ```typescript
-function forgeStoryblokCmsTargets(options: ForgeStoryblokCmsTargetsOptions): CmsOutputPlugin[]
+function forgeStoryblokCmsTargets(
+  options: ForgeStoryblokCmsTargetsOptions,
+): CmsOutputPlugin[];
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| options | ForgeStoryblokCmsTargetsOptions |  |
+| Name    | Type                            | Description |
+| ------- | ------------------------------- | ----------- |
+| options | ForgeStoryblokCmsTargetsOptions |             |
 
 ### ForgeStoryblokCmsTargetsOptions
 
@@ -268,6 +295,16 @@ export interface AnalyzedStoryblokComponent
 
 The full result of analysing one neutral component for Storyblok.
 
+### StoryblokComponent
+
+**Kind:** interface
+
+```typescript
+export interface StoryblokComponent
+```
+
+A Storyblok _component object_ (the writable subset consumed when pushing components).
+
 ### StoryblokComponentNames
 
 **Kind:** type
@@ -286,7 +323,17 @@ keeps the Storyblok-facing signature readable.
 **Kind:** type
 
 ```typescript
-export type StoryblokFieldType = | "text" | "richtext" | "number" | "boolean" | "option" | "asset" | "multilink" | "bloks" | "tab" | "plugin";
+export type StoryblokFieldType =
+  | "text"
+  | "richtext"
+  | "number"
+  | "boolean"
+  | "option"
+  | "asset"
+  | "multilink"
+  | "bloks"
+  | "tab"
+  | "plugin";
 ```
 
 The Storyblok field types the neutral content kinds map onto.
@@ -338,7 +385,7 @@ A Storyblok schema field (the value of one entry in a component's `schema`).
 **Kind:** function
 
 ```typescript
-function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string
+function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string;
 ```
 
 Build the typed `blok` prop type for a wrapper — `SbBlokData & { … }` with one
@@ -349,16 +396,20 @@ bare `SbBlokData`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| analyzed | AnalyzedStoryblokComponent |  |
+| Name     | Type                       | Description |
+| -------- | -------------------------- | ----------- |
+| analyzed | AnalyzedStoryblokComponent |             |
 
 ### emitStoryblokBlokWrapper
 
 **Kind:** function
 
 ```typescript
-function emitStoryblokBlokWrapper(analyzed: AnalyzedStoryblokComponent, publicName: string, options: StoryblokBlokWrapperOptions): string
+function emitStoryblokBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  options: StoryblokBlokWrapperOptions,
+): string;
 ```
 
 Emit the framework blok wrapper source that binds Storyblok's `blok` prop onto
@@ -367,11 +418,11 @@ or a native Web-Component (`.ts`) custom element.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| analyzed | AnalyzedStoryblokComponent |  |
-| publicName | string |  |
-| options | StoryblokBlokWrapperOptions |  |
+| Name       | Type                        | Description |
+| ---------- | --------------------------- | ----------- |
+| analyzed   | AnalyzedStoryblokComponent  |             |
+| publicName | string                      |             |
+| options    | StoryblokBlokWrapperOptions |             |
 
 ### StoryblokBlokWrapperOptions
 

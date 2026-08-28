@@ -16,23 +16,23 @@
 **종류:** 기능
 
 ```typescript
-function declarationFileName(component: ContentComponent): string
+function declarationFileName(component: ContentComponent): string;
 ```
 
 구성 요소 선언이 기록되는 파일입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ### DEFAULT_ISLAND_ENTRY
 
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_ISLAND_ENTRY
+export const DEFAULT_ISLAND_ENTRY;
 ```
 
 드라이버가 아무것도 생성하지 않을 때(테스트, 시험 실행) 사용되는 아일랜드 지정자입니다.
@@ -42,7 +42,7 @@ export const DEFAULT_ISLAND_ENTRY
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_WEBFLOW_GROUP
+export const DEFAULT_WEBFLOW_GROUP;
 ```
 
 Designer가 라이브러리의 구성 요소를 저장하는 구성 요소 그룹입니다.
@@ -52,7 +52,10 @@ Designer가 라이브러리의 구성 요소를 저장하는 구성 요소 그�
 **종류:** 기능
 
 ```typescript
-function emitWebflowDeclaration(component: ContentComponent, options: WebflowDeclarationOptions = {}): string
+function emitWebflowDeclaration(
+  component: ContentComponent,
+  options: WebflowDeclarationOptions = {},
+): string;
 ```
 
 하나의 구성 요소에 대한 코드 구성 요소 선언을 내보냅니다.
@@ -64,17 +67,20 @@ function emitWebflowDeclaration(component: ContentComponent, options: WebflowDec
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
-| 옵션 | Webflow선언 옵션 |  |
+| 이름     | 유형             | 설명 |
+| -------- | ---------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소  |      |
+| 옵션     | Webflow선언 옵션 |      |
 
 ### webflow선언진단
 
 **종류:** 기능
 
 ```typescript
-function webflowDeclarationDiagnostics(component: ContentComponent, fileName: string): readonly CompilerDiagnostic[]
+function webflowDeclarationDiagnostics(
+  component: ContentComponent,
+  fileName: string,
+): readonly CompilerDiagnostic[];
 ```
 
 한 구성 요소의 선언을 내보내는 진단이 생성됩니다.
@@ -84,10 +90,10 @@ function webflowDeclarationDiagnostics(component: ContentComponent, fileName: st
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
-| 파일 이름 | 문자열 |  |
+| 이름      | 유형            | 설명 |
+| --------- | --------------- | ---- |
+| 구성요소  | 콘텐츠 구성요소 |      |
+| 파일 이름 | 문자열          |      |
 
 ### Webflow선언옵션
 
@@ -104,7 +110,7 @@ export interface WebflowDeclarationOptions
 **종류:** 기능
 
 ```typescript
-function webflowDescription(component: ContentComponent): string | undefined
+function webflowDescription(component: ContentComponent): string | undefined;
 ```
 
 디자이너가 구성 요소에 대해 표시하는 설명입니다.
@@ -116,48 +122,48 @@ function webflowDescription(component: ContentComponent): string | undefined
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ### 웹플로우표시이름
 
 **종류:** 기능
 
 ```typescript
-function webflowDisplayName(name: string): string
+function webflowDisplayName(name: string): string;
 ```
 
 사람을 향한 라벨 소품은 디자이너 아래에 표시됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이름 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 이름 | 문자열 |      |
 
 ### webflow속성 이름
 
 **종류:** 기능
 
 ```typescript
-function webflowPropertyName(field: ContentField): string
+function webflowPropertyName(field: ContentField): string;
 ```
 
 필드가 작성된 선언 키 — 해당 React 소품 이름.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 필드 | 콘텐츠 필드 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 필드 | 콘텐츠 필드 |      |
 
 ### webflow속성 유형
 
 **종류:** 기능
 
 ```typescript
-function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
+function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType;
 ```
 
 중립적인 콘텐츠 종류를 Webflow의 소품 어휘에 매핑합니다.
@@ -167,16 +173,23 @@ function webflowPropertyType(kind: ContentFieldKind): WebflowPropertyType
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 종류 | 콘텐츠 필드 종류 |  |
+| 이름 | 유형             | 설명 |
+| ---- | ---------------- | ---- |
+| 종류 | 콘텐츠 필드 종류 |      |
 
 ### Webflow속성 유형
 
 **종류:** 유형
 
 ```typescript
-export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichText" | "props.Slot" | "props.Text" | "props.Variant" | "props.Visibility";
+export type WebflowPropertyType =
+  | "props.Image"
+  | "props.Link"
+  | "props.RichText"
+  | "props.Slot"
+  | "props.Text"
+  | "props.Variant"
+  | "props.Visibility";
 ```
 
 그만큼 `@webflow/data-types` 공장에서는 중립 필드 종류가 작성됩니다.
@@ -188,7 +201,7 @@ export type WebflowPropertyType = | "props.Image" | "props.Link" | "props.RichTe
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEBFLOW_NUMBER_AS_TEXT
+export const FORGE_WEBFLOW_NUMBER_AS_TEXT;
 ```
 
 숫자 필드는 Webflow 텍스트 소품으로 작성되었습니다. Webflow에는 숫자 유형이 없습니다.
@@ -198,18 +211,22 @@ export const FORGE_WEBFLOW_NUMBER_AS_TEXT
 **종류:** 기능
 
 ```typescript
-function webflowWarning(code: string, message: string, fileName: string): CompilerDiagnostic
+function webflowWarning(
+  code: string,
+  message: string,
+  fileName: string,
+): CompilerDiagnostic;
 ```
 
 세대 단계 경고를 구축합니다. Webflow 대상은 오류를 발생시키지 않습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 코드 | 문자열 |  |
-| 메시지 | 문자열 |  |
-| 파일 이름 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 코드      | 문자열 |      |
+| 메시지    | 문자열 |      |
+| 파일 이름 | 문자열 |      |
 
 ## `src/entry`
 
@@ -218,32 +235,32 @@ function webflowWarning(code: string, message: string, fileName: string): Compil
 **종류:** 기능
 
 ```typescript
-function emitWebflowEntry(components: readonly ContentComponent[]): string
+function emitWebflowEntry(components: readonly ContentComponent[]): string;
 ```
 
 방출하다 `index.ts` 방출된 모든 선언을 다시 내보냅니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 읽기 전용 ContentComponent[] |  |
+| 이름     | 유형                         | 설명 |
+| -------- | ---------------------------- | ---- |
+| 구성요소 | 읽기 전용 ContentComponent[] |      |
 
 ### 항목내보내기 이름
 
 **종류:** 기능
 
 ```typescript
-function entryExportName(component: ContentComponent): string
+function entryExportName(component: ContentComponent): string;
 ```
 
 구성 요소 선언을 다시 내보내는 배럴 내보내기 이름입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | 콘텐츠 구성요소 |  |
+| 이름     | 유형            | 설명 |
+| -------- | --------------- | ---- |
+| 구성요소 | 콘텐츠 구성요소 |      |
 
 ## `src/manifest`
 
@@ -252,24 +269,27 @@ function entryExportName(component: ContentComponent): string
 **종류:** 기능
 
 ```typescript
-function buildWebflowManifest(libraryName: string, frameworkId: string): WebflowManifest
+function buildWebflowManifest(
+  libraryName: string,
+  frameworkId: string,
+): WebflowManifest;
 ```
 
 빌드 `webflow.json` 라이브러리의 조각입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 라이브러리이름 | 문자열 |  |
-| 프레임워크ID | 문자열 |  |
+| 이름           | 유형   | 설명 |
+| -------------- | ------ | ---- |
+| 라이브러리이름 | 문자열 |      |
+| 프레임워크ID   | 문자열 |      |
 
 ### DEFAULT_WEBFLOW_LIBRARY_NAME
 
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_WEBFLOW_LIBRARY_NAME
+export const DEFAULT_WEBFLOW_LIBRARY_NAME;
 ```
 
 호출자가 라이브러리 이름을 제공하지 않을 때 사용되는 라이브러리 이름입니다.
@@ -279,7 +299,7 @@ export const DEFAULT_WEBFLOW_LIBRARY_NAME
 **종류:** 기능
 
 ```typescript
-function emitWebflowManifest(libraryName: string, frameworkId: string): string
+function emitWebflowManifest(libraryName: string, frameworkId: string): string;
 ```
 
 방출 `webflow.json`.
@@ -290,17 +310,17 @@ function emitWebflowManifest(libraryName: string, frameworkId: string): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 라이브러리이름 | 문자열 |  |
-| 프레임워크ID | 문자열 |  |
+| 이름           | 유형   | 설명 |
+| -------------- | ------ | ---- |
+| 라이브러리이름 | 문자열 |      |
+| 프레임워크ID   | 문자열 |      |
 
 ### WEBFLOW_LIBRARY_MANIFEST
 
 **종류:** 상수
 
 ```typescript
-export const WEBFLOW_LIBRARY_MANIFEST
+export const WEBFLOW_LIBRARY_MANIFEST;
 ```
 
 라이브러리 조각이 기록되는 파일입니다.
@@ -310,7 +330,7 @@ export const WEBFLOW_LIBRARY_MANIFEST
 **종류:** 기능
 
 ```typescript
-function webflowComponentsGlob(frameworkId: string): string
+function webflowComponentsGlob(frameworkId: string): string;
 ```
 
 하나의 대상 실행에 대해 빌드된 모든 선언과 일치하는 glob입니다.
@@ -322,9 +342,9 @@ function webflowComponentsGlob(frameworkId: string): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프레임워크ID | 문자열 |  |
+| 이름         | 유형   | 설명 |
+| ------------ | ------ | ---- |
+| 프레임워크ID | 문자열 |      |
 
 ### 웹플로우라이브러리
 
@@ -353,16 +373,16 @@ export interface WebflowManifest
 **종류:** 기능
 
 ```typescript
-function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin
+function forgeWebflowCms(options: ForgeWebflowCmsOptions): CmsOutputPlugin;
 ```
 
 Webflow 코드 구성 요소 프로젝션을 호출자 소유에 바인딩 React 출력 플러그인.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebflowCms옵션 |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 옵션 | ForgeWebflowCms옵션 |      |
 
 ### ForgeWebflowCms옵션
 
@@ -379,7 +399,7 @@ export interface ForgeWebflowCmsOptions
 **종류:** 상수
 
 ```typescript
-export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[]
+export const WEBFLOW_RUNTIME_EXTERNALS: readonly string[];
 ```
 
 Webflow 도구 체인이 제공하는 방출된 선언을 모듈로 가져옵니다.

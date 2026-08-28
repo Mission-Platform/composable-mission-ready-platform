@@ -11,42 +11,47 @@ Generated from public source declarations in `fws-vscode`.
 **Kind:** function
 
 ```typescript
-function activate(context: vscode.ExtensionContext): Promise<void>
+function activate(context: vscode.ExtensionContext): Promise<void>;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| context | vscode.ExtensionContext |  |
+| Name    | Type                    | Description |
+| ------- | ----------------------- | ----------- |
+| context | vscode.ExtensionContext |             |
 
 ### createLanguageClient
 
 **Kind:** function
 
 ```typescript
-function createLanguageClient(serverOptions: ServerOptions, configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>, outputChannel: vscode.LogOutputChannel, fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*')): ForgeWebScriptLanguageClient
+function createLanguageClient(
+  serverOptions: ServerOptions,
+  configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>,
+  outputChannel: vscode.LogOutputChannel,
+  fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*'),
+): ForgeWebScriptLanguageClient;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| serverOptions | ServerOptions |  |
-| configuration | Pick<ForgeWebScriptConfiguration, 'traceServer'> |  |
-| outputChannel | vscode.LogOutputChannel |  |
-| fileWatcher | vscode.FileSystemWatcher |  |
+| Name          | Type                                             | Description |
+| ------------- | ------------------------------------------------ | ----------- |
+| serverOptions | ServerOptions                                    |             |
+| configuration | Pick<ForgeWebScriptConfiguration, 'traceServer'> |             |
+| outputChannel | vscode.LogOutputChannel                          |             |
+| fileWatcher   | vscode.FileSystemWatcher                         |             |
 
 ### deactivate
 
 **Kind:** function
 
 ```typescript
-function deactivate(): Promise<void>
+function deactivate(): Promise<void>;
 ```
 
 No description provided.

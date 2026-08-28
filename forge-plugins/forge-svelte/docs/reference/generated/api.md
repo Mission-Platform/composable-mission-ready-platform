@@ -11,7 +11,12 @@ Generated from public source declarations in `@mission-platform/forge-plugin-sve
 **Kind:** function
 
 ```typescript
-function emitSvelteModule(module: SemanticModule, componentName: string = "Component", componentFolders: ReadonlySet<string> = new Set(), plan?: SvelteLoweredModule): SvelteModuleOutput
+function emitSvelteModule(
+  module: SemanticModule,
+  componentName: string = "Component",
+  componentFolders: ReadonlySet<string> = new Set(),
+  plan?: SvelteLoweredModule,
+): SvelteModuleOutput;
 ```
 
 Print a neutral component module as a Svelte 5 SFC. A caller that already ran
@@ -20,12 +25,12 @@ lowered one, so the emitter is always driven by the same contract.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
-| componentName | string |  |
-| componentFolders | ReadonlySet<string> |  |
-| plan | SvelteLoweredModule |  |
+| Name             | Type                | Description |
+| ---------------- | ------------------- | ----------- |
+| module           | SemanticModule      |             |
+| componentName    | string              |             |
+| componentFolders | ReadonlySet<string> |             |
+| plan             | SvelteLoweredModule |             |
 
 ### SvelteModuleOutput
 
@@ -44,16 +49,16 @@ A generated `.svelte` module and any auxiliary modules written beside it.
 **Kind:** function
 
 ```typescript
-function emitSvelteHookModule(module: SemanticModule): string
+function emitSvelteHookModule(module: SemanticModule): string;
 ```
 
 Print a neutral hook/composable module as its Svelte-target `.ts` source.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| module | SemanticModule |  |
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| module | SemanticModule |             |
 
 ## `src/index`
 
@@ -62,7 +67,7 @@ Print a neutral hook/composable module as its Svelte-target `.ts` source.
 **Kind:** function
 
 ```typescript
-function forgeSvelteFramework(): FrameworkOutputPlugin
+function forgeSvelteFramework(): FrameworkOutputPlugin;
 ```
 
 Create the Svelte output plugin and its Vite/Rolldown compiler adapters.
@@ -74,33 +79,38 @@ Create the Svelte output plugin and its Vite/Rolldown compiler adapters.
 **Kind:** function
 
 ```typescript
-function isSvelteLowered(lowered: TargetLoweredModule | undefined): lowered is SvelteLoweredModule
+function isSvelteLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is SvelteLoweredModule;
 ```
 
 Whether a target plan is the Svelte one — the discriminator every consumer narrows on.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| lowered | TargetLoweredModule \| undefined |  |
+| Name    | Type                             | Description |
+| ------- | -------------------------------- | ----------- |
+| lowered | TargetLoweredModule \| undefined |             |
 
 ### lowerSvelteModule
 
 **Kind:** function
 
 ```typescript
-function lowerSvelteModule(ir: SemanticModule, context: TargetContext): SvelteTargetIntentions
+function lowerSvelteModule(
+  ir: SemanticModule,
+  context: TargetContext,
+): SvelteTargetIntentions;
 ```
 
 Build the Svelte plan for a neutral module.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| ir | SemanticModule |  |
-| context | TargetContext |  |
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| ir      | SemanticModule |             |
+| context | TargetContext  |             |
 
 ### SvelteBindingPlan
 
@@ -276,7 +286,10 @@ Target intentions carrying a fully typed Svelte plan.
 **Kind:** function
 
 ```typescript
-function optimizeSvelteModule(intentions: TargetIntentions, options: TargetOptimizeOptions): TargetIntentions
+function optimizeSvelteModule(
+  intentions: TargetIntentions,
+  options: TargetOptimizeOptions,
+): TargetIntentions;
 ```
 
 Refine a lowered Svelte plan. Intentions that carry no Svelte plan (a foreign
@@ -284,17 +297,17 @@ target's, or a caller that skipped `lower`) are returned untouched.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| intentions | TargetIntentions |  |
-| options | TargetOptimizeOptions |  |
+| Name       | Type                  | Description |
+| ---------- | --------------------- | ----------- |
+| intentions | TargetIntentions      |             |
+| options    | TargetOptimizeOptions |             |
 
 ### SVELTE_OPTIMIZATIONS
 
 **Kind:** constant
 
 ```typescript
-export const SVELTE_OPTIMIZATIONS: readonly string[]
+export const SVELTE_OPTIMIZATIONS: readonly string[];
 ```
 
 Every optimization this target can apply, in application order.
