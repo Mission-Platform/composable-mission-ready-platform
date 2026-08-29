@@ -168,7 +168,10 @@ function registerReturnedCleanup(body: string): string {
 }
 
 /** Add cleanup registration to one effect callback. */
-function lowerEffectCallback(callback: string): string {
+function lowerEffectCallback(
+  callback: string,
+  usage: SolidPrimitiveUsage,
+): string {
   const arrow = callback.indexOf("=>");
   if (arrow === -1) {
     return callback;
@@ -182,6 +185,9 @@ function lowerEffectCallback(callback: string): string {
     const body = registerReturnedCleanup(
       callback.slice(bodyStart + 1, bodyEnd),
     );
+    if (body !== callback.slice(bodyStart + 1, bodyEnd)) {
+      usage.onCleanup = true;
+    }
     return `${callback.slice(0, bodyStart + 1)}${body}${callback.slice(bodyEnd)}`;
   }
   return callback;
@@ -217,10 +223,10 @@ export function lowerReactiveCalls(
       case "useEffect": {
         if (isMountDependencies(call.args[1])) {
           usage.onMount = true;
-          return `onMount${generics}(${lowerEffectCallback(first ?? "")})`;
+          return `onMount${generics}(${lowerEffectCallback(first ?? "", usage)})`;
         }
         usage.createEffect = true;
-        return `createEffect${generics}(${lowerEffectCallback(first ?? "")})`;
+        return `createEffect${generics}(${lowerEffectCallback(first ?? "", usage)})`;
       }
       case "useId": {
         usage.createUniqueId = true;

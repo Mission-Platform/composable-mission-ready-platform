@@ -108,6 +108,7 @@ function solidPrimitiveNames(context: SolidLoweringContext): string[] {
   if (usage.createMemo) names.push("createMemo");
   if (usage.createEffect) names.push("createEffect");
   if (usage.onMount) names.push("onMount");
+  if (usage.onCleanup) names.push("onCleanup");
   if (usage.createUniqueId) names.push("createUniqueId");
   if (usage.mergeProps) names.push("mergeProps");
   return names;

@@ -12,6 +12,7 @@ function primitiveUsage(): Parameters<typeof lowerReactiveCalls>[1] {
     createMemo: false,
     createEffect: false,
     onMount: false,
+    onCleanup: false,
     createUniqueId: false,
     mergeProps: false,
   };
@@ -146,6 +147,7 @@ describe("lowerReactiveCalls", () => {
         usage,
       ),
     ).toBe("onMount(() => { subscribe(); onCleanup(() => unsubscribe()); });");
+    expect(usage.onCleanup).toBe(true);
   });
 
   it("lowers multiline generic useMemo calls", () => {

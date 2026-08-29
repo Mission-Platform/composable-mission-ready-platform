@@ -28,6 +28,7 @@ export interface SolidPrimitiveUsage {
   createMemo: boolean;
   createEffect: boolean;
   onMount: boolean;
+  onCleanup: boolean;
   createUniqueId: boolean;
   mergeProps: boolean;
 }
@@ -258,6 +259,7 @@ export function createSolidLoweringContext(
       createMemo: false,
       createEffect: false,
       onMount: false,
+      onCleanup: false,
       createUniqueId: false,
       mergeProps: false,
     },
