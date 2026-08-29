@@ -34,6 +34,7 @@
     "@mission-platform/resource-planner": "workspace:*",
     "@mission-platform/select": "workspace:*",
     "@mission-platform/theme": "workspace:*",
+    "@mission-platform/three": "workspace:*",
     "@mission-platform/scheduler": "workspace:*",
     "@mission-platform/forms": "workspace:*",
     "@mission-platform/content": "workspace:*",
