@@ -12,7 +12,7 @@ packages:
   - mcp/*
 
 catalog:
-  "js-yaml": ^4.3.1
+  "js-yaml": ^4.3.2
   "luxon": ^3.7.2
   "@types/luxon": ^3.7.5
   rxjs: ^7.8.2
@@ -23,7 +23,7 @@ catalogs:
     "@changesets/cli": ^2.31.1
     "@commitlint/cli": ^21.2.2
     "@commitlint/config-conventional": ^21.2.2
-    turbo: ^2.10.11
+    turbo: ^2.10.12
     assemblyscript: ^0.28.20
     husky: ^9.1.7
     "yaml-language-server": "^1.24.0"
@@ -61,7 +61,7 @@ catalogs:
     eslint-plugin-unicorn: ^64.0.0
     eslint: ^10.9.1
     eslint-config-prettier: ^10.1.8
-    eslint-config-turbo: ^2.10.11
+    eslint-config-turbo: ^2.10.12
     eslint-import-resolver-typescript: ^4.4.5
     eslint-plugin-import-x: ^4.17.1
     eslint-plugin-vue: ^10.10.0
@@ -96,11 +96,11 @@ catalogs:
   vue:
     "@vue/compiler-sfc": ^3.5.41
     "@unhead/vue": ^2.1.17
-    "@vue/test-utils": ^2.4.11
+    "@vue/test-utils": ^2.5.0
     "@vue/tsconfig": ^0.9.1
     "@vitejs/plugin-vue": ^6.0.8
     "@vitejs/plugin-vue-jsx": ^5.1.6
-    vue: ^3.5.41
+    vue: ^3.5.42
     vue-router: ^4.6.4
     vue-tsc: ^3.3.11
 
@@ -112,7 +112,7 @@ catalogs:
     vite: ^8.2.2
     vite-plugin-pwa: ^1.3.0
     vite-ssg: ^28.3.0
-    vite-svg-loader: ^5.1.1
+    vite-svg-loader: ^5.1.2
 
   build:
     tsdown: ^0.22.14
@@ -164,9 +164,9 @@ catalogs:
 
   cloudflare:
     rwsdk: ^1.7.2
-    wrangler: ^4.125.0
-    "@cloudflare/vite-plugin": ^1.53.1
-    "@cloudflare/workers-types": ^5.20260825.1
+    wrangler: ^4.127.0
+    "@cloudflare/vite-plugin": ^1.54.1
+    "@cloudflare/workers-types": ^5.20260827.1
 
   mcp:
     "@modelcontextprotocol/sdk": ^1.30.0
@@ -175,11 +175,12 @@ catalogs:
 trustPolicy: no-downgrade
 
 trustPolicyExclude:
-  - semver@5.7.2
-  - semver@6.3.1
-  - "@trickfilm400/rollup-plugin-off-main-thread"
-  - rwsdk
+  - fastq@1.20.2
+  - "@trickfilm400/rollup-plugin-off-main-thread@3.0.0-pre1"
   - cytoscape@3.34.1
+  - semver@5.7.2
+  - rwsdk@1.7.2
+  - semver@6.3.1
 
 allowBuilds:
   "@parcel/watcher": true
@@ -195,10 +196,10 @@ allowBuilds:
   workerd: true
 
 overrides:
-  glob: ^13.0.6
   source-map: ^0.7.6
   beasties: ^0.4.3
   nanoid: ^5.1.16
 
 patchedDependencies:
+  beasties@0.4.3: patches/beasties@0.4.3.patch
   "eslint-plugin-sonarjs@4.2.0": patches/eslint-plugin-sonarjs.patch
