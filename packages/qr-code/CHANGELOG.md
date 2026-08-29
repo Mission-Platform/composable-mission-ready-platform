@@ -99,7 +99,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: "vue" });
+  export default defineFrameworkAppConfig({ framework: 'vue' });
   ```
 
   ```jsonc
