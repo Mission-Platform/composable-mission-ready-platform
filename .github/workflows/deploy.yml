@@ -44,12 +44,25 @@ jobs:
           # Full history lets `turbo` determine the affected changes.
           fetch-depth: 0
 
+      - name: Check staging credentials
+        id: credentials
+        shell: bash
+        run: |
+          if [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Staging deployment skipped because Cloudflare credentials are not configured."
+          fi
+
       - name: Set up pnpm
+        if: steps.credentials.outputs.configured == 'true'
         uses: pnpm/action-setup@f520eceda224fe1a4aed5a2a27a194379a409996 # v6
         with:
           run_install: false
 
       - name: Set up Node.js
+        if: steps.credentials.outputs.configured == 'true'
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: .nvmrc
@@ -57,12 +70,14 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Set up Rust
+        if: steps.credentials.outputs.configured == 'true'
         uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # stable
         with:
           toolchain: stable
           targets: wasm32-unknown-unknown
 
       - name: Install dependencies
+        if: steps.credentials.outputs.configured == 'true'
         run: pnpm install --frozen-lockfile
 
       # ──────────────────────────────────────────────────────────────
@@ -72,6 +87,7 @@ jobs:
       # `deploy:staging` turbo task.
       # ──────────────────────────────────────────────────────────────
       - name: Deploy to staging
+        if: steps.credentials.outputs.configured == 'true'
         run: >-
           pnpm exec turbo run deploy:staging
           --filter=@mission-platform/website
