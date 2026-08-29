@@ -113,7 +113,7 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
       const code = emitVueModule(module, "Badge").code;
 
       expect(code).toContain(
-        `--forge-badge-color: v-bind('$props.properties?.["color"]');`,
+        `--forge-badge-color: v-bind('$props.properties?.["color"] ?? "var(--mp-badge-color)"');`,
       );
       expect(code).toContain(
         '<span class="forge-badge" :style="style" v-bind="$attrs">',
@@ -235,10 +235,16 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
       ],
     });
 
-    const code = emitVueModule(module, "Logger").code;
+    const code = emitVueModule(
+      module,
+      "Logger",
+      undefined,
+      planFor(module),
+    ).code;
 
+    expect(code).toContain("import { onMounted, watch } from 'vue';");
     expect(code).toContain(
-      "watch(() => [properties.label], (_value, _oldValue, onCleanup) => { const result = (() => { console.log('changed'); })(); if (typeof result === \"function\") onCleanup(result); else onCleanup(() => console.log('cleanup')); }, { immediate: true });",
+      "onMounted(() => { watch(() => [properties.label], (_value, _oldValue, onCleanup) => { const result = (() => { console.log('changed'); })(); if (typeof result === \"function\") onCleanup(result); else onCleanup(() => console.log('cleanup')); }, { immediate: true }); });",
     );
     expect(code).not.toContain("mpEffect");
   });

@@ -114,6 +114,11 @@ function insertAfterUses(css: string, rule: string): string {
   return `${css.slice(0, end)}${rule}\n\n${css.slice(end)}`;
 }
 
+/** The token fallback corresponding to a component-owned override property. */
+function defaultToken(customProperty: string): string {
+  return customProperty.replace(/^--forge-/, "--mp-");
+}
+
 /**
  * Add Vue's reactive CSS-variable declarations to the owning component root.
  *
@@ -136,7 +141,7 @@ function withVueStyleBindings(
   const declarations = applicable
     .map(
       ({ customProperty, expression }) =>
-        `  ${customProperty}: v-bind('${expression}');`,
+        `  ${customProperty}: v-bind('${expression} ?? "var(${defaultToken(customProperty)})"');`,
     )
     .join("\n");
   const rule = `${rootClass(styleImport)} {\n${declarations}\n}`;
