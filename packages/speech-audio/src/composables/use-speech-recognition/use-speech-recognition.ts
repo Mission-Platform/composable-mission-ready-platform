@@ -1,4 +1,4 @@
-import { type MpRef, useCallback, useEffect, useRef, useState } from '@mission-platform/forge';
+import { type MpRef, useEffect, useRef, useState } from '@mission-platform/forge';
 
 // ─── Minimal Web Speech (recognition) typings ──────────────────────────────
 //
@@ -106,52 +106,49 @@ export function useSpeechRecognition(): SpeechRecognitionControls {
   const [error, setError] = useState<string | undefined>(undefined);
   const recognition: MpRef<SpeechRecognitionLike | undefined> = useRef<SpeechRecognitionLike | undefined>(undefined);
 
-  const stop = useCallback(() => {
+  const stop = (): void => {
     recognition.current?.stop();
-  }, [recognition]);
+  };
 
-  const abort = useCallback(() => {
+  const abort = (): void => {
     recognition.current?.abort();
-  }, [recognition]);
+  };
 
-  const start = useCallback(
-    (options?: SpeechRecognitionOptions) => {
-      if (RecognitionConstructor === undefined) {
-        return;
+  const start = (options?: SpeechRecognitionOptions): void => {
+    if (RecognitionConstructor === undefined) {
+      return;
+    }
+
+    recognition.current?.abort();
+
+    const instance = new RecognitionConstructor();
+    instance.lang = options?.lang ?? 'en-US';
+    instance.continuous = options?.continuous ?? false;
+    instance.interimResults = options?.interimResults ?? false;
+    instance.maxAlternatives = options?.maxAlternatives ?? 1;
+
+    instance.addEventListener('start', () => {
+      setIsListening(() => true);
+      setError(undefined);
+    });
+    instance.addEventListener('end', () => {
+      setIsListening(() => false);
+    });
+    instance.addEventListener('error', (event) => {
+      setError(() => (event as SpeechRecognitionErrorEventLike).error);
+    });
+    instance.addEventListener('result', (event) => {
+      const recognitionEvent = event as SpeechRecognitionEventLike;
+      let text = '';
+      for (let index = recognitionEvent.resultIndex; index < recognitionEvent.results.length; index += 1) {
+        text += recognitionEvent.results[index][0].transcript;
       }
+      setTranscript(() => text);
+    });
 
-      recognition.current?.abort();
-
-      const instance = new RecognitionConstructor();
-      instance.lang = options?.lang ?? 'en-US';
-      instance.continuous = options?.continuous ?? false;
-      instance.interimResults = options?.interimResults ?? false;
-      instance.maxAlternatives = options?.maxAlternatives ?? 1;
-
-      instance.addEventListener('start', () => {
-        setIsListening(() => true);
-        setError(undefined);
-      });
-      instance.addEventListener('end', () => {
-        setIsListening(() => false);
-      });
-      instance.addEventListener('error', (event) => {
-        setError(() => (event as SpeechRecognitionErrorEventLike).error);
-      });
-      instance.addEventListener('result', (event) => {
-        const recognitionEvent = event as SpeechRecognitionEventLike;
-        let text = '';
-        for (let index = recognitionEvent.resultIndex; index < recognitionEvent.results.length; index += 1) {
-          text += recognitionEvent.results[index][0].transcript;
-        }
-        setTranscript(() => text);
-      });
-
-      recognition.current = instance;
-      instance.start();
-    },
-    [RecognitionConstructor, recognition],
-  );
+    recognition.current = instance;
+    instance.start();
+  };
 
   useEffect(() => {
     return () => {

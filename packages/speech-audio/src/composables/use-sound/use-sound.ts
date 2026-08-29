@@ -1,4 +1,4 @@
-import { type MpRef, useCallback, useEffect, useRef, useState } from '@mission-platform/forge';
+import { type MpRef, useEffect, useRef, useState } from '@mission-platform/forge';
 
 /** Reactive state and controls returned by {@link useSound}. */
 export interface SoundControls {
@@ -37,15 +37,15 @@ export function useSound(source?: string): SoundControls {
   const audio: MpRef<HTMLAudioElement | undefined> = useRef<HTMLAudioElement | undefined>(undefined);
   const context: MpRef<AudioContext | undefined> = useRef<AudioContext | undefined>(undefined);
 
-  const ensureContext = useCallback((): AudioContext | undefined => {
+  const ensureContext = (): AudioContext | undefined => {
     if (globalThis.window === undefined || typeof AudioContext === 'undefined') {
       return undefined;
     }
     context.current ??= new AudioContext();
     return context.current;
-  }, [context]);
+  };
 
-  const play = useCallback(() => {
+  const play = (): void => {
     if (globalThis.window === undefined || typeof Audio === 'undefined' || source === undefined) {
       return;
     }
@@ -64,35 +64,32 @@ export function useSound(source?: string): SoundControls {
     element.currentTime = 0;
     void element.play();
     setIsPlaying(() => true);
-  }, [source, audio]);
+  };
 
-  const stop = useCallback(() => {
+  const stop = (): void => {
     const element = audio.current;
     if (element !== undefined) {
       element.pause();
       element.currentTime = 0;
     }
     setIsPlaying(() => false);
-  }, [audio]);
+  };
 
-  const playTone = useCallback(
-    (frequency: number, durationMs = 200, type: OscillatorType = 'sine') => {
-      const audioContext = ensureContext();
-      if (audioContext === undefined) {
-        return;
-      }
+  const playTone = (frequency: number, durationMs = 200, type: OscillatorType = 'sine'): void => {
+    const audioContext = ensureContext();
+    if (audioContext === undefined) {
+      return;
+    }
 
-      const oscillator = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      oscillator.type = type;
-      oscillator.frequency.value = frequency;
-      oscillator.connect(gain);
-      gain.connect(audioContext.destination);
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + durationMs / 1000);
-    },
-    [ensureContext],
-  );
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    oscillator.type = type;
+    oscillator.frequency.value = frequency;
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + durationMs / 1000);
+  };
 
   useEffect(() => {
     return () => {

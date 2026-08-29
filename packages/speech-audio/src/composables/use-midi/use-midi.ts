@@ -1,4 +1,4 @@
-import { type MpRef, useCallback, useEffect, useRef, useState } from '@mission-platform/forge';
+import { type MpRef, useEffect, useRef, useState } from '@mission-platform/forge';
 
 /** Reactive state and controls returned by {@link useMidi}. */
 export interface MidiControls {
@@ -48,50 +48,44 @@ export function useMidi(): MidiControls {
   const [error, setError] = useState<string | undefined>(undefined);
   const access: MpRef<MIDIAccess | undefined> = useRef<MIDIAccess | undefined>(undefined);
 
-  const syncPorts = useCallback((current: MIDIAccess) => {
+  const syncPorts = (current: MIDIAccess): void => {
     setInputs(() => [...current.inputs.values()]);
     setOutputs(() => [...current.outputs.values()]);
-  }, []);
+  };
 
-  const requestAccess = useCallback(
-    (options?: MIDIOptions) => {
-      if (!isSupported) {
-        setError(() => 'Web MIDI API is not supported');
-        return;
-      }
+  const requestAccess = (options?: MIDIOptions): void => {
+    if (!isSupported) {
+      setError(() => 'Web MIDI API is not supported');
+      return;
+    }
 
-      void globalThis.navigator.requestMIDIAccess(options).then(
-        (granted) => {
-          access.current = granted;
-          setIsConnected(() => true);
-          setError(undefined);
+    void globalThis.navigator.requestMIDIAccess(options).then(
+      (granted) => {
+        access.current = granted;
+        setIsConnected(() => true);
+        setError(undefined);
+        syncPorts(granted);
+        granted.addEventListener('statechange', () => {
           syncPorts(granted);
-          granted.addEventListener('statechange', () => {
-            syncPorts(granted);
-          });
-        },
-        (error_: unknown) => {
-          setError(() => (error_ instanceof Error ? error_.message : String(error_)));
-        },
-      );
-    },
-    [isSupported, syncPorts, access],
-  );
+        });
+      },
+      (error_: unknown) => {
+        setError(() => (error_ instanceof Error ? error_.message : String(error_)));
+      },
+    );
+  };
 
-  const playNote = useCallback(
-    (note: number, velocity = DEFAULT_VELOCITY, durationMs = 300, output?: MIDIOutput) => {
-      const current = access.current;
-      const target = output ?? (current === undefined ? undefined : [...current.outputs.values()][0]);
-      if (target === undefined) {
-        return;
-      }
+  const playNote = (note: number, velocity = DEFAULT_VELOCITY, durationMs = 300, output?: MIDIOutput): void => {
+    const current = access.current;
+    const target = output ?? (current === undefined ? undefined : [...current.outputs.values()][0]);
+    if (target === undefined) {
+      return;
+    }
 
-      const now = globalThis.performance === undefined ? 0 : globalThis.performance.now();
-      target.send([NOTE_ON, note, velocity]);
-      target.send([NOTE_OFF, note, 0], now + durationMs);
-    },
-    [access],
-  );
+    const now = globalThis.performance === undefined ? 0 : globalThis.performance.now();
+    target.send([NOTE_ON, note, velocity]);
+    target.send([NOTE_OFF, note, 0], now + durationMs);
+  };
 
   useEffect(() => {
     return () => {
