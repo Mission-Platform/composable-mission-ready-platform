@@ -8,7 +8,7 @@
 "@mission-platform/forms": patch
 "@mission-platform/i18n": patch
 "@mission-platform/icons": patch
-"@mission-platform/layout": patch
+"@mission-platform/layouts": patch
 "@mission-platform/map": patch
 "@mission-platform/matrix-code": patch
 "@mission-platform/observers": patch
