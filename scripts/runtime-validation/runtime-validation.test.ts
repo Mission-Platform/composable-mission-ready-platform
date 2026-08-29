@@ -20,7 +20,7 @@ import { reportHasFailures, writeVisualParityReport } from '../visual-parity/rep
 import { buildStorybookDevSpawnArgs } from '../visual-parity/servers.ts';
 import { createRendererDefinitions, type VisualParityReport } from '../visual-parity/types.ts';
 
-import { appScript, validateAppsForFullRun } from './app-sweep.ts';
+import { appBuildArgs, appScript, validateAppsForFullRun } from './app-sweep.ts';
 import { classifyFailure } from './classification.ts';
 import { createProcessRegistry, terminateProcessTree } from './cleanup.ts';
 import { discoverInventory } from './inventory.ts';
@@ -146,6 +146,10 @@ describe('route discovery', () => {
 });
 
 describe('application runtime sweep', () => {
+  it('builds each app together with its workspace dependencies', () => {
+    expect(appBuildArgs('@mission-platform/website')).toEqual(['--filter', '@mission-platform/website...', 'build']);
+  });
+
   it('generates route checks with app-root and documented contract assertions', () => {
     const script = appScript(
       ['/', '/?overlay=snippet-new'],

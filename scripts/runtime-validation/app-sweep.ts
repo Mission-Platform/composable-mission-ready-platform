@@ -38,6 +38,10 @@ function appShortName(app: AppInventory): string {
   return app.name.replace(/^@mission-platform\//, '');
 }
 
+export function appBuildArgs(appName: string): string[] {
+  return ['--filter', `${appName}...`, 'build'];
+}
+
 function writeAppLog(repositoryRoot: string, app: AppInventory, suffix: string, content: string): string {
   const target = artifactPath(repositoryRoot, 'app', `${appShortName(app)}-${suffix}`, 'log');
   fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -317,7 +321,7 @@ export async function validateApps(
     const selectedRoutes = routes.length > 0 ? routes : options.route ? [options.route] : ['/'];
     let buildLog = '';
     if (options.build ?? true) {
-      const build = await runProcess(repositoryRoot, ['--filter', app.name, 'build'], 120_000);
+      const build = await runProcess(repositoryRoot, appBuildArgs(app.name), 120_000);
       buildLog = build.output;
       if (!build.ok) {
         const log = writeAppLog(repositoryRoot, app, 'build', `${build.error ?? 'Build failed'}\n${build.output}`);
