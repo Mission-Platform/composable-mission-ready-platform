@@ -11,12 +11,13 @@ function selectElement(value: unknown): MpElement | undefined {
 
 describe('ForgeLanguageSwitcher', () => {
   it('maps locales to ForgeSelect options and keeps the language icon in the start slot', () => {
-    const element = selectElement(
-      ForgeLanguageSwitcher({
-        locale: 'en',
-        locales: ['en', { code: 'fr', label: 'Français' }, { code: 'de', disabled: true }],
-      }),
-    );
+    const root = ForgeLanguageSwitcher({
+      locale: 'en',
+      locales: ['en', { code: 'fr', label: 'Français' }, { code: 'de', disabled: true }],
+    });
+    const element = selectElement(root);
+
+    expect(root.properties).toHaveProperty('options');
 
     expect(element).toBeDefined();
     if (element === undefined) return;

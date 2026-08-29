@@ -1,4 +1,4 @@
-import { ForgeIconFlag, ForgeIconLanguage, IconSpriteProvider, type IconCountryCode } from '@mission-platform/icons';
+import { ForgeIconFlag, ForgeIconLanguage, type IconCountryCode } from '@mission-platform/icons';
 
 import { ForgeSelect } from '../forge-select';
 
@@ -90,23 +90,21 @@ export function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcher
   });
 
   return (
-    <IconSpriteProvider>
-      <ForgeSelect
-        disabled={properties.disabled}
-        id={properties.id}
-        label={properties.label ?? 'Language'}
-        labelHidden={properties.labelHidden ?? true}
-        modelValue={properties.locale}
-        options={options}
-        searchable={false}
-        size={properties.size}
-        onUpdateModelValue={(value: string | number) => properties.onLocaleChange?.(String(value))}
-      >
-        <ForgeIconLanguage
-          size="sm"
-          slot="start"
-        />
-      </ForgeSelect>
-    </IconSpriteProvider>
+    <ForgeSelect
+      disabled={properties.disabled}
+      id={properties.id}
+      label={properties.label ?? 'Language'}
+      labelHidden={properties.labelHidden ?? true}
+      modelValue={properties.locale}
+      options={options}
+      searchable={false}
+      size={properties.size}
+      onUpdateModelValue={(value: string | number) => properties.onLocaleChange?.(String(value))}
+    >
+      <ForgeIconLanguage
+        size="sm"
+        slot="start"
+      />
+    </ForgeSelect>
   );
 }
