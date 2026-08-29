@@ -117,11 +117,12 @@ export function resolveComponentsModule(
 export function cmsCacheDirectory(
   rootDir: string,
   target: CmsOutputPlugin,
+  cacheRoot = path.join(rootDir, "node_modules/.cache"),
 ): string {
   validateForgeArtifactSegment(target.id);
   validateForgeArtifactSegment(target.framework.id);
   const cacheName = `${path.basename(rootDir)}-cms-${target.id}-${target.framework.id}`;
-  return path.join(rootDir, "node_modules/.cache", cacheName);
+  return path.join(cacheRoot, cacheName);
 }
 
 /** The distribution directory a target's per-framework modules are emitted to. */
@@ -267,7 +268,7 @@ export function defineTsdownForgeCms(
       "all" | "shared" | "framework" | undefined) ?? "all",
     overrides,
   } = options;
-  const cacheDirectory = cmsCacheDirectory(rootDir, target);
+  const cacheDirectory = cmsCacheDirectory(rootDir, target, outputRoot);
   const outDir = cmsBuildOutputDirectory(
     rootDir,
     target,
