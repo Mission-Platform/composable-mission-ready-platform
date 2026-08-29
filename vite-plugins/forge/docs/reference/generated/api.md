@@ -58,6 +58,91 @@ export interface ForgeArtifactRecord
 
 One deterministic output recorded by a target-scoped artifact manifest.
 
+## `src/compiler/artifact-path`
+
+### assertForgeArtifactRoot
+
+**Kind:** function
+
+```typescript
+function assertForgeArtifactRoot(root: string): string;
+```
+
+Validate an output root and reject an existing symlink or non-directory.
+Descendant components are checked by the artifact resolver before use.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| root | string |             |
+
+### ensureForgeArtifactDirectory
+
+**Kind:** function
+
+```typescript
+function ensureForgeArtifactDirectory(root: string, directory: string): string;
+```
+
+Create an output directory one component at a time without following links.
+
+#### Parameters
+
+| Name      | Type   | Description |
+| --------- | ------ | ----------- |
+| root      | string |             |
+| directory | string |             |
+
+### resolveForgeArtifactPath
+
+**Kind:** function
+
+```typescript
+function resolveForgeArtifactPath(root: string, relativeName: string): string;
+```
+
+Resolve an artifact name and verify that existing path components are safe.
+
+#### Parameters
+
+| Name         | Type   | Description |
+| ------------ | ------ | ----------- |
+| root         | string |             |
+| relativeName | string |             |
+
+### validateForgeArtifactName
+
+**Kind:** function
+
+```typescript
+function validateForgeArtifactName(relativeName: string): string;
+```
+
+Validate an artifact name without normalising away unsafe path segments.
+
+#### Parameters
+
+| Name         | Type   | Description |
+| ------------ | ------ | ----------- |
+| relativeName | string |             |
+
+### validateForgeArtifactSegment
+
+**Kind:** function
+
+```typescript
+function validateForgeArtifactSegment(segment: string): string;
+```
+
+Validate a single path component used to construct an artifact root.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| segment | string |             |
+
 ## `src/compiler/artifact-writer`
 
 ### createForgeArtifactWriter

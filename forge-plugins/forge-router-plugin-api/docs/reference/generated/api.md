@@ -24,7 +24,7 @@ Create a source-local diagnostic for a router compiler failure.
 
 | Name       | Type                                                                              | Description |
 | ---------- | --------------------------------------------------------------------------------- | ----------- |
-| diagnostic | Omit<CompilerDiagnostic, 'phase' \| 'fileName'> & { readonly fileName?: string; } |             |
+| diagnostic | Omit<CompilerDiagnostic, "phase" \| "fileName"> & { readonly fileName?: string; } |             |
 
 ### defineForgeRouterPlugin
 

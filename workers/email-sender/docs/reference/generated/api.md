@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/email-sender`.
 **Kind:** type
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 No description provided.
@@ -31,15 +31,19 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name        | Type     | Description |
-| ----------- | -------- | ----------- |
-| request     | Request  |             |
-| environment | Env      |             |
-| delivery    | Delivery |             |
+| Name        | Type              | Description |
+| ----------- | ----------------- | ----------- |
+| request     | Request           |             |
+| environment | WorkerEnvironment |             |
+| delivery    | Delivery          |             |
