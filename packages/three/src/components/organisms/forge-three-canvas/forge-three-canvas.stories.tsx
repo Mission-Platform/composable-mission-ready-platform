@@ -1,8 +1,6 @@
-import * as THREE from 'three';
-
-import { ForgeThreeCanvas, type ThreeContext } from '@mission-platform/three';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { ForgeThreeCanvas, type ThreeContext } from '@mission-platform/three';
+import * as THREE from 'three';
 
 /**
  * A small Three.js scene demonstrating `@mission-platform/three`. A single cube

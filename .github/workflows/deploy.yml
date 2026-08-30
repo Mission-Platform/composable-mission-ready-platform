@@ -23,6 +23,8 @@ concurrency:
 jobs:
   deploy:
     name: Deploy (staging)
+    # Staging deployments are handled by Cloudflare directly.
+    if: ${{ false }}
     runs-on: ubuntu-latest
 
     # Map onto the GitHub `staging` environment so deployments are tracked and
