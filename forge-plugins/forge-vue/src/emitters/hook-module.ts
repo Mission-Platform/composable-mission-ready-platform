@@ -264,13 +264,12 @@ function emitStatement(
         ? `(() => { let cleanup: (() => void) | undefined; onMounted(() => { const result = (${callbackText})(); cleanup = typeof result === "function" ? result : undefined; }); onUnmounted(() => cleanup?.()); })();`
         : `onMounted(${callbackText});`;
     }
-    vueImports.add("onMounted");
     vueImports.add("watch");
     const source = rewriteExpression(dependencies, scope);
     const watchExpression = hasCleanup
       ? `watch(() => ${source}, (_value, _oldValue, onCleanup) => { ${invoke} }, { immediate: true });`
       : `watch(() => ${source}, ${callbackText}, { immediate: true });`;
-    return `onMounted(() => { ${watchExpression} });`;
+    return watchExpression;
   }
   return rewriteExpression(statement, scope);
 }

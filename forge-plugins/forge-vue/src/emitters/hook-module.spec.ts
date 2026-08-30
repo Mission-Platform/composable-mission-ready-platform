@@ -32,15 +32,13 @@ describe("the Vue hook-module emitter compiles a neutral composable", () => {
 
     const code = emitVueHookModule(module);
 
-    expect(code).toContain(
-      "import { ref, watch, onMounted, type Ref } from 'vue';",
-    );
+    expect(code).toContain("import { ref, watch, type Ref } from 'vue';");
     expect(code).toContain(
       "export function useCounter(initial: number): Ref<number> {",
     );
     expect(code).toContain("const count = ref(initial);");
     expect(code).toContain(
-      "onMounted(() => { watch(() => [count.value], () => { report(count.value); }, { immediate: true }); });",
+      "watch(() => [count.value], () => { report(count.value); }, { immediate: true });",
     );
     expect(code).toContain("count.value = initial;");
     expect(code).toContain("return count as Ref<number>;");
