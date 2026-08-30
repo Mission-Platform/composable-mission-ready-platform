@@ -29,6 +29,75 @@ jobs:
           # Full history lets `turbo run … --affected` diff against the base.
           fetch-depth: 0
 
+      - name: Set Turbo SCM comparison range
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF: ${{ github.ref }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_BASE_REF: ${{ github.base_ref }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          readonly zero_sha=0000000000000000000000000000000000000000
+
+          resolve_commit() {
+            local commit="$1"
+            local label="$2"
+            local ref="$3"
+
+            if git cat-file -e "${commit}^{commit}" 2>/dev/null; then
+              return
+            fi
+
+            if [[ -n "$ref" ]]; then
+              git fetch --no-tags origin "$ref" || true
+            fi
+            if ! git cat-file -e "${commit}^{commit}" 2>/dev/null; then
+              git fetch --no-tags origin "$commit" || true
+            fi
+            if ! git cat-file -e "${commit}^{commit}" 2>/dev/null; then
+              echo "::error::Unable to resolve the $label commit '$commit' after the full-history checkout." >&2
+              exit 1
+            fi
+          }
+
+          case "$EVENT_NAME" in
+            pull_request)
+              base="$PR_BASE_SHA"
+              head="$GITHUB_SHA"
+              base_ref="refs/heads/$PR_BASE_REF"
+              head_ref="$GITHUB_REF"
+              ;;
+            push)
+              base="$PUSH_BEFORE_SHA"
+              head="$GITHUB_SHA"
+              base_ref="$GITHUB_REF"
+              head_ref="$GITHUB_REF"
+              ;;
+            *)
+              echo "::error::Unsupported CI event '$EVENT_NAME'; cannot determine a Turbo SCM comparison range." >&2
+              exit 1
+              ;;
+          esac
+
+          if [[ -z "$base" || -z "$head" ]]; then
+            echo "::error::The $EVENT_NAME event did not provide both Turbo SCM comparison commits." >&2
+            exit 1
+          fi
+          if [[ "$base" == "$zero_sha" ]]; then
+            echo "::error::The initial push has no previous commit for Turbo's affected comparison." >&2
+            exit 1
+          fi
+
+          resolve_commit "$base" "base" "$base_ref"
+          resolve_commit "$head" "head" "$head_ref"
+
+          printf 'TURBO_SCM_BASE=%s\n' "$base" >> "$GITHUB_ENV"
+          printf 'TURBO_SCM_HEAD=%s\n' "$head" >> "$GITHUB_ENV"
+
       - name: Set up pnpm
         uses: pnpm/action-setup@f520eceda224fe1a4aed5a2a27a194379a409996 # v6
         with:

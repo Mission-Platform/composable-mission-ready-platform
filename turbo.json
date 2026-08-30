@@ -332,6 +332,17 @@
       "dependsOn": [
         "build"
       ],
+      "env": [
+        "CLOUDFLARE_API_TOKEN",
+        "CLOUDFLARE_ACCOUNT_ID"
+      ],
+      "cache": false
+    },
+    "deploy:staging": {
+      "env": [
+        "CLOUDFLARE_API_TOKEN",
+        "CLOUDFLARE_ACCOUNT_ID"
+      ],
       "cache": false
     },
     "i18n:extract": {

@@ -797,17 +797,22 @@ Convert a public name to its technical name (`InView` → `in_view`).
 **Kind:** function
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
+function cmsCacheDirectory(
+  rootDir: string,
+  target: CmsOutputPlugin,
+  cacheRoot = path.join(rootDir, "node_modules/.cache"),
+): string;
 ```
 
 The cache directory a target's generated tree is written to.
 
 #### Parameters
 
-| Name    | Type            | Description |
-| ------- | --------------- | ----------- |
-| rootDir | string          |             |
-| target  | CmsOutputPlugin |             |
+| Name      | Type            | Description |
+| --------- | --------------- | ----------- |
+| rootDir   | string          |             |
+| target    | CmsOutputPlugin |             |
+| cacheRoot |                 |             |
 
 ### cmsOutputDirectory
 
