@@ -9,4 +9,19 @@ export default [
       'unicorn/consistent-function-scoping': 'off',
     },
   },
+  {
+    files: ['src/components/organisms/forge-theme-composer/forge-theme-composer.stories.tsx'],
+    rules: {
+      'import-x/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          'newlines-between': 'always',
+          pathGroups: [{ pattern: '@mission-platform/**', group: 'external' }],
+          pathGroupsExcludedImportTypes: ['builtin'],
+          alphabetize: { order: 'asc', caseInsensitive: true },
+        },
+      ],
+    },
+  },
 ];
