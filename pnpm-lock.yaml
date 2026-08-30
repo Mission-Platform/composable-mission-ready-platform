@@ -7285,6 +7285,9 @@ importers:
       '@mission-platform/forge-plugin-web-components':
         specifier: workspace:*
         version: link:../forge-plugins/forge-web-components
+      '@mission-platform/forge-web-script':
+        specifier: workspace:*
+        version: link:../packages/forge-web-script
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../configs/prettier-config
