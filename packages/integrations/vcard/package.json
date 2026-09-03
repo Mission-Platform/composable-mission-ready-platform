@@ -1,0 +1,129 @@
+{
+  "name": "@mission-platform/vcard",
+  "version": "0.2.1",
+  "description": "RFC 6350 vCard and RFC 5545 iCalendar data and Forge components for Mission Platform",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "mp:vue": {
+        "types": "./dist/vue/index.d.ts",
+        "import": "./dist/vue/index.js"
+      },
+      "mp:react": {
+        "types": "./dist/react/index.d.ts",
+        "import": "./dist/react/index.js"
+      },
+      "mp:solid": {
+        "types": "./dist/solid/index.d.ts",
+        "import": "./dist/solid/index.js"
+      },
+      "mp:svelte": {
+        "types": "./dist/svelte/index.d.ts",
+        "import": "./dist/svelte/index.js"
+      },
+      "mp:web-component": {
+        "types": "./dist/web-components/index.d.ts",
+        "import": "./dist/web-components/index.js"
+      },
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./calendar": {
+      "types": "./dist/calendar/index.d.ts",
+      "import": "./dist/calendar/index.js"
+    }
+  },
+  "dependencies": {
+    "@mission-platform/components": "workspace:*",
+    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/typography": "workspace:*",
+    "luxon": "catalog:",
+    "nanoid": "^5.1.16"
+  },
+  "peerDependencies": {
+    "lit": "^3.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "solid-js": "^1.9.0",
+    "svelte": "^5.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "lit": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build:forge": "node --experimental-strip-types ../../../scripts/build-forge.ts --target forge",
+    "build:react": "node --experimental-strip-types ../../../scripts/build-forge.ts --target react",
+    "build:vue": "node --experimental-strip-types ../../../scripts/build-forge.ts --target vue",
+    "build:svelte": "node --experimental-strip-types ../../../scripts/build-forge.ts --target svelte",
+    "build:solid": "node --experimental-strip-types ../../../scripts/build-forge.ts --target solid",
+    "build:web-components": "node --experimental-strip-types ../../../scripts/build-forge.ts --target web-components",
+    "build:cms-storyblok": "tsdown",
+    "build:cms-storyblok:assets": "FORGE_CMS_ARTIFACT_MODE=shared FORGE_CMS_STORYBLOK_TARGET=react tsdown",
+    "build:cms-storyblok:react": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=react tsdown",
+    "build:cms-storyblok:vue": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=vue tsdown",
+    "build:cms-storyblok:svelte": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=svelte tsdown",
+    "build:cms-storyblok:solid": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=solid tsdown",
+    "build:cms-storyblok:web-components": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=web-components tsdown",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build": "node --experimental-strip-types ../../../scripts/build-forge.ts",
+    "build:bundle": "tsdown",
+    "build:types": "tsdown",
+    "build:watch": "tsdown --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/forge-plugin-react": "workspace:*",
+    "@mission-platform/forge-plugin-solid": "workspace:*",
+    "@mission-platform/forge-plugin-svelte": "workspace:*",
+    "@mission-platform/forge-plugin-vue": "workspace:*",
+    "@mission-platform/forge-plugin-web-components": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/storybook-framework": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-forge": "workspace:*",
+    "@mission-platform/forge-cms-plugin-api": "workspace:*",
+    "@mission-platform/forge-cms-storyblok": "workspace:*",
+    "@types/luxon": "catalog:",
+    "@types/node": "catalog:typescript",
+    "@vitest/coverage-v8": "catalog:testing",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
+  }
+}

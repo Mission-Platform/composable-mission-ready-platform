@@ -16,10 +16,10 @@ Mission Platform 使用 pnpm 工作区和 Turborepo 来管理多包环境。存�
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
+├── packages/tooling/configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
+├── packages/tooling/vite/           # Build-time extensions and compilers
+├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
@@ -53,7 +53,7 @@ composable_mission_ready_platform/
 - **`@mission-platform/barcode`**、**`@mission-platform/code-scanner`**、**`@mission-platform/matrix-code`** 和
   **`@mission-platform/qr-code`**：Wasm 支持的扫描和编码包。
 
-### 3. `configs/`（工具基础）
+### 3. `packages/tooling/configs/`（工具基础）
 
 共享配置可确保所有工作区的一致性。该目录中的包通常用作
 `devDependencies`。
@@ -63,7 +63,7 @@ composable_mission_ready_platform/
 - **`tsdown-config/`** 和 **`vite-config/`**：通用库、应用程序、Vite 和 Vitest 构建模式。
 - **`i18n-config/`** 和 **`storybook-framework/`**：共享区域设置提取和框架工作台设置。
 
-### 4. `vite-plugins/`（构建扩展）
+### 4. `packages/tooling/vite/`（构建扩展）
 
 扩展 Vite 构建过程的自定义插件。
 
@@ -71,7 +71,7 @@ composable_mission_ready_platform/
 - **`tokens/`**：从 DTCG 令牌定义生成代码工件。
 - **`i18n/`**：处理区域设置加载和静态提取。
 
-### 5.`workers/`（边缘服务）
+### 5.`packages/edge/workers/`（边缘服务）
 
 Cloudflare Workers 用于服务器端逻辑和优化的资产交付。
 

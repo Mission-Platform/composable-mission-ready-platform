@@ -66,9 +66,9 @@ Mission Platform은 최신 고성능 스택을 기반으로 구축되었습니�
 - **`apps/`**: 패키지를 제품으로 구성하는 배포 가능한 애플리케이션(예: `my-care-notes`, `website`)입니다.
 - **`packages/`**: `@mission-platform/components`, `@mission-platform/router` 및
   `@mission-platform/i18n`.
-- **`configs/`**: ESLint, Prettier, TypeScript 및 Vite에 대한 공유 구성입니다.
-- **`vite-plugins/`**: 디자인 토큰, Forge 컴파일 및 SEO를 위한 맞춤형 빌드 타임 도구입니다.
-- **`workers/`**: 백엔드 논리 및 SPA 제공 기능을 제공하는 Cloudflare Workers.
+- **`packages/tooling/configs/`**: ESLint, Prettier, TypeScript 및 Vite에 대한 공유 구성입니다.
+- **`packages/tooling/vite/`**: 디자인 토큰, Forge 컴파일 및 SEO를 위한 맞춤형 빌드 타임 도구입니다.
+- **`packages/edge/workers/`**: 백엔드 논리 및 SPA 제공 기능을 제공하는 Cloudflare Workers.
 
 ## 다음 단계
 

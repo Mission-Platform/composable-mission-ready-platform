@@ -14,10 +14,6 @@ import {
 const WORKSPACE_ROOTS: Array<[string, WorkspacePackage['scope']]> = [
   ['apps', 'app'],
   ['packages', 'package'],
-  ['configs', 'config'],
-  ['forge-plugins', 'plugin'],
-  ['vite-plugins', 'plugin'],
-  ['workers', 'worker'],
   ['examples', 'example'],
   ['mcp', 'mcp'],
   ['scripts', 'script'],

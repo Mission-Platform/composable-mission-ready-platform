@@ -19,9 +19,9 @@ Mission Platform עוקבת אחר ארכיטקטורה מונעת חבילה ו
 
 כדי לשמור על monorepo בר תחזוקה, אנו אוכפים זרימת תלות חד כיוונית קפדנית:
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (ישיר לתצורת כלי עבודה/בנייה)
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`** (ישיר לתצורת כלי עבודה/בנייה)
 
 **כלל:** קוד פנימה `packages/` חייב **לעולם לא** לייבא מ `apps/`. זה מונע תלות מעגלית ומבטיח
 החבילות נשארות ניתנות לשימוש חוזר באמת.
@@ -33,7 +33,7 @@ Mission Platform עוקבת אחר ארכיטקטורה מונעת חבילה ו
 מגלה ומציג את הסיפורים שחיים לצד מרכיביהם.
 
 - איתור משותף של כל אחד `.stories.tsx` קובץ עם הרכיב שלו בתוך ספריית החבילות של אותו רכיב (למשל.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), לא מתחת `apps/storybook`. זה תואם
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), לא מתחת `apps/storybook`. זה תואם
   האמנה ב [עיצוב רכיבים אטומיים](atomic-component-design.md).
 - אמת את התנהגות הרכיב על פני Vue, React, Svelte, Solid, ורכיבי אינטרנט על ידי החלפת ה-
   `STORYBOOK_FRAMEWORK` משתנה סביבה. כל מצב חייב לצרוך את אותו מלאי סיפור ניטרלי; חסר
@@ -76,7 +76,7 @@ done
 
 - **רכיבי ממשק משתמש חדשים**: שייכים ל `packages/`.
 - **כלי שירות משותפים**: שייך ל `packages/`.
-- **כלי מוך/פורמט/בנייה**: תצורות משותפות שייכות ל `configs/`.
+- **כלי מוך/פורמט/בנייה**: תצורות משותפות שייכות ל `packages/tooling/configs/`.
 
 ### מוך ועיצוב
 

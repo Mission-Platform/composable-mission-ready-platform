@@ -66,9 +66,9 @@ Le référentiel est organisé en plusieurs zones distinctes :
 - **`apps/`** : applications déployables (par exemple, `my-care-notes`, `website`) qui composent des packages en produits.
 - **`packages/`** : les éléments de base, notamment `@mission-platform/components`, `@mission-platform/router` et
   `@mission-platform/i18n`.
-- **`configs/`** : configurations partagées pour ESLint, Prettier, TypeScript et Vite.
-- **`vite-plugins/`** : outils de construction personnalisés pour les jetons de conception, la compilation Forge et le référencement.
-- **`workers/`** : Cloudflare Workers fournissant une logique backend et des capacités de service SPA.
+- **`packages/tooling/configs/`** : configurations partagées pour ESLint, Prettier, TypeScript et Vite.
+- **`packages/tooling/vite/`** : outils de construction personnalisés pour les jetons de conception, la compilation Forge et le référencement.
+- **`packages/edge/workers/`** : Cloudflare Workers fournissant une logique backend et des capacités de service SPA.
 
 ## Prochaines étapes
 

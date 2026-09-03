@@ -7,8 +7,8 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 
 Esta página de todo el proyecto es un directorio de capacidades y compatibilidad de paquetes.
 contratos. La instalación canónica, el uso, las limitaciones y los detalles de API para
-cada paquete vive al lado de ese paquete en `packages/*/docs/`, `configs/*/docs/`,
-y `forge-plugins/*/docs/`. Las referencias de API generadas deben agregarse a la propiedad.
+cada paquete vive al lado de ese paquete en `packages/**/docs/`, ` `,
+y ` `. Las referencias de API generadas deben agregarse a la propiedad.
 paquete en lugar de esta página.
 
 > **Las importaciones siempre son simples.** Los paquetes `@mission-platform/*` de envío de marco exponen un solo `.`
@@ -313,7 +313,7 @@ El prefijo `sha256-v1` permite futuras actualizaciones del algoritmo hash sin am
 ## Lectura adicional
 
 - [Guía de migración de Vue 2 a Vue 3](migration-guides/vue2-to-vue3.md)
-- [Descripción general de la configuración del proyecto](configs/index.md)
+- [Descripción general de la configuración del proyecto](packages/tooling/configs/index.md)
 - [Estructura del espacio de trabajo](workspace-structure.md)
 
 ## Índice completo del paquete del espacio de trabajo
@@ -366,9 +366,9 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 
 ### Forjar objetivos del compilador
 
-Estos viven en `forge-plugins/` en lugar de `packages/`. Un complemento **framework** decide en qué tiempo de ejecución es un componente neutral
+Estos viven en `packages/compiler/plugins/` en lugar de `packages/`. Un complemento **framework** decide en qué tiempo de ejecución es un componente neutral
 se reduce a; un destino **CMS** decide en qué plataforma de contenido se proyecta. Los dos ejes se componen, por lo que cualquier CMS
-El objetivo puede estar vinculado a cualquier complemento del marco. Consulte la [Canalización del compilador Forge](../../../vite-plugins/forge/docs/locales/es/reference/compiler.md).
+El objetivo puede estar vinculado a cualquier complemento del marco. Consulte la [Canalización del compilador Forge](../../../packages/tooling/vite/forge/docs/locales/es/reference/compiler.md).
 
 | Paquete | Propósito |
 | :---------------------------------------------- | :-------------------------------------------------------------------------------- |

@@ -65,4 +65,4 @@ Mission Platform 通过 Forge 适配器为其他框架提供不同级别的支�
 ## 相关资源
 - [最佳实践](best-practices.md)
 - [测试指南](testing.md)
-- [@mission-platform/forge 自述文件](../../../packages/forge/README.md)
+- [@mission-platform/forge 自述文件](../../../packages/compiler/forge/forge/README.md)

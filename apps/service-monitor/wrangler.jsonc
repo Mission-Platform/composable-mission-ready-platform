@@ -9,7 +9,7 @@
   "first_party_worker": true,
   "build": {
     "cwd": "../../",
-    "watch_dir": ["./apps/service-monitor/src/**", "./workers/**"],
+    "watch_dir": ["./apps/service-monitor/src/**", "./packages/edge/workers/**"],
     "command": "pnpm exec turbo run build --filter=@mission-platform/service-monitor"
   },
   "assets": {

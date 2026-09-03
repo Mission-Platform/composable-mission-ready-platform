@@ -79,5 +79,5 @@ pnpm --filter @mission-platform/service-monitor deploy:staging
 - [إعداد التطوير](development-setup.md)
 - [هيكل مساحة العمل](workspace-structure.md)
 - [بناء النظام](build-system.md)
-- [تكوين العامل](configs/workers-config.md)
+- [تكوين العامل](packages/tooling/configs/workers-config.md)
 - [اختبار](testing.md)

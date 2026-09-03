@@ -110,7 +110,7 @@ done
 
 Door Forge ondersteunde pakketten publiceren matching `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, En `mp:web-component` voorwaarden. De actieve voorwaarde moet zijn
-geconfigureerd door de verbruikende bundelaar; zien [de compilerreferentie](../../../vite-plugins/forge/docs/locales/nl/reference/compiler.md)
+geconfigureerd door de verbruikende bundelaar; zien [de compilerreferentie](../../../packages/tooling/vite/forge/docs/locales/nl/reference/compiler.md)
 voor de doelplug-in en declaratiepijplijn.
 
 ### Applicatieontwikkeling

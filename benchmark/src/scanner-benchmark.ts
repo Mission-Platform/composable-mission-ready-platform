@@ -123,7 +123,7 @@ function checkedIterations(options: ScannerBenchmarkOptions): {
 
 async function loadScanner(): Promise<ScannerApi> {
   const scannerUrl = new URL(
-    "../../packages/code-scanner/dist/index.js",
+    "../../packages/integrations/code-scanner/dist/index.js",
     import.meta.url,
   );
   const module = await import(scannerUrl.href);

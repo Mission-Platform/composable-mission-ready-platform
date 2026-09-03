@@ -19,9 +19,9 @@ componibles, utilidades) viven en `packages/`, mientras que las aplicaciones imp
 
 Para mantener un monorepo mantenible, aplicamos un estricto flujo de dependencia unidireccional:
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (Directamente para herramientas/configuración de compilación)
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`** (Directamente para herramientas/configuración de compilación)
 
 **Regla:** Código en `packages/` **nunca** debe importar desde `apps/`. Esto evita dependencias circulares y garantiza
 Los paquetes siguen siendo verdaderamente reutilizables.
@@ -33,7 +33,7 @@ ambiente. El `apps/storybook` La aplicación no contiene las historias en sí: e
 descubre y representa las historias que conviven con sus componentes.
 
 - Co-ubicar cada uno `.stories.tsx` archivo con su componente dentro del directorio del paquete de ese componente (p. ej.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), no bajo `apps/storybook`. Esto coincide
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), no bajo `apps/storybook`. Esto coincide
   la convención en [Diseño de componentes atómicos](atomic-component-design.md).
 - Verificar el comportamiento de los componentes en Vue, React, Svelte, Solidy componentes web cambiando el
   `STORYBOOK_FRAMEWORK` variable de entorno. Cada modo debe consumir el mismo inventario de historia neutral; un desaparecido
@@ -76,7 +76,7 @@ solucionador del consumidor con la coincidencia `mp:vue`, `mp:react`, `mp:svelte
 
 - **Nuevos componentes de la interfaz de usuario**: pertenecen a `packages/`.
 - **Utilidades compartidas**: pertenecen a `packages/`.
-- **Lint/Format/Build Tooling**: las configuraciones compartidas pertenecen a `configs/`.
+- **Lint/Format/Build Tooling**: las configuraciones compartidas pertenecen a `packages/tooling/configs/`.
 
 ### Linting y formato
 

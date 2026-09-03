@@ -79,5 +79,5 @@ Verwenden `wrangler secret put` für Geheimnisse. Behalten Sie Bindungen und nic
 - [Entwicklungs-Setup](development-setup.md)
 - [Arbeitsbereichsstruktur](workspace-structure.md)
 - [Build-System](build-system.md)
-- [Worker-Konfiguration](configs/workers-config.md)
+- [Worker-Konfiguration](packages/tooling/configs/workers-config.md)
 - [Testen](testing.md)

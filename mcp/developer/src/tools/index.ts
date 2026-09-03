@@ -4,7 +4,7 @@
  * component usage, workspace creation/development, FWS security, and discovery.
  */
 
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
 import {
@@ -44,7 +44,7 @@ import {
   surveyLocales,
   updateTranslation,
 } from '@mission-platform/mcp-shared/repo/locales';
-import { findRepoRoot, groupDir, resolveRepoPath, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
+import { findRepoRoot, resolveRepoPath, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
 import {
   findMember,
   listDocs,
@@ -74,7 +74,7 @@ function toolError(error: unknown) {
   };
 }
 
-/** Resolve `packages/<name>` (accepts bare folder or `@mission-platform/<name>`). */
+/** Resolve a package below `packages/` (accepts a folder or `@mission-platform/<name>`). */
 function resolvePackageTarget(packageName: string): { packageDir: string; relativePackageDir: string; folder: string } {
   const folder = packageName.replace(/^@mission-platform\//, '').trim();
   if (!folder) {
@@ -84,12 +84,16 @@ function resolvePackageTarget(packageName: string): { packageDir: string; relati
   if (nameError) {
     throw new Error(nameError);
   }
-  const relativePackageDir = `packages/${folder}`;
-  const packageDir = join(groupDir('packages'), folder);
-  if (!existsSync(packageDir)) {
+  const member = findMember('packages', packageName);
+  if (!member) {
+    const relativePackageDir = `packages/${folder}`;
     throw new Error(`Package "${relativePackageDir}" does not exist.`);
   }
-  return { packageDir: resolveRepoPath(packageDir, relativePackageDir), relativePackageDir, folder };
+  return {
+    packageDir: resolveRepoPath(member.dir, member.relativeDir),
+    relativePackageDir: member.relativeDir,
+    folder,
+  };
 }
 
 function normalizeUnitName(raw: string): string {
@@ -610,7 +614,7 @@ export function registerTools(server: McpServer): void {
     'read_doc',
     {
       description:
-        'Read a single repository document by its slug (see `list_docs`), e.g. "best-practices" or "configs/eslint-config".',
+        'Read a single repository document by its slug (see `list_docs`), e.g. "best-practices" or "packages/tooling/configs/eslint-config".',
       inputSchema: {
         slug: z.string().describe('Document slug from `list_docs`.'),
       },
@@ -791,12 +795,12 @@ export function registerTools(server: McpServer): void {
   server.registerTool(
     'list_workers',
     {
-      description: 'List all Cloudflare Workers in workers/.',
+      description: 'List all Cloudflare Workers in packages/edge/workers/.',
       inputSchema: {},
     },
     async () => {
       return json(
-        listGroup('workers').map((member) => ({
+        listGroup('edge-workers').map((member) => ({
           name: member.name,
           version: member.version,
           description: member.description,
@@ -811,9 +815,7 @@ export function registerTools(server: McpServer): void {
       description:
         'Get detailed info for a workspace member: its manifest scripts and dependencies, plus its llms.txt/README when present.',
       inputSchema: {
-        group: z
-          .enum(['packages', 'apps', 'workers', 'vite-plugins', 'configs', 'crates'])
-          .describe('Workspace group.'),
+        group: z.enum(['packages', 'apps', 'edge-workers', 'crates']).describe('Workspace group.'),
         name: z.string().describe('Folder name or scoped package name.'),
       },
     },
@@ -914,7 +916,7 @@ export function registerTools(server: McpServer): void {
     'scaffold_worker',
     {
       description:
-        'Generate a convention-compliant workers/<name> Cloudflare Worker skeleton (private manifest, tsconfig set, shared configs, typed fetch handler). Dry-run unless apply=true.',
+        'Generate a convention-compliant packages/edge/workers/<name> Cloudflare Worker skeleton (private manifest, tsconfig set, shared configs, typed fetch handler). Dry-run unless apply=true.',
       inputSchema: {
         name: z.string().describe('Kebab-case worker name, e.g. "asset-proxy".'),
         description: z.string().optional().describe('Short worker description.'),
@@ -928,7 +930,7 @@ export function registerTools(server: McpServer): void {
       }
       try {
         const files = workerFiles({ name, description: args.description?.trim() ?? '' });
-        const result = writeScaffold({ group: 'workers', name, files, apply: args.apply === true });
+        const result = writeScaffold({ group: 'edge-workers', name, files, apply: args.apply === true });
         return json(result);
       } catch (error) {
         return {
@@ -1157,7 +1159,7 @@ export function registerTools(server: McpServer): void {
           .optional()
           .describe('Workspace member folder (e.g. "website"). Omit to survey all members of the group.'),
         group: z
-          .enum(['apps', 'packages', 'workers', 'vite-plugins', 'configs', 'crates'])
+          .enum(['apps', 'packages', 'edge-workers', 'tooling-vite', 'tooling-configs', 'crates'])
           .optional()
           .describe('Workspace group. Defaults to "apps".'),
       },
@@ -1198,7 +1200,7 @@ export function registerTools(server: McpServer): void {
         name: z.string().describe('Workspace member folder (e.g. "website").'),
         locale: z.string().describe('New locale code — a BCP-47 tag such as "pt", "pt-br" or "zh-hans".'),
         group: z
-          .enum(['apps', 'packages', 'workers', 'vite-plugins', 'configs', 'crates'])
+          .enum(['apps', 'packages', 'edge-workers', 'tooling-vite', 'tooling-configs', 'crates'])
           .optional()
           .describe('Workspace group. Defaults to "apps".'),
         fill: z
@@ -1240,7 +1242,7 @@ export function registerTools(server: McpServer): void {
         name: z.string().describe('Workspace member folder (e.g. "website").'),
         locale: z.string().describe('Locale code to remove (e.g. "ko").'),
         group: z
-          .enum(['apps', 'packages', 'workers', 'vite-plugins', 'configs', 'crates'])
+          .enum(['apps', 'packages', 'edge-workers', 'tooling-vite', 'tooling-configs', 'crates'])
           .optional()
           .describe('Workspace group. Defaults to "apps".'),
         apply: z.boolean().optional().describe('Delete files. Defaults to false (dry run).'),
@@ -1279,7 +1281,7 @@ export function registerTools(server: McpServer): void {
           .describe('Map of dot-path key -> new value, e.g. { "hero.title": "Hola", "nav.about": "Acerca de" }.'),
         namespace: z.string().optional().describe('i18n namespace (e.g. "mp.website"). Inferred when unambiguous.'),
         group: z
-          .enum(['apps', 'packages', 'workers', 'vite-plugins', 'configs', 'crates'])
+          .enum(['apps', 'packages', 'edge-workers', 'tooling-vite', 'tooling-configs', 'crates'])
           .optional()
           .describe('Workspace group. Defaults to "apps".'),
         apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),

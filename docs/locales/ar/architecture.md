@@ -22,10 +22,10 @@
 ```mermaid
 graph TD
     Apps[apps/] --> Packages[packages/]
-    Apps --> Plugins[vite-plugins/]
-    Apps --> Workers[workers/]
-    Packages --> ForgePlugins[forge-plugins/]
-    Packages --> Configs[configs/]
+    Apps --> Plugins[packages/tooling/vite/]
+    Apps --> Workers[packages/edge/workers/]
+    Packages --> ForgePlugins[packages/compiler/plugins/]
+    Packages --> Configs[packages/tooling/configs/]
     ForgePlugins --> Plugins
     ForgePlugins --> Configs
     Plugins --> Configs
@@ -36,10 +36,10 @@ graph TD
    com.monorepo.
 2. ** الحزم (`packages/`)**: توفير منطق ومكونات قابلة لإعادة الاستخدام. يمكنهم الاعتماد على بعضهم البعض ولكن ليس عليهم أبدًا
    التطبيقات.
-3. ** صياغة الإضافات (`forge-plugins/`)**: أهداف مخرجات المترجم - المكونات الإضافية لإطار العمل وأهداف CMS. قد يعتمدون عليها
-   `vite-plugins/` و `configs/`، وأبدا `apps/` أو على إخوة بعضهم البعض؛ محول CMS يعتمد فقط على
+3. ** صياغة الإضافات (`packages/compiler/plugins/`)**: أهداف مخرجات المترجم - المكونات الإضافية لإطار العمل وأهداف CMS. قد يعتمدون عليها
+   `packages/tooling/vite/` و `packages/tooling/configs/`، وأبدا `apps/` أو على إخوة بعضهم البعض؛ محول CMS يعتمد فقط على
    `forge-cms-plugin-api`.
-4. ** التكوينات (`configs/`)**: إعدادات الأدوات المشتركة (ESLint, TypeScript، إلخ.). هم الأساس ويعتمدون عليه
+4. ** التكوينات (`packages/tooling/configs/`)**: إعدادات الأدوات المشتركة (ESLint, TypeScript، إلخ.). هم الأساس ويعتمدون عليه
    لا شيء داخل monorepo.
 
 ## محرك محايد الإطار: صياغة
@@ -65,7 +65,7 @@ graph TD
 أي أزواج منصة مع أي إطار ويصل الإخراج `dist/cms/<cms>/<framework>/**`.
 
 للحصول على خط الأنابيب الكامل، والمستهلكين المكونين والربط، وإسقاط CMS، وتوجيهات الامتداد، راجع
-[صياغة خط أنابيب مترجم](../../../vite-plugins/forge/docs/locales/ar/reference/compiler.md). للحصول على طريقة عرض تزامن البناء، راجع
+[صياغة خط أنابيب مترجم](../../../packages/tooling/vite/forge/docs/locales/ar/reference/compiler.md). للحصول على طريقة عرض تزامن البناء، راجع
 [بناء النظام](build-system.md).
 
 ## تصميم نظام رمزي
@@ -105,7 +105,7 @@ graph TD
 
 ### نشر Cloudflare
 
-يتم نشر التطبيقات بشكل أساسي على **Cloudflare Pages**، مع **Cloudflare Workers** (تحت `workers/`) توفير
+يتم نشر التطبيقات بشكل أساسي على **Cloudflare Pages**، مع **Cloudflare Workers** (تحت `packages/edge/workers/`) توفير
 منطق متخصص لوكيل API وخدمة أصول SPA.
 
 ## ملخص

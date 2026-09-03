@@ -2,14 +2,14 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> docs/configs/workers-config.md: [docs/configs/workers-config.md](../../../configs/workers-config.md)
+> docs/packages/tooling/configs/workers-config.md: [docs/packages/tooling/configs/workers-config.md](../../../packages/tooling/configs/workers-config.md)
 > 언어: 한국어 (ko)
 
 작업자 구현 문서는 게시 가능한 각 작업자 옆에 속합니다.
 
-- [`@mission-platform/api-proxy`](../../../../workers/api-proxy/docs/locales/ko/index.md) — 제한된 읽기 전용 API 프록시.
-- [`@mission-platform/email-sender`](../../../../workers/email-sender/docs/locales/ko/index.md) — 로컬 MailPit 지원 발신자.
-- [`@mission-platform/forge-spa`](../../../../workers/forge-spa/docs/locales/ko/index.md) — 공유 `ASSETS` SPA 대체 처리기.
+- [`@mission-platform/api-proxy`](../../../../packages/edge/workers/api-proxy/docs/locales/ko/index.md) — 제한된 읽기 전용 API 프록시.
+- [`@mission-platform/email-sender`](../../../../packages/edge/workers/email-sender/docs/locales/ko/index.md) — 로컬 MailPit 지원 발신자.
+- [`@mission-platform/forge-spa`](../../../../packages/edge/workers/forge-spa/docs/locales/ko/index.md) — 공유 `ASSETS` SPA 대체 처리기.
 
 이 프로젝트 페이지는 교차 작업공간 배포 맵만 유지합니다. 노동자
 패키지는 핸들러 계약, 예제, 테스트 및 빌드 지침을 소유합니다.
@@ -20,8 +20,8 @@
 
 | 신청 | 핸들러 | 구성 | 자산 |
 | :---------- | :------ | :------------ | :----- |
-| 웹사이트 | `workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, 다음과 같이 바인딩됨 `ASSETS` |
-| 나의 케어 노트 | `workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, 다음과 같이 바인딩됨 `ASSETS` |
+| 웹사이트 | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, 다음과 같이 바인딩됨 `ASSETS` |
+| 나의 케어 노트 | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, 다음과 같이 바인딩됨 `ASSETS` |
 | 서비스 모니터 | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, 다음과 같이 바인딩됨 `ASSETS` |
 | 문서 | 정적 자산 | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
 

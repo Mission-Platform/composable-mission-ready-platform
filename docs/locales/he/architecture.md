@@ -22,10 +22,10 @@ Mission Platform מתוכננת לשימוש חוזר מקסימלי וגמיש�
 ```mermaid
 graph TD
     Apps[apps/] --> Packages[packages/]
-    Apps --> Plugins[vite-plugins/]
-    Apps --> Workers[workers/]
-    Packages --> ForgePlugins[forge-plugins/]
-    Packages --> Configs[configs/]
+    Apps --> Plugins[packages/tooling/vite/]
+    Apps --> Workers[packages/edge/workers/]
+    Packages --> ForgePlugins[packages/compiler/plugins/]
+    Packages --> Configs[packages/tooling/configs/]
     ForgePlugins --> Plugins
     ForgePlugins --> Configs
     Plugins --> Configs
@@ -36,10 +36,10 @@ graph TD
    מונורפו.
 2. **חבילות (`packages/`)**: ספק היגיון ורכיבים לשימוש חוזר. הם יכולים לסמוך זה על זה אבל לעולם לא
    יישומים.
-3. **זיוף תוספים (`forge-plugins/`)**: יעדי פלט מהדר - תוספי מסגרת ויעדי CMS. הם עשויים להיות תלויים
-   `vite-plugins/` ו `configs/`, ולעולם לא על `apps/` או על אחיו של זה; מתאם CMS תלוי רק ב
+3. **זיוף תוספים (`packages/compiler/plugins/`)**: יעדי פלט מהדר - תוספי מסגרת ויעדי CMS. הם עשויים להיות תלויים
+   `packages/tooling/vite/` ו `packages/tooling/configs/`, ולעולם לא על `apps/` או על אחיו של זה; מתאם CMS תלוי רק ב
    `forge-cms-plugin-api`.
-4. **תצורות (`configs/`)**: הגדרות כלי עבודה משותפות (ESLint, TypeScriptוכו'). הם הבסיס ותלויים בהם
+4. **תצורות (`packages/tooling/configs/`)**: הגדרות כלי עבודה משותפות (ESLint, TypeScriptוכו'). הם הבסיס ותלויים בהם
    שום דבר בתוך המונורפו.
 
 ## מנוע ניטרלי מסגרת: Forge
@@ -65,7 +65,7 @@ graph TD
 כל פלטפורמה משתלבת עם כל מסגרת והפלט נוחת פנימה `dist/cms/<cms>/<framework>/**`.
 
 לקבלת הצינור המלא, צרכני הרכיבים והקרס, הקרנת CMS והנחיית הרחבה, ראה
-[Forge Compiler Pipeline](../../../vite-plugins/forge/docs/locales/he/reference/compiler.md). לתצוגת תזמור הבנייה, ראה
+[Forge Compiler Pipeline](../../../packages/tooling/vite/forge/docs/locales/he/reference/compiler.md). לתצוגת תזמור הבנייה, ראה
 [בניית מערכת](build-system.md).
 
 ## מערכת אסימון עיצוב
@@ -105,7 +105,7 @@ Turborepo מטפל בהרמה כבדה של בנייה, בדיקה ומוך על
 
 ### פריסת Cloudflare
 
-יישומים נפרסים בעיקר ב-**Cloudflare Pages**, עם **Cloudflare Workers** (תחת `workers/`) מתן
+יישומים נפרסים בעיקר ב-**Cloudflare Pages**, עם **Cloudflare Workers** (תחת `packages/edge/workers/`) מתן
 לוגיקה מיוחדת ל-Proxying API והגשת נכסי SPA.
 
 ## תַקצִיר

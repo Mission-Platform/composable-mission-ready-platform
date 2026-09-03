@@ -65,4 +65,4 @@ Mission Platform מספקת רמות שונות של תמיכה עבור מסג�
 ## משאבים קשורים
 - [שיטות עבודה מומלצות](best-practices.md)
 - [מדריך בדיקות](testing.md)
-- [@mission-platform/forge README](../../../packages/forge/README.md)
+- [@mission-platform/forge README](../../../packages/compiler/forge/forge/README.md)

@@ -12,7 +12,7 @@ import {listDocs, listGroup, readDoc as readDocument} from '../repo/scanner.ts';
 import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 
 function inventory(): string {
-  const groups = (['packages', 'apps', 'workers', 'vite-plugins', 'configs', 'crates'] as const).map((group) => ({
+  const groups = (['packages', 'apps', 'crates'] as const).map((group) => ({
     group,
     members: listGroup(group).map((member) => ({
       name: member.name,

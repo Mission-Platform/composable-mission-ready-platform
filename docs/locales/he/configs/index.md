@@ -2,10 +2,10 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
+> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
 > שפה: עברית (he)
 
-פלטפורמת המשימה משתמשת בחבילות תצורה מרכזיות ב- `configs/` ספרייה כדי להבטיח עקביות על פני
+פלטפורמת המשימה משתמשת בחבילות תצורה מרכזיות ב- `packages/tooling/configs/` ספרייה כדי להבטיח עקביות על פני
 המונורפו.
 
 ## סקירה כללית
@@ -21,15 +21,15 @@
 
 | חבילה | מטרה | משטח תצורה ראשי |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/he/index.md) | שָׁטוּחַ ESLint כללים עבור JS/TS ו Vue. | `eslint.config.js` |
-| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/he/index.md) | ברירת המחדל של עיצוב מאגר. | `prettier.config.js` |
-| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/he/index.md) | TypeScript הגדרות מראש של מהדר. | `tsconfig.json` |
-| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/he/index.md) | מוך CSS ו-SCSS. | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/he/index.md) | Vite ו Vitest עוזרי תצורה. | `vite.config.ts` |
-| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/he/index.md) | עוזרי צרור ספרייה. | `tsdown.config.ts` |
-| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/he/index.md) | צינור PostCSS משותף. | `postcss.config.mjs` |
-| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/he/index.md) | הגדרות מקומיות וחילוץ משותפות. | `i18next.config.ts` |
-| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/he/index.md) | מסגרת של ספר סיפורים שנבחרה בסביבה. | `.storybook/main.ts` |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/he/index.md) | שָׁטוּחַ ESLint כללים עבור JS/TS ו Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/he/index.md) | ברירת המחדל של עיצוב מאגר. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/he/index.md) | TypeScript הגדרות מראש של מהדר. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/he/index.md) | מוך CSS ו-SCSS. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/he/index.md) | Vite ו Vitest עוזרי תצורה. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/he/index.md) | עוזרי צרור ספרייה. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/he/index.md) | צינור PostCSS משותף. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/he/index.md) | הגדרות מקומיות וחילוץ משותפות. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/he/index.md) | מסגרת של ספר סיפורים שנבחרה בסביבה. | `.storybook/main.ts` |
 | [תצורת עובדים](workers-config.md) | מוסכמות Cloudflare Worker חוצה סביבות עבודה. | `wrangler.jsonc` |
 
 ## כלי ליבה
@@ -100,7 +100,7 @@ export default { ...baseConfig };
 ## בחירת תצורה
 
 השתמש בחבילה שבבעלותה הדאגה במקום להעתיק כללים לסביבת עבודה. קבצי בניית יישומים וספריות
-עשוי להוסיף עקיפות מקומיות, אך ברירות מחדל משותפות צריכות להישאר `configs/`. לחבילה חדשה, התחל עם החבילה
+עשוי להוסיף עקיפות מקומיות, אך ברירות מחדל משותפות צריכות להישאר `packages/tooling/configs/`. לחבילה חדשה, התחל עם החבילה
 פיגום ולאחר מכן הפעל את בדיקות סביבת העבודה:
 
 ```bash

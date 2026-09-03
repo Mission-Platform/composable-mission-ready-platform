@@ -22,10 +22,10 @@ Mission Platform は、最大限の再利用性とフレームワーク間の柔
 ```mermaid
 graph TD
     Apps[apps/] --> Packages[packages/]
-    Apps --> Plugins[vite-plugins/]
-    Apps --> Workers[workers/]
-    Packages --> ForgePlugins[forge-plugins/]
-    Packages --> Configs[configs/]
+    Apps --> Plugins[packages/tooling/vite/]
+    Apps --> Workers[packages/edge/workers/]
+    Packages --> ForgePlugins[packages/compiler/plugins/]
+    Packages --> Configs[packages/tooling/configs/]
     ForgePlugins --> Plugins
     ForgePlugins --> Configs
     Plugins --> Configs
@@ -36,10 +36,10 @@ graph TD
    モノレポ。
 2. **パッケージ (`packages/`)**: 再利用可能なロジックとコンポーネントを提供します。彼らはお互いに依存することはできますが、決して依存することはありません
    アプリケーション。
-3. **プラグインを鍛造する (`forge-plugins/`)**: コンパイラ出力ターゲット - フレームワーク プラグインと CMS ターゲット。彼らは次のものに依存している可能性があります
-   `vite-plugins/` そして `configs/`、そして決してオンになりません `apps/` またはお互いの兄弟について。 CMS アダプターは以下にのみ依存します
+3. **プラグインを鍛造する (`packages/compiler/plugins/`)**: コンパイラ出力ターゲット - フレームワーク プラグインと CMS ターゲット。彼らは次のものに依存している可能性があります
+   `packages/tooling/vite/` そして `packages/tooling/configs/`、そして決してオンになりません `apps/` またはお互いの兄弟について。 CMS アダプターは以下にのみ依存します
    `forge-cms-plugin-api`。
-4. **構成 (`configs/`)**: 共有ツール設定 (ESLint, TypeScript、など）。それらは基盤であり、依存しています
+4. **構成 (`packages/tooling/configs/`)**: 共有ツール設定 (ESLint, TypeScript、など）。それらは基盤であり、依存しています
    モノリポジトリ内には何もありません。
 
 ## フレームワーク中立エンジン: Forge
@@ -65,7 +65,7 @@ graph TD
 任意のプラットフォームと任意のフレームワークを組み合わせると、出力が次のようになります。 `dist/cms/<cms>/<framework>/**`.
 
 完全なパイプライン、コンポーネントとフックのコンシューマ、CMS プロジェクション、および拡張機能のガイダンスについては、以下を参照してください。
-[Forge コンパイラ パイプライン](../../../vite-plugins/forge/docs/locales/ja/reference/compiler.md)。ビルド オーケストレーション ビューについては、次を参照してください。
+[Forge コンパイラ パイプライン](../../../packages/tooling/vite/forge/docs/locales/ja/reference/compiler.md)。ビルド オーケストレーション ビューについては、次を参照してください。
 [ビルドシステム](build-system.md).
 
 ## デザイントークンシステム
@@ -105,7 +105,7 @@ Turborepo は、モノレポ全体にわたる構築、テスト、リンティ�
 
 ### Cloudflareの導入
 
-アプリケーションは主に **Cloudflare Workers** を使用して **Cloudflare Pages** にデプロイされます ( `workers/`) 提供する
+アプリケーションは主に **Cloudflare Workers** を使用して **Cloudflare Pages** にデプロイされます ( `packages/edge/workers/`) 提供する
 API プロキシと SPA アセット サービスに特化したロジック。
 
 ## まとめ

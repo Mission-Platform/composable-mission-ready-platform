@@ -46,16 +46,16 @@ assembled from those blocks in \`apps/\`.
 ## Workspace groups
 - \`apps/\` — deployable applications (always \`"private": true\`).
 - \`packages/\` — reusable, independently versioned building blocks.
-- \`workers/\` — Cloudflare Workers (always \`"private": true\`).
-- \`vite-plugins/\` — Vite build plugins consumed by apps.
-- \`configs/\` — shared lint/format/build tooling (never imports from apps/packages).
+- \`packages/edge/workers/\` — Cloudflare Workers (always \`"private": true\`).
+- \`packages/tooling/vite/\` — Vite build plugins consumed by apps.
+- \`packages/tooling/configs/\` — shared lint/format/build tooling (never imports from apps/packages).
 - \`scripts/\` — repository-wide tooling scripts.
 
 ## Golden rules
-1. **Dependency direction is one-way:** \`apps\` → \`packages\`/\`vite-plugins\`/\`workers\` → \`configs\`.
-   Code in \`packages/\`, \`configs/\`, \`vite-plugins/\`, and \`workers/\` must **never** import from \`apps/\`.
+1. **Dependency direction is one-way:** \`apps/\` → \`packages/\` and domain packages depend only on lower-level shared contracts.
+   Code in \`packages/\`, \`packages/tooling/configs/\`, \`packages/tooling/vite/\`, and \`packages/edge/workers/\` must **never** import from \`apps/\`.
 2. **TypeScript everywhere:** new files are \`.ts\`, \`.tsx\`, or \`.vue\` (\`<script setup lang="ts">\`). No plain \`.js\`/\`.jsx\` source.
-3. **Isolation of concerns:** new UI/composables/utilities/tokens belong in \`packages/\`, not embedded in an app. New shared tooling belongs in \`configs/\`.
+3. **Isolation of concerns:** new UI/composables/utilities/tokens belong in \`packages/\`, not embedded in an app. New shared tooling belongs in \`packages/tooling/configs/\`.
 4. **Storybook as workbench:** when adding/changing components in \`packages/\`, add or update stories in \`apps/storybook\`.
 5. **Changesets:** every change to a published workspace needs a changeset (\`pnpm changeset\`).`;
 
@@ -133,7 +133,7 @@ import { ForgeButton } from '@mission-platform/components';
 - Props follow a canonical \`2xs → 2xl\` size scale and named design-token spacing.
 - Styling ships with the component via co-located CSS Modules (\`@layer mp.components\`).
 - Prefer existing components over re-implementing UI. If a component is missing,
-  add it to \`packages/components\` (see the package-development guide) and add a story.`;
+  add it to \`packages/ui/components\` (see the package-development guide) and add a story.`;
 
 const ATOMIC_COMPONENT_DESIGN = `# Atomic Component Design
 
@@ -452,7 +452,7 @@ const APP_DEVELOPMENT = `# Developing an App
 
 const WORKER_CREATION = `# Creating a Worker
 
-Workers live in \`workers/<name>/\`, are \`"private": true\`, scoped \`@mission-platform/<name>\`,
+Workers live in \`packages/edge/workers/<name>/\`, are \`"private": true\`, scoped \`@mission-platform/<name>\`,
 and serve static assets / handle SPA fallbacks (or proxy APIs) on Cloudflare.
 
 ## Fastest path
@@ -461,9 +461,9 @@ manifest, \`tsconfig.json\` + \`tsconfig.build.json\` (extends \`.../library\`, 
 re-exported eslint/prettier configs, and \`src/index.ts\` with a typed \`fetch\` handler.
 
 ## Manual steps
-1. \`mkdir workers/<name>\`; add \`package.json\` (\`"private": true\`, \`"type": "module"\`,
+1. \`mkdir packages/edge/workers/<name>\`; add \`package.json\` (\`"private": true\`, \`"type": "module"\`,
    \`exports\`/\`types\` → \`dist\`, \`build\`: \`tsc --project tsconfig.build.json\`).
-2. Add \`@cloudflare/workers-types\` (\`catalog:cloudflare\`) and the shared configs/typescript-config as devDependencies.
+2. Add \`@cloudflare/workers-types\` (\`catalog:cloudflare\`) and the shared packages/tooling/configs/typescript-config as devDependencies.
 3. Add \`tsconfig.json\` (references \`tsconfig.build.json\`) and \`tsconfig.build.json\`
    (extends \`@mission-platform/typescript-config/library\`, \`types: ["@cloudflare/workers-types"]\`).
 4. Re-export eslint/prettier configs.
@@ -471,13 +471,13 @@ re-exported eslint/prettier configs, and \`src/index.ts\` with a typed \`fetch\`
 6. \`pnpm install\`, then \`pnpm exec turbo run build --filter @mission-platform/<name>\`.
 
 ## Guardrails
-- Workers may consume \`packages/\` at runtime and \`configs/\` as devDependencies, but never import from \`apps/\`.`;
+- Workers may consume \`packages/\` at runtime and \`packages/tooling/configs/\` as devDependencies, but never import from \`apps/\`.`;
 
 const WORKER_DEVELOPMENT = `# Developing a Worker
 
 ## Layout
 \`\`\`
-workers/<name>/
+packages/edge/workers/<name>/
 ├── src/index.ts        # default export with an async fetch(request, env) handler
 ├── package.json
 ├── tsconfig.json / tsconfig.build.json

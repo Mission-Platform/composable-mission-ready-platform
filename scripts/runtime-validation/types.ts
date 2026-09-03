@@ -27,7 +27,7 @@ export interface WorkspacePackage {
   name: string;
   directory: string;
   relativeDirectory: string;
-  scope: 'app' | 'package' | 'config' | 'plugin' | 'worker' | 'example' | 'script' | 'mcp' | 'crate' | 'other';
+  scope: 'app' | 'package' | 'example' | 'script' | 'mcp' | 'crate' | 'other';
 }
 
 export interface StoryFile {

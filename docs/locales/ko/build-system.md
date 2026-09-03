@@ -57,7 +57,7 @@ Forge 패키지 빌드는 중립 컴파일러 프런트 엔드를 일반에 추�
 CMS 빌드는 다음으로 내보냅니다. `dist/cms/<cms>/<framework>/**`, 매니페스트 및 기타 플랫폼 사이드카가 미러링됨
 `dist/cms/<cms>/`. 수화된 런타임(Astro, Webflow)이 필요한 대상은 경계에서 섬 트리를 공동 생성합니다.
 프레임워크 플러그인을 동일한 빌드에 추가합니다. 완전한 책임 분할 및 단계 경계는 다음에 설명되어 있습니다.
-[Forge 컴파일러 파이프라인](../../../vite-plugins/forge/docs/locales/ko/reference/compiler.md).
+[Forge 컴파일러 파이프라인](../../../packages/tooling/vite/forge/docs/locales/ko/reference/compiler.md).
 
 ## 계약 구축
 
@@ -144,7 +144,7 @@ pnpm build:force
 
 ## 공유 구성
 
-빌드 구성은 중앙 집중화되어 있습니다. `configs/` 모노레포 전체에서 일관성을 유지하기 위한 디렉터리입니다.
+빌드 구성은 중앙 집중화되어 있습니다. `packages/tooling/configs/` 모노레포 전체에서 일관성을 유지하기 위한 디렉터리입니다.
 
 | 패키지 | 목적 |
 | :------------------------------------ | :----------------------------------------------------------- |

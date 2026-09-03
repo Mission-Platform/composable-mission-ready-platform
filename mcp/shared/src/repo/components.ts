@@ -10,7 +10,7 @@ import {join} from 'node:path';
 
 import {groupDir} from './paths.ts';
 
-const COMPONENTS_DIR = join(groupDir('packages'), 'components', 'src', 'components');
+const COMPONENTS_DIR = join(groupDir('packages'), 'ui', 'components', 'src', 'components');
 
 /** Atomic-design level folders under `src/components/`. */
 export const ATOMIC_LEVELS = ['atoms', 'molecules', 'organisms', 'templates', 'pages'] as const;

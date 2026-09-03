@@ -57,7 +57,7 @@ el marco se elige de forma independiente, `storyblok × vue` y `astro × solid` 
 Las compilaciones de CMS emiten a `dist/cms/<cms>/<framework>/**`, con manifiestos y otros sidecares de plataforma reflejados en
 `dist/cms/<cms>/`. Los objetivos que necesitan un tiempo de ejecución hidratado (Astro, Webflow) cogeneran un árbol de isla a partir del límite.
 complemento de framework en la misma compilación. La división completa de responsabilidades y los límites de las etapas se describen en
-[Canalización del compilador Forge](../../../vite-plugins/forge/docs/locales/es/reference/compiler.md).
+[Canalización del compilador Forge](../../../packages/tooling/vite/forge/docs/locales/es/reference/compiler.md).
 
 ## contrato de construcción
 
@@ -144,7 +144,7 @@ restaurado desde el caché.
 
 ## Configuraciones compartidas
 
-Las configuraciones de compilación están centralizadas en el `configs/` directorio para mantener la coherencia en todo el monorepo.
+Las configuraciones de compilación están centralizadas en el `packages/tooling/configs/` directorio para mantener la coherencia en todo el monorepo.
 
 | Paquete | Propósito |
 | :------------------------------------ | :----------------------------------------------------------- |

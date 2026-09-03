@@ -7,8 +7,8 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Deze projectbrede pagina is een directory met pakketmogelijkheden en compatibiliteit
 contracten. De canonieke installatie, het gebruik, de beperkingen en API-details voor
-elk pakket bevindt zich naast dat pakket onder `packages/*/docs/`, `configs/*/docs/`,
-en `forge-plugins/*/docs/`. Gegenereerde API-referenties moeten worden toegevoegd aan het bezit
+elk pakket bevindt zich naast dat pakket onder `packages/**/docs/`, ` `,
+en ` `. Gegenereerde API-referenties moeten worden toegevoegd aan het bezit
 pakket in plaats van deze pagina.
 
 > **Imports zijn altijd kaal.** Framework-verzending `@mission-platform/*`-pakketten tonen één `.`
@@ -313,7 +313,7 @@ Het voorvoegsel `sha256-v1` maakt toekomstige upgrades van het hash-algoritme zo
 ## Verder lezen
 
 - [Vue 2 naar Vue 3 Migratiehandleiding](migration-guides/vue2-to-vue3.md)
-- [Overzicht projectconfiguratie](configs/index.md)
+- [Overzicht projectconfiguratie](packages/tooling/configs/index.md)
 - [Werkruimtestructuur](workspace-structure.md)
 
 ## Volledige werkruimtepakketindex
@@ -366,9 +366,9 @@ pakket in `packages/`, inclusief de getypte WebAssembly gevels.
 
 ### Smeed compilerdoelen
 
-Deze bevinden zich in `forge-plugins/` in plaats van `packages/`. Een **framework**-plug-in bepaalt welke runtime een neutraal onderdeel is
+Deze bevinden zich in `packages/compiler/plugins/` in plaats van `packages/`. Een **framework**-plug-in bepaalt welke runtime een neutraal onderdeel is
 wordt verlaagd naar; een **CMS**-doel bepaalt op welk contentplatform het wordt geprojecteerd. De twee assen vormen elkaar, dus elk CMS
-target kan aan elke framework-plug-in worden gekoppeld. Zie de [Forge Compiler Pipeline](../../../vite-plugins/forge/docs/locales/nl/reference/compiler.md).
+target kan aan elke framework-plug-in worden gekoppeld. Zie de [Forge Compiler Pipeline](../../../packages/tooling/vite/forge/docs/locales/nl/reference/compiler.md).
 
 | Pakket | Doel |
 | :---------------------------------------------- | :-------------------------------------------------------------------------------- |

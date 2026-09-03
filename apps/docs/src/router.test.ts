@@ -7,7 +7,9 @@ import { routes } from './router';
 describe('localized documentation routes', () => {
   it('keeps English URLs unprefixed and prefixes translated documents', () => {
     expect(documentPath('overview')).toBe('/overview');
-    expect(documentPath('configs/index', 'fr')).toBe('/fr/configs/index');
+    expect(documentPath('packages/tooling/configs/eslint-config/index', 'fr')).toBe(
+      '/fr/packages/tooling/configs/eslint-config/index',
+    );
   });
 
   it('restricts locale resolution to supported locale segments', () => {

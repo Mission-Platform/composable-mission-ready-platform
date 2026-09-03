@@ -6,13 +6,13 @@ on:
       - main
       - develop
     paths:
-      - packages/hunspell/docker/**
+      - packages/content/hunspell/docker/**
   pull_request:
     branches:
       - main
       - develop
     paths:
-      - packages/hunspell/docker/**
+      - packages/content/hunspell/docker/**
 
 concurrency:
   group: docker-hunspell-${{ github.ref }}
@@ -34,4 +34,4 @@ jobs:
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4
 
       - name: Build Hunspell WASM
-        run: GHA_CACHE=1 bash packages/hunspell/build.sh
+        run: GHA_CACHE=1 bash packages/content/hunspell/build.sh

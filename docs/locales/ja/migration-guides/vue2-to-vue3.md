@@ -18,7 +18,7 @@ Mission Platform は、Composition API および `<script setup>` 構文で Vue 
 
 - `apps/` からのインポートはありません。
 - すべての共有ロジックは `packages/` に存在する必要があります。
-- 構成は `configs/` から取得する必要があります。
+- 構成は `packages/tooling/configs/` から取得する必要があります。
 
 ## ステップ 1: ビルド構成を更新する
 

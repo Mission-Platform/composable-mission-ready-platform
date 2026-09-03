@@ -65,4 +65,4 @@ Mission Platform は、Forge アダプターを通じて他のフレームワー
 ## 関連リソース
 - [ベストプラクティス](best-practices.md)
 - [テストガイド](testing.md)
-- [@mission-platform/forge の README](../../../packages/forge/README.md)
+- [@mission-platform/forge の README](../../../packages/compiler/forge/forge/README.md)

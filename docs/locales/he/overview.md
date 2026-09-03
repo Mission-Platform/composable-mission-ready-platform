@@ -66,9 +66,9 @@ Mission Platform בנויה על ערימה מודרנית עם ביצועים �
 - **`apps/`**: יישומים הניתנים לפריסה (למשל, `my-care-notes`, `website`) שמרכיבים חבילות למוצרים.
 - **`packages/`**: אבני הבניין הליבה, כולל `@mission-platform/components`, `@mission-platform/router`, ו
   `@mission-platform/i18n`.
-- **`configs/`**: תצורות משותפות עבור ESLint, Prettier, TypeScript ו-Vite.
-- **`vite-plugins/`**: כלי עבודה מותאמים אישית בזמן הבנייה עבור אסימוני עיצוב, הידור Forge ו-SEO.
-- **`workers/`**: Cloudflare Workers מספקים לוגיקה אחורית ויכולות הגשת SPA.
+- **`packages/tooling/configs/`**: תצורות משותפות עבור ESLint, Prettier, TypeScript ו-Vite.
+- **`packages/tooling/vite/`**: כלי עבודה מותאמים אישית בזמן הבנייה עבור אסימוני עיצוב, הידור Forge ו-SEO.
+- **`packages/edge/workers/`**: Cloudflare Workers מספקים לוגיקה אחורית ויכולות הגשת SPA.
 
 ## השלבים הבאים
 

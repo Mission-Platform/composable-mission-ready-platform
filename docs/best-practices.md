@@ -14,9 +14,8 @@ composables, utilities) live in `packages/`, while deployable applications are a
 
 To maintain a maintainable monorepo, we enforce a strict one-way dependency flow:
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (Directly for tooling/build config)
+- **`apps`** → **`packages`**
+- **`packages`** → lower-level domain packages such as **`core`**, **`tooling`**, and **`compiler`**
 
 **Rule:** Code in `packages/` must **never** import from `apps/`. This prevents circular dependencies and ensure
 packages remain truly reusable.
@@ -28,7 +27,7 @@ environment. The `apps/storybook` app does not contain the stories itself — it
 discovers and renders the stories that live alongside their components.
 
 - Co-locate each `.stories.tsx` file with its component inside that component's package directory (e.g.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), not under `apps/storybook`. This matches
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), not under `apps/storybook`. This matches
   the convention in [Atomic Component Design](atomic-component-design.md).
 - Verify component behavior across Vue, React, Svelte, Solid, and Web Components by switching the
   `STORYBOOK_FRAMEWORK` environment variable. Each mode must consume the same neutral story inventory; a missing
@@ -71,7 +70,7 @@ consumer's resolver with the matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:sol
 
 - **New UI Components**: Belong in `packages/`.
 - **Shared Utilities**: Belong in `packages/`.
-- **Lint/Format/Build Tooling**: Shared configurations belong in `configs/`.
+- **Lint/Format/Build Tooling**: Shared configurations belong in `packages/tooling/configs/`.
 
 ### Linting and Formatting
 

@@ -110,7 +110,7 @@ done
 
 Von Forge unterstützte Pakete veröffentlichen Matching `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, Und `mp:web-component` Bedingungen. Die aktive Bedingung muss sein
-vom konsumierenden Bundler konfiguriert; sehen [die Compiler-Referenz](../../../vite-plugins/forge/docs/locales/de/reference/compiler.md)
+vom konsumierenden Bundler konfiguriert; sehen [die Compiler-Referenz](../../../packages/tooling/vite/forge/docs/locales/de/reference/compiler.md)
 für das Ziel-Plugin und die Deklarationspipeline.
 
 ### Anwendungsentwicklung

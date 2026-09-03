@@ -205,7 +205,7 @@ export default {
 
 패키지별 설치, 사용법, 제한 사항, 기여자 워크플로 및 API 참조 페이지는
 저장소 전체 `docs/` 트리가 아닌 패키지의 `docs/` 디렉터리입니다. 문서 사이트는 이러한 파일을 직접 수집하고
-`/packages/barcode/index` 또는 `/configs/eslint-config/index`과 같은 안정적인 패키지 네임스페이스에 게시합니다.
+`/packages/integrations/barcode/index` 또는 `/packages/tooling/configs/eslint-config/index`과 같은 안정적인 패키지 네임스페이스에 게시합니다.
 프로젝트 전반의 개념, 아키텍처, 작업 공간 워크플로우 및 패키지 간 문제 해결은 루트 `docs/`에 남아 있습니다.
 
 생성된 API 페이지는 `docs/reference/generated/` 아래에 있으며 패키지 `prebuild` 후크에 의해 새로 고쳐집니다. 편집하지 마세요

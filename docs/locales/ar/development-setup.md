@@ -110,7 +110,7 @@ done
 
 تنشر الحزم المدعومة من Forge المطابقة `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`، و `mp:web-component` شروط. يجب أن تكون الحالة النشطة
-تم تكوينه بواسطة المجمع المستهلك؛ يرى [مرجع المترجم](../../../vite-plugins/forge/docs/locales/ar/reference/compiler.md)
+تم تكوينه بواسطة المجمع المستهلك؛ يرى [مرجع المترجم](../../../packages/tooling/vite/forge/docs/locales/ar/reference/compiler.md)
 للمكون الإضافي المستهدف وخط أنابيب الإعلان.
 
 ### تطوير التطبيقات

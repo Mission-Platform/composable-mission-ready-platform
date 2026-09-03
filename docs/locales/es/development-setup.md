@@ -110,7 +110,7 @@ done
 
 Los paquetes respaldados por Forge publican coincidencias `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, y `mp:web-component` condiciones. La condición activa debe ser
-configurado por el paquete consumidor; ver [la referencia del compilador](../../../vite-plugins/forge/docs/locales/es/reference/compiler.md)
+configurado por el paquete consumidor; ver [la referencia del compilador](../../../packages/tooling/vite/forge/docs/locales/es/reference/compiler.md)
 para el complemento de destino y la canalización de declaración.
 
 ### Desarrollo de aplicaciones

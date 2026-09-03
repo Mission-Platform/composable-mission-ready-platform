@@ -2,7 +2,7 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/packages/tooling/configs/scripts-config.md: [docs/packages/tooling/configs/scripts-config.md](../../../packages/tooling/configs/scripts-config.md)
 > 言語: 日本語 (ja)
 
 このガイドは意図的にプロジェクト ドキュメント層に残されます。 `scripts/`

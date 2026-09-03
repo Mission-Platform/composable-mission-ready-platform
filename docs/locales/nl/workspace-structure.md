@@ -16,10 +16,10 @@ in functionele lagen:
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
+├── packages/tooling/configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
+├── packages/tooling/vite/           # Build-time extensions and compilers
+├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
@@ -53,7 +53,7 @@ Herbruikbare bibliotheken met versiebeheer die door apps worden gebruikt. Deze z
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, en
   **`@mission-platform/qr-code`**: door Wasm ondersteunde scan- en coderingspakketten.
 
-### 3. `configs/` (Tooling-basis)
+### 3. `packages/tooling/configs/` (Tooling-basis)
 
 Gedeelde configuraties die consistentie in alle werkruimten garanderen. Pakketten in deze map worden doorgaans gebruikt als
 `devDependencies`.
@@ -63,7 +63,7 @@ Gedeelde configuraties die consistentie in alle werkruimten garanderen. Pakkette
 - **`tsdown-config/`** en **`vite-config/`**: gemeenschappelijke bibliotheek-, app-, Vite- en Vitest-buildpatronen.
 - **`i18n-config/`** en **`storybook-framework/`**: gedeelde locale-extractie en framework-workbench-instellingen.
 
-### 4. `vite-plugins/` (build-uitbreidingen)
+### 4. `packages/tooling/vite/` (build-uitbreidingen)
 
 Aangepaste plug-ins die het Vite-buildproces uitbreiden.
 
@@ -71,7 +71,7 @@ Aangepaste plug-ins die het Vite-buildproces uitbreiden.
 - **`tokens/`**: genereert codeartefacten op basis van DTCG-tokendefinities.
 - **`i18n/`**: verzorgt lokaal laden en statische extractie.
 
-### 5. `workers/` (Edge-services)
+### 5. `packages/edge/workers/` (Edge-services)
 
 Cloudflare Workers voor logica aan de serverzijde en geoptimaliseerde levering van assets.
 

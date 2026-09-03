@@ -65,4 +65,4 @@ Mission Platform proporciona distintos niveles de soporte para otros marcos a tr
 ## Recursos relacionados
 - [Mejores prácticas](best-practices.md)
 - [Guía de prueba](testing.md)
-- [@mission-platform/forge LÉAME](../../../packages/forge/README.md)
+- [@mission-platform/forge LÉAME](../../../packages/compiler/forge/forge/README.md)

@@ -29,10 +29,10 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
 ## Core Principles
 
 ### Dependency Direction
-Code in `packages/`, `configs/`, `vite-plugins/`, and `workers/` must never import from `apps/`. The dependency flow is strictly one-way: `apps` → `packages`/`vite-plugins`/`workers` → `configs` (and `apps` → `configs` directly for tooling).
+Code in `packages/` must never import from `apps/`. The dependency flow is strictly one-way: `apps/` consume reusable members from `packages/`, while domain packages may depend on lower-level `core`, `tooling`, and compiler contracts without importing applications.
 
 ### Isolation of Concerns
-New UI components, composables, utilities, or design tokens belong in `packages/`, not embedded inside an app. New shared lint/format/build tooling belongs in `configs/`.
+New UI components, composables, utilities, or design tokens belong in `packages/`, not embedded inside an app. New shared lint/format/build tooling belongs in `packages/tooling/configs/`.
 
 ### Storybook as Workbench
 When adding or modifying components in `packages/`, add or update corresponding stories in `apps/storybook`.

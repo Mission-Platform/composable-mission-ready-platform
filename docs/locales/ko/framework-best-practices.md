@@ -65,4 +65,4 @@ Mission Platform은 Forge 어댑터를 통해 다른 프레임워크에 대한 �
 ## 관련 자료
 - [모범 사례](best-practices.md)
 - [테스트 가이드](testing.md)
-- [@mission-platform/forge 읽어보기](../../../packages/forge/README.md)
+- [@mission-platform/forge 읽어보기](../../../packages/compiler/forge/forge/README.md)

@@ -2,10 +2,10 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
+> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
 > 言語: 日本語 (ja)
 
-Mission Platform は、集中管理された構成パッケージを使用します。 `configs/` ディレクトリ間で一貫性を確保する
+Mission Platform は、集中管理された構成パッケージを使用します。 `packages/tooling/configs/` ディレクトリ間で一貫性を確保する
 モノレポ。
 
 ## 概要
@@ -21,15 +21,15 @@ Mission Platform は、集中管理された構成パッケージを使用しま
 
 |パッケージ |目的 |一次構成面 |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/ja/index.md) |フラット ESLint JS/TS のルールと Vue. | `eslint.config.js` |
-| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/ja/index.md) |リポジトリのフォーマットのデフォルト。 | `prettier.config.js` |
-| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/ja/index.md) | TypeScript コンパイラのプリセット。 | `tsconfig.json` |
-| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/ja/index.md) | CSS および SCSS リンティング。 | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/ja/index.md) | Vite そして Vitest 構成ヘルパー。 | `vite.config.ts` |
-| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/ja/index.md) |ライブラリのバンドル ヘルパー。 | `tsdown.config.ts` |
-| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/ja/index.md) |共有PostCSSパイプライン。 | `postcss.config.mjs` |
-| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/ja/index.md) |共有ロケールと抽出設定。 | `i18next.config.ts` |
-| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/ja/index.md) |環境によって選択された Storybook フレームワークのプリセット。 | `.storybook/main.ts` |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/ja/index.md) |フラット ESLint JS/TS のルールと Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/ja/index.md) |リポジトリのフォーマットのデフォルト。 | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/ja/index.md) | TypeScript コンパイラのプリセット。 | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/ja/index.md) | CSS および SCSS リンティング。 | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/ja/index.md) | Vite そして Vitest 構成ヘルパー。 | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/ja/index.md) |ライブラリのバンドル ヘルパー。 | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/ja/index.md) |共有PostCSSパイプライン。 | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/ja/index.md) |共有ロケールと抽出設定。 | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/ja/index.md) |環境によって選択された Storybook フレームワークのプリセット。 | `.storybook/main.ts` |
 | [ワーカーの構成](workers-config.md) |クロスワークスペースの Cloudflare Worker 規約。 | `wrangler.jsonc` |
 
 ## コアツーリング
@@ -100,7 +100,7 @@ export default { ...baseConfig };
 ## 構成の選択
 
 ルールをワークスペースにコピーするのではなく、懸念事項を所有するパッケージを使用します。アプリケーションとライブラリのビルド ファイル
-ローカルオーバーライドを追加することはできますが、共有デフォルトはそのままにしておく必要があります。 `configs/`。新しいパッケージの場合は、パッケージから開始します
+ローカルオーバーライドを追加することはできますが、共有デフォルトはそのままにしておく必要があります。 `packages/tooling/configs/`。新しいパッケージの場合は、パッケージから開始します
 scaffold を作成してから、ワークスペース チェックを実行します。
 
 ```bash

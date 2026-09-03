@@ -6,15 +6,7 @@ import { parseDocumentationModulePath, qualifiedSlug, type DocumentationSourceRo
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type DocumentationLocale } from './i18n';
 
 const rawModules = import.meta.glob(
-  [
-    '../../../docs/**/*.md',
-    '../../../packages/**/docs/**/*.md',
-    '../../../configs/**/docs/**/*.md',
-    '../../../forge-plugins/**/docs/**/*.md',
-    '../../../vite-plugins/**/docs/**/*.md',
-    '../../../workers/**/docs/**/*.md',
-    '../../../extensions/**/docs/**/*.md',
-  ],
+  ['../../../docs/**/*.md', '../../../packages/**/docs/**/*.md', '../../../extensions/**/docs/**/*.md'],
   {
     query: '?raw',
     import: 'default',
@@ -23,20 +15,13 @@ const rawModules = import.meta.glob(
 ) as Record<string, string>;
 
 const packageManifests = import.meta.glob(
-  [
-    '../../../packages/**/package.json',
-    '../../../configs/**/package.json',
-    '../../../forge-plugins/**/package.json',
-    '../../../vite-plugins/**/package.json',
-    '../../../workers/**/package.json',
-    '../../../extensions/**/package.json',
-  ],
+  ['../../../packages/**/package.json', '../../../extensions/**/package.json'],
   { eager: true, import: 'default' },
 ) as Record<string, { readonly name?: string }>;
 
 /** A single documentation page. */
 export interface DocumentEntry {
-  /** Route-friendly identifier, e.g. `overview` or `packages/barcode/index`. */
+  /** Route-friendly identifier, e.g. `overview` or `packages/integrations/barcode/index`. */
   slug: string;
   /** Locale of the Markdown source. */
   locale: DocumentationLocale;
@@ -236,10 +221,15 @@ const CURATED_GROUPS: NavGroup[] = [
     label: 'Build & Tooling',
     items: [
       'build-system',
-      'configs/index',
-      'configs/eslint-config',
-      'configs/scripts-config',
-      'configs/workers-config',
+      'packages/tooling/configs/eslint-config',
+      'packages/tooling/configs/i18n-config',
+      'packages/tooling/configs/postcss-config',
+      'packages/tooling/configs/prettier-config',
+      'packages/tooling/configs/storybook-framework',
+      'packages/tooling/configs/stylelint-config',
+      'packages/tooling/configs/tsdown-config',
+      'packages/tooling/configs/typescript-config',
+      'packages/tooling/configs/vite-config',
     ],
   },
   { key: 'quality', label: 'Quality', items: ['testing', 'best-practices', 'framework-best-practices'] },

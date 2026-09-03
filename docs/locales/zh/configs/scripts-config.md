@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/packages/tooling/configs/scripts-config.md: [docs/packages/tooling/configs/scripts-config.md](../../../packages/tooling/configs/scripts-config.md)
 > 语言: 简体中文 (zh)
 
 本指南有意保留在项目文档层中： `scripts/`

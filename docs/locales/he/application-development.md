@@ -79,5 +79,5 @@ pnpm --filter @mission-platform/service-monitor deploy:staging
 - [הגדרת פיתוח](development-setup.md)
 - [מבנה סביבת עבודה](workspace-structure.md)
 - [בניית מערכת](build-system.md)
-- [תצורת עובד](configs/workers-config.md)
+- [תצורת עובד](packages/tooling/configs/workers-config.md)
 - [בּוֹחֵן](testing.md)

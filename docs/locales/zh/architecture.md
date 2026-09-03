@@ -22,10 +22,10 @@ Mission Platform 旨在实现最大程度的可重用性和跨框架灵活性。
 ```mermaid
 graph TD
     Apps[apps/] --> Packages[packages/]
-    Apps --> Plugins[vite-plugins/]
-    Apps --> Workers[workers/]
-    Packages --> ForgePlugins[forge-plugins/]
-    Packages --> Configs[configs/]
+    Apps --> Plugins[packages/tooling/vite/]
+    Apps --> Workers[packages/edge/workers/]
+    Packages --> ForgePlugins[packages/compiler/plugins/]
+    Packages --> Configs[packages/tooling/configs/]
     ForgePlugins --> Plugins
     ForgePlugins --> Configs
     Plugins --> Configs
@@ -36,10 +36,10 @@ graph TD
    单一仓库。
 2. **套餐（`packages/`)**：提供可重用的逻辑和组件。他们可以互相依赖，但永远不能依赖
    应用程序。
-3. **伪造插件（`forge-plugins/`)**：编译器输出目标 - 框架插件和 CMS 目标。他们可能取决于
-   `vite-plugins/` 和 `configs/`，并且从不 `apps/` 或彼此的兄弟姐妹； CMS 适配器仅取决于
+3. **伪造插件（`packages/compiler/plugins/`)**：编译器输出目标 - 框架插件和 CMS 目标。他们可能取决于
+   `packages/tooling/vite/` 和 `packages/tooling/configs/`，并且从不 `apps/` 或彼此的兄弟姐妹； CMS 适配器仅取决于
    `forge-cms-plugin-api`。
-4. **配置（`configs/`)**：共享工具设置（ESLint, TypeScript， ETC。）。它们是基础并依赖于
+4. **配置（`packages/tooling/configs/`)**：共享工具设置（ESLint, TypeScript， ETC。）。它们是基础并依赖于
    monorepo 中没有任何内容。
 
 ## 框架中立引擎：Forge
@@ -65,7 +65,7 @@ Mission Platform 的核心是 `@mission-platform/forge`，一个框架中立的�
 任何平台与任何框架配对，输出落在 `dist/cms/<cms>/<framework>/**`.
 
 有关完整的管道、组件和挂钩使用者、CMS 投影和扩展指南，请参阅
-[Forge 编译器管道](../../../vite-plugins/forge/docs/locales/zh/reference/compiler.md)。对于构建编排视图，请参阅
+[Forge 编译器管道](../../../packages/tooling/vite/forge/docs/locales/zh/reference/compiler.md)。对于构建编排视图，请参阅
 [构建系统](build-system.md).
 
 ## 设计代币系统
@@ -105,7 +105,7 @@ Turborepo 处理整个 monorepo 的构建、测试和 linting 的繁重工作。
 
 ### Cloudflare 部署
 
-应用程序主要部署到 **Cloudflare Pages**，以及 **Cloudflare Workers**（在 `workers/`) 提供
+应用程序主要部署到 **Cloudflare Pages**，以及 **Cloudflare Workers**（在 `packages/edge/workers/`) 提供
 用于 API 代理和 SPA 资产服务的专用逻辑。
 
 ## 概括

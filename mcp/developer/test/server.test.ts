@@ -238,7 +238,7 @@ describe('tools', () => {
 
   it('inspects a .sonir.json artifact and returns a valid summary', async () => {
     const body = await callTool('fws_inspect_sonir', {
-      sonIrPath: 'packages/forge-web-script/src/fixtures/test.sonir.json',
+      sonIrPath: 'packages/compiler/forge/forge-web-script/src/fixtures/test.sonir.json',
       maxNodes: 10,
       maxFunctions: 10,
     });

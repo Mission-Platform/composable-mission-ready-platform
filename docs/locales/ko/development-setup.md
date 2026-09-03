@@ -110,7 +110,7 @@ done
 
 위조 지원 패키지 게시 일치 `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, 그리고 `mp:web-component` 정황. 활성 조건은 다음과 같아야 합니다.
-소비 번들러에 의해 구성됩니다. 보다 [컴파일러 참조](../../../vite-plugins/forge/docs/locales/ko/reference/compiler.md)
+소비 번들러에 의해 구성됩니다. 보다 [컴파일러 참조](../../../packages/tooling/vite/forge/docs/locales/ko/reference/compiler.md)
 대상 플러그인 및 선언 파이프라인용.
 
 ### 애플리케이션 개발

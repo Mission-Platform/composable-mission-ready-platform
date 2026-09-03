@@ -16,10 +16,10 @@ in livelli funzionali:
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
+├── packages/tooling/configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
+├── packages/tooling/vite/           # Build-time extensions and compilers
+├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
@@ -53,7 +53,7 @@ Librerie riutilizzabili e con versione utilizzate dalle app. Questi sono destina
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`** e
   **`@mission-platform/qr-code`**: pacchetti di scansione e codifica supportati da Wasm.
 
-### 3. `configs/` (Base per utensili)
+### 3. `packages/tooling/configs/` (Base per utensili)
 
 Configurazioni condivise che garantiscono coerenza in tutti gli spazi di lavoro. I pacchetti in questa directory vengono generalmente utilizzati come
 `devDependencies`.
@@ -63,7 +63,7 @@ Configurazioni condivise che garantiscono coerenza in tutti gli spazi di lavoro.
 - **`tsdown-config/`** e **`vite-config/`**: modelli di creazione di libreria comune, app, Vite e Vitest.
 - **`i18n-config/`** e **`storybook-framework/`**: estrazione locale condivisa e impostazioni del framework-workbench.
 
-### 4. `vite-plugins/` (Crea estensioni)
+### 4. `packages/tooling/vite/` (Crea estensioni)
 
 Plug-in personalizzati che estendono il processo di compilazione Vite.
 
@@ -71,7 +71,7 @@ Plug-in personalizzati che estendono il processo di compilazione Vite.
 - **`tokens/`**: genera artefatti di codice dalle definizioni di token DTCG.
 - **`i18n/`**: gestisce il caricamento delle impostazioni locali e l'estrazione statica.
 
-### 5. `workers/` (Servizi periferici)
+### 5. `packages/edge/workers/` (Servizi periferici)
 
 Cloudflare Workers per logica lato server e distribuzione ottimizzata delle risorse.
 

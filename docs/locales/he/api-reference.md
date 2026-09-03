@@ -7,8 +7,8 @@
 
 דף זה הכולל את הפרויקט הוא ספרייה של יכולות ותאימות של החבילות
 חוזים. ההתקנה הקנונית, השימוש, המגבלות ופרטי ה-API עבור
-כל חבילה חיה לצד החבילה הזו תחת `packages/*/docs/`, `configs/*/docs/`,
-ו-`forge-plugins/*/docs/`. יש להוסיף הפניות ל-API שנוצרו לבעלות
+כל חבילה חיה לצד החבילה הזו תחת `packages/**/docs/`, ` `,
+ו-` `. יש להוסיף הפניות ל-API שנוצרו לבעלות
 חבילה ולא דף זה.
 
 > **היבוא תמיד חשוף.** חבילות `@mission-platform/*` למשלוח מסגרת חושפות `.` יחיד
@@ -313,7 +313,7 @@ const router = createWebComponentsRouter({
 ## קריאה נוספת
 
 - [מדריך ההגירה של Vue 2 ל-Vue 3](migration-guides/vue2-to-vue3.md)
-- [סקירת תצורת פרויקט](configs/index.md)
+- [סקירת תצורת פרויקט](packages/tooling/configs/index.md)
 - [מבנה סביבת עבודה](workspace-structure.md)
 
 ## אינדקס חבילות עבודה מלא
@@ -366,9 +366,9 @@ const router = createWebComponentsRouter({
 
 ### לזייף יעדי מהדר
 
-אלה חיים ב-`forge-plugins/` ולא ב-`packages/`. תוסף **מסגרת** מחליט באיזה זמן ריצה הוא רכיב ניטרלי
+אלה חיים ב-`packages/compiler/plugins/` ולא ב-`packages/`. תוסף **מסגרת** מחליט באיזה זמן ריצה הוא רכיב ניטרלי
 ירד ל; יעד **CMS** מחליט על איזו פלטפורמת תוכן הוא מוקרן. שני הצירים מרכיבים, אז כל CMS
-target עשוי להיות קשור לכל תוסף מסגרת. ראה את [צינור המהדר של Forge](../../../vite-plugins/forge/docs/locales/he/reference/compiler.md).
+target עשוי להיות קשור לכל תוסף מסגרת. ראה את [צינור המהדר של Forge](../../../packages/tooling/vite/forge/docs/locales/he/reference/compiler.md).
 
 | חבילה | מטרה |
 | :---------------------------------------------- | :-------------------------------------------------------------------------------- |

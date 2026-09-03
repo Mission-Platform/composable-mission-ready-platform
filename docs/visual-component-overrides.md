@@ -27,7 +27,7 @@ co-located touch points were checked:
 
 Every audited module has a neutral `.tsx` source and a co-located
 `.stories.tsx`. Every module has a co-located `index.ts` except
-`packages/resource-planner/src/components/organisms/forge-resource-planner`;
+`packages/ui/resource-planner/src/components/organisms/forge-resource-planner`;
 that package barrel exports the source file directly. The package-level
 barrels are therefore the export touch point even when a local barrel is
 missing.
@@ -168,11 +168,11 @@ SCSS value to `v-bind('properties.<name>')`; Vue render-closure fallback and
 all non-Vue stylesheet paths must remain valid ordinary CSS/SCSS.
 
 The implementation touch points for that lowering are the neutral runtime
-contract in `packages/forge/src/runtime/types.ts` and `packages/forge/src/runtime/h.ts`,
+contract in `packages/compiler/forge/forge/src/runtime/types.ts` and `packages/compiler/forge/forge/src/runtime/h.ts`,
 the existing neutral-to-Vue style lowering in
-`forge-plugins/forge-vue/src/transformers/template.ts`, and the co-located
-style assembly/emission in `forge-plugins/forge-vue/src/runtime/styles.ts` and
-`forge-plugins/forge-vue/src/emitters/sfc.ts`. These files carry or lower the
+`packages/compiler/plugins/forge-vue/src/transformers/template.ts`, and the co-located
+style assembly/emission in `packages/compiler/plugins/forge-vue/src/runtime/styles.ts` and
+`packages/compiler/plugins/forge-vue/src/emitters/sfc.ts`. These files carry or lower the
 typed `style` value; they must not add a framework-specific `styles` attribute.
 
 ## Prototype and existing candidates
@@ -182,11 +182,11 @@ compatibility anchors, not a request to replace semantic APIs with bags.
 
 | Component                  | Style module                                                                                                     | Existing variables                                                                                      | Current owner/disposition                                                                          | Later touch points                                                                                                                |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `ForgeTypography`          | `packages/typography/src/components/atoms/forge-typography/forge-typography.module.scss`                         | Complete `--forge-typography-*` surface, including base, display, variant, color, link and popup values | Prototype; inherited through the typography root and truncate-popup wrapper                        | `forge-typography.tsx`, local `index.ts`, `.spec.ts`, `.stories.tsx`; all concrete names are registered in the co-located partial |
-| `ForgeLogoCloud`           | `packages/components/src/components/organisms/forge-logo-cloud/forge-logo-cloud.module.scss`                     | `--forge-logo-columns`                                                                                  | Existing semantic variable; retain `columns` and its clamping                                      | `forge-logo-cloud.tsx`, local barrel, spec, story; no duplicate `properties.columns`                                              |
-| `ForgeStatsSection`        | `packages/components/src/components/organisms/forge-stats-section/forge-stats-section.module.scss`               | `--forge-stats-columns`                                                                                 | Existing semantic variable; retain `columns`                                                       | `forge-stats-section.tsx`, local barrel, spec, story; no duplicate `properties.columns`                                           |
-| `ForgeTestimonialsSection` | `packages/components/src/components/organisms/forge-testimonials-section/forge-testimonials-section.module.scss` | `--forge-testimonial-columns`                                                                           | Existing semantic variable; retain `columns`                                                       | `forge-testimonials-section.tsx`, local barrel, spec, story; no duplicate `properties.columns`                                    |
-| `ForgeGridLayout`          | `packages/layout/src/components/templates/forge-grid-layout/forge-grid-layout.module.scss`                       | `--forge-grid-columns`, `--forge-grid-rows`                                                             | Existing semantic variables derived from `columns`/`rows`; retain clamping and breakpoint behavior | `forge-grid-layout.tsx`, local barrel, spec, story; no duplicate grid bag                                                         |
+| `ForgeTypography`          | `packages/ui/typography/src/components/atoms/forge-typography/forge-typography.module.scss`                         | Complete `--forge-typography-*` surface, including base, display, variant, color, link and popup values | Prototype; inherited through the typography root and truncate-popup wrapper                        | `forge-typography.tsx`, local `index.ts`, `.spec.ts`, `.stories.tsx`; all concrete names are registered in the co-located partial |
+| `ForgeLogoCloud`           | `packages/ui/components/src/components/organisms/forge-logo-cloud/forge-logo-cloud.module.scss`                     | `--forge-logo-columns`                                                                                  | Existing semantic variable; retain `columns` and its clamping                                      | `forge-logo-cloud.tsx`, local barrel, spec, story; no duplicate `properties.columns`                                              |
+| `ForgeStatsSection`        | `packages/ui/components/src/components/organisms/forge-stats-section/forge-stats-section.module.scss`               | `--forge-stats-columns`                                                                                 | Existing semantic variable; retain `columns`                                                       | `forge-stats-section.tsx`, local barrel, spec, story; no duplicate `properties.columns`                                           |
+| `ForgeTestimonialsSection` | `packages/ui/components/src/components/organisms/forge-testimonials-section/forge-testimonials-section.module.scss` | `--forge-testimonial-columns`                                                                           | Existing semantic variable; retain `columns`                                                       | `forge-testimonials-section.tsx`, local barrel, spec, story; no duplicate `properties.columns`                                    |
+| `ForgeGridLayout`          | `packages/ui/layout/src/components/templates/forge-grid-layout/forge-grid-layout.module.scss`                       | `--forge-grid-columns`, `--forge-grid-rows`                                                             | Existing semantic variables derived from `columns`/`rows`; retain clamping and breakpoint behavior | `forge-grid-layout.tsx`, local barrel, spec, story; no duplicate grid bag                                                         |
 
 The typography prototype now has a complete registration partial for every
 concrete property consumed by its module, including all finite variant and
@@ -203,23 +203,23 @@ column is an exact pathspec for the style files.
 
 | Package and exact module pathspec                           |   Count | Disposition                                                        |
 | ----------------------------------------------------------- | ------: | ------------------------------------------------------------------ |
-| `packages/barcode/src/components/**/*.module.scss`          |       1 | Migrate/review generated barcode presentation                      |
-| `packages/breakpoints/src/components/**/*.module.scss`      |       1 | Excluded diagnostic/debug presentation                             |
-| `packages/code-scanner/src/components/**/*.module.scss`     |       1 | Migrate/review scanner host/frame presentation                     |
-| `packages/components/src/components/**/*.module.scss`       |      84 | 3 existing semantic variables; 81 migrate/review                   |
-| `packages/content/src/components/**/*.module.scss`          |      10 | 8 migrate/review; 2 editor-owned/excluded                          |
-| `packages/float/src/components/**/*.module.scss`            |       8 | Migrate/review; popup/portal inheritance priority                  |
-| `packages/forms/src/components/**/*.module.scss`            |      28 | Migrate/review, preserving control semantics                       |
-| `packages/icons/src/components/**/*.module.scss`            |     106 | Excluded generated glyph wrappers                                  |
-| `packages/layout/src/components/**/*.module.scss`           |       7 | 1 existing semantic variable; 6 migrate/review                     |
-| `packages/map/src/components/**/*.module.scss`              |       1 | Excluded MapLibre/canvas host                                      |
-| `packages/matrix-code/src/components/**/*.module.scss`      |       1 | Migrate/review generated code presentation                         |
-| `packages/qr-code/src/components/**/*.module.scss`          |       1 | Migrate/review generated code presentation                         |
-| `packages/resource-planner/src/components/**/*.module.scss` |       1 | Migrate/review domain presentation                                 |
-| `packages/scheduler/src/components/**/*.module.scss`        |       1 | Migrate/review domain presentation                                 |
-| `packages/select/src/components/**/*.module.scss`           |       3 | Migrate/review, preserving selection semantics                     |
-| `packages/theme/src/components/**/*.module.scss`            |       3 | 1 migrate/review; 2 renderless/state exclusions                    |
-| `packages/typography/src/components/**/*.module.scss`       |       1 | Prototype                                                          |
+| `packages/integrations/barcode/src/components/**/*.module.scss`          |       1 | Migrate/review generated barcode presentation                      |
+| `packages/ui/breakpoints/src/components/**/*.module.scss`      |       1 | Excluded diagnostic/debug presentation                             |
+| `packages/integrations/code-scanner/src/components/**/*.module.scss`     |       1 | Migrate/review scanner host/frame presentation                     |
+| `packages/ui/components/src/components/**/*.module.scss`       |      84 | 3 existing semantic variables; 81 migrate/review                   |
+| `packages/content/content/content/src/components/**/*.module.scss`          |      10 | 8 migrate/review; 2 editor-owned/excluded                          |
+| `packages/ui/float/src/components/**/*.module.scss`            |       8 | Migrate/review; popup/portal inheritance priority                  |
+| `packages/ui/forms/src/components/**/*.module.scss`            |      28 | Migrate/review, preserving control semantics                       |
+| `packages/ui/icons/src/components/**/*.module.scss`            |     106 | Excluded generated glyph wrappers                                  |
+| `packages/ui/layout/src/components/**/*.module.scss`           |       7 | 1 existing semantic variable; 6 migrate/review                     |
+| `packages/integrations/map/src/components/**/*.module.scss`              |       1 | Excluded MapLibre/canvas host                                      |
+| `packages/integrations/matrix-code/src/components/**/*.module.scss`      |       1 | Migrate/review generated code presentation                         |
+| `packages/integrations/qr-code/src/components/**/*.module.scss`          |       1 | Migrate/review generated code presentation                         |
+| `packages/ui/resource-planner/src/components/**/*.module.scss` |       1 | Migrate/review domain presentation                                 |
+| `packages/core/scheduler/src/components/**/*.module.scss`        |       1 | Migrate/review domain presentation                                 |
+| `packages/ui/select/src/components/**/*.module.scss`           |       3 | Migrate/review, preserving selection semantics                     |
+| `packages/ui/theme/src/components/**/*.module.scss`            |       3 | 1 migrate/review; 2 renderless/state exclusions                    |
+| `packages/ui/typography/src/components/**/*.module.scss`       |       1 | Prototype                                                          |
 | **Total**                                                   | **258** | **141 migrate/review, 5 prototype/semantic anchors, 112 excluded** |
 
 ### Coverage signals
@@ -265,13 +265,13 @@ popup styles.
 
 ### `@mission-platform/barcode`, `breakpoints`, and `code-scanner`
 
-- `forge-barcode` — `packages/barcode/src/components/molecules/forge-barcode/`
+- `forge-barcode` — `packages/integrations/barcode/src/components/molecules/forge-barcode/`
   — source, module, local index, spec, story. Review only generated/barcode
   dimensions or surface controls that are not part of the barcode encoding API.
-- `forge-breakpoint-debug` — `packages/breakpoints/src/components/molecules/forge-breakpoint-debug/`
+- `forge-breakpoint-debug` — `packages/ui/breakpoints/src/components/molecules/forge-breakpoint-debug/`
   — source, module, local index, spec, story. Excluded: this is a diagnostic
   viewport/debug display, not a reusable visual theme surface.
-- `forge-code-scanner` — `packages/code-scanner/src/components/organisms/forge-code-scanner/`
+- `forge-code-scanner` — `packages/integrations/code-scanner/src/components/organisms/forge-code-scanner/`
   — source, module, local index, spec, story. Review scanner frame/container
   controls only; scanner engine behavior is not styling API.
 
@@ -279,7 +279,7 @@ popup styles.
 
 All entries below have `<slug>.tsx`, `<slug>.module.scss`,
 `<slug>.stories.tsx`, `<slug>.spec.ts`, and `<slug>/index.ts`, with the package
-barrel at `packages/components/src/components/index.ts`.
+barrel at `packages/ui/components/src/components/index.ts`.
 
 **Existing semantic-variable anchors:**
 `forge-logo-cloud`, `forge-stats-section`, `forge-testimonials-section`.
@@ -324,7 +324,7 @@ not expose a second way to select columns.
 `forge-wysiwyg-status-bar`, `forge-wysiwyg-toolbar`, `forge-monaco-editor`,
 `forge-wysiwyg-editor` are under their existing atom/molecule/organism
 directories and all have source, module, story, local index, and the package
-barrel at `packages/content/src/components/index.ts`.
+barrel at `packages/content/content/content/src/components/index.ts`.
 
 Specs exist for `forge-code-block`, `forge-mermaid`, `forge-markdown`,
 `forge-monaco-editor`, `forge-wysiwyg-status-bar`, and
@@ -354,7 +354,7 @@ styles. Their surrounding host/toolbars remain review candidates.
   `forge-f-pattern-layout`, `forge-vertical-layout`, `forge-z-pattern-layout`
   are review candidates. `forge-grid-layout` is the existing semantic anchor
   and keeps `rows`, `columns`, `gap`, `margin`, `padding`, and `breakpoint`.
-  The package barrel is `packages/layout/src/components/index.ts`.
+  The package barrel is `packages/ui/layout/src/components/index.ts`.
 - Generated/domain candidates (each has source/module/story/local index/spec
   unless noted): `forge-matrix-code` (`packages/matrix-code`), `forge-qr-code`
   (`packages/qr-code`), `forge-resource-planner`
@@ -366,14 +366,14 @@ styles. Their surrounding host/toolbars remain review candidates.
 - Theme: `forge-theme-toggle` is a review candidate; `forge-theme-composer`
   and `forge-theme-provider` are excluded from visual override migration as
   theme state/renderless provider infrastructure. The package barrel is
-  `packages/theme/src/components/index.ts`.
+  `packages/ui/theme/src/components/index.ts`.
 
 ### `@mission-platform/icons` (106)
 
 All 106 icon modules are generated glyph wrappers under
-`packages/icons/src/components/**`, have a neutral source, module, story and
+`packages/ui/icons/src/components/**`, have a neutral source, module, story and
 local export, and are exported by the generated
-`packages/icons/src/components/index.ts`. None has a co-located spec. The
+`packages/ui/icons/src/components/index.ts`. None has a co-located spec. The
 complete generated names are:
 
 `forge-icon-alert`, `forge-icon-alert-critical`, `forge-icon-alert-info`,
@@ -416,14 +416,14 @@ bag to each generated icon.
 ### `@mission-platform/map` and `@mission-platform/typography`
 
 `forge-map-libre` is the sole MapLibre host module at
-`packages/map/src/components/organisms/forge-map-libre/`; it has a story and
+`packages/integrations/map/src/components/organisms/forge-map-libre/`; it has a story and
 local/package exports but no co-located spec. Its canvas/map engine owns the
 inner visual model, so it is excluded; only host sizing behavior should be
 considered if a later API explicitly requires it.
 
 `forge-typography` is the sole typography module at
-`packages/typography/src/components/atoms/forge-typography/`. Its source,
-local index, package barrel (`packages/typography/src/components/index.ts`),
+`packages/ui/typography/src/components/atoms/forge-typography/`. Its source,
+local index, package barrel (`packages/ui/typography/src/components/index.ts`),
 spec and story are the exact Step 2 touch points. Its existing inherited
 properties are the reference for font-family, leading, display metrics and
 truncate-popup descendants.

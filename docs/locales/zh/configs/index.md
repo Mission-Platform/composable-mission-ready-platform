@@ -2,10 +2,10 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
+> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
 > 语言: 简体中文 (zh)
 
-任务平台使用集中配置包 `configs/` 目录以确保一致性
+任务平台使用集中配置包 `packages/tooling/configs/` 目录以确保一致性
 单一仓库。
 
 ## 概述
@@ -21,15 +21,15 @@
 
 |套餐 |目的|主构型面|
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/zh/index.md) |平坦的 ESLint JS/TS 的规则和 Vue. | `eslint.config.js` |
-| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/zh/index.md) |存储库格式默认值。 | `prettier.config.js` |
-| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/zh/index.md) | TypeScript 编译器预设。 | `tsconfig.json` |
-| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/zh/index.md) | CSS 和 SCSS linting。 | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/zh/index.md) | Vite 和 Vitest 配置助手。 | `vite.config.ts` |
-| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/zh/index.md) |图书馆捆绑助手。 | `tsdown.config.ts` |
-| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/zh/index.md) |共享 PostCSS 管道。 | `postcss.config.mjs` |
-| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/zh/index.md) |共享区域设置和提取设置。 | `i18next.config.ts` |
-| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/zh/index.md) |环境选择的 Storybook 框架预设。 | `.storybook/main.ts` |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/zh/index.md) |平坦的 ESLint JS/TS 的规则和 Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/zh/index.md) |存储库格式默认值。 | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/zh/index.md) | TypeScript 编译器预设。 | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/zh/index.md) | CSS 和 SCSS linting。 | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/zh/index.md) | Vite 和 Vitest 配置助手。 | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/zh/index.md) |图书馆捆绑助手。 | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/zh/index.md) |共享 PostCSS 管道。 | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/zh/index.md) |共享区域设置和提取设置。 | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/zh/index.md) |环境选择的 Storybook 框架预设。 | `.storybook/main.ts` |
 | [工人配置](workers-config.md) |跨工作空间 Cloudflare Worker 约定。 | `wrangler.jsonc` |
 
 ## 核心工具
@@ -100,7 +100,7 @@ export default { ...baseConfig };
 ## 选择配置
 
 使用拥有关注点的包，而不是将规则复制到工作区中。应用程序和库构建文件
-可以添加本地覆盖，但共享默认值应保留在 `configs/`。对于新包，从包开始
+可以添加本地覆盖，但共享默认值应保留在 `packages/tooling/configs/`。对于新包，从包开始
 脚手架，然后运行工作区检查：
 
 ```bash

@@ -53,7 +53,7 @@ function makeStorybookIndex(framework: string) {
     entries: {
       button: {
         id: 'components-button--default',
-        importPath: '../../packages/components/src/button.stories.tsx',
+        importPath: '../../packages/ui/components/src/button.stories.tsx',
         title: 'Button',
         name: 'Default',
       },
@@ -66,7 +66,7 @@ function makeStorybookIndex(framework: string) {
         ? {
             onlyHere: {
               id: `${framework}-only--default`,
-              importPath: '../../packages/components/src/only-here.stories.tsx',
+              importPath: '../../packages/ui/components/src/only-here.stories.tsx',
             },
           }
         : {}),
@@ -292,8 +292,8 @@ describe('manifest and index contracts', () => {
     const story = {
       id: '@mission-platform/components:button.stories.tsx',
       packageName: '@mission-platform/components',
-      filePath: 'packages/components/src/button.stories.tsx',
-      absolutePath: path.join(repositoryRoot, 'packages/components/src/button.stories.tsx'),
+      filePath: 'packages/ui/components/src/button.stories.tsx',
+      absolutePath: path.join(repositoryRoot, 'packages/ui/components/src/button.stories.tsx'),
     };
     const inventory = {
       repositoryRoot,
@@ -314,8 +314,8 @@ describe('manifest and index contracts', () => {
   });
 
   it('normalizes generated Storybook imports from the app root', () => {
-    expect(normalizeImportPath(repositoryRoot, '../../packages/components/src/button.stories.tsx')).toBe(
-      'packages/components/src/button.stories.tsx',
+    expect(normalizeImportPath(repositoryRoot, '../../packages/ui/components/src/button.stories.tsx')).toBe(
+      'packages/ui/components/src/button.stories.tsx',
     );
   });
 
@@ -323,8 +323,8 @@ describe('manifest and index contracts', () => {
     const neutralStory = {
       id: '@mission-platform/components:button.stories.tsx',
       packageName: '@mission-platform/components',
-      filePath: 'packages/components/src/button.stories.tsx',
-      absolutePath: path.join(repositoryRoot, 'packages/components/src/button.stories.tsx'),
+      filePath: 'packages/ui/components/src/button.stories.tsx',
+      absolutePath: path.join(repositoryRoot, 'packages/ui/components/src/button.stories.tsx'),
     };
     const frameworkStory = {
       id: '@mission-platform/storybook:i18n.vue.stories.tsx',
@@ -336,8 +336,8 @@ describe('manifest and index contracts', () => {
     const onlyHereStory = {
       id: '@mission-platform/components:only-here.stories.tsx',
       packageName: '@mission-platform/components',
-      filePath: 'packages/components/src/only-here.stories.tsx',
-      absolutePath: path.join(repositoryRoot, 'packages/components/src/only-here.stories.tsx'),
+      filePath: 'packages/ui/components/src/only-here.stories.tsx',
+      absolutePath: path.join(repositoryRoot, 'packages/ui/components/src/only-here.stories.tsx'),
     };
     const inventory = {
       repositoryRoot,
@@ -355,7 +355,7 @@ describe('manifest and index contracts', () => {
 
     expect(pairing.pairs).toHaveLength(1);
     expect(pairing.pairs[0]).toMatchObject({ storyId: 'components-button--default' });
-    expect(pairing.pairs[0]?.sourceImport).toBe('packages/components/src/button.stories.tsx');
+    expect(pairing.pairs[0]?.sourceImport).toBe('packages/ui/components/src/button.stories.tsx');
     expect(pairing.pairs[0]?.entries.react?.id).toBe('components-button--default');
     expect(pairing.missing.some((missing) => missing.storyId === 'web-component-only--default')).toBe(true);
     expect(pairing.missingStories).toEqual([onlyHereStory]);
@@ -834,8 +834,8 @@ describe('visual parity diffing and CLI options', () => {
         {
           id: '@mission-platform/components:forge-button.stories.tsx',
           packageName: '@mission-platform/components',
-          filePath: 'packages/components/src/forge-button.stories.tsx',
-          absolutePath: path.join(repositoryRoot, 'packages/components/src/forge-button.stories.tsx'),
+          filePath: 'packages/ui/components/src/forge-button.stories.tsx',
+          absolutePath: path.join(repositoryRoot, 'packages/ui/components/src/forge-button.stories.tsx'),
         },
       ],
       storybookPackages: [],
@@ -843,7 +843,7 @@ describe('visual parity diffing and CLI options', () => {
     const pairs = [
       {
         storyId: 'atoms-display-forgebutton--focus-visible',
-        sourceImport: 'packages/components/src/forge-button.stories.tsx',
+        sourceImport: 'packages/ui/components/src/forge-button.stories.tsx',
         entries: {
           'web-component': { id: 'atoms-display-forgebutton--focus-visible' },
           react: { id: 'atoms-display-forgebutton--focus-visible' },

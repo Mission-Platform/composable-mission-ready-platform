@@ -2,10 +2,10 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
+> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
 > Taal: Nederlands (nl)
 
-Het Mission Platform maakt gebruik van gecentraliseerde configuratiepakketten in de `configs/` directory om consistentie te garanderen
+Het Mission Platform maakt gebruik van gecentraliseerde configuratiepakketten in de `packages/tooling/configs/` directory om consistentie te garanderen
 de monorepo.
 
 ## Overzicht
@@ -21,15 +21,15 @@ documentatiesite:
 
 | Pakket | Doel | Primair configuratieoppervlak |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/nl/index.md) | Vlak ESLint regels voor JS/TS en Vue. | `eslint.config.js` |
-| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/nl/index.md) | Standaardinstellingen voor de opmaak van de opslagplaats. | `prettier.config.js` |
-| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/nl/index.md) | TypeScript compiler-voorinstellingen. | `tsconfig.json` |
-| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/nl/index.md) | CSS- en SCSS-linting. | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/nl/index.md) | Vite En Vitest configuratiehulpen. | `vite.config.ts` |
-| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/nl/index.md) | Helpers bij het bundelen van bibliotheken. | `tsdown.config.ts` |
-| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/nl/index.md) | Gedeelde PostCSS-pijplijn. | `postcss.config.mjs` |
-| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/nl/index.md) | Gedeelde landinstellingen en extractie-instellingen. | `i18next.config.ts` |
-| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/nl/index.md) | Door de omgeving geselecteerde Storybook-framework-voorinstelling. | `.storybook/main.ts` |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/nl/index.md) | Vlak ESLint regels voor JS/TS en Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/nl/index.md) | Standaardinstellingen voor de opmaak van de opslagplaats. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/nl/index.md) | TypeScript compiler-voorinstellingen. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/nl/index.md) | CSS- en SCSS-linting. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/nl/index.md) | Vite En Vitest configuratiehulpen. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/nl/index.md) | Helpers bij het bundelen van bibliotheken. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/nl/index.md) | Gedeelde PostCSS-pijplijn. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/nl/index.md) | Gedeelde landinstellingen en extractie-instellingen. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/nl/index.md) | Door de omgeving geselecteerde Storybook-framework-voorinstelling. | `.storybook/main.ts` |
 | [Configuratie van werknemers](workers-config.md) | Cross-werkruimte Cloudflare Worker-conventies. | `wrangler.jsonc` |
 
 ## Kerngereedschap
@@ -100,7 +100,7 @@ export default { ...baseConfig };
 ## Een configuratie kiezen
 
 Gebruik het pakket dat eigenaar is van het probleem in plaats van regels naar een werkruimte te kopiëren. Applicatie- en bibliotheekbuildbestanden
-kan lokale overschrijvingen toevoegen, maar gedeelde standaardwaarden moeten behouden blijven `configs/`. Voor een nieuw pakket begint u met het pakket
+kan lokale overschrijvingen toevoegen, maar gedeelde standaardwaarden moeten behouden blijven `packages/tooling/configs/`. Voor een nieuw pakket begint u met het pakket
 steiger en voer vervolgens de werkruimtecontroles uit:
 
 ```bash

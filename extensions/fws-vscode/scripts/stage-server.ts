@@ -12,8 +12,8 @@ type PackageManifest = {
 
 const extensionRoot = path.resolve(import.meta.dirname, '..');
 const repositoryRoot = path.resolve(extensionRoot, '../..');
-const lspRoot = path.join(repositoryRoot, 'packages/forge-web-script-lsp');
-const dapRoot = path.join(repositoryRoot, 'packages/forge-web-script-dap');
+const lspRoot = path.join(repositoryRoot, 'packages/compiler/forge/forge-web-script-lsp');
+const dapRoot = path.join(repositoryRoot, 'packages/compiler/forge/forge-web-script-dap');
 const outputRoot = path.join(extensionRoot, 'server');
 const outputNodeModules = path.join(outputRoot, 'node_modules');
 

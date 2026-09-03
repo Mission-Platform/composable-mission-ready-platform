@@ -172,7 +172,9 @@ fn helper() -> unit {}
       'utf8',
     );
 
-    const parserPath = fileURLToPath(new URL('../packages/forge-web-script/dist/parser.js', import.meta.url));
+    const parserPath = fileURLToPath(
+      new URL('../packages/compiler/forge/forge-web-script/dist/parser.js', import.meta.url),
+    );
     const parserModule = (await import(pathToFileURL(parserPath).href)) as {
       readonly parseForgeWebScript: (
         source: string,

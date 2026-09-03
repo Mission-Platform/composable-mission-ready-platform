@@ -1,0 +1,146 @@
+{
+  "name": "@mission-platform/breakpoints",
+  "version": "6.0.1",
+  "license": "BSD-4-Clause",
+  "description": "Responsive breakpoint utilities and write-once Vue, React, Svelte, Solid, and Web Component outputs for Mission Platform, authored once in JSX",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "exports": {
+    ".": {
+      "mp:vue": {
+        "types": "./dist/vue/index.d.ts",
+        "import": "./dist/vue/index.js"
+      },
+      "mp:react": {
+        "types": "./dist/react/index.d.ts",
+        "import": "./dist/react/index.js"
+      },
+      "mp:solid": {
+        "types": "./dist/solid/index.d.ts",
+        "import": "./dist/solid/index.js"
+      },
+      "mp:svelte": {
+        "types": "./dist/svelte/index.d.ts",
+        "import": "./dist/svelte/index.js"
+      },
+      "mp:web-component": {
+        "types": "./dist/web-components/index.d.ts",
+        "import": "./dist/web-components/index.js"
+      },
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/breakpoints.d.ts",
+      "import": "./dist/breakpoints.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build:forge": "node --experimental-strip-types ../../../scripts/build-forge.ts --target forge",
+    "build:react": "node --experimental-strip-types ../../../scripts/build-forge.ts --target react",
+    "build:vue": "node --experimental-strip-types ../../../scripts/build-forge.ts --target vue",
+    "build:svelte": "node --experimental-strip-types ../../../scripts/build-forge.ts --target svelte",
+    "build:solid": "node --experimental-strip-types ../../../scripts/build-forge.ts --target solid",
+    "build:web-components": "node --experimental-strip-types ../../../scripts/build-forge.ts --target web-components",
+    "build:cms-storyblok": "tsdown",
+    "build:cms-storyblok:assets": "FORGE_CMS_ARTIFACT_MODE=shared FORGE_CMS_STORYBLOK_TARGET=react tsdown",
+    "build:cms-storyblok:react": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=react tsdown",
+    "build:cms-storyblok:vue": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=vue tsdown",
+    "build:cms-storyblok:svelte": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=svelte tsdown",
+    "build:cms-storyblok:solid": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=solid tsdown",
+    "build:cms-storyblok:web-components": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=web-components tsdown",
+    "build": "node --experimental-strip-types ../../../scripts/build-forge.ts",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:watch": "tsdown --watch",
+    "test": "vitest run",
+    "i18n:extract": "i18next-cli extract --config i18next.config.ts",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "lint:style": "stylelint \"src/**/*.scss\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.scss\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/forge": "workspace:*"
+  },
+  "peerDependencies": {
+    "@mission-platform/i18n": "workspace:*",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "solid-js": "^1.9.0",
+    "svelte": "^5.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/i18n": "workspace:*",
+    "@mission-platform/i18n-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/storybook-framework": "workspace:*",
+    "@mission-platform/stylelint-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-forge": "workspace:*",
+    "@mission-platform/forge-plugin-react": "workspace:*",
+    "@mission-platform/forge-plugin-solid": "workspace:*",
+    "@mission-platform/forge-plugin-svelte": "workspace:*",
+    "@mission-platform/forge-plugin-vue": "workspace:*",
+    "@mission-platform/forge-plugin-web-components": "workspace:*",
+    "@mission-platform/forge-cms-plugin-api": "workspace:*",
+    "@mission-platform/forge-cms-storyblok": "workspace:*",
+    "@tsdown/css": "catalog:build",
+    "@types/node": "catalog:typescript",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@vitejs/plugin-vue": "catalog:vue",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "@vitest/coverage-v8": "catalog:testing",
+    "eslint": "catalog:eslint",
+    "i18next-cli": "1.68.0",
+    "i18next": "catalog:i18next",
+    "i18next-vue": "catalog:i18next",
+    "jsdom": "catalog:testing",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "prettier": "catalog:prettier",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "sass-embedded": "catalog:vite",
+    "storybook": "catalog:storybook",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript",
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue"
+  }
+}

@@ -65,4 +65,4 @@ Mission Platform biedt verschillende niveaus van ondersteuning voor andere raamw
 ## Gerelateerde bronnen
 - [Beste praktijken](best-practices.md)
 - [Gids voor testen](testing.md)
-- [@mission-platform/forge LEESMIJ](../../../packages/forge/README.md)
+- [@mission-platform/forge LEESMIJ](../../../packages/compiler/forge/forge/README.md)

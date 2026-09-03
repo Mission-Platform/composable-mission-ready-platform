@@ -110,7 +110,7 @@ done
 
 I pacchetti supportati da Forge pubblicano la corrispondenza `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, E `mp:web-component` condizioni. La condizione attiva deve essere
-configurato dal bundler consumatore; Vedere [il riferimento del compilatore](../../../vite-plugins/forge/docs/locales/it/reference/compiler.md)
+configurato dal bundler consumatore; Vedere [il riferimento del compilatore](../../../packages/tooling/vite/forge/docs/locales/it/reference/compiler.md)
 per il plugin di destinazione e la pipeline di dichiarazione.
 
 ### Sviluppo di applicazioni

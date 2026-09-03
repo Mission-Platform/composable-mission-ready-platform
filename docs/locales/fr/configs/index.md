@@ -2,10 +2,10 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
+> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
 > Langue: Français (fr)
 
-La plateforme de mission utilise des packages de configuration centralisés dans le `configs/` répertoire pour garantir la cohérence à travers
+La plateforme de mission utilise des packages de configuration centralisés dans le `packages/tooling/configs/` répertoire pour garantir la cohérence à travers
 le monorepo.
 
 ## Aperçu
@@ -21,15 +21,15 @@ site de documentation :
 
 | Forfait | Objectif | Surface de configuration principale |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/fr/index.md) | Plat ESLint règles pour JS/TS et Vue. | `eslint.config.js` |
-| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/fr/index.md) | Paramètres par défaut du formatage du référentiel. | `prettier.config.js` |
-| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/fr/index.md) | TypeScript préréglages du compilateur. | `tsconfig.json` |
-| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/fr/index.md) | Pelucheux CSS et SCSS. | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/fr/index.md) | Vite et Vitest aides à la configuration. | `vite.config.ts` |
-| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/fr/index.md) | Aides au regroupement de bibliothèques. | `tsdown.config.ts` |
-| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/fr/index.md) | Pipeline PostCSS partagé. | `postcss.config.mjs` |
-| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/fr/index.md) | Paramètres régionaux et d’extraction partagés. | `i18next.config.ts` |
-| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/fr/index.md) | Préréglage du framework Storybook sélectionné par l'environnement. | `.storybook/main.ts` |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/fr/index.md) | Plat ESLint règles pour JS/TS et Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/fr/index.md) | Paramètres par défaut du formatage du référentiel. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/fr/index.md) | TypeScript préréglages du compilateur. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/fr/index.md) | Pelucheux CSS et SCSS. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/fr/index.md) | Vite et Vitest aides à la configuration. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/fr/index.md) | Aides au regroupement de bibliothèques. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/fr/index.md) | Pipeline PostCSS partagé. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/fr/index.md) | Paramètres régionaux et d’extraction partagés. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/fr/index.md) | Préréglage du framework Storybook sélectionné par l'environnement. | `.storybook/main.ts` |
 | [Configuration des travailleurs](workers-config.md) | Conventions Cloudflare Worker inter-espaces de travail. | `wrangler.jsonc` |
 
 ## Outillage de base
@@ -100,7 +100,7 @@ export default { ...baseConfig };
 ## Choisir une configuration
 
 Utilisez le package propriétaire du problème plutôt que de copier les règles dans un espace de travail. Fichiers de construction d'applications et de bibliothèques
-peut ajouter des remplacements locaux, mais les valeurs par défaut partagées doivent rester dans `configs/`. Pour un nouveau package, commencez par le package
+peut ajouter des remplacements locaux, mais les valeurs par défaut partagées doivent rester dans `packages/tooling/configs/`. Pour un nouveau package, commencez par le package
 échafaudage, puis exécutez les vérifications de l'espace de travail :
 
 ```bash

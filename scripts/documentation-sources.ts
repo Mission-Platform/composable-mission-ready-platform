@@ -1,15 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
-/** Workspace families whose package documentation is published by the docs site. */
-export const DOCUMENTATION_WORKSPACE_FAMILIES = [
-  'packages',
-  'configs',
-  'forge-plugins',
-  'vite-plugins',
-  'workers',
-  'extensions',
-] as const;
+/** Workspace roots whose package documentation is published by the docs site. */
+export const DOCUMENTATION_WORKSPACE_FAMILIES = ['packages', 'extensions'] as const;
 
 export interface DocumentationSourceRoot {
   readonly kind: 'project' | 'package';

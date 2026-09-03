@@ -19,7 +19,9 @@ describe('documentation source ownership', () => {
 
     expect(project?.routePrefix).toBe('');
     expect(barcode?.packageName).toBe('@mission-platform/barcode');
-    expect(barcode === undefined ? undefined : qualifiedSlug(barcode, 'index')).toBe('packages/barcode/index');
+    expect(barcode === undefined ? undefined : qualifiedSlug(barcode, 'index')).toBe(
+      'packages/integrations/barcode/index',
+    );
   });
 
   it('selects the most specific root for nested package paths', () => {

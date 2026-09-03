@@ -57,7 +57,7 @@
 בונות CMS לפלוט ל `dist/cms/<cms>/<framework>/**`, עם מניפסטים ורכבות צד אחרות של הפלטפורמה משתקפות לתוך
 `dist/cms/<cms>/`. יעדים שזקוקים לזמן ריצה מרופד (Astro, Webflow) יוצרים יחד עץ אי מהתחום
 תוסף מסגרת לאותו build. פיצול האחריות המלא וגבולות השלבים מתוארים ב
-[Forge Compiler Pipeline](../../../vite-plugins/forge/docs/locales/he/reference/compiler.md).
+[Forge Compiler Pipeline](../../../packages/tooling/vite/forge/docs/locales/he/reference/compiler.md).
 
 ## בניית חוזה
 
@@ -144,7 +144,7 @@ pnpm build:force
 
 ## תצורות משותפות
 
-תצורות Build מרוכזות ב- `configs/` ספרייה כדי לשמור על עקביות ברחבי המונורפו.
+תצורות Build מרוכזות ב- `packages/tooling/configs/` ספרייה כדי לשמור על עקביות ברחבי המונורפו.
 
 | חבילה | מטרה |
 | :------------------------------------ | :----------------------------------------------------------- |

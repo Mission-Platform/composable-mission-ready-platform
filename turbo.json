@@ -240,10 +240,6 @@
       "inputs": [
         "$TURBO_ROOT$/scripts/extract-package-docs.ts",
         "packages/**",
-        "configs/**",
-        "forge-plugins/**",
-        "vite-plugins/**",
-        "workers/**",
         "extensions/**",
         "!**/dist/**",
         "!**/node_modules/**",
@@ -251,10 +247,6 @@
       ],
       "outputs": [
         "packages/**/docs/reference/generated/**",
-        "configs/**/docs/reference/generated/**",
-        "forge-plugins/**/docs/reference/generated/**",
-        "vite-plugins/**/docs/reference/generated/**",
-        "workers/**/docs/reference/generated/**",
         "extensions/**/docs/reference/generated/**"
       ]
     },

@@ -32,27 +32,29 @@ describe('useMarkdown', () => {
     );
 
     expect(resolveHref.value('./testing.md')).toBe('/testing');
-    expect(resolveHref.value('configs/index.md')).toBe('/configs/index');
+    expect(resolveHref.value('packages/tooling/configs/eslint-config/index.md')).toBe(
+      '/packages/tooling/configs/eslint-config/index',
+    );
     expect(resolveHref.value('./testing.md#usage')).toBe('/testing#usage');
   });
 
   it('resolves parent-relative links against the current document directory', () => {
     const { resolveHref } = useMarkdown(
       () => '',
-      () => 'configs/index',
+      () => 'packages/tooling/configs/eslint-config/index',
     );
 
-    expect(resolveHref.value('../overview.md')).toBe('/overview');
+    expect(resolveHref.value('../overview.md')).toBe('/packages/tooling/configs/overview');
   });
 
   it('keeps relative links inside the active locale', () => {
     const { resolveHref } = useMarkdown(
       () => '',
-      () => 'configs/index',
+      () => 'packages/tooling/configs/eslint-config/index',
       () => 'ja',
     );
 
-    expect(resolveHref.value('../overview.md#はじめに')).toBe('/ja/overview#はじめに');
+    expect(resolveHref.value('../overview.md#はじめに')).toBe('/ja/packages/tooling/configs/overview#はじめに');
   });
 
   it('leaves non-Markdown links (external, anchors) unresolved', () => {

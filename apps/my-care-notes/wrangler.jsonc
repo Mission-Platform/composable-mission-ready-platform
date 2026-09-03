@@ -5,7 +5,7 @@
   // pin requires compatibility validation before altering runtime behavior.
   "compatibility_date": "2026-06-07",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "../../workers/forge-spa/dist/index.js",
+  "main": "../../packages/edge/workers/forge-spa/dist/index.js",
   "first_party_worker": true,
   "dev": {
     "generate_types": true,
@@ -26,7 +26,7 @@
   },
   "build": {
     "cwd": "../../",
-    "watch_dir": ["./packages/**/src/*", "./apps/my-care-notes/src/*", "./workers/forge-spa/src/*"],
+    "watch_dir": ["./packages/**/src/*", "./apps/my-care-notes/src/*", "./packages/edge/workers/forge-spa/src/*"],
     "command": "pnpm exec turbo run build --filter=@mission-platform/my-care-notes --filter=@mission-platform/forge-spa"
   },
   "assets": {

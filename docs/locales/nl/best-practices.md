@@ -19,9 +19,9 @@ composables, nutsvoorzieningen) leven in `packages/`, terwijl uit deze blokken i
 
 Om een ​​onderhoudbare monorepo in stand te houden, handhaven we een strikte eenrichtingsafhankelijkheidsstroom:
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (Direct voor tooling/build-configuratie)
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`** (Direct voor tooling/build-configuratie)
 
 **Regel:** Codeer in `packages/` moet **nooit** importeren van `apps/`. Dit voorkomt circulaire afhankelijkheden en waarborgt
 verpakkingen blijven echt herbruikbaar.
@@ -33,7 +33,7 @@ omgeving. De `apps/storybook` app bevat niet de verhalen zelf; het is de aggrege
 ontdekt en geeft de verhalen weer die naast hun componenten leven.
 
 - Plaats ze allemaal samen `.stories.tsx` bestand met zijn component in de pakketmap van die component (bijv.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), niet onder `apps/storybook`. Dit komt overeen
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), niet onder `apps/storybook`. Dit komt overeen
   de conventie in [Ontwerp van atomaire componenten](atomic-component-design.md).
 - Controleer het gedrag van componenten over de hele linie Vue, React, Svelte, Soliden Webcomponenten door de
   `STORYBOOK_FRAMEWORK` omgevingsvariabele. Elke modus moet dezelfde neutrale verhaalinventaris gebruiken; een vermist
@@ -76,7 +76,7 @@ consumentenresolver met de matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid
 
 - **Nieuwe UI-componenten**: hoor erbij `packages/`.
 - **Gedeelde hulpprogramma's**: hoor erbij `packages/`.
-- **Lint/Format/Build Tooling**: gedeelde configuraties horen erbij `configs/`.
+- **Lint/Format/Build Tooling**: gedeelde configuraties horen erbij `packages/tooling/configs/`.
 
 ### Linten en opmaak
 

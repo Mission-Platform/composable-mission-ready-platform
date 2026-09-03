@@ -1,14 +1,7 @@
 import type { DocumentationLocale } from './i18n.ts';
 
-/** Workspace families whose package documentation is published by docs-app. */
-export const DOCUMENTATION_WORKSPACE_FAMILIES = [
-  'packages',
-  'configs',
-  'forge-plugins',
-  'vite-plugins',
-  'workers',
-  'extensions',
-] as const;
+/** Workspace roots whose package documentation is published by docs-app. */
+export const DOCUMENTATION_WORKSPACE_FAMILIES = ['packages', 'extensions'] as const;
 
 export interface DocumentationSourceRoot {
   readonly kind: 'project' | 'package';
@@ -68,9 +61,9 @@ export function parseWorkspaceDocumentationPath(
   }
 
   const familyPattern = DOCUMENTATION_WORKSPACE_FAMILIES.join('|');
-  const match = normalized.match(new RegExp(`^(${familyPattern})/(.+?)/docs/(.*)$`, 'u'));
+  const match = normalized.match(new RegExp(`^((?:${familyPattern})/.+?)/docs/(.*)$`, 'u'));
   if (!match) return undefined;
-  return { workspaceDirectory: `${match[1]}/${match[2]}`, documentPath: match[3] };
+  return { workspaceDirectory: match[1], documentPath: match[2] };
 }
 
 /** Parse a Vite Markdown module path into the same ownership model used by Node tooling. */

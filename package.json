@@ -48,7 +48,7 @@
     "validate:target": "node --experimental-strip-types scripts/runtime-validation/cli.ts target",
     "validate:runtime": "node --experimental-strip-types scripts/runtime-validation/cli.ts full",
     "visual:parity": "node --experimental-strip-types scripts/visual-parity/cli.ts",
-    "test:runtime-validation": "pnpm --filter @mission-platform/components exec vitest run --config ../../scripts/runtime-validation/vitest.config.ts"
+    "test:runtime-validation": "pnpm --filter @mission-platform/components exec vitest run --config ../../../scripts/runtime-validation/vitest.config.ts"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:utilities",

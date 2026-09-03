@@ -205,7 +205,7 @@ export default {
 
 התקנה ספציפית לחבילה, שימוש, מגבלות, זרימות עבודה של תורמים ודפי עזר ל-API שייכים ל-
 ספריית `docs/` של החבילה, לא בעץ `docs/` בכל המאגר. אתר docs קולט קבצים אלה ישירות ו
-מפרסם אותם תחת מרחב שמות של חבילה יציבה כגון `/packages/barcode/index` או `/configs/eslint-config/index`.
+מפרסם אותם תחת מרחב שמות של חבילה יציבה כגון `/packages/integrations/barcode/index` או `/packages/tooling/configs/eslint-config/index`.
 מושגים כלל פרויקטים, ארכיטקטורה, זרימות עבודה של סביבת עבודה ופתרון בעיות חוצות חבילות נשארים בבסיס `docs/`.
 
 דפי API שנוצרו חיים תחת `docs/reference/generated/` ומתרעננים על ידי החבילה `prebuild` Hook; לא לערוך

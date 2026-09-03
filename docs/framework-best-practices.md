@@ -60,4 +60,4 @@ Mission Platform provides varying levels of support for other frameworks through
 ## Related Resources
 - [Best Practices](best-practices.md)
 - [Testing Guide](testing.md)
-- [@mission-platform/forge README](../packages/forge/README.md)
+- [@mission-platform/forge README](../packages/compiler/forge/forge/README.md)

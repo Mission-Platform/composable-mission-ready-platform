@@ -66,9 +66,9 @@ Mission Platform عبارة عن منصة مكونة قابلة للتركيب �
 - **`apps/`**: التطبيقات القابلة للنشر (على سبيل المثال، `my-care-notes`، `website`) التي تقوم بتكوين الحزم في المنتجات.
 - **`packages/`**: اللبنات الأساسية، بما في ذلك `@mission-platform/components`، و`@mission-platform/router`، و
   `@mission-platform/i18n`.
-- **`configs/`**: التكوينات المشتركة لـ ESLint وPrettier وTypeScript وVite.
-- **`vite-plugins/`**: أدوات مخصصة لوقت البناء لرموز التصميم، وتجميع Forge، وتحسين محركات البحث.
-- **`workers/`**: عمال Cloudflare يوفرون منطق الواجهة الخلفية وقدرات خدمة SPA.
+- **`packages/tooling/configs/`**: التكوينات المشتركة لـ ESLint وPrettier وTypeScript وVite.
+- **`packages/tooling/vite/`**: أدوات مخصصة لوقت البناء لرموز التصميم، وتجميع Forge، وتحسين محركات البحث.
+- **`packages/edge/workers/`**: عمال Cloudflare يوفرون منطق الواجهة الخلفية وقدرات خدمة SPA.
 
 ## الخطوات التالية
 

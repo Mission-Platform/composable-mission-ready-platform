@@ -38,9 +38,12 @@ test('scanner skips symlinked documents and workspace members', () => {
   symlinkSync(join(outside, 'member'), join(root, 'packages', 'linked-member'));
   mkdirSync(join(root, 'packages', 'regular-member'));
   writeFileSync(join(root, 'packages', 'regular-member', 'package.json'), JSON.stringify({name: '@mission-platform/regular-member'}));
+  mkdirSync(join(root, 'packages', 'ui', 'nested-member'), {recursive: true});
+  writeFileSync(join(root, 'packages', 'ui', 'nested-member', 'package.json'), JSON.stringify({name: '@mission-platform/nested-member'}));
 
   assert.deepEqual(scanner.listDocs().map(({slug}) => slug), ['regular']);
-  assert.deepEqual(scanner.listGroup('packages').map(({name}) => name), ['@mission-platform/regular-member']);
+  assert.deepEqual(scanner.listGroup('packages').map(({name}) => name), ['@mission-platform/nested-member', '@mission-platform/regular-member']);
+  assert.equal(scanner.findMember('packages', 'nested-member')?.relativeDir, 'packages/ui/nested-member');
 });
 
 test('locale discovery ignores symlinked locale entries and writes fail closed', () => {

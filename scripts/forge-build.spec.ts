@@ -4,12 +4,12 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { forgeReactFramework } from '../forge-plugins/forge-react/src';
-import { forgeSolidFramework } from '../forge-plugins/forge-solid/src';
-import { forgeSvelteFramework } from '../forge-plugins/forge-svelte/src';
-import { forgeVueFramework } from '../forge-plugins/forge-vue/src';
-import { forgeWebComponentsFramework } from '../forge-plugins/forge-web-components/src';
-import { generateFrameworkSources } from '../vite-plugins/forge/src/generate';
+import { forgeReactFramework } from '../packages/compiler/plugins/forge-react/src';
+import { forgeSolidFramework } from '../packages/compiler/plugins/forge-solid/src';
+import { forgeSvelteFramework } from '../packages/compiler/plugins/forge-svelte/src';
+import { forgeVueFramework } from '../packages/compiler/plugins/forge-vue/src';
+import { forgeWebComponentsFramework } from '../packages/compiler/plugins/forge-web-components/src';
+import { generateFrameworkSources } from '../packages/tooling/vite/forge/src/generate';
 
 import {
   deriveForgeStagePath,

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:worker": "pnpm --dir ../../workers/email-sender dev --port 8787",
+    "dev:worker": "pnpm --dir ../../packages/edge/workers/email-sender dev --port 8787",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"

@@ -205,7 +205,7 @@ APIs, Komponenten und Verhalten des Pakets, sodass KI-Assistenten das Paket bess
 
 Paketspezifische Installation, Nutzung, Einschränkungen, Mitwirkende-Workflows und API-Referenzseiten gehören dazu
 Das `docs/`-Verzeichnis des Pakets, nicht im Repository-weiten `docs/`-Baum. Die Docs-Site nimmt diese Dateien direkt auf und
-veröffentlicht sie unter einem stabilen Paketnamensraum wie `/packages/barcode/index` oder `/configs/eslint-config/index`.
+veröffentlicht sie unter einem stabilen Paketnamensraum wie `/packages/integrations/barcode/index` oder `/packages/tooling/configs/eslint-config/index`.
 Projektweite Konzepte, Architektur, Workspace-Workflows und paketübergreifende Fehlerbehebung bleiben im Stammverzeichnis `docs/`.
 
 Generierte API-Seiten befinden sich unter `docs/reference/generated/` und werden durch den Paket-Hook `prebuild` aktualisiert. nicht bearbeiten

@@ -4,9 +4,9 @@
  * `llms.txt` files.
  */
 import {lstatSync, readdirSync, readFileSync} from 'node:fs';
-import {join} from 'node:path';
+import {join, relative} from 'node:path';
 
-import {docsDir, groupDir, resolveRepoPath, WORKSPACE_GROUPS, type WorkspaceGroup} from './paths.ts';
+import {docsDir, findRepoRoot, groupDir, resolveRepoPath, WORKSPACE_GROUPS, type WorkspaceGroup} from './paths.ts';
 
 export interface PackageManifest {
   name?: string;
@@ -61,7 +61,7 @@ function toMember(group: WorkspaceGroup, dir: string, manifest: PackageManifest)
   return {
     group,
     dir,
-    relativeDir: `${group}/${folder}`,
+    relativeDir: relative(findRepoRoot(), dir).replaceAll('\\', '/'),
     name: manifest.name ?? folder,
     version: manifest.version ?? '0.0.0',
     description: manifest.description ?? '',
@@ -82,22 +82,25 @@ export function listGroup(group: WorkspaceGroup): WorkspaceMember[] {
     return [];
   }
   const members: WorkspaceMember[] = [];
-  for (const entry of readdirSync(base, {withFileTypes: true})) {
-    if (!entry.isDirectory()) {
-      continue;
+  const visit = (dir: string): void => {
+    for (const entry of readdirSync(dir, {withFileTypes: true})) {
+      if (!entry.isDirectory() || entry.isSymbolicLink()) continue;
+      const memberDir = join(dir, entry.name);
+      const manifest = safeReadManifest(memberDir);
+      if (manifest) {
+        let safeDir: string;
+        try {
+          safeDir = resolveRepoPath(memberDir, `${group} workspace member`);
+        } catch {
+          continue;
+        }
+        members.push(toMember(group, safeDir, manifest));
+        continue;
+      }
+      if (group === 'packages' || group === 'apps' || group === 'crates') visit(memberDir);
     }
-    const dir = join(base, entry.name);
-    let safeDir: string;
-    try {
-      safeDir = resolveRepoPath(dir, `${group} workspace member`);
-    } catch {
-      continue;
-    }
-    const manifest = safeReadManifest(safeDir);
-    if (manifest) {
-      members.push(toMember(group, safeDir, manifest));
-    }
-  }
+  };
+  visit(base);
   return members.sort((a, b) => a.name.localeCompare(b.name));
 }
 
@@ -110,7 +113,7 @@ export function listAll(): WorkspaceMember[] {
 export function findMember(group: WorkspaceGroup, nameOrFolder: string): WorkspaceMember | undefined {
   const needle = nameOrFolder.replace('@mission-platform/', '').toLowerCase();
   return listGroup(group).find((member) => {
-    const folder = member.relativeDir.split('/')[1] ?? '';
+    const folder = member.relativeDir.split('/').at(-1) ?? '';
     return folder.toLowerCase() === needle || member.name.toLowerCase() === nameOrFolder.toLowerCase();
   });
 }

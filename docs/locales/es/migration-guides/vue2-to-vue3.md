@@ -18,7 +18,7 @@ Antes de migrar, asegúrese de que su paquete siga las reglas de dependencia de 
 
 - No hay importaciones desde `apps/`.
 - Toda la lógica compartida debe residir en `packages/`.
-- La configuración debe provenir de `configs/`.
+- La configuración debe provenir de `packages/tooling/configs/`.
 
 ## Paso 1: actualizar la configuración de compilación
 

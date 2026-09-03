@@ -2,10 +2,10 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
+> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
 > اللغة: العربية (ar)
 
-تستخدم منصة المهمة حزم التكوين المركزية في `configs/` الدليل لضمان الاتساق عبر
+تستخدم منصة المهمة حزم التكوين المركزية في `packages/tooling/configs/` الدليل لضمان الاتساق عبر
 مونوريبو.
 
 ## ملخص
@@ -21,15 +21,15 @@
 
 | الحزمة | الغرض | سطح التكوين الأساسي |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/ar/index.md) | مستوي ESLint قواعد JS/TS و Vue. | `eslint.config.js` |
-| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/ar/index.md) | الإعدادات الافتراضية لتنسيق المستودع. | `prettier.config.js` |
-| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/ar/index.md) | TypeScript الإعدادات المسبقة للمترجم. | `tsconfig.json` |
-| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/ar/index.md) | بطانة CSS وSCSS. | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/ar/index.md) | Vite و Vitest مساعدي التكوين. | `vite.config.ts` |
-| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/ar/index.md) | مساعدو تجميع المكتبة. | `tsdown.config.ts` |
-| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/ar/index.md) | خط أنابيب PostCSS المشترك. | `postcss.config.mjs` |
-| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/ar/index.md) | الإعدادات المحلية والاستخراج المشتركة. | `i18next.config.ts` |
-| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/ar/index.md) | إطار عمل القصص المصورة المحدد للبيئة. | `.storybook/main.ts` |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/ar/index.md) | مستوي ESLint قواعد JS/TS و Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/ar/index.md) | الإعدادات الافتراضية لتنسيق المستودع. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/ar/index.md) | TypeScript الإعدادات المسبقة للمترجم. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/ar/index.md) | بطانة CSS وSCSS. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/ar/index.md) | Vite و Vitest مساعدي التكوين. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/ar/index.md) | مساعدو تجميع المكتبة. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/ar/index.md) | خط أنابيب PostCSS المشترك. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/ar/index.md) | الإعدادات المحلية والاستخراج المشتركة. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/ar/index.md) | إطار عمل القصص المصورة المحدد للبيئة. | `.storybook/main.ts` |
 | [تكوين العمال](workers-config.md) | اتفاقيات Cloudflare Worker عبر مساحة العمل. | `wrangler.jsonc` |
 
 ## الأدوات الأساسية
@@ -100,7 +100,7 @@ export default { ...baseConfig };
 ## اختيار التكوين
 
 استخدم الحزمة التي تمتلك الاهتمام بدلاً من نسخ القواعد إلى مساحة العمل. ملفات بناء التطبيقات والمكتبة
-قد يضيف تجاوزات محلية، ولكن يجب أن تظل الإعدادات الافتراضية المشتركة كما هي `configs/`. للحصول على حزمة جديدة، ابدأ بالحزمة
+قد يضيف تجاوزات محلية، ولكن يجب أن تظل الإعدادات الافتراضية المشتركة كما هي `packages/tooling/configs/`. للحصول على حزمة جديدة، ابدأ بالحزمة
 سقالة ثم قم بتشغيل اختبارات مساحة العمل:
 
 ```bash
