@@ -1,5 +1,12 @@
 # @mission-platform/vite-plugin-tokens
 
+## 0.1.2
+
+### Patch Changes
+
+- 6c72cb5: emit valid typed custom-property registrations for token-generated SCSS
+- e0c66e1: update package build task dependencies
+
 ## 0.1.1
 
 ### Patch Changes

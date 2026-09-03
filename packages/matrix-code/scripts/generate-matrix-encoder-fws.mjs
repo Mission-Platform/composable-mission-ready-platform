@@ -476,6 +476,10 @@ fn rs_ecc(data: string, count: i32, primitive: i32, size: i32) -> string {
 
 // ---- Data Matrix -----------------------------------------------------------
 
+fn extended_ascii_codeword(byte: i32) -> string {
+  return string_concat("235", byte_char3(byte - 127));
+}
+
 fn ascii_codewords(data: string) -> string {
   let mut out: string = "";
   let mut index: i32 = 0;
@@ -493,22 +497,20 @@ fn ascii_codewords(data: string) -> string {
       } else {
         if byte < 128 {
           out = bytes_push(out, byte + 1);
-          index = index + 1;
-        } else {
-          out = bytes_push(out, 235);
-          out = bytes_push(out, byte - 128 + 1);
-          index = index + 1;
         }
+        if byte >= 128 {
+          out = string_concat(out, extended_ascii_codeword(byte));
+        }
+        index = index + 1;
       }
     } else {
       if byte < 128 {
         out = bytes_push(out, byte + 1);
-        index = index + 1;
-      } else {
-        out = bytes_push(out, 235);
-        out = bytes_push(out, byte - 128 + 1);
-        index = index + 1;
       }
+      if byte >= 128 {
+        out = string_concat(out, extended_ascii_codeword(byte));
+      }
+      index = index + 1;
     }
   }
   return string_concat(out, "");

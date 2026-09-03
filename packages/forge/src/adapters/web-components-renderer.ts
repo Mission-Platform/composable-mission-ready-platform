@@ -12,6 +12,7 @@ import { isContextProvider, MP_CONTEXT } from '../runtime/context';
 import {
   dynamicElement,
   RawHtml,
+  SuspenseResult,
   TemplateResult,
   nothing,
   type DomDynamicRenderResult,
@@ -513,6 +514,9 @@ export function materializeTree(value: unknown): MaterializedTree {
     instance.hideAnchors();
     return new OwnedMaterializedTree(nodes, () => instance.dispose());
   }
+  if (value instanceof SuspenseResult) {
+    return materializeTree(value.fallback);
+  }
   if (isNeutralElement(value)) {
     return materializeTree(dynamicElement(value.type, value.properties, ...value.children));
   }
@@ -588,7 +592,32 @@ type MountedValue =
       value: DomRenderResult;
       instance: DomRenderInstance;
     }
+  | {
+      readonly kind: 'suspense';
+      readonly nodes: readonly Node[];
+      readonly value: SuspenseResult;
+      readonly active: MountedValue;
+      readonly token: symbol;
+    }
   | { readonly kind: 'array'; readonly nodes: readonly Node[]; value: readonly unknown[]; entries: MountedValue[] };
+
+function isThenable(value: unknown): value is PromiseLike<unknown> {
+  return (
+    ((typeof value === 'object' && value !== null) || typeof value === 'function') &&
+    typeof (value as { then?: unknown }).then === 'function'
+  );
+}
+
+function containsThenable(value: unknown): boolean {
+  return isThenable(value) || (Array.isArray(value) && value.some((entry) => containsThenable(entry)));
+}
+
+function resolveSuspenseContent(value: unknown): unknown | Promise<unknown> {
+  if (Array.isArray(value) && containsThenable(value)) {
+    return Promise.all(value.map((item) => resolveSuspenseContent(item)));
+  }
+  return value;
+}
 
 function primitiveText(value: unknown): string | undefined {
   if (
@@ -639,6 +668,40 @@ class NodePart {
   }
 
   private reconcile(oldValue: MountedValue, value: unknown): MountedValue {
+    if (value instanceof SuspenseResult) {
+      const content = resolveSuspenseContent(value.content);
+      if (!isThenable(content)) {
+        return this.reconcile(oldValue, content);
+      }
+      this.disposeValue(oldValue);
+      const token = Symbol('suspense');
+      const active = this.reconcile({ kind: 'empty', nodes: [] }, value.fallback);
+      const pending = {
+        kind: 'suspense' as const,
+        nodes: active.nodes,
+        value,
+        active,
+        token,
+      };
+      void Promise.resolve(content).then(
+        (resolved) => {
+          if (this.current.kind !== 'suspense' || this.current.token !== token) {
+            return;
+          }
+          const next = this.reconcile(this.current.active, resolved);
+          this.current = { ...this.current, active: next, nodes: next.nodes };
+        },
+        (error: unknown) => {
+          if (this.current.kind !== 'suspense' || this.current.token !== token) {
+            return;
+          }
+          console.error('Forge Suspense content rejected', error);
+          const next = this.reconcile(this.current.active, nothing);
+          this.current = { ...this.current, active: next, nodes: next.nodes };
+        },
+      );
+      return pending;
+    }
     if (Array.isArray(value)) {
       if (oldValue.kind === 'array') {
         return this.reconcileArray(oldValue, value);
@@ -795,6 +858,10 @@ class NodePart {
           this.disposeValue(entry);
         }
 
+        break;
+      }
+      case 'suspense': {
+        this.disposeValue(value.active);
         break;
       }
       // No default
@@ -1363,18 +1430,102 @@ class HtmlContentInstance {
   }
 }
 
-type RenderInstance = TemplateInstance | DomRenderInstance | HtmlContentInstance;
+type RenderInstance = TemplateInstance | DomRenderInstance | HtmlContentInstance | SuspenseInstance;
 const renderInstances = new WeakMap<ParentNode, RenderInstance>();
 
 function isDomRenderInstance(instance: RenderInstance | undefined): instance is DomRenderInstance {
   return instance instanceof DomTemplateInstance || instance instanceof DomDynamicInstance;
 }
 
+/** Persistent renderer for a top-level framework-neutral Suspense boundary. */
+export class SuspenseInstance {
+  private result: SuspenseResult;
+  private container: ParentNode | undefined;
+  private active: MaterializedTree | undefined;
+  private token = Symbol('suspense');
+
+  constructor(result: SuspenseResult) {
+    this.result = result;
+  }
+
+  isCompatible(_result: SuspenseResult): boolean {
+    return false;
+  }
+
+  mount(container: ParentNode): void {
+    this.container = container;
+    this.commit(this.result);
+  }
+
+  update(result: SuspenseResult): void {
+    this.result = result;
+    this.commit(result);
+  }
+
+  private commit(result: SuspenseResult): void {
+    const token = Symbol('suspense');
+    this.token = token;
+    this.active?.dispose();
+    this.active = undefined;
+    const content = resolveSuspenseContent(result.content);
+    if (!isThenable(content)) {
+      this.active = materializeTree(content);
+      this.appendActive();
+      return;
+    }
+    this.active = materializeTree(result.fallback);
+    this.appendActive();
+    void Promise.resolve(content).then(
+      (resolved) => {
+        if (this.token !== token) {
+          return;
+        }
+        this.active?.dispose();
+        this.active = materializeTree(resolved);
+        this.appendActive();
+      },
+      (error: unknown) => {
+        if (this.token !== token) {
+          return;
+        }
+        console.error('Forge Suspense content rejected', error);
+        this.active?.dispose();
+        this.active = undefined;
+      },
+    );
+  }
+
+  private appendActive(): void {
+    if (this.container !== undefined && this.active !== undefined) {
+      this.container.append(...this.active.nodes);
+    }
+  }
+
+  dispose(): void {
+    this.token = Symbol('disposed-suspense');
+    this.active?.dispose();
+    this.active = undefined;
+    this.container = undefined;
+  }
+}
+
 export function renderIncrementally(
-  result: TemplateResult | DomRenderResult | HtmlContentResult,
+  result: TemplateResult | DomRenderResult | HtmlContentResult | SuspenseResult,
   container: ParentNode,
 ): void {
   const current = renderInstances.get(container);
+  if (result instanceof SuspenseResult) {
+    if (current instanceof SuspenseInstance) {
+      current.update(result);
+      return;
+    }
+    current?.dispose();
+    container.replaceChildren();
+    const instance = new SuspenseInstance(result);
+    instance.mount(container);
+    renderInstances.set(container, instance);
+    return;
+  }
   if (result instanceof TemplateResult) {
     if (current instanceof TemplateInstance && current.isCompatible(result)) {
       current.update(result);

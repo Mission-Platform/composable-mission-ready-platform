@@ -4208,6 +4208,28 @@ export interface TransferListProperties
 
 No description provided.
 
+## `src/components/organisms/forge-tree-view/forge-tree-view-item`
+
+### TreeViewLabelScope
+
+**Kind:** interface
+
+```typescript
+export interface TreeViewLabelScope
+```
+
+The scope passed to {@link ForgeTreeView}'s `label` (scoped) slot per node.
+
+### TreeViewNode
+
+**Kind:** interface
+
+```typescript
+export interface TreeViewNode
+```
+
+A node in the tree rendered by {@link ForgeTreeView}.
+
 ## `src/components/organisms/forge-tree-view/forge-tree-view`
 
 ### ForgeTreeView
@@ -4244,26 +4266,6 @@ callback props otherwise match.
 | Name       | Type                         | Description |
 | ---------- | ---------------------------- | ----------- |
 | properties | Readonly<TreeViewProperties> |             |
-
-### TreeViewLabelScope
-
-**Kind:** interface
-
-```typescript
-export interface TreeViewLabelScope
-```
-
-The scope passed to {@link ForgeTreeView}'s `label` (scoped) slot per node.
-
-### TreeViewNode
-
-**Kind:** interface
-
-```typescript
-export interface TreeViewNode
-```
-
-A node in the tree rendered by {@link ForgeTreeView}.
 
 ### TreeViewProperties
 

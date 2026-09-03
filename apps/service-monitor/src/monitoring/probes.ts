@@ -1,9 +1,15 @@
 import { connect } from 'cloudflare:sockets';
 
+import { resolveMonitorValidationPolicy } from './config';
+import { isAllowedMonitorHost, isAllowedMonitorUrl } from './validation';
+
 import type { HealthState, MonitorTarget, ProbeType, Sample } from './types';
+import type { MonitorValidationPolicy } from './validation';
 
 /** Abort a probe that takes longer than this many milliseconds. */
 const PROBE_TIMEOUT_MS = 8000;
+const MAX_PROBE_RESPONSE_BYTES = 256 * 1024;
+const MAX_REDIRECTS = 3;
 
 /** Shared request headers so upstream services can identify the prober. */
 const USER_AGENT = 'mission-platform-service-monitor/1.0';
@@ -18,24 +24,25 @@ const USER_AGENT = 'mission-platform-service-monitor/1.0';
 export async function runProbe(target: MonitorTarget): Promise<Sample> {
   const type: ProbeType = target.type ?? 'http';
   const start = Date.now();
+  const policy = resolveMonitorValidationPolicy();
   try {
     switch (type) {
       case 'http': {
-        return await httpProbe(target, start);
+        return await httpProbe(target, start, policy);
       }
       case 'json': {
-        return await jsonProbe(target, start);
+        return await jsonProbe(target, start, policy);
       }
       case 'graphql': {
-        return await graphqlProbe(target, start);
+        return await graphqlProbe(target, start, policy);
       }
       case 'dns': {
-        return await dnsProbe(target, start);
+        return await dnsProbe(target, start, policy);
       }
       case 'tcp':
       case 'mqtt':
       case 'network': {
-        return await socketProbe(target, start);
+        return await socketProbe(target, start, policy);
       }
       case 'udp':
       case 'ntp': {
@@ -51,15 +58,19 @@ export async function runProbe(target: MonitorTarget): Promise<Sample> {
 }
 
 /** Plain HTTP check classified by status code and latency. */
-async function httpProbe(target: MonitorTarget, start: number): Promise<Sample> {
-  const url = requireUrl(target);
-  const response = await fetch(url, {
-    method: target.method ?? 'GET',
-    redirect: 'follow',
-    signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
-    headers: { 'user-agent': USER_AGENT },
-  });
-  await response.arrayBuffer();
+async function httpProbe(target: MonitorTarget, start: number, policy: MonitorValidationPolicy): Promise<Sample> {
+  const url = requireUrl(target, policy);
+  const response = await fetchWithRedirectPolicy(
+    url,
+    {
+      method: target.method ?? 'GET',
+      redirect: 'follow',
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+      headers: { 'user-agent': USER_AGENT },
+    },
+    policy,
+  );
+  await readResponseBody(response);
   const latencyMs = Date.now() - start;
   return sample(target, {
     state: classifyHttp(response.status, latencyMs, target.degradedAboveMs),
@@ -74,19 +85,23 @@ async function httpProbe(target: MonitorTarget, start: number): Promise<Sample> 
  * assert that the value at `jsonPath` equals `expect`. Reachable but unexpected
  * payloads are reported as `degraded` rather than `down`.
  */
-async function jsonProbe(target: MonitorTarget, start: number): Promise<Sample> {
-  const url = requireUrl(target);
-  const response = await fetch(url, {
-    method: target.method ?? 'GET',
-    signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
-    headers: { 'user-agent': USER_AGENT, accept: 'application/json' },
-  });
+async function jsonProbe(target: MonitorTarget, start: number, policy: MonitorValidationPolicy): Promise<Sample> {
+  const url = requireUrl(target, policy);
+  const response = await fetchWithRedirectPolicy(
+    url,
+    {
+      method: target.method ?? 'GET',
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+      headers: { 'user-agent': USER_AGENT, accept: 'application/json' },
+    },
+    policy,
+  );
   const latencyMs = Date.now() - start;
   if (!response.ok) {
     return sample(target, { state: 'down', status: response.status, latencyMs, error: `HTTP ${response.status}` });
   }
 
-  const body: unknown = await response.json();
+  const body: unknown = JSON.parse(await readResponseBody(response));
   if (target.jsonPath) {
     const actual = readPath(body, target.jsonPath);
     const expected = target.expect ?? 'ok';
@@ -108,21 +123,25 @@ async function jsonProbe(target: MonitorTarget, start: number): Promise<Sample> 
 }
 
 /** POST a GraphQL query; fail on transport errors or a populated `errors` array. */
-async function graphqlProbe(target: MonitorTarget, start: number): Promise<Sample> {
-  const url = requireUrl(target);
+async function graphqlProbe(target: MonitorTarget, start: number, policy: MonitorValidationPolicy): Promise<Sample> {
+  const url = requireUrl(target, policy);
   const query = target.query ?? '{ __typename }';
-  const response = await fetch(url, {
-    method: 'POST',
-    signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
-    headers: { 'user-agent': USER_AGENT, 'content-type': 'application/json', accept: 'application/json' },
-    body: JSON.stringify({ query }),
-  });
+  const response = await fetchWithRedirectPolicy(
+    url,
+    {
+      method: 'POST',
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+      headers: { 'user-agent': USER_AGENT, 'content-type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({ query }),
+    },
+    policy,
+  );
   const latencyMs = Date.now() - start;
   if (!response.ok) {
     return sample(target, { state: 'down', status: response.status, latencyMs, error: `HTTP ${response.status}` });
   }
 
-  const body = (await response.json()) as { errors?: Array<{ message?: string }> };
+  const body = JSON.parse(await readResponseBody(response)) as { errors?: Array<{ message?: string }> };
   const errors = body.errors ?? [];
   if (errors.length > 0) {
     return sample(target, {
@@ -141,11 +160,11 @@ async function graphqlProbe(target: MonitorTarget, start: number): Promise<Sampl
 }
 
 /** Resolve a hostname via Cloudflare DNS-over-HTTPS (`application/dns-json`). */
-async function dnsProbe(target: MonitorTarget, start: number): Promise<Sample> {
-  const host = requireHost(target);
+async function dnsProbe(target: MonitorTarget, start: number, policy: MonitorValidationPolicy): Promise<Sample> {
+  const host = requireHost(target, policy);
   const recordType = target.recordType ?? 'A';
   const url = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(host)}&type=${encodeURIComponent(recordType)}`;
-  const response = await fetch(url, {
+  const response = await fetchWithRedirectPolicy(url, {
     signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
     headers: { accept: 'application/dns-json', 'user-agent': USER_AGENT },
   });
@@ -154,7 +173,7 @@ async function dnsProbe(target: MonitorTarget, start: number): Promise<Sample> {
     return sample(target, { state: 'down', status: response.status, latencyMs, error: `HTTP ${response.status}` });
   }
 
-  const body = (await response.json()) as { Status?: number; Answer?: unknown[] };
+  const body = JSON.parse(await readResponseBody(response)) as { Status?: number; Answer?: unknown[] };
   const resolved = body.Status === 0 && (body.Answer?.length ?? 0) > 0;
   return sample(target, {
     state: resolved ? classifyHttp(200, latencyMs, target.degradedAboveMs) : 'down',
@@ -170,9 +189,12 @@ async function dnsProbe(target: MonitorTarget, start: number): Promise<Sample> {
  * runs over TCP; a successful connect confirms the broker is accepting
  * connections).
  */
-async function socketProbe(target: MonitorTarget, start: number): Promise<Sample> {
-  const host = requireHost(target);
-  const port = target.port ?? (target.type === 'mqtt' ? 1883 : 80);
+async function socketProbe(target: MonitorTarget, start: number, policy: MonitorValidationPolicy): Promise<Sample> {
+  const host = requireHost(target, policy);
+  const port = target.port ?? (target.type === 'mqtt' ? 1883 : 443);
+  if (!isAllowedMonitorHost(host, port, policy)) {
+    throw new Error('monitor destination or port is not allowed');
+  }
   const socket = connect({ hostname: host, port });
   try {
     await withTimeout(socket.opened, PROBE_TIMEOUT_MS, 'connect timeout');
@@ -208,11 +230,12 @@ function unsupported(target: MonitorTarget, start: number, type: ProbeType): Sam
 
 /** Build a `down` sample from a caught error. */
 function failed(target: MonitorTarget, start: number, error: unknown): Sample {
+  const message = error instanceof Error ? error.message : String(error);
   return sample(target, {
     state: 'down',
     status: 0,
     latencyMs: Date.now() - start,
-    error: error instanceof Error ? error.message : String(error),
+    error: message.slice(0, 256),
   });
 }
 
@@ -221,18 +244,76 @@ function sample(target: MonitorTarget, fields: Omit<Sample, 'service' | 'ts'>): 
   return { service: target.id, ts: Date.now(), ...fields };
 }
 
-function requireUrl(target: MonitorTarget): string {
+function requireUrl(target: MonitorTarget, policy: MonitorValidationPolicy): string {
   if (!target.url) {
     throw new Error(`monitor "${target.id}" is missing a url`);
+  }
+  if (!isAllowedMonitorUrl(target.url, policy)) {
+    throw new Error('monitor destination is not allowed');
   }
   return target.url;
 }
 
-function requireHost(target: MonitorTarget): string {
+function requireHost(target: MonitorTarget, policy: MonitorValidationPolicy): string {
   if (!target.host) {
     throw new Error(`monitor "${target.id}" is missing a host`);
   }
+  if (!isAllowedMonitorHost(target.host, target.port, policy)) {
+    throw new Error('monitor destination is not allowed');
+  }
   return target.host;
+}
+
+/** Fetch without allowing redirects to bypass the monitor destination policy. */
+async function fetchWithRedirectPolicy(
+  url: string,
+  init: RequestInit,
+  policy: MonitorValidationPolicy = {},
+): Promise<Response> {
+  let current = url;
+  for (let redirect = 0; redirect <= MAX_REDIRECTS; redirect += 1) {
+    const response = await fetch(current, { ...init, redirect: 'manual' });
+    if (response.status < 300 || response.status >= 400) return response;
+    const location = response.headers.get('location');
+    if (!location || redirect === MAX_REDIRECTS) throw new Error('redirect policy rejected the response');
+    const next = new URL(location, current).toString();
+    if (!isAllowedMonitorUrl(next, policy)) throw new Error('redirect destination is not allowed');
+    current = next;
+  }
+  throw new Error('redirect policy rejected the response');
+}
+
+/** Read a probe response with a hard cap, including for chunked responses. */
+async function readResponseBody(response: Response): Promise<string> {
+  const declaredLength = Number(response.headers.get('content-length') ?? '');
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_PROBE_RESPONSE_BYTES) {
+    throw new Error('probe response is too large');
+  }
+  if (!response.body) return '';
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > MAX_PROBE_RESPONSE_BYTES) {
+        await reader.cancel();
+        throw new Error('probe response is too large');
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
 }
 
 /** Reject if `promise` does not settle within `ms` milliseconds. */

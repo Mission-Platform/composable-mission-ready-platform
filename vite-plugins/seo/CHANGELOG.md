@@ -1,5 +1,14 @@
 # @mission-platform/vite-plugin-seo
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [c32bb83]
+- Updated dependencies [8a15dbc]
+- Updated dependencies [48f26d1]
+  - @mission-platform/seo@0.3.4
+
 ## 0.1.1
 
 ### Patch Changes

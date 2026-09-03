@@ -1,5 +1,22 @@
 # @mission-platform/breakpoints
 
+## 6.0.1
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- 46fe17a: scope Forge build environment variables to package build tasks
+- 9e59f09: split shared UI capabilities into focused workspaces and update their design tokens
+- 97c3f20: add typed custom-property overrides for visual components
+- 31ed685: Run i18n extraction from each configured workspace through the root Turbo task
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [89aab02]
+- Updated dependencies [8a15dbc]
+  - @mission-platform/forge@1.1.0
+  - @mission-platform/i18n@2.1.1
+
 ## 6.0.0
 
 ### Major Changes

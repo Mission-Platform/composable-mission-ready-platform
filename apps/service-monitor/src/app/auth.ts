@@ -12,6 +12,7 @@ interface TimingSafeSubtleCrypto extends SubtleCrypto {
 
 export const MONITOR_SESSION_COOKIE = 'monitor_session';
 const MONITOR_SESSION_MAX_AGE_SECONDS = 60 * 60 * 8;
+const MAX_AUTH_REQUEST_BYTES = 8 * 1024;
 
 function constantTimeEqual(left: Uint8Array, right: Uint8Array): boolean {
   let difference = 0;
@@ -132,9 +133,17 @@ export async function handleMonitorSession(request: Request, configuredToken?: s
     );
   }
 
+  const declaredLength = Number(request.headers.get('content-length') ?? '');
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_AUTH_REQUEST_BYTES) {
+    return Response.json({ error: 'Request body is too large.' }, { status: 413 });
+  }
   let body: unknown;
   try {
-    body = await request.json();
+    const text = await request.text();
+    if (new TextEncoder().encode(text).byteLength > MAX_AUTH_REQUEST_BYTES) {
+      return Response.json({ error: 'Request body is too large.' }, { status: 413 });
+    }
+    body = JSON.parse(text) as unknown;
   } catch {
     return Response.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
   }

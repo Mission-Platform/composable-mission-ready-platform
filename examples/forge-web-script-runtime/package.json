@@ -1,7 +1,7 @@
 {
   "name": "forge-web-script-runtime-example",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +16,7 @@
     "@mission-platform/forge-web-script": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
+    "@types/node": "catalog:typescript",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite"
   }

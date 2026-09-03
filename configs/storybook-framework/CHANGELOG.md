@@ -1,5 +1,19 @@
 # @mission-platform/storybook-framework
 
+## 0.3.1
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- f216404: add framework-neutral router contracts and compiler tooling integration
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- b899a3c: add the Storybook designs addon to the shared framework preset
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [8a15dbc]
+  - @mission-platform/vite-config@1.1.1
+  - @mission-platform/vite-plugin-i18n@0.1.3
+
 ## 0.3.0
 
 ### Minor Changes

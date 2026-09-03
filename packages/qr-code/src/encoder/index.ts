@@ -11,32 +11,27 @@ import type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from '../types';
 /** Ordinal for each error-correction level, matching the FWS encoder contract. */
 const ECC_ORDINAL: Record<QrErrorCorrection, number> = { L: 0, M: 1, Q: 2, H: 3 };
 
-/** Unpack the FWS encoder's `version,size,row-major-bits` result. */
-function unpack(packed: string): QrMatrix {
-  if (packed.length === 0) {
+/** Read the FWS encoder's fixed-layout record and its module words. */
+function unpack(encoded: { version: number; size: number; modules: readonly number[] }): QrMatrix {
+  if (encoded.version === 0 || encoded.size === 0 || encoded.modules.length === 0) {
     throw new RangeError('Data too long for a QR Code at the chosen error-correction level');
   }
-  const firstSeparator = packed.indexOf(',');
-  const secondSeparator = packed.indexOf(',', firstSeparator + 1);
-  const version = Number.parseInt(packed.slice(0, firstSeparator), 10);
-  const size = Number.parseInt(packed.slice(firstSeparator + 1, secondSeparator), 10);
-  const bits = packed.slice(secondSeparator + 1);
-  if (
-    firstSeparator <= 0 ||
-    secondSeparator <= firstSeparator ||
-    !Number.isInteger(version) ||
-    !Number.isInteger(size) ||
-    size <= 0 ||
-    bits.length !== size * size
-  ) {
+  const { version, size, modules: moduleWords } = encoded;
+  if (!Number.isInteger(version) || !Number.isInteger(size) || size <= 0 || !Array.isArray(moduleWords)) {
     throw new RangeError('Malformed QR Code encoder result');
   }
+  const words = Math.ceil((size * size) / 32);
+  if (
+    moduleWords.length !== words ||
+    moduleWords.some((word) => !Number.isInteger(word) || word < 0 || word > 0xffffffff)
+  )
+    throw new RangeError('Malformed QR Code encoder result');
   const modules: boolean[][] = [];
-  let offset = 0;
   for (let y = 0; y < size; y++) {
     const row: boolean[] = new Array<boolean>(size);
     for (let x = 0; x < size; x++) {
-      row[x] = bits[offset++] === '1';
+      const index = y * size + x;
+      row[x] = ((moduleWords[Math.floor(index / 32)]! >>> (index % 32)) & 1) === 1;
     }
     modules.push(row);
   }
@@ -51,7 +46,8 @@ function unpack(packed: string): QrMatrix {
  *   40) QR Code at the chosen error-correction level.
  */
 export function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix {
-  return unpack(loadQrEncoderSync().encode_qr(ECC_ORDINAL[errorCorrection], text));
+  const encoder = loadQrEncoderSync();
+  return unpack(encoder.encode_qr(ECC_ORDINAL[errorCorrection], text));
 }
 
 /**

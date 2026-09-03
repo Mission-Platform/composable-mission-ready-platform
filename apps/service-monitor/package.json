@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/service-monitor",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "BSD-4-Clause",
   "type": "module",
   "description": "Server-side service monitoring app built with RedwoodSDK on Cloudflare, backed by a Durable Object SQLite time-series store, with a React + RxJS live dashboard.",
@@ -12,7 +12,7 @@
     "deploy": "wrangler deploy",
     "deploy:staging": "wrangler deploy --env staging",
     "types": "wrangler types",
-    "test": "vitest run",
+    "test": "vitest run --exclude 'e2e/**'",
     "test:e2e": "playwright test",
     "i18n:extract": "i18next-cli extract --config i18next.config.ts",
     "lint": "eslint .",

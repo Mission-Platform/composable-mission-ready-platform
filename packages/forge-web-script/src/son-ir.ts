@@ -805,7 +805,7 @@ function sonTransformStatements(
       }
       case 'assignment': {
         const value = sonTransformExpression(statement.value, locals, counters);
-        locals.delete(statement.name);
+        locals.clear();
         result.push({ ...statement, value });
         break;
       }
@@ -841,9 +841,11 @@ function sonTransformStatements(
           statement.alternate === undefined
             ? undefined
             : sonTransformStatements(statement.alternate, new Map(locals), counters);
-        for (const name of sonAssignedNames(statement.consequent)) locals.delete(name);
-        if (statement.alternate !== undefined)
-          for (const name of sonAssignedNames(statement.alternate)) locals.delete(name);
+        if (
+          sonAssignedNames(statement.consequent).size > 0 ||
+          (statement.alternate !== undefined && sonAssignedNames(statement.alternate).size > 0)
+        )
+          locals.clear();
         result.push({ ...statement, condition, consequent, ...(alternate === undefined ? {} : { alternate }) });
         break;
       }
@@ -853,7 +855,7 @@ function sonTransformStatements(
         for (const name of sonAssignedNames(statement.body)) bodyLocals.delete(name);
         const condition = sonTransformExpression(statement.condition, bodyLocals, counters);
         const body = sonTransformStatements(statement.body, bodyLocals, counters);
-        for (const name of sonAssignedNames(statement.body)) locals.delete(name);
+        if (sonAssignedNames(statement.body).size > 0) locals.clear();
         result.push({ ...statement, condition, body });
         break;
       }
@@ -867,9 +869,11 @@ function sonTransformStatements(
           statement.defaultCase === undefined
             ? undefined
             : sonTransformStatements(statement.defaultCase, new Map(locals), counters);
-        for (const arm of statement.cases) for (const name of sonAssignedNames(arm.body)) locals.delete(name);
-        if (statement.defaultCase !== undefined)
-          for (const name of sonAssignedNames(statement.defaultCase)) locals.delete(name);
+        if (
+          statement.cases.some((arm) => sonAssignedNames(arm.body).size > 0) ||
+          (statement.defaultCase !== undefined && sonAssignedNames(statement.defaultCase).size > 0)
+        )
+          locals.clear();
         result.push({ ...statement, value, cases, ...(defaultCase === undefined ? {} : { defaultCase }) });
         break;
       }
@@ -879,7 +883,7 @@ function sonTransformStatements(
         bodyLocals.delete(statement.binding);
         const iterator = sonTransformExpression(statement.iterator, locals, counters);
         const body = sonTransformStatements(statement.body, bodyLocals, counters);
-        for (const name of sonAssignedNames(statement.body)) locals.delete(name);
+        if (sonAssignedNames(statement.body).size > 0) locals.clear();
         result.push({ ...statement, iterator, body });
         break;
       }

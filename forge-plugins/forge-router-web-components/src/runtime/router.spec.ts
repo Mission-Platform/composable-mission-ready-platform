@@ -157,6 +157,42 @@ describe('Web Components router', () => {
     router.dispose();
   });
 
+  it('shares pending route views and cancels a stale concurrent navigation', async () => {
+    let calls = 0;
+    let resolveSlow!: (view: string) => void;
+    const slowView = new Promise<string>((resolve) => {
+      resolveSlow = resolve;
+    });
+    const router = createWebComponentsRouter({
+      routes: [
+        { path: '/', name: 'home' },
+        {
+          path: '/slow',
+          name: 'slow',
+          component: () => {
+            calls += 1;
+            return slowView;
+          },
+        },
+        { path: '/fast', name: 'fast', component: () => 'fast view' },
+      ],
+      history: new MpMemoryHistory('/'),
+    });
+    const slowRoute = router.resolve('/slow');
+    const firstLoad = router.resolveView(slowRoute);
+    const secondLoad = router.resolveView(slowRoute);
+    expect(secondLoad).toBe(firstLoad);
+
+    const slowNavigation = router.push('/slow');
+    const fastNavigation = router.push('/fast');
+    await fastNavigation;
+    resolveSlow('slow view');
+    await expect(slowNavigation).resolves.toMatchObject({ type: 'failure', failureType: 'cancelled' });
+    expect(calls).toBe(1);
+    expect(router.current.value?.path).toBe('/fast');
+    router.dispose();
+  });
+
   it.each(routerCompatibilityFixtures.filter((fixture) => fixture.expectedNavigation === undefined))(
     'resolves compatibility case $id',
     ({ path, expectedRoute }) => {

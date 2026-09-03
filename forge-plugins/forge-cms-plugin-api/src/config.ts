@@ -9,6 +9,11 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { defineLibraryConfig } from "@mission-platform/vite-config";
+import {
+  assertForgeArtifactRoot,
+  ensureForgeArtifactDirectory,
+  resolveForgeArtifactPath,
+} from "@mission-platform/vite-plugin-forge";
 import { mergeConfig } from "vite";
 
 import { generateCmsArtifacts } from "./driver.js";
@@ -34,7 +39,10 @@ function cmsEntryDeclarationsPlugin(cacheDirectory: string): Plugin {
   return {
     name: "mission-platform:cms-entry-dts",
     generateBundle() {
-      const declarations = path.join(cacheDirectory, "index.d.ts");
+      const declarations = resolveForgeArtifactPath(
+        cacheDirectory,
+        "index.d.ts",
+      );
       if (!fs.existsSync(declarations)) {
         return;
       }
@@ -56,14 +64,26 @@ function cmsAssetsPlugin(
   return {
     name: "mission-platform:cms-assets",
     closeBundle() {
-      const destinationRoot = path.resolve(rootDir, `dist/cms/${targetId}`);
+      const safeCacheDirectory = assertForgeArtifactRoot(cacheDirectory);
+      const destinationRoot = assertForgeArtifactRoot(
+        path.resolve(rootDir, `dist/cms/${targetId}`),
+      );
       for (const asset of assets) {
-        const source = path.join(cacheDirectory, asset.fileName);
+        const source = resolveForgeArtifactPath(
+          safeCacheDirectory,
+          asset.fileName,
+        );
         if (!fs.existsSync(source)) {
           continue;
         }
-        const destination = path.join(destinationRoot, asset.fileName);
-        fs.mkdirSync(path.dirname(destination), { recursive: true });
+        const destination = resolveForgeArtifactPath(
+          destinationRoot,
+          asset.fileName,
+        );
+        ensureForgeArtifactDirectory(
+          destinationRoot,
+          path.dirname(destination),
+        );
         fs.copyFileSync(source, destination);
       }
     },
@@ -76,6 +96,9 @@ export function defineViteForgeCmsLibrary(
 ): UserConfig {
   const { rootDir, target, name, external = [], overrides } = options;
   const cacheDirectory = cmsCacheDirectory(rootDir, target);
+  const outputDirectory = assertForgeArtifactRoot(
+    path.resolve(rootDir, `dist/cms/${target.id}/${target.framework.id}`),
+  );
   const componentsImport = options.componentsImport ?? target.packageName;
 
   const generated = generateCmsArtifacts({

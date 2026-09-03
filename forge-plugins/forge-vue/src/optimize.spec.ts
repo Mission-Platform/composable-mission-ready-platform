@@ -190,7 +190,7 @@ describe("the Vue optimization phase refines the lowered plan", () => {
     expect(
       planOf(optimizeVueModule(lowerVueModule(fixture(), CONTEXT), ALL_ENABLED))
         .vueImports.values,
-    ).toEqual(["computed", "ref", "useTemplateRef", "watch"]);
+    ).toEqual(["computed", "onMounted", "ref", "useTemplateRef", "watch"]);
   });
 
   it("gates static hoisting on the neutral `staticMarking` flag", () => {

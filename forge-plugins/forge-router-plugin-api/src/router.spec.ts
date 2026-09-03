@@ -121,4 +121,52 @@ describe("Forge router plugin API", () => {
     expect(generated.code).toContain("useMpRouter().navigate");
     expect(generated.code).not.toContain("@mission-platform/router");
   });
+
+  it("rewrites multiple neutral imports without duplicating native imports", () => {
+    const target = defineForgeRouterTarget({
+      id: "multiple-imports-fixture",
+      routerPackage: "fixture-router",
+      capabilities: ["link", "route", "navigate", "resolve", "view"],
+      runtimeModule: "@fixture/router-runtime",
+    });
+    const source = [
+      "import { MpLink } from '@mission-platform/router';",
+      "import { useMpRoute, useMpRouter } from '@mission-platform/router';",
+      "export const route = useMpRoute();",
+      "export const navigate = useMpRouter();",
+      "export { MpLink };",
+      "",
+    ].join("\n");
+    const generated = target.generate(
+      target.lower(
+        {
+          kind: "router-capability-module",
+          source,
+          fileName: "multiple-imports.ts",
+          moduleKind: "component",
+          imports: ["MpLink", "useMpRoute", "useMpRouter"].map((name) => ({
+            importedName: name,
+            localName: name,
+            typeOnly: false,
+            span: { start: 0, end: 1, line: 1, column: 1 },
+          })),
+          uses: [],
+        },
+        {
+          routerTarget: "multiple-imports-fixture",
+          uiFramework: "none",
+          moduleKind: "component",
+          fileName: "multiple-imports.ts",
+        },
+      ),
+    );
+
+    expect(generated.code).not.toContain("@mission-platform/router");
+    expect(
+      generated.code.match(/from '@fixture\/router-runtime'/gu),
+    ).toHaveLength(1);
+    expect(generated.code).toContain(
+      "import { MpLink, useMpRoute, useMpRouter } from '@fixture/router-runtime';",
+    );
+  });
 });

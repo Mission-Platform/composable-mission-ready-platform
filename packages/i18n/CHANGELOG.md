@@ -1,5 +1,12 @@
 # @mission-platform/i18n
 
+## 2.1.1
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+
 ## 2.1.0
 
 ### Minor Changes

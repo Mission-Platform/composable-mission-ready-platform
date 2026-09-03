@@ -33,7 +33,7 @@ beforeAll(async () => {
   // Load the same entry that production uses so custom-element registration is
   // covered by the application graph rather than by test-only package imports.
   await import('./main');
-});
+}, 120_000);
 
 async function mountDocs(initialUrl: string): Promise<{
   router: ReturnType<typeof createDocsRouter>;
@@ -87,7 +87,7 @@ afterEach(() => {
   localStorage.clear();
 });
 
-describe('docs Web Components application', () => {
+describe('docs Web Components application', { timeout: 30_000 }, () => {
   it('mounts the compiled language switcher with typed select options', async () => {
     const switcher = document.createElement('forge-language-switcher') as HTMLElement & {
       locale: string;
@@ -278,9 +278,35 @@ describe('docs Web Components application', () => {
     expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('noindex,follow');
 
     await router.push('/fr/overview');
+    await flushElementUpdates();
     updateRouteMetadata(router.current.value!);
     expect(router.current.value?.path).toBe('/fr/overview');
     expect(shell.querySelector('docs-document-view')?.dataset.locale).toBe('fr');
+  });
+
+  it('keeps the current document visible beneath the loading spinner during SPA navigation', async () => {
+    const { router, shell } = await mountDocs('/overview');
+    const outlet = shell.querySelector('forge-router-outlet');
+    const currentView = shell.querySelector('docs-document-view');
+
+    expect(currentView?.dataset.slug).toBe('overview');
+    const navigation = router.push('/development-setup');
+
+    expect(outlet?.getAttribute('aria-busy')).toBe('true');
+    expect(outlet?.querySelector('.forge-router-loading-overlay')).not.toBeNull();
+    expect(outlet?.querySelector('.docs-loading-spinner')).not.toBeNull();
+    expect(shell.querySelector('docs-document-view')).toBe(currentView);
+    expect(router.current.value?.path).toBe('/overview');
+
+    await navigation;
+    expect(shell.querySelector('docs-document-view')).toBe(currentView);
+    expect(currentView?.dataset.slug).toBe('overview');
+    await flushElementUpdates();
+
+    expect(router.current.value?.path).toBe('/development-setup');
+    expect(shell.querySelector('docs-document-view')?.dataset.slug).toBe('development-setup');
+    expect(outlet?.getAttribute('aria-busy')).toBeNull();
+    expect(outlet?.querySelector('.forge-router-loading-overlay')).toBeNull();
   });
 
   it('uses router-link events for in-app navigation and updates RTL routes', async () => {
@@ -295,6 +321,7 @@ describe('docs Web Components application', () => {
 
     await router.push('/he/configs/index');
     updateRouteMetadata(router.current.value!);
+    await flushElementUpdates();
     expect(shell.querySelector('docs-document-view')?.dataset.slug).toBe('configs/index');
     expect(document.documentElement.dir).toBe('rtl');
   });

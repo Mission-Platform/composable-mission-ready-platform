@@ -1,13 +1,12 @@
 {
   "name": "@mission-platform/benchmark",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Evidence-based Forge Web Script runtime benchmark harness",
   "type": "module",
   "scripts": {
     "bench": "node --experimental-strip-types src/cli.ts",
     "bench:scanner": "node --experimental-strip-types src/scanner-cli.ts",
-    "bench:web-lua": "node --experimental-strip-types src/web-lua-cli.ts",
     "build": "tsc --project tsconfig.json --noEmit",
     "test": "vitest run --maxWorkers=1",
     "test:watch": "vitest",
@@ -18,7 +17,6 @@
   "dependencies": {
     "@mission-platform/forge-web-script": "workspace:*",
     "@mission-platform/forge-web-script-runtime": "workspace:*",
-    "@mission-platform/web-lua": "workspace:*",
     "@mission-platform/vite-plugin-assemblyscript": "workspace:*",
     "vite": "catalog:vite"
   },

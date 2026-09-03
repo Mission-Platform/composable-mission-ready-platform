@@ -363,6 +363,27 @@ describe('Forge Web Script VM WASM backend', () => {
     expect(() => denied.execute('clock', [])).toThrowError(ForgeWebScriptTrap);
   });
 
+  it('rejects nested execution without corrupting the reusable invocation state', () => {
+    let prepared!: ReturnType<typeof prepareForgeWebScriptVmWasm>;
+    let nestedError: unknown;
+    prepared = prepareForgeWebScriptVmWasm(module, {
+      capabilities: {
+        now: () => {
+          try {
+            prepared.execute('add', [number(1), number(2)]);
+          } catch (error) {
+            nestedError = error;
+          }
+          return number(7);
+        },
+      },
+    });
+
+    expect(prepared.execute('clock', []).value).toEqual(number(7));
+    expect(nestedError).toBeInstanceOf(ForgeWebScriptTrap);
+    expect(prepared.execute('add', [number(1), number(2)]).value).toEqual(number(3));
+  });
+
   it('rejects malformed artifacts before instantiation', () => {
     const artifact = compileForgeWebScriptVmWasm(module);
     expect(() => prepareForgeWebScriptVmWasm({ ...artifact, wasm: new Uint8Array([0]) })).toThrowError(

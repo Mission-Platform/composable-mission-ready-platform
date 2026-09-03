@@ -70,6 +70,13 @@ export interface MonitorTarget {
   successThreshold?: number;
 }
 
+/** The intentionally small monitor shape safe to expose to public clients. */
+export interface PublicMonitorTarget {
+  id: string;
+  name: string;
+  type: ProbeType;
+}
+
 export type IncidentStatus = 'investigating' | 'identified' | 'monitoring' | 'resolved';
 export type IncidentSeverity = 'minor' | 'major' | 'critical';
 
@@ -129,7 +136,7 @@ export interface Sample {
 
 /** Rolled-up view of a target's current condition. */
 export interface ServiceStatus {
-  target: MonitorTarget;
+  target: PublicMonitorTarget;
   /** Most recent sample, or `null` when no probe has run yet. */
   latest: Sample | null;
   /** Uptime ratio (0..1) across the retained window. */
@@ -138,6 +145,11 @@ export interface ServiceStatus {
   avgLatencyMs: number;
   /** Number of samples the roll-up is based on. */
   sampleCount: number;
+}
+
+/** Project a private monitor configuration into the public status contract. */
+export function toPublicMonitorTarget(target: MonitorTarget): PublicMonitorTarget {
+  return { id: target.id, name: target.name, type: target.type ?? 'http' };
 }
 
 /** Payload returned by `GET /api/services`. */

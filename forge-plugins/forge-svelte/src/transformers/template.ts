@@ -49,6 +49,7 @@ import {
   SLOT_TAG,
   svelteAttributeName,
   svelteEventName,
+  SUSPENSE_TAG,
   TELEPORT_TAG,
   TRANSITION_GROUP_TAG,
   TRANSITION_TAG,
@@ -563,6 +564,24 @@ export function renderNode(
   }
   if (tag === HTML_CONTENT_TAG) {
     return htmlContentMarkup(node, context);
+  }
+  if (tag === SUSPENSE_TAG) {
+    const fallback = node.attributes.find(
+      (attribute) => attribute.name === "fallback",
+    )?.value;
+    const fallbackMarkup =
+      fallback?.kind === "expression"
+        ? fallback.nested.length > 0
+          ? fallback.nested
+              .map((child) => renderNode(child, context))
+              .join("\n")
+          : fallback.expression === undefined
+            ? ""
+            : `{${scopeExpression(fallback.expression.text, context.scope)}}`
+        : fallback?.kind === "string"
+          ? fallback.value
+          : "";
+    return `<svelte:boundary>\n{#snippet pending()}\n${fallbackMarkup}\n{/snippet}\n${renderChildren(node.children, context)}\n</svelte:boundary>`;
   }
   if (
     tag === TRANSITION_TAG ||

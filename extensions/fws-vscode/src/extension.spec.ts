@@ -34,6 +34,7 @@ const mocks = vi.hoisted(() => {
     'trace.server': 'messages',
   };
   const workspace = {
+    isTrusted: true,
     workspaceFolders: folders,
     getConfiguration: vi.fn(() => ({
       get: vi.fn(<T>(section: string, defaultValue: T): T => (configurationValues[section] ?? defaultValue) as T),
@@ -118,5 +119,19 @@ describe('Forge Web Script VS Code client lifecycle', () => {
     expect(mocks.MockLanguageClient.instances).toHaveLength(0);
     expect(mocks.window.showErrorMessage).toHaveBeenCalledWith(expect.stringMatching(/node/u));
     expect(mocks.outputChannel.show).toHaveBeenCalledWith(true);
+  });
+
+  it('does not activate an untrusted workspace with a relative server override', async () => {
+    mocks.workspace.isTrusted = false;
+    mocks.configurationValues.serverPath = 'tools/server.mjs';
+    const context = { extensionPath: path.resolve(import.meta.dirname, '..'), subscriptions: [] as unknown[] };
+    try {
+      await activate(context as never);
+
+      expect(mocks.MockLanguageClient.instances).toHaveLength(0);
+      expect(mocks.window.showErrorMessage).toHaveBeenCalledWith(expect.stringMatching(/untrusted workspace/u));
+    } finally {
+      mocks.workspace.isTrusted = true;
+    }
   });
 });

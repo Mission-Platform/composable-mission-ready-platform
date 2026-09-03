@@ -8,7 +8,7 @@ import {
 } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
-import { ForgeAvatar } from '@/components/atoms/forge-avatar';
+import { ForgeAvatar } from '../../atoms/forge-avatar';
 
 import styles from './forge-chat-bubble.module.scss';
 

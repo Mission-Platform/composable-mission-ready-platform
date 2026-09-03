@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/stylelint-config",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "license": "BSD-4-Clause",
   "description": "Shared Stylelint configuration for all Mission Platform packages and apps",
   "type": "module",

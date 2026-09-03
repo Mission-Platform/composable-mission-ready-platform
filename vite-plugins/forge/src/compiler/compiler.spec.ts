@@ -1254,9 +1254,9 @@ describe('the local JSX types module source (`localJsxTypesModuleSource`)', () =
   it('binds the Web-Components variants to the native template result types', () => {
     const source = localJsxTypesModuleSource('web-components');
     expect(source).toContain(
-      "import type { HtmlContentResult, TemplateResult } from '@mission-platform/forge/web-components';",
+      "import type { HtmlContentResult, SuspenseResult, TemplateResult } from '@mission-platform/forge/web-components';",
     );
-    expect(source).toContain('export type MpElement = TemplateResult | HtmlContentResult;');
+    expect(source).toContain('export type MpElement = TemplateResult | HtmlContentResult | SuspenseResult;');
     expect(source).toContain('export type MpChild = MpElement | string | number | boolean | null | undefined;');
   });
 
@@ -3244,7 +3244,7 @@ describe('the Web Components compiler preserves slot ownership', () => {
   });
 
   it('emits repeated default/named outlets and exact children aliases natively', () => {
-    expect(projection.code.match(/dynamicElement\("slot"/g)?.length).toBe(4);
+    expect(projection.code.match(/dynamicElement\("slot"/g)?.length).toBe(3);
     expect(projection.code).toContain('"~name": "end"');
     expect(projection.code).toContain('dynamicElement("slot", {}, )');
   });

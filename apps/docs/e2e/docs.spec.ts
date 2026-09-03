@@ -20,6 +20,9 @@ test('searches the documentation', async ({ page }) => {
 test('navigates to a document from the documentation sidebar', async ({ page }) => {
   await page.goto('/overview');
 
+  const initialNavigationCount = await page.evaluate(() => performance.getEntriesByType('navigation').length);
+  const initialHistoryLength = await page.evaluate(() => history.length);
+
   await page
     .locator('nav.docs-sidebar:not([data-mobile-only]) forge-router-link.docs-sidebar__link')
     .filter({ hasText: 'Development Setup' })
@@ -27,6 +30,10 @@ test('navigates to a document from the documentation sidebar', async ({ page }) 
 
   await expect(page).toHaveURL(/\/development-setup$/);
   await expect(page.getByRole('heading', { name: 'Development Setup', exact: true })).toBeVisible();
+  await expect
+    .poll(() => page.evaluate(() => performance.getEntriesByType('navigation').length))
+    .toBe(initialNavigationCount);
+  await expect.poll(() => page.evaluate(() => history.length)).toBe(initialHistoryLength + 1);
 });
 
 test.describe('WebKit customized built-in fallback', () => {

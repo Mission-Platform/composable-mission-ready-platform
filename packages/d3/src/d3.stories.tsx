@@ -1,8 +1,6 @@
-import { scaleBand, scaleLinear } from 'd3';
-
 import { innerDimensions, useD3 } from '@mission-platform/d3';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { scaleBand, scaleLinear } from 'd3';
 
 /**
  * A small D3 bar chart demonstrating `@mission-platform/d3`. The chart's layout

@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/rxjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "BSD-4-Clause",
   "description": "Framework-neutral RxJS integration for Mission Platform — write-once composables (useObservable/useSubscription) authored against @mission-platform/forge hooks and compiled to React (./react) and Vue (./vue), bridging RxJS Observables to component state and lifecycle",
   "type": "module",

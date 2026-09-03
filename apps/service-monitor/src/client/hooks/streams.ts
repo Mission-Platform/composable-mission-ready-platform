@@ -2,7 +2,7 @@ import { from, of, timer, type Observable } from 'rxjs';
 import { catchError, distinctUntilChanged, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import type { SpeedProviderId, SpeedResponse, SpeedResult, SpeedSeriesResponse } from '@/monitoring/speed/types';
-import type { MetricsResponse, MonitorTarget, Sample, ServicesResponse } from '@/monitoring/types';
+import type { MetricsResponse, MonitorTarget, MonitorsResponse, Sample, ServicesResponse } from '@/monitoring/types';
 
 /** Fetch and parse JSON, throwing on non-2xx responses. */
 async function fetchJson<T>(input: string): Promise<T> {
@@ -24,6 +24,12 @@ export function servicesStream(intervalMs: number): Observable<ServicesResponse 
     switchMap(() => from(fetchJson<ServicesResponse>('/api/services')).pipe(catchError(() => of(null)))),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
+}
+
+/** Fetch the private monitor configuration only for an authenticated management view. */
+export async function loadMonitors(): Promise<MonitorTarget[]> {
+  const response = await fetchJson<MonitorsResponse>('/api/monitors');
+  return response.monitors;
 }
 
 /**

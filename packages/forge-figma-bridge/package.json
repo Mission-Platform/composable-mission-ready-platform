@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-figma-bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local repository bridge for reviewed Forge Figma artifact bundles.",
   "type": "module",
   "bin": {

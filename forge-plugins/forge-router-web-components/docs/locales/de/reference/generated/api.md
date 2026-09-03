@@ -148,7 +148,7 @@ Keine Beschreibung angegeben.
 **Art:** Komponente
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
 Benutzerdefiniertes Element-Tag, das für kompilierte neutrale Links verwendet wird.
@@ -158,7 +158,7 @@ Benutzerdefiniertes Element-Tag, das für kompilierte neutrale Links verwendet w
 **Art:** Komponente
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 Benutzerdefiniertes Element-Tag, das für kompilierte neutrale Steckdosen verwendet wird.
@@ -300,6 +300,16 @@ Verlauf, Wächter, Weiterleitungen, Abonnements und Browser-Scroll-Verhalten.
 | Name     | Geben Sie                          | ein Beschreibung |
 | -------- | ---------------------------------- | ---------------- |
 | Optionen | MpWebComponentsRouterOptions<View> |                  |
+
+### MpRouterLoadingFallback
+
+**Art:** Komponente
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+Von einem Router-Ausgang gerenderter Inhalt, während eine Zielansicht geladen wird.
 
 ### MpWebComponentsRouter
 

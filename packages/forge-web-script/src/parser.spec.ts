@@ -57,6 +57,21 @@ describe('Forge Web Script flat source modules', () => {
     expect(checkForgeWebScript(result.module!, 'aggregates.fws').diagnostics).toEqual([]);
   });
 
+  it('reserves record as a declaration keyword', () => {
+    const declaration = parseForgeWebScript(
+      'record EncodedQR { version: i32; size: i32; modules: u32[]; }',
+      'record.fws',
+    );
+    expect(declaration.diagnostics).toEqual([]);
+    expect(declaration.module?.structs[0]).toMatchObject({ name: 'EncodedQR', record: true });
+
+    const invalidParameter = parseForgeWebScript(
+      'export fn read(record: u32) -> u32 { return 0; }',
+      'reserved-record.fws',
+    );
+    expect(invalidParameter.diagnostics).toContainEqual(expect.objectContaining({ code: 'FWS-PARSE-015' }));
+  });
+
   it('parses qualified enum constructors and preserves them through IR lowering', () => {
     const result = parseForgeWebScript(
       `enum Result<T, E> { Ok(value: T), Error(error: E), }

@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/icons",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "BSD-4-Clause",
   "description": "SVG icon components for Mission Platform, authored once in JSX and compiled to Vue, React, Svelte, Solid, and Web Components",
   "type": "module",

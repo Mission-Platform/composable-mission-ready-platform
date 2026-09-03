@@ -5,10 +5,20 @@
   "compatibility_date": "2026-08-08",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
+  // Non-local deployments must set the EMAIL_DEPLOYMENT_TOKEN secret and provide
+  // explicit EMAIL_ALLOWED_ORIGINS and EMAIL_ALLOWED_RECIPIENTS variables.
   "vars": {
+    "EMAIL_ALLOWED_ORIGINS": "http://localhost:5173,http://127.0.0.1:5173",
     "MAILPIT_HOST": "127.0.0.1",
     "MAILPIT_PORT": "1025",
     "MAIL_FROM": "showcase@mission.local",
     "MAILPIT_UI_URL": "http://localhost:8025"
-  }
+  },
+  "ratelimits": [
+    {
+      "name": "EMAIL_RATE_LIMITER",
+      "namespace_id": "1003",
+      "simple": { "limit": 5, "period": 60 }
+    }
+  ]
 }

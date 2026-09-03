@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/email-sender",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "BSD-4-Clause",
   "description": "Local Cloudflare Worker email showcase sender backed by MailPit SMTP",
   "type": "module",

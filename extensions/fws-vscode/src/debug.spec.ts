@@ -29,6 +29,7 @@ const mocks = vi.hoisted(() => {
     runtimeArgs: ['--debug'],
   };
   const workspace = {
+    isTrusted: true,
     getConfiguration: vi.fn(() => ({
       get: vi.fn(<T>(section: string, defaultValue: T): T => (configurationValues[section] ?? defaultValue) as T),
     })),
@@ -101,6 +102,80 @@ describe('Forge Web Script VS Code debugger', () => {
       runtimeArgs: ['--debug'],
       args: [],
     });
+  });
+
+  it('rejects a workspace-relative adapter override in an untrusted workspace', async () => {
+    mocks.configurationValues.nodePath = process.execPath;
+    mocks.configurationValues.dapPath = 'tools/dap.mjs';
+    mocks.workspace.isTrusted = false;
+    try {
+      const provider = createDebugConfigurationProvider({ extensionPath: path.resolve(import.meta.dirname, '..') });
+
+      await expect(
+        provider.resolveDebugConfiguration?.(
+          { uri: { fsPath: '/workspace' } } as never,
+          { type: 'fws', request: 'launch' } as never,
+        ),
+      ).rejects.toThrow(/untrusted workspace/u);
+    } finally {
+      mocks.workspace.isTrusted = true;
+    }
+  });
+
+  it('rejects an absolute adapter override in an untrusted workspace', async () => {
+    mocks.configurationValues.nodePath = process.execPath;
+    mocks.configurationValues.dapPath = path.join(path.resolve(import.meta.dirname, '..'), 'package.json');
+    mocks.workspace.isTrusted = false;
+    try {
+      const provider = createDebugConfigurationProvider({ extensionPath: path.resolve(import.meta.dirname, '..') });
+
+      await expect(
+        provider.resolveDebugConfiguration?.(
+          { uri: { fsPath: '/workspace' } } as never,
+          { type: 'fws', request: 'launch' } as never,
+        ),
+      ).rejects.toThrow(/untrusted workspace/u);
+    } finally {
+      mocks.workspace.isTrusted = true;
+    }
+  });
+
+  it('rejects a configured runtime path in an untrusted workspace', async () => {
+    mocks.configurationValues.nodePath = process.execPath;
+    mocks.configurationValues.dapPath = path.join(path.resolve(import.meta.dirname, '..'), 'package.json');
+    mocks.configurationValues.runtimePath = '/opt/forge-runtime';
+    mocks.workspace.isTrusted = false;
+    try {
+      const provider = createDebugConfigurationProvider({ extensionPath: path.resolve(import.meta.dirname, '..') });
+
+      await expect(
+        provider.resolveDebugConfiguration?.(
+          { uri: { fsPath: '/workspace' } } as never,
+          { type: 'fws', request: 'launch' } as never,
+        ),
+      ).rejects.toThrow(/untrusted workspace/u);
+    } finally {
+      mocks.workspace.isTrusted = true;
+    }
+  });
+
+  it('rejects a configured working directory in an untrusted workspace', async () => {
+    mocks.configurationValues.nodePath = process.execPath;
+    mocks.configurationValues.dapPath = path.join(path.resolve(import.meta.dirname, '..'), 'package.json');
+    mocks.configurationValues.runtimePath = '';
+    mocks.workspace.isTrusted = false;
+    try {
+      const provider = createDebugConfigurationProvider({ extensionPath: path.resolve(import.meta.dirname, '..') });
+
+      await expect(
+        provider.resolveDebugConfiguration?.(
+          { uri: { fsPath: '/workspace' } } as never,
+          { type: 'fws', request: 'launch', cwd: '/tmp' } as never,
+        ),
+      ).rejects.toThrow(/untrusted workspace/u);
+    } finally {
+      mocks.workspace.isTrusted = true;
+    }
   });
 
   it('launches the staged adapter with configured Node and workspace cwd', () => {

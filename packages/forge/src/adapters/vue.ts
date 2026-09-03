@@ -15,6 +15,7 @@ import {
   inject,
   type InjectionKey,
   isVNode,
+  Suspense as VueSuspense,
   provide,
   type VNode,
   type VNodeChild,
@@ -43,6 +44,7 @@ import {
 } from '../runtime/slots';
 import { Teleport as TeleportMarker } from '../runtime/teleport';
 import { Transition as TransitionMarker, TransitionGroup as TransitionGroupMarker } from '../runtime/transition';
+import { Suspense as SuspenseMarker, type MpSuspenseProperties } from '../runtime/types';
 
 /**
  * Map the neutral props onto Vue's `h` props. The neutral `className={…}`
@@ -102,6 +104,18 @@ export function renderToVue(element: MpElement): VNode {
   // would otherwise invoke the throw-on-call marker.
   if (type === Fragment) {
     return createVueElement(VueFragment, undefined, toVueChildren(children));
+  }
+
+  if (type === SuspenseMarker) {
+    const suspense = properties as MpSuspenseProperties;
+    const fallback = suspense.fallback;
+    const content = suspense.children ?? children;
+    return createVueElement(VueSuspense, undefined, {
+      default: () => toVueChildren(Array.isArray(content) ? content : [content]),
+      ...(fallback === undefined
+        ? {}
+        : { fallback: () => toVueChildren(Array.isArray(fallback) ? fallback : [fallback]) }),
+    });
   }
 
   // A `<Slot name="…" />` resolves against the enclosing component's slot scope.

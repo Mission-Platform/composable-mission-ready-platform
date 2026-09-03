@@ -237,6 +237,7 @@ function lowerImports(
     } else if (watcher.dependencies === undefined) {
       values.push("watchEffect");
     } else {
+      values.push("onMounted");
       values.push("watch");
     }
   }

@@ -65,6 +65,9 @@ const HTML_CONTENT_TAG = "HtmlContent";
 /** Neutral portal marker: Web Components keep the overlay in their shadow root. */
 const TELEPORT_TAG = "Teleport";
 
+/** Neutral async boundary lowered to the Web Components runtime. */
+const SUSPENSE_TAG = "Suspense";
+
 /** Context threaded through the recursive template build. */
 export interface TemplateContext {
   /** The element-instance scope embedded expressions are rewritten against. */
@@ -612,6 +615,39 @@ function htmlContentToTemplate(
   return `${openTag(host, "element", hostAttributes, context, false)}\${unsafeHtml(${content})}</${host}>`;
 }
 
+function suspenseFallbackToTemplate(
+  node: GenericRenderNode,
+  context: TemplateContext,
+): string {
+  const attribute = node.attributes.find(
+    (entry): entry is Extract<GenericAttribute, { kind: "jsx-attribute" }> =>
+      entry.kind === "jsx-attribute" && entry.name === "fallback",
+  );
+  if (attribute?.value?.kind === "string") {
+    return JSON.stringify(attribute.value.value);
+  }
+  if (attribute?.value?.kind === "expression") {
+    const nested = nestedOf(attribute.value);
+    if (nested.length > 0) {
+      return `html\`${nested.map((child) => renderNodeToTemplate(child, context)).join("")}\``;
+    }
+    return attribute.value.expression === undefined
+      ? "nothing"
+      : templateHole(attribute.value.expression, [], context);
+  }
+  return "nothing";
+}
+
+function suspenseToTemplate(
+  node: GenericRenderNode,
+  context: TemplateContext,
+): string {
+  const children = node.children
+    .map((child) => childToTemplate(child, context))
+    .join("");
+  return `suspense(${suspenseFallbackToTemplate(node, context)}, html\`${children}\`)`;
+}
+
 /** Lower a Slot marker to a native outlet or a runtime projection marker. */
 function slotToTemplate(
   node: GenericRenderNode,
@@ -714,6 +750,9 @@ export function renderNodeToTemplate(
   }
   if (node.tag === TELEPORT_TAG) {
     return children;
+  }
+  if (node.tag === SUSPENSE_TAG) {
+    return suspenseToTemplate(node, childContext);
   }
   if (node.tag === "Slot") {
     return slotToTemplate(node, childContext);
@@ -916,6 +955,23 @@ function domNodeExpression(
       .filter((value): value is string => value !== undefined)
       .join(", ")}]`;
   }
+  if (node.tag === SUSPENSE_TAG) {
+    const fallback = node.attributes.find(
+      (entry): entry is Extract<GenericAttribute, { kind: "jsx-attribute" }> =>
+        entry.kind === "jsx-attribute" && entry.name === "fallback",
+    )?.value;
+    const fallbackExpression =
+      fallback?.kind === "string"
+        ? JSON.stringify(fallback.value)
+        : fallback?.kind === "expression" && fallback.expression !== undefined
+          ? domValue(fallback.expression.text, nestedOf(fallback), childContext)
+          : "nothing";
+    const children = node.children
+      .map((child) => domChildExpression(child, childContext))
+      .filter((value): value is string => value !== undefined)
+      .join(", ");
+    return `suspense(${fallbackExpression}, [${children}])`;
+  }
   if (node.tag === HTML_CONTENT_TAG) {
     let host = "div";
     let content = '""';
@@ -947,7 +1003,23 @@ function domNodeExpression(
         value: { kind: "string", value: name },
       } as GenericAttribute);
     }
-    return `dynamicElement("slot", ${domProperties(attrs, childContext)}, ${node.children
+    const properties = domProperties(attrs, childContext);
+    if ((context.slotOwnerDepth ?? 0) > 0) {
+      const props = context.scope.propsParameterName;
+      const content =
+        props === undefined
+          ? "undefined"
+          : rewriteExpressionText(`${props}.children`, context.scope);
+      const markerProperties =
+        properties === "{}"
+          ? `{ "?data-mp-forge-slot": true, "?data-mp-forge-nested": true, ".content": ${content} }`
+          : `{ "?data-mp-forge-slot": true, "?data-mp-forge-nested": true, ${properties.slice(1, -1)}, ".content": ${content} }`;
+      return `dynamicElement("forge-slot", ${markerProperties}, ${node.children
+        .map((child) => domChildExpression(child, childContext))
+        .filter((value): value is string => value !== undefined)
+        .join(", ")})`;
+    }
+    return `dynamicElement("slot", ${properties}, ${node.children
       .map((child) => domChildExpression(child, childContext))
       .filter((value): value is string => value !== undefined)
       .join(", ")})`;
@@ -994,6 +1066,7 @@ function domStaticNode(
   if (
     node.tag === "Slot" ||
     node.tag === HTML_CONTENT_TAG ||
+    node.tag === SUSPENSE_TAG ||
     node.tagKind === "dynamic"
   ) {
     const value = builder.values.push(domNodeExpression(node, context)) - 1;

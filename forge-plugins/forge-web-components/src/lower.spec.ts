@@ -571,7 +571,7 @@ describe("the Web-Components lowering phase", () => {
         callback: "connectedCallback",
         callsSuper: true,
         statements: [
-          'this.__mpCleanup0 = (() => { const result = (() => { start(); })(); return typeof result === "function" ? result : () => stop(); })()',
+          "this.__mpCleanup0 = (() => { start(); return () => stop(); })();",
           "(() => { warmUp(); })();",
         ],
       },
@@ -589,7 +589,7 @@ describe("the Web-Components lowering phase", () => {
         statements: [
           "this.__mpCleanup0?.();",
           "this.__mpCleanup0 = undefined;",
-          'this.__mpCleanup0 = (() => { const result = (() => { start(); })(); return typeof result === "function" ? result : () => stop(); })()',
+          "this.__mpCleanup0 = (() => { start(); return () => stop(); })();",
           "(() => { warmUp(); })();",
         ],
       },

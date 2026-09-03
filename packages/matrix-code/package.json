@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/matrix-code",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "BSD-4-Clause",
   "description": "Dependency-free 2D matrix barcode encoder and decoder (Data Matrix, GS1, rectangular, compact Aztec) implemented with package-local Forge Web Script artifacts, a typed ES module wrapper, and a write-once React/Vue component",
   "type": "module",
@@ -70,6 +70,7 @@
   "dependencies": {
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-web-script-runtime": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/typography": "workspace:*"
   },

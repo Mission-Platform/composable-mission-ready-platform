@@ -1,5 +1,21 @@
 # @mission-platform/vite-plugin-forge
 
+## 1.2.0
+
+### Minor Changes
+
+- 89aab02: add typed style generation support for Forge components
+
+### Patch Changes
+
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [89aab02]
+- Updated dependencies [8a15dbc]
+  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-plugin-api@0.3.0
+  - @mission-platform/forge-router-plugin-api@0.1.1
+
 ## 1.1.0
 
 ### Minor Changes

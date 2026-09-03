@@ -8,9 +8,9 @@ import {
   radiusValue,
   sizeValue,
   typographyStyle,
-} from '@/tokens';
+} from '../../../tokens';
 
-import type { EmailColor, EmailSizeScale } from '@/tokens';
+import type { EmailColor, EmailSizeScale } from '../../../tokens';
 import type { MpChild, MpElement } from '@mission-platform/forge';
 
 export type EmailButtonVariant =

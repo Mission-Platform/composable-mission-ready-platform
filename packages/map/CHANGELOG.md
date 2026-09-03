@@ -1,5 +1,23 @@
 # @mission-platform/map
 
+## 2.0.1
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- 46fe17a: scope Forge build environment variables to package build tasks
+- 31ed685: Run i18n extraction from each configured workspace through the root Turbo task
+- Updated dependencies [c32bb83]
+- Updated dependencies [f216404]
+- Updated dependencies [89aab02]
+- Updated dependencies [8a15dbc]
+- Updated dependencies [b88a08e]
+- Updated dependencies [9e59f09]
+- Updated dependencies [97c3f20]
+  - @mission-platform/forge@1.1.0
+  - @mission-platform/tokens@2.0.0
+
 ## 2.0.0
 
 ### Major Changes

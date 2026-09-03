@@ -1,5 +1,18 @@
 # @mission-platform/phone-number
 
+## 0.3.2
+
+### Patch Changes
+
+- 140f802: move barcode and phone-number implementations onto the Forge Web Script runtime
+- c32bb83: centralize package documentation generation in the repository build
+- 93ddb34: align generated Forge Web Script codecs with the updated compiler
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- Updated dependencies [c32bb83]
+- Updated dependencies [9774a09]
+- Updated dependencies [e0c66e1]
+  - @mission-platform/forge-web-script-regex@0.2.0
+
 ## 0.3.1
 
 ### Patch Changes

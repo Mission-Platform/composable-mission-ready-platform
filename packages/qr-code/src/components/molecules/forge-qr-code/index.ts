@@ -9,4 +9,4 @@ export {
 } from './forge-qr-code';
 // The component only consumes this type; it is owned by the package's shared
 // types module, which both the encoder and the decoder entry depend on.
-export { type QrErrorCorrection } from '@/types';
+export { type QrErrorCorrection } from '../../../types';

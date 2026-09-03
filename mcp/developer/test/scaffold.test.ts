@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, symlinkSync, writeFileSync, existsSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -36,6 +36,19 @@ test('scaffold writes regular targets inside the repository', () => {
 
   assert.equal(result.applied, true);
   assert.equal(existsSync(join(root, 'packages', 'regular-package', 'README.md')), true);
+});
+
+test('scaffold keeps sorted paths paired with their original contents', () => {
+  const result = writeScaffold({
+    group: 'packages',
+    name: 'ordered-package',
+    files: { 'z-file.txt': 'z-content', 'a-file.txt': 'a-content' },
+    apply: true,
+  });
+
+  assert.deepEqual(result.files, ['a-file.txt', 'z-file.txt']);
+  assert.equal(readFileSync(join(root, 'packages', 'ordered-package', 'a-file.txt'), 'utf8'), 'a-content');
+  assert.equal(readFileSync(join(root, 'packages', 'ordered-package', 'z-file.txt'), 'utf8'), 'z-content');
 });
 
 test('in-package scaffold rejects traversal before mutation', () => {

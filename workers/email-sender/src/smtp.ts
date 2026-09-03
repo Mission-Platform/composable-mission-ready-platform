@@ -10,6 +10,7 @@ export interface SmtpMessage {
 export interface SmtpOptions {
   readonly host: string;
   readonly port: number;
+  readonly timeoutMs?: number;
 }
 
 interface SmtpSocket {
@@ -26,7 +27,27 @@ interface ReaderState {
   readonly decoder: TextDecoder;
 }
 
-async function readLine(reader: ReadableStreamDefaultReader<Uint8Array>, state: ReaderState): Promise<string> {
+const DEFAULT_TIMEOUT_MS = 10_000;
+
+async function withTimeout<T>(operation: PromiseLike<T>, timeoutMs: number, operationName: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<T>((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`SMTP ${operationName} timed out`)), timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
+  }
+}
+
+async function readLine(
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+  state: ReaderState,
+  timeoutMs: number,
+): Promise<string> {
   while (true) {
     const end = state.buffer.indexOf('\r\n');
     if (end !== -1) {
@@ -34,7 +55,7 @@ async function readLine(reader: ReadableStreamDefaultReader<Uint8Array>, state: 
       state.buffer = state.buffer.slice(end + 2);
       return line;
     }
-    const result = await reader.read();
+    const result = await withTimeout(reader.read(), timeoutMs, 'read');
     if (result.done) throw new Error('SMTP connection closed before a complete response was received');
     state.buffer += state.decoder.decode(result.value, { stream: true });
   }
@@ -44,13 +65,15 @@ async function expectResponse(
   reader: ReadableStreamDefaultReader<Uint8Array>,
   state: ReaderState,
   expected: number,
+  timeoutMs: number,
 ): Promise<void> {
-  const firstLine = await readLine(reader, state);
+  const firstLine = await readLine(reader, state, timeoutMs);
   const code = Number.parseInt(firstLine.slice(0, 3), 10);
   if (code !== expected) throw new Error(`SMTP expected ${expected}, received: ${firstLine}`);
   if (firstLine[3] === '-') {
     let line = firstLine;
-    while (line.slice(0, 3) === firstLine.slice(0, 3) && line[3] !== ' ') line = await readLine(reader, state);
+    while (line.slice(0, 3) === firstLine.slice(0, 3) && line[3] !== ' ')
+      line = await readLine(reader, state, timeoutMs);
   }
 }
 
@@ -60,9 +83,10 @@ async function sendCommand(
   state: ReaderState,
   command: string,
   expected: number,
+  timeoutMs: number,
 ): Promise<void> {
-  await writer.write(new TextEncoder().encode(`${command}\r\n`));
-  await expectResponse(reader, state, expected);
+  await withTimeout(writer.write(new TextEncoder().encode(`${command}\r\n`)), timeoutMs, 'write');
+  await expectResponse(reader, state, expected, timeoutMs);
 }
 
 function formatMessage(message: SmtpMessage): string {
@@ -86,24 +110,41 @@ export async function sendSmtpMessage(
   message: SmtpMessage,
   connector: SocketConnector = (address) => connect(address),
 ): Promise<void> {
+  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new Error('SMTP timeout must be a positive finite number');
   const socket = connector({ hostname: options.host, port: options.port });
-  await socket.opened;
-  const reader = socket.readable.getReader();
-  const writer = socket.writable.getWriter();
-  const state: ReaderState = { buffer: '', decoder: new TextDecoder() };
+  let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+  let writer: WritableStreamDefaultWriter<Uint8Array> | undefined;
 
   try {
-    await expectResponse(reader, state, 220);
-    await sendCommand(writer, reader, state, 'EHLO mission-platform.local', 250);
-    await sendCommand(writer, reader, state, `MAIL FROM:<${message.from}>`, 250);
-    await sendCommand(writer, reader, state, `RCPT TO:<${message.to}>`, 250);
-    await sendCommand(writer, reader, state, 'DATA', 354);
-    await writer.write(new TextEncoder().encode(formatMessage(message)));
-    await expectResponse(reader, state, 250);
-    await sendCommand(writer, reader, state, 'QUIT', 221);
+    await withTimeout(socket.opened, timeoutMs, 'open');
+    reader = socket.readable.getReader();
+    writer = socket.writable.getWriter();
+    const state: ReaderState = { buffer: '', decoder: new TextDecoder() };
+
+    await expectResponse(reader, state, 220, timeoutMs);
+    await sendCommand(writer, reader, state, 'EHLO mission-platform.local', 250, timeoutMs);
+    await sendCommand(writer, reader, state, `MAIL FROM:<${message.from}>`, 250, timeoutMs);
+    await sendCommand(writer, reader, state, `RCPT TO:<${message.to}>`, 250, timeoutMs);
+    await sendCommand(writer, reader, state, 'DATA', 354, timeoutMs);
+    await withTimeout(writer.write(new TextEncoder().encode(formatMessage(message))), timeoutMs, 'write');
+    await expectResponse(reader, state, 250, timeoutMs);
+    await sendCommand(writer, reader, state, 'QUIT', 221, timeoutMs);
   } finally {
-    writer.releaseLock();
-    reader.releaseLock();
-    socket.close();
+    try {
+      writer?.releaseLock();
+    } catch {
+      // The writer may already have been released by a failed stream operation.
+    }
+    try {
+      reader?.releaseLock();
+    } catch {
+      // The reader may already have been released by a failed stream operation.
+    }
+    try {
+      socket.close();
+    } catch {
+      // Closing is best effort after a transport failure.
+    }
   }
 }

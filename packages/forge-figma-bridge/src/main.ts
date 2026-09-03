@@ -67,7 +67,8 @@ export async function main(arguments_: readonly string[] = process.argv.slice(2)
   });
   const address = server.address();
   process.stdout.write(
-    `Forge Figma bridge listening on ${typeof address === 'object' && address ? address.port : address}\n`,
+    `Forge Figma bridge listening on ${typeof address === 'object' && address ? address.port : address}\n` +
+      `Forge Figma bridge authentication token: ${server.authToken}\n`,
   );
   const close = (): void => {
     server.close(() => process.exit(0));

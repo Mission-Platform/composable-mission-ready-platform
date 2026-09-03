@@ -1,6 +1,6 @@
-import { EmailImage } from '@/components/atoms';
-import { EmailColumn, EmailRow } from '@/components/molecules';
-import { colorValue, spacingValue, typographyStyle } from '@/tokens';
+import { colorValue, spacingValue, typographyStyle } from '../../../tokens';
+import { EmailImage } from '../../atoms';
+import { EmailColumn, EmailRow } from '../../molecules';
 
 import type { MpChild, MpElement } from '@mission-platform/forge';
 

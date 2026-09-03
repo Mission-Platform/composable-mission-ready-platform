@@ -3,6 +3,12 @@
 // Matrix construction uses in-place bit buffers to stay inside the 64KiB FWS page.
 import "./qr-common.fws" as q;
 
+record EncodedQR {
+  version: i32;
+  size: i32;
+  modules: u32[];
+}
+
 fn text_bits_range(text: string, start: i32, end: i32) -> string {
   if end <= start { return ""; }
   let span: i32 = end - start;
@@ -44,9 +50,11 @@ fn pad_bits_range(start: i32, end: i32) -> string {
 fn data_bits(text: string, version: i32, ecc: i32) -> string {
   let capacity: i32 = q.data_codewords(ecc, version) * 8;
   let count: i32 = string_length(text);
-  let mut result: string = q.bits_push_value("", 4, 4);
-  result = q.bits_push_value(result, count, q.count_bits(version));
-  result = string_concat(result, text_bits_range(text, 0, count));
+  let mode_bits: string = q.bits_push_value("", 4, 4);
+  let count_stream: string = q.bits_push_value("", count, q.count_bits(version));
+  let payload_bits: string = text_bits_range(text, 0, count);
+  let mut result: string = string_concat(mode_bits, count_stream);
+  result = string_concat(result, payload_bits);
   let remaining: i32 = capacity - string_length(result);
   let mut terminator: i32 = remaining;
   if terminator > 4 { terminator = 4; }
@@ -391,7 +399,6 @@ fn penalty_n2(modules: u32, size: i32) -> i32 {
   return score;
 }
 
-// N3 rows: finder-like 1:1:3:1:1 patterns along rows.
 fn penalty_n3_rows(modules: u32, size: i32) -> i32 {
   let mut score: i32 = 0;
   let mut y: i32 = 0;
@@ -413,7 +420,6 @@ fn penalty_n3_rows(modules: u32, size: i32) -> i32 {
   return score;
 }
 
-// N3 cols: finder-like 1:1:3:1:1 patterns along columns.
 fn penalty_n3_cols(modules: u32, size: i32) -> i32 {
   let mut score: i32 = 0;
   let mut x: i32 = 0;
@@ -503,8 +509,28 @@ fn build_matrix(version: i32, ecc: i32, codewords: string) -> string {
   return string_concat("", q.bitbuf_to_bits(modules, total));
 }
 
-export fn encode_qr(ecc: i32, text: string) -> string {
-  if ecc < 0 || ecc > 3 { return ""; }
+fn pack_modules(bits: string, size: i32) -> u32 {
+  let total: i32 = size * size;
+  let rounded: i32 = total + 31;
+  let words: i32 = q.safe_div_i32(rounded, 32);
+  let array_words: i32 = words + 1;
+  let result_bytes: i32 = array_words * 4;
+  let result: u32 = q.mem_alloc_bytes(result_bytes);
+  q.mem_set_u32(result, q.u32_from_i32(words));
+  let modules: u32 = result + 4;
+  let mut index: i32 = 0;
+  while index < total {
+    if q.bits_get(bits, index) { q.bitbuf_set(modules, index, true); }
+    index = index + 1;
+  }
+  return result;
+}
+
+export fn encode_qr(ecc: i32, text: string) -> EncodedQR {
+  if ecc < 0 || ecc > 3 {
+    let empty: u32 = q.mem_alloc_bytes(4);
+    return EncodedQR { version: 0, size: 0, modules: empty };
+  }
   let mut version: i32 = 1;
   while version <= 40 {
     let capacity_bits: i32 = q.data_codewords(ecc, version) * 8;
@@ -514,14 +540,18 @@ export fn encode_qr(ecc: i32, text: string) -> string {
       let bits: string = data_bits(text, version, ecc);
       let data: string = q.bits_to_bytes(bits);
       let interleaved: string = q.interleave_data(data, version, ecc);
-      let modules: string = build_matrix(version, ecc, interleaved);
       let size: i32 = version * 4 + 17;
-      return string_concat( string_concat(q.itoa(version), string_concat(",", string_concat(q.itoa(size), ","))), modules );
+      let module_bits: string = build_matrix(version, ecc, interleaved);
+      let modules: u32 = pack_modules(module_bits, size);
+      return EncodedQR { version: version, size: size, modules: modules };
     }
     version = version + 1;
   }
-  return "";
+  let empty: u32 = q.mem_alloc_bytes(4);
+  return EncodedQR { version: 0, size: 0, modules: empty };
 }
+
+
 
 // Focused test exports (no temporary isolation probes).
 export fn __test_tables(ecc: i32) -> string {
@@ -533,5 +563,6 @@ export fn __test_interleave(ecc: i32, data: string) -> string {
 }
 
 export fn __test_gf256_mul(a: i32, b: i32) -> i32 { return q.gf_mul(a, b); }
+
 
 export fn __test_rs_remainder(data: string, count: i32) -> string { return string_concat("", q.rs_remainder(data, count)); }

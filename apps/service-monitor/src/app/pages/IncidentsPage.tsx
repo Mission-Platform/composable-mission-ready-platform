@@ -7,9 +7,9 @@ export async function IncidentsPage() {
   return (
     <AppProviders>
       <IncidentsView
-        initialIncidents={await monitor.listIncidents()}
-        initialMaintenance={await monitor.listMaintenance()}
-        monitors={await monitor.listMonitors()}
+        initialIncidents={[]}
+        initialMaintenance={[]}
+        monitors={(await monitor.getServices()).map((service) => service.target)}
       />
     </AppProviders>
   );

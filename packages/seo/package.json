@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/seo",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "license": "BSD-4-Clause",
   "description": "Vue SEO composables for page metadata, Open Graph, and JSON-LD structured data",
   "type": "module",
@@ -24,6 +24,14 @@
     "./json-ld": {
       "types": "./dist/build-json-ld.d.ts",
       "import": "./dist/build-json-ld.js"
+    },
+    "./robots": {
+      "types": "./dist/build-robots-txt.d.ts",
+      "import": "./dist/build-robots-txt.js"
+    },
+    "./sitemap": {
+      "types": "./dist/build-sitemap-xml.d.ts",
+      "import": "./dist/build-sitemap-xml.js"
     },
     "./types": {
       "types": "./dist/types.d.ts"

@@ -6,7 +6,7 @@ import { ForgeSchemaForm, type FormValues, type SchemaFormDefinition } from '@mi
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeContainer } from '@mission-platform/layouts';
 import { ForgeTypography } from '@mission-platform/typography';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { maintenanceStatus, validMaintenanceRange } from '@/monitoring/incidents';
 
@@ -123,12 +123,41 @@ export function IncidentsView({
     startsAt: '',
     endsAt: '',
   });
-  const refresh = async () =>
-    setIncidents(((await (await fetch('/api/incidents')).json()) as { incidents: Incident[] }).incidents);
-  const refreshMaintenance = async () =>
-    setMaintenance(
-      ((await (await fetch('/api/maintenance')).json()) as { maintenance: MaintenanceWindow[] }).maintenance,
-    );
+  const refresh = async (): Promise<void> => {
+    const response = await fetch('/api/incidents', { credentials: 'same-origin' });
+    if (!response.ok) return;
+    const body = (await response.json()) as { incidents?: unknown };
+    if (Array.isArray(body.incidents)) setIncidents(body.incidents as Incident[]);
+  };
+  const refreshMaintenance = async (): Promise<void> => {
+    const response = await fetch('/api/maintenance', { credentials: 'same-origin' });
+    if (!response.ok) return;
+    const body = (await response.json()) as { maintenance?: unknown };
+    if (Array.isArray(body.maintenance)) setMaintenance(body.maintenance as MaintenanceWindow[]);
+  };
+  useEffect(() => {
+    let active = true;
+    void Promise.all([
+      fetch('/api/incidents', { credentials: 'same-origin' }),
+      fetch('/api/maintenance', { credentials: 'same-origin' }),
+    ])
+      .then(async ([incidentsResponse, maintenanceResponse]) => {
+        if (!incidentsResponse.ok || !maintenanceResponse.ok) return;
+        const [incidentsBody, maintenanceBody] = (await Promise.all([
+          incidentsResponse.json(),
+          maintenanceResponse.json(),
+        ])) as [{ incidents?: unknown }, { maintenance?: unknown }];
+        if (!active) return;
+        if (Array.isArray(incidentsBody.incidents)) setIncidents(incidentsBody.incidents as Incident[]);
+        if (Array.isArray(maintenanceBody.maintenance)) {
+          setMaintenance(maintenanceBody.maintenance as MaintenanceWindow[]);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
   const close = () => {
     setDialog(null);
     setSelectedId(null);

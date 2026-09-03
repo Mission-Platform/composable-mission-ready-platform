@@ -4,7 +4,23 @@ import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-tree-view.module.scss';
 
-import type { TreeViewLabelScope, TreeViewNode } from './forge-tree-view';
+/** A node in the tree rendered by {@link ForgeTreeView}. */
+export interface TreeViewNode {
+  /** Stable identity. */
+  id: string | number;
+  /** Display label. */
+  label: string;
+  /** Child nodes (a node with children is expandable). */
+  children?: TreeViewNode[];
+}
+
+/** The scope passed to {@link ForgeTreeView}'s `label` (scoped) slot per node. */
+export interface TreeViewLabelScope {
+  /** The node being rendered. */
+  node: TreeViewNode;
+  /** Depth in the tree (0 = root). */
+  depth: number;
+}
 
 /** Whether a node is expandable (has at least one child). */
 function hasChildren(node: TreeViewNode): boolean {

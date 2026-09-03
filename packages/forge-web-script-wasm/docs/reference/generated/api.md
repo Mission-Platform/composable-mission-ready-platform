@@ -57,6 +57,16 @@ export interface ForgeWebScriptTargetFeatures
 
 No description provided.
 
+### ForgeWebScriptWasmAggregateLayout
+
+**Kind:** interface
+
+```typescript
+export interface ForgeWebScriptWasmAggregateLayout
+```
+
+No description provided.
+
 ### ForgeWebScriptWasmArtifactMetadata
 
 **Kind:** interface

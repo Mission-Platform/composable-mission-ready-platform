@@ -3,7 +3,7 @@ import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 import { stubFramework } from "./__fixtures__/framework.js";
-import { defineTsdownForgeCms } from "./tsdown.js";
+import { cmsCacheDirectory, defineTsdownForgeCms } from "./tsdown.js";
 
 import type { CmsOutputPlugin } from "./cms.js";
 
@@ -68,6 +68,15 @@ describe("Forge CMS tsdown helper", () => {
         path.join(outputRoot, "dist/cms/storyblok/react"),
         path.join(outputRoot, "dist/cms/storyblok"),
       ]);
+      expect(frameworkConfig.entry).toBe(
+        path.join(outputRoot, "components-cms-storyblok-react", "index.ts"),
+      );
+      expect(cmsCacheDirectory(rootDirectory, target)).toBe(
+        path.join(
+          rootDirectory,
+          "node_modules/.cache/components-cms-storyblok-react",
+        ),
+      );
     } finally {
       vi.unstubAllEnvs();
     }

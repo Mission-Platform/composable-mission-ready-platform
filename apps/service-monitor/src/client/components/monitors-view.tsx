@@ -2,44 +2,34 @@
 
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeContainer } from '@mission-platform/layouts';
-import { useObservable } from '@mission-platform/rxjs';
 import { ForgeTypography } from '@mission-platform/typography';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { createMonitorSession, deleteMonitor, hasMonitorSession, saveMonitor, servicesStream } from '../hooks/streams';
+import { createMonitorSession, deleteMonitor, hasMonitorSession, loadMonitors, saveMonitor } from '../hooks/streams';
 import { ServiceMonitorShell } from '../layouts/service-monitor-shell';
 
 import { MonitorManager } from './monitor-manager';
 
-import type { Incident, MonitorTarget, ServicesResponse } from '@/monitoring/types';
+import type { MonitorTarget } from '@/monitoring/types';
 import type { FormEvent } from 'react';
 
 interface MonitorsViewProperties {
-  readonly initialMonitors: MonitorTarget[];
-  readonly initialIncidents: Incident[];
   readonly intervalSeconds: number;
-  readonly initialNow: number;
 }
 
 /**
  * The `/monitors` management page. Kept separate from the dashboard so runtime
- * monitor CRUD has its own route. The current monitor list stays live through
- * an RxJS `servicesStream` (bridged with `@mission-platform/rxjs`), and a
- * `reloadNonce` forces an immediate re-poll right after a create/update/delete.
+ * monitor CRUD has its own route. Private monitor configuration is fetched only
+ * after the browser has established an authenticated monitor session.
  */
-export function MonitorsView({
-  initialMonitors,
-  initialIncidents,
-  intervalSeconds,
-  initialNow,
-}: MonitorsViewProperties) {
+export function MonitorsView({ intervalSeconds }: MonitorsViewProperties) {
   const { t } = useI18n();
-  const intervalMs = intervalSeconds * 1000;
 
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [sessionToken, setSessionToken] = useState('');
   const [sessionError, setSessionError] = useState<string | null>(null);
   const [reloadNonce, setReloadNonce] = useState(0);
+  const [privateMonitors, setPrivateMonitors] = useState<MonitorTarget[]>([]);
 
   useEffect(() => {
     let active = true;
@@ -54,6 +44,21 @@ export function MonitorsView({
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (authenticated !== true) return;
+    let active = true;
+    void loadMonitors()
+      .then((value) => {
+        if (active) setPrivateMonitors(value);
+      })
+      .catch(() => {
+        if (active) setPrivateMonitors([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, [authenticated, reloadNonce]);
 
   const signIn = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -71,24 +76,7 @@ export function MonitorsView({
     }
   };
 
-  const initialResponse = useMemo<ServicesResponse>(
-    () => ({
-      now: initialNow,
-      intervalSeconds,
-      services: initialMonitors.map((target) => ({
-        target,
-        latest: null,
-        uptime: 0,
-        avgLatencyMs: 0,
-        sampleCount: 0,
-      })),
-    }),
-    [initialNow, intervalSeconds, initialMonitors],
-  );
-
-  const services$ = useMemo(() => servicesStream(intervalMs), [intervalMs, reloadNonce]);
-  const snapshot = useObservable(services$, initialResponse);
-  const monitors: MonitorTarget[] = (snapshot ?? initialResponse).services.map((service) => service.target);
+  const monitors = privateMonitors;
 
   const onSave = useCallback(async (monitor: MonitorTarget) => {
     const ok = await saveMonitor(monitor);
@@ -107,7 +95,7 @@ export function MonitorsView({
   }, []);
 
   return (
-    <ServiceMonitorShell incidents={initialIncidents}>
+    <ServiceMonitorShell incidents={[]}>
       <ForgeContainer
         variant="responsive"
         className="monitors-page"

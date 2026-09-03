@@ -3,8 +3,11 @@
 
   import { copyForgeFile, downloadForgeFile, fileForPath, fileText, sendBundleToBridge } from './delivery';
   import {
+    FORGE_FIGMA_UI_ORIGIN,
+    isForgeBridgeConfig,
+    isForgePluginMainMessage,
+    isTrustedForgePluginMessageEvent,
     type ForgeBridgeConfig,
-    type ForgePluginMainMessage,
     type ForgePluginUiMessage,
     unwrapForgePluginMessage,
   } from './messages';
@@ -25,6 +28,7 @@
   const bridgeResults = ref<readonly ForgeBridgeFileResult[]>([]);
   const bridgeConfig = reactive<ForgeBridgeConfig>({
     bridgeUrl: 'http://127.0.0.1:8787/export',
+    authToken: '',
     repositoryRootId: '',
     targetDirectory: '',
   });
@@ -40,15 +44,10 @@
     );
   });
   const canConvert = computed(() => selectionCount.value === 1 && !isConverting.value);
-  const canExport = computed(
-    () =>
-      Boolean(bundle.value) &&
-      Boolean(bridgeConfig.bridgeUrl && bridgeConfig.repositoryRootId && bridgeConfig.targetDirectory) &&
-      !isExporting.value,
-  );
+  const canExport = computed(() => Boolean(bundle.value) && isForgeBridgeConfig(bridgeConfig) && !isExporting.value);
 
   function send(message: ForgePluginUiMessage): void {
-    window.parent.postMessage({ pluginMessage: message }, '*');
+    window.parent.postMessage({ pluginMessage: message }, FORGE_FIGMA_UI_ORIGIN);
   }
 
   function setStatus(message: string, kind: 'info' | 'success' | 'error' = 'info'): void {
@@ -57,8 +56,9 @@
   }
 
   function handleMainMessage(event: MessageEvent<unknown>): void {
+    if (!isTrustedForgePluginMessageEvent(event, window.parent)) return;
     const message = unwrapForgePluginMessage(event.data);
-    if (!isMainMessage(message)) return;
+    if (!isForgePluginMainMessage(message)) return;
     if (message.type === 'selection-status') {
       selectionCount.value = message.selectionCount;
       if (message.selectionCount !== 1) {
@@ -91,17 +91,6 @@
       Object.assign(bridgeConfig, message.config);
       if (message.type === 'bridge-config-saved') setStatus('Bridge configuration saved.', 'success');
     }
-  }
-
-  function isMainMessage(message: unknown): message is ForgePluginMainMessage {
-    if (typeof message !== 'object' || message === null || !('type' in message)) return false;
-    const type = message.type;
-    return (
-      type === 'selection-status' ||
-      type === 'conversion-result' ||
-      type === 'bridge-config' ||
-      type === 'bridge-config-saved'
-    );
   }
 
   function convert(): void {
@@ -292,6 +281,14 @@
         <input
           v-model.trim="bridgeConfig.bridgeUrl"
           type="url"
+          autocomplete="off"
+        />
+      </label>
+      <label>
+        Bridge authentication token
+        <input
+          v-model.trim="bridgeConfig.authToken"
+          type="password"
           autocomplete="off"
         />
       </label>

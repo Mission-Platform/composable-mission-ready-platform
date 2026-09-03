@@ -125,6 +125,28 @@ describe('ForgeCompilerService', () => {
     expect(service.report().cache.invalidatedEntries).toBe(1);
   });
 
+  it('bounds derived caches and invalidates their indexed entries', () => {
+    const service = createForgeCompilerService({ frontendModules: 2, optimizedModules: 2 });
+    service.analyze(input('export const one = true;'));
+    service.analyze({ ...input('export const two = true;'), fileName: 'Other.tsx' });
+
+    const phaseCount = service.report().phaseTimings.length;
+    expect(service.invalidate(['Other.tsx'])).toMatchObject({
+      invalidatedFiles: ['Other.tsx'],
+      invalidatedEntries: 1,
+    });
+    service.analyze({ ...input('export const two = true;'), fileName: 'Other.tsx' });
+    expect(
+      service
+        .report()
+        .phaseTimings.slice(phaseCount)
+        .map(({ phase }) => phase),
+    ).toEqual(['frontend', 'optimization', 'inference']);
+
+    service.analyze({ ...input('export const three = true;'), fileName: 'Third.tsx' });
+    expect(service.report().cache).toMatchObject({ frontendEvictions: 1, optimizedEvictions: 1 });
+  });
+
   it('aggregates target warnings and rejects use after disposal', () => {
     const service = createForgeCompilerService();
     service.compile({ input: input(), framework: fixtureFramework([], true) });
@@ -210,6 +232,22 @@ describe('ForgeCompilerService', () => {
       expect(service.prepare({ entry, sourceRoot: root }).graph).not.toBe(firstProject.graph);
       expect(service.analyze({ ...input('export const unrelated = true;'), fileName: unrelated })).toBeDefined();
       expect(service.report().cache.semanticHits).toBe(1);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('bounds prepared project graph retention', () => {
+    const root = mkdtempSync(path.join(os.tmpdir(), 'forge-graph-cache-'));
+    try {
+      const entry = path.join(root, 'index.ts');
+      writeFileSync(entry, 'export const fixture = true;');
+      const service = createForgeCompilerService({ projectGraphs: 1 });
+
+      service.prepare({ entry, sourceRoot: root, configFingerprint: 'one' });
+      service.prepare({ entry, sourceRoot: root, configFingerprint: 'two' });
+
+      expect(service.report().cache.projectGraphEvictions).toBe(1);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

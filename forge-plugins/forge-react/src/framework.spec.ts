@@ -164,6 +164,30 @@ describe("React Forge framework package", () => {
     );
   });
 
+  it("lowers the neutral Suspense marker to React's native boundary", () => {
+    const generated = compile({
+      imports: [neutralImport(["Suspense"])],
+      component: component({
+        name: "ForgeFixture",
+        parameter: "properties",
+        returnNode: element("Suspense", {
+          attributes: [
+            expressionAttribute("fallback", "undefined", [
+              element("span", { children: [textChild("Loading")] }),
+            ]),
+          ],
+          children: [expressionChild("loadContent()")],
+        }),
+      }),
+    });
+
+    expect(generated.code).toContain("<Suspense");
+    expect(generated.code).toContain("fallback=");
+    expect(generated.code).toContain("loadContent()");
+    expect(generated.code).toContain('import { Suspense } from "react";');
+    expect(generated.code).not.toContain("@mission-platform/forge");
+  });
+
   it("generates a composable module without a component", () => {
     const generated = compile({
       moduleKind: "composable",

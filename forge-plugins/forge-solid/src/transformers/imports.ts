@@ -108,6 +108,7 @@ function solidPrimitiveNames(context: SolidLoweringContext): string[] {
   if (usage.createMemo) names.push("createMemo");
   if (usage.createEffect) names.push("createEffect");
   if (usage.onMount) names.push("onMount");
+  if (usage.onCleanup) names.push("onCleanup");
   if (usage.createUniqueId) names.push("createUniqueId");
   if (usage.mergeProps) names.push("mergeProps");
   return names;
@@ -132,7 +133,13 @@ export function buildSolidImports(
     values.add(HYPERSCRIPT_NAME);
   }
 
-  const primitives = namedImport(solidPrimitiveNames(context), SOLID_MODULE);
+  const primitives = namedImport(
+    [
+      ...solidPrimitiveNames(context),
+      ...(values.has("Suspense") ? ["Suspense"] : []),
+    ],
+    SOLID_MODULE,
+  );
   if (primitives !== undefined) {
     lines.push(primitives);
   }
@@ -153,8 +160,8 @@ export function buildSolidImports(
     lines.push(runtime);
   }
 
-  const adapterComponents = [...values].filter((name) =>
-    NEUTRAL_FRAMEWORK_COMPONENTS.has(name),
+  const adapterComponents = [...values].filter(
+    (name) => NEUTRAL_FRAMEWORK_COMPONENTS.has(name) && name !== "Suspense",
   );
   const adapter = namedImport(
     adapterComponents,

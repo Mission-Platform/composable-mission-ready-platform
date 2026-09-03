@@ -9,26 +9,12 @@ import {
 import { ForgeTreeViewItem } from './forge-tree-view-item';
 import styles from './forge-tree-view.module.scss';
 
+import type { TreeViewLabelScope, TreeViewNode } from './forge-tree-view-item';
+
 /** Size token — canonical 2xs → 2xl scale. */
 export type TreeViewSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-/** A node in the tree rendered by {@link ForgeTreeView}. */
-export interface TreeViewNode {
-  /** Stable identity. */
-  id: string | number;
-  /** Display label. */
-  label: string;
-  /** Child nodes (a node with children is expandable). */
-  children?: TreeViewNode[];
-}
-
-/** The scope passed to {@link ForgeTreeView}'s `label` (scoped) slot per node. */
-export interface TreeViewLabelScope {
-  /** The node being rendered. */
-  node: TreeViewNode;
-  /** Depth in the tree (0 = root). */
-  depth: number;
-}
+export type { TreeViewLabelScope, TreeViewNode } from './forge-tree-view-item';
 
 /* ── Visual property overrides (generated) ───────────────────────────── */
 export interface TreeViewStyleProperties {

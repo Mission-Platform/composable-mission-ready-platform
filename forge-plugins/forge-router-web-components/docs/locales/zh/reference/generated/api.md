@@ -148,7 +148,7 @@ export const ForgeRouterOutlet;
 **种类：**组件
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
 用于编译的中性链接的自定义元素标签。
@@ -158,7 +158,7 @@ export const MpLink;
 **种类：**组件
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 用于编译中性插座的自定义元素标签。
@@ -300,6 +300,16 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 | 名称 | 类型                                 | 描述                                 |
 | ---- | ------------------------------------ | ------------------------------------ |
 | 选项 | MpWebComponentsRou​​terOptions<View> | MpWebComponentsRou​​terOptions<View> |
+
+### MpRouter加载回退
+
+**种类：**组件
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+加载目标视图时由路由器出口呈现的内容。
 
 ### MpWeb组件路由器
 

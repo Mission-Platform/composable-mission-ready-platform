@@ -10,7 +10,7 @@ import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-virtual-tabs.module.scss';
 
-import type { TabItem, TabsVariant } from '@/components/molecules/forge-tabs';
+import type { TabItem, TabsVariant } from '../../molecules/forge-tabs';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type VirtualTabsSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';

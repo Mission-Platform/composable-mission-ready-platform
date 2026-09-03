@@ -49,6 +49,42 @@ export function resolveServerPath(
   return path.resolve(workspaceFolder?.uri.fsPath ?? context.extensionPath, configuration.serverPath);
 }
 
+export function assertWorkspaceRelativeOverrideAllowed(
+  settingName: string,
+  configuredPath: string,
+  workspaceTrusted: boolean,
+): void {
+  if (workspaceTrusted || configuredPath.length === 0) {
+    return;
+  }
+  throw new Error(`${settingName} cannot use a configured path in an untrusted workspace.`);
+}
+
+export function assertWorkingDirectoryAllowed(
+  settingName: string,
+  configuredPath: unknown,
+  workspaceTrusted: boolean,
+): void {
+  if (
+    workspaceTrusted ||
+    configuredPath === undefined ||
+    configuredPath === '' ||
+    configuredPath === '${workspaceFolder}'
+  ) {
+    return;
+  }
+  throw new Error(`${settingName} cannot use a configured path in an untrusted workspace.`);
+}
+
+export function assertWorkspaceRelativeExecutableAllowed(
+  settingName: string,
+  configuredPath: string,
+  workspaceTrusted: boolean,
+): void {
+  if (!configuredPath.startsWith('.') && !configuredPath.includes('/') && !configuredPath.includes('\\')) return;
+  assertWorkspaceRelativeOverrideAllowed(settingName, configuredPath, workspaceTrusted);
+}
+
 export function createServerOptions(
   context: Pick<ExtensionContext, 'extensionPath'>,
   configuration: ForgeWebScriptConfiguration,
@@ -87,27 +123,65 @@ export async function assertNodeRuntime(nodePath: string): Promise<void> {
 
 function readNodeVersion(nodePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    const child = spawn(nodePath, ['--version'], { stdio: ['ignore', 'pipe', 'pipe'] });
+    let child: ReturnType<typeof spawn>;
     let stdout = '';
     let stderr = '';
-    child.stdout.setEncoding('utf8');
-    child.stderr.setEncoding('utf8');
-    child.stdout.on('data', (chunk: string) => {
-      stdout += chunk;
-    });
-    child.stderr.on('data', (chunk: string) => {
-      stderr += chunk;
-    });
-    child.once('error', () => {
-      reject(
-        new Error(
-          `Unable to execute Node.js at ${nodePath}. Configure forgeWebScript.nodePath to Node.js 24 or newer.`,
+    let settled = false;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const finish = (callback: () => void): void => {
+      if (settled) return;
+      settled = true;
+      if (timeout !== undefined) clearTimeout(timeout);
+      callback();
+    };
+
+    try {
+      child = spawn(nodePath, ['--version'], { stdio: ['ignore', 'pipe', 'pipe'] });
+      if (child.stdout === null || child.stderr === null) {
+        child.kill('SIGTERM');
+        throw new Error('Node.js version probe streams unavailable.');
+      }
+      child.stdout.setEncoding('utf8');
+      child.stderr.setEncoding('utf8');
+      child.stdout.on('data', (chunk: string) => {
+        stdout += chunk;
+      });
+      child.stderr.on('data', (chunk: string) => {
+        stderr += chunk;
+      });
+      child.once('error', () => {
+        finish(() =>
+          reject(
+            new Error(
+              `Unable to execute Node.js at ${nodePath}. Configure forgeWebScript.nodePath to Node.js 24 or newer.`,
+            ),
+          ),
+        );
+      });
+      child.once('close', (code) => {
+        finish(() => {
+          if (code === 0) resolve(stdout.trim());
+          else
+            reject(new Error(`Node.js at ${nodePath} could not be started: ${stderr.trim() || `exit code ${code}`}.`));
+        });
+      });
+      timeout = setTimeout(() => {
+        finish(() => {
+          try {
+            child.kill('SIGTERM');
+          } finally {
+            reject(new Error(`Node.js version probe timed out at ${nodePath}.`));
+          }
+        });
+      }, 1000);
+    } catch {
+      finish(() =>
+        reject(
+          new Error(
+            `Unable to execute Node.js at ${nodePath}. Configure forgeWebScript.nodePath to Node.js 24 or newer.`,
+          ),
         ),
       );
-    });
-    child.once('close', (code) => {
-      if (code === 0) resolve(stdout.trim());
-      else reject(new Error(`Node.js at ${nodePath} could not be started: ${stderr.trim() || `exit code ${code}`}.`));
-    });
+    }
   });
 }

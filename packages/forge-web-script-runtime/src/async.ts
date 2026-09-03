@@ -24,8 +24,10 @@ export interface ForgeWebScriptAsyncTask {
 }
 
 export interface ForgeWebScriptAsyncHostAdapter {
-  readonly scheduleMicrotask: (taskId: number, run: () => void) => void;
+  readonly scheduleMicrotask: (taskId: number, run: () => ForgeWebScriptAsyncExecutionResult | undefined) => void;
   readonly postWorkerMessage: (message: ForgeWebScriptAsyncWorkerMessage) => void;
+  /** Receives results completed by a host-scheduled microtask, when provided. */
+  readonly deliverAsyncResult?: (result: ForgeWebScriptAsyncExecutionResult) => void;
 }
 
 export interface ForgeWebScriptAsyncRuntimeOptions {
@@ -160,7 +162,15 @@ export function createForgeWebScriptAsyncRuntime(
     if (scheduleMicrotask === undefined) return undefined;
     try {
       scheduleMicrotask(taskId, () => {
-        runTask(taskId);
+        const result = runTask(taskId);
+        if (result !== undefined && options.host?.deliverAsyncResult !== undefined) {
+          try {
+            options.host.deliverAsyncResult(result);
+          } catch {
+            logger.error('result.host-error', { taskId });
+          }
+        }
+        return result;
       });
       return undefined;
     } catch (error) {

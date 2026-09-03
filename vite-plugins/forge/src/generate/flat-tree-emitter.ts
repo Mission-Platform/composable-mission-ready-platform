@@ -1,4 +1,3 @@
-import { mkdirSync } from 'node:fs';
 import path from 'node:path';
 
 import type { ForgeArtifactWriter } from '../compiler/artifact-writer.js';
@@ -69,7 +68,6 @@ export function createFlatTreeEmitter(input: {
   const writeModule = (dir: string, fileName: string, code: string, sourceId?: string): void => {
     const normalised = normaliseDir(dir);
     const destination = path.join(outDir, normalised, fileName);
-    mkdirSync(path.dirname(destination), { recursive: true });
     writer.writeText(path.relative(outDir, destination), code, 'module');
     const target = { dir: normalised, file: fileName };
     registerModule(fileName, target);
@@ -90,7 +88,6 @@ export function createFlatTreeEmitter(input: {
   const copyAsset = (dir: string, fileName: string, sourcePath: string, sourceId?: string): void => {
     const normalised = normaliseDir(dir);
     const destination = path.join(outDir, normalised, fileName);
-    mkdirSync(path.dirname(destination), { recursive: true });
     writer.copyFile(
       path.relative(outDir, destination),
       sourcePath,

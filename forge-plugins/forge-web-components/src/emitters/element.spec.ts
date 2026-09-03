@@ -485,7 +485,7 @@ describe("the element class synthesis", () => {
     expect(source).toContain("  connectedCallback() {");
     expect(source).toContain("    super.connectedCallback();");
     expect(source).toContain(
-      '    this.__mpCleanup0 = (() => { const result = (() => { start(); })(); return typeof result === "function" ? result : () => stop(); })()',
+      "    this.__mpCleanup0 = (() => { start(); return () => stop(); })();",
     );
     expect(source).toContain("  disconnectedCallback() {");
     expect(source).toContain("    this.__mpCleanup0?.();");

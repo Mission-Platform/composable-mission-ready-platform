@@ -49,13 +49,21 @@ function abiCarrierType(type: {
   return type.reference === undefined ? type.name : 'i32';
 }
 
-function abiFunction(declaration: ForgeWebScriptModule['functions'][number]): ForgeWebScriptAbiFunction {
+function abiFunction(
+  declaration: ForgeWebScriptModule['functions'][number],
+  module: ForgeWebScriptModule,
+): ForgeWebScriptAbiFunction {
+  const referenceOf = (type: {
+    readonly name: ForgeWebScriptPrimitiveType;
+    readonly reference?: string;
+  }): string | undefined =>
+    type.reference ?? (module.structs.some(({ name }) => name === type.name) ? type.name : undefined);
   return {
     name: declaration.name,
     parameters: declaration.parameters.map(({ name, type }) => ({
       name,
-      type: abiCarrierType(type),
-      ...(type.reference === undefined ? {} : { reference: type.reference }),
+      type: abiCarrierType({ ...type, reference: referenceOf(type) }),
+      ...(referenceOf(type) === undefined ? {} : { reference: referenceOf(type) }),
       passing:
         type.referenceMode === 'mut-ref'
           ? 'mutable-reference'
@@ -74,8 +82,8 @@ function abiFunction(declaration: ForgeWebScriptModule['functions'][number]): Fo
           ? {}
           : { ownership: type.ownership }),
     })),
-    result: abiCarrierType(declaration.result),
-    ...(declaration.result.reference === undefined ? {} : { resultReference: declaration.result.reference }),
+    result: abiCarrierType({ ...declaration.result, reference: referenceOf(declaration.result) }),
+    ...(referenceOf(declaration.result) === undefined ? {} : { resultReference: referenceOf(declaration.result) }),
     ...(declaration.result.arguments === undefined ? {} : { resultArguments: declaration.result.arguments }),
     ...(declaration.result.length === undefined ? {} : { resultLength: declaration.result.length }),
     ...(declaration.result.ownership === undefined ? {} : { resultOwnership: declaration.result.ownership }),
@@ -221,7 +229,7 @@ function graphLinks(
   ).flatMap(({ module: sourceModule, moduleId }) =>
     sourceModule.functions
       .filter(({ exported }) => exported)
-      .map((declaration) => ({ moduleId, ...abiFunction(declaration) })),
+      .map((declaration) => ({ moduleId, ...abiFunction(declaration, sourceModule) })),
   );
   const sourceImports: ForgeWebScriptSourceImport[] = (entry?.module.sourceImports ?? []).map((sourceImport) => {
     const edge = input.graph.edges.find(
@@ -241,7 +249,7 @@ function graphLinks(
         : {
             exports: target.module.functions
               .filter(({ exported }) => exported)
-              .map((declaration) => abiFunction(declaration))
+              .map((declaration) => abiFunction(declaration, target.module))
               .toSorted((left, right) => left.name.localeCompare(right.name)),
           }),
     };

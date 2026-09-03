@@ -138,14 +138,17 @@ function dynamicLinkMetadata(
 }
 
 function declarationType(
-  value: ForgeWebScriptPrimitiveType | ForgeWebScriptAbiParameter,
+  value: string | ForgeWebScriptAbiParameter,
   enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
 ): string {
   if (typeof value !== 'string') {
     if (value.reference === 'Array' && value.arguments?.[0]?.name === 'i32') return 'ArrayLike<number>';
     if (value.reference !== undefined && enumNames?.has(value.reference)) return value.reference;
+    if (value.reference !== undefined && recordNames?.has(value.reference)) return value.reference;
     value = value.type;
   }
+  if (value.startsWith('Array<')) return 'ArrayLike<number>';
   if (value === 'unit') return 'void';
   if (value === 'string') return 'string';
   if (value === 'bytes') return 'ForgeWebScriptBytes';
@@ -157,7 +160,11 @@ function declarationProperty(name: string): string {
   return /^[$A-Z_a-z][$\w]*$/u.test(name) ? name : JSON.stringify(name);
 }
 
-function declarationFunction(declaration: ForgeWebScriptAbiFunction, enumNames?: ReadonlySet<string>): string {
+function declarationFunction(
+  declaration: ForgeWebScriptAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string {
   const result = {
     name: 'result',
     type: declaration.result,
@@ -168,7 +175,7 @@ function declarationFunction(declaration: ForgeWebScriptAbiFunction, enumNames?:
     ...(declaration.resultPassing === undefined ? {} : { passing: declaration.resultPassing }),
     ...(declaration.resultReferenceMode === undefined ? {} : { referenceMode: declaration.resultReferenceMode }),
   } satisfies ForgeWebScriptAbiParameter;
-  return `(${declaration.parameters.map((parameter) => `${declarationProperty(parameter.name)}: ${declarationType(parameter, enumNames)}`).join(', ')}) => ${declarationType(result, enumNames)}`;
+  return `(${declaration.parameters.map((parameter) => `${declarationProperty(parameter.name)}: ${declarationType(parameter, enumNames, recordNames)}`).join(', ')}) => ${declarationType(result, enumNames, recordNames)}`;
 }
 
 function rawDeclarationType(value: ForgeWebScriptPrimitiveType | ForgeWebScriptAbiParameter): string {
@@ -208,17 +215,29 @@ function rawDeclarationRecord(declarations: readonly ForgeWebScriptAbiFunction[]
 function declarationRecord(
   declarations: readonly ForgeWebScriptAbiFunction[],
   enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
 ): string {
   return declarations
     .map(
       (declaration) =>
-        `  readonly ${declarationProperty(declaration.name)}: ${declarationFunction(declaration, enumNames)};`,
+        `  readonly ${declarationProperty(declaration.name)}: ${declarationFunction(declaration, enumNames, recordNames)};`,
     )
     .join('\n');
 }
 
 function createDeclarations(manifest: ForgeWebScriptAbiManifest): string {
   const enumNames = new Set(manifest.enumDeclarations.filter(({ exported }) => exported).map(({ name }) => name));
+  const recordLayouts = manifest.aggregateLayouts.filter(({ kind, record }) => kind === 'struct' && record === true);
+  const recordNames = new Set(recordLayouts.map(({ name }) => name));
+  const recordDeclarations = recordLayouts.flatMap((layout) => [
+    `export interface ${declarationProperty(layout.name)} {`,
+    ...layout.fields.map(
+      (field) =>
+        `  readonly ${declarationProperty(field.name)}: ${declarationType(field.type, enumNames, recordNames)};`,
+    ),
+    '}',
+    '',
+  ]);
   const enumDeclarations = manifest.enumDeclarations
     .filter(({ exported }) => exported)
     .flatMap((declaration) => [
@@ -399,9 +418,10 @@ function createDeclarations(manifest: ForgeWebScriptAbiManifest): string {
     '}',
     'export type ForgeWebScriptAbiManifest = ForgeWebScriptManifest;',
     '',
+    ...recordDeclarations,
     'export interface ForgeWebScriptExports {',
     '  readonly memory: WebAssembly.Memory;',
-    declarationRecord(manifest.exports, enumNames),
+    declarationRecord(manifest.exports, enumNames, recordNames),
     '  readonly fws_alloc: (size: number) => number;',
     '  readonly fws_dealloc: (pointer: number, size: number) => void;',
     '  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;',
@@ -483,6 +503,12 @@ function createEsmSource(
           .join(', ')} });`,
     )
     .join('\n');
+  const recordLayouts = Object.fromEntries(
+    manifest.aggregateLayouts
+      .filter(({ kind, record }) => kind === 'struct' && record === true)
+      .map((layout) => [layout.name, layout]),
+  );
+  const recordNames = new Set(Object.keys(recordLayouts));
   const stringImports = manifest.imports.filter(
     ({ function: declaration }) =>
       declaration.parameters.some(({ type }) => type === 'string') || declaration.result === 'string',
@@ -491,7 +517,9 @@ function createEsmSource(
     ({ function: declaration }) =>
       declaration.parameters.some(({ type }) => type === 'string' || type === 'bytes') ||
       declaration.result === 'string' ||
-      declaration.result === 'bytes',
+      declaration.result === 'bytes' ||
+      declaration.parameters.some(({ reference }) => reference !== undefined && recordNames.has(reference)) ||
+      (declaration.resultReference !== undefined && recordNames.has(declaration.resultReference)),
   );
   const hasStringImports = stringImports.length > 0;
   const valueExports = Object.fromEntries(
@@ -502,7 +530,9 @@ function createEsmSource(
           declaration.parameters.some(
             ({ type, reference }) => type === 'string' || type === 'bytes' || reference === 'Array',
           ) ||
-          declaration.result === 'string',
+          declaration.result === 'string' ||
+          declaration.parameters.some(({ reference }) => reference !== undefined && recordNames.has(reference)) ||
+          (declaration.resultReference !== undefined && recordNames.has(declaration.resultReference)),
       )
       .map((declaration) => [
         declaration.name,
@@ -517,6 +547,7 @@ function createEsmSource(
             }),
           ),
           result: declaration.result,
+          ...(declaration.resultReference === undefined ? {} : { resultReference: declaration.resultReference }),
         },
       ]),
   );
@@ -609,7 +640,62 @@ const decoder = new TextDecoder('utf-8', { fatal: true });
 }
 `
           : ''
-      }function invokeValueExport(wasmExports, rawFunction, metadata, args, runtime) {
+      }const recordLayouts = ${JSON.stringify(recordLayouts)};
+${
+  Object.keys(recordLayouts).length === 0
+    ? ''
+    : `function decodeRecord(wasmExports, pointer, name) {
+  const layout = recordLayouts[name];
+  if (layout === undefined) throw new TypeError('Unknown Forge Web Script record: ' + name);
+  const memory = wasmExports.memory;
+  const bytes = checkedBytes(memory, pointer, layout.size);
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const result = {};
+  for (const field of layout.fields) {
+    if (field.type.startsWith('Array<')) {
+      const arrayPointer = view.getUint32(field.offset, true);
+      const arrayLength = new DataView(memory.buffer, arrayPointer, 4).getUint32(0, true);
+      const arrayDataPointer = arrayPointer + 4;
+      const arrayBytes = checkedBytes(memory, arrayDataPointer, arrayLength * 4);
+      const arrayView = new DataView(arrayBytes.buffer, arrayBytes.byteOffset, arrayBytes.byteLength);
+      result[field.name] = Array.from({ length: arrayLength }, (_, index) => arrayView.getUint32(index * 4, true));
+      wasmExports.fws_dealloc(arrayPointer, arrayLength * 4 + 4);
+    } else if (field.type === 'f64') result[field.name] = view.getFloat64(field.offset, true);
+    else if (field.type === 'f32') result[field.name] = view.getFloat32(field.offset, true);
+    else if (field.type === 'i64' || field.type === 'u64') result[field.name] = field.type === 'i64' ? view.getBigInt64(field.offset, true) : view.getBigUint64(field.offset, true);
+    else result[field.name] = field.type === 'u32' || field.type === 'bool' ? view.getUint32(field.offset, true) : view.getInt32(field.offset, true);
+  }
+  return result;
+}
+function encodeRecord(wasmExports, value, name) {
+  const layout = recordLayouts[name];
+  if (value === null || typeof value !== 'object') throw new TypeError('Forge Web Script record argument must be an object.');
+  if (layout === undefined) throw new TypeError('Unknown Forge Web Script record: ' + name);
+  const pointer = wasmExports.fws_alloc(layout.size);
+  const nested = [];
+  const bytes = checkedBytes(wasmExports.memory, pointer, layout.size);
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  for (const field of layout.fields) {
+    const fieldValue = value[field.name];
+    if (field.type.startsWith('Array<')) {
+      const array = fieldValue instanceof Uint32Array ? fieldValue : Uint32Array.from(fieldValue);
+      const arrayPointer = wasmExports.fws_alloc((array.length + 1) * 4);
+      nested.push({ pointer: arrayPointer, length: (array.length + 1) * 4 });
+      const arrayView = new DataView(wasmExports.memory.buffer, arrayPointer, (array.length + 1) * 4);
+      arrayView.setUint32(0, array.length, true);
+      new Uint32Array(wasmExports.memory.buffer, arrayPointer + 4, array.length).set(array);
+      view.setUint32(field.offset, arrayPointer, true);
+    } else if (field.type === 'f64') view.setFloat64(field.offset, fieldValue, true);
+    else if (field.type === 'f32') view.setFloat32(field.offset, fieldValue, true);
+    else if (field.type === 'i64') view.setBigInt64(field.offset, BigInt(fieldValue), true);
+    else if (field.type === 'u64') view.setBigUint64(field.offset, BigInt(fieldValue), true);
+    else if (field.type === 'u32' || field.type === 'bool') view.setUint32(field.offset, fieldValue, true);
+    else view.setInt32(field.offset, fieldValue, true);
+  }
+  return { pointer, length: layout.size, nested };
+}
+`
+}function invokeValueExport(wasmExports, rawFunction, metadata, args, runtime) {
   const encoded = [];
   let total = 0;
   let stringCount = 0;
@@ -656,6 +742,13 @@ const decoder = new TextDecoder('utf-8', { fatal: true });
         rawArgs.push(array.pointer);
         continue;
       }
+      if (parameter.reference !== undefined && recordLayouts[parameter.reference] !== undefined) {
+        const record = encodeRecord(wasmExports, args[index], parameter.reference);
+        owned.push(record);
+        for (const nested of record.nested) owned.push(nested);
+        rawArgs.push(record.pointer);
+        continue;
+      }
       if (parameter.type !== 'string') {
         rawArgs.push(args[index]);
         continue;
@@ -670,6 +763,10 @@ const decoder = new TextDecoder('utf-8', { fatal: true });
       const decoded = decodeString(runtime, wasmExports.memory, result);
       output = decoded.range;
       return decoder.decode(decoded.bytes);
+    }
+    if (metadata.resultReference !== undefined && recordLayouts[metadata.resultReference] !== undefined) {
+      output = { pointer: result, length: recordLayouts[metadata.resultReference].size };
+      return decodeRecord(wasmExports, result, metadata.resultReference);
     }
     return result;
   } catch (error) {
@@ -927,6 +1024,7 @@ function compileForgeWebScriptModule(
           representation: 'i32' as const,
           variants: declaration.variants.map(({ name, tag }) => ({ name, value: tag })),
         })),
+        aggregateLayouts: manifest.aggregateLayouts,
       } as unknown as Parameters<typeof compileForgeWebScriptWasm>[0]['ir'],
       optimizedIr: {
         ...frontend.optimizedIr!,
@@ -937,6 +1035,7 @@ function compileForgeWebScriptModule(
           representation: 'i32' as const,
           variants: declaration.variants.map(({ name, tag }) => ({ name, value: tag })),
         })),
+        aggregateLayouts: manifest.aggregateLayouts,
       } as unknown as Parameters<typeof compileForgeWebScriptWasm>[0]['optimizedIr'],
       abi: manifest,
       links: frontend.links,

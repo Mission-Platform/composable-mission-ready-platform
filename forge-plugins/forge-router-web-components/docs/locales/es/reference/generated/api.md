@@ -67,7 +67,7 @@ No se proporciona descripción.
 | ------ | ------- | ----------- |
 | ganar  | Ventana |             |
 
-### crearMemoriaHistorial
+### crearMemoriaHistoria
 
 **Tipo:** función
 
@@ -148,7 +148,7 @@ No se proporciona descripción.
 **Tipo:** componente
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
 Etiqueta de elemento personalizado utilizada para enlaces neutrales compilados.
@@ -158,7 +158,7 @@ Etiqueta de elemento personalizado utilizada para enlaces neutrales compilados.
 **Tipo:** componente
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 Etiqueta de elemento personalizado utilizada para salidas neutrales compiladas.
@@ -300,6 +300,16 @@ historial, guardias, redirecciones, suscripciones y comportamiento de desplazami
 | Nombre   | Tipo                                       | Descripción |
 | -------- | ------------------------------------------ | ----------- |
 | opciones | MpWebComponentsOpciones de enrutador<View> |             |
+
+### MpRouterCargaReserva
+
+**Tipo:** componente
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+Contenido representado por una salida de enrutador mientras se carga una vista de destino.
 
 ### MpWebComponentsEnrutador
 

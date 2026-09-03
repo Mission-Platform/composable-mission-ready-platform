@@ -1,5 +1,17 @@
 # @mission-platform/forge
 
+## 1.1.0
+
+### Minor Changes
+
+- 89aab02: add typed style generation support for Forge components
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- f216404: add framework-neutral router contracts and compiler tooling integration
+- 8a15dbc: add generated package API references and build-time documentation extraction
+
 ## 1.0.0
 
 ### Major Changes

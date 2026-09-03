@@ -34,6 +34,15 @@ describe("defineForgeCmsPlugin", () => {
     );
   });
 
+  it.each(["../outside", "nested/target", String.raw`nested\target`, "."])(
+    "rejects an unsafe id %s",
+    (id) => {
+      expect(() => defineForgeCmsPlugin(validPlugin({ id }))).toThrow(
+        /safe single-segment/,
+      );
+    },
+  );
+
   it("rejects a missing package name", () => {
     expect(() =>
       defineForgeCmsPlugin(validPlugin({ packageName: "" })),

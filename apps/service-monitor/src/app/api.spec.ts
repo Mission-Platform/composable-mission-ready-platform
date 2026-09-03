@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getMonitor } from '@/monitoring/store';
 
-import { handleSpeedSeries } from './api';
+import { handleServices, handleSpeedSeries } from './api';
 
 vi.mock('cloudflare:workers', () => ({ env: {} }));
 vi.mock('@/monitoring/store', () => ({ getMonitor: vi.fn() }));
@@ -45,4 +45,41 @@ describe('handleSpeedSeries', () => {
       expect(getSpeedSeries).not.toHaveBeenCalled();
     },
   );
+});
+
+describe('handleServices', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('returns the services payload', async () => {
+    const getServices = vi.fn().mockResolvedValue([
+      {
+        target: { id: 'svc-1', name: 'Service 1', type: 'http' },
+        latest: null,
+        uptime: 1,
+        avgLatencyMs: 0,
+        sampleCount: 0,
+      },
+    ]);
+    vi.mocked(getMonitor).mockReturnValue({ getServices } as never);
+
+    const response = await handleServices();
+    expect(response.status).toBe(200);
+
+    const body = (await response.json()) as unknown;
+    expect(body).toMatchObject({
+      now: expect.any(Number),
+      intervalSeconds: expect.any(Number),
+      services: expect.arrayContaining([
+        {
+          target: { id: 'svc-1', name: 'Service 1', type: 'http' },
+          latest: null,
+          uptime: 1,
+          avgLatencyMs: 0,
+          sampleCount: 0,
+        },
+      ]),
+    });
+  });
 });

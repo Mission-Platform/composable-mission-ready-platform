@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-router-react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Forge router target for React Router",
   "type": "module",
   "sideEffects": false,
@@ -47,7 +47,7 @@
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
     "react": "catalog:react",
-    "react-router": "^7.18.2",
+    "react-router": "^7.18.3",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
     "vitest": "catalog:testing"

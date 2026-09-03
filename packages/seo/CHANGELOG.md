@@ -1,5 +1,13 @@
 # @mission-platform/seo
 
+## 0.3.4
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- 48f26d1: support page writing direction in generated HTML metadata
+
 ## 0.3.3
 
 ### Patch Changes

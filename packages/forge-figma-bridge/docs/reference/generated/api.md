@@ -6,12 +6,22 @@ Generated from public source declarations in `@mission-platform/forge-figma-brid
 
 ## `src/bridge`
 
+### createForgeBridgeAuthToken
+
+**Kind:** function
+
+```typescript
+function createForgeBridgeAuthToken(): string;
+```
+
+No description provided.
+
 ### createForgeBridgeServer
 
 **Kind:** function
 
 ```typescript
-function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server;
+function createForgeBridgeServer(options: ForgeBridgeServerOptions): ForgeBridgeServer;
 ```
 
 No description provided.
@@ -21,6 +31,16 @@ No description provided.
 | Name    | Type                     | Description |
 | ------- | ------------------------ | ----------- |
 | options | ForgeBridgeServerOptions |             |
+
+### DEFAULT_ALLOWED_ORIGIN
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_ALLOWED_ORIGIN;
+```
+
+No description provided.
 
 ### DEFAULT_EXPORT_PATH
 
@@ -69,12 +89,42 @@ No description provided.
 | value   | unknown            |             |
 | options | ForgeBridgeOptions |             |
 
+### FORGE_BRIDGE_AUTH_HEADER
+
+**Kind:** constant
+
+```typescript
+export const FORGE_BRIDGE_AUTH_HEADER;
+```
+
+No description provided.
+
+### FORGE_BRIDGE_TOKEN_HEADER
+
+**Kind:** constant
+
+```typescript
+export const FORGE_BRIDGE_TOKEN_HEADER;
+```
+
+No description provided.
+
 ### ForgeBridgeOptions
 
 **Kind:** interface
 
 ```typescript
 export interface ForgeBridgeOptions
+```
+
+No description provided.
+
+### ForgeBridgeServer
+
+**Kind:** interface
+
+```typescript
+export interface ForgeBridgeServer extends Server
 ```
 
 No description provided.
@@ -96,7 +146,7 @@ No description provided.
 ```typescript
 function startForgeBridgeServer(
   options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
-): Promise<Server>;
+): Promise<ForgeBridgeServer>;
 ```
 
 No description provided.

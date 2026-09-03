@@ -1,5 +1,12 @@
 # @mission-platform/postcss-config
 
+## 0.1.3
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+
 ## 0.1.2
 
 ### Patch Changes

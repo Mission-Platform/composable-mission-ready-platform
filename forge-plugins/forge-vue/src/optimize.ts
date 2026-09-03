@@ -71,6 +71,7 @@ function requiredImports(plan: VueLoweredModule): Set<string> {
     } else if (watcher.dependencies === undefined) {
       required.add("watchEffect");
     } else {
+      required.add("onMounted");
       required.add("watch");
     }
     if (watcher.runsOnce && watcher.cleanupText !== undefined) {

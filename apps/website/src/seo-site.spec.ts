@@ -15,7 +15,7 @@ describe('@mission-platform/website', () => {
     expect(SITE_NAME).toBe('Mission Platform');
     expect(SITE_TITLE).toContain('Build boldly. Ship with purpose.');
     expect(SITE_DESCRIPTION).toContain('framework-neutral UI');
-    expect(SITE_ORIGIN).toBe('https://mission-platform.dev');
+    expect(SITE_ORIGIN).toBe('https://mission-platform.com');
     expect(canonicalFor('en')).toBe(`${SITE_ORIGIN}/`);
     expect(canonicalFor('fr')).toBe(`${SITE_ORIGIN}/fr/`);
     expect(LOCALE_DIR.ar).toBe('rtl');

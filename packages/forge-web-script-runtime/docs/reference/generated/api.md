@@ -3016,6 +3016,16 @@ No description provided.
 
 ## `src/vm`
 
+### FORGE_WEB_SCRIPT_VM_DEFAULT_MAX_MEMORY_PAGES
+
+**Kind:** constant
+
+```typescript
+export const FORGE_WEB_SCRIPT_VM_DEFAULT_MAX_MEMORY_PAGES;
+```
+
+No description provided.
+
 ### FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
 
 **Kind:** constant

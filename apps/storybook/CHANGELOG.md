@@ -1,5 +1,50 @@
 # @mission-platform/storybook
 
+## 0.0.14
+
+### Patch Changes
+
+- Updated dependencies [140f802]
+- Updated dependencies [7e40fba]
+- Updated dependencies [c32bb83]
+- Updated dependencies [26a9cfe]
+- Updated dependencies [7877dc0]
+- Updated dependencies [f331f02]
+- Updated dependencies [06a8934]
+- Updated dependencies [8a15dbc]
+- Updated dependencies [0c74365]
+- Updated dependencies [46fe17a]
+- Updated dependencies [b88a08e]
+- Updated dependencies [9e59f09]
+- Updated dependencies [e56f10c]
+- Updated dependencies [97c3f20]
+- Updated dependencies [31ed685]
+  - @mission-platform/barcode@2.1.0
+  - @mission-platform/qr-code@2.1.0
+  - @mission-platform/content@1.1.0
+  - @mission-platform/breakpoints@6.0.1
+  - @mission-platform/code-scanner@1.2.0
+  - @mission-platform/components@3.1.0
+  - @mission-platform/d3@2.0.1
+  - @mission-platform/email-components@1.1.0
+  - @mission-platform/float@1.1.0
+  - @mission-platform/forms@2.1.0
+  - @mission-platform/harper@0.2.2
+  - @mission-platform/hunspell@0.4.2
+  - @mission-platform/i18n@2.1.1
+  - @mission-platform/icons@2.0.1
+  - @mission-platform/layouts@2.1.0
+  - @mission-platform/map@2.0.1
+  - @mission-platform/resource-planner@1.2.0
+  - @mission-platform/rxjs@1.0.1
+  - @mission-platform/scheduler@0.3.0
+  - @mission-platform/select@1.1.0
+  - @mission-platform/speech-audio@1.0.1
+  - @mission-platform/theme@1.1.0
+  - @mission-platform/tokens@2.0.0
+  - @mission-platform/typography@1.1.0
+  - @mission-platform/vcard@0.2.1
+
 ## 0.0.13
 
 ### Patch Changes

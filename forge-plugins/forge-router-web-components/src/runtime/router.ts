@@ -47,14 +47,20 @@ export interface MpWebComponentsRouterOptions<View = unknown> {
   scrollBehavior?: MpScrollBehavior;
   viewAdapter?: MpRouteViewAdapter<View, HTMLElement>;
   maxRedirects?: number;
+  loadingFallback?: MpRouterLoadingFallback;
 }
+
+/** Content rendered by a router outlet while a destination view is loading. */
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
 
 export interface MpWebComponentsRouter<View = unknown> extends MpRouterAdapter {
   readonly routes: readonly MpRoute<View>[];
   readonly history: MpHistory;
   readonly ready: Promise<MpNavigationResult>;
   readonly viewAdapter?: MpRouteViewAdapter<View, HTMLElement>;
+  readonly loadingFallback?: MpRouterLoadingFallback;
   recordFor(route: MpResolvedLocation): MpRouteMatch | undefined;
+  resolveView(route: MpResolvedLocation): Promise<View | undefined>;
   dispose(): void;
 }
 
@@ -93,6 +99,13 @@ export function createWebComponentsRouter<View = unknown>(
   let disposed = false;
   const pendingHistory: Array<(result: MpNavigationResult) => void> = [];
   const maxRedirects = options.maxRedirects ?? 16;
+  let navigationToken = 0;
+  type ViewCacheEntry = {
+    route: MpResolvedLocation;
+    promise: Promise<View>;
+    settled: boolean;
+  };
+  const viewCache = new WeakMap<object, ViewCacheEntry>();
 
   const emit = (event: MpRouteChangeEvent): void => {
     for (const listener of changes) {
@@ -100,11 +113,12 @@ export function createWebComponentsRouter<View = unknown>(
     }
   };
 
-  const complete = (result: MpNavigationResult, settleHistory = false): MpNavigationResult => {
+  const complete = (
+    result: MpNavigationResult,
+    settle?: (navigation: MpNavigationResult) => void,
+  ): MpNavigationResult => {
     emit({ type: result.type, to: result.to, from: result.from, result });
-    if (settleHistory) {
-      pendingHistory.shift()?.(result);
-    }
+    settle?.(result);
     return result;
   };
 
@@ -131,37 +145,95 @@ export function createWebComponentsRouter<View = unknown>(
     applyScroll(position);
   };
 
+  const loadView = (route: MpResolvedLocation): View | Promise<View> | undefined => {
+    const match = resolver.match(route.path);
+    const definition = match?.flat.route as MpRoute<View> | undefined;
+    if (!definition) {
+      return undefined;
+    }
+    const factory = definition.component ?? definition.lazy;
+    if (!factory) {
+      return undefined;
+    }
+    const cached = viewCache.get(definition);
+    if (cached && (!cached.settled || cached.route === route)) {
+      return cached.promise;
+    }
+    if (cached) {
+      viewCache.delete(definition);
+    }
+    let view: View | Promise<View>;
+    try {
+      view = typeof factory === 'function' ? (factory as () => Promise<View>)() : factory;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+    const viewPromise = Promise.resolve(view);
+    const entry: ViewCacheEntry = { route, promise: viewPromise, settled: false };
+    viewCache.set(definition, entry);
+    void viewPromise.then(
+      () => {
+        entry.settled = true;
+      },
+      () => {
+        if (viewCache.get(definition) === entry) {
+          viewCache.delete(definition);
+        }
+      },
+    );
+    return view instanceof Promise ? viewPromise : view;
+  };
+
+  const resolveView = (route: MpResolvedLocation): Promise<View | undefined> => Promise.resolve(loadView(route));
+
+  const isPendingView = (view: View | Promise<View> | undefined): view is Promise<View> =>
+    view instanceof Promise || (typeof view === 'object' && view !== null && 'then' in view);
+
   const navigate = async (
     raw: MpRouteLocationRaw,
     mode: 'push' | 'replace' | 'pop',
     savedPosition?: MpScrollPosition,
+    settleHistory?: (result: MpNavigationResult) => void,
   ): Promise<MpNavigationResult> => {
     const from = signal.value;
     let to = resolver.resolve(raw);
     const initialTo = to;
     let redirectTo: MpRouteLocationRaw | undefined;
+    const token = ++navigationToken;
+    const isStale = (): boolean => disposed || token !== navigationToken;
+    const completeNavigation = (result: MpNavigationResult): MpNavigationResult => complete(result, settleHistory);
+    const cancelled = (): MpNavigationResult =>
+      completeNavigation(
+        failure(to, from, disposed ? 'error' : 'cancelled', disposed ? new Error('Router disposed') : undefined),
+      );
 
     emit({ type: 'start', to, from });
+    if (isStale()) {
+      return cancelled();
+    }
     if (mode !== 'pop' && from?.fullPath === to.fullPath) {
       const result = failure(to, from, 'duplicated');
-      return complete(result);
+      return completeNavigation(result);
     }
 
     for (let redirectCount = 0; redirectCount <= maxRedirects; redirectCount += 1) {
       const match = resolver.match(to.path);
       if (!match) {
         const result = failure(to, from, 'not-found');
-        return complete(result, mode === 'pop');
+        return completeNavigation(result);
       }
 
       const redirect = match.flat.route.redirect;
       if (redirect !== undefined) {
         const target = typeof redirect === 'function' ? await redirect(to) : redirect;
+        if (isStale()) {
+          return cancelled();
+        }
         redirectTo ??= target;
         to = resolver.resolve(target);
         if (redirectCount === maxRedirects) {
           const result = failure(to, from, 'error', new Error('Maximum router redirect depth exceeded'));
-          return complete(result, mode === 'pop');
+          return completeNavigation(result);
         }
         continue;
       }
@@ -183,9 +255,12 @@ export function createWebComponentsRouter<View = unknown>(
       let redirected: MpRouteLocationRaw | undefined;
       for (const guard of guards) {
         const outcome = await guard(to, from);
+        if (isStale()) {
+          return cancelled();
+        }
         if (outcome === false) {
           const result = failure(to, from, 'cancelled');
-          return complete(result, mode === 'pop');
+          return completeNavigation(result);
         }
         if (outcome !== undefined && outcome !== true) {
           redirected = outcome;
@@ -198,13 +273,20 @@ export function createWebComponentsRouter<View = unknown>(
         continue;
       }
 
-      if (match.flat.route.lazy) {
-        try {
-          await match.flat.route.lazy();
-        } catch (error) {
-          const result = failure(to, from, 'error', error);
-          return complete(result, mode === 'pop');
+      try {
+        const view = loadView(to);
+        if (isPendingView(view)) {
+          await view;
         }
+      } catch (error) {
+        if (isStale()) {
+          return cancelled();
+        }
+        const result = failure(to, from, 'error', error);
+        return completeNavigation(result);
+      }
+      if (isStale()) {
+        return cancelled();
       }
 
       if (mode === 'push') {
@@ -212,31 +294,41 @@ export function createWebComponentsRouter<View = unknown>(
       } else if (mode === 'replace') {
         await history.replace(to.fullPath);
       }
+      if (isStale()) {
+        return cancelled();
+      }
       signal.set(to);
       await scroll(to, from, savedPosition);
 
       const result: MpNavigationResult = redirectTo
         ? { type: 'redirect', ok: false, to, from, redirectTo }
         : { type: 'success', ok: true, to, from };
-      return complete(result, mode === 'pop');
+      return completeNavigation(result);
     }
 
     const result = failure(initialTo, from, 'error', new Error('Router transition did not settle'));
-    return complete(result, mode === 'pop');
+    return completeNavigation(result);
   };
 
-  const handleHistoryError = (raw: string, error: unknown): void => {
+  const handleHistoryError = (
+    raw: string,
+    error: unknown,
+    settleHistory?: (result: MpNavigationResult) => void,
+  ): void => {
     const to = resolver.resolve(raw);
     const result = failure(to, signal.value, 'error', error);
     emit({ type: 'failure', to, from: signal.value, result });
-    pendingHistory.shift()?.(result);
+    settleHistory?.(result);
   };
 
   const unlistenHistory = history.listen((event) => {
     if (event.type === 'pop') {
-      void navigate(event.to.url, 'pop', event.to.state as MpScrollPosition | undefined).catch((error: unknown) => {
-        handleHistoryError(event.to.url, error);
-      });
+      const settleHistory = pendingHistory.shift();
+      void navigate(event.to.url, 'pop', event.to.state as MpScrollPosition | undefined, settleHistory).catch(
+        (error: unknown) => {
+          handleHistoryError(event.to.url, error, settleHistory);
+        },
+      );
     }
   });
 
@@ -270,6 +362,7 @@ export function createWebComponentsRouter<View = unknown>(
     routes: options.routes,
     history,
     viewAdapter: options.viewAdapter,
+    loadingFallback: options.loadingFallback,
     current: signal,
     resolve: (to) => resolver.resolve(to),
     push: (to) => navigate(to, 'push'),
@@ -282,10 +375,12 @@ export function createWebComponentsRouter<View = unknown>(
       return () => changes.delete(listener);
     },
     recordFor: (route) => resolver.match(route.path),
+    resolveView,
     ready: initialReady,
     dispose: () => {
       if (!disposed) {
         disposed = true;
+        navigationToken += 1;
         const result = failure(
           signal.value ?? resolver.resolve(history.location),
           signal.value,

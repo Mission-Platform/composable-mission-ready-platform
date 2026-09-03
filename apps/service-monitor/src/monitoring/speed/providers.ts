@@ -1,7 +1,11 @@
+import { isAllowedMonitorUrl } from '../validation';
+
 import type { SpeedProviderId, SpeedProviderMeta, SpeedResult } from './types';
 
 /** Abort any single network operation that exceeds this budget. */
 const OP_TIMEOUT_MS = 20_000;
+const MAX_SPEED_RESPONSE_BYTES = 25 * 1024 * 1024;
+const MAX_REDIRECTS = 3;
 
 /** A server-side speed-test integration. */
 export interface SpeedProvider {
@@ -22,7 +26,7 @@ function toMbps(bytes: number, ms: number): number {
 /** Download a URL and report the number of bytes read and elapsed time. */
 async function timedDownload(url: string, init?: RequestInit): Promise<{ bytes: number; ms: number }> {
   const start = Date.now();
-  const response = await fetch(url, {
+  const response = await fetchWithRedirectPolicy(url, {
     ...init,
     signal: AbortSignal.timeout(OP_TIMEOUT_MS),
     headers: { 'user-agent': 'mission-platform-service-monitor/1.0', ...init?.headers },
@@ -30,15 +34,15 @@ async function timedDownload(url: string, init?: RequestInit): Promise<{ bytes: 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
   }
-  const buffer = await response.arrayBuffer();
-  return { bytes: buffer.byteLength, ms: Date.now() - start };
+  const bytes = await readBoundedBytes(response);
+  return { bytes, ms: Date.now() - start };
 }
 
 /** Upload a zero-filled body of `bytes` and report the throughput. */
 async function timedUpload(url: string, bytes: number): Promise<number> {
   const body = new Uint8Array(bytes);
   const start = Date.now();
-  const response = await fetch(url, {
+  const response = await fetchWithRedirectPolicy(url, {
     method: 'POST',
     body,
     signal: AbortSignal.timeout(OP_TIMEOUT_MS),
@@ -47,7 +51,7 @@ async function timedUpload(url: string, bytes: number): Promise<number> {
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
   }
-  await response.arrayBuffer();
+  await readBoundedBytes(response);
   return toMbps(bytes, Date.now() - start);
 }
 
@@ -55,8 +59,11 @@ async function timedUpload(url: string, bytes: number): Promise<number> {
 async function safeLatency(url: string): Promise<number> {
   try {
     const start = Date.now();
-    const response = await fetch(url, { signal: AbortSignal.timeout(OP_TIMEOUT_MS), cache: 'no-store' });
-    await response.arrayBuffer();
+    const response = await fetchWithRedirectPolicy(url, {
+      signal: AbortSignal.timeout(OP_TIMEOUT_MS),
+      cache: 'no-store',
+    });
+    await readBoundedBytes(response);
     return Date.now() - start;
   } catch {
     return 0;
@@ -135,7 +142,7 @@ const fastProvider: SpeedProvider = {
       const apiUrl = `https://api.fast.com/netflix/speedtest/v2?https=true&token=${token}&urlCount=1`;
       const api = (await fetchJson<{ targets?: { url: string }[] }>(apiUrl)).targets ?? [];
       const target = api[0]?.url;
-      if (!target) {
+      if (!target || !isAllowedMonitorUrl(target)) {
         throw new Error('no measurement targets returned');
       }
 
@@ -183,6 +190,9 @@ const speedtestProvider: SpeedProvider = {
       }
 
       const base = `https://${server.host}`;
+      if (!isAllowedMonitorUrl(base)) {
+        throw new Error('speed-test server destination is not allowed');
+      }
       const latencyMs = await safeLatency(`${base}/download?size=1&nocache=${Date.now()}`);
       const { bytes: downloaded, ms } = await timedDownload(`${base}/download?size=${bytes}&nocache=${Date.now()}`);
 
@@ -204,34 +214,87 @@ const speedtestProvider: SpeedProvider = {
 
 /** Fetch JSON with a shared timeout and non-2xx guard. */
 async function fetchJson<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
+  const response = await fetchWithRedirectPolicy(url, {
     signal: AbortSignal.timeout(OP_TIMEOUT_MS),
     headers: { accept: 'application/json' },
   });
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
   }
-  return (await response.json()) as T;
+  return JSON.parse(await readBoundedText(response)) as T;
 }
 
 /** Scrape the current Fast.com API token from the site's app bundle. */
 async function fetchFastToken(): Promise<string> {
-  const homeResponse = await fetch('https://fast.com/', { signal: AbortSignal.timeout(OP_TIMEOUT_MS) });
-  const html = await homeResponse.text();
+  const homeResponse = await fetchWithRedirectPolicy('https://fast.com/', {
+    signal: AbortSignal.timeout(OP_TIMEOUT_MS),
+  });
+  const html = await readBoundedText(homeResponse);
   const scriptName = html.match(/app-[^"']+\.js/)?.[0];
   if (!scriptName) {
     throw new Error('could not locate app bundle');
   }
 
-  const scriptResponse = await fetch(`https://fast.com/${scriptName}`, {
+  const scriptResponse = await fetchWithRedirectPolicy(`https://fast.com/${scriptName}`, {
     signal: AbortSignal.timeout(OP_TIMEOUT_MS),
   });
-  const script = await scriptResponse.text();
+  const script = await readBoundedText(scriptResponse);
   const token = script.match(/token:"([^"]+)"/)?.[1];
   if (!token) {
     throw new Error('could not locate API token');
   }
   return token;
+}
+
+async function fetchWithRedirectPolicy(url: string, init: RequestInit): Promise<Response> {
+  let current = url;
+  for (let redirect = 0; redirect <= MAX_REDIRECTS; redirect += 1) {
+    const response = await fetch(current, { ...init, redirect: 'manual' });
+    if (response.status < 300 || response.status >= 400) return response;
+    const location = response.headers.get('location');
+    if (!location || redirect === MAX_REDIRECTS) throw new Error('speed-test redirect policy rejected the response');
+    const next = new URL(location, current).toString();
+    if (!isAllowedMonitorUrl(next)) throw new Error('speed-test redirect destination is not allowed');
+    current = next;
+  }
+  throw new Error('speed-test redirect policy rejected the response');
+}
+
+async function readBoundedText(response: Response): Promise<string> {
+  const bytes = await readBoundedBytes(response);
+  return new TextDecoder().decode(bytes);
+}
+
+async function readBoundedBytes(response: Response): Promise<Uint8Array> {
+  const declaredLength = Number(response.headers.get('content-length') ?? '');
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_SPEED_RESPONSE_BYTES) {
+    throw new Error('speed-test response is too large');
+  }
+  if (!response.body) return new Uint8Array();
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > MAX_SPEED_RESPONSE_BYTES) {
+        await reader.cancel();
+        throw new Error('speed-test response is too large');
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  const result = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    result.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return result;
 }
 
 /** All providers, in display order. */

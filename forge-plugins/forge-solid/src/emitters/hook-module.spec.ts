@@ -74,6 +74,7 @@ describe("emitSolidHookModule", () => {
     expect(code).toContain(
       "onMount(() => { subscribe(); onCleanup(() => unsubscribe()); });",
     );
+    expect(code).toContain('import { onMount, onCleanup } from "solid-js";');
   });
 
   it("remaps the neutral context primitives to Solid own exports", () => {

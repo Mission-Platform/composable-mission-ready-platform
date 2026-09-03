@@ -129,7 +129,7 @@ export const ForgeRouterLink;
 
 - **@非推奨:** {@link MpLink} を優先します。既存のランタイム コンシューマのために保持されます。
 
-### Forgeルーターアウトレット
+### フォージルーターアウトレット
 
 **種類:** 定数
 
@@ -148,7 +148,7 @@ export const ForgeRouterOutlet;
 **種類:** コンポーネント
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
 コンパイルされたニュートラル リンクに使用されるカスタム要素タグ。
@@ -158,7 +158,7 @@ export const MpLink;
 **種類:** コンポーネント
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 コンパイルされたニュートラル アウトレットに使用されるカスタム要素タグ。
@@ -300,6 +300,16 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 | 名前       | タイプ                               | 説明 |
 | ---------- | ------------------------------------ | ---- |
 | オプション | MpWebComponentsRou​​terOptions<View> |      |
+
+### MpRouterLoadingFallback
+
+**種類:** コンポーネント
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+デスティネーション ビューの読み込み中にルーター アウトレットによってレンダリングされるコンテンツ。
 
 ### MpWebコンポーネントルーター
 

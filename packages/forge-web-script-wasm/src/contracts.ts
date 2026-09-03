@@ -104,6 +104,21 @@ export interface ForgeWebScriptWasmSourceSpan {
   readonly endColumn: number;
 }
 
+export interface ForgeWebScriptWasmAggregateLayout {
+  readonly name: string;
+  readonly kind: 'struct' | 'enum';
+  readonly record?: true;
+  readonly size: number;
+  readonly alignment: number;
+  readonly fields: readonly {
+    readonly name: string;
+    readonly type: string;
+    readonly offset: number;
+    readonly size: number;
+    readonly alignment: number;
+  }[];
+}
+
 export interface ForgeWebScriptWasmTypeName {
   readonly name: ForgeWebScriptWasmPrimitiveType;
   readonly reference?: 'Array' | 'Vector' | string;
@@ -164,6 +179,12 @@ export type ForgeWebScriptWasmExpression =
       readonly kind: 'literal';
       readonly value: boolean | number | string;
       readonly type: ForgeWebScriptWasmPrimitiveType;
+      readonly span: ForgeWebScriptWasmSourceSpan;
+    }
+  | {
+      readonly kind: 'struct-value';
+      readonly type: string;
+      readonly fields: Readonly<Record<string, ForgeWebScriptWasmExpression>>;
       readonly span: ForgeWebScriptWasmSourceSpan;
     }
   | { readonly kind: 'identifier'; readonly name: string; readonly span: ForgeWebScriptWasmSourceSpan }
@@ -341,6 +362,7 @@ export interface ForgeWebScriptWasmModule {
   readonly specializations?: readonly ForgeWebScriptWasmGenericSpecialization[];
   readonly iteratorDescriptors?: readonly ForgeWebScriptWasmIteratorBoundaryDescriptor[];
   readonly enumDeclarations?: readonly ForgeWebScriptWasmEnumDeclaration[];
+  readonly aggregateLayouts?: readonly ForgeWebScriptWasmAggregateLayout[];
   readonly collectionLayouts?: readonly ForgeWebScriptWasmCollectionLayout[];
   readonly iteratorCapabilities?: readonly ForgeWebScriptWasmIteratorCapabilityDescriptor[];
   readonly featureRequirements?: ForgeWebScriptWasmFeatureRequirements;
@@ -395,6 +417,7 @@ export interface ForgeWebScriptWasmBackendResult {
   readonly iteratorExports?: readonly ForgeWebScriptWasmIteratorExport[];
   readonly featureRequirements?: ForgeWebScriptWasmFeatureRequirements;
   readonly sourceMap?: string;
+  /** Versioned SHA-256 digest in the `sha256-v1:<hex>` format. */
   readonly contentHash: string;
   readonly metadata: ForgeWebScriptWasmArtifactMetadata;
   readonly diagnostics: readonly ForgeWebScriptWasmDiagnostic[];

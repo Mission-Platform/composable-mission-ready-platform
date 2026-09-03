@@ -148,7 +148,7 @@ Geen beschrijving opgegeven.
 **Soort:** component
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
 Aangepaste elementtag die wordt gebruikt voor gecompileerde neutrale links.
@@ -158,7 +158,7 @@ Aangepaste elementtag die wordt gebruikt voor gecompileerde neutrale links.
 **Soort:** component
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 Aangepaste elementtag die wordt gebruikt voor samengestelde neutrale verkooppunten.
@@ -259,7 +259,7 @@ Geen beschrijving opgegeven.
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
+Alleen noodzakelijke navigatie-/oplossingsmogelijkheden lezen.
 
 ### gebruikMpRoute
 
@@ -300,6 +300,16 @@ geschiedenis, bewakers, omleidingen, abonnementen en browserscrollgedrag.
 | Naam   | Typ                                | Beschrijving |
 | ------ | ---------------------------------- | ------------ |
 | opties | MpWebComponentenRouteropties<View> |              |
+
+### MpRouterLadenFallback
+
+**Soort:** component
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+Inhoud weergegeven door een routeruitgang terwijl een bestemmingsweergave wordt geladen.
 
 ### MpWebComponentsRouter
 

@@ -1,5 +1,12 @@
 # @mission-platform/forge-plugin-react
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [89aab02]
+  - @mission-platform/forge-plugin-api@0.3.0
+
 ## 0.1.1
 
 ### Patch Changes

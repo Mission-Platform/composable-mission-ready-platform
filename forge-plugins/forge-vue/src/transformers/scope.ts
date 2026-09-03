@@ -493,9 +493,11 @@ function emitEffect(
     ].join("\n");
   }
   const source = rewriteExpression(dependencies, scope);
-  return cleanup === undefined
-    ? `watch(() => ${source}, ${callbackText}, { immediate: true });`
-    : `watch(() => ${source}, (_value, _oldValue, onCleanup) => { ${invoke} }, { immediate: true });`;
+  const watchExpression =
+    cleanup === undefined
+      ? `watch(() => ${source}, ${callbackText}, { immediate: true });`
+      : `watch(() => ${source}, (_value, _oldValue, onCleanup) => { ${invoke} }, { immediate: true });`;
+  return `onMounted(() => { ${watchExpression} });`;
 }
 
 /**

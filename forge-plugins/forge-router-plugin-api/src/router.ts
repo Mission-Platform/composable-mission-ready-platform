@@ -222,8 +222,18 @@ export function defineForgeRouterTarget(
       });
       const importText = nativeImportCode(native);
       const neutralImport =
-        /import\s+(?:type\s+)?\{[^}]*\}\s+from\s+['"]@mission-platform\/router['"];?/u;
-      const code = plan.module.source.replace(neutralImport, importText);
+        /import\s+(?:type\s+)?\{[^}]*\}\s+from\s+['"]@mission-platform\/router['"];?/gu;
+      let insertedNativeImports = false;
+      const code = plan.module.source.replaceAll(neutralImport, () => {
+        if (importText.length === 0) {
+          return "";
+        }
+        if (insertedNativeImports) {
+          return "";
+        }
+        insertedNativeImports = true;
+        return importText;
+      });
       return { code, lang: plan.module.fileName.split(".").pop() ?? "ts" };
     },
     build: options.build ?? {},

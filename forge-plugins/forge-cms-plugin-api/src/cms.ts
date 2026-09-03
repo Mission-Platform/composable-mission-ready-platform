@@ -11,6 +11,8 @@
  * returned {@link CmsArtifact}; it never maps a string id onto a target, so
  * adding a platform is an additive package with no edits here.
  */
+import { validateForgeArtifactSegment } from "@mission-platform/vite-plugin-forge";
+
 import type { ContentComponent } from "./content-model.js";
 import type {
   CompilerDiagnostic,
@@ -106,6 +108,13 @@ export function defineForgeCmsPlugin<T extends CmsOutputPlugin>(plugin: T): T {
   if (typeof plugin.id !== "string" || plugin.id.length === 0) {
     throw new TypeError("A Forge CMS plugin requires a non-empty `id`.");
   }
+  try {
+    validateForgeArtifactSegment(plugin.id);
+  } catch {
+    throw new TypeError(
+      `The Forge CMS plugin "${plugin.id}" requires a safe single-segment \`id\`.`,
+    );
+  }
   if (
     typeof plugin.packageName !== "string" ||
     plugin.packageName.length === 0
@@ -121,6 +130,13 @@ export function defineForgeCmsPlugin<T extends CmsOutputPlugin>(plugin: T): T {
   ) {
     throw new TypeError(
       `The Forge CMS plugin "${plugin.id}" requires a bound framework output plugin.`,
+    );
+  }
+  try {
+    validateForgeArtifactSegment(plugin.framework.id);
+  } catch {
+    throw new TypeError(
+      `The Forge CMS plugin "${plugin.id}" requires a safe framework plugin id.`,
     );
   }
   if (typeof plugin.emitTemplate !== "function") {
@@ -147,5 +163,7 @@ export function defineForgeCmsPlugin<T extends CmsOutputPlugin>(plugin: T): T {
 
 /** The directory segment a target's per-framework output is written under. */
 export function cmsTargetDirectory(plugin: CmsOutputPlugin): string {
+  validateForgeArtifactSegment(plugin.id);
+  validateForgeArtifactSegment(plugin.framework.id);
   return `${plugin.id}/${plugin.framework.id}`;
 }

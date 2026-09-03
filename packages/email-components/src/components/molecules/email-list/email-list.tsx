@@ -1,7 +1,7 @@
 import { validateUrl } from '@mission-platform/email-renderer';
 import { h, type MpChild, type MpElement } from '@mission-platform/forge';
 
-import { spacingValue, type EmailSpacingScale } from '@/tokens';
+import { spacingValue, type EmailSpacingScale } from '../../../tokens';
 
 export interface EmailListItem {
   readonly children: MpChild | readonly MpChild[];

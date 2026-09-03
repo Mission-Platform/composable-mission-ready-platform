@@ -109,7 +109,7 @@ describe("the Vue emitter builds `<style>` blocks", () => {
     );
 
     expect(block).toContain(
-      `.forge-badge {\n  --forge-badge-color: v-bind('$props.properties?.["color"]');\n}`,
+      `.forge-badge {\n  --forge-badge-color: v-bind('$props.properties?.["color"] ?? "var(--mp-badge-color)"');\n}`,
     );
     expect(block).toContain("@layer mp.components {");
     const source = block.match(/<style[^>]*>\n([\s\S]*)\n<\/style>/)?.[1];

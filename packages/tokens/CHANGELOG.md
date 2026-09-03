@@ -1,5 +1,17 @@
 # @mission-platform/tokens
 
+## 2.0.0
+
+### Major Changes
+
+- b88a08e: Remove 189 unreachable primitive, semantic, typography, and structural token leaves from the generated surface. This is a breaking change for consumers relying on the removed exported TypeScript types.
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 9e59f09: split shared UI capabilities into focused workspaces and update their design tokens
+- 97c3f20: add typed custom-property overrides for visual components
+
 ## 1.1.0
 
 ### Minor Changes

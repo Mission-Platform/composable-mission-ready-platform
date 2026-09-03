@@ -45,7 +45,10 @@ export fn bytes_get(data: string, index: i32) -> i32 {
   let hundreds: i32 = string_byte_at(data, offset) - 48;
   let tens: i32 = string_byte_at(data, offset + 1) - 48;
   let ones: i32 = string_byte_at(data, offset + 2) - 48;
-  return hundreds * 100 + tens * 10 + ones;
+  let mut value: i32 = hundreds * 100;
+  value = value + tens * 10;
+  value = value + ones;
+  return value;
 }
 
 export fn bytes_push(data: string, value: i32) -> string {
@@ -104,12 +107,14 @@ export fn bits_push_value(data: string, value: i32, count: i32) -> string {
 
 fn bits_to_byte(bits: string, start: i32) -> i32 {
   let mut value: i32 = 0;
-  let mut bit: i32 = 0;
-  while bit < 8 {
-    value = value * 2;
-    if bits_get(bits, start + bit) { value = value + 1; }
-    bit = bit + 1;
-  }
+  if start < string_length(bits) && string_byte_at(bits, start) == 49 { value = value + 128; }
+  if start + 1 < string_length(bits) && string_byte_at(bits, start + 1) == 49 { value = value + 64; }
+  if start + 2 < string_length(bits) && string_byte_at(bits, start + 2) == 49 { value = value + 32; }
+  if start + 3 < string_length(bits) && string_byte_at(bits, start + 3) == 49 { value = value + 16; }
+  if start + 4 < string_length(bits) && string_byte_at(bits, start + 4) == 49 { value = value + 8; }
+  if start + 5 < string_length(bits) && string_byte_at(bits, start + 5) == 49 { value = value + 4; }
+  if start + 6 < string_length(bits) && string_byte_at(bits, start + 6) == 49 { value = value + 2; }
+  if start + 7 < string_length(bits) && string_byte_at(bits, start + 7) == 49 { value = value + 1; }
   return value;
 }
 
@@ -156,6 +161,12 @@ export fn xor_value(left: i32, right: i32, width: i32) -> i32 {
   return result;
 }
 
+fn gf_double(value: i32) -> i32 {
+  if value < 128 { return value * 2; }
+  let reduced: i32 = value - 128;
+  return xor_value(reduced * 2, 29, 8);
+}
+
 export fn gf_mul(a: i32, b: i32) -> i32 {
   if a == 0 || b == 0 { return 0; }
   let mut result: i32 = 0;
@@ -164,9 +175,7 @@ export fn gf_mul(a: i32, b: i32) -> i32 {
   let mut index: i32 = 0;
   while index < 8 {
     if y - y / 2 * 2 == 1 { result = xor_value(result, x, 9); }
-    let high: i32 = x / 128;
-    x = x * 2 % 256;
-    if high == 1 { x = xor_value(x, 29, 8); }
+    x = gf_double(x);
     y = y / 2;
     index = index + 1;
   }
@@ -218,6 +227,10 @@ export fn mem_alloc_bytes(nbytes: i32) -> u32 {
   }
   return ptr;
 }
+
+export fn mem_get_u32(ptr: u32) -> u32 { return memory_load_u32(ptr); }
+
+export fn mem_set_u32(ptr: u32, value: u32) -> unit { memory_store_u32(ptr, value); }
 
 export fn mem_get_u8(ptr: u32, index: i32) -> i32 {
   if index < 0 { return 0; }
@@ -283,14 +296,11 @@ export fn bytes_set(data: string, index: i32, value: i32) -> string {
   return string_concat(string_concat(left, byte_char(value)), right);
 }
 
-// In-place RS over a pre-sized generator buffer (count+1 bytes) and remainder (count bytes).
 fn rs_generator_mem(gen: u32, count: i32) -> unit {
-  // gen[0] = 1, rest 0 initially assumed.
   mem_set_u8(gen, 0, 1);
   let mut root: i32 = 1;
   let mut round: i32 = 0;
   while round < count {
-    // Multiply by (x - root) in place from high to low.
     let mut index: i32 = round;
     while index >= 0 {
       let coefficient: i32 = mem_get_u8(gen, index);
@@ -382,6 +392,7 @@ export fn rs_remainder(data: string, count: i32) -> string {
   rs_remainder_mem(data_mem, data_len, gen, rem, count);
   return string_concat("", rs_dump(rem, count));
 }
+
 
 // ECC ordinal: 0=L, 1=M, 2=Q, 3=H.
 export fn ecc_per_block(ecc: i32, version: i32) -> i32 {
@@ -503,6 +514,7 @@ export fn block_count(ecc: i32, version: i32) -> i32 {
     if version <= 5 { return 1; }
     if version <= 9 { return 2; }
     if version <= 13 { return 4; }
+    if version == 14 { return 4; }
     if version <= 17 { return 6; }
     if version == 18 { return 6; }
     if version == 19 { return 7; }

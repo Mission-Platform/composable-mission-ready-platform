@@ -69,7 +69,8 @@ export function writeScaffold(request: ScaffoldRequest): ScaffoldResult {
 
   const relativeDir = `${group}/${name}`;
   const targetDir = resolveRepoPath(join(groupDir(group), name), relativeDir, { allowMissing: true });
-  const fileList = Object.keys(files).sort();
+  const entries = Object.entries(files).toSorted(([left], [right]) => left.localeCompare(right));
+  const fileList = entries.map(([relativePath]) => relativePath);
 
   if (existsSync(targetDir)) {
     throw new Error(`Target "${relativeDir}" already exists. Choose another name or edit it manually.`);
@@ -85,13 +86,24 @@ export function writeScaffold(request: ScaffoldRequest): ScaffoldResult {
     };
   }
 
-  const targets = Object.keys(files).map((relativePath) =>
+  // Unlike the preflight check above, mkdir is an atomic claim of the target.
+  // A concurrent scaffold cannot win the same directory between check and write.
+  mkdirSync(dirname(targetDir), { recursive: true });
+  try {
+    mkdirSync(targetDir);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'EEXIST') {
+      throw new Error(`Target "${relativeDir}" already exists. Choose another name or edit it manually.`);
+    }
+    throw error;
+  }
+  const targets = entries.map(([relativePath]) =>
     resolveRepoPath(join(targetDir, relativePath), `${relativeDir}/${relativePath}`, { allowMissing: true }),
   );
-  for (const [index, contents] of Object.values(files).entries()) {
+  for (const [index, [, contents]] of entries.entries()) {
     const fullPath = targets[index] as string;
     mkdirSync(dirname(fullPath), { recursive: true });
-    writeFileSync(fullPath, contents, 'utf8');
+    writeFileSync(fullPath, contents, { encoding: 'utf8', flag: 'wx' });
   }
 
   return {
@@ -115,7 +127,8 @@ export function writeIntoPackage(request: PackageWriteRequest): ScaffoldResult {
   }
   const packageDir = resolveRepoPath(request.packageDir, relativePackageDir);
 
-  const fileList = Object.keys(files).sort();
+  const entries = Object.entries(files).toSorted(([left], [right]) => left.localeCompare(right));
+  const fileList = entries.map(([relativePath]) => relativePath);
   const fileTargets = fileList.map((relativePath) =>
     resolveRepoPath(join(packageDir, relativePath), `${relativePackageDir}/${relativePath}`, { allowMissing: true }),
   );
@@ -144,10 +157,10 @@ export function writeIntoPackage(request: PackageWriteRequest): ScaffoldResult {
     };
   }
 
-  for (const [index, contents] of Object.values(files).entries()) {
+  for (const [index, [, contents]] of entries.entries()) {
     const fullPath = fileTargets[index] as string;
     mkdirSync(dirname(fullPath), { recursive: true });
-    writeFileSync(fullPath, contents, 'utf8');
+    writeFileSync(fullPath, contents, { encoding: 'utf8', flag: 'wx' });
   }
 
   for (const [index, update] of barrelUpdates.entries()) {
@@ -174,7 +187,7 @@ function applyBarrelUpdate(packageDir: string, update: BarrelUpdate, validatedPa
   mkdirSync(dirname(fullPath), { recursive: true });
 
   if (!existsSync(fullPath)) {
-    writeFileSync(fullPath, `${line}\n`, 'utf8');
+    writeFileSync(fullPath, `${line}\n`, { encoding: 'utf8', flag: 'wx' });
     return;
   }
 

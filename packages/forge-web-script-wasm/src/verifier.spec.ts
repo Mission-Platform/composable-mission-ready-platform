@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { compileForgeWebScriptWasm } from './emitter.js';
+import { sha256ArtifactHash } from './hash.js';
 import { verifyForgeWebScriptWasmArtifact } from './verifier.js';
 
 import type {
@@ -98,6 +99,11 @@ function appendCustomSection(bytes: Uint8Array, name: string): Uint8Array {
 }
 
 describe('Forge Web Script Wasm artifact verifier', () => {
+  it('uses the versioned SHA-256 artifact identity format', () => {
+    expect(sha256ArtifactHash(new TextEncoder().encode('abc'))).toBe(
+      'sha256-v1:ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad',
+    );
+  });
   it('accepts a valid deterministic artifact with an exported function and checks both variants', () => {
     const backend = backendFor(exportedModule());
     expect(backend.wasm).toBeDefined();

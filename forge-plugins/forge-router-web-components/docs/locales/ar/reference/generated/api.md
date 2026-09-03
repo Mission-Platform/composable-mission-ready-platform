@@ -31,7 +31,7 @@ export class MpRouterOutletElement extends HTMLElement
 
 منفذ جهاز التوجيه الذي يقوم بتثبيت عرض DOM المحايد للمسار. قد تمر التطبيقات أ
 `viewAdapter` إلى جهاز التوجيه عندما تحتاج العروض إلى دورة حياة مخصصة؛ وإلا أ
-يتم عرض Node أو مصنع DOM في `route.component` مباشرةً.
+يتم عرض Node أو مصنع DOM في `route.component` مباشرة.
 
 ### import org.registerRouterElements
 
@@ -148,7 +148,7 @@ export const ForgeRouterOutlet;
 **النوع:** مكون
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
 علامة العنصر المخصص المستخدمة للارتباطات المحايدة المجمعة.
@@ -158,7 +158,7 @@ export const MpLink;
 **النوع:** مكون
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 علامة العنصر المخصص المستخدمة للمنافذ المحايدة المجمعة.
@@ -259,7 +259,7 @@ export const useForgeRouter;
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-اقرأ فقط إمكانيات التنقل/الحل الضرورية.
+اقرأ فقط قدرات التنقل/الحل الضرورية.
 
 ### useMpRoute
 
@@ -300,6 +300,16 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 | الاسم  | اكتب                               | الوصف |
 | ------ | ---------------------------------- | ----- |
 | خيارات | MpWebComponentsRouterOptions<View> |       |
+
+### MpRouterLoadingFallback
+
+**النوع:** مكون
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+المحتوى الذي يتم عرضه بواسطة منفذ جهاز التوجيه أثناء تحميل طريقة عرض الوجهة.
 
 ### MpWebComponentsRouter
 

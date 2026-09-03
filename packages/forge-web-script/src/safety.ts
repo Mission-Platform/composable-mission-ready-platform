@@ -276,7 +276,7 @@ function isNonOwningEscapeResult(result: ForgeWebScriptTypeName, context: Safety
     result.reference === 'Vector' ||
     result.name === 'bytes' ||
     result.name === 'string' ||
-    context.module.structs.some(({ name }) => name === result.reference) ||
+    context.module.structs.some(({ name, record }) => name === result.reference && record !== true) ||
     context.module.enums.some(({ name }) => name === result.reference)
   );
 }
@@ -321,6 +321,13 @@ function classifyReturnedValue(expression: ForgeWebScriptExpression, context: Sa
       };
     }
     case 'struct-value': {
+      if (
+        context.module.structs.some(
+          ({ name, record }) =>
+            record === true && (name === expression.type.name || name === expression.type.reference),
+        )
+      )
+        return { allowed: true };
       if (expression.type.ownership === 'owned' || expression.type.ownership === 'shared') return { allowed: true };
       if (isForgeWebScriptPodType(expression.type, context.module)) return { allowed: true };
       return {

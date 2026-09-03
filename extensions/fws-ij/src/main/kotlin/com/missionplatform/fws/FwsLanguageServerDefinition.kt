@@ -1,6 +1,7 @@
 package com.missionplatform.fws
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.isTrusted
 import com.intellij.openapi.vfs.VirtualFile
 import com.redhat.devtools.lsp4ij.LanguageServerFactory
 import com.redhat.devtools.lsp4ij.server.OSProcessStreamConnectionProvider
@@ -15,7 +16,7 @@ class FwsLanguageServerDefinition : LanguageServerFactory {
         }
         val projectRoot = project.basePath
             ?: error("Forge Web Script cannot start because the project has no workspace root.")
-        val command = FwsCommandLine.build(settings, projectRoot)
+        val command = FwsCommandLine.build(settings, projectRoot, project.isTrusted())
         return FwsStreamConnectionProvider(command, settings.trace)
     }
 }

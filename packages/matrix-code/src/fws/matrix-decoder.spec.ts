@@ -84,6 +84,7 @@ describe('matrix-decoder.fws artifact', () => {
   it('round-trips compact Aztec symbols', async () => {
     await expect(roundTrip(loadEncoderSync, loadSync, 3, 'Aztec')).resolves.toBe('Aztec');
     await expect(roundTrip(loadEncoder, load, 3, 'Hello')).resolves.toBe('Hello');
+    await expect(roundTrip(loadEncoderSync, loadSync, 3, 'mission-platform-9')).resolves.toBe('mission-platform-9');
   });
 
   it('returns empty output for unsupported dimensions', () => {

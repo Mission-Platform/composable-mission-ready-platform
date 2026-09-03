@@ -48,6 +48,15 @@ interface StaticServer {
   close: () => Promise<void>;
 }
 
+const MAX_CHILD_LOG_CHARS = 256 * 1024;
+const LOG_TRUNCATION_MARKER = '\n...[child output truncated]...\n';
+
+function appendBounded(current: string, chunk: string): string {
+  const combined = current + chunk;
+  if (combined.length <= MAX_CHILD_LOG_CHARS) return combined;
+  return LOG_TRUNCATION_MARKER + combined.slice(-MAX_CHILD_LOG_CHARS + LOG_TRUNCATION_MARKER.length);
+}
+
 const MIME_TYPES: Record<string, string> = {
   '.css': 'text/css; charset=utf-8',
   '.gif': 'image/gif',
@@ -94,6 +103,7 @@ async function runBuild(
     }) as unknown as PipedProcess;
     let output = '';
     let settled = false;
+    let terminating = false;
     let timeout: ReturnType<typeof setTimeout> | undefined;
     const finish = (result: { ok: true; log: string } | { ok: false; log: string; error: string }): void => {
       if (settled) return;
@@ -102,6 +112,7 @@ async function runBuild(
       resolve(result);
     };
     timeout = setTimeout(() => {
+      terminating = true;
       void terminateProcessTree(child, { graceMs: 250 }).then(() =>
         finish({
           ok: false,
@@ -111,12 +122,15 @@ async function runBuild(
       );
     }, 120_000);
     const append = (chunk: Buffer): void => {
-      output += chunk.toString();
+      output = appendBounded(output, chunk.toString());
     };
     child.stdout.on('data', append);
     child.stderr.on('data', append);
-    child.on('error', (error) => finish({ ok: false, log: output, error: errorMessage(error) }));
+    child.on('error', (error) => {
+      if (!terminating) finish({ ok: false, log: output, error: errorMessage(error) });
+    });
     child.on('close', (code, signal) => {
+      if (terminating) return;
       const log = output || `build exited with code=${code ?? 'null'} signal=${signal ?? 'null'}`;
       if (code === 0) finish({ ok: true, log });
       else
@@ -129,7 +143,8 @@ async function runBuild(
   });
 }
 
-async function startStaticServer(root: string, requestedPort = 0): Promise<StaticServer> {
+export async function startStaticServer(root: string, requestedPort = 0): Promise<StaticServer> {
+  const realRoot = fs.realpathSync(root);
   const server = http.createServer((request, response) => {
     try {
       const requestUrl = new URL(request.url ?? '/', 'http://127.0.0.1');
@@ -138,20 +153,31 @@ async function startStaticServer(root: string, requestedPort = 0): Promise<Stati
         response.writeHead(204).end();
         return;
       }
-      const candidate = path.resolve(root, `.${requestedPath}`);
-      if (!candidate.startsWith(`${path.resolve(root)}${path.sep}`) && candidate !== path.resolve(root)) {
+      const candidate = path.resolve(realRoot, `.${requestedPath}`);
+      if (!candidate.startsWith(`${realRoot}${path.sep}`) && candidate !== realRoot) {
         response.writeHead(403).end('Forbidden');
         return;
       }
-      const filePath = candidate === path.resolve(root) ? path.join(root, 'index.html') : candidate;
+      const filePath = candidate === realRoot ? path.join(realRoot, 'index.html') : candidate;
       if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
         response.writeHead(404).end('Not found');
         return;
       }
+      let realFilePath: string;
+      try {
+        realFilePath = fs.realpathSync(filePath);
+      } catch {
+        response.writeHead(404).end('Not found');
+        return;
+      }
+      if (!realFilePath.startsWith(`${realRoot}${path.sep}`) && realFilePath !== realRoot) {
+        response.writeHead(403).end('Forbidden');
+        return;
+      }
       response.writeHead(200, {
-        'content-type': MIME_TYPES[path.extname(filePath).toLowerCase()] ?? 'application/octet-stream',
+        'content-type': MIME_TYPES[path.extname(realFilePath).toLowerCase()] ?? 'application/octet-stream',
       });
-      fs.createReadStream(filePath).pipe(response);
+      fs.createReadStream(realFilePath).pipe(response);
     } catch (error) {
       response.writeHead(500).end(errorMessage(error));
     }
@@ -319,10 +345,23 @@ async function runEgoChecks(
     let diagnostics = '';
     let settled = false;
     let timedOut = false;
+    let terminating = false;
     const timeout = setTimeout(() => {
       timedOut = true;
-      diagnostics += `Ego Lite timed out after ${timeoutMs}ms`;
-      void terminateProcessTree(child, { graceMs: 250 });
+      terminating = true;
+      diagnostics = appendBounded(diagnostics, `Ego Lite timed out after ${timeoutMs}ms`);
+      void terminateProcessTree(child, { graceMs: 250 }).then(() => {
+        if (settled) return;
+        const message = diagnostics || `Ego Lite timed out after ${timeoutMs}ms`;
+        finish(
+          entries.map((entry) => ({
+            id: entry.id,
+            ...classifyFailure('environment', new Error(message)),
+            message,
+            evidence: { log: egoFailureEvidence(repositoryRoot, artifactPrefix, entry.id, message) },
+          })),
+        );
+      });
     }, timeoutMs);
     const finish = (value: EgoStoryResult[]): void => {
       if (settled) return;
@@ -332,7 +371,7 @@ async function runEgoChecks(
     };
     const parseOutput = (chunk: Buffer): void => {
       const text = chunk.toString();
-      pending += text;
+      pending = appendBounded(pending, text);
       for (const line of pending.split('\n').slice(0, -1)) {
         try {
           const message = JSON.parse(line) as { kind?: string; result?: EgoStoryResult };
@@ -345,12 +384,13 @@ async function runEgoChecks(
     };
     const appendDiagnostics = (chunk: Buffer): void => {
       const text = chunk.toString();
-      diagnostics += text;
+      diagnostics = appendBounded(diagnostics, text);
       parseOutput(chunk);
     };
     child.stdout.on('data', parseOutput);
     child.stderr.on('data', appendDiagnostics);
     child.on('error', (error) => {
+      if (terminating) return;
       const message = errorMessage(error);
       finish(
         entries.map((entry) => ({
@@ -362,6 +402,7 @@ async function runEgoChecks(
       );
     });
     child.on('close', (code) => {
+      if (terminating) return;
       if (code !== 0 && results.length === 0) {
         const message = timedOut ? diagnostics : diagnostics || `ego-browser exited with code ${code ?? 'null'}`;
         finish(

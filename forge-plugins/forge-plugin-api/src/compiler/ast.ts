@@ -23,12 +23,14 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string> = new Set([
   "hasSlot",
 ]);
 export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string> = new Set([
+  "Suspense",
   "Teleport",
   "Transition",
   "TransitionGroup",
   "HtmlContent",
 ]);
 export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string> = new Set([
+  "Suspense",
   "Teleport",
   "Transition",
   "TransitionGroup",
@@ -175,10 +177,10 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
       " * primitives, generated for the web-components build so the compiled components",
       " * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).",
       " */",
-      `import type { HtmlContentResult, TemplateResult } from '${frameworkAdapterModule("web-components")}';`,
+      `import type { HtmlContentResult, SuspenseResult, TemplateResult } from '${frameworkAdapterModule("web-components")}';`,
       "",
       "/** A node in the rendered tree — the web-components variant of the neutral `MpElement`. */",
-      "export type MpElement = TemplateResult | HtmlContentResult;",
+      "export type MpElement = TemplateResult | HtmlContentResult | SuspenseResult;",
       "",
       "/** Anything that may render as a child — the web-components variant of the neutral `MpChild`. */",
       "export type MpChild = MpElement | string | number | boolean | null | undefined;",

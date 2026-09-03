@@ -1,6 +1,6 @@
-import { colorValue, spacingValue } from '@/tokens';
+import { colorValue, spacingValue } from '../../../tokens';
 
-import type { EmailColor, EmailSpacingScale } from '@/tokens';
+import type { EmailColor, EmailSpacingScale } from '../../../tokens';
 import type { MpChild, MpElement } from '@mission-platform/forge';
 
 export interface EmailSectionProperties {

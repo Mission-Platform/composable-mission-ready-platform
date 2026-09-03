@@ -29,7 +29,7 @@ Un lien de routeur neutre présenté comme un élément d'ancrage normal et acce
 export class MpRouterOutletElement extends HTMLElement
 ```
 
-Prise de routeur qui monte la vue DOM neutre d'une route. Les candidatures peuvent passer un
+Prise de routeur qui monte la vue DOM neutre d'un itinéraire. Les candidatures peuvent passer un
 `viewAdapter` au routeur lorsque les vues nécessitent un cycle de vie personnalisé ; sinon un
 Node, chaîne ou fabrique DOM dans `route.component` est rendu directement.
 
@@ -148,7 +148,7 @@ Aucune description fournie.
 **Genre :** composant
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
 Balise d'élément personnalisé utilisée pour les liens neutres compilés.
@@ -158,7 +158,7 @@ Balise d'élément personnalisé utilisée pour les liens neutres compilés.
 **Genre :** composant
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 Balise d'élément personnalisé utilisée pour les prises neutres compilées.
@@ -300,6 +300,16 @@ historique, gardes, redirections, abonnements et comportement de défilement du 
 | Nom     | Tapez                              | Descriptif |
 | ------- | ---------------------------------- | ---------- |
 | options | MpWebComponentsRouterOptions<View> |            |
+
+### MpRouterLoadingFallback
+
+**Genre :** composant
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+Contenu rendu par une prise de routeur pendant le chargement d'une vue de destination.
 
 ### MpWebComponentsRouter
 

@@ -103,6 +103,54 @@ class FwsCommandLineTest {
     }
 
     @Test
+    fun rejectsAnExplicitServerPathForAnUntrustedProject() {
+        val root = Files.createTempDirectory("fws-command-test")
+        val server = writeExecutableFile(root.resolve("custom/server.js"), "#!/usr/bin/env node\n")
+
+        val error = assertFailsWith<IllegalArgumentException> {
+            FwsCommandLine.build(
+                FwsLaunchSettings(serverCommand = server.pathString),
+                root.toString(),
+                projectTrusted = false,
+            )
+        }
+
+        assertContains(error.message.orEmpty(), "untrusted project")
+    }
+
+    @Test
+    fun doesNotResolveAnUntrustedProjectNodeModulesShim() {
+        val root = Files.createTempDirectory("fws-command-test")
+        val entryPoint = writeExecutableFile(root.resolve("node_modules/@mission-platform/forge-web-script-lsp/dist/main.js"), "#!/usr/bin/env node\n")
+        writePnpmShim(root.resolve("node_modules/.bin/forge-web-script-lsp"), entryPoint)
+
+        val error = assertFailsWith<IllegalStateException> {
+            FwsCommandLine.build(
+                FwsLaunchSettings(serverCommand = "forge-web-script-lsp"),
+                root.toString(),
+                projectTrusted = false,
+            )
+        }
+
+        assertContains(error.message.orEmpty(), "could not find a project-installed")
+    }
+
+    @Test
+    fun rejectsAnExplicitNodePathForAnUntrustedProject() {
+        val root = Files.createTempDirectory("fws-command-test")
+
+        val error = assertFailsWith<IllegalArgumentException> {
+            FwsCommandLine.build(
+                FwsLaunchSettings(nodeExecutable = root.resolve("node").pathString),
+                root.toString(),
+                projectTrusted = false,
+            )
+        }
+
+        assertContains(error.message.orEmpty(), "untrusted project")
+    }
+
+    @Test
     fun rejectsMissingConfiguredExecutableWithActionableMessage() {
         val root = Files.createTempDirectory("fws-command-test")
         val error = assertFailsWith<IllegalArgumentException> {

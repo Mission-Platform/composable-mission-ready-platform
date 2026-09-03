@@ -1,4 +1,4 @@
-import { type MpRef, useCallback, useEffect, useRef, useState } from '@mission-platform/forge';
+import { type MpRef, useEffect, useRef, useState } from '@mission-platform/forge';
 
 /** Reactive state and controls returned by {@link useMidi}. */
 export interface MidiControls {
@@ -47,54 +47,77 @@ export function useMidi(): MidiControls {
   // eslint-disable-next-line unicorn/no-useless-undefined
   const [error, setError] = useState<string | undefined>(undefined);
   const access: MpRef<MIDIAccess | undefined> = useRef<MIDIAccess | undefined>(undefined);
+  const mounted: MpRef<boolean> = useRef(false);
+  const stateChangeListener: MpRef<((event: Event) => void) | undefined> = useRef<((event: Event) => void) | undefined>(
+    undefined,
+  );
+  const requestId: MpRef<number> = useRef(0);
 
-  const syncPorts = useCallback((current: MIDIAccess) => {
+  const syncPorts = (current: MIDIAccess): void => {
     setInputs(() => [...current.inputs.values()]);
     setOutputs(() => [...current.outputs.values()]);
-  }, []);
+  };
 
-  const requestAccess = useCallback(
-    (options?: MIDIOptions) => {
-      if (!isSupported) {
-        setError(() => 'Web MIDI API is not supported');
-        return;
-      }
+  const removeStateChangeListener = (): void => {
+    const current = access.current;
+    const listener = stateChangeListener.current;
+    if (current !== undefined && listener !== undefined) {
+      current.removeEventListener('statechange', listener);
+    }
+    stateChangeListener.current = undefined;
+  };
 
-      void globalThis.navigator.requestMIDIAccess(options).then(
-        (granted) => {
-          access.current = granted;
-          setIsConnected(() => true);
-          setError(undefined);
-          syncPorts(granted);
-          granted.addEventListener('statechange', () => {
-            syncPorts(granted);
-          });
-        },
-        (error_: unknown) => {
-          setError(() => (error_ instanceof Error ? error_.message : String(error_)));
-        },
-      );
-    },
-    [isSupported, syncPorts, access],
-  );
+  const requestAccess = (options?: MIDIOptions): void => {
+    if (!isSupported) {
+      setError(() => 'Web MIDI API is not supported');
+      return;
+    }
 
-  const playNote = useCallback(
-    (note: number, velocity = DEFAULT_VELOCITY, durationMs = 300, output?: MIDIOutput) => {
-      const current = access.current;
-      const target = output ?? (current === undefined ? undefined : [...current.outputs.values()][0]);
-      if (target === undefined) {
-        return;
-      }
+    const currentRequestId = requestId.current + 1;
+    requestId.current = currentRequestId;
+    void globalThis.navigator.requestMIDIAccess(options).then(
+      (granted) => {
+        if (!mounted.current || currentRequestId !== requestId.current) return;
+        if (access.current !== granted) {
+          removeStateChangeListener();
+        }
+        access.current = granted;
+        setIsConnected(() => true);
+        setError(undefined);
+        syncPorts(granted);
+        if (stateChangeListener.current === undefined) {
+          const listener = (): void => {
+            if (mounted.current && access.current === granted) syncPorts(granted);
+          };
+          stateChangeListener.current = listener;
+          granted.addEventListener('statechange', listener);
+        }
+      },
+      (error_: unknown) => {
+        if (!mounted.current || currentRequestId !== requestId.current) return;
+        setError(() => (error_ instanceof Error ? error_.message : String(error_)));
+      },
+    );
+  };
 
-      const now = globalThis.performance === undefined ? 0 : globalThis.performance.now();
-      target.send([NOTE_ON, note, velocity]);
-      target.send([NOTE_OFF, note, 0], now + durationMs);
-    },
-    [access],
-  );
+  const playNote = (note: number, velocity = DEFAULT_VELOCITY, durationMs = 300, output?: MIDIOutput): void => {
+    const current = access.current;
+    const target = output ?? (current === undefined ? undefined : [...current.outputs.values()][0]);
+    if (target === undefined) {
+      return;
+    }
+
+    const now = globalThis.performance === undefined ? 0 : globalThis.performance.now();
+    target.send([NOTE_ON, note, velocity]);
+    target.send([NOTE_OFF, note, 0], now + durationMs);
+  };
 
   useEffect(() => {
+    mounted.current = true;
     return () => {
+      mounted.current = false;
+      requestId.current += 1;
+      removeStateChangeListener();
       access.current = undefined;
     };
   }, [access]);

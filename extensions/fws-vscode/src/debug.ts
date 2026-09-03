@@ -3,7 +3,15 @@ import path from 'node:path';
 
 import * as vscode from 'vscode';
 
-import { assertNodeRuntime, configurationSection, readConfiguration, type ConfigurationReader } from './server-path.js';
+import {
+  assertNodeRuntime,
+  assertWorkingDirectoryAllowed,
+  assertWorkspaceRelativeExecutableAllowed,
+  assertWorkspaceRelativeOverrideAllowed,
+  configurationSection,
+  readConfiguration,
+  type ConfigurationReader,
+} from './server-path.js';
 
 export interface ForgeWebScriptLaunchConfiguration extends vscode.DebugConfiguration {
   readonly type: 'fws';
@@ -74,6 +82,22 @@ export function createDebugConfigurationProvider(
       configuration: vscode.DebugConfiguration,
     ): Promise<vscode.DebugConfiguration> => {
       const settings = readDebugSettings(vscode.workspace.getConfiguration(configurationSection, folder?.uri));
+      assertWorkspaceRelativeOverrideAllowed(
+        `${configurationSection}.dapPath`,
+        settings.dapPath,
+        vscode.workspace.isTrusted,
+      );
+      assertWorkspaceRelativeExecutableAllowed(
+        `${configurationSection}.nodePath`,
+        settings.nodePath,
+        vscode.workspace.isTrusted,
+      );
+      assertWorkspaceRelativeExecutableAllowed(
+        `${configurationSection}.runtimePath`,
+        configuration.runtimePath || settings.runtimePath,
+        vscode.workspace.isTrusted,
+      );
+      assertWorkingDirectoryAllowed(`${configurationSection}.cwd`, configuration.cwd, vscode.workspace.isTrusted);
       const adapterPath = resolveDebugAdapterPath(context, settings, folder);
       await assertNodeRuntime(settings.nodePath);
       await assertDebugAdapterAvailable(adapterPath);
@@ -104,6 +128,26 @@ export function createDebugAdapterDescriptorFactory(
     ): vscode.DebugAdapterDescriptor {
       const folder = session.workspaceFolder;
       const settings = readDebugSettings(vscode.workspace.getConfiguration(configurationSection, folder?.uri));
+      assertWorkspaceRelativeOverrideAllowed(
+        `${configurationSection}.dapPath`,
+        settings.dapPath,
+        vscode.workspace.isTrusted,
+      );
+      assertWorkspaceRelativeExecutableAllowed(
+        `${configurationSection}.nodePath`,
+        settings.nodePath,
+        vscode.workspace.isTrusted,
+      );
+      assertWorkspaceRelativeExecutableAllowed(
+        `${configurationSection}.runtimePath`,
+        session.configuration.runtimePath || settings.runtimePath,
+        vscode.workspace.isTrusted,
+      );
+      assertWorkingDirectoryAllowed(
+        `${configurationSection}.cwd`,
+        session.configuration.cwd,
+        vscode.workspace.isTrusted,
+      );
       const adapterPath = resolveDebugAdapterPath(context, settings, folder);
       const cwd = resolveWorkingDirectory(session.configuration.cwd, folder, context.extensionPath);
       return new vscode.DebugAdapterExecutable(settings.nodePath, [adapterPath], { cwd });

@@ -1,5 +1,16 @@
 # @mission-platform/router
 
+## 1.1.0
+
+### Minor Changes
+
+- f216404: add framework-neutral router contracts and compiler tooling integration
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+
 ## 1.0.0
 
 ### Major Changes

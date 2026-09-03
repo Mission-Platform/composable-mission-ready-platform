@@ -1,6 +1,6 @@
-import { combineStyleValues, colorValue, radiusValue, spacingValue } from '@/tokens';
+import { combineStyleValues, colorValue, radiusValue, spacingValue } from '../../../tokens';
 
-import type { EmailColor, EmailRadiusScale, EmailSpacingScale } from '@/tokens';
+import type { EmailColor, EmailRadiusScale, EmailSpacingScale } from '../../../tokens';
 import type { MpChild, MpElement } from '@mission-platform/forge';
 
 export interface EmailCardProperties {

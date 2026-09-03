@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from '@mission-platform/forge';
+import { useEffect, useState } from '@mission-platform/forge';
 
 /** Per-utterance options applied to a {@link useSpeechSynthesis} `speak` call. */
 export interface SpeakOptions {
@@ -68,72 +68,69 @@ export function useSpeechSynthesis(): SpeechSynthesisControls {
     };
   }, [isSupported]);
 
-  const speak = useCallback(
-    (text: string, options?: SpeakOptions) => {
-      if (!isSupported) {
-        return;
-      }
+  const speak = (text: string, options?: SpeakOptions): void => {
+    if (!isSupported) {
+      return;
+    }
 
-      const synth = globalThis.speechSynthesis;
-      const utterance = new SpeechSynthesisUtterance(text);
+    const synth = globalThis.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(text);
 
-      if (options?.lang !== undefined) {
-        utterance.lang = options.lang;
-      }
-      if (options?.voice !== undefined) {
-        utterance.voice = options.voice;
-      }
-      if (options?.pitch !== undefined) {
-        utterance.pitch = options.pitch;
-      }
-      if (options?.rate !== undefined) {
-        utterance.rate = options.rate;
-      }
-      if (options?.volume !== undefined) {
-        utterance.volume = options.volume;
-      }
+    if (options?.lang !== undefined) {
+      utterance.lang = options.lang;
+    }
+    if (options?.voice !== undefined) {
+      utterance.voice = options.voice;
+    }
+    if (options?.pitch !== undefined) {
+      utterance.pitch = options.pitch;
+    }
+    if (options?.rate !== undefined) {
+      utterance.rate = options.rate;
+    }
+    if (options?.volume !== undefined) {
+      utterance.volume = options.volume;
+    }
 
-      utterance.addEventListener('start', () => {
-        setIsSpeaking(() => true);
-        setIsPaused(() => false);
-      });
-      utterance.addEventListener('pause', () => {
-        setIsPaused(() => true);
-      });
-      utterance.addEventListener('resume', () => {
-        setIsPaused(() => false);
-      });
-      utterance.addEventListener('end', () => {
-        setIsSpeaking(() => false);
-        setIsPaused(() => false);
-      });
-      utterance.addEventListener('error', () => {
-        setIsSpeaking(() => false);
-        setIsPaused(() => false);
-      });
+    utterance.addEventListener('start', () => {
+      setIsSpeaking(() => true);
+      setIsPaused(() => false);
+    });
+    utterance.addEventListener('pause', () => {
+      setIsPaused(() => true);
+    });
+    utterance.addEventListener('resume', () => {
+      setIsPaused(() => false);
+    });
+    utterance.addEventListener('end', () => {
+      setIsSpeaking(() => false);
+      setIsPaused(() => false);
+    });
+    utterance.addEventListener('error', () => {
+      setIsSpeaking(() => false);
+      setIsPaused(() => false);
+    });
 
-      synth.speak(utterance);
-    },
-    [isSupported],
-  );
+    synth.speak(utterance);
+  };
 
-  const pause = useCallback(() => {
+  const pause = (): void => {
     if (isSupported) {
       globalThis.speechSynthesis.pause();
     }
-  }, [isSupported]);
+  };
 
-  const resume = useCallback(() => {
+  const resume = (): void => {
     if (isSupported) {
       globalThis.speechSynthesis.resume();
     }
-  }, [isSupported]);
+  };
 
-  const cancel = useCallback(() => {
+  const cancel = (): void => {
     if (isSupported) {
       globalThis.speechSynthesis.cancel();
     }
-  }, [isSupported]);
+  };
 
   return { isSupported, isSpeaking, isPaused, voices, speak, pause, resume, cancel };
 }

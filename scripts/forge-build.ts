@@ -1,7 +1,10 @@
 import { spawn } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
+import fsSync from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+
+import { terminateProcessTree } from './runtime-validation/cleanup.ts';
 
 export const FORGE_BUILD_TARGETS = ['forge', 'react', 'vue', 'svelte', 'solid', 'web-components'] as const;
 
@@ -52,8 +55,21 @@ function isPathInside(parent: string, candidate: string): boolean {
   return relative !== '' && !relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative);
 }
 
+function realPathWithMissingSuffix(candidate: string): string {
+  const resolved = path.resolve(candidate);
+  const missing: string[] = [];
+  let existing = resolved;
+  while (!fsSync.existsSync(existing)) {
+    const parent = path.dirname(existing);
+    if (parent === existing) return resolved;
+    missing.unshift(path.basename(existing));
+    existing = parent;
+  }
+  return path.join(fsSync.realpathSync(existing), ...missing);
+}
+
 function assertSafeStageRoot(packageRoot: string, stageRoot: string): void {
-  if (!isPathInside(packageRoot, stageRoot)) {
+  if (!isPathInside(realPathWithMissingSuffix(packageRoot), realPathWithMissingSuffix(stageRoot))) {
     throw new Error(`Forge stage root must be below the package root: ${stageRoot}`);
   }
 }
@@ -359,37 +375,31 @@ async function executeCommand(context: ForgeBuildCommandContext): Promise<void> 
   if (executable === undefined) throw new Error('Forge build command must not be empty.');
   await new Promise<void>((resolve, reject) => {
     let settled = false;
-    let killTimer: ReturnType<typeof setTimeout> | undefined;
+    let aborting = false;
     const child = spawn(executable, arguments_, {
       cwd: context.packageRoot,
       env: context.env,
       stdio: 'inherit',
+      detached: true,
     });
     const finish = (error?: Error): void => {
       if (settled) return;
       settled = true;
-      if (killTimer !== undefined) clearTimeout(killTimer);
       context.signal.removeEventListener('abort', abort);
       if (error === undefined) resolve();
       else reject(error);
     };
     const abort = (): void => {
-      child.kill('SIGTERM');
-      killTimer = setTimeout(() => child.kill('SIGKILL'), 2000);
-      if (settled) return;
-      settled = true;
-      context.signal.removeEventListener('abort', abort);
-      reject(new Error('Forge build was cancelled.'));
+      if (settled || aborting) return;
+      aborting = true;
+      void terminateProcessTree(child, { graceMs: 2000 }).then(
+        () => finish(new Error('Forge build was cancelled.')),
+        (error: unknown) => finish(new Error(`Forge build cancellation cleanup failed: ${String(error)}`)),
+      );
     };
-    if (context.signal.aborted) {
-      abort();
-      return;
-    }
-    context.signal.addEventListener('abort', abort, { once: true });
     child.once('error', (error) => finish(error));
     child.once('exit', (code, signal) => {
-      if (killTimer !== undefined) clearTimeout(killTimer);
-      if (settled) return;
+      if (settled || aborting) return;
       if (code === 0) {
         finish();
       } else {
@@ -398,6 +408,8 @@ async function executeCommand(context: ForgeBuildCommandContext): Promise<void> 
         );
       }
     });
+    if (context.signal.aborted) abort();
+    else context.signal.addEventListener('abort', abort, { once: true });
   });
 }
 
@@ -422,10 +434,11 @@ export async function runForgeBuild(options: ForgeBuildOptions): Promise<BuildPr
     env: commandEnvironment({ ...options, target }, stageRoot),
     signal: controller.signal,
   };
+  let buildPromise: Promise<void> | undefined;
 
   try {
     if (controller.signal.aborted) throw new Error('Forge build was cancelled.');
-    const buildPromise = (options.runCommand ?? executeCommand)(context);
+    buildPromise = (options.runCommand ?? executeCommand)(context);
     await new Promise<void>((resolve, reject) => {
       const onAbort = (): void => reject(new Error('Forge build was cancelled.'));
       controller.signal.addEventListener('abort', onAbort, { once: true });
@@ -436,6 +449,9 @@ export async function runForgeBuild(options: ForgeBuildOptions): Promise<BuildPr
     }
     return await promoteTarget({ packageRoot, stageRoot, target });
   } finally {
+    if (controller.signal.aborted && buildPromise !== undefined) {
+      await Promise.race([buildPromise.catch(() => {}), new Promise<void>((resolve) => setTimeout(resolve, 2500))]);
+    }
     if (timeout !== undefined) clearTimeout(timeout);
     options.signal?.removeEventListener('abort', abortParent);
     await removeStage(packageRoot, stageRoot);

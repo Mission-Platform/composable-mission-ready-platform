@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { copyForgeFile, downloadForgeFile, fileNameFromPath, sendBundleToBridge } from './delivery';
+import { isAllowedForgeBridgeUrl } from './messages';
 
 import type { ForgeExportBundle, ForgeExportFile } from '@mission-platform/forge-figma';
 
@@ -17,6 +18,25 @@ const bundle: ForgeExportBundle = {
 };
 
 describe('Forge artifact delivery', () => {
+  it('only permits the local repository bridge endpoint', () => {
+    expect(isAllowedForgeBridgeUrl('http://127.0.0.1:8787/export')).toBe(true);
+    expect(isAllowedForgeBridgeUrl('http://localhost:8787/export?redirect=https://evil.test')).toBe(false);
+    expect(isAllowedForgeBridgeUrl('https://example.test/export')).toBe(false);
+    expect(isAllowedForgeBridgeUrl('http://127.0.0.1:8787/other')).toBe(false);
+  });
+
+  it('rejects an unsafe bridge configuration before making a request', async () => {
+    const fetcher = vi.fn<typeof fetch>();
+    await expect(
+      sendBundleToBridge(
+        { bridgeUrl: 'https://example.test/export', repositoryRootId: 'repo', targetDirectory: 'components' },
+        bundle,
+        false,
+        fetcher,
+      ),
+    ).rejects.toThrow(/not allowed/);
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   it('uses the authoritative bundle path for safe download names', () => {
     expect(fileNameFromPath('assets/hero image.png')).toBe('hero_image.png');
 
@@ -46,7 +66,12 @@ describe('Forge artifact delivery', () => {
       return Response.json({ protocolVersion: 1, ok: true, results: [] });
     });
     await sendBundleToBridge(
-      { bridgeUrl: 'http://127.0.0.1:8787/export', repositoryRootId: 'repo', targetDirectory: 'components' },
+      {
+        bridgeUrl: 'http://127.0.0.1:8787/export',
+        authToken: 'test-token',
+        repositoryRootId: 'repo',
+        targetDirectory: 'components',
+      },
       bundle,
       true,
       fetcher,
@@ -57,6 +82,12 @@ describe('Forge artifact delivery', () => {
     expect(request.bundle.files[0]?.content).toBe(files[0].content);
     expect(request.bundle.files[2]?.content).toEqual([1, 2, 3]);
     expect(request.overwrite).toBe(true);
+    expect(fetcher).toHaveBeenCalledWith(
+      'http://127.0.0.1:8787/export',
+      expect.objectContaining({
+        headers: { authorization: 'Bearer test-token', 'content-type': 'application/json' },
+      }),
+    );
   });
 
   it('returns structured per-file failures from the bridge without throwing', async () => {
@@ -74,7 +105,12 @@ describe('Forge artifact delivery', () => {
 
     await expect(
       sendBundleToBridge(
-        { bridgeUrl: 'http://127.0.0.1:8787/export', repositoryRootId: 'repo', targetDirectory: 'components' },
+        {
+          bridgeUrl: 'http://127.0.0.1:8787/export',
+          authToken: 'test-token',
+          repositoryRootId: 'repo',
+          targetDirectory: 'components',
+        },
         bundle,
         false,
         fetcher,

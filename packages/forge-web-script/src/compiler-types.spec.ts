@@ -189,6 +189,7 @@ export fn echo(value: string) -> string { return value; }
 
     // Verify the generated declarations contain the expected type signatures
     expect(artifact.declarations).toContain('export interface ForgeWebScriptExports');
+    expect(artifact.declarations).toContain('export interface');
     expect(artifact.declarations).toContain('readonly currentTime: () => bigint;');
     expect(artifact.declarations).toContain('readonly roundTrip: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;');
     expect(artifact.declarations).toContain('readonly echo: (value: string) => string;');

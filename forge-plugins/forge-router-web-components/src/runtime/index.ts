@@ -10,7 +10,7 @@ export {
 } from './history';
 export { MpRouterLinkElement, MpRouterOutletElement, registerRouterElements } from './elements';
 export { createWebComponentsRouter, routeHref } from './router';
-export type { MpWebComponentsRouter, MpWebComponentsRouterOptions } from './router';
+export type { MpRouterLoadingFallback, MpWebComponentsRouter, MpWebComponentsRouterOptions } from './router';
 
 let activeRouter: MpWebComponentsRouter<unknown> | undefined;
 

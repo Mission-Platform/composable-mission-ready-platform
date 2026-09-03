@@ -1,5 +1,16 @@
 # @mission-platform/vite-config
 
+## 1.1.1
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- f216404: add framework-neutral router contracts and compiler tooling integration
+- 8a15dbc: add generated package API references and build-time documentation extraction
+- Updated dependencies [c32bb83]
+- Updated dependencies [8a15dbc]
+  - @mission-platform/postcss-config@0.1.3
+
 ## 1.1.0
 
 ### Minor Changes

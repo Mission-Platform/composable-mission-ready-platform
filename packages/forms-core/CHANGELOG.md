@@ -1,5 +1,12 @@
 # @mission-platform/forms-core
 
+## 0.3.1
+
+### Patch Changes
+
+- c32bb83: centralize package documentation generation in the repository build
+- 8a15dbc: add generated package API references and build-time documentation extraction
+
 ## 0.3.0
 
 ### Minor Changes

@@ -38,6 +38,7 @@ describe("benchmark execution pipeline", () => {
         (measurement) => measurement.phase === "execute",
       ),
     ).toBe(true);
+    console.log(result.failures);
     expect(
       result.failures.filter((failure) => failure.category !== "environment"),
     ).toHaveLength(0);

@@ -266,9 +266,10 @@ function emitStatement(
     }
     vueImports.add("watch");
     const source = rewriteExpression(dependencies, scope);
-    return hasCleanup
+    const watchExpression = hasCleanup
       ? `watch(() => ${source}, (_value, _oldValue, onCleanup) => { ${invoke} }, { immediate: true });`
       : `watch(() => ${source}, ${callbackText}, { immediate: true });`;
+    return watchExpression;
   }
   return rewriteExpression(statement, scope);
 }

@@ -43,6 +43,9 @@ export const TRANSITION_GROUP_TAG = "TransitionGroup";
  */
 export const TELEPORT_TAG = "Teleport";
 
+/** Native Svelte 5 async boundary with a `pending` snippet. */
+export const SUSPENSE_TAG = "Suspense";
+
 /** The neutral class-composition helper unwrapped into a Svelte class value. */
 export const CLASS_NAMES_HELPER = "classNames";
 

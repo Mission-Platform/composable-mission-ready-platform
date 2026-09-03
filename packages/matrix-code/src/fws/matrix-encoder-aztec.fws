@@ -58,20 +58,17 @@ fn aztec_stuff_bits(bits: string, word_size: i32) -> string {
 }
 
 fn aztec_word_value(stuffed: string, start: i32, word_size: i32) -> i32 {
-  let mut value: i32 = 0;
-  value = value * 2; if core.bits_get(stuffed, start) { value = value + 1; }
-  value = value * 2; if core.bits_get(stuffed, start + 1) { value = value + 1; }
-  value = value * 2; if core.bits_get(stuffed, start + 2) { value = value + 1; }
-  value = value * 2; if core.bits_get(stuffed, start + 3) { value = value + 1; }
-  if word_size > 4 {
-    value = value * 2; if core.bits_get(stuffed, start + 4) { value = value + 1; }
-    value = value * 2; if core.bits_get(stuffed, start + 5) { value = value + 1; }
-  }
-  if word_size > 6 {
-    value = value * 2; if core.bits_get(stuffed, start + 6) { value = value + 1; }
-    value = value * 2; if core.bits_get(stuffed, start + 7) { value = value + 1; }
-  }
-  return value;
+  let mut b0: i32 = 0; if start >= string_length(stuffed) || string_byte_at(stuffed, start) == 49 { b0 = 1; }
+  let mut b1: i32 = 0; if start + 1 >= string_length(stuffed) || string_byte_at(stuffed, start + 1) == 49 { b1 = 1; }
+  let mut b2: i32 = 0; if start + 2 >= string_length(stuffed) || string_byte_at(stuffed, start + 2) == 49 { b2 = 1; }
+  let mut b3: i32 = 0; if start + 3 >= string_length(stuffed) || string_byte_at(stuffed, start + 3) == 49 { b3 = 1; }
+  let mut b4: i32 = 0; if word_size > 4 { if start + 4 >= string_length(stuffed) { b4 = 1; } else { if string_byte_at(stuffed, start + 4) == 49 { b4 = 1; } } }
+  let mut b5: i32 = 0; if word_size > 4 { if start + 5 >= string_length(stuffed) { b5 = 1; } else { if string_byte_at(stuffed, start + 5) == 49 { b5 = 1; } } }
+  let mut b6: i32 = 0; if word_size > 6 { if start + 6 >= string_length(stuffed) { b6 = 1; } else { if string_byte_at(stuffed, start + 6) == 49 { b6 = 1; } } }
+  let mut b7: i32 = 0; if word_size > 6 { if start + 7 >= string_length(stuffed) { b7 = 1; } else { if string_byte_at(stuffed, start + 7) == 49 { b7 = 1; } } }
+  if word_size == 4 { return b0 * 8 + b1 * 4 + b2 * 2 + b3; }
+  if word_size == 6 { return b0 * 32 + b1 * 16 + b2 * 8 + b3 * 4 + b4 * 2 + b5; }
+  return b0 * 128 + b1 * 64 + b2 * 32 + b3 * 16 + b4 * 8 + b5 * 4 + b6 * 2 + b7;
 }
 
 fn aztec_append_word_bits(data: string, word: i32, word_size: i32) -> string {

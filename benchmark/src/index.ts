@@ -12,4 +12,3 @@ export * from "./adapters/rust-wasm.ts";
 export * from "./adapters/assemblyscript-wasm.ts";
 export * from "./run-node.ts";
 export * from "./run-browser.ts";
-export * from "./web-lua.ts";

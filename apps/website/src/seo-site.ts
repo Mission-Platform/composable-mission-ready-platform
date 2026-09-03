@@ -10,7 +10,7 @@
  */
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from './router';
 
-export const SITE_ORIGIN = 'https://mission-platform.dev';
+export const SITE_ORIGIN = 'https://mission-platform.com';
 
 export const SITE_NAME = 'Mission Platform';
 export const SITE_TITLE = 'Mission Platform — Build boldly. Ship with purpose.';

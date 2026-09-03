@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import { defineLibraryConfig } from '@mission-platform/vite-config';
@@ -237,10 +236,6 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
       ? path.resolve(rootDir, 'src/index.ts')
       : resolvedComponentsModule);
 
-  const vueTscBin = createRequire(path.join(rootDir, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
-    paths: [path.join(rootDir, 'node_modules/@mission-platform/forge')],
-  });
-
   const entry = generateFrameworkSources({
     plugin,
     componentsModule: resolvedComponentsModule,
@@ -298,7 +293,6 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
         framework,
         generatedDir,
         outDir: path.resolve(rootDir, `dist/${framework}`),
-        vueTscBin,
         componentsModule: resolvedComponentsModule,
         publicEntryModule: resolvedPublicEntryModule,
         sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),

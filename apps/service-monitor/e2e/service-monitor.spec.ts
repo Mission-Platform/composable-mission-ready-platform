@@ -41,3 +41,17 @@ test('opens the incident history page', async ({ page }) => {
   await expect(page).toHaveURL(/\/incidents$/);
   await expect(page.getByRole('heading', { name: 'Incidents', exact: true })).toBeVisible();
 });
+
+test('does not serialize private incident details for anonymous page requests', async ({ page }) => {
+  const privateTitle = `private SSR incident ${Date.now()}`;
+  const response = await page.request.post('/api/incidents', {
+    headers: { authorization: 'Bearer test-monitor-token' },
+    data: { title: privateTitle, description: 'private incident details' },
+  });
+
+  expect(response.status()).toBe(201);
+  await page.goto('/incidents');
+
+  expect(await page.content()).not.toContain(privateTitle);
+  expect(await page.content()).not.toContain('private incident details');
+});

@@ -195,16 +195,14 @@ fn unstuff_bits(stuffed: string, word_size: i32) -> string {
       if word_size == 4 { bits = string_concat(bits, "000"); }
       if word_size == 6 { bits = string_concat(bits, "00000"); }
       if word_size == 8 { bits = string_concat(bits, "0000000"); }
-      step = word_size - 1;
     } else {
       if prefix == ones_prefix {
         if word_size == 4 { bits = string_concat(bits, "111"); }
         if word_size == 6 { bits = string_concat(bits, "11111"); }
         if word_size == 8 { bits = string_concat(bits, "1111111"); }
-        step = word_size - 1;
-      } else {
-        bits = aztec_append_stuffed_word(bits, stuffed, index, word_size);
-      }
+        } else {
+          bits = aztec_append_stuffed_word(bits, stuffed, index, word_size);
+        }
     }
     index = index + step;
   }
@@ -237,6 +235,16 @@ fn read_bits(bits: string, offset: i32, count: i32) -> i32 {
   if count == 5 { return b0 * 16 + b1 * 8 + b2 * 4 + b3 * 2 + b4; }
   if count == 8 { return b0 * 128 + b1 * 64 + b2 * 32 + b3 * 16 + b4 * 8 + b5 * 4 + b6 * 2 + b7; }
   return b0 * 1024 + b1 * 512 + b2 * 256 + b3 * 128 + b4 * 64 + b5 * 32 + b6 * 16 + b7 * 8 + b8 * 4 + b9 * 2 + b10;
+}
+
+fn append_word_bits(data: string, value: i32, word_size: i32) -> string {
+  let mut result: string = data;
+  let mut shift: i32 = word_size - 1;
+  while shift >= 0 {
+    result = string_concat(result, aztec_bit(dec.bit_test(value, shift)));
+    shift = shift - 1;
+  }
+  return string_concat(result, "");
 }
 
 fn decode_binary_payload(bits: string) -> string {
@@ -322,11 +330,18 @@ export fn decode_aztec(width: i32, height: i32, modules: Array<i32>, erasures: A
         primitive = 301;
         field_size = 256;
       }
-      let corrected: string = rs.rs_correct(words, total_words - data_words, 301, 256, word_erased);
+      let corrected: string = rs.rs_correct(words, total_words - data_words, primitive, field_size, word_erased);
       if string_length(corrected) == 0 { return ""; }
-      let stuffed: string = string_slice(message, start_pad, start_pad + data_words * word_size);
+      let mut corrected_bits: string = "";
+      let mut corrected_index: i32 = 0;
+      while corrected_index < data_words {
+        corrected_bits = append_word_bits(corrected_bits, dec.dget(corrected, corrected_index), word_size);
+        corrected_index = corrected_index + 1;
+      }
+      let stuffed: string = string_slice(corrected_bits, 0, data_words * word_size);
       let payload_bits: string = unstuff_bits(stuffed, word_size);
-      return string_concat(decode_binary_payload(payload_bits), "");
+      let payload: string = decode_binary_payload(payload_bits);
+      return string_concat(payload, "");
     }
     split = split + 1;
   }
