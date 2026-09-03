@@ -1,82 +1,82 @@
-# 외부 소비자 설정
+# External Consumer Setup
 
-정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
+This guide explains how to consume Mission Platform packages in projects located outside of the main monorepo. It focuses on using framework-specific builds and managing design tokens.
 
-> 영어 원문: [docs/external-consumer-setup.md](../../external-consumer-setup.md)
-> 언어: 한국어 (ko)
+## Framework Selection via Conditions
 
-이 가이드에서는 기본 모노레포 외부에 있는 프로젝트에서 Mission Platform 패키지를 사용하는 방법을 설명합니다. 프레임워크별 빌드 사용 및 디자인 토큰 관리에 중점을 둡니다.
+Mission Platform components are authored once using `@mission-platform/forge` and distributed as multiple framework-specific bundles (Vue 3, React, Solid, and Web Components) within a single package.
 
-## 조건을 통한 프레임워크 선택
+To select the correct bundle, you must configure your build tool and TypeScript to use **Custom Export Conditions**.
 
-Mission Platform 구성 요소는 다음을 사용하여 한 번 작성됩니다. `@mission-platform/forge` 여러 프레임워크별 번들로 배포됩니다(Vue 3, React, Solid및 웹 구성 요소)를 단일 패키지 내에 포함합니다.
+### Supported Framework Conditions
 
-올바른 번들을 선택하려면 빌드 도구를 구성하고 TypeScript **사용자 정의 내보내기 조건**을 사용합니다.
+| Framework          | Export Condition   |
+| :----------------- | :----------------- |
+| **Vue 3**          | `mp:vue`           |
+| **React**          | `mp:react`         |
+| **Solid**          | `mp:solid`         |
+| **Web Components** | `mp:web-component` |
 
-### 지원되는 프레임워크 조건
+## Project Configuration
 
-| 프레임워크 | 수출조건 |
-| :--- | :--- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
-| **웹 구성요소** | `mp:web-component` |
+### 1. Vite Configuration
 
-## 프로젝트 구성
-
-### 1. Vite 구성
-
-당신이 사용하는 경우 Vite, 다음의 도우미 기능을 사용할 수 있습니다. `@mission-platform/vite-config` 올바른 해결 조건을 자동으로 설정합니다.
+If you are using Vite, you can use the helper functions from `@mission-platform/vite-config` to automatically set the correct resolve conditions. A framework-free app should select `mp:web-component`; do not install or configure a Vue plugin for that target.
 
 ```ts
-import { defineConfig } from 'vite';
-import { frameworkResolveConditions } from '@mission-platform/vite-config';
+import { defineConfig } from "vite";
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
 export default defineConfig({
   resolve: {
-    // This places 'mp:vue' at the top of the condition list
-    conditions: frameworkResolveConditions('mp:vue'),
+    // This places the Web Components build at the top of the condition list.
+    conditions: frameworkResolveConditions("web-component"),
   },
 });
 ```
 
-### 2. TypeScript 구성
+### 2. TypeScript Configuration
 
-보장하기 위해 TypeScript LSP(Language Service)는 올바른 프레임워크에 대한 유형을 확인합니다. `@mission-platform/typescript-config`.
+To ensure the TypeScript Language Service (LSP) resolves types for the correct framework, you should extend a framework preset from `@mission-platform/typescript-config`.
 
 ```json
 {
-  "extends": "@mission-platform/typescript-config/framework-vue",
+  "extends": "@mission-platform/typescript-config/framework-web-component",
   "compilerOptions": {
-    "customConditions": ["mp:vue"]
+    "customConditions": ["mp:web-component"]
   }
 }
 ```
 
-## 패키지 설치
+## Package Installation
 
-레지스트리에서 필수 패키지를 설치합니다.
+Install the required packages from your registry:
 
 ```bash
-pnpm add @mission-platform/components @mission-platform/tokens
+pnpm add @mission-platform/components @mission-platform/tokens @mission-platform/router @mission-platform/forge-router-web-components
 ```
 
-### 피어 종속성
+### Peer Dependencies
 
-대부분의 Mission Platform 패키지는 런타임 종속성을 외부화합니다. 프로젝트에 해당 프레임워크와 공유 라이브러리가 설치되어 있는지 확인하세요.
+Most Mission Platform packages externalize their runtime dependencies. Ensure you have the corresponding framework and shared libraries installed in your project:
 
 ```bash
 # Example for a Vue 3 project
-pnpm add vue vue-router @mission-platform/i18n
+pnpm add @mission-platform/i18n
 ```
 
-## 구성요소 사용법
+The neutral router package has no framework or router-library runtime dependencies. Install the native router selected by
+your application and the matching Forge target (`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`, or `-web-components`). The application owns route definitions, providers, guards, loaders, and the native
+router instance; reusable packages import only capabilities from `@mission-platform/router`.
 
-조건이 올바르게 구성되면 패키지 루트에서 구성 요소를 가져올 수 있습니다. 빌드 도구는 귀하의 요구사항과 일치하는 번들을 자동으로 선택합니다. `mp:*` 상태.
+## Component Usage
+
+With the conditions correctly configured, you can import components from the root of the package. The build tool will automatically select the bundle matching your `mp:*` condition.
 
 ```vue
 <script setup lang="ts">
-import { ForgeButton } from '@mission-platform/components';
+import { ForgeButton } from "@mission-platform/components";
 </script>
 
 <template>
@@ -84,18 +84,98 @@ import { ForgeButton } from '@mission-platform/components';
 </template>
 ```
 
-## 디자인 토큰 커스터마이징
+### Framework-free routing
 
-Mission Platform은 디자인 토큰에 CSS 사용자 정의 속성(변수)을 사용합니다. 애플리케이션의 루트 스타일시트에서 전역적으로 이러한 토큰을 재정의할 수 있습니다.
+Use memory history for tests and prerendering, or omit `history` in a browser to use browser history. Register router
+elements once; assign route targets as properties when they contain params, query values, or hashes:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from "@mission-platform/forge-router-web-components/runtime";
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory("/"),
+  routes: [
+    { path: "/", redirect: "/docs/intro" },
+    {
+      path: "/docs/*",
+      name: "doc",
+      component: () => document.createTextNode("Docs"),
+    },
+  ],
+});
+setForgeRouter(router);
+
+const outlet = document.querySelector("forge-router-outlet");
+outlet?.setRouter(router);
+```
+
+### Async navigation with a loading spinner
+
+Async route components can keep the current page visible while the next view
+loads. Configure the outlet fallback when creating the Web Components router;
+`forge-router-link` then performs SPA navigation with `pushState` (or replace
+history when `replace` is enabled):
+
+```ts
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory("/docs/intro"),
+  loadingFallback: () => {
+    const spinner = document.createElement("span");
+    spinner.className = "docs-loading-spinner";
+    spinner.setAttribute("aria-label", "Loading documentation");
+    return spinner;
+  },
+  routes: [
+    {
+      path: "/docs/*",
+      component: async () => (await import("./views/docs-view")).default(),
+    },
+  ],
+});
+setForgeRouter(router);
+document.querySelector("forge-router-outlet")?.setRouter(router);
+```
+
+```html
+<forge-router-link to="/docs/advanced"
+  >Advanced documentation</forge-router-link
+>
+<forge-router-outlet></forge-router-outlet>
+```
+
+The outlet owns the loading overlay and does not remove the currently mounted
+view until the destination resolves. It clears the overlay for successful,
+redirected, cancelled, and failed navigation. Modified clicks, downloads,
+external URLs, and links with another target retain native browser behavior.
+
+When authoring shared Forge source, use the neutral boundary directly and let
+each compiler select its native implementation:
+
+```tsx
+<Suspense fallback={<LoadingSpinner label="Loading documentation" />}>
+  <DocumentationRoute />
+</Suspense>
+```
+
+## Design Token Customization
+
+Mission Platform uses CSS Custom Properties (variables) for design tokens. You can override these tokens globally in your application's root stylesheet.
 
 ```css
 /* App.css */
 :root {
   /* Override the brand primary color */
   --mp-color-brand-primary: #007bff;
+
   /* Override a spacing token */
   --mp-spacing-md: 1.5rem;
 }
 ```
 
-모든 Mission Platform 구성 요소는 이러한 변수를 사용하므로 `:root` 레벨은 전체 UI에 전파됩니다.
+All Mission Platform components consume these variables, so changes at the `:root` level will propagate throughout the entire UI.
