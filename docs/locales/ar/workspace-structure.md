@@ -1,17 +1,12 @@
-# هيكل مساحة العمل
+# Workspace Structure
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+This document provides a technical reference for the Mission Platform monorepo layout, directory purposes, and internal
+package conventions.
 
-> المصدر الإنجليزي: [docs/workspace-structure.md](../../workspace-structure.md)
-> اللغة: العربية (ar)
+## Monorepo Layout Reference
 
-توفر هذه الوثيقة مرجعًا فنيًا لتخطيط Mission Platform monorepo وأغراض الدليل والداخلية
-اتفاقيات الحزمة.
-
-## مرجع تخطيط Monorepo
-
-يستخدم منصة المهمة pnpm مساحات العمل وTurborepo لإدارة بيئة متعددة الحزم. يتم تنظيم المستودع
-إلى طبقات وظيفية:
+Mission Platform uses pnpm workspaces and Turborepo to manage a multi-package environment. The repository is organised
+into functional tiers:
 
 ```text
 composable_mission_ready_platform/
@@ -20,119 +15,129 @@ composable_mission_ready_platform/
 ├── packages/               # Reusable libraries and building blocks
 ├── vite-plugins/           # Build-time extensions and compilers
 ├── workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── forge-plugins/          # Forge compiler plugins and adapters
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
 └── docs/                   # Canonical English and translated documentation
 ```
 
-## الدلائل الأولية
+## Primary Directories
 
-### 1. `apps/` (التطبيقات)
+### 1. `apps/` (Applications)
 
-التطبيقات عبارة عن وحدات قابلة للنشر تقوم بتكوين وظائف من `packages/` دليل. عادة ما تكون خاصة
-ولم يتم نشرها مطلقًا في السجل.
+Applications are deployable units that compose functionality from the `packages/` directory. They are usually private
+and never published to a registry.
 
-- **`docs/`**: ال Vite + Vue موقع توثيق لمجموعة Markdown.
-- **`my-care-notes/`**: تطبيق ملاحظات الرعاية الرائد.
-- **`service-monitor/`**: لوحة معلومات صحة خدمة RedwoodSDK المدعومة بكائن متين.
-- **`website/`**: موقع تسويق ومنتجات Mission Platform.
-- **`storybook/`**: منضدة عمل المكونات ومجموعة الاختبارات المرئية.
+- **`docs/`**: The Vite + Vue documentation site for the Markdown corpus.
+- **`my-care-notes/`**: The flagship care-notes application.
+- **`service-monitor/`**: The RedwoodSDK service health dashboard backed by a Durable Object.
+- **`website/`**: The Mission Platform marketing and product website.
+- **`storybook/`**: The component workbench and visual testing suite.
 
-### 2. `packages/` (لبنات البناء)
+### 2. `packages/` (Building Blocks)
 
-مكتبات ذات إصدارات قابلة لإعادة الاستخدام تستهلكها التطبيقات. تهدف هذه إلى أن تكون حيادية للإطار حيثما أمكن ذلك.
+Reusable, versioned libraries consumed by apps. These are intended to be framework-agnostic where possible.
 
-- **`@mission-platform/forge`**: وقت تشغيل ومحولات JSX المحايدة لإطار العمل.
-- **`@mission-platform/components`**: مكتبة المكونات متعددة الأطر.
-- **`@mission-platform/forms`** و **`@mission-platform/forms-core`**: النماذج الأولية المستندة إلى المخطط.
-- **`@mission-platform/content`** و **`@mission-platform/email-renderer`**: خطوط أنابيب المحتوى والعرض.
-- **`@mission-platform/tokens`**: مصدر التصميم المميز للحقيقة.
-- **`@mission-platform/router`** و **`@mission-platform/i18n`**: التوجيه والتعريب المحايد للإطار.
-- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**، و
-  **`@mission-platform/qr-code`**: حزم المسح والتشفير المدعومة من Wasm.
+- **`@mission-platform/forge`**: The framework-neutral JSX runtime and adapters.
+- **`@mission-platform/components`**: The multi-framework component library.
+- **`@mission-platform/forms`** and **`@mission-platform/forms-core`**: Schema-driven form primitives.
+- **`@mission-platform/content`** and **`@mission-platform/email-renderer`**: Content and rendering pipelines.
+- **`@mission-platform/tokens`**: Design token source of truth.
+- **`@mission-platform/router`** and **`@mission-platform/i18n`**: Framework-neutral routing and localization.
+- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, and
+  **`@mission-platform/qr-code`**: Wasm-backed scanning and encoding packages.
 
-### 3. `configs/` (مؤسسة الأدوات)
+### 3. `configs/` (Tooling Foundation)
 
-التكوينات المشتركة التي تضمن الاتساق عبر جميع مساحات العمل. تُستخدم الحزم الموجودة في هذا الدليل عادةً كـ
+Shared configurations that ensure consistency across all workspaces. Packages in this directory are typically used as
 `devDependencies`.
 
-- **`eslint-config/`**, **`prettier-config/`**، و **`stylelint-config/`**: قواعد الفحص والتنسيق.
-- **`typescript-config/`**: قاعدة `tsconfig.json` ملفات ل Nodeو DOM والمكتبة ومستهلكي الإطار.
-- **`tsdown-config/`** و **`vite-config/`**: المكتبة المشتركة، التطبيق، Vite، و Vitest بناء الأنماط.
-- **`i18n-config/`** و **`storybook-framework/`**: استخراج الإعدادات المحلية المشتركة وإعدادات طاولة العمل.
+- **`eslint-config/`**, **`prettier-config/`**, and **`stylelint-config/`**: Linting and formatting rules.
+- **`typescript-config/`**: Base `tsconfig.json` files for Node, DOM, library, and framework consumers.
+- **`tsdown-config/`** and **`vite-config/`**: Common library, app, Vite, and Vitest build patterns.
+- **`i18n-config/`** and **`storybook-framework/`**: Shared locale extraction and framework-workbench settings.
 
-### 4. `vite-plugins/` (بناء ملحقات)
+### 4. `vite-plugins/` (Build Extensions)
 
-المكونات الإضافية المخصصة التي تعمل على توسيع نطاق Vite عملية البناء.
+Custom plugins that extend the Vite build process.
 
-- **`forge/`**: المترجم متعدد المراحل لمكونات Forge.
-- **`tokens/`**: يُنشئ عناصر التعليمات البرمجية من تعريفات رمز DTCG.
-- **`i18n/`**: يتعامل مع التحميل المحلي والاستخراج الثابت.
+- **`forge/`**: The multi-stage compiler for Forge components.
+- **`tokens/`**: Generates code artifacts from DTCG token definitions.
+- **`i18n/`**: Handles locale loading and static extraction.
 
-### 5. `workers/` (خدمات الحافة)
+### 5. `workers/` (Edge Services)
 
-عمال Cloudflare للمنطق من جانب الخادم وتسليم الأصول الأمثل.
+Cloudflare Workers for server-side logic and optimised asset delivery.
 
-- **`api-proxy/`**: يوفر وصولاً مقيدًا للقراءة فقط إلى مسارات واجهة برمجة التطبيقات المعتمدة.
-- **`email-sender/`**: عامل عرض البريد الإلكتروني المحلي المدعوم من MailPit.
-- **`forge-spa/`**: يخدم الأصول الثابتة مع `ASSETS`-ارتداد SPA ملزم.
+- **`api-proxy/`**: Provides constrained read-only access to approved API routes.
+- **`email-sender/`**: Local MailPit-backed email showcase worker.
+- **`forge-spa/`**: Serves static assets with an `ASSETS`-binding SPA fallback.
 
-يتم تكوين عمال التطبيق القابل للنشر بواسطة `apps/website/wrangler.jsonc`,
-`apps/my-care-notes/wrangler.jsonc`، و `apps/service-monitor/wrangler.jsonc`. ال
-`api-proxy` و `forge-spa` الحزم هي تبعيات مجمعة وليست مستقلة Wrangler عمليات النشر.
+Deployable application Workers are configured by `apps/website/wrangler.jsonc`,
+`apps/my-care-notes/wrangler.jsonc`, and `apps/service-monitor/wrangler.jsonc`. The
+`api-proxy` and `forge-spa` packages are bundled dependencies rather than standalone Wrangler deployments.
 
-## اتفاقيات الحزمة الداخلية
+### 6. `forge-plugins/` (Forge Compiler Plugins)
 
-للحفاظ على بيئة يمكن التنبؤ بها، تتبع جميع الحزم والتطبيقات تخطيطًا داخليًا قياسيًا.
+Framework-specific output plugins and adapters for the Forge compiler.
 
-### معيار `src/` تَسَلسُل
+- **`forge-cms-plugin-api/`**: CMS artifact generation and Vite/tsdown adapter integration.
+- **`forge-cms-astro/`**, **`forge-cms-ghost/`**, **`forge-cms-jekyll/`**, **`forge-cms-storyblok/`**, **`forge-cms-webflow/`**: CMS-specific integration adapters.
+- **`forge-plugin-api/`**: Shared Forge compiler plugin interfaces.
+- **`forge-vue/`**, **`forge-react/`**, **`forge-solid/`**, **`forge-svelte/`**, **`forge-web-components/`**: Framework-specific code generation and runtime adapters.
+- **`forge-router-plugin-api/`**, **`forge-router-vue/`**, **`forge-router-react/`**, **`forge-router-solid/`**, **`forge-router-svelte/`**, **`forge-router-web-components/`**, **`forge-router-redwood/`**: Router framework-specific integration adapters.
 
-يتم تنظيم كود المصدر حسب نوع الوظيفة:
+## Internal Package Conventions
 
-- **`components/`**: منطق واجهة المستخدم (SFCs أو TSX).
-- **`composables/`**: المنطق التفاعلي والخطافات.
-- **`utils/`**: وظائف خالصة ومساعدين حياديين للإطار.
-- **`locales/`**: ملفات ترجمة JSON/YAML.
-- **`styles/`**: أجزاء SCSS وتكامل نظام التصميم.
+To maintain a predictable environment, all packages and apps follow a standard internal layout.
 
-### نمط تصدير البرميل
+### Standard `src/` Hierarchy
 
-كل دليل داخل `src/` يجب أن تحتوي على `index.ts` (ملف برميل).
+Source code is organised by functional type:
 
-- تقوم الدلائل الفرعية بتصدير رموزها الداخلية عبر مجلداتها المحلية `index.ts`.
-- الجذر `src/index.ts` بمثابة نقطة الدخول العامة لعضو مساحة العمل بأكمله.
+- **`components/`**: UI logic (SFCs or TSX).
+- **`composables/`**: Reactive logic and hooks.
+- **`utils/`**: Pure functions and framework-agnostic helpers.
+- **`locales/`**: JSON/YAML translation files.
+- **`styles/`**: SCSS partials and design system integrations.
 
-## سجل تكوين الجذر
+### Barrel Export Pattern
 
-تتحكم الملفات الرئيسية الموجودة في جذر المستودع في سلوك monorepo:
+Every directory within `src/` must contain an `index.ts` (barrel file).
 
-| ملف | الغرض |
-|:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml`   | يحدد حدود مساحة العمل ومجموعات الأعضاء وكتالوجات التبعية. |
-| `turbo.json`            | ينسق خط أنابيب البناء والتخزين المؤقت للمهام.                    |
-| `package.json`          | البرامج النصية على مستوى الجذر وتبعيات التطوير على مستوى monorepo.                |
-| `commitlint.config.mjs` | يفرض مواصفات الالتزامات التقليدية.                     |
+- Sub-directories export their internal symbols via their local `index.ts`.
+- The root `src/index.ts` acts as the public entry point for the entire workspace member.
 
-## إدارة التبعية ومساحة العمل
+## Root Configuration Registry
 
-تستخدم منصة المهمة `workspace:*` بروتوكول التبعيات الداخلية. وهذا يضمن أن الحزم تستخدم دائمًا ملف
-الإصدار المحلي لأعضاء مساحة العمل الآخرين أثناء التطوير.
+Key files at the repository root govern the monorepo's behaviour:
 
-### PNPM الكتالوجات
+| File                    | Purpose                                                                              |
+| :---------------------- | :----------------------------------------------------------------------------------- |
+| `pnpm-workspace.yaml`   | Defines workspace boundaries, member globs, and dependency catalogs. |
+| `turbo.json`            | Orchestrates the build pipeline and task caching.                    |
+| `package.json`          | Root-level scripts and monorepo-wide devDependencies.                |
+| `commitlint.config.mjs` | Enforces the Conventional Commits specification.                     |
 
-روافع المستودع **pnpm الكتالوجات ** (المحددة في `pnpm-workspace.yaml`) لمركزية إصدارات التبعية عبر
-مونوريبو. وهذا يمنع انحراف الإصدار ويبسط عملية الصيانة.
+## Dependency & Workspace Management
 
-### تنفيذ المهمة
+Mission Platform uses the `workspace:*` protocol for internal dependencies. This ensures that packages always use the
+local version of other workspace members during development.
 
-يتم تنفيذ المهام عبر مساحة العمل عبر الجذر `package.json` باستخدام توربوريبو:
+### PNPM Catalogs
 
-- `pnpm build`: قم ببناء كافة مساحات العمل بترتيب التبعية الصحيح.
-- `pnpm test`: قم بتشغيل مجموعات الاختبار لجميع مساحات العمل باستخدام ملف `test` مهمة. يستخدم `pnpm exec turbo run test --affected` ل
-  نطاق CI لمساحة العمل التي تم تغييرها.
-- `pnpm lint`: يجري ESLint عبر مساحات العمل.
-- `pnpm lint:style`: يجري Stylelint لأنماط التطبيق والحزمة.
-- `pnpm format`: التحقق من التنسيق مع Prettier.
-- `pnpm i18n:extract`: استخراج مفاتيح الترجمة لمساحات العمل التي تمتلك الكتالوجات.
+The repository leverages **pnpm catalogs** (defined in `pnpm-workspace.yaml`) to centralise dependency versions across
+the monorepo. This prevents version drift and simplifies maintenance.
+
+### Task Execution
+
+Cross-workspace tasks are executed via the root `package.json` using Turborepo:
+
+- `pnpm build`: Build all workspaces in the correct dependency order.
+- `pnpm test`: Run the test suites for all workspaces with a `test` task. Use `pnpm exec turbo run test --affected` for
+  the changed-workspace CI scope.
+- `pnpm lint`: Run ESLint across the workspaces.
+- `pnpm lint:style`: Run Stylelint for app and package styles.
+- `pnpm format`: Check formatting with Prettier.
+- `pnpm i18n:extract`: Extract translation keys for workspaces that own catalogues.
