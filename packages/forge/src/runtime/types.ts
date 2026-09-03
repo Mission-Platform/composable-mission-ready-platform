@@ -30,6 +30,19 @@ export const Fragment: MpFragment = () => {
   );
 };
 
+/** Props carried by the framework-neutral Suspense marker. */
+export interface MpSuspenseProperties {
+  readonly fallback?: MpSuspenseChild;
+  readonly children?: MpSuspenseChild;
+}
+
+/** Native async-boundary marker lowered by each framework compiler. */
+export const Suspense: MpComponent<MpSuspenseProperties> = () => {
+  throw new Error(
+    '@mission-platform/forge: <Suspense> is a compile-time / adapter marker and must not be rendered directly.',
+  );
+};
+
 /**
  * The **runtime** bag of attributes/props carried by an {@link MpElement}.
  *
@@ -140,6 +153,9 @@ export type MpElementType = string | MpFragment | MpComponent;
 
 /** A single child slot in the neutral tree. */
 export type MpChild = MpElement | string | number | boolean | null | undefined;
+
+/** Synchronous or recursively asynchronous content accepted by Suspense. */
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
 
 /** A node in the framework-neutral virtual tree produced by {@link h}. */
 export interface MpElement {

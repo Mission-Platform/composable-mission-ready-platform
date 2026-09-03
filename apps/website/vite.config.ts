@@ -49,7 +49,7 @@ const SUPPORTED_LOCALES = readSupportedLocales({ root: CONFIG_DIR, localesDir: '
 type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 const DEFAULT_LOCALE: SupportedLocale = 'en';
 
-const SITE_ORIGIN = 'https://mission-platform.dev';
+const SITE_ORIGIN = 'https://mission-platform.com';
 const SITEMAP_URL = `${SITE_ORIGIN}/sitemap.xml`;
 
 const LOCALE_BCP47: Record<SupportedLocale, string> = {
@@ -78,13 +78,6 @@ const sitemapAlternates: SitemapAlternate[] = [
   { hreflang: 'x-default', href: canonicalFor(DEFAULT_LOCALE) },
 ];
 
-const HASH_ANCHORS: Array<{ hash: string; changefreq: SitemapUrl['changefreq']; priority: number }> = [
-  { hash: '#features', changefreq: 'weekly', priority: 0.8 },
-  { hash: '#packages', changefreq: 'weekly', priority: 0.8 },
-  { hash: '#about', changefreq: 'monthly', priority: 0.6 },
-  { hash: '#faq', changefreq: 'monthly', priority: 0.6 },
-];
-
 const sitemapUrls: SitemapUrl[] = [
   {
     loc: canonicalFor(DEFAULT_LOCALE),
@@ -96,11 +89,6 @@ const sitemapUrls: SitemapUrl[] = [
     loc: canonicalFor(locale),
     changefreq: 'weekly',
     priority: 0.9,
-  })),
-  ...HASH_ANCHORS.map<SitemapUrl>((entry) => ({
-    loc: `${canonicalFor(DEFAULT_LOCALE)}${entry.hash}`,
-    changefreq: entry.changefreq,
-    priority: entry.priority,
   })),
 ];
 
@@ -121,7 +109,6 @@ const config: SsgUserConfig = {
   },
   resolve: {
     conditions: frameworkConditions,
-    tsconfigPaths: true,
   },
   ssr: {
     noExternal: [/^@mission-platform\//],

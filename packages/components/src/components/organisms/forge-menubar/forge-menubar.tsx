@@ -12,7 +12,7 @@ import { ForgeIconChevron, type IconDirection } from '@mission-platform/icons';
 
 import styles from './forge-menubar.module.scss';
 
-import type { MenuNode } from '@/components/molecules/forge-menu';
+import type { MenuNode } from '../../molecules/forge-menu';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type MenubarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';

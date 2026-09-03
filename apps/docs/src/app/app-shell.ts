@@ -242,6 +242,7 @@ export class DocsAppShellElement extends HTMLElement {
       ['Toggle navigation'],
     );
     sidebarToggle.className = 'docs-navbar__sidebar-toggle--native';
+    sidebarToggle.setAttribute('aria-controls', 'docs-native-sidebar');
     sidebarToggle.addEventListener('click', () => {
       this.sidebarOpen = !this.sidebarOpen;
       this.syncNativeSidebar();
@@ -320,7 +321,17 @@ export class DocsAppShellElement extends HTMLElement {
     nav.className = 'docs-navbar__nav';
     nav.dataset.mobileOnly = 'true';
     navbar.append(nav);
-    const end = createElement<HTMLElement>('span', {}, [createElement<HTMLElement>('a', {}, ['mission-platform.dev'])]);
+    const end = createElement<HTMLElement>('span', {}, [
+      createElement<HTMLAnchorElement>(
+        'a',
+        {
+          href: 'https://mission-platform.dev',
+          target: '_blank',
+          rel: 'noopener noreferrer',
+        },
+        ['mission-platform.dev'],
+      ),
+    ]);
     end.className = 'docs-navbar__end';
     end.setAttribute('slot', 'end');
     const languages = SUPPORTED_LOCALES.map((code) => ({

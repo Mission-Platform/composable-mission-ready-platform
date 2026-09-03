@@ -29,6 +29,18 @@ describe('renderEmail', () => {
     expect(() => renderEmail(h('a', { href: 'javascript:alert(1)' }, 'unsafe'))).toThrow('forbidden URL scheme');
   });
 
+  it('rejects browser-normalized and encoded unsafe URL schemes', () => {
+    for (const href of [
+      'java\nscript:alert(1)',
+      'java\tscript:alert(1)',
+      'java\rscript:alert(1)',
+      'java%0Ascript:alert(1)',
+      'jav%61script%3Aalert(1)',
+    ]) {
+      expect(() => renderEmail(h('a', { href }, 'unsafe'))).toThrow('forbidden URL scheme');
+    }
+  });
+
   it('serializes styles and attributes deterministically', () => {
     const output = renderEmail(
       h(

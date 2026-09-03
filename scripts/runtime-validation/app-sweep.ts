@@ -34,6 +34,15 @@ interface ProcessResult {
   error?: string;
 }
 
+const MAX_CHILD_LOG_CHARS = 256 * 1024;
+const LOG_TRUNCATION_MARKER = '\n...[child output truncated]...\n';
+
+function appendBounded(current: string, chunk: string): string {
+  const combined = current + chunk;
+  if (combined.length <= MAX_CHILD_LOG_CHARS) return combined;
+  return LOG_TRUNCATION_MARKER + combined.slice(-MAX_CHILD_LOG_CHARS + LOG_TRUNCATION_MARKER.length);
+}
+
 function appShortName(app: AppInventory): string {
   return app.name.replace(/^@mission-platform\//, '');
 }
@@ -59,6 +68,7 @@ function runProcess(repositoryRoot: string, args: string[], timeoutMs: number): 
     });
     let output = '';
     let settled = false;
+    let terminating = false;
     const finish = (result: ProcessResult): void => {
       if (settled) return;
       settled = true;
@@ -66,39 +76,54 @@ function runProcess(repositoryRoot: string, args: string[], timeoutMs: number): 
       resolve(result);
     };
     const timeout = setTimeout(() => {
+      terminating = true;
       void terminateProcessTree(child, { graceMs: 250 }).then(() =>
         finish({ ok: false, output, error: `Command timed out after ${timeoutMs}ms: pnpm ${args.join(' ')}` }),
       );
     }, timeoutMs);
     child.stdout?.on('data', (chunk: Buffer) => {
-      output += chunk.toString();
+      output = appendBounded(output, chunk.toString());
     });
     child.stderr?.on('data', (chunk: Buffer) => {
-      output += chunk.toString();
+      output = appendBounded(output, chunk.toString());
     });
-    child.on('error', (error) => finish({ ok: false, output, error: error.stack ?? error.message }));
-    child.on('close', (code, signal) =>
+    child.on('error', (error) => {
+      if (!terminating) finish({ ok: false, output, error: error.stack ?? error.message });
+    });
+    child.on('close', (code, signal) => {
+      if (terminating) return;
       finish({
         ok: code === 0,
         output,
         error: code === 0 ? undefined : `Command exited with ${signal ? `signal ${signal}` : `code ${code}`}`,
-      }),
-    );
+      });
+    });
   });
 }
 
-function waitForHttp(url: string, timeoutMs: number): Promise<void> {
+export function waitForHttp(url: string, timeoutMs: number): Promise<void> {
   return new Promise((resolve, reject) => {
     const deadline = Date.now() + timeoutMs;
+    let lastStatus: number | undefined;
+    const retry = (): void => {
+      if (Date.now() >= deadline) {
+        reject(
+          new Error(
+            `Server did not become ready at ${url}${lastStatus === undefined ? '' : ` (last HTTP status ${lastStatus})`}`,
+          ),
+        );
+      } else setTimeout(attempt, 150);
+    };
     const attempt = (): void => {
       const request = http.get(url, (response) => {
+        lastStatus = response.statusCode;
         response.resume();
-        response.once('end', () => resolve());
+        response.once('end', () => {
+          if (response.statusCode !== undefined && response.statusCode >= 200 && response.statusCode < 400) resolve();
+          else retry();
+        });
       });
-      request.once('error', () => {
-        if (Date.now() >= deadline) reject(new Error(`Server did not become ready at ${url}`));
-        else setTimeout(attempt, 150);
-      });
+      request.once('error', retry);
       request.setTimeout(1000, () => request.destroy());
     };
     attempt();
@@ -238,6 +263,7 @@ function runEgoAppChecks(
     let pending = '';
     let diagnostics = '';
     let settled = false;
+    let terminating = false;
     const finish = (value: BrowserAppResult[]): void => {
       if (settled) return;
       settled = true;
@@ -245,7 +271,7 @@ function runEgoAppChecks(
       resolve(value);
     };
     const parse = (chunk: Buffer): void => {
-      pending += chunk.toString();
+      pending = appendBounded(pending, chunk.toString());
       const lines = pending.split('\n');
       pending = lines.pop() ?? '';
       for (const line of lines) {
@@ -258,19 +284,36 @@ function runEgoAppChecks(
       }
     };
     const timeout = setTimeout(() => {
-      diagnostics += `Ego Lite timed out after ${timeoutMs}ms`;
-      void terminateProcessTree(child, { graceMs: 250 });
+      terminating = true;
+      diagnostics = appendBounded(diagnostics, `Ego Lite timed out after ${timeoutMs}ms`);
+      void terminateProcessTree(child, { graceMs: 250 }).then(() => {
+        if (settled) return;
+        const error = new Error(diagnostics);
+        const log = artifactPath(repositoryRoot, 'app', `${appName}-ego-runner`, 'log');
+        fs.mkdirSync(path.dirname(log), { recursive: true });
+        fs.writeFileSync(log, `${error.message}\n`);
+        finish(
+          routes.map((route) => ({
+            route,
+            ...classifyFailure('runtime', error),
+            message: error.message,
+            evidence: { log },
+          })),
+        );
+      });
     }, timeoutMs);
     child.stdout?.on('data', parse);
     child.stderr?.on('data', (chunk: Buffer) => {
-      diagnostics += chunk.toString();
+      diagnostics = appendBounded(diagnostics, chunk.toString());
       parse(chunk);
     });
     child.on('error', (error) => {
+      if (terminating) return;
       const message = error.stack ?? error.message;
       finish(routes.map((route) => ({ route, ...classifyFailure('environment', error), message })));
     });
     child.on('close', (code) => {
+      if (terminating) return;
       if (results.length === 0) {
         const error = new Error(diagnostics || `ego-browser exited with code ${code ?? 'null'}`);
         const log = artifactPath(repositoryRoot, 'app', `${appName}-ego-runner`, 'log');
@@ -369,8 +412,8 @@ export async function validateApps(
       },
     );
     let serverOutput = '';
-    child.stdout?.on('data', (chunk: Buffer) => (serverOutput += chunk.toString()));
-    child.stderr?.on('data', (chunk: Buffer) => (serverOutput += chunk.toString()));
+    child.stdout?.on('data', (chunk: Buffer) => (serverOutput = appendBounded(serverOutput, chunk.toString())));
+    child.stderr?.on('data', (chunk: Buffer) => (serverOutput = appendBounded(serverOutput, chunk.toString())));
     try {
       await waitForHttp(`http://127.0.0.1:${port}/`, 15_000);
       allResults.push({

@@ -148,7 +148,7 @@ export const ForgeRouterOutlet;
 **종류:** 구성요소
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
 컴파일된 중립 링크에 사용되는 맞춤 요소 태그입니다.
@@ -158,7 +158,7 @@ export const MpLink;
 **종류:** 구성요소
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 컴파일된 중립 콘센트에 사용되는 맞춤 요소 태그입니다.
@@ -301,6 +301,16 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 | ---- | ---------------------------------- | ---- |
 | 옵션 | MpWebComponentsRouterOptions<View> |      |
 
+### MpRouterLoading대체
+
+**종류:** 구성요소
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+대상 보기가 로드되는 동안 라우터 콘센트에서 렌더링된 콘텐츠입니다.
+
 ### MpWebComponents라우터
 
 **종류:** 구성요소
@@ -348,4 +358,4 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 export const forgeRouterWebComponents;
 ```
 
-프레임워크가 필요 없는 기록/아웃렛 런타임이 지원되는 Forge 라우터 대상입니다.
+프레임워크가 필요 없는 기록/아웃렛 런타임이 지원하는 Forge 라우터 대상입니다.

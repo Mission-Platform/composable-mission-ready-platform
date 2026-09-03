@@ -43,6 +43,7 @@ describe('Forge plugin messaging', () => {
 
     const config = {
       bridgeUrl: 'http://localhost:8787/export',
+      authToken: 'test-token',
       repositoryRootId: 'repo',
       targetDirectory: 'components',
     } as const;

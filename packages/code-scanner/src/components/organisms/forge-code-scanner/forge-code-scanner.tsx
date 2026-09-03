@@ -10,7 +10,6 @@ import {
 import { ForgeIconCamera, ForgeIconClose, ForgeIconUpload } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
-import { scannerLog } from '@/debug';
 import {
   scanFile,
   scanImageData,
@@ -18,6 +17,8 @@ import {
   setCodeScannerDebug,
   videoFrameToImageData,
 } from '@mission-platform/code-scanner';
+
+import { scannerLog } from '../../../debug';
 
 import styles from './forge-code-scanner.module.scss';
 

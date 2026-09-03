@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 import { link, lstat, mkdir, realpath, rename, rm, writeFile } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import path from 'node:path';
@@ -20,6 +20,9 @@ import {
 export const DEFAULT_MAX_REQUEST_BYTES = 10 * 1024 * 1024;
 export const DEFAULT_MAX_FILE_BYTES = 5 * 1024 * 1024;
 export const DEFAULT_EXPORT_PATH = '/export';
+export const DEFAULT_ALLOWED_ORIGIN = 'https://www.figma.com';
+export const FORGE_BRIDGE_AUTH_HEADER = 'authorization';
+export const FORGE_BRIDGE_TOKEN_HEADER = 'x-forge-bridge-token';
 
 export interface ForgeBridgeOptions {
   readonly repositoryRoots: ReadonlyMap<string, string> | Readonly<Record<string, string>>;
@@ -30,6 +33,13 @@ export interface ForgeBridgeOptions {
 
 export interface ForgeBridgeServerOptions extends ForgeBridgeOptions {
   readonly exportPath?: string;
+  readonly authToken?: string;
+  readonly allowedOrigin?: string;
+}
+
+export interface ForgeBridgeServer extends Server {
+  readonly authToken: string;
+  readonly allowedOrigin: string;
 }
 
 interface DecodedFile {
@@ -254,13 +264,38 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : 'The repository export failed unexpectedly.';
 }
 
-function writeJson(responseObject: ServerResponse, statusCode: number, body: ForgeBridgeResponse): void {
+function writeJson(
+  responseObject: ServerResponse,
+  statusCode: number,
+  body: ForgeBridgeResponse,
+  origin?: string,
+): void {
   responseObject.writeHead(statusCode, {
-    'access-control-allow-origin': '*',
+    ...(origin === undefined ? {} : { 'access-control-allow-origin': origin, vary: 'Origin' }),
     'access-control-allow-headers': 'content-type',
     'content-type': 'application/json; charset=utf-8',
   });
   responseObject.end(JSON.stringify(body));
+}
+
+export function createForgeBridgeAuthToken(): string {
+  return randomBytes(32).toString('base64url');
+}
+
+function hasValidAuthToken(request: IncomingMessage, expectedToken: string): boolean {
+  const authorization = request.headers[FORGE_BRIDGE_AUTH_HEADER];
+  const headerToken = request.headers[FORGE_BRIDGE_TOKEN_HEADER];
+  const providedToken =
+    typeof authorization === 'string' && authorization.startsWith('Bearer ')
+      ? authorization.slice('Bearer '.length)
+      : typeof headerToken === 'string'
+        ? headerToken
+        : undefined;
+  if (providedToken === undefined) return false;
+
+  const expectedBytes = Buffer.from(expectedToken);
+  const providedBytes = Buffer.from(providedToken);
+  return expectedBytes.byteLength === providedBytes.byteLength && timingSafeEqual(expectedBytes, providedBytes);
 }
 
 async function readBody(request: IncomingMessage, maxBytes: number): Promise<string> {
@@ -280,19 +315,36 @@ async function handleHttpRequest(
   request: IncomingMessage,
   responseObject: ServerResponse,
   options: ForgeBridgeServerOptions,
+  authToken: string,
+  allowedOrigin: string,
 ): Promise<void> {
   const exportPath = options.exportPath ?? DEFAULT_EXPORT_PATH;
-  responseObject.setHeader('access-control-allow-origin', '*');
+  const origin = request.headers.origin;
+  if (origin !== allowedOrigin) {
+    writeJson(responseObject, 403, response(false, [], 'The request origin is not allowed.'));
+    return;
+  }
   if (request.method === 'OPTIONS') {
     responseObject.writeHead(204, {
-      'access-control-allow-headers': 'content-type',
+      'access-control-allow-origin': allowedOrigin,
+      'access-control-allow-headers': `content-type, ${FORGE_BRIDGE_AUTH_HEADER}, ${FORGE_BRIDGE_TOKEN_HEADER}`,
       'access-control-allow-methods': 'POST, OPTIONS',
+      vary: 'Origin',
     });
     responseObject.end();
     return;
   }
   if (request.method !== 'POST' || request.url !== exportPath) {
-    writeJson(responseObject, 404, response(false, [], 'The requested bridge endpoint does not exist.'));
+    writeJson(responseObject, 404, response(false, [], 'The requested bridge endpoint does not exist.'), allowedOrigin);
+    return;
+  }
+  if (!hasValidAuthToken(request, authToken)) {
+    writeJson(
+      responseObject,
+      401,
+      response(false, [], 'The bridge authentication token is missing or invalid.'),
+      allowedOrigin,
+    );
     return;
   }
 
@@ -302,7 +354,7 @@ async function handleHttpRequest(
     try {
       payload = JSON.parse(body);
     } catch {
-      writeJson(responseObject, 400, response(false, [], 'The bridge request body is not valid JSON.'));
+      writeJson(responseObject, 400, response(false, [], 'The bridge request body is not valid JSON.'), allowedOrigin);
       return;
     }
     if (!validRequest(payload)) {
@@ -310,17 +362,19 @@ async function handleHttpRequest(
         responseObject,
         400,
         response(false, [], 'The bridge request is malformed or uses an unsupported protocol.'),
+        allowedOrigin,
       );
       return;
     }
     const result = await exportForgeRepositoryBundle(payload, options);
-    writeJson(responseObject, result.ok ? 200 : 409, result);
+    writeJson(responseObject, result.ok ? 200 : 409, result, allowedOrigin);
   } catch (error) {
     const httpError = isHttpError(error) ? error : undefined;
     writeJson(
       responseObject,
       httpError?.statusCode ?? 500,
       response(false, [], httpError?.message ?? errorMessage(error)),
+      allowedOrigin,
     );
   }
 }
@@ -329,15 +383,24 @@ function isHttpError(error: unknown): error is HttpError {
   return isRecord(error) && typeof error.statusCode === 'number' && typeof error.message === 'string';
 }
 
-export function createForgeBridgeServer(options: ForgeBridgeServerOptions): Server {
-  return createServer((request, responseObject) => {
-    void handleHttpRequest(request, responseObject, options);
+export function createForgeBridgeServer(options: ForgeBridgeServerOptions): ForgeBridgeServer {
+  const authToken = options.authToken ?? createForgeBridgeAuthToken();
+  if (!authToken) throw new Error('The bridge authentication token must not be empty.');
+  const allowedOrigin = options.allowedOrigin ?? DEFAULT_ALLOWED_ORIGIN;
+  let server: ForgeBridgeServer;
+  server = createServer((request, responseObject) => {
+    void handleHttpRequest(request, responseObject, options, authToken, allowedOrigin);
+  }) as ForgeBridgeServer;
+  Object.defineProperties(server, {
+    authToken: { configurable: false, enumerable: true, value: authToken, writable: false },
+    allowedOrigin: { configurable: false, enumerable: true, value: allowedOrigin, writable: false },
   });
+  return server;
 }
 
 export async function startForgeBridgeServer(
   options: ForgeBridgeServerOptions & { readonly host?: string; readonly port?: number },
-): Promise<Server> {
+): Promise<ForgeBridgeServer> {
   const server = createForgeBridgeServer(options);
   await new Promise<void>((resolve, reject) => {
     const onError = (error: Error): void => {

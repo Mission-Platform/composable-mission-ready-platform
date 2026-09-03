@@ -66,7 +66,12 @@ describe('Forge artifact delivery', () => {
       return Response.json({ protocolVersion: 1, ok: true, results: [] });
     });
     await sendBundleToBridge(
-      { bridgeUrl: 'http://127.0.0.1:8787/export', repositoryRootId: 'repo', targetDirectory: 'components' },
+      {
+        bridgeUrl: 'http://127.0.0.1:8787/export',
+        authToken: 'test-token',
+        repositoryRootId: 'repo',
+        targetDirectory: 'components',
+      },
       bundle,
       true,
       fetcher,
@@ -77,6 +82,12 @@ describe('Forge artifact delivery', () => {
     expect(request.bundle.files[0]?.content).toBe(files[0].content);
     expect(request.bundle.files[2]?.content).toEqual([1, 2, 3]);
     expect(request.overwrite).toBe(true);
+    expect(fetcher).toHaveBeenCalledWith(
+      'http://127.0.0.1:8787/export',
+      expect.objectContaining({
+        headers: { authorization: 'Bearer test-token', 'content-type': 'application/json' },
+      }),
+    );
   });
 
   it('returns structured per-file failures from the bridge without throwing', async () => {
@@ -94,7 +105,12 @@ describe('Forge artifact delivery', () => {
 
     await expect(
       sendBundleToBridge(
-        { bridgeUrl: 'http://127.0.0.1:8787/export', repositoryRootId: 'repo', targetDirectory: 'components' },
+        {
+          bridgeUrl: 'http://127.0.0.1:8787/export',
+          authToken: 'test-token',
+          repositoryRootId: 'repo',
+          targetDirectory: 'components',
+        },
         bundle,
         false,
         fetcher,

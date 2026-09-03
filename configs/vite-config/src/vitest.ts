@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, mergeConfig, type ViteUserConfig } from 'vitest/config';
 
@@ -60,6 +62,9 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
   const base = defineConfig({
     plugins: [vue(), ignoreVueI18nBlocksPlugin()],
     resolve: {
+      alias: {
+        '@': path.resolve(process.cwd(), 'src'),
+      },
       tsconfigPaths: true,
       ...(conditions && !scoped ? { conditions } : {}),
     },

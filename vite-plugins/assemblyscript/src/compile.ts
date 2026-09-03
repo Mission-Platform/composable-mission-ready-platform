@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, resolve } from 'node:path';
 
 import { buildGeneratedModule, extractInstantiate } from './generate.js';
@@ -26,7 +26,7 @@ export interface AssemblyScriptCompileOptions {
   outFile: string;
   /**
    * Intermediate `.wasm` path used by the compiler, relative to `rootDir` (or
-   * absolute). Defaults to `build/<entry-name>.wasm`.
+   * absolute). Defaults to a unique temporary path under `build/`.
    */
   wasmFile?: string;
   /** Base directory for resolving relative paths. Defaults to `process.cwd()`. */
@@ -55,39 +55,53 @@ export async function compileAssemblyScript(options: AssemblyScriptCompileOption
   const rootDir = options.rootDir ?? process.cwd();
   const entryPath = resolvePath(rootDir, options.entry);
   const outPath = resolvePath(rootDir, options.outFile);
-  const wasmPath = resolvePath(rootDir, options.wasmFile ?? 'build/module.wasm');
+  let temporaryDirectory: string | undefined;
+  let wasmPath: string;
+  if (options.wasmFile === undefined) {
+    mkdirSync(resolve(rootDir, 'build'), { recursive: true });
+    temporaryDirectory = mkdtempSync(resolve(rootDir, 'build/assemblyscript-'));
+    wasmPath = resolve(temporaryDirectory, 'module.wasm');
+  } else {
+    wasmPath = resolvePath(rootDir, options.wasmFile);
+  }
   const bindingsPath = wasmPath.replace(/\.wasm$/u, '.js');
   const optimizeLevel = options.optimizeLevel ?? 3;
   const shrinkLevel = options.shrinkLevel ?? 1;
 
-  mkdirSync(dirname(wasmPath), { recursive: true });
+  try {
+    mkdirSync(dirname(wasmPath), { recursive: true });
 
-  const argv = [
-    entryPath,
-    '--outFile',
-    wasmPath,
-    '--bindings',
-    'esm',
-    '--exportRuntime',
-    '--optimizeLevel',
-    String(optimizeLevel),
-    '--shrinkLevel',
-    String(shrinkLevel),
-  ];
-  if (options.emitText) {
-    argv.push('--textFile', wasmPath.replace(/\.wasm$/u, '.wat'));
+    const argv = [
+      entryPath,
+      '--outFile',
+      wasmPath,
+      '--bindings',
+      'esm',
+      '--exportRuntime',
+      '--optimizeLevel',
+      String(optimizeLevel),
+      '--shrinkLevel',
+      String(shrinkLevel),
+    ];
+    if (options.emitText) {
+      argv.push('--textFile', wasmPath.replace(/\.wasm$/u, '.wat'));
+    }
+
+    const asc = (await import('assemblyscript/asc')).default as unknown as AscModule;
+    const { error, stderr } = await asc.main(argv, {});
+    if (error) {
+      throw new Error(`AssemblyScript compilation failed: ${error.message}\n${stderr.toString()}`);
+    }
+
+    const wasm = readFileSync(wasmPath);
+    const bindings = readFileSync(bindingsPath, 'utf8');
+    const moduleSource = buildGeneratedModule(wasm.toString('base64'), extractInstantiate(bindings));
+
+    mkdirSync(dirname(outPath), { recursive: true });
+    writeFileSync(outPath, moduleSource, 'utf8');
+  } finally {
+    if (temporaryDirectory !== undefined) {
+      rmSync(temporaryDirectory, { recursive: true, force: true });
+    }
   }
-
-  const asc = (await import('assemblyscript/asc')).default as unknown as AscModule;
-  const { error, stderr } = await asc.main(argv, {});
-  if (error) {
-    throw new Error(`AssemblyScript compilation failed: ${error.message}\n${stderr.toString()}`);
-  }
-
-  const wasm = readFileSync(wasmPath);
-  const bindings = readFileSync(bindingsPath, 'utf8');
-  const moduleSource = buildGeneratedModule(wasm.toString('base64'), extractInstantiate(bindings));
-
-  mkdirSync(dirname(outPath), { recursive: true });
-  writeFileSync(outPath, moduleSource, 'utf8');
 }

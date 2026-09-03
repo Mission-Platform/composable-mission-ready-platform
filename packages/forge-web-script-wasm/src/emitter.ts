@@ -4,6 +4,7 @@ import type {
   ForgeWebScriptWasmBackendInput,
   ForgeWebScriptWasmBackendResult,
   ForgeWebScriptWasmBinaryOperator,
+  ForgeWebScriptWasmAggregateLayout,
   ForgeWebScriptWasmDiagnostic,
   ForgeWebScriptWasmExpression,
   ForgeWebScriptWasmFeatureRequirements,
@@ -199,6 +200,16 @@ function projectExpression(expression: ForgeWebScriptWasmExpression): ForgeWebSc
     return {
       ...expression,
       type: projectPrimitive({ name: expression.type }),
+    };
+  }
+  if (expression.kind === 'struct-value') {
+    const sourceType = expression.type as unknown as { readonly name: string; readonly reference?: string };
+    return {
+      ...expression,
+      type: sourceType.reference ?? sourceType.name,
+      fields: Object.fromEntries(
+        Object.entries(expression.fields).map(([name, value]) => [name, projectExpression(value)]),
+      ),
     };
   }
   if (expression.kind === 'identifier') return expression;
@@ -877,6 +888,7 @@ function emitWasm(
   targetFeatures: ForgeWebScriptTargetFeatures | undefined,
   compilerHints: ForgeWebScriptWasmCompilerHints | undefined,
   metadata: ForgeWebScriptWasmBackendInput['metadata'],
+  aggregateLayouts: readonly ForgeWebScriptWasmAggregateLayout[] = [],
 ): Uint8Array {
   const hasRegexRuntime = module.functions.some((declaration) =>
     /"standardLibrary":"(?:full|prefix|search)/.test(JSON.stringify(declaration.body)),
@@ -1028,6 +1040,7 @@ function emitWasm(
     if (index === -1) throw new Error(`Unknown collection runtime operation "${operation}".`);
     return allocatorFunctionIndex + 3 + index;
   };
+  const aggregateLayout = new Map(aggregateLayouts.map((layout) => [layout.name, layout]));
   const enumValues = new Map<string, number>();
   for (const declaration of module.enumDeclarations ?? [])
     for (const variant of declaration.variants) enumValues.set(variant.name, variant.value);
@@ -1112,7 +1125,10 @@ function emitWasm(
       return result;
     };
     const collectExpression = (expression: ForgeWebScriptWasmExpression): void => {
-      if (expression.kind === 'array-literal' || expression.kind === 'vector-literal') {
+      if (expression.kind === 'struct-value') {
+        expressionLocations.set(expression, allocateI32());
+        for (const value of Object.values(expression.fields)) collectExpression(value);
+      } else if (expression.kind === 'array-literal' || expression.kind === 'vector-literal') {
         expressionLocations.set(expression, allocateI32());
         for (const element of expression.elements) collectExpression(element);
       } else if (expression.kind === 'call') {
@@ -1255,6 +1271,30 @@ function emitWasm(
             0x41,
             ...signedLeb(expression.value === true ? 1 : expression.value === false ? 0 : Number(expression.value)),
           );
+      } else if (expression.kind === 'struct-value') {
+        const temporary = expressionLocations.get(expression);
+        const layout = aggregateLayout.get(expression.type);
+        if (temporary === undefined || layout === undefined)
+          throw new Error(`FWS-RECORD-001: Record layout for "${expression.type}" is unavailable.`);
+        body.push(
+          0x41,
+          ...signedLeb(layout.size),
+          0x10,
+          ...unsignedLeb(allocatorFunctionIndex),
+          0x21,
+          ...unsignedLeb(temporary.indexes[0]!),
+        );
+        for (const field of layout.fields) {
+          const value = expression.fields[field.name];
+          if (value === undefined) throw new Error(`FWS-RECORD-002: Record field "${field.name}" is missing.`);
+          body.push(0x20, ...unsignedLeb(temporary.indexes[0]!), 0x41, ...signedLeb(field.offset), 0x6a);
+          emitExpression(value, visible);
+          if (field.type === 'f64') body.push(0x39, 0x03, 0x00);
+          else if (field.type === 'f32') body.push(0x38, 0x02, 0x00);
+          else if (field.type === 'i64' || field.type === 'u64') body.push(0x37, 0x03, 0x00);
+          else body.push(0x36, 0x02, 0x00);
+        }
+        body.push(0x20, ...unsignedLeb(temporary.indexes[0]!));
       } else if (expression.kind === 'array-literal' || expression.kind === 'vector-literal') {
         const temporary = expressionLocations.get(expression);
         if (temporary === undefined) throw new Error('Collection literal is missing its temporary handle local.');
@@ -1882,8 +1922,10 @@ function emitWasm(
             );
           } else {
             emitExpression(statement.value, current);
-            if (location !== undefined)
+            if (location !== undefined) {
               for (const index of location.indexes.toReversed()) body.push(0x21, ...unsignedLeb(index));
+              if (statement.index === undefined) visible.set(statement.name, location);
+            }
           }
         } else if (statement.kind === 'return') {
           const tailCall =
@@ -2720,7 +2762,7 @@ function emitVariant(
   ];
   if (diagnostics.length > 0) return { wat, diagnostics, iteratorExports: lowered.iteratorExports };
   try {
-    const wasm = emitWasm(stage.module, targetFeatures, compilerHints, metadata);
+    const wasm = emitWasm(stage.module, targetFeatures, compilerHints, metadata, stage.module.aggregateLayouts);
     if (!WebAssembly.validate(wasm.buffer as ArrayBuffer)) {
       let validationDetail = '';
       try {

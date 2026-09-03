@@ -4,7 +4,12 @@ import path from 'node:path';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { exportForgeRepositoryBundle, startForgeBridgeServer } from './bridge.js';
+import {
+  createForgeBridgeServer,
+  DEFAULT_ALLOWED_ORIGIN,
+  exportForgeRepositoryBundle,
+  startForgeBridgeServer,
+} from './bridge.js';
 
 import type { ForgeRepositoryExportRequest } from '@mission-platform/forge-figma';
 
@@ -119,24 +124,104 @@ describe('Forge repository export', () => {
     expect(response.results[0]?.error).toContain('size limit');
   });
 
-  it('serves the versioned protocol over HTTP and rejects malformed JSON', async () => {
+  it('generates a distinct authentication token for each server', () => {
+    const firstServer = createForgeBridgeServer({ repositoryRoots: { mission: '/tmp/mission' } });
+    const secondServer = createForgeBridgeServer({ repositoryRoots: { mission: '/tmp/mission' } });
+
+    expect(firstServer.authToken).toHaveLength(43);
+    expect(secondServer.authToken).toHaveLength(43);
+    expect(firstServer.authToken).not.toBe(secondServer.authToken);
+    expect(firstServer.allowedOrigin).toBe(DEFAULT_ALLOWED_ORIGIN);
+  });
+
+  it('rejects unauthorized HTTP exports before reading or writing the bundle', async () => {
     const root = await repositoryRoot();
-    const server = await startForgeBridgeServer({ repositoryRoots: { mission: root }, port: 0 });
+    const server = await startForgeBridgeServer({
+      repositoryRoots: { mission: root },
+      authToken: 'test-token',
+      port: 0,
+    });
+    const address = server.address();
+    if (typeof address !== 'object' || address === null) throw new Error('The test bridge did not bind to a port.');
+
+    try {
+      const unauthorizedResponse = await fetch(`http://127.0.0.1:${address.port}/export`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', origin: DEFAULT_ALLOWED_ORIGIN },
+        body: JSON.stringify(request()),
+      });
+      expect(unauthorizedResponse.status).toBe(401);
+      expect(await unauthorizedResponse.json()).toMatchObject({ protocolVersion: 1, ok: false });
+      await expect(readFile(path.join(root, 'components/checkout/Checkout.tsx'))).rejects.toMatchObject({
+        code: 'ENOENT',
+      });
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
+  it('rejects cross-origin HTTP exports even with a valid authentication token', async () => {
+    const root = await repositoryRoot();
+    const server = await startForgeBridgeServer({
+      repositoryRoots: { mission: root },
+      authToken: 'test-token',
+      port: 0,
+    });
+    const address = server.address();
+    if (typeof address !== 'object' || address === null) throw new Error('The test bridge did not bind to a port.');
+
+    try {
+      const crossOriginResponse = await fetch(`http://127.0.0.1:${address.port}/export`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          authorization: 'Bearer test-token',
+          origin: 'https://evil.example',
+        },
+        body: JSON.stringify(request()),
+      });
+      expect(crossOriginResponse.status).toBe(403);
+      expect(crossOriginResponse.headers.get('access-control-allow-origin')).toBeNull();
+      await expect(readFile(path.join(root, 'components/checkout/Checkout.tsx'))).rejects.toMatchObject({
+        code: 'ENOENT',
+      });
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
+  it('serves the versioned protocol over HTTP for an authenticated allowed-origin request', async () => {
+    const root = await repositoryRoot();
+    const server = await startForgeBridgeServer({
+      repositoryRoots: { mission: root },
+      authToken: 'test-token',
+      port: 0,
+    });
     const address = server.address();
     if (typeof address !== 'object' || address === null) throw new Error('The test bridge did not bind to a port.');
 
     try {
       const validResponse = await fetch(`http://127.0.0.1:${address.port}/export`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          authorization: 'Bearer test-token',
+          origin: DEFAULT_ALLOWED_ORIGIN,
+        },
         body: JSON.stringify(request()),
       });
       expect(validResponse.status).toBe(200);
+      expect(validResponse.headers.get('access-control-allow-origin')).toBe(DEFAULT_ALLOWED_ORIGIN);
+      expect(validResponse.headers.get('access-control-allow-origin')).not.toBe('*');
       expect(await validResponse.json()).toMatchObject({ protocolVersion: 1, ok: true });
 
       const malformedResponse = await fetch(`http://127.0.0.1:${address.port}/export`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          authorization: 'Bearer test-token',
+          origin: DEFAULT_ALLOWED_ORIGIN,
+        },
         body: '{',
       });
       expect(malformedResponse.status).toBe(400);
@@ -144,7 +229,11 @@ describe('Forge repository export', () => {
 
       const invalidShapeResponse = await fetch(`http://127.0.0.1:${address.port}/export`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          authorization: 'Bearer test-token',
+          origin: DEFAULT_ALLOWED_ORIGIN,
+        },
         body: JSON.stringify({ protocolVersion: 1 }),
       });
       expect(invalidShapeResponse.status).toBe(400);

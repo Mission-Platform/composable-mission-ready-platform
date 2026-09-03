@@ -43,4 +43,25 @@ class FwsDapCommandLineTest {
             Files.deleteIfExists(root)
         }
     }
+
+    @Test
+    fun rejectsAnExplicitNodePathForAnUntrustedProject() {
+        val root = Files.createTempDirectory("fws-dap-test")
+        val adapter = Files.createFile(root.resolve("main.js"))
+        try {
+            val error = assertFailsWith<IllegalArgumentException> {
+                FwsCommandLine.buildDapAdapter(
+                    FwsLaunchSettings(nodeExecutable = root.resolve("node").toString()),
+                    root.toString(),
+                    adapter,
+                    projectTrusted = false,
+                )
+            }
+
+            assertTrue(error.message.orEmpty().contains("untrusted project"))
+        } finally {
+            Files.deleteIfExists(adapter)
+            Files.deleteIfExists(root)
+        }
+    }
 }

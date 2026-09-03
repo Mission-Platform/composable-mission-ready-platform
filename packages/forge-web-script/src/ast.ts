@@ -160,6 +160,8 @@ export interface ForgeWebScriptStructField {
 export interface ForgeWebScriptStructDeclaration {
   readonly kind: 'struct';
   readonly name: string;
+  /** Records use the same source representation but cross the host ABI as values. */
+  readonly record?: true;
   readonly documentation?: ForgeWebScriptDocumentation;
   readonly genericParameters: readonly ForgeWebScriptGenericParameter[];
   readonly fields: readonly ForgeWebScriptStructField[];

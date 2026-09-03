@@ -10,8 +10,8 @@ import {
   type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
-import { encodeMicroQr, encodeQr, encodeRmqr } from '@/encoder';
-import type { QrErrorCorrection } from '@/types';
+import { encodeMicroQr, encodeQr, encodeRmqr } from '../../../encoder';
+import type { QrErrorCorrection } from '../../../types';
 
 import styles from './forge-qr-code.module.scss';
 

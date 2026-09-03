@@ -4,6 +4,7 @@ export const FORGE_FIGMA_UI_ORIGIN = 'https://www.figma.com';
 
 export interface ForgeBridgeConfig {
   readonly bridgeUrl: string;
+  readonly authToken: string;
   readonly repositoryRootId: string;
   readonly targetDirectory: string;
 }
@@ -81,6 +82,9 @@ export function isForgeBridgeConfig(value: unknown): value is ForgeBridgeConfig 
   return (
     typeof value.bridgeUrl === 'string' &&
     isAllowedForgeBridgeUrl(value.bridgeUrl) &&
+    typeof value.authToken === 'string' &&
+    value.authToken.length > 0 &&
+    value.authToken.length <= 256 &&
     typeof value.repositoryRootId === 'string' &&
     value.repositoryRootId.length > 0 &&
     value.repositoryRootId.length <= 256 &&

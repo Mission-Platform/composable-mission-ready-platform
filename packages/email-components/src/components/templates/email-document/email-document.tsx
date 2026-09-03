@@ -1,4 +1,4 @@
-import { EmailPreheader } from '@/components/organisms';
+import { EmailPreheader } from '../../organisms';
 
 import type { MpChild, MpElement } from '@mission-platform/forge';
 

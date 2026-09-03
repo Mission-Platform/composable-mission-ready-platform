@@ -20,7 +20,7 @@ import '@mission-platform/layouts';
 import { updateRouteMetadata } from './app/metadata';
 import { createDocsRouter } from './app/router';
 
-import type { MpRouterAdapter } from '@mission-platform/router';
+import type { MpRouteChangeEvent, MpRouterAdapter } from '@mission-platform/router';
 
 import './app/app-shell';
 
@@ -75,7 +75,7 @@ const outlet = shell.querySelector<HTMLElement & { setRouter?: (router: MpRouter
 );
 outlet?.setRouter?.(router);
 
-router.subscribe((event) => {
+router.subscribe((event: MpRouteChangeEvent) => {
   if (event.type !== 'success' && event.type !== 'redirect') return;
   updateRouteMetadata(event.to);
 });

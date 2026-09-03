@@ -70,6 +70,7 @@
   "dependencies": {
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-web-script-runtime": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/typography": "workspace:*"
   },

@@ -11,10 +11,27 @@
  * adapter. Components return Solid `JSX.Element` values via hyperscript-style
  * `createComponent` / plain functions.
  */
-import { createComponent, createEffect, createMemo, createSignal, type JSX } from 'solid-js';
+import { createComponent, createEffect, createMemo, createSignal, Suspense as SolidSuspense, type JSX } from 'solid-js';
 import { Dynamic, isServer, Portal } from 'solid-js/web';
 
 import type { HtmlContentProperties } from '../runtime/html-content';
+
+export interface SuspenseProperties {
+  fallback?: JSX.Element;
+  children?: JSX.Element;
+}
+
+/** The Solid-native implementation of the neutral async boundary. */
+export function Suspense(properties: SuspenseProperties): JSX.Element {
+  return createComponent(SolidSuspense, {
+    get fallback() {
+      return properties.fallback;
+    },
+    get children() {
+      return properties.children;
+    },
+  });
+}
 
 /** The properties accepted by the Solid {@link Teleport} component. */
 export interface TeleportProperties {

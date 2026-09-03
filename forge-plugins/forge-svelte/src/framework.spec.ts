@@ -112,6 +112,45 @@ describe("Svelte Forge framework package", () => {
     );
   });
 
+  it("lowers the neutral Suspense marker to a Svelte pending boundary", () => {
+    const generated = generate(
+      semanticModule({
+        imports: [
+          moduleImport(
+            "import { Suspense } from '@mission-platform/forge';",
+            NEUTRAL,
+            { valueNames: ["Suspense"] },
+          ),
+        ],
+        component: component({
+          name: "Fixture",
+          parameter: "properties",
+          returned: {
+            expression: "<Suspense />",
+            nodes: [
+              element("Suspense", {
+                attributes: [
+                  expressionAttribute("fallback", "undefined", [
+                    element("span", { children: [textChild("Loading")] }),
+                  ]),
+                ],
+                children: [expressionChild("loadContent()")],
+              }),
+            ],
+          },
+        }),
+      }),
+    );
+
+    const output = markup(generated.code);
+    expect(output).toContain("<svelte:boundary>");
+    expect(output).toContain("{#snippet pending()}");
+    expect(output).toContain("Loading");
+    expect(output).toContain("loadContent()");
+    expect(output).not.toContain("<Suspense");
+    expectCompiles(generated.code);
+  });
+
   it("lowers state, derived values and effects into runes", () => {
     const button = element("button", {
       attributes: [expressionAttribute("onClick", "() => setCount(count + 1)")],

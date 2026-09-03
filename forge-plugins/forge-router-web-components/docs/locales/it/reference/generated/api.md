@@ -148,7 +148,7 @@ Nessuna descrizione fornita.
 **Tipo:** componente
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
 Tag di elemento personalizzato utilizzato per collegamenti neutri compilati.
@@ -158,7 +158,7 @@ Tag di elemento personalizzato utilizzato per collegamenti neutri compilati.
 **Tipo:** componente
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 Tag con elemento personalizzato utilizzato per prese neutre compilate.
@@ -251,7 +251,7 @@ Nessuna descrizione fornita.
 
 - **@deprecato:** Preferisco {@link useMpRouter}.
 
-### useMpNavigation
+### useMpNavigazione
 
 **Tipo:** funzione
 
@@ -300,6 +300,16 @@ cronologia, protezioni, reindirizzamenti, abbonamenti e comportamento di scorrim
 | Nome    | Digitare                           | Descrizione |
 | ------- | ---------------------------------- | ----------- |
 | opzioni | MpWebComponentsRouterOptions<View> |             |
+
+### MpRouterLoadingFalback
+
+**Tipo:** componente
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+Contenuto reso da una presa del router durante il caricamento di una vista di destinazione.
 
 ### MpWebComponentsRouter
 

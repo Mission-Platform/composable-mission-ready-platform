@@ -106,55 +106,22 @@ describe("benchmark build smoke tests", () => {
 
     const moduleUrl = String(artifact.metadata?.moduleUrl);
     const adapter = createRustWasmAdapter(async (url) => {
-      // wasm-pack bundler output imports the .wasm as an ESM side-effect.
-      // Prefer the Node-friendly path: load bg.js helpers and init with bytes.
       const modulePath = fileURLToPath(url);
       const directory = path.dirname(modulePath);
       const bgUrl = pathToFileURL(path.join(directory, "benchmark_bg.js")).href;
       const wasmPath = path.join(directory, "benchmark_bg.wasm");
-      try {
-        const bg = (await import(bgUrl)) as {
-          __wbg_set_wasm?: (exports: WebAssembly.Exports) => void;
-          arithmetic_reduce?: unknown;
-          string_transform?: unknown;
-          dataset_scan?: unknown;
-        };
-        if (typeof bg.__wbg_set_wasm === "function") {
-          const wasmBytes = readFileSync(wasmPath);
-          const instance = await WebAssembly.instantiate(wasmBytes, {});
-          bg.__wbg_set_wasm(instance.instance.exports);
-          return bg as never;
-        }
-      } catch {
-        // Fall through to direct module import.
-      }
-
-      const loaded = (await import(url)) as Record<string, unknown> & {
-        default?: unknown;
-        initSync?: (module: BufferSource) => unknown;
-        init?: (module?: unknown) => Promise<unknown>;
+      const bg = (await import(bgUrl)) as {
+        __wbg_set_wasm: (exports: WebAssembly.Exports) => void;
+        arithmetic_reduce?: unknown;
+        string_transform?: unknown;
+        dataset_scan?: unknown;
       };
       const wasmBytes = readFileSync(wasmPath);
-      switch (true) {
-        case typeof loaded.initSync === "function": {
-          loaded.initSync(wasmBytes);
-          break;
-        }
-        case typeof loaded.init === "function": {
-          await loaded.init(wasmBytes);
-          break;
-        }
-        case typeof loaded.default === "function": {
-          await (loaded.default as (module?: unknown) => Promise<unknown>)(
-            wasmBytes,
-          );
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-      return loaded as never;
+      const instance = await WebAssembly.instantiate(wasmBytes, {
+        "./benchmark_bg.js": bg as WebAssembly.ModuleImports,
+      });
+      bg.__wbg_set_wasm(instance.instance.exports);
+      return bg as never;
     });
 
     const initialized = await adapter.initialize({

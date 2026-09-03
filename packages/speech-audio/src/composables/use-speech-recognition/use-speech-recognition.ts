@@ -147,7 +147,12 @@ export function useSpeechRecognition(): SpeechRecognitionControls {
     });
 
     recognition.current = instance;
-    instance.start();
+    try {
+      instance.start();
+    } catch (error_: unknown) {
+      setIsListening(() => false);
+      setError(() => (error_ instanceof Error ? error_.message : String(error_)));
+    }
   };
 
   useEffect(() => {

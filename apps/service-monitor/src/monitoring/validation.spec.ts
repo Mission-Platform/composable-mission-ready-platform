@@ -9,6 +9,15 @@ describe('monitor destination policy', () => {
     expect(isAllowedMonitorHost('localhost', 3000)).toBe(false);
   });
 
+  it('rejects alternate loopback and unspecified-address forms', () => {
+    expect(isAllowedMonitorUrl('https://[::ffff:127.0.0.1]/health')).toBe(false);
+    expect(isAllowedMonitorUrl('https://[::ffff:7f00:1]/health')).toBe(false);
+    expect(isAllowedMonitorUrl('https://[::]/health')).toBe(false);
+    expect(isAllowedMonitorHost('127.1')).toBe(false);
+    expect(isAllowedMonitorHost('2130706433')).toBe(false);
+    expect(isAllowedMonitorHost('::ffff:127.0.0.1')).toBe(false);
+  });
+
   it('allows explicitly trusted private destinations with bounded custom ports', () => {
     const policy = { allowPrivateDestinations: true };
     expect(isAllowedMonitorUrl('http://127.0.0.1:3000/health', policy)).toBe(true);

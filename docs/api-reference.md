@@ -20,7 +20,7 @@ package rather than this page.
 The foundation of the "write-once" architecture, providing a framework-neutral JSX runtime and hooks.
 
 | Export             | Type     | Description                                                                             |
-|:-------------------|:---------|:----------------------------------------------------------------------------------------|
+| :----------------- | :------- | :-------------------------------------------------------------------------------------- |
 | `h`, `Fragment`    | Function | JSX factory and fragment for authoring components.                                      |
 | `useState`         | Hook     | Framework-neutral state hook.                                                           |
 | `useEffect`        | Hook     | Framework-neutral effect hook.                                                          |
@@ -37,14 +37,14 @@ not provide a framework registry. `defineViteForgeComponents` and
 `defineTsdownForgeComponents` (plus the hook and CMS helpers) share an in-process
 `ForgeCompilerService` for one build or watch session.
 
-| Capability | Description |
-|:-----------|:------------|
-| Service lifecycle | Reuse source, graph, parsed-source, semantic-IR, and target-artifact state across builds; dispose one-shot services after completion and watcher services on close. |
-| Cache keys | Source/dependency/config fingerprints, compiler and router options, `tsconfig` `baseUrl`/`paths`, target ID, plugin identity/version, and relevant conditions. |
-| Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable. |
-| Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion. |
-| Artifact manifest | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion. |
-| Extension point | Implement and pass a `FrameworkOutputPlugin` from a caller-owned `forge-plugin-*` package; do not add target branches to the neutral driver. |
+| Capability         | Description                                                                                                                                                         |
+| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Service lifecycle  | Reuse source, graph, parsed-source, semantic-IR, and target-artifact state across builds; dispose one-shot services after completion and watcher services on close. |
+| Cache keys         | Source/dependency/config fingerprints, compiler and router options, `tsconfig` `baseUrl`/`paths`, target ID, plugin identity/version, and relevant conditions.      |
+| Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable.                     |
+| Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion.                                 |
+| Artifact manifest  | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion.                                                     |
+| Extension point    | Implement and pass a `FrameworkOutputPlugin` from a caller-owned `forge-plugin-*` package; do not add target branches to the neutral driver.                        |
 
 Configure aliases through the project `tsconfig.json` (`baseUrl` and
 `paths`); Vite and tsdown graph preparation use the same alias facts. Router
@@ -58,13 +58,13 @@ Framework-neutral route contracts, pure matching helpers, and compiler markers f
 shared packages. Applications own route records and native router instances; the
 Forge router target selected by the application supplies the runtime capabilities.
 
-| Export / package | Type | Description |
-|:-----------------|:-----|:------------|
-| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | Types | Route records, params, query/hash state, metadata, and navigation targets. |
-| `defineRoutes`, `matchRoutes`, `resolveLocation` | Functions | Define route trees and resolve paths without a DOM or framework runtime. |
-| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | Types | Navigation outcomes/events, guards, pluggable history, and adapter contracts. |
-| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Compiler markers | Neutral link, route-state, navigation, resolution, and outlet capabilities consumed by shared packages. |
-| `@mission-platform/forge-router-*` | Forge targets | Independently selected native router targets for Vue Router, React Router, SolidJS Router, SvelteKit, RedwoodSDK, and Web Components. |
+| Export / package                                                         | Type             | Description                                                                                                                           |
+| :----------------------------------------------------------------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation`                    | Types            | Route records, params, query/hash state, metadata, and navigation targets.                                                            |
+| `defineRoutes`, `matchRoutes`, `resolveLocation`                         | Functions        | Define route trees and resolve paths without a DOM or framework runtime.                                                              |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter`     | Types            | Navigation outcomes/events, guards, pluggable history, and adapter contracts.                                                         |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Compiler markers | Neutral link, route-state, navigation, resolution, and outlet capabilities consumed by shared packages.                               |
+| `@mission-platform/forge-router-*`                                       | Forge targets    | Independently selected native router targets for Vue Router, React Router, SolidJS Router, SvelteKit, RedwoodSDK, and Web Components. |
 
 Runtime packages own history and reactive state; the neutral package never imports a UI framework. For Web Components,
 register the elements once and pass complex targets through DOM properties rather than serialized attributes:
@@ -75,18 +75,53 @@ import {
   createWebComponentsRouter,
   registerRouterElements,
   setForgeRouter,
-} from '@mission-platform/forge-router-web-components/runtime';
+} from "@mission-platform/forge-router-web-components/runtime";
 
 registerRouterElements();
 const router = createWebComponentsRouter({
-  history: new MpMemoryHistory('/overview'),
-  routes: [{ path: '/overview', component: () => 'Documentation' }],
+  history: new MpMemoryHistory("/overview"),
+  routes: [{ path: "/overview", component: () => "Documentation" }],
 });
 setForgeRouter(router);
-const link = document.createElement('forge-router-link');
-link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+const link = document.createElement("forge-router-link");
+link.to = { path: "/overview", query: { q: "router" }, hash: "results" };
 link.router = router;
 ```
+
+### Async route views and `Suspense`
+
+Forge's neutral compiler recognizes `Suspense` and lowers it to the native
+async boundary for the selected target. Keep the fallback in the shared source
+so every target presents the same loading state without importing a framework
+adapter:
+
+```tsx
+<Suspense fallback={<LoadingSpinner label="Loading documentation" />}>
+  <DocumentationRoute />
+</Suspense>
+```
+
+React, Vue, Solid, and Svelte receive their native suspense boundary. A
+framework-free application uses the Web Components router's outlet fallback
+for async route views instead:
+
+```ts
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory("/overview"),
+  loadingFallback: () => {
+    const spinner = document.createElement("span");
+    spinner.className = "docs-loading-spinner";
+    spinner.setAttribute("aria-label", "Loading documentation");
+    return spinner;
+  },
+  routes: [{ path: "/:slug(.*)", component: loadDocumentationView }],
+});
+```
+
+The router emits a loading overlay from `forge-router-outlet` while the async
+route view resolves. The current view remains mounted until the destination is
+ready, and the overlay is removed after success, redirect, cancellation, or
+failure.
 
 ## UI & Design
 
@@ -95,7 +130,7 @@ link.router = router;
 Centralized design tokens for colors, typography, and spacing.
 
 | Export        | Description                                                               |
-|:--------------|:--------------------------------------------------------------------------|
+| :------------ | :------------------------------------------------------------------------ |
 | `tokens`      | JS/TS object containing all design tokens (e.g., `tokens.color.primary`). |
 | `tokens.scss` | SCSS variables for use in stylesheets.                                    |
 
@@ -104,7 +139,7 @@ Centralized design tokens for colors, typography, and spacing.
 Responsive utilities and visibility components.
 
 | Export           | Type      | Description                                                |
-|:-----------------|:----------|:-----------------------------------------------------------|
+| :--------------- | :-------- | :--------------------------------------------------------- |
 | `useBreakpoints` | Hook      | Returns reactive breakpoint status.                        |
 | `ShowIf`         | Component | Renders children only when a breakpoint condition matches. |
 | `HideIf`         | Component | Hides children when a breakpoint condition matches.        |
@@ -127,7 +162,7 @@ Shared UI components authored once and available for multiple frameworks.
 Internationalization system based on i18next.
 
 | Export            | Description                                               |
-|:------------------|:----------------------------------------------------------|
+| :---------------- | :-------------------------------------------------------- |
 | `createForgeI18N` | Initializes the i18n instance with platform defaults.     |
 | `useI18n`         | Hook for translations and locale switching in components. |
 
@@ -136,7 +171,7 @@ Internationalization system based on i18next.
 Meta tag and SEO management.
 
 | Export   | Description                                                           |
-|:---------|:----------------------------------------------------------------------|
+| :------- | :-------------------------------------------------------------------- |
 | `useSeo` | Hook to declaratively set page title, meta tags, and Open Graph data. |
 
 ### @mission-platform/map
@@ -144,7 +179,7 @@ Meta tag and SEO management.
 Reactive wrapper for MapLibre GL.
 
 | Component       | Description                               |
-|:----------------|:------------------------------------------|
+| :-------------- | :---------------------------------------- |
 | `<MpMap>`       | Main map container component.             |
 | `<MpMapMarker>` | Component for placing markers on the map. |
 
@@ -153,7 +188,7 @@ Reactive wrapper for MapLibre GL.
 Camera-based barcode and QR code scanning.
 
 | Component         | Description                                                      |
-|:------------------|:-----------------------------------------------------------------|
+| :---------------- | :--------------------------------------------------------------- |
 | `<MpCodeScanner>` | Component that initializes camera stream and emits scan results. |
 
 ## Integrations
@@ -163,7 +198,7 @@ Camera-based barcode and QR code scanning.
 Bridges RxJS Observables to component state.
 
 | Hook            | Description                                                                 |
-|:----------------|:----------------------------------------------------------------------------|
+| :-------------- | :-------------------------------------------------------------------------- |
 | `useObservable` | Subscribes to an observable and returns its latest value as reactive state. |
 
 ### @mission-platform/d3
@@ -171,7 +206,7 @@ Bridges RxJS Observables to component state.
 Framework-neutral D3.js integration.
 
 | Hook    | Description                                                        |
-|:--------|:-------------------------------------------------------------------|
+| :------ | :----------------------------------------------------------------- |
 | `useD3` | Binds a D3 selection to a component ref with lifecycle management. |
 
 ### @mission-platform/hunspell
@@ -179,7 +214,7 @@ Framework-neutral D3.js integration.
 WebAssembly-powered spell checking.
 
 | Export         | Description                                             |
-|:---------------|:--------------------------------------------------------|
+| :------------- | :------------------------------------------------------ |
 | `initHunspell` | Loads and instantiates the Hunspell WebAssembly module. |
 | `spell`        | Checks if a word is spelled correctly.                  |
 | `suggest`      | Provides spelling suggestions for a word.               |
@@ -284,7 +319,7 @@ package in `packages/`, including the typed WebAssembly façades.
 ### Core and UI
 
 | Package                        | Purpose                                                       |
-|:-------------------------------|:--------------------------------------------------------------|
+| :----------------------------- | :------------------------------------------------------------ |
 | `@mission-platform/forge`      | Framework-neutral JSX runtime and adapters.                   |
 | `@mission-platform/components` | Write-once UI components.                                     |
 | `@mission-platform/icons`      | Write-once SVG icon components.                               |
@@ -295,34 +330,34 @@ package in `packages/`, including the typed WebAssembly façades.
 
 ### Composables and integrations
 
-| Package                            | Purpose                                                       |
-|:-----------------------------------|:--------------------------------------------------------------|
-| `@mission-platform/breakpoints`    | Responsive breakpoint state and visibility helpers.           |
-| `@mission-platform/d3`             | D3 selection lifecycle composable and margin utilities.       |
-| `@mission-platform/i18n`           | i18next state and framework integration helpers.              |
-| `@mission-platform/map`            | MapLibre map components and composables.                      |
-| `@mission-platform/observers`      | Intersection, mutation, and performance observer composables. |
-| `@mission-platform/phone-number`   | Typed WebAssembly phone-number parsing and formatting.        |
-| `@mission-platform/router`         | Framework-neutral route contracts and compiler capabilities. |
-| `@mission-platform/forge-router-web-components` | Web Components router target and framework-free runtime. |
-| `@mission-platform/rxjs`           | RxJS observable and subscription composables.                 |
-| `@mission-platform/scheduler`     | Scheduler UI, recurrence, and calendar layout domain logic. |
-| `@mission-platform/vcard`         | RFC 6350 vCard and RFC 5545 iCalendar data and components.  |
-| `@mission-platform/content`       | Content AST, builders, Monaco, Markdown, and WYSIWYG components. |
-| `@mission-platform/seo`            | Metadata, Open Graph, and structured-data composables.        |
-| `@mission-platform/speech-audio`   | Speech, audio, and Web MIDI composables.                      |
-| `@mission-platform/three`          | Three.js canvas and lifecycle composables.                    |
+| Package                                         | Purpose                                                          |
+| :---------------------------------------------- | :--------------------------------------------------------------- |
+| `@mission-platform/breakpoints`                 | Responsive breakpoint state and visibility helpers.              |
+| `@mission-platform/d3`                          | D3 selection lifecycle composable and margin utilities.          |
+| `@mission-platform/i18n`                        | i18next state and framework integration helpers.                 |
+| `@mission-platform/map`                         | MapLibre map components and composables.                         |
+| `@mission-platform/observers`                   | Intersection, mutation, and performance observer composables.    |
+| `@mission-platform/phone-number`                | Typed WebAssembly phone-number parsing and formatting.           |
+| `@mission-platform/router`                      | Framework-neutral route contracts and compiler capabilities.     |
+| `@mission-platform/forge-router-web-components` | Web Components router target and framework-free runtime.         |
+| `@mission-platform/rxjs`                        | RxJS observable and subscription composables.                    |
+| `@mission-platform/scheduler`                   | Scheduler UI, recurrence, and calendar layout domain logic.      |
+| `@mission-platform/vcard`                       | RFC 6350 vCard and RFC 5545 iCalendar data and components.       |
+| `@mission-platform/content`                     | Content AST, builders, Monaco, Markdown, and WYSIWYG components. |
+| `@mission-platform/seo`                         | Metadata, Open Graph, and structured-data composables.           |
+| `@mission-platform/speech-audio`                | Speech, audio, and Web MIDI composables.                         |
+| `@mission-platform/three`                       | Three.js canvas and lifecycle composables.                       |
 
 ### Code and WebAssembly packages
 
-| Package                                     | Purpose                                           |
-|:--------------------------------------------|:--------------------------------------------------|
-| `@mission-platform/barcode`                 | 1D barcode encode/decode façade and component.    |
-| `@mission-platform/code-scanner`            | Camera and image code-scanning component.         |
-| `@mission-platform/matrix-code`             | Data Matrix and Aztec encode/decode façade.       |
-| `@mission-platform/qr-code`                 | QR encode/decode façade and component.            |
-| `@mission-platform/harper`                  | Harper grammar and style integration for Monaco.  |
-| `@mission-platform/hunspell`                | Emscripten Hunspell spell-checking wrapper.       |
+| Package                          | Purpose                                          |
+| :------------------------------- | :----------------------------------------------- |
+| `@mission-platform/barcode`      | 1D barcode encode/decode façade and component.   |
+| `@mission-platform/code-scanner` | Camera and image code-scanning component.        |
+| `@mission-platform/matrix-code`  | Data Matrix and Aztec encode/decode façade.      |
+| `@mission-platform/qr-code`      | QR encode/decode façade and component.           |
+| `@mission-platform/harper`       | Harper grammar and style integration for Monaco. |
+| `@mission-platform/hunspell`     | Emscripten Hunspell spell-checking wrapper.      |
 
 ### Forge compiler targets
 
@@ -330,30 +365,30 @@ These live in `forge-plugins/` rather than `packages/`. A **framework** plugin d
 is lowered to; a **CMS** target decides which content platform it is projected onto. The two axes compose, so any CMS
 target may be bound to any framework plugin. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
 
-| Package                                          | Purpose                                                                        |
-|:-------------------------------------------------|:--------------------------------------------------------------------------------|
-| `@mission-platform/forge-plugin-api`             | `FrameworkOutputPlugin` contract, semantic IR types, and build adapter types.   |
-| `@mission-platform/forge-plugin-react`           | React output target.                                                            |
-| `@mission-platform/forge-plugin-vue`             | Vue 3 output target.                                                            |
-| `@mission-platform/forge-plugin-solid`           | Solid output target.                                                            |
-| `@mission-platform/forge-plugin-svelte`          | Svelte 5 output target.                                                         |
-| `@mission-platform/forge-plugin-web-components`  | Web Components output target.                                                   |
-| `@mission-platform/forge-cms-plugin-api`         | `CmsOutputPlugin` contract, neutral content model, CMS driver, and build helpers. |
-| `@mission-platform/forge-cms-storyblok`          | Storyblok component objects, blok wrappers, and `components.json`.              |
-| `@mission-platform/forge-cms-astro`              | Static `.astro` templates and `client:load` framework islands.                  |
-| `@mission-platform/forge-cms-ghost`              | Ghost Handlebars partials and a `config.custom` theme fragment.                 |
-| `@mission-platform/forge-cms-jekyll`             | Jekyll Liquid includes, `_data` schema, and a `_config.yml` fragment.           |
-| `@mission-platform/forge-cms-webflow`            | Webflow `declareComponent` code components and a `webflow.json` library fragment. |
+| Package                                         | Purpose                                                                           |
+| :---------------------------------------------- | :-------------------------------------------------------------------------------- |
+| `@mission-platform/forge-plugin-api`            | `FrameworkOutputPlugin` contract, semantic IR types, and build adapter types.     |
+| `@mission-platform/forge-plugin-react`          | React output target.                                                              |
+| `@mission-platform/forge-plugin-vue`            | Vue 3 output target.                                                              |
+| `@mission-platform/forge-plugin-solid`          | Solid output target.                                                              |
+| `@mission-platform/forge-plugin-svelte`         | Svelte 5 output target.                                                           |
+| `@mission-platform/forge-plugin-web-components` | Web Components output target.                                                     |
+| `@mission-platform/forge-cms-plugin-api`        | `CmsOutputPlugin` contract, neutral content model, CMS driver, and build helpers. |
+| `@mission-platform/forge-cms-storyblok`         | Storyblok component objects, blok wrappers, and `components.json`.                |
+| `@mission-platform/forge-cms-astro`             | Static `.astro` templates and `client:load` framework islands.                    |
+| `@mission-platform/forge-cms-ghost`             | Ghost Handlebars partials and a `config.custom` theme fragment.                   |
+| `@mission-platform/forge-cms-jekyll`            | Jekyll Liquid includes, `_data` schema, and a `_config.yml` fragment.             |
+| `@mission-platform/forge-cms-webflow`           | Webflow `declareComponent` code components and a `webflow.json` library fragment. |
 
 #### @mission-platform/forge-cms-plugin-api
 
-| Export                     | Type     | Description                                                                    |
-|:---------------------------|:---------|:--------------------------------------------------------------------------------|
-| `analyzeContentComponent`  | Function | Projects a neutral component's props onto the platform-neutral content model.  |
-| `ContentComponent`         | Type     | Ordered `ContentField`s, slots, and the `interactive` flag.                    |
-| `ContentFieldKind`         | Type     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
-| `CmsOutputPlugin`          | Type     | The target contract: a bound framework plugin plus the four emitters.          |
-| `defineForgeCmsPlugin`     | Function | Validates a CMS target at configuration time.                                  |
-| `generateCmsArtifacts`     | Function | The generic discover → IR → content model → emit → write driver.               |
-| `defineTsdownForgeCms`     | Function | tsdown config for one CMS target, emitting `dist/cms/<cms>/<framework>/**`.    |
-| `defineTsdownForgeCmsAll`  | Function | tsdown configs for a list of CMS targets.                                      |
+| Export                    | Type     | Description                                                                     |
+| :------------------------ | :------- | :------------------------------------------------------------------------------ |
+| `analyzeContentComponent` | Function | Projects a neutral component's props onto the platform-neutral content model.   |
+| `ContentComponent`        | Type     | Ordered `ContentField`s, slots, and the `interactive` flag.                     |
+| `ContentFieldKind`        | Type     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
+| `CmsOutputPlugin`         | Type     | The target contract: a bound framework plugin plus the four emitters.           |
+| `defineForgeCmsPlugin`    | Function | Validates a CMS target at configuration time.                                   |
+| `generateCmsArtifacts`    | Function | The generic discover → IR → content model → emit → write driver.                |
+| `defineTsdownForgeCms`    | Function | tsdown config for one CMS target, emitting `dist/cms/<cms>/<framework>/**`.     |
+| `defineTsdownForgeCmsAll` | Function | tsdown configs for a list of CMS targets.                                       |

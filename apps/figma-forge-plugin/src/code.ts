@@ -18,6 +18,7 @@ const BRIDGE_CONFIG_STORAGE_KEY = 'forge-figma.bridge-config';
 
 const DEFAULT_BRIDGE_CONFIG: ForgeBridgeConfig = {
   bridgeUrl: 'http://127.0.0.1:8787/export',
+  authToken: '',
   repositoryRootId: '',
   targetDirectory: '',
 };

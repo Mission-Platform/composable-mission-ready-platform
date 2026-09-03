@@ -124,6 +124,7 @@ export interface ForgeWebScriptAggregateFieldLayout {
 export interface ForgeWebScriptAggregateLayout {
   readonly name: string;
   readonly kind: 'struct' | 'enum';
+  readonly record?: true;
   readonly size: number;
   readonly alignment: number;
   readonly discriminantSize?: 1 | 2 | 4;
@@ -204,16 +205,24 @@ type FunctionDeclaration = {
 };
 
 function toAbiFunction(declaration: FunctionDeclaration, module?: ForgeWebScriptModule): ForgeWebScriptAbiFunction {
+  const referenceOf = (type: {
+    readonly name: ForgeWebScriptPrimitiveType;
+    readonly reference?: string;
+  }): string | undefined =>
+    type.reference ?? (module?.structs.some(({ name }) => name === type.name) ? type.name : undefined);
   const carrierType = (type: {
     readonly name: ForgeWebScriptPrimitiveType;
     readonly reference?: string;
-  }): ForgeWebScriptPrimitiveType => (type.reference === 'Array' || type.reference !== undefined ? 'i32' : type.name);
+  }): ForgeWebScriptPrimitiveType => {
+    const reference = referenceOf(type);
+    return reference === undefined ? type.name : 'i32';
+  };
   return {
     name: declaration.name,
     parameters: declaration.parameters.map((parameter) => ({
       name: parameter.name,
       type: carrierType(parameter.type),
-      ...(parameter.type.reference === undefined ? {} : { reference: parameter.type.reference }),
+      ...(referenceOf(parameter.type) === undefined ? {} : { reference: referenceOf(parameter.type) }),
       ...(parameter.type.arguments === undefined ? {} : { arguments: parameter.type.arguments }),
       ...(parameter.type.length === undefined ? {} : { length: parameter.type.length }),
       ...(parameter.type.reference === 'Array'
@@ -226,7 +235,7 @@ function toAbiFunction(declaration: FunctionDeclaration, module?: ForgeWebScript
       ...(parameter.type.referenceMode === undefined ? {} : { referenceMode: parameter.type.referenceMode }),
     })),
     result: carrierType(declaration.result),
-    ...(declaration.result.reference === undefined ? {} : { resultReference: declaration.result.reference }),
+    ...(referenceOf(declaration.result) === undefined ? {} : { resultReference: referenceOf(declaration.result) }),
     ...(declaration.result.arguments === undefined ? {} : { resultArguments: declaration.result.arguments }),
     ...(declaration.result.length === undefined ? {} : { resultLength: declaration.result.length }),
     ...(declaration.result.ownership === undefined ? {} : { resultOwnership: declaration.result.ownership }),
@@ -261,7 +270,7 @@ function aggregateLayouts(module: ForgeWebScriptModule): readonly ForgeWebScript
   const structs = module.structs.map((declaration) => {
     let offset = 0;
     const fields = declaration.fields.map((field) => {
-      const size = field.type.name === 'unit' ? 0 : 4;
+      const size = field.type.name === 'unit' && field.type.reference === undefined ? 0 : 4;
       const layout = {
         name: field.name,
         type: typeKey(field.type),
@@ -276,6 +285,7 @@ function aggregateLayouts(module: ForgeWebScriptModule): readonly ForgeWebScript
     return {
       name: declaration.name,
       kind: 'struct' as const,
+      ...(declaration.record ? { record: true as const } : {}),
       size: offset,
       alignment: 4,
       fields,

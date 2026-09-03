@@ -1,7 +1,11 @@
 import { createForgeWebScriptTraceRecorder, summarizeForgeWebScriptVmValue } from './trace.js';
 import { attachForgeWebScriptTrace, toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
 import { validateForgeWebScriptVmModule } from './vm-executor.js';
-import { FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION, FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION } from './vm.js';
+import {
+  FORGE_WEB_SCRIPT_VM_DEFAULT_MAX_MEMORY_PAGES,
+  FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION,
+  FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION,
+} from './vm.js';
 
 import type { ForgeWebScriptTraceOptions } from './trace.js';
 import type {
@@ -656,7 +660,7 @@ function artifactHash(artifact: ForgeWebScriptVmWasmArtifact): string {
   return hashText(JSON.stringify({ ...artifact, wasm: [...artifact.wasm], reproducibilityHash: '' }));
 }
 
-function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
+function buildModule(module: ForgeWebScriptVmModule, maximumPages: number): Uint8Array {
   const dataOffsets = new Map<number, number>();
   const dataSegments: Array<{ readonly offset: number; readonly bytes: Uint8Array }> = [];
   let dataEnd = STATIC_DATA_START;
@@ -969,7 +973,12 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
     ...section(3, [...unsignedLeb(allFunctionTypes.length), ...allFunctionTypes.flatMap((type) => unsignedLeb(type))]),
   );
   const initialPages = Math.max(1, Math.ceil(dataEnd / PAGE_SIZE));
-  output.push(...section(5, [0x01, 0x00, ...unsignedLeb(initialPages)]));
+  if (!Number.isSafeInteger(maximumPages) || maximumPages < initialPages)
+    throw new ForgeWebScriptTrap(
+      'MemoryExhausted',
+      `VM WASM maximum memory pages must be an integer of at least ${String(initialPages)}.`,
+    );
+  output.push(...section(5, [0x01, 0x01, ...unsignedLeb(initialPages), ...unsignedLeb(maximumPages)]));
   output.push(
     ...section(6, [
       0x03,
@@ -1020,6 +1029,7 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
 
 export interface ForgeWebScriptVmWasmCompileOptions {
   readonly compilerVersion?: string;
+  readonly maxMemoryPages?: number;
 }
 
 export function compileForgeWebScriptVmWasm(
@@ -1028,7 +1038,7 @@ export function compileForgeWebScriptVmWasm(
 ): ForgeWebScriptVmWasmArtifact {
   validateForgeWebScriptVmModule(module);
   const compilerVersion = options.compilerVersion ?? '0.1.0';
-  const wasm = buildModule(module);
+  const wasm = buildModule(module, options.maxMemoryPages ?? FORGE_WEB_SCRIPT_VM_DEFAULT_MAX_MEMORY_PAGES);
   const artifact = {
     format: 'forge-web-script-vm-wasm' as const,
     moduleVersion: '1.0' as const,
@@ -1124,10 +1134,19 @@ export function prepareForgeWebScriptVmWasm(
   options: ForgeWebScriptVmPreparedExecutorOptions = {},
 ): ForgeWebScriptVmPreparedExecutor {
   const mode = options.mode ?? 'jit';
+  const maximumPages = options.maxMemoryPages ?? FORGE_WEB_SCRIPT_VM_DEFAULT_MAX_MEMORY_PAGES;
   const artifact =
     'wasm' in moduleOrArtifact
-      ? moduleOrArtifact
-      : compileForgeWebScriptVmWasm(moduleOrArtifact, { compilerVersion: options.compilerVersion });
+      ? options.maxMemoryPages === undefined
+        ? moduleOrArtifact
+        : compileForgeWebScriptVmWasm(moduleOrArtifact.module, {
+            compilerVersion: options.compilerVersion,
+            maxMemoryPages: maximumPages,
+          })
+      : compileForgeWebScriptVmWasm(moduleOrArtifact, {
+          compilerVersion: options.compilerVersion,
+          maxMemoryPages: maximumPages,
+        });
   if (
     artifact.format !== 'forge-web-script-vm-wasm' ||
     artifact.moduleVersion !== '1.0' ||
@@ -1320,6 +1339,11 @@ export function prepareForgeWebScriptVmWasm(
     try {
       resetState();
       maxSteps = executionOptions.maxSteps;
+      if (executionOptions.maxMemoryPages !== undefined && executionOptions.maxMemoryPages < maximumPages)
+        throw new ForgeWebScriptTrap(
+          'InvalidAbi',
+          'VM WASM prepared executor was compiled with a larger memory limit than this execution allows.',
+        );
       activeFunctionName = functionName;
       activeTrace =
         executionOptions.trace === undefined
@@ -1328,8 +1352,20 @@ export function prepareForgeWebScriptVmWasm(
       activeRedact = executionOptions.trace?.redact;
       const requiredBytes = executionOptions.memory?.byteLength ?? 0;
       const requiredPages = Math.ceil(requiredBytes / PAGE_SIZE);
-      if (requiredPages > memory!.buffer.byteLength / PAGE_SIZE)
-        memory!.grow(requiredPages - memory!.buffer.byteLength / PAGE_SIZE);
+      if (requiredPages > memory!.buffer.byteLength / PAGE_SIZE) {
+        try {
+          memory!.grow(requiredPages - memory!.buffer.byteLength / PAGE_SIZE);
+        } catch (error) {
+          throw new ForgeWebScriptTrap(
+            'MemoryExhausted',
+            'VM WASM memory could not grow for this execution.',
+            undefined,
+            {
+              cause: error,
+            },
+          );
+        }
+      }
       if (executionOptions.memory !== undefined) new Uint8Array(memory!.buffer).set(executionOptions.memory, 0);
       const arguments__ = arguments_.flatMap((argument, index) =>
         importValue(argument, typeForValue(function_.parameters[index]!), memory!, allocate),

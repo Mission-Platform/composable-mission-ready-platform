@@ -11,7 +11,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   webServer: {
-    command: "MONITOR_TARGETS='[]' SPEED_TEST_ENABLED=false pnpm dev --host 127.0.0.1 --port 4175",
+    command:
+      "MONITOR_TARGETS='[]' MONITOR_API_TOKEN='test-monitor-token' SPEED_TEST_ENABLED=false pnpm dev --host 127.0.0.1 --port 4175",
     url: 'http://127.0.0.1:4175',
     reuseExistingServer: !process.env.CI,
   },

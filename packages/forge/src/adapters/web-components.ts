@@ -4,6 +4,7 @@ import {
   DomDynamicInstance,
   DomTemplateInstance,
   renderIncrementally,
+  SuspenseInstance,
   TemplateInstance,
   type DomRenderInstance,
   type MaterializedTree,
@@ -198,6 +199,22 @@ function ariaAttributeName(name: string): string {
  * lit-html's `nothing`.
  */
 export const nothing: unique symbol = Symbol('@mission-platform/forge:nothing');
+
+/** A framework-neutral async boundary consumed by the Web Components renderer. */
+export class SuspenseResult {
+  readonly fallback: unknown;
+  readonly content: unknown;
+
+  constructor(fallback: unknown, content: unknown) {
+    this.fallback = fallback;
+    this.content = content;
+  }
+}
+
+/** Render fallback immediately, then replace it when the content resolves. */
+export function suspense(fallback: unknown, content: unknown): SuspenseResult {
+  return new SuspenseResult(fallback, content);
+}
 
 /** A parsed `html\`…\`` result: the static strings plus the interpolated values. */
 export class TemplateResult {
@@ -757,7 +774,10 @@ function mountLiveForgeSlotMarkers(
  * DOM and native form state are retained while only changed binding ranges are
  * updated; incompatible template kinds replace the renderer-owned content.
  */
-export function render(result: TemplateResult | DomRenderResult | HtmlContentResult, container: ParentNode): void {
+export function render(
+  result: TemplateResult | DomRenderResult | HtmlContentResult | SuspenseResult,
+  container: ParentNode,
+): void {
   renderIncrementally(result, container);
 }
 
@@ -822,7 +842,7 @@ export class ForgeElement extends ForgeHTMLElement {
   /** The host's capability-gated ElementInternals handle. */
   private mpInternals: ElementInternals | undefined;
   /** Incremental template instance for the current render shape. */
-  private mpRenderInstance: TemplateInstance | DomRenderInstance | undefined;
+  private mpRenderInstance: TemplateInstance | DomRenderInstance | SuspenseInstance | undefined;
   /** Live projection outlets associated with the current template instance. */
   private mpSlotOutlets!: LiveSlotOutlet[];
   /** Whether a re-render is already scheduled for the current microtask. */
@@ -1050,7 +1070,7 @@ export class ForgeElement extends ForgeHTMLElement {
   }
 
   /** The element's template. Overridden by every generated subclass. */
-  render(): TemplateResult | DomRenderResult {
+  render(): TemplateResult | DomRenderResult | SuspenseResult {
     return html`
       <slot></slot>
     `;
@@ -1123,6 +1143,20 @@ export class ForgeElement extends ForgeHTMLElement {
       return;
     }
     const result = this.render();
+    if (result instanceof SuspenseResult) {
+      for (const outlet of this.mpSlotOutlets) {
+        outlet.dispose();
+      }
+      this.mpSlotOutlets = [];
+      if (this.mpRenderInstance instanceof SuspenseInstance) {
+        this.mpRenderInstance.update(result);
+      } else {
+        this.mpRenderInstance?.dispose();
+        this.mpRenderInstance = new SuspenseInstance(result);
+        this.mpRenderInstance.mount(this.mpRoot);
+      }
+      return;
+    }
     const domResult = result instanceof TemplateResult ? undefined : result;
     const incompatible =
       domResult === undefined
@@ -1133,7 +1167,8 @@ export class ForgeElement extends ForgeHTMLElement {
           )
         : !(
             this.mpRenderInstance !== undefined &&
-            !(this.mpRenderInstance instanceof TemplateInstance) &&
+            (this.mpRenderInstance instanceof DomTemplateInstance ||
+              this.mpRenderInstance instanceof DomDynamicInstance) &&
             this.mpRenderInstance.isCompatible(domResult)
           );
     if (incompatible) {
@@ -1154,7 +1189,7 @@ export class ForgeElement extends ForgeHTMLElement {
       if (
         domResult !== undefined &&
         this.mpRenderInstance !== undefined &&
-        !(this.mpRenderInstance instanceof TemplateInstance)
+        (this.mpRenderInstance instanceof DomTemplateInstance || this.mpRenderInstance instanceof DomDynamicInstance)
       ) {
         this.mpRenderInstance.update(domResult);
       } else if (result instanceof TemplateResult && this.mpRenderInstance instanceof TemplateInstance) {

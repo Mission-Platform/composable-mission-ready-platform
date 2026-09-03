@@ -1,7 +1,5 @@
 import path from 'node:path';
 
-import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
-import { forgeStoryblokCmsTargets } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
@@ -57,18 +55,18 @@ export default [
     external: ['i18next'],
     declarationModule: '..',
   }),
-  ...defineTsdownForgeCmsAll({
-    rootDir: rootDirectory,
-    targets: forgeStoryblokCmsTargets({
-      packageName: '@mission-platform/components',
-      frameworks: [
-        forgeReactFramework(),
-        forgeVueFramework(),
-        forgeSvelteFramework(),
-        forgeSolidFramework(),
-        forgeWebComponentsFramework(),
-      ],
-    }),
-    componentsModule,
-  }),
+  // ...defineTsdownForgeCmsAll({
+  //   rootDir: rootDirectory,
+  //   targets: forgeStoryblokCmsTargets({
+  //     packageName: '@mission-platform/components',
+  //     frameworks: [
+  //       forgeReactFramework(),
+  //       forgeVueFramework(),
+  //       forgeSvelteFramework(),
+  //       forgeSolidFramework(),
+  //       forgeWebComponentsFramework(),
+  //     ],
+  //   }),
+  //   componentsModule,
+  // }),
 ];

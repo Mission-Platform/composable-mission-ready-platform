@@ -4,6 +4,7 @@ import {
   component,
   element,
   expressionChild,
+  expressionAttribute,
   moduleImport,
   semanticModule,
   state,
@@ -175,5 +176,44 @@ describe("Solid Forge framework package", () => {
     expect(generated.code).toContain(
       'import { createSignal } from "solid-js";',
     );
+  });
+
+  it("lowers the neutral Suspense marker to Solid's native boundary", () => {
+    const framework = forgeSolidFramework();
+    const module = semanticModule({
+      imports: [
+        moduleImport(
+          "import { Suspense } from '@mission-platform/forge';",
+          "@mission-platform/forge",
+          { valueNames: ["Suspense"] },
+        ),
+      ],
+      component: component({
+        name: "Widget",
+        parameter: "properties",
+        returnNode: element("Suspense", {
+          attributes: [
+            expressionAttribute("fallback", "undefined", [
+              element("span", { children: [textChild("Loading")] }),
+            ]),
+          ],
+          children: [expressionChild("loadContent()")],
+        }),
+      }),
+    });
+
+    const generated = framework.generate(
+      framework.optimize(
+        framework.lower(module, COMPONENT_CONTEXT),
+        ALL_ENABLED,
+      ),
+      COMPONENT_CONTEXT,
+    ).code;
+
+    expect(generated).toContain("<Suspense");
+    expect(generated).toContain("fallback=");
+    expect(generated).toContain("loadContent()");
+    expect(generated).toContain('from "solid-js"');
+    expect(generated).not.toContain("@mission-platform/forge");
   });
 });

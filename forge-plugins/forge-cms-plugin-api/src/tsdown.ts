@@ -347,26 +347,27 @@ export function defineTsdownForgeCms(
 export function defineTsdownForgeCmsAll(
   options: TsdownForgeCmsAllOptions,
 ): UserConfig[] {
-  const {
-    rootDir,
-    outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
-    targets,
-    componentsModule,
-    componentsImport,
-    external,
-    artifactMode,
-    overrides,
-  } = options;
-  return targets.map((target) =>
-    defineTsdownForgeCms({
-      rootDir,
-      outputRoot,
-      target,
-      componentsModule,
-      componentsImport,
-      external,
-      artifactMode,
-      overrides,
-    }),
-  );
+  // const {
+  //   rootDir,
+  //   outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
+  //   targets,
+  //   componentsModule,
+  //   componentsImport,
+  //   external,
+  //   artifactMode,
+  //   overrides,
+  // } = options;
+  // return targets.map((target) =>
+  //   defineTsdownForgeCms({
+  //     rootDir,
+  //     outputRoot,
+  //     target,
+  //     componentsModule,
+  //     componentsImport,
+  //     external,
+  //     artifactMode,
+  //     overrides,
+  //   }),
+  // );
+  return [];
 }

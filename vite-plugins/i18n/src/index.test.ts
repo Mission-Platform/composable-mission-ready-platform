@@ -1,3 +1,7 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import { i18nPlugin } from ".";
@@ -56,5 +60,90 @@ describe("i18nPlugin", () => {
       "export const resources",
     );
     expect(load("\0some-other-virtual")).toBeUndefined();
+  });
+
+  it("surfaces malformed locale YAML with the source file path", () => {
+    const root = fs.mkdtempSync(
+      path.join(os.tmpdir(), "mission-platform-i18n-"),
+    );
+    const localePath = path.join(root, "src/locales/en.yaml");
+    fs.mkdirSync(path.dirname(localePath), { recursive: true });
+    fs.writeFileSync(localePath, "common: [unclosed\n");
+
+    try {
+      const plugin = i18nPlugin();
+      const configResolved = plugin.configResolved as (config: {
+        root: string;
+      }) => void;
+      configResolved({ root });
+      const load = plugin.load as (id: string) => string | undefined;
+
+      expect(() => load("\0virtual:i18n-resources")).toThrow(localePath);
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("surfaces type-shim generation failures", () => {
+    const root = fs.mkdtempSync(
+      path.join(os.tmpdir(), "mission-platform-i18n-"),
+    );
+    const shimPath = path.join(root, "shim-directory");
+    fs.mkdirSync(shimPath);
+
+    try {
+      const plugin = i18nPlugin({ typeShimPath: "shim-directory" });
+      const configResolved = plugin.configResolved as (config: {
+        root: string;
+      }) => void;
+
+      expect(() => configResolved({ root })).toThrow(shimPath);
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("generates safe locale literals and rejects hostile locale identifiers", () => {
+    const root = fs.mkdtempSync(
+      path.join(os.tmpdir(), "mission-platform-i18n-"),
+    );
+    const localesPath = path.join(root, "src/locales");
+    fs.mkdirSync(localesPath, { recursive: true });
+    fs.writeFileSync(path.join(localesPath, "en-US.yaml"), "common: {}\n");
+
+    try {
+      const plugin = i18nPlugin();
+      const configResolved = plugin.configResolved as (config: {
+        root: string;
+      }) => void;
+
+      configResolved({ root });
+
+      const shim = fs.readFileSync(
+        path.join(localesPath, "i18n-locales.d.ts"),
+        "utf8",
+      );
+      expect(shim).toContain('readonly ["en", "en-US"]');
+      expect(shim).toContain('defaultLocale: "en"');
+      expect(shim).not.toContain("globalThis.hacked");
+
+      fs.writeFileSync(
+        path.join(localesPath, "en'; globalThis.hacked = true; .yaml"),
+        "common: {}\n",
+      );
+      expect(() => configResolved({ root })).toThrow(
+        /Invalid i18n locale identifier/,
+      );
+      const hostileDefault = i18nPlugin({
+        defaultLocale: "en'; globalThis.hacked = true; //",
+      });
+      const hostileDefaultConfigResolved =
+        hostileDefault.configResolved as (config: { root: string }) => void;
+      expect(() => hostileDefaultConfigResolved({ root })).toThrow(
+        /Invalid i18n locale identifier/,
+      );
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
   });
 });

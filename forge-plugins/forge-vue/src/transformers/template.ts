@@ -173,6 +173,7 @@ export interface NodeArraySource {
 const SLOT_TAG = "Slot";
 const DYNAMIC_TAG = "Dynamic";
 const HTML_CONTENT_TAG = "HtmlContent";
+const SUSPENSE_TAG = "Suspense";
 
 /**
  * Rewrite an expression for a binding and escape it for a double-quoted value.
@@ -614,6 +615,69 @@ function emitHtmlContent(
   );
 }
 
+/** Render Vue's native `<Suspense>` boundary and its named fallback slot. */
+function emitSuspense(
+  node: GenericRenderNode,
+  depth: number,
+  context: TemplateContext,
+  directives: readonly string[],
+  trailing: readonly string[] = [],
+): string {
+  const fallback = node.attributes.find(
+    (
+      attribute,
+    ): attribute is Extract<GenericAttribute, { kind: "jsx-attribute" }> =>
+      attribute.kind === "jsx-attribute" && attribute.name === "fallback",
+  );
+  const attributes = node.attributes.filter(
+    (attribute) => attribute !== fallback,
+  );
+  if (fallback?.value === undefined) {
+    return emitTag(
+      SUSPENSE_TAG,
+      directives,
+      attributes,
+      node.children,
+      node.selfClosing,
+      depth,
+      context,
+      false,
+      trailing,
+    );
+  }
+  const fallbackValue = fallback.value;
+  const fallbackMarkup =
+    fallbackValue.kind === "string"
+      ? collapseWhitespace(fallbackValue.value)
+      : fallbackValue.expression === undefined
+        ? ""
+        : fallbackValue.nested.length > 0
+          ? fallbackValue.nested
+              .map((child) =>
+                isRenderNode(child)
+                  ? emitRenderNode(child, depth + 2, context)
+                  : emitChild(child, depth + 2, context),
+              )
+              .join("\n")
+          : `${pad(depth + 2)}{{ ${binding(fallbackValue.expression.text, context)} }}`;
+  const rendered = emitTag(
+    SUSPENSE_TAG,
+    [...directives, ...trailing],
+    attributes,
+    node.children,
+    false,
+    depth,
+    context,
+    false,
+  );
+  const closingToken = `</${SUSPENSE_TAG}>`;
+  const opening = rendered.endsWith(closingToken)
+    ? rendered.slice(0, -closingToken.length)
+    : `${rendered.slice(0, -3)}>`;
+  const fallbackSlot = `${pad(depth + 1)}<template #fallback>\n${fallbackMarkup}\n${pad(depth + 1)}</template>`;
+  return `${opening}\n${fallbackSlot}\n${pad(depth)}${closingToken}`;
+}
+
 /** Assemble an open/close tag pair (or a self-closing tag) with its children. */
 function emitTag(
   tag: string,
@@ -720,6 +784,9 @@ export function emitRenderNode(
   }
   if (tag === HTML_CONTENT_TAG) {
     return emitHtmlContent(node, depth, context, directives, trailing);
+  }
+  if (tag === SUSPENSE_TAG) {
+    return emitSuspense(node, depth, context, directives, trailing);
   }
   return emitTag(
     tag,

@@ -387,8 +387,10 @@ function optimizeStatements(
       const index = statement.index === undefined ? undefined : fold(resolve(statement.index, environment));
       constants += value.constants;
       offsets += value.offsets;
+      // An assignment can invalidate any previously propagated expression,
+      // including aliases that depend on the assigned local.
+      environment.clear();
       if (index === undefined) environment.set(statement.name, value.expression);
-      else environment.delete(statement.name);
       output.push({
         ...statement,
         value: value.expression,

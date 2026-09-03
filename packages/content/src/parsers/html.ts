@@ -7,6 +7,7 @@ import {
   type ContentMark,
 } from '../ast';
 import { normalizeDocument } from '../ast/validation';
+import { decodeCodeBlockValue } from '../utils/blocks';
 import { sanitizeHtml, sanitizeUrl } from '../utils/sanitize';
 
 interface HtmlTextNode {
@@ -222,7 +223,7 @@ function blocksFromNodes(nodes: HtmlNode[]): ContentBlock[] {
     if (node.attributes['data-mp-code'] !== undefined)
       blocks.push({
         type: 'code',
-        value: decodeURIComponent(node.attributes['data-mp-code']),
+        value: decodeCodeBlockValue(node.attributes['data-mp-code']),
         language: node.attributes['data-mp-language'] ?? undefined,
         ...(align ? { align } : {}),
       });

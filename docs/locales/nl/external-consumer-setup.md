@@ -9,14 +9,14 @@ In deze handleiding wordt uitgelegd hoe u Mission Platform-pakketten kunt gebrui
 
 ## Kaderselectie via voorwaarden
 
-Mission Platform-componenten worden eenmaal gebruikt `@mission-platform/forge` en gedistribueerd als meerdere raamwerkspecifieke bundels (Vue 3, React, Soliden webcomponenten) binnen één pakket.
+Mission Platform-componenten worden één keer geschreven met behulp van `@mission-platform/forge` en gedistribueerd als meerdere raamwerkspecifieke bundels (Vue 3, React, Solid en Web Components) binnen één pakket.
 
-Om de juiste bundel te selecteren, moet u uw buildtool configureren en TypeScript om **Aangepaste exportvoorwaarden** te gebruiken.
+Om de juiste bundel te selecteren, moet u uw buildtool en TypeScript configureren om **Aangepaste exportvoorwaarden** te gebruiken.
 
 ### Ondersteunde raamvoorwaarden
 
 | Kader | Exportvoorwaarde |
-| :--- | :--- |
+| :----------------- | :----------------- |
 | **Vue 3** | `mp:vue` |
 | **React** | `mp:react` |
 | **Solid** | `mp:solid` |
@@ -24,25 +24,25 @@ Om de juiste bundel te selecteren, moet u uw buildtool configureren en TypeScrip
 
 ## Projectconfiguratie
 
-### 1. Vite Configuratie
+### 1. Vite-configuratie
 
-Als u gebruikt Vite, kunt u de helpfuncties van gebruiken `@mission-platform/vite-config` om automatisch de juiste oplossingsvoorwaarden in te stellen. Een raamwerkvrije app zou moeten selecteren `mp:web-component`; installeer of configureer geen Vue plug-in voor dat doel.
+Als u Vite gebruikt, kunt u de helperfuncties van `@mission-platform/vite-config` gebruiken om automatisch de juiste oplossingsvoorwaarden in te stellen. Een framework-vrije app zou `mp:web-component` moeten selecteren; installeer of configureer geen Vue-plug-in voor dat doel.
 
 ```ts
-import { defineConfig } from 'vite';
-import { frameworkResolveConditions } from '@mission-platform/vite-config';
+import { defineConfig } from "vite";
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
 export default defineConfig({
   resolve: {
     // This places the Web Components build at the top of the condition list.
-    conditions: frameworkResolveConditions('web-component'),
+    conditions: frameworkResolveConditions("web-component"),
   },
 });
 ```
 
-### 2. TypeScript Configuratie
+### 2. TypeScript-configuratie
 
-Om ervoor te zorgen dat de TypeScript Language Service (LSP) lost typen op voor het juiste raamwerk, u moet een raamwerkvoorinstelling uitbreiden `@mission-platform/typescript-config`.
+Om ervoor te zorgen dat de TypeScript Language Service (LSP) typen voor het juiste raamwerk omzet, moet u een raamwerkvoorinstelling van `@mission-platform/typescript-config` uitbreiden.
 
 ```json
 {
@@ -71,17 +71,17 @@ pnpm add @mission-platform/i18n
 ```
 
 Het neutrale routerpakket heeft geen runtime-afhankelijkheden van het raamwerk of de routerbibliotheek. Installeer de native router die is geselecteerd door
-uw toepassing en het bijbehorende Forge-doel (`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
-`-redwood`, of `-web-components`). De applicatie is eigenaar van routedefinities, providers, bewakers, laders en de native
-routerinstantie; herbruikbare pakketten importeren alleen mogelijkheden van `@mission-platform/router`.
+uw toepassing en het bijpassende Forge-doel (`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood` of `-web-components`). De applicatie is eigenaar van routedefinities, providers, bewakers, laders en de native
+routerinstantie; herbruikbare pakketten importeren alleen mogelijkheden uit `@mission-platform/router`.
 
 ## Componentgebruik
 
-Als de voorwaarden correct zijn geconfigureerd, kunt u componenten importeren vanuit de hoofdmap van het pakket. De bouwtool selecteert automatisch de bundel die bij uw past `mp:*` voorwaarde.
+Als de voorwaarden correct zijn geconfigureerd, kunt u componenten importeren vanuit de hoofdmap van het pakket. De buildtool selecteert automatisch de bundel die overeenkomt met uw `mp:*`-voorwaarde.
 
 ```vue
 <script setup lang="ts">
-import { ForgeButton } from '@mission-platform/components';
+import { ForgeButton } from "@mission-platform/components";
 </script>
 
 <template>
@@ -91,7 +91,7 @@ import { ForgeButton } from '@mission-platform/components';
 
 ### Framework-vrije routering
 
-Gebruik geheugengeschiedenis voor tests en pre-rendering, of laat het achterwege `history` in een browser om de browsergeschiedenis te gebruiken. Router registreren
+Gebruik geheugengeschiedenis voor tests en pre-rendering, of laat `history` weg in een browser om de browsergeschiedenis te gebruiken. Router registreren
 elementen één keer; wijs routedoelen toe als eigenschappen wanneer ze params, querywaarden of hashes bevatten:
 
 ```ts
@@ -100,20 +100,72 @@ import {
   createWebComponentsRouter,
   registerRouterElements,
   setForgeRouter,
-} from '@mission-platform/forge-router-web-components/runtime';
+} from "@mission-platform/forge-router-web-components/runtime";
 
 registerRouterElements();
 const router = createWebComponentsRouter({
-  history: new MpMemoryHistory('/'),
+  history: new MpMemoryHistory("/"),
   routes: [
-    { path: '/', redirect: '/docs/intro' },
-    { path: '/docs/*', name: 'doc', component: () => document.createTextNode('Docs') },
+    { path: "/", redirect: "/docs/intro" },
+    {
+      path: "/docs/*",
+      name: "doc",
+      component: () => document.createTextNode("Docs"),
+    },
   ],
 });
 setForgeRouter(router);
 
-const outlet = document.querySelector('forge-router-outlet');
+const outlet = document.querySelector("forge-router-outlet");
 outlet?.setRouter(router);
+```
+
+### Asynchrone navigatie met een laadspinner
+
+Asynchrone routecomponenten kunnen de huidige pagina zichtbaar houden tijdens de volgende weergave
+ladingen. Configureer de outlet-fallback bij het maken van de Web Components-router;
+`forge-router-link` voert vervolgens SPA-navigatie uit met `pushState` (of vervang
+geschiedenis wanneer `replace` is ingeschakeld):
+
+```ts
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory("/docs/intro"),
+  loadingFallback: () => {
+    const spinner = document.createElement("span");
+    spinner.className = "docs-loading-spinner";
+    spinner.setAttribute("aria-label", "Loading documentation");
+    return spinner;
+  },
+  routes: [
+    {
+      path: "/docs/*",
+      component: async () => (await import("./views/docs-view")).default(),
+    },
+  ],
+});
+setForgeRouter(router);
+document.querySelector("forge-router-outlet")?.setRouter(router);
+```
+
+```html
+<forge-router-link to="/docs/advanced"
+  >Advanced documentation</forge-router-link
+>
+<forge-router-outlet></forge-router-outlet>
+```
+
+Het stopcontact is eigenaar van de laadoverlay en verwijdert de momenteel gemonteerde niet
+bekijken totdat de bestemming is opgelost. Het maakt de overlay leeg voor succesvol,
+omgeleid, geannuleerd en mislukte navigatie. Gewijzigde klikken, downloads,
+externe URL's en links met een ander doel behouden het oorspronkelijke browsergedrag.
+
+Wanneer u een gedeelde Forge-bron schrijft, gebruik dan direct de neutrale grens en laat
+elke compiler selecteert zijn eigen implementatie:
+
+```tsx
+<Suspense fallback={<LoadingSpinner label="Loading documentation" />}>
+  <DocumentationRoute />
+</Suspense>
 ```
 
 ## Aanpassing van ontwerptokens
@@ -125,10 +177,10 @@ Mission Platform gebruikt CSS Custom Properties (variabelen) voor ontwerptokens.
 :root {
   /* Override the brand primary color */
   --mp-color-brand-primary: #007bff;
-  
+
   /* Override a spacing token */
   --mp-spacing-md: 1.5rem;
 }
 ```
 
-Alle Mission Platform-componenten gebruiken deze variabelen, dus veranderingen aan de `:root` niveau zal zich door de gehele gebruikersinterface verspreiden.
+Alle Mission Platform-componenten gebruiken deze variabelen, dus wijzigingen op het `:root`-niveau zullen zich door de gehele gebruikersinterface verspreiden.

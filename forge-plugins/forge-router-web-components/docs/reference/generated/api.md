@@ -296,6 +296,16 @@ history, guards, redirects, subscriptions, and browser scroll behavior.
 | ------- | ---------------------------------- | ----------- |
 | options | MpWebComponentsRouterOptions<View> |             |
 
+### MpRouterLoadingFallback
+
+**Kind:** component
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+Content rendered by a router outlet while a destination view is loading.
+
 ### MpWebComponentsRouter
 
 **Kind:** component

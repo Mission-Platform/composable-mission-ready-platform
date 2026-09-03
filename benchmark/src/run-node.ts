@@ -1,7 +1,7 @@
 import os from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { outputsEqual, normalizeBenchmarkOutput } from "./abi.ts";
+import { normalizeBenchmarkOutput, outputsEqual } from "./abi.ts";
 import { createAssemblyScriptAdapter } from "./adapters/assemblyscript-wasm.ts";
 import { createFwsVmAdapter } from "./adapters/fws-vm.ts";
 import {
@@ -20,9 +20,11 @@ import {
 } from "./measure.ts";
 import { summarizeSamples } from "./statistics.ts";
 
+import type { RustWasmExports } from "./adapters/rust-wasm.ts";
 import type {
   BenchmarkCase,
   BenchmarkFailure,
+  BuildArtifact,
   CorrectnessResult,
   EnvironmentMetadata,
   FwsMode,
@@ -30,7 +32,6 @@ import type {
   MeasurementOptions,
   PhaseMeasurement,
   RuntimeAdapter,
-  BuildArtifact,
 } from "./contracts.ts";
 
 export interface NodeBenchmarkOptions extends Partial<MeasurementOptions> {
@@ -69,7 +70,7 @@ function memoryGetter(): (() => number | undefined) | undefined {
   return memoryUsageBytes() === undefined ? undefined : memoryUsageBytes;
 }
 
-async function rustLoader(moduleUrl: string): Promise<never> {
+async function rustLoader(moduleUrl: string): Promise<RustWasmExports> {
   const modulePath = fileURLToPath(moduleUrl);
   const directory = new URL("./", pathToFileURL(modulePath));
   const wasmPath = fileURLToPath(new URL("benchmark_bg.wasm", directory));
@@ -84,7 +85,9 @@ async function rustLoader(moduleUrl: string): Promise<never> {
     const bytes = await import("node:fs").then(({ readFileSync }) =>
       readFileSync(wasmPath),
     );
-    const instance = await WebAssembly.instantiate(bytes, {});
+    const instance = await WebAssembly.instantiate(bytes, {
+      "./benchmark_bg.js": bg as WebAssembly.ModuleImports,
+    });
     bg.__wbg_set_wasm(instance.instance.exports);
     return bg as never;
   }

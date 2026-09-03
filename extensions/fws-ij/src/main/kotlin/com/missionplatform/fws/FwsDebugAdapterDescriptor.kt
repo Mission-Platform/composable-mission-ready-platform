@@ -5,6 +5,7 @@ import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.isTrusted
 import com.redhat.devtools.lsp4ij.dap.client.LaunchUtils
 import com.redhat.devtools.lsp4ij.dap.configurations.DAPRunConfigurationOptions
 import com.redhat.devtools.lsp4ij.dap.configurations.options.FileOptionConfigurable
@@ -30,6 +31,7 @@ class FwsDebugAdapterDescriptor(
             FwsCommandLine.from(FwsSettingsState.getInstance()),
             projectRoot,
             adapterPath,
+            project.isTrusted(),
         )
         return startServer(command)
     }

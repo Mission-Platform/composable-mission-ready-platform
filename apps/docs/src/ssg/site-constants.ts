@@ -4,6 +4,12 @@
  * import these modules under plain Node (`--experimental-strip-types`).
  */
 
+import * as i18n from '../i18n.ts';
+
+// The docs i18n catalogue is the source of truth for the locales emitted by
+// both the runtime router and the Node SSG helpers.
+export { DEFAULT_LOCALE, SUPPORTED_LOCALES, type DocumentationLocale } from '../i18n.ts';
+
 export const SITE_ORIGIN = 'https://docs.mission-platform.dev';
 export const DEFAULT_SLUG = 'overview';
 export const SITE_NAME = 'Mission Platform Docs';
@@ -15,11 +21,7 @@ export const TITLE_TEMPLATE = `%s · ${SITE_NAME}`;
 export const SITE_OG_IMAGE = `${SITE_ORIGIN}/og-image.svg`;
 export const THEME_COLOR = '#4a9ebe';
 
-export const SUPPORTED_LOCALES = ['en', 'ar', 'de', 'es', 'fr', 'he', 'it', 'ja', 'ko', 'nl', 'zh'] as const;
-export type DocumentationLocale = (typeof SUPPORTED_LOCALES)[number];
-export const DEFAULT_LOCALE: DocumentationLocale = 'en';
-
-export const LOCALE_BCP47: Record<DocumentationLocale, string> = {
+export const LOCALE_BCP47: Record<i18n.DocumentationLocale, string> = {
   en: 'en-AU',
   ar: 'ar',
   de: 'de-DE',
@@ -33,7 +35,7 @@ export const LOCALE_BCP47: Record<DocumentationLocale, string> = {
   zh: 'zh-CN',
 };
 
-export const LOCALE_OG: Record<DocumentationLocale, string> = {
+export const LOCALE_OG: Record<i18n.DocumentationLocale, string> = {
   en: 'en_AU',
   ar: 'ar_AR',
   de: 'de_DE',
@@ -47,7 +49,7 @@ export const LOCALE_OG: Record<DocumentationLocale, string> = {
   zh: 'zh_CN',
 };
 
-export const LOCALE_DIR: Record<DocumentationLocale, 'ltr' | 'rtl'> = {
+export const LOCALE_DIR: Record<i18n.DocumentationLocale, 'ltr' | 'rtl'> = {
   en: 'ltr',
   ar: 'rtl',
   de: 'ltr',
@@ -61,35 +63,38 @@ export const LOCALE_DIR: Record<DocumentationLocale, 'ltr' | 'rtl'> = {
   zh: 'ltr',
 };
 
-export function resolveDocumentationLocale(value: unknown): DocumentationLocale {
-  return typeof value === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(value)
-    ? (value as DocumentationLocale)
-    : DEFAULT_LOCALE;
+export function resolveDocumentationLocale(value: unknown): i18n.DocumentationLocale {
+  return typeof value === 'string' && (i18n.SUPPORTED_LOCALES as readonly string[]).includes(value)
+    ? (value as i18n.DocumentationLocale)
+    : i18n.DEFAULT_LOCALE;
 }
 
-export function canonicalForSlug(slug: string, locale: DocumentationLocale = DEFAULT_LOCALE): string {
-  if (locale === DEFAULT_LOCALE && (slug === DEFAULT_SLUG || slug.length === 0)) return `${SITE_ORIGIN}/`;
-  return `${SITE_ORIGIN}/${locale === DEFAULT_LOCALE ? '' : `${locale}/`}${slug}`;
+export function canonicalForSlug(slug: string, locale: i18n.DocumentationLocale = i18n.DEFAULT_LOCALE): string {
+  if (locale === i18n.DEFAULT_LOCALE && (slug === DEFAULT_SLUG || slug.length === 0)) return `${SITE_ORIGIN}/`;
+  return `${SITE_ORIGIN}/${locale === i18n.DEFAULT_LOCALE ? '' : `${locale}/`}${slug}`;
 }
 
 export function alternatesForSlug(slug: string): Array<{ hreflang: string; href: string }> {
   return [
-    ...SUPPORTED_LOCALES.map((locale) => ({ hreflang: LOCALE_BCP47[locale], href: canonicalForSlug(slug, locale) })),
-    { hreflang: 'x-default', href: canonicalForSlug(slug, DEFAULT_LOCALE) },
+    ...i18n.SUPPORTED_LOCALES.map((locale) => ({
+      hreflang: LOCALE_BCP47[locale],
+      href: canonicalForSlug(slug, locale),
+    })),
+    { hreflang: 'x-default', href: canonicalForSlug(slug, i18n.DEFAULT_LOCALE) },
   ];
 }
 
-export function searchCanonical(locale: DocumentationLocale): string {
-  return `${SITE_ORIGIN}/${locale === DEFAULT_LOCALE ? '' : `${locale}/`}search`;
+export function searchCanonical(locale: i18n.DocumentationLocale): string {
+  return `${SITE_ORIGIN}/${locale === i18n.DEFAULT_LOCALE ? '' : `${locale}/`}search`;
 }
 
 export function alternatesForSearch(): Array<{ hreflang: string; href: string }> {
   return [
-    ...SUPPORTED_LOCALES.map((locale) => ({ hreflang: LOCALE_BCP47[locale], href: searchCanonical(locale) })),
-    { hreflang: 'x-default', href: searchCanonical(DEFAULT_LOCALE) },
+    ...i18n.SUPPORTED_LOCALES.map((locale) => ({ hreflang: LOCALE_BCP47[locale], href: searchCanonical(locale) })),
+    { hreflang: 'x-default', href: searchCanonical(i18n.DEFAULT_LOCALE) },
   ];
 }
 
-export function documentPath(slug: string, locale: DocumentationLocale = DEFAULT_LOCALE): string {
-  return locale === DEFAULT_LOCALE ? `/${slug}` : `/${locale}/${slug}`;
+export function documentPath(slug: string, locale: i18n.DocumentationLocale = i18n.DEFAULT_LOCALE): string {
+  return locale === i18n.DEFAULT_LOCALE ? `/${slug}` : `/${locale}/${slug}`;
 }

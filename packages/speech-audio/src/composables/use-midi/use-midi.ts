@@ -47,10 +47,24 @@ export function useMidi(): MidiControls {
   // eslint-disable-next-line unicorn/no-useless-undefined
   const [error, setError] = useState<string | undefined>(undefined);
   const access: MpRef<MIDIAccess | undefined> = useRef<MIDIAccess | undefined>(undefined);
+  const mounted: MpRef<boolean> = useRef(false);
+  const stateChangeListener: MpRef<((event: Event) => void) | undefined> = useRef<((event: Event) => void) | undefined>(
+    undefined,
+  );
+  const requestId: MpRef<number> = useRef(0);
 
   const syncPorts = (current: MIDIAccess): void => {
     setInputs(() => [...current.inputs.values()]);
     setOutputs(() => [...current.outputs.values()]);
+  };
+
+  const removeStateChangeListener = (): void => {
+    const current = access.current;
+    const listener = stateChangeListener.current;
+    if (current !== undefined && listener !== undefined) {
+      current.removeEventListener('statechange', listener);
+    }
+    stateChangeListener.current = undefined;
   };
 
   const requestAccess = (options?: MIDIOptions): void => {
@@ -59,17 +73,28 @@ export function useMidi(): MidiControls {
       return;
     }
 
+    const currentRequestId = requestId.current + 1;
+    requestId.current = currentRequestId;
     void globalThis.navigator.requestMIDIAccess(options).then(
       (granted) => {
+        if (!mounted.current || currentRequestId !== requestId.current) return;
+        if (access.current !== granted) {
+          removeStateChangeListener();
+        }
         access.current = granted;
         setIsConnected(() => true);
         setError(undefined);
         syncPorts(granted);
-        granted.addEventListener('statechange', () => {
-          syncPorts(granted);
-        });
+        if (stateChangeListener.current === undefined) {
+          const listener = (): void => {
+            if (mounted.current && access.current === granted) syncPorts(granted);
+          };
+          stateChangeListener.current = listener;
+          granted.addEventListener('statechange', listener);
+        }
       },
       (error_: unknown) => {
+        if (!mounted.current || currentRequestId !== requestId.current) return;
         setError(() => (error_ instanceof Error ? error_.message : String(error_)));
       },
     );
@@ -88,7 +113,11 @@ export function useMidi(): MidiControls {
   };
 
   useEffect(() => {
+    mounted.current = true;
     return () => {
+      mounted.current = false;
+      requestId.current += 1;
+      removeStateChangeListener();
       access.current = undefined;
     };
   }, [access]);

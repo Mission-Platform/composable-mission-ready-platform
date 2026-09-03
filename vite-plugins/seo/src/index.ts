@@ -13,8 +13,11 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { buildRobotsTxt, buildSitemapXml, type RobotsTxtInput, type SitemapXmlInput } from '@mission-platform/seo';
+import { buildRobotsTxt } from '@mission-platform/seo/robots';
+import { buildSitemapXml } from '@mission-platform/seo/sitemap';
 
+import type { RobotsTxtInput } from '@mission-platform/seo/robots';
+import type { SitemapXmlInput } from '@mission-platform/seo/sitemap';
 import type { Plugin } from 'vite';
 
 /** Options for {@link seoPlugin}. */
@@ -35,7 +38,8 @@ export interface SeoPluginOptions {
   outDir?: string;
 }
 
-export type { RobotsTxtInput, SitemapXmlInput } from '@mission-platform/seo';
+export type { RobotsTxtInput } from '@mission-platform/seo/robots';
+export type { SitemapXmlInput } from '@mission-platform/seo/sitemap';
 
 /**
  * Create a Vite plugin that writes `robots.txt` and `sitemap.xml` into the

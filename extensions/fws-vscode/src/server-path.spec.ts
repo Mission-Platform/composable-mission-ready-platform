@@ -1,3 +1,5 @@
+import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -5,6 +7,8 @@ import { describe, expect, it } from 'vitest';
 import {
   assertNodeRuntime,
   assertServerAvailable,
+  assertWorkspaceRelativeExecutableAllowed,
+  assertWorkspaceRelativeOverrideAllowed,
   createServerOptions,
   defaultConfiguration,
   readConfiguration,
@@ -44,6 +48,22 @@ describe('Forge Web Script server launcher', () => {
     );
   });
 
+  it('blocks workspace-relative server overrides in an untrusted workspace', () => {
+    expect(() =>
+      assertWorkspaceRelativeOverrideAllowed('forgeWebScript.serverPath', 'tools/server.mjs', false),
+    ).toThrow(/untrusted workspace/u);
+    expect(() =>
+      assertWorkspaceRelativeOverrideAllowed('forgeWebScript.serverPath', '/server/main.mjs', false),
+    ).toThrow(/untrusted workspace/u);
+    expect(() => assertWorkspaceRelativeExecutableAllowed('forgeWebScript.nodePath', './node', false)).toThrow(
+      /untrusted workspace/u,
+    );
+    expect(() => assertWorkspaceRelativeExecutableAllowed('forgeWebScript.nodePath', 'node', false)).not.toThrow();
+    expect(() => assertWorkspaceRelativeExecutableAllowed('forgeWebScript.nodePath', '/opt/node24', false)).toThrow(
+      /untrusted workspace/u,
+    );
+  });
+
   it('constructs a Node stdio executable with the workspace as its cwd', () => {
     const options = createServerOptions(
       { extensionPath: '/extension' },
@@ -70,5 +90,25 @@ describe('Forge Web Script server launcher', () => {
 
   it('rejects an unavailable Node executable with an actionable setting name', async () => {
     await expect(assertNodeRuntime(path.join(import.meta.dirname, 'missing-node'))).rejects.toThrow(/nodePath/u);
+  });
+
+  it('fails promptly when the Node version probe hangs', async () => {
+    const root = mkdtempSync(path.join(os.tmpdir(), 'fws-node-probe-'));
+    const executable = path.join(root, 'hanging-node');
+    writeFileSync(executable, '#!/bin/sh\n(sleep 3; kill -TERM $$) &\nwhile :; do :; done\n', 'utf8');
+    chmodSync(executable, 0o755);
+    try {
+      const result = await Promise.race([
+        assertNodeRuntime(executable).then(
+          () => 'completed',
+          (error: unknown) => (error instanceof Error ? error.message : String(error)),
+        ),
+        new Promise<string>((resolve) => setTimeout(() => resolve('test timed out'), 1100)),
+      ]);
+
+      expect(result).toMatch(/Node\.js version probe timed out/u);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

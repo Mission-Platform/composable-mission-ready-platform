@@ -10,7 +10,7 @@ import {
 } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
-import { ForgeSpinner } from '@/components/atoms/forge-spinner';
+import { ForgeSpinner } from '../../atoms/forge-spinner';
 
 import styles from './forge-metric-card.module.scss';
 

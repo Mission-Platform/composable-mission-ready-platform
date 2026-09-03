@@ -13,7 +13,7 @@ name: Deploy
 on:
   push:
     branches:
-      - changeset-release/main  # staging deployment (release PR (re)generated)
+      - changeset-release/main # staging deployment (release PR (re)generated)
 
 # Never cancel an in-progress deploy; let each environment's deploys serialise.
 concurrency:
@@ -23,8 +23,9 @@ concurrency:
 jobs:
   deploy:
     name: Deploy (staging)
-    # Staging deployments are handled by Cloudflare directly.
-    if: ${{ false }}
+    # Deploy the release branch to Cloudflare's staging environment. The
+    # credential check below keeps this job green when staging secrets are not
+    # configured for a fork or another repository environment.
     runs-on: ubuntu-latest
 
     # Map onto the GitHub `staging` environment so deployments are tracked and

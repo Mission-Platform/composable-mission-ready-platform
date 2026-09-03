@@ -39,6 +39,11 @@ const RESOLVED_VIRTUAL_LOCALES_ID = "\0" + VIRTUAL_LOCALES_ID;
 const VIRTUAL_LOCALE_PREFIX = "virtual:i18n-locale-";
 const RESOLVED_VIRTUAL_LOCALE_PREFIX = "\0" + VIRTUAL_LOCALE_PREFIX;
 
+// A conservative BCP 47-compatible shape: a language subtag followed by
+// optional hyphen-separated alphanumeric subtags. Keeping the accepted form
+// narrow ensures locale values are safe to embed in generated TypeScript.
+const LOCALE_IDENTIFIER_PATTERN = /^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$/;
+
 // Vite replaces the leading null byte (`\0`) that marks a resolved virtual
 // module with the URL-safe placeholder `__x00__` when it turns the id into a
 // URL. Environments that run in an isolated module runner (such as the
@@ -46,6 +51,10 @@ const RESOLVED_VIRTUAL_LOCALE_PREFIX = "\0" + VIRTUAL_LOCALE_PREFIX;
 // encoded form back to the `load` hook without decoding it first, so the hook
 // must recognise both variants.
 const ENCODED_NULL_BYTE = "__x00__";
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
 
 function stripResolvedPrefix(id: string): string {
   if (id.startsWith("\0")) {
@@ -60,6 +69,15 @@ function stripResolvedPrefix(id: string): string {
 /** Whether `name` looks like a YAML file we should read. */
 function isYamlFile(name: string): boolean {
   return name.endsWith(".yaml") || name.endsWith(".yml");
+}
+
+function validateLocaleIdentifier(locale: string, source: string): void {
+  const match = locale.match(LOCALE_IDENTIFIER_PATTERN);
+  if (match?.[0] !== locale) {
+    throw new Error(
+      `Invalid i18n locale identifier ${JSON.stringify(locale)} in ${source}. Expected a BCP 47-compatible locale tag such as "en" or "en-US".`,
+    );
+  }
 }
 
 /** Resolve the configured (or default `src/locales`) locales directory. */
@@ -82,6 +100,7 @@ function discoverLocales(
   localesDirectory: string,
   defaultLocale: string,
 ): string[] {
+  validateLocaleIdentifier(defaultLocale, "defaultLocale");
   const codes = new Set<string>();
   if (fs.existsSync(localesDirectory)) {
     for (const entry of fs.readdirSync(localesDirectory, {
@@ -91,14 +110,8 @@ function discoverLocales(
         // Nested layout: a subdirectory named after the locale, holding one
         // YAML file per namespace.
         const localeDirectory = path.join(localesDirectory, entry.name);
-        try {
-          if (
-            fs.readdirSync(localeDirectory).some((file) => isYamlFile(file))
-          ) {
-            codes.add(entry.name);
-          }
-        } catch {
-          // Ignore unreadable entries.
+        if (fs.readdirSync(localeDirectory).some((file) => isYamlFile(file))) {
+          codes.add(entry.name);
         }
       } else if (entry.isFile() && isYamlFile(entry.name)) {
         // Flat layout: `<code>.yaml`.
@@ -107,7 +120,29 @@ function discoverLocales(
     }
   }
   codes.delete(defaultLocale);
-  return [defaultLocale, ...[...codes].toSorted()];
+  const locales = [defaultLocale, ...[...codes].toSorted()];
+  for (const locale of locales) {
+    validateLocaleIdentifier(locale, `locale files in ${localesDirectory}`);
+  }
+  return locales;
+}
+
+function readYamlObject(filePath: string): Record<string, unknown> {
+  let parsed: unknown;
+  try {
+    parsed = yaml.load(fs.readFileSync(filePath, "utf8"));
+  } catch (error) {
+    throw new Error(
+      `Failed to parse i18n locale file ${filePath}: ${errorMessage(error)}`,
+      { cause: error },
+    );
+  }
+  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error(
+      `Failed to parse i18n locale file ${filePath}: expected a YAML mapping at the document root.`,
+    );
+  }
+  return parsed as Record<string, unknown>;
 }
 
 /**
@@ -134,16 +169,7 @@ function readLocaleResources(
         continue;
       }
       const namespace = path.basename(file, path.extname(file));
-      try {
-        const parsed = yaml.load(
-          fs.readFileSync(path.join(nestedDirectory, file), "utf8"),
-        );
-        if (parsed && typeof parsed === "object") {
-          resources[namespace] = parsed;
-        }
-      } catch {
-        // Ignore parse errors
-      }
+      resources[namespace] = readYamlObject(path.join(nestedDirectory, file));
     }
     return resources;
   }
@@ -151,15 +177,7 @@ function readLocaleResources(
   for (const extension of [".yaml", ".yml"]) {
     const flatPath = path.join(localesDirectory, `${locale}${extension}`);
     if (fs.existsSync(flatPath)) {
-      try {
-        const parsed = yaml.load(fs.readFileSync(flatPath, "utf8"));
-        if (parsed && typeof parsed === "object") {
-          return parsed as Record<string, unknown>;
-        }
-      } catch {
-        // Ignore parse errors
-      }
-      break;
+      return readYamlObject(flatPath);
     }
   }
   return {};
@@ -174,16 +192,14 @@ function buildLocalesTypeShim(
   locales: readonly string[],
   defaultLocale: string,
 ): string {
-  // Emit single-quoted string literals so the generated `.d.ts` already matches
-  // the consuming apps' Prettier style (single quotes) — otherwise the shim the
-  // plugin rewrites on every dev/build would churn and fail `prettier --check`.
-  const tuple = locales.map((code) => `'${code}'`).join(", ");
+  const tuple = locales.map((code) => JSON.stringify(code)).join(", ");
+  const defaultLiteral = JSON.stringify(defaultLocale);
   return [
     "// AUTO-GENERATED by @mission-platform/vite-plugin-i18n. Do not edit by hand.",
     "declare module 'virtual:i18n-locales' {",
     `  export const supportedLocales: readonly [${tuple}];`,
     "  export type SupportedLocale = (typeof supportedLocales)[number];",
-    `  export const defaultLocale: '${defaultLocale}';`,
+    `  export const defaultLocale: ${defaultLiteral};`,
     `  const _default: readonly [${tuple}];`,
     "  export default _default;",
     "}",
@@ -231,15 +247,15 @@ export function i18nPlugin(options: I18nPluginOptions = {}): Plugin {
       root = config.root;
       // Emit the `virtual:i18n-locales` type shim so importing the module is
       // typed with the exact selected locales. Written idempotently (only when
-      // the content changes) to avoid dev-server reload churn, and never fatal.
+      // the content changes) to avoid dev-server reload churn.
+      const shimPath = options.typeShimPath
+        ? path.resolve(root, options.typeShimPath)
+        : path.resolve(root, "src/locales/i18n-locales.d.ts");
       try {
         const locales = discoverLocales(
           resolveLocalesDirectory(root, options),
           defaultLocale,
         );
-        const shimPath = options.typeShimPath
-          ? path.resolve(root, options.typeShimPath)
-          : path.resolve(root, "src/locales/i18n-locales.d.ts");
         const shim = buildLocalesTypeShim(locales, defaultLocale);
         const existing = fs.existsSync(shimPath)
           ? fs.readFileSync(shimPath, "utf8")
@@ -248,8 +264,11 @@ export function i18nPlugin(options: I18nPluginOptions = {}): Plugin {
           fs.mkdirSync(path.dirname(shimPath), { recursive: true });
           fs.writeFileSync(shimPath, shim);
         }
-      } catch {
-        // Never fail the build over the (best-effort) type shim.
+      } catch (error) {
+        throw new Error(
+          `Failed to generate i18n locale type shim ${shimPath}: ${errorMessage(error)}`,
+          { cause: error },
+        );
       }
     },
     resolveId(id) {

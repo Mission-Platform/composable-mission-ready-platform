@@ -120,8 +120,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint all affected workspaces
-        # Temporarily disabled while the GitHub lint failures are investigated.
-        if: ${{ false }}
         run: pnpm exec turbo run lint --affected
 
       # The plain test task is available in every affected workspace, including

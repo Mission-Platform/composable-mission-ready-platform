@@ -9,14 +9,14 @@
 
 ## בחירת מסגרת באמצעות תנאים
 
-רכיבי פלטפורמת המשימה נכתבו לאחר השימוש `@mission-platform/forge` ומופץ כחבילות מרובות ספציפיות למסגרת (Vue 3, React, Solid, ו-Web Components) בתוך חבילה אחת.
+רכיבי פלטפורמת המשימה נכתבו פעם אחת באמצעות `@mission-platform/forge` ומופצים כחבילות מרובות ספציפיות למסגרת (Vue 3, React, Solid ורכיבי אינטרנט) בתוך חבילה אחת.
 
-כדי לבחור את החבילה הנכונה, עליך להגדיר את כלי הבנייה שלך ו TypeScript כדי להשתמש ב**תנאי ייצוא מותאמים אישית**.
+כדי לבחור את החבילה הנכונה, עליך להגדיר את כלי הבנייה שלך ואת TypeScript לשימוש ב**תנאי ייצוא מותאמים אישית**.
 
 ### תנאי מסגרת נתמכים
 
 | מסגרת | מצב ייצוא |
-| :--- | :--- |
+| :----------------- | :----------------- |
 | **Vue 3** | `mp:vue` |
 | **React** | `mp:react` |
 | **Solid** | `mp:solid` |
@@ -24,25 +24,25 @@
 
 ## תצורת פרויקט
 
-### 1. Vite תְצוּרָה
+### 1. תצורת Vite
 
-אם אתה משתמש Vite, אתה יכול להשתמש בפונקציות העזר מ `@mission-platform/vite-config` כדי להגדיר באופן אוטומטי את תנאי הפתרון הנכונים. אפליקציה ללא מסגרת צריכה לבחור `mp:web-component`; אין להתקין או להגדיר את א Vue תוסף עבור היעד הזה.
+אם אתה משתמש ב-Vite, אתה יכול להשתמש בפונקציות העזר מ-`@mission-platform/vite-config` כדי להגדיר באופן אוטומטי את תנאי הפתרון הנכונים. אפליקציה ללא מסגרת צריכה לבחור `mp:web-component`; אין להתקין או להגדיר תוסף Vue עבור יעד זה.
 
 ```ts
-import { defineConfig } from 'vite';
-import { frameworkResolveConditions } from '@mission-platform/vite-config';
+import { defineConfig } from "vite";
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
 export default defineConfig({
   resolve: {
     // This places the Web Components build at the top of the condition list.
-    conditions: frameworkResolveConditions('web-component'),
+    conditions: frameworkResolveConditions("web-component"),
   },
 });
 ```
 
-### 2. TypeScript תְצוּרָה
+### 2. תצורת TypeScript
 
-כדי להבטיח את TypeScript שירות שפה (LSP) פותר סוגים עבור המסגרת הנכונה, עליך להרחיב מסגרת מוגדרת מראש `@mission-platform/typescript-config`.
+כדי להבטיח ששירות השפה TypeScript (LSP) פותר סוגים עבור המסגרת הנכונה, עליך להרחיב מסגרת מוגדרת מראש מ-`@mission-platform/typescript-config`.
 
 ```json
 {
@@ -70,18 +70,18 @@ pnpm add @mission-platform/components @mission-platform/tokens @mission-platform
 pnpm add @mission-platform/i18n
 ```
 
-לחבילת הנתב הנייטרלית אין תלות בזמן ריצה של מסגרת או ספריית נתב. התקן את הנתב המקורי שנבחר על ידי
-היישום שלך והיעד התואם Forge (`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+לחבילת הנתב הנייטרלי אין תלות בזמן ריצה של מסגרת או ספריית נתב. התקן את הנתב המקורי שנבחר על ידי
+האפליקציה שלך ויעד Forge התואם (`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
 `-redwood`, או `-web-components`). האפליקציה היא הבעלים של הגדרות מסלול, ספקים, שומרים, מעמיסים והיליד
-מופע נתב; חבילות לשימוש חוזר מייבאות רק יכולות מהן `@mission-platform/router`.
+מופע נתב; חבילות לשימוש חוזר מייבאות רק יכולות מ-`@mission-platform/router`.
 
 ## שימוש ברכיבים
 
-כאשר התנאים מוגדרים כהלכה, תוכל לייבא רכיבים מהשורש של החבילה. כלי הבנייה יבחר אוטומטית את החבילה שתואמת את `mp:*` מַצָב.
+כאשר התנאים מוגדרים כהלכה, ניתן לייבא רכיבים מהשורש של החבילה. כלי הבנייה יבחר אוטומטית את החבילה התואמת את מצב ה-`mp:*` שלך.
 
 ```vue
 <script setup lang="ts">
-import { ForgeButton } from '@mission-platform/components';
+import { ForgeButton } from "@mission-platform/components";
 </script>
 
 <template>
@@ -91,7 +91,7 @@ import { ForgeButton } from '@mission-platform/components';
 
 ### ניתוב ללא מסגרת
 
-השתמש בהיסטוריית זיכרון עבור בדיקות ועיבוד מוקדם, או השמט `history` בדפדפן כדי להשתמש בהיסטוריית הדפדפן. רשום נתב
+השתמש בהיסטוריית זיכרון עבור בדיקות ועיבוד מוקדם, או השמט את `history` בדפדפן כדי להשתמש בהיסטוריית הדפדפן. רשום נתב
 אלמנטים פעם אחת; הקצה יעדי מסלול כמאפיינים כאשר הם מכילים פרמים, ערכי שאילתה או גיבוב:
 
 ```ts
@@ -100,20 +100,72 @@ import {
   createWebComponentsRouter,
   registerRouterElements,
   setForgeRouter,
-} from '@mission-platform/forge-router-web-components/runtime';
+} from "@mission-platform/forge-router-web-components/runtime";
 
 registerRouterElements();
 const router = createWebComponentsRouter({
-  history: new MpMemoryHistory('/'),
+  history: new MpMemoryHistory("/"),
   routes: [
-    { path: '/', redirect: '/docs/intro' },
-    { path: '/docs/*', name: 'doc', component: () => document.createTextNode('Docs') },
+    { path: "/", redirect: "/docs/intro" },
+    {
+      path: "/docs/*",
+      name: "doc",
+      component: () => document.createTextNode("Docs"),
+    },
   ],
 });
 setForgeRouter(router);
 
-const outlet = document.querySelector('forge-router-outlet');
+const outlet = document.querySelector("forge-router-outlet");
 outlet?.setRouter(router);
+```
+
+### ניווט אסינכרוני עם ספינר טעינה
+
+רכיבי מסלול אסינכרוני יכולים לשמור על הדף הנוכחי גלוי בזמן התצוגה הבאה
+המון. קבע את התצורה של היציאה לשקע בעת יצירת הנתב Web Components;
+`forge-router-link` לאחר מכן מבצע ניווט בספא עם `pushState` (או להחליף
+היסטוריה כאשר `replace` מופעל):
+
+```ts
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory("/docs/intro"),
+  loadingFallback: () => {
+    const spinner = document.createElement("span");
+    spinner.className = "docs-loading-spinner";
+    spinner.setAttribute("aria-label", "Loading documentation");
+    return spinner;
+  },
+  routes: [
+    {
+      path: "/docs/*",
+      component: async () => (await import("./views/docs-view")).default(),
+    },
+  ],
+});
+setForgeRouter(router);
+document.querySelector("forge-router-outlet")?.setRouter(router);
+```
+
+```html
+<forge-router-link to="/docs/advanced"
+  >Advanced documentation</forge-router-link
+>
+<forge-router-outlet></forge-router-outlet>
+```
+
+השקע הוא הבעלים של שכבת הטעינה ואינו מסיר את הרכיב המותקן כעת
+הצג עד שהיעד ייפתר. זה מנקה את שכבת העל להצלחה,
+ניתוב מחדש, בוטל וניווט נכשל. שינויים בהקלקות, הורדות,
+כתובות URL חיצוניות וקישורים עם יעד אחר שומרים על התנהגות דפדפן מקורית.
+
+בעת יצירת מקור Forge משותף, השתמש ישירות בגבול הנייטרלי ואפשר
+כל מהדר בוחר ביישום המקורי שלו:
+
+```tsx
+<Suspense fallback={<LoadingSpinner label="Loading documentation" />}>
+  <DocumentationRoute />
+</Suspense>
 ```
 
 ## התאמה אישית של אסימון עיצוב
@@ -125,10 +177,10 @@ Mission Platform משתמשת ב-CSS Custom Properties (משתנים) עבור �
 :root {
   /* Override the brand primary color */
   --mp-color-brand-primary: #007bff;
-  
+
   /* Override a spacing token */
   --mp-spacing-md: 1.5rem;
 }
 ```
 
-כל רכיבי פלטפורמת המשימה צורכים את המשתנים הללו, ולכן שינויים ב- `:root` הרמה תתפשט בכל ממשק המשתמש.
+כל רכיבי פלטפורמת המשימה צורכים משתנים אלה, כך ששינויים ברמת `:root` יתפשטו בכל ממשק המשתמש.

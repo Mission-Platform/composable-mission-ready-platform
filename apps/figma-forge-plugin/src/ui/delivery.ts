@@ -77,7 +77,10 @@ export async function sendBundleToBridge(
   };
   const response = await fetcher(config.bridgeUrl, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      authorization: `Bearer ${config.authToken}`,
+      'content-type': 'application/json',
+    },
     body: JSON.stringify(request, (_key, value: unknown) => (value instanceof Uint8Array ? [...value] : value)),
   });
   let body: unknown;

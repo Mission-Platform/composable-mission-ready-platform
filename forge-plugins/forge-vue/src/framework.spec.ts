@@ -11,6 +11,7 @@ import {
   state,
   statement,
   stringAttribute,
+  textChild,
 } from "./ir-test-helpers.js";
 import { isVueLowered } from "./lower.js";
 
@@ -109,6 +110,42 @@ describe("Vue Forge framework package", () => {
     expect(generated).toContain('class="host" aria-label="trusted"');
     expect(generated).not.toContain("{{ properties.markup }}");
     expect(generated).not.toContain("<HtmlContent");
+  });
+
+  it("lowers the neutral Suspense marker to Vue's native boundary and fallback slot", () => {
+    const framework = forgeVueFramework();
+    const module = semanticModule({
+      imports: [
+        moduleImport(
+          "import { Suspense } from '@mission-platform/forge';",
+          "@mission-platform/forge",
+          { valueNames: ["Suspense"] },
+        ),
+      ],
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        returnNode: element("Suspense", {
+          attributes: [
+            expressionAttribute("fallback", "undefined", [
+              element("span", { children: [textChild("Loading")] }),
+            ]),
+          ],
+          children: [expressionChild("loadContent()")],
+        }),
+      }),
+    });
+
+    const generated = framework.generate(
+      framework.lower(module, CONTEXT),
+      CONTEXT,
+    ).code;
+
+    expect(generated).toContain('<Suspense v-bind="$attrs">');
+    expect(generated).toContain("<template #fallback>");
+    expect(generated).toContain("Loading");
+    expect(generated).toContain("loadContent()");
+    expect(generated).not.toContain("<Suspense fallback");
   });
 
   it("compiles a composable module to a Vue composable", () => {

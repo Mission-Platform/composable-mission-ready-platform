@@ -18,20 +18,10 @@ interface MarkdownElement extends HTMLElement {
 
 export class DocsDocumentElement extends HTMLElement {
   private router?: MpRouterAdapter;
-  private unsubscribe?: () => void;
 
   public setRouter(router: MpRouterAdapter): void {
-    this.unsubscribe?.();
     this.router = router;
-    this.unsubscribe = router.subscribe((event) => {
-      if (event.type === 'success' || event.type === 'redirect') this.render(event.to);
-    });
     if (router.current.value) this.render(router.current.value);
-  }
-
-  public disconnectedCallback(): void {
-    this.unsubscribe?.();
-    this.unsubscribe = undefined;
   }
 
   private async renderNativeMarkdown(

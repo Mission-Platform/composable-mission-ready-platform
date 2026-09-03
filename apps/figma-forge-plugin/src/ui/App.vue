@@ -28,6 +28,7 @@
   const bridgeResults = ref<readonly ForgeBridgeFileResult[]>([]);
   const bridgeConfig = reactive<ForgeBridgeConfig>({
     bridgeUrl: 'http://127.0.0.1:8787/export',
+    authToken: '',
     repositoryRootId: '',
     targetDirectory: '',
   });
@@ -280,6 +281,14 @@
         <input
           v-model.trim="bridgeConfig.bridgeUrl"
           type="url"
+          autocomplete="off"
+        />
+      </label>
+      <label>
+        Bridge authentication token
+        <input
+          v-model.trim="bridgeConfig.authToken"
+          type="password"
           autocomplete="off"
         />
       </label>

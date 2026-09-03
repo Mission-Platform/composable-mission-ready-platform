@@ -132,6 +132,7 @@ const RUNTIME_VALUES = [
   "domTemplate",
   "dynamicElement",
   "html",
+  "suspense",
   "nothing",
   HAS_SLOT_RUNTIME,
   "unsafeHtml",
@@ -1552,10 +1553,21 @@ function loweredElementRefs(
   });
 }
 
-/** Invoke an effect callback and fall back to cleanup recorded separately in the IR. */
+/** Invoke an effect callback while keeping recorded cleanup in its lexical scope. */
 function effectInvocation(body: string, cleanup: string | undefined): string {
   if (cleanup === undefined) {
     return `(${body})();`;
+  }
+  const trimmedBody = body.trim();
+  const closingBrace = trimmedBody.lastIndexOf("}");
+  const arrow = trimmedBody.indexOf("=>");
+  if (
+    arrow !== -1 &&
+    closingBrace > arrow &&
+    trimmedBody.slice(closingBrace + 1).trim() === ""
+  ) {
+    const bodyWithCleanup = `${trimmedBody.slice(0, closingBrace).trimEnd()} return ${cleanup}; ${trimmedBody.slice(closingBrace)}`;
+    return `(${bodyWithCleanup})();`;
   }
   return `(() => { const result = (${body})(); return typeof result === "function" ? result : ${cleanup}; })()`;
 }

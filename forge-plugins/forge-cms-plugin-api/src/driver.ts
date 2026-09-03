@@ -23,6 +23,7 @@ import {
   ensureForgeArtifactDirectory,
   resolveForgeArtifactPath,
   validateForgeArtifactName,
+  type ForgeGraphDiagnostic,
 } from "@mission-platform/vite-plugin-forge";
 
 import { analyzeContentComponent } from "./analyze.js";
@@ -45,6 +46,19 @@ const PLACEHOLDER_ENTRY: CmsArtifact = {
   contents: "export {};\n",
   artifactKind: "entry",
 };
+
+function toCompilerDiagnostic(
+  diagnostic: ForgeGraphDiagnostic,
+): CompilerDiagnostic {
+  return {
+    phase: "build",
+    severity: "error",
+    code: `FORGE_GRAPH_${diagnostic.code.toUpperCase().replaceAll("-", "_")}`,
+    message: diagnostic.message,
+    fileName: diagnostic.source,
+    span: diagnostic.span,
+  };
+}
 
 /** Options for {@link generateCmsArtifacts}. */
 export interface GenerateCmsArtifactsOptions {
@@ -168,6 +182,9 @@ export function generateCmsArtifacts(
     sourceRoot: componentsDirectory,
   });
   const discovered = discoverComponentsFromGraph(graph, stripPrefix);
+  const diagnostics: CompilerDiagnostic[] = graph.diagnostics.map(
+    (diagnostic) => toCompilerDiagnostic(diagnostic),
+  );
 
   const safeOutputDirectory = assertForgeArtifactRoot(outDir);
   rmSync(safeOutputDirectory, {
@@ -187,7 +204,6 @@ export function generateCmsArtifacts(
         })
       : undefined;
 
-  const diagnostics: CompilerDiagnostic[] = [];
   const context: CmsTargetContext = {
     rootDir: options.rootDir ?? path.dirname(outDir),
     outDir: safeOutputDirectory,

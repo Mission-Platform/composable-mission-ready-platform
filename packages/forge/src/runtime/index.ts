@@ -1,4 +1,5 @@
 export { h, Fragment } from './h';
+export { Suspense } from './types';
 export { classNames, type ClassValue } from './class-names';
 export {
   Slot,
@@ -38,6 +39,8 @@ export {
   type MpElementType,
   type MpPropertyBag,
   type MpReservedProperties,
+  type MpSuspenseProperties,
+  type MpSuspenseChild,
 } from './types';
 export {
   useState,

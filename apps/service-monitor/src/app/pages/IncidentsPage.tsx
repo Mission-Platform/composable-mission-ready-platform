@@ -4,13 +4,12 @@ import { getMonitor } from '@/monitoring/store';
 
 export async function IncidentsPage() {
   const monitor = getMonitor();
-  const services = await monitor.getServices();
   return (
     <AppProviders>
       <IncidentsView
-        initialIncidents={await monitor.listIncidents()}
-        initialMaintenance={await monitor.listMaintenance()}
-        monitors={services.map((service) => service.target)}
+        initialIncidents={[]}
+        initialMaintenance={[]}
+        monitors={(await monitor.getServices()).map((service) => service.target)}
       />
     </AppProviders>
   );

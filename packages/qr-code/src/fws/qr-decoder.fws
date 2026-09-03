@@ -487,6 +487,7 @@ fn deinterleave_and_correct(codewords: u32, version: i32, ecc: i32, out: u32) ->
   return true;
 }
 
+
 fn read_bits(data: u32, length: i32, position: i32, count: i32) -> i32 {
   if position < 0 || count < 0 || position + count > length * 8 { return -1; }
   let mut value: i32 = 0;
@@ -504,22 +505,24 @@ fn read_bits(data: u32, length: i32, position: i32, count: i32) -> i32 {
 }
 
 fn parse_bytes(data: u32, length: i32, version: i32) -> string {
-  let mut position: i32 = 0;
-  let mode: i32 = read_bits(data, length, position, 4);
+  let mode: i32 = read_bits(data, length, 0, 4);
   if mode != 4 { return ""; }
-  position = position + 4;
-  let mut count: i32 = read_bits(data, length, position, q.count_bits(version));
-  if count < 0 { return ""; }
-  position = position + q.count_bits(version);
-  if position + count * 8 > length * 8 { return ""; }
-  if count == 0 { return "1"; }
+  let count_width: i32 = q.count_bits(version);
+  let payload_count: i32 = read_bits(data, length, 4, count_width);
+  if payload_count < 0 { return ""; }
+  let mut payload_position: i32 = 4 + count_width;
+  let payload_bits: i32 = payload_count * 8;
+  let available_bits: i32 = length * 8;
+  let payload_end: i32 = payload_position + payload_bits;
+  if payload_end > available_bits { return ""; }
+  if payload_count == 0 { return "1"; }
   let mut payload: string = "";
   let mut index: i32 = 0;
-  while index < count {
-    let value: i32 = read_bits(data, length, position, 8);
+  while index < payload_count {
+    let value: i32 = read_bits(data, length, payload_position, 8);
     if value < 0 { return ""; }
-    payload = q.bytes_push(payload, value);
-    position = position + 8;
+    payload = string_concat(payload, q.byte_char(value));
+    payload_position = payload_position + 8;
     index = index + 1;
   }
   return decode_utf8(payload);
@@ -546,9 +549,11 @@ export fn decode_qr(packed: Array<i32>) -> string {
   let reserved: u32 = function_map(version);
   let raw_codewords: i32 = q.total_codewords(version);
   let codewords: u32 = q.mem_alloc_bytes(raw_codewords);
-  if !extract_codewords(packed, size, mask, reserved, raw_codewords, codewords) { return ""; }
+  let extracted: bool = extract_codewords(packed, size, mask, reserved, raw_codewords, codewords);
+  if !extracted { return ""; }
   let data_length: i32 = q.data_codewords(ecc, version);
   let data: u32 = q.mem_alloc_bytes(data_length);
-  if !deinterleave_and_correct(codewords, version, ecc, data) { return ""; }
+  let corrected: bool = deinterleave_and_correct(codewords, version, ecc, data);
+  if !corrected { return ""; }
   return string_concat("", parse_bytes(data, data_length, version));
 }

@@ -333,6 +333,32 @@ export fn literal() -> string { return "generated"; }
     }
   });
 
+  it('marshals record exports through both loaders', async () => {
+    const artifact = compileForgeWebScript(
+      input(`record Pair { left: i32; right: u32; }
+export fn make() -> Pair { return Pair { left: 7, right: 9 }; }`),
+    );
+    expect(artifact.diagnostics).toEqual([]);
+    expect(artifact.declarations).toContain('export interface Pair');
+    expect(artifact.declarations).toContain('readonly make: () => Pair;');
+    const generated = await import(`data:text/javascript,${encodeURIComponent(artifact.esmSource)}`);
+
+    for (const exports of [generated.loadSync(), await generated.load()]) {
+      expect(exports.make()).toEqual({ left: 7, right: 9 });
+    }
+  });
+
+  it('marshals array fields inside record exports', async () => {
+    const artifact = compileForgeWebScript(
+      input(`record Packet { values: u32[]; }
+export fn make(values: u32[]) -> Packet { return Packet { values: values }; }`),
+    );
+    expect(artifact.diagnostics).toEqual([]);
+    const generated = await import(`data:text/javascript,${encodeURIComponent(artifact.esmSource)}`);
+
+    expect(generated.loadSync().make([7, 9])).toEqual({ values: [7, 9] });
+  });
+
   it('adapts string capability imports through both loaders', async () => {
     const artifact = compileForgeWebScript(
       input(

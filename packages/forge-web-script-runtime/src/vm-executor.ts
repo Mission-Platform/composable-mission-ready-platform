@@ -2,6 +2,7 @@ import { ForgeWebScriptMemory } from './memory.js';
 import { createForgeWebScriptTraceRecorder, summarizeForgeWebScriptVmValue } from './trace.js';
 import { attachForgeWebScriptTrace, toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
 import { prepareForgeWebScriptVmWasm } from './vm-wasm.js';
+import { FORGE_WEB_SCRIPT_VM_DEFAULT_MAX_MEMORY_PAGES } from './vm.js';
 
 import type {
   ForgeWebScriptVmAotArtifact,
@@ -662,9 +663,17 @@ function executeFunction(
   throw trap(`Function '${function_.name}' reached the end without returning.`);
 }
 
-function createMemory(input: Uint8Array | undefined, trace?: ExecutionState['trace']): ForgeWebScriptMemory {
+function createMemory(
+  input: Uint8Array | undefined,
+  trace: ExecutionState['trace'],
+  maxMemoryPages: number | undefined,
+): ForgeWebScriptMemory {
   const initialPages = Math.max(1, Math.ceil((input?.byteLength ?? PAGE_SIZE) / PAGE_SIZE));
-  const memory = new ForgeWebScriptMemory(undefined, { initialPages, trace });
+  const memory = new ForgeWebScriptMemory(undefined, {
+    initialPages,
+    maximumPages: maxMemoryPages ?? FORGE_WEB_SCRIPT_VM_DEFAULT_MAX_MEMORY_PAGES,
+    trace,
+  });
   if (input !== undefined) memory.writeBytes(0, input);
   return memory;
 }
@@ -682,7 +691,11 @@ export function createForgeWebScriptVmExecutor(
     ForgeWebScriptVmModule,
     Map<
       Exclude<ForgeWebScriptVmExecutionMode, 'interpret'>,
-      { capabilities?: ForgeWebScriptVmExecutionOptions['capabilities']; prepared: ForgeWebScriptVmPreparedExecutor }
+      {
+        capabilities?: ForgeWebScriptVmExecutionOptions['capabilities'];
+        maxMemoryPages?: number;
+        prepared: ForgeWebScriptVmPreparedExecutor;
+      }
     >
   >();
   const prepare = (
@@ -697,11 +710,17 @@ export function createForgeWebScriptVmExecutor(
       preparedByModule.set(module, cached);
     }
     const existing = cached.get(mode);
-    if (existing !== undefined && existing.capabilities === options.capabilities) return existing.prepared;
+    if (
+      existing !== undefined &&
+      existing.capabilities === options.capabilities &&
+      existing.maxMemoryPages === options.maxMemoryPages
+    )
+      return existing.prepared;
     const prepared = prepareForgeWebScriptVmWasm(module, {
       compilerVersion,
       mode,
       capabilities: options.capabilities,
+      maxMemoryPages: options.maxMemoryPages,
     });
     if (mode === 'jit') {
       for (const function_ of module.functions) {
@@ -714,7 +733,7 @@ export function createForgeWebScriptVmExecutor(
           };
       }
     }
-    cached.set(mode, { capabilities: options.capabilities, prepared });
+    cached.set(mode, { capabilities: options.capabilities, maxMemoryPages: options.maxMemoryPages, prepared });
     return prepared;
   };
   const execute: ForgeWebScriptVmExecutor['execute'] = (module, functionName, arguments_, options) => {
@@ -733,10 +752,14 @@ export function createForgeWebScriptVmExecutor(
       let fallback = wasmFallbacks.get(module)?.has('aot') ?? false;
       if (!fallback) {
         try {
-          const prepared = prepare(module, 'aot', { capabilities: options.capabilities });
+          const prepared = prepare(module, 'aot', {
+            capabilities: options.capabilities,
+            maxMemoryPages: options.maxMemoryPages,
+          });
           return prepared.execute(functionName, arguments_, {
             memory: options.memory,
             maxSteps: options.maxSteps,
+            maxMemoryPages: options.maxMemoryPages,
             trace: options.trace,
           });
         } catch (error) {
@@ -763,10 +786,14 @@ export function createForgeWebScriptVmExecutor(
         let fallback = wasmFallbacks.get(module)?.has('jit') ?? false;
         if (!fallback) {
           try {
-            const prepared = prepare(module, 'jit', { capabilities: options.capabilities });
+            const prepared = prepare(module, 'jit', {
+              capabilities: options.capabilities,
+              maxMemoryPages: options.maxMemoryPages,
+            });
             return prepared.execute(functionName, arguments_, {
               memory: options.memory,
               maxSteps: options.maxSteps,
+              maxMemoryPages: options.maxMemoryPages,
               trace: options.trace,
             });
           } catch (error) {
@@ -793,7 +820,7 @@ export function createForgeWebScriptVmExecutor(
     if (entry === undefined) throw trap(`Function '${functionName}' does not exist.`);
     const trace =
       options.trace === undefined ? undefined : createForgeWebScriptTraceRecorder(options.trace, functionName);
-    const memory = createMemory(options.memory, trace);
+    const memory = createMemory(options.memory, trace, options.maxMemoryPages);
     const state: ExecutionState = { module, options, memory, steps: 0, trace };
     const executeNamed = (
       name: string,

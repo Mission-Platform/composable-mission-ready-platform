@@ -19,8 +19,9 @@
  * the browser only has to trust the self-signed cert once.
  *
  * The certificate's Subject Alternative Names include `localhost`, the loopback
- * addresses and every non-internal IPv4/IPv6 address of the machine, so the same
- * certificate is valid whether Storybook is opened locally or over the network.
+ * addresses and every non-private, non-internal IPv4/IPv6 address of the machine,
+ * so the same certificate is valid whether Storybook is opened locally or over the
+ * network.
  *
  * Usage:
  *   node --experimental-strip-types scripts/generate-dev-cert.ts <output-dir>
@@ -31,6 +32,7 @@
 
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { isIP } from 'node:net';
 import { networkInterfaces } from 'node:os';
 import { isAbsolute, join, resolve } from 'node:path';
 
@@ -52,6 +54,43 @@ function resolveOutputDir(): string {
   return isAbsolute(arg) ? arg : resolve(process.cwd(), arg);
 }
 
+/** Return true for addresses that are not useful as certificate SANs. */
+function isPrivateAddress(address: string): boolean {
+  const version = isIP(address);
+  if (version === 4) {
+    const octets = address.split('.').map(Number);
+    const [first, second] = octets;
+    return (
+      first === 0 ||
+      first === 10 ||
+      first === 127 ||
+      (first === 100 && second >= 64 && second <= 127) ||
+      (first === 169 && second === 254) ||
+      (first === 172 && second >= 16 && second <= 31) ||
+      (first === 192 && second === 168) ||
+      first >= 224
+    );
+  }
+
+  if (version === 6) {
+    const normalized = address.toLowerCase();
+    return (
+      normalized === '::' ||
+      normalized === '::1' ||
+      normalized.startsWith('fc') ||
+      normalized.startsWith('fd') ||
+      normalized.startsWith('fe8') ||
+      normalized.startsWith('fe9') ||
+      normalized.startsWith('fea') ||
+      normalized.startsWith('feb') ||
+      normalized.startsWith('fec') ||
+      normalized.startsWith('ff')
+    );
+  }
+
+  return true;
+}
+
 /** Collect the Subject Alternative Names the certificate should be valid for. */
 function collectSubjectAltNames(): string[] {
   const dnsNames = new Set<string>(['localhost']);
@@ -59,7 +98,17 @@ function collectSubjectAltNames(): string[] {
 
   for (const addresses of Object.values(networkInterfaces())) {
     for (const address of addresses ?? []) {
-      ipAddresses.add(address.address);
+      // Internal, private, and scoped addresses are not valid network SANs.
+      // A scope identifier (for example, `%en0`) is local routing metadata,
+      // not part of the IPv6 address encoded in an X.509 certificate.
+      if (address.internal || address.address.includes('%')) {
+        continue;
+      }
+      const ip = address.address;
+      if (isPrivateAddress(ip)) {
+        continue;
+      }
+      ipAddresses.add(ip);
     }
   }
 

@@ -12,6 +12,7 @@ import { createJavaScriptAdapter } from "../src/adapters/javascript.ts";
 import { createRustWasmAdapter } from "../src/adapters/rust-wasm.ts";
 import { measureExecution, measureInitialization } from "../src/measure.ts";
 
+import type { RustWasmExports } from "../src/adapters/rust-wasm.ts";
 import type {
   BenchmarkCase,
   BenchmarkFailure,
@@ -331,45 +332,9 @@ function fwsGeneratedWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
   };
 }
 
-async function rustLoader(moduleUrl: string): Promise<never> {
-  const loaded = (await import(moduleUrl)) as {
-    __wbg_set_wasm?: (exports: WebAssembly.Exports) => void;
-    init?: (module?: unknown) => Promise<unknown>;
-    initSync?: (module: BufferSource) => unknown;
-    default?: (module?: unknown) => Promise<unknown>;
-  };
-  const wasmUrl = new URL(
-    "benchmark_bg.wasm",
-    new URL(moduleUrl, globalThis.location.href),
-  ).href;
-  const response = await fetch(wasmUrl);
-  const bytes = await response.arrayBuffer();
-  if (!response.ok)
-    throw new Error(`Unable to fetch Rust WASM (${response.status}).`);
-  if (typeof loaded.__wbg_set_wasm === "function") {
-    const instance = await WebAssembly.instantiate(bytes, {});
-    loaded.__wbg_set_wasm(instance.instance.exports);
-  } else {
-    switch (true) {
-      case typeof loaded.initSync === "function": {
-        loaded.initSync(bytes);
-        break;
-      }
-      case typeof loaded.init === "function": {
-        await loaded.init(bytes);
-        break;
-      }
-      case typeof loaded.default === "function": {
-        await loaded.default(bytes);
-        break;
-      }
-      default: {
-        // Vite may initialize the imported WASM module while bundling it.
-        break;
-      }
-    }
-  }
-  return loaded as never;
+async function rustLoader(moduleUrl: string): Promise<RustWasmExports> {
+  // The bundler entry imports benchmark_bg.wasm and initializes its glue.
+  return (await import(moduleUrl)) as RustWasmExports;
 }
 
 async function assemblyScriptLoader(moduleUrl: string): Promise<never> {

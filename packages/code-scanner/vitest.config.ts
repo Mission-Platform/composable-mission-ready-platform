@@ -33,9 +33,15 @@ export default defineVitestConfig({
     },
     resolve: {
       alias: [
-        { find: /^@mission-platform\/code-scanner$/, replacement: resolve(import.meta.dirname, 'src/index.ts') },
+        { find: '@mission-platform/code-scanner', replacement: resolve(import.meta.dirname, 'src/index.ts') },
         {
-          find: /^@mission-platform\/components$/,
+          find: '@mission-platform/matrix-code',
+          replacement: resolve(import.meta.dirname, '../matrix-code/src/index.ts'),
+        },
+        { find: '@mission-platform/qr-code', replacement: resolve(import.meta.dirname, '../qr-code/src/index.ts') },
+        { find: '@mission-platform/barcode', replacement: resolve(import.meta.dirname, '../barcode/src/index.ts') },
+        {
+          find: '@mission-platform/components',
           replacement: resolve(import.meta.dirname, 'src/test-support/neutral-components.ts'),
         },
       ],

@@ -39,7 +39,12 @@ object FwsCommandLine {
         startOnActivation = settings.startOnActivation,
     )
 
-    fun buildDapAdapter(settings: FwsLaunchSettings, projectRoot: String, adapterPath: Path): GeneralCommandLine {
+    fun buildDapAdapter(
+        settings: FwsLaunchSettings,
+        projectRoot: String,
+        adapterPath: Path,
+        projectTrusted: Boolean = true,
+    ): GeneralCommandLine {
         val node = settings.nodeExecutable.trim()
         require(node.isNotEmpty()) {
             "Forge Web Script debugging requires a Node.js executable. Configure it in Settings | Tools | Forge Web Script."
@@ -51,11 +56,11 @@ object FwsCommandLine {
         require(Files.isRegularFile(adapterPath)) {
             "Forge Web Script debugging cannot find the packaged DAP adapter: $adapterPath"
         }
-        validateExecutablePath(node, "Node.js executable", root)
+        validateExecutablePath(node, "Node.js executable", root, projectTrusted)
         return GeneralCommandLine(node, adapterPath.toString()).withWorkDirectory(root.toFile())
     }
 
-    fun build(settings: FwsLaunchSettings, projectRoot: String): GeneralCommandLine {
+    fun build(settings: FwsLaunchSettings, projectRoot: String, projectTrusted: Boolean = true): GeneralCommandLine {
         val node = settings.nodeExecutable.trim()
         val server = settings.serverCommand.trim()
         require(node.isNotEmpty()) {
@@ -68,9 +73,9 @@ object FwsCommandLine {
         require(Files.isDirectory(root)) {
             "Forge Web Script cannot start because the project root does not exist: $root"
         }
-        validateExecutablePath(node, "Node.js executable", root)
+        validateExecutablePath(node, "Node.js executable", root, projectTrusted)
 
-        val resolved = resolveServerCommand(server, root)
+        val resolved = resolveServerCommand(server, root, projectTrusted)
         val command = if (resolved.launchWithNode) {
             GeneralCommandLine(node, resolved.path.toString())
         } else {
@@ -88,8 +93,12 @@ object FwsCommandLine {
      * executable), or, failing that, a directly executable file (launched as-is, relying on its own
      * shebang, e.g. a package-manager shim script).
      */
-    private fun resolveServerCommand(server: String, projectRoot: Path): ResolvedServerCommand {
+    private fun resolveServerCommand(server: String, projectRoot: Path, projectTrusted: Boolean): ResolvedServerCommand {
         val hasPathSeparator = server.contains('/') || server.contains('\\')
+        require(projectTrusted || !hasPathSeparator) {
+            "Forge Web Script cannot use the configured forge-web-script-lsp path in an untrusted project. Trust the project " +
+                "before configuring a project or absolute server path."
+        }
         val candidate = if (hasPathSeparator) {
             val configured = Path.of(server)
             val path = if (configured.isAbsolute) configured else projectRoot.resolve(configured)
@@ -99,8 +108,8 @@ object FwsCommandLine {
             }
             path
         } else {
-            findInAncestorNodeModulesBin(server, projectRoot)
-                ?: findOnPath(server)
+            (if (projectTrusted) findInAncestorNodeModulesBin(server, projectRoot) else null)
+                ?: findOnPath(server, projectRoot, projectTrusted)
                 ?: error(
                     "Forge Web Script could not find a project-installed '$server'. Run " +
                         "'pnpm add forge-web-script-lsp' (or your package manager's equivalent) so that " +
@@ -110,7 +119,13 @@ object FwsCommandLine {
         }
 
         val jsEntryPoint = resolveJsEntryPoint(candidate)
-        if (jsEntryPoint != null) return ResolvedServerCommand(jsEntryPoint, launchWithNode = true)
+        if (jsEntryPoint != null) {
+            require(projectTrusted || !isWithinProject(jsEntryPoint, projectRoot)) {
+                "Forge Web Script resolved the server command to a project file in an untrusted project. Trust the project " +
+                    "before launching project-installed server code."
+            }
+            return ResolvedServerCommand(jsEntryPoint, launchWithNode = true)
+        }
 
         require(Files.isExecutable(candidate)) {
             "Forge Web Script found '$candidate' but could not resolve a JavaScript entry point and " +
@@ -131,12 +146,14 @@ object FwsCommandLine {
         return null
     }
 
-    private fun findOnPath(command: String): Path? {
+    private fun findOnPath(command: String, projectRoot: Path, projectTrusted: Boolean): Path? {
         val pathEnv = System.getenv("PATH") ?: return null
         for (entry in pathEnv.split(File.pathSeparator)) {
             if (entry.isBlank()) continue
             val candidate = runCatching { Path.of(entry).resolve(command) }.getOrNull() ?: continue
-            if (Files.isRegularFile(candidate) && Files.isExecutable(candidate)) return candidate
+            if (Files.isRegularFile(candidate) && Files.isExecutable(candidate) &&
+                (projectTrusted || !isWithinProject(candidate, projectRoot))
+            ) return candidate
         }
         return null
     }
@@ -171,14 +188,24 @@ object FwsCommandLine {
         return extension in JS_EXTENSIONS
     }
 
-    private fun validateExecutablePath(value: String, description: String, projectRoot: Path) {
+    private fun validateExecutablePath(value: String, description: String, projectRoot: Path, projectTrusted: Boolean) {
         if (!value.contains('/') && !value.contains('\\')) return
+        require(projectTrusted) {
+            "Forge Web Script cannot use the configured $description path in an untrusted project. Trust the project " +
+                "before configuring an absolute or project-relative executable path."
+        }
         val configuredPath = Path.of(value)
         val path = if (configuredPath.isAbsolute()) configuredPath else projectRoot.resolve(configuredPath)
         require(Files.isRegularFile(path) && Files.isExecutable(path)) {
             "Forge Web Script could not find an executable $description at '$value'. " +
                 "Install Node.js 24 or newer and forge-web-script-lsp, or update the plugin settings."
         }
+    }
+
+    private fun isWithinProject(path: Path, projectRoot: Path): Boolean {
+        val normalized = path.toAbsolutePath().normalize()
+        if (normalized.startsWith(projectRoot)) return true
+        return runCatching { path.toRealPath().startsWith(projectRoot) }.getOrDefault(false)
     }
 
     internal fun parseArguments(value: String): List<String> {

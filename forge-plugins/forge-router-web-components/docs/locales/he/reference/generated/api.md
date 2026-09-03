@@ -30,7 +30,7 @@ export class MpRouterOutletElement extends HTMLElement
 ```
 
 שקע נתב שמעלה תצוגת DOM ניטראלית של מסלול. בקשות עשויות לעבור א
-`viewAdapter` לנתב כאשר תצוגות צריכות מחזור חיים מותאם אישית; אחרת א
+`viewAdapter` לנתב כאשר תצוגות זקוקות למחזור חיים מותאם אישית; אחרת א
 Node, מחרוזת או DOM במפעל `route.component` מעובד ישירות.
 
 ### registerRouterElements
@@ -148,17 +148,17 @@ export const ForgeRouterOutlet;
 **סוג:** רכיב
 
 ```typescript
-export const MpLink;
+export MpLink = 'forge-router-link'
 ```
 
-תג אלמנט מותאם אישית המשמש עבור קישורים ניטרליים שהורכבו.
+תג רכיב מותאם אישית המשמש עבור קישורים ניטרליים שהורכבו.
 
 ### MpRouterView
 
 **סוג:** רכיב
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = 'forge-router-outlet'
 ```
 
 תג אלמנט מותאם אישית המשמש לשקעים ניטרליים שהורכבו.
@@ -185,7 +185,7 @@ export const resolveForgeLink;
 function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
-פתרו יעד ניטרלי דרך נתב רכיבי הרשת המחוברים.
+פתרו יעד ניטרלי באמצעות נתב רכיבי האינטרנט המחוברים.
 
 #### פרמטרים
 
@@ -201,7 +201,7 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
-אגד את הנתב בבעלות האפליקציה לקבלת יכולות חבילה ללא מסגרת.
+אגד את הנתב שבבעלות האפליקציה לקבלת יכולות חבילה ללא מסגרת הידור.
 
 #### פרמטרים
 
@@ -300,6 +300,16 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 | שם       | הקלד                               | תיאור |
 | -------- | ---------------------------------- | ----- |
 | אפשרויות | MpWebComponentsRouterOptions<View> |       |
+
+### MpRouterLoadingFallback
+
+**סוג:** רכיב
+
+```typescript
+export type MpRouterLoadingFallback = Node | string | (() => Node | string);
+```
+
+תוכן שעובד על ידי שקע נתב בזמן שתצוגת יעד נטענת.
 
 ### MpWebComponentsRouter
 

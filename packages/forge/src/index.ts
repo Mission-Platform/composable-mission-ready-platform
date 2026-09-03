@@ -24,6 +24,7 @@
 export {
   h,
   Fragment,
+  Suspense,
   classNames,
   createForgeStyle,
   isMpElement,
@@ -57,6 +58,8 @@ export {
   type MpTeleportProperties,
   type MpTransitionProperties,
   type MpTransitionGroupProperties,
+  type MpSuspenseProperties,
+  type MpSuspenseChild,
 } from './runtime';
 
 export {

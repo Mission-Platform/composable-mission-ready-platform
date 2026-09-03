@@ -40,6 +40,7 @@ const keywords = new Set([
   'new',
   'return',
   'struct',
+  'record',
   'switch',
   'trait',
   'while',

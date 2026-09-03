@@ -10,11 +10,11 @@ To select the correct bundle, you must configure your build tool and TypeScript 
 
 ### Supported Framework Conditions
 
-| Framework | Export Condition |
-| :--- | :--- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
+| Framework          | Export Condition   |
+| :----------------- | :----------------- |
+| **Vue 3**          | `mp:vue`           |
+| **React**          | `mp:react`         |
+| **Solid**          | `mp:solid`         |
 | **Web Components** | `mp:web-component` |
 
 ## Project Configuration
@@ -24,13 +24,13 @@ To select the correct bundle, you must configure your build tool and TypeScript 
 If you are using Vite, you can use the helper functions from `@mission-platform/vite-config` to automatically set the correct resolve conditions. A framework-free app should select `mp:web-component`; do not install or configure a Vue plugin for that target.
 
 ```ts
-import { defineConfig } from 'vite';
-import { frameworkResolveConditions } from '@mission-platform/vite-config';
+import { defineConfig } from "vite";
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
 export default defineConfig({
   resolve: {
     // This places the Web Components build at the top of the condition list.
-    conditions: frameworkResolveConditions('web-component'),
+    conditions: frameworkResolveConditions("web-component"),
   },
 });
 ```
@@ -76,7 +76,7 @@ With the conditions correctly configured, you can import components from the roo
 
 ```vue
 <script setup lang="ts">
-import { ForgeButton } from '@mission-platform/components';
+import { ForgeButton } from "@mission-platform/components";
 </script>
 
 <template>
@@ -95,20 +95,72 @@ import {
   createWebComponentsRouter,
   registerRouterElements,
   setForgeRouter,
-} from '@mission-platform/forge-router-web-components/runtime';
+} from "@mission-platform/forge-router-web-components/runtime";
 
 registerRouterElements();
 const router = createWebComponentsRouter({
-  history: new MpMemoryHistory('/'),
+  history: new MpMemoryHistory("/"),
   routes: [
-    { path: '/', redirect: '/docs/intro' },
-    { path: '/docs/*', name: 'doc', component: () => document.createTextNode('Docs') },
+    { path: "/", redirect: "/docs/intro" },
+    {
+      path: "/docs/*",
+      name: "doc",
+      component: () => document.createTextNode("Docs"),
+    },
   ],
 });
 setForgeRouter(router);
 
-const outlet = document.querySelector('forge-router-outlet');
+const outlet = document.querySelector("forge-router-outlet");
 outlet?.setRouter(router);
+```
+
+### Async navigation with a loading spinner
+
+Async route components can keep the current page visible while the next view
+loads. Configure the outlet fallback when creating the Web Components router;
+`forge-router-link` then performs SPA navigation with `pushState` (or replace
+history when `replace` is enabled):
+
+```ts
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory("/docs/intro"),
+  loadingFallback: () => {
+    const spinner = document.createElement("span");
+    spinner.className = "docs-loading-spinner";
+    spinner.setAttribute("aria-label", "Loading documentation");
+    return spinner;
+  },
+  routes: [
+    {
+      path: "/docs/*",
+      component: async () => (await import("./views/docs-view")).default(),
+    },
+  ],
+});
+setForgeRouter(router);
+document.querySelector("forge-router-outlet")?.setRouter(router);
+```
+
+```html
+<forge-router-link to="/docs/advanced"
+  >Advanced documentation</forge-router-link
+>
+<forge-router-outlet></forge-router-outlet>
+```
+
+The outlet owns the loading overlay and does not remove the currently mounted
+view until the destination resolves. It clears the overlay for successful,
+redirected, cancelled, and failed navigation. Modified clicks, downloads,
+external URLs, and links with another target retain native browser behavior.
+
+When authoring shared Forge source, use the neutral boundary directly and let
+each compiler select its native implementation:
+
+```tsx
+<Suspense fallback={<LoadingSpinner label="Loading documentation" />}>
+  <DocumentationRoute />
+</Suspense>
 ```
 
 ## Design Token Customization
@@ -120,7 +172,7 @@ Mission Platform uses CSS Custom Properties (variables) for design tokens. You c
 :root {
   /* Override the brand primary color */
   --mp-color-brand-primary: #007bff;
-  
+
   /* Override a spacing token */
   --mp-spacing-md: 1.5rem;
 }

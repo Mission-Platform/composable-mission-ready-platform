@@ -84,6 +84,9 @@ interface MutableCacheStats {
   semanticHits: number;
   semanticMisses: number;
   semanticEvictions: number;
+  frontendEvictions: number;
+  optimizedEvictions: number;
+  projectGraphEvictions: number;
   invalidations: number;
   invalidatedEntries: number;
 }
@@ -113,6 +116,27 @@ function now(): number {
   return globalThis.performance?.now() ?? Date.now();
 }
 
+function addIndexedKey(index: Map<string, Set<string>>, fileName: string, key: string): void {
+  for (const alias of new Set([fileName, path.resolve(fileName)])) {
+    const keys = index.get(alias) ?? new Set<string>();
+    keys.add(key);
+    index.set(alias, keys);
+  }
+}
+
+function removeIndexedKey(index: Map<string, Set<string>>, key: string): void {
+  for (const [fileName, keys] of index) {
+    keys.delete(key);
+    if (keys.size === 0) index.delete(fileName);
+  }
+}
+
+function collectIndexedKeys(index: Map<string, Set<string>>, fileName: string, result: Set<string>): void {
+  for (const alias of new Set([fileName, path.resolve(fileName)])) {
+    for (const key of index.get(alias) ?? []) result.add(key);
+  }
+}
+
 /** Long-lived, synchronous compiler state for one process/build session. */
 export class PersistentForgeCompilerService implements ForgeCompilerService {
   private readonly semanticCache = new Map<string, SemanticModule>();
@@ -120,6 +144,9 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
   private readonly optimizedCache = new Map<string, OxcParsedModule>();
   private readonly graphCache = new Map<string, ForgeFileGraph>();
   private readonly cacheKeysByFile = new Map<string, Set<string>>();
+  private readonly frontendKeysByFile = new Map<string, Set<string>>();
+  private readonly optimizedKeysByFile = new Map<string, Set<string>>();
+  private readonly graphKeysByFile = new Map<string, Set<string>>();
   private readonly diagnostics: CompilerDiagnostic[] = [];
   private readonly phaseTimings: ForgePhaseTiming[] = [];
   private readonly affectedFiles = new Set<string>();
@@ -131,29 +158,34 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
 
   constructor(limits: ForgeCacheLimits = {}) {
     this.limits = { ...DEFAULT_FORGE_CACHE_LIMITS, ...limits };
-    if (this.limits.semanticModules < 1) {
-      throw new RangeError('Forge semantic cache limit must be at least 1.');
+    for (const [name, limit] of Object.entries(this.limits)) {
+      if (limit < 1) throw new RangeError(`Forge ${name} cache limit must be at least 1.`);
     }
   }
 
   prepare(input: ForgeProjectInput): ForgeProjectSnapshot {
     this.assertActive();
     const fingerprint = projectFingerprint(input);
-    const graph =
-      input.entry === undefined
-        ? undefined
-        : (this.graphCache.get(fingerprint) ??
-          (() => {
-            const nextGraph = buildForgeFileGraph({
-              entry: input.entry,
-              sourceRoot: input.sourceRoot,
-              tsconfig: input.tsconfig,
-              paths: input.paths,
-              baseUrl: input.baseUrl,
-            });
-            this.graphCache.set(fingerprint, nextGraph);
-            return nextGraph;
-          })());
+    let graph: ForgeFileGraph | undefined;
+    if (input.entry !== undefined) {
+      const cachedGraph = this.graphCache.get(fingerprint);
+      if (cachedGraph !== undefined) {
+        this.graphCache.delete(fingerprint);
+        this.graphCache.set(fingerprint, cachedGraph);
+        graph = cachedGraph;
+      } else {
+        graph = buildForgeFileGraph({
+          entry: input.entry,
+          sourceRoot: input.sourceRoot,
+          tsconfig: input.tsconfig,
+          paths: input.paths,
+          baseUrl: input.baseUrl,
+        });
+        this.graphCache.set(fingerprint, graph);
+        for (const fileName of graph.nodes.keys()) addIndexedKey(this.graphKeysByFile, fileName, fingerprint);
+        this.evictProjectGraphsIfNeeded();
+      }
+    }
     const snapshot = { ...input, fingerprint, ...(graph === undefined ? {} : { graph }) };
     this.preparedProject = snapshot;
     return snapshot;
@@ -181,11 +213,15 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
     const frontend = this.frontendCache.get(frontendKey);
     let parsedFrontend: FrontendModule;
     if (frontend !== undefined) {
+      this.frontendCache.delete(frontendKey);
+      this.frontendCache.set(frontendKey, frontend);
       parsedFrontend = frontend;
     } else {
       const frontendStart = now();
       parsedFrontend = parseFrontendModule(input.fileName, input.source, input.moduleKind, input.componentName);
       this.frontendCache.set(frontendKey, parsedFrontend);
+      addIndexedKey(this.frontendKeysByFile, parsedFrontend.fileName, frontendKey);
+      this.evictFrontendIfNeeded();
       this.recordPhase('frontend', frontendStart);
     }
     const optimizedKey = `${key.value}:optimized`;
@@ -199,6 +235,8 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
       const optimizeStart = now();
       analyzedModule = optimizeForgeModule(parsedFrontend.oxc, input.optimize ?? {});
       this.optimizedCache.set(optimizedKey, analyzedModule);
+      addIndexedKey(this.optimizedKeysByFile, key.fileName, optimizedKey);
+      this.evictOptimizedIfNeeded();
       this.recordPhase('optimization', optimizeStart);
     }
     const inferenceStart = now();
@@ -311,21 +349,30 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
         for (const key of keys) invalidatedKeys.add(key);
         this.cacheKeysByFile.delete(alias);
       }
-      for (const [key, cached] of this.frontendCache) {
-        if (cached.fileName === fileName || path.resolve(cached.fileName) === path.resolve(fileName)) {
-          this.frontendCache.delete(key);
-        }
-      }
-      for (const key of this.optimizedCache.keys()) {
-        if (key.includes(fileName)) this.optimizedCache.delete(key);
-      }
+    }
+    const invalidatedFrontendKeys = new Set<string>();
+    const invalidatedOptimizedKeys = new Set<string>();
+    const invalidatedGraphKeys = new Set<string>();
+    for (const fileName of affected) {
+      collectIndexedKeys(this.frontendKeysByFile, fileName, invalidatedFrontendKeys);
+      collectIndexedKeys(this.optimizedKeysByFile, fileName, invalidatedOptimizedKeys);
+      collectIndexedKeys(this.graphKeysByFile, fileName, invalidatedGraphKeys);
     }
     for (const key of invalidatedKeys) {
       if (this.semanticCache.delete(key)) {
         // Count each semantic entry once even though it is indexed by both path forms.
       }
     }
-    if (this.preparedProject !== undefined) this.graphCache.delete(this.preparedProject.fingerprint);
+    for (const key of invalidatedFrontendKeys) {
+      this.frontendCache.delete(key);
+      removeIndexedKey(this.frontendKeysByFile, key);
+    }
+    for (const key of invalidatedOptimizedKeys) {
+      this.optimizedCache.delete(key);
+      removeIndexedKey(this.optimizedKeysByFile, key);
+    }
+    for (const key of invalidatedGraphKeys) this.deleteGraphCache(key);
+    if (this.preparedProject !== undefined) this.deleteGraphCache(this.preparedProject.fingerprint);
     const invalidatedEntries = invalidatedKeys.size;
     this.mutableStats.invalidations += files.length > 0 ? 1 : 0;
     this.mutableStats.invalidatedEntries += invalidatedEntries;
@@ -356,6 +403,9 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
     this.optimizedCache.clear();
     this.graphCache.clear();
     this.cacheKeysByFile.clear();
+    this.frontendKeysByFile.clear();
+    this.optimizedKeysByFile.clear();
+    this.graphKeysByFile.clear();
     this.diagnostics.length = 0;
     this.phaseTimings.length = 0;
     this.affectedFiles.clear();
@@ -372,12 +422,48 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
       const oldest = this.semanticCache.keys().next().value;
       if (oldest === undefined) return;
       this.semanticCache.delete(oldest);
+      this.optimizedCache.delete(`${oldest}:optimized`);
+      removeIndexedKey(this.optimizedKeysByFile, `${oldest}:optimized`);
       this.mutableStats.semanticEvictions += 1;
       for (const [fileName, keys] of this.cacheKeysByFile) {
         keys.delete(oldest);
         if (keys.size === 0) this.cacheKeysByFile.delete(fileName);
       }
     }
+  }
+
+  private evictFrontendIfNeeded(): void {
+    while (this.frontendCache.size > this.limits.frontendModules) {
+      const oldest = this.frontendCache.keys().next().value;
+      if (oldest === undefined) return;
+      this.frontendCache.delete(oldest);
+      removeIndexedKey(this.frontendKeysByFile, oldest);
+      this.mutableStats.frontendEvictions += 1;
+    }
+  }
+
+  private evictOptimizedIfNeeded(): void {
+    while (this.optimizedCache.size > this.limits.optimizedModules) {
+      const oldest = this.optimizedCache.keys().next().value;
+      if (oldest === undefined) return;
+      this.optimizedCache.delete(oldest);
+      removeIndexedKey(this.optimizedKeysByFile, oldest);
+      this.mutableStats.optimizedEvictions += 1;
+    }
+  }
+
+  private evictProjectGraphsIfNeeded(): void {
+    while (this.graphCache.size > this.limits.projectGraphs) {
+      const oldest = this.graphCache.keys().next().value;
+      if (oldest === undefined) return;
+      this.deleteGraphCache(oldest);
+      this.mutableStats.projectGraphEvictions += 1;
+    }
+  }
+
+  private deleteGraphCache(key: string): void {
+    if (!this.graphCache.delete(key)) return;
+    removeIndexedKey(this.graphKeysByFile, key);
   }
 
   private recordDiagnostics(diagnostics: readonly CompilerDiagnostic[]): void {

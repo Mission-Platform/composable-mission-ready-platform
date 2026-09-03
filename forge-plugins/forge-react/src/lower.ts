@@ -441,6 +441,10 @@ function planImports(
       continue;
     }
     if (NEUTRAL_FRAMEWORK_COMPONENTS.has(name)) {
+      if (name === "Suspense") {
+        addName(values, name);
+        addName(declared, name);
+      }
       continue;
     }
     const reactName = name === FACTORY_NAME ? CREATE_ELEMENT : name;
@@ -483,8 +487,8 @@ function planImports(
   return {
     values,
     types,
-    adapterComponents: neutralValues.filter((name) =>
-      NEUTRAL_FRAMEWORK_COMPONENTS.has(name),
+    adapterComponents: neutralValues.filter(
+      (name) => NEUTRAL_FRAMEWORK_COMPONENTS.has(name) && name !== "Suspense",
     ),
     runtimeValues,
     localTypes,

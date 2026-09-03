@@ -12,7 +12,7 @@
     "deploy": "wrangler deploy",
     "deploy:staging": "wrangler deploy --env staging",
     "types": "wrangler types",
-    "test": "vitest run",
+    "test": "vitest run --exclude 'e2e/**'",
     "test:e2e": "playwright test",
     "i18n:extract": "i18next-cli extract --config i18next.config.ts",
     "lint": "eslint .",

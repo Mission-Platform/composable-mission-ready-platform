@@ -42,6 +42,15 @@ const CSS_TO_ALIGN: Readonly<Record<string, WysiwygBlockAlign>> = {
   justify: 'alignJustify',
 };
 
+/** Decode persisted code safely; malformed percent escapes remain literal text. */
+export function decodeCodeBlockValue(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
 /**
  * Build the HTML for a non-editable code-block placeholder. The code + language
  * are stored (URL-encoded) in data attributes — the placeholder's own DOM is
@@ -86,7 +95,7 @@ export function scanCodeBlocks(host: HTMLElement, allocateKey: () => string): Co
     return {
       key,
       host: element,
-      code: decodeURIComponent(element.dataset.mpCode ?? ''),
+      code: decodeCodeBlockValue(element.dataset.mpCode ?? ''),
       language: element.dataset.mpLanguage ?? 'plaintext',
     };
   });

@@ -1,6 +1,6 @@
-import { spacingValue } from '@/tokens';
+import { spacingValue } from '../../../tokens';
 
-import type { EmailSpacingScale } from '@/tokens';
+import type { EmailSpacingScale } from '../../../tokens';
 import type { MpChild, MpElement } from '@mission-platform/forge';
 
 export interface EmailColumnProperties {

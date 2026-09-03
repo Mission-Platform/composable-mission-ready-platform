@@ -61,6 +61,79 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
     expect(optimized.report.passes.find(({ name }) => name === 'unreachable-block-removal')?.applied).toBe(1);
   });
 
+  it('invalidates aliases when an assigned local changes', () => {
+    const optimized = optimizeForgeWebScriptWasmModule(
+      moduleWith(
+        [
+          {
+            kind: 'let',
+            name: 'high',
+            type: { name: 'i32', span },
+            value: { kind: 'binary', operator: '/', left: identifier('x'), right: number(128), span },
+            span,
+          },
+          {
+            kind: 'assignment',
+            name: 'x',
+            value: { kind: 'binary', operator: '%', left: identifier('x'), right: number(256), span },
+            span,
+          },
+          { kind: 'return', value: identifier('high'), span },
+        ],
+        [{ name: 'x', type: { name: 'i32', span } }],
+      ),
+    );
+
+    expect(optimized.module.functions[0]!.body.at(-1)).toMatchObject({
+      kind: 'return',
+      value: { kind: 'identifier', name: 'high' },
+    });
+  });
+
+  it('preserves loop-local aliases across assignments', () => {
+    const optimized = optimizeForgeWebScriptWasmModule(
+      moduleWith(
+        [
+          {
+            kind: 'while',
+            condition: identifier('running'),
+            body: [
+              {
+                kind: 'let',
+                name: 'high',
+                type: { name: 'i32', span },
+                value: { kind: 'binary', operator: '/', left: identifier('x'), right: number(128), span },
+                span,
+              },
+              {
+                kind: 'assignment',
+                name: 'x',
+                value: { kind: 'binary', operator: '*', left: identifier('x'), right: number(2), span },
+                span,
+              },
+              {
+                kind: 'if',
+                condition: { kind: 'binary', operator: '==', left: identifier('high'), right: number(1), span },
+                consequent: [],
+                span,
+              },
+            ],
+            span,
+          },
+        ],
+        [
+          { name: 'running', type: { name: 'bool', span } },
+          { name: 'x', type: { name: 'i32', span } },
+        ],
+      ),
+    );
+
+    expect(optimized.module.functions[0]!.body[0]).toMatchObject({
+      kind: 'while',
+      body: [{}, {}, { kind: 'if', condition: { kind: 'binary', left: { kind: 'identifier', name: 'high' } } }],
+    });
+  });
+
   it('normalizes enum tags and selects dense or sparse dispatch deterministically', () => {
     const dense = optimizeForgeWebScriptWasmModule({
       ...moduleWith([

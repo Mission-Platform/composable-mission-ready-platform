@@ -1,4 +1,4 @@
-import { colorValue, containerWidthValue } from '@/tokens';
+import { colorValue, containerWidthValue } from '../../../tokens';
 
 import type { MpChild, MpElement } from '@mission-platform/forge';
 

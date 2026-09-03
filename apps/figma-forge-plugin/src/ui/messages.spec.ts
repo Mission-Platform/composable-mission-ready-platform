@@ -1,11 +1,24 @@
 import { describe, expect, it } from 'vitest';
 
-import { isForgePluginMainMessage, isTrustedForgePluginMessageEvent } from './messages';
+import { isForgeBridgeConfig, isForgePluginMainMessage, isTrustedForgePluginMessageEvent } from './messages';
 
 const messageEvent = (source: MessageEventSource | null, origin: string) =>
   ({ source, origin }) as MessageEvent<unknown>;
 
 describe('Forge Figma UI message security', () => {
+  it('requires a non-empty authentication token while preserving the local bridge URL rules', () => {
+    const config = {
+      bridgeUrl: 'http://127.0.0.1:8787/export',
+      authToken: 'test-token',
+      repositoryRootId: 'repo',
+      targetDirectory: 'components',
+    };
+
+    expect(isForgeBridgeConfig(config)).toBe(true);
+    expect(isForgeBridgeConfig({ ...config, authToken: '' })).toBe(false);
+    expect(isForgeBridgeConfig({ ...config, bridgeUrl: 'https://example.test/export' })).toBe(false);
+  });
+
   it('requires the expected parent source and origin', () => {
     const parent = {} as WindowProxy;
 

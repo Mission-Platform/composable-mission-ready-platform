@@ -34,6 +34,15 @@ interface ProcessLike {
   on(event: 'close', listener: (code: number | null, signal: NodeJS.Signals | null) => void): void;
 }
 
+const MAX_CHILD_LOG_CHARS = 256 * 1024;
+const LOG_TRUNCATION_MARKER = '\n...[child output truncated]...\n';
+
+function appendBounded(current: string, chunk: string): string {
+  const combined = current + chunk;
+  if (combined.length <= MAX_CHILD_LOG_CHARS) return combined;
+  return LOG_TRUNCATION_MARKER + combined.slice(-MAX_CHILD_LOG_CHARS + LOG_TRUNCATION_MARKER.length);
+}
+
 function errorMessage(error: unknown): string {
   return error instanceof Error ? (error.stack ?? error.message) : String(error);
 }
@@ -82,6 +91,7 @@ function runCertificate(repositoryRoot: string, timeoutMs: number): Promise<Comm
     }) as unknown as ProcessLike;
     let output = '';
     let settled = false;
+    let terminating = false;
     let timeout: ReturnType<typeof setTimeout> | undefined;
     const finish = (result: CommandResult): void => {
       if (settled) return;
@@ -89,20 +99,24 @@ function runCertificate(repositoryRoot: string, timeoutMs: number): Promise<Comm
       if (timeout) clearTimeout(timeout);
       resolve(result);
     };
-    child.stdout?.on('data', (chunk: Buffer) => (output += chunk.toString()));
-    child.stderr?.on('data', (chunk: Buffer) => (output += chunk.toString()));
-    child.on('error', (error: Error) => finish({ output, error: errorMessage(error) }));
-    child.on('close', (code: number | null, signal: NodeJS.Signals | null) =>
+    child.stdout?.on('data', (chunk: Buffer) => (output = appendBounded(output, chunk.toString())));
+    child.stderr?.on('data', (chunk: Buffer) => (output = appendBounded(output, chunk.toString())));
+    child.on('error', (error: Error) => {
+      if (!terminating) finish({ output, error: errorMessage(error) });
+    });
+    child.on('close', (code: number | null, signal: NodeJS.Signals | null) => {
+      if (terminating) return;
       finish({
         output,
         error:
           code === 0 ? undefined : `Certificate command exited with ${signal ? `signal ${signal}` : `code ${code}`}`,
-      }),
-    );
+      });
+    });
     timeout = setTimeout(() => {
-      void terminateProcessTree(child as unknown as ChildProcess, { graceMs: DEFAULT_CLEANUP_GRACE_MS }).then(() =>
-        finish({ output, error: `Certificate command timed out after ${timeoutMs}ms.` }),
-      );
+      terminating = true;
+      void terminateProcessTree(child as unknown as ChildProcess, { graceMs: DEFAULT_CLEANUP_GRACE_MS }).then(() => {
+        finish({ output, error: `Certificate command timed out after ${timeoutMs}ms.` });
+      });
     }, timeoutMs);
   });
 }
@@ -199,8 +213,8 @@ async function launchServer(
   let output = '';
   let spawnError: Error | undefined;
   let closed = false;
-  child.stdout?.on('data', (chunk: Buffer) => (output += chunk.toString()));
-  child.stderr?.on('data', (chunk: Buffer) => (output += chunk.toString()));
+  child.stdout?.on('data', (chunk: Buffer) => (output = appendBounded(output, chunk.toString())));
+  child.stderr?.on('data', (chunk: Buffer) => (output = appendBounded(output, chunk.toString())));
   child.on('error', (error: Error) => (spawnError = error));
   registry.add(child as never);
   const getOutput = (): string => output;

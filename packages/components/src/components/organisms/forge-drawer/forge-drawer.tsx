@@ -13,7 +13,7 @@ import {
 } from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 
-import { beginPointerDrag, clamp, rootFontSize } from '@/utils/pointer-drag/pointer-drag';
+import { beginPointerDrag, clamp, rootFontSize } from '../../../utils/pointer-drag/pointer-drag';
 
 import styles from './forge-drawer.module.scss';
 

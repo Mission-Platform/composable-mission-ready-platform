@@ -20,13 +20,15 @@ const decoderImports: ForgeQrDecoderImports = {
   },
 };
 
-function matrixFromPacked(packed: string): Uint8Array {
-  const [version, sizeText, modules] = packed.split(',');
-  expect(version).toMatch(/^\d+$/);
-  const size = Number(sizeText);
+function matrixFromPacked(encoded: { version: number; size: number; modules: readonly number[] }): Uint8Array {
+  expect(encoded.version).toBeGreaterThan(0);
+  const size = encoded.size;
+  const words = Math.ceil((size * size) / 32);
+  expect(encoded.modules).toHaveLength(words);
   const matrix = new Uint8Array(1 + size * size);
   matrix[0] = size;
-  for (let index = 0; index < modules.length; index += 1) matrix[1 + index] = modules.charCodeAt(index) - 48;
+  for (let index = 0; index < size * size; index += 1)
+    matrix[1 + index] = (encoded.modules[Math.floor(index / 32)]! >>> (index % 32)) & 1;
   return matrix;
 }
 

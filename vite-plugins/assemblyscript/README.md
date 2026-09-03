@@ -46,12 +46,12 @@ Provide a hand-maintained `.d.ts` next to the generated `.js` to type the raw ex
 
 ## Options
 
-| Option          | Type      | Default             | Description                                         |
-| --------------- | --------- | ------------------- | --------------------------------------------------- |
-| `entry`         | `string`  | —                   | AssemblyScript entry `.ts` (relative to `rootDir`). |
-| `outFile`       | `string`  | —                   | Generated self-contained ES module to emit.         |
-| `wasmFile`      | `string`  | `build/module.wasm` | Intermediate `.wasm` path used by the compiler.     |
-| `rootDir`       | `string`  | `process.cwd()`     | Base directory for resolving relative paths.        |
-| `optimizeLevel` | `number`  | `3`                 | `asc` optimize level (`-O`).                        |
-| `shrinkLevel`   | `number`  | `1`                 | `asc` shrink level.                                 |
-| `emitText`      | `boolean` | `false`             | Also emit a human-readable `.wat` next to the wasm. |
+| Option          | Type      | Default                              | Description                                         |
+| --------------- | --------- | ------------------------------------ | --------------------------------------------------- |
+| `entry`         | `string`  | —                                    | AssemblyScript entry `.ts` (relative to `rootDir`). |
+| `outFile`       | `string`  | —                                    | Generated self-contained ES module to emit.         |
+| `wasmFile`      | `string`  | unique temporary path under `build/` | Intermediate `.wasm` path used by the compiler.     |
+| `rootDir`       | `string`  | `process.cwd()`                      | Base directory for resolving relative paths.        |
+| `optimizeLevel` | `number`  | `3`                                  | `asc` optimize level (`-O`).                        |
+| `shrinkLevel`   | `number`  | `1`                                  | `asc` shrink level.                                 |
+| `emitText`      | `boolean` | `false`                              | Also emit a human-readable `.wat` next to the wasm. |

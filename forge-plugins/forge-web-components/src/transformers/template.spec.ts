@@ -117,6 +117,23 @@ describe("the generic render-node lowering", () => {
     );
   });
 
+  it("keeps nested Slot nodes behind direct-DOM projection markers", () => {
+    const source = renderNodeToDomTemplate(
+      element("ForgeDrawer", {
+        tagKind: "component",
+        children: [element("nav", { children: [element("Slot")] })],
+      }),
+      CONTEXT,
+    );
+
+    expect(source.values.join("\n")).toContain(
+      'dynamicElement("forge-slot", { "?data-mp-forge-slot": true, "?data-mp-forge-nested": true, ".content": this.children }',
+    );
+    expect(source.values.join("\n")).not.toContain(
+      'dynamicElement("slot", {},',
+    );
+  });
+
   it("includes root-level fragment expression node anchors in DomTemplate blueprint nodes", () => {
     const source = renderNodeToDomTemplate(
       fragment([expressionChild("properties.value")]),

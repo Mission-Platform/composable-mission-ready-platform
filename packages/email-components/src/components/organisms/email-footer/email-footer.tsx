@@ -1,5 +1,5 @@
-import { EmailDivider } from '@/components/atoms';
-import { combineStyleValues, colorValue, spacingValue, typographyStyle } from '@/tokens';
+import { combineStyleValues, colorValue, spacingValue, typographyStyle } from '../../../tokens';
+import { EmailDivider } from '../../atoms';
 
 import type { MpChild, MpElement } from '@mission-platform/forge';
 

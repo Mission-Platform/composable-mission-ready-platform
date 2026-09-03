@@ -21,19 +21,134 @@ export interface MonitorValidationPolicy {
   allowedDestinations?: readonly string[];
 }
 
+type IPv4 = readonly [number, number, number, number];
+type IPv6 = readonly [number, number, number, number, number, number, number, number];
+const LEGACY_IPV4_PART = /^(?:0[xX][0-9a-fA-F]+|0[0-7]*|[0-9]+)$/;
+
+function parseIpv6Part(part: string): number | null {
+  if (!/^[0-9a-fA-F]{1,4}$/.test(part)) return null;
+  const number = Number.parseInt(part, 16);
+  return number <= 0xff_ff ? number : null;
+}
+
+function isLegacyIpv4Literal(value: string): boolean {
+  const parts = value.split('.');
+  return parts.length <= 4 && parts.every((part) => LEGACY_IPV4_PART.test(part));
+}
+
+function parseLegacyIpv4(value: string): IPv4 | null {
+  const parts = value.split('.');
+  if (!isLegacyIpv4Literal(value)) {
+    return null;
+  }
+
+  const numbers = parts.map((part) => {
+    if (/^0[xX]/.test(part)) return Number.parseInt(part.slice(2), 16);
+    if (part.length > 1 && part.startsWith('0')) return Number.parseInt(part, 8);
+    return Number.parseInt(part, 10);
+  });
+  const limits = [0xff, 0xff_ff_ff, 0xff_ff_ff_ff];
+  if (numbers.some((number) => !Number.isSafeInteger(number) || number < 0)) return null;
+
+  let address: number;
+  switch (numbers.length) {
+    case 1: {
+      address = numbers[0];
+      break;
+    }
+    case 2: {
+      if (numbers[0] > 0xff || numbers[1] > limits[1]) return null;
+      address = numbers[0] * 0x1_00_00_00 + numbers[1];
+      break;
+    }
+    case 3: {
+      if (numbers[0] > 0xff || numbers[1] > 0xff || numbers[2] > limits[0]) return null;
+      address = numbers[0] * 0x1_00_00_00 + numbers[1] * 0x1_00_00 + numbers[2];
+      break;
+    }
+    case 4: {
+      if (numbers.some((number) => number > 0xff)) return null;
+      address = numbers[0] * 0x1_00_00_00 + numbers[1] * 0x1_00_00 + numbers[2] * 0x1_00 + numbers[3];
+      break;
+    }
+  }
+  if (address > 0xff_ff_ff_ff) return null;
+  return [(address >>> 24) & 0xff, (address >>> 16) & 0xff, (address >>> 8) & 0xff, address & 0xff];
+}
+
+function parseIpv6(value: string): IPv6 | null {
+  let host = value;
+  if (host.includes('.')) {
+    const separator = host.lastIndexOf(':');
+    if (separator === -1) return null;
+    const ipv4 = parseLegacyIpv4(host.slice(separator + 1));
+    if (!ipv4 || host.slice(separator + 1).split('.').length !== 4) return null;
+    host = `${host.slice(0, separator)}:${((ipv4[0] << 8) | ipv4[1]).toString(16)}:${((ipv4[2] << 8) | ipv4[3]).toString(16)}`;
+  }
+
+  const halves = host.split('::');
+  if (halves.length > 2) return null;
+  const left = halves[0] ? halves[0].split(':') : [];
+  const right = halves.length === 2 && halves[1] ? halves[1].split(':') : [];
+  const leftValues = left.map(parseIpv6Part);
+  const rightValues = right.map(parseIpv6Part);
+  if (leftValues.includes(null) || rightValues.includes(null)) return null;
+  if (halves.length === 1 && leftValues.length !== 8) return null;
+  if (halves.length === 2 && leftValues.length + rightValues.length >= 8) return null;
+  const zeros = halves.length === 2 ? Array.from({ length: 8 - leftValues.length - rightValues.length }).fill(0) : [];
+  return [...leftValues, ...zeros, ...rightValues] as IPv6;
+}
+
+function isPrivateIpv4([first, second]: IPv4): boolean {
+  return (
+    first === 0 ||
+    first === 10 ||
+    first === 127 ||
+    (first === 100 && second >= 64 && second <= 127) ||
+    (first === 169 && second === 254) ||
+    (first === 172 && second >= 16 && second <= 31) ||
+    (first === 192 && second === 0) ||
+    (first === 192 && second === 168) ||
+    (first === 198 && (second === 18 || second === 19)) ||
+    first >= 224
+  );
+}
+
+function isPrivateIpv6(address: IPv6): boolean {
+  const [first, second, third, fourth, fifth, sixth, seventh, eighth] = address;
+  const isUnspecified = address.every((part) => part === 0);
+  const isUniqueLocal = (first & 0xfe_00) === 0xfc_00;
+  const isLinkLocal = (first & 0xff_c0) === 0xfe_80;
+  const isMulticast = (first & 0xff_00) === 0xff_00;
+  const isIpv4Mapped = first === 0 && second === 0 && third === 0 && fourth === 0 && fifth === 0 && sixth === 0xff_ff;
+  const isIpv4Compatible = first === 0 && second === 0 && third === 0 && fourth === 0 && fifth === 0 && sixth === 0;
+  const embeddedIpv4: IPv4 = [(seventh >>> 8) & 0xff, seventh & 0xff, (eighth >>> 8) & 0xff, eighth & 0xff];
+  const isPrivateEmbeddedIpv4 = (isIpv4Mapped || isIpv4Compatible) && isPrivateIpv4(embeddedIpv4);
+  return isUnspecified || isUniqueLocal || isLinkLocal || isMulticast || isPrivateEmbeddedIpv4;
+}
+
+function normaliseDestinationHost(hostname: string): string {
+  return hostname.toLowerCase().replace(/^\[/, '').replace(/\]$/, '').replace(/\.$/, '');
+}
+
 function isPrivateHost(hostname: string): boolean {
-  const host = hostname
-    .toLowerCase()
-    .replaceAll(/[\[\]]/g, '')
-    .replace(/\.$/, '');
+  const host = normaliseDestinationHost(hostname);
   if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.local') || host.endsWith('.internal')) {
     return true;
   }
-  if (/^127\.(?:\d{1,3}\.){2}\d{1,3}$/.test(host) || /^10\.(?:\d{1,3}\.){2}\d{1,3}$/.test(host)) return true;
-  const private172 = /^172\.(\d{1,3})\.(?:\d{1,3}\.)\d{1,3}$/.exec(host);
-  if (private172 && Number(private172[1]) >= 16 && Number(private172[1]) <= 31) return true;
-  if (/^192\.168\.(?:\d{1,3}\.)\d{1,3}$/.test(host) || /^169\.254\./.test(host)) return true;
-  if (host === '::1' || host.startsWith('fc') || host.startsWith('fd') || host.startsWith('fe80:')) return true;
+  const ipv4 = parseLegacyIpv4(host);
+  if (ipv4) return isPrivateIpv4(ipv4);
+  const ipv6 = parseIpv6(host);
+  if (ipv6) return isPrivateIpv6(ipv6);
+
+  const labels = host.split('.');
+  for (let start = 0; start < labels.length; start += 1) {
+    for (let count = 2; count <= 4 && start + count <= labels.length; count += 1) {
+      const candidate = labels.slice(start, start + count).join('.');
+      const embedded = parseLegacyIpv4(candidate);
+      if (embedded && isPrivateIpv4(embedded)) return true;
+    }
+  }
   return false;
 }
 
@@ -41,9 +156,9 @@ function isAllowedDestination(hostname: string, policy: MonitorValidationPolicy)
   if (policy.allowPrivateDestinations !== true && isPrivateHost(hostname)) return false;
   const allowed = policy.allowedDestinations ?? [];
   if (allowed.length === 0) return true;
-  const host = hostname.toLowerCase().replace(/\.$/, '');
+  const host = normaliseDestinationHost(hostname);
   return allowed.some((entry) => {
-    const candidate = entry.toLowerCase().replace(/\.$/, '');
+    const candidate = normaliseDestinationHost(entry);
     return candidate.startsWith('*.') ? host.endsWith(candidate.slice(1)) : host === candidate;
   });
 }
@@ -74,7 +189,25 @@ export function isAllowedMonitorUrl(value: string, policy: MonitorValidationPoli
 
 /** Validate a socket/DNS destination and its explicitly configured port. */
 export function isAllowedMonitorHost(hostname: string, port?: number, policy: MonitorValidationPolicy = {}): boolean {
-  if (!hostname || hostname.length > MAX_HOST_LENGTH || /[^a-zA-Z0-9.:[\]-]/.test(hostname)) return false;
+  const host = hostname.trim();
+  if (!host || host.length > MAX_HOST_LENGTH) return false;
+  const bracketed = host.startsWith('[') || host.endsWith(']');
+  if (bracketed && (!host.startsWith('[') || !host.endsWith(']'))) return false;
+  const unbracketed = bracketed ? host.slice(1, -1) : host;
+  const isIpv6 = unbracketed.includes(':');
+  const isIpv4Literal = isLegacyIpv4Literal(unbracketed);
+  const validDns = unbracketed
+    .replace(/\.$/, '')
+    .split('.')
+    .every(
+      (label) => label.length > 0 && label.length <= 63 && /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/.test(label),
+    );
+  if (
+    (isIpv6 && (!parseIpv6(unbracketed) || (!host.startsWith('[') && host.includes(']')))) ||
+    (isIpv4Literal && !parseLegacyIpv4(unbracketed)) ||
+    (!isIpv6 && !isIpv4Literal && !validDns)
+  )
+    return false;
   if (!isAllowedDestination(hostname, policy)) return false;
   if (
     port !== undefined &&

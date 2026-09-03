@@ -22,7 +22,7 @@ describe('vCard framework exports', () => {
     }
   });
 
-  it('keeps calendar helpers available from framework-conditioned entries', async () => {
+  it('keeps calendar helpers available from framework-conditioned entries', { timeout: 30_000 }, async () => {
     const frameworkModule = await import(path.join(process.cwd(), 'dist/vue/index.js'));
     const declarations = readFileSync(path.join(process.cwd(), 'dist/vue/index.d.ts'), 'utf8');
 

@@ -204,6 +204,32 @@ The Solid build of the neutral `<HtmlContent>` primitive. Solid's
 | ---------- | --------------------- | ----------- |
 | properties | HtmlContentProperties |             |
 
+### Suspense
+
+**Kind:** function
+
+```typescript
+function Suspense(properties: SuspenseProperties): JSX.Element;
+```
+
+The Solid-native implementation of the neutral async boundary.
+
+#### Parameters
+
+| Name       | Type               | Description |
+| ---------- | ------------------ | ----------- |
+| properties | SuspenseProperties |             |
+
+### SuspenseProperties
+
+**Kind:** interface
+
+```typescript
+export interface SuspenseProperties
+```
+
+No description provided.
+
 ### Teleport
 
 **Kind:** function
@@ -870,7 +896,10 @@ A trusted raw-HTML value used by the native Web-Components adapter.
 **Kind:** function
 
 ```typescript
-function render(result: TemplateResult | DomRenderResult | HtmlContentResult, container: ParentNode): void;
+function render(
+  result: TemplateResult | DomRenderResult | HtmlContentResult | SuspenseResult,
+  container: ParentNode,
+): void;
 ```
 
 Render a result into `container` using a persistent template instance. Static
@@ -879,10 +908,10 @@ updated; incompatible template kinds replace the renderer-owned content.
 
 #### Parameters
 
-| Name      | Type                                                   | Description |
-| --------- | ------------------------------------------------------ | ----------- |
-| result    | TemplateResult \| DomRenderResult \| HtmlContentResult |             |
-| container | ParentNode                                             |             |
+| Name      | Type                                                                     | Description |
+| --------- | ------------------------------------------------------------------------ | ----------- |
+| result    | TemplateResult \| DomRenderResult \| HtmlContentResult \| SuspenseResult |             |
+| container | ParentNode                                                               |             |
 
 ### resolveForgeSlotMarkers
 
@@ -915,6 +944,33 @@ value is materialized as a last resort.
 | owner           | ForgeElement    |             |
 | sourceChildren  | readonly Node[] |             |
 | destinationRoot | ShadowRoot      |             |
+
+### suspense
+
+**Kind:** function
+
+```typescript
+function suspense(fallback: unknown, content: unknown): SuspenseResult;
+```
+
+Render fallback immediately, then replace it when the content resolves.
+
+#### Parameters
+
+| Name     | Type    | Description |
+| -------- | ------- | ----------- |
+| fallback | unknown |             |
+| content  | unknown |             |
+
+### SuspenseResult
+
+**Kind:** class
+
+```typescript
+export class SuspenseResult
+```
+
+A framework-neutral async boundary consumed by the Web Components renderer.
 
 ### TemplateResult
 
@@ -1730,6 +1786,26 @@ _parent_ (the reconciler, the slot router), never by the component itself —
 so they are accepted for every element here rather than declared on each
 props interface.
 
+### MpSuspenseChild
+
+**Kind:** component
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+Synchronous or recursively asynchronous content accepted by Suspense.
+
+### MpSuspenseProperties
+
+**Kind:** component
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+Props carried by the framework-neutral Suspense marker.
+
 ### Slot
 
 **Kind:** constant
@@ -1746,3 +1822,13 @@ It is never actually invoked, though: the build-time compiler
 (`@mission-platform/vite-plugin-forge`) rewrites every `<Slot>` to the target
 framework's own slot mechanism, and the runtime adapters intercept it by
 identity (`type === Slot`) before any call. Calling it directly is a bug.
+
+### Suspense
+
+**Kind:** constant
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+Native async-boundary marker lowered by each framework compiler.

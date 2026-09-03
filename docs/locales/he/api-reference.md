@@ -7,16 +7,16 @@
 
 דף זה הכולל את הפרויקט הוא ספרייה של יכולות ותאימות של החבילות
 חוזים. ההתקנה הקנונית, השימוש, המגבלות ופרטי ה-API עבור
-כל חבילה נמצאת ליד החבילה הזו מתחת `packages/*/docs/`, `configs/*/docs/`,
-ו `forge-plugins/*/docs/`. יש להוסיף הפניות ל-API שנוצרו לבעלות
+כל חבילה חיה לצד החבילה הזו תחת `packages/*/docs/`, `configs/*/docs/`,
+ו-`forge-plugins/*/docs/`. יש להוסיף הפניות ל-API שנוצרו לבעלות
 חבילה ולא דף זה.
 
-> **היבוא תמיד חשוף.** משלוח מסגרת `@mission-platform/*` חבילות חושפות יחיד `.`
-> הכניסה נשמרת על ידי `mp:vue`, `mp:react`, `mp:solid`, ו `mp:web-component` ייצוא
-> תנאים. בחר את המסגרת **פעם** - באמצעות `resolve.conditions` (לִרְאוֹת `defineFrameworkAppConfig` /
-> `frameworkResolveConditions` מִן `@mission-platform/vite-config`) ו `customConditions` (דרך ה
-> `@mission-platform/typescript-config/framework-<name>` הגדרות קבועות מראש) - ואז ייבא הכל עם החשוף
-> מפרט החבילה. לִרְאוֹת [הגדרת צרכן חיצוני](external-consumer-setup.md).
+> **היבוא תמיד חשוף.** חבילות `@mission-platform/*` למשלוח מסגרת חושפות `.` יחיד
+> כניסה נשמרת על ידי ייצוא `mp:vue`, `mp:react`, `mp:solid` ו-`mp:web-component`
+> תנאים. בחר את המסגרת **פעם אחת** - דרך `resolve.conditions` (ראה `defineFrameworkAppConfig` /
+> `frameworkResolveConditions` מ-`@mission-platform/vite-config`) ו-`customConditions` (באמצעות
+> `@mission-platform/typescript-config/framework-<name>` קביעות מוגדרות מראש) - ואז ייבא הכל עם החשוף
+> מפרט החבילה. ראה [הגדרות צרכן חיצוני](external-consumer-setup.md).
 
 ## מסגרת ליבה
 
@@ -25,33 +25,33 @@
 הבסיס של ארכיטקטורת "כתוב פעם אחת", מספק זמן ריצה ו-hooks של JSX ניטרליים למסגרת.
 
 | ייצוא | הקלד | תיאור |
-|:-------------------|:---------|:----------------------------------------------------------------------------------------|
-| `h`, `Fragment`    | פונקציה | מפעל ומקטע JSX ליצירת רכיבים.                                      |
-| `useState`         | הוק | וו מצב נייטרלי מסגרת.                                                           |
-| `useEffect`        | הוק | וו אפקט ניטרלי מסגרת.                                                          |
-| `useMemo`          | הוק | וו זיכרונות נייטרלי מסגרת.                                                     |
-| `useRef`           | הוק | וו התייחסות ניטרלי למסגרת.                                                       |
-| `useContext`       | הוק | וו הקשר ניטרלי למסגרת.                                                         |
-| `toVueComponent`   | מתאם | ממיר רכיב חישול ל-a Vue 3 רכיבים (מ `@mission-platform/forge/vue`).   |
-| `toReactComponent` | מתאם | ממיר רכיב חישול ל-a React רכיב (מ `@mission-platform/forge/react`). |
+| :----------------- | :------- | :-------------------------------------------------------------------------------------- |
+| `h`, `Fragment` | פונקציה | מפעל ומקטע JSX ליצירת רכיבים.                                      |
+| `useState` | הוק | וו מצב נייטרלי מסגרת.                                                           |
+| `useEffect` | הוק | וו אפקט ניטרלי מסגרת.                                                          |
+| `useMemo` | הוק | וו זיכרונות נייטרלי מסגרת.                                                     |
+| `useRef` | הוק | וו התייחסות ניטרלי למסגרת.                                                       |
+| `useContext` | הוק | וו הקשר ניטרלי למסגרת.                                                         |
+| `toVueComponent` | מתאם | ממירה רכיב חישול לרכיב Vue 3 (מ-`@mission-platform/forge/vue`).   |
+| `toReactComponent` | מתאם | ממירה רכיב זיוף לרכיב React (מ-`@mission-platform/forge/react`). |
 
 ### @mission-platform/vite-plugin-forge
 
-מנהל ההדרים מקבל מפורש `FrameworkOutputPlugin` מקרים; זה כן
+מנהל ההדרים מקבל מופעי `FrameworkOutputPlugin` מפורשים; זה כן
 לא לספק רישום מסגרת. `defineViteForgeComponents` ו
-`defineTsdownForgeComponents` (בתוספת ה-hook ו-CMS עוזרים) לשתף בתהליך
-`ForgeCompilerService` לסשן בנייה או צפייה אחד.
+`defineTsdownForgeComponents` (בתוספת ה-hook ו-CMS עוזרים) חולקים תהליך בתהליך
+`ForgeCompilerService` להפעלה אחת של בנייה או צפייה.
 
 | יכולת | תיאור |
-|:-----------|:------------|
-| מחזור חיי שירות | שימוש חוזר במקור, גרף, מקור מנותח, סמנטי-IR, ומצב חפץ מטרה על פני בנייה; להיפטר משירותים חד-פעמיים לאחר סיום ושירותי צופה בסגירה. |
-| מפתחות מטמון | טביעות אצבע של מקור/תלות/תצורה, אפשרויות מהדר ונתב, `tsconfig` `baseUrl`/`paths`, מזהה יעד, זהות/גרסה של הפלאגין ותנאים רלוונטיים. |
-| פסילת צפה | קבצים שהשתנו מבטלים את התלויים בגרף הפוך, כולל כניסות רכיבים טרנזיטיביים והוק; צילומי מטרה לא קשורים נשארים לשימוש חוזר. |
-| אבחון/דוח | מדווח על תזמון שלב, ספירת כניסות/חמצות במטמון, קבצים מושפעים, אזהרות, שגיאות וספירת חפצים שנפלטו. שגיאות חוסמות קידום. |
-| מניפסט חפץ | מפרט ערכים בהיקף יעד, מודולים, הצהרות, מפות מקור, נכסים וסיכומי ביקורת לפני קידום אטומי. |
-| נקודת הרחבה | ליישם ולהעביר א `FrameworkOutputPlugin` ממתקשר בבעלות מתקשר `forge-plugin-*` חֲבִילָה; אל תוסיף ענפי יעד לנהג הנייטרלי. |
+| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| מחזור חיי שירות | שימוש חוזר במקור, גרף, מקור מנותח, IR סמנטי, ומצב חפצי יעד על פני בנייה; להיפטר משירותים חד-פעמיים לאחר השלמתם ושירותי צופה בסגירה. |
+| מפתחות מטמון | טביעות אצבע של מקור/תלות/קונפיגורציה, אפשרויות מהדר ונתב, `tsconfig` `baseUrl`/`paths`, מזהה יעד, זהות/גרסה של תוסף ותנאים רלוונטיים.      |
+| צפה בביטול | קבצים שהשתנו מבטלים את התלויים בגרף הפוך, כולל כניסות רכיבים טרנזיטיביים והוק; תמונות מטרה שאינן קשורות נשארות לשימוש חוזר.                     |
+| אבחון/דוח | מדווח על תזמון שלב, ספירת כניסות/חמצות במטמון, קבצים מושפעים, אזהרות, שגיאות וספירת חפצים שנפלטו. שגיאות חוסמות קידום.                                 |
+| מניפסט חפץ | מפרט ערכים בהיקף יעד, מודולים, הצהרות, מפות מקור, נכסים וסיכומי ביקורת לפני קידום אטומי.                                                     |
+| נקודת הרחבה | ליישם ולהעביר `FrameworkOutputPlugin` מחבילת `forge-plugin-*` בבעלות המתקשר; אל תוסיף ענפי יעד לנהג הנייטרלי.                        |
 
-הגדר כינויים דרך הפרויקט `tsconfig.json` (`baseUrl` ו
+הגדר כינויים דרך הפרויקט `tsconfig.json` (`baseUrl` ו-
 `paths`); Vite והכנת גרף tsdown משתמשים באותן עובדות כינוי. נתב
 בחירה, תוספים של נתב ותנאים מועברים דרך רכיב ו
 עוזרי וו. עובד/דמון עתידי עשוי לשבת מאחורי חוזה השירות, אבל
@@ -64,12 +64,12 @@
 לזייף יעד הנתב שנבחר על ידי האפליקציה מספק את יכולות זמן הריצה.
 
 | ייצוא / חבילה | הקלד | תיאור |
-|:-----------------|:-----|:------------|
-| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | סוגים | רשומות מסלול, פרמטרים, מצב שאילתה/hash, מטא נתונים ויעדי ניווט. |
-| `defineRoutes`, `matchRoutes`, `resolveLocation` | פונקציות | הגדר עצי נתיב ופתור נתיבים ללא זמן ריצה של DOM או מסגרת. |
-| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | סוגים | תוצאות/אירועים של ניווט, שומרים, היסטוריה ניתנת לחיבור וחוזי מתאם. |
-| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | סמני מהדר | יכולות קישור ניטרלי, מצב מסלול, ניווט, רזולוציה ושקע הנצרכות על ידי חבילות משותפות. |
-| `@mission-platform/forge-router-*` | לזייף מטרות | יעדי נתב מקוריים שנבחרו באופן עצמאי עבור Vue נתב, React נתב, נתב SolidJS, SvelteKit, RedwoodSDK ורכיבי אינטרנט. |
+| :----------------------------------------------------------------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | סוגים | רשומות מסלול, פרמים, מצב שאילתה/hash, מטא נתונים ויעדי ניווט.                                                            |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` | פונקציות | הגדר עצי נתיב ופתור נתיבים ללא זמן ריצה של DOM או מסגרת.                                                              |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | סוגים | תוצאות/אירועים של ניווט, שומרים, היסטוריה ניתנת לחיבור וחוזי מתאם.                                                         |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | סמני מהדר | קישור ניטרלי, מצב מסלול, ניווט, רזולוציה ויכולות יציאה הנצרכות על ידי חבילות משותפות.                               |
+| `@mission-platform/forge-router-*` | לזייף מטרות | יעדי נתב מקוריים שנבחרו באופן עצמאי עבור נתב Vue, נתב React, נתב SolidJS, SvelteKit, RedwoodSDK ורכיבי אינטרנט. |
 
 חבילות זמן ריצה משלהן היסטוריה ומצב תגובתי; החבילה הנייטרלית לעולם לא מייבאת מסגרת ממשק משתמש. עבור רכיבי אינטרנט,
 רשום את האלמנטים פעם אחת והעביר יעדים מורכבים דרך מאפייני DOM במקום תכונות מסודרות:
@@ -80,18 +80,53 @@ import {
   createWebComponentsRouter,
   registerRouterElements,
   setForgeRouter,
-} from '@mission-platform/forge-router-web-components/runtime';
+} from "@mission-platform/forge-router-web-components/runtime";
 
 registerRouterElements();
 const router = createWebComponentsRouter({
-  history: new MpMemoryHistory('/overview'),
-  routes: [{ path: '/overview', component: () => 'Documentation' }],
+  history: new MpMemoryHistory("/overview"),
+  routes: [{ path: "/overview", component: () => "Documentation" }],
 });
 setForgeRouter(router);
-const link = document.createElement('forge-router-link');
-link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+const link = document.createElement("forge-router-link");
+link.to = { path: "/overview", query: { q: "router" }, hash: "results" };
 link.router = router;
 ```
+
+### תצוגות מסלול אסינכרון ו-`Suspense`
+
+המהדר הנייטרלי של Forge מזהה `Suspense` ומוריד אותו ל-native
+גבול אסינכרון עבור היעד שנבחר. שמור את ההחלפה במקור המשותף
+כך שכל יעד מציג את אותו מצב טעינה מבלי לייבא מסגרת
+מתאם:
+
+```tsx
+<Suspense fallback={<LoadingSpinner label="Loading documentation" />}>
+  <DocumentationRoute />
+</Suspense>
+```
+
+React, Vue, Solid ו-Svelte מקבלים את גבול המתח המקורי שלהם. א
+יישום נטול מסגרת משתמש בנתב השקע של ה-Web Components
+עבור תצוגות מסלול אסינכרון במקום זאת:
+
+```ts
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory("/overview"),
+  loadingFallback: () => {
+    const spinner = document.createElement("span");
+    spinner.className = "docs-loading-spinner";
+    spinner.setAttribute("aria-label", "Loading documentation");
+    return spinner;
+  },
+  routes: [{ path: "/:slug(.*)", component: loadDocumentationView }],
+});
+```
+
+הנתב פולט שכבת טעינה מ-`forge-router-outlet` תוך כדי אסינכרון
+תצוגת המסלול נפתרת. התצוגה הנוכחית נשארת רכובה עד ליעד
+מוכן, והשכבה מוסרת לאחר הצלחה, הפניה מחדש, ביטול או
+כישלון.
 
 ## ממשק משתמש ועיצוב
 
@@ -100,8 +135,8 @@ link.router = router;
 אסימוני עיצוב מרכזיים עבור צבעים, טיפוגרפיה ומרווחים.
 
 | ייצוא | תיאור |
-|:--------------|:--------------------------------------------------------------------------|
-| `tokens`      | אובייקט JS/TS המכיל את כל אסימוני העיצוב (למשל, `tokens.color.primary`). |
+| :------------ | :------------------------------------------------------------------------ |
+| `tokens` | אובייקט JS/TS המכיל את כל אסימוני העיצוב (למשל, `tokens.color.primary`). |
 | `tokens.scss` | משתני SCSS לשימוש בגיליונות סגנונות.                                    |
 
 ### @mission-platform/breakpoints
@@ -109,21 +144,21 @@ link.router = router;
 כלי עזר רספונסיביים ורכיבי נראות.
 
 | ייצוא | הקלד | תיאור |
-|:-----------------|:----------|:-----------------------------------------------------------|
+| :--------------- | :-------- | :--------------------------------------------------------- |
 | `useBreakpoints` | הוק | מחזיר מצב נקודת שבירה תגובתי.                        |
-| `ShowIf`         | רכיב | מעבד ילדים רק כאשר תנאי נקודת שבירה תואם. |
-| `HideIf`         | רכיב | מסתיר ילדים כאשר תנאי נקודת שבירה תואם.        |
+| `ShowIf` | רכיב | מעבד ילדים רק כאשר תנאי נקודת שבירה תואם. |
+| `HideIf` | רכיב | מסתיר ילדים כאשר תנאי נקודת שבירה תואם.        |
 
 ### @mission-platform/components
 
 רכיבי ממשק משתמש משותפים שנכתבו פעם אחת וזמינים עבור מסגרות מרובות.
 
-- **יבוא**: תמיד `@mission-platform/components`; הפעיל `mp:<framework>` התנאי מחליט אם אתה מקבל את
+- **ייבוא**: תמיד `@mission-platform/components`; התנאי הפעיל `mp:<framework>` מחליט אם אתה מקבל את
   Vue 3, React, Solid, או בניית רכיבי אינטרנט.
-- **נתיבי משנה לכל רכיב**: `@mission-platform/components/<path>` (e.g.
-  `@mission-platform/components/atoms/forge-badge/forge-badge`) הוא גם מודע למצב, וטוען רק את הרכיב הזה
+- **נתיבי משנה לכל רכיב**: `@mission-platform/components/<path>` (למשל
+  `@mission-platform/components/atoms/forge-badge/forge-badge`) גם מודע למצב, וטוען רק את הרכיב הזה
   נתח.
-- **רכיבים**: `ForgeButton`, `ForgeInput`, `ForgeModal`, ועוד.
+- **רכיבים**: `ForgeButton`, `ForgeInput`, `ForgeModal` ועוד.
 
 ## חבילות תכונה
 
@@ -132,16 +167,16 @@ link.router = router;
 מערכת בינלאומית המבוססת על i18next.
 
 | ייצוא | תיאור |
-|:------------------|:----------------------------------------------------------|
+| :---------------- | :-------------------------------------------------------- |
 | `createForgeI18N` | מאתחל את מופע i18n עם ברירות מחדל של פלטפורמה.     |
-| `useI18n`         | הוק עבור תרגומים ומעבר מקומי ברכיבים. |
+| `useI18n` | הוק עבור תרגומים ומעבר מקומי ברכיבים. |
 
 ### @mission-platform/seo
 
 מטא תג וניהול SEO.
 
 | ייצוא | תיאור |
-|:---------|:----------------------------------------------------------------------|
+| :------- | :-------------------------------------------------------------------- |
 | `useSeo` | חבר להגדרה הצהרתית של כותרת עמוד, מטא תגים ונתוני Open Graph. |
 
 ### @mission-platform/map
@@ -149,8 +184,8 @@ link.router = router;
 עטיפה תגובתית עבור MapLibre GL.
 
 | רכיב | תיאור |
-|:----------------|:------------------------------------------|
-| `<MpMap>`       | רכיב מיכל המפה הראשי.             |
+| :-------------- | :---------------------------------------- |
+| `<MpMap>` | רכיב מיכל המפה הראשי.             |
 | `<MpMapMarker>` | רכיב להצבת סמנים על המפה. |
 
 ### @mission-platform/code-scanner
@@ -158,7 +193,7 @@ link.router = router;
 סריקת ברקוד וקוד QR מבוססי מצלמה.
 
 | רכיב | תיאור |
-|:------------------|:-----------------------------------------------------------------|
+| :---------------- | :--------------------------------------------------------------- |
 | `<MpCodeScanner>` | רכיב שמאתחל את זרם המצלמה ופולט תוצאות סריקה. |
 
 ## אינטגרציות
@@ -168,7 +203,7 @@ link.router = router;
 מגשרים RxJS צפיות למצב רכיב.
 
 | הוק | תיאור |
-|:----------------|:----------------------------------------------------------------------------|
+| :-------------- | :-------------------------------------------------------------------------- |
 | `useObservable` | נרשם לצפייה ומחזיר את הערך האחרון שלו כמצב תגובתי. |
 
 ### @mission-platform/d3
@@ -176,103 +211,189 @@ link.router = router;
 אינטגרציה של D3.js ניטראלית במסגרת.
 
 | הוק | תיאור |
-|:--------|:-------------------------------------------------------------------|
-| `useD3` | קושר מבחר D3 ל-Ref רכיב עם ניהול מחזור חיים. |
+| :------ | :----------------------------------------------------------------- |
+| `useD3` | קושר בחירה D3 ל-Ref רכיב עם ניהול מחזור חיים. |
 
 ### @mission-platform/hunspell
 
 בדיקת איות באמצעות WebAssembly.
 
 | ייצוא | תיאור |
-|:---------------|:--------------------------------------------------------|
+| :------------- | :------------------------------------------------------ |
 | `initHunspell` | טוען ומציג את מודול Hunspell WebAssembly. |
-| `spell`        | בודק אם מילה מאויתת נכון.                  |
-| `suggest`      | מספק הצעות איות למילה.               |
+| `spell` | בודק אם מילה מאויתת נכון.                  |
+| `suggest` | מספק הצעות איות למילה.               |
+
+## ניטור שירות
+
+### שירות מוניטור API
+
+אפליקציית ה-service-monitor מספקת נקודות קצה ציבוריות ומאומתות כאחד לניטור תקינות השירות.
+
+#### נקודות קצה ציבוריות
+
+נקודות קצה ציבוריות חושפות מידע סטטוס מינימלי בלבד ואינן דורשות אימות:
+
+- **`GET /api/services`**: מחזיר סטטוס מגולגל עבור כל שירות בפיקוח. התגובה כוללת רק `{ id, name, type }` עבור כל שירות, בתוספת `now` ו-`intervalSeconds`. לא נחשפות תצורת יעד, כתובות URL, מארחים, שאילתות, כותרות, ספים או טופולוגיה.
+- **`GET /api/metrics?service=<id>&since=<ms>`**: מחזיר מדדי סדרות זמן גולמיות עבור שירות אחד. הפרמטר `since` מוגבל על ידי חלון השמירה המוגדר. התגובה כוללת רק `service`, `now`, `since` ו-`samples`.
+
+#### נקודות קצה מאומתות
+
+נקודות קצה מאומתות דורשות את אסימון הנושא `MONITOR_API_TOKEN` וחושפות את תצורת הצג המלאה:
+
+- **`POST /api/check`**: הפעל מחזור בדיקה מיידי.
+- **`GET /api/monitors`**: רשום את כל המסכים עם תצורה מלאה.
+- **`POST /api/monitors`**: צור צג חדש.
+- **`PATCH /api/monitors/<id>`**: עדכן צג קיים.
+- **`DELETE /api/monitors/<id>`**: מחק צג ומחק את המונים ההיסטוריים שלו.
+
+#### מדיניות בדיקה ויעד
+
+שירות-מוניטור אוכף מגבלות קפדניות על התנהגות בדיקה:
+
+- **סכימות מותרות**: בדיקות כתובת URL כברירת מחדל היא `https://` (ויציאה 443) אלא אם מצב פרטי מהימן מופעל; `http://` מותר במצב מהימן.
+- **יציאות מותרות**: בדיקות כתובת URL מאפשרות יציאה 443; בדיקות מארח מאפשרות קו בסיס של יציאות [53, 80, 123, 443, 1883, 8883].
+- **יעדים אסורים**: כתובות פרטיות/קישור-מקומי (127.0.0.1, ::1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, fe80::/10) אלא אם כן נותנים אמון מפורש.
+- **גבולות בקשות/תגובה**: בקשות בדיקה מוגבלות ל-64 KB; התגובות מוגבלות ל-256 KB. מבחני המהירות מוגבלים ל-25 MB.
+- **מדיניות ניתוב מחדש**: הפניות מחדש חייבות להישאר באותו מקור ובאותו קידומות נתיב מאושרות; הפניות מחדש בין מקורות או נתיבים אסורים נדחות.
+- **שימור היסטוריה**: היסטוריית אירועים, עדכונים ותחזוקה מוגבלת על ידי מכסי ספירת פריטים (מקסימום 100 פריטים לכל צג). שמירת ברירת המחדל עבור נתונים מדדים היא 24 שעות.
+
+#### עיבוד בצד השרת (SSR)
+
+שכבת ה-SSR של מוניטור השירות דורשת אימות לפני סידור תצורת צג פרטי לאביזרים ללקוח. בקשות לא מאומתות מקבלות רק את הסטטוס הציבורי DTO.
+
+### עובד שולח אימייל
+
+עובד שולח הדוא"ל מספק חלון ראווה של פיתוח מקומי לעיבוד ומסירת דוא"ל.
+
+#### מצבי פריסה
+
+- **פיתוח מקומי** (ברירת מחדל): נשלח ל-MailPit ב-`localhost:1025`. אין צורך באימות.
+- **פריסה לא מקומית**: דורש הרשאה מפורשת של נושא `EMAIL_DEPLOYMENT_TOKEN`, רשימת ההיתרים `EMAIL_ALLOWED_ORIGINS` ורשימת ההיתרים `EMAIL_ALLOWED_RECIPIENTS`. הגבלת תעריפים באמצעות `EMAIL_RATE_LIMITER` נאכפת.
+
+#### בקש אימות
+
+כל בקשות הדוא"ל חייבות:
+
+- השתמש ב-`Content-Type: application/json`.
+- כלול כתובת אימייל חוקית של נמען (שדה `to`, עד 254 תווים).
+- כלול שם נמען (`recipientName`, 1-100 תווים).
+- כלול HTML שהושלם עבור דוא"ל (`html`, מקסימום 240 KB).
+- עברו בדיקות תאימות של HTML דרך `assertCompatibleEmailHtml`.
+
+#### ברירות מחדל נסגרות בכשל
+
+פריסות לא מקומיות ללא תצורה מפורשת ידחו את כל הבקשות. פריסות מקומיות נותרות ללא הגבלה לנוחות הפיתוח.
+
+## Forge Web Script Artifact Verification
+
+### זהות תוכן חפץ
+
+פריטי Forge Web Script משתמשים בזהות תוכן SHA-256 בגרסה בפורמט `sha256-v1:<hex>`. תקציר זה מחושב על פני הקובץ הבינארי המלא של החפץ ומאוחסן בשדה `contentHash` של המניפסט של החפץ.
+
+#### יושרה מול אותנטיות
+
+גיבוב תוכן **מזהה שינויים בתוכן מקריים או לא מורשים** בהשוואה לערך צפוי מהימן. זה **לא**:
+
+- אימות המפיק או המקור של החפץ.
+- החלף חתימות קריפטוגרפיות או בקרות גישה לפריסה.
+- הבטח שהחפץ בטוח לביצוע.
+
+#### זרימת עבודה של אימות
+
+1. **קבל את ה-hash הצפוי** ממקור מהימן (לדוגמה, מניפסט חתום, יומן בניית CI או תצורה מאובטחת).
+2. **חשב את ה-hash של החפץ** באמצעות המאמת: `fws_verify_artifact(artifact)` מחזיר את ה-`contentHash`.
+3. **השווה גיבובים**: אם הם תואמים, החפץ לא השתנה בטעות או בזדון מאז שהערך הצפוי תועד.
+4. **אמת את המניפסט**: השתמש ב-`fws_inspect_manifest` כדי לבדוק יבוא, ייצוא, מטא נתונים ותאימות למדיניות באופן עצמאי.
+
+#### גירסאות
+
+הקידומת `sha256-v1` מאפשרת שדרוגי אלגוריתמי חשיש עתידיים ללא עמימות. המתקשרים חייבים לטפל בפורמטים מדור קודם (אם יש) וגם בפורמטים של תקציר נוכחי בחן.
 
 ## קריאה נוספת
 
-- [Vue 2 ל Vue 3 מדריך הגירה](migration-guides/vue2-to-vue3.md)
-- [סקירה כללית של תצורת הפרויקט](configs/index.md)
+- [מדריך ההגירה של Vue 2 ל-Vue 3](migration-guides/vue2-to-vue3.md)
+- [סקירת תצורת פרויקט](configs/index.md)
 - [מבנה סביבת עבודה](workspace-structure.md)
 
 ## אינדקס חבילות עבודה מלא
 
 האינדקס הבא נוצר ממניפסטי החבילה ונשמר כאן כך שההפניה הציבורית ל-API מכסה כל
-חבילה פנימה `packages/`, כולל חזיתות WebAssembly המוקלדות.
+חבילה ב-`packages/`, כולל חזיתות ה-WebAssembly המוקלדות.
 
 ### ליבה וממשק משתמש
 
 | חבילה | מטרה |
-|:-------------------------------|:--------------------------------------------------------------|
-| `@mission-platform/forge`      | זמן ריצה ומתאמים של JSX ניטרליים למסגרת.                   |
+| :----------------------------- | :------------------------------------------------------------ |
+| `@mission-platform/forge` | זמן ריצה ומתאמים של JSX ניטרליים למסגרת.                   |
 | `@mission-platform/components` | רכיבי ממשק משתמש לכתיבה פעם אחת.                                     |
-| `@mission-platform/icons`      | רכיבי סמל SVG לכתיבה חד פעמית.                               |
-| `@mission-platform/layouts`    | רכיבי יישום, מיכל ופריסה רספונסיבית.     |
-| `@mission-platform/forms`      | טפסי סכימה ורכיבי בונה טפסים חזותיים.              |
+| `@mission-platform/icons` | רכיבי סמל SVG לכתיבה חד פעמית.                               |
+| `@mission-platform/layouts` | רכיבי יישום, מיכל ופריסה רספונסיבית.     |
+| `@mission-platform/forms` | טפסי סכימה ורכיבי בונה טפסים חזותיים.              |
 | `@mission-platform/forms-core` | גזירת סכימה, אימות ולוגיקת תחום בונה טפסים. |
-| `@mission-platform/tokens`     | מאפייני CSS מותאמים אישית ואסימוני עיצוב SCSS.                 |
+| `@mission-platform/tokens` | מאפייני CSS מותאמים אישית ואסימוני עיצוב SCSS.                 |
 
 ### חומרים חיבורים ואינטגרציות
 
 | חבילה | מטרה |
-|:-----------------------------------|:--------------------------------------------------------------|
-| `@mission-platform/breakpoints`    | עוזרי מצב נקודת שבירה רספונסיביים ונראות.           |
-| `@mission-platform/d3`             | D3 בחירת מחזור חיים כלי עזר ושוליים.       |
-| `@mission-platform/i18n`           | עוזרי שילוב של i18next מדינה ומסגרת.              |
-| `@mission-platform/map`            | רכיבי מפה ורכיבי מפה של MapLibre.                      |
-| `@mission-platform/observers`      | חומרי חיבור לצומת, מוטציה וביצועים של צופה בביצועים. |
-| `@mission-platform/phone-number`   | ניתוח ועיצוב מספרי טלפון של WebAssembly.        |
-| `@mission-platform/router`         | חוזי מסלול ניטרליים מסגרת ויכולות מהדר. |
-| `@mission-platform/forge-router-web-components` | רכיבי אינטרנט לנתב יעד וזמן ריצה ללא מסגרת. |
-| `@mission-platform/rxjs`           | RxJS ניתנים לצפייה ורכיבי מנוי.                 |
-| `@mission-platform/scheduler`     | לוגיקה של תחום של מתזמן, מחזוריות ופריסה של לוח שנה. |
-| `@mission-platform/vcard`         | נתונים ורכיבים של RFC 6350 vCard ו-RFC 5545 iCalendar.  |
-| `@mission-platform/content`       | רכיבי תוכן AST, Builders, מונקו, Markdown ו-WYSIWYG. |
-| `@mission-platform/seo`            | Metadata, Open Graph ורכיבי חיבור של נתונים מובנים.        |
-| `@mission-platform/speech-audio`   | רכיבי דיבור, אודיו ו-MIDI אינטרנט.                      |
-| `@mission-platform/three`          | Three.js canvas ורכיבי חיבור למחזור החיים.                    |
+| :---------------------------------------------- | :--------------------------------------------------------------- |
+| `@mission-platform/breakpoints` | עוזרי מצב נקודת שבירה רספונסיביים ונראות.              |
+| `@mission-platform/d3` | D3 בחירת מחזור חיים כלי עזר ושוליים.          |
+| `@mission-platform/i18n` | עוזרי שילוב של i18next מדינה ומסגרת.                 |
+| `@mission-platform/map` | רכיבי מפה ורכיבי מפה של MapLibre.                         |
+| `@mission-platform/observers` | חומרי חיבור לצומת, מוטציה וביצועי צופה.    |
+| `@mission-platform/phone-number` | ניתוח ועיצוב מספרי טלפון של WebAssembly.           |
+| `@mission-platform/router` | חוזי מסלול ניטרליים מסגרת ויכולות מהדר.     |
+| `@mission-platform/forge-router-web-components` | רכיבי אינטרנט לנתב יעד וזמן ריצה ללא מסגרת.         |
+| `@mission-platform/rxjs` | RxJS ניתנים לצפייה ורכיבי מנוי.                    |
+| `@mission-platform/scheduler` | לוגיקה של תחום של מתזמן, מחזוריות ופריסה של לוח שנה.      |
+| `@mission-platform/vcard` | נתונים ורכיבים של RFC 6350 vCard ו-RFC 5545 iCalendar.       |
+| `@mission-platform/content` | רכיבי תוכן AST, Builders, מונקו, Markdown ו-WYSIWYG. |
+| `@mission-platform/seo` | Metadata, Open Graph ורכיבי חיבור של נתונים מובנים.           |
+| `@mission-platform/speech-audio` | רכיבי דיבור, אודיו ו-MIDI אינטרנט.                         |
+| `@mission-platform/three` | Three.js canvas ורכיבי חיבור למחזור החיים.                       |
 
 ### חבילות קוד ו-WebAssembly
 
 | חבילה | מטרה |
-|:--------------------------------------------|:--------------------------------------------------|
-| `@mission-platform/barcode`                 | ברקוד 1D קידוד/פענוח חזית ורכיב.    |
-| `@mission-platform/code-scanner`            | רכיב סריקת קוד מצלמה ותמונה.         |
-| `@mission-platform/matrix-code`             | מטריצת נתונים ואצטקים מקודדים/פענחים חזית.       |
-| `@mission-platform/qr-code`                 | QR קידוד/פענח חזית ורכיב.            |
-| `@mission-platform/harper`                  | שילוב דקדוק וסגנון הרפר עבור מונקו.  |
-| `@mission-platform/hunspell`                | עטיפה לבדיקת איות של Emscripten Hunspell.       |
+| :------------------------------- | :----------------------------------------------- |
+| `@mission-platform/barcode` | קידוד/פענוח ברקוד 1D חזית ורכיב.   |
+| `@mission-platform/code-scanner` | רכיב סריקת קוד מצלמה ותמונה.        |
+| `@mission-platform/matrix-code` | מטריצת נתונים ואצטקים מקודדים/פענחים חזית.      |
+| `@mission-platform/qr-code` | QR קידוד/פענח חזית ורכיב.           |
+| `@mission-platform/harper` | שילוב דקדוק וסגנון הרפר עבור מונקו. |
+| `@mission-platform/hunspell` | עטיפה לבדיקת איות של Emscripten Hunspell.      |
 
 ### לזייף יעדי מהדר
 
-אלה חיים ב `forge-plugins/` במקום `packages/`. תוסף **מסגרת** מחליט באיזה זמן ריצה רכיב ניטרלי
-מורד ל; יעד **CMS** מחליט לאיזו פלטפורמת תוכן הוא מוקרן. שני הצירים מרכיבים, אז כל CMS
-target עשוי להיות קשור לכל תוסף מסגרת. ראה את [Forge Compiler Pipeline](../../../vite-plugins/forge/docs/locales/he/reference/compiler.md).
+אלה חיים ב-`forge-plugins/` ולא ב-`packages/`. תוסף **מסגרת** מחליט באיזה זמן ריצה הוא רכיב ניטרלי
+ירד ל; יעד **CMS** מחליט על איזו פלטפורמת תוכן הוא מוקרן. שני הצירים מרכיבים, אז כל CMS
+target עשוי להיות קשור לכל תוסף מסגרת. ראה את [צינור המהדר של Forge](../../../vite-plugins/forge/docs/locales/he/reference/compiler.md).
 
 | חבילה | מטרה |
-|:-------------------------------------------------|:--------------------------------------------------------------------------------|
-| `@mission-platform/forge-plugin-api`             | `FrameworkOutputPlugin` חוזה, סוגי IR סמנטיים וסוגי מתאמים לבנות.   |
-| `@mission-platform/forge-plugin-react`           | React יעד פלט.                                                            |
-| `@mission-platform/forge-plugin-vue`             | Vue יעד פלט 3.                                                            |
-| `@mission-platform/forge-plugin-solid`           | Solid יעד פלט.                                                            |
-| `@mission-platform/forge-plugin-svelte`          | Svelte יעד פלט 5.                                                         |
-| `@mission-platform/forge-plugin-web-components`  | יעד פלט של רכיבי אינטרנט.                                                   |
-| `@mission-platform/forge-cms-plugin-api`         | `CmsOutputPlugin` חוזה, מודל תוכן ניטרלי, מנהל מערכת ניהול תוכן ובניית עוזרים. |
-| `@mission-platform/forge-cms-storyblok`          | אובייקטים של רכיבי Storyblok, עטיפות בלוק, ו `components.json`.              |
-| `@mission-platform/forge-cms-astro`              | סטָטִי `.astro` תבניות ו `client:load` איי מסגרת.                  |
-| `@mission-platform/forge-cms-ghost`              | חלקי כידון רפאים וא `config.custom` קטע נושא.                 |
-| `@mission-platform/forge-cms-jekyll`             | נוזל ג'קיל כולל, `_data` סכימה, וא `_config.yml` קֶטַע.           |
-| `@mission-platform/forge-cms-webflow`            | זרימת אינטרנט `declareComponent` רכיבי קוד וא `webflow.json` קטע ספרייה. |
+| :---------------------------------------------- | :-------------------------------------------------------------------------------- |
+| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin` חוזה, סוגי IR סמנטיים וסוגי מתאמים לבנות.     |
+| `@mission-platform/forge-plugin-react` | יעד פלט React.                                                              |
+| `@mission-platform/forge-plugin-vue` | Vue 3 יעד פלט.                                                              |
+| `@mission-platform/forge-plugin-solid` | יעד פלט Solid.                                                              |
+| `@mission-platform/forge-plugin-svelte` | Svelte 5 יעד פלט.                                                           |
+| `@mission-platform/forge-plugin-web-components` | יעד פלט של רכיבי אינטרנט.                                                     |
+| `@mission-platform/forge-cms-plugin-api` | חוזה `CmsOutputPlugin`, מודל תוכן ניטרלי, מנהל התקן CMS ועוזרים לבנות. |
+| `@mission-platform/forge-cms-storyblok` | אובייקטים של רכיבי Storyblok, עטיפות בלוק ו-`components.json`.                |
+| `@mission-platform/forge-cms-astro` | תבניות `.astro` סטטיות ואיי מסגרת `client:load`.                    |
+| `@mission-platform/forge-cms-ghost` | חלקי Ghost Handlebars וקטע נושא `config.custom`.                   |
+| `@mission-platform/forge-cms-jekyll` | Jekyll Liquid כולל, סכימת `_data` ומקטע `_config.yml`.             |
+| `@mission-platform/forge-cms-webflow` | Webflow `declareComponent` רכיבי קוד וקטע ספריית `webflow.json`. |
 
 #### @mission-platform/forge-cms-plugin-api
 
 | ייצוא | הקלד | תיאור |
-|:---------------------------|:---------|:--------------------------------------------------------------------------------|
-| `analyzeContentComponent`  | פונקציה | מקרין אביזרי רכיב ניטרלי על מודל התוכן ניטרלי הפלטפורמה.  |
-| `ContentComponent`         | הקלד | הוזמן `ContentField`s, חריצים, וה `interactive` דֶגֶל.                    |
-| `ContentFieldKind`         | הקלד | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
-| `CmsOutputPlugin`          | הקלד | חוזה היעד: תוסף מסגרת קשור בתוספת ארבעת הפולטים.          |
-| `defineForgeCmsPlugin`     | פונקציה | מאמת יעד CMS בזמן ההגדרה.                                  |
-| `generateCmsArtifacts`     | פונקציה | הגילוי הגנרי → IR → מודל תוכן → emit → כתוב מנהל התקן.               |
-| `defineTsdownForgeCms`     | פונקציה | tsdown config עבור יעד CMS אחד, פולט `dist/cms/<cms>/<framework>/**`.    |
-| `defineTsdownForgeCmsAll`  | פונקציה | tsdown הגדרות עבור רשימה של יעדי CMS.                                      |
+| :------------------------ | :------- | :------------------------------------------------------------------------------ |
+| `analyzeContentComponent` | פונקציה | מקרין אביזרים של רכיב ניטרלי על מודל התוכן ניטרלי הפלטפורמה.   |
+| `ContentComponent` | הקלד | הזמינו `ContentField`s, חריצים ודגל `interactive`.                     |
+| `ContentFieldKind` | הקלד | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
+| `CmsOutputPlugin` | הקלד | חוזה היעד: תוסף מסגרת קשור בתוספת ארבעת הפולטים.           |
+| `defineForgeCmsPlugin` | פונקציה | מאמת יעד CMS בזמן ההגדרה.                                   |
+| `generateCmsArtifacts` | פונקציה | הגילוי הגנרי → IR → מודל תוכן → emit → כתוב מנהל התקן.                |
+| `defineTsdownForgeCms` | פונקציה | תצורת tsdown עבור יעד CMS אחד, פולטת `dist/cms/<cms>/<framework>/**`.     |
+| `defineTsdownForgeCmsAll` | פונקציה | tsdown הגדרות עבור רשימה של יעדי CMS.                                       |

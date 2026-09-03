@@ -11,6 +11,7 @@ import {
   cloneElement,
   createElement,
   Fragment as ReactFragment,
+  Suspense as ReactSuspense,
   type FunctionComponent,
   isValidElement,
   type Key,
@@ -39,7 +40,15 @@ import {
 } from '../runtime/slots';
 import { Teleport as TeleportMarker } from '../runtime/teleport';
 import { Transition as TransitionMarker, TransitionGroup as TransitionGroupMarker } from '../runtime/transition';
-import { Fragment, type MpChild, type MpComponent, type MpElement, type MpPropertyBag } from '../runtime/types';
+import {
+  Fragment,
+  Suspense as SuspenseMarker,
+  type MpChild,
+  type MpComponent,
+  type MpElement,
+  type MpPropertyBag,
+  type MpSuspenseProperties,
+} from '../runtime/types';
 
 /** Neutral prop names that differ in React's DOM prop vocabulary. */
 const REACT_PROPERTY_ALIASES: Readonly<Record<string, string>> = {
@@ -64,7 +73,11 @@ function toReactProperties(properties: MpPropertyBag): Record<string, unknown> {
 }
 
 function toReactNode(child: MpChild): ReactNode {
-  if (child === undefined || child === null || typeof child === 'boolean') {
+  if (
+    child === undefined ||
+    typeof child === 'boolean' ||
+    (!child && typeof child !== 'string' && typeof child !== 'number')
+  ) {
     return undefined;
   }
   if (typeof child === 'string' || typeof child === 'number') {
@@ -121,6 +134,19 @@ export function renderToReact(element: MpElement): ReactElement {
   // adapter (cross-framework parity).
   if (type === TransitionMarker || type === TransitionGroupMarker) {
     return createElement(ReactFragment, undefined, ...toReactChildren(children));
+  }
+
+  if (type === SuspenseMarker) {
+    const suspense = properties as MpSuspenseProperties;
+    const fallback = suspense.fallback;
+    const content = suspense.children ?? children;
+    return createElement(
+      ReactSuspense,
+      {
+        fallback: fallback === undefined ? undefined : toReactChildren(Array.isArray(fallback) ? fallback : [fallback]),
+      },
+      ...toReactChildren(Array.isArray(content) ? content : [content]),
+    );
   }
 
   // Raw HTML is a deliberate trusted-content boundary. React's native

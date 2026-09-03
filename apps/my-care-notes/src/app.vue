@@ -83,6 +83,36 @@
   } = useSnippets();
 
   const { t, locale, setLocale } = useI18n();
+  const MAX_IMPORT_FILE_BYTES = 5 * 1024 * 1024;
+  const MAX_IMPORTED_SNIPPETS = 100;
+  const SNIPPET_SEPARATOR = '\n\n---snippet---\n\n';
+  const IMPORT_ERROR_ROLE = 'alert';
+  const IMPORT_ERROR_LIVE = 'assertive';
+  const importError = ref<string | undefined>();
+
+  function setImportError(message: string): void {
+    importError.value = message;
+  }
+
+  function importErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+      return 'Import could not be saved because browser storage is full. Free up space and try again.';
+    }
+    return error instanceof Error ? error.message : fallback;
+  }
+
+  function validateImportFile(file: File, maxItems = 1): boolean {
+    if (file.size > MAX_IMPORT_FILE_BYTES) {
+      setImportError('This import is too large. Choose a file smaller than 5 MB.');
+      return false;
+    }
+    if (maxItems > 1 && file.size === 0) {
+      setImportError('This import does not contain any snippets.');
+      return false;
+    }
+    return true;
+  }
+
   const locales: ForgeLanguageSwitcherOption[] = [
     { code: 'ar', countryCode: 'SA' },
     { code: 'de', countryCode: 'DE' },
@@ -214,19 +244,25 @@
     closeSnippetModal();
   }
 
-  function pickFile(accept: string, onFile: (file: File) => void): void {
+  function pickFile(accept: string, onFile: (file: File) => void | Promise<void>): void {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = accept;
     input.onchange = () => {
-      if (input.files?.[0]) onFile(input.files[0]);
+      if (input.files?.[0]) void onFile(input.files[0]);
     };
     input.click();
   }
 
   function onImportNote(): void {
-    pickFile('.md,text/markdown,text/plain', (file) => {
-      importTab(file);
+    pickFile('.md,text/markdown,text/plain', async (file) => {
+      importError.value = undefined;
+      if (!validateImportFile(file)) return;
+      try {
+        await importTab(file);
+      } catch (error) {
+        setImportError(importErrorMessage(error, 'The note could not be imported.'));
+      }
     });
   }
 
@@ -237,14 +273,36 @@
   }
 
   function onImportSnippet(): void {
-    pickFile('.md,text/markdown', (file) => {
-      importSnippet(file);
+    pickFile('.md,text/markdown', async (file) => {
+      importError.value = undefined;
+      if (!validateImportFile(file)) return;
+      try {
+        const imported = await importSnippet(file);
+        if (!imported) setImportError('The file does not contain a valid snippet.');
+      } catch (error) {
+        setImportError(importErrorMessage(error, 'The snippet could not be imported.'));
+      }
     });
   }
 
   function onImportAllSnippets(): void {
-    pickFile('.md,text/markdown', (file) => {
-      importAllSnippets(file);
+    pickFile('.md,text/markdown', async (file) => {
+      importError.value = undefined;
+      if (!validateImportFile(file, MAX_IMPORTED_SNIPPETS)) return;
+      try {
+        const text = await file.text();
+        const itemCount = text.split(SNIPPET_SEPARATOR).length;
+        if (itemCount > MAX_IMPORTED_SNIPPETS) {
+          setImportError(
+            `This import contains too many snippets. Choose a file with ${MAX_IMPORTED_SNIPPETS} or fewer.`,
+          );
+          return;
+        }
+        const imported = await importAllSnippets(file);
+        if (imported === 0) setImportError('The file does not contain any valid snippets.');
+      } catch (error) {
+        setImportError(importErrorMessage(error, 'The snippets could not be imported.'));
+      }
     });
   }
 
@@ -347,6 +405,13 @@
       :title="t(($) => $.sidebar.title, { ns: 'mp.my-care-notes', defaultValue: 'Snippets' })"
       @open-change="onSnippetsPanelUpdate"
     >
+      <div
+        v-if="importError"
+        :role="IMPORT_ERROR_ROLE"
+        :aria-live="IMPORT_ERROR_LIVE"
+      >
+        {{ importError }}
+      </div>
       <ForgeMenubar
         :items="[
           {

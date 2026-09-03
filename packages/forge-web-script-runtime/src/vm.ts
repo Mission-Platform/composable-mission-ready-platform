@@ -7,6 +7,8 @@ import type {
 
 export type ForgeWebScriptVmExecutionMode = 'interpret' | 'jit' | 'aot';
 
+export const FORGE_WEB_SCRIPT_VM_DEFAULT_MAX_MEMORY_PAGES = 256;
+
 export type ForgeWebScriptVmValue =
   | { readonly kind: 'unit' }
   | { readonly kind: 'bool'; readonly value: boolean }
@@ -151,6 +153,8 @@ export interface ForgeWebScriptVmExecutionOptions {
   readonly memory?: Uint8Array;
   readonly jitCache?: ForgeWebScriptVmJitCache;
   readonly maxSteps?: number;
+  /** Maximum linear-memory pages available to this execution. */
+  readonly maxMemoryPages?: number;
   readonly trace?: ForgeWebScriptTraceOptions;
 }
 
@@ -220,6 +224,7 @@ export interface ForgeWebScriptVmPreparedExecutorOptions {
   readonly compilerVersion?: string;
   readonly mode?: Exclude<ForgeWebScriptVmExecutionMode, 'interpret'>;
   readonly aotArtifact?: ForgeWebScriptVmAotArtifact;
+  readonly maxMemoryPages?: number;
   readonly capabilities?: Readonly<
     Record<string, (...arguments_: readonly ForgeWebScriptVmValue[]) => ForgeWebScriptVmValue>
   >;

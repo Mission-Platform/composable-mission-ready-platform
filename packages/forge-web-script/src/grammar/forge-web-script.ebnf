@@ -16,6 +16,7 @@ compilation-unit        = legacy-module | { top-level-declaration } ;
 legacy-module           = "module", identifier, "{", { top-level-declaration }, "}" ;
 top-level-declaration   = import-declaration
                         | struct-declaration
+                        | record-declaration
                         | enum-declaration
                         | interface-declaration
                         | function-declaration
@@ -51,7 +52,7 @@ keyword                 = "as" | "capability" | "case" | "catch" | "class"
                         | "extends" | "export" | "for" | "fn" | "if" | "impl"
                         | "import" | "inline" | "interface" | "iter" | "let" | "mut"
                         | "likely" | "loop" | "match" | "module" | "new"
-                        | "noinline" | "return" | "struct" | "switch" | "throw"
+                        | "noinline" | "record" | "return" | "struct" | "switch" | "throw"
                         | "trait" | "try" | "unlikely" | "while" | "yield" ;
 boolean-literal         = "true" | "false" ;
 
@@ -82,6 +83,8 @@ generic-parameters      = "<", generic-parameter, { ",", generic-parameter }, ">
 generic-parameter       = identifier, [ ":", identifier, { "+", identifier } ] ;
 
 struct-declaration      = "struct", identifier, [ generic-parameters ], "{",
+                          { struct-field }, "}" ;
+record-declaration      = "record", identifier, [ generic-parameters ], "{",
                           { struct-field }, "}" ;
 struct-field            = identifier, ":", type, ( "," | ";" ) ;
 enum-declaration        = [ "export" ], "enum", identifier, [ generic-parameters ],

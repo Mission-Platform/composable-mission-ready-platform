@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,7 +21,7 @@ import { reportHasFailures, writeVisualParityReport } from '../visual-parity/rep
 import { buildStorybookDevSpawnArgs } from '../visual-parity/servers.ts';
 import { createRendererDefinitions, type VisualParityReport } from '../visual-parity/types.ts';
 
-import { appBuildArgs, appScript, validateAppsForFullRun } from './app-sweep.ts';
+import { appBuildArgs, appScript, validateAppsForFullRun, waitForHttp } from './app-sweep.ts';
 import { classifyFailure } from './classification.ts';
 import { createProcessRegistry, terminateProcessTree } from './cleanup.ts';
 import { discoverInventory } from './inventory.ts';
@@ -40,7 +41,7 @@ import {
   pairStorybookIndexes,
   parseStorybookIndex,
 } from './storybook-index.ts';
-import { egoScript } from './storybook-sweep.ts';
+import { egoScript, startStaticServer } from './storybook-sweep.ts';
 import { workstreamForPackage, workstreamForApp } from './workstreams.ts';
 
 import type { RepositoryInventory, RuntimeManifest, RuntimeResult } from './types.ts';
@@ -224,6 +225,19 @@ describe('application runtime sweep', () => {
     await validateAppsForFullRun(repositoryRoot, inventory, {}, validate);
 
     expect(calls.map(({ port }) => port)).toEqual([7305, 7306, 7307, 7308, 7309]);
+  });
+
+  it('does not treat an HTTP error response as app readiness', async () => {
+    const server = http.createServer((_request, response) => response.writeHead(503).end());
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Test server did not expose a TCP address');
+
+    try {
+      await expect(waitForHttp(`http://127.0.0.1:${address.port}`, 250)).rejects.toThrow('last HTTP status 503');
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
   });
 });
 
@@ -474,6 +488,25 @@ describe('manifest and index contracts', () => {
     expect(selectResults(inventory, { storyId: 'missing', includeApps: false })).toMatchObject([
       { status: 'blocked', category: 'target-not-found', idOrRoute: 'missing' },
     ]);
+  });
+});
+
+describe('Storybook static server', () => {
+  it('rejects files reached through symlinks outside the static root', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'storybook-static-root-'));
+    const outside = fs.mkdtempSync(path.join(os.tmpdir(), 'storybook-static-outside-'));
+    fs.writeFileSync(path.join(outside, 'secret.txt'), 'not public');
+    fs.symlinkSync(path.join(outside, 'secret.txt'), path.join(root, 'secret.txt'));
+
+    const server = await startStaticServer(root);
+    try {
+      const response = await fetch(`${server.url}/secret.txt`);
+      expect(response.status).toBe(403);
+    } finally {
+      await server.close();
+      fs.rmSync(root, { recursive: true, force: true });
+      fs.rmSync(outside, { recursive: true, force: true });
+    }
   });
 });
 

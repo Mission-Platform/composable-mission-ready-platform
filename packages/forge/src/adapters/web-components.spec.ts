@@ -14,6 +14,7 @@ import {
   memoize,
   nothing,
   render,
+  suspense,
   unsafeHtml,
   useId,
 } from './web-components';
@@ -462,6 +463,103 @@ afterEach(() => {
 });
 
 describe('the native `html` tagged template + `render`', () => {
+  it('renders synchronous Suspense content without flashing its fallback', () => {
+    const container = document.createElement('div');
+
+    render(
+      suspense(
+        html`
+          <span class="loading">Loading</span>
+        `,
+        html`
+          <strong>Ready</strong>
+        `,
+      ),
+      container,
+    );
+
+    expect(container.textContent).toBe('Ready');
+    expect(container.querySelector('.loading')).toBeNull();
+  });
+
+  it('replaces an async fallback and ignores stale or rejected content', async () => {
+    const container = document.createElement('div');
+    let resolve!: (value: TemplateResult) => void;
+    const pending = new Promise<TemplateResult>((fulfill) => {
+      resolve = fulfill;
+    });
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(
+      suspense(
+        html`
+          <span class="loading">Loading</span>
+        `,
+        pending,
+      ),
+      container,
+    );
+    expect(container.textContent).toBe('Loading');
+
+    render(
+      html`
+        <i>Newer</i>
+      `,
+      container,
+    );
+    resolve(html`
+      <strong>Stale</strong>
+    `);
+    await tick();
+    expect(container.textContent).toBe('Newer');
+
+    let reject!: (reason: unknown) => void;
+    const rejected = new Promise<TemplateResult>((_, fail) => {
+      reject = fail;
+    });
+    render(
+      suspense(
+        html`
+          <span>Fallback</span>
+        `,
+        rejected,
+      ),
+      container,
+    );
+    reject(new Error('failed content'));
+    await tick();
+    expect(container.textContent).toBe('');
+    expect(error).toHaveBeenCalledOnce();
+    error.mockRestore();
+  });
+
+  it('resolves Suspense inside a direct-DOM node range', async () => {
+    const container = document.createElement('div');
+    let resolve!: (value: TemplateResult) => void;
+    const pending = new Promise<TemplateResult>((fulfill) => {
+      resolve = fulfill;
+    });
+
+    render(
+      domTemplate(directDefinition(), [
+        suspense(
+          html`
+            <span>Loading</span>
+          `,
+          pending,
+        ),
+      ]),
+      container,
+    );
+    expect(container.textContent).toBe('Loading');
+
+    resolve(html`
+      <strong>Ready</strong>
+    `);
+    await tick();
+    expect(container.textContent).toBe('Ready');
+  });
+
   it('materializes computed intrinsic tags and applies normalized bindings', () => {
     const container = document.createElement('div');
     const clicks: string[] = [];

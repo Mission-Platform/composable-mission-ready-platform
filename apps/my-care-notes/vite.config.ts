@@ -183,7 +183,7 @@ const config = defineFrameworkAppConfig({
       }),
     ],
     build: {
-      rolldownOptions: {
+      rollupOptions: {
         output: {
           manualChunks(id) {
             if (id.includes('monaco-editor')) {

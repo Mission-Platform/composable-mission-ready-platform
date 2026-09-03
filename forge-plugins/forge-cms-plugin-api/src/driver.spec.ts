@@ -273,6 +273,20 @@ describe("generateCmsArtifacts", () => {
     expect(readFileSync(tree.entry, "utf8")).toBe("export {};\n");
   });
 
+  it("propagates graph diagnostics to the CMS build report", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    writeFileSync(
+      workspace.componentsModule,
+      "export { ForgeBadge, type BadgeProperties } from './forge-badge';\n" +
+        "export { MissingComponent } from './missing-component';\n",
+      "utf8",
+    );
+
+    expect(() => run(recordingTarget(), workspace)).toThrow(
+      /FORGE_GRAPH_MISSING_FILE/,
+    );
+  });
+
   it("reports interactivity from the neutral IR", () => {
     const workspace = createWorkspace([BADGE_COMPONENT, COUNTER_COMPONENT]);
     const tree = run(recordingTarget(), workspace);

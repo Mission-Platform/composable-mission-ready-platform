@@ -11,6 +11,8 @@ import { registerDebugSupport } from './debug.js';
 import {
   assertNodeRuntime,
   assertServerAvailable,
+  assertWorkspaceRelativeExecutableAllowed,
+  assertWorkspaceRelativeOverrideAllowed,
   configurationSection,
   createServerOptions,
   readConfiguration,
@@ -39,6 +41,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   try {
     const configuration = readConfiguration(vscode.workspace.getConfiguration(configurationSection));
     const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    assertWorkspaceRelativeOverrideAllowed(
+      `${configurationSection}.serverPath`,
+      configuration.serverPath,
+      vscode.workspace.isTrusted,
+    );
+    assertWorkspaceRelativeExecutableAllowed(
+      `${configurationSection}.nodePath`,
+      configuration.nodePath,
+      vscode.workspace.isTrusted,
+    );
     const serverPath = resolveServerPath(context, configuration, workspaceFolder);
     outputChannel.appendLine(`Starting Forge Web Script language server: ${serverPath}`);
     await assertNodeRuntime(configuration.nodePath);

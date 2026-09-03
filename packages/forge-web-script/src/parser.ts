@@ -100,7 +100,8 @@ class Parser {
       if (this.is('import')) {
         if (this.isNext('capability')) imports.push(this.parseImport());
         else sourceImports.push(this.parseSourceImport());
-      } else if (this.is('struct')) structs.push(this.parseStruct(documentation));
+      } else if (this.is('struct') || this.is('record'))
+        structs.push(this.parseStruct(documentation, this.is('record')));
       else if (this.is('enum') || (this.is('export') && this.isNext('enum'))) enums.push(this.parseEnum(documentation));
       else if (this.is('interface')) interfaces.push(this.parseInterface(documentation));
       else if (
@@ -225,7 +226,10 @@ class Parser {
     return parameters;
   }
 
-  private parseStruct(documentation?: ForgeWebScriptFunction['documentation']): ForgeWebScriptStructDeclaration {
+  private parseStruct(
+    documentation?: ForgeWebScriptFunction['documentation'],
+    record = false,
+  ): ForgeWebScriptStructDeclaration {
     const start = this.consume().span;
     const name = this.expectIdentifier('FWS-PARSE-034', 'Expected a struct name.');
     const genericParameters = this.parseGenericParameters();
@@ -253,6 +257,7 @@ class Parser {
     return {
       kind: 'struct',
       name: name ?? '<missing>',
+      ...(record ? { record: true as const } : {}),
       ...(documentation === undefined ? {} : { documentation }),
       genericParameters,
       fields,
@@ -452,7 +457,7 @@ class Parser {
     const primitive = primitiveTypes.has(name as ForgeWebScriptPrimitiveType)
       ? (name as ForgeWebScriptPrimitiveType)
       : 'unit';
-    return {
+    const baseType: ForgeWebScriptTypeName = {
       kind: 'type-name',
       name: primitive,
       ...(primitive === 'unit' && name !== 'unit' ? { reference: name } : {}),
@@ -460,6 +465,18 @@ class Parser {
       ...(referenceStart ? { referenceMode: mutableReference ? ('mut-ref' as const) : ('ref' as const) } : {}),
       span: mergeSpans(typeStart, this.previous().span),
     };
+    if (this.match('[')) {
+      const end = this.expect(']', 'FWS-PARSE-084', "Expected ']' after a dynamic array type.").span;
+      return {
+        kind: 'type-name',
+        name: 'unit',
+        reference: 'Array',
+        arguments: [baseType],
+        ...(referenceStart ? { referenceMode: mutableReference ? ('mut-ref' as const) : ('ref' as const) } : {}),
+        span: mergeSpans(typeStart, end),
+      };
+    }
+    return baseType;
   }
 
   private parseTypeArguments(): ForgeWebScriptTypeName[] {
@@ -871,7 +888,7 @@ class Parser {
         const end = this.expect(']', 'FWS-PARSE-092', "Expected ']' after an index expression.").span;
         expression = { kind: 'index', receiver: expression, index, span: mergeSpans(expression.span, end) };
       }
-      if (this.is('{') && this.tokens[this.index + 1]?.text === ':') {
+      if (this.is('{') && this.tokens[this.index + 2]?.text === ':') {
         this.consume();
         const fields: Record<string, ForgeWebScriptExpression> = {};
         while (!this.is('}') && !this.is('eof')) {

@@ -1,6 +1,6 @@
-import { borderWidthValue, combineStyleValues, colorValue, spacingValue } from '@/tokens';
+import { borderWidthValue, combineStyleValues, colorValue, spacingValue } from '../../../tokens';
 
-import type { EmailColor, EmailSpacingScale } from '@/tokens';
+import type { EmailColor, EmailSpacingScale } from '../../../tokens';
 import type { MpElement } from '@mission-platform/forge';
 
 export interface EmailDividerProperties {

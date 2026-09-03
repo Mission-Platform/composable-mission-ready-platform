@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { load } from 'js-yaml';
 import { describe, expect, it } from 'vitest';
 
-const LOCALES = ['en', 'ar', 'de', 'es', 'fr', 'he', 'it', 'ja', 'ko', 'nl', 'zh'] as const;
+import { SUPPORTED_LOCALES } from './router';
 
 const localeMessages = (locale: string): Record<string, unknown> =>
   load(readFileSync(new URL(`../locales/${locale}/mp.website.yaml`, import.meta.url), 'utf8')) as Record<
@@ -29,11 +29,11 @@ describe('website locale catalogues', () => {
 
   it('keep the homepage and SEO message key set identical in every supported locale', () => {
     const keysByLocale = Object.fromEntries(
-      LOCALES.map((locale) => [locale, messageKeys(localeMessages(locale)).toSorted()]),
+      SUPPORTED_LOCALES.map((locale) => [locale, messageKeys(localeMessages(locale)).toSorted()]),
     );
     const englishKeys = keysByLocale.en;
 
-    for (const locale of LOCALES) {
+    for (const locale of SUPPORTED_LOCALES) {
       expect(keysByLocale[locale], `${locale} catalogue parity`).toEqual(englishKeys);
     }
   });
@@ -41,7 +41,7 @@ describe('website locale catalogues', () => {
   it('provides translated SEO title and description values for every locale', () => {
     const englishSeo = localeMessages('en').seo as Record<string, string>;
 
-    for (const locale of LOCALES) {
+    for (const locale of SUPPORTED_LOCALES) {
       const seo = localeMessages(locale).seo as Record<string, string>;
       expect(seo.title, `${locale} title`).toBeTruthy();
       expect(seo.description, `${locale} description`).toBeTruthy();

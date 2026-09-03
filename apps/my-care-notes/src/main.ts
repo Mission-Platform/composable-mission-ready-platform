@@ -16,6 +16,7 @@ import { effectScope, h, type VNode } from 'vue';
 import { RouterView } from 'vue-router';
 
 import { routerOptions } from './router';
+import { APP_ORIGIN } from './seo-app';
 
 import type { Resource } from 'i18next';
 
@@ -96,7 +97,7 @@ export const createApp = ViteSSG(
             description:
               'A privacy-first, offline-capable note-taking app with built-in spell and grammar checking, powered by the Mission Platform.',
             type: 'website',
-            url: 'https://my-care-notes.mission-platform.dev/',
+            url: APP_ORIGIN,
             siteName: 'My Care Notes',
             locale: 'en_AU',
             twitter: {

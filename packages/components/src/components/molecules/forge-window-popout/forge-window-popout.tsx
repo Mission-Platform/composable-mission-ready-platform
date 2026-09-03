@@ -1,13 +1,13 @@
 import {
   classNames,
+  createForgeStyle,
+  type CSSStyleProperties,
+  type MpChild,
+  type MpElement,
   Slot,
   useEffect,
   useRef,
   useState,
-  createForgeStyle,
-  type MpChild,
-  type MpElement,
-  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -220,11 +220,12 @@ export function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>):
     if (globalThis.window === undefined) {
       return;
     }
-    const features = `width=${width},height=${height},resizable=yes,scrollbars=yes`;
+    const features = `width=${width},height=${height},resizable=yes,scrollbars=yes,noopener,noreferrer`;
     const win = window.open('', '_blank', features);
     if (win === null) {
       return;
     }
+    win.opener = undefined;
     win.document.title = title ?? document.title;
     win.document.body.style.margin = '0';
 

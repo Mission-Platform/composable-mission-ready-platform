@@ -18,6 +18,7 @@ import {
   state,
   statement,
   stringAttribute,
+  textChild,
 } from "./ir-test-helpers.ts";
 
 import type {
@@ -108,6 +109,37 @@ describe("Web Components Forge framework package", () => {
     ).not.toThrow();
 
     expect(generateSpy).toHaveBeenCalled();
+  });
+
+  it("lowers the neutral Suspense marker to the runtime boundary", () => {
+    const generated = generate(
+      semanticModule({
+        imports: [
+          moduleImport(
+            "import { Suspense } from '@mission-platform/forge';",
+            "@mission-platform/forge",
+            { valueNames: ["Suspense"] },
+          ),
+        ],
+        component: component({
+          name: "Fixture",
+          parameter: "properties",
+          returnNode: element("Suspense", {
+            attributes: [
+              expressionAttribute("fallback", "undefined", [
+                element("span", { children: [textChild("Loading")] }),
+              ]),
+            ],
+            children: [expressionChild("loadContent()")],
+          }),
+        }),
+      }),
+    );
+
+    expect(generated.code).toContain("suspense(");
+    expect(generated.code).toContain("loadContent()");
+    expect(generated.code).toContain("suspense,");
+    expect(generated.code).not.toContain("<Suspense");
   });
 
   it("uses an autonomous host when a component can return a dynamic root", () => {
