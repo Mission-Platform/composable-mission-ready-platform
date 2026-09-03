@@ -1,17 +1,12 @@
-# ワークスペースの構造
+# Workspace Structure
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+This document provides a technical reference for the Mission Platform monorepo layout, directory purposes, and internal
+package conventions.
 
-> 英語の原典: [docs/workspace-structure.md](../../workspace-structure.md)
-> 言語: 日本語 (ja)
+## Monorepo Layout Reference
 
-このドキュメントは、Mission Platform のモノリポジトリのレイアウト、ディレクトリの目的、および内部的なリポジトリに関する技術リファレンスを提供します。
-パッケージの規約。
-
-## モノリポジトリのレイアウト リファレンス
-
-ミッションプラットフォームの用途 pnpm ワークスペースと Turborepo を使用してマルチパッケージ環境を管理します。リポジトリが整理されている
-機能層に分割します。
+Mission Platform uses pnpm workspaces and Turborepo to manage a multi-package environment. The repository is organised
+into functional tiers:
 
 ```text
 composable_mission_ready_platform/
@@ -20,119 +15,129 @@ composable_mission_ready_platform/
 ├── packages/               # Reusable libraries and building blocks
 ├── vite-plugins/           # Build-time extensions and compilers
 ├── workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── forge-plugins/          # Forge compiler plugins and adapters
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
 └── docs/                   # Canonical English and translated documentation
 ```
 
-## プライマリディレクトリ
+## Primary Directories
 
-### 1. `apps/` （申請）
+### 1. `apps/` (Applications)
 
-アプリケーションは、機能を構成する展開可能なユニットです。 `packages/` ディレクトリ。彼らは通常プライベートです
-レジストリに公開されることはありません。
+Applications are deployable units that compose functionality from the `packages/` directory. They are usually private
+and never published to a registry.
 
-- **`docs/`**: Vite + Vue Markdown コーパスのドキュメント サイト。
-- **`my-care-notes/`**: 主力のケアノート アプリケーション。
-- **`service-monitor/`**: Durable Object によってサポートされる RedwoodSDK サービス健全性ダッシュボード。
-- **`website/`**: Mission Platform のマーケティングおよび製品 Web サイト。
-- **`storybook/`**: コンポーネント ワークベンチとビジュアル テスト スイート。
+- **`docs/`**: The Vite + Vue documentation site for the Markdown corpus.
+- **`my-care-notes/`**: The flagship care-notes application.
+- **`service-monitor/`**: The RedwoodSDK service health dashboard backed by a Durable Object.
+- **`website/`**: The Mission Platform marketing and product website.
+- **`storybook/`**: The component workbench and visual testing suite.
 
-### 2. `packages/` (積み木)
+### 2. `packages/` (Building Blocks)
 
-アプリによって使用される、再利用可能なバージョン管理されたライブラリ。これらは、可能な限りフレームワークに依存しないように設計されています。
+Reusable, versioned libraries consumed by apps. These are intended to be framework-agnostic where possible.
 
-- **`@mission-platform/forge`**: フレームワークに依存しない JSX ランタイムとアダプター。
-- **`@mission-platform/components`**: マルチフレームワークコンポーネントライブラリ。
-- **`@mission-platform/forms`** そして **`@mission-platform/forms-core`**: スキーマ駆動のフォーム プリミティブ。
-- **`@mission-platform/content`** そして **`@mission-platform/email-renderer`**: コンテンツとレンダリング パイプライン。
-- **`@mission-platform/tokens`**: 信頼できるトークンのソースを設計します。
-- **`@mission-platform/router`** そして **`@mission-platform/i18n`**: フレームワークに依存しないルーティングとローカリゼーション。
-- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**、 そして
-  **`@mission-platform/qr-code`**: Wasm ベースのスキャンおよびエンコード パッケージ。
+- **`@mission-platform/forge`**: The framework-neutral JSX runtime and adapters.
+- **`@mission-platform/components`**: The multi-framework component library.
+- **`@mission-platform/forms`** and **`@mission-platform/forms-core`**: Schema-driven form primitives.
+- **`@mission-platform/content`** and **`@mission-platform/email-renderer`**: Content and rendering pipelines.
+- **`@mission-platform/tokens`**: Design token source of truth.
+- **`@mission-platform/router`** and **`@mission-platform/i18n`**: Framework-neutral routing and localization.
+- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, and
+  **`@mission-platform/qr-code`**: Wasm-backed scanning and encoding packages.
 
-### 3. `configs/` (ツーリング基盤)
+### 3. `configs/` (Tooling Foundation)
 
-すべてのワークスペース間で一貫性を確保する共有構成。このディレクトリ内のパッケージは通常、次のように使用されます。
+Shared configurations that ensure consistency across all workspaces. Packages in this directory are typically used as
 `devDependencies`.
 
-- **`eslint-config/`**, **`prettier-config/`**、 そして **`stylelint-config/`**: リンティングとフォーマットのルール。
-- **`typescript-config/`**: ベース `tsconfig.json` のファイル Node、DOM、ライブラリ、およびフレームワークのコンシューマ。
-- **`tsdown-config/`** そして **`vite-config/`**: 共通ライブラリ、アプリ、 Vite、 そして Vitest パターンを構築します。
-- **`i18n-config/`** そして **`storybook-framework/`**: 共有ロケール抽出とフレームワークワークベンチ設定。
+- **`eslint-config/`**, **`prettier-config/`**, and **`stylelint-config/`**: Linting and formatting rules.
+- **`typescript-config/`**: Base `tsconfig.json` files for Node, DOM, library, and framework consumers.
+- **`tsdown-config/`** and **`vite-config/`**: Common library, app, Vite, and Vitest build patterns.
+- **`i18n-config/`** and **`storybook-framework/`**: Shared locale extraction and framework-workbench settings.
 
-### 4. `vite-plugins/` (拡張機能のビルド)
+### 4. `vite-plugins/` (Build Extensions)
 
-を拡張するカスタム プラグイン Vite ビルドプロセス。
+Custom plugins that extend the Vite build process.
 
-- **`forge/`**: Forge コンポーネント用のマルチステージ コンパイラ。
-- **`tokens/`**: DTCG トークン定義からコード アーティファクトを生成します。
-- **`i18n/`**: ロケールの読み込みと静的抽出を処理します。
+- **`forge/`**: The multi-stage compiler for Forge components.
+- **`tokens/`**: Generates code artifacts from DTCG token definitions.
+- **`i18n/`**: Handles locale loading and static extraction.
 
-### 5. `workers/` (エッジサービス)
+### 5. `workers/` (Edge Services)
 
-サーバー側ロジックと最適化されたアセット配信のための Cloudflare Workers。
+Cloudflare Workers for server-side logic and optimised asset delivery.
 
-- **`api-proxy/`**: 承認された API ルートへの制限付き読み取り専用アクセスを提供します。
-- **`email-sender/`**: ローカルの MailPit 支援の電子メール ショーケース ワーカー。
-- **`forge-spa/`**: 静的アセットを提供します。 `ASSETS`-バインディング SPA フォールバック。
+- **`api-proxy/`**: Provides constrained read-only access to approved API routes.
+- **`email-sender/`**: Local MailPit-backed email showcase worker.
+- **`forge-spa/`**: Serves static assets with an `ASSETS`-binding SPA fallback.
 
-デプロイ可能なアプリケーション ワーカーは次のように構成されます。 `apps/website/wrangler.jsonc`,
-`apps/my-care-notes/wrangler.jsonc`、 そして `apps/service-monitor/wrangler.jsonc`。の
-`api-proxy` そして `forge-spa` パッケージはスタンドアロンではなくバンドルされた依存関係です Wrangler 展開。
+Deployable application Workers are configured by `apps/website/wrangler.jsonc`,
+`apps/my-care-notes/wrangler.jsonc`, and `apps/service-monitor/wrangler.jsonc`. The
+`api-proxy` and `forge-spa` packages are bundled dependencies rather than standalone Wrangler deployments.
 
-## パッケージの内部規約
+### 6. `forge-plugins/` (Forge Compiler Plugins)
 
-予測可能な環境を維持するために、すべてのパッケージとアプリは標準の内部レイアウトに従います。
+Framework-specific output plugins and adapters for the Forge compiler.
 
-### 標準 `src/` 階層
+- **`forge-cms-plugin-api/`**: CMS artifact generation and Vite/tsdown adapter integration.
+- **`forge-cms-astro/`**, **`forge-cms-ghost/`**, **`forge-cms-jekyll/`**, **`forge-cms-storyblok/`**, **`forge-cms-webflow/`**: CMS-specific integration adapters.
+- **`forge-plugin-api/`**: Shared Forge compiler plugin interfaces.
+- **`forge-vue/`**, **`forge-react/`**, **`forge-solid/`**, **`forge-svelte/`**, **`forge-web-components/`**: Framework-specific code generation and runtime adapters.
+- **`forge-router-plugin-api/`**, **`forge-router-vue/`**, **`forge-router-react/`**, **`forge-router-solid/`**, **`forge-router-svelte/`**, **`forge-router-web-components/`**, **`forge-router-redwood/`**: Router framework-specific integration adapters.
 
-ソース コードは機能タイプごとに編成されています。
+## Internal Package Conventions
 
-- **`components/`**: UI ロジック (SFC または TSX)。
-- **`composables/`**: リアクティブロジックとフック。
-- **`utils/`**: 純粋な関数とフレームワークに依存しないヘルパー。
-- **`locales/`**: JSON/YAML 翻訳ファイル。
-- **`styles/`**: SCSS 部分と設計システムの統合。
+To maintain a predictable environment, all packages and apps follow a standard internal layout.
 
-### バレルエクスポートパターン
+### Standard `src/` Hierarchy
 
-内のすべてのディレクトリ `src/` が含まれている必要があります `index.ts` (バレルファイル)。
+Source code is organised by functional type:
 
-- サブディレクトリは、ローカル経由で内部シンボルをエクスポートします。 `index.ts`。
-- 根 `src/index.ts` ワークスペース メンバー全体のパブリック エントリ ポイントとして機能します。
+- **`components/`**: UI logic (SFCs or TSX).
+- **`composables/`**: Reactive logic and hooks.
+- **`utils/`**: Pure functions and framework-agnostic helpers.
+- **`locales/`**: JSON/YAML translation files.
+- **`styles/`**: SCSS partials and design system integrations.
 
-## ルート構成レジストリ
+### Barrel Export Pattern
 
-リポジトリ ルートにあるキー ファイルは、モノリポジトリの動作を制御します。
+Every directory within `src/` must contain an `index.ts` (barrel file).
 
-|ファイル |目的 |
-|:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml`   |ワークスペース境界、メンバー グロブ、および依存関係カタログを定義します。 |
-| `turbo.json`            |ビルド パイプラインとタスク キャッシュを調整します。                    |
-| `package.json`          |ルートレベルのスクリプトとモノリポジトリ全体の devDependency。                |
-| `commitlint.config.mjs` |従来のコミット仕様を強制します。                     |
+- Sub-directories export their internal symbols via their local `index.ts`.
+- The root `src/index.ts` acts as the public entry point for the entire workspace member.
 
-## 依存関係とワークスペースの管理
+## Root Configuration Registry
 
-ミッションプラットフォームは、 `workspace:*` 内部依存関係のプロトコル。これにより、パッケージは常に
-開発中の他のワークスペース メンバーのローカル バージョン。
+Key files at the repository root govern the monorepo's behaviour:
 
-### PNPM カタログ
+| File                    | Purpose                                                                              |
+| :---------------------- | :----------------------------------------------------------------------------------- |
+| `pnpm-workspace.yaml`   | Defines workspace boundaries, member globs, and dependency catalogs. |
+| `turbo.json`            | Orchestrates the build pipeline and task caching.                    |
+| `package.json`          | Root-level scripts and monorepo-wide devDependencies.                |
+| `commitlint.config.mjs` | Enforces the Conventional Commits specification.                     |
 
-リポジトリは ** を利用しますpnpm カタログ** (定義: `pnpm-workspace.yaml`) 依存関係のバージョンを一元管理する
-モノレポ。これにより、バージョンのドリフトが防止され、メンテナンスが簡素化されます。
+## Dependency & Workspace Management
 
-### タスクの実行
+Mission Platform uses the `workspace:*` protocol for internal dependencies. This ensures that packages always use the
+local version of other workspace members during development.
 
-クロスワークスペースタスクはルート経由で実行されます `package.json` ターボレポを使用して:
+### PNPM Catalogs
 
-- `pnpm build`: すべてのワークスペースを正しい依存関係の順序で構築します。
-- `pnpm test`: すべてのワークスペースに対してテスト スイートを実行します。 `test` タスク。使用 `pnpm exec turbo run test --affected` のために
-  変更されたワークスペースの CI スコープ。
-- `pnpm lint`： 走る ESLint ワークスペース全体で。
-- `pnpm lint:style`： 走る Stylelint アプリとパッケージのスタイル用。
-- `pnpm format`: でフォーマットを確認します Prettier.
-- `pnpm i18n:extract`: カタログを所有するワークスペースの翻訳キーを抽出します。
+The repository leverages **pnpm catalogs** (defined in `pnpm-workspace.yaml`) to centralise dependency versions across
+the monorepo. This prevents version drift and simplifies maintenance.
+
+### Task Execution
+
+Cross-workspace tasks are executed via the root `package.json` using Turborepo:
+
+- `pnpm build`: Build all workspaces in the correct dependency order.
+- `pnpm test`: Run the test suites for all workspaces with a `test` task. Use `pnpm exec turbo run test --affected` for
+  the changed-workspace CI scope.
+- `pnpm lint`: Run ESLint across the workspaces.
+- `pnpm lint:style`: Run Stylelint for app and package styles.
+- `pnpm format`: Check formatting with Prettier.
+- `pnpm i18n:extract`: Extract translation keys for workspaces that own catalogues.
