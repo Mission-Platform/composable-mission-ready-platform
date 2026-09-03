@@ -65,4 +65,4 @@ Mission Platform fournit différents niveaux de prise en charge pour d'autres fr
 ## Ressources connexes
 - [Meilleures pratiques](best-practices.md)
 - [Guide de test](testing.md)
-- [@mission-platform/forge LISEZMOI](../../../packages/forge/README.md)
+- [@mission-platform/forge LISEZMOI](../../../packages/compiler/forge/forge/README.md)

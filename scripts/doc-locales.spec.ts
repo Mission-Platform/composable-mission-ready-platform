@@ -123,7 +123,7 @@ token files into an application.
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle.
 
-> packages/tokens/docs/index.md: [packages/tokens/docs/index.md](../../index.md)
+> packages/ui/tokens/docs/index.md: [packages/ui/tokens/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
 CSS design tokens und SCSS theme definitions für Mission Platform. dies package
@@ -151,7 +151,7 @@ token files into an application.
 
 由规范英文源进行的机器辅助翻译。
 
-> packages/tokens/docs/index.md: [packages/tokens/docs/index.md](../../index.md)
+> packages/ui/tokens/docs/index.md: [packages/ui/tokens/docs/index.md](../../index.md)
 > 语言: 简体中文 (zh)
 
 ${OFFLINE_FABRICATION_MARKERS[6]} CSS design tokens and SCSS theme definitions for Mission Platform. This package
@@ -176,7 +176,7 @@ token files into an application.
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle.
 
-> packages/tokens/docs/index.md: [packages/tokens/docs/index.md](../../index.md)
+> packages/ui/tokens/docs/index.md: [packages/ui/tokens/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
 CSS-Design-Tokens und SCSS-Themendefinitionen für die Mission Platform. Dieses
@@ -214,7 +214,7 @@ describe('doc locale package-local output paths', () => {
 
     const outputPath = join(barcodeDocs, 'locales', 'fr', 'index.md');
     await mkdir(join(barcodeDocs, 'locales', 'fr'), { recursive: true });
-    const sourceLabel = 'packages/barcode/docs/index.md';
+    const sourceLabel = 'packages/integrations/barcode/docs/index.md';
     const sourceLink = '../../index.md';
     await writeFile(
       outputPath,
@@ -233,7 +233,7 @@ describe('doc locale package-local output paths', () => {
     );
 
     const localized = await readFile(outputPath, 'utf8');
-    expect(outputPath.replaceAll('\\', '/')).toContain('/packages/barcode/docs/locales/fr/index.md');
+    expect(outputPath.replaceAll('\\', '/')).toContain('/packages/integrations/barcode/docs/locales/fr/index.md');
     expect(localized).toContain(sourceLabel);
     expect(localized).toContain('](../../index.md)');
     expect(localized).toContain('`@mission-platform/barcode`');

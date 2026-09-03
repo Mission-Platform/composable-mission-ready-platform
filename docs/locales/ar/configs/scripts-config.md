@@ -2,7 +2,7 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/packages/tooling/configs/scripts-config.md: [docs/packages/tooling/configs/scripts-config.md](../../../packages/tooling/configs/scripts-config.md)
 > اللغة: العربية (ar)
 
 يبقى هذا الدليل عمدا في طبقة وثائق المشروع: `scripts/`

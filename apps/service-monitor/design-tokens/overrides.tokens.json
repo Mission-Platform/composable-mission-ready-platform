@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../vite-plugins/token-overrides/schema/token-overrides.schema.json",
+  "$schema": "../../../packages/tooling/vite/token-overrides/schema/token-overrides.schema.json",
   "$description": "Service Monitor design-token override (DTCG-style). Transformed into `overrides.generated.scss` by `@mission-platform/vite-plugin-token-overrides` on build / dev start and imported after `@mission-platform/tokens` in `styles.css`. Colours use `{ light, dark }` pairs (emitted as `light-dark(...)`); everything else is a literal. Theme: pastel colours, sharp shadows, less rounding, Inter font.",
   "font": {
     "family": {

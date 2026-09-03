@@ -16,10 +16,10 @@ Mission Platform משתמשת בסביבות עבודה pnpm וב-Turborepo לנ
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
+├── packages/tooling/configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
+├── packages/tooling/vite/           # Build-time extensions and compilers
+├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
@@ -53,7 +53,7 @@ composable_mission_ready_platform/
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, וכן
   **`@mission-platform/qr-code`**: חבילות סריקה וקידוד בגיבוי Wasm.
 
-### 3. `configs/` (קרן כלי עבודה)
+### 3. `packages/tooling/configs/` (קרן כלי עבודה)
 
 תצורות משותפות המבטיחות עקביות בכל סביבות העבודה. חבילות בספרייה זו משמשות בדרך כלל כ
 `devDependencies`.
@@ -63,7 +63,7 @@ composable_mission_ready_platform/
 - **`tsdown-config/`** ו-**`vite-config/`**: תבניות בנייה נפוצות של ספרייה, אפליקציה, Vite ו-Vitest.
 - **`i18n-config/`** ו-**`storybook-framework/`**: חילוץ מקומי והגדרות מסגרת עבודה משותפות.
 
-### 4. `vite-plugins/` (תוספי בנייה)
+### 4. `packages/tooling/vite/` (תוספי בנייה)
 
 תוספים מותאמים אישית שמרחיבים את תהליך הבנייה של Vite.
 
@@ -71,7 +71,7 @@ composable_mission_ready_platform/
 - **`tokens/`**: יוצר חפצי קוד מהגדרות אסימון DTCG.
 - **`i18n/`**: מטפל בטעינת מיקום ובחילוץ סטטי.
 
-### 5. `workers/` (שירותי Edge)
+### 5. `packages/edge/workers/` (שירותי Edge)
 
 Cloudflare Workers להיגיון בצד השרת ואספקת נכסים אופטימלית.
 

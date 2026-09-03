@@ -19,9 +19,9 @@ composables, utilitaires) vivent dans `packages/`, tandis que les applications d
 
 Pour maintenir un monorepo maintenable, nous appliquons un flux de dépendances unidirectionnel strict :
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (Directement pour la configuration d'outillage/build)
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`** (Directement pour la configuration d'outillage/build)
 
 **Règle :** Coder dans `packages/` ne doit **jamais** importer depuis `apps/`. Cela évite les dépendances circulaires et garantit
 les emballages restent véritablement réutilisables.
@@ -33,7 +33,7 @@ environnement. Le `apps/storybook` l'application ne contient pas les histoires e
 découvre et restitue les histoires qui vivent aux côtés de leurs composants.
 
 - Co-localiser chacun `.stories.tsx` fichier avec son composant dans le répertoire du package de ce composant (par ex.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), pas sous `apps/storybook`. Cela correspond
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), pas sous `apps/storybook`. Cela correspond
   la convention en [Conception de composants atomiques](atomic-component-design.md).
 - Vérifier le comportement des composants Vue, React, Svelte, Solidet les composants Web en commutant le
   `STORYBOOK_FRAMEWORK` variable d'environnement. Chaque mode doit consommer le même inventaire d’histoire neutre ; un disparu
@@ -76,7 +76,7 @@ le résolveur du consommateur avec la correspondance `mp:vue`, `mp:react`, `mp:s
 
 - **Nouveaux composants de l'interface utilisateur** : appartiennent à `packages/`.
 - **Utilitaires partagés** : appartiennent à `packages/`.
-- **Lint/Format/Build Tooling** : les configurations partagées appartiennent à `configs/`.
+- **Lint/Format/Build Tooling** : les configurations partagées appartiennent à `packages/tooling/configs/`.
 
 ### Pelucheux et formatage
 

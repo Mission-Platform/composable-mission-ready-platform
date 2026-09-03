@@ -22,10 +22,10 @@ grenzen:
 ```mermaid
 graph TD
     Apps[apps/] --> Packages[packages/]
-    Apps --> Plugins[vite-plugins/]
-    Apps --> Workers[workers/]
-    Packages --> ForgePlugins[forge-plugins/]
-    Packages --> Configs[configs/]
+    Apps --> Plugins[packages/tooling/vite/]
+    Apps --> Workers[packages/edge/workers/]
+    Packages --> ForgePlugins[packages/compiler/plugins/]
+    Packages --> Configs[packages/tooling/configs/]
     ForgePlugins --> Plugins
     ForgePlugins --> Configs
     Plugins --> Configs
@@ -36,10 +36,10 @@ graph TD
    monorepo.
 2. **Pakketten (`packages/`)**: Zorg voor herbruikbare logica en componenten. Ze kunnen van elkaar afhankelijk zijn, maar nooit van elkaar
    toepassingen.
-3. **Forge-plug-ins (`forge-plugins/`)**: Uitvoerdoelen van de compiler — framework-plug-ins en CMS-doelen. Ze kunnen afhankelijk zijn van
-   `vite-plugins/` En `configs/`, en nooit aan `apps/` of op elkaars broers en zussen; een CMS-adapter is alleen afhankelijk van
+3. **Forge-plug-ins (`packages/compiler/plugins/`)**: Uitvoerdoelen van de compiler — framework-plug-ins en CMS-doelen. Ze kunnen afhankelijk zijn van
+   `packages/tooling/vite/` En `packages/tooling/configs/`, en nooit aan `apps/` of op elkaars broers en zussen; een CMS-adapter is alleen afhankelijk van
    `forge-cms-plugin-api`.
-4. **Configuraties (`configs/`)**: Gedeelde gereedschapsinstellingen (ESLint, TypeScriptenz.). Zij vormen de basis en zijn afhankelijk van
+4. **Configuraties (`packages/tooling/configs/`)**: Gedeelde gereedschapsinstellingen (ESLint, TypeScriptenz.). Zij vormen de basis en zijn afhankelijk van
    niets binnen de monorepo.
 
 ## Framework-neutrale engine: Forge
@@ -65,7 +65,7 @@ En `forge-cms-webflow` elk een platform. Een CMS-doel *componeert* een framework
 elk platform koppelt met elk raamwerk en de uitvoer komt terecht `dist/cms/<cms>/<framework>/**`.
 
 Zie voor de volledige pijplijn-, component- en hook-consumenten, CMS-projectie en uitbreidingsrichtlijnen
-[Forge Compiler-pijplijn](../../../vite-plugins/forge/docs/locales/nl/reference/compiler.md). Zie voor de build-orkestratieweergave
+[Forge Compiler-pijplijn](../../../packages/tooling/vite/forge/docs/locales/nl/reference/compiler.md). Zie voor de build-orkestratieweergave
 [Bouw systeem](build-system.md).
 
 ## Ontwerptokensysteem
@@ -105,7 +105,7 @@ Elk pakket en elke app gebruikt Vite voor ontwikkelings- en productiebuilds, waa
 
 ### Cloudflare-implementatie
 
-Applicaties worden voornamelijk geïmplementeerd op **Cloudflare Pages**, met **Cloudflare Workers** (onder `workers/`) verstrekken
+Applicaties worden voornamelijk geïmplementeerd op **Cloudflare Pages**, met **Cloudflare Workers** (onder `packages/edge/workers/`) verstrekken
 gespecialiseerde logica voor API-proxying en SPA-activaservice.
 
 ## Samenvatting

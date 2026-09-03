@@ -18,7 +18,7 @@ Mission Platform 将 Vue 3 与 Composition API 和 `<script setup>` 语法结合
 
 - 没有从 `apps/` 导入。
 - 所有共享逻辑应驻留在 `packages/` 中。
-- 配置应来自 `configs/`。
+- 配置应来自 `packages/tooling/configs/`。
 
 ## 第 1 步：更新构建配置
 

@@ -2,7 +2,7 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/packages/tooling/configs/scripts-config.md: [docs/packages/tooling/configs/scripts-config.md](../../../packages/tooling/configs/scripts-config.md)
 > שפה: עברית (he)
 
 מדריך זה נשאר בכוונה בשכבת תיעוד הפרויקט: `scripts/`

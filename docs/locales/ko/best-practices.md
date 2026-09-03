@@ -19,9 +19,9 @@ Mission Platform은 패키지 중심의 구성 가능한 아키텍처를 따릅�
 
 유지 관리 가능한 단일 저장소를 유지하기 위해 엄격한 단방향 종속성 흐름을 적용합니다.
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (툴링/빌드 구성을 위해 직접)
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`** (툴링/빌드 구성을 위해 직접)
 
 **규칙:** 코드 입력 `packages/` **절대** 다음에서 가져오면 안 됩니다. `apps/`. 이는 순환 종속성을 방지하고
 패키지는 여전히 재사용이 가능합니다.
@@ -33,7 +33,7 @@ Mission Platform은 패키지 중심의 구성 가능한 아키텍처를 따릅�
 구성 요소와 함께 살아가는 스토리를 발견하고 렌더링합니다.
 
 - 각각 함께 위치 `.stories.tsx` 해당 구성 요소의 패키지 디렉터리 내에 해당 구성 요소가 포함된 파일(예:
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), 아래가 아님 `apps/storybook`. 이 일치
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), 아래가 아님 `apps/storybook`. 이 일치
   협약 [원자 구성 요소 설계](atomic-component-design.md).
 - 전체 구성 요소 동작을 확인합니다. Vue, React, Svelte, Solid및 웹 구성 요소를 전환하여
   `STORYBOOK_FRAMEWORK` 환경 변수. 각 모드는 동일한 중립 스토리 인벤토리를 소비해야 합니다. 실종
@@ -76,7 +76,7 @@ done
 
 - **새로운 UI 구성요소**: `packages/`.
 - **공유 유틸리티**: 다음에 속함 `packages/`.
-- **린트/형식/빌드 도구**: 공유 구성은 다음에 속합니다. `configs/`.
+- **린트/형식/빌드 도구**: 공유 구성은 다음에 속합니다. `packages/tooling/configs/`.
 
 ### 린팅 및 서식 지정
 

@@ -16,10 +16,10 @@ en niveles funcionales:
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
+├── packages/tooling/configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
+├── packages/tooling/vite/           # Build-time extensions and compilers
+├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
@@ -53,7 +53,7 @@ Bibliotecas versionadas y reutilizables consumidas por las aplicaciones. Se pret
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`** y
   **`@mission-platform/qr-code`**: Paquetes de codificación y escaneo respaldados por Wasm.
 
-### 3. `configs/` (Fundación de herramientas)
+### 3. `packages/tooling/configs/` (Fundación de herramientas)
 
 Configuraciones compartidas que garantizan la coherencia en todos los espacios de trabajo. Los paquetes en este directorio se utilizan normalmente como
 `devDependencies`.
@@ -63,7 +63,7 @@ Configuraciones compartidas que garantizan la coherencia en todos los espacios d
 - **`tsdown-config/`** y **`vite-config/`**: biblioteca común, aplicación, patrones de compilación Vite y Vitest.
 - **`i18n-config/`** y **`storybook-framework/`**: configuración de entorno de trabajo y extracción de configuración regional compartida.
 
-### 4. `vite-plugins/` (Extensiones de compilación)
+### 4. `packages/tooling/vite/` (Extensiones de compilación)
 
 Complementos personalizados que amplían el proceso de compilación Vite.
 
@@ -71,7 +71,7 @@ Complementos personalizados que amplían el proceso de compilación Vite.
 - **`tokens/`**: genera artefactos de código a partir de definiciones de tokens DTCG.
 - **`i18n/`**: Maneja la carga local y la extracción estática.
 
-### 5. `workers/` (Servicios perimetrales)
+### 5. `packages/edge/workers/` (Servicios perimetrales)
 
 Cloudflare Workers para lógica del lado del servidor y entrega optimizada de activos.
 

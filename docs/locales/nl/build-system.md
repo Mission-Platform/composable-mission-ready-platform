@@ -57,7 +57,7 @@ raamwerk worden onafhankelijk gekozen, `storyblok × vue` En `astro × solid` zi
 CMS-builds emitteren naar `dist/cms/<cms>/<framework>/**`, met manifesten en andere perronzijspannen erin gespiegeld
 `dist/cms/<cms>/`. Doelen die een gehydrateerde runtime nodig hebben (Astro, Webflow) genereren samen een eilandboom vanaf de grens
 framework-plug-in in dezelfde build. De volledige verantwoordelijkheidsverdeling en fasegrenzen worden beschreven in
-[Forge Compiler-pijplijn](../../../vite-plugins/forge/docs/locales/nl/reference/compiler.md).
+[Forge Compiler-pijplijn](../../../packages/tooling/vite/forge/docs/locales/nl/reference/compiler.md).
 
 ## Contract opbouwen
 
@@ -144,7 +144,7 @@ hersteld vanuit de cache.
 
 ## Gedeelde configuraties
 
-Buildconfiguraties worden gecentraliseerd in het `configs/` directory om de consistentie binnen de monorepo te behouden.
+Buildconfiguraties worden gecentraliseerd in het `packages/tooling/configs/` directory om de consistentie binnen de monorepo te behouden.
 
 | Pakket | Doel |
 | :------------------------------------ | :----------------------------------------------------------- |

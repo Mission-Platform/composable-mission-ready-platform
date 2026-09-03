@@ -66,9 +66,9 @@ Mission Platform は、最新の高性能スタック上に構築されていま
 - **`apps/`**: パッケージを製品に組み込む展開可能なアプリケーション (`my-care-notes`、`website` など)。
 - **`packages/`**: `@mission-platform/components`、`@mission-platform/router`、および `@mission-platform/router` を含むコア構成要素
   `@mission-platform/i18n`。
-- **`configs/`**: ESLint、Prettier、TypeScript、および Vite の共有構成。
-- **`vite-plugins/`**: デザイン トークン、Forge コンパイル、SEO 用のカスタム ビルド時ツール。
-- **`workers/`**: バックエンド ロジックと SPA サービス機能を提供する Cloudflare ワーカー。
+- **`packages/tooling/configs/`**: ESLint、Prettier、TypeScript、および Vite の共有構成。
+- **`packages/tooling/vite/`**: デザイン トークン、Forge コンパイル、SEO 用のカスタム ビルド時ツール。
+- **`packages/edge/workers/`**: バックエンド ロジックと SPA サービス機能を提供する Cloudflare ワーカー。
 
 ## 次のステップ
 

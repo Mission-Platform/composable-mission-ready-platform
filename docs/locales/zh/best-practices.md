@@ -19,9 +19,9 @@ Mission Platform 遵循包驱动的可组合架构。可重复使用的构建块
 
 为了维护可维护的单一存储库，我们强制执行严格的单向依赖流：
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`**（直接用于工具/构建配置）
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`**（直接用于工具/构建配置）
 
 **规则：** 代码在 `packages/` 绝不能**从以下国家进口 `apps/`。这可以防止循环依赖并确保
 包仍然是真正可重用的。
@@ -33,7 +33,7 @@ Mission Platform 遵循包驱动的可组合架构。可重复使用的构建块
 发现并呈现与其组件一起存在的故事。
 
 - 共同定位每个 `.stories.tsx` 文件及其组件位于该组件的包目录中（例如
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`)，不低于 `apps/storybook`。这匹配
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`)，不低于 `apps/storybook`。这匹配
   公约在 [原子组件设计](atomic-component-design.md)。
 - 验证组件行为 Vue, React, Svelte, Solid和 Web 组件，通过切换
   `STORYBOOK_FRAMEWORK` 环境变量。每种模式必须消耗相同的中立故事库存；失踪的
@@ -76,7 +76,7 @@ done
 
 - **新的 UI 组件**：属于 `packages/`。
 - **共享实用程序**：属于 `packages/`。
-- **Lint/Format/Build Tooling**：共享配置属于 `configs/`.
+- **Lint/Format/Build Tooling**：共享配置属于 `packages/tooling/configs/`.
 
 ### 检测和格式化
 

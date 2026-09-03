@@ -22,10 +22,10 @@ Mission Platform은 재사용성과 프레임워크 간 유연성을 극대화�
 ```mermaid
 graph TD
     Apps[apps/] --> Packages[packages/]
-    Apps --> Plugins[vite-plugins/]
-    Apps --> Workers[workers/]
-    Packages --> ForgePlugins[forge-plugins/]
-    Packages --> Configs[configs/]
+    Apps --> Plugins[packages/tooling/vite/]
+    Apps --> Workers[packages/edge/workers/]
+    Packages --> ForgePlugins[packages/compiler/plugins/]
+    Packages --> Configs[packages/tooling/configs/]
     ForgePlugins --> Plugins
     ForgePlugins --> Configs
     Plugins --> Configs
@@ -36,10 +36,10 @@ graph TD
    모노레포.
 2. **패키지(`packages/`)**: 재사용 가능한 논리 및 구성 요소를 제공합니다. 그들은 서로 의지할 수 있지만 결코 의지하지 않는다
    응용 프로그램.
-3. **Forge 플러그인(`forge-plugins/`)**: 컴파일러 출력 대상 — 프레임워크 플러그인 및 CMS 대상. 그들은 다음에 따라 달라질 수 있습니다
-   `vite-plugins/` 그리고 `configs/`, 그리고 절대 켜지지 않음 `apps/` 또는 서로의 형제자매에 대해; CMS 어댑터는 다음에만 의존합니다.
+3. **Forge 플러그인(`packages/compiler/plugins/`)**: 컴파일러 출력 대상 — 프레임워크 플러그인 및 CMS 대상. 그들은 다음에 따라 달라질 수 있습니다
+   `packages/tooling/vite/` 그리고 `packages/tooling/configs/`, 그리고 절대 켜지지 않음 `apps/` 또는 서로의 형제자매에 대해; CMS 어댑터는 다음에만 의존합니다.
    `forge-cms-plugin-api`.
-4. **구성(`configs/`)**: 공유 도구 설정(ESLint, TypeScript, 등.). 그들은 기초이며 의존합니다
+4. **구성(`packages/tooling/configs/`)**: 공유 도구 설정(ESLint, TypeScript, 등.). 그들은 기초이며 의존합니다
    모노레포에는 아무것도 없습니다.
 
 ## 프레임워크 중립 엔진: Forge
@@ -65,7 +65,7 @@ graph TD
 모든 프레임워크와 모든 플랫폼이 쌍을 이루며 출력은 `dist/cms/<cms>/<framework>/**`.
 
 전체 파이프라인, 구성 요소 및 후크 소비자, CMS 프로젝션 및 확장 지침은 다음을 참조하세요.
-[Forge 컴파일러 파이프라인](../../../vite-plugins/forge/docs/locales/ko/reference/compiler.md). 빌드 오케스트레이션 보기는 다음을 참조하세요.
+[Forge 컴파일러 파이프라인](../../../packages/tooling/vite/forge/docs/locales/ko/reference/compiler.md). 빌드 오케스트레이션 보기는 다음을 참조하세요.
 [시스템 구축](build-system.md).
 
 ## 디자인 토큰 시스템
@@ -105,7 +105,7 @@ Turborepo는 모노레포 전반에 걸쳐 빌드, 테스트 및 Linting의 무�
 
 ### Cloudflare 배포
 
-애플리케이션은 주로 **Cloudflare Workers**(아래)와 함께 **Cloudflare Pages**에 배포됩니다. `workers/`) 제공
+애플리케이션은 주로 **Cloudflare Workers**(아래)와 함께 **Cloudflare Pages**에 배포됩니다. `packages/edge/workers/`) 제공
 API 프록시 및 SPA 자산 제공을 위한 특수 논리.
 
 ## 요약

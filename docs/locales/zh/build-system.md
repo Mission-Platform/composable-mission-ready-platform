@@ -57,7 +57,7 @@ Forge 包构建在正常情况下添加了一个中立的编译器前端 `tsdown
 CMS 构建发出至 `dist/cms/<cms>/<framework>/**`，清单和其他平台边车镜像到
 `dist/cms/<cms>/`。需要水合运行时的目标（Astro、Webflow）从绑定中共同生成一棵岛树
 框架插件到同一构建中。完整的责任划分和阶段边界描述于
-[Forge 编译器管道](../../../vite-plugins/forge/docs/locales/zh/reference/compiler.md).
+[Forge 编译器管道](../../../packages/tooling/vite/forge/docs/locales/zh/reference/compiler.md).
 
 ## 建造合同
 
@@ -144,7 +144,7 @@ pnpm build:force
 
 ## 共享配置
 
-构建配置集中在 `configs/` 目录以保持整个 monorepo 的一致性。
+构建配置集中在 `packages/tooling/configs/` 目录以保持整个 monorepo 的一致性。
 
 |套餐 |目的|
 | :------------------------------------ | :----------------------------------------------------------- |

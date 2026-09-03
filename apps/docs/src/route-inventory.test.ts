@@ -19,8 +19,8 @@ describe('documentation route inventory', () => {
 
   it('discovers project and package-owned documentation roots', () => {
     expect(roots.some((root) => root.kind === 'project' && root.routePrefix === '')).toBe(true);
-    expect(roots.some((root) => root.routePrefix === 'packages/barcode')).toBe(true);
-    expect(slugs).toContain('packages/barcode/index');
+    expect(roots.some((root) => root.routePrefix === 'packages/integrations/barcode')).toBe(true);
+    expect(slugs).toContain('packages/integrations/barcode/index');
   });
 
   it('keeps Node route inventory in parity with runtime Markdown discovery', () => {
@@ -33,8 +33,8 @@ describe('documentation route inventory', () => {
   });
 
   it('discovers documentation for the DAP package', () => {
-    expect(roots.some((root) => root.routePrefix === 'packages/forge-web-script-dap')).toBe(true);
-    expect(slugs).toContain('packages/forge-web-script-dap/reference/generated/api');
+    expect(roots.some((root) => root.routePrefix === 'packages/compiler/forge/forge-web-script-dap')).toBe(true);
+    expect(slugs).toContain('packages/compiler/forge/forge-web-script-dap/reference/generated/api');
   });
 
   it('uses one ownership parser for root, nested package, and unsupported paths', () => {
@@ -49,24 +49,26 @@ describe('documentation route inventory', () => {
     expect(parseWorkspaceDocumentationPath('apps/website/docs/index.md')).toBeUndefined();
 
     const parsed = parseDocumentationModulePath(
-      '../../../packages/barcode/docs/locales/fr/index.md',
+      '../../../packages/integrations/barcode/docs/locales/fr/index.md',
       '@mission-platform/barcode',
     );
     expect(parsed?.locale).toBe('fr');
-    expect(parsed?.sourceRoot.routePrefix).toBe('packages/barcode');
+    expect(parsed?.sourceRoot.routePrefix).toBe('packages/integrations/barcode');
     expect(parsed?.documentPath).toBe('index');
-    expect(parseDocumentationModulePath('../../../packages/barcode/docs/locales/pt/index.md')).toBeUndefined();
+    expect(
+      parseDocumentationModulePath('../../../packages/integrations/barcode/docs/locales/pt/index.md'),
+    ).toBeUndefined();
   });
 
   it('includes package routes in localized prerender and sitemap inventories', () => {
     const routes = buildIncludedRoutes(slugs);
-    expect(routes).toContain('/packages/barcode/index');
-    expect(routes).toContain('/fr/packages/barcode/index');
+    expect(routes).toContain('/packages/integrations/barcode/index');
+    expect(routes).toContain('/fr/packages/integrations/barcode/index');
 
-    const packageUrl = buildSitemapUrls(slugs).find((url) => url.loc.endsWith('/packages/barcode/index'));
-    expect(packageUrl?.alternates.some((alternate) => alternate.href.endsWith('/de/packages/barcode/index'))).toBe(
-      true,
-    );
+    const packageUrl = buildSitemapUrls(slugs).find((url) => url.loc.endsWith('/packages/integrations/barcode/index'));
+    expect(
+      packageUrl?.alternates.some((alternate) => alternate.href.endsWith('/de/packages/integrations/barcode/index')),
+    ).toBe(true);
   });
 
   it('prefers the most specific (longest) documentation root for nested package slugs', () => {

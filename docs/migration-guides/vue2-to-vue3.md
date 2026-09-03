@@ -13,7 +13,7 @@ Before migrating, ensure your package follows the platform's dependency rules:
 
 - No imports from `apps/`.
 - All shared logic should reside in `packages/`.
-- Configuration should come from `configs/`.
+- Configuration should come from `packages/tooling/configs/`.
 
 ## Step 1: Update Build Configuration
 

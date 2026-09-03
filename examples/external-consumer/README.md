@@ -33,7 +33,7 @@ pnpm --filter external-consumer-example dev
 
 The Vite `/api` proxy forwards send requests to the Worker. MailPit receives SMTP on port `1025` and serves its inbox at
 [`http://localhost:8025`](http://localhost:8025). The Worker variables are explicit in
-`workers/email-sender/wrangler.jsonc`; set `VITE_MAILPIT_UI_URL` if the UI uses another address.
+`packages/edge/workers/email-sender/wrangler.jsonc`; set `VITE_MAILPIT_UI_URL` if the UI uses another address.
 
 ### Exercise the flow
 
@@ -102,4 +102,4 @@ pnpm add @mission-platform/components @mission-platform/tokens
 Or, if testing locally with tarballs:
 
 1. `pnpm pack` in `packages/components` and `packages/tokens`.
-2. `pnpm add ../../packages/components/mission-platform-components-1.0.0.tgz` etc.
+2. `pnpm add ../../packages/ui/components/mission-platform-components-1.0.0.tgz` etc.

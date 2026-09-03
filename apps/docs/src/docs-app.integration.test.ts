@@ -150,16 +150,21 @@ describe('docs Web Components application', { timeout: 30_000 }, () => {
   });
 
   it('renders a localized document and synchronizes locale metadata', async () => {
-    const { router, shell } = await mountDocs('/fr/configs/index');
+    const { router, shell } = await mountDocs('/fr/packages/tooling/configs/eslint-config/index');
     updateRouteMetadata(router.current.value!);
 
     expect(router.current.value?.name).toBe('localized-doc');
-    expect(router.current.value?.params).toEqual({ locale: 'fr', slug: 'configs/index' });
+    expect(router.current.value?.params).toEqual({
+      locale: 'fr',
+      slug: 'packages/tooling/configs/eslint-config/index',
+    });
     expect(shell.querySelector('docs-document-view')?.dataset.locale).toBe('fr');
-    expect(shell.querySelector('docs-document-view')?.textContent).toContain('Résumé du package');
+    expect(shell.querySelector('docs-document-view')?.textContent).toContain('Installer et utiliser');
     expect(document.documentElement.lang).toBe('fr-FR');
-    expect(document.title).toContain('Paquets de configuration');
-    expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain('/fr/configs/index');
+    expect(document.title).toContain('@mission-platform/eslint-config');
+    expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain(
+      '/fr/packages/tooling/configs/eslint-config/index',
+    );
   });
 
   it('mounts component styles in representative shadow roots and preserves them across rerenders', async () => {
@@ -185,7 +190,7 @@ describe('docs Web Components application', { timeout: 30_000 }, () => {
     expect(mountedStyles(navbar, 'forge-navbar after rerender')).toEqual(navbarStyles);
     expect(mountedStyles(select, 'forge-select after rerender')).toEqual(selectStyles);
 
-    await router.push('/fr/configs/index');
+    await router.push('/fr/packages/tooling/configs/eslint-config/index');
     await flushElementUpdates();
     expect(
       mountedStyles(
@@ -319,10 +324,12 @@ describe('docs Web Components application', { timeout: 30_000 }, () => {
     const brandLink = shell.querySelector('forge-router-link')?.querySelector('a');
     expect(brandLink?.getAttribute('href')).toBe('/he/overview');
 
-    await router.push('/he/configs/index');
+    await router.push('/he/packages/tooling/configs/eslint-config/index');
     updateRouteMetadata(router.current.value!);
     await flushElementUpdates();
-    expect(shell.querySelector('docs-document-view')?.dataset.slug).toBe('configs/index');
+    expect(shell.querySelector('docs-document-view')?.dataset.slug).toBe(
+      'packages/tooling/configs/eslint-config/index',
+    );
     expect(document.documentElement.dir).toBe('rtl');
   });
 });

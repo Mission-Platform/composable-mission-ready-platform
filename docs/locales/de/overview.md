@@ -66,9 +66,9 @@ Das Repository ist in mehrere unterschiedliche Bereiche unterteilt:
 - **`apps/`**: Bereitstellbare Anwendungen (z. B. `my-care-notes`, `website`), die Pakete zu Produkten zusammenstellen.
 - **`packages/`**: Die Kernbausteine, einschließlich `@mission-platform/components`, `@mission-platform/router` und
   `@mission-platform/i18n`.
-- **`configs/`**: Gemeinsame Konfigurationen für ESLint, Prettier, TypeScript und Vite.
-- **`vite-plugins/`**: Benutzerdefinierte Build-Time-Tools für Design-Tokens, Forge-Kompilierung und SEO.
-- **`workers/`**: Cloudflare-Worker, die Backend-Logik und SPA-Bereitstellungsfunktionen bereitstellen.
+- **`packages/tooling/configs/`**: Gemeinsame Konfigurationen für ESLint, Prettier, TypeScript und Vite.
+- **`packages/tooling/vite/`**: Benutzerdefinierte Build-Time-Tools für Design-Tokens, Forge-Kompilierung und SEO.
+- **`packages/edge/workers/`**: Cloudflare-Worker, die Backend-Logik und SPA-Bereitstellungsfunktionen bereitstellen.
 
 ## Nächste Schritte
 

@@ -14,8 +14,8 @@ describe('documentation manifest', () => {
   it('loads the canonical docs from the repository docs/ folder', () => {
     expect(Object.keys(documents).length).toBeGreaterThan(0);
     expect(documents.overview).toBeDefined();
-    expect(documents['configs/eslint-config/index']).toBeDefined();
-    expect(documents['packages/barcode/index']).toBeDefined();
+    expect(documents['packages/tooling/configs/eslint-config/index']).toBeDefined();
+    expect(documents['packages/integrations/barcode/index']).toBeDefined();
   });
 
   it('derives a non-empty title from each document', () => {
@@ -40,7 +40,7 @@ describe('documentation manifest', () => {
     expect(navGroups.length).toBeGreaterThan(0);
     expect(navGroups[0]?.label).toBe('Getting Started');
     expect(navGroups[0]?.items).toContain('overview');
-    const barcodeGroup = navGroups.find((group) => group.items.includes('packages/barcode/index'));
+    const barcodeGroup = navGroups.find((group) => group.items.includes('packages/integrations/barcode/index'));
     expect(barcodeGroup?.key).toBe('packages');
     expect(barcodeGroup?.packageName).toBe('@mission-platform/barcode');
     expect(barcodeGroup?.label).toBe('@mission-platform/barcode');

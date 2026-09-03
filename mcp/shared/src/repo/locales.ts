@@ -159,7 +159,6 @@ export function resolveMemberLocales(
   if (!member) {
     throw new Error(`No "${name}" in ${group}/.`);
   }
-  const folder = member.relativeDir.split('/')[1] ?? name;
   for (const candidate of ['locales', 'src/locales']) {
     const dir = safeExistingPath(join(member.dir, candidate), 'locales directory');
     if (!dir) continue;
@@ -169,7 +168,7 @@ export function resolveMemberLocales(
       const ordered = probe.codes.includes(defaultLocale) ? [defaultLocale, ...rest] : rest;
       return {
         localesDir: dir,
-        relativeLocalesDir: `${group}/${folder}/${candidate}`,
+        relativeLocalesDir: `${member.relativeDir}/${candidate}`,
         layout: probe.layout,
         locales: ordered,
         namespaces: probe.namespaces,

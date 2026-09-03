@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/packages/tooling/configs/scripts-config.md: [docs/packages/tooling/configs/scripts-config.md](../../../packages/tooling/configs/scripts-config.md)
 > Lingua: Italiano (it)
 
 Questa guida rimane intenzionalmente nel livello della documentazione del progetto: `scripts/`

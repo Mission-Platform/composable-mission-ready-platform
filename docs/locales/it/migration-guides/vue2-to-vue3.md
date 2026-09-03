@@ -18,7 +18,7 @@ Prima della migrazione, assicurati che il tuo pacchetto segua le regole di dipen
 
 - Nessuna importazione da `apps/`.
 - Tutta la logica condivisa deve risiedere in `packages/`.
-- La configurazione dovrebbe provenire da `configs/`.
+- La configurazione dovrebbe provenire da `packages/tooling/configs/`.
 
 ## Passaggio 1: aggiorna la configurazione della build
 

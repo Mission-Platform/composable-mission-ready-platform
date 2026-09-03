@@ -65,4 +65,4 @@ Mission Platform bietet über Forge-Adapter unterschiedliche Unterstützungsstuf
 ## Verwandte Ressourcen
 - [Best Practices](best-practices.md)
 - [Testleitfaden](testing.md)
-- [@mission-platform/forge README](../../../packages/forge/README.md)
+- [@mission-platform/forge README](../../../packages/compiler/forge/forge/README.md)

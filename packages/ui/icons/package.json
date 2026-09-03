@@ -1,0 +1,172 @@
+{
+  "name": "@mission-platform/icons",
+  "version": "2.0.1",
+  "license": "BSD-4-Clause",
+  "description": "SVG icon components for Mission Platform, authored once in JSX and compiled to Vue, React, Svelte, Solid, and Web Components",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss",
+    "dist/web-components/**/*.js"
+  ],
+  "exports": {
+    ".": {
+      "mp:vue": {
+        "types": "./dist/vue/index.d.ts",
+        "import": "./dist/vue/index.js"
+      },
+      "mp:react": {
+        "types": "./dist/react/index.d.ts",
+        "import": "./dist/react/index.js"
+      },
+      "mp:solid": {
+        "types": "./dist/solid/index.d.ts",
+        "import": "./dist/solid/index.js"
+      },
+      "mp:svelte": {
+        "types": "./dist/svelte/index.d.ts",
+        "import": "./dist/svelte/index.js"
+      },
+      "mp:web-component": {
+        "types": "./dist/web-components/index.d.ts",
+        "import": "./dist/web-components/index.js"
+      },
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./*": {
+      "mp:vue": {
+        "types": "./dist/vue/index.d.ts",
+        "import": "./dist/vue/*.js"
+      },
+      "mp:react": {
+        "types": "./dist/react/index.d.ts",
+        "import": "./dist/react/*.js"
+      },
+      "mp:solid": {
+        "types": "./dist/solid/index.d.ts",
+        "import": "./dist/solid/*.js"
+      },
+      "mp:web-component": {
+        "types": "./dist/web-components/index.d.ts",
+        "import": "./dist/web-components/*.js"
+      },
+      "mp:svelte": {
+        "types": "./dist/svelte/index.d.ts",
+        "import": "./dist/svelte/*.js"
+      }
+    },
+    "./sprite": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./icons.svg": "./dist/icons.svg"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build:forge": "node --experimental-strip-types ../../../scripts/build-forge.ts --target forge",
+    "build:react": "node --experimental-strip-types ../../../scripts/build-forge.ts --target react",
+    "build:vue": "node --experimental-strip-types ../../../scripts/build-forge.ts --target vue",
+    "build:svelte": "node --experimental-strip-types ../../../scripts/build-forge.ts --target svelte",
+    "build:solid": "node --experimental-strip-types ../../../scripts/build-forge.ts --target solid",
+    "build:web-components": "node --experimental-strip-types ../../../scripts/build-forge.ts --target web-components",
+    "build:cms-storyblok": "tsdown",
+    "build:cms-storyblok:assets": "FORGE_CMS_ARTIFACT_MODE=shared FORGE_CMS_STORYBLOK_TARGET=react tsdown",
+    "build:cms-storyblok:react": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=react tsdown",
+    "build:cms-storyblok:vue": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=vue tsdown",
+    "build:cms-storyblok:svelte": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=svelte tsdown",
+    "build:cms-storyblok:solid": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=solid tsdown",
+    "build:cms-storyblok:web-components": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=web-components tsdown",
+    "build": "node --experimental-strip-types ../../../scripts/build-forge.ts && pnpm run build:sprite",
+    "build:sprite": "node --input-type=module -e \"import { mkdirSync, writeFileSync } from 'node:fs'; import { ICON_SPRITE_ASSET } from './dist/sprite/asset.js'; mkdirSync('./dist', { recursive: true }); writeFileSync('./dist/icons.svg', ICON_SPRITE_ASSET);\"",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:watch": "tsdown --watch",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "lint:style": "stylelint \"src/**/*.scss\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.scss\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/forge": "workspace:*"
+  },
+  "peerDependencies": {
+    "lit": "^3.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "solid-js": "^1.9.0",
+    "svelte": "^5.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "lit": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/i18n-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/stylelint-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/storybook-framework": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-forge": "workspace:*",
+    "@mission-platform/forge-plugin-react": "workspace:*",
+    "@mission-platform/forge-plugin-solid": "workspace:*",
+    "@mission-platform/forge-plugin-svelte": "workspace:*",
+    "@mission-platform/forge-plugin-vue": "workspace:*",
+    "@mission-platform/forge-plugin-web-components": "workspace:*",
+    "@mission-platform/forge-cms-plugin-api": "workspace:*",
+    "@mission-platform/forge-cms-storyblok": "workspace:*",
+    "@storybook/vue3-vite": "catalog:storybook",
+    "@tsdown/css": "catalog:build",
+    "@types/node": "catalog:typescript",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@vitejs/plugin-vue": "catalog:vue",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "@vitest/coverage-v8": "catalog:testing",
+    "eslint": "catalog:eslint",
+    "jsdom": "catalog:testing",
+    "lit": "catalog:webcomponents",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "prettier": "catalog:prettier",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "sass-embedded": "catalog:vite",
+    "solid-js": "catalog:solid",
+    "svelte": "catalog:svelte",
+    "storybook": "catalog:storybook",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue"
+  }
+}

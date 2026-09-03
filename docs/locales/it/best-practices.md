@@ -19,9 +19,9 @@ componenti componibili, utilities) vivono `packages/`, mentre le applicazioni di
 
 Per mantenere un monorepo gestibile, applichiamo un rigoroso flusso di dipendenza unidirezionale:
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (Direttamente per la configurazione di strumenti/build)
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`** (Direttamente per la configurazione di strumenti/build)
 
 **Regola:** Codice inserito `packages/` non deve **mai** importare da `apps/`. Ciò impedisce dipendenze circolari e garantisce
 i pacchetti rimangono veramente riutilizzabili.
@@ -33,7 +33,7 @@ ambiente. IL `apps/storybook` app non contiene le storie stesse: è l'ambiente d
 scopre e rende le storie che convivono accanto alle loro componenti.
 
 - Co-localizzare ciascuno `.stories.tsx` file con il suo componente all'interno della directory del pacchetto di quel componente (ad es.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), non sotto `apps/storybook`. Questo corrisponde
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), non sotto `apps/storybook`. Questo corrisponde
   la convenzione dentro [Progettazione di componenti atomici](atomic-component-design.md).
 - Verificare il comportamento dei componenti attraverso Vue, React, Svelte, Solide componenti Web cambiando il file
   `STORYBOOK_FRAMEWORK` variabile d'ambiente. Ciascuna modalità deve consumare lo stesso inventario narrativo neutro; una scomparsa
@@ -76,7 +76,7 @@ risolutore del consumatore con la corrispondenza `mp:vue`, `mp:react`, `mp:svelt
 
 - **Nuovi componenti dell'interfaccia utente**: appartieni `packages/`.
 - **Utilità condivise**: appartieni `packages/`.
-- **Strumenti Lint/Format/Build**: appartengono le configurazioni condivise `configs/`.
+- **Strumenti Lint/Format/Build**: appartengono le configurazioni condivise `packages/tooling/configs/`.
 
 ### Linting e formattazione
 

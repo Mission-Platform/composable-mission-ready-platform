@@ -7,7 +7,7 @@ import type { DocumentationSourceRoot } from '../documentation-sources';
 describe('ssg markdown pipeline', () => {
   it('renders valid heading hierarchy without the regex placeholder nesting bug', () => {
     const source = '# Configuration Packages\n\nCentralizing configurations.\n\n## Overview\n\nDetails here.\n';
-    const { html, toc, title } = renderDocumentationMarkdown(source, 'configs/index');
+    const { html, toc, title } = renderDocumentationMarkdown(source, 'packages/tooling/configs/eslint-config/index');
 
     expect(title).toBe('Configuration Packages');
     expect(html).toContain('<h1 id="configuration-packages">Configuration Packages</h1>');
@@ -39,7 +39,9 @@ describe('ssg markdown pipeline', () => {
   });
 
   it('resolves parent-relative links against the current slug directory', () => {
-    expect(resolveInternalHref('../overview.md', 'configs/index', 'ja')).toBe('/ja/overview');
+    expect(resolveInternalHref('../overview.md', 'packages/tooling/configs/eslint-config/index', 'ja')).toBe(
+      '/ja/packages/tooling/configs/overview',
+    );
   });
 
   it('resolves package-local and package-to-project links using owning roots', () => {
@@ -51,22 +53,22 @@ describe('ssg markdown pipeline', () => {
     };
     const barcode: DocumentationSourceRoot = {
       kind: 'package',
-      rootDirectory: '/repo/packages/barcode/docs',
-      routePrefix: 'packages/barcode',
-      workspaceDirectory: 'packages/barcode',
+      rootDirectory: '/repo/packages/integrations/barcode/docs',
+      routePrefix: 'packages/integrations/barcode',
+      workspaceDirectory: 'packages/integrations/barcode',
       packageName: '@mission-platform/barcode',
     };
     const context = {
       currentRoot: barcode,
       roots: [project, barcode],
-      hasDocument: (slug: string) => ['packages/barcode/reference', 'overview'].includes(slug),
+      hasDocument: (slug: string) => ['packages/integrations/barcode/reference', 'overview'].includes(slug),
     };
 
-    expect(resolveInternalHref('./reference.md', 'packages/barcode/index', 'fr', context)).toBe(
-      '/fr/packages/barcode/reference',
+    expect(resolveInternalHref('./reference.md', 'packages/integrations/barcode/index', 'fr', context)).toBe(
+      '/fr/packages/integrations/barcode/reference',
     );
-    expect(resolveInternalHref('../../../../docs/overview.md', 'packages/barcode/index', 'fr', context)).toBe(
-      '/fr/overview',
-    );
+    expect(
+      resolveInternalHref('../../../../docs/overview.md', 'packages/integrations/barcode/index', 'fr', context),
+    ).toBe('/fr/overview');
   });
 });

@@ -13,9 +13,6 @@ import {
 const WORKSPACE_SCOPES = new Set<RepositoryInventory['workspacePackages'][number]['scope']>([
   'app',
   'package',
-  'config',
-  'plugin',
-  'worker',
   'example',
   'script',
   'mcp',

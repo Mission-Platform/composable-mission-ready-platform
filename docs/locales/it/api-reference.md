@@ -7,8 +7,8 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 
 Questa pagina a livello di progetto è una directory di funzionalità e compatibilità del pacchetto
 contratti. Installazione canonica, utilizzo, limitazioni e dettagli API per
-ogni pacchetto vive accanto a quel pacchetto in `packages/*/docs/`, `configs/*/docs/`,
-e `forge-plugins/*/docs/`. I riferimenti API generati devono essere aggiunti al proprietario
+ogni pacchetto vive accanto a quel pacchetto in `packages/**/docs/`, ` `,
+e ` `. I riferimenti API generati devono essere aggiunti al proprietario
 pacchetto anziché questa pagina.
 
 > **Le importazioni sono sempre vuote.** I pacchetti `@mission-platform/*` di spedizione del framework espongono un singolo `.`
@@ -313,7 +313,7 @@ Il prefisso `sha256-v1` consente futuri aggiornamenti dell'algoritmo hash senza 
 ## Ulteriori letture
 
 - [Guida alla migrazione da Vue 2 a Vue 3](migration-guides/vue2-to-vue3.md)
-- [Panoramica sulla configurazione del progetto](configs/index.md)
+- [Panoramica sulla configurazione del progetto](packages/tooling/configs/index.md)
 - [Struttura dell'area di lavoro](workspace-structure.md)
 
 ## Indice completo del pacchetto Workspace
@@ -366,9 +366,9 @@ pacchetto in `packages/`, incluse le facciate WebAssembly tipizzate.
 
 ### Obiettivi del compilatore Forge
 
-Questi risiedono in `forge-plugins/` anziché in `packages/`. Un plugin **framework** decide quale runtime è un componente neutro
+Questi risiedono in `packages/compiler/plugins/` anziché in `packages/`. Un plugin **framework** decide quale runtime è un componente neutro
 è abbassato a; un target **CMS** decide su quale piattaforma di contenuti viene proiettato. I due assi si compongono, quindi qualsiasi CMS
-target può essere associato a qualsiasi plugin del framework. Vedere la [Pipeline del compilatore Forge](../../../vite-plugins/forge/docs/locales/it/reference/compiler.md).
+target può essere associato a qualsiasi plugin del framework. Vedere la [Pipeline del compilatore Forge](../../../packages/tooling/vite/forge/docs/locales/it/reference/compiler.md).
 
 | Pacchetto | Scopo |
 | :---------------------------------------------- | :-------------------------------------------------------------------------------- |

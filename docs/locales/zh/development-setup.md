@@ -110,7 +110,7 @@ done
 
 Forge 支持的包发布匹配 `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`， 和 `mp:web-component` 状况。活动状态必须是
-由消费捆绑器配置；看 [编译器参考](../../../vite-plugins/forge/docs/locales/zh/reference/compiler.md)
+由消费捆绑器配置；看 [编译器参考](../../../packages/tooling/vite/forge/docs/locales/zh/reference/compiler.md)
 用于目标插件和声明管道。
 
 ### 应用开发

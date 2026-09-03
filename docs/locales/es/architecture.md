@@ -22,10 +22,10 @@ límites:
 ```mermaid
 graph TD
     Apps[apps/] --> Packages[packages/]
-    Apps --> Plugins[vite-plugins/]
-    Apps --> Workers[workers/]
-    Packages --> ForgePlugins[forge-plugins/]
-    Packages --> Configs[configs/]
+    Apps --> Plugins[packages/tooling/vite/]
+    Apps --> Workers[packages/edge/workers/]
+    Packages --> ForgePlugins[packages/compiler/plugins/]
+    Packages --> Configs[packages/tooling/configs/]
     ForgePlugins --> Plugins
     ForgePlugins --> Configs
     Plugins --> Configs
@@ -36,10 +36,10 @@ graph TD
    monorepo.
 2. **Paquetes (`packages/`)**: Proporciona lógica y componentes reutilizables. Pueden depender unos de otros pero nunca de
    aplicaciones.
-3. **Complementos de Forge (`forge-plugins/`)**: Destinos de salida del compilador: complementos del marco y destinos de CMS. Pueden depender de
-   `vite-plugins/` y `configs/`, y nunca en `apps/` o sobre los hermanos del otro; un adaptador CMS depende sólo de
+3. **Complementos de Forge (`packages/compiler/plugins/`)**: Destinos de salida del compilador: complementos del marco y destinos de CMS. Pueden depender de
+   `packages/tooling/vite/` y `packages/tooling/configs/`, y nunca en `apps/` o sobre los hermanos del otro; un adaptador CMS depende sólo de
    `forge-cms-plugin-api`.
-4. **Configuraciones (`configs/`)**: Configuración de herramientas compartidas (ESLint, TypeScript, etc.). Son la base y dependen de
+4. **Configuraciones (`packages/tooling/configs/`)**: Configuración de herramientas compartidas (ESLint, TypeScript, etc.). Son la base y dependen de
    nada dentro del monorepo.
 
 ## Motor neutral en el marco: Forge
@@ -65,7 +65,7 @@ y `forge-cms-webflow` cada uno posee una plataforma. Un destino CMS *compone* un
 cualquier plataforma se empareja con cualquier marco y la salida aterriza en `dist/cms/<cms>/<framework>/**`.
 
 Para conocer la canalización completa, los consumidores de componentes y ganchos, la proyección de CMS y la guía de extensión, consulte
-[Canalización del compilador Forge](../../../vite-plugins/forge/docs/locales/es/reference/compiler.md). Para la vista de orquestación de compilación, consulte
+[Canalización del compilador Forge](../../../packages/tooling/vite/forge/docs/locales/es/reference/compiler.md). Para la vista de orquestación de compilación, consulte
 [Sistema de construcción](build-system.md).
 
 ## Sistema de tokens de diseño
@@ -105,7 +105,7 @@ Cada paquete y aplicación utiliza Vite para desarrollo y producción, aprovecha
 
 ### Implementación de Cloudflare
 
-Las aplicaciones se implementan principalmente en **Páginas de Cloudflare**, con **Trabajadores de Cloudflare** (en `workers/`) proporcionando
+Las aplicaciones se implementan principalmente en **Páginas de Cloudflare**, con **Trabajadores de Cloudflare** (en `packages/edge/workers/`) proporcionando
 Lógica especializada para proxy API y servicio de activos SPA.
 
 ## Resumen

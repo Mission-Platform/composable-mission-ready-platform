@@ -11,7 +11,7 @@ import { findRepoRoot } from "./paths.ts";
  * with `component` / `component/atoms`.
  */
 export function readTokens(category?: string): unknown {
-  const tokensDir = join(findRepoRoot(), "packages", "tokens", "tokens");
+  const tokensDir = join(findRepoRoot(), "packages", "ui", "tokens", "tokens");
   const sources = readTokenSources(tokensDir);
 
   if (category) {
@@ -132,7 +132,7 @@ export interface TokenVariable {
   name: string;
   /** Stable DTCG path used by Figma and runtime overrides. */
   path: string;
-  /** Source ID relative to packages/tokens/tokens, when known. */
+  /** Source ID relative to packages/ui/tokens/tokens, when known. */
   source?: string;
   /** Top-level DTCG group the token belongs to, e.g. `color`, `radius`, `font`. */
   group: string;
@@ -151,7 +151,7 @@ export function listOverridableTokenVariables(
   category?: string,
   prefix = "mp",
 ): TokenVariable[] {
-  const tokensDir = join(findRepoRoot(), "packages", "tokens", "tokens");
+  const tokensDir = join(findRepoRoot(), "packages", "ui", "tokens", "tokens");
   const sources = readTokenSources(tokensDir);
   const selected = category ? selectSources(sources, category) : sources;
   if (category && selected.length === 0) {

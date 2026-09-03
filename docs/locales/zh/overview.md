@@ -66,9 +66,9 @@ Mission Platform 建立在现代化的高性能堆栈之上：
 - **`apps/`**：可部署的应用程序（例如， `my-care-notes`, `website`) 将包组合成产品。
 - **`packages/`**：核心构建块，包括 `@mission-platform/components`, `@mission-platform/router`， 和
   `@mission-platform/i18n`.
-- **`configs/`**：共享配置 ESLint, Prettier, TypeScript， 和 Vite.
-- **`vite-plugins/`**：用于设计令牌、Forge 编译和 SEO 的自定义构建时工具。
-- **`workers/`**：Cloudflare Workers 提供后端逻辑和 SPA 服务功能。
+- **`packages/tooling/configs/`**：共享配置 ESLint, Prettier, TypeScript， 和 Vite.
+- **`packages/tooling/vite/`**：用于设计令牌、Forge 编译和 SEO 的自定义构建时工具。
+- **`packages/edge/workers/`**：Cloudflare Workers 提供后端逻辑和 SPA 服务功能。
 
 ## 下一步
 

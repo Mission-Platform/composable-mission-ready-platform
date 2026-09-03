@@ -37,7 +37,9 @@ export {
 export function tokenOverrideSchemaPath(): string {
   return join(
     findRepoRoot(),
-    "vite-plugins",
+    "packages",
+    "tooling",
+    "vite",
     "token-overrides",
     "schema",
     "token-overrides.schema.json",

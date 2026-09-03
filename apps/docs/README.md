@@ -6,7 +6,7 @@ Built with **TypeScript**, **Vite**, a small Web Components application shell, a
 
 ## How it works
 
-- **Two documentation ownership tiers**: root `docs/` contains project-wide guidance and indexes; package-specific usage, development, and API pages live beside their owner under `<workspace>/<package>/docs/`. Package routes are namespaced by workspace path (for example, `/packages/barcode/index`).
+- **Two documentation ownership tiers**: root `docs/` contains project-wide guidance and indexes; package-specific usage, development, and API pages live beside their owner under `<workspace>/<package>/docs/`. Package routes are namespaced by workspace path (for example, `/packages/integrations/barcode/index`).
 - **Direct multi-root source of truth**: every English and translated Markdown file under the approved roots is imported at build time via `import.meta.glob`; the site never stages package pages into root `docs/`. Node route inventory and prerendering discover the same roots from workspace manifests.
 - **Grouped navigation**: the sidebar preserves curated project groups (Getting Started, Architecture, Authoring, Build & Tooling, Quality, Troubleshooting, Reference) and adds one section per owning package for namespaced pages. Any project document not explicitly listed is appended under an "Additional" group so nothing is hidden.
 - **Rendering**: Markdown is converted with `marked`; code blocks are syntax-highlighted with a curated `highlight.js` language set; headings receive anchor ids and feed a per-page table of contents; relative `.md` links are rewritten to in-app routes and handled by the SPA router.

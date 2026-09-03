@@ -205,7 +205,7 @@ Web Components Storybook 工作台。
 
 特定于包的安装、使用、限制、贡献者工作流程和 API 参考页面属于
 包的 `docs/` 目录，而不是存储库范围的 `docs/` 树中。文档站点直接提取这些文件并
-在稳定的包命名空间（例如 `/packages/barcode/index` 或 `/configs/eslint-config/index`）下发布它们。
+在稳定的包命名空间（例如 `/packages/integrations/barcode/index` 或 `/packages/tooling/configs/eslint-config/index`）下发布它们。
 项目范围的概念、架构、工作区工作流程和跨包故障排除保留在根 `docs/` 中。
 
 生成的 API 页面位于 `docs/reference/generated/` 下，并由包 `prebuild` 挂钩刷新；请勿编辑

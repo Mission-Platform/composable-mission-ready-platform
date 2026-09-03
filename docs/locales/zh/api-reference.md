@@ -7,8 +7,8 @@
 
 这个项目范围的页面是包功能和兼容性的目录
 合同。规范安装、使用、限制和 API 详细信息
-每个包都位于 `packages/*/docs/`、`configs/*/docs/` 下的该包旁边，
-和 `forge-plugins/*/docs/`。生成的 API 引用必须添加到所属的 API 引用中
+每个包都位于 `packages/**/docs/`、` ` 下的该包旁边，
+和 ` `。生成的 API 引用必须添加到所属的 API 引用中
 包而不是这个页面。
 
 > **导入始终是裸露的。** 框架传送 `@mission-platform/*` 包公开单个 `.`
@@ -313,7 +313,7 @@ Forge Web 脚本工件使用格式为 `sha256-v1:<hex>` 的版本化 SHA-256 内
 ## 进一步阅读
 
 - [Vue 2 到 Vue 3 迁移指南](migration-guides/vue2-to-vue3.md)
-- [项目配置概述](configs/index.md)
+- [项目配置概述](packages/tooling/configs/index.md)
 - [工作空间结构](workspace-structure.md)
 
 ## 完整的工作空间包索引
@@ -366,9 +366,9 @@ Forge Web 脚本工件使用格式为 `sha256-v1:<hex>` 的版本化 SHA-256 内
 
 ### Forge 编译器目标
 
-它们位于 `forge-plugins/` 而不是 `packages/` 中。 **框架**插件决定哪个运行时是中立组件
+它们位于 `packages/compiler/plugins/` 而不是 `packages/` 中。 **框架**插件决定哪个运行时是中立组件
 降低至； **CMS** 目标决定将其投影到哪个内容平台。两个轴组成，因此任何 CMS
-目标可以绑定到任何框架插件。请参阅 [Forge 编译器管道](../../../vite-plugins/forge/docs/locales/zh/reference/compiler.md)。
+目标可以绑定到任何框架插件。请参阅 [Forge 编译器管道](../../../packages/tooling/vite/forge/docs/locales/zh/reference/compiler.md)。
 
 |套餐 |目的|
 | :---------------------------------------------- | :-------------------------------------------------------------------------------- |

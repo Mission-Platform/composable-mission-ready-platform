@@ -16,10 +16,10 @@ in funktionale Ebenen:
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
+├── packages/tooling/configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
+├── packages/tooling/vite/           # Build-time extensions and compilers
+├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
@@ -53,7 +53,7 @@ Wiederverwendbare, versionierte Bibliotheken, die von Apps genutzt werden. Diese
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`** und
   **`@mission-platform/qr-code`**: Wasm-gestützte Scan- und Codierungspakete.
 
-### 3. `configs/` (Tooling Foundation)
+### 3. `packages/tooling/configs/` (Tooling Foundation)
 
 Gemeinsame Konfigurationen, die Konsistenz über alle Arbeitsbereiche hinweg gewährleisten. Pakete in diesem Verzeichnis werden normalerweise als verwendet
 `devDependencies`.
@@ -63,7 +63,7 @@ Gemeinsame Konfigurationen, die Konsistenz über alle Arbeitsbereiche hinweg gew
 - **`tsdown-config/`** und **`vite-config/`**: Gemeinsame Build-Muster für Bibliothek, App, Vite und Vitest.
 - **`i18n-config/`** und **`storybook-framework/`**: Gemeinsame Gebietsschema-Extraktion und Framework-Workbench-Einstellungen.
 
-### 4. `vite-plugins/` (Build-Erweiterungen)
+### 4. `packages/tooling/vite/` (Build-Erweiterungen)
 
 Benutzerdefinierte Plugins, die den Vite-Build-Prozess erweitern.
 
@@ -71,7 +71,7 @@ Benutzerdefinierte Plugins, die den Vite-Build-Prozess erweitern.
 - **`tokens/`**: Erzeugt Codeartefakte aus DTCG-Tokendefinitionen.
 - **`i18n/`**: Verwaltet das Laden des Gebietsschemas und die statische Extraktion.
 
-### 5. `workers/` (Edge-Dienste)
+### 5. `packages/edge/workers/` (Edge-Dienste)
 
 Cloudflare Workers für serverseitige Logik und optimierte Asset-Bereitstellung.
 

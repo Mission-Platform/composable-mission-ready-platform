@@ -19,9 +19,9 @@ Composables, Dienstprogramme) leben in `packages/`, während aus diesen Blöcken
 
 Um ein wartbares Monorepo aufrechtzuerhalten, erzwingen wir einen strikten einseitigen Abhängigkeitsfluss:
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (Direkt für Tooling/Build-Konfiguration)
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`** (Direkt für Tooling/Build-Konfiguration)
 
 **Regel:** Code eingeben `packages/` darf **niemals** aus importieren `apps/`. Dies verhindert zirkuläre Abhängigkeiten und stellt sicher
 Pakete bleiben wirklich wiederverwendbar.
@@ -33,7 +33,7 @@ Umgebung. Der `apps/storybook` Die App enthält nicht die Storys selbst – sie 
 entdeckt und gibt die Geschichten wieder, die neben ihren Komponenten leben.
 
 - Ordnen Sie alle gemeinsam an `.stories.tsx` Datei mit ihrer Komponente im Paketverzeichnis dieser Komponente (z. B.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), nicht unter `apps/storybook`. Das passt
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), nicht unter `apps/storybook`. Das passt
   die Konvention in [Atomares Komponentendesign](atomic-component-design.md).
 - Überprüfen Sie das Verhalten der Komponenten übergreifend Vue, React, Svelte, Solidund Webkomponenten durch Umschalten der
   `STORYBOOK_FRAMEWORK` Umgebungsvariable. Jeder Modus muss das gleiche neutrale Story-Inventar verbrauchen; ein Vermisster
@@ -76,7 +76,7 @@ Consumer-Resolver mit dem Matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`
 
 - **Neue UI-Komponenten**: Gehören dazu `packages/`.
 - **Shared Utilities**: Gehören dazu `packages/`.
-- **Lint/Format/Build Tooling**: Gemeinsam genutzte Konfigurationen gehören dazu `configs/`.
+- **Lint/Format/Build Tooling**: Gemeinsam genutzte Konfigurationen gehören dazu `packages/tooling/configs/`.
 
 ### Linting und Formatierung
 

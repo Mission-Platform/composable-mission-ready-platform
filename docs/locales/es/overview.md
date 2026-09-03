@@ -66,9 +66,9 @@ El repositorio está organizado en varias áreas distintas:
 - **`apps/`**: aplicaciones implementables (por ejemplo, `my-care-notes`, `website`) que componen paquetes en productos.
 - **`packages/`**: Los componentes básicos, incluidos `@mission-platform/components`, `@mission-platform/router` y
   `@mission-platform/i18n`.
-- **`configs/`**: Configuraciones compartidas para ESLint, Prettier, TypeScript y Vite.
-- **`vite-plugins/`**: herramientas personalizadas en tiempo de compilación para tokens de diseño, compilación de Forge y SEO.
-- **`workers/`**: Cloudflare Workers que proporciona lógica de backend y capacidades de servicio de SPA.
+- **`packages/tooling/configs/`**: Configuraciones compartidas para ESLint, Prettier, TypeScript y Vite.
+- **`packages/tooling/vite/`**: herramientas personalizadas en tiempo de compilación para tokens de diseño, compilación de Forge y SEO.
+- **`packages/edge/workers/`**: Cloudflare Workers que proporciona lógica de backend y capacidades de servicio de SPA.
 
 ## Próximos pasos
 

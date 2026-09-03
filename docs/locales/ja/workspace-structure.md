@@ -16,10 +16,10 @@ Mission Platform は、pnpm ワークスペースと Turborepo を使用して�
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
+├── packages/tooling/configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
+├── packages/tooling/vite/           # Build-time extensions and compilers
+├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
@@ -53,7 +53,7 @@ composable_mission_ready_platform/
 - **`@mission-platform/barcode`**、**`@mission-platform/code-scanner`**、**`@mission-platform/matrix-code`**、および
   **`@mission-platform/qr-code`**: Wasm 支援のスキャンおよびエンコード パッケージ。
 
-### 3. `configs/` (ツール財団)
+### 3. `packages/tooling/configs/` (ツール財団)
 
 すべてのワークスペース間で一貫性を確保する共有構成。このディレクトリ内のパッケージは通常、次のように使用されます。
 `devDependencies`。
@@ -63,7 +63,7 @@ composable_mission_ready_platform/
 - **`tsdown-config/`** および **`vite-config/`**: 共通ライブラリ、アプリ、Vite、および Vitest ビルド パターン。
 - **`i18n-config/`** および **`storybook-framework/`**: 共有ロケール抽出およびフレームワーク ワークベンチ設定。
 
-### 4. `vite-plugins/` (ビルド拡張機能)
+### 4. `packages/tooling/vite/` (ビルド拡張機能)
 
 Vite ビルド プロセスを拡張するカスタム プラグイン。
 
@@ -71,7 +71,7 @@ Vite ビルド プロセスを拡張するカスタム プラグイン。
 - **`tokens/`**: DTCG トークン定義からコード アーティファクトを生成します。
 - **`i18n/`**: ロケールの読み込みと静的抽出を処理します。
 
-### 5. `workers/` (エッジサービス)
+### 5. `packages/edge/workers/` (エッジサービス)
 
 サーバー側ロジックと最適化されたアセット配信のための Cloudflare Workers。
 

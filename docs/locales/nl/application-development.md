@@ -79,5 +79,5 @@ geselecteerde omgeving voordat u deze implementeert.
 - [Ontwikkeling instellen](development-setup.md)
 - [Structuur van de werkruimte](workspace-structure.md)
 - [Bouw systeem](build-system.md)
-- [Configuratie van werknemers](configs/workers-config.md)
+- [Configuratie van werknemers](packages/tooling/configs/workers-config.md)
 - [Testen](testing.md)

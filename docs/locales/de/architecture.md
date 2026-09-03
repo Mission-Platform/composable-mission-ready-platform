@@ -22,10 +22,10 @@ Grenzen:
 ```mermaid
 graph TD
     Apps[apps/] --> Packages[packages/]
-    Apps --> Plugins[vite-plugins/]
-    Apps --> Workers[workers/]
-    Packages --> ForgePlugins[forge-plugins/]
-    Packages --> Configs[configs/]
+    Apps --> Plugins[packages/tooling/vite/]
+    Apps --> Workers[packages/edge/workers/]
+    Packages --> ForgePlugins[packages/compiler/plugins/]
+    Packages --> Configs[packages/tooling/configs/]
     ForgePlugins --> Plugins
     ForgePlugins --> Configs
     Plugins --> Configs
@@ -36,10 +36,10 @@ graph TD
    Monorepo.
 2. **Pakete (`packages/`)**: Stellen Sie wiederverwendbare Logik und Komponenten bereit. Sie können sich aufeinander verlassen, aber niemals aufeinander
    Anwendungen.
-3. **Forge-Plugins (`forge-plugins/`)**: Compiler-Ausgabeziele – Framework-Plugins und CMS-Ziele. Sie können sich darauf verlassen
-   `vite-plugins/` Und `configs/`, und niemals an `apps/` oder auf die Geschwister des anderen; Ein CMS-Adapter hängt nur davon ab
+3. **Forge-Plugins (`packages/compiler/plugins/`)**: Compiler-Ausgabeziele – Framework-Plugins und CMS-Ziele. Sie können sich darauf verlassen
+   `packages/tooling/vite/` Und `packages/tooling/configs/`, und niemals an `apps/` oder auf die Geschwister des anderen; Ein CMS-Adapter hängt nur davon ab
    `forge-cms-plugin-api`.
-4. **Konfigurationen (`configs/`)**: Gemeinsam genutzte Werkzeugeinstellungen (ESLint, TypeScript, usw.). Sie sind das Fundament und auf sie angewiesen
+4. **Konfigurationen (`packages/tooling/configs/`)**: Gemeinsam genutzte Werkzeugeinstellungen (ESLint, TypeScript, usw.). Sie sind das Fundament und auf sie angewiesen
    nichts im Monorepo.
 
 ## Framework-neutrale Engine: Forge
@@ -65,7 +65,7 @@ Und `forge-cms-webflow` Jeder besitzt eine Plattform. Ein CMS-Ziel *erstellt* ei
 Jede Plattform paart sich mit jedem Framework und die Ausgabe landet darin `dist/cms/<cms>/<framework>/**`.
 
 Die vollständige Pipeline, Komponenten- und Hook-Konsumenten, CMS-Projektion und Erweiterungsanleitungen finden Sie unter
-[Forge-Compiler-Pipeline](../../../vite-plugins/forge/docs/locales/de/reference/compiler.md). Informationen zur Build-Orchestrierungsansicht finden Sie unter
+[Forge-Compiler-Pipeline](../../../packages/tooling/vite/forge/docs/locales/de/reference/compiler.md). Informationen zur Build-Orchestrierungsansicht finden Sie unter
 [Build-System](build-system.md).
 
 ## Design-Token-System
@@ -105,7 +105,7 @@ Jedes Paket und jede App verwendet Vite für Entwicklungs- und Produktions-Build
 
 ### Cloudflare-Bereitstellung
 
-Anwendungen werden hauptsächlich auf **Cloudflare-Seiten** bereitgestellt, mit **Cloudflare-Workern** (unter `workers/`) bereitstellen
+Anwendungen werden hauptsächlich auf **Cloudflare-Seiten** bereitgestellt, mit **Cloudflare-Workern** (unter `packages/edge/workers/`) bereitstellen
 Speziallogik für API-Proxying und SPA-Asset-Serving.
 
 ## Zusammenfassung

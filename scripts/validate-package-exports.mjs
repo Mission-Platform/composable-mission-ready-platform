@@ -16,7 +16,7 @@ const failures = [];
 let checkedTargets = 0;
 
 function targetFiles(target) {
-  const absoluteTarget = path.resolve(packagesDirectory, target.packageName, target.path);
+  const absoluteTarget = path.resolve(target.packageDirectory, target.path);
   if (!target.path.includes('*')) return fs.existsSync(absoluteTarget) ? [absoluteTarget] : [];
 
   const directory = path.dirname(absoluteTarget);
@@ -28,33 +28,48 @@ function targetFiles(target) {
     .map((file) => path.join(directory, file));
 }
 
-function validateTarget(packageName, target, kind) {
+function validateTarget(packageInfo, target, kind) {
   if (typeof target !== 'string' || !target.startsWith('./')) {
-    failures.push(`${packageName}: ${kind} target must be a relative package path`);
+    failures.push(`${packageInfo.packageName}: ${kind} target must be a relative package path`);
     return;
   }
 
   checkedTargets += 1;
-  if (targetFiles({ packageName, path: target.slice(2) }).length === 0) {
-    failures.push(`${packageName}: ${kind} target does not exist after build: ${target}`);
+  if (targetFiles({ packageDirectory: packageInfo.packageDirectory, path: target.slice(2) }).length === 0) {
+    failures.push(`${packageInfo.packageName}: ${kind} target does not exist after build: ${target}`);
   }
 }
 
-function validateEntry(packageName, entry, exportPath) {
+function packageDirectories(directory) {
+  const result = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (!entry.isDirectory() || entry.name === 'node_modules' || entry.name === 'dist') continue;
+    const packageDirectory = path.join(directory, entry.name);
+    const manifestPath = path.join(packageDirectory, 'package.json');
+    if (fs.existsSync(manifestPath)) {
+      result.push({ packageDirectory, manifestPath });
+      continue;
+    }
+    result.push(...packageDirectories(packageDirectory));
+  }
+  return result;
+}
+
+function validateEntry(packageInfo, entry, exportPath) {
   if (typeof entry === 'string') {
-    validateTarget(packageName, entry, `${exportPath} export`);
+    validateTarget(packageInfo, entry, `${exportPath} export`);
     return;
   }
   if (!entry || typeof entry !== 'object') return;
 
   for (const [condition, value] of Object.entries(entry)) {
     if (condition.startsWith('mp:') && !supportedConditions.has(condition)) {
-      failures.push(`${packageName}: unsupported framework export condition ${condition}`);
+      failures.push(`${packageInfo.packageName}: unsupported framework export condition ${condition}`);
     }
     if (condition === 'types' || condition === 'import' || condition === 'default') {
-      validateTarget(packageName, value, `${exportPath} ${condition}`);
+      validateTarget(packageInfo, value, `${exportPath} ${condition}`);
     } else if (value && typeof value === 'object') {
-      validateEntry(packageName, value, `${exportPath} ${condition}`);
+      validateEntry(packageInfo, value, `${exportPath} ${condition}`);
     }
   }
 
@@ -62,20 +77,17 @@ function validateEntry(packageName, entry, exportPath) {
     const expectedTypes = entry.import.replace(/\.js$/, '.d.ts');
     const usesFrameworkIndexDeclaration = entry.import.includes('*') && entry.types.endsWith('/index.d.ts');
     if (entry.import.endsWith('.js') && entry.types !== expectedTypes && !usesFrameworkIndexDeclaration) {
-      failures.push(`${packageName}: ${exportPath} types target does not match import target`);
+      failures.push(`${packageInfo.packageName}: ${exportPath} types target does not match import target`);
     }
   }
 }
 
-for (const directoryName of fs.readdirSync(packagesDirectory)) {
-  const packageName = directoryName;
-  const manifestPath = path.join(packagesDirectory, directoryName, 'package.json');
-  if (!fs.existsSync(manifestPath)) continue;
-
+for (const { packageDirectory, manifestPath } of packageDirectories(packagesDirectory)) {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   if (!manifest.exports || typeof manifest.exports !== 'object') continue;
+  const packageName = manifest.name ?? path.relative(packagesDirectory, packageDirectory);
   for (const [exportPath, entry] of Object.entries(manifest.exports)) {
-    validateEntry(packageName, entry, exportPath);
+    validateEntry({ packageDirectory, packageName }, entry, exportPath);
   }
 }
 

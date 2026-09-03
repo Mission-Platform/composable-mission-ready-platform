@@ -79,5 +79,5 @@ entorno seleccionado antes de la implementación.
 - [Configuración de desarrollo](development-setup.md)
 - [Estructura del espacio de trabajo](workspace-structure.md)
 - [Sistema de construcción](build-system.md)
-- [Configuración del trabajador](configs/workers-config.md)
+- [Configuración del trabajador](packages/tooling/configs/workers-config.md)
 - [Pruebas](testing.md)

@@ -39,9 +39,9 @@ export interface BarrelUpdate {
 }
 
 export interface PackageWriteRequest {
-  /** Absolute path to the package root (e.g. `.../packages/components`). */
+  /** Absolute path to the package root (e.g. `.../packages/ui/components`). */
   packageDir: string;
-  /** Repo-relative package path for messages (e.g. `packages/components`). */
+  /** Repo-relative package path for messages (e.g. `packages/ui/components`). */
   relativePackageDir: string;
   /** New files keyed by path relative to the package root. */
   files: Record<string, string>;
@@ -67,7 +67,14 @@ export function writeScaffold(request: ScaffoldRequest): ScaffoldResult {
     throw new Error(nameError);
   }
 
-  const relativeDir = `${group}/${name}`;
+  const relativeDir =
+    group === 'edge-workers'
+      ? `packages/edge/workers/${name}`
+      : group === 'tooling-vite'
+        ? `packages/tooling/vite/${name}`
+        : group === 'tooling-configs'
+          ? `packages/tooling/configs/${name}`
+          : `${group}/${name}`;
   const targetDir = resolveRepoPath(join(groupDir(group), name), relativeDir, { allowMissing: true });
   const entries = Object.entries(files).toSorted(([left], [right]) => left.localeCompare(right));
   const fileList = entries.map(([relativePath]) => relativePath);

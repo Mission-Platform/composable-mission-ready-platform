@@ -110,7 +110,7 @@ done
 
 Forge-backed パッケージがマッチングを公開 `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`、 そして `mp:web-component` 条件。アクティブな条件は次のとおりです。
-使用するバンドラーによって構成されます。見る [コンパイラリファレンス](../../../vite-plugins/forge/docs/locales/ja/reference/compiler.md)
+使用するバンドラーによって構成されます。見る [コンパイラリファレンス](../../../packages/tooling/vite/forge/docs/locales/ja/reference/compiler.md)
 ターゲットプラグインと宣言パイプライン用。
 
 ### アプリケーション開発

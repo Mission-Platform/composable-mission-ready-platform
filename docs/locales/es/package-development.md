@@ -205,7 +205,7 @@ API, componentes y comportamiento del paquete, lo que permite a los asistentes d
 
 La instalación, el uso, las limitaciones, los flujos de trabajo de los contribuyentes y las páginas de referencia de API específicas del paquete pertenecen al
 directorio `docs/` del paquete, no en el árbol `docs/` de todo el repositorio. El sitio de documentos ingiere estos archivos directamente y
-los publica bajo un espacio de nombres de paquete estable como `/packages/barcode/index` o `/configs/eslint-config/index`.
+los publica bajo un espacio de nombres de paquete estable como `/packages/integrations/barcode/index` o `/packages/tooling/configs/eslint-config/index`.
 Los conceptos de todo el proyecto, la arquitectura, los flujos de trabajo del espacio de trabajo y la solución de problemas entre paquetes permanecen en la raíz `docs/`.
 
 Las páginas API generadas se encuentran en `docs/reference/generated/` y se actualizan mediante el gancho del paquete `prebuild`; no editar

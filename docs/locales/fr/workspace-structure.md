@@ -16,10 +16,10 @@ en niveaux fonctionnels :
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
+├── packages/tooling/configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
+├── packages/tooling/vite/           # Build-time extensions and compilers
+├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
@@ -53,7 +53,7 @@ Bibliothèques réutilisables et versionnées consommées par les applications. 
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`** et
   **`@mission-platform/qr-code`** : packages d'analyse et d'encodage pris en charge par Wasm.
 
-### 3. `configs/` (Fondation d'outillage)
+### 3. `packages/tooling/configs/` (Fondation d'outillage)
 
 Configurations partagées qui garantissent la cohérence dans tous les espaces de travail. Les packages de ce répertoire sont généralement utilisés comme
 `devDependencies`.
@@ -63,7 +63,7 @@ Configurations partagées qui garantissent la cohérence dans tous les espaces d
 - **`tsdown-config/`** et **`vite-config/`** : modèles de construction de bibliothèque commune, d'application, Vite et Vitest.
 - **`i18n-config/`** et **`storybook-framework/`** : extraction de paramètres régionaux partagés et paramètres de framework-workbench.
 
-### 4. `vite-plugins/` (extensions de construction)
+### 4. `packages/tooling/vite/` (extensions de construction)
 
 Plugins personnalisés qui étendent le processus de construction Vite.
 
@@ -71,7 +71,7 @@ Plugins personnalisés qui étendent le processus de construction Vite.
 - **`tokens/`** : génère des artefacts de code à partir des définitions de jetons DTCG.
 - **`i18n/`** : gère le chargement des paramètres régionaux et l'extraction statique.
 
-### 5. `workers/` (Services de périphérie)
+### 5. `packages/edge/workers/` (Services de périphérie)
 
 Cloudflare Workers pour une logique côté serveur et une livraison optimisée des actifs.
 

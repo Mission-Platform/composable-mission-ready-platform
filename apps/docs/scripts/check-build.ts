@@ -64,7 +64,7 @@ function assertContains(html: string, snippet: string, label: string): void {
 
 // Check a representative package-owned route so this verification cannot pass
 // while package pages are only available through the client-side fallback.
-const nestedRoute = '/packages/barcode/index';
+const nestedRoute = '/packages/integrations/barcode/index';
 if (!routes.includes(nestedRoute)) {
   throw new Error(`Docs build inventory is missing the representative package route ${nestedRoute}`);
 }
@@ -151,7 +151,7 @@ const forgeModules = [
     label: 'forge-navbar',
     module: path.join(
       repoRoot,
-      'packages/components/dist/web-components/components/organisms/forge-navbar/forge-navbar.js',
+      'packages/ui/components/dist/web-components/components/organisms/forge-navbar/forge-navbar.js',
     ),
     expected: ['../../../styles/size.css', './forge-navbar.css'],
   },
@@ -159,7 +159,7 @@ const forgeModules = [
     label: 'forge-application-layout',
     module: path.join(
       repoRoot,
-      'packages/layout/dist/web-components/components/templates/forge-application-layout/forge-application-layout.js',
+      'packages/ui/layout/dist/web-components/components/templates/forge-application-layout/forge-application-layout.js',
     ),
     expected: ['./forge-application-layout.css'],
   },
@@ -167,7 +167,7 @@ const forgeModules = [
     label: 'forge-select',
     module: path.join(
       repoRoot,
-      'packages/select/dist/web-components/components/molecules/forge-select/forge-select.js',
+      'packages/ui/select/dist/web-components/components/molecules/forge-select/forge-select.js',
     ),
     expected: ['./forge-select.css'],
   },
@@ -205,7 +205,11 @@ if (translatedRoute) {
 
 const sitemap = await requiredFile(path.join(outputDirectory, 'sitemap.xml'));
 const robots = await requiredFile(path.join(outputDirectory, 'robots.txt'));
-if (!sitemap.includes('<urlset') || !sitemap.includes('configs/') || !sitemap.includes('packages/barcode/index')) {
+if (
+  !sitemap.includes('<urlset') ||
+  !sitemap.includes('packages/tooling/configs/') ||
+  !sitemap.includes('packages/integrations/barcode/index')
+) {
   throw new Error('Sitemap does not include project and package documentation URLs');
 }
 if (!robots.includes('/search')) {

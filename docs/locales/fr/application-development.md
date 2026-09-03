@@ -79,5 +79,5 @@ l'environnement sélectionné avant le déploiement.
 - [Configuration du développement](development-setup.md)
 - [Structure de l'espace de travail](workspace-structure.md)
 - [Construire un système](build-system.md)
-- [Configuration du travailleur](configs/workers-config.md)
+- [Configuration du travailleur](packages/tooling/configs/workers-config.md)
 - [Essai](testing.md)

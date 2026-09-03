@@ -18,7 +18,7 @@ Voordat u migreert, moet u ervoor zorgen dat uw pakket de afhankelijkheidsregels
 
 - Geen import uit `apps/`.
 - Alle gedeelde logica moet zich in `packages/` bevinden.
-- De configuratie moet afkomstig zijn van `configs/`.
+- De configuratie moet afkomstig zijn van `packages/tooling/configs/`.
 
 ## Stap 1: Update de build-configuratie
 

@@ -65,4 +65,4 @@ Mission Platform fornisce diversi livelli di supporto per altri framework tramit
 ## Risorse correlate
 - [Migliori pratiche](best-practices.md)
 - [Guida al test](testing.md)
-- [@mission-platform/forge LEGGIMI](../../../packages/forge/README.md)
+- [@mission-platform/forge LEGGIMI](../../../packages/compiler/forge/forge/README.md)

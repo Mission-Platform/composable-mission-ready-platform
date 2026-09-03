@@ -205,7 +205,7 @@ Web コンポーネント Storybook ワークベンチ。
 
 パッケージ固有のインストール、使用法、制限事項、コントリビューターのワークフロー、および API リファレンス ページは、
 パッケージの `docs/` ディレクトリではなく、リポジトリ全体の `docs/` ツリー内にありません。ドキュメント サイトはこれらのファイルを直接取り込み、
-`/packages/barcode/index` や `/configs/eslint-config/index` などの安定したパッケージ名前空間でそれらを公開します。
+`/packages/integrations/barcode/index` や `/packages/tooling/configs/eslint-config/index` などの安定したパッケージ名前空間でそれらを公開します。
 プロジェクト全体の概念、アーキテクチャ、ワークスペースのワークフロー、およびパッケージ間のトラブルシューティングは、ルート `docs/` に残ります。
 
 生成された API ページは `docs/reference/generated/` の下に存在し、パッケージ `prebuild` フックによって更新されます。編集しないでください

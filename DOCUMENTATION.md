@@ -36,8 +36,7 @@ The repository has two documentation tiers:
 
 - **Project guidance** lives in the root `docs/` tree. It covers architecture, workspace workflows, application
   development, testing, and cross-package troubleshooting.
-- **Package documentation** lives beside its owner under `packages/*/docs/`, `configs/*/docs/`,
-  `forge-plugins/*/docs/`, `vite-plugins/*/docs/`, `workers/*/docs/`, or another publishable workspace. It covers
+- **Package documentation** lives beside its owner under the full `packages/**/docs/` path or another publishable workspace. It covers
   installation, exports, examples, limitations, API reference, and contributor workflows for that package.
 
 Package pages use `docs/index.md` as their entry point. Hand-authored guides live under `docs/guides/`, reference pages
@@ -89,10 +88,10 @@ a cross-package directory; it is not a substitute for package-owned API document
 #### Tooling & Configs
 
 - **[docs/configs/index.md](docs/configs/index.md)**: Project-wide directory of configuration packages
-- **[configs/eslint-config/docs/index.md](configs/eslint-config/docs/index.md)**: ESLint package usage and development
-- **[configs/typescript-config/docs/index.md](configs/typescript-config/docs/index.md)**: TypeScript preset usage and development
-- **[configs/vite-config/docs/index.md](configs/vite-config/docs/index.md)**: Vite/Vitest helper usage and development
-- **[configs/*/docs/index.md](configs/)**: Documentation owned by each configuration package
+- **[packages/tooling/configs/eslint-config/docs/index.md](packages/tooling/configs/eslint-config/docs/index.md)**: ESLint package usage and development
+- **[packages/tooling/configs/typescript-config/docs/index.md](packages/tooling/configs/typescript-config/docs/index.md)**: TypeScript preset usage and development
+- **[packages/tooling/configs/vite-config/docs/index.md](packages/tooling/configs/vite-config/docs/index.md)**: Vite/Vitest helper usage and development
+- **[packages/tooling/configs/*/docs/index.md](packages/tooling/configs/)**: Documentation owned by each configuration package
 - **[docs/configs/workers-config.md](docs/configs/workers-config.md)**: Cross-workspace Cloudflare Worker guidance
 
 ### Advanced Documentation
@@ -100,14 +99,13 @@ a cross-package directory; it is not a substitute for package-owned API document
 #### Architecture
 
 - **[docs/architecture.md](docs/architecture.md)**: Detailed architecture documentation
-- **[vite-plugins/forge/docs/reference/compiler.md](vite-plugins/forge/docs/reference/compiler.md)**: Maintainer-focused explanation of the cross-package strict Forge
+- **[packages/tooling/vite/forge/docs/reference/compiler.md](packages/tooling/vite/forge/docs/reference/compiler.md)**: Maintainer-focused explanation of the cross-package strict Forge
   compiler pipeline, explicit target-plugin ownership, native build adapters, and component, hook, and Storyblok consumers
 
 #### API Reference
 
 - **[docs/api-reference.md](docs/api-reference.md)**: Project-wide package directory and compatibility overview; detailed
-  usage and API references live beside each package under `packages/*/docs/`, `configs/*/docs/`, and
-  `forge-plugins/*/docs/`
+  usage and API references live beside each package under its full `packages/**/docs/` path.
 
 #### Migration Guides
 
@@ -130,7 +128,7 @@ a cross-package directory; it is not a substitute for package-owned API document
 ### Localized content
 
 Every canonical Markdown page must have a counterpart at `docs/locales/<locale>/<slug>.md` for each supported locale.
-The locale tree mirrors nested slugs such as `migration-guides/vue2-to-vue3` and `configs/index` exactly. Translations
+The locale tree mirrors nested slugs such as `migration-guides/vue2-to-vue3` and `packages/tooling/configs/eslint-config/index` exactly. Translations
 localize titles, headings, prose, tables, navigation-facing descriptions, and link text while preserving:
 
 - fenced code blocks, command lines, package names, exports, file paths, URLs, and technical identifiers;

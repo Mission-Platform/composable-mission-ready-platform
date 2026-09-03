@@ -65,4 +65,4 @@ Vue 3 هو إطار العمل الذي تم إنشاء التطبيقات في 
 ## الموارد ذات الصلة
 - [أفضل الممارسات](best-practices.md)
 - [دليل الاختبار](testing.md)
-- [التمهيدي @mission-platform/forge](../../../packages/forge/README.md)
+- [التمهيدي @mission-platform/forge](../../../packages/compiler/forge/forge/README.md)

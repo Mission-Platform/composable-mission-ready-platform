@@ -200,7 +200,7 @@ package's APIs, components, and behavior, enabling AI assistants to better under
 
 Package-specific installation, usage, limitations, contributor workflows, and API reference pages belong in the
 package's `docs/` directory, not in the repository-wide `docs/` tree. The docs site ingests these files directly and
-publishes them under a stable package namespace such as `/packages/barcode/index` or `/configs/eslint-config/index`.
+publishes them under a stable package namespace such as `/packages/integrations/barcode/index` or `/packages/tooling/configs/eslint-config/index`.
 Project-wide concepts, architecture, workspace workflows, and cross-package troubleshooting remain in root `docs/`.
 
 Generated API pages live under `docs/reference/generated/` and are refreshed by the package `prebuild` hook; do not edit

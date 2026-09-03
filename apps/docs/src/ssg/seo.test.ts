@@ -6,7 +6,7 @@ describe('docs route SEO builders', () => {
   it('emits site-wide and page JSON-LD plus Open Graph for documents', () => {
     const seo = buildDocumentSeo({
       locale: 'fr',
-      slug: 'configs/index',
+      slug: 'packages/tooling/configs/eslint-config/index',
       title: 'Configuration Packages',
       description: 'Central configuration packages.',
       exists: true,

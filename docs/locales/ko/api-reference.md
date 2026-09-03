@@ -7,8 +7,8 @@
 
 이 프로젝트 전체 페이지는 패키지 기능 및 호환성 디렉터리입니다.
 계약. 정식 설치, 사용법, 제한 사항 및 API 세부 정보
-각 패키지는 `packages/*/docs/`, `configs/*/docs/` 아래 해당 패키지 옆에 있습니다.
-및 `forge-plugins/*/docs/`. 생성된 API 참조를 소유 항목에 추가해야 합니다.
+각 패키지는 `packages/**/docs/`, ` ` 아래 해당 패키지 옆에 있습니다.
+및 ` `. 생성된 API 참조를 소유 항목에 추가해야 합니다.
 이 페이지보다는 패키지를 선택하세요.
 
 > **가져오기는 항상 기본입니다.** 프레임워크 제공 `@mission-platform/*` 패키지는 단일 `.`를 노출합니다.
@@ -313,7 +313,7 @@ Forge 웹 스크립트 아티팩트는 `sha256-v1:<hex>` 형식의 버전이 지
 ## 추가 자료
 
 - [Vue 2에서 Vue 3으로 마이그레이션 가이드](migration-guides/vue2-to-vue3.md)
-- [프로젝트 구성 개요](configs/index.md)
+- [프로젝트 구성 개요](packages/tooling/configs/index.md)
 - [작업공간 구조](workspace-structure.md)
 
 ## 완전한 작업 공간 패키지 색인
@@ -366,9 +366,9 @@ Forge 웹 스크립트 아티팩트는 `sha256-v1:<hex>` 형식의 버전이 지
 
 ### Forge 컴파일러 타겟
 
-이는 `packages/`이 아닌 `forge-plugins/`에 있습니다. **프레임워크** 플러그인은 어떤 런타임이 중립 구성요소인지 결정합니다.
+이는 `packages/`이 아닌 `packages/compiler/plugins/`에 있습니다. **프레임워크** 플러그인은 어떤 런타임이 중립 구성요소인지 결정합니다.
 으로 낮아졌습니다; **CMS** 대상은 그것이 투영되는 콘텐츠 플랫폼을 결정합니다. 두 개의 축이 구성되므로 모든 CMS
-대상은 모든 프레임워크 플러그인에 바인딩될 수 있습니다. [Forge 컴파일러 파이프라인](../../../vite-plugins/forge/docs/locales/ko/reference/compiler.md)을 참조하세요.
+대상은 모든 프레임워크 플러그인에 바인딩될 수 있습니다. [Forge 컴파일러 파이프라인](../../../packages/tooling/vite/forge/docs/locales/ko/reference/compiler.md)을 참조하세요.
 
 | 패키지 | 목적 |
 | :---------------------------------------------- | :-------------------------------------------------------------------------------- |

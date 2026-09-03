@@ -74,5 +74,5 @@ selected environment before deploying.
 - [Development Setup](development-setup.md)
 - [Workspace Structure](workspace-structure.md)
 - [Build System](build-system.md)
-- [Worker Configuration](configs/workers-config.md)
+- [Worker Configuration](packages/tooling/configs/workers-config.md)
 - [Testing](testing.md)

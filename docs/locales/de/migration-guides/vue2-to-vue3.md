@@ -18,7 +18,7 @@ Stellen Sie vor der Migration sicher, dass Ihr Paket den Abhängigkeitsregeln de
 
 - Keine Importe aus `apps/`.
 – Die gesamte gemeinsame Logik sollte sich in `packages/` befinden.
-- Die Konfiguration sollte von `configs/` stammen.
+- Die Konfiguration sollte von `packages/tooling/configs/` stammen.
 
 ## Schritt 1: Build-Konfiguration aktualisieren
 

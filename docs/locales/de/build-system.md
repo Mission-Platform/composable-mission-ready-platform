@@ -57,7 +57,7 @@ Rahmen werden unabhängig gewählt, `storyblok × vue` Und `astro × solid` Es h
 CMS-Builds senden an `dist/cms/<cms>/<framework>/**`, mit gespiegelten Manifesten und anderen Plattform-Sidecars
 `dist/cms/<cms>/`. Ziele, die eine hydratisierte Laufzeit benötigen (Astro, Webflow), generieren gemeinsam einen Inselbaum aus der Grenze
 Framework-Plugin in denselben Build integrieren. Die vollständige Verantwortungsaufteilung und Phasengrenzen sind in beschrieben
-[Forge-Compiler-Pipeline](../../../vite-plugins/forge/docs/locales/de/reference/compiler.md).
+[Forge-Compiler-Pipeline](../../../packages/tooling/vite/forge/docs/locales/de/reference/compiler.md).
 
 ## Bauvertrag
 
@@ -144,7 +144,7 @@ aus dem Cache wiederhergestellt.
 
 ## Gemeinsame Konfigurationen
 
-Build-Konfigurationen sind im zentralisiert `configs/` Verzeichnis, um die Konsistenz im gesamten Monorepo aufrechtzuerhalten.
+Build-Konfigurationen sind im zentralisiert `packages/tooling/configs/` Verzeichnis, um die Konsistenz im gesamten Monorepo aufrechtzuerhalten.
 
 | Paket | Zweck |
 | :------------------------------------ | :----------------------------------------------------------- |

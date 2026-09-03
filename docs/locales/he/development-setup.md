@@ -110,7 +110,7 @@ done
 
 חבילות מגובות מזויפות מפרסמות התאמה `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, ו `mp:web-component` תנאים. המצב הפעיל חייב להיות
-מוגדר על ידי המצרף הצורך; לִרְאוֹת [הפניה מהדר](../../../vite-plugins/forge/docs/locales/he/reference/compiler.md)
+מוגדר על ידי המצרף הצורך; לִרְאוֹת [הפניה מהדר](../../../packages/tooling/vite/forge/docs/locales/he/reference/compiler.md)
 עבור תוסף היעד וצינור ההצהרה.
 
 ### פיתוח אפליקציות

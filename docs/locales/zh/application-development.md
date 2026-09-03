@@ -79,5 +79,5 @@ pnpm --filter @mission-platform/service-monitor deploy:staging
 - [开发设置](development-setup.md)
 - [工作区结构](workspace-structure.md)
 - [构建系统](build-system.md)
-- [工作人员配置](configs/workers-config.md)
+- [工作人员配置](packages/tooling/configs/workers-config.md)
 - [测试](testing.md)

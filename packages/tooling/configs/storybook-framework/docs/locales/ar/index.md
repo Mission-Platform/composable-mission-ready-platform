@@ -1,0 +1,21 @@
+# @mission-platform/storybook-framework
+
+ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+
+> packages/tooling/configs/storybook-framework/docs/index.md: [packages/tooling/configs/storybook-framework/docs/index.md](../../index.md)
+> اللغة: العربية (ar)
+
+إطار عمل القصص المصورة المحدد للبيئة تم إعداده مسبقًا لـ Mission Platform.
+
+## التثبيت والاستخدام
+
+أضف الحزمة إلى مساحة عمل Storybook وقم بالرجوع إليها من
+`.storybook/main.ts` أو تكوين Storybook المقابل. حدد
+الإطار من خلال الظروف المدعومة لمساحة العمل؛ لا رمز الثابت أ
+محول الإطار في حزم المكونات المشتركة.
+
+## يساهم
+
+يجري `pnpm --filter @mission-platform/storybook-framework lint` و
+الشيكات بناء القصص القصيرة. حافظ على تركيز هذه الحزمة على اختيار الإطار و
+الإعدادات الافتراضية للقصص المصورة المشتركة؛ تنتمي القصص المكونة إلى `apps/storybook`.

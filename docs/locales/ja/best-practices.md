@@ -19,9 +19,9 @@ Mission Platform は、パッケージ駆動型の構成可能なアーキテク
 
 保守可能なモノリポジトリを維持するために、厳密な一方向の依存関係フローを強制します。
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (ツール/ビルド構成用に直接)
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`** (ツール/ビルド構成用に直接)
 
 **ルール:** コードイン `packages/` からインポートしてはなりません** `apps/`。これにより、循環依存関係が防止され、
 パッケージは引き続き真に再利用可能です。
@@ -33,7 +33,7 @@ Mission Platform は、パッケージ駆動型の構成可能なアーキテク
 コンポーネントとともに存在するストーリーを発見してレンダリングします。
 
 - それぞれを同じ場所に配置 `.stories.tsx` ファイルとそのコンポーネントをそのコンポーネントのパッケージ ディレクトリ内に保存します (例:
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`)、以下ではありません `apps/storybook`。これは一致します
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`)、以下ではありません `apps/storybook`。これは一致します
   の大会 [アトミックコンポーネント設計](atomic-component-design.md)。
 - 全体にわたるコンポーネントの動作を検証する Vue, React, Svelte, Solid、Web コンポーネントを切り替えることで、
   `STORYBOOK_FRAMEWORK` 環境変数。各モードは同じニュートラル ストーリー インベントリを消費する必要があります。行方不明の
@@ -76,7 +76,7 @@ done
 
 - **新しい UI コンポーネント**: に属します `packages/`。
 - **共有ユーティリティ**: に属します `packages/`。
-- **Lint/フォーマット/ビルド ツール**: 共有構成は以下に属します。 `configs/`.
+- **Lint/フォーマット/ビルド ツール**: 共有構成は以下に属します。 `packages/tooling/configs/`.
 
 ### リンティングとフォーマット
 

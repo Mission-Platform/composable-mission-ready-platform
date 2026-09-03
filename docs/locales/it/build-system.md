@@ -57,7 +57,7 @@ quadro sono scelti in modo indipendente, `storyblok × vue` E `astro × solid` s
 Le build CMS vengono inviate a `dist/cms/<cms>/<framework>/**`, con manifesti e altri sidecar della piattaforma specchiati
 `dist/cms/<cms>/`. I target che necessitano di un runtime idratato (Astro, Webflow) cogenerano un albero dell'isola dal limite
 plugin del framework nella stessa build. La suddivisione completa delle responsabilità e i confini delle fasi sono descritti in
-[Pipeline del compilatore Forge](../../../vite-plugins/forge/docs/locales/it/reference/compiler.md).
+[Pipeline del compilatore Forge](../../../packages/tooling/vite/forge/docs/locales/it/reference/compiler.md).
 
 ## Costruisci contratto
 
@@ -144,7 +144,7 @@ ripristinato dalla cache.
 
 ## Configurazioni condivise
 
-Le configurazioni di build sono centralizzate in `configs/` directory per mantenere la coerenza nel monorepo.
+Le configurazioni di build sono centralizzate in `packages/tooling/configs/` directory per mantenere la coerenza nel monorepo.
 
 | Pacchetto | Scopo |
 | :------------------------------------ | :----------------------------------------------------------- |

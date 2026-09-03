@@ -16,10 +16,10 @@
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
+├── packages/tooling/configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
+├── packages/tooling/vite/           # Build-time extensions and compilers
+├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
@@ -53,7 +53,7 @@ composable_mission_ready_platform/
 - **`@mission-platform/barcode`**، **`@mission-platform/code-scanner`**، **`@mission-platform/matrix-code`**، و
   **`@mission-platform/qr-code`**: حزم المسح والتشفير المدعومة من Wasm.
 
-### 3. `configs/` (أساس الأدوات)
+### 3. `packages/tooling/configs/` (أساس الأدوات)
 
 التكوينات المشتركة التي تضمن الاتساق عبر جميع مساحات العمل. تُستخدم الحزم الموجودة في هذا الدليل عادةً كـ
 `devDependencies`.
@@ -63,7 +63,7 @@ composable_mission_ready_platform/
 - **`tsdown-config/`** و **`vite-config/`**: أنماط البناء المشتركة للمكتبة والتطبيق وVite وVitest.
 - **`i18n-config/`** و **`storybook-framework/`**: استخراج الإعدادات المحلية المشتركة وإعدادات طاولة العمل.
 
-### 4. `vite-plugins/` (امتدادات البناء)
+### 4. `packages/tooling/vite/` (امتدادات البناء)
 
 المكونات الإضافية المخصصة التي تعمل على توسيع عملية إنشاء Vite.
 
@@ -71,7 +71,7 @@ composable_mission_ready_platform/
 - **`tokens/`**: يُنشئ عناصر التعليمات البرمجية من تعريفات الرمز المميز DTCG.
 - **`i18n/`**: يتعامل مع التحميل المحلي والاستخراج الثابت.
 
-### 5. `workers/` (خدمات الحافة)
+### 5. `packages/edge/workers/` (خدمات الحافة)
 
 عمال Cloudflare للمنطق من جانب الخادم وتسليم الأصول الأمثل.
 

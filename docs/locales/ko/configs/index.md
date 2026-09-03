@@ -2,10 +2,10 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
+> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
 > 언어: 한국어 (ko)
 
-Mission Platform은 중앙 집중식 구성 패키지를 사용합니다. `configs/` 일관성을 보장하기 위한 디렉토리
+Mission Platform은 중앙 집중식 구성 패키지를 사용합니다. `packages/tooling/configs/` 일관성을 보장하기 위한 디렉토리
 모노레포.
 
 ## 개요
@@ -21,15 +21,15 @@ Mission Platform은 중앙 집중식 구성 패키지를 사용합니다. `confi
 
 | 패키지 | 목적 | 기본 구성 표면 |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/ko/index.md) | 평평한 ESLint JS/TS 규칙 및 Vue. | `eslint.config.js` |
-| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/ko/index.md) | 저장소 형식 기본값. | `prettier.config.js` |
-| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/ko/index.md) | TypeScript 컴파일러 사전 설정. | `tsconfig.json` |
-| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/ko/index.md) | CSS 및 SCSS 린트. | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/ko/index.md) | Vite 그리고 Vitest 구성 도우미. | `vite.config.ts` |
-| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/ko/index.md) | 라이브러리 번들링 도우미. | `tsdown.config.ts` |
-| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/ko/index.md) | 공유 PostCSS 파이프라인. | `postcss.config.mjs` |
-| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/ko/index.md) | 공유 로케일 및 추출 설정. | `i18next.config.ts` |
-| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/ko/index.md) | 환경이 선택한 Storybook 프레임워크 사전 설정. | `.storybook/main.ts` |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/ko/index.md) | 평평한 ESLint JS/TS 규칙 및 Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/ko/index.md) | 저장소 형식 기본값. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/ko/index.md) | TypeScript 컴파일러 사전 설정. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/ko/index.md) | CSS 및 SCSS 린트. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/ko/index.md) | Vite 그리고 Vitest 구성 도우미. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/ko/index.md) | 라이브러리 번들링 도우미. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/ko/index.md) | 공유 PostCSS 파이프라인. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/ko/index.md) | 공유 로케일 및 추출 설정. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/ko/index.md) | 환경이 선택한 Storybook 프레임워크 사전 설정. | `.storybook/main.ts` |
 | [작업자 구성](workers-config.md) | 작업 공간 간 Cloudflare Worker 규칙. | `wrangler.jsonc` |
 
 ## 핵심 툴링
@@ -100,7 +100,7 @@ export default { ...baseConfig };
 ## 구성 선택
 
 규칙을 작업 공간에 복사하는 대신 문제를 소유한 패키지를 사용하십시오. 애플리케이션 및 라이브러리 빌드 파일
-로컬 재정의를 추가할 수 있지만 공유 기본값은 그대로 유지되어야 합니다. `configs/`. 새 패키지의 경우 해당 패키지부터 시작하세요.
+로컬 재정의를 추가할 수 있지만 공유 기본값은 그대로 유지되어야 합니다. `packages/tooling/configs/`. 새 패키지의 경우 해당 패키지부터 시작하세요.
 스캐폴드를 실행한 다음 작업 공간 검사를 실행합니다.
 
 ```bash

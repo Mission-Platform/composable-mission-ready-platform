@@ -61,9 +61,9 @@ The repository is organised into several distinct areas:
 - **`apps/`**: Deployable applications (e.g., `my-care-notes`, `website`) that compose packages into products.
 - **`packages/`**: The core building blocks, including `@mission-platform/components`, `@mission-platform/router`, and
   `@mission-platform/i18n`.
-- **`configs/`**: Shared configurations for ESLint, Prettier, TypeScript, and Vite.
-- **`vite-plugins/`**: Custom build-time tooling for design tokens, Forge compilation, and SEO.
-- **`workers/`**: Cloudflare Workers providing backend logic and SPA serving capabilities.
+- **`packages/tooling/configs/`**: Shared configurations for ESLint, Prettier, TypeScript, and Vite.
+- **`packages/tooling/vite/`**: Custom build-time tooling for design tokens, Forge compilation, and SEO.
+- **`packages/edge/workers/`**: Cloudflare Workers providing backend logic and SPA serving capabilities.
 
 ## Next Steps
 

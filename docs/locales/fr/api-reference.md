@@ -7,8 +7,8 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 
 Cette page à l'échelle du projet est un répertoire des fonctionnalités et de la compatibilité des packages.
 contrats. L'installation canonique, l'utilisation, les limitations et les détails de l'API pour
-chaque package se trouve à côté de ce package sous `packages/*/docs/`, `configs/*/docs/`,
-et `forge-plugins/*/docs/`. Les références API générées doivent être ajoutées au propriétaire
+chaque package se trouve à côté de ce package sous `packages/**/docs/`, ` `,
+et ` `. Les références API générées doivent être ajoutées au propriétaire
 package plutôt que cette page.
 
 > **Les importations sont toujours nues.** Les packages `@mission-platform/*` expédiés par framework exposent un seul `.`
@@ -313,7 +313,7 @@ Le préfixe `sha256-v1` permet de futures mises à niveau de l'algorithme de hac
 ## Lectures complémentaires
 
 - [Guide de migration de Vue 2 vers Vue 3](migration-guides/vue2-to-vue3.md)
-- [Aperçu de la configuration du projet](configs/index.md)
+- [Aperçu de la configuration du projet](packages/tooling/configs/index.md)
 - [Structure de l'espace de travail](workspace-structure.md)
 
 ## Index complet des packages d'espace de travail
@@ -366,9 +366,9 @@ package dans `packages/`, incluant les façades typées WebAssembly.
 
 ### Cibles du compilateur Forge
 
-Ceux-ci se trouvent dans `forge-plugins/` plutôt que dans `packages/`. Un plugin **framework** décide quel runtime est un composant neutre
+Ceux-ci se trouvent dans `packages/compiler/plugins/` plutôt que dans `packages/`. Un plugin **framework** décide quel runtime est un composant neutre
 est abaissé à ; une cible **CMS** décide sur quelle plateforme de contenu elle est projetée. Les deux axes composent, donc n'importe quel CMS
-target peut être lié à n’importe quel plugin de framework. Voir le [Pipeline du compilateur Forge](../../../vite-plugins/forge/docs/locales/fr/reference/compiler.md).
+target peut être lié à n’importe quel plugin de framework. Voir le [Pipeline du compilateur Forge](../../../packages/tooling/vite/forge/docs/locales/fr/reference/compiler.md).
 
 | Forfait | Objectif |
 | :---------------------------------------------- | :-------------------------------------------------------------------------------- |

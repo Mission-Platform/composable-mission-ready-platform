@@ -19,9 +19,9 @@
 
 للحفاظ على monorepo قابل للصيانة، فإننا نفرض تدفقًا صارمًا للتبعية في اتجاه واحد:
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (مباشرة لتكوين الأدوات/الإنشاء)
+- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
+- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
+- **`apps`** → **`packages/tooling/configs`** (مباشرة لتكوين الأدوات/الإنشاء)
 
 **القاعدة:** أدخل الرمز `packages/` يجب **أبدًا** الاستيراد من `apps/`. وهذا يمنع التبعيات الدائرية ويضمن
 تظل الحزم قابلة لإعادة الاستخدام حقًا.
@@ -33,7 +33,7 @@
 يكتشف ويعرض القصص التي تعيش جنبًا إلى جنب مع مكوناتها.
 
 - شارك في تحديد موقع كل منهما `.stories.tsx` ملف بمكونه داخل دليل الحزمة الخاص بهذا المكون (على سبيل المثال.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`)، وليس تحت `apps/storybook`. هذا يتطابق
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`)، وليس تحت `apps/storybook`. هذا يتطابق
   الاتفاقية في [تصميم المكونات الذرية](atomic-component-design.md).
 - التحقق من سلوك المكون عبر Vue, React, Svelte, Solidومكونات الويب عن طريق تبديل
   `STORYBOOK_FRAMEWORK` متغير البيئة. يجب أن يستهلك كل وضع نفس مخزون القصة المحايدة؛ مفقود
@@ -76,7 +76,7 @@ done
 
 - **مكونات واجهة المستخدم الجديدة**: تنتمي إلى `packages/`.
 - **المرافق المشتركة**: تنتمي إلى `packages/`.
-- **أدوات الوبر/التنسيق/الإنشاء**: تنتمي التكوينات المشتركة `configs/`.
+- **أدوات الوبر/التنسيق/الإنشاء**: تنتمي التكوينات المشتركة `packages/tooling/configs/`.
 
 ### التصفية والتنسيق
 

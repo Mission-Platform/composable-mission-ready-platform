@@ -498,7 +498,7 @@ import { ForgeButton } from '@mission-platform/components';
   };
 }
 
-/** Files for a new `workers/<name>` Cloudflare Worker. */
+/** Files for a new `packages/edge/workers/<name>` Cloudflare Worker. */
 export function workerFiles(options: WorkerScaffoldOptions): Record<string, string> {
   const {name, description} = options;
   const scoped = `@mission-platform/${name}`;

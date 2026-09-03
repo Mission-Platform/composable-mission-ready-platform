@@ -9,14 +9,11 @@ import {dirname, isAbsolute, join, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 /** The workspace groups understood by the tooling. */
-export type WorkspaceGroup = 'packages' | 'apps' | 'workers' | 'vite-plugins' | 'configs' | 'crates';
+export type WorkspaceGroup = 'packages' | 'apps' | 'edge-workers' | 'tooling-vite' | 'tooling-configs' | 'crates';
 
 export const WORKSPACE_GROUPS: readonly WorkspaceGroup[] = [
   'packages',
   'apps',
-  'workers',
-  'vite-plugins',
-  'configs',
   'crates',
 ];
 
@@ -114,7 +111,15 @@ export function findRepoRoot(): string {
 }
 
 export function groupDir(group: WorkspaceGroup): string {
-  return join(findRepoRoot(), group);
+  const relativeGroup = {
+    packages: 'packages',
+    apps: 'apps',
+    'edge-workers': 'packages/edge/workers',
+    'tooling-vite': 'packages/tooling/vite',
+    'tooling-configs': 'packages/tooling/configs',
+    crates: 'crates',
+  }[group];
+  return join(findRepoRoot(), relativeGroup);
 }
 
 export function docsDir(): string {

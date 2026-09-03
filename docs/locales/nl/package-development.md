@@ -205,7 +205,7 @@ API's, componenten en gedrag van het pakket, waardoor AI-assistenten het pakket 
 
 Pakketspecifieke installatie, gebruik, beperkingen, workflows voor bijdragers en API-referentiepagina's horen thuis in de
 de map `docs/` van het pakket, niet in de `docs/`-structuur voor de hele repository. De docs-site neemt deze bestanden rechtstreeks op en
-publiceert ze onder een stabiele pakketnaamruimte zoals `/packages/barcode/index` of `/configs/eslint-config/index`.
+publiceert ze onder een stabiele pakketnaamruimte zoals `/packages/integrations/barcode/index` of `/packages/tooling/configs/eslint-config/index`.
 Projectbrede concepten, architectuur, werkruimteworkflows en probleemoplossing voor meerdere pakketten blijven in de root `docs/`.
 
 Gegenereerde API-pagina's staan ​​live onder `docs/reference/generated/` en worden vernieuwd door de pakket `prebuild` hook; niet bewerken

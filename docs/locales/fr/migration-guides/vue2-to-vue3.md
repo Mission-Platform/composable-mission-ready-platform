@@ -18,7 +18,7 @@ Avant de migrer, assurez-vous que votre package respecte les règles de dépenda
 
 - Aucune importation depuis `apps/`.
 - Toute la logique partagée doit résider dans `packages/`.
-- La configuration doit provenir de `configs/`.
+- La configuration doit provenir de `packages/tooling/configs/`.
 
 ## Étape 1 : Mettre à jour la configuration de la build
 

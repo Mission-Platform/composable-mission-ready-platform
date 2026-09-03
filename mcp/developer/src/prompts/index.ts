@@ -187,7 +187,7 @@ export function registerPrompts(server: McpServer): void {
   server.registerPrompt(
     'create-worker',
     {
-      description: 'Guide the assistant to create a new Cloudflare Worker in workers/.',
+      description: 'Guide the assistant to create a new Cloudflare Worker in packages/edge/workers/.',
       argsSchema: {
         name: z.string().optional().describe('Kebab-case worker name.'),
         purpose: z.string().optional().describe('What the worker should do.'),
@@ -212,7 +212,7 @@ export function registerPrompts(server: McpServer): void {
     },
     (args) => {
       const name = args.name;
-      const known = listGroup('workers')
+      const known = listGroup('edge-workers')
         .map((member) => member.name)
         .join(', ');
       return userMessage(

@@ -7,8 +7,8 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 
 Diese projektweite Seite ist ein Verzeichnis der Paketfunktionen und -kompatibilität
 Verträge. Die kanonische Installation, Nutzung, Einschränkungen und API-Details für
-Jedes Paket befindet sich neben diesem Paket unter `packages/*/docs/`, `configs/*/docs/`,
-und `forge-plugins/*/docs/`. Generierte API-Referenzen müssen dem Besitz hinzugefügt werden
+Jedes Paket befindet sich neben diesem Paket unter `packages/**/docs/`, ` `,
+und ` `. Generierte API-Referenzen müssen dem Besitz hinzugefügt werden
 Paket statt dieser Seite.
 
 > **Importe sind immer leer.** Framework-versandende `@mission-platform/*`-Pakete legen ein einzelnes `.` offen
@@ -313,7 +313,7 @@ Das Präfix `sha256-v1` ermöglicht zukünftige Upgrades des Hash-Algorithmus oh
 ## Weiterführende Literatur
 
 - [Vue 2 bis Vue 3 Migrationsleitfaden](migration-guides/vue2-to-vue3.md)
-- [Übersicht über die Projektkonfiguration](configs/index.md)
+- [Übersicht über die Projektkonfiguration](packages/tooling/configs/index.md)
 - [Arbeitsbereichsstruktur](workspace-structure.md)
 
 ## Vollständiger Workspace-Paketindex
@@ -366,9 +366,9 @@ Paket in `packages/`, einschließlich der typisierten WebAssembly-Fassaden.
 
 ### Forge-Compiler-Ziele
 
-Diese befinden sich in `forge-plugins/` und nicht in `packages/`. Ein **Framework**-Plugin entscheidet, welche Laufzeit eine neutrale Komponente ist
+Diese befinden sich in `packages/compiler/plugins/` und nicht in `packages/`. Ein **Framework**-Plugin entscheidet, welche Laufzeit eine neutrale Komponente ist
 wird abgesenkt auf; Ein **CMS**-Ziel entscheidet, auf welche Content-Plattform es projiziert wird. Die beiden Achsen bilden zusammen, also jedes CMS
-Das Ziel kann an ein beliebiges Framework-Plugin gebunden werden. Siehe die [Forge Compiler Pipeline](../../../vite-plugins/forge/docs/locales/de/reference/compiler.md).
+Das Ziel kann an ein beliebiges Framework-Plugin gebunden werden. Siehe die [Forge Compiler Pipeline](../../../packages/tooling/vite/forge/docs/locales/de/reference/compiler.md).
 
 | Paket | Zweck |
 | :---------------------------------------------- | :-------------------------------------------------------------------------------- |

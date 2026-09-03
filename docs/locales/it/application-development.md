@@ -79,5 +79,5 @@ ambiente selezionato prima della distribuzione.
 - [Configurazione dello sviluppo](development-setup.md)
 - [Struttura dell'area di lavoro](workspace-structure.md)
 - [Costruisci sistema](build-system.md)
-- [Configurazione del lavoratore](configs/workers-config.md)
+- [Configurazione del lavoratore](packages/tooling/configs/workers-config.md)
 - [Test](testing.md)
