@@ -1,17 +1,12 @@
-# 工作区结构
+# Workspace Structure
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+This document provides a technical reference for the Mission Platform monorepo layout, directory purposes, and internal
+package conventions.
 
-> 英文原文: [docs/workspace-structure.md](../../workspace-structure.md)
-> 语言: 简体中文 (zh)
+## Monorepo Layout Reference
 
-本文档提供了 Mission Platform monorepo 布局、目录用途和内部的技术参考
-封装约定。
-
-## Monorepo 布局参考
-
-任务平台用途 pnpm 工作区和 Turborepo 来管理多包环境。存储库已组织好
-分为功能层：
+Mission Platform uses pnpm workspaces and Turborepo to manage a multi-package environment. The repository is organised
+into functional tiers:
 
 ```text
 composable_mission_ready_platform/
@@ -20,119 +15,129 @@ composable_mission_ready_platform/
 ├── packages/               # Reusable libraries and building blocks
 ├── vite-plugins/           # Build-time extensions and compilers
 ├── workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── forge-plugins/          # Forge compiler plugins and adapters
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
 └── docs/                   # Canonical English and translated documentation
 ```
 
-## 主要目录
+## Primary Directories
 
-### 1. `apps/` （应用）
+### 1. `apps/` (Applications)
 
-应用程序是可部署的单元，由 `packages/` 目录。他们通常是私人的
-并且从未发布到注册表。
+Applications are deployable units that compose functionality from the `packages/` directory. They are usually private
+and never published to a registry.
 
-- **`docs/`**： 这 Vite + Vue Markdown 语料库的文档网站。
-- **`my-care-notes/`**：旗舰护理笔记应用程序。
-- **`service-monitor/`**：由持久对象支持的 RedwoodSDK 服务运行状况仪表板。
-- **`website/`**：Mission Platform 营销和产品网站。
-- **`storybook/`**：组件工作台和可视化测试套件。
+- **`docs/`**: The Vite + Vue documentation site for the Markdown corpus.
+- **`my-care-notes/`**: The flagship care-notes application.
+- **`service-monitor/`**: The RedwoodSDK service health dashboard backed by a Durable Object.
+- **`website/`**: The Mission Platform marketing and product website.
+- **`storybook/`**: The component workbench and visual testing suite.
 
-### 2. `packages/` （积木）
+### 2. `packages/` (Building Blocks)
 
-应用程序使用的可重用、版本化的库。这些旨在尽可能与框架无关。
+Reusable, versioned libraries consumed by apps. These are intended to be framework-agnostic where possible.
 
-- **`@mission-platform/forge`**：框架中立的 JSX 运行时和适配器。
-- **`@mission-platform/components`**：多框架组件库。
-- **`@mission-platform/forms`** 和 **`@mission-platform/forms-core`**：模式驱动的表单原语。
-- **`@mission-platform/content`** 和 **`@mission-platform/email-renderer`**：内容和渲染管道。
-- **`@mission-platform/tokens`**：设计令牌的真实来源。
-- **`@mission-platform/router`** 和 **`@mission-platform/i18n`**：框架中立的路由和本地化。
-- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**， 和
-  **`@mission-platform/qr-code`**：Wasm 支持的扫描和编码包。
+- **`@mission-platform/forge`**: The framework-neutral JSX runtime and adapters.
+- **`@mission-platform/components`**: The multi-framework component library.
+- **`@mission-platform/forms`** and **`@mission-platform/forms-core`**: Schema-driven form primitives.
+- **`@mission-platform/content`** and **`@mission-platform/email-renderer`**: Content and rendering pipelines.
+- **`@mission-platform/tokens`**: Design token source of truth.
+- **`@mission-platform/router`** and **`@mission-platform/i18n`**: Framework-neutral routing and localization.
+- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, and
+  **`@mission-platform/qr-code`**: Wasm-backed scanning and encoding packages.
 
-### 3. `configs/` （模具基础）
+### 3. `configs/` (Tooling Foundation)
 
-共享配置可确保所有工作区的一致性。该目录中的包通常用作
+Shared configurations that ensure consistency across all workspaces. Packages in this directory are typically used as
 `devDependencies`.
 
-- **`eslint-config/`**, **`prettier-config/`**， 和 **`stylelint-config/`**：检查和格式化规则。
-- **`typescript-config/`**： 根据 `tsconfig.json` 文件为 Node、DOM、库和框架使用者。
-- **`tsdown-config/`** 和 **`vite-config/`**：通用库、应用程序、 Vite， 和 Vitest 构建模式。
-- **`i18n-config/`** 和 **`storybook-framework/`**：共享区域设置提取和框架工作台设置。
+- **`eslint-config/`**, **`prettier-config/`**, and **`stylelint-config/`**: Linting and formatting rules.
+- **`typescript-config/`**: Base `tsconfig.json` files for Node, DOM, library, and framework consumers.
+- **`tsdown-config/`** and **`vite-config/`**: Common library, app, Vite, and Vitest build patterns.
+- **`i18n-config/`** and **`storybook-framework/`**: Shared locale extraction and framework-workbench settings.
 
-### 4. `vite-plugins/` （构建扩展）
+### 4. `vite-plugins/` (Build Extensions)
 
-扩展的自定义插件 Vite 构建过程。
+Custom plugins that extend the Vite build process.
 
-- **`forge/`**：Forge 组件的多阶段编译器。
-- **`tokens/`**：从 DTCG 令牌定义生成代码工件。
-- **`i18n/`**：处理区域设置加载和静态提取。
+- **`forge/`**: The multi-stage compiler for Forge components.
+- **`tokens/`**: Generates code artifacts from DTCG token definitions.
+- **`i18n/`**: Handles locale loading and static extraction.
 
-### 5. `workers/` （边缘服务）
+### 5. `workers/` (Edge Services)
 
-Cloudflare Workers 用于服务器端逻辑和优化的资产交付。
+Cloudflare Workers for server-side logic and optimised asset delivery.
 
-- **`api-proxy/`**：提供对已批准的 API 路由的受限只读访问。
-- **`email-sender/`**：本地 MailPit 支持的电子邮件展示工作人员。
-- **`forge-spa/`**：提供静态资源 `ASSETS`-绑定 SPA 后备。
+- **`api-proxy/`**: Provides constrained read-only access to approved API routes.
+- **`email-sender/`**: Local MailPit-backed email showcase worker.
+- **`forge-spa/`**: Serves static assets with an `ASSETS`-binding SPA fallback.
 
-可部署的应用程序 Workers 的配置如下 `apps/website/wrangler.jsonc`,
-`apps/my-care-notes/wrangler.jsonc`， 和 `apps/service-monitor/wrangler.jsonc`。这
-`api-proxy` 和 `forge-spa` 包是捆绑的依赖项而不是独立的 Wrangler 部署。
+Deployable application Workers are configured by `apps/website/wrangler.jsonc`,
+`apps/my-care-notes/wrangler.jsonc`, and `apps/service-monitor/wrangler.jsonc`. The
+`api-proxy` and `forge-spa` packages are bundled dependencies rather than standalone Wrangler deployments.
 
-## 内部封装约定
+### 6. `forge-plugins/` (Forge Compiler Plugins)
 
-为了维持可预测的环境，所有软件包和应用程序都遵循标准的内部布局。
+Framework-specific output plugins and adapters for the Forge compiler.
 
-### 标准 `src/` 等级制度
+- **`forge-cms-plugin-api/`**: CMS artifact generation and Vite/tsdown adapter integration.
+- **`forge-cms-astro/`**, **`forge-cms-ghost/`**, **`forge-cms-jekyll/`**, **`forge-cms-storyblok/`**, **`forge-cms-webflow/`**: CMS-specific integration adapters.
+- **`forge-plugin-api/`**: Shared Forge compiler plugin interfaces.
+- **`forge-vue/`**, **`forge-react/`**, **`forge-solid/`**, **`forge-svelte/`**, **`forge-web-components/`**: Framework-specific code generation and runtime adapters.
+- **`forge-router-plugin-api/`**, **`forge-router-vue/`**, **`forge-router-react/`**, **`forge-router-solid/`**, **`forge-router-svelte/`**, **`forge-router-web-components/`**, **`forge-router-redwood/`**: Router framework-specific integration adapters.
 
-源代码按功能类型组织：
+## Internal Package Conventions
 
-- **`components/`**：UI 逻辑（SFC 或 TSX）。
-- **`composables/`**：反应性逻辑和钩子。
-- **`utils/`**：纯函数和与框架无关的助手。
-- **`locales/`**：JSON/YAML 翻译文件。
-- **`styles/`**：SCSS 部分和设计系统集成。
+To maintain a predictable environment, all packages and apps follow a standard internal layout.
 
-### 桶出口图案
+### Standard `src/` Hierarchy
 
-里面的每个目录 `src/` 必须包含一个 `index.ts` （桶状锉刀）。
+Source code is organised by functional type:
 
-- 子目录通过本地导出其内部符号 `index.ts`。
-- 根 `src/index.ts` 充当整个工作区成员的公共入口点。
+- **`components/`**: UI logic (SFCs or TSX).
+- **`composables/`**: Reactive logic and hooks.
+- **`utils/`**: Pure functions and framework-agnostic helpers.
+- **`locales/`**: JSON/YAML translation files.
+- **`styles/`**: SCSS partials and design system integrations.
 
-## 根配置注册表
+### Barrel Export Pattern
 
-存储库根目录中的关键文件控制 monorepo 的行为：
+Every directory within `src/` must contain an `index.ts` (barrel file).
 
-|文件 |目的|
-|:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml`   |定义工作区边界、成员全局和依赖项目录。 |
-| `turbo.json`            |协调构建管道和任务缓存。                    |
-| `package.json`          |根级脚本和 monorepo 范围的 devDependency。                |
-| `commitlint.config.mjs` |强制执行常规提交规范。                     |
+- Sub-directories export their internal symbols via their local `index.ts`.
+- The root `src/index.ts` acts as the public entry point for the entire workspace member.
 
-## 依赖关系和工作空间管理
+## Root Configuration Registry
 
-任务平台使用 `workspace:*` 内部依赖协议。这确保了包始终使用
-开发期间其他工作区成员的本地版本。
+Key files at the repository root govern the monorepo's behaviour:
 
-### PNPM 目录
+| File                    | Purpose                                                                              |
+| :---------------------- | :----------------------------------------------------------------------------------- |
+| `pnpm-workspace.yaml`   | Defines workspace boundaries, member globs, and dependency catalogs. |
+| `turbo.json`            | Orchestrates the build pipeline and task caching.                    |
+| `package.json`          | Root-level scripts and monorepo-wide devDependencies.                |
+| `commitlint.config.mjs` | Enforces the Conventional Commits specification.                     |
 
-存储库利用 **pnpm 目录**（定义于 `pnpm-workspace.yaml`) 集中依赖版本
-单一仓库。这可以防止版本漂移并简化维护。
+## Dependency & Workspace Management
 
-### 任务执行
+Mission Platform uses the `workspace:*` protocol for internal dependencies. This ensures that packages always use the
+local version of other workspace members during development.
 
-跨工作区任务通过root执行 `package.json` 使用 Turborepo：
+### PNPM Catalogs
 
-- `pnpm build`：以正确的依赖顺序构建所有工作区。
-- `pnpm test`：使用以下命令为所有工作区运行测试套件 `test` 任务。使用 `pnpm exec turbo run test --affected` 为了
-  更改后的工作空间 CI 范围。
-- `pnpm lint`： 跑步 ESLint 跨工作区。
-- `pnpm lint:style`： 跑步 Stylelint 适用于应用程序和包样式。
-- `pnpm format`：检查格式 Prettier.
-- `pnpm i18n:extract`：提取拥有目录的工作区的翻译密钥。
+The repository leverages **pnpm catalogs** (defined in `pnpm-workspace.yaml`) to centralise dependency versions across
+the monorepo. This prevents version drift and simplifies maintenance.
+
+### Task Execution
+
+Cross-workspace tasks are executed via the root `package.json` using Turborepo:
+
+- `pnpm build`: Build all workspaces in the correct dependency order.
+- `pnpm test`: Run the test suites for all workspaces with a `test` task. Use `pnpm exec turbo run test --affected` for
+  the changed-workspace CI scope.
+- `pnpm lint`: Run ESLint across the workspaces.
+- `pnpm lint:style`: Run Stylelint for app and package styles.
+- `pnpm format`: Check formatting with Prettier.
+- `pnpm i18n:extract`: Extract translation keys for workspaces that own catalogues.
