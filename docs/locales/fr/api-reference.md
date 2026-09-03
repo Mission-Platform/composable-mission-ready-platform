@@ -75,18 +75,53 @@ import {
   createWebComponentsRouter,
   registerRouterElements,
   setForgeRouter,
-} from '@mission-platform/forge-router-web-components/runtime';
+} from "@mission-platform/forge-router-web-components/runtime";
 
 registerRouterElements();
 const router = createWebComponentsRouter({
-  history: new MpMemoryHistory('/overview'),
-  routes: [{ path: '/overview', component: () => 'Documentation' }],
+  history: new MpMemoryHistory("/overview"),
+  routes: [{ path: "/overview", component: () => "Documentation" }],
 });
 setForgeRouter(router);
-const link = document.createElement('forge-router-link');
-link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+const link = document.createElement("forge-router-link");
+link.to = { path: "/overview", query: { q: "router" }, hash: "results" };
 link.router = router;
 ```
+
+### Async route views and `Suspense`
+
+Forge's neutral compiler recognizes `Suspense` and lowers it to the native
+async boundary for the selected target. Keep the fallback in the shared source
+so every target presents the same loading state without importing a framework
+adapter:
+
+```tsx
+<Suspense fallback={<LoadingSpinner label="Loading documentation" />}>
+  <DocumentationRoute />
+</Suspense>
+```
+
+React, Vue, Solid, and Svelte receive their native suspense boundary. A
+framework-free application uses the Web Components router's outlet fallback
+for async route views instead:
+
+```ts
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory("/overview"),
+  loadingFallback: () => {
+    const spinner = document.createElement("span");
+    spinner.className = "docs-loading-spinner";
+    spinner.setAttribute("aria-label", "Loading documentation");
+    return spinner;
+  },
+  routes: [{ path: "/:slug(.*)", component: loadDocumentationView }],
+});
+```
+
+The router emits a loading overlay from `forge-router-outlet` while the async
+route view resolves. The current view remains mounted until the destination is
+ready, and the overlay is removed after success, redirect, cancellation, or
+failure.
 
 ## Interface utilisateur et conception
 
@@ -94,7 +129,7 @@ link.router = router;
 
 Jetons de conception centralisés pour les couleurs, la typographie et l'espacement.
 
-| Exporter      | Descriptif                                                                                                                    |
+| Exporter      | Description                                                                                                                   |
 | :------------ | :---------------------------------------------------------------------------------------------------------------------------- |
 | `tokens`      | Objet JS/TS contenant tous les jetons de conception (par exemple, `tokens.color.primary`). |
 | `tokens.scss` | Variables SCSS à utiliser dans les feuilles de style.                                                         |
@@ -182,6 +217,92 @@ Vérification orthographique basée sur WebAssembly.
 | `initHunspell` | Charge et instancie le module Hunspell WebAssembly.  |
 | `spell`        | Vérifie si un mot est correctement orthographié.     |
 | `suggest`      | Fournit des suggestions orthographiques pour un mot. |
+
+## Service Monitoring
+
+### Service Monitor API
+
+The service-monitor application provides both public and authenticated endpoints for monitoring service health.
+
+#### Public Endpoints
+
+Public endpoints expose only minimal status information and do not require authentication:
+
+- **`GET /api/services`**: Returns rolled-up status for every monitored service. Response includes only `{ id, name, type }` for each service, plus `now` and `intervalSeconds`. No target configuration, URLs, hosts, queries, headers, thresholds, or topology is exposed.
+- **`GET /api/metrics?service=<id>&since=<ms>`**: Returns raw time-series metrics for one service. The `since` parameter is bounded by the configured retention window. Response includes only `service`, `now`, `since`, and `samples`.
+
+#### Authenticated Endpoints
+
+Authenticated endpoints require the `MONITOR_API_TOKEN` bearer token and expose full monitor configuration:
+
+- **`POST /api/check`**: Trigger an immediate probe cycle.
+- **`GET /api/monitors`**: List all monitors with full configuration.
+- **`POST /api/monitors`**: Create a new monitor.
+- **`PATCH /api/monitors/<id>`**: Update an existing monitor.
+- **`DELETE /api/monitors/<id>`**: Delete a monitor and clear its historical counters.
+
+#### Probe and Destination Policy
+
+Service-monitor enforces strict bounds on probe behavior:
+
+- **Allowed schemes**: URL probes default to `https://` (and port 443) unless trusted private mode is enabled; `http://` is allowed in trusted mode.
+- **Allowed ports**: URL probes allow port 443; host probes allow a baseline of ports [53, 80, 123, 443, 1883, 8883].
+- **Forbidden destinations**: Private/link-local addresses (127.0.0.1, ::1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, fe80::/10) unless explicitly trusted.
+- **Request/response bounds**: Probe requests are limited to 64 KB; responses are limited to 256 KB. Speed tests are limited to 25 MB.
+- **Redirect policy**: Redirects must remain within the same origin and approved path prefixes; cross-origin or disallowed-path redirects are rejected.
+- **History retention**: Incident, update, and maintenance history is bounded by item-count caps (max 100 items per monitor). Default retention for metric data is 24 hours.
+
+#### Server-Side Rendering (SSR)
+
+The service-monitor SSR layer requires authentication before serializing private monitor configuration into client props. Unauthenticated requests receive only the public status DTO.
+
+### Email Sender Worker
+
+The email-sender worker provides a local development showcase for email rendering and delivery.
+
+#### Deployment Modes
+
+- **Local development** (default): Sends to MailPit on `localhost:1025`. No authentication required.
+- **Non-local deployment**: Requires explicit `EMAIL_DEPLOYMENT_TOKEN` bearer authorization, `EMAIL_ALLOWED_ORIGINS` allowlist, and `EMAIL_ALLOWED_RECIPIENTS` allowlist. Rate limiting via `EMAIL_RATE_LIMITER` is enforced.
+
+#### Request Validation
+
+All email requests must:
+
+- Use `Content-Type: application/json`.
+- Include a valid recipient email address (`to` field, max 254 characters).
+- Include a recipient name (`recipientName`, 1–100 characters).
+- Include completed email HTML (`html`, max 240 KB).
+- Pass HTML compatibility checks via `assertCompatibleEmailHtml`.
+
+#### Fail-Closed Defaults
+
+Non-local deployments without explicit configuration will reject all requests. Local deployments remain unrestricted for development convenience.
+
+## Forge Web Script Artifact Verification
+
+### Artifact Content Identity
+
+Forge Web Script artifacts use a versioned SHA-256 content identity in the format `sha256-v1:<hex>`. This digest is computed over the complete artifact binary and is stored in the artifact manifest's `contentHash` field.
+
+#### Integrity vs. Authenticity
+
+A content hash **detects accidental or unauthorized content changes** when compared with a trusted expected value. It does **not**:
+
+- Authenticate the producer or origin of the artifact.
+- Replace cryptographic signatures or deployment access controls.
+- Guarantee the artifact is safe to execute.
+
+#### Verification Workflow
+
+1. **Obtain the expected hash** from a trusted source (e.g., a signed manifest, CI build log, or secure configuration).
+2. **Compute the artifact hash** using the verifier: `fws_verify_artifact(artifact)` returns the `contentHash`.
+3. **Compare hashes**: If they match, the artifact has not been accidentally or maliciously altered since the expected value was recorded.
+4. **Verify the manifest**: Use `fws_inspect_manifest` to check capability imports, exports, metadata, and policy compliance independently.
+
+#### Versioning
+
+The `sha256-v1` prefix allows for future hash algorithm upgrades without ambiguity. Callers must handle both legacy (if any) and current digest formats gracefully.
 
 ## Lectures complémentaires
 
