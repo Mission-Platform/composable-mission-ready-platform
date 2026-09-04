@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-web-script-runtime",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Capability host and linear-memory runtime for Forge Web Script modules",
   "type": "module",
   "sideEffects": false,

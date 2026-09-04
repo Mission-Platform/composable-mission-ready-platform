@@ -1,5 +1,17 @@
 # @mission-platform/forge-cms-plugin-api
 
+## 0.2.2
+
+### Patch Changes
+
+- 7788642: Honor the staged output root when resolving CMS cache directories.
+- 7788642: Reject unsafe Forge and CMS artifact paths before filesystem operations.
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+  - @mission-platform/vite-config@1.1.2
+  - @mission-platform/vite-plugin-forge@1.2.1
+  - @mission-platform/forge-plugin-api@0.3.0
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/mcp-developer",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "BSD-4-Clause",
   "description": "DEVELOPER MCP: Model Context Protocol server that helps AI assistants use the Mission Platform monorepo: component usage, and package/app/worker creation and development. (Compatibility note: previously @mission-platform/mcp)",
   "type": "module",

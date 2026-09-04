@@ -1,5 +1,13 @@
 # @mission-platform/forge-jsx
 
+## 2.0.0
+
+### Major Changes
+
+- 355f413: split the Forge JSX runtime from its framework adapters
+
+  BREAKING CHANGE: replace `@mission-platform/forge` imports with `@mission-platform/forge-jsx` for neutral runtime APIs and `@mission-platform/forge-adapters/<framework>` for framework adapters.
+
 ## 1.1.0
 
 ### Minor Changes

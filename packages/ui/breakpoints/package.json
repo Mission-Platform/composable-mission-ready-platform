@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/breakpoints",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "license": "BSD-4-Clause",
   "description": "Responsive breakpoint utilities and write-once Vue, React, Svelte, Solid, and Web Component outputs for Mission Platform, authored once in JSX",
   "type": "module",

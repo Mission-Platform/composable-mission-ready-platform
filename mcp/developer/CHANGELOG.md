@@ -1,5 +1,15 @@
 # @mission-platform/mcp-developer
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+  - @mission-platform/forge-web-script-runtime@0.2.1
+  - @mission-platform/forge-web-script-wasm@1.0.0
+  - @mission-platform/forge-web-script@0.2.1
+
 ## 0.1.2
 
 ### Patch Changes

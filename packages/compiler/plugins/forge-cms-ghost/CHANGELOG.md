@@ -1,5 +1,14 @@
 # @mission-platform/forge-cms-ghost
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+  - @mission-platform/forge-cms-plugin-api@0.2.2
+  - @mission-platform/forge-plugin-api@0.3.0
+
 ## 0.2.1
 
 ### Patch Changes

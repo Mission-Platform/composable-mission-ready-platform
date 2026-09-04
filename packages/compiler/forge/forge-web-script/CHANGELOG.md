@@ -1,5 +1,13 @@
 # @mission-platform/forge-web-script
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [7788642]
+  - @mission-platform/forge-web-script-wasm@1.0.0
+  - @mission-platform/forge-web-script-regex@0.2.0
+
 ## 0.2.0
 
 ### Minor Changes
