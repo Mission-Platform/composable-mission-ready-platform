@@ -2,8 +2,7 @@
 
 This project-wide page is a directory of package capabilities and compatibility
 contracts. The canonical installation, usage, limitations, and API details for
-each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
-and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+each package live beside that package under its full `packages/**/docs/` path. Generated API references must be added to the owning
 package rather than this page.
 
 > **インポートは常にベアです。** フレームワークの出荷 `@mission-platform/*` パッケージは単一の `.`
@@ -364,9 +363,9 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 
 ### Forge コンパイラ ターゲット
 
-These live in `forge-plugins/` rather than `packages/`. A **framework** plugin decides which runtime a neutral component
+These live in `packages/compiler/plugins/`. A **framework** plugin decides which runtime a neutral component
 is lowered to; a **CMS** target decides which content platform it is projected onto. The two axes compose, so any CMS
-target may be bound to any framework plugin. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
+target may be bound to any framework plugin. See the [Forge Compiler Pipeline](../packages/tooling/vite/forge/docs/reference/compiler.md).
 
 | パッケージ                                           | 目的                                                                        |
 | :---------------------------------------------- | :------------------------------------------------------------------------ |
