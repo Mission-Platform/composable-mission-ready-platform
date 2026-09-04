@@ -2,8 +2,7 @@
 
 This project-wide page is a directory of package capabilities and compatibility
 contracts. The canonical installation, usage, limitations, and API details for
-each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
-and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+each package live beside that package under its full `packages/**/docs/` path. Generated API references must be added to the owning
 package rather than this page.
 
 > **الواردات دائمًا عارية.** شحن الإطار `@mission-platform/*` حزم تعرض واحدة `.`
@@ -361,9 +360,9 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 
 ### Forge compiler targets
 
-هؤلاء يعيشون في `forge-plugins/` بدلا من `packages/`. يقرر البرنامج الإضافي **framework** وقت التشغيل الذي يعتبر مكونًا محايدًا
+These live in `packages/compiler/plugins/`. يقرر البرنامج الإضافي **framework** وقت التشغيل الذي يعتبر مكونًا محايدًا
 تم تخفيضه إلى؛ يحدد هدف **CMS** نظام المحتوى الأساسي الذي سيتم عرضه عليه. يتكون المحوران، لذلك أي CMS
-قد يكون الهدف مرتبطًا بأي مكون إضافي لإطار العمل. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
+قد يكون الهدف مرتبطًا بأي مكون إضافي لإطار العمل. See the [Forge Compiler Pipeline](../packages/tooling/vite/forge/docs/reference/compiler.md).
 
 | الحزمة                                          | الغرض                                                                                             |
 | :---------------------------------------------- | :------------------------------------------------------------------------------------------------ |
