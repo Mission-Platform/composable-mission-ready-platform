@@ -1,45 +1,39 @@
-# Best Practices der Missionsplattform
+# Mission Platform Best Practices
 
-Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
+This document outlines the core principles, architecture, and coding standards for the Mission Platform monorepo. It
+serves as an **Explanation** of why we follow certain patterns and a **Guideline** for day-to-day development.
 
-> Englische Quelle: [docs/best-practices.md](../../best-practices.md)
-> Sprache: Deutsch (de)
+## Core Principles
 
-Dieses Dokument beschreibt die Grundprinzipien, Architektur und Codierungsstandards für das Mission Platform Monorepo. Es
-dient als **Erklärung**, warum wir bestimmten Mustern folgen, und als **Leitlinie** für die tägliche Entwicklung.
+### Composable Architecture
 
-## Grundprinzipien
+Mission Platform follows a package-driven, composable architecture. Reusable building blocks (UI components,
+composables, utilities) live in `packages/`, while deployable applications are assembled from these blocks in `apps/`.
 
-### Zusammensetzbare Architektur
+### Dependency Discipline
 
-Mission Platform folgt einer paketgesteuerten, zusammensetzbaren Architektur. Wiederverwendbare Bausteine (UI-Komponenten,
-Composables, Dienstprogramme) leben in `packages/`, während aus diesen Blöcken bereitstellbare Anwendungen zusammengestellt werden `apps/`.
+To maintain a maintainable monorepo, we enforce a strict one-way dependency flow:
 
-### Abhängigkeitsdisziplin
+- **`apps`** → **`packages`**
+- **`packages`** → lower-level domain packages such as **`core`**, **`tooling`**, and **`compiler`**
 
-Um ein wartbares Monorepo aufrechtzuerhalten, erzwingen wir einen strikten einseitigen Abhängigkeitsfluss:
+**Rule:** Code in `packages/` must **never** import from `apps/`. This prevents circular dependencies and ensure
+packages remain truly reusable.
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (Direkt für Tooling/Build-Konfiguration)
+### Storybook as Workbench
 
-**Regel:** Code eingeben `packages/` darf **niemals** aus importieren `apps/`. Dies verhindert zirkuläre Abhängigkeiten und stellt sicher
-Pakete bleiben wirklich wiederverwendbar.
+When adding or modifying components in `packages/`, use the Storybook app (`apps/storybook`) as your primary development
+environment. The `apps/storybook` app does not contain the stories itself — it is the aggregating workbench that
+discovers and renders the stories that live alongside their components.
 
-### Bilderbuch als Werkbank
+- Co-locate each `.stories.tsx` file with its component inside that component's package directory (e.g.
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), not under `apps/storybook`. This matches
+  the convention in [Atomic Component Design](atomic-component-design.md).
+- Verify component behavior across Vue, React, Svelte, Solid, and Web Components by switching the
+  `STORYBOOK_FRAMEWORK` environment variable. Each mode must consume the same neutral story inventory; a missing
+  framework artifact is a package/export failure, not a reason to filter that story out.
 
-Beim Hinzufügen oder Ändern von Komponenten in `packages/`, verwenden Sie die Storybook-App (`apps/storybook`) als Ihre primäre Entwicklung
-Umgebung. Der `apps/storybook` Die App enthält nicht die Storys selbst – sie ist die Aggregations-Workbench
-entdeckt und gibt die Geschichten wieder, die neben ihren Komponenten leben.
-
-- Ordnen Sie alle gemeinsam an `.stories.tsx` Datei mit ihrer Komponente im Paketverzeichnis dieser Komponente (z. B.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), nicht unter `apps/storybook`. Das passt
-  die Konvention in [Atomares Komponentendesign](atomic-component-design.md).
-- Überprüfen Sie das Verhalten der Komponenten übergreifend Vue, React, Svelte, Solidund Webkomponenten durch Umschalten der
-  `STORYBOOK_FRAMEWORK` Umgebungsvariable. Jeder Modus muss das gleiche neutrale Story-Inventar verbrauchen; ein Vermisster
-  Framework-Artefakt ist ein Paket-/Exportfehler und kein Grund, diese Geschichte herauszufiltern.
-
-Die vollständige statische Validierungsschleife ist:
+The full static validation loop is:
 
 ```bash
 for framework in vue react svelte solid web-component; do
@@ -47,61 +41,61 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-## Entwicklungsstandards
+## Development Standards
 
-### TypeScript Überall
+### TypeScript Everywhere
 
-Der gesamte neue Quellcode muss eingeschrieben werden TypeScript (`.ts`) oder Vue SFCs mit `<script setup lang="ts">`.
+All new source code must be written in TypeScript (`.ts`) or Vue SFCs with `<script setup lang="ts">`.
 
-- **Strenger Modus**: `strict: true` wird überall durchgesetzt `tsconfig.json` Dateien.
-- **Explizite Typen**: Stellen Sie explizite Typen für alle öffentlichen APIs, exportierten Funktionen und Composables bereit.
-- **Vermeiden `any`**: Verwenden Sie präzise Typen oder Generika. Wenn ein Typ wirklich unbekannt ist, verwenden Sie `unknown` und führen Sie eine Typeingrenzung durch.
+- **Strict Mode**: `strict: true` is enforced across all `tsconfig.json` files.
+- **Explicit Types**: Provide explicit types for all public APIs, exported functions, and composables.
+- **Avoid `any`**: Use precise types or generics. If a type is truly unknown, use `unknown` and perform type narrowing.
 
-### Framework-neutrale Komponenten
+### Framework-Neutral Components
 
-Wenn möglich, erstellen Sie UI-Komponenten mithilfe von `@mission-platform/forge` Dialekt. Dadurch können Komponenten sein
-zusammengestellt und verwendet Vue, React, Svelte, Solidund Webkomponenten, ohne die Kernlogik neu zu schreiben. Konfigurieren Sie die
-Verbraucher-Resolver mit dem Matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, oder `mp:web-component` Zustand.
+Whenever possible, author UI components using the `@mission-platform/forge` dialect. This allows components to be
+compiled and used in Vue, React, Svelte, Solid, and Web Components without rewriting the core logic. Configure the
+consumer's resolver with the matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, or `mp:web-component` condition.
 
-### Reaktivitätsmuster (Vue 3)
+### Reactivity Patterns (Vue 3)
 
-- Verwenden Sie ausschließlich die **Composition API**.
-- Bevorzugen `ref()` für die meisten Staaten, um die Konsistenz aufrechtzuerhalten.
-- Extrahieren Sie komplexe Zustandslogik in **Composables** (`useXxx`).
-– Stellen Sie sicher, dass alle Nebenwirkungen (Beobachter, Intervalle, Ereignis-Listener) ordnungsgemäß bereinigt werden `onUnmounted`.
+- Use the **Composition API** exclusively.
+- Prefer `ref()` for most state to maintain consistency.
+- Extract complex stateful logic into **Composables** (`useXxx`).
+- Ensure all side effects (watchers, intervals, event listeners) are properly cleaned up in `onUnmounted`.
 
-## Monorepo-Workflow
+## Monorepo Workflow
 
-### Isolierung von Bedenken
+### Isolation of Concerns
 
-- **Neue UI-Komponenten**: Gehören dazu `packages/`.
-- **Shared Utilities**: Gehören dazu `packages/`.
-- **Lint/Format/Build Tooling**: Gemeinsam genutzte Konfigurationen gehören dazu `configs/`.
+- **New UI Components**: Belong in `packages/`.
+- **Shared Utilities**: Belong in `packages/`.
+- **Lint/Format/Build Tooling**: Shared configurations belong in `packages/tooling/configs/`.
 
-### Linting und Formatierung
+### Linting and Formatting
 
-Ein konsistenter Codestil wird durch erzwungen ESLint Und Prettier.
+Consistent code style is enforced via ESLint and Prettier.
 
-- Laufen `pnpm lint` um auf Verstöße zu prüfen.
-- Laufen `pnpm format:write` um Formatierungsprobleme automatisch zu beheben.
-- Commit-Nachrichten müssen der **Conventional Commits**-Spezifikation entsprechen.
+- Run `pnpm lint` to check for violations.
+- Run `pnpm format:write` to automatically fix formatting issues.
+- Commit messages must follow the **Conventional Commits** specification.
 
-## Leistungsoptimierung
+## Performance Optimization
 
-- **Code-Splitting**: Dynamisch verwenden `import()` für unkritische Funktionen und große Bibliotheken.
-- **Asset-Optimierung**: Bevorzugen Sie moderne Bildformate (WebP/AVIF) und stellen Sie sicher, dass alle statischen Assets komprimiert sind.
-- **Reaktivitätsaufwand**: Verwenden `shallowRef` für große Objekte, die keine tiefe Reaktivität erfordern.
+- **Code Splitting**: Use dynamic `import()` for non-critical features and large libraries.
+- **Asset Optimization**: Prefer modern image formats (WebP/AVIF) and ensure all static assets are compressed.
+- **Reactivity Overhead**: Use `shallowRef` for large objects that do not require deep reactivity.
 
-## Prüfung und Dokumentation
+## Testing and Documentation
 
-- **Testgetriebene Entwicklung**: Jede neue Funktion oder Fehlerbehebung sollte von Unit-Tests begleitet werden (`.spec.ts`).
-- **Diátaxis-Dokumentation**: Autorendokumentation nach dem Diátaxis-Framework (Tutorials, Anleitungen, Referenzen,
-  Erklärung).
-- **TSDoc**: Verwenden Sie TSDoc/JSDoc für alle öffentlich zugänglichen Methoden und Eigenschaften, um die IDE-Intelligenz zu unterstützen.
+- **Test-Driven Development**: Every new feature or bug fix should be accompanied by unit tests (`.spec.ts`).
+- **Diátaxis Documentation**: Author documentation following the Diátaxis framework (Tutorials, How-to, Reference,
+  Explanation).
+- **TSDoc**: Use TSDoc/JSDoc for all public-facing methods and properties to power IDE intelligence.
 
-## Verwandte Ressourcen
+## Related Resources
 
-- [Testleitfaden](testing.md)
-- [Best Practices für Frameworks](framework-best-practices.md)
-- [Arbeitsbereichsstruktur](workspace-structure.md)
-- [Fehlerbehebung](troubleshooting.md)
+- [Testing Guide](testing.md)
+- [Framework Best Practices](framework-best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting](troubleshooting.md)
