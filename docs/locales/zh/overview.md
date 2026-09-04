@@ -1,80 +1,75 @@
-# 任务平台概述
+# Mission Platform Overview
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+Mission Platform is a composable, package-driven, framework-neutral component platform designed for building
+production-ready applications with reusable building blocks. It leverages a modern monorepo architecture to provide a
+highly efficient development environment for complex, multi-application ecosystems.
 
-> 英文原文: [docs/overview.md](../../overview.md)
-> 语言: 简体中文 (zh)
+## The Composable Philosophy
 
-Mission Platform 是一个可组合、包驱动、框架中立的组件平台，旨在构建
-具有可重用构建块的生产就绪应用程序。它利用现代 monorepo 架构来提供
-适用于复杂的多应用生态系统的高效开发环境。
+At its core, Mission Platform is built on the principle of **composition over inheritance**. Instead of providing a
+monolithic framework that dictates application structure, the platform offers a suite of small, focused, and highly
+interoperable packages.
 
-## 可组合的哲学
+### Composable Building Blocks
 
-Mission Platform 的核心是建立在**组合优于继承**的原则之上。而不是提供一个
-决定应用程序结构的整体框架，该平台提供了一套小型、集中且高度
-可互操作的包。
+Applications are assembled from shared packages, ensuring that common logic—from UI components to internationalisation
+and routing—is authored once and reused everywhere. This approach reduces duplication, simplifies maintenance, and
+ensures a consistent user experience across the entire product suite.
 
-### 可组合的构建块
+### Multi-Framework by Design
 
-应用程序由共享包组装而成，确保从 UI 组件到国际化的通用逻辑
-和路由——编写一次并在任何地方重复使用。这种方法减少了重复，简化了维护，并且
-确保整个产品套件的用户体验一致。
+Mission Platform introduces a framework-neutral development paradigm. Using the `@mission-platform/forge-jsx` JSX dialect,
+developers can author components once and compile them to native outputs for Vue 3, React, Solid, Svelte, and Web
+Components. This future-proofs the codebase and allows for seamless integration into diverse frontend environments.
 
-### 多框架设计
+### Type-Safe Foundation
 
-任务平台引入了框架中立的开发范例。使用 `@mission-platform/forge` JSX方言，
-开发人员可以编写一次组件并将其编译为本机输出 Vue 3, React, Solid, Svelte，和网络
-组件。这使代码库面向未来，并允许无缝集成到不同的前端环境中。
+The entire platform is authored in **TypeScript**, providing a robust, self-documenting developer experience. Explicit
+typing across all public APIs ensures that errors are caught at compile-time, significantly increasing development
+velocity and code quality.
 
-### 类型安全基础
+## Key Features
 
-整个平台的作者是**TypeScript**，提供强大的、自记录的开发人员体验。显式的
-跨所有公共 API 进行输入可确保在编译时捕获错误，从而显着提高开发速度
-速度和代码质量。
+| Feature               | Description                                                                                                                                                            |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX Runtime** | A framework-neutral JSX dialect: author once and build for Vue 3, React, Svelte, Solid, and Web Components with zero runtime overhead. |
+| **Component Library** | A comprehensive set of layout, typography, and interactive components authored once for multiple frameworks.                                           |
+| **Design Tokens**     | A DTCG-compliant token system that generates SCSS and TypeScript artifacts for consistent theming.                                                     |
+| **Agnostic Routing**  | A type-safe routing system that works independently of the UI framework.                                                                               |
+| **Universal I18n**    | A framework-agnostic internationalisation wrapper based on i18next with dedicated Vue and React adapters.                                              |
+| **Wasm Utilities**    | High-performance utilities for barcode scanning, spell checking, and more, powered by WebAssembly.                                                     |
 
-## 主要特点
+## Technology Stack
 
-|特色 |描述 |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| **Forge JSX 运行时** |框架中立的 JSX 方言：编写一次并构建 Vue 3, React, Svelte, Solid，以及零运行时开销的 Web 组件。 |
-| **组件库** |为多个框架一次性编写的一套全面的布局、排版和交互式组件。                           |
-| **设计代币** |符合 DTCG 的令牌系统，可生成 SCSS 和 TypeScript 一致主题的工件。                                     |
-| **不可知路由** |独立于 UI 框架工作的类型安全路由系统。                                                               |
-| **通用 I18n** |基于 i18next 的与框架无关的国际化包装器，具有专用的 Vue 和 React 适配器。                              |
-| **Wasm 实用程序** |由 WebAssembly 提供支持的高性能实用程序，用于条形码扫描、拼写检查等。                                     |
+Mission Platform is built on a modern, high-performance stack:
 
-## 技术栈
+- **Forge JSX (`@mission-platform/forge-jsx`)**: The primary UI framework — a framework-neutral JSX runtime in which all
+  shared components (everything except the apps) are authored.
+- **Vue 3**: The framework the applications in `apps/` are built with, and one of several native render targets for
+  Forge components.
+- **TypeScript**: The standard for all source code.
+- **Vite**: The build tool powering fast HMR and optimised production bundles.
+- **pnpm Workspaces**: Efficient dependency management with shared lockfiles.
+- **Turborepo**: High-performance task orchestration and caching.
+- **Cloudflare Workers/Pages**: The primary deployment target for applications and APIs.
+- **Storybook**: The workbench for component development and visual testing.
 
-Mission Platform 建立在现代化的高性能堆栈之上：
+## Ecosystem Structure
 
-- **锻造 JSX (`@mission-platform/forge`)**：主要 UI 框架 — 一个框架中立的 JSX 运行时，其中所有
-  共享组件（除应用程序之外的所有组件）都是创作的。
-- **Vue 3**：应用程序的框架 `apps/` 是用几个本机渲染目标之一构建的
-  锻造组件。
-- **TypeScript**：所有源代码的标准。
-- **Vite**：构建工具为快速 HMR 和优化的生产包提供支持。
-- **pnpm 工作区**：使用共享锁定文件进行高效的依赖管理。
-- **Turborepo**：高性能任务编排和缓存。
-- **Cloudflare Workers/Pages**：应用程序和 API 的主要部署目标。
-- **故事书**：组件开发和可视化测试的工作台。
+The repository is organised into several distinct areas:
 
-## 生态系统结构
-
-该存储库分为几个不同的区域：
-
-- **`apps/`**：可部署的应用程序（例如， `my-care-notes`, `website`) 将包组合成产品。
-- **`packages/`**：核心构建块，包括 `@mission-platform/components`, `@mission-platform/router`， 和
+- **`apps/`**: Deployable applications (e.g., `my-care-notes`, `website`) that compose packages into products.
+- **`packages/`**: The core building blocks, including `@mission-platform/components`, `@mission-platform/router`, and
   `@mission-platform/i18n`.
-- **`configs/`**：共享配置 ESLint, Prettier, TypeScript， 和 Vite.
-- **`vite-plugins/`**：用于设计令牌、Forge 编译和 SEO 的自定义构建时工具。
-- **`workers/`**：Cloudflare Workers 提供后端逻辑和 SPA 服务功能。
+- **`packages/tooling/configs/`**: Shared configurations for ESLint, Prettier, TypeScript, and Vite.
+- **`packages/tooling/vite/`**: Custom build-time tooling for design tokens, Forge compilation, and SEO.
+- **`packages/edge/workers/`**: Cloudflare Workers providing backend logic and SPA serving capabilities.
 
-## 下一步
+## Next Steps
 
-要开始在 Mission Platform 上进行开发，请参阅以下指南：
+To begin developing on the Mission Platform, please refer to the following guides:
 
-- **[开发设置](development-setup.md)**：准备好您的环境并安装依赖项。
-- **[建筑学](architecture.md)**：深入了解平台的设计原则和依赖流程。
-- **[工作区结构](workspace-structure.md)**：了解目录布局和包约定。
-- **[测试](testing.md)**：了解我们的测试策略和工具。
+- **[Development Setup](./development-setup.md)**: Get your environment ready and install dependencies.
+- **[Architecture](./architecture.md)**: Deep dive into the platform's design principles and dependency flow.
+- **[Workspace Structure](./workspace-structure.md)**: Understand the directory layout and package conventions.
+- **[Testing](./testing.md)**: Learn about our testing strategies and tools.
