@@ -134,7 +134,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### Authoring Rules
 
-1. **TypeScript Everywhere**: All source code must be in `.ts` or `.tsx` (using `@mission-platform/forge`).
+1. **TypeScript Everywhere**: All source code must be in `.ts` or `.tsx` (using `@mission-platform/forge-jsx`).
 2. **Framework Neutrality**: Favor framework-agnostic logic. Components should be authored once in Forge JSX to target
    multiple frameworks.
 3. **Isolation**: Packages must never import from `apps/`.
@@ -200,7 +200,7 @@ package's APIs, components, and behavior, enabling AI assistants to better under
 
 Package-specific installation, usage, limitations, contributor workflows, and API reference pages belong in the
 package's `docs/` directory, not in the repository-wide `docs/` tree. The docs site ingests these files directly and
-publishes them under a stable package namespace such as `/packages/barcode/index` or `/configs/eslint-config/index`.
+publishes them under a stable package namespace such as `/packages/integrations/barcode/index` or `/packages/tooling/configs/eslint-config/index`.
 Project-wide concepts, architecture, workspace workflows, and cross-package troubleshooting remain in root `docs/`.
 
 Generated API pages live under `docs/reference/generated/` and are refreshed by the package `prebuild` hook; do not edit
