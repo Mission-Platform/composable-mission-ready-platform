@@ -1,18 +1,13 @@
-# כתיבה ניתנת לחיבור
+# Composable Authoring
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+Composables are the primary way to encapsulate and reuse reactive logic within the Mission Platform. To ensure these
+units of logic are portable across all supported UI frameworks, they are authored as **write-once** modules using the
+framework-neutral hooks provided by `@mission-platform/forge-jsx`.
 
-> מקור באנגלית: [docs/composable-authoring.md](../../composable-authoring.md)
-> שפה: עברית (he)
+## Directory Layout
 
-חומרים קומפוזיציים הם הדרך העיקרית להקיף ולעשות שימוש חוזר בלוגיקה תגובתית בתוך פלטפורמת המשימה. כדי להבטיח את אלה
-יחידות לוגיקה ניתנות לנייד בכל מסגרות ממשק המשתמש הנתמכות, הן נכתבו כמודולים של **כתיבה חד פעמית** באמצעות
-ווים ניטרליים למסגרת מסופקים על ידי `@mission-platform/forge`.
-
-## פריסת ספרייה
-
-כל אחד מהרכיבים חייב להתגורר בספריית המשנה בעלת השם שלו בתוכו `src/composables/`, בליווי מבחן משותף
-קובץ וחבית מקומית.
+Each composable MUST reside in its own named subdirectory within `src/composables/`, accompanied by a co-located test
+file and a local barrel.
 
 ```text
 src/composables/
@@ -23,23 +18,23 @@ src/composables/
 └── index.ts                     # Package-level re-exports
 ```
 
-## כללי כתיבה
+## Authoring Rules
 
-1. **השתמש ב-Forge Hooks**: ייבא רק פרימיטיבים תגובתיים (למשל, `useState`, `useEffect`, `useMemo`, `useRef`) מִן
-   `@mission-platform/forge`. לעולם אל תייבא ישירות מ `vue` אוֹ `react`.
-2. **מוסכמת השמות**: שמות הניתנים לחיבור חייבים להשתמש באותיות קבב ובקדימות `use-` (e.g., `use-media-query`).
-3. **בטיחות SSR**: ודא שהלוגיקה בטוחה לעיבוד בצד השרת. שמרו על כל גישה לממשקי API לדפדפן בלבד כמו `window`,
-   `document`, או `localStorage`.
-4. **ללא רכיבי ממשק משתמש**: רכיבי חיבור צריכים להתמקד בלוגיקה. אין להחזיר או לבצע מניפולציות ישירות ברכיבי ממשק משתמש; במקום זאת,
-   מצב החזרה, המלצות או התקשרויות חוזרות.
-5. **בדיקה חובה**: כל חומר חיבור חייב להיות משותף `.spec.ts` קובץ באמצעות Vitest.
+1. **Use Forge Hooks**: Only import reactive primitives (e.g., `useState`, `useEffect`, `useMemo`, `useRef`) from
+   `@mission-platform/forge-jsx`. Never import directly from `vue` or `react`.
+2. **Naming Convention**: Composable names must use kebab-case and be prefixed with `use-` (e.g., `use-media-query`).
+3. **SSR Safety**: Ensure logic is safe for Server-Side Rendering. Guard any access to browser-only APIs like `window`,
+   `document`, or `localStorage`.
+4. **No UI Components**: Composables should focus on logic. Do not return or manipulate UI components directly; instead,
+   return state, refs, or callbacks.
+5. **Mandatory Testing**: Every composable must have a co-located `.spec.ts` file using Vitest.
 
-## דוגמה בסיסית
+## Basic Example
 
-הנה חומר כתיבה טיפוסי לכתיבה פעם אחת שמנהל מאזין אירועים.
+Here is a typical write-once composable that manages an event listener.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,
@@ -53,6 +48,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);
@@ -61,18 +57,18 @@ export function useEventListener(
 }
 ```
 
-## פיגומים
+## Scaffolding
 
-הדרך המהירה ביותר ליצור חומר חיבור חדש היא באמצעות הכלי Mission Platform Developer MCP:
+The fastest way to create a new composable is via the Mission Platform Developer MCP tool:
 
 ```bash
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```
 
-## מדריכים קשורים
+## Related Guides
 
-- [פיתוח חבילות](package-development.md)
-- [עיצוב רכיבים אטומיים](atomic-component-design.md)
-- [עריכת חנות](store-authoring.md)
-- [השתמש בכתיבה](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
