@@ -1,18 +1,13 @@
-# Autoría de utilidades
+# Util Authoring
 
-Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
+Utilities (utils) are pure, framework-agnostic helper functions. They should be free of UI framework imports and, unless
+explicitly required and documented, free of DOM APIs. This ensures they can be used in any context, including
+server-side logic and workers.
 
-> Fuente en inglés: [docs/util-authoring.md](../../util-authoring.md)
-> Idioma: Español (es)
+## Directory Layout
 
-Las utilidades (utils) son funciones auxiliares puras e independientes del marco. Deben estar libres de importaciones de marcos de UI y, a menos que
-requerido y documentado explícitamente, libre de API DOM. Esto garantiza que puedan utilizarse en cualquier contexto, incluido
-Lógica y trabajadores del lado del servidor.
-
-## Diseño del directorio
-
-Cada utilidad DEBE residir en su propio subdirectorio con nombre dentro `src/utils/`, acompañado de un archivo de prueba ubicado en el mismo lugar y
-un barril local.
+Each utility SHOULD reside in its own named subdirectory within `src/utils/`, accompanied by a co-located test file and
+a local barrel.
 
 ```text
 src/utils/
@@ -23,17 +18,17 @@ src/utils/
 └── index.ts                  # Package-level re-exports
 ```
 
-## Reglas de creación
+## Authoring Rules
 
-1. **Pureza**: Prefiere funciones puras que no tengan efectos secundarios. Dada la misma entrada, siempre deben devolver el
-   misma salida.
-2. **Sin ganchos de interfaz de usuario**: nunca importar `vue`, `react`, o `@mission-platform/forge` ganchos en una utilidad. Lógica que requiere
-   la reactividad pertenece a [Componibles](composable-authoring.md).
-3. **Escritura explícita**: proporcione información completa TypeScript tipos para todos los argumentos y valores de retorno.
-4. **Pruebas obligatorias**: Cada utilidad debe tener una ubicación compartida `.spec.ts` archivo.
-5. **Responsabilidad única**: cada carpeta de utilidades debe centrarse en una tarea específica y específica.
+1. **Purity**: Prefer pure functions that do not have side effects. Given the same input, they should always return the
+   same output.
+2. **No UI Hooks**: Never import `vue`, `react`, or `@mission-platform/forge-jsx` hooks in a util. Logic requiring
+   reactivity belongs in [Composables](composable-authoring.md).
+3. **Explicit Typing**: Provide full TypeScript types for all arguments and return values.
+4. **Mandatory Testing**: Every util must have a co-located `.spec.ts` file.
+5. **Single Responsibility**: Each util folder should focus on a specific, narrow task.
 
-## Ejemplo básico
+## Basic Example
 
 ```ts
 /**
@@ -44,18 +39,18 @@ export function clamp(value: number, min: number, max: number): number {
 }
 ```
 
-## Andamio
+## Scaffolding
 
-Utilice la herramienta MCP de Mission Platform Developer para generar un nuevo esqueleto de utilidad:
+Use the Mission Platform Developer MCP tool to generate a new utility skeleton:
 
 ```bash
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
 
-## Guías relacionadas
+## Related Guides
 
-- [Desarrollo de paquetes](package-development.md)
-- [Diseño de componentes atómicos](atomic-component-design.md)
-- [Autoría componible](composable-authoring.md)
-- [Creación de tiendas](store-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
