@@ -1,68 +1,70 @@
-# שיטות עבודה מומלצות במסגרת
+# Framework Best Practices
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+This document provides guidance on idiomatic patterns, reactivity models, and performance optimizations for the frameworks supported by the Mission Platform. It serves as an **Explanation** of our multi-framework strategy and a reference for framework-specific development.
 
-> מקור באנגלית: [docs/framework-best-practices.md](../../framework-best-practices.md)
-> שפה: עברית (he)
+## Multi-Framework Strategy
 
-מסמך זה מספק הנחיות לגבי דפוסים אידיומטיים, מודלים של תגובתיות ואופטימיזציות של ביצועים עבור המסגרות הנתמכות על ידי פלטפורמת המשימה. הוא משמש כ**הסבר** לאסטרטגיית ריבוי המסגרות שלנו והתייחסות לפיתוח ספציפי למסגרת.
+The Mission Platform core philosophy is to build once and render everywhere. This is achieved through **@mission-platform/forge**, the primary framework of the platform: a framework-neutral JSX runtime in which all shared components (everything except the apps) are authored and from which they are rendered seamlessly in Vue 3, React, and other supported environments.
 
-## אסטרטגיה מרובת מסגרות
+### The Forge Dialect
 
-פילוסופיית הליבה של פלטפורמת המשימה היא לבנות פעם אחת ולעבד בכל מקום. זה מושג באמצעות **@mission-platform/forge**, המסגרת הראשית של הפלטפורמה: זמן ריצה JSX ניטרלי במסגרת מסגרת שבה כל הרכיבים המשותפים (הכל מלבד האפליקציות) נכתבו וממנו הם מוצגים בצורה חלקה Vue 3, React, וסביבות נתמכות אחרות.
+When building shared packages, author components using Forge's neutral primitives:
 
-### דיאלקט הפורג'
-בעת בניית חבילות משותפות, מחבר רכיבים באמצעות הפרימיטיבים הנייטרליים של Forge:
-- **JSX Factory**: השתמש `h` ו `Fragment` מִן `@mission-platform/forge`.
-- **ווים ניטרליים**: שימוש `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`, ו `useId`.
-- **פרימיטיבים**: שימוש `Slot`, `Teleport`, `Transition`, ו `Dynamic` עבור מבני UI מורכבים.
+- **JSX Factory**: Use `h` and `Fragment` from `@mission-platform/forge`.
+- **Neutral Hooks**: Use `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`, and `useId`.
+- **Primitives**: Use `Slot`, `Teleport`, `Transition`, and `Dynamic` for complex UI structures.
 
 ## Vue 3
 
-Vue 3 היא המסגרת שבה היישומים `apps/` בנויים עם יעד העיבוד המקורי הראשי עבור רכיבי Forge. הרכיבים המשותפים עצמם נכתבו ב-Forge JSX ולא ישירות ב-Forge JSX Vue.
+Vue 3 is the framework the applications in `apps/` are built with, and the primary native render target for Forge components. Shared components themselves are authored in Forge JSX rather than directly in Vue.
 
-### דפוסים אידיומטיים
-- **Composition API**: השתמש `<script setup lang="ts">` עבור כל הרכיבים החדשים.
-- **שילוב חישול**: עטפו רכיבים ניטרליים באמצעות `toVueComponent` מִן `@mission-platform/forge/vue`.
-- **Composables**: חלץ היגיון מצבי לתוך `useXxx` פונקציות לקידום שימוש חוזר.
+### Idiomatic Patterns
 
-### אופטימיזציות של ביצועים
-- **תגובתיות רדודה**: שימוש `shallowRef` אוֹ `shallowReactive` עבור מערכי נתונים גדולים ומורכבים כדי למנוע תקורה של פרוקסי.
-- **v-memo**: השתמש `v-memo` בתבניות כדי לדלג על עדכוני תת-עץ יקרים המבוססים על שינויים בתלות.
-- **markRaw**: עטוף מופעי ספרייה של צד שלישי (למשל, Chart.js, Mapbox) ב `markRaw` למנוע Vue מניסיון להפוך אותם לתגובתי.
+- **Composition API**: Use `<script setup lang="ts">` for all new components.
+- **Forge Integration**: Wrap neutral components using `toVueComponent` from `@mission-platform/forge/vue`.
+- **Composables**: Extract stateful logic into `useXxx` functions to promote reusability.
+
+### Performance Optimizations
+
+- **Shallow Reactivity**: Use `shallowRef` or `shallowReactive` for large, complex datasets to avoid proxy overhead.
+- **v-memo**: Use `v-memo` in templates to skip expensive sub-tree updates based on dependency changes.
+- **markRaw**: Wrap third-party library instances (e.g., Chart.js, Mapbox) in `markRaw` to prevent Vue from attempting to make them reactive.
 
 ## React
 
-React נתמך באמצעות מתאם זמן הריצה Forge, בעיקר עבור אינטגרציות חיצוניות וכלים פנימיים ספציפיים.
+React is supported via the Forge runtime adapter, primarily for external integrations and specific internal tools.
 
-### דפוסים אידיומטיים
-- **רכיבים פונקציונליים**: השתמשו ברכיבים פונקציונליים עם ווים.
-- **שילוב חישול**: עטפו רכיבים ניטרליים באמצעות `toReactComponent` מִן `@mission-platform/forge/react`.
-- **משמעת הוקס**: עקבו בקפדנות אחר "כללי הוקס" כדי להבטיח התנהגות צפויה.
+### Idiomatic Patterns
 
-### אופטימיזציות של ביצועים
-- **שינון**: השתמש `React.memo`, `useMemo`, ו `useCallback` לשמור על זהות התייחסותית ולהימנע מעיבודים חוזרים מיותרים.
-- **תכונות במקביל**: מינוף `useTransition` אוֹ `useDeferredValue` לעדכוני ממשק משתמש לא דחופים כדי לשמור על תגובה של השרשור הראשי.
+- **Functional Components**: Use functional components with hooks.
+- **Forge Integration**: Wrap neutral components using `toReactComponent` from `@mission-platform/forge/react`.
+- **Hooks Discipline**: strictly follow the "Rules of Hooks" to ensure predictable behavior.
 
-## מסגרות אחרות
+### Performance Optimizations
 
-Mission Platform מספקת רמות שונות של תמיכה עבור מסגרות אחרות באמצעות מתאמי Forge:
+- **Memoization**: Use `React.memo`, `useMemo`, and `useCallback` to maintain referential identity and avoid unnecessary re-renders.
+- **Concurrent Features**: Leverage `useTransition` or `useDeferredValue` for non-urgent UI updates to keep the main thread responsive.
 
-- **SolidJS**: משתמש בתגובתיות עדינה באמצעות אותות. הימנע מהרס של אביזרים כדי לשמור על תגובתיות.
-- **Svelte 5**: ממנף רונים (`$state`, `$derived`, `$effect`) לתגובתיות מודרנית.
-- **רכיבי אינטרנט (Lit)**: שימושי לבניית רכיבים ניידים במיוחד שצריכים לפעול בסביבות מדור קודם או ללא מסגרת.
+## Other Frameworks
 
-## מודלים של ביצועים ותגובתיות
+Mission Platform provides varying levels of support for other frameworks through Forge adapters:
 
-| מסגרת | מודל תגובתיות | אסטרטגיית עדכון |
-| :--- | :--- | :--- |
-| **Vue 3** | מבוסס פרוקסי | DOM וירטואלי עם אופטימיזציות מהדר. |
-| **React** | מצב בלתי משתנה | התאמה וירטואלית של DOM. |
-| **SolidJS** | איתותים עדינים | עדכוני DOM ישירים (ללא VDOM). |
-| **Svelte 5** | רונים / אותות | עדכוני DOM ישירים באמצעות מהדר. |
-| **מואר** | מאפיינים ריאקטיביים | עדכוני Shadow DOM אסינכרוניים. |
+- **SolidJS**: Uses fine-grained reactivity via signals. Avoid destructuring props to maintain reactivity.
+- **Svelte 5**: Leverages runes (`$state`, `$derived`, `$effect`) for modern reactivity.
+- **Web Components (Lit)**: Useful for building highly portable components that need to run in legacy environments or without a framework.
 
-## משאבים קשורים
-- [שיטות עבודה מומלצות](best-practices.md)
-- [מדריך בדיקות](testing.md)
-- [@mission-platform/forge README](../../../packages/forge/README.md)
+## Performance & Reactivity Models
+
+| Framework    | Reactivity Model     | Update Strategy                                                  |
+| :----------- | :------------------- | :--------------------------------------------------------------- |
+| **Vue 3**    | Proxy-based          | Virtual DOM with compiler optimizations.         |
+| **React**    | Immutable State      | Virtual DOM Reconciliation.                      |
+| **SolidJS**  | Fine-grained Signals | Direct DOM updates (no VDOM). |
+| **Svelte 5** | Runes / Signals      | Direct DOM updates via compiler.                 |
+| **Lit**      | Reactive Properties  | Asynchronous Shadow DOM updates.                 |
+
+## Related Resources
+
+- [Best Practices](best-practices.md)
+- [Testing Guide](testing.md)
+- [@mission-platform/forge README](../packages/compiler/forge/forge/README.md)
