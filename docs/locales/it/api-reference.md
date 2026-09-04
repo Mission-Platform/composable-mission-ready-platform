@@ -14,20 +14,32 @@ package rather than this page.
 
 ## Quadro fondamentale
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 La base dell'architettura "write-once", che fornisce un runtime JSX e hook indipendenti dal framework.
 
-| Esporta            | Type       | Digitare                                                                                                                            |
-| :----------------- | :--------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| `h`, `Fragment`    | Funzione   | Factory JSX e frammento per la creazione di componenti.                                                             |
-| `useState`         | Gancio     | Hook di stato neutrale rispetto al quadro normativo.                                                                |
-| `useEffect`        | Gancio     | Gancio effetto quadro neutro.                                                                                       |
-| `useMemo`          | Gancio     | Gancio di memorizzazione neutro dal framework.                                                                      |
-| `useRef`           | Gancio     | Gancio di riferimento neutro rispetto al contesto.                                                                  |
-| `useContext`       | Gancio     | Hook di contesto neutrale rispetto al contesto.                                                                     |
-| `toVueComponent`   | Adattatore | Converte un componente di forgiatura in a Vue 3 componenti (da `@mission-platform/forge/vue`).   |
-| `toReactComponent` | Adattatore | Converte un componente di forgiatura in a React componente (da `@mission-platform/forge/react`). |
+| Esporta         | Type     | Digitare                                                                |
+| :-------------- | :------- | :---------------------------------------------------------------------- |
+| `h`, `Fragment` | Funzione | Factory JSX e frammento per la creazione di componenti. |
+| `useState`      | Gancio   | Hook di stato neutrale rispetto al quadro normativo.    |
+| `useEffect`     | Gancio   | Gancio effetto quadro neutro.                           |
+| `useMemo`       | Gancio   | Gancio di memorizzazione neutro dal framework.          |
+| `useRef`        | Gancio   | Gancio di riferimento neutro rispetto al contesto.      |
+| `useContext`    | Gancio   | Hook di contesto neutrale rispetto al contesto.         |
+
+### @mission-platform/forge-adapters
+
+Framework-specific adapters for rendering neutral Forge JSX components. Each
+framework is exposed as an independent subpath so applications can select only
+the runtime they use.
+
+| Esporta            | Type       | Descrizione                                                                                                        |
+| :----------------- | :--------- | :----------------------------------------------------------------------------------------------------------------- |
+| `toVueComponent`   | Adattatore | Converts a Forge component to a Vue 3 component from `@mission-platform/forge-adapters/vue`.       |
+| `toReactComponent` | Adattatore | Converts a Forge component to a React component from `@mission-platform/forge-adapters/react`.     |
+| SolidJS primitives | Adapter    | `Teleport`, `Transition`, and `TransitionGroup` from `@mission-platform/forge-adapters/solid`.     |
+| Svelte primitives  | Adapter    | Raw HTML and transition helpers from `@mission-platform/forge-adapters/svelte`.                    |
+| Web Components     | Runtime    | Native custom-element rendering primitives from `@mission-platform/forge-adapters/web-components`. |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -57,7 +69,7 @@ Framework-neutral route contracts, pure matching helpers, and compiler markers f
 shared packages. Applications own route records and native router instances; the
 Forge router target selected by the application supplies the runtime capabilities.
 
-| Export / package                                                     | Type             | Descrizione                                                                                                                                           |
+| Export / package                                                     | Type             | Description                                                                                                                                           |
 | :------------------------------------------------------------------- | :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MpRoute`                                                            | Types            | Route records, params, query/hash state, metadata, and navigation targets.                                                            |
 | `defineRoutes`                                                       | Funzione         | Define route trees and resolve paths without a DOM or framework runtime.                                                              |
@@ -128,7 +140,7 @@ failure.
 
 Token di progettazione centralizzati per colori, tipografia e spaziatura.
 
-| Esporta       | Description                                                                                                                      |
+| Esporta       | Descrizione                                                                                                                      |
 | :------------ | :------------------------------------------------------------------------------------------------------------------------------- |
 | `tokens`      | Oggetto JS/TS contenente tutti i token di progettazione (ad esempio, `tokens.color.primary`). |
 | `tokens.scss` | Variabili SCSS da utilizzare nei fogli di stile.                                                                 |
@@ -186,7 +198,7 @@ Wrapper reattivo per MapLibre GL.
 
 Scansione di codici a barre e codici QR basata su fotocamera.
 
-| Componente        | Descrizione                                                                                                  |
+| Componente        | Description                                                                                                  |
 | :---------------- | :----------------------------------------------------------------------------------------------------------- |
 | `<MpCodeScanner>` | Componente che inizializza il flusso della telecamera ed emette i risultati della scansione. |
 
@@ -319,7 +331,7 @@ pacchetto dentro `packages/`, incluse le facciate WebAssembly tipizzate.
 
 | Pacchetto                      | Purpose                                                                                           |
 | :----------------------------- | :------------------------------------------------------------------------------------------------ |
-| `@mission-platform/forge`      | Runtime e adattatori JSX indipendenti dal framework.                              |
+| `@mission-platform/forge-jsx`  | Runtime e adattatori JSX indipendenti dal framework.                              |
 | `@mission-platform/components` | Componenti dell'interfaccia utente scrivibili una sola volta.                     |
 | `@mission-platform/icons`      | Componenti dell'icona SVG scrivibili una sola volta.                              |
 | `@mission-platform/layouts`    | Componenti dell'applicazione, del contenitore e del layout reattivo.              |
@@ -381,9 +393,9 @@ target può essere associato a qualsiasi plugin del framework. See the [Forge Co
 
 #### @mission-platform/forge-cms-plugin-api
 
-| Esporta                   | Type     | Descrizione                                                                                                                          |
+| Export                    | Type     | Description                                                                                                                          |
 | :------------------------ | :------- | :----------------------------------------------------------------------------------------------------------------------------------- |
-| `analyzeContentComponent` | Funzione | Proietta gli oggetti di scena di un componente neutrale sul modello di contenuto neutrale rispetto alla piattaforma. |
+| `analyzeContentComponent` | Function | Proietta gli oggetti di scena di un componente neutrale sul modello di contenuto neutrale rispetto alla piattaforma. |
 | `ContentComponent`        | Type     | Ordinato `ContentField`s, slot e il `interactive` bandiera.                                                          |
 | `ContentFieldKind`        | Type     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.                                      |
 | `CmsOutputPlugin`         | Type     | Il contratto target: un plugin framework vincolato più i quattro emettitori.                         |
