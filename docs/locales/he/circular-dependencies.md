@@ -1,90 +1,85 @@
-# ניהול תלות מעגלי
+# Circular Dependency Management
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+This document explains the impact of circular dependencies within the Mission Platform monorepo and provides a **How-to
+guide** for detecting, resolving, and preventing them. It serves as both an **Explanation** of monorepo health and a
+technical recipe for refactoring.
 
-> מקור באנגלית: [docs/circular-dependencies.md](../../circular-dependencies.md)
-> שפה: עברית (he)
+## What are Circular Dependencies?
 
-מסמך זה מסביר את ההשפעה של תלות מעגלית בתוך פלטפורמת המשימה המונורפו ומספק **כיצד לעשות
-מדריך** לאיתור, פתרון ומניעה שלהם. זה משמש גם כ-**הסבר** לבריאות מונורפו וגם א
-מתכון טכני לשחזור.
+A circular dependency occurs when two or more packages depend on each other, either directly or indirectly. For example:
 
-## מהן תלות מעגלית?
+- Package A imports from Package B.
+- Package B imports from Package A.
 
-תלות מעגלית מתרחשת כאשר שתי חבילות או יותר תלויות זו בזו, במישרין או בעקיפין. לְדוּגמָה:
+In a monorepo, these cycles are particularly harmful because they can cause:
 
-- חבילה א' מייבאת מחבילה ב'.
-- חבילה ב' מייבאת מחבילה א'.
+- **Build Failures**: Dependency graph resolution (e.g., by Turborepo or pnpm) can deadlock or fail.
+- **Runtime Errors**: One module may be partially initialized when the other attempts to use its exports.
+- **Increased Coupling**: Packages become impossible to use or test in isolation.
 
-במונורפו, מחזורים אלה מזיקים במיוחד מכיוון שהם יכולים לגרום ל:
+## Detection
 
-- **כשלי בנייה**: רזולוציית גרף תלות (למשל, על ידי Turborepo או pnpm) יכול להיכשל או להיכשל.
-- **שגיאות זמן ריצה**: מודול אחד עשוי להיות מאותחל חלקית כאשר השני מנסה להשתמש בייצוא שלו.
-- **צימוד מוגבר**: החבילות הופכות בלתי אפשריות לשימוש או לבדיקה בבודדים.
-
-## איתור
-
-Mission Platform משתמשת במספר כלים אוטומטיים כדי לתפוס תלות מעגלית לפני שהם מגיעים לייצור.
+Mission Platform uses several automated tools to catch circular dependencies before they reach production.
 
 ### ESLint `no-restricted-paths`
 
-המשותף שלנו ESLint תצורה אוכפת את זרימת התלות החד-כיוונית. אם תנסה לייבא מחבילה
-צריך להיות "מעל" שלך בהיררכיה, ה-linter יזרוק שגיאה.
+Our shared ESLint configuration enforces the one-way dependency flow. If you attempt to import from a package that
+should be "above" yours in the hierarchy, the linter will throw an error.
 
-הפעל את ה-linter כדי לבדוק אם יש הפרות:
+Run the linter to check for violations:
 
 ```bash
 pnpm lint
 ```
 
-### ביקורת ידנית עם Madge
+### Manual Audit with Madge
 
-עבור מחזורים מורכבים המשתרעים על מספר קבצים, אתה יכול להשתמש `madge` (אם מותקנים) או חזותיים דומים למיפוי
-גרף תלות.
+For complex cycles that span multiple files, you can use `madge` (if installed) or similar visualizers to map the
+dependency graph.
 
-## איך לעשות: פתרון תלות מעגלית
+## How-to: Resolve Circular Dependencies
 
-כאשר מזוהה תלות מעגלית, השתמש באחת מהאסטרטגיות הבאות כדי לפתור אותה.
+When a circular dependency is detected, use one of the following strategies to resolve it.
 
-### אסטרטגיה 1: חילוץ קוד משותף (מומלץ)
+### Strategy 1: Extract Shared Code (Recommended)
 
-אם חבילה A וחבילה B שתיהן זקוקות לפיסת היגיון משותפת, העבר היגיון זה לחבילה חדשה ברמה נמוכה יותר (למשל,
+If Package A and Package B both need a common piece of logic, move that logic into a new, lower-level package (e.g.,
 `packages/utils-shared`).
 
-**לִפנֵי**:
+**Before**:
 
-- חבילה א' ↔ חבילה ב'
+- Package A ↔ Package B
 
-**לְאַחַר**:
+**After**:
 
-- חבילה א' → חבילה ג'
-- חבילה B → חבילה C
+- Package A → Package C
+- Package B → Package C
 
-### אסטרטגיה 2: היפוך תלות
+### Strategy 2: Dependency Inversion
 
-במקום חבילה B תייבא ישירות מחבילה א', בקש מחבילה B לקבל את הפונקציונליות הנדרשת כאביזר, א
-אובייקט תצורה, או באמצעות אפיק אירועים.
+Instead of Package B importing directly from Package A, have Package B accept the required functionality as a prop, a
+configuration object, or via an event bus.
 
-**דוגמה**:
-במקום `AuthService` יבוא `UserService` כדי לעדכן פרופיל, `AuthService` יכול לפלוט an `AUTH_SUCCESS` אירוע
-את זה `UserService` מקשיבה ל.
+**Example**:
+Instead of `AuthService` importing `UserService` to update a profile, `AuthService` can emit an `AUTH_SUCCESS` event
+that `UserService` listens for.
 
-### אסטרטגיה 3: איחוד
+### Strategy 3: Consolidation
 
-אם שתי חבילות מחוברות כל כך חזק שהן דורשות כל הזמן את החלק הפנימי של זו, הן עשויות למעשה להיות
-יחידה לוגית אחת. שקול למזג אותם לחבילה אחת.
+If two packages are so tightly coupled that they constantly require each other's internals, they might actually be a
+single logical unit. Consider merging them into one package.
 
-## שיטות עבודה מומלצות למניעה
+## Prevention Best Practices
 
-1. **עקוב אחר הזרימה החד-כיוונית**: היצמדו בקפדנות ל- `Apps → Packages → Configs` כיוון התלות.
-2. **היגיון ניטרלי של מסגרת מחבר**: שימוש `@mission-platform/forge` ללוגיקה הליבה כדי להימנע ממחזורים ספציפיים למסגרת.
-3. **השתמש בפרוטוקולי Workspace**: השתמש תמיד `workspace:*` להבטחת תלות פנימית pnpm יכול לפתור בצורה נכונה
-   הגרף.
-4. **בקר יבוא באופן קבוע**: שימו לב להצעות "ייבוא אוטומטי" ב-IDE שלכם, מכיוון שהן יכולות לפעמים להציג
-   תלות לא מכוונת בין חבילות.
+1. **Follow the One-Way Flow**: Strictly adhere to the `Apps → Packages → Configs` dependency direction.
+2. **Author Framework-Neutral Logic**: Use `@mission-platform/forge-jsx` for core logic to avoid framework-specific cycles.
+3. **Use Workspace Protocols**: Always use `workspace:*` for internal dependencies to ensure pnpm can correctly resolve
+   the graph.
+4. **Regularly Audit Imports**: Pay attention to "auto-import" suggestions in your IDE, as they can sometimes introduce
+   unintended cross-package dependencies.
 
-## תיעוד קשור
+## Related Documentation
 
-- [שיטות עבודה מומלצות](best-practices.md)
-- [מבנה סביבת עבודה](workspace-structure.md)
-- [מדריך לפתרון בעיות](troubleshooting.md)
+- [Best Practices](best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting Guide](troubleshooting.md)
