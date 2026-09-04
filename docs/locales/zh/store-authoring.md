@@ -1,18 +1,13 @@
-# 商店创作
+# Store Authoring
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+Stores are used to manage shared, cross-component state within a package. Unlike application-level stores (like Pinia or
+Redux), package stores in the Mission Platform are designed to be **framework-neutral observable modules**. This allows
+write-once components to consume them via Forge hooks regardless of the host framework.
 
-> 英文原文: [docs/store-authoring.md](../../store-authoring.md)
-> 语言: 简体中文 (zh)
+## Directory Layout
 
-存储用于管理包内共享的跨组件状态。与应用程序级商店（如 Pinia 或
-Redux），任务平台中的包存储被设计为**框架中立的可观察模块**。这允许
-编写一次组件即可通过 Forge 挂钩使用它们，而不管主机框架如何。
-
-## 目录布局
-
-每个存储必须驻留在其自己的命名子目录中 `src/stores/`，并附有一个位于同一位置的测试文件和一个
-当地桶。
+Each store MUST reside in its own named subdirectory within `src/stores/`, accompanied by a co-located test file and a
+local barrel.
 
 ```text
 src/stores/
@@ -23,26 +18,26 @@ src/stores/
 └── index.ts                  # Package-level re-exports
 ```
 
-## 可观察的模式
+## The Observable Pattern
 
-包存储避免了特定于框架的依赖关系。相反，它们遵循一个简单的可观察模式：
+Package stores avoid framework-specific dependencies. Instead, they follow a simple observable pattern:
 
-1. **私有状态**：将状态保留在模块范围内（简单 TypeScript 值）。
-2. **快照访问**：提供 `getSnapshot()` 函数来检索当前状态。
-3. **订阅**：提供 `subscribe(listener)` 向列表添加回调并返回取消订阅的函数
-   功能。
-4. **Mutators**：提供更新状态的函数，更新后必须通知所有监听者。
+1. **Private State**: Keep state within the module scope (plain TypeScript values).
+2. **Snapshot Access**: Provide a `getSnapshot()` function to retrieve the current state.
+3. **Subscription**: Provide a `subscribe(listener)` function that adds a callback to a list and returns an unsubscribe
+   function.
+4. **Mutators**: Provide functions to update the state, which MUST notify all listeners after the update.
 
-## 创作规则
+## Authoring Rules
 
-1. **与框架无关**：不要从以下位置导入 `vue`, `react`， 或者 `@mission-platform/forge` 商店模块内的挂钩
-   本身。
-2. **显式类型**：始终为商店状态定义和导出接口。
-3. **SSR 安全**：保护对浏览器 API 的访问（例如， `localStorage`) 所以可以在 a 中初始化商店 Node.js
-   环境。
-4. **强制测试**：每家商店必须有一个位于同一地点的 `.spec.ts` 文件。
+1. **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge-jsx` hooks inside the store module
+   itself.
+2. **Explicit Types**: Always define and export an interface for the store's state.
+3. **SSR Safety**: Guard access to browser APIs (e.g., `localStorage`) so the store can be initialized in a Node.js
+   environment.
+4. **Mandatory Testing**: Every store must have a co-located `.spec.ts` file.
 
-## 示例商店
+## Example Store
 
 ```ts
 export interface ThemeState {
@@ -67,9 +62,9 @@ export function setTheme(theme: ThemeState['theme']): void {
 }
 ```
 
-## 消费组件中的存储
+## Consuming Stores in Components
 
-要在一次写入组件中使用存储，请使用以下命令桥接它 `useState` 和 `useEffect` 从 `@mission-platform/forge`:
+To use a store within a write-once component, bridge it using `useState` and `useEffect` from `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());
@@ -79,18 +74,18 @@ useEffect(() => {
 }, []);
 ```
 
-## 脚手架
+## Scaffolding
 
-使用 Mission Platform Developer MCP 工具生成新的商店骨架：
+Use the Mission Platform Developer MCP tool to generate a new store skeleton:
 
 ```bash
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
 
-## 相关指南
+## Related Guides
 
-- [封装开发](package-development.md)
-- [原子组件设计](atomic-component-design.md)
-- [可组合创作](composable-authoring.md)
-- [实用程序创作](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Util Authoring](util-authoring.md)
