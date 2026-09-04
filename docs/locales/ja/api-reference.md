@@ -17,20 +17,32 @@ package rather than this page.
 
 ## コアフレームワーク
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 「ライトワンス」アーキテクチャの基盤であり、フレームワークに依存しない JSX ランタイムとフックを提供します。
 
-| エクスポート             | タイプ   | `createMpRouter`                                                                             |
-| :----------------- | :---- | :------------------------------------------------------------------------------------------- |
-| `h`, `Fragment`    | 機能    | コンポーネントを作成するための JSX ファクトリとフラグメント。                                                            |
-| `useState`         | フック   | フレームワーク中立状態フック。                                                                              |
-| `useEffect`        | フック   | フレームワークに依存しないエフェクトフック。                                                                       |
-| `useMemo`          | フック   | Framework-neutral memoization hook.                                          |
-| `useRef`           | フック   | Framework-neutral reference hook.                                            |
-| `useContext`       | フック   | Framework-neutral context hook.                                              |
-| `toVueComponent`   | アダプター | forge コンポーネントを Vue 3成分(から `@mission-platform/forge/vue`). |
-| `toReactComponent` | アダプター | forge コンポーネントを React コンポーネント（から `@mission-platform/forge/react`).            |
+| エクスポート          | タイプ | `createMpRouter`                                    |
+| :-------------- | :-- | :-------------------------------------------------- |
+| `h`, `Fragment` | 機能  | コンポーネントを作成するための JSX ファクトリとフラグメント。                   |
+| `useState`      | フック | フレームワーク中立状態フック。                                     |
+| `useEffect`     | フック | フレームワークに依存しないエフェクトフック。                              |
+| `useMemo`       | フック | Framework-neutral memoization hook. |
+| `useRef`        | フック | Framework-neutral reference hook.   |
+| `useContext`    | フック | Framework-neutral context hook.     |
+
+### @mission-platform/forge-adapters
+
+Framework-specific adapters for rendering neutral Forge JSX components. Each
+framework is exposed as an independent subpath so applications can select only
+the runtime they use.
+
+| エクスポート             | タイプ     | 説明                                                                                                                 |
+| :----------------- | :------ | :----------------------------------------------------------------------------------------------------------------- |
+| `toVueComponent`   | アダプター   | Converts a Forge component to a Vue 3 component from `@mission-platform/forge-adapters/vue`.       |
+| `toReactComponent` | アダプター   | Converts a Forge component to a React component from `@mission-platform/forge-adapters/react`.     |
+| SolidJS primitives | Adapter | `Teleport`, `Transition`, and `TransitionGroup` from `@mission-platform/forge-adapters/solid`.     |
+| Svelte primitives  | Adapter | Raw HTML and transition helpers from `@mission-platform/forge-adapters/svelte`.                    |
+| Web Components     | Runtime | Native custom-element rendering primitives from `@mission-platform/forge-adapters/web-components`. |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -60,7 +72,7 @@ Framework-neutral route contracts, pure matching helpers, and compiler markers f
 shared packages. Applications own route records and native router instances; the
 Forge router target selected by the application supplies the runtime capabilities.
 
-| エクスポート                                                               | タイプ              | 説明                                                                                                                                                    |
+| エクスポート                                                               | タイプ              | Description                                                                                                                                           |
 | :------------------------------------------------------------------- | :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MpRoute`                                                            | アダプター            | Route records, params, query/hash state, metadata, and navigation targets.                                                            |
 | `defineRoutes`                                                       | 機能               | Define route trees and resolve paths without a DOM or framework runtime.                                                              |
@@ -131,7 +143,7 @@ failure.
 
 Centralized design tokens for colors, typography, and spacing.
 
-| エクスポート        | Description                                                                                                   |
+| エクスポート        | 説明                                                                                                            |
 | :------------ | :------------------------------------------------------------------------------------------------------------ |
 | `tokens`      | すべてのデザイン トークンを含む JS/TS オブジェクト (例: `tokens.color.primary`). |
 | `tokens.scss` | スタイルシートで使用する SCSS 変数。                                                                                         |
@@ -189,7 +201,7 @@ MapLibre GL のリアクティブ ラッパー。
 
 カメラベースのバーコードと QR コードのスキャン。
 
-| コンポーネント           | 説明                                |
+| コンポーネント           | Description                       |
 | :---------------- | :-------------------------------- |
 | `<MpCodeScanner>` | カメラストリームを初期化し、スキャン結果を出力するコンポーネント。 |
 
@@ -322,7 +334,7 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 
 | パッケージ                          | 目的                                        |
 | :----------------------------- | :---------------------------------------- |
-| `@mission-platform/forge`      | フレームワークに依存しない JSX ランタイムとアダプター。            |
+| `@mission-platform/forge-jsx`  | フレームワークに依存しない JSX ランタイムとアダプター。            |
 | `@mission-platform/components` | Write-once UI components. |
 | `@mission-platform/icons`      | ライトワンス SVG アイコン コンポーネント。                  |
 | `@mission-platform/layouts`    | アプリケーション、コンテナ、およびレスポンシブ レイアウトのコンポーネント。    |
@@ -384,13 +396,13 @@ target may be bound to any framework plugin. See the [Forge Compiler Pipeline](.
 
 #### @mission-platform/forge-cms-plugin-api
 
-| エクスポート                    | タイプ | 説明                                                                                              |
-| :------------------------ | :-- | :---------------------------------------------------------------------------------------------- |
-| `analyzeContentComponent` | 機能  | 中立的なコンポーネントのプロパティをプラットフォーム中立的なコンテンツ モデルに投影します。                                                  |
-| `ContentComponent`        | タイプ | 注文済み `ContentField`、スロット、および `interactive` フラグ。                                                 |
-| `ContentFieldKind`        | タイプ | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
-| `CmsOutputPlugin`         | タイプ | ターゲット コントラクト: バインドされたフレームワーク プラグインと 4 つのエミッター。                                  |
-| `defineForgeCmsPlugin`    | 機能  | 構成時に CMS ターゲットを検証します。                                                                           |
-| `generateCmsArtifacts`    | 機能  | 一般的な検出→IR→コンテンツモデル→出力→ドライバーの書き込み。                                                               |
-| `defineTsdownForgeCms`    | 機能  | 1 つの CMS ターゲットの tsdown 構成、発行 `dist/cms/<cms>/<framework>/**`.                   |
-| `defineTsdownForgeCmsAll` | 機能  | CMS ターゲットのリストの tsdown config。                                                                   |
+| Export                    | タイプ      | Description                                                                                     |
+| :------------------------ | :------- | :---------------------------------------------------------------------------------------------- |
+| `analyzeContentComponent` | Function | 中立的なコンポーネントのプロパティをプラットフォーム中立的なコンテンツ モデルに投影します。                                                  |
+| `ContentComponent`        | タイプ      | 注文済み `ContentField`、スロット、および `interactive` フラグ。                                                 |
+| `ContentFieldKind`        | タイプ      | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
+| `CmsOutputPlugin`         | Type     | ターゲット コントラクト: バインドされたフレームワーク プラグインと 4 つのエミッター。                                  |
+| `defineForgeCmsPlugin`    | 機能       | 構成時に CMS ターゲットを検証します。                                                                           |
+| `generateCmsArtifacts`    | 機能       | 一般的な検出→IR→コンテンツモデル→出力→ドライバーの書き込み。                                                               |
+| `defineTsdownForgeCms`    | 機能       | 1 つの CMS ターゲットの tsdown 構成、発行 `dist/cms/<cms>/<framework>/**`.                   |
+| `defineTsdownForgeCmsAll` | 機能       | CMS ターゲットのリストの tsdown config。                                                                   |
