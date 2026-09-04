@@ -11,11 +11,13 @@ into functional tiers:
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── configs/                # Shared tooling and base configurations
-├── packages/               # Reusable libraries and building blocks
-├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Reusable Cloudflare Worker edge functions
-├── forge-plugins/          # Forge compiler plugins and adapters
+├── packages/core/          # Framework-neutral runtime, Forge JSX/adapters, routing, i18n, and scheduling
+├── packages/ui/            # Components, forms, layouts, themes, and design tokens
+├── packages/content/       # Content, email, search, and SEO pipelines
+├── packages/integrations/  # Barcode, maps, media, 3D, and interoperability adapters
+├── packages/compiler/      # Figma bridges and Forge compiler plugins
+├── packages/tooling/       # Shared configs and Vite/build-time extensions
+├── packages/edge/          # Reusable Cloudflare Worker edge functions
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
@@ -37,18 +39,38 @@ and never published to a registry.
 
 ### 2. `packages/` (Building Blocks)
 
-Reusable, versioned libraries consumed by apps. These are intended to be framework-agnostic where possible.
+Reusable, versioned libraries consumed by apps. Domain directories make ownership explicit without changing package names or imports.
 
-- **`@mission-platform/forge`**: The framework-neutral JSX runtime and adapters.
+- **`core/`**: Framework-neutral runtime, Forge JSX/adapters, routing, localization, observability, RxJS, and scheduler services.
+
+- **`ui/`**: Components, breakpoints, forms, layouts, selection, themes, tokens, and typography.
+
+- **`content/`**: Content models, email components/rendering, language tools, and SEO.
+
+- **`integrations/`**: Barcode, code-scanning, D3, maps, QR/matrix codes, speech, Three.js, and vCards.
+
+- **`compiler/`**: Figma bridges and framework/router/CMS compiler plugins.
+
+- **`tooling/`**: Shared configuration packages and Vite plugins.
+
+- **`edge/`**: Worker packages used by applications and local examples.
+
+- **`@mission-platform/forge-jsx`**: The framework-neutral JSX runtime and adapters.
+
 - **`@mission-platform/components`**: The multi-framework component library.
+
 - **`@mission-platform/forms`** and **`@mission-platform/forms-core`**: Schema-driven form primitives.
+
 - **`@mission-platform/content`** and **`@mission-platform/email-renderer`**: Content and rendering pipelines.
+
 - **`@mission-platform/tokens`**: Design token source of truth.
+
 - **`@mission-platform/router`** and **`@mission-platform/i18n`**: Framework-neutral routing and localization.
+
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, and
   **`@mission-platform/qr-code`**: Wasm-backed scanning and encoding packages.
 
-### 3. `configs/` (Tooling Foundation)
+### 3. `packages/tooling/configs/` (Tooling Foundation)
 
 Shared configurations that ensure consistency across all workspaces. Packages in this directory are typically used as
 `devDependencies`.
@@ -58,7 +80,7 @@ Shared configurations that ensure consistency across all workspaces. Packages in
 - **`tsdown-config/`** and **`vite-config/`**: Common library, app, Vite, and Vitest build patterns.
 - **`i18n-config/`** and **`storybook-framework/`**: Shared locale extraction and framework-workbench settings.
 
-### 4. `vite-plugins/` (Build Extensions)
+### 4. `packages/tooling/vite/` (Build Extensions)
 
 Custom plugins that extend the Vite build process.
 
@@ -66,7 +88,7 @@ Custom plugins that extend the Vite build process.
 - **`tokens/`**: Generates code artifacts from DTCG token definitions.
 - **`i18n/`**: Handles locale loading and static extraction.
 
-### 5. `workers/` (Edge Services)
+### 5. `packages/edge/workers/` (Edge Services)
 
 Cloudflare Workers for server-side logic and optimised asset delivery.
 
@@ -78,7 +100,7 @@ Deployable application Workers are configured by `apps/website/wrangler.jsonc`,
 `apps/my-care-notes/wrangler.jsonc`, and `apps/service-monitor/wrangler.jsonc`. The
 `api-proxy` and `forge-spa` packages are bundled dependencies rather than standalone Wrangler deployments.
 
-### 6. `forge-plugins/` (Forge Compiler Plugins)
+### 6. `packages/compiler/plugins/` (Forge Compiler Plugins)
 
 Framework-specific output plugins and adapters for the Forge compiler.
 
