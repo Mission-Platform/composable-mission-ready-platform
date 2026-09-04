@@ -1,68 +1,70 @@
-# Kader van beste praktijken
+# Framework Best Practices
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+This document provides guidance on idiomatic patterns, reactivity models, and performance optimizations for the frameworks supported by the Mission Platform. It serves as an **Explanation** of our multi-framework strategy and a reference for framework-specific development.
 
-> Engelse bron: [docs/framework-best-practices.md](../../framework-best-practices.md)
-> Taal: Nederlands (nl)
+## Multi-Framework Strategy
 
-Dit document biedt richtlijnen voor idiomatische patronen, reactiviteitsmodellen en prestatie-optimalisaties voor de raamwerken die worden ondersteund door het Mission Platform. Het dient als **Verklaring** van onze multi-frameworkstrategie en als referentie voor raamwerkspecifieke ontwikkeling.
+The Mission Platform core philosophy is to build once and render everywhere. This is achieved through **@mission-platform/forge**, the primary framework of the platform: a framework-neutral JSX runtime in which all shared components (everything except the apps) are authored and from which they are rendered seamlessly in Vue 3, React, and other supported environments.
 
-## Multi-framework-strategie
+### The Forge Dialect
 
-De kernfilosofie van het Mission Platform is om één keer te bouwen en overal weer te geven. Dit wordt bereikt door **@mission-platform/forge**, het primaire raamwerk van het platform: een raamwerkneutrale JSX-runtime waarin alle gedeelde componenten (alles behalve de apps) zijn geschreven en van waaruit ze naadloos worden weergegeven in Vue 3, Reacten andere ondersteunde omgevingen.
+When building shared packages, author components using Forge's neutral primitives:
 
-### Het smedendialect
-Bij het bouwen van gedeelde pakketten, auteurscomponenten met behulp van de neutrale primitieven van Forge:
-- **JSX-fabriek**: gebruik `h` En `Fragment` van `@mission-platform/forge`.
-- **Neutrale haken**: gebruik `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`, En `useId`.
-- **Primitieven**: gebruik `Slot`, `Teleport`, `Transition`, En `Dynamic` voor complexe UI-structuren.
+- **JSX Factory**: Use `h` and `Fragment` from `@mission-platform/forge`.
+- **Neutral Hooks**: Use `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`, and `useId`.
+- **Primitives**: Use `Slot`, `Teleport`, `Transition`, and `Dynamic` for complex UI structures.
 
 ## Vue 3
 
-Vue 3 is het raamwerk waarin de toepassingen zich bevinden `apps/` zijn gebouwd met, en het primaire native renderdoel voor Forge-componenten. Gedeelde componenten zelf zijn geschreven in Forge JSX in plaats van rechtstreeks in Vue.
+Vue 3 is the framework the applications in `apps/` are built with, and the primary native render target for Forge components. Shared components themselves are authored in Forge JSX rather than directly in Vue.
 
-### Idiomatische patronen
-- **Compositie-API**: gebruik `<script setup lang="ts">` voor alle nieuwe componenten.
-- **Forge-integratie**: verpak neutrale componenten met behulp van `toVueComponent` van `@mission-platform/forge/vue`.
-- **Composables**: extraheer stateful logica in `useXxx` functies om herbruikbaarheid te bevorderen.
+### Idiomatic Patterns
 
-### Prestatie-optimalisaties
-- **Ondiepe reactiviteit**: gebruik `shallowRef` of `shallowReactive` voor grote, complexe datasets om proxy-overhead te vermijden.
-- **v-memo**: Gebruik `v-memo` in sjablonen om dure subboomupdates over te slaan op basis van afhankelijkheidswijzigingen.
-- **markRaw**: verpak bibliotheekinstanties van derden (bijvoorbeeld Chart.js, Mapbox) in `markRaw` voorkomen Vue van pogingen om ze reactief te maken.
+- **Composition API**: Use `<script setup lang="ts">` for all new components.
+- **Forge Integration**: Wrap neutral components using `toVueComponent` from `@mission-platform/forge/vue`.
+- **Composables**: Extract stateful logic into `useXxx` functions to promote reusability.
+
+### Performance Optimizations
+
+- **Shallow Reactivity**: Use `shallowRef` or `shallowReactive` for large, complex datasets to avoid proxy overhead.
+- **v-memo**: Use `v-memo` in templates to skip expensive sub-tree updates based on dependency changes.
+- **markRaw**: Wrap third-party library instances (e.g., Chart.js, Mapbox) in `markRaw` to prevent Vue from attempting to make them reactive.
 
 ## React
 
-React wordt ondersteund via de Forge runtime-adapter, voornamelijk voor externe integraties en specifieke interne tools.
+React is supported via the Forge runtime adapter, primarily for external integrations and specific internal tools.
 
-### Idiomatische patronen
-- **Functionele componenten**: gebruik functionele componenten met haken.
-- **Forge-integratie**: verpak neutrale componenten met behulp van `toReactComponent` van `@mission-platform/forge/react`.
-- **Hooks Discipline**: volg strikt de "Rules of Hooks" om voorspelbaar gedrag te garanderen.
+### Idiomatic Patterns
 
-### Prestatie-optimalisaties
-- **Memoisatie**: gebruik `React.memo`, `useMemo`, En `useCallback` om de referentiële identiteit te behouden en onnodige herhalingen te voorkomen.
-- **Gelijktijdige functies**: hefboomwerking `useTransition` of `useDeferredValue` voor niet-dringende UI-updates om de hoofdthread responsief te houden.
+- **Functional Components**: Use functional components with hooks.
+- **Forge Integration**: Wrap neutral components using `toReactComponent` from `@mission-platform/forge/react`.
+- **Hooks Discipline**: strictly follow the "Rules of Hooks" to ensure predictable behavior.
 
-## Andere raamwerken
+### Performance Optimizations
 
-Mission Platform biedt verschillende niveaus van ondersteuning voor andere raamwerken via Forge-adapters:
+- **Memoization**: Use `React.memo`, `useMemo`, and `useCallback` to maintain referential identity and avoid unnecessary re-renders.
+- **Concurrent Features**: Leverage `useTransition` or `useDeferredValue` for non-urgent UI updates to keep the main thread responsive.
 
-- **SolidJS**: maakt gebruik van fijnmazige reactiviteit via signalen. Vermijd het destructureren van rekwisieten om de reactiviteit te behouden.
-- **Svelte 5**: Maakt gebruik van runen (`$state`, `$derived`, `$effect`) voor moderne reactiviteit.
-- **Webcomponenten (Lit)**: Handig voor het bouwen van zeer draagbare componenten die moeten worden uitgevoerd in oudere omgevingen of zonder raamwerk.
+## Other Frameworks
 
-## Prestatie- en reactiviteitsmodellen
+Mission Platform provides varying levels of support for other frameworks through Forge adapters:
 
-| Kader | Reactiviteitsmodel | Strategie bijwerken |
-| :--- | :--- | :--- |
-| **Vue 3** | Op proxy gebaseerd | Virtuele DOM met compileroptimalisaties. |
-| **React** | Onveranderlijke staat | Virtuele DOM-afstemming. |
-| **SolidJS** | Fijnkorrelige signalen | Directe DOM-updates (geen VDOM). |
-| **Svelte 5** | Runen / Signalen | Directe DOM-updates via compiler. |
-| **Lit** | Reactieve eigenschappen | Asynchrone Shadow DOM-updates. |
+- **SolidJS**: Uses fine-grained reactivity via signals. Avoid destructuring props to maintain reactivity.
+- **Svelte 5**: Leverages runes (`$state`, `$derived`, `$effect`) for modern reactivity.
+- **Web Components (Lit)**: Useful for building highly portable components that need to run in legacy environments or without a framework.
 
-## Gerelateerde bronnen
-- [Beste praktijken](best-practices.md)
-- [Gids voor testen](testing.md)
-- [@mission-platform/forge LEESMIJ](../../../packages/forge/README.md)
+## Performance & Reactivity Models
+
+| Framework    | Reactivity Model     | Update Strategy                                                  |
+| :----------- | :------------------- | :--------------------------------------------------------------- |
+| **Vue 3**    | Proxy-based          | Virtual DOM with compiler optimizations.         |
+| **React**    | Immutable State      | Virtual DOM Reconciliation.                      |
+| **SolidJS**  | Fine-grained Signals | Direct DOM updates (no VDOM). |
+| **Svelte 5** | Runes / Signals      | Direct DOM updates via compiler.                 |
+| **Lit**      | Reactive Properties  | Asynchronous Shadow DOM updates.                 |
+
+## Related Resources
+
+- [Best Practices](best-practices.md)
+- [Testing Guide](testing.md)
+- [@mission-platform/forge README](../packages/compiler/forge/forge/README.md)
