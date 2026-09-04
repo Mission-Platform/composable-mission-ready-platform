@@ -14,20 +14,32 @@ package rather than this page.
 
 ## Kern-Framework
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 Die Grundlage der „Write-Once“-Architektur, die eine Framework-neutrale JSX-Laufzeit und Hooks bereitstellt.
 
-| Exportieren        | Type     | ein Beschreibung                                                                                                                     |
-| :----------------- | :------- | :----------------------------------------------------------------------------------------------------------------------------------- |
-| `h`, `Fragment`    | Funktion | JSX-Factory und Fragment zum Erstellen von Komponenten.                                                              |
-| `useState`         | Haken    | Framework-neutraler Zustands-Hook.                                                                                   |
-| `useEffect`        | Haken    | Gerüstneutraler Effekthaken.                                                                                         |
-| `useMemo`          | Haken    | Framework-neutraler Memoisierungs-Hook.                                                                              |
-| `useRef`           | Haken    | Frameworkneutraler Referenz-Hook.                                                                                    |
-| `useContext`       | Haken    | Framework-neutraler Kontext-Hook.                                                                                    |
-| `toVueComponent`   | Adapter  | Konvertiert eine Forge-Komponente in eine Vue 3-Komponenten (von `@mission-platform/forge/vue`).  |
-| `toReactComponent` | Adapter  | Konvertiert eine Forge-Komponente in eine React Komponente (von `@mission-platform/forge/react`). |
+| Exportieren     | Type     | ein Beschreibung                                                        |
+| :-------------- | :------- | :---------------------------------------------------------------------- |
+| `h`, `Fragment` | Funktion | JSX-Factory und Fragment zum Erstellen von Komponenten. |
+| `useState`      | Haken    | Framework-neutraler Zustands-Hook.                      |
+| `useEffect`     | Haken    | Gerüstneutraler Effekthaken.                            |
+| `useMemo`       | Haken    | Framework-neutraler Memoisierungs-Hook.                 |
+| `useRef`        | Haken    | Frameworkneutraler Referenz-Hook.                       |
+| `useContext`    | Haken    | Framework-neutraler Kontext-Hook.                       |
+
+### @mission-platform/forge-adapters
+
+Framework-specific adapters for rendering neutral Forge JSX components. Each
+framework is exposed as an independent subpath so applications can select only
+the runtime they use.
+
+| Exportieren        | Type    | Beschreibung                                                                                                       |
+| :----------------- | :------ | :----------------------------------------------------------------------------------------------------------------- |
+| `toVueComponent`   | Adapter | Converts a Forge component to a Vue 3 component from `@mission-platform/forge-adapters/vue`.       |
+| `toReactComponent` | Adapter | Converts a Forge component to a React component from `@mission-platform/forge-adapters/react`.     |
+| SolidJS primitives | Adapter | `Teleport`, `Transition`, and `TransitionGroup` from `@mission-platform/forge-adapters/solid`.     |
+| Svelte primitives  | Adapter | Raw HTML and transition helpers from `@mission-platform/forge-adapters/svelte`.                    |
+| Web Components     | Runtime | Native custom-element rendering primitives from `@mission-platform/forge-adapters/web-components`. |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -57,7 +69,7 @@ Framework-neutral route contracts, pure matching helpers, and compiler markers f
 shared packages. Applications own route records and native router instances; the
 Forge router target selected by the application supplies the runtime capabilities.
 
-| Exportieren                                                          | Type             | Beschreibung                                                                                                                                          |
+| Exportieren                                                          | Type             | Description                                                                                                                                           |
 | :------------------------------------------------------------------- | :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MpRoute`                                                            | Types            | Route records, params, query/hash state, metadata, and navigation targets.                                                            |
 | `defineRoutes`                                                       | Funktion         | Define route trees and resolve paths without a DOM or framework runtime.                                                              |
@@ -128,7 +140,7 @@ failure.
 
 Zentralisierte Design-Tokens für Farben, Typografie und Abstände.
 
-| Exportieren   | Description                                                                                                                                     |
+| Exportieren   | Beschreibung                                                                                                                                    |
 | :------------ | :---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `tokens`      | JS/TS-Objekt, das alle Design-Tokens enthält (z. B. `tokens.color.primary`). |
 | `tokens.scss` | SCSS-Variablen zur Verwendung in Stylesheets.                                                                                   |
@@ -169,7 +181,7 @@ Internationalisierungssystem basierend auf i18next.
 
 Meta-Tag- und SEO-Management.
 
-| Exportieren | Beschreibung                                                                                      |
+| Exportieren | Geben Sie                                                                                         |
 | :---------- | :------------------------------------------------------------------------------------------------ |
 | `useSeo`    | Hook zum deklarativen Festlegen von Seitentiteln, Meta-Tags und Open Graph-Daten. |
 
@@ -177,7 +189,7 @@ Meta-Tag- und SEO-Management.
 
 Reaktiver Wrapper für MapLibre GL.
 
-| Komponente      | Geben Sie                                                                 |
+| Komponente      | Beschreibung                                                              |
 | :-------------- | :------------------------------------------------------------------------ |
 | `<MpMap>`       | Hauptkomponente des Kartencontainers.                     |
 | `<MpMapMarker>` | Komponente zum Platzieren von Markierungen auf der Karte. |
@@ -186,7 +198,7 @@ Reaktiver Wrapper für MapLibre GL.
 
 Kamerabasiertes Scannen von Barcodes und QR-Codes.
 
-| Komponente        | Beschreibung                                                                               |
+| Komponente        | Description                                                                                |
 | :---------------- | :----------------------------------------------------------------------------------------- |
 | `<MpCodeScanner>` | Komponente, die den Kamerastream initialisiert und Scanergebnisse ausgibt. |
 
@@ -212,7 +224,7 @@ Frameworkneutrale D3.js-Integration.
 
 WebAssembly-basierte Rechtschreibprüfung.
 
-| Exportieren    | ein Beschreibung                                                      |
+| Exportieren    | Beschreibung                                                          |
 | :------------- | :-------------------------------------------------------------------- |
 | `initHunspell` | Lädt und instanziiert das Hunspell WebAssembly-Modul. |
 | `spell`        | Überprüft, ob ein Wort richtig geschrieben ist.       |
@@ -319,7 +331,7 @@ einpacken `packages/`, einschließlich der typisierten WebAssembly-Fassaden.
 
 | Paket                          | Zweck                                                                        |
 | :----------------------------- | :--------------------------------------------------------------------------- |
-| `@mission-platform/forge`      | Frameworkneutrale JSX-Laufzeit und -Adapter.                 |
+| `@mission-platform/forge-jsx`  | Frameworkneutrale JSX-Laufzeit und -Adapter.                 |
 | `@mission-platform/components` | Einmal beschreibbare UI-Komponenten.                         |
 | `@mission-platform/icons`      | Einmal beschreibbare SVG-Symbolkomponenten.                  |
 | `@mission-platform/layouts`    | Anwendungs-, Container- und responsive Layoutkomponenten.    |
@@ -381,9 +393,9 @@ Das Ziel kann an ein beliebiges Framework-Plugin gebunden werden. See the [Forge
 
 #### @mission-platform/forge-cms-plugin-api
 
-| Exportieren               | Type     | Beschreibung                                                                                                  |
+| Export                    | Type     | Description                                                                                                   |
 | :------------------------ | :------- | :------------------------------------------------------------------------------------------------------------ |
-| `analyzeContentComponent` | Funktion | Projiziert die Requisiten einer neutralen Komponente auf das plattformneutrale Inhaltsmodell. |
+| `analyzeContentComponent` | Function | Projiziert die Requisiten einer neutralen Komponente auf das plattformneutrale Inhaltsmodell. |
 | `ContentComponent`        | Type     | ein Bestellt `ContentField`s, Slots und die `interactive` Flagge.                             |
 | `ContentFieldKind`        | Type     | ein `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.           |
 | `CmsOutputPlugin`         | Type     | ein Der Zielvertrag: ein gebundenes Framework-Plugin plus die vier Emitter.   |
