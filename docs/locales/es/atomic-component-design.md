@@ -1,30 +1,25 @@
-# Diseño de componentes atómicos
+# Atomic Component Design
 
-Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
+Mission Platform uses an **Atomic Design** system to organize components into hierarchical levels of complexity. Every
+component is a "write-once" unit authored in the neutral Forge JSX dialect (`@mission-platform/forge-jsx`), ensuring
+consistency across multiple frameworks.
 
-> Fuente en inglés: [docs/atomic-component-design.md](../../atomic-component-design.md)
-> Idioma: Español (es)
+## Design Levels
 
-Mission Platform utiliza un sistema de **Diseño Atómico** para organizar los componentes en niveles jerárquicos de complejidad. cada
-El componente es una unidad de "escritura única" creada en el dialecto neutral Forge JSX (`@mission-platform/forge`), asegurando
-coherencia entre múltiples marcos.
+Components are categorized into five levels based on their scope and responsibility.
 
-## Niveles de diseño
+| Level         | Folder                      | Description                                                                                                                                                                                                                                                       |
+| :------------ | :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atoms**     | `src/components/atoms/`     | Smallest UI primitives (e.g., `ForgeButton`, `ForgeInput`, `ForgeBadge`). They are typically functional units that cannot be broken down further without losing their purpose. |
+| **Molecules** | `src/components/molecules/` | Simple compositions of atoms (e.g., `ForgeSearchInput`, `ForgeFieldSet`). They function together as a unit.                                                                    |
+| **Organisms** | `src/components/organisms/` | Complex UI sections composed of atoms, molecules, and other organisms (e.g., `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                                       |
+| **Templates** | `src/components/templates/` | Page-level layouts that define the content structure (e.g., `ForgeHero`, `ForgeAppLayout`). They often use slots to define where content should be placed.                     |
+| **Pages**     | `src/components/pages/`     | Specific instances of templates populated with concrete content and data (e.g., `AccountSettingsPage`).                                                                                        |
 
-Los componentes se clasifican en cinco niveles según su alcance y responsabilidad.
+## Component Folder Layout
 
-| Nivel | Carpeta | Descripción |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Átomos** | `src/components/atoms/`     | Las primitivas de interfaz de usuario más pequeñas (p. ej., `ForgeButton`, `ForgeInput`, `ForgeBadge`). Por lo general, son unidades funcionales que no pueden descomponerse más sin perder su propósito. |
-| **Moléculas** | `src/components/molecules/` | Composiciones simples de átomos (por ejemplo, `ForgeSearchInput`, `ForgeFieldSet`). Funcionan juntos como una unidad.                                                                    |
-| **Organismos** | `src/components/organisms/` | Secciones complejas de la interfaz de usuario compuestas de átomos, moléculas y otros organismos (p. ej., `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
-| **Plantillas** | `src/components/templates/` | Diseños a nivel de página que definen la estructura del contenido (por ejemplo, `ForgeHero`, `ForgeAppLayout`). A menudo utilizan espacios para definir dónde se debe colocar el contenido.                     |
-| **Páginas** | `src/components/pages/`     | Instancias específicas de plantillas llenas de contenido y datos concretos (p. ej., `AccountSettingsPage`).                                                                        |
-
-## Diseño de carpeta de componentes
-
-Cada componente reside en su propio subdirectorio con nombre en la carpeta del nivel apropiado. Este directorio contiene el
-fuente de componentes, historias, pruebas y estilos opcionales.
+Each component resides in its own named subdirectory under the appropriate level folder. This directory contains the
+component source, stories, tests, and optional styles.
 
 ```text
 src/components/
@@ -42,28 +37,28 @@ src/components/
 └── index.ts                         # Global barrel re-exporting all levels
 ```
 
-## Convenciones de historias
+## Story Conventions
 
-Las historias de los libros de cuentos DEBEN ubicarse junto con sus componentes y seguir una estricta convención de títulos para mantener una apariencia limpia.
-estructura de la barra lateral.
+Storybook stories MUST be co-located with their components and follow a strict title convention to maintain a clean
+sidebar structure.
 
-### Nombre del archivo
+### Filename
 
-Las historias deben utilizar el `.stories.tsx` extensión.
+Stories must use the `.stories.tsx` extension.
 
-### Convención de título
+### Title Convention
 
-El `title` campo en el libro de cuentos `meta` El objeto debe seguir este patrón:
+The `title` field in the Storybook `meta` object must follow this pattern:
 
 ```text
 <Level>/<Category>/<Component>
 ```
 
-- **Nivel**: plural en mayúscula (p. ej., `Atoms`, `Molecules`).
-- **Categoría**: agrupación funcional (p. ej., `Forms`, `Navigation`, `Display`, `Feedback`).
-- **Componente**: nombre del componente PascalCase (por ejemplo, `ForgeButton`).
+- **Level**: Capitalized plural (e.g., `Atoms`, `Molecules`).
+- **Category**: Functional grouping (e.g., `Forms`, `Navigation`, `Display`, `Feedback`).
+- **Component**: PascalCase component name (e.g., `ForgeButton`).
 
-**Ejemplo (`forge-button.stories.tsx`):**
+**Example (`forge-button.stories.tsx`):**
 
 ```tsx
 const meta = {
@@ -73,22 +68,22 @@ const meta = {
 };
 ```
 
-## Estándares de creación
+## Authoring Standards
 
-1. **Neutralidad del marco**: nunca separe el autor Vue y React versiones. Usar `@mission-platform/forge`.
-2. **Nombre**: Los componentes deben usar el `Base` prefijo (por ejemplo, `ForgeCard`) a menos que sean implementaciones específicas.
-3. **Seguridad de tipos**: Exportar un `*Properties` interfaz para los accesorios del componente.
-4. **Pruebas**: una ubicación compartida `.spec.ts` Se requiere para cada componente.
-5. **Andamios**: Utilice el `scaffold_component` Herramienta MCP para garantizar la estructura de directorios y el texto estándar correctos.
+1. **Framework Neutrality**: Never author separate Vue and React versions. Use `@mission-platform/forge-jsx`.
+2. **Naming**: Components should use the `Base` prefix (e.g., `ForgeCard`) unless they are specific implementations.
+3. **Type Safety**: Export a `*Properties` interface for the component's props.
+4. **Testing**: A co-located `.spec.ts` is required for every component.
+5. **Scaffolding**: Use the `scaffold_component` MCP tool to ensure the correct directory structure and boilerplate.
 
 ```bash
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
 
-## Guías relacionadas
+## Related Guides
 
-- [Desarrollo de paquetes](package-development.md)
-- [Autoría componible](composable-authoring.md)
-- [Creación de tiendas](store-authoring.md)
-- [Autoría de utilidades](util-authoring.md)
+- [Package Development](package-development.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
