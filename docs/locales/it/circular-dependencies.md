@@ -1,90 +1,85 @@
-# Gestione delle dipendenze circolari
+# Circular Dependency Management
 
-Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
+This document explains the impact of circular dependencies within the Mission Platform monorepo and provides a **How-to
+guide** for detecting, resolving, and preventing them. It serves as both an **Explanation** of monorepo health and a
+technical recipe for refactoring.
 
-> Fonte inglese: [docs/circular-dependencies.md](../../circular-dependencies.md)
-> Lingua: Italiano (it)
+## What are Circular Dependencies?
 
-Questo documento spiega l'impatto delle dipendenze circolari all'interno del monorepo di Mission Platform e fornisce un **How-to
-guida** per rilevarli, risolverli e prevenirli. Serve sia come **Spiegazione** della salute di monorepo sia come a
-ricetta tecnica per il refactoring.
+A circular dependency occurs when two or more packages depend on each other, either directly or indirectly. For example:
 
-## Cosa sono le dipendenze circolari?
+- Package A imports from Package B.
+- Package B imports from Package A.
 
-Una dipendenza circolare si verifica quando due o più pacchetti dipendono l'uno dall'altro, direttamente o indirettamente. Per esempio:
+In a monorepo, these cycles are particularly harmful because they can cause:
 
-- Il pacchetto A importa dal pacchetto B.
-- Il pacchetto B viene importato dal pacchetto A.
+- **Build Failures**: Dependency graph resolution (e.g., by Turborepo or pnpm) can deadlock or fail.
+- **Runtime Errors**: One module may be partially initialized when the other attempts to use its exports.
+- **Increased Coupling**: Packages become impossible to use or test in isolation.
 
-In un monorepo questi cicli sono particolarmente dannosi perché possono causare:
+## Detection
 
-- **Errori di compilazione**: risoluzione del grafico delle dipendenze (ad esempio, tramite Turborepo o pnpm) può bloccarsi o fallire.
-- **Errori di runtime**: un modulo potrebbe essere parzialmente inizializzato quando l'altro tenta di utilizzare le sue esportazioni.
-- **Accoppiamento aumentato**: i pacchetti diventano impossibili da utilizzare o testare isolatamente.
-
-## Rilevamento
-
-Mission Platform utilizza diversi strumenti automatizzati per individuare le dipendenze circolari prima che raggiungano la produzione.
+Mission Platform uses several automated tools to catch circular dependencies before they reach production.
 
 ### ESLint `no-restricted-paths`
 
-La nostra condivisa ESLint la configurazione impone il flusso di dipendenza unidirezionale. Se provi a importare da un pacchetto that
-dovrebbe essere "sopra" il tuo nella gerarchia, il linter genererà un errore.
+Our shared ESLint configuration enforces the one-way dependency flow. If you attempt to import from a package that
+should be "above" yours in the hierarchy, the linter will throw an error.
 
-Esegui il linter per verificare la presenza di violazioni:
+Run the linter to check for violations:
 
 ```bash
 pnpm lint
 ```
 
-### Audit manuale con Madge
+### Manual Audit with Madge
 
-Per cicli complessi che si estendono su più file, è possibile utilizzare `madge` (se installato) o visualizzatori simili per mappare i
-grafico delle dipendenze.
+For complex cycles that span multiple files, you can use `madge` (if installed) or similar visualizers to map the
+dependency graph.
 
-## Procedura: risolvere le dipendenze circolari
+## How-to: Resolve Circular Dependencies
 
-Quando viene rilevata una dipendenza circolare, utilizzare una delle seguenti strategie per risolverla.
+When a circular dependency is detected, use one of the following strategies to resolve it.
 
-### Strategia 1: estrazione del codice condiviso (consigliato)
+### Strategy 1: Extract Shared Code (Recommended)
 
-Se il Pacchetto A e il Pacchetto B necessitano entrambi di una parte logica comune, spostare tale logica in un nuovo pacchetto di livello inferiore (ad esempio,
+If Package A and Package B both need a common piece of logic, move that logic into a new, lower-level package (e.g.,
 `packages/utils-shared`).
 
-**Prima**:
+**Before**:
 
-- Pacchetto A ↔ Pacchetto B
+- Package A ↔ Package B
 
-**Dopo**:
+**After**:
 
-- Pacchetto A → Pacchetto C
-- Pacchetto B → Pacchetto C
+- Package A → Package C
+- Package B → Package C
 
-### Strategia 2: inversione delle dipendenze
+### Strategy 2: Dependency Inversion
 
-Invece di importare il pacchetto B direttamente dal pacchetto A, fai in modo che il pacchetto B accetti la funzionalità richiesta come oggetto di scena, a
-oggetto di configurazione o tramite un bus di eventi.
+Instead of Package B importing directly from Package A, have Package B accept the required functionality as a prop, a
+configuration object, or via an event bus.
 
-**Esempio**:
-Invece di `AuthService` importazione `UserService` per aggiornare un profilo, `AuthService` può emettere un `AUTH_SUCCESS` evento
-quello `UserService` ascolta.
+**Example**:
+Instead of `AuthService` importing `UserService` to update a profile, `AuthService` can emit an `AUTH_SUCCESS` event
+that `UserService` listens for.
 
-### Strategia 3: consolidamento
+### Strategy 3: Consolidation
 
-Se due pacchetti sono così strettamente accoppiati da richiedere costantemente i rispettivi componenti interni, potrebbero effettivamente essere a
-unica unità logica. Valuta la possibilità di unirli in un unico pacchetto.
+If two packages are so tightly coupled that they constantly require each other's internals, they might actually be a
+single logical unit. Consider merging them into one package.
 
-## Migliori pratiche di prevenzione
+## Prevention Best Practices
 
-1. **Segui il flusso unidirezionale**: aderisci rigorosamente al `Apps → Packages → Configs` direzione della dipendenza.
-2. **Logica neutra rispetto al framework dell'autore**: utilizzo `@mission-platform/forge` per la logica di base per evitare cicli specifici del framework.
-3. **Utilizza protocolli Workspace**: utilizzare sempre `workspace:*` per le dipendenze interne da garantire pnpm può risolversi correttamente
-   il grafico.
-4. **Controlla regolarmente le importazioni**: presta attenzione ai suggerimenti di "importazione automatica" nel tuo IDE, poiché a volte possono introdurre
-   dipendenze tra pacchetti non intenzionali.
+1. **Follow the One-Way Flow**: Strictly adhere to the `Apps → Packages → Configs` dependency direction.
+2. **Author Framework-Neutral Logic**: Use `@mission-platform/forge-jsx` for core logic to avoid framework-specific cycles.
+3. **Use Workspace Protocols**: Always use `workspace:*` for internal dependencies to ensure pnpm can correctly resolve
+   the graph.
+4. **Regularly Audit Imports**: Pay attention to "auto-import" suggestions in your IDE, as they can sometimes introduce
+   unintended cross-package dependencies.
 
-## Documentazione correlata
+## Related Documentation
 
-- [Migliori pratiche](best-practices.md)
-- [Struttura dell'area di lavoro](workspace-structure.md)
-- [Guida alla risoluzione dei problemi](troubleshooting.md)
+- [Best Practices](best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting Guide](troubleshooting.md)
