@@ -1,80 +1,75 @@
-# סקירת פלטפורמת המשימה
+# Mission Platform Overview
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+Mission Platform is a composable, package-driven, framework-neutral component platform designed for building
+production-ready applications with reusable building blocks. It leverages a modern monorepo architecture to provide a
+highly efficient development environment for complex, multi-application ecosystems.
 
-> מקור באנגלית: [docs/overview.md](../../overview.md)
-> שפה: עברית (he)
+## The Composable Philosophy
 
-Mission Platform היא פלטפורמת רכיבים הניתנת להרכבה, מונעת חבילה, פלטפורמת רכיבים ניטראלית מסגרת המיועדת לבנייה
-יישומים מוכנים לייצור עם אבני בניין הניתנות לשימוש חוזר. הוא ממנף ארכיטקטורת מונורופו מודרנית כדי לספק א
-סביבת פיתוח יעילה ביותר עבור מערכות אקולוגיות מורכבות מרובות יישומים.
+At its core, Mission Platform is built on the principle of **composition over inheritance**. Instead of providing a
+monolithic framework that dictates application structure, the platform offers a suite of small, focused, and highly
+interoperable packages.
 
-## הפילוסופיה הניתנת לחיבור
+### Composable Building Blocks
 
-בבסיסה, Mission Platform בנויה על העיקרון של **קומפוזיציה על פני ירושה**. במקום לספק א
-מסגרת מונוליטית שמכתיבה את מבנה האפליקציה, הפלטפורמה מציעה חבילה של קטנה, ממוקדת ומאוד
-חבילות הדדיות.
+Applications are assembled from shared packages, ensuring that common logic—from UI components to internationalisation
+and routing—is authored once and reused everywhere. This approach reduces duplication, simplifies maintenance, and
+ensures a consistent user experience across the entire product suite.
 
-### אבני בניין הניתנות לחיבור
+### Multi-Framework by Design
 
-יישומים מורכבים מחבילות משותפות, מה שמבטיח את ההיגיון המשותף - מרכיבי ממשק משתמש ועד לבינלאומיות
-וניתוב - נכתב פעם אחת ונעשה בו שימוש חוזר בכל מקום. גישה זו מפחיתה כפילות, מפשטת תחזוקה ו
-מבטיח חווית משתמש עקבית בכל חבילת המוצרים.
+Mission Platform introduces a framework-neutral development paradigm. Using the `@mission-platform/forge-jsx` JSX dialect,
+developers can author components once and compile them to native outputs for Vue 3, React, Solid, Svelte, and Web
+Components. This future-proofs the codebase and allows for seamless integration into diverse frontend environments.
 
-### Multi-Framework לפי עיצוב
+### Type-Safe Foundation
 
-Mission Platform מציגה פרדיגמת פיתוח ניטראלית במסגרת. שימוש ב- `@mission-platform/forge` ניב JSX,
-מפתחים יכולים לכתוב רכיבים פעם אחת ולקומל אותם לתפוקות מקוריות עבור Vue 3, React, Solid, Svelte, ואינטרנט
-רכיבים. זה מגן על עתיד את בסיס הקוד ומאפשר שילוב חלק בסביבות חזיתיות מגוונות.
+The entire platform is authored in **TypeScript**, providing a robust, self-documenting developer experience. Explicit
+typing across all public APIs ensures that errors are caught at compile-time, significantly increasing development
+velocity and code quality.
 
-### קרן בטוחה מסוג
+## Key Features
 
-הפלטפורמה כולה נכתבה ב-**TypeScript**, מספק חוויית מפתח חזקה ומתעדת את עצמה. מפורש
-הקלדה בכל ממשקי ה-API הציבוריים מבטיחה שגיאות ייתפסו בזמן ההידור, מה שמגביר משמעותית את הפיתוח
-מהירות ואיכות קוד.
+| Feature               | Description                                                                                                                                                            |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX Runtime** | A framework-neutral JSX dialect: author once and build for Vue 3, React, Svelte, Solid, and Web Components with zero runtime overhead. |
+| **Component Library** | A comprehensive set of layout, typography, and interactive components authored once for multiple frameworks.                                           |
+| **Design Tokens**     | A DTCG-compliant token system that generates SCSS and TypeScript artifacts for consistent theming.                                                     |
+| **Agnostic Routing**  | A type-safe routing system that works independently of the UI framework.                                                                               |
+| **Universal I18n**    | A framework-agnostic internationalisation wrapper based on i18next with dedicated Vue and React adapters.                                              |
+| **Wasm Utilities**    | High-performance utilities for barcode scanning, spell checking, and more, powered by WebAssembly.                                                     |
 
-## תכונות עיקריות
+## Technology Stack
 
-| תכונה | תיאור |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| **Forge JSX Runtime** | דיאלקט JSX ניטרלי במסגרת: מחבר פעם אחת ובנה עבור Vue 3, React, Svelte, Solid, ורכיבי אינטרנט עם אפס תקורה של זמן ריצה. |
-| **ספריית רכיבים** | סט מקיף של פריסה, טיפוגרפיה ורכיבים אינטראקטיביים שנכתבו פעם אחת עבור מסגרות מרובות.                           |
-| **אסימוני עיצוב** | מערכת אסימונים תואמת DTCG המייצרת SCSS ו TypeScript חפצים עבור עיצוב עקבי.                                     |
-| **ניתוב אגנוסטי** | מערכת ניתוב בטוחה בסוג שפועלת ללא תלות בממשק המשתמש.                                                               |
-| **Universal I18n** | מעטפת בינלאומית אגנוסטית למסגרת המבוססת על i18next עם ייעודי Vue ו React מתאמים.                              |
-| **Wasm Utilities** | כלי עזר בעלי ביצועים גבוהים לסריקת ברקוד, בדיקת איות ועוד, מופעל על ידי WebAssembly.                                     |
+Mission Platform is built on a modern, high-performance stack:
 
-## מחסנית טכנולוגיה
+- **Forge JSX (`@mission-platform/forge-jsx`)**: The primary UI framework — a framework-neutral JSX runtime in which all
+  shared components (everything except the apps) are authored.
+- **Vue 3**: The framework the applications in `apps/` are built with, and one of several native render targets for
+  Forge components.
+- **TypeScript**: The standard for all source code.
+- **Vite**: The build tool powering fast HMR and optimised production bundles.
+- **pnpm Workspaces**: Efficient dependency management with shared lockfiles.
+- **Turborepo**: High-performance task orchestration and caching.
+- **Cloudflare Workers/Pages**: The primary deployment target for applications and APIs.
+- **Storybook**: The workbench for component development and visual testing.
 
-Mission Platform בנויה על ערימה מודרנית עם ביצועים גבוהים:
+## Ecosystem Structure
 
-- **Forge JSX (`@mission-platform/forge`)**: המסגרת הראשית של ממשק המשתמש - זמן ריצה נייטרלי של JSX שבו הכל
-  רכיבים משותפים (הכל מלבד האפליקציות) נכתבו.
-- **Vue 3**: המסגרת שבה היישומים `apps/` בנויים עם, ואחד מכמה יעדי עיבוד מקוריים עבור
-  לזייף רכיבים.
-- **TypeScript**: התקן לכל קוד המקור.
-- **Vite**: כלי הבנייה המניע HMR מהיר וחבילות ייצור אופטימליות.
-- **pnpm סביבות עבודה**: ניהול תלות יעיל עם קבצי נעילה משותפים.
-- **Turborepo**: תזמור משימות ושמירה במטמון עם ביצועים גבוהים.
-- **Cloudflare Workers/Pages**: יעד הפריסה העיקרי עבור יישומים וממשקי API.
-- **ספר סיפורים**: שולחן העבודה לפיתוח רכיבים ובדיקות חזותיות.
+The repository is organised into several distinct areas:
 
-## מבנה מערכת אקולוגית
-
-המאגר מאורגן במספר אזורים נפרדים:
-
-- **`apps/`**: יישומים הניתנים לפריסה (למשל, `my-care-notes`, `website`) שמרכיבים חבילות למוצרים.
-- **`packages/`**: אבני הבניין הליבה, כולל `@mission-platform/components`, `@mission-platform/router`, ו
+- **`apps/`**: Deployable applications (e.g., `my-care-notes`, `website`) that compose packages into products.
+- **`packages/`**: The core building blocks, including `@mission-platform/components`, `@mission-platform/router`, and
   `@mission-platform/i18n`.
-- **`configs/`**: תצורות משותפות עבור ESLint, Prettier, TypeScript, ו Vite.
-- **`vite-plugins/`**: כלי עבודה מותאמים אישית בזמן הבנייה עבור אסימוני עיצוב, הידור Forge ו-SEO.
-- **`workers/`**: Cloudflare Workers מספקים לוגיקה עורפית ויכולות הגשה של SPA.
+- **`packages/tooling/configs/`**: Shared configurations for ESLint, Prettier, TypeScript, and Vite.
+- **`packages/tooling/vite/`**: Custom build-time tooling for design tokens, Forge compilation, and SEO.
+- **`packages/edge/workers/`**: Cloudflare Workers providing backend logic and SPA serving capabilities.
 
-## השלבים הבאים
+## Next Steps
 
-כדי להתחיל בפיתוח בפלטפורמת המשימה, עיין במדריכים הבאים:
+To begin developing on the Mission Platform, please refer to the following guides:
 
-- **[הגדרת פיתוח](development-setup.md)**: הכן את הסביבה שלך והתקן תלות.
-- **[אַדְרִיכָלוּת](architecture.md)**: צלילה עמוקה לתוך עקרונות העיצוב וזרימת התלות של הפלטפורמה.
-- **[מבנה סביבת עבודה](workspace-structure.md)**: הבן את פריסת הספרייה ואת מוסכמות החבילות.
-- **[בּוֹחֵן](testing.md)**: למד על אסטרטגיות וכלי הבדיקה שלנו.
+- **[Development Setup](./development-setup.md)**: Get your environment ready and install dependencies.
+- **[Architecture](./architecture.md)**: Deep dive into the platform's design principles and dependency flow.
+- **[Workspace Structure](./workspace-structure.md)**: Understand the directory layout and package conventions.
+- **[Testing](./testing.md)**: Learn about our testing strategies and tools.
