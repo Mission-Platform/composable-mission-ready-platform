@@ -1,18 +1,13 @@
-# التأليف القابل للتأليف
+# Composable Authoring
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+Composables are the primary way to encapsulate and reuse reactive logic within the Mission Platform. To ensure these
+units of logic are portable across all supported UI frameworks, they are authored as **write-once** modules using the
+framework-neutral hooks provided by `@mission-platform/forge-jsx`.
 
-> المصدر الإنجليزي: [docs/composable-authoring.md](../../composable-authoring.md)
-> اللغة: العربية (ar)
+## Directory Layout
 
-تعتبر العناصر القابلة للتركيب هي الطريقة الأساسية لتغليف وإعادة استخدام المنطق التفاعلي داخل منصة المهمة. لضمان هذه
-وحدات المنطق قابلة للنقل عبر جميع أطر عمل واجهة المستخدم المدعومة، ويتم تأليفها كوحدات **كتابة مرة واحدة** باستخدام
-خطافات محايدة للإطار مقدمة من `@mission-platform/forge`.
-
-## تخطيط الدليل
-
-يجب أن يتواجد كل ملف قابل للتركيب في الدليل الفرعي المسمى الخاص به بداخله `src/composables/`، مصحوبة باختبار مشترك
-ملف وبرميل محلي.
+Each composable MUST reside in its own named subdirectory within `src/composables/`, accompanied by a co-located test
+file and a local barrel.
 
 ```text
 src/composables/
@@ -23,23 +18,23 @@ src/composables/
 └── index.ts                     # Package-level re-exports
 ```
 
-## قواعد التأليف
+## Authoring Rules
 
-1. **استخدم Forge Hooks**: قم باستيراد العناصر الأولية التفاعلية فقط (على سبيل المثال، `useState`, `useEffect`, `useMemo`, `useRef`) من
-   `@mission-platform/forge`. لا تستورد مباشرة من `vue` أو `react`.
-2. **اصطلاح التسمية**: يجب أن تستخدم الأسماء القابلة للتركيب حالة الكباب وأن تكون مسبوقة بـ `use-` (e.g., `use-media-query`).
-3. **سلامة SSR**: تأكد من أن المنطق آمن للعرض من جانب الخادم. حماية أي وصول إلى واجهات برمجة التطبيقات للمتصفح فقط مثل `window`,
-   `document`، أو `localStorage`.
-4. **لا توجد مكونات لواجهة المستخدم**: يجب أن تركز العناصر المركبة على المنطق. لا تقم بإرجاع أو التعامل مع مكونات واجهة المستخدم مباشرة؛ بدلا من ذلك،
-   حالة الإرجاع أو المراجع أو عمليات الاسترجاعات.
-5. **الاختبار الإلزامي**: يجب أن يكون لكل قطعة قابلة للتركيب موقع مشترك `.spec.ts` باستخدام الملف Vitest.
+1. **Use Forge Hooks**: Only import reactive primitives (e.g., `useState`, `useEffect`, `useMemo`, `useRef`) from
+   `@mission-platform/forge-jsx`. Never import directly from `vue` or `react`.
+2. **Naming Convention**: Composable names must use kebab-case and be prefixed with `use-` (e.g., `use-media-query`).
+3. **SSR Safety**: Ensure logic is safe for Server-Side Rendering. Guard any access to browser-only APIs like `window`,
+   `document`, or `localStorage`.
+4. **No UI Components**: Composables should focus on logic. Do not return or manipulate UI components directly; instead,
+   return state, refs, or callbacks.
+5. **Mandatory Testing**: Every composable must have a co-located `.spec.ts` file using Vitest.
 
-## مثال أساسي
+## Basic Example
 
-فيما يلي نموذج نموذجي قابل للكتابة مرة واحدة يدير مستمع الحدث.
+Here is a typical write-once composable that manages an event listener.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,
@@ -53,6 +48,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);
@@ -61,18 +57,18 @@ export function useEventListener(
 }
 ```
 
-## السقالات
+## Scaffolding
 
-أسرع طريقة لإنشاء ملف جديد قابل للتركيب هي عبر أداة Mission Platform Developer MCP:
+The fastest way to create a new composable is via the Mission Platform Developer MCP tool:
 
 ```bash
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```
 
-## أدلة ذات صلة
+## Related Guides
 
-- [تطوير الحزمة](package-development.md)
-- [تصميم المكونات الذرية](atomic-component-design.md)
-- [تأليف المتجر](store-authoring.md)
-- [استخدام التأليف](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
