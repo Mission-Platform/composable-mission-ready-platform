@@ -4,7 +4,7 @@ This guide explains how to consume Mission Platform packages in projects located
 
 ## Framework Selection via Conditions
 
-Mission Platform components are authored once using `@mission-platform/forge` and distributed as multiple framework-specific bundles (Vue 3, React, Solid, and Web Components) within a single package.
+Mission Platform components are authored once using `@mission-platform/forge-jsx` and distributed as multiple framework-specific bundles (Vue 3, React, Solid, and Web Components) within a single package.
 
 To select the correct bundle, you must configure your build tool and TypeScript to use **Custom Export Conditions**.
 
