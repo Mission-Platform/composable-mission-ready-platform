@@ -168,7 +168,7 @@ SCSS value to `v-bind('properties.<name>')`; Vue render-closure fallback and
 all non-Vue stylesheet paths must remain valid ordinary CSS/SCSS.
 
 The implementation touch points for that lowering are the neutral runtime
-contract in `packages/compiler/forge/forge/src/runtime/types.ts` and `packages/compiler/forge/forge/src/runtime/h.ts`,
+contract in `packages/core/forge-jsx/src/runtime/types.ts` and `packages/core/forge-jsx/src/runtime/h.ts`,
 the existing neutral-to-Vue style lowering in
 `packages/compiler/plugins/forge-vue/src/transformers/template.ts`, and the co-located
 style assembly/emission in `packages/compiler/plugins/forge-vue/src/runtime/styles.ts` and

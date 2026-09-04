@@ -23,7 +23,7 @@ export const HTML_CONTENT_TAG = "HtmlContent";
  * React and Vue resolve `Transition` to a real component (a CSS-class driver
  * for React, Vue's own built-in for Vue) so the enter/leave animation is
  * framework-native. Svelte has no equivalent wrapper component — its own
- * hand-written adapter primitive (`packages/compiler/forge/forge/src/adapters/svelte.ts`)
+ * hand-written adapter primitive (`packages/core/forge-jsx/src/adapters/svelte.ts`)
  * already renders `properties.children` in place and expects any animation to
  * come from a native `transition:`/`in:`/`out:` directive applied directly to
  * the child element by the author. The compiler mirrors that: `Transition` is
@@ -37,7 +37,7 @@ export const TRANSITION_GROUP_TAG = "TransitionGroup";
 
 /**
  * The neutral portal marker. Svelte has no built-in DOM-portal primitive, so —
- * matching the hand-written adapter's own `Teleport` (`packages/compiler/forge/forge/src/adapters/svelte.ts`,
+ * matching the hand-written adapter's own `Teleport` (`packages/core/forge-jsx/src/adapters/svelte.ts`,
  * which renders children in place) — this is a compile-time marker that
  * unwraps to its children rather than moving them to another DOM location.
  */
