@@ -1,18 +1,13 @@
-# 可组合创作
+# Composable Authoring
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+Composables are the primary way to encapsulate and reuse reactive logic within the Mission Platform. To ensure these
+units of logic are portable across all supported UI frameworks, they are authored as **write-once** modules using the
+framework-neutral hooks provided by `@mission-platform/forge-jsx`.
 
-> 英文原文: [docs/composable-authoring.md](../../composable-authoring.md)
-> 语言: 简体中文 (zh)
+## Directory Layout
 
-可组合性是在任务平台中封装和重用反应式逻辑的主要方式。为了保证这些
-逻辑单元可跨所有受支持的 UI 框架移植，它们使用以下方法编写为 **一次写入** 模块
-框架中立的钩子由 `@mission-platform/forge`.
-
-## 目录布局
-
-每个可组合项必须驻留在其自己的命名子目录中 `src/composables/`，伴随同地测试
-文件和本地桶。
+Each composable MUST reside in its own named subdirectory within `src/composables/`, accompanied by a co-located test
+file and a local barrel.
 
 ```text
 src/composables/
@@ -23,23 +18,23 @@ src/composables/
 └── index.ts                     # Package-level re-exports
 ```
 
-## 创作规则
+## Authoring Rules
 
-1. **使用 Forge Hooks**：仅导入反应原语（例如， `useState`, `useEffect`, `useMemo`, `useRef`) 从
-   `@mission-platform/forge`。切勿直接从 `vue` 或者 `react`。
-2. **命名约定**：可组合名称必须使用短横线大小写并带有前缀 `use-` (e.g., `use-media-query`)。
-3. **SSR 安全**：确保服务器端渲染的逻辑是安全的。保护对仅限浏览器的 API 的任何访问，例如 `window`,
-   `document`， 或者 `localStorage`。
-4. **没有 UI 组件**：可组合项应该专注于逻辑。不要直接返回或操作UI组件；相反，
-   返回状态、引用或回调。
-5. **强制测试**：每个可组合项都必须有一个共同定位的 `.spec.ts` 文件使用 Vitest.
+1. **Use Forge Hooks**: Only import reactive primitives (e.g., `useState`, `useEffect`, `useMemo`, `useRef`) from
+   `@mission-platform/forge-jsx`. Never import directly from `vue` or `react`.
+2. **Naming Convention**: Composable names must use kebab-case and be prefixed with `use-` (e.g., `use-media-query`).
+3. **SSR Safety**: Ensure logic is safe for Server-Side Rendering. Guard any access to browser-only APIs like `window`,
+   `document`, or `localStorage`.
+4. **No UI Components**: Composables should focus on logic. Do not return or manipulate UI components directly; instead,
+   return state, refs, or callbacks.
+5. **Mandatory Testing**: Every composable must have a co-located `.spec.ts` file using Vitest.
 
-## 基本示例
+## Basic Example
 
-这是一个管理事件侦听器的典型一次性写入可组合项。
+Here is a typical write-once composable that manages an event listener.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,
@@ -53,6 +48,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);
@@ -61,18 +57,18 @@ export function useEventListener(
 }
 ```
 
-## 脚手架
+## Scaffolding
 
-创建新可组合项的最快方法是通过 Mission Platform Developer MCP 工具：
+The fastest way to create a new composable is via the Mission Platform Developer MCP tool:
 
 ```bash
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```
 
-## 相关指南
+## Related Guides
 
-- [封装开发](package-development.md)
-- [原子组件设计](atomic-component-design.md)
-- [商店创作](store-authoring.md)
-- [实用程序创作](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
