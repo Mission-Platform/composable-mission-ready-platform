@@ -1,18 +1,13 @@
-# コンポーザブルオーサリング
+# Composable Authoring
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+Composables are the primary way to encapsulate and reuse reactive logic within the Mission Platform. To ensure these
+units of logic are portable across all supported UI frameworks, they are authored as **write-once** modules using the
+framework-neutral hooks provided by `@mission-platform/forge-jsx`.
 
-> 英語の原典: [docs/composable-authoring.md](../../composable-authoring.md)
-> 言語: 日本語 (ja)
+## Directory Layout
 
-コンポーザブルは、Mission Platform 内でリアクティブ ロジックをカプセル化して再利用するための主な方法です。これらを確実にするために
-ロジックのユニットは、サポートされているすべての UI フレームワーク間で移植可能であり、
-によって提供されるフレームワークに依存しないフック `@mission-platform/forge`.
-
-## ディレクトリのレイアウト
-
-各コンポーザブルは、コンポーザブル内の独自の名前付きサブディレクトリに存在する必要があります。 `src/composables/`、同じ場所でのテストを伴う
-ファイルとローカルバレル。
+Each composable MUST reside in its own named subdirectory within `src/composables/`, accompanied by a co-located test
+file and a local barrel.
 
 ```text
 src/composables/
@@ -23,23 +18,23 @@ src/composables/
 └── index.ts                     # Package-level re-exports
 ```
 
-## オーサリングルール
+## Authoring Rules
 
-1. **Forge フックを使用**: リアクティブ プリミティブのみをインポートします (例: `useState`, `useEffect`, `useMemo`, `useRef`) から
-   `@mission-platform/forge`。 ～から直接輸入しないでください `vue` または `react`。
-2. **命名規則**: コンポーザブル名にはケバブケースを使用し、接頭辞を付ける必要があります。 `use-` (e.g., `use-media-query`)。
-3. **SSR の安全性**: ロジックがサーバーサイド レンダリングに対して安全であることを確認します。次のようなブラウザ専用 API へのアクセスを保護します。 `window`,
-   `document`、 または `localStorage`。
-4. **UI コンポーネントなし**: コンポーザブルはロジックに重点を置く必要があります。 UI コンポーネントを直接返したり操作したりしないでください。代わりに、
-   状態、参照、またはコールバックを返します。
-5. **必須テスト**: すべてのコンポーザブルには、同じ場所に `.spec.ts` ファイルを使用して Vitest.
+1. **Use Forge Hooks**: Only import reactive primitives (e.g., `useState`, `useEffect`, `useMemo`, `useRef`) from
+   `@mission-platform/forge-jsx`. Never import directly from `vue` or `react`.
+2. **Naming Convention**: Composable names must use kebab-case and be prefixed with `use-` (e.g., `use-media-query`).
+3. **SSR Safety**: Ensure logic is safe for Server-Side Rendering. Guard any access to browser-only APIs like `window`,
+   `document`, or `localStorage`.
+4. **No UI Components**: Composables should focus on logic. Do not return or manipulate UI components directly; instead,
+   return state, refs, or callbacks.
+5. **Mandatory Testing**: Every composable must have a co-located `.spec.ts` file using Vitest.
 
-## 基本的な例
+## Basic Example
 
-以下は、イベント リスナーを管理する一般的な追記型コンポーザブルです。
+Here is a typical write-once composable that manages an event listener.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,
@@ -53,6 +48,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);
@@ -61,18 +57,18 @@ export function useEventListener(
 }
 ```
 
-## 足場
+## Scaffolding
 
-新しいコンポーザブルを作成する最も速い方法は、Mission Platform Developer MCP ツールを使用することです。
+The fastest way to create a new composable is via the Mission Platform Developer MCP tool:
 
 ```bash
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```
 
-## 関連ガイド
+## Related Guides
 
-- [パッケージ開発](package-development.md)
-- [アトミックコンポーネント設計](atomic-component-design.md)
-- [ストアオーサリング](store-authoring.md)
-- [ユーティリティオーサリング](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
