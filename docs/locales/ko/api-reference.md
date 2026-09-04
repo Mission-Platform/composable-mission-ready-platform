@@ -2,8 +2,7 @@
 
 This project-wide page is a directory of package capabilities and compatibility
 contracts. The canonical installation, usage, limitations, and API details for
-each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
-and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+each package live beside that package under its full `packages/**/docs/` path. Generated API references must be added to the owning
 package rather than this page.
 
 > **가져오기는 항상 베어입니다.** 프레임워크 배송 `@mission-platform/*` 패키지는 단일을 노출합니다. `.`
@@ -357,8 +356,8 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 
 ### Forge 컴파일러 타겟
 
-이들은 `forge-plugins/` 오히려 `packages/`. **프레임워크** 플러그인은 어떤 런타임이 중립 구성 요소인지 결정합니다. 으로 낮아졌습니다; **CMS** 대상은 그것이 투영되는 콘텐츠 플랫폼을 결정합니다. 두 개의 축이 구성되므로 모든 CMS
-대상은 모든 프레임워크 플러그인에 바인딩될 수 있습니다. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
+These live in `packages/compiler/plugins/`. **프레임워크** 플러그인은 어떤 런타임이 중립 구성 요소인지 결정합니다. 으로 낮아졌습니다; **CMS** 대상은 그것이 투영되는 콘텐츠 플랫폼을 결정합니다. 두 개의 축이 구성되므로 모든 CMS
+대상은 모든 프레임워크 플러그인에 바인딩될 수 있습니다. See the [Forge Compiler Pipeline](../packages/tooling/vite/forge/docs/reference/compiler.md).
 
 | 패키지                                             | 목적                                                                                  |
 | :---------------------------------------------- | :---------------------------------------------------------------------------------- |
