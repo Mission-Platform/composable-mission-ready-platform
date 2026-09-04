@@ -52,7 +52,7 @@ framework are chosen independently, `storyblok × vue` and `astro × solid` are 
 CMS builds emit to `dist/cms/<cms>/<framework>/**`, with manifests and other platform sidecars mirrored into
 `dist/cms/<cms>/`. Targets that need a hydrated runtime (Astro, Webflow) co-generate an island tree from the bound
 framework plugin into the same build. The complete responsibility split and stage boundaries are described in
-[Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
+[Forge Compiler Pipeline](../packages/tooling/vite/forge/docs/reference/compiler.md).
 
 ## Build contract
 
@@ -139,7 +139,7 @@ restored from cache.
 
 ## Shared Configurations
 
-Build configurations are centralized in the `configs/` directory to maintain consistency across the monorepo.
+Build configurations are centralized in the `packages/tooling/configs/` directory to maintain consistency across the monorepo.
 
 | Package                               | Purpose                                                                                              |
 | :------------------------------------ | :--------------------------------------------------------------------------------------------------- |
