@@ -1,18 +1,13 @@
-# استخدام التأليف
+# Util Authoring
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+Utilities (utils) are pure, framework-agnostic helper functions. They should be free of UI framework imports and, unless
+explicitly required and documented, free of DOM APIs. This ensures they can be used in any context, including
+server-side logic and workers.
 
-> المصدر الإنجليزي: [docs/util-authoring.md](../../util-authoring.md)
-> اللغة: العربية (ar)
+## Directory Layout
 
-الأدوات المساعدة (utils) هي وظائف مساعدة نقية وحيادية الإطار. يجب أن تكون خالية من واردات إطار عمل واجهة المستخدم، وما لم
-مطلوبة وموثقة بشكل صريح، وخالية من واجهات برمجة تطبيقات DOM. وهذا يضمن إمكانية استخدامها في أي سياق، بما في ذلك
-المنطق من جانب الخادم والعمال.
-
-## تخطيط الدليل
-
-يجب أن تتواجد كل أداة مساعدة في دليل فرعي خاص بها `src/utils/`، مصحوبًا بملف اختبار مشترك و
-برميل محلي.
+Each utility SHOULD reside in its own named subdirectory within `src/utils/`, accompanied by a co-located test file and
+a local barrel.
 
 ```text
 src/utils/
@@ -23,17 +18,17 @@ src/utils/
 └── index.ts                  # Package-level re-exports
 ```
 
-## قواعد التأليف
+## Authoring Rules
 
-1. **النقاء**: تفضل الوظائف النقية التي ليس لها آثار جانبية. وبالنظر إلى نفس المدخلات، يجب عليهم دائمًا إرجاع ملف
-   نفس الإخراج.
-2. **لا توجد خطافات لواجهة المستخدم**: لا تقم بالاستيراد مطلقًا `vue`, `react`، أو `@mission-platform/forge` السنانير في الاستخدام. يتطلب المنطق
-   التفاعل ينتمي [المواد المركبة](composable-authoring.md).
-3. ** الكتابة الصريحة **: تقديم كامل TypeScript أنواع لجميع الوسائط وقيم الإرجاع.
-4. **الاختبار الإلزامي**: يجب أن يكون لكل استخدام موقع مشترك `.spec.ts` ملف.
-5. **مسؤولية فردية**: يجب أن يركز كل مجلد أدوات على مهمة محددة وضيقة.
+1. **Purity**: Prefer pure functions that do not have side effects. Given the same input, they should always return the
+   same output.
+2. **No UI Hooks**: Never import `vue`, `react`, or `@mission-platform/forge-jsx` hooks in a util. Logic requiring
+   reactivity belongs in [Composables](composable-authoring.md).
+3. **Explicit Typing**: Provide full TypeScript types for all arguments and return values.
+4. **Mandatory Testing**: Every util must have a co-located `.spec.ts` file.
+5. **Single Responsibility**: Each util folder should focus on a specific, narrow task.
 
-## مثال أساسي
+## Basic Example
 
 ```ts
 /**
@@ -44,18 +39,18 @@ export function clamp(value: number, min: number, max: number): number {
 }
 ```
 
-## السقالات
+## Scaffolding
 
-استخدم أداة Mission Platform Developer MCP لإنشاء هيكل فائدة جديد:
+Use the Mission Platform Developer MCP tool to generate a new utility skeleton:
 
 ```bash
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
 
-## أدلة ذات صلة
+## Related Guides
 
-- [تطوير الحزمة](package-development.md)
-- [تصميم المكونات الذرية](atomic-component-design.md)
-- [التأليف القابل للتأليف](composable-authoring.md)
-- [تأليف المتجر](store-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
