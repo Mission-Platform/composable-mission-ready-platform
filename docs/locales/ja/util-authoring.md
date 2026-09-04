@@ -1,18 +1,13 @@
-# ユーティリティオーサリング
+# Util Authoring
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+Utilities (utils) are pure, framework-agnostic helper functions. They should be free of UI framework imports and, unless
+explicitly required and documented, free of DOM APIs. This ensures they can be used in any context, including
+server-side logic and workers.
 
-> 英語の原典: [docs/util-authoring.md](../../util-authoring.md)
-> 言語: 日本語 (ja)
+## Directory Layout
 
-ユーティリティ (utils) は、純粋なフレームワークに依存しないヘルパー関数です。 UI フレームワークのインポートがないようにする必要があります。
-明示的に要求され文書化されており、DOM API は含まれていません。これにより、次のようなあらゆるコンテキストで使用できるようになります。
-サーバー側のロジックとワーカー。
-
-## ディレクトリのレイアウト
-
-各ユーティリティは、以下の独自の名前付きサブディレクトリに存在する必要があります。 `src/utils/`、同じ場所に配置されたテスト ファイルを伴い、
-地元の樽。
+Each utility SHOULD reside in its own named subdirectory within `src/utils/`, accompanied by a co-located test file and
+a local barrel.
 
 ```text
 src/utils/
@@ -23,17 +18,17 @@ src/utils/
 └── index.ts                  # Package-level re-exports
 ```
 
-## オーサリングルール
+## Authoring Rules
 
-1. **純度**: 副作用のない純粋な関数を優先します。同じ入力が与えられた場合、常に次の値を返す必要があります。
-   同じ出力です。
-2. **UI フックなし**: インポートしないでください `vue`, `react`、 または `@mission-platform/forge` ユーティリティ内のフック。ロジックが必要
-   反応性は以下に属します [コンポーザブル](composable-authoring.md)。
-3. **明示的な入力**: 完全なものを提供します TypeScript すべての引数と戻り値の型。
-4. **必須テスト**: すべてのユーティリティには、同じ場所に `.spec.ts` ファイル。
-5. **単一の責任**: 各ユーティリティ フォルダーは、特定の狭いタスクに焦点を当てる必要があります。
+1. **Purity**: Prefer pure functions that do not have side effects. Given the same input, they should always return the
+   same output.
+2. **No UI Hooks**: Never import `vue`, `react`, or `@mission-platform/forge-jsx` hooks in a util. Logic requiring
+   reactivity belongs in [Composables](composable-authoring.md).
+3. **Explicit Typing**: Provide full TypeScript types for all arguments and return values.
+4. **Mandatory Testing**: Every util must have a co-located `.spec.ts` file.
+5. **Single Responsibility**: Each util folder should focus on a specific, narrow task.
 
-## 基本的な例
+## Basic Example
 
 ```ts
 /**
@@ -44,18 +39,18 @@ export function clamp(value: number, min: number, max: number): number {
 }
 ```
 
-## 足場
+## Scaffolding
 
-Mission Platform Developer MCP ツールを使用して、新しいユーティリティ スケルトンを生成します。
+Use the Mission Platform Developer MCP tool to generate a new utility skeleton:
 
 ```bash
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
 
-## 関連ガイド
+## Related Guides
 
-- [パッケージ開発](package-development.md)
-- [アトミックコンポーネント設計](atomic-component-design.md)
-- [コンポーザブルオーサリング](composable-authoring.md)
-- [ストアオーサリング](store-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
