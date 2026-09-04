@@ -1,18 +1,13 @@
-# Creación de tiendas
+# Store Authoring
 
-Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
+Stores are used to manage shared, cross-component state within a package. Unlike application-level stores (like Pinia or
+Redux), package stores in the Mission Platform are designed to be **framework-neutral observable modules**. This allows
+write-once components to consume them via Forge hooks regardless of the host framework.
 
-> Fuente en inglés: [docs/store-authoring.md](../../store-authoring.md)
-> Idioma: Español (es)
+## Directory Layout
 
-Las tiendas se utilizan para gestionar el estado compartido entre componentes dentro de un paquete. A diferencia de las tiendas a nivel de aplicaciones (como Pinia o
-Redux), las tiendas de paquetes en Mission Platform están diseñadas para ser **módulos observables neutrales en cuanto al marco**. Esto permite
-componentes de escritura única para consumirlos a través de ganchos de Forge independientemente del marco del host.
-
-## Diseño del directorio
-
-Cada tienda DEBE residir en su propio subdirectorio con nombre dentro `src/stores/`, acompañado de un archivo de prueba ubicado en el mismo lugar y un
-barril local.
+Each store MUST reside in its own named subdirectory within `src/stores/`, accompanied by a co-located test file and a
+local barrel.
 
 ```text
 src/stores/
@@ -23,26 +18,26 @@ src/stores/
 └── index.ts                  # Package-level re-exports
 ```
 
-## El patrón observable
+## The Observable Pattern
 
-Las tiendas de paquetes evitan dependencias específicas del marco. En cambio, siguen un patrón observable simple:
+Package stores avoid framework-specific dependencies. Instead, they follow a simple observable pattern:
 
-1. **Estado privado**: Mantenga el estado dentro del alcance del módulo (simple TypeScript valores).
-2. **Acceso a instantáneas**: proporcione una `getSnapshot()` función para recuperar el estado actual.
-3. **Suscripción**: proporcione una `subscribe(listener)` función que agrega una devolución de llamada a una lista y devuelve una cancelación de suscripción
-   función.
-4. **Mutadores**: proporcionan funciones para actualizar el estado, que DEBEN notificar a todos los oyentes después de la actualización.
+1. **Private State**: Keep state within the module scope (plain TypeScript values).
+2. **Snapshot Access**: Provide a `getSnapshot()` function to retrieve the current state.
+3. **Subscription**: Provide a `subscribe(listener)` function that adds a callback to a list and returns an unsubscribe
+   function.
+4. **Mutators**: Provide functions to update the state, which MUST notify all listeners after the update.
 
-## Reglas de creación
+## Authoring Rules
 
-1. **Independiente del marco**: no importar desde `vue`, `react`, o `@mission-platform/forge` ganchos dentro del módulo de tienda
-   mismo.
-2. **Tipos explícitos**: siempre defina y exporte una interfaz para el estado de la tienda.
-3. **Seguridad SSR**: protege el acceso a las API del navegador (p. ej., `localStorage`) para que la tienda se pueda inicializar en un Node.js
-   ambiente.
-4. **Pruebas obligatorias**: cada tienda debe tener una ubicación compartida `.spec.ts` archivo.
+1. **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge-jsx` hooks inside the store module
+   itself.
+2. **Explicit Types**: Always define and export an interface for the store's state.
+3. **SSR Safety**: Guard access to browser APIs (e.g., `localStorage`) so the store can be initialized in a Node.js
+   environment.
+4. **Mandatory Testing**: Every store must have a co-located `.spec.ts` file.
 
-## Tienda de ejemplo
+## Example Store
 
 ```ts
 export interface ThemeState {
@@ -67,9 +62,9 @@ export function setTheme(theme: ThemeState['theme']): void {
 }
 ```
 
-## Consumir tiendas en componentes
+## Consuming Stores in Components
 
-Para usar una tienda dentro de un componente de escritura única, conéctela usando `useState` y `useEffect` de `@mission-platform/forge`:
+To use a store within a write-once component, bridge it using `useState` and `useEffect` from `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());
@@ -79,18 +74,18 @@ useEffect(() => {
 }, []);
 ```
 
-## Andamio
+## Scaffolding
 
-Utilice la herramienta MCP de Mission Platform Developer para generar un nuevo esqueleto de tienda:
+Use the Mission Platform Developer MCP tool to generate a new store skeleton:
 
 ```bash
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
 
-## Guías relacionadas
+## Related Guides
 
-- [Desarrollo de paquetes](package-development.md)
-- [Diseño de componentes atómicos](atomic-component-design.md)
-- [Autoría componible](composable-authoring.md)
-- [Autoría de utilidades](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Util Authoring](util-authoring.md)
