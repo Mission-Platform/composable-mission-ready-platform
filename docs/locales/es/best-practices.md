@@ -1,45 +1,39 @@
-# Mejores prácticas de la plataforma de misión
+# Mission Platform Best Practices
 
-Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
+This document outlines the core principles, architecture, and coding standards for the Mission Platform monorepo. It
+serves as an **Explanation** of why we follow certain patterns and a **Guideline** for day-to-day development.
 
-> Fuente en inglés: [docs/best-practices.md](../../best-practices.md)
-> Idioma: Español (es)
+## Core Principles
 
-Este documento describe los principios básicos, la arquitectura y los estándares de codificación para el monorepo de Mission Platform. eso
-Sirve como una **Explicación** de por qué seguimos ciertos patrones y una **Pauta** para el desarrollo del día a día.
+### Composable Architecture
 
-## Principios básicos
+Mission Platform follows a package-driven, composable architecture. Reusable building blocks (UI components,
+composables, utilities) live in `packages/`, while deployable applications are assembled from these blocks in `apps/`.
 
-### Arquitectura componible
+### Dependency Discipline
 
-Mission Platform sigue una arquitectura componible basada en paquetes. Bloques de construcción reutilizables (componentes de interfaz de usuario,
-componibles, utilidades) viven en `packages/`, mientras que las aplicaciones implementables se ensamblan a partir de estos bloques en `apps/`.
+To maintain a maintainable monorepo, we enforce a strict one-way dependency flow:
 
-### Disciplina de dependencia
+- **`apps`** → **`packages`**
+- **`packages`** → lower-level domain packages such as **`core`**, **`tooling`**, and **`compiler`**
 
-Para mantener un monorepo mantenible, aplicamos un estricto flujo de dependencia unidireccional:
+**Rule:** Code in `packages/` must **never** import from `apps/`. This prevents circular dependencies and ensure
+packages remain truly reusable.
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (Directamente para herramientas/configuración de compilación)
+### Storybook as Workbench
 
-**Regla:** Código en `packages/` **nunca** debe importar desde `apps/`. Esto evita dependencias circulares y garantiza
-Los paquetes siguen siendo verdaderamente reutilizables.
+When adding or modifying components in `packages/`, use the Storybook app (`apps/storybook`) as your primary development
+environment. The `apps/storybook` app does not contain the stories itself — it is the aggregating workbench that
+discovers and renders the stories that live alongside their components.
 
-### Libro de cuentos como banco de trabajo
+- Co-locate each `.stories.tsx` file with its component inside that component's package directory (e.g.
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), not under `apps/storybook`. This matches
+  the convention in [Atomic Component Design](atomic-component-design.md).
+- Verify component behavior across Vue, React, Svelte, Solid, and Web Components by switching the
+  `STORYBOOK_FRAMEWORK` environment variable. Each mode must consume the same neutral story inventory; a missing
+  framework artifact is a package/export failure, not a reason to filter that story out.
 
-Al agregar o modificar componentes en `packages/`, utiliza la aplicación Storybook (`apps/storybook`) como tu desarrollo principal
-ambiente. El `apps/storybook` La aplicación no contiene las historias en sí: es el banco de trabajo de agregación el que
-descubre y representa las historias que conviven con sus componentes.
-
-- Co-ubicar cada uno `.stories.tsx` archivo con su componente dentro del directorio del paquete de ese componente (p. ej.
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`), no bajo `apps/storybook`. Esto coincide
-  la convención en [Diseño de componentes atómicos](atomic-component-design.md).
-- Verificar el comportamiento de los componentes en Vue, React, Svelte, Solidy componentes web cambiando el
-  `STORYBOOK_FRAMEWORK` variable de entorno. Cada modo debe consumir el mismo inventario de historia neutral; un desaparecido
-  El artefacto del marco es un error de paquete/exportación, no una razón para filtrar esa historia.
-
-El ciclo de validación estático completo es:
+The full static validation loop is:
 
 ```bash
 for framework in vue react svelte solid web-component; do
@@ -47,61 +41,61 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-## Estándares de desarrollo
+## Development Standards
 
-### TypeScript En todos lados
+### TypeScript Everywhere
 
-Todo el código fuente nuevo debe escribirse en TypeScript (`.ts`) o Vue SFC con `<script setup lang="ts">`.
+All new source code must be written in TypeScript (`.ts`) or Vue SFCs with `<script setup lang="ts">`.
 
-- **Modo estricto**: `strict: true` se aplica en todos `tsconfig.json` archivos.
-- **Tipos explícitos**: proporcione tipos explícitos para todas las API públicas, funciones exportadas y elementos componibles.
-- **Evitar `any`**: Utilice tipos precisos o genéricos. Si un tipo es realmente desconocido, utilice `unknown` y realizar un estrechamiento de tipos.
+- **Strict Mode**: `strict: true` is enforced across all `tsconfig.json` files.
+- **Explicit Types**: Provide explicit types for all public APIs, exported functions, and composables.
+- **Avoid `any`**: Use precise types or generics. If a type is truly unknown, use `unknown` and perform type narrowing.
 
-### Componentes neutrales al marco
+### Framework-Neutral Components
 
-Siempre que sea posible, cree componentes de la interfaz de usuario utilizando el `@mission-platform/forge` dialecto. Esto permite que los componentes sean
-compilado y utilizado en Vue, React, Svelte, Solidy componentes web sin reescribir la lógica central. Configurar el
-solucionador del consumidor con la coincidencia `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, o `mp:web-component` condición.
+Whenever possible, author UI components using the `@mission-platform/forge` dialect. This allows components to be
+compiled and used in Vue, React, Svelte, Solid, and Web Components without rewriting the core logic. Configure the
+consumer's resolver with the matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, or `mp:web-component` condition.
 
-### Patrones de reactividad (Vue 3)
+### Reactivity Patterns (Vue 3)
 
-- Utilice la **API de composición** exclusivamente.
-- Preferir `ref()` para que la mayoría de los estados mantengan la coherencia.
-- Extraer lógica con estado compleja en **Composables** (`useXxx`).
-- Asegúrese de que todos los efectos secundarios (observadores, intervalos, oyentes de eventos) se limpien adecuadamente en `onUnmounted`.
+- Use the **Composition API** exclusively.
+- Prefer `ref()` for most state to maintain consistency.
+- Extract complex stateful logic into **Composables** (`useXxx`).
+- Ensure all side effects (watchers, intervals, event listeners) are properly cleaned up in `onUnmounted`.
 
-## Flujo de trabajo de Monorepo
+## Monorepo Workflow
 
-### Aislamiento de preocupaciones
+### Isolation of Concerns
 
-- **Nuevos componentes de la interfaz de usuario**: pertenecen a `packages/`.
-- **Utilidades compartidas**: pertenecen a `packages/`.
-- **Lint/Format/Build Tooling**: las configuraciones compartidas pertenecen a `configs/`.
+- **New UI Components**: Belong in `packages/`.
+- **Shared Utilities**: Belong in `packages/`.
+- **Lint/Format/Build Tooling**: Shared configurations belong in `packages/tooling/configs/`.
 
-### Linting y formato
+### Linting and Formatting
 
-El estilo de código consistente se aplica a través de ESLint y Prettier.
+Consistent code style is enforced via ESLint and Prettier.
 
-- Correr `pnpm lint` para comprobar si hay violaciones.
-- Correr `pnpm format:write` para solucionar automáticamente problemas de formato.
-- Los mensajes de confirmación deben seguir la especificación **Commits convencionales**.
+- Run `pnpm lint` to check for violations.
+- Run `pnpm format:write` to automatically fix formatting issues.
+- Commit messages must follow the **Conventional Commits** specification.
 
-## Optimización del rendimiento
+## Performance Optimization
 
-- **División de código**: uso dinámico `import()` para funciones no críticas y bibliotecas grandes.
-- **Optimización de activos**: prefiera formatos de imagen modernos (WebP/AVIF) y asegúrese de que todos los activos estáticos estén comprimidos.
-- **Gastos generales de reactividad**: uso `shallowRef` para objetos grandes que no requieren reactividad profunda.
+- **Code Splitting**: Use dynamic `import()` for non-critical features and large libraries.
+- **Asset Optimization**: Prefer modern image formats (WebP/AVIF) and ensure all static assets are compressed.
+- **Reactivity Overhead**: Use `shallowRef` for large objects that do not require deep reactivity.
 
-## Pruebas y documentación
+## Testing and Documentation
 
-- **Desarrollo basado en pruebas**: cada característica nueva o corrección de errores debe ir acompañada de pruebas unitarias (`.spec.ts`).
-- **Documentación Diátaxis**: Documentación del autor siguiendo el marco Diátaxis (Tutoriales, How-to, Referencia,
-  Explicación).
-- **TSDoc**: utilice TSDoc/JSDoc para todos los métodos y propiedades públicos para potenciar la inteligencia IDE.
+- **Test-Driven Development**: Every new feature or bug fix should be accompanied by unit tests (`.spec.ts`).
+- **Diátaxis Documentation**: Author documentation following the Diátaxis framework (Tutorials, How-to, Reference,
+  Explanation).
+- **TSDoc**: Use TSDoc/JSDoc for all public-facing methods and properties to power IDE intelligence.
 
-## Recursos relacionados
+## Related Resources
 
-- [Guía de prueba](testing.md)
-- [Mejores prácticas del marco](framework-best-practices.md)
-- [Estructura del espacio de trabajo](workspace-structure.md)
-- [Solución de problemas](troubleshooting.md)
+- [Testing Guide](testing.md)
+- [Framework Best Practices](framework-best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting](troubleshooting.md)
