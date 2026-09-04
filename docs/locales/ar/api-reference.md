@@ -14,20 +14,32 @@ package rather than this page.
 
 ## الإطار الأساسي
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 أساس بنية "الكتابة مرة واحدة"، مما يوفر وقت تشغيل JSX وخطافات محايدة لإطار العمل.
 
-| تصدير              | اكتب  | الوصف                                                                                                    |
-| :----------------- | :---- | :------------------------------------------------------------------------------------------------------- |
-| `h`, `Fragment`    | وظيفة | مصنع JSX وجزء لمكونات التأليف.                                                           |
-| `useState`         | هوك   | Framework-neutral state hook.                                                            |
-| `useEffect`        | هوك   | خطاف ذو تأثير محايد للإطار.                                                              |
-| `useMemo`          | هوك   | Framework-neutral memoization hook.                                                      |
-| `useRef`           | هوك   | خطاف مرجعي محايد للإطار.                                                                 |
-| `useContext`       | هوك   | ربط سياق محايد للإطار.                                                                   |
-| `toVueComponent`   | محول  | تحويل مكون صياغة إلى Vue 3 مكون (من `@mission-platform/forge/vue`).   |
-| `toReactComponent` | محول  | تحويل مكون صياغة إلى React مكون (من `@mission-platform/forge/react`). |
+| تصدير           | اكتب  | الوصف                                               |
+| :-------------- | :---- | :-------------------------------------------------- |
+| `h`, `Fragment` | وظيفة | مصنع JSX وجزء لمكونات التأليف.      |
+| `useState`      | هوك   | Framework-neutral state hook.       |
+| `useEffect`     | هوك   | خطاف ذو تأثير محايد للإطار.         |
+| `useMemo`       | هوك   | Framework-neutral memoization hook. |
+| `useRef`        | هوك   | خطاف مرجعي محايد للإطار.            |
+| `useContext`    | هوك   | ربط سياق محايد للإطار.              |
+
+### @mission-platform/forge-adapters
+
+Framework-specific adapters for rendering neutral Forge JSX components. Each
+framework is exposed as an independent subpath so applications can select only
+the runtime they use.
+
+| تصدير              | اكتب    | الوصف                                                                                                              |
+| :----------------- | :------ | :----------------------------------------------------------------------------------------------------------------- |
+| `toVueComponent`   | محول    | Converts a Forge component to a Vue 3 component from `@mission-platform/forge-adapters/vue`.       |
+| `toReactComponent` | محول    | Converts a Forge component to a React component from `@mission-platform/forge-adapters/react`.     |
+| SolidJS primitives | Adapter | `Teleport`, `Transition`, and `TransitionGroup` from `@mission-platform/forge-adapters/solid`.     |
+| Svelte primitives  | Adapter | Raw HTML and transition helpers from `@mission-platform/forge-adapters/svelte`.                    |
+| Web Components     | Runtime | Native custom-element rendering primitives from `@mission-platform/forge-adapters/web-components`. |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -57,7 +69,7 @@ Framework-neutral route contracts, pure matching helpers, and compiler markers f
 shared packages. Applications own route records and native router instances; the
 Forge router target selected by the application supplies the runtime capabilities.
 
-| تصدير                                                                | اكتب                | الوصف                                                                                                                                                 |
+| تصدير                                                                | اكتب                | Description                                                                                                                                           |
 | :------------------------------------------------------------------- | :------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MpRoute`                                                            | محول                | Route records, params, query/hash state, metadata, and navigation targets.                                                            |
 | `defineRoutes`                                                       | وظيفة               | Define route trees and resolve paths without a DOM or framework runtime.                                                              |
@@ -128,7 +140,7 @@ failure.
 
 رموز التصميم المركزية للألوان والطباعة والمسافات.
 
-| تصدير         | Description                                                                                                          |
+| تصدير         | الوصف                                                                                                                |
 | :------------ | :------------------------------------------------------------------------------------------------------------------- |
 | `tokens`      | كائن JS/TS يحتوي على جميع رموز التصميم (على سبيل المثال، `tokens.color.primary`). |
 | `tokens.scss` | متغيرات SCSS للاستخدام في أوراق الأنماط.                                                             |
@@ -186,7 +198,7 @@ failure.
 
 مسح الباركود القائم على الكاميرا ورمز الاستجابة السريعة.
 
-| مكون              | الوصف                                                                    |
+| مكون              | Description                                                              |
 | :---------------- | :----------------------------------------------------------------------- |
 | `<MpCodeScanner>` | المكون الذي يقوم بتهيئة دفق الكاميرا وإصدار نتائج المسح. |
 
@@ -204,7 +216,7 @@ failure.
 
 تكامل D3.js المحايد للإطار.
 
-| هوك     | الوصف                                                              |
+| هوك     | هوك                                                                |
 | :------ | :----------------------------------------------------------------- |
 | `useD3` | ربط تحديد D3 بمرجع مكون من خلال إدارة دورة الحياة. |
 
@@ -212,7 +224,7 @@ failure.
 
 التدقيق الإملائي المدعوم من WebAssembly.
 
-| تصدير          | هوك                                                                    |
+| تصدير          | الوصف                                                                  |
 | :------------- | :--------------------------------------------------------------------- |
 | `initHunspell` | يقوم بتحميل وحدة Hunspell WebAssembly وإنشاء مثيل لها. |
 | `spell`        | التحقق مما إذا كانت الكلمة مكتوبة بشكل صحيح.           |
@@ -319,7 +331,7 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 
 | الحزمة                         | الغرض                                                                         |
 | :----------------------------- | :---------------------------------------------------------------------------- |
-| `@mission-platform/forge`      | وقت تشغيل ومحولات JSX المحايدة للإطار.                        |
+| `@mission-platform/forge-jsx`  | وقت تشغيل ومحولات JSX المحايدة للإطار.                        |
 | `@mission-platform/components` | مكونات واجهة المستخدم للكتابة مرة واحدة.                      |
 | `@mission-platform/icons`      | مكونات أيقونة SVG للكتابة مرة واحدة.                          |
 | `@mission-platform/layouts`    | مكونات التطبيق والحاوية والتخطيط سريع الاستجابة.              |
@@ -381,13 +393,13 @@ These live in `packages/compiler/plugins/`. يقرر البرنامج الإضا
 
 #### @mission-platform/forge-cms-plugin-api
 
-| تصدير                     | اكتب  | الوصف                                                                                                    |
-| :------------------------ | :---- | :------------------------------------------------------------------------------------------------------- |
-| `analyzeContentComponent` | وظيفة | يعرض دعائم مكون محايد على نموذج المحتوى المحايد للنظام الأساسي.                          |
-| `ContentComponent`        | اكتب  | أمر `ContentField`ق، وفتحات، و `interactive` علَم.                                       |
-| `ContentFieldKind`        | اكتب  | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.          |
-| `CmsOutputPlugin`         | اكتب  | العقد المستهدف: مكون إضافي لإطار عمل مقيد بالإضافة إلى الباعثات الأربعة. |
-| `defineForgeCmsPlugin`    | وظيفة | التحقق من صحة هدف CMS في وقت التكوين.                                                    |
-| `generateCmsArtifacts`    | وظيفة | الاكتشاف العام ← IR ← نموذج المحتوى ← انبعاث ← كتابة السائق.                             |
-| `defineTsdownForgeCms`    | وظيفة | تكوين tsdown لهدف CMS واحد، ينبعث منه `dist/cms/<cms>/<framework>/**`.                   |
-| `defineTsdownForgeCmsAll` | وظيفة | تكوينات tsdown للحصول على قائمة أهداف CMS.                                               |
+| Export                    | اكتب     | Description                                                                                              |
+| :------------------------ | :------- | :------------------------------------------------------------------------------------------------------- |
+| `analyzeContentComponent` | Function | يعرض دعائم مكون محايد على نموذج المحتوى المحايد للنظام الأساسي.                          |
+| `ContentComponent`        | اكتب     | أمر `ContentField`ق، وفتحات، و `interactive` علَم.                                       |
+| `ContentFieldKind`        | اكتب     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.          |
+| `CmsOutputPlugin`         | Type     | العقد المستهدف: مكون إضافي لإطار عمل مقيد بالإضافة إلى الباعثات الأربعة. |
+| `defineForgeCmsPlugin`    | وظيفة    | التحقق من صحة هدف CMS في وقت التكوين.                                                    |
+| `generateCmsArtifacts`    | وظيفة    | الاكتشاف العام ← IR ← نموذج المحتوى ← انبعاث ← كتابة السائق.                             |
+| `defineTsdownForgeCms`    | وظيفة    | تكوين tsdown لهدف CMS واحد، ينبعث منه `dist/cms/<cms>/<framework>/**`.                   |
+| `defineTsdownForgeCmsAll` | وظيفة    | تكوينات tsdown للحصول على قائمة أهداف CMS.                                               |
