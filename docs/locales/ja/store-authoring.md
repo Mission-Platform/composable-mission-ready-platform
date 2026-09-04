@@ -1,18 +1,13 @@
-# ストアオーサリング
+# Store Authoring
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+Stores are used to manage shared, cross-component state within a package. Unlike application-level stores (like Pinia or
+Redux), package stores in the Mission Platform are designed to be **framework-neutral observable modules**. This allows
+write-once components to consume them via Forge hooks regardless of the host framework.
 
-> 英語の原典: [docs/store-authoring.md](../../store-authoring.md)
-> 言語: 日本語 (ja)
+## Directory Layout
 
-ストアは、パッケージ内のコンポーネント間の共有状態を管理するために使用されます。アプリケーションレベルのストア（Ponia や
-Redux)、Mission Platform のパッケージ ストアは、**フレームワークに依存しない監視可能なモジュール**になるように設計されています。これにより、
-ホスト フレームワークに関係なく、Forge フックを介してコンポーネントを消費するためのライトワンス コンポーネント。
-
-## ディレクトリのレイアウト
-
-各ストアは、内部の独自の名前付きサブディレクトリに存在する必要があります。 `src/stores/`、同じ場所に配置されたテスト ファイルと
-地元の樽。
+Each store MUST reside in its own named subdirectory within `src/stores/`, accompanied by a co-located test file and a
+local barrel.
 
 ```text
 src/stores/
@@ -23,26 +18,26 @@ src/stores/
 └── index.ts                  # Package-level re-exports
 ```
 
-## 観察可能なパターン
+## The Observable Pattern
 
-パッケージ ストアはフレームワーク固有の依存関係を回避します。代わりに、それらは単純な観察可能なパターンに従います。
+Package stores avoid framework-specific dependencies. Instead, they follow a simple observable pattern:
 
-1. **プライベート状態**: 状態をモジュールのスコープ内に保持します (プレーン) TypeScript 値)。
-2. **スナップショット アクセス**: `getSnapshot()` 現在の状態を取得する関数。
-3. **サブスクリプション**: `subscribe(listener)` リストにコールバックを追加し、購読解除を返す関数
-   機能。
-4. **ミューテーター**: 状態を更新する関数を提供します。更新後にすべてのリスナーに通知しなければなりません。
+1. **Private State**: Keep state within the module scope (plain TypeScript values).
+2. **Snapshot Access**: Provide a `getSnapshot()` function to retrieve the current state.
+3. **Subscription**: Provide a `subscribe(listener)` function that adds a callback to a list and returns an unsubscribe
+   function.
+4. **Mutators**: Provide functions to update the state, which MUST notify all listeners after the update.
 
-## オーサリングルール
+## Authoring Rules
 
-1. **フレームワークに依存しない**: からインポートしないでください。 `vue`, `react`、 または `@mission-platform/forge` ストアモジュール内のフック
-   それ自体。
-2. **明示的なタイプ**: 常にストアの状態のインターフェイスを定義してエクスポートします。
-3. **SSR の安全性**: ブラウザ API へのアクセスを保護します (例: `localStorage`) したがって、ストアは次のように初期化できます。 Node.js
-   環境。
-4. **必須テスト**: すべての店舗に同じ場所にテストを設置する必要があります。 `.spec.ts` ファイル。
+1. **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge-jsx` hooks inside the store module
+   itself.
+2. **Explicit Types**: Always define and export an interface for the store's state.
+3. **SSR Safety**: Guard access to browser APIs (e.g., `localStorage`) so the store can be initialized in a Node.js
+   environment.
+4. **Mandatory Testing**: Every store must have a co-located `.spec.ts` file.
 
-## ストアの例
+## Example Store
 
 ```ts
 export interface ThemeState {
@@ -67,9 +62,9 @@ export function setTheme(theme: ThemeState['theme']): void {
 }
 ```
 
-## コンポーネント内のストアの使用
+## Consuming Stores in Components
 
-追記型コンポーネント内でストアを使用するには、次を使用してストアをブリッジします。 `useState` そして `useEffect` から `@mission-platform/forge`:
+To use a store within a write-once component, bridge it using `useState` and `useEffect` from `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());
@@ -79,18 +74,18 @@ useEffect(() => {
 }, []);
 ```
 
-## 足場
+## Scaffolding
 
-Mission Platform Developer MCP ツールを使用して、新しいストア スケルトンを生成します。
+Use the Mission Platform Developer MCP tool to generate a new store skeleton:
 
 ```bash
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
 
-## 関連ガイド
+## Related Guides
 
-- [パッケージ開発](package-development.md)
-- [アトミックコンポーネント設計](atomic-component-design.md)
-- [コンポーザブルオーサリング](composable-authoring.md)
-- [ユーティリティオーサリング](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Util Authoring](util-authoring.md)
