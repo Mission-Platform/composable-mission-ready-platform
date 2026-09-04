@@ -1,30 +1,25 @@
-# 原子组件设计
+# Atomic Component Design
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+Mission Platform uses an **Atomic Design** system to organize components into hierarchical levels of complexity. Every
+component is a "write-once" unit authored in the neutral Forge JSX dialect (`@mission-platform/forge-jsx`), ensuring
+consistency across multiple frameworks.
 
-> 英文原文: [docs/atomic-component-design.md](../../atomic-component-design.md)
-> 语言: 简体中文 (zh)
+## Design Levels
 
-任务平台使用**原子设计**系统将组件组织成复杂的层次结构。每个
-组件是用中立的 Forge JSX 方言编写的“一次写入”单元（`@mission-platform/forge`)，确保
-跨多个框架的一致性。
+Components are categorized into five levels based on their scope and responsibility.
 
-## 设计水平
+| Level         | Folder                      | Description                                                                                                                                                                                                                                                       |
+| :------------ | :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atoms**     | `src/components/atoms/`     | Smallest UI primitives (e.g., `ForgeButton`, `ForgeInput`, `ForgeBadge`). They are typically functional units that cannot be broken down further without losing their purpose. |
+| **Molecules** | `src/components/molecules/` | Simple compositions of atoms (e.g., `ForgeSearchInput`, `ForgeFieldSet`). They function together as a unit.                                                                    |
+| **Organisms** | `src/components/organisms/` | Complex UI sections composed of atoms, molecules, and other organisms (e.g., `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                                       |
+| **Templates** | `src/components/templates/` | Page-level layouts that define the content structure (e.g., `ForgeHero`, `ForgeAppLayout`). They often use slots to define where content should be placed.                     |
+| **Pages**     | `src/components/pages/`     | Specific instances of templates populated with concrete content and data (e.g., `AccountSettingsPage`).                                                                                        |
 
-组件根据其范围和职责分为五个级别。
+## Component Folder Layout
 
-|水平|文件夹|描述 |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **原子** | `src/components/atoms/`     |最小的 UI 原语（例如， `ForgeButton`, `ForgeInput`, `ForgeBadge`)。它们通常是功能单元，不能在不失去其用途的情况下进一步分解。 |
-| **分子** | `src/components/molecules/` |原子的简单组成（例如， `ForgeSearchInput`, `ForgeFieldSet`)。它们作为一个整体共同发挥作用。                                                                    |
-| **生物体** | `src/components/organisms/` |由原子、分子和其他有机体（例如， `ForgeNavbar`, `ForgeTable`, `ForgeModal`)。                                                       |
-| **模板** | `src/components/templates/` |定义内容结构的页面级布局（例如， `ForgeHero`, `ForgeAppLayout`)。他们经常使用插槽来定义内容的放置位置。                     |
-| **页面** | `src/components/pages/`     |填充有具体内容和数据的模板的特定实例（例如， `AccountSettingsPage`).                                                                        |
-
-## 组件文件夹布局
-
-每个组件都位于相应级别文件夹下其自己命名的子目录中。该目录包含
-组件源、故事、测试和可选样式。
+Each component resides in its own named subdirectory under the appropriate level folder. This directory contains the
+component source, stories, tests, and optional styles.
 
 ```text
 src/components/
@@ -42,28 +37,28 @@ src/components/
 └── index.ts                         # Global barrel re-exporting all levels
 ```
 
-## 故事惯例
+## Story Conventions
 
-故事书故事必须与其组件位于同一位置，并遵循严格的标题约定以保持干净
-侧边栏结构。
+Storybook stories MUST be co-located with their components and follow a strict title convention to maintain a clean
+sidebar structure.
 
-### 文件名
+### Filename
 
-故事必须使用 `.stories.tsx` 扩大。
+Stories must use the `.stories.tsx` extension.
 
-### 产权约定
+### Title Convention
 
-这 `title` 故事书里的田野 `meta` 对象必须遵循以下模式：
+The `title` field in the Storybook `meta` object must follow this pattern:
 
 ```text
 <Level>/<Category>/<Component>
 ```
 
-- **级别**：大写复数（例如， `Atoms`, `Molecules`)。
-- **类别**：功能分组（例如， `Forms`, `Navigation`, `Display`, `Feedback`)。
-- **组件**：PascalCase 组件名称（例如， `ForgeButton`).
+- **Level**: Capitalized plural (e.g., `Atoms`, `Molecules`).
+- **Category**: Functional grouping (e.g., `Forms`, `Navigation`, `Display`, `Feedback`).
+- **Component**: PascalCase component name (e.g., `ForgeButton`).
 
-**例子 （`forge-button.stories.tsx`):**
+**Example (`forge-button.stories.tsx`):**
 
 ```tsx
 const meta = {
@@ -73,22 +68,22 @@ const meta = {
 };
 ```
 
-## 编写标准
+## Authoring Standards
 
-1. **框架中立性**：切勿单独创作 Vue 和 React 版本。使用 `@mission-platform/forge`。
-2. **命名**：组件应使用 `Base` 前缀（例如， `ForgeCard`) 除非它们是具体的实现。
-3. **类型安全**：导出 `*Properties` 组件道具的接口。
-4. **测试**：同地办公 `.spec.ts` 每个组件都需要。
-5. **脚手架**：使用 `scaffold_component` MCP 工具确保正确的目录结构和样板文件。
+1. **Framework Neutrality**: Never author separate Vue and React versions. Use `@mission-platform/forge-jsx`.
+2. **Naming**: Components should use the `Base` prefix (e.g., `ForgeCard`) unless they are specific implementations.
+3. **Type Safety**: Export a `*Properties` interface for the component's props.
+4. **Testing**: A co-located `.spec.ts` is required for every component.
+5. **Scaffolding**: Use the `scaffold_component` MCP tool to ensure the correct directory structure and boilerplate.
 
 ```bash
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
 
-## 相关指南
+## Related Guides
 
-- [封装开发](package-development.md)
-- [可组合创作](composable-authoring.md)
-- [商店创作](store-authoring.md)
-- [实用程序创作](util-authoring.md)
+- [Package Development](package-development.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
