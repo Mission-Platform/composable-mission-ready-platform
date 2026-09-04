@@ -14,20 +14,32 @@ package rather than this page.
 
 ## Core Framework
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 De basis van de "write-once"-architectuur, die een raamwerkneutrale JSX-runtime en hooks biedt.
 
-| Exporteren         | Typ     | Beschrijving                                                                                                                           |
-| :----------------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------- |
-| `h`, `Fragment`    | Functie | JSX-fabriek en fragment voor het schrijven van componenten.                                                            |
-| `useState`         | Haak    | Kaderneutrale staatshaak.                                                                                              |
-| `useEffect`        | Haak    | Kader-neutrale effecthaak.                                                                                             |
-| `useMemo`          | Haak    | Kaderneutrale memoisatiehaak.                                                                                          |
-| `useRef`           | Haak    | Kaderneutrale referentiehaak.                                                                                          |
-| `useContext`       | Haak    | Kaderneutrale contexthaak.                                                                                             |
-| `toVueComponent`   | Adapter | Converteert een smederijcomponent naar een Vue 3 componenten (vanaf `@mission-platform/forge/vue`). |
-| `toReactComponent` | Adapter | Converteert een smederijcomponent naar een React onderdeel (van `@mission-platform/forge/react`).   |
+| Exporteren      | Typ     | Beschrijving                                                                |
+| :-------------- | :------ | :-------------------------------------------------------------------------- |
+| `h`, `Fragment` | Functie | JSX-fabriek en fragment voor het schrijven van componenten. |
+| `useState`      | Haak    | Kaderneutrale staatshaak.                                   |
+| `useEffect`     | Haak    | Kader-neutrale effecthaak.                                  |
+| `useMemo`       | Haak    | Kaderneutrale memoisatiehaak.                               |
+| `useRef`        | Haak    | Kaderneutrale referentiehaak.                               |
+| `useContext`    | Haak    | Kaderneutrale contexthaak.                                  |
+
+### @mission-platform/forge-adapters
+
+Framework-specific adapters for rendering neutral Forge JSX components. Each
+framework is exposed as an independent subpath so applications can select only
+the runtime they use.
+
+| Exporteren         | Typ     | Beschrijving                                                                                                       |
+| :----------------- | :------ | :----------------------------------------------------------------------------------------------------------------- |
+| `toVueComponent`   | Adapter | Converts a Forge component to a Vue 3 component from `@mission-platform/forge-adapters/vue`.       |
+| `toReactComponent` | Adapter | Converts a Forge component to a React component from `@mission-platform/forge-adapters/react`.     |
+| SolidJS primitives | Adapter | `Teleport`, `Transition`, and `TransitionGroup` from `@mission-platform/forge-adapters/solid`.     |
+| Svelte primitives  | Adapter | Raw HTML and transition helpers from `@mission-platform/forge-adapters/svelte`.                    |
+| Web Components     | Runtime | Native custom-element rendering primitives from `@mission-platform/forge-adapters/web-components`. |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -57,7 +69,7 @@ Framework-neutral route contracts, pure matching helpers, and compiler markers f
 shared packages. Applications own route records and native router instances; the
 Forge router target selected by the application supplies the runtime capabilities.
 
-| Exporteren                                                           | Typ              | Beschrijving                                                                                                                                          |
+| Exporteren                                                           | Typ              | Description                                                                                                                                           |
 | :------------------------------------------------------------------- | :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MpRoute`                                                            | Typ              | Route records, params, query/hash state, metadata, and navigation targets.                                                            |
 | `defineRoutes`                                                       | Functie          | Define route trees and resolve paths without a DOM or framework runtime.                                                              |
@@ -128,7 +140,7 @@ failure.
 
 Gecentraliseerde ontwerptokens voor kleuren, typografie en spatiëring.
 
-| Exporteren    | Description                                                                                                                  |
+| Exporteren    | Beschrijving                                                                                                                 |
 | :------------ | :--------------------------------------------------------------------------------------------------------------------------- |
 | `tokens`      | JS/TS-object dat alle ontwerptokens bevat (bijv. `tokens.color.primary`). |
 | `tokens.scss` | SCSS-variabelen voor gebruik in stylesheets.                                                                 |
@@ -186,7 +198,7 @@ Reactieve verpakking voor MapLibre GL.
 
 Cameragebaseerd scannen van streepjescodes en QR-codes.
 
-| Onderdeel         | Beschrijving                                                                            |
+| Onderdeel         | Description                                                                             |
 | :---------------- | :-------------------------------------------------------------------------------------- |
 | `<MpCodeScanner>` | Component dat de camerastream initialiseert en scanresultaten verzendt. |
 
@@ -212,7 +224,7 @@ Kaderneutrale D3.js-integratie.
 
 Spellingcontrole door WebAssembly.
 
-| Exporteren     | Beschrijving                                                          |
+| Exporteren     | Doel                                                                  |
 | :------------- | :-------------------------------------------------------------------- |
 | `initHunspell` | Laadt en instantieert de Hunspell WebAssembly-module. |
 | `spell`        | Controleert of een woord correct is gespeld.          |
@@ -319,7 +331,7 @@ inpakken `packages/`, inclusief de getypte WebAssembly gevels.
 
 | Pakket                         | Purpose                                                                           |
 | :----------------------------- | :-------------------------------------------------------------------------------- |
-| `@mission-platform/forge`      | Framework-neutrale JSX-runtime en adapters.                       |
+| `@mission-platform/forge-jsx`  | Framework-neutrale JSX-runtime en adapters.                       |
 | `@mission-platform/components` | UI-componenten die eenmalig kunnen worden geschreven.             |
 | `@mission-platform/icons`      | Eenmalig beschrijfbare SVG-pictogramcomponenten.                  |
 | `@mission-platform/layouts`    | Applicatie-, container- en responsieve lay-outcomponenten.        |
@@ -381,13 +393,13 @@ target kan aan elke framework-plug-in worden gekoppeld. See the [Forge Compiler 
 
 #### @mission-platform/forge-cms-plugin-api
 
-| Exporteren                | Typ     | Doel                                                                                                        |
-| :------------------------ | :------ | :---------------------------------------------------------------------------------------------------------- |
-| `analyzeContentComponent` | Functie | Projecteert de rekwisieten van een neutrale component op het platformneutrale inhoudsmodel. |
-| `ContentComponent`        | Typ     | Besteld `ContentField`s, slots en de `interactive` vlag.                                    |
-| `ContentFieldKind`        | Typ     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.             |
-| `CmsOutputPlugin`         | Typ     | Het doelcontract: een gebonden raamwerkplug-in plus de vier emitters.       |
-| `defineForgeCmsPlugin`    | Functie | Valideert een CMS-doel tijdens de configuratie.                                             |
-| `generateCmsArtifacts`    | Functie | Het generieke stuurprogramma Discover → IR → Content Model → Emit → Write.                  |
-| `defineTsdownForgeCms`    | Functie | tsdown-configuratie voor één CMS-doel, uitzendend `dist/cms/<cms>/<framework>/**`.          |
-| `defineTsdownForgeCmsAll` | Functie | tsdown-configuraties voor een lijst met CMS-doelen.                                         |
+| Export                    | Typ      | Description                                                                                                 |
+| :------------------------ | :------- | :---------------------------------------------------------------------------------------------------------- |
+| `analyzeContentComponent` | Function | Projecteert de rekwisieten van een neutrale component op het platformneutrale inhoudsmodel. |
+| `ContentComponent`        | Typ      | Besteld `ContentField`s, slots en de `interactive` vlag.                                    |
+| `ContentFieldKind`        | Typ      | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.             |
+| `CmsOutputPlugin`         | Type     | Het doelcontract: een gebonden raamwerkplug-in plus de vier emitters.       |
+| `defineForgeCmsPlugin`    | Functie  | Valideert een CMS-doel tijdens de configuratie.                                             |
+| `generateCmsArtifacts`    | Functie  | Het generieke stuurprogramma Discover → IR → Content Model → Emit → Write.                  |
+| `defineTsdownForgeCms`    | Functie  | tsdown-configuratie voor één CMS-doel, uitzendend `dist/cms/<cms>/<framework>/**`.          |
+| `defineTsdownForgeCmsAll` | Functie  | tsdown-configuraties voor een lijst met CMS-doelen.                                         |
