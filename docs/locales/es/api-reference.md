@@ -14,20 +14,32 @@ package rather than this page.
 
 ## Marco central
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 La base de la arquitectura de "escritura única", que proporciona ganchos y un tiempo de ejecución JSX neutral en el marco.
 
-| Exportar           | Tipo      | Descripción                                                                                                                      |
-| :----------------- | :-------- | :------------------------------------------------------------------------------------------------------------------------------- |
-| `h`, `Fragment`    | Función   | Fábrica JSX y fragmento para componentes de creación.                                                            |
-| `useState`         | Gancho    | Gancho de estado neutral en el marco.                                                                            |
-| `useEffect`        | Gancho    | Gancho con efecto marco neutro.                                                                                  |
-| `useMemo`          | Gancho    | Gancho de memorización neutral en el marco.                                                                      |
-| `useRef`           | Gancho    | Gancho de referencia neutral en el marco.                                                                        |
-| `useContext`       | Gancho    | Gancho de contexto neutral al marco.                                                                             |
-| `toVueComponent`   | Adaptador | Convierte un componente de forja en un Vue 3 componentes (de `@mission-platform/forge/vue`).  |
-| `toReactComponent` | Adaptador | Convierte un componente de forja en un React componente (de `@mission-platform/forge/react`). |
+| Exportar        | Tipo    | Descripción                                                           |
+| :-------------- | :------ | :-------------------------------------------------------------------- |
+| `h`, `Fragment` | Función | Fábrica JSX y fragmento para componentes de creación. |
+| `useState`      | Gancho  | Gancho de estado neutral en el marco.                 |
+| `useEffect`     | Gancho  | Gancho con efecto marco neutro.                       |
+| `useMemo`       | Gancho  | Gancho de memorización neutral en el marco.           |
+| `useRef`        | Gancho  | Gancho de referencia neutral en el marco.             |
+| `useContext`    | Gancho  | Gancho de contexto neutral al marco.                  |
+
+### @mission-platform/forge-adapters
+
+Framework-specific adapters for rendering neutral Forge JSX components. Each
+framework is exposed as an independent subpath so applications can select only
+the runtime they use.
+
+| Exportar           | Tipo      | Descripción                                                                                                        |
+| :----------------- | :-------- | :----------------------------------------------------------------------------------------------------------------- |
+| `toVueComponent`   | Adaptador | Converts a Forge component to a Vue 3 component from `@mission-platform/forge-adapters/vue`.       |
+| `toReactComponent` | Adaptador | Converts a Forge component to a React component from `@mission-platform/forge-adapters/react`.     |
+| SolidJS primitives | Adapter   | `Teleport`, `Transition`, and `TransitionGroup` from `@mission-platform/forge-adapters/solid`.     |
+| Svelte primitives  | Adapter   | Raw HTML and transition helpers from `@mission-platform/forge-adapters/svelte`.                    |
+| Web Components     | Runtime   | Native custom-element rendering primitives from `@mission-platform/forge-adapters/web-components`. |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -57,7 +69,7 @@ Framework-neutral route contracts, pure matching helpers, and compiler markers f
 shared packages. Applications own route records and native router instances; the
 Forge router target selected by the application supplies the runtime capabilities.
 
-| Exportar                                                             | Tipo             | Descripción                                                                                                                                           |
+| Exportar                                                             | Tipo             | Description                                                                                                                                           |
 | :------------------------------------------------------------------- | :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MpRoute`                                                            | Tipo             | Route records, params, query/hash state, metadata, and navigation targets.                                                            |
 | `defineRoutes`                                                       | Función          | Define route trees and resolve paths without a DOM or framework runtime.                                                              |
@@ -128,7 +140,7 @@ failure.
 
 Fichas de diseño centralizadas para colores, tipografía y espaciado.
 
-| Exportar      | Description                                                                                                                    |
+| Exportar      | Descripción                                                                                                                    |
 | :------------ | :----------------------------------------------------------------------------------------------------------------------------- |
 | `tokens`      | Objeto JS/TS que contiene todos los tokens de diseño (por ejemplo, `tokens.color.primary`). |
 | `tokens.scss` | Variables SCSS para uso en hojas de estilo.                                                                    |
@@ -185,7 +197,7 @@ Envoltorio reactivo para MapLibre GL.
 
 Escaneo de códigos de barras y códigos QR basado en cámara.
 
-| Componente        | Descripción                                                                                          |
+| Componente        | Description                                                                                          |
 | :---------------- | :--------------------------------------------------------------------------------------------------- |
 | `<MpCodeScanner>` | Componente que inicializa la transmisión de la cámara y emite resultados de escaneo. |
 
@@ -211,7 +223,7 @@ Integración D3.js neutral en el marco de trabajo.
 
 WebAssembly-powered spell checking.
 
-| Exportar       | Descripción                                                                 |
+| Exportar       | `createMpRouter`                                                            |
 | :------------- | :-------------------------------------------------------------------------- |
 | `initHunspell` | Carga y crea una instancia del módulo Hunspell WebAssembly. |
 | `spell`        | Comprueba si una palabra está escrita correctamente.        |
@@ -318,7 +330,7 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 
 | Paquete                        | Propósito                                                                                          |
 | :----------------------------- | :------------------------------------------------------------------------------------------------- |
-| `@mission-platform/forge`      | Adaptadores y tiempo de ejecución JSX neutrales en el marco de trabajo.            |
+| `@mission-platform/forge-jsx`  | Adaptadores y tiempo de ejecución JSX neutrales en el marco de trabajo.            |
 | `@mission-platform/components` | Componentes de interfaz de usuario de escritura única.                             |
 | `@mission-platform/icons`      | Componentes de iconos SVG de escritura única.                                      |
 | `@mission-platform/layouts`    | Componentes de aplicación, contenedor y diseño responsivo.                         |
@@ -380,13 +392,13 @@ El objetivo puede estar vinculado a cualquier complemento del marco. See the [Fo
 
 #### @mission-platform/forge-cms-plugin-api
 
-| Exportar                  | Tipo    | `createMpRouter`                                                                                                   |
-| :------------------------ | :------ | :----------------------------------------------------------------------------------------------------------------- |
-| `analyzeContentComponent` | Función | Proyecta los accesorios de un componente neutral en el modelo de contenido neutral de plataforma.  |
-| `ContentComponent`        | Tipo    | Ordenado `ContentField`s, ranuras y el `interactive` bandera.                                      |
-| `ContentFieldKind`        | Tipo    | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.                    |
-| `CmsOutputPlugin`         | Tipo    | El contrato de destino: un complemento de marco vinculado más los cuatro emisores. |
-| `defineForgeCmsPlugin`    | Función | Valida un destino CMS en el momento de la configuración.                                           |
-| `generateCmsArtifacts`    | Función | El controlador genérico descubrir → IR → modelo de contenido → emitir → escribir.                  |
-| `defineTsdownForgeCms`    | Función | Configuración tsdown para un objetivo CMS, emitiendo `dist/cms/<cms>/<framework>/**`.              |
-| `defineTsdownForgeCmsAll` | Función | tsdown configs para obtener una lista de destinos de CMS.                                          |
+| Export                    | Tipo     | Description                                                                                                        |
+| :------------------------ | :------- | :----------------------------------------------------------------------------------------------------------------- |
+| `analyzeContentComponent` | Function | Proyecta los accesorios de un componente neutral en el modelo de contenido neutral de plataforma.  |
+| `ContentComponent`        | Tipo     | Ordenado `ContentField`s, ranuras y el `interactive` bandera.                                      |
+| `ContentFieldKind`        | Tipo     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.                    |
+| `CmsOutputPlugin`         | Type     | El contrato de destino: un complemento de marco vinculado más los cuatro emisores. |
+| `defineForgeCmsPlugin`    | Función  | Valida un destino CMS en el momento de la configuración.                                           |
+| `generateCmsArtifacts`    | Función  | El controlador genérico descubrir → IR → modelo de contenido → emitir → escribir.                  |
+| `defineTsdownForgeCms`    | Función  | Configuración tsdown para un objetivo CMS, emitiendo `dist/cms/<cms>/<framework>/**`.              |
+| `defineTsdownForgeCmsAll` | Función  | tsdown configs para obtener una lista de destinos de CMS.                                          |
