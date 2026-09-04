@@ -1,90 +1,85 @@
-# 순환 종속성 관리
+# Circular Dependency Management
 
-정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
+This document explains the impact of circular dependencies within the Mission Platform monorepo and provides a **How-to
+guide** for detecting, resolving, and preventing them. It serves as both an **Explanation** of monorepo health and a
+technical recipe for refactoring.
 
-> 영어 원문: [docs/circular-dependencies.md](../../circular-dependencies.md)
-> 언어: 한국어 (ko)
+## What are Circular Dependencies?
 
-이 문서는 Mission Platform 모노레포 내 순환 종속성의 영향을 설명하고 **How-to를 제공합니다.
-이를 탐지, 해결, 예방하기 위한 가이드**를 제공합니다. 이는 모노레포 상태에 대한 **설명** 및
-리팩토링을 위한 기술적인 방법.
+A circular dependency occurs when two or more packages depend on each other, either directly or indirectly. For example:
 
-## 순환 종속성이란 무엇입니까?
+- Package A imports from Package B.
+- Package B imports from Package A.
 
-순환 종속성은 두 개 이상의 패키지가 직접 또는 간접적으로 서로 종속될 때 발생합니다. 예를 들어:
+In a monorepo, these cycles are particularly harmful because they can cause:
 
-- 패키지 A는 패키지 B에서 가져옵니다.
-- 패키지 B는 패키지 A에서 가져옵니다.
+- **Build Failures**: Dependency graph resolution (e.g., by Turborepo or pnpm) can deadlock or fail.
+- **Runtime Errors**: One module may be partially initialized when the other attempts to use its exports.
+- **Increased Coupling**: Packages become impossible to use or test in isolation.
 
-단일 저장소에서 이러한 주기는 다음과 같은 원인이 될 수 있기 때문에 특히 해롭습니다.
+## Detection
 
-- **빌드 실패**: 종속성 그래프 해결(예: Turborepo 또는 pnpm) 교착 상태에 빠지거나 실패할 수 있습니다.
-- **런타임 오류**: 다른 모듈이 내보내기를 사용하려고 하면 한 모듈이 부분적으로 초기화될 수 있습니다.
-- **결합 증가**: 패키지를 단독으로 사용하거나 테스트하는 것이 불가능해집니다.
-
-## 발각
-
-Mission Platform은 여러 자동화 도구를 사용하여 순환 종속성이 프로덕션에 도달하기 전에 포착합니다.
+Mission Platform uses several automated tools to catch circular dependencies before they reach production.
 
 ### ESLint `no-restricted-paths`
 
-우리의 공유 ESLint 구성은 단방향 종속성 흐름을 적용합니다. 다음 패키지에서 가져오려고 하면
-계층 구조에서 사용자의 "위에" 있어야 하면 linter에서 오류가 발생합니다.
+Our shared ESLint configuration enforces the one-way dependency flow. If you attempt to import from a package that
+should be "above" yours in the hierarchy, the linter will throw an error.
 
-Linter를 실행하여 위반 사항을 확인합니다.
+Run the linter to check for violations:
 
 ```bash
 pnpm lint
 ```
 
-### Madge를 사용한 수동 감사
+### Manual Audit with Madge
 
-여러 파일에 걸쳐 있는 복잡한 주기의 경우 다음을 사용할 수 있습니다. `madge` (설치된 경우) 또는 유사한 시각화 도구를 사용하여
-의존성 그래프.
+For complex cycles that span multiple files, you can use `madge` (if installed) or similar visualizers to map the
+dependency graph.
 
-## 방법: 순환 종속성 해결
+## How-to: Resolve Circular Dependencies
 
-순환 종속성이 감지되면 다음 전략 중 하나를 사용하여 이를 해결하세요.
+When a circular dependency is detected, use one of the following strategies to resolve it.
 
-### 전략 1: 공유 코드 추출(권장)
+### Strategy 1: Extract Shared Code (Recommended)
 
-패키지 A와 패키지 B 모두에 공통 로직이 필요한 경우 해당 로직을 새로운 하위 수준 패키지로 이동합니다(예:
+If Package A and Package B both need a common piece of logic, move that logic into a new, lower-level package (e.g.,
 `packages/utils-shared`).
 
-**전에**:
+**Before**:
 
-- 패키지 A ⇔ 패키지 B
+- Package A ↔ Package B
 
-**후에**:
+**After**:
 
-- 패키지 A → 패키지 C
-- 패키지 B → 패키지 C
+- Package A → Package C
+- Package B → Package C
 
-### 전략 2: 종속성 반전
+### Strategy 2: Dependency Inversion
 
-패키지 B가 패키지 A에서 직접 가져오는 대신 패키지 B가 필요한 기능을 소품으로 받아들이도록 합니다.
-구성 객체 또는 이벤트 버스를 통해.
+Instead of Package B importing directly from Package A, have Package B accept the required functionality as a prop, a
+configuration object, or via an event bus.
 
-**예**:
-대신에 `AuthService` 수입 `UserService` 프로필을 업데이트하려면 `AuthService` 방출할 수 있다 `AUTH_SUCCESS` 이벤트
-그 `UserService` 들어요.
+**Example**:
+Instead of `AuthService` importing `UserService` to update a profile, `AuthService` can emit an `AUTH_SUCCESS` event
+that `UserService` listens for.
 
-### 전략 3: 통합
+### Strategy 3: Consolidation
 
-두 패키지가 너무 밀접하게 결합되어 서로의 내부가 지속적으로 필요한 경우 실제로는
-단일 논리 유닛. 하나의 패키지로 병합하는 것을 고려해보세요.
+If two packages are so tightly coupled that they constantly require each other's internals, they might actually be a
+single logical unit. Consider merging them into one package.
 
-## 예방 모범 사례
+## Prevention Best Practices
 
-1. **일방향 흐름을 따르세요**: `Apps → Packages → Configs` 의존성 방향.
-2. **작성 프레임워크 중립 논리**: 사용 `@mission-platform/forge` 프레임워크별 주기를 방지하기 위한 핵심 논리
-3. **작업공간 프로토콜 사용**: 항상 사용 `workspace:*` 내부 종속성을 보장하기 위해 pnpm 제대로 해결할 수 있다
-   그래프.
-4. **정기적으로 가져오기 감사**: IDE의 "자동 가져오기" 제안에 주의하세요.
-   의도하지 않은 패키지 간 종속성.
+1. **Follow the One-Way Flow**: Strictly adhere to the `Apps → Packages → Configs` dependency direction.
+2. **Author Framework-Neutral Logic**: Use `@mission-platform/forge-jsx` for core logic to avoid framework-specific cycles.
+3. **Use Workspace Protocols**: Always use `workspace:*` for internal dependencies to ensure pnpm can correctly resolve
+   the graph.
+4. **Regularly Audit Imports**: Pay attention to "auto-import" suggestions in your IDE, as they can sometimes introduce
+   unintended cross-package dependencies.
 
-## 관련 문서
+## Related Documentation
 
-- [모범 사례](best-practices.md)
-- [작업공간 구조](workspace-structure.md)
-- [문제 해결 가이드](troubleshooting.md)
+- [Best Practices](best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting Guide](troubleshooting.md)
