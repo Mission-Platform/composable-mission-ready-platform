@@ -1,18 +1,13 @@
-# تأليف المتجر
+# Store Authoring
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+Stores are used to manage shared, cross-component state within a package. Unlike application-level stores (like Pinia or
+Redux), package stores in the Mission Platform are designed to be **framework-neutral observable modules**. This allows
+write-once components to consume them via Forge hooks regardless of the host framework.
 
-> المصدر الإنجليزي: [docs/store-authoring.md](../../store-authoring.md)
-> اللغة: العربية (ar)
+## Directory Layout
 
-تُستخدم المتاجر لإدارة الحالة المشتركة والمتعددة المكونات داخل الحزمة. على عكس المتاجر على مستوى التطبيق (مثل Pinia أو
-Redux)، تم تصميم مخازن الحزم في Mission Platform لتكون **وحدات يمكن ملاحظتها محايدة للإطار**. هذا يسمح
-مكونات قابلة للكتابة مرة واحدة لاستهلاكها عبر Forge Hooks بغض النظر عن إطار العمل المضيف.
-
-## تخطيط الدليل
-
-يجب أن يتواجد كل متجر في الدليل الفرعي المسمى الخاص به بداخله `src/stores/`، مصحوبًا بملف اختبار مشترك وملف
-برميل محلي.
+Each store MUST reside in its own named subdirectory within `src/stores/`, accompanied by a co-located test file and a
+local barrel.
 
 ```text
 src/stores/
@@ -23,26 +18,26 @@ src/stores/
 └── index.ts                  # Package-level re-exports
 ```
 
-## النمط الملحوظ
+## The Observable Pattern
 
-تتجنب متاجر الحزم التبعيات الخاصة بإطار العمل. وبدلاً من ذلك، فإنها تتبع نمطًا بسيطًا يمكن ملاحظته:
+Package stores avoid framework-specific dependencies. Instead, they follow a simple observable pattern:
 
-1. **الحالة الخاصة**: احتفظ بالحالة ضمن نطاق الوحدة النمطية (plain TypeScript قيم).
-2. **الوصول إلى اللقطة**: قم بتوفير أ `getSnapshot()` وظيفة لاستعادة الحالة الحالية.
-3. **الاشتراك**: قم بتوفير أ `subscribe(listener)` وظيفة تضيف رد اتصال إلى القائمة وترجع إلغاء الاشتراك
-   وظيفة.
-4. **Mutators**: توفير وظائف لتحديث الحالة، والتي يجب إخطار جميع المستمعين بها بعد التحديث.
+1. **Private State**: Keep state within the module scope (plain TypeScript values).
+2. **Snapshot Access**: Provide a `getSnapshot()` function to retrieve the current state.
+3. **Subscription**: Provide a `subscribe(listener)` function that adds a callback to a list and returns an unsubscribe
+   function.
+4. **Mutators**: Provide functions to update the state, which MUST notify all listeners after the update.
 
-## قواعد التأليف
+## Authoring Rules
 
-1. **محايد للإطار**: لا تستورد من `vue`, `react`، أو `@mission-platform/forge` السنانير داخل وحدة المتجر
-   نفسها.
-2. **الأنواع الصريحة**: قم دائمًا بتحديد واجهة وتصديرها لحالة المتجر.
-3. **أمان SSR**: حماية الوصول إلى واجهات برمجة تطبيقات المتصفح (على سبيل المثال، `localStorage`) لذلك يمكن تهيئة المتجر في ملف Node.js
-   بيئة.
-4. **الاختبار الإلزامي**: يجب أن يكون لكل متجر موقع مشترك `.spec.ts` ملف.
+1. **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge-jsx` hooks inside the store module
+   itself.
+2. **Explicit Types**: Always define and export an interface for the store's state.
+3. **SSR Safety**: Guard access to browser APIs (e.g., `localStorage`) so the store can be initialized in a Node.js
+   environment.
+4. **Mandatory Testing**: Every store must have a co-located `.spec.ts` file.
 
-## متجر المثال
+## Example Store
 
 ```ts
 export interface ThemeState {
@@ -67,9 +62,9 @@ export function setTheme(theme: ThemeState['theme']): void {
 }
 ```
 
-## استهلاك المخازن في المكونات
+## Consuming Stores in Components
 
-لاستخدام مخزن ضمن مكون للكتابة مرة واحدة، قم بتوصيله باستخدام `useState` و `useEffect` من `@mission-platform/forge`:
+To use a store within a write-once component, bridge it using `useState` and `useEffect` from `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());
@@ -79,18 +74,18 @@ useEffect(() => {
 }, []);
 ```
 
-## السقالات
+## Scaffolding
 
-استخدم أداة Mission Platform Developer MCP لإنشاء هيكل متجر جديد:
+Use the Mission Platform Developer MCP tool to generate a new store skeleton:
 
 ```bash
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
 
-## أدلة ذات صلة
+## Related Guides
 
-- [تطوير الحزمة](package-development.md)
-- [تصميم المكونات الذرية](atomic-component-design.md)
-- [التأليف القابل للتأليف](composable-authoring.md)
-- [استخدام التأليف](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Util Authoring](util-authoring.md)
