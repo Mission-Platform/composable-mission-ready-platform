@@ -6,6 +6,16 @@ Generated from public source declarations in `@mission-platform/forge-plugin-api
 
 ## `src/compiler/ast`
 
+### ADAPTERS_MODULE
+
+**Kind:** constant
+
+```typescript
+export const ADAPTERS_MODULE;
+```
+
+No description provided.
+
 ### applySourceEdits
 
 **Kind:** function

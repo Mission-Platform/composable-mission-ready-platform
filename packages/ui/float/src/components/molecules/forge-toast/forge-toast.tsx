@@ -1,4 +1,10 @@
-import { Slot, createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
+import {
+  Slot,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge-jsx';
 import {
   ForgeIconCheck,
   ForgeIconClose,

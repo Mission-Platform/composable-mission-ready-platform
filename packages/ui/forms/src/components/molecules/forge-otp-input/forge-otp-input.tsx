@@ -1,4 +1,10 @@
-import { useEffect, useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
+import {
+  useEffect,
+  useRef,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge-jsx';
 
 import styles from './forge-otp-input.module.scss';
 

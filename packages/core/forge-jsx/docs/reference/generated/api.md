@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/forge-jsx`.
 **Kind:** function
 
 ```typescript
-function classNames(...values: readonly ClassValue[]): string
+function classNames(...values: readonly ClassValue[]): string;
 ```
 
 Merge any number of {@link ClassValue}s into a single space-separated class
@@ -20,9 +20,9 @@ first occurrence wins). Returns an empty string when nothing is active.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| values | readonly ClassValue[] |  |
+| Name   | Type                  | Description |
+| ------ | --------------------- | ----------- |
+| values | readonly ClassValue[] |             |
 
 ### ClassValue
 
@@ -41,7 +41,7 @@ A single value accepted by {@link classNames}.
 **Kind:** function
 
 ```typescript
-function createContext(defaultValue: T): MpContext<T>
+function createContext(defaultValue: T): MpContext<T>;
 ```
 
 Create a framework-neutral context with the given default value. Returns a
@@ -50,32 +50,32 @@ with {@link useContext}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| defaultValue | T |  |
+| Name         | Type | Description |
+| ------------ | ---- | ----------- |
+| defaultValue | T    |             |
 
 ### isContextProvider
 
 **Kind:** function
 
 ```typescript
-function isContextProvider(value: unknown): value is MpContextProvider<unknown>
+function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 ```
 
 Whether a value is a context {@link MpContext.Provider} function.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | unknown |  |
+| Name  | Type    | Description |
+| ----- | ------- | ----------- |
+| value | unknown |             |
 
 ### MP_CONTEXT
 
 **Kind:** constant
 
 ```typescript
-export const MP_CONTEXT: unique symbol
+export const MP_CONTEXT: unique symbol;
 ```
 
 The property the runtime adapters use to recognise a context {@link MpContext.Provider}
@@ -116,7 +116,7 @@ The properties accepted by an {@link MpContext.Provider} element.
 **Kind:** function
 
 ```typescript
-function useContext(context: MpContext<T>): T
+function useContext(context: MpContext<T>): T;
 ```
 
 Read the current value of a context: the nearest enclosing
@@ -124,9 +124,9 @@ Read the current value of a context: the nearest enclosing
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| context | MpContext<T> |  |
+| Name    | Type         | Description |
+| ------- | ------------ | ----------- |
+| context | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
 
@@ -135,7 +135,7 @@ Read the current value of a context: the nearest enclosing
 **Kind:** constant
 
 ```typescript
-export const Dynamic: MpComponent<MpDynamicProperties>
+export const Dynamic: MpComponent<MpDynamicProperties>;
 ```
 
 Marker used as the element `type` for a dynamic component
@@ -160,7 +160,7 @@ The properties accepted by the {@link Dynamic} element.
 This is one of the few declarations that legitimately keeps an **open bag**:
 every property other than `is` is forwarded verbatim to the element `is`
 resolves to, and that element is only known at runtime, so the attributes it
-accepts cannot be enumerated here. Component props interfaces must *not*
+accepts cannot be enumerated here. Component props interfaces must _not_
 follow this pattern — see {@link MpPropertyBag}.
 
 ## `src/runtime/h`
@@ -170,7 +170,11 @@ follow this pattern — see {@link MpPropertyBag}.
 **Kind:** function
 
 ```typescript
-function h(type: MpElementType | ((properties: P) => MpElement), properties?: P | null, ...children: MpChild[]): MpElement
+function h(
+  type: MpElementType | ((properties: P) => MpElement),
+  properties?: P | null,
+  ...children: MpChild[]
+): MpElement;
 ```
 
 The classic JSX factory (`jsxFactory: 'h'`).
@@ -182,11 +186,11 @@ either as trailing variadic arguments (the classic transform) or via
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| type | MpElementType \| ((properties: P) => MpElement) |  |
-| properties | P \| null |  |
-| children | MpChild[] |  |
+| Name       | Type                                            | Description |
+| ---------- | ----------------------------------------------- | ----------- |
+| type       | MpElementType \| ((properties: P) => MpElement) |             |
+| properties | P \| null                                       |             |
+| children   | MpChild[]                                       |             |
 
 ## `src/runtime/hooks`
 
@@ -245,24 +249,24 @@ Update a piece of state, either to a new value or via an updater function.
 **Kind:** function
 
 ```typescript
-function useCallback(callback: T, _dependencies?: MpDependencyList): T
+function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 ```
 
 Neutral `useCallback`. Returns the callback unchanged for the render.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| callback | T |  |
-| _dependencies | MpDependencyList |  |
+| Name          | Type             | Description |
+| ------------- | ---------------- | ----------- |
+| callback      | T                |             |
+| _dependencies | MpDependencyList |             |
 
 ### useEffect
 
 **Kind:** function
 
 ```typescript
-function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void
+function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void;
 ```
 
 Neutral `useEffect`. A no-op: effects model post-render side effects, which
@@ -270,17 +274,17 @@ do not run during a single SSR/adapter render.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| _effect | MpEffectCallback |  |
-| _dependencies | MpDependencyList |  |
+| Name          | Type             | Description |
+| ------------- | ---------------- | ----------- |
+| _effect       | MpEffectCallback |             |
+| _dependencies | MpDependencyList |             |
 
 ### useId
 
 **Kind:** function
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 Neutral `useId`. Mirrors React's and Vue's `useId`: returns a stable, unique
@@ -296,24 +300,24 @@ stays stable (and identical across both frameworks).
 **Kind:** function
 
 ```typescript
-function useMemo(factory: () => T, _dependencies?: MpDependencyList): T
+function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 ```
 
 Neutral `useMemo`. Computes the value once for the render.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| factory | () => T |  |
-| _dependencies | MpDependencyList |  |
+| Name          | Type             | Description |
+| ------------- | ---------------- | ----------- |
+| factory       | () => T          |             |
+| _dependencies | MpDependencyList |             |
 
 ### useRef
 
 **Kind:** function
 
 ```typescript
-function useRef(initial: T): MpRef<T>
+function useRef(initial: T): MpRef<T>;
 ```
 
 Neutral `useRef`. Returns a fresh `{ current }` container for the single
@@ -321,16 +325,16 @@ render; the framework runtimes preserve it across renders.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| initial | T |  |
+| Name    | Type | Description |
+| ------- | ---- | ----------- |
+| initial | T    |             |
 
 ### useState
 
 **Kind:** function
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>]
+function useState(initial: T | (() => T)): [T, MpSetState<T>];
 ```
 
 Neutral `useState`. The baseline implementation returns the initial value and
@@ -339,9 +343,9 @@ the correct behaviour for a single SSR/adapter render.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| initial | T \| (() => T) |  |
+| Name    | Type           | Description |
+| ------- | -------------- | ----------- |
+| initial | T \| (() => T) |             |
 
 ## `src/runtime/html-content`
 
@@ -350,7 +354,7 @@ the correct behaviour for a single SSR/adapter render.
 **Kind:** constant
 
 ```typescript
-export const HtmlContent: MpComponent<HtmlContentProperties>
+export const HtmlContent: MpComponent<HtmlContentProperties>;
 ```
 
 Marker used as the element type for trusted raw HTML content.
@@ -379,7 +383,7 @@ bag rather than enumerating the whole DOM attribute surface.
 **Kind:** function
 
 ```typescript
-function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
 ```
 
 Partition a parent component's children by their `slot="…"` marker so a
@@ -393,16 +397,16 @@ same `slot="…"` markers to Vue `<template #name>` / a React `name` prop.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| children | readonly MpChild[] |  |
+| Name     | Type               | Description |
+| -------- | ------------------ | ----------- |
+| children | readonly MpChild[] |             |
 
 ### hasSlot
 
 **Kind:** function
 
 ```typescript
-function hasSlot(name?: string): boolean
+function hasSlot(name?: string): boolean;
 ```
 
 Whether the enclosing component was given content for a slot — the neutral
@@ -410,7 +414,13 @@ counterpart of Vue's `$slots.x` / a React `properties.x != null` check. An
 omitted (or `'default'`) name targets the default slot (`children`):
 
 ```tsx
-{hasSlot('footer') ? <footer><Slot name="footer" /></footer> : undefined}
+{
+  hasSlot('footer') ? (
+    <footer>
+      <Slot name="footer" />
+    </footer>
+  ) : undefined;
+}
 ```
 
 `@mission-platform/vite-plugin-forge` rewrites the call straight to each
@@ -422,9 +432,9 @@ reading the current component's slot scope.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| name | string |  |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
 
 ### MpRenderProperty
 
@@ -472,7 +482,7 @@ open bag rather than enumerating properties it cannot know.
 **Kind:** function
 
 ```typescript
-function popSlotScope(): void
+function popSlotScope(): void;
 ```
 
 Pop the current slot scope once a component's subtree has been expanded.
@@ -482,23 +492,23 @@ Pop the current slot scope once a component's subtree has been expanded.
 **Kind:** function
 
 ```typescript
-function pushSlotScope(properties: MpPropertyBag): void
+function pushSlotScope(properties: MpPropertyBag): void;
 ```
 
 Push the props of the component about to be expanded onto the slot scope.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | MpPropertyBag |  |
+| Name       | Type          | Description |
+| ---------- | ------------- | ----------- |
+| properties | MpPropertyBag |             |
 
 ### resolveSlot
 
 **Kind:** function
 
 ```typescript
-function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[]
+function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[];
 ```
 
 Resolve the content of a `<Slot name="…" />` against the enclosing
@@ -508,17 +518,17 @@ slot element's remaining (non-`name`) properties.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | MpSlotProperties |  |
-| fallback | readonly MpChild[] |  |
+| Name       | Type               | Description |
+| ---------- | ------------------ | ----------- |
+| properties | MpSlotProperties   |             |
+| fallback   | readonly MpChild[] |             |
 
 ### resolveSlotMarkers
 
 **Kind:** function
 
 ```typescript
-function resolveSlotMarkers(children: readonly MpChild[]): MpChild[]
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
 ```
 
 Deeply resolve every `<Slot name="…" />` **marker** within a parent-authored
@@ -538,9 +548,9 @@ child's own scope). Non-slot elements are walked recursively so nested markers
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| children | readonly MpChild[] |  |
+| Name     | Type               | Description |
+| -------- | ------------------ | ----------- |
+| children | readonly MpChild[] |             |
 
 ## `src/runtime/teleport`
 
@@ -559,7 +569,7 @@ The properties accepted by the {@link Teleport} element.
 **Kind:** constant
 
 ```typescript
-export const Teleport: MpComponent<MpTeleportProperties>
+export const Teleport: MpComponent<MpTeleportProperties>;
 ```
 
 Marker used as the element `type` for a portal (`<Teleport to="…">…</Teleport>`).
@@ -596,7 +606,7 @@ The properties accepted by the {@link Transition} element.
 **Kind:** constant
 
 ```typescript
-export const Transition: MpComponent<MpTransitionProperties>
+export const Transition: MpComponent<MpTransitionProperties>;
 ```
 
 Marker used as the element `type` for an enter/leave transition
@@ -612,7 +622,7 @@ and the compiler remaps its import to the target framework's transition.
 **Kind:** constant
 
 ```typescript
-export const TransitionGroup: MpComponent<MpTransitionGroupProperties>
+export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 ```
 
 Marker used as the element `type` for a **list** enter/leave/move transition
@@ -634,7 +644,7 @@ import to each framework's native group transition — Vue's built-in
 **Kind:** function
 
 ```typescript
-function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
 ```
 
 Build a neutral `style` map from defined custom-property values.
@@ -645,9 +655,9 @@ when no overrides are present.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| style | T |  |
+| Name  | Type | Description |
+| ----- | ---- | ----------- |
+| style | T    |             |
 
 ### CSSStyleProperties
 
@@ -668,7 +678,7 @@ rather than introducing an untyped style dictionary or a non-DOM `styles` bag.
 **Kind:** constant
 
 ```typescript
-export const Fragment: MpFragment
+export const Fragment: MpFragment;
 ```
 
 Marker used as the element `type` for fragments (`<>…</>`), i.e. the classic
@@ -689,16 +699,16 @@ own form (React's `<>`, Vue's inlined children). Calling it directly is a bug.
 **Kind:** function
 
 ```typescript
-function isMpElement(value: unknown): value is MpElement
+function isMpElement(value: unknown): value is MpElement;
 ```
 
 Narrow an arbitrary value to an {@link MpElement}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| value | unknown |  |
+| Name  | Type    | Description |
+| ----- | ------- | ----------- |
+| value | unknown |             |
 
 ### MpChild
 
@@ -758,7 +768,7 @@ The **runtime** bag of attributes/props carried by an {@link MpElement}.
 
 This is deliberately a plain, untyped record: it is what the JSX factory
 builds and what the adapters index into while walking a neutral tree. It is
-*not* a base type for a component's props — a component declares exactly the
+_not_ a base type for a component's props — a component declares exactly the
 properties it accepts (including `children?: MpChild | readonly MpChild[]`
 when it renders them), so that excess-property checking and `keyof` stay
 meaningful in every compiled target. The handful of attributes every element
@@ -785,7 +795,7 @@ it declares itself, wired up as `JSX.IntrinsicAttributes` by the opt-in
   `"default"`) means the default slot.
 
 Neither is part of a component's own props contract — both are read by the
-*parent* (the reconciler, the slot router), never by the component itself —
+_parent_ (the reconciler, the slot router), never by the component itself —
 so they are accepted for every element here rather than declared on each
 props interface.
 
@@ -814,7 +824,7 @@ Props carried by the framework-neutral Suspense marker.
 **Kind:** constant
 
 ```typescript
-export const Slot: MpComponent
+export const Slot: MpComponent;
 ```
 
 Marker used as the element `type` for a named slot (`<Slot name="…" />`).
@@ -831,7 +841,7 @@ identity (`type === Slot`) before any call. Calling it directly is a bug.
 **Kind:** constant
 
 ```typescript
-export const Suspense: MpComponent<MpSuspenseProperties>
+export const Suspense: MpComponent<MpSuspenseProperties>;
 ```
 
 Native async-boundary marker lowered by each framework compiler.
