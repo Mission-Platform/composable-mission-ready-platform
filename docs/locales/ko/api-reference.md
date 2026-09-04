@@ -13,20 +13,32 @@ package rather than this page.
 
 ## 핵심 프레임워크
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 프레임워크 중립적인 JSX 런타임 및 후크를 제공하는 "한 번 쓰기" 아키텍처의 기반입니다.
 
-| 수출                 | 유형  | 설명                                                                                           |
-| :----------------- | :-- | :------------------------------------------------------------------------------------------- |
-| `h`, `Fragment`    | 기능  | 구성요소 작성을 위한 JSX 팩토리 및 단편입니다.                                                 |
-| `useState`         | 후크  | 프레임워크 중립적 상태 후크.                                                             |
-| `useEffect`        | 후크  | 프레임워크 중립 효과 후크.                                                              |
-| `useMemo`          | 후크  | 프레임워크 중립적인 메모 후크.                                                            |
-| `useRef`           | 후크  | 프레임워크 중립적인 참조 후크.                                                            |
-| `useContext`       | 후크  | 프레임워크 중립적인 컨텍스트 후크.                                                          |
-| `toVueComponent`   | 어댑터 | 단조 구성요소를 Vue 3개 구성요소(에서 `@mission-platform/forge/vue`).   |
-| `toReactComponent` | 어댑터 | 단조 구성요소를 React 구성 요소(에서 `@mission-platform/forge/react`). |
+| 수출              | 유형 | 설명                                           |
+| :-------------- | :- | :------------------------------------------- |
+| `h`, `Fragment` | 기능 | 구성요소 작성을 위한 JSX 팩토리 및 단편입니다. |
+| `useState`      | 후크 | 프레임워크 중립적 상태 후크.             |
+| `useEffect`     | 후크 | 프레임워크 중립 효과 후크.              |
+| `useMemo`       | 후크 | 프레임워크 중립적인 메모 후크.            |
+| `useRef`        | 후크 | 프레임워크 중립적인 참조 후크.            |
+| `useContext`    | 후크 | 프레임워크 중립적인 컨텍스트 후크.          |
+
+### @mission-platform/forge-adapters
+
+Framework-specific adapters for rendering neutral Forge JSX components. Each
+framework is exposed as an independent subpath so applications can select only
+the runtime they use.
+
+| 수출                 | 유형      | 설명                                                                                                                 |
+| :----------------- | :------ | :----------------------------------------------------------------------------------------------------------------- |
+| `toVueComponent`   | 어댑터     | Converts a Forge component to a Vue 3 component from `@mission-platform/forge-adapters/vue`.       |
+| `toReactComponent` | 어댑터     | Converts a Forge component to a React component from `@mission-platform/forge-adapters/react`.     |
+| SolidJS primitives | Adapter | `Teleport`, `Transition`, and `TransitionGroup` from `@mission-platform/forge-adapters/solid`.     |
+| Svelte primitives  | Adapter | Raw HTML and transition helpers from `@mission-platform/forge-adapters/svelte`.                    |
+| Web Components     | Runtime | Native custom-element rendering primitives from `@mission-platform/forge-adapters/web-components`. |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -56,7 +68,7 @@ Framework-neutral route contracts, pure matching helpers, and compiler markers f
 shared packages. Applications own route records and native router instances; the
 Forge router target selected by the application supplies the runtime capabilities.
 
-| 수출                                                                   | 유형               | 설명                                                                                                                                                    |
+| 수출                                                                   | 유형               | Description                                                                                                                                           |
 | :------------------------------------------------------------------- | :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MpRoute`                                                            | 유형               | Route records, params, query/hash state, metadata, and navigation targets.                                                            |
 | `defineRoutes`                                                       | 기능               | Define route trees and resolve paths without a DOM or framework runtime.                                                              |
@@ -127,7 +139,7 @@ failure.
 
 색상, 타이포그래피, 간격을 위한 중앙 집중식 디자인 토큰입니다.
 
-| 수출            | Description                                                                                             |
+| 수출            | 설명                                                                                                      |
 | :------------ | :------------------------------------------------------------------------------------------------------ |
 | `tokens`      | 모든 디자인 토큰을 포함하는 JS/TS 객체(예: `tokens.color.primary`). |
 | `tokens.scss` | 스타일시트에 사용하기 위한 SCSS 변수입니다.                                                              |
@@ -183,7 +195,7 @@ MapLibre GL용 반응성 래퍼.
 
 카메라 기반 바코드 및 QR 코드 스캐닝.
 
-| 구성요소              | 설명                                                  |
+| 구성요소              | Description                                         |
 | :---------------- | :-------------------------------------------------- |
 | `<MpCodeScanner>` | 카메라 스트림을 초기화하고 스캔 결과를 내보내는 구성요소입니다. |
 
@@ -201,7 +213,7 @@ RxJS Observable을 구성 요소 상태에 연결합니다.
 
 프레임워크 중립적인 D3.js 통합.
 
-| 후크      | 설명                                                      |
+| 후크      | `createMpRouter`                                        |
 | :------ | :------------------------------------------------------ |
 | `useD3` | 수명주기 관리를 통해 D3 선택 항목을 구성 요소 참조에 바인딩합니다. |
 
@@ -209,7 +221,7 @@ RxJS Observable을 구성 요소 상태에 연결합니다.
 
 WebAssembly 기반 맞춤법 검사.
 
-| 수출             | `createMpRouter`                                        |
+| 수출             | 설명                                                      |
 | :------------- | :------------------------------------------------------ |
 | `initHunspell` | Hunspell WebAssembly 모듈을 로드하고 인스턴스화합니다. |
 | `spell`        | 단어의 철자가 올바른지 확인합니다.                     |
@@ -315,7 +327,7 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 
 | 패키지                            | 목적                                              |
 | :----------------------------- | :---------------------------------------------- |
-| `@mission-platform/forge`      | 프레임워크 중립적인 JSX 런타임 및 어댑터.       |
+| `@mission-platform/forge-jsx`  | 프레임워크 중립적인 JSX 런타임 및 어댑터.       |
 | `@mission-platform/components` | 한 번만 쓸 수 있는 UI 구성 요소입니다.        |
 | `@mission-platform/icons`      | 한 번만 쓸 수 있는 SVG 아이콘 구성요소.       |
 | `@mission-platform/layouts`    | 애플리케이션, 컨테이너, 반응형 레이아웃 구성요소.    |
@@ -376,13 +388,13 @@ These live in `packages/compiler/plugins/`. **프레임워크** 플러그인은 
 
 #### @mission-platform/forge-cms-plugin-api
 
-| 수출                        | 유형 | 설명                                                                                              |
-| :------------------------ | :- | :---------------------------------------------------------------------------------------------- |
-| `analyzeContentComponent` | 기능 | 중립 구성 요소의 소품을 플랫폼 중립 콘텐츠 모델에 투영합니다.                                             |
-| `ContentComponent`        | 유형 | 주문하다 `ContentField`s, 슬롯 및 `interactive` 깃발.                                    |
-| `ContentFieldKind`        | 유형 | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
-| `CmsOutputPlugin`         | 유형 | 대상 계약: 바인딩된 프레임워크 플러그인과 4개의 이미터.                                |
-| `defineForgeCmsPlugin`    | 기능 | 구성 시 CMS 대상의 유효성을 검사합니다.                                                        |
-| `generateCmsArtifacts`    | 기능 | 일반 검색 → IR → 콘텐츠 모델 → 방출 → 드라이버 작성.                                             |
-| `defineTsdownForgeCms`    | 기능 | 하나의 CMS 대상에 대한 tsdown 구성, 방출 `dist/cms/<cms>/<framework>/**`.                   |
-| `defineTsdownForgeCmsAll` | 기능 | CMS 대상 목록에 대한 tsdown 구성.                                                        |
+| Export                    | 유형       | Description                                                                                     |
+| :------------------------ | :------- | :---------------------------------------------------------------------------------------------- |
+| `analyzeContentComponent` | Function | 중립 구성 요소의 소품을 플랫폼 중립 콘텐츠 모델에 투영합니다.                                             |
+| `ContentComponent`        | 유형       | 주문하다 `ContentField`s, 슬롯 및 `interactive` 깃발.                                    |
+| `ContentFieldKind`        | 유형       | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
+| `CmsOutputPlugin`         | Type     | 대상 계약: 바인딩된 프레임워크 플러그인과 4개의 이미터.                                |
+| `defineForgeCmsPlugin`    | 기능       | 구성 시 CMS 대상의 유효성을 검사합니다.                                                        |
+| `generateCmsArtifacts`    | 기능       | 일반 검색 → IR → 콘텐츠 모델 → 방출 → 드라이버 작성.                                             |
+| `defineTsdownForgeCms`    | 기능       | 하나의 CMS 대상에 대한 tsdown 구성, 방출 `dist/cms/<cms>/<framework>/**`.                   |
+| `defineTsdownForgeCmsAll` | 기능       | CMS 대상 목록에 대한 tsdown 구성.                                                        |
