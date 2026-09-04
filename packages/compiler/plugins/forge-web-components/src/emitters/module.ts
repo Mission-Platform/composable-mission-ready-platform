@@ -7,7 +7,7 @@
  * element class, and the exact runtime values the plan uses. Only the import
  * header is rewritten here, straight from the generic `GenericImport` records —
  * never from a parsed TypeScript source file:
- * - the `@mission-platform/forge` value import is reduced to the runtime helpers
+ * - the `@mission-platform/forge-jsx` value import is reduced to the runtime helpers
  *   that survive (`classNames`); its hooks/`h` are dropped (state/markup are
  *   lifted into the class by `./element`),
  * - its render/props **type** imports are redirected to the co-located
@@ -24,7 +24,7 @@
  *   type-only re-import of the type names that sibling contributes, while other
  *   relative imports (CSS modules, shared helpers) are preserved,
  * - the native, Lit-free runtime header
- *   (`import { ForgeElement, domTemplate, … } from '@mission-platform/forge/web-components'`)
+ *   (`import { ForgeElement, domTemplate, … } from '@mission-platform/forge-adapters/web-components'`)
  *   is prepended with exactly the values `plan.runtimeImports` asked for, plus
  *   the inline type imports its annotations need (`DomTemplateDefinition`, the
  *   template contract, and `PropertyDeclaration`, the contract the class'
@@ -92,7 +92,7 @@ function importStatementText(entry: GenericImport): string {
   return text.endsWith(";") ? text : `${text};`;
 }
 
-/** Rewrite the neutral `@mission-platform/forge` import into the imports that survive. */
+/** Rewrite the neutral `@mission-platform/forge-jsx` import into the imports that survive. */
 function rewriteNeutralImport(
   entry: GenericImport,
   localTypes: Set<string>,

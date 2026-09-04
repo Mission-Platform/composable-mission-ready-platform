@@ -66,7 +66,7 @@ Paketverknüpfungen sind korrekt eingerichtet.
 Führen Sie einen Rauchtest durch, um sicherzustellen, dass das Build-System und die Umgebung richtig konfiguriert sind:
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 Der `...` erstellt auch die für das Paket erforderlichen Forge-Abhängigkeiten. Die

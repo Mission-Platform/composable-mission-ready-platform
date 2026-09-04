@@ -11,7 +11,7 @@ import type { ContentComponentNamesInput } from "../content-model.js";
 
 /** Literal-union options, JSDoc descriptions, and `?? literal` defaults. */
 export const BADGE = [
-  "import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export type BadgeVariant = 'default' | 'primary' | 'secondary';",
   "export type BadgeSize = 'sm' | 'md' | 'lg';",
@@ -35,7 +35,7 @@ export const BADGE = [
 
 /** A union degrading to text plus a dropped callback prop. */
 export const BUTTON = [
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export type ButtonVariant = 'primary' | 'secondary' | 'ghost';",
   "",
@@ -59,7 +59,7 @@ export const BUTTON = [
 
 /** A numeric prop with a numeric default. */
 export const GRID = [
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface GridProperties {",
   "  children?: MpChild | readonly MpChild[];",
@@ -75,7 +75,7 @@ export const GRID = [
 
 /** A named slot alongside the default slot. */
 export const LAYOUT = [
-  "import { h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   "",
   "export interface LayoutProperties {",
   "  /** Stick the header to the top. */",
@@ -96,7 +96,7 @@ export const LAYOUT = [
 
 /** An interactive component: state and an event handler force a hydrated island. */
 export const COUNTER = [
-  "import { h, useState, type MpElement } from '@mission-platform/forge';",
+  "import { h, useState, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface CounterProperties {",
   "  /** Initial value of the counter. */",
@@ -118,7 +118,7 @@ export const COUNTER = [
 
 /** A component with a site-wide setting prop. */
 export const SITE_HEADER = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface SiteHeaderProperties {",
   "  /**",
@@ -138,7 +138,7 @@ export const SITE_HEADER = [
 
 /** A required (non-optional) prop alongside an optional one. */
 export const REQUIRED = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface RequiredProperties {",
   "  /** Mandatory heading. */",
@@ -154,7 +154,7 @@ export const REQUIRED = [
 
 /** A component with no props at all. */
 export const EMPTY = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export function ForgeEmpty(): MpElement {",
   "  return <hr />;",

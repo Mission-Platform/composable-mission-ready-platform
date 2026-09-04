@@ -2,7 +2,7 @@
 
 Composables are the primary way to encapsulate and reuse reactive logic within the Mission Platform. To ensure these
 units of logic are portable across all supported UI frameworks, they are authored as **write-once** modules using the
-framework-neutral hooks provided by `@mission-platform/forge`.
+framework-neutral hooks provided by `@mission-platform/forge-jsx`.
 
 ## Directory Layout
 
@@ -21,7 +21,7 @@ src/composables/
 ## Authoring Rules
 
 1. **Use Forge Hooks**: Only import reactive primitives (e.g., `useState`, `useEffect`, `useMemo`, `useRef`) from
-   `@mission-platform/forge`. Never import directly from `vue` or `react`.
+   `@mission-platform/forge-jsx`. Never import directly from `vue` or `react`.
 2. **Naming Convention**: Composable names must use kebab-case and be prefixed with `use-` (e.g., `use-media-query`).
 3. **SSR Safety**: Ensure logic is safe for Server-Side Rendering. Guard any access to browser-only APIs like `window`,
    `document`, or `localStorage`.
@@ -34,7 +34,7 @@ src/composables/
 Here is a typical write-once composable that manages an event listener.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,

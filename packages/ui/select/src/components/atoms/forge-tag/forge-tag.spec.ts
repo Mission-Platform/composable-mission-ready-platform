@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeTag } from './forge-tag';
 
 /**
  * Exercises the **neutral** `ForgeTag` authored in this package, rendering it on
- * both frameworks through the `@mission-platform/forge` runtime adapters. Covers
+ * both frameworks through the `@mission-platform/forge-jsx` runtime adapters. Covers
  * the label (via the composed `ForgeTypography`), the tone/size modifiers, and
  * the removable affordance.
  */

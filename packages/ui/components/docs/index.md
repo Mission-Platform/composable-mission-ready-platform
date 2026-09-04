@@ -1,7 +1,7 @@
 # @mission-platform/components
 
 `@mission-platform/components` is the residual write-once component library for the Mission Platform. Every component in
-this library is authored once using a framework-neutral JSX dialect (via `@mission-platform/forge`) and then compiled at
+this library is authored once using a framework-neutral JSX dialect (via `@mission-platform/forge-jsx`) and then compiled at
 build time into native **Vue 3**, **React**, **Svelte**, **Solid**, and **Web Component** outputs.
 
 `ForgeTypography` is owned by the dedicated `@mission-platform/typography` package. Import it from that package rather
@@ -11,7 +11,7 @@ than from `@mission-platform/components`.
 
 This package demonstrates a high-efficiency cross-framework architecture:
 
-- **Neutral Source**: Components are written in `.tsx` files using `@mission-platform/forge`.
+- **Neutral Source**: Components are written in `.tsx` files using `@mission-platform/forge-jsx`.
 - **Two-Stage Compilation**: Using `@mission-platform/vite-plugin-forge`, the neutral source is transformed into
   framework-specific source code (Vue SFCs and React TSX) and then compiled by the respective native toolchains.
 - **Zero Runtime Overhead**: There are no runtime adapters. Consumers import native components with the bare

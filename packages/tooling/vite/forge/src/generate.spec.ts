@@ -100,7 +100,7 @@ function component(
 
 /** Minimal atom used by the nested/flat generate parity fixtures. */
 const TYPOGRAPHY_SOURCE = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export type TypographyVariant = "body" | "caption";',
   '',
@@ -117,7 +117,7 @@ const TYPOGRAPHY_SOURCE = [
 /** Molecule that imports the typography atom via a relative sibling specifier. */
 function quoteSource(typographyImport: string): string {
   return [
-    "import { h, type MpElement } from '@mission-platform/forge';",
+    "import { h, type MpElement } from '@mission-platform/forge-jsx';",
     '',
     `import { ForgeTypography, type TypographyVariant } from '${typographyImport}';`,
     '',
@@ -335,7 +335,7 @@ describe('generateFrameworkSources', () => {
       writeFileSync(
         path.join(componentsDir, 'forge-card.tsx'),
         [
-          "import { h, type MpElement } from '@mission-platform/forge';",
+          "import { h, type MpElement } from '@mission-platform/forge-jsx';",
           "import { encodeValue } from '../encoder';",
           '',
           'export function ForgeCard(): MpElement {',
@@ -397,7 +397,7 @@ describe('generateFrameworkSources', () => {
       writeFileSync(
         path.join(componentDir, 'forge-card.tsx'),
         [
-          "import { h, type MpElement } from '@mission-platform/forge';",
+          "import { h, type MpElement } from '@mission-platform/forge-jsx';",
           "import { createCard } from '@/helpers/card';",
           '',
           'export interface CardProperties { label?: string; }',
@@ -657,7 +657,7 @@ describe('generateFrameworkSources', () => {
       writeFileSync(
         path.join(cardDir, 'forge-card.tsx'),
         [
-          "import { h, type MpElement } from '@mission-platform/forge';",
+          "import { h, type MpElement } from '@mission-platform/forge-jsx';",
           "import { createCard } from '@/components';",
           "import { ForgeTypography } from '@/components/atoms/forge-typography';",
           '',
@@ -781,7 +781,7 @@ describe('generateFrameworkSources', () => {
       writeFileSync(path.join(componentsDir, 'index.ts'), "export { ForgeBadge } from './molecules/forge-badge';\n");
       writeFileSync(
         path.join(componentDir, 'forge-badge.tsx'),
-        "import type { MpElement } from '@mission-platform/forge';\nimport { component } from '../component';\nexport function ForgeBadge(): MpElement { return component ? null : null; }\n",
+        "import type { MpElement } from '@mission-platform/forge-jsx';\nimport { component } from '../component';\nexport function ForgeBadge(): MpElement { return component ? null : null; }\n",
       );
       writeFileSync(path.join(helperDir, 'index.ts'), 'export const component = true;\n');
 
@@ -941,8 +941,8 @@ describe('generateFrameworkSources', () => {
       writeFileSync(
         path.join(quoteDir, 'forge-quote.tsx'),
         quoteSource('@/components/atoms/forge-typography').replace(
-          "import { h, type MpElement } from '@mission-platform/forge';",
-          "import { ForgeButton } from '@mission-platform/components';\nimport { h, type MpElement } from '@mission-platform/forge';",
+          "import { h, type MpElement } from '@mission-platform/forge-jsx';",
+          "import { ForgeButton } from '@mission-platform/components';\nimport { h, type MpElement } from '@mission-platform/forge-jsx';",
         ),
       );
 
@@ -983,7 +983,7 @@ describe('generateFrameworkSources', () => {
       writeFileSync(
         path.join(componentDir, 'forge-counter.tsx'),
         [
-          "import { h, type MpElement } from '@mission-platform/forge';",
+          "import { h, type MpElement } from '@mission-platform/forge-jsx';",
           '',
           "import { getCount } from './counter-store';",
           '',

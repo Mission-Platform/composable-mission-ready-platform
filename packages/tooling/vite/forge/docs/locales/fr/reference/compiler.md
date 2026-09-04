@@ -198,7 +198,7 @@ le pilote possède une orchestration générique ; et chaque package cible poss
 
 ## Constructions de composants
 
-Les packages de composants créent des modules neutres par rapport à `@mission-platform/forge`, généralement via un baril de composants neutres.
+Les packages de composants créent des modules neutres par rapport à `@mission-platform/forge-jsx`, généralement via un baril de composants neutres.
 `defineTsdownForgeComponents` crée une version cible pour chaque plugin fourni. Pour chaque cible, il :
 
 1. analyse, normalise et analyse les modules de composants neutres ;

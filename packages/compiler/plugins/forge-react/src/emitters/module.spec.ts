@@ -53,11 +53,11 @@ describe("the React module emitter", () => {
       'import { createElement as h, useState } from "react";',
     );
     expect(source).toContain(
-      'import { classNames } from "@mission-platform/forge";',
+      'import { classNames } from "@mission-platform/forge-jsx";',
     );
     expect(source).toContain('import type { ReactNode } from "react";');
     expect(source).toContain(
-      'import type { ForgeVariant } from "@mission-platform/forge";',
+      'import type { ForgeVariant } from "@mission-platform/forge-jsx";',
     );
   });
 
@@ -257,7 +257,7 @@ describe("the React module emitter", () => {
       "<div className={classNames('card', properties.variant)}/>",
     );
     expect(source).toContain(
-      'import { classNames } from "@mission-platform/forge";',
+      'import { classNames } from "@mission-platform/forge-jsx";',
     );
   });
 
@@ -426,7 +426,7 @@ describe("the React module emitter", () => {
     const source = emit({
       moduleKind: "composable",
       fileName: "use-label.tsx",
-      source: `import { useMemo, useState } from '@mission-platform/forge';\n\n${declaration}\n`,
+      source: `import { useMemo, useState } from '@mission-platform/forge-jsx';\n\n${declaration}\n`,
       imports: [neutralImport(["useMemo", "useState"])],
       declarations: [
         statement(declaration, "function", {
@@ -452,7 +452,7 @@ describe("the React module emitter", () => {
       "}",
     ].join("\n");
     const source = emit({
-      source: `import { h, type MpChild, type MpElement } from '@mission-platform/forge';\n\n${declaration}\n`,
+      source: `import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';\n\n${declaration}\n`,
       imports: [neutralImport(["h"], ["MpChild", "MpElement"])],
       component: component({
         name: "ForgeFixture",

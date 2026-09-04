@@ -70,8 +70,8 @@ describe("Vue Forge framework package", () => {
     const module = semanticModule({
       imports: [
         moduleImport(
-          "import { HtmlContent, type MpElement } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { HtmlContent, type MpElement } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           {
             valueNames: ["HtmlContent"],
             typeNames: ["MpElement"],
@@ -117,8 +117,8 @@ describe("Vue Forge framework package", () => {
     const module = semanticModule({
       imports: [
         moduleImport(
-          "import { Suspense } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { Suspense } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           { valueNames: ["Suspense"] },
         ),
       ],

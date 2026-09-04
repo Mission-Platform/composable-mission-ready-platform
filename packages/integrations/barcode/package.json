@@ -70,7 +70,8 @@
   "dependencies": {
     "@mission-platform/components": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-adapters": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/typography": "workspace:*"
   },
   "peerDependencies": {

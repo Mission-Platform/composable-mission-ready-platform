@@ -6,7 +6,7 @@
 > 언어: 한국어 (ko)
 
 `@mission-platform/components`은 Mission Platform을 위한 잔여 Write-Once 구성 요소 라이브러리입니다. 모든 구성 요소
-이 라이브러리는 프레임워크 중립적인 JSX 방언(`@mission-platform/forge`을 통해)을 사용하여 한 번 작성된 다음 다음에서 컴파일됩니다.
+이 라이브러리는 프레임워크 중립적인 JSX 방언(`@mission-platform/forge-jsx`을 통해)을 사용하여 한 번 작성된 다음 다음에서 컴파일됩니다.
 기본 **Vue 3**, **React**, **Svelte**, **Solid** 및 **웹 구성 요소** 출력에 시간을 빌드합니다.
 
 `ForgeTypography`은 전용 `@mission-platform/typography` 패키지가 소유합니다. 오히려 해당 패키지에서 가져옵니다.
@@ -16,7 +16,7 @@
 
 이 패키지는 고효율 크로스 프레임워크 아키텍처를 보여줍니다.
 
-- **중립 소스**: 구성 요소는 `@mission-platform/forge`을 사용하여 `.tsx` 파일에 작성됩니다.
+- **중립 소스**: 구성 요소는 `@mission-platform/forge-jsx`을 사용하여 `.tsx` 파일에 작성됩니다.
 - **2단계 컴파일**: `@mission-platform/vite-plugin-forge`를 사용하여 중립 소스를 다음으로 변환합니다.
   프레임워크별 소스 코드(Vue SFC 및 React TSX)를 생성한 다음 해당 네이티브 툴체인으로 컴파일합니다.
 - **제로 런타임 오버헤드**: 런타임 어댑터가 없습니다. 소비자는 기본 구성 요소를 기본 구성 요소로 가져옵니다.

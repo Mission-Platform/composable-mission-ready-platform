@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeFormBuilder, type SchemaFormDefinition } from './forge-form-builde
 
 /**
  * Exercises the **neutral** `ForgeFormBuilder` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/forge` adapters. Like the
+ * it on both frameworks through the `@mission-platform/forge-jsx` adapters. Like the
  * Vue original it authors a JSON Schema (through the shared
  * `@mission-platform/forms-core`): a palette, a canvas of fields hydrated from
  * the `modelValue` schema, and the Editor/Preview/Schema tabs — identical across

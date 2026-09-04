@@ -15,7 +15,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
     "types": ["vite/client", "vitest/globals"],
     "jsx": "react-jsx",
-    "jsxImportSource": "@mission-platform/forge"
+    "jsxImportSource": "@mission-platform/forge-jsx"
   },
   "include": [
     "src/**/*.ts",

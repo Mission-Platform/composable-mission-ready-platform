@@ -1,4 +1,4 @@
-import { useEffect } from '@mission-platform/forge';
+import { useEffect } from '@mission-platform/forge-jsx';
 
 /**
  * Framework-neutral PerformanceObserver hook.

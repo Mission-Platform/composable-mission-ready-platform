@@ -7,7 +7,7 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 
 `@mission-platform/breakpoints` fornisce utilità per punti di interruzione reattivi e componenti viewport **write-once** per
 Piattaforma di missione. I componenti (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) vengono creati una volta nel formato neutro
-Dialetto `@mission-platform/forge` e compilato **sia Vue 3 che React** da `@mission-platform/vite-plugin-forge`.
+Dialetto `@mission-platform/forge-jsx` e compilato **sia Vue 3 che React** da `@mission-platform/vite-plugin-forge`.
 
 ## Esportazioni
 

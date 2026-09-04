@@ -1,7 +1,7 @@
-import { renderToReact, toReactComponent } from '@mission-platform/forge/react';
+import { renderToReact, toReactComponent } from '@mission-platform/forge-adapters/react';
 
 import type { EmailNode } from '../render';
-import type { MpComponent, MpPropertyBag } from '@mission-platform/forge';
+import type { MpComponent, MpPropertyBag } from '@mission-platform/forge-jsx';
 import type { FunctionComponent, ReactElement } from 'react';
 
 /** Render the shared Forge tree as a React element for browser previews. */

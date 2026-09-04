@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeDateInput } from './forge-date-input';
 
 /**
  * Exercises the **neutral** `ForgeDateInput` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/forge` runtime adapters.
+ * it on both frameworks through the `@mission-platform/forge-jsx` runtime adapters.
  * The popover calendar opens on the client, so the SSR markup is the trigger
  * shell: the formatted value/placeholder, the dialog affordance, and the error
  * wiring must match across React and Vue.

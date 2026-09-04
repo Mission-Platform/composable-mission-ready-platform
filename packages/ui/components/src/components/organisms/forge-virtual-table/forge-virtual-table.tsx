@@ -10,7 +10,7 @@ import {
   type MpElement,
   type MpRenderProperty,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 import { ForgeIconSort } from '@mission-platform/icons';
 
 /** Size token — canonical 2xs → 2xl scale. */

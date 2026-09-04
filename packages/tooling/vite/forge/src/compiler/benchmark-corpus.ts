@@ -19,7 +19,7 @@ export interface ForgeBenchmarkFixture {
 }
 
 const SMALL_SOURCE = [
-  "import { type MpElement } from '@mission-platform/forge';",
+  "import { type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface BadgeProperties {',
   '  label: string;',
@@ -33,7 +33,7 @@ const SMALL_SOURCE = [
 ].join('\n');
 
 const MEDIUM_SOURCE = [
-  "import { type MpChild, type MpElement, useEffect, useMemo, useState } from '@mission-platform/forge';",
+  "import { type MpChild, type MpElement, useEffect, useMemo, useState } from '@mission-platform/forge-jsx';",
   "import { formatBenchmarkValue as format } from '@/shared/benchmark-format';",
   '',
   'export interface BenchmarkCardProperties {',
@@ -69,7 +69,7 @@ const LARGE_ROWS = Array.from(
 ).join('\n');
 
 const LARGE_SOURCE = [
-  "import { type MpChild, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';",
+  "import { type MpChild, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge-jsx';",
   "import { formatBenchmarkValue as format } from '@/shared/benchmark-format';",
   "import { BenchmarkRow } from './BenchmarkRow';",
   '',

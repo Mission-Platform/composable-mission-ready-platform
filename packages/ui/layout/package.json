@@ -2,7 +2,7 @@
   "name": "@mission-platform/layouts",
   "version": "2.1.0",
   "license": "BSD-4-Clause",
-  "description": "Sample write-once Mission Platform layouts authored with @mission-platform/forge and shipped as Vue, React, Svelte, Solid, and Web Component outputs",
+  "description": "Sample write-once Mission Platform layouts authored with @mission-platform/forge-jsx and shipped as Vue, React, Svelte, Solid, and Web Component outputs",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -105,7 +105,8 @@
     "@mission-platform/harper": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-adapters": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "@mission-platform/components": "workspace:*",
     "@mission-platform/phone-number": "workspace:*",

@@ -132,7 +132,7 @@ describe('Forge staged build orchestration', () => {
     await fs.writeFile(
       path.join(componentDir, 'forge-card.tsx'),
       [
-        "import { h } from '@mission-platform/forge';",
+        "import { h } from '@mission-platform/forge-jsx';",
         'export function ForgeCard() {',
         '  return <button data-build-marker="published-real-framework">ForgeCard published body</button>;',
         '}',

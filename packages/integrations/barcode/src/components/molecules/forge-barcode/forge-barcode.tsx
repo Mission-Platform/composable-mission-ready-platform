@@ -7,7 +7,7 @@ import {
   createForgeStyle,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 

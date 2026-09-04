@@ -11,7 +11,7 @@
  * `style` string it applies to its scope (or `document.documentElement` when
  * `global`).
  *
- * This module is a plain helper (no `@mission-platform/forge` import), so
+ * This module is a plain helper (no `@mission-platform/forge-jsx` import), so
  * `@mission-platform/vite-plugin-forge` copies it verbatim into both the React and
  * Vue generated trees.
  */

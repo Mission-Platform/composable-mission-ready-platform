@@ -2,7 +2,7 @@ import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-puzzle.module.scss';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface IconPuzzleProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */

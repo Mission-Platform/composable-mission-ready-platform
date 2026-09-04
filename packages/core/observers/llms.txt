@@ -17,6 +17,6 @@ Watches for changes being made to the DOM tree.
 Watches for new performance entries.
 
 ## Implementation Details
-- Authored against `@mission-platform/forge` neutral hooks.
+- Authored against `@mission-platform/forge-jsx` neutral hooks.
 - SSR-safe (no-op when window/Observer is undefined).
 - Automatic cleanup on unmount.

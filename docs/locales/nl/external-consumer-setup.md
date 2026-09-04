@@ -9,7 +9,7 @@ In deze handleiding wordt uitgelegd hoe u Mission Platform-pakketten kunt gebrui
 
 ## Kaderselectie via voorwaarden
 
-Mission Platform-componenten worden één keer geschreven met behulp van `@mission-platform/forge` en gedistribueerd als meerdere raamwerkspecifieke bundels (Vue 3, React, Solid en Web Components) binnen één pakket.
+Mission Platform-componenten worden één keer geschreven met behulp van `@mission-platform/forge-jsx` en gedistribueerd als meerdere raamwerkspecifieke bundels (Vue 3, React, Solid en Web Components) binnen één pakket.
 
 Om de juiste bundel te selecteren, moet u uw buildtool en TypeScript configureren om **Aangepaste exportvoorwaarden** te gebruiken.
 

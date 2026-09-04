@@ -16,14 +16,14 @@ describe('Forge source frontends', () => {
   });
 
   it('builds a serializable generic AST and removes framework directives', () => {
-    const source = '"use vue";\nimport { useState } from "@mission-platform/forge";\nexport const value = 1;';
+    const source = '"use vue";\nimport { useState } from "@mission-platform/forge-jsx";\nexport const value = 1;';
     const parsed = parseForgeSource('use-data.jsx', source);
     const ast = createGenericAst(parsed, 'composable');
     const frontend = parseFrontendModule('use-data.jsx', source, 'composable');
 
     expect(ast.fileName).toBe('use-data.jsx');
     expect(ast.nodes.some((node) => node.kind === 'import')).toBe(true);
-    expect(ast.imports.map((entry) => entry.source)).toEqual(['@mission-platform/forge']);
+    expect(ast.imports.map((entry) => entry.source)).toEqual(['@mission-platform/forge-jsx']);
     expect(ast.declarations.map((entry) => entry.statementKind)).toEqual(['expression', 'variable']);
     expect(ast.declarations[1]?.exported).toBe(true);
     expect(ast.component).toBeUndefined();
@@ -213,7 +213,7 @@ describe('Forge source frontends', () => {
 
   it('preserves self-closing JSX elements, components, and markers', () => {
     const source = [
-      'import { Slot } from "@mission-platform/forge";',
+      'import { Slot } from "@mission-platform/forge-jsx";',
       'export function ForgeForm() {',
       '  return (',
       '    <form>',
@@ -268,7 +268,7 @@ describe('Forge source frontends', () => {
 
   it('retains prop and state type information for target emitters', () => {
     const source = [
-      'import { useState } from "@mission-platform/forge";',
+      'import { useState } from "@mission-platform/forge-jsx";',
       'interface CardProperties { title: string; count?: number }',
       'export function ForgeCard(properties: CardProperties) {',
       '  const [open, setOpen] = useState(false);',
@@ -306,7 +306,7 @@ describe('Forge source frontends', () => {
 
   it('infers shared component intentions without selecting a framework', () => {
     const source = [
-      'import { Dynamic, Slot, hasSlot, useEffect, useMemo, useRef, useState } from "@mission-platform/forge";',
+      'import { Dynamic, Slot, hasSlot, useEffect, useMemo, useRef, useState } from "@mission-platform/forge-jsx";',
       'interface CardProperties { title: string; active?: boolean }',
       'export function ForgeCard(properties: CardProperties) {',
       '  const [count, setCount] = useState(0);',

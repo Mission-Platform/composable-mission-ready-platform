@@ -523,7 +523,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 
 אנימציית Enter/Leave תואמת את Vue SFC דרך הנייטרלי
 **`<TransitionGroup>`** פרימיטיבי, שמתחבר ל-Vue המובנה
-`<TransitionGroup>` וקבוצת `@mission-platform/forge/react` CSS-class
+`<TransitionGroup>` וקבוצת `@mission-platform/forge-adapters/react` CSS-class
 נהג. ארבעת כיתות שלב הכניסה/יציאה המעוצבות מועברות כ-**hash
 כיתות CSS-Module** (באמצעות אביזרי המחלקה `<TransitionGroup>`), אז
 סגנון האנימציה נשאר בהיקף של רכיבים במקום להסתמך על גלובלי

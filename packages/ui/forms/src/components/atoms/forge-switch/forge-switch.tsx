@@ -4,7 +4,7 @@ import {
   type ClassValue,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-switch.module.scss';

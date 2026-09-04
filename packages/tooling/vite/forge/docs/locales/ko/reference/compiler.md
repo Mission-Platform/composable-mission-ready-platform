@@ -198,7 +198,7 @@ flowchart LR
 
 ## 구성요소 빌드
 
-구성 요소 패키지는 일반적으로 중립 구성 요소 배럴을 통해 `@mission-platform/forge`에 대한 중립 모듈을 작성합니다.
+구성 요소 패키지는 일반적으로 중립 구성 요소 배럴을 통해 `@mission-platform/forge-jsx`에 대한 중립 모듈을 작성합니다.
 `defineTsdownForgeComponents`은 제공된 각 플러그인에 대해 하나의 대상 빌드를 생성합니다. 각 대상에 대해 다음을 수행합니다.
 
 1. 중립 구성 요소 모듈을 구문 분석, 정규화 및 분석합니다.

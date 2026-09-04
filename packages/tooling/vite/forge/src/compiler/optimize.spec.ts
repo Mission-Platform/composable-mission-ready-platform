@@ -24,7 +24,7 @@ import type { GenericRenderNode } from '@mission-platform/forge-plugin-api';
 
 /** Fully-static intrinsic subtree + a dynamic sibling (Stage-1 marks the static one). */
 const STATIC_SUBTREE = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface CardProperties {',
   '  title: string;',
@@ -42,7 +42,7 @@ const STATIC_SUBTREE = [
 
 /** Constant conditionals / short-circuits that Stage-1 must fold away. */
 const CONSTANT_CONDITIONALS = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface FlagProperties {',
   '  label: string;',
@@ -62,7 +62,7 @@ const CONSTANT_CONDITIONALS = [
 
 /** Stable array-literal `.map` without keys — Stage-1 infers `key={item}`. */
 const STABLE_KEYED_LIST = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export function ForgeStableList(): MpElement {',
   '  return (',
@@ -77,7 +77,7 @@ const STABLE_KEYED_LIST = [
 
 /** Module-level const array — also a stable map source. */
 const MODULE_CONST_LIST = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   "const ITEMS = ['one', 'two'] as const;",
   '',
@@ -94,7 +94,7 @@ const MODULE_CONST_LIST = [
 
 /** Dynamic prop-sourced map — Stage-1 must NOT invent keys (not a stable source). */
 const DYNAMIC_LIST = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface DynProperties {',
   '  items: string[];',
@@ -114,7 +114,7 @@ const DYNAMIC_LIST = [
 
 /** Constant `useMemo` — Stage-2 folds it to a plain const on Vue/Solid/Svelte. */
 const CONSTANT_MEMO_HOOK = [
-  "import { useMemo, useState } from '@mission-platform/forge';",
+  "import { useMemo, useState } from '@mission-platform/forge-jsx';",
   '',
   'export function useLabel(): { label: string; count: number; bump: () => void } {',
   "  const label = useMemo(() => 'static-label', []);",
@@ -126,7 +126,7 @@ const CONSTANT_MEMO_HOOK = [
 
 /** Component with a constant derived const (template path). */
 const CONSTANT_DERIVED = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface TagProperties {',
   '  name: string;',
@@ -140,7 +140,7 @@ const CONSTANT_DERIVED = [
 
 /** Regression fixtures — slots / teleport / effects must still emit correctly. */
 const SLOT_LAYOUT = [
-  "import { h, type MpElement, Slot } from '@mission-platform/forge';",
+  "import { h, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export function ForgeLayout(): MpElement {',
   '  return (',
@@ -153,7 +153,7 @@ const SLOT_LAYOUT = [
 ].join('\n');
 
 const TELEPORT_PANEL = [
-  "import { h, type MpElement, Teleport, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, Teleport, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface PanelProperties {',
   '  open?: boolean;',
@@ -175,7 +175,7 @@ const TELEPORT_PANEL = [
 ].join('\n');
 
 const EFFECT_HOOK = [
-  "import { useEffect, useState } from '@mission-platform/forge';",
+  "import { useEffect, useState } from '@mission-platform/forge-jsx';",
   '',
   'export function useTick(enabled: boolean): number {',
   '  const [n, setN] = useState(0);',
@@ -248,7 +248,7 @@ describe('Stage-1 optimise — static-node marking', () => {
 
   it('does not mark elements with dynamic bindings or event handlers', () => {
     const source = [
-      "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+      "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
       'export interface ButtonProperties { children?: MpChild | readonly MpChild[]; }',
       'export function ForgeBtn(properties: ButtonProperties): MpElement {',
       '  return <button type="button" onClick={() => undefined}>{properties.children}</button>;',
@@ -338,7 +338,7 @@ describe('Stage-2 — Svelte keyed each + constant memo', () => {
 
   it('emits a plain `const` (not `$derived`) for a constant `useMemo` in a component', () => {
     const source = [
-      "import { h, useMemo, type MpElement } from '@mission-platform/forge';",
+      "import { h, useMemo, type MpElement } from '@mission-platform/forge-jsx';",
       'export function ForgeLabel(): MpElement {',
       "  const label = useMemo(() => 'hi', []);",
       '  return <span class="label">{label}</span>;',
@@ -356,7 +356,7 @@ describe('Stage-2 — Svelte keyed each + constant memo', () => {
 describe('Stage-2 — Web Components static template hoist', () => {
   it('hoists a fully-static root to a module-level direct-DOM definition', () => {
     const source = [
-      "import { h, type MpElement } from '@mission-platform/forge';",
+      "import { h, type MpElement } from '@mission-platform/forge-jsx';",
       'export function ForgeIcon(): MpElement {',
       '  return <span class="icon">★</span>;',
       '}',

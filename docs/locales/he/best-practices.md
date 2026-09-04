@@ -59,7 +59,7 @@ done
 
 ### רכיבים ניטרליים למסגרת
 
-במידת האפשר, מחבר רכיבי ממשק משתמש באמצעות ה `@mission-platform/forge` נִיב. זה מאפשר לרכיבים להיות
+במידת האפשר, מחבר רכיבי ממשק משתמש באמצעות ה `@mission-platform/forge-jsx` נִיב. זה מאפשר לרכיבים להיות
 הידור והשימוש ב Vue, React, Svelte, Solid, ו-Web Components מבלי לשכתב את לוגיקה הליבה. הגדר את
 הפותר של הצרכן עם ההתאמה `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, או `mp:web-component` מַצָב.
 

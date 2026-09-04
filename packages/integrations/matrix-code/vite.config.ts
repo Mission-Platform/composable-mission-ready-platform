@@ -38,11 +38,11 @@ const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
 
 /**
  * The `vue-tsc` CLI used to emit the Vue build's declarations. It ships as a
- * dependency of `@mission-platform/forge` (a transitive dependency here), so it is
+ * dependency of `@mission-platform/forge-jsx` (a transitive dependency here), so it is
  * resolved from the jsx package directory rather than assumed hoisted.
  */
 const vueTscBin = createRequire(path.join(__dirname, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
-  paths: [path.join(__dirname, 'node_modules/@mission-platform/forge')],
+  paths: [path.join(__dirname, 'node_modules/@mission-platform/forge-jsx')],
 });
 
 /** The self-contained encoder/decoder bundle (`dist/index.js`, the `.` export). */

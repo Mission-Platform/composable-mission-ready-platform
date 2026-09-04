@@ -8,7 +8,7 @@ import {
   createForgeStyle,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 import { encodeMatrix, type MatrixSymbology } from '@mission-platform/matrix-code';
 

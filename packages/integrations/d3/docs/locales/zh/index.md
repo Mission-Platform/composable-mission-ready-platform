@@ -12,7 +12,7 @@
 
 该包将命令式 D3 基于选择的渲染与声明式反应式 UI 树连接起来：
 
-- **中性实现**：构建在 `@mission-platform/forge` 挂钩（`useRef`、`useEffect`）之上。
+- **中性实现**：构建在 `@mission-platform/forge-jsx` 挂钩（`useRef`、`useEffect`）之上。
 - **双框架目标**：由 `@mission-platform/vite-plugin-forge` 转换为本机 React (`./react`) 和 Vue 3
   (`./vue`) 可组合项。
 - **选择性依赖**：直接导入 `d3-selection` 以保持客户端包大小最小。

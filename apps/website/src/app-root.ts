@@ -1,4 +1,4 @@
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { IconSpriteProvider } from '@mission-platform/icons';
 import { h, type VNode } from 'vue';
 import { RouterView } from 'vue-router';

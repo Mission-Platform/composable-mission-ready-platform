@@ -139,7 +139,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### 创作规则
 
-1. **TypeScript 无处不在**：所有源代码必须位于 `.ts` 或 `.tsx` 中（使用 `@mission-platform/forge`）。
+1. **TypeScript 无处不在**：所有源代码必须位于 `.ts` 或 `.tsx` 中（使用 `@mission-platform/forge-jsx`）。
 2. **框架中立性**：支持与框架无关的逻辑。组件应该在 Forge JSX 中编写一次以定位
    多个框架。
 3. **隔离**：包绝不能从 `apps/` 导入。

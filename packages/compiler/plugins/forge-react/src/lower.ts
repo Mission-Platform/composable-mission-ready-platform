@@ -412,7 +412,7 @@ function planHooks(module: SemanticModule): ReactHookPlan {
 /**
  * Split the neutral import into the React bindings the module needs.
  *
- * The neutral `@mission-platform/forge` value import is React's own vocabulary
+ * The neutral `@mission-platform/forge-jsx` value import is React's own vocabulary
  * (`h` → `createElement`, `Fragment`, the hooks) except for the compile-time
  * markers (consumed by the lowering), the per-framework components (imported
  * from the React adapter) and the framework-agnostic runtime helpers (kept

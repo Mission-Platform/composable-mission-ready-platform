@@ -139,7 +139,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### 저작 규칙
 
-1. **TypeScript Everywhere**: 모든 소스 코드는 `.ts` 또는 `.tsx`(`@mission-platform/forge` 사용)에 있어야 합니다.
+1. **TypeScript Everywhere**: 모든 소스 코드는 `.ts` 또는 `.tsx`(`@mission-platform/forge-jsx` 사용)에 있어야 합니다.
 2. **프레임워크 중립성**: 프레임워크에 구애받지 않는 논리를 선호합니다. Forge JSX에서 대상으로 구성 요소를 한 번 작성해야 합니다.
    여러 프레임워크.
 3. **격리**: 패키지는 `apps/`에서 가져오면 안 됩니다.

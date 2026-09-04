@@ -6,7 +6,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > Taal: Nederlands (nl)
 
 Mission Platform gebruikt een **Atomic Design**-systeem om componenten in hiërarchische niveaus van complexiteit te ordenen. Elke
-component is een "eenmalig schrijven" -eenheid geschreven in het neutrale Forge JSX-dialect (`@mission-platform/forge`), verzekeren
+component is een "eenmalig schrijven" -eenheid geschreven in het neutrale Forge JSX-dialect (`@mission-platform/forge-jsx`), verzekeren
 consistentie binnen meerdere raamwerken.
 
 ## Ontwerpniveaus
@@ -75,7 +75,7 @@ const meta = {
 
 ## Auteursnormen
 
-1. **Framework Neutrality**: Auteur nooit afzonderlijk Vue En React versies. Gebruik `@mission-platform/forge`.
+1. **Framework Neutrality**: Auteur nooit afzonderlijk Vue En React versies. Gebruik `@mission-platform/forge-jsx`.
 2. **Naamgeving**: Componenten moeten de `Base` voorvoegsel (bijv. `ForgeCard`) tenzij het specifieke implementaties zijn.
 3. **Typeveiligheid**: Exporteren `*Properties` interface voor de rekwisieten van de component.
 4. **Testen**: Een co-locatie `.spec.ts` is voor elk onderdeel vereist.

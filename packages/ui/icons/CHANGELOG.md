@@ -12,7 +12,7 @@
 - Updated dependencies [f216404]
 - Updated dependencies [89aab02]
 - Updated dependencies [8a15dbc]
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
 
 ## 2.0.0
 
@@ -65,7 +65,7 @@
   live basemap again — their sized wrapper is an inline element rather than a local
   component taking `children`, which the Vue JSX transform turns into a slot.
 
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
 
 ## 1.0.0
 
@@ -109,7 +109,7 @@
   +import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
   ```
 
-  The `@mission-platform/forge` adapter subpaths (`/react`, `/vue`, `/solid`,
+  The `@mission-platform/forge-jsx` adapter subpaths (`/react`, `/vue`, `/solid`,
   `/web-components`, `/runtime`, `/jsx-globals`), the Storyblok wrappers (`/storyblok/react`, `/storyblok/vue`),
   `@mission-platform/router/redwood`,
   `@mission-platform/breakpoints/core` and every `…/styles` entry are unaffected.
@@ -147,7 +147,7 @@
 
 - 90a72fc: Add `@mission-platform/wysiwyg`, a framework-agnostic (write-once Vue 3 + React) WYSIWYG rich-text editor.
 
-  The editor is authored once with `@mission-platform/forge` and composes existing packages: a `contenteditable` surface
+  The editor is authored once with `@mission-platform/forge-jsx` and composes existing packages: a `contenteditable` surface
   with a formatting toolbar built from `@mission-platform/icons` and `@mission-platform/components`' `ForgeButton`, an
   optional Monaco-backed HTML source view (`ForgeMonacoEditor` with Hunspell + Harper spell/grammar checking), design
   tokens via `@mission-platform/tokens`, and an RxJS-powered live word/character counter.
@@ -193,7 +193,7 @@
 - Updated dependencies [3fb8ddb]
 - Updated dependencies [7d95459]
 - Updated dependencies [f67e304]
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
 
 ## 0.2.0
 
@@ -218,7 +218,7 @@
 
   The package now exposes a framework-neutral `.` export (the neutral icon source, typed against the built
   `dist/components` declarations) alongside the existing compiled `./react` / `./vue` subpaths. This lets a write-once
-  `@mission-platform/forge` component import an icon from `@mission-platform/icons`
+  `@mission-platform/forge-jsx` component import an icon from `@mission-platform/icons`
   so it type-checks and renders through the runtime adapters in unit tests, while
   `@mission-platform/vite-plugin-forge` remaps that specifier to the matching per-framework build for the emitted
   React/Vue output. The package `src` is now published so the neutral entry resolves.
@@ -248,7 +248,7 @@
   `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on React an array value collapses to a
   `className={classNames(…)}` string call (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which understands the array/object forms (no
-  helper needed). `@mission-platform/forge`'s
+  helper needed). `@mission-platform/forge-jsx`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so the ad-hoc/SSR output matches the
   compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -320,7 +320,7 @@ false })` (so multi-root / render-closure components don't warn), but it never r
 - Updated dependencies [94f9acf]
 - Updated dependencies [ca1d98b]
 - Updated dependencies [d39b6fc]
-  - @mission-platform/forge@0.2.0
+  - @mission-platform/forge-jsx@0.2.0
 
 ## 0.2.0
 
@@ -345,7 +345,7 @@ false })` (so multi-root / render-closure components don't warn), but it never r
 
   The package now exposes a framework-neutral `.` export (the neutral icon source, typed against the built
   `dist/components` declarations) alongside the existing compiled `./react` / `./vue` subpaths. This lets a write-once
-  `@mission-platform/forge` component import an icon from `@mission-platform/icons`
+  `@mission-platform/forge-jsx` component import an icon from `@mission-platform/icons`
   so it type-checks and renders through the runtime adapters in unit tests, while
   `@mission-platform/vite-plugin-forge` remaps that specifier to the matching per-framework build for the emitted
   React/Vue output. The package `src` is now published so the neutral entry resolves.
@@ -375,7 +375,7 @@ false })` (so multi-root / render-closure components don't warn), but it never r
   `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on React an array value collapses to a
   `className={classNames(…)}` string call (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which understands the array/object forms (no
-  helper needed). `@mission-platform/forge`'s
+  helper needed). `@mission-platform/forge-jsx`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so the ad-hoc/SSR output matches the
   compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -447,7 +447,7 @@ false })` (so multi-root / render-closure components don't warn), but it never r
 - Updated dependencies [94f9acf]
 - Updated dependencies [ca1d98b]
 - Updated dependencies [d39b6fc]
-  - @mission-platform/forge@0.2.0
+  - @mission-platform/forge-jsx@0.2.0
 
 ## 0.2.0
 
@@ -472,7 +472,7 @@ false })` (so multi-root / render-closure components don't warn), but it never r
 
   The package now exposes a framework-neutral `.` export (the neutral icon source, typed against the built
   `dist/components` declarations) alongside the existing compiled `./react` / `./vue` subpaths. This lets a write-once
-  `@mission-platform/forge` component import an icon from `@mission-platform/icons`
+  `@mission-platform/forge-jsx` component import an icon from `@mission-platform/icons`
   so it type-checks and renders through the runtime adapters in unit tests, while
   `@mission-platform/vite-plugin-forge` remaps that specifier to the matching per-framework build for the emitted
   React/Vue output. The package `src` is now published so the neutral entry resolves.
@@ -502,7 +502,7 @@ false })` (so multi-root / render-closure components don't warn), but it never r
   `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on React an array value collapses to a
   `className={classNames(…)}` string call (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which understands the array/object forms (no
-  helper needed). `@mission-platform/forge`'s
+  helper needed). `@mission-platform/forge-jsx`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so the ad-hoc/SSR output matches the
   compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -574,7 +574,7 @@ false })` (so multi-root / render-closure components don't warn), but it never r
 - Updated dependencies [94f9acf]
 - Updated dependencies [ca1d98b]
 - Updated dependencies [d39b6fc]
-  - @mission-platform/forge@0.2.0
+  - @mission-platform/forge-jsx@0.2.0
 
 ## 0.2.0
 
@@ -599,7 +599,7 @@ false })` (so multi-root / render-closure components don't warn), but it never r
 
   The package now exposes a framework-neutral `.` export (the neutral icon source, typed against the built
   `dist/components` declarations) alongside the existing compiled `./react` / `./vue` subpaths. This lets a write-once
-  `@mission-platform/forge` component import an icon from `@mission-platform/icons`
+  `@mission-platform/forge-jsx` component import an icon from `@mission-platform/icons`
   so it type-checks and renders through the runtime adapters in unit tests, while
   `@mission-platform/vite-plugin-forge` remaps that specifier to the matching per-framework build for the emitted
   React/Vue output. The package `src` is now published so the neutral entry resolves.
@@ -629,7 +629,7 @@ false })` (so multi-root / render-closure components don't warn), but it never r
   `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on React an array value collapses to a
   `className={classNames(…)}` string call (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which understands the array/object forms (no
-  helper needed). `@mission-platform/forge`'s
+  helper needed). `@mission-platform/forge-jsx`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so the ad-hoc/SSR output matches the
   compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -701,4 +701,4 @@ false })` (so multi-root / render-closure components don't warn), but it never r
 - Updated dependencies [94f9acf]
 - Updated dependencies [ca1d98b]
 - Updated dependencies [d39b6fc]
-  - @mission-platform/forge@0.2.0
+  - @mission-platform/forge-jsx@0.2.0

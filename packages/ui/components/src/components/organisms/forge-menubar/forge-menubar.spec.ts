@@ -1,6 +1,6 @@
-import { h } from '@mission-platform/forge';
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
+import { h } from '@mission-platform/forge-jsx';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -13,7 +13,7 @@ import type { MenuNode } from '@/components/molecules/forge-menu';
 
 /**
  * Exercises the **neutral** `ForgeMenubar` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/forge` runtime adapters.
+ * on both frameworks through the `@mission-platform/forge-jsx` runtime adapters.
  * Covers the labelled `menubar`, the link/button items, and the dropdown
  * submenu affordances.
  */

@@ -1,4 +1,4 @@
-import { useState } from '@mission-platform/forge';
+import { useState } from '@mission-platform/forge-jsx';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeCheckbox, ForgeFormWizard, ForgeInput } from '@mission-platform/forms';
@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 /**
  * `ForgeFormWizard` is the write-once component of `@mission-platform/forms`.
  * It is authored **once** in the framework-neutral JSX dialect
- * (`@mission-platform/forge`) and compiled at build time by
+ * (`@mission-platform/forge-jsx`) and compiled at build time by
  * `@mission-platform/vite-plugin-forge` to every supported framework (Vue 3,
  * React, SolidJS, Svelte, and Web Components).
  *

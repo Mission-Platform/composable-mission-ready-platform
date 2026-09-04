@@ -21,7 +21,7 @@ durch diese Migration.
 
 Diese Komponenten teilen sich die Tastaturnavigation, den beweglichen Fokus, den Menü-/Registerkartenstatus usw
 Navigationsorientierte Interaktionsverträge. Ihre neutralen Implementierungen hängen davon ab
-auf `@mission-platform/forge`; Es werden auch menü- und tabellenartige Steuerelemente verwendet
+auf `@mission-platform/forge-jsx`; Es werden auch menü- und tabellenartige Steuerelemente verwendet
 `@mission-platform/icons`, während Breadcrumb-/Navigationsleisteninhalte den Eigentümer bilden
 `@mission-platform/typography`-Paket. `ForgeNavbar` besteht derzeit aus dem
 Rest `ForgeDrawer`, daher muss das Extrahieren der Navigation entweder beibehalten werden
@@ -36,7 +36,7 @@ eine Abhängigkeit von `@mission-platform/components` zurück in die Navigation.
 
 Das gemeinsame Anliegen ist die Darstellung strukturierter oder großvolumiger Daten, einschließlich
 Fensterung, Sortierung, Baumerweiterung und Statusdarstellung. Die aktuelle Quelle
-verwendet `@mission-platform/forge` und, wo Text oder Glyphen zusammengesetzt sind,
+verwendet `@mission-platform/forge-jsx` und, wo Text oder Glyphen zusammengesetzt sind,
 `@mission-platform/typography` und `@mission-platform/icons`; diese sollten bleiben
 Abhängigkeiten auf niedrigerer Ebene eines zukünftigen Pakets. Virtuelle Komponenten sollten mitziehen
 ihre nebeneinander liegenden Stile/Spezifikationen/Geschichten, also ihr neutrales Hook-Verhalten und fünf
@@ -60,7 +60,7 @@ Quellbaum des Domänenpakets.
 
 Die ersten drei besitzen die Semantik für das Laden/Rendering von Medien, Karussell und Gerät
 Mock-Add-Präsentation rund um die Medien. Ihre neutrale Quelle hängt derzeit davon ab
-`@mission-platform/forge` und für Karussellsteuerungen `@mission-platform/icons`;
+`@mission-platform/forge-jsx` und für Karussellsteuerungen `@mission-platform/icons`;
 Es besteht keine Abhängigkeit von den extrahierten Paketen. Reduzierte Bewegung beibehalten und
 CSS pro Komponente als Teil eines zukünftigen Schritts zu integrieren, anstatt das Medienverhalten aufzuteilen
 aus seinen Stilen.
@@ -101,7 +101,7 @@ Duplizierte Implementierungen als Kompatibilitätsverknüpfung.
 Die verbleibende Komponentenquelle wurde auf Importe der extrahierten Pakete überprüft:
 Es gibt keine Importe von `@mission-platform/theme`, `@mission-platform/float` oder
 `@mission-platform/select` unter `packages/ui/components/src`. Neutrale Komponenten
-Verwenden Sie `@mission-platform/forge`, ausgewählte Symbole aus `@mission-platform/icons`,
+Verwenden Sie `@mission-platform/forge-jsx`, ausgewählte Symbole aus `@mission-platform/icons`,
 Typografie von `@mission-platform/typography` und paketlokale Stile/Dienstprogramme.
 Geschichten können das Paketfass importieren, um die öffentliche Oberfläche zu nutzen; das ist es nicht
 eine Implementierungsabhängigkeit oder ein Paketzyklus.

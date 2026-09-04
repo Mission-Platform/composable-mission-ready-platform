@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 /**
  * `ForgeQrCode` is the write-once `ForgeQrCode` in `@mission-platform/qr-code`.
  * The component is authored **once** in the framework-neutral JSX dialect
- * (`@mission-platform/forge`) and compiled at build time by
+ * (`@mission-platform/forge-jsx`) and compiled at build time by
  * `@mission-platform/vite-plugin-forge` to every supported framework.
  *
  * This is a single, framework-agnostic story: the bare

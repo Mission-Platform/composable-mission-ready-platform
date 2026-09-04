@@ -90,7 +90,7 @@ const CONVENTIONS = `# Conventions & Naming
 const COMPONENT_USAGE = `# Using Components
 
 Components live in \`@mission-platform/components\`. They are **write-once**: authored
-in the neutral JSX dialect (\`@mission-platform/forge\`) and compiled to **both Vue 3 and React**.
+in the neutral JSX dialect (\`@mission-platform/forge-jsx\`) and compiled to **both Vue 3 and React**.
 
 ## Discover
 - Use the \`list_components\` tool to enumerate every component and its exports.
@@ -140,7 +140,7 @@ const ATOMIC_COMPONENT_DESIGN = `# Atomic Component Design
 Components in \`@mission-platform/components\` (and other component packages) are
 organised by **atomic design**. Each component lives in its own folder under a
 level directory, is authored **write-once** in the neutral JSX dialect
-(\`@mission-platform/forge\`), and ships with a co-located story and test.
+(\`@mission-platform/forge-jsx\`), and ships with a co-located story and test.
 
 See also the repository doc: \`docs/atomic-component-design.md\`.
 
@@ -197,7 +197,7 @@ Examples:
 
 ## Authoring rules
 
-1. **Write-once:** implement with \`@mission-platform/forge\` (\`h\`, \`MpElement\`, neutral hooks). Never hand-write separate Vue/React sources.
+1. **Write-once:** implement with \`@mission-platform/forge-jsx\` (\`h\`, \`MpElement\`, neutral hooks). Never hand-write separate Vue/React sources.
    Props interfaces inherit nothing — there is no shared props base. Declare exactly what the component accepts, adding
    \`children?: MpChild | readonly MpChild[]\` or \`className?: ClassValue\` only when it uses them; \`key\` and \`slot\` come free
    from \`MpReservedProperties\`.
@@ -214,7 +214,7 @@ Examples:
 const COMPOSABLE_AUTHORING = `# Authoring Composables
 
 Composables hold reusable reactive logic. They are **write-once** against
-\`@mission-platform/forge\` neutral hooks so the same source compiles to every
+\`@mission-platform/forge-jsx\` neutral hooks so the same source compiles to every
 supported framework.
 
 See also: \`docs/composable-authoring.md\`.
@@ -235,7 +235,7 @@ Names are kebab-case and should start with \`use-\` (the scaffold tool prefixes
 
 ## Rules
 
-1. Import hooks only from \`@mission-platform/forge\` (\`useState\`, \`useEffect\`,
+1. Import hooks only from \`@mission-platform/forge-jsx\` (\`useState\`, \`useEffect\`,
    \`useMemo\`, \`type MpRef\`, …) — not from \`vue\` or \`react\` directly.
 2. Keep composables pure and SSR-safe (guard \`window\`/\`document\` access).
 3. **Every composable ships a co-located test** (\`.spec.ts\`).
@@ -245,7 +245,7 @@ Names are kebab-case and should start with \`use-\` (the scaffold tool prefixes
 ## Example
 
 \`\`\`ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,
@@ -393,7 +393,7 @@ packages/<name>/
   (packages typically split into \`build:check\`, \`build:bundle\`, \`build:types\`).
 - Test: \`pnpm exec turbo run test --filter @mission-platform/<name>\` (Vitest; Playwright for browser-level).
 - Lint/format: \`pnpm exec turbo run lint lint:style format --filter @mission-platform/<name>\`.
-- Framework-agnostic components: author with \`@mission-platform/forge\` so they compile to Vue and React.
+- Framework-agnostic components: author with \`@mission-platform/forge-jsx\` so they compile to Vue and React.
 - Prefer the scaffold tools for units: \`scaffold_component\`, \`scaffold_composable\`,
   \`scaffold_store\`, \`scaffold_util\` (see the atomic / composable / store / util guides).
 - Update \`llms.txt\` whenever the public API changes, and add/refresh Storybook stories.

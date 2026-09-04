@@ -100,7 +100,8 @@
   "dependencies": {
     "@mission-platform/components": "workspace:*",
     "@mission-platform/float": "workspace:*",
-    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-adapters": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/forge-plugin-react": "workspace:*",
     "@mission-platform/forge-plugin-solid": "workspace:*",
     "@mission-platform/forge-plugin-svelte": "workspace:*",

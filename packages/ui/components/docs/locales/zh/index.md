@@ -6,7 +6,7 @@
 > 语言: 简体中文 (zh)
 
 `@mission-platform/components` 是 Mission Platform 的剩余一次写入组件库。中的每个组件
-该库是使用框架中立的 JSX 方言（通过 `@mission-platform/forge`）编写一次，然后在
+该库是使用框架中立的 JSX 方言（通过 `@mission-platform/forge-jsx`）编写一次，然后在
 将构建时间写入本机 **Vue 3**、**React**、**Svelte**、**Solid** 和 **Web 组件** 输出。
 
 `ForgeTypography` 由专用 `@mission-platform/typography` 包拥有。而是从该包导入它
@@ -16,7 +16,7 @@
 
 该包演示了高效的跨框架架构：
 
-- **中性源**：组件使用 `@mission-platform/forge` 写入 `.tsx` 文件中。
+- **中性源**：组件使用 `@mission-platform/forge-jsx` 写入 `.tsx` 文件中。
 - **两阶段编译**：使用 `@mission-platform/vite-plugin-forge`，将中性源转换为
   特定于框架的源代码（Vue SFC 和 React TSX），然后由各自的本机工具链进行编译。
 - **零运行时开销**：没有运行时适配器。消费者直接导入原生组件

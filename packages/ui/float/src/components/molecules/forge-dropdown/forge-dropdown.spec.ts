@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -12,7 +12,7 @@ import { ForgeDropdown } from './forge-dropdown';
 
 /**
  * Exercises the **neutral** `ForgeDropdown` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/forge` runtime adapters.
+ * it on both frameworks through the `@mission-platform/forge-jsx` runtime adapters.
  * The panel is portalled through the neutral `<Teleport>` primitive (the
  * adapters render teleported children in place for SSR parity) and gated on
  * `open`, so it only ships in the markup while open; when open it stays anchored

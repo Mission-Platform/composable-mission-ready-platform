@@ -32,7 +32,7 @@ import type {
 
 /** Every neutral kind in one component, including the three marker types. */
 const KINDS = [
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export type KindsTone = 'light' | 'dark';",
   "",

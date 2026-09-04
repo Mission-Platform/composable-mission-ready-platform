@@ -1,7 +1,7 @@
 # `@mission-platform/rxjs`
 
 Framework-neutral RxJS integration for Mission Platform apps. Write-once composables (`useObservable`,
-`useSubscription`, `useSubscribe`) authored against `@mission-platform/forge` hooks and shipped for React,
+`useSubscription`, `useSubscribe`) authored against `@mission-platform/forge-jsx` hooks and shipped for React,
 Vue, and framework-neutral environments — all behind the single bare `@mission-platform/rxjs` specifier.
 
 ---

@@ -1,4 +1,4 @@
-import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 import { ForgeIconChevron, ForgeIconChevrons } from '@mission-platform/icons';
 
 import styles from './forge-pagination.module.scss';

@@ -518,7 +518,7 @@ Accessibility:
 
 Enter/leave animation matches the Vue SFC via the neutral
 **`<TransitionGroup>`** primitive, which compiles to Vue's built-in
-`<TransitionGroup>` and the `@mission-platform/forge/react` CSS-class group
+`<TransitionGroup>` and the `@mission-platform/forge-adapters/react` CSS-class group
 driver. The four styled enter/leave phase classes are passed as **hashed
 CSS-Module classes** (via the `<TransitionGroup>` class props), so the
 animation styling stays component-scoped instead of relying on global

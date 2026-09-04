@@ -59,7 +59,7 @@ export function moduleImport(
   };
 }
 
-/** The neutral `@mission-platform/forge` import, spelled out from its names. */
+/** The neutral `@mission-platform/forge-jsx` import, spelled out from its names. */
 export function neutralImport(
   valueNames: readonly string[],
   typeNames: readonly string[] = [],
@@ -69,8 +69,8 @@ export function neutralImport(
     typeNames.length === 0 ? undefined : `type { ${typeNames.join(", ")} }`,
   ].filter((clause): clause is string => clause !== undefined);
   return moduleImport(
-    `import ${clauses.join(", ")} from '@mission-platform/forge';`,
-    "@mission-platform/forge",
+    `import ${clauses.join(", ")} from '@mission-platform/forge-jsx';`,
+    "@mission-platform/forge-jsx",
     {
       valueNames,
       typeNames,

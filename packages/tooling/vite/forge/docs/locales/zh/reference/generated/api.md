@@ -106,7 +106,7 @@ export const CLASS_NAME_ATTRIBUTE;
 `className={…}`（`class` 属性保留用于静态字符串），
 传递 `classNames` 运行时帮助程序接受的相同参数 - 大多数
 通常是类值的**数组** (`className={['base', { active }]}`)，
-但任何单个 {@link import ('@mission-platform/forge').ClassValue} 也可以。
+但任何单个 {@link import ('@mission-platform/forge-jsx').ClassValue} 也可以。
 该属性的拼写与 React 自己的 `className` 相同（与
 运行时帮助程序，仍为 `classNames`），以便组件可以合并自己的组件
 具有转发的 `properties.className` 且没有命名的计算类
@@ -154,7 +154,7 @@ export const COMPONENTS_JSX_MODULES;
 `@mission-platform/icons`，中立作者从这些导入他们的组件
 软件包（例如 `@mission-platform/components/forge-drawer` 中的 `ForgeDrawer`，或
 `ForgeVerticalLayout` 到 `@mission-platform/layouts`)，进行类型检查
-针对中性源并通过 `@mission-platform/forge` 进行渲染
+针对中性源并通过 `@mission-platform/forge-jsx` 进行渲染
 单元测试中的适配器。生成的每个框架源将它们导入到
 完全相同的裸说明符 - 框架选择发生在每个
 包的 `mp:<framework>` 导出条件，不通过子路径。
@@ -796,12 +796,12 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 `MpRenderProperty<S>`，作用域槽/渲染属性函数返回
 给定范围的槽内容。
 
-而不是将其保留为生成的 `@mission-platform/forge` 导入
+而不是将其保留为生成的 `@mission-platform/forge-jsx` 导入
 代码，每个框架构建都会发出一个微小的并置模块
 ({@link LOCAL_JSX_TYPES_MODULE}) 定义了**特定于框架的变体**
 其中 - React 超过 `ReactNode`，Vue 超过 `VNodeChild` - 以及每个发射器
 在那里重定向类型导入（请参阅 React 和 Vue `imports` 构建器）。
-因此生成的源不包含中性 `@mission-platform/forge`
+因此生成的源不包含中性 `@mission-platform/forge-jsx`
 render-prop **type** 完全导入。
 
 ### LOCAL_JSX_TYPES_FILE
@@ -867,7 +867,7 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 框架：名为的中性渲染基元的特定于框架的变体
 在 {@link LOCAL_JSX_TYPE_NAMES} 中，因此生成的组件导入
 `MpRenderProperty` 来自该本地模块而不是中性模块
-`@mission-platform/forge` 包。每个框架的定义都不同：
+`@mission-platform/forge-jsx` 包。每个框架的定义都不同：
 “可渲染内容”位置是React的`ReactNode`和Vue的`VNodeChild`，
 因此每个构建的声明都以其运行时的惯用方式读取。
 
@@ -944,7 +944,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 作为上下文原语的中性**值**导入。在 React 上，它们*是*
 React 自己的 (`createContext`/`useContext`)，因此它们落入
 `react` 值导入；在 Vue 上，它们的导入被重新映射到
-`@mission-platform/forge/vue` 适配器（支持 `provide`/`inject`
+`@mission-platform/forge-adapters/vue` 适配器（支持 `provide`/`inject`
 `createContext`/`useContext`)。
 
 ### NEUTRAL_FRAMEWORK_COMPONENTS
@@ -958,15 +958,15 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 中性**值**导入是真实的，每个框架**组件**而不是
 比标记、运行时实用程序或 React 自己的原语更重要。他们的 JSX 使用情况
 保持不变（它们仍然是组件标签），但是它们的
-`import { … } from '@mission-platform/forge'` 被重新映射到目标
+`import { … } from '@mission-platform/forge-jsx'` 被重新映射到目标
 框架的本机实现：`Teleport`（门户原语）变为
-`import { Teleport } from '@mission-platform/forge/react'`（`createPortal`
+`import { Teleport } from '@mission-platform/forge-adapters/react'`（`createPortal`
 React 的包装器）和 Vue 的 `import { Teleport } from 'vue'`（内置）；
 `Transition`（进入/离开原语）成为
-`@mission-platform/forge/react` React 的 CSS 级驱动程序和内置
+`@mission-platform/forge-adapters/react` React 的 CSS 级驱动程序和内置
 `import { Transition } from 'vue'` 为 Vue； `TransitionGroup`（列表
 进入/离开/移动原语）以相同的方式重新映射（
-`@mission-platform/forge/react` React 的组驱动程序，内置
+`@mission-platform/forge-adapters/react` React 的组驱动程序，内置
 `import { TransitionGroup } from 'vue'` 为 Vue)。
 
 ### 中性模块
@@ -989,7 +989,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 
 中性**值**导入是与框架无关的运行时实用程序 - 它们
 在每个目标上的行为都相同，因此（与 `h` 和钩子不同，它们是
-每个框架翻译/别名）他们的 `import { … } from '@mission-platform/forge'`
+每个框架翻译/别名）他们的 `import { … } from '@mission-platform/forge-jsx'`
 必须逐字保留在生成的 React 和 Vue 源中。
 
 ### NEUTRAL_VUE_RUNTIME_HOOKS
@@ -1113,7 +1113,7 @@ props 接口的单个​​（自己的）属性 - 它的名称、声明的类�
 export const REACT_ADAPTER_MODULE;
 ```
 
-React 框架组件从中导入的 `@mission-platform/forge/react` 子路径。
+React 框架组件从中导入的 `@mission-platform/forge-adapters/react` 子路径。
 
 ### REACT_TYPE_ALIASES
 
@@ -1126,7 +1126,7 @@ export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 具有一流 React 等效项的中性 **类型** 导入
 `react` 本身。在 React 目标上，这些内容被重写为其 React 名称
 （导入 `import type { … } from 'react'`）而不是保持中立
-`@mission-platform/forge` 类型，因此 React 作者看到的是惯用类型。每个
+`@mission-platform/forge-jsx` 类型，因此 React 作者看到的是惯用类型。每个
 对发射源中中性名称的引用被重命名为映射的
 React 名称（请参阅 React 发射器）。每个中性钩子/渲染基元
 有一个精确的 React 对应项：
@@ -1284,7 +1284,7 @@ function readHasSlotName(call: ts.CallExpression): string | undefined;
 function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
-检查模块的 `import … from '@mission-platform/forge'` 绑定。
+检查模块的 `import … from '@mission-platform/forge-jsx'` 绑定。
 
 #### 参数
 
@@ -1625,7 +1625,7 @@ Oxc 模块或 node 是否调用 `i18next.t(...)`。
 export const VUE_ADAPTER_MODULE;
 ```
 
-Vue 上下文基元从中导入的 `@mission-platform/forge/vue` 子路径。
+Vue 上下文基元从中导入的 `@mission-platform/forge-adapters/vue` 子路径。
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -1651,7 +1651,7 @@ export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 将中性 **element** 原语 `MpChild` 和 `MpElement` 重新声明为
 Vue 的 `VNodeChild` / `VNode`。在 `jsxImportSource: 'vue'` 下 a
 生成的 SFC 中的 JSX 表达式的类型为 `JSX.Element`（即 Vue 的 `VNode`）；
-保持中立的 `@mission-platform/forge` 定义（品牌为
+保持中立的 `@mission-platform/forge-jsx` 定义（品牌为
 `__mpElement`) 将使每个 `const x: MpElement = <div/>` /
 `MpChild[] = items.map(() => <li/>)` 无法在 `vue-tsc` 下进行类型检查。 React
 相反，将它们重命名为 `ReactNode`/`ReactElement`（请参阅
@@ -1803,7 +1803,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 编译一个中性的**钩子模块**（一种针对
-`@mission-platform/forge` 的 React 风格的挂钩（_不是_ UI 组件）到其
+`@mission-platform/forge-jsx` 的 React 风格的挂钩（_不是_ UI 组件）到其
 每个框架源（第一阶段）。
 
 #### 参数

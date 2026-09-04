@@ -44,7 +44,7 @@ graph TD
 
 ## 프레임워크 중립 엔진: Forge
 
-미션플랫폼의 핵심은 `@mission-platform/forge`, 구성 요소에 대한 프레임워크 중립적인 작성 모델 및
+미션플랫폼의 핵심은 `@mission-platform/forge-jsx`, 구성 요소에 대한 프레임워크 중립적인 작성 모델 및
 컴포저블. `@mission-platform/vite-plugin-forge` 중립 컴파일러 드라이버입니다. 소스를 구문 분석하고 정규화합니다.
 의미론적 IR을 구축하고, 공유 분석 및 최적화를 실행하고, 명시적으로 제공된
 `FrameworkOutputPlugin`.

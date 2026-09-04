@@ -16,6 +16,6 @@
     "emitDeclarationOnly": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    "jsxImportSource": "@mission-platform/forge"
+    "jsxImportSource": "@mission-platform/forge-jsx"
   }
 }

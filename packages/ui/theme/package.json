@@ -2,7 +2,7 @@
   "name": "@mission-platform/theme",
   "version": "1.1.0",
   "license": "BSD-4-Clause",
-  "description": "Mission Platform theme components, stores, and runtime theme contracts authored with @mission-platform/forge",
+  "description": "Mission Platform theme components, stores, and runtime theme contracts authored with @mission-platform/forge-jsx",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -89,7 +89,8 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-adapters": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/tokens": "workspace:*"
   },
   "peerDependencies": {

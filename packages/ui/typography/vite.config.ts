@@ -22,7 +22,7 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
 const componentsModule = path.resolve(import.meta.dirname, 'src/components/index.ts');
 const cacheRoot = path.resolve(import.meta.dirname, 'node_modules/.cache');
 const vueTscBin = createRequire(import.meta.url).resolve('vue-tsc/bin/vue-tsc.js', {
-  paths: [path.join(import.meta.dirname, 'node_modules/@mission-platform/forge')],
+  paths: [path.join(import.meta.dirname, 'node_modules/@mission-platform/forge-jsx')],
 });
 
 function defineFrameworkConfig(framework: JsxFramework): UserConfig {

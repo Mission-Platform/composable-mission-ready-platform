@@ -1243,7 +1243,7 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 
 `ForgeDeviceMock`: un marco de dispositivo decorativo que envuelve cualquier pantalla
 contenido (la ranura predeterminada) en `mobile`, `tablet`, `desktop` o `browser`
-Chrome, escrito una vez en el dialecto JSX neutral (`@mission-platform/forge`)
+Chrome, escrito una vez en el dialecto JSX neutral (`@mission-platform/forge-jsx`)
 y compilado directamente en React o Vue por
 `@mission-platform/vite-plugin-forge`.
 

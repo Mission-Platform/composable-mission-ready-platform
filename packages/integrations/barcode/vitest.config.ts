@@ -8,12 +8,12 @@ export default defineVitestConfig({
   coverageExclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/test-support/**', 'src/**/*.stories.*'],
   overrides: {
     plugins: [forgeWebScriptPlugin({ root: import.meta.dirname, requireExports: false })],
-    // The neutral `ForgeBarcode` is authored in the `@mission-platform/forge`
+    // The neutral `ForgeBarcode` is authored in the `@mission-platform/forge-jsx`
     // dialect, so its spec is transformed with the package's automatic runtime.
     oxc: {
       jsx: {
         runtime: 'automatic',
-        importSource: '@mission-platform/forge',
+        importSource: '@mission-platform/forge-jsx',
       },
     },
     resolve: {

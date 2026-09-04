@@ -1,0 +1,424 @@
+# @mission-platform/forge-jsx
+
+A tiny, dependency-free "write once, run on Vue 3 and React" layer for Mission
+Platform. Components are authored once in JSX and rendered on either framework
+through small adapters — no build-time codegen, no external compiler (this is a
+hand-rolled alternative to tools like Mitosis).
+
+## How it works
+
+```
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
+                                                          └──▶ toVueComponent  ──▶ Vue 3
+```
+
+1. Components are written in JSX compiled by the **classic** JSX transform
+   (`jsxFactory: 'h'`, `jsxFragmentFactory: 'Fragment'`).
+2. `h(...)` builds a framework-neutral, serialisable `MpElement` tree instead of
+   a React/Vue element.
+3. The per-framework adapters walk that tree and map every node onto
+   `React.createElement` or Vue's `h` at render time.
+
+This package ships **only** the runtime + adapters. Components live in consuming
+packages (see `@mission-platform/components`).
+
+## Exports
+
+| Subpath | Exports |
+|---|---|
+| `@mission-platform/forge-jsx` | `h`, `Fragment`, the named-slot marker `Slot`, the slot-presence helper `hasSlot`, the **portal marker** `Teleport`, the **transition markers** `Transition` / `TransitionGroup`, the **dynamic-component marker** `Dynamic`, the **context** primitives `createContext` / `useContext` (+ `isContextProvider`, `MP_CONTEXT`), `isMpElement`, the class-name helper `classNames`, the neutral hooks `useState` / `useRef` / `useEffect` / `useMemo` / `useCallback`, and the types `ClassValue`, `MpElement`, `MpComponent`, `MpProperties`, `MpElementType`, `MpChild`, `MpSlotContent`, `MpSlotProperties`, `MpTeleportProperties`, `MpTransitionProperties`, `MpTransitionGroupProperties`, `MpDynamicProperties`, `MpContext`, `MpContextProvider`, `MpContextProviderProperties`, `MpRef`, `MpSetState`, `MpEffectCallback`, `MpEffectCleanup`, `MpDependencyList` |
+| `@mission-platform/forge-jsx/react` | `toReactComponent(component, displayName?)`, `renderToReact(element)`, the React `Teleport` portal component (a `createPortal` wrapper), the React `Transition` component (a CSS-class enter/leave driver), and the React `TransitionGroup` component (a CSS-class list enter/leave/move driver) |
+| `@mission-platform/forge-jsx/vue` | `toVueComponent(component, name?)`, `renderToVue(element)`, the Vue `createContext` / `useContext` primitives (a `provide`/`inject`-backed implementation) |
+| `@mission-platform/forge-jsx/jsx-globals` | Opt-in ambient typings (no runtime) wiring the global `JSX` namespace to `MpElement`; add it to a consumer's `compilerOptions.types`. |
+
+`react`, `react-dom`, and `vue` are **optional peer dependencies** — a consumer
+only installs the framework(s) it actually targets, and only the matching
+adapter subpath is imported.
+
+## Hooks
+
+The package also exposes framework-neutral, React-style hooks (`useState`,
+`useRef`, `useEffect`, `useMemo`, `useCallback`) so neutral components can hold
+state and run effects. The implementations here are **render-once and
+side-effect-free** (the SSR/adapter baseline: state stays at its initial value
+and effects do not run), which keeps the runtime adapters' output a correct
+single render. The **live** reactive behaviour comes from
+`@mission-platform/vite-plugin-forge`, which at build time rewrites these imports
+to React's own hooks (React build) or a small "React hooks on Vue" shim (Vue
+build). Author against the neutral hooks; pick the behaviour via the build.
+
+## Class names
+
+Author dynamic classes with the **`className={…}` JSX attribute** — the
+neutral counterpart of React's `className` / Vue's `class`. The canonical value
+is an **array** holding the same arguments the `classNames` helper accepts (a
+space-separated string `'a b'`, a truthiness map `{ a: true, b: false }`, an
+array, plus any nesting), but a single class value works too. Reserve the plain
+`class="…"` attribute for **static** string literals.
+
+```tsx
+<span className={[styles['forge-badge'], { [styles['forge-badge--pill']]: pill }]} />
+```
+
+The attribute is owned by the platform: you **never import `classNames`
+yourself**. `@mission-platform/vite-plugin-forge`'s two-stage compiler collapses
+an array value to a `className={classNames(…)}` string call on the React target
+(re-injecting the helper import) and maps it onto Vue's native `class` binding
+(which already understands the array/object forms); the `./react` and `./vue`
+runtime adapters do the same at render time, so the ad-hoc/SSR output matches
+the compiled output exactly.
+
+The `classNames(...values)` helper itself is still exported (for the rare
+`const className = classNames(…)` precompute and `h(tag, { class: classNames(…) })`
+object form): it merges any number of class values into a single
+space-separated string, dropping every falsy entry and de-duplicating (first
+occurrence wins). React's `className` only accepts a string, which is why the
+conditional/array/object forms must be collapsed before they reach the element.
+
+## Named slots
+
+Besides the default slot (`properties.children`), a component can declare
+**named slots** with the `<Slot name="…" />` element:
+
+```tsx
+import { h, Slot, type MpChild, type MpElement } from '@mission-platform/forge-jsx';
+
+export interface LayoutProperties {
+  header?: MpChild; // named-slot content
+  children?: MpChild | readonly MpChild[]; // default-slot content
+}
+
+export function Layout(properties: LayoutProperties): MpElement {
+  return (
+    <div class="layout">
+      <div class="layout__header"><Slot name="header" /></div>
+      <main><Slot>Nothing here yet</Slot></main>
+    </div>
+  );
+}
+```
+
+A `<Slot name="x" />` resolves to the enclosing component's `x` prop (the
+nameless `<Slot />` resolves to `children`); a function-valued slot prop is a
+scoped slot, called with the slot element's remaining props. Fallback children
+(`<Slot>fallback</Slot>`) render when nothing is provided. The runtime adapters
+resolve slots against a per-component scope; `@mission-platform/vite-plugin-forge`
+compiles `<Slot name="x" />` to Vue's `slots.x?.()` and React's `properties.x`.
+
+### Slot presence (`hasSlot`)
+
+Use `hasSlot('x')` to render an optional wrapper region only when a slot is
+filled — the neutral counterpart of Vue's `$slots.x` / a React
+`properties.x != null` check (an omitted/`'default'` name targets the default
+slot):
+
+```tsx
+import { h, hasSlot, Slot, type MpChild, type MpElement } from '@mission-platform/forge-jsx';
+
+export interface CardProperties {
+  header?: MpChild;
+  children?: MpChild | readonly MpChild[];
+}
+
+export function Card(properties: CardProperties): MpElement {
+  return (
+    <article class="card">
+      {hasSlot('header') ? <header><Slot name="header" /></header> : undefined}
+      <div class="card__body"><Slot /></div>
+    </article>
+  );
+}
+```
+
+`@mission-platform/vite-plugin-forge` rewrites the call straight to each
+framework's native presence check — Vue's `$slots.x` (a `v-if` in the template
+path) / `!!slots.x` (the `<script setup>` render-closure path) and React's
+`properties.x != null` — so the same write-once source renders the optional
+region correctly on both frameworks. The runtime adapters read the same
+per-component scope `<Slot>` resolves against.
+
+### Scoped slots (render-props)
+
+Any **extra attributes** on a `<Slot>` become its **scope** — the slot is then
+called with that scope object:
+
+```tsx
+{items.map((item, index) => (
+  <li><Slot name="row" item={item} index={index} /></li>
+))}
+```
+
+This compiles to a Vue scoped slot (`slots.row?.({ item, index })`) and a React
+render-prop call (`properties.row?.({ item, index })`); the consumer supplies a
+function (`MpRenderProperty<Scope>`) for the `row` prop / `#row` template. Note the
+runtime adapters forward **named** scoped slots (but eagerly evaluate the
+**default** slot), so scoped rows use a *named* slot (e.g. `row`).
+
+### Passing named slots into a child component
+
+To fill a child component's named slot from a write-once parent, mark the child
+content with a `slot="name"` attribute (the neutral counterpart of Vue's
+`<template #name>`). Children without a `slot` marker stay in the child's default
+slot:
+
+```tsx
+import { h, type MpElement } from '@mission-platform/forge-jsx';
+
+import { ForgeDropdown } from '../forge-dropdown';
+
+export function Picker(_properties: Record<string, never>): MpElement {
+  return (
+    <ForgeDropdown>
+      <button slot="trigger" type="button">Open</button>
+      <ul class="panel">…</ul>
+    </ForgeDropdown>
+  );
+}
+```
+
+`@mission-platform/vite-plugin-forge` compiles the marker to each framework's
+native mechanism — a React `trigger={…}` prop, a Vue `<template #trigger>` block
+(template path) or the `@vitejs/plugin-vue-jsx` `{{ trigger: () => … }}`
+object-children form (render-closure path). The runtime adapters do the same at
+runtime via `collectSlottedChildren`, which partitions a parent's children by
+their `slot` marker (stripping the marker) and folds the named groups into the
+child's props. The marker is never emitted as a real DOM attribute.
+
+A write-once component can also **forward** one of its own slots into a child's
+slot by nesting a `<Slot name="…" />` inside the `slot="…"` content
+(`<ForgeDrawer><div slot="header"><Slot name="title" /></div></ForgeDrawer>`). The
+forwarded `<Slot>` resolves lexically against the forwarding component: the
+compiled output captures it in the parent's render (React `properties.title`,
+Vue `<template #header>` re-emitting the parent slot), and the runtime adapters
+resolve the forwarded markers against the parent scope (via `resolveSlotMarkers`)
+before handing the children to the child component.
+
+## Teleport / portals
+
+The `<Teleport to="…">…</Teleport>` element (`MpTeleportProperties`: `to?:
+string | Element` — default `'body'` — and `disabled?: boolean`) renders its
+children into a different part of the DOM tree, so an overlay can escape its
+parent's `overflow`/stacking context. It is the neutral equivalent of Vue's
+built-in `<Teleport>` and React's `createPortal`:
+
+```tsx
+import { h, Teleport } from '@mission-platform/forge-jsx';
+
+{open && (
+  <Teleport to="body">
+    <div class="popup">…</div>
+  </Teleport>
+)}
+```
+
+Like `Slot`, the `Teleport` value is a **marker** — never call it directly.
+`@mission-platform/vite-plugin-forge` rewrites its **import** to each framework's
+native portal at build time (`import { Teleport } from 'vue'` for Vue;
+`import { Teleport } from '@mission-platform/forge-jsx/react'` — a `createPortal`
+wrapper — for React), so the compiled output uses the real portal with no
+neutral runtime. The runtime adapters (and therefore SSR) instead render the
+teleported children **in place** (a real portal only matters in the live DOM),
+which keeps the cross-framework SSR output identical. The React `Teleport`
+component is SSR-safe: it resolves the target after mount and renders nothing
+until then.
+
+## Transitions
+
+The `<Transition name="…">…</Transition>` element (`MpTransitionProperties`:
+`name?: string` — default `'v'` — `appear?: boolean`, `duration?: number | {
+enter: number; leave: number }`) animates a single conditionally-rendered child
+by toggling Vue-compatible CSS classes (`<name>-enter-from`/`-enter-active`/
+`-enter-to` and the matching `-leave-*`), so one stylesheet drives both
+frameworks. It is the neutral equivalent of Vue's built-in `<Transition>`:
+
+```tsx
+import { h, Transition } from '@mission-platform/forge-jsx';
+
+<Transition name="fade">
+  {open ? <div class="panel">…</div> : undefined}
+</Transition>
+```
+
+Like `Teleport`, `Transition` is a **marker** — never call it directly.
+`@mission-platform/vite-plugin-forge` rewrites its **import** to each framework's
+native transition at build time (`import { Transition } from 'vue'` for Vue; the
+`@mission-platform/forge-jsx/react` CSS-class driver for React, which keeps the child
+mounted through its leave animation). The runtime adapters (and SSR) render the
+child **in place** — the animation only runs in the live DOM after mount — so
+the cross-framework SSR output stays identical.
+
+### Scoped (non-global) transition classes
+
+By default the `<name>`-derived classes (`fade-enter-active`, …) are **global**,
+so styling them inside a CSS Module requires a `:global(…)` escape hatch. To keep
+a component's enter/leave styling **scoped** (e.g. hashed CSS-Module classes),
+pass the explicit per-phase class props — `enterFromClass`, `enterActiveClass`,
+`enterToClass`, `leaveFromClass`, `leaveActiveClass`, `leaveToClass` (and
+`moveClass` on `<TransitionGroup>`) — each overriding the `<name>`-derived
+default for one phase, exactly mirroring Vue's built-in `<Transition>` class
+props. The React CSS-class driver applies the given classes verbatim and Vue's
+native `<Transition>` does the same, so a write-once component can drive its
+transition from its own scoped stylesheet:
+
+```tsx
+import styles from './fade.module.scss';
+
+<Transition
+  enterFromClass={styles['fade-enter-from']}
+  enterActiveClass={styles['fade-enter-active']}
+  leaveActiveClass={styles['fade-leave-active']}
+  leaveToClass={styles['fade-leave-to']}
+>
+  {open ? <div className={styles.panel}>…</div> : undefined}
+</Transition>
+```
+
+Any phase left unset falls back to the conventional `<name>-<phase>` class, so
+the unstyled `-enter-to`/`-leave-from` (and `-move`) markers need no rule. This
+is how `@mission-platform/components`'s `ForgeDrawer` and `ForgeToastContainer`
+keep their enter/leave styling scoped instead of using `:global(…)` rules.
+
+The `<TransitionGroup name="…">{items.map(…)}</TransitionGroup>` element
+(`MpTransitionGroupProperties`: `name?: string` — default `'v'` — `tag?: string`
+— omit for no wrapper, matching Vue — `moveClass?: string`, `appear?: boolean`,
+`duration?: number | { enter: number; leave: number }`) is the **list**
+counterpart: it animates a keyed list, adding `<name>-enter-*` to entering
+items, keeping leaving items mounted through their `<name>-leave-*` animation,
+and FLIP-animating surviving items that change position with `<name>-move`. It
+is the neutral equivalent of Vue's built-in `<TransitionGroup>`:
+
+```tsx
+import { h, TransitionGroup } from '@mission-platform/forge-jsx';
+
+<TransitionGroup name="fade">
+  {items.map((item) => <li key={item.id} class="item">{item.label}</li>)}
+</TransitionGroup>
+```
+
+Like `Transition`, `TransitionGroup` is a **marker**; its import is rewritten to
+`import { TransitionGroup } from 'vue'` for Vue and the
+`@mission-platform/forge-jsx/react` group driver for React, and the runtime adapters
+(and SSR) render the children **in place**. The React driver applies the
+transition classes to each child's DOM node, so — like `Transition` — they take
+effect on DOM-element children; a child that is itself a (non-ref-forwarding)
+component still mounts/unmounts correctly but receives no class. It accepts the
+same explicit per-phase class props as `<Transition>` (`enterFromClass` …
+`leaveToClass`, plus `moveClass`) for scoped (non-global) enter/leave styling.
+
+## Dynamic components
+
+The `<Dynamic is={…} …>…</Dynamic>` element (`MpDynamicProperties`: `is:
+MpElementType` — an intrinsic tag name or a component) renders an element whose
+tag/component is only known at runtime, forwarding every other property and the
+children to the resolved element:
+
+```tsx
+import { h, Dynamic } from '@mission-platform/forge-jsx';
+
+<Dynamic is={href === undefined ? 'button' : 'a'} class="navbar__item" href={href}>
+  <Slot />
+</Dynamic>
+```
+
+`Dynamic` is a **marker** — never call it directly.
+`@mission-platform/vite-plugin-forge` rewrites `<Dynamic is={X} …>` to an
+`h(X, …)` call, which React's classic-`h` JSX transform compiles to a native
+`createElement(X, …)` and Vue compiles to a native `<component :is="X">`.
+
+## Context (provide / inject)
+
+`createContext(defaultValue)` returns a context handle carrying a `Provider`
+element; `useContext(context)` reads the nearest enclosing provider's value (or
+the default). It shares a value with an arbitrarily deep subtree without
+threading it through every component's props:
+
+```tsx
+import { h, createContext, useContext } from '@mission-platform/forge-jsx';
+
+const ThemeContext = createContext('light');
+
+export function ThemeProvider(properties): MpElement {
+  return <ThemeContext.Provider value={properties.theme}><Slot /></ThemeContext.Provider>;
+}
+
+export function ThemedButton(): MpElement {
+  const theme = useContext(ThemeContext);
+  return <button className={`btn btn--${theme}`}><Slot /></button>;
+}
+```
+
+`@mission-platform/vite-plugin-forge` maps the primitives to each framework's
+native mechanism: on **React** `createContext`/`useContext` *are* React's own
+(their import is rewritten to `react`, so `<Ctx.Provider value>` is a native
+React context provider); on **Vue** the import is rewritten to
+`@mission-platform/forge-jsx/vue`, whose `createContext` returns a `provide()`-backed
+`Provider` and whose `useContext` is `inject()`. The runtime adapters (and SSR)
+resolve context through a synchronous provide stack so both frameworks produce
+identical output.
+
+## Recursion
+
+A neutral component may reference **itself** as a JSX tag — true recursion, for
+trees and nested menus:
+
+```tsx
+export function TreeView(properties: TreeProperties): MpElement {
+  return (
+    <ul class="tree">
+      {properties.nodes.map((node) => (
+        <li>{node.label}{node.children ? <TreeView nodes={node.children} /> : undefined}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+This compiles natively on React (the self-reference is an ordinary in-scope
+function) and Vue (the SFC's `defineOptions({ name })` lets the render closure
+resolve the self-reference by name via `resolveComponent`).
+
+## Authoring a component
+
+Set up the classic JSX factory in `tsconfig.json` and Vite/esbuild, enable the
+ambient JSX namespace (`JSX.Element = MpElement`) by adding
+`@mission-platform/forge-jsx/jsx-globals` to `compilerOptions.types`, then:
+
+```tsx
+import { h, type MpElement } from '@mission-platform/forge-jsx';
+
+export interface GreetingProperties {
+  name?: string;
+}
+
+export function Greeting(properties: GreetingProperties): MpElement {
+  return <p class="greeting">Hello, {properties.name ?? 'world'}!</p>;
+}
+```
+
+## Rendering on each framework
+
+```ts
+import { toReactComponent } from '@mission-platform/forge-jsx/react';
+import { toVueComponent } from '@mission-platform/forge-jsx/vue';
+import { Greeting } from './greeting';
+
+const ReactGreeting = toReactComponent(Greeting); // React function component
+const VueGreeting = toVueComponent(Greeting); //     Vue functional component
+```
+
+## Behaviour notes
+
+- **Prop mapping.** Author neutral DOM props (`class`, `for`); the React adapter
+  rewrites them to `className` / `htmlFor`. The Vue adapter passes them through.
+- **Events.** `onClick`, `onInput`, … work unchanged on both frameworks.
+- **Children.** `h` drops non-renderable children (`undefined`, `null`,
+  booleans) and flattens nested arrays; strings/numbers/elements are preserved.
+  Because of this recursive flattening, the `jsx-globals` child typing allows an
+  array (e.g. `{items.map(…)}`) in **any** child position — including alongside
+  other children — not only as a parent's sole child.
+- **Composition.** Nested neutral components are inlined into the host tree.
+  Native React elements / Vue `VNode`s passed in as children (e.g. via a Vue
+  default slot) are forwarded untouched, so the generated components compose
+  with ordinary framework code.
+- **SSR-safe.** The adapters only call the framework's element factory, so the
+  output works with `react-dom/server` and `vue/server-renderer`.

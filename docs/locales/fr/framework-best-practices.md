@@ -9,11 +9,11 @@ Ce document fournit des conseils sur les modèles idiomatiques, les modèles de 
 
 ## Stratégie multi-cadre
 
-La philosophie fondamentale de Mission Platform est de construire une fois et de restituer partout. Ceci est réalisé grâce à **@mission-platform/forge**, le framework principal de la plateforme : un environnement d'exécution JSX indépendant du framework dans lequel tous les composants partagés (tout sauf les applications) sont créés et à partir desquels ils sont rendus de manière transparente dans Vue 3, React et d'autres environnements pris en charge.
+La philosophie fondamentale de Mission Platform est de construire une fois et de restituer partout. Ceci est réalisé grâce à **@mission-platform/forge-jsx**, le framework principal de la plateforme : un environnement d'exécution JSX indépendant du framework dans lequel tous les composants partagés (tout sauf les applications) sont créés et à partir desquels ils sont rendus de manière transparente dans Vue 3, React et d'autres environnements pris en charge.
 
 ### Le dialecte de la Forge
 Lors de la création de packages partagés, créez des composants à l'aide des primitives neutres de Forge :
-- **JSX Factory** : utilisez `h` et `Fragment` à partir de `@mission-platform/forge`.
+- **JSX Factory** : utilisez `h` et `Fragment` à partir de `@mission-platform/forge-jsx`.
 - **Hooks neutres** : utilisez `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback` et `useId`.
 - **Primitives** : utilisez `Slot`, `Teleport`, `Transition` et `Dynamic` pour les structures d'interface utilisateur complexes.
 
@@ -23,7 +23,7 @@ Vue 3 est le framework avec lequel les applications de `apps/` sont construites 
 
 ### Modèles idiomatiques
 - **API de composition** : utilisez `<script setup lang="ts">` pour tous les nouveaux composants.
-- **Forge Integration** : enveloppez des composants neutres à l'aide de `toVueComponent` à partir de `@mission-platform/forge/vue`.
+- **Forge Integration** : enveloppez des composants neutres à l'aide de `toVueComponent` à partir de `@mission-platform/forge-adapters/vue`.
 - **Composables** : extrayez la logique avec état dans les fonctions `useXxx` pour favoriser la réutilisabilité.
 
 ### Optimisations des performances
@@ -37,7 +37,7 @@ React est pris en charge via l'adaptateur d'exécution Forge, principalement pou
 
 ### Modèles idiomatiques
 - **Composants fonctionnels** : utilisez des composants fonctionnels avec des crochets.
-- **Forge Integration** : enveloppez des composants neutres à l'aide de `toReactComponent` de `@mission-platform/forge/react`.
+- **Forge Integration** : enveloppez des composants neutres à l'aide de `toReactComponent` de `@mission-platform/forge-adapters/react`.
 - **Hooks Discipline** : suivez strictement les "Règles des Hooks" pour garantir un comportement prévisible.
 
 ### Optimisations des performances
@@ -65,4 +65,4 @@ Mission Platform fournit différents niveaux de prise en charge pour d'autres fr
 ## Ressources connexes
 - [Meilleures pratiques](best-practices.md)
 - [Guide de test](testing.md)
-- [@mission-platform/forge LISEZMOI](../../../packages/compiler/forge/forge/README.md)
+- [@mission-platform/forge-jsx LISEZMOI](../../../packages/core/forge-jsx/README.md)

@@ -66,7 +66,7 @@ Los enlaces del paquete están establecidos correctamente.
 Ejecute una prueba de humo para garantizar que el sistema de compilación y el entorno estén configurados correctamente:
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 El `...` También construye las dependencias de Forge requeridas por el paquete. el

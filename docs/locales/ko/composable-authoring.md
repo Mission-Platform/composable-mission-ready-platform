@@ -7,7 +7,7 @@
 
 컴포저블은 미션 플랫폼 내에서 반응형 로직을 캡슐화하고 재사용하는 기본 방법입니다. 이를 보장하려면
 로직 단위는 지원되는 모든 UI 프레임워크에서 이식 가능하며 다음을 사용하여 **한 번만 작성** 모듈로 작성됩니다.
-프레임워크 중립 후크는 다음에서 제공됩니다. `@mission-platform/forge`.
+프레임워크 중립 후크는 다음에서 제공됩니다. `@mission-platform/forge-jsx`.
 
 ## 디렉토리 레이아웃
 
@@ -26,7 +26,7 @@ src/composables/
 ## 저작 규칙
 
 1. **Forge Hooks 사용**: 반응성 프리미티브만 가져옵니다(예: `useState`, `useEffect`, `useMemo`, `useRef`) ~에서
-   `@mission-platform/forge`. 절대 직접 수입하지 마세요. `vue` 또는 `react`.
+   `@mission-platform/forge-jsx`. 절대 직접 수입하지 마세요. `vue` 또는 `react`.
 2. **명명 규칙**: 구성 가능한 이름은 kebab-case를 사용해야 하며 접두사로 다음이 추가되어야 합니다. `use-` (e.g., `use-media-query`).
 3. **SSR 안전**: 서버 측 렌더링에 대한 논리가 안전한지 확인합니다. 다음과 같은 브라우저 전용 API에 대한 액세스를 보호하세요. `window`,
    `document`, 또는 `localStorage`.
@@ -39,7 +39,7 @@ src/composables/
 다음은 이벤트 리스너를 관리하는 일반적인 1회 쓰기 컴포저블입니다.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,

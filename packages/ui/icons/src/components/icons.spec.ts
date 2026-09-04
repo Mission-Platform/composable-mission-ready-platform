@@ -1,6 +1,6 @@
-import { h as forgeH, type MpComponent, type MpElement } from '@mission-platform/forge';
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
+import { h as forgeH, type MpComponent, type MpElement } from '@mission-platform/forge-jsx';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -34,7 +34,7 @@ const ExternalSpriteDemo: MpComponent = (): MpElement =>
 
 /**
  * Smoke-tests a representative slice of the generated icon set, rendering each
- * neutral icon on **both** frameworks through the `@mission-platform/forge`
+ * neutral icon on **both** frameworks through the `@mission-platform/forge-jsx`
  * runtime adapters. Covers a plain stroke icon, an embedded `<text>` glyph, a
  * `fill={color}` child, the rotating `direction` prop, and the conditional
  * per-path fills — i.e. every distinct shape the generator emits.

@@ -15,7 +15,7 @@
 - Updated dependencies [b88a08e]
 - Updated dependencies [9e59f09]
 - Updated dependencies [97c3f20]
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/tokens@2.0.0
 
 ## 2.0.0
@@ -84,7 +84,7 @@
 
 - Updated dependencies [4714506]
   - @mission-platform/tokens@1.1.0
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
 
 ## 1.0.0
 
@@ -128,7 +128,7 @@
   +import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
   ```
 
-  The `@mission-platform/forge` adapter subpaths (`/react`, `/vue`, `/solid`,
+  The `@mission-platform/forge-jsx` adapter subpaths (`/react`, `/vue`, `/solid`,
   `/web-components`, `/runtime`, `/jsx-globals`), the Storyblok wrappers (`/storyblok/react`, `/storyblok/vue`),
   `@mission-platform/router/redwood`,
   `@mission-platform/breakpoints/core` and every `…/styles` entry are unaffected.
@@ -208,7 +208,7 @@
 - Updated dependencies [3fb8ddb]
 - Updated dependencies [7d95459]
 - Updated dependencies [f67e304]
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
   - @mission-platform/tokens@1.0.1
 
 ## 0.4.0
@@ -287,7 +287,7 @@
 - Updated dependencies [be8ab67]
 - Updated dependencies [be8ab67]
   - @mission-platform/tokens@1.0.0
-  - @mission-platform/forge@0.2.0
+  - @mission-platform/forge-jsx@0.2.0
 
 ## 0.2.2
 

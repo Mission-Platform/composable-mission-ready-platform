@@ -21,7 +21,7 @@
 
 이러한 구성 요소는 키보드 탐색, 이동 포커스, 메뉴/탭 상태 및
 탐색 중심 상호 작용 계약. 중립적 구현은 다음과 같습니다.
-`@mission-platform/forge`에; 메뉴 및 표와 같은 컨트롤도 사용됩니다.
+`@mission-platform/forge-jsx`에; 메뉴 및 표와 같은 컨트롤도 사용됩니다.
 `@mission-platform/icons`, 탐색경로/navbar 콘텐츠가 소유를 구성하는 동안
 `@mission-platform/typography` 패키지. `ForgeNavbar`은 현재
 잔여 `ForgeDrawer`이므로 탐색을 추출하려면 이를 유지하거나 유지해야 합니다.
@@ -36,7 +36,7 @@
 
 일반적인 관심사는 다음을 포함하여 구조화된 데이터 또는 대용량 데이터를 렌더링하는 것입니다.
 윈도우화, 정렬, 트리 확장 및 상태 표시. 현재 소스
-`@mission-platform/forge`을 사용하며 텍스트나 문자가 구성된 경우
+`@mission-platform/forge-jsx`을 사용하며 텍스트나 문자가 구성된 경우
 `@mission-platform/typography` 및 `@mission-platform/icons`; 이것들은 남아있어야 해
 향후 패키지의 하위 수준 종속성. 가상 구성요소는 다음과 같이 이동해야 합니다.
 같은 위치에 있는 스타일/사양/스토리이므로 중립적인 후크 동작과 5가지
@@ -60,7 +60,7 @@ Forge 대상은 계속해서 함께 테스트됩니다.
 
 처음 3개의 자체 미디어 로딩/렌더링 의미론, 캐러셀 및 장치
 미디어 주변에 프레젠테이션을 추가합니다. 중립 소스는 현재 다음에 따라 달라집니다.
-`@mission-platform/forge` 및 캐러셀 제어의 경우 `@mission-platform/icons`;
+`@mission-platform/forge-jsx` 및 캐러셀 제어의 경우 `@mission-platform/icons`;
 추출된 패키지에 대한 종속성은 없습니다. 움직임 감소를 보존하고
 미디어 동작을 분할하는 대신 향후 움직임의 일부인 구성 요소별 CSS
 그 스타일에서.
@@ -101,7 +101,7 @@ Forge 대상은 계속해서 함께 테스트됩니다.
 추출된 패키지를 가져오기 위해 잔여 구성 요소 소스를 확인했습니다.
 `@mission-platform/theme`, `@mission-platform/float` 가져오기가 없습니다.
 `packages/ui/components/src` 아래의 `@mission-platform/select`. 중립 구성 요소
-`@mission-platform/forge`, `@mission-platform/icons`에서 선택한 아이콘을 사용하고,
+`@mission-platform/forge-jsx`, `@mission-platform/icons`에서 선택한 아이콘을 사용하고,
 `@mission-platform/typography`의 타이포그래피 및 패키지 로컬 스타일/유틸리티.
 스토리는 공개 표면을 행사하기 위해 패키지 배럴을 가져올 수 있습니다. 그건 아니다
 구현 종속성 또는 패키지 주기.

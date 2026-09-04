@@ -58,7 +58,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'The `@mission-platform/map` package is authored once in the neutral `@mission-platform/forge` dialect and dual-built to **Vue** and **React**.',
+          'The `@mission-platform/map` package is authored once in the neutral `@mission-platform/forge-jsx` dialect and dual-built to **Vue** and **React**.',
       },
     },
   },

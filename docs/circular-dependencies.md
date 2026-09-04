@@ -72,7 +72,7 @@ single logical unit. Consider merging them into one package.
 ## Prevention Best Practices
 
 1. **Follow the One-Way Flow**: Strictly adhere to the `Apps → Packages → Configs` dependency direction.
-2. **Author Framework-Neutral Logic**: Use `@mission-platform/forge` for core logic to avoid framework-specific cycles.
+2. **Author Framework-Neutral Logic**: Use `@mission-platform/forge-jsx` for core logic to avoid framework-specific cycles.
 3. **Use Workspace Protocols**: Always use `workspace:*` for internal dependencies to ensure pnpm can correctly resolve
    the graph.
 4. **Regularly Audit Imports**: Pay attention to "auto-import" suggestions in your IDE, as they can sometimes introduce

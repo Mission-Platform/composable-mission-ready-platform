@@ -1,4 +1,4 @@
-import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 
 import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
 import { type EditorStats, EMPTY_EDITOR_STATS } from '../../../utils/text-stats';

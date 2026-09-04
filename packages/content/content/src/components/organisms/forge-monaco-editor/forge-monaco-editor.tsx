@@ -1,4 +1,4 @@
-import { type MpElement, useEffect, useRef } from '@mission-platform/forge';
+import { type MpElement, useEffect, useRef } from '@mission-platform/forge-jsx';
 import { font } from '@mission-platform/tokens';
 
 import styles from './forge-monaco-editor.module.scss';

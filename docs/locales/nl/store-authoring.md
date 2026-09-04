@@ -35,7 +35,7 @@ Pakketwinkels vermijden raamwerkspecifieke afhankelijkheden. In plaats daarvan v
 
 ## Auteursregels
 
-1. **Framework-agnostisch**: importeer niet vanuit `vue`-, `react`- of `@mission-platform/forge`-haken in de winkelmodule
+1. **Framework-agnostisch**: importeer niet vanuit `vue`-, `react`- of `@mission-platform/forge-jsx`-haken in de winkelmodule
    zelf.
 2. **Expliciete typen**: definieer en exporteer altijd een interface voor de status van de winkel.
 3. **SSR-veiligheid**: bewaak de toegang tot browser-API's (bijvoorbeeld `localStorage`) zodat de winkel kan worden geïnitialiseerd in een Node.js
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Winkels in componenten consumeren
 
-Om een ​​opslag binnen een eenmalige-schrijfcomponent te gebruiken, moet u deze overbruggen met behulp van `useState` en `useEffect` uit `@mission-platform/forge`:
+Om een ​​opslag binnen een eenmalige-schrijfcomponent te gebruiken, moet u deze overbruggen met behulp van `useState` en `useEffect` uit `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

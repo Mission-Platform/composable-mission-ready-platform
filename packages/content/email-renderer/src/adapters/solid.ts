@@ -1,4 +1,4 @@
-import { Fragment, type MpChild, type MpElement, type MpPropertyBag } from '@mission-platform/forge';
+import { Fragment, type MpChild, type MpElement, type MpPropertyBag } from '@mission-platform/forge-jsx';
 import { createComponent, type Component, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 

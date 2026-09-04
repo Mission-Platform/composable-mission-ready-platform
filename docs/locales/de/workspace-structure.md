@@ -44,7 +44,7 @@ und niemals in einem Register veröffentlicht.
 
 Wiederverwendbare, versionierte Bibliotheken, die von Apps genutzt werden. Diese sollen nach Möglichkeit Framework-unabhängig sein.
 
-- **`@mission-platform/forge`**: Die Framework-neutrale JSX-Laufzeit und -Adapter.
+- **`@mission-platform/forge-jsx`**: Die Framework-neutrale JSX-Laufzeit und -Adapter.
 - **`@mission-platform/components`**: Die Multi-Framework-Komponentenbibliothek.
 - **`@mission-platform/forms`** und **`@mission-platform/forms-core`**: Schemagesteuerte Formularprimitive.
 – **`@mission-platform/content`** und **`@mission-platform/email-renderer`**: Inhalts- und Rendering-Pipelines.

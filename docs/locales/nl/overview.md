@@ -23,7 +23,7 @@ zorgt voor een consistente gebruikerservaring in de hele productsuite.
 
 ### Multiframework per ontwerp
 
-Mission Platform introduceert een raamwerkneutraal ontwikkelingsparadigma. Met behulp van het `@mission-platform/forge` JSX-dialect,
+Mission Platform introduceert een raamwerkneutraal ontwikkelingsparadigma. Met behulp van het `@mission-platform/forge-jsx` JSX-dialect,
 ontwikkelaars kunnen componenten één keer schrijven en deze compileren naar native uitvoer voor Vue 3, React, Solid, Svelte en Web
 Componenten. Dit maakt de codebase toekomstbestendig en maakt naadloze integratie in diverse frontend-omgevingen mogelijk.
 
@@ -48,7 +48,7 @@ snelheid en codekwaliteit.
 
 Mission Platform is gebouwd op een moderne, krachtige stack:
 
-- **Forge JSX (`@mission-platform/forge`)**: het primaire UI-framework — een raamwerkneutrale JSX-runtime waarin alle
+- **Forge JSX (`@mission-platform/forge-jsx`)**: het primaire UI-framework — een raamwerkneutrale JSX-runtime waarin alle
   gedeelde componenten (alles behalve de apps) zijn geschreven.
 - **Vue 3**: het raamwerk waarmee de toepassingen in `apps/` zijn gebouwd, en een van de vele native renderdoelen waarvoor
   Smeed componenten.

@@ -44,7 +44,7 @@ composable_mission_ready_platform/
 
 应用程序使用的可重用、版本化的库。这些旨在尽可能与框架无关。
 
-- **`@mission-platform/forge`**：框架中立的 JSX 运行时和适配器。
+- **`@mission-platform/forge-jsx`**：框架中立的 JSX 运行时和适配器。
 - **`@mission-platform/components`**：多框架组件库。
 - **`@mission-platform/forms`** 和 **`@mission-platform/forms-core`**：架构驱动的表单原语。
 - **`@mission-platform/content`** 和 **`@mission-platform/email-renderer`**：内容和渲染管道。

@@ -68,8 +68,8 @@ describe("Solid Forge framework package", () => {
       componentName: "Widget",
       imports: [
         moduleImport(
-          "import { useState } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { useState } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           {
             valueNames: ["useState"],
           },
@@ -145,8 +145,8 @@ describe("Solid Forge framework package", () => {
       componentName: "useCounter",
       imports: [
         moduleImport(
-          "import { useState } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { useState } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           {
             valueNames: ["useState"],
           },
@@ -183,8 +183,8 @@ describe("Solid Forge framework package", () => {
     const module = semanticModule({
       imports: [
         moduleImport(
-          "import { Suspense } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { Suspense } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           { valueNames: ["Suspense"] },
         ),
       ],
@@ -214,6 +214,6 @@ describe("Solid Forge framework package", () => {
     expect(generated).toContain("fallback=");
     expect(generated).toContain("loadContent()");
     expect(generated).toContain('from "solid-js"');
-    expect(generated).not.toContain("@mission-platform/forge");
+    expect(generated).not.toContain("@mission-platform/forge-jsx");
   });
 });

@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 /**
  * `ForgeCodeScanner` is the write-once `ForgeCodeScanner` in
  * `@mission-platform/code-scanner`. The component is authored **once** in the
- * framework-neutral JSX dialect (`@mission-platform/forge`) and compiled at
+ * framework-neutral JSX dialect (`@mission-platform/forge-jsx`) and compiled at
  * build time by `@mission-platform/vite-plugin-forge` to every supported
  * framework. It decodes a QR code, Data Matrix, or 1D barcode from an uploaded
  * image or a live camera stream using the dependency-free Rust/WebAssembly

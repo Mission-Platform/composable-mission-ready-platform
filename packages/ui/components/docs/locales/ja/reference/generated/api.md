@@ -1243,7 +1243,7 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 
 `ForgeDeviceMock` — 任意の画面を包み込む装飾的なデバイス フレーム
 `mobile`、`tablet`、`desktop`、または `browser` のコンテンツ (デフォルトのスロット)
-chrome、ニュートラルな JSX 方言で一度作成されました (`@mission-platform/forge`)
+chrome、ニュートラルな JSX 方言で一度作成されました (`@mission-platform/forge-jsx`)
 そして、直接ReactまたはVueにコンパイルされます。
 `@mission-platform/vite-plugin-forge`。
 

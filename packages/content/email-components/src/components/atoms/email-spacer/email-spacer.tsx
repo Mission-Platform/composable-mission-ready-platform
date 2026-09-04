@@ -1,7 +1,7 @@
 import { spacingValue } from '../../../tokens';
 
 import type { EmailSpacingScale } from '../../../tokens';
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface EmailSpacerProperties {
   readonly spacing?: EmailSpacingScale;

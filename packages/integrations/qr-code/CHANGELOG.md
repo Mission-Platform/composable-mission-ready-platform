@@ -22,7 +22,7 @@
 - Updated dependencies [97c3f20]
 - Updated dependencies [31ed685]
   - @mission-platform/components@3.1.0
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/icons@2.0.1
   - @mission-platform/typography@1.1.0
   - @mission-platform/vcard@0.2.1
@@ -71,7 +71,7 @@
   - @mission-platform/components@3.0.0
   - @mission-platform/icons@2.0.0
   - @mission-platform/vcard@0.2.0
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
 
 ## 1.0.0
 
@@ -115,7 +115,7 @@
   +import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
   ```
 
-  The `@mission-platform/forge` adapter subpaths (`/react`, `/vue`, `/solid`,
+  The `@mission-platform/forge-jsx` adapter subpaths (`/react`, `/vue`, `/solid`,
   `/web-components`, `/runtime`, `/jsx-globals`), the Storyblok wrappers (`/storyblok/react`, `/storyblok/vue`),
   `@mission-platform/router/redwood`,
   `@mission-platform/breakpoints/core` and every `…/styles` entry are unaffected.
@@ -214,7 +214,7 @@
 - Updated dependencies [2cbbd16]
 - Updated dependencies [b23115e]
 - Updated dependencies [90a72fc]
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
   - @mission-platform/components@2.0.0
   - @mission-platform/icons@1.0.0
 
@@ -328,7 +328,7 @@
 - Updated dependencies [edb785f]
   - @mission-platform/components@1.0.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/forge@0.2.0
+  - @mission-platform/forge-jsx@0.2.0
 
 ## 0.1.1
 
@@ -440,7 +440,7 @@
 - Updated dependencies [edb785f]
   - @mission-platform/components@1.0.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/forge@0.2.0
+  - @mission-platform/forge-jsx@0.2.0
 
 ## 0.1.1
 
@@ -552,7 +552,7 @@
 - Updated dependencies [edb785f]
   - @mission-platform/components@1.0.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/forge@0.2.0
+  - @mission-platform/forge-jsx@0.2.0
 
 ## 0.1.1
 
@@ -664,4 +664,4 @@
 - Updated dependencies [edb785f]
   - @mission-platform/components@1.0.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/forge@0.2.0
+  - @mission-platform/forge-jsx@0.2.0

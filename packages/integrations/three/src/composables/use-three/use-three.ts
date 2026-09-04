@@ -1,4 +1,4 @@
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 import * as THREE from 'three';
 
 type ReferenceLike<T> = MpRef<T> | Readonly<{ value: T }>;

@@ -23,7 +23,7 @@ garantit une expérience utilisateur cohérente dans l’ensemble de la suite de
 
 ### Multi-Framework par conception
 
-Mission Platform introduit un paradigme de développement neutre en termes de cadre. En utilisant le dialecte `@mission-platform/forge` JSX,
+Mission Platform introduit un paradigme de développement neutre en termes de cadre. En utilisant le dialecte `@mission-platform/forge-jsx` JSX,
 les développeurs peuvent créer des composants une seule fois et les compiler vers des sorties natives pour Vue 3, React, Solid, Svelte et Web.
 Composants. Cela pérennise la base de code et permet une intégration transparente dans divers environnements frontaux.
 
@@ -48,7 +48,7 @@ vitesse et qualité du code.
 
 Mission Platform est construite sur une pile moderne et performante :
 
-- **Forge JSX (`@mission-platform/forge`)** : le framework d'interface utilisateur principal – un environnement d'exécution JSX indépendant du framework dans lequel tous
+- **Forge JSX (`@mission-platform/forge-jsx`)** : le framework d'interface utilisateur principal – un environnement d'exécution JSX indépendant du framework dans lequel tous
   les composants partagés (tout sauf les applications) sont créés.
 - **Vue 3** : le framework avec lequel les applications dans `apps/` sont construites et l'une des nombreuses cibles de rendu natives pour
   Forger des composants.

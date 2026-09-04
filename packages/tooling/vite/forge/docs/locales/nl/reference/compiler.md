@@ -198,7 +198,7 @@ de bestuurder is eigenaar van generieke orkestratie; en elk doelpakket is eigena
 
 ## Componenten bouwen
 
-Componentpakketten schrijven neutrale modules tegen `@mission-platform/forge`, meestal via een neutraal componentenvat.
+Componentpakketten schrijven neutrale modules tegen `@mission-platform/forge-jsx`, meestal via een neutraal componentenvat.
 `defineTsdownForgeComponents` maakt één doelbuild voor elke meegeleverde plug-in. Voor elk doel geldt het volgende:
 
 1. parseert, normaliseert en analyseert de neutrale componentmodules;

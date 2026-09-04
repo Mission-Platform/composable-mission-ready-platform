@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -18,7 +18,7 @@ const avatarSource = readFileSync(
 
 /**
  * Exercises the **neutral** `ForgeAvatar` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/forge` runtime adapters.
+ * on both frameworks through the `@mission-platform/forge-jsx` runtime adapters.
  * Covers the image, initials, and presence-status branches.
  */
 const ReactAvatar = toReactComponent(ForgeAvatar, 'Avatar');

@@ -9,7 +9,7 @@ Ce guide explique comment utiliser les packages Mission Platform dans des projet
 
 ## Sélection du cadre via les conditions
 
-Les composants de Mission Platform sont créés une seule fois à l'aide de `@mission-platform/forge` et distribués sous forme de plusieurs ensembles spécifiques au framework (Vue 3, React, Solid et composants Web) au sein d'un seul package.
+Les composants de Mission Platform sont créés une seule fois à l'aide de `@mission-platform/forge-jsx` et distribués sous forme de plusieurs ensembles spécifiques au framework (Vue 3, React, Solid et composants Web) au sein d'un seul package.
 
 Pour sélectionner le bon bundle, vous devez configurer votre outil de génération et TypeScript pour utiliser les **Conditions d'exportation personnalisées**.
 

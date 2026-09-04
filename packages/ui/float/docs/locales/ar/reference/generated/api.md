@@ -523,7 +523,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 
 الرسوم المتحركة للدخول/الخروج تتطابق مع Vue SFC عبر الحياد
 **`<TransitionGroup>`** بدائي، والذي يتم تجميعه إلى Vue المدمج
-`<TransitionGroup>` ومجموعة فئة `@mission-platform/forge/react` CSS
+`<TransitionGroup>` ومجموعة فئة `@mission-platform/forge-adapters/react` CSS
 driver. يتم تمرير فئات مرحلة الدخول/المغادرة الأربعة على شكل ** مجزأة
 فئات CSS-Module** (عبر دعائم فئة `<TransitionGroup>`)، وبالتالي فإن
 يظل تصميم الرسوم المتحركة على نطاق المكونات بدلاً من الاعتماد على المستوى العالمي

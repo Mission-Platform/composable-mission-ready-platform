@@ -44,7 +44,7 @@ graph TD
 
 ## Framework-neutrale engine: Forge
 
-Het hart van Mission Platform is `@mission-platform/forge`, een raamwerkneutraal auteursmodel voor componenten en
+Het hart van Mission Platform is `@mission-platform/forge-jsx`, een raamwerkneutraal auteursmodel voor componenten en
 Composables. `@mission-platform/vite-plugin-forge` is de neutrale compilerdriver: het parseert en normaliseert de bron,
 bouwt semantische IR, voert gedeelde analyse en optimalisatie uit en verzendt naar een expliciet geleverde
 `FrameworkOutputPlugin`.

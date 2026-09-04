@@ -19,6 +19,6 @@
 - Updated dependencies [9e59f09]
 - Updated dependencies [97c3f20]
   - @mission-platform/float@1.1.0
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/icons@2.0.1
   - @mission-platform/typography@1.1.0

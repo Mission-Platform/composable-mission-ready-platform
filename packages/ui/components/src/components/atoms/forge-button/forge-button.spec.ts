@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -13,7 +13,7 @@ import { ForgeButton } from './forge-button';
 
 /**
  * Exercises the **neutral** `ForgeButton` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/forge` runtime adapters. That
+ * on both frameworks through the `@mission-platform/forge-jsx` runtime adapters. That
  * keeps the assertions independent of the build-time plugin (whose React/Vue
  * parity is covered in `@mission-platform/vite-plugin-forge`), while proving the
  * component itself — mirroring the `@mission-platform/components` `ForgeButton`

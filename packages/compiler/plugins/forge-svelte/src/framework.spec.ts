@@ -31,7 +31,7 @@ import type {
   TargetContext,
 } from "@mission-platform/forge-plugin-api";
 
-const NEUTRAL = "@mission-platform/forge";
+const NEUTRAL = "@mission-platform/forge-jsx";
 
 function context(parts: Partial<TargetContext> = {}): TargetContext {
   return {
@@ -83,7 +83,7 @@ describe("Svelte Forge framework package", () => {
       semanticModule({
         imports: [
           moduleImport(
-            "import { useId } from '@mission-platform/forge';",
+            "import { useId } from '@mission-platform/forge-jsx';",
             NEUTRAL,
             {
               valueNames: ["useId"],
@@ -108,7 +108,7 @@ describe("Svelte Forge framework package", () => {
     );
 
     expect(script(generated.code)).toContain(
-      "import { useId } from '@mission-platform/forge';",
+      "import { useId } from '@mission-platform/forge-jsx';",
     );
   });
 
@@ -117,7 +117,7 @@ describe("Svelte Forge framework package", () => {
       semanticModule({
         imports: [
           moduleImport(
-            "import { Suspense } from '@mission-platform/forge';",
+            "import { Suspense } from '@mission-platform/forge-jsx';",
             NEUTRAL,
             { valueNames: ["Suspense"] },
           ),
@@ -1002,7 +1002,7 @@ describe("Svelte Forge framework package", () => {
     const module = semanticModule({
       imports: [
         moduleImport(
-          "import { classNames, type MpElement, type MpRenderProperty } from '@mission-platform/forge';",
+          "import { classNames, type MpElement, type MpRenderProperty } from '@mission-platform/forge-jsx';",
           NEUTRAL,
           {
             valueNames: ["classNames"],
@@ -1030,7 +1030,7 @@ describe("Svelte Forge framework package", () => {
     const generated = generate(module);
 
     expect(script(generated.code)).toContain(
-      "import { classNames } from '@mission-platform/forge';",
+      "import { classNames } from '@mission-platform/forge-jsx';",
     );
     expect(script(generated.code)).toContain(
       "import type { MpRenderProperty } from './mp-jsx-types';",
@@ -1084,7 +1084,7 @@ describe("Svelte Forge framework package", () => {
       fileName: "use-counter.ts",
       imports: [
         moduleImport(
-          "import { hasSlot, useState } from '@mission-platform/forge';",
+          "import { hasSlot, useState } from '@mission-platform/forge-jsx';",
           NEUTRAL,
           {
             valueNames: ["hasSlot", "useState"],
@@ -1111,7 +1111,7 @@ describe("Svelte Forge framework package", () => {
 
     expect(generated.lang).toBe("ts");
     expect(generated.code).toContain(
-      "import { useState } from '@mission-platform/forge';",
+      "import { useState } from '@mission-platform/forge-jsx';",
     );
     expect(generated.code).not.toContain("hasSlot");
     expect(generated.code).toContain(

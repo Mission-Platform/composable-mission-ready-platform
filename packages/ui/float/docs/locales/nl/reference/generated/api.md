@@ -523,7 +523,7 @@ Toegankelijkheid:
 
 De animatie voor binnenkomen/verlaten komt overeen met de Vue SFC via de neutraal
 **`<TransitionGroup>`** primitief, dat compileert naar de ingebouwde Vue
-`<TransitionGroup>` en de `@mission-platform/forge/react` CSS-klassegroep
+`<TransitionGroup>` en de `@mission-platform/forge-adapters/react` CSS-klassegroep
 bestuurder. De vier gestileerde klassen van de enter/leave-fase worden doorgegeven als **hash
 CSS-Module-klassen** (via de `<TransitionGroup>`-klasse rekwisieten), dus de
 animatiestyling blijft componentgericht in plaats van te vertrouwen op globaal

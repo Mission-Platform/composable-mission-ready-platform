@@ -16,7 +16,7 @@ import {
   tableRows,
 } from './markdown-utilities';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 import type { Token, Tokens } from 'marked';
 
 export interface MarkdownBlockProperties {

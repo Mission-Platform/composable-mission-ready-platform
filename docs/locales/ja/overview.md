@@ -23,7 +23,7 @@ Mission Platform は、構築用に設計された、構成可能でパッケー
 
 ### 設計によるマルチフレームワーク
 
-Mission Platform は、フレームワークに依存しない開発パラダイムを導入します。 `@mission-platform/forge` JSX 方言を使用すると、
+Mission Platform は、フレームワークに依存しない開発パラダイムを導入します。 `@mission-platform/forge-jsx` JSX 方言を使用すると、
 開発者はコンポーネントを一度作成し、Vue 3、React、Solid、Svelte、および Web のネイティブ出力にコンパイルできます。
 コンポーネント。これにより、コードベースが将来も保証され、多様なフロントエンド環境へのシームレスな統合が可能になります。
 
@@ -48,7 +48,7 @@ Mission Platform は、フレームワークに依存しない開発パラダイ
 
 Mission Platform は、最新の高性能スタック上に構築されています。
 
-- **Forge JSX (`@mission-platform/forge`)**: 主要な UI フレームワーク — フレームワークに依存しない JSX ランタイム。
+- **Forge JSX (`@mission-platform/forge-jsx`)**: 主要な UI フレームワーク — フレームワークに依存しない JSX ランタイム。
   共有コンポーネント (アプリを除くすべて) が作成されます。
 - **Vue 3**: `apps/` のアプリケーションが構築されるフレームワーク、およびいくつかのネイティブ レンダー ターゲットの 1 つ
   コンポーネントを鍛造します。

@@ -523,7 +523,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 
 Enter/Leave 애니메이션은 중립을 통해 Vue SFC와 일치합니다.
 **`<TransitionGroup>`** 기본 요소, Vue의 내장으로 컴파일됩니다.
-`<TransitionGroup>` 및 `@mission-platform/forge/react` CSS 클래스 그룹
+`<TransitionGroup>` 및 `@mission-platform/forge-adapters/react` CSS 클래스 그룹
 운전사. 4가지 스타일의 진입/탈퇴 단계 클래스는 **해시되어 전달됩니다.
 CSS 모듈 클래스**(`<TransitionGroup>` 클래스 소품을 통해), 따라서
 애니메이션 스타일은 전역에 의존하는 대신 구성 요소 범위로 유지됩니다.

@@ -323,8 +323,8 @@ describe("lowerSvelteModule", () => {
     const module = semanticModule({
       imports: [
         moduleImport(
-          "import { classNames, type MpRenderProperty } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { classNames, type MpRenderProperty } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           { valueNames: ["classNames"], typeNames: ["MpRenderProperty"] },
         ),
       ],
@@ -338,7 +338,7 @@ describe("lowerSvelteModule", () => {
 
     expect(plan(module).svelteImports).toEqual([
       {
-        module: "@mission-platform/forge",
+        module: "@mission-platform/forge-jsx",
         names: ["classNames"],
         typeOnly: false,
         reason: "runtime-values",

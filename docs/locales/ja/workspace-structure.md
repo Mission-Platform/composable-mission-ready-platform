@@ -44,7 +44,7 @@ composable_mission_ready_platform/
 
 アプリによって使用される、再利用可能なバージョン管理されたライブラリ。これらは、可能な限りフレームワークに依存しないように設計されています。
 
-- **`@mission-platform/forge`**: フレームワークに依存しない JSX ランタイムとアダプター。
+- **`@mission-platform/forge-jsx`**: フレームワークに依存しない JSX ランタイムとアダプター。
 - **`@mission-platform/components`**: マルチフレームワーク コンポーネント ライブラリ。
 - **`@mission-platform/forms`** および **`@mission-platform/forms-core`**: スキーマ駆動のフォーム プリミティブ。
 - **`@mission-platform/content`** および **`@mission-platform/email-renderer`**: コンテンツとレンダリング パイプライン。

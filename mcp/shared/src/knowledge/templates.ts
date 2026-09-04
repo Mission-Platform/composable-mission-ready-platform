@@ -287,7 +287,7 @@ export * from './utils/index.ts';
     'src/components/index.ts': `// Export UI components from here
 export {};
 `,
-    'src/composables/index.ts': `// Export reactive logic and hooks from here (authored against @mission-platform/forge)
+    'src/composables/index.ts': `// Export reactive logic and hooks from here (authored against @mission-platform/forge-jsx)
 export {};
 `,
     'src/locales/index.ts': `// Export i18n translations from here
@@ -689,7 +689,7 @@ export function componentFiles(options: ComponentScaffoldOptions): {
   const baseDir = `src/components/${levelFolder}/${name}`;
 
   const files: Record<string, string> = {
-    [`${baseDir}/${name}.tsx`]: `import { h, type MpChild, type MpElement } from '@mission-platform/forge';
+    [`${baseDir}/${name}.tsx`]: `import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';
 
 /**
  * Props of \`${componentName}\`. The interface inherits nothing — declare every
@@ -706,7 +706,7 @@ export interface ${propertiesName} {
 /**
  * \`${componentName}\` — ${description}
  *
- * Authored once in the neutral JSX dialect (\`@mission-platform/forge\`) and
+ * Authored once in the neutral JSX dialect (\`@mission-platform/forge-jsx\`) and
  * compiled to every supported framework by \`@mission-platform/vite-plugin-forge\`.
  */
 export function ${componentName}(properties: Readonly<${propertiesName}>): MpElement {
@@ -717,7 +717,7 @@ export function ${componentName}(properties: Readonly<${propertiesName}>): MpEle
   );
 }
 `,
-    [`${baseDir}/${name}.stories.tsx`]: `import { h } from '@mission-platform/forge';
+    [`${baseDir}/${name}.stories.tsx`]: `import { h } from '@mission-platform/forge-jsx';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
@@ -775,12 +775,12 @@ export function composableFiles(options: NamedUnitScaffoldOptions): {
   const baseDir = `src/composables/${name}`;
 
   const files: Record<string, string> = {
-    [`${baseDir}/${name}.ts`]: `import { useState } from '@mission-platform/forge';
+    [`${baseDir}/${name}.ts`]: `import { useState } from '@mission-platform/forge-jsx';
 
 /**
  * ${description}
  *
- * Write-once against \`@mission-platform/forge\` neutral hooks so the same source
+ * Write-once against \`@mission-platform/forge-jsx\` neutral hooks so the same source
  * compiles to every supported framework.
  */
 export function ${functionName}(initial = false): {

@@ -27,7 +27,7 @@ src/utils/
 
 1. **Zuiverheid**: geef de voorkeur aan pure functies die geen bijwerkingen hebben. Gegeven dezelfde invoer moeten ze altijd de
    dezelfde uitgang.
-2. **Geen UI-hooks**: importeer nooit `vue`-, `react`- of `@mission-platform/forge`-hooks in een util. Logica vereist
+2. **Geen UI-hooks**: importeer nooit `vue`-, `react`- of `@mission-platform/forge-jsx`-hooks in een util. Logica vereist
    reactiviteit hoort erbij [Composables](composable-authoring.md).
 3. **Expliciet typen**: geef volledige TypeScript-typen op voor alle argumenten en retourneerwaarden.
 4. **Verplicht testen**: elk hulpprogramma moet een medegelocaliseerd `.spec.ts`-bestand hebben.

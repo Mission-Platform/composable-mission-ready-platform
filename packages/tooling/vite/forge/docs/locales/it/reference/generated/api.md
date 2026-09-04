@@ -106,7 +106,7 @@ L'attributo JSX neutro che guida la gestione dei nomi di classe. Gli autori scri
 `className={…}` (l'attributo `class` è riservato alle stringhe statiche),
 passando gli stessi argomenti accettati dall'helper runtime `classNames`: la maggior parte
 comunemente un **array** di valori di classe (`className={['base', { active }]}`),
-ma funziona anche qualsiasi singolo {@link import ('@mission-platform/forge').ClassValue}.
+ma funziona anche qualsiasi singolo {@link import ('@mission-platform/forge-jsx').ClassValue}.
 L'attributo è scritto allo stesso modo di `className` di React (a differenza di
 runtime helper, che rimane `classNames`) in modo che un componente possa unire il proprio
 classi calcolate con `properties.className` inoltrato senza denominazione
@@ -154,7 +154,7 @@ I pacchetti dell'area di lavoro **component-library** riscrivibili una sola volt
 `@mission-platform/icons`, gli autori neutrali importano i loro componenti da questi
 pacchetti (ad esempio `ForgeDrawer` da `@mission-platform/components/forge-drawer` o
 `ForgeVerticalLayout` da `@mission-platform/layouts`), che controlla il tipo
-rispetto alla fonte neutra ed eseguire il rendering tramite `@mission-platform/forge`
+rispetto alla fonte neutra ed eseguire il rendering tramite `@mission-platform/forge-jsx`
 adattatori nei test unitari. Le origini generate per framework le importano in
 lo stesso semplice specificatore: la selezione del framework avviene attraverso ciascuno
 condizione di esportazione `mp:<framework>` del pacchetto, non tramite un percorso secondario.
@@ -794,12 +794,12 @@ nel vocabolario di ciascun framework: il rendering primitivo
 `MpRenderProperty<S>`, una funzione scoped-slot/render-prop che restituisce a
 il contenuto dello slot per un determinato ambito.
 
-Piuttosto che mantenerlo come importazione `@mission-platform/forge` nel file generato
+Piuttosto che mantenerlo come importazione `@mission-platform/forge-jsx` nel file generato
 codice, ogni build del framework emette un piccolo modulo co-localizzato
 ({@link LOCAL_JSX_TYPES_MODULE}) che definisce una **variante specifica del framework**
 di esso - React su `ReactNode`, Vue su `VNodeChild` - e ogni emettitore
 reindirizza lì l'importazione del tipo (vedere i builder React e Vue `imports`).
-Pertanto le fonti generate non contengono `@mission-platform/forge` neutrali
+Pertanto le fonti generate non contengono `@mission-platform/forge-jsx` neutrali
 render-prop **type** importare affatto.
 
 ### LOCAL_JSX_TYPES_FILE
@@ -865,7 +865,7 @@ L'origine del {@link LOCAL_JSX_TYPES_MODULE} co-localizzato per una destinazione
 framework: varianti specifiche del framework delle primitive di rendering neutre denominate
 in {@link LOCAL_JSX_TYPE_NAMES}, quindi i componenti generati vengono importati
 `MpRenderProperty` da questo modulo locale invece che dal neutro
-Pacchetto `@mission-platform/forge`. Le definizioni differiscono per quadro: il
+Pacchetto `@mission-platform/forge-jsx`. Le definizioni differiscono per quadro: il
 la posizione del "contenuto visualizzabile" è `ReactNode` di React e `VNodeChild` di Vue,
 quindi le dichiarazioni di ogni build vengono lette in modo idiomatico per il suo runtime.
 
@@ -942,7 +942,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 Importazioni di **valori** neutri che rappresentano le primitive di contesto. Su React _sono_
 proprio di React (`createContext`/`useContext`), quindi cadono nel
 `react` importazione valore; su Vue la loro importazione viene rimappata al file
-Adattatore `@mission-platform/forge/vue` (un adattatore supportato da `provide`/`inject`
+Adattatore `@mission-platform/forge-adapters/vue` (un adattatore supportato da `provide`/`inject`
 `createContext`/`useContext`).
 
 ### NEUTRAL_FRAMEWORK_COMPONENTS
@@ -956,15 +956,15 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 Importazioni di **valore** neutre che sono piuttosto **componenti** reali per framework
 rispetto ai marcatori, alle utilità di runtime o alle primitive di React. Il loro utilizzo di JSX
 viene lasciato intatto (rimangono un tag componente), ma il loro
-`import { … } from '@mission-platform/forge'` viene rimappato alla destinazione
+`import { … } from '@mission-platform/forge-jsx'` viene rimappato alla destinazione
 implementazione nativa del framework: `Teleport` (la primitiva del portale) diventa
-`import { Teleport } from '@mission-platform/forge/react'` (a `createPortal`
+`import { Teleport } from '@mission-platform/forge-adapters/react'` (a `createPortal`
 wrapper) per React e `import { Teleport } from 'vue'` (il built-in) per Vue;
 `Transition` (la primitiva entra/esci) diventa il
-`@mission-platform/forge/react` Driver di classe CSS per React e il driver integrato
+`@mission-platform/forge-adapters/react` Driver di classe CSS per React e il driver integrato
 `import { Transition } from 'vue'` per Vue; `TransitionGroup` (l'elenco
 enter/leave/move primitive) viene rimappato allo stesso modo (the
-Driver di gruppo `@mission-platform/forge/react` per React, il file integrato
+Driver di gruppo `@mission-platform/forge-adapters/react` per React, il file integrato
 `import { TransitionGroup } from 'vue'` per Vue).
 
 ### MODULO_NEUTRO
@@ -987,7 +987,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 
 Importazioni di **valore** neutre che sono utilità di runtime indipendenti dal framework: loro
 si comportano in modo identico su ogni destinazione, quindi (a differenza di `h` e degli hook, che sono
-tradotto/alias per framework) il loro `import { … } from '@mission-platform/forge'`
+tradotto/alias per framework) il loro `import { … } from '@mission-platform/forge-jsx'`
 deve essere preservato parola per parola nei sorgenti React e Vue generati.
 
 ### NEUTRAL_VUE_RUNTIME_HOOKS
@@ -1111,7 +1111,7 @@ Una singola (propria) proprietà di un'interfaccia props: il suo nome, il testo 
 export const REACT_ADAPTER_MODULE;
 ```
 
-Il percorso secondario `@mission-platform/forge/react` da cui vengono importati i componenti del framework React.
+Il percorso secondario `@mission-platform/forge-adapters/react` da cui vengono importati i componenti del framework React.
 
 ### REACT_TYPE_ALIASES
 
@@ -1124,7 +1124,7 @@ export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 Importazioni di tipo **neutro** con un equivalente React di prima classe spedito da
 `react` stesso. Sulla destinazione React questi vengono riscritti con il nome React
 (`import type { … } from 'react'` importato) anziché mantenerlo neutrale
-Tipo `@mission-platform/forge`, quindi gli autori React vedono il tipo idiomatico. Ogni
+Tipo `@mission-platform/forge-jsx`, quindi gli autori React vedono il tipo idiomatico. Ogni
 il riferimento al nome neutro nella sorgente emessa viene rinominato in mappato
 Nome React (vedi emettitore React). Le primitive di hook/rendering neutre ciascuna
 avere una controparte esatta React:
@@ -1282,7 +1282,7 @@ Leggere il nome dello slot statico di una chiamata `hasSlot('name')` (`undefined
 function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
-Esaminare i collegamenti `import … from '@mission-platform/forge'` di un modulo.
+Esaminare i collegamenti `import … from '@mission-platform/forge-jsx'` di un modulo.
 
 #### Parametri
 
@@ -1623,7 +1623,7 @@ Se un modulo Oxc o node chiama `i18next.t(...)`.
 export const VUE_ADAPTER_MODULE;
 ```
 
-Il sottopercorso `@mission-platform/forge/vue` da cui vengono importate le primitive di contesto Vue.
+Il sottopercorso `@mission-platform/forge-adapters/vue` da cui vengono importate le primitive di contesto Vue.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -1649,7 +1649,7 @@ co-localizzato {@link LOCAL_JSX_TYPES_MODULE}. È un superinsieme di
 ridichiara le primitive **elemento** neutre `MpChild` e `MpElement` come
 `VNodeChild` / `VNode` di Vue. In `jsxImportSource: 'vue'` a
 L'espressione JSX in un SFC generato ha il tipo `JSX.Element` (ovvero `VNode` di Vue);
-mantenendo le definizioni neutre `@mission-platform/forge` (marchiate con
+mantenendo le definizioni neutre `@mission-platform/forge-jsx` (marchiate con
 `__mpElement`) renderebbe ogni `const x: MpElement = <div/>` /
 `MpChild[] = items.map(() => <li/>)` non riesce a controllare il tipo in `vue-tsc`. React
 li rinomina invece in `ReactNode`/`ReactElement` (vedi
@@ -1801,7 +1801,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 Compila un **modulo hook** neutro (un componibile riscrivibile creato contro
-hook in stile React di `@mission-platform/forge`, _non_ un componente dell'interfaccia utente) al suo
+hook in stile React di `@mission-platform/forge-jsx`, _non_ un componente dell'interfaccia utente) al suo
 fonte per framework (Fase 1).
 
 #### Parametri

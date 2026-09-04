@@ -7,7 +7,7 @@ import {
   type MpElement,
   type MpElementType,
   type MpPropertyBag,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 import { serializeAttributes } from './attributes';
 import { escapeHtml } from './escape';

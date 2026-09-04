@@ -30,7 +30,7 @@ Package stores avoid framework-specific dependencies. Instead, they follow a sim
 
 ## Authoring Rules
 
-1. **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge` hooks inside the store module
+1. **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge-jsx` hooks inside the store module
    itself.
 2. **Explicit Types**: Always define and export an interface for the store's state.
 3. **SSR Safety**: Guard access to browser APIs (e.g., `localStorage`) so the store can be initialized in a Node.js
@@ -64,7 +64,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Consuming Stores in Components
 
-To use a store within a write-once component, bridge it using `useState` and `useEffect` from `@mission-platform/forge`:
+To use a store within a write-once component, bridge it using `useState` and `useEffect` from `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

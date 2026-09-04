@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 /**
  * `ForgeMatrixCode` is the write-once `ForgeMatrixCode` in
  * `@mission-platform/matrix-code`. The component is authored **once** in the
- * framework-neutral JSX dialect (`@mission-platform/forge`) and compiled at
+ * framework-neutral JSX dialect (`@mission-platform/forge-jsx`) and compiled at
  * build time by `@mission-platform/vite-plugin-forge` to every supported
  * framework.
  *

@@ -10,7 +10,7 @@ import {
   type MpElement,
   type MpRenderProperty,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type VirtualListSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';

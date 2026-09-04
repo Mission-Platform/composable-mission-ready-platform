@@ -186,7 +186,7 @@ The neutral JSX attribute that drives class-name management. Authors write
 `className={…}` (the `class` attribute is reserved for static strings),
 passing the same arguments the `classNames` runtime helper accepts — most
 commonly an **array** of class values (`className={['base', { active }]}`),
-but any single {@link import('@mission-platform/forge').ClassValue} works too.
+but any single {@link import('@mission-platform/forge-jsx').ClassValue} works too.
 The attribute is spelled the same as React's own `className` (unlike the
 runtime helper, which stays `classNames`) so a component can merge its own
 computed classes with a forwarded `properties.className` without a naming
@@ -825,12 +825,12 @@ in each framework's own vocabulary — the render primitive
 `MpRenderProperty<S>`, a scoped-slot / render-prop function returning a
 slot's content for a given scope.
 
-Rather than keep it as an `@mission-platform/forge` import in the generated
+Rather than keep it as an `@mission-platform/forge-jsx` import in the generated
 code, each framework build emits a tiny co-located module
 ({@link LOCAL_JSX_TYPES_MODULE}) that defines a **framework-specific variant**
 of it — React's over `ReactNode`, Vue's over `VNodeChild` — and every emitter
 redirects the type import there (see the React and Vue `imports` builders).
-So the generated sources carry no neutral `@mission-platform/forge`
+So the generated sources carry no neutral `@mission-platform/forge-jsx`
 render-prop **type** import at all.
 
 ### LOCAL_JSX_TYPES_FILE
@@ -865,7 +865,7 @@ The source of the co-located {@link LOCAL_JSX_TYPES_MODULE} for a target
 framework: framework-specific variants of the neutral render primitives named
 in {@link LOCAL_JSX_TYPE_NAMES}, so the generated components import
 `MpRenderProperty` from this local module instead of the neutral
-`@mission-platform/forge` package. The definitions differ per framework: the
+`@mission-platform/forge-jsx` package. The definitions differ per framework: the
 "renderable content" position is React's `ReactNode` and Vue's `VNodeChild`,
 so each build's declarations read idiomatically for its runtime.
 
@@ -942,7 +942,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 Neutral **value** imports that are the context primitives. On React they _are_
 React's own (`createContext`/`useContext`), so they fall through to the
 `react` value import; on Vue their import is remapped to the
-`@mission-platform/forge/vue` adapter (a `provide`/`inject`-backed
+`@mission-platform/forge-adapters/vue` adapter (a `provide`/`inject`-backed
 `createContext`/`useContext`).
 
 ### NEUTRAL_MODULE
@@ -965,7 +965,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 
 Neutral **value** imports that are framework-agnostic runtime utilities — they
 behave identically on every target, so (unlike `h` and the hooks, which are
-translated/aliased per framework) their `import { … } from '@mission-platform/forge'`
+translated/aliased per framework) their `import { … } from '@mission-platform/forge-jsx'`
 must be preserved verbatim in the generated React and Vue sources.
 
 ### NEUTRAL_VUE_RUNTIME_HOOKS
@@ -1170,7 +1170,7 @@ Read the static slot name of a `hasSlot('name')` call (`undefined` → the defau
 function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
-Inspect a module's `import … from '@mission-platform/forge'` bindings.
+Inspect a module's `import … from '@mission-platform/forge-jsx'` bindings.
 
 #### Parameters
 
@@ -1630,7 +1630,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 Compile one neutral **hook module** (a write-once composable authored against
-`@mission-platform/forge`'s React-style hooks, _not_ a UI component) to its
+`@mission-platform/forge-jsx`'s React-style hooks, _not_ a UI component) to its
 per-framework source (Stage 1).
 
 #### Parameters

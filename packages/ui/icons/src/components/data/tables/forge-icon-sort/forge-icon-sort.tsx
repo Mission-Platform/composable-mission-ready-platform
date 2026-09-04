@@ -2,7 +2,7 @@ import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-sort.module.scss';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 /** The active sort direction, or `undefined` when unsorted. */
 export type SortDirection = 'asc' | 'desc' | undefined;

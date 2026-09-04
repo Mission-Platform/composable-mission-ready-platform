@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeWindowPopout } from './forge-window-popout';
 
 /**
  * Exercises the **neutral** `ForgeWindowPopout` on both frameworks through the
- * `@mission-platform/forge` runtime adapters. SSR renders the inline (not popped)
+ * `@mission-platform/forge-jsx` runtime adapters. SSR renders the inline (not popped)
  * state — the second-window behaviour relies on `window.open` and runs only in a
  * live browser, so these checks cover the inline content, the toggle button, and
  * the labels.

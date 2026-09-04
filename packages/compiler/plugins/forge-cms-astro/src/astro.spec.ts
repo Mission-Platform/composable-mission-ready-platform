@@ -145,7 +145,7 @@ describe("the static Astro template", () => {
 
   it("rewrites JSX-only attribute names in the markup", () => {
     const source = [
-      "import { h, type MpElement } from '@mission-platform/forge';",
+      "import { h, type MpElement } from '@mission-platform/forge-jsx';",
       "export interface FieldProperties {",
       "  /** Label text. */",
       "  label?: string;",
@@ -225,7 +225,7 @@ describe("the island-backed Astro template", () => {
 describe("Astro diagnostics", () => {
   it("warns when a component's prop default cannot cross the island boundary", () => {
     const source = [
-      "import { h, useState, type MpElement } from '@mission-platform/forge';",
+      "import { h, useState, type MpElement } from '@mission-platform/forge-jsx';",
       "export interface TickerProperties {",
       "  /** Formatter for the value. */",
       "  format?: (value: number) => string;",

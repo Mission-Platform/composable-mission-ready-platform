@@ -27,7 +27,7 @@ src/utils/
 
 1. **Purezza**: preferisci funzioni pure che non abbiano effetti collaterali. Dato lo stesso input, dovrebbero sempre restituire il file
    stessa uscita.
-2. **Nessun hook dell'interfaccia utente**: non importare mai gli hook `vue`, `react` o `@mission-platform/forge` in un'utilità. Richiede logica
+2. **Nessun hook dell'interfaccia utente**: non importare mai gli hook `vue`, `react` o `@mission-platform/forge-jsx` in un'utilità. Richiede logica
    la reattività appartiene [Componenti componibili](composable-authoring.md).
 3. **Digitazione esplicita**: fornisce tipi TypeScript completi per tutti gli argomenti e i valori restituiti.
 4. **Test obbligatorio**: ogni utilità deve avere un file `.spec.ts` co-localizzato.

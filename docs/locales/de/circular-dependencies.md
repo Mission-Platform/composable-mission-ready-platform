@@ -77,7 +77,7 @@ einzelne logische Einheit. Erwägen Sie, sie in einem Paket zusammenzuführen.
 ## Best Practices für die Prävention
 
 1. **Folgen Sie dem einseitigen Ablauf**: Halten Sie sich strikt daran `Apps → Packages → Configs` Abhängigkeitsrichtung.
-2. **Autoren-Framework-neutrale Logik**: Verwendung `@mission-platform/forge` für die Kernlogik, um Framework-spezifische Zyklen zu vermeiden.
+2. **Autoren-Framework-neutrale Logik**: Verwendung `@mission-platform/forge-jsx` für die Kernlogik, um Framework-spezifische Zyklen zu vermeiden.
 3. **Workspace-Protokolle verwenden**: Immer verwenden `workspace:*` um interne Abhängigkeiten zu gewährleisten pnpm richtig lösen kann
    die Grafik.
 4. **Importe regelmäßig prüfen**: Achten Sie auf „Auto-Import“-Vorschläge in Ihrer IDE, da diese manchmal zu Problemen führen können

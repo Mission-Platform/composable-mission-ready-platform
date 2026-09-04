@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeSchemaForm, type SchemaFormDefinition } from './forge-schema-form'
 
 /**
  * Exercises the **neutral** `ForgeSchemaForm` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/forge` adapters. Like the
+ * it on both frameworks through the `@mission-platform/forge-jsx` adapters. Like the
  * Vue original it is driven entirely by a JSON Schema (resolved + validated
  * through the shared `@mission-platform/forms-core`), so it must derive the same
  * controls — and honour conditional visibility / wizard steps — identically

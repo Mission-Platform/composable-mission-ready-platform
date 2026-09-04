@@ -42,8 +42,8 @@ const CONTEXT: TargetContext = {
 
 /** The neutral import every fixture module declares. */
 const NEUTRAL_IMPORT = moduleImport(
-  "import type { MpElement } from '@mission-platform/forge';",
-  "@mission-platform/forge",
+  "import type { MpElement } from '@mission-platform/forge-jsx';",
+  "@mission-platform/forge-jsx",
   { typeNames: ["MpElement"], typeOnly: true },
 );
 

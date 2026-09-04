@@ -77,7 +77,7 @@ une seule unité logique. Pensez à les fusionner en un seul package.
 ## Meilleures pratiques de prévention
 
 1. **Suivez le flux à sens unique** : respectez strictement le `Apps → Packages → Configs` sens de dépendance.
-2. **Logique neutre du cadre d'auteur** : utilisation `@mission-platform/forge` pour la logique de base afin d'éviter les cycles spécifiques au framework.
+2. **Logique neutre du cadre d'auteur** : utilisation `@mission-platform/forge-jsx` pour la logique de base afin d'éviter les cycles spécifiques au framework.
 3. **Utilisez les protocoles d'espace de travail** : utilisez toujours `workspace:*` pour les dépendances internes afin d'assurer pnpm peut résoudre correctement
    le graphique.
 4. **Auditez régulièrement les importations** : faites attention aux suggestions "d'importation automatique" dans votre IDE, car elles peuvent parfois introduire

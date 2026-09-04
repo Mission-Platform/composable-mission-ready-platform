@@ -10,7 +10,7 @@
 - Updated dependencies [f216404]
 - Updated dependencies [89aab02]
 - Updated dependencies [8a15dbc]
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
 
 ## 1.0.0
 
@@ -50,7 +50,7 @@
   +import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
   ```
 
-  The `@mission-platform/forge` adapter subpaths (`/react`, `/vue`, `/solid`,
+  The `@mission-platform/forge-jsx` adapter subpaths (`/react`, `/vue`, `/solid`,
   `/web-components`, `/runtime`, `/jsx-globals`), the Storyblok wrappers (`/storyblok/react`, `/storyblok/vue`),
   `@mission-platform/router/redwood`,
   `@mission-platform/breakpoints/core` and every `…/styles` entry are unaffected.
@@ -68,7 +68,7 @@
 
 - d78e44f: add `@mission-platform/speech-audio` — framework-neutral browser speech & audio composables
 
-  New write-once composables authored against the `@mission-platform/forge` neutral hooks and compiled to React, Vue, Solid, Svelte, and Web Components (with per-framework subpath exports).
+  New write-once composables authored against the `@mission-platform/forge-jsx` neutral hooks and compiled to React, Vue, Solid, Svelte, and Web Components (with per-framework subpath exports).
 
   - **`useSpeechSynthesis`** — text-to-speech via the native SpeechSynthesis API (`speak`/`pause`/`resume`/`cancel`, available `voices`, `isSpeaking`/`isPaused` state).
   - **`useSpeechRecognition`** — speech-to-text via the native SpeechRecognition API (`webkitSpeechRecognition` fallback) with `start`/`stop`/`abort`, `transcript`, and `isListening`/`error` state.
@@ -88,7 +88,7 @@
 - Updated dependencies [3fb8ddb]
 - Updated dependencies [7d95459]
 - Updated dependencies [f67e304]
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
 
 All notable changes to this project will be documented in this file.
 

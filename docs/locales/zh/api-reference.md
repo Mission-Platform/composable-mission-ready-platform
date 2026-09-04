@@ -20,7 +20,7 @@
 
 ## 核心框架
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 “一次写入”架构的基础，提供框架中立的 JSX 运行时和挂钩。
 
@@ -32,8 +32,8 @@
 | `useMemo` |钩|框架中立的记忆钩子。                                                     |
 | `useRef` |钩|框架中立的参考钩子。                                                       |
 | `useContext` |钩|框架中立的上下文挂钩。                                                         |
-| `toVueComponent` |适配器|将 forge 组件转换为 Vue 3 组件（来自 `@mission-platform/forge/vue`）。   |
-| `toReactComponent` |适配器|将 forge 组件转换为 React 组件（来自 `@mission-platform/forge/react`）。 |
+| `toVueComponent` |适配器|将 forge 组件转换为 Vue 3 组件（来自 `@mission-platform/forge-adapters/vue`）。   |
+| `toReactComponent` |适配器|将 forge 组件转换为 React 组件（来自 `@mission-platform/forge-adapters/react`）。 |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ Forge Web 脚本工件使用格式为 `sha256-v1:<hex>` 的版本化 SHA-256 内
 
 |套餐 |目的|
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` |框架中立的 JSX 运行时和适配器。                   |
+| `@mission-platform/forge-jsx` |框架中立的 JSX 运行时和适配器。                   |
 | `@mission-platform/components` |一次性编写 UI 组件。                                     |
 | `@mission-platform/icons` |一次性编写 SVG 图标组件。                               |
 | `@mission-platform/layouts` |应用程序、容器和响应式布局组件。     |

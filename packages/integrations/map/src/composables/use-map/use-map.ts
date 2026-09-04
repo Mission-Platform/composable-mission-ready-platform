@@ -1,12 +1,12 @@
 // ─── useMap ─────────────────────────────────────────────────────────────────
 //
-// Framework-neutral: authored once against the `@mission-platform/forge` context
+// Framework-neutral: authored once against the `@mission-platform/forge-jsx` context
 // primitive and compiled to React / Vue by `@mission-platform/vite-plugin-forge`.
 // Returns the MapLibre `Map` instance provided by the nearest `<MapLibre>`
 // ancestor through {@link MapContext}. `undefined` until the map has loaded (and
 // when read outside a `<MapLibre>` subtree).
 
-import { useContext } from '@mission-platform/forge';
+import { useContext } from '@mission-platform/forge-jsx';
 
 import { MapContext } from '@/map-context';
 

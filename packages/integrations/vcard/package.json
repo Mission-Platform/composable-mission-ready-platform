@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "@mission-platform/components": "workspace:*",
-    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-adapters": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/typography": "workspace:*",
     "luxon": "catalog:",
     "nanoid": "^5.1.16"

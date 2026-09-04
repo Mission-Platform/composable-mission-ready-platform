@@ -49,7 +49,7 @@ function contentOf(
 }
 
 const ANNOTATED_SETTING = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface AnnotatedSettingProperties {",
   "  /**",
@@ -80,7 +80,7 @@ const annotatedSettingNames: ContentComponentNamesInput = {
 };
 
 const TABBED = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "",
   "export interface TabbedProperties {",
   "  /** @cmsTab Content */",

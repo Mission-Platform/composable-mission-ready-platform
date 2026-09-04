@@ -1,4 +1,4 @@
-import { h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import { h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge-jsx';
 
 import styles from './forge-f-pattern-layout.module.scss';
 

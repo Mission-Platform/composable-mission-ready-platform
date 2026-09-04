@@ -194,7 +194,7 @@
       }),
     },
     {
-      name: '@mission-platform/forge',
+      name: '@mission-platform/forge-jsx',
       description: t(($) => $.packages.items.jsx, {
         defaultValue: 'Framework-neutral JSX runtime with adapters for each framework.',
         ns: 'mp.website',

@@ -1,7 +1,7 @@
 # @mission-platform/forms
 
 Write-once Mission Platform **form** components — authored once in the
-framework-neutral `@mission-platform/forge` dialect and compiled straight to both
+framework-neutral `@mission-platform/forge-jsx` dialect and compiled straight to both
 Vue 3 (`./vue`) and React (`./react`) by `@mission-platform/vite-plugin-forge`'s
 two-stage compiler (there is no neutral runtime build). The package was split out
 of `@mission-platform/components` so it can depend on **both**

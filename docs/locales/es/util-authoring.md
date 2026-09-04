@@ -27,7 +27,7 @@ src/utils/
 
 1. **Pureza**: Prefiere funciones puras que no tengan efectos secundarios. Dada la misma entrada, siempre deben devolver el
    misma salida.
-2. **Sin ganchos de interfaz de usuario**: nunca importe ganchos `vue`, `react` o `@mission-platform/forge` en una utilidad. Lógica que requiere
+2. **Sin ganchos de interfaz de usuario**: nunca importe ganchos `vue`, `react` o `@mission-platform/forge-jsx` en una utilidad. Lógica que requiere
    la reactividad pertenece a [Componibles](composable-authoring.md).
 3. **Escritura explícita**: proporcione tipos TypeScript completos para todos los argumentos y valores de retorno.
 4. **Pruebas obligatorias**: cada utilidad debe tener un archivo `.spec.ts` ubicado en el mismo lugar.

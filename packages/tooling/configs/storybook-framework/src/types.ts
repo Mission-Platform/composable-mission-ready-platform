@@ -7,7 +7,7 @@
  * the renderer and its JSX transform, while the bare `@mission-platform/<pkg>`
  * import auto-resolves to the matching framework build). Inside a package the
  * same story is type-checked under the neutral forge JSX toolchain
- * (`jsx: react-jsx`, `jsxImportSource: '@mission-platform/forge'`), where a
+ * (`jsx: react-jsx`, `jsxImportSource: '@mission-platform/forge-jsx'`), where a
  * component is a plain `(properties) => MpElement` function rather than a
  * Vue/React node.
  *

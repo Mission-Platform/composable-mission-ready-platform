@@ -1,4 +1,4 @@
-import { type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
+import { type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge-jsx';
 import { ForgeIconChevron } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 

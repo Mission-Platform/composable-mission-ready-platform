@@ -139,7 +139,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### オーサリングルール
 
-1. **TypeScript どこでも**: すべてのソース コードは `.ts` または `.tsx` (`@mission-platform/forge` を使用) に存在する必要があります。
+1. **TypeScript どこでも**: すべてのソース コードは `.ts` または `.tsx` (`@mission-platform/forge-jsx` を使用) に存在する必要があります。
 2. **フレームワークの中立性**: フレームワークに依存しないロジックを優先します。コンポーネントは、ターゲットに合わせて Forge JSX で一度作成する必要があります
    複数のフレームワーク。
 3. **分離**: パッケージは `apps/` からインポートしてはなりません。

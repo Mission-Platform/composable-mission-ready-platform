@@ -22,7 +22,7 @@
 - Updated dependencies [97c3f20]
 - Updated dependencies [31ed685]
   - @mission-platform/components@3.1.0
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/icons@2.0.1
   - @mission-platform/tokens@2.0.0
   - @mission-platform/typography@1.1.0

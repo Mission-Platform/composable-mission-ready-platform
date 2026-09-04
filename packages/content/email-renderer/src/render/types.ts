@@ -1,4 +1,4 @@
-import type { MpChild, MpComponent, MpElement, MpPropertyBag } from '@mission-platform/forge';
+import type { MpChild, MpComponent, MpElement, MpPropertyBag } from '@mission-platform/forge-jsx';
 
 /** A framework-neutral Forge element accepted by the email serializer. */
 export type EmailNode = MpElement;

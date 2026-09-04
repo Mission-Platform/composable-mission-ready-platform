@@ -1,4 +1,4 @@
-import { useEffect, useState } from '@mission-platform/forge';
+import { useEffect, useState } from '@mission-platform/forge-jsx';
 
 import {
   type BreakpointKey,

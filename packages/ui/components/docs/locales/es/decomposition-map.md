@@ -21,7 +21,7 @@ por esta migración.
 
 Estos componentes comparten navegación por teclado, enfoque móvil, estado de menú/pestaña y
 Contratos de interacción orientados a la navegación. Sus implementaciones neutrales dependen
-en `@mission-platform/forge`; Los controles de menú y tipo tabla también utilizan
+en `@mission-platform/forge-jsx`; Los controles de menú y tipo tabla también utilizan
 `@mission-platform/icons`, mientras que el contenido de ruta de navegación/barra de navegación compone la propiedad
 Paquete `@mission-platform/typography`. `ForgeNavbar` actualmente compone el
 `ForgeDrawer` residual, por lo que extraer la navegación requiere mantener esa
@@ -36,7 +36,7 @@ una dependencia de `@mission-platform/components` nuevamente en la navegación.
 
 La preocupación común es generar datos estructurados o de gran volumen, incluidos
 ventanas, clasificación, expansión de árboles y presentación de estado. La fuente actual
-utiliza `@mission-platform/forge` y, cuando se componen texto o glifos,
+utiliza `@mission-platform/forge-jsx` y, cuando se componen texto o glifos,
 `@mission-platform/typography` y `@mission-platform/icons`; estos deberían permanecer
 dependencias de nivel inferior de un paquete futuro. Los componentes virtuales deben moverse con
 sus estilos/especificaciones/historias coubicados, por lo que su comportamiento de gancho neutral y cinco
@@ -60,7 +60,7 @@ la utilidad a un paquete estable de nivel inferior; no debe llegar a otro
 
 Los primeros tres poseen semántica de carga/renderización de medios, mientras que carrusel y dispositivo
 presentación simulada de adición en torno a los medios. Su fuente neutral depende actualmente de
-`@mission-platform/forge` y, para controles de carrusel, `@mission-platform/icons`;
+`@mission-platform/forge-jsx` y, para controles de carrusel, `@mission-platform/icons`;
 no hay dependencia de los paquetes extraídos. Preservar el movimiento reducido y
 CSS por componente como parte de un movimiento futuro en lugar de dividir el comportamiento de los medios
 desde sus estilos.
@@ -101,7 +101,7 @@ implementaciones duplicadas como atajo de compatibilidad.
 Se verificó la fuente del componente residual para las importaciones de los paquetes extraídos:
 no hay importaciones de `@mission-platform/theme`, `@mission-platform/float` o
 `@mission-platform/select` bajo `packages/ui/components/src`. Componentes neutros
-use `@mission-platform/forge`, íconos seleccionados de `@mission-platform/icons`,
+use `@mission-platform/forge-jsx`, íconos seleccionados de `@mission-platform/icons`,
 tipografía de `@mission-platform/typography` y estilos/utilidades locales del paquete.
 Las historias pueden importar el paquete para ejercitar la superficie pública; eso no es
 una dependencia de implementación o un ciclo de paquete.

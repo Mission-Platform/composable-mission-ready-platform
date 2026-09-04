@@ -4,7 +4,7 @@
  * Both emitters rebuild their import lines from `GenericImport` facts — the
  * frontend already split every clause into value/type names, a default binding
  * and a namespace binding, so nothing has to be re-parsed:
- * - the neutral `@mission-platform/forge` import is owned by the **lowering
+ * - the neutral `@mission-platform/forge-jsx` import is owned by the **lowering
  *   plan** for a component (which resolves the runtime values it keeps, the
  *   `MpRenderProperty` redirect to the co-located per-framework JSX types
  *   module, and the Svelte lifecycles it needs) and by the pass below for a

@@ -1,6 +1,12 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeDialog } from '@mission-platform/float';
-import { Dynamic, useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import {
+  Dynamic,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge-jsx';
 import { ForgeInput, ForgeTextarea } from '@mission-platform/forms';
 import { ForgeIconChevron } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';

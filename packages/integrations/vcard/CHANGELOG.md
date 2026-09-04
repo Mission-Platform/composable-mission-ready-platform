@@ -17,7 +17,7 @@
 - Updated dependencies [97c3f20]
 - Updated dependencies [31ed685]
   - @mission-platform/components@3.1.0
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/typography@1.1.0
 
 ## 0.2.0
@@ -44,4 +44,4 @@
 - Updated dependencies [4714506]
 - Updated dependencies [be97ac0]
   - @mission-platform/components@3.0.0
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0

@@ -12,7 +12,7 @@ sistema.
 
 Este paquete une la representación imperativa basada en selección D3 con árboles de UI declarativos reactivos:
 
-- **Implementación neutral**: Construido sobre ganchos `@mission-platform/forge` (`useRef`, `useEffect`).
+- **Implementación neutral**: Construido sobre ganchos `@mission-platform/forge-jsx` (`useRef`, `useEffect`).
 - **Objetivo de marco dual**: Transpilado por `@mission-platform/vite-plugin-forge` a React nativo (`./react`) y Vue 3
   (`./vue`) componibles.
 - **Dependencia selectiva**: Importa `d3-selection` directamente para mantener mínimos los tamaños de los paquetes de clientes.

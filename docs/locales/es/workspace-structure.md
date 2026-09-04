@@ -44,7 +44,7 @@ y nunca publicado en un registro.
 
 Bibliotecas versionadas y reutilizables consumidas por las aplicaciones. Se pretende que sean independientes del marco siempre que sea posible.
 
-- **`@mission-platform/forge`**: adaptadores y tiempo de ejecución JSX neutrales en el marco.
+- **`@mission-platform/forge-jsx`**: adaptadores y tiempo de ejecución JSX neutrales en el marco.
 - **`@mission-platform/components`**: la biblioteca de componentes de múltiples marcos.
 - **`@mission-platform/forms`** y **`@mission-platform/forms-core`**: primitivas de forma basadas en esquemas.
 - **`@mission-platform/content`** y **`@mission-platform/email-renderer`**: Canalizaciones de contenido y renderizado.

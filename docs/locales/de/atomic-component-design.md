@@ -6,7 +6,7 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > Sprache: Deutsch (de)
 
 Mission Platform verwendet ein **Atomic Design**-System, um Komponenten in hierarchische Komplexitätsebenen zu organisieren. Jeder
-Komponente ist eine „einmal beschreibbare“ Einheit, die im neutralen Forge JSX-Dialekt erstellt wurde (`@mission-platform/forge`), sicherstellen
+Komponente ist eine „einmal beschreibbare“ Einheit, die im neutralen Forge JSX-Dialekt erstellt wurde (`@mission-platform/forge-jsx`), sicherstellen
 Konsistenz über mehrere Frameworks hinweg.
 
 ## Designebenen
@@ -75,7 +75,7 @@ const meta = {
 
 ## Autorenstandards
 
-1. **Framework-Neutralität**: Niemals separat verfassen Vue Und React Versionen. Verwenden `@mission-platform/forge`.
+1. **Framework-Neutralität**: Niemals separat verfassen Vue Und React Versionen. Verwenden `@mission-platform/forge-jsx`.
 2. **Benennung**: Komponenten sollten die verwenden `Base` Präfix (z. B. `ForgeCard`) es sei denn, es handelt sich um spezifische Implementierungen.
 3. **Typsicherheit**: Export a `*Properties` Schnittstelle für die Requisiten der Komponente.
 4. **Testen**: A am selben Ort `.spec.ts` ist für jede Komponente erforderlich.

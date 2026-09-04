@@ -92,8 +92,8 @@ function refinableModule(): SemanticModule {
   return semanticModule({
     imports: [
       moduleImport(
-        "import { classNames } from '@mission-platform/forge';",
-        "@mission-platform/forge",
+        "import { classNames } from '@mission-platform/forge-jsx';",
+        "@mission-platform/forge-jsx",
         {
           valueNames: ["classNames"],
         },

@@ -523,7 +523,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 
 入退室アニメーションは、ニュートラルを介して Vue SFC と一致します。
 **`<TransitionGroup>`** プリミティブ。Vue の組み込みにコンパイルされます。
-`<TransitionGroup>` および `@mission-platform/forge/react` CSS クラス グループ
+`<TransitionGroup>` および `@mission-platform/forge-adapters/react` CSS クラス グループ
 運転手。 4 つのスタイル付き開始/終了フェーズ クラスは、** ハッシュとして渡されます。
 CSS モジュール クラス** (`<TransitionGroup>` クラス プロパティ経由)、
 アニメーションのスタイル設定はグローバルに依存するのではなく、コンポーネント スコープのままになります。

@@ -44,7 +44,7 @@ composable_mission_ready_platform/
 
 ספריות ניתנות לשימוש חוזר עם גרסאות הנצרכות על ידי אפליקציות. אלה נועדו להיות אגנוסטיים למסגרת במידת האפשר.
 
-- **`@mission-platform/forge`**: זמן הריצה ומתאמים של JSX ניטרליים למסגרת.
+- **`@mission-platform/forge-jsx`**: זמן הריצה ומתאמים של JSX ניטרליים למסגרת.
 - **`@mission-platform/components`**: ספריית רכיבי ריבוי המסגרות.
 - **`@mission-platform/forms`** ו-**`@mission-platform/forms-core`**: פרימיטיביים של צורות מונעי סכמה.
 - **`@mission-platform/content`** ו-**`@mission-platform/email-renderer`**: צינורות תוכן ועיבוד.

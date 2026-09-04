@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeVerticalLayout } from './forge-vertical-layout';
 
 /**
  * Exercises the **neutral** `ForgeVerticalLayout` (which composes inline
- * `ForgeDrawer`s) on both frameworks through the `@mission-platform/forge` runtime
+ * `ForgeDrawer`s) on both frameworks through the `@mission-platform/forge-jsx` runtime
  * adapters. During SSR the reactive breakpoint is `false`, so the columns behave
  * as overlay drawers (the single-column grid template) — an open column renders
  * its drawer, a closed/absent one renders nothing.

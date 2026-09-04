@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeGrid } from './forge-grid';
 
 /**
  * Exercises the **neutral** `ForgeGrid` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/forge` runtime adapters. The
+ * on both frameworks through the `@mission-platform/forge-jsx` runtime adapters. The
  * assertions confirm cross-framework parity of the BEM class and the computed
  * CSS Grid inline style (track template derived from `rows` / `cols`).
  */

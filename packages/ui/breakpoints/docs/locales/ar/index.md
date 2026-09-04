@@ -7,7 +7,7 @@
 
 يوفر `@mission-platform/breakpoints` أدوات مساعدة لنقاط التوقف سريعة الاستجابة ومكونات منفذ العرض **للكتابة مرة واحدة** لـ
 منصة المهمة. يتم تأليف المكونات (`ForgeShowAt`، `ForgeHideAt`، `ForgeBreakpointDebug`) مرة واحدة في الوضع المحايد
-لهجة `@mission-platform/forge` وتم تجميعها إلى **كل من Vue 3 وReact** بواسطة `@mission-platform/vite-plugin-forge`.
+لهجة `@mission-platform/forge-jsx` وتم تجميعها إلى **كل من Vue 3 وReact** بواسطة `@mission-platform/vite-plugin-forge`.
 
 ## صادرات
 

@@ -7,7 +7,7 @@
 
 `@mission-platform/breakpoints` מספק כלי עזר מגיבים לנקודת עצירה ורכיבי תצוגה של **כתיבה חד פעמית** עבור
 פלטפורמת משימה. הרכיבים (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) נכתבו פעם אחת בניוטרל
-ניב `@mission-platform/forge` והורכב ל-**הן Vue 3 והן React** על ידי `@mission-platform/vite-plugin-forge`.
+ניב `@mission-platform/forge-jsx` והורכב ל-**הן Vue 3 והן React** על ידי `@mission-platform/vite-plugin-forge`.
 
 ## יצוא
 

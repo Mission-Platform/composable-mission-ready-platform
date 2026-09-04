@@ -1,4 +1,4 @@
-import { useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 
 import { ForgeBadge } from '../../atoms/forge-badge/forge-badge';
 

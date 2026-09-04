@@ -1,7 +1,7 @@
 /**
  * Stage-1 of the two-stage compiler: source-to-source transformation.
  *
- * A neutral component authored against `@mission-platform/forge` is parsed with
+ * A neutral component authored against `@mission-platform/forge-jsx` is parsed with
  * the Oxc parser and re-emitted as a per-framework **source
  * module** — a React `.tsx` or a Vue `.vue` single-file component. Stage 2 (the
  * framework's own Vite plugin / JSX transform) then compiles that module
@@ -273,7 +273,7 @@ export interface CompileHookOptions {
 
 /**
  * Compile one neutral **hook module** (a write-once composable authored against
- * `@mission-platform/forge`'s React-style hooks, *not* a UI component) to its
+ * `@mission-platform/forge-jsx`'s React-style hooks, *not* a UI component) to its
  * per-framework source (Stage 1).
  */
 export function compileHookModule(source: string, options: CompileHookOptions): CompiledModule {

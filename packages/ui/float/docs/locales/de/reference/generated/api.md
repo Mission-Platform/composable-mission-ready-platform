@@ -523,7 +523,7 @@ Zugänglichkeit:
 
 Die Animation zum Betreten/Verlassen stimmt über den Neutralleiter mit dem SFC Vue überein
 Grundelement **`<TransitionGroup>`**, das mit der integrierten Funktion von Vue kompiliert wird
-`<TransitionGroup>` und die CSS-Klassengruppe `@mission-platform/forge/react`
+`<TransitionGroup>` und die CSS-Klassengruppe `@mission-platform/forge-adapters/react`
 Fahrer. Die vier formatierten Ein-/Austrittsphasenklassen werden als **gehasht übergeben
 CSS-Modulklassen** (über die `<TransitionGroup>`-Klassen-Requisiten), also die
 Der Animationsstil bleibt komponentenbezogen, anstatt sich auf globale Elemente zu verlassen

@@ -66,7 +66,7 @@ i collegamenti ai pacchetti siano stabiliti correttamente.
 Esegui un test del fumo per assicurarti che il sistema di build e l'ambiente siano configurati correttamente:
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 IL `...` crea anche le dipendenze Forge richieste dal pacchetto. Il

@@ -8,7 +8,7 @@
  * `GenericRenderNode` tree — never from a parsed TypeScript source file:
  *
  * - the imports are rebuilt from the lowering plan (`../lower`): the neutral
- *   `@mission-platform/forge` import splits into a `react` value import
+ *   `@mission-platform/forge-jsx` import splits into a `react` value import
  *   (`h` → `createElement`, `Fragment`, the hooks) plus the retained
  *   neutral/local type imports, an `i18next` import gains the
  *   `@mission-platform/i18n` `useI18n` import, and relative sibling-component

@@ -1,4 +1,4 @@
-import { type MpRef, useEffect, useRef, useState } from '@mission-platform/forge';
+import { type MpRef, useEffect, useRef, useState } from '@mission-platform/forge-jsx';
 
 // ─── Minimal Web Speech (recognition) typings ──────────────────────────────
 //

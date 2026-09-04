@@ -523,7 +523,7 @@ Accessibilità:
 
 L'animazione di entrata/uscita corrisponde all'SFC Vue tramite il neutro
 Primitiva **`<TransitionGroup>`**, che viene compilata nel metodo integrato di Vue
-`<TransitionGroup>` e il gruppo di classi CSS `@mission-platform/forge/react`
+`<TransitionGroup>` e il gruppo di classi CSS `@mission-platform/forge-adapters/react`
 autista. Le quattro classi della fase di entrata/uscita con stile vengono passate come **hash
 Classi del modulo CSS** (tramite le prop della classe `<TransitionGroup>`), quindi il file
 lo stile dell'animazione rimane nell'ambito del componente invece di fare affidamento su quello globale

@@ -1,6 +1,6 @@
-import { isMpElement, Slot, type MpElement } from '@mission-platform/forge';
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
+import { isMpElement, Slot, type MpElement } from '@mission-platform/forge-jsx';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -11,7 +11,7 @@ import { ForgeDrawer } from './forge-drawer';
 
 /**
  * Exercises the **neutral** `ForgeDrawer` on both frameworks through the
- * `@mission-platform/forge` runtime adapters. During SSR the reactive breakpoint
+ * `@mission-platform/forge-jsx` runtime adapters. During SSR the reactive breakpoint
  * is `false`, so the overlay behaviour is exercised: an open drawer renders the
  * panel + backdrop, a closed one renders neither.
  */

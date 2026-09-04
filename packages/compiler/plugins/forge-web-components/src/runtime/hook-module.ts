@@ -8,7 +8,7 @@
  * (`useState`/`useRef`/`useEffect`/…) and the context primitives
  * (`createContext`/`useContext`) are the framework-neutral runtime baseline —
  * deliberately render-once, side-effect-free implementations (see
- * `@mission-platform/forge`'s `runtime/hooks.ts` / `runtime/context.ts`) — which
+ * `@mission-platform/forge-jsx`'s `runtime/hooks.ts` / `runtime/context.ts`) — which
  * stay perfectly valid, non-throwing glue for a plain `.ts` composable/context
  * module, so they are kept against the neutral package rather than remapped to
  * a bespoke Web-Components mechanism, mirroring how the React target needs no
@@ -68,7 +68,7 @@ function withSpecifier(entry: GenericImport, specifier: string): string {
 }
 
 /**
- * Build the replacement for the neutral `@mission-platform/forge` import: the
+ * Build the replacement for the neutral `@mission-platform/forge-jsx` import: the
  * pure compile-time markers are dropped, every other value (hooks, context
  * primitives, runtime utilities) stays imported from the neutral package,
  * `MpRenderProperty` redirects to the co-located

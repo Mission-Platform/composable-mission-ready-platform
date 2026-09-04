@@ -20,7 +20,7 @@
 
 ## מסגרת ליבה
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 הבסיס של ארכיטקטורת "כתוב פעם אחת", מספק זמן ריצה ו-hooks של JSX ניטרליים למסגרת.
 
@@ -32,8 +32,8 @@
 | `useMemo` | הוק | וו זיכרונות נייטרלי מסגרת.                                                     |
 | `useRef` | הוק | וו התייחסות ניטרלי למסגרת.                                                       |
 | `useContext` | הוק | וו הקשר ניטרלי למסגרת.                                                         |
-| `toVueComponent` | מתאם | ממירה רכיב חישול לרכיב Vue 3 (מ-`@mission-platform/forge/vue`).   |
-| `toReactComponent` | מתאם | ממירה רכיב זיוף לרכיב React (מ-`@mission-platform/forge/react`). |
+| `toVueComponent` | מתאם | ממירה רכיב חישול לרכיב Vue 3 (מ-`@mission-platform/forge-adapters/vue`).   |
+| `toReactComponent` | מתאם | ממירה רכיב זיוף לרכיב React (מ-`@mission-platform/forge-adapters/react`). |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ const router = createWebComponentsRouter({
 
 | חבילה | מטרה |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` | זמן ריצה ומתאמים של JSX ניטרליים למסגרת.                   |
+| `@mission-platform/forge-jsx` | זמן ריצה ומתאמים של JSX ניטרליים למסגרת.                   |
 | `@mission-platform/components` | רכיבי ממשק משתמש לכתיבה פעם אחת.                                     |
 | `@mission-platform/icons` | רכיבי סמל SVG לכתיבה חד פעמית.                               |
 | `@mission-platform/layouts` | רכיבי יישום, מיכל ופריסה רספונסיבית.     |

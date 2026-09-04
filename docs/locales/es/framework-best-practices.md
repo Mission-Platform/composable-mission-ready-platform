@@ -9,11 +9,11 @@ Este documento proporciona orientación sobre patrones idiomáticos, modelos de 
 
 ## Estrategia multimarco
 
-La filosofía central de Mission Platform es construir una vez y renderizar en todas partes. Esto se logra a través de **@mission-platform/forge**, el marco principal de la plataforma: un entorno de ejecución JSX neutral en el marco en el que se crean todos los componentes compartidos (todo excepto las aplicaciones) y desde el cual se procesan sin problemas en Vue 3, React y otros entornos compatibles.
+La filosofía central de Mission Platform es construir una vez y renderizar en todas partes. Esto se logra a través de **@mission-platform/forge-jsx**, el marco principal de la plataforma: un entorno de ejecución JSX neutral en el marco en el que se crean todos los componentes compartidos (todo excepto las aplicaciones) y desde el cual se procesan sin problemas en Vue 3, React y otros entornos compatibles.
 
 ### El dialecto de la forja
 Al crear paquetes compartidos, cree componentes utilizando las primitivas neutrales de Forge:
-- **JSX Factory**: Utilice `h` y `Fragment` de `@mission-platform/forge`.
+- **JSX Factory**: Utilice `h` y `Fragment` de `@mission-platform/forge-jsx`.
 - **Ganchos neutros**: Utilice `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback` y `useId`.
 - **Primitivas**: utilice `Slot`, `Teleport`, `Transition` y `Dynamic` para estructuras de interfaz de usuario complejas.
 
@@ -23,7 +23,7 @@ Vue 3 es el marco con el que se crean las aplicaciones en `apps/` y el principal
 
 ### Patrones idiomáticos
 - **API de composición**: utilice `<script setup lang="ts">` para todos los componentes nuevos.
-- **Integración de Forge**: Envuelva componentes neutros usando `toVueComponent` de `@mission-platform/forge/vue`.
+- **Integración de Forge**: Envuelva componentes neutros usando `toVueComponent` de `@mission-platform/forge-adapters/vue`.
 - **Composables**: extrae lógica con estado en funciones `useXxx` para promover la reutilización.
 
 ### Optimizaciones de rendimiento
@@ -37,7 +37,7 @@ React es compatible a través del adaptador de tiempo de ejecución de Forge, pr
 
 ### Patrones idiomáticos
 - **Componentes funcionales**: Utilice componentes funcionales con ganchos.
-- **Integración de Forge**: Envuelva componentes neutros usando `toReactComponent` de `@mission-platform/forge/react`.
+- **Integración de Forge**: Envuelva componentes neutros usando `toReactComponent` de `@mission-platform/forge-adapters/react`.
 - **Disciplina de Hooks**: sigue estrictamente las "Reglas de Hooks" para garantizar un comportamiento predecible.
 
 ### Optimizaciones de rendimiento
@@ -65,4 +65,4 @@ Mission Platform proporciona distintos niveles de soporte para otros marcos a tr
 ## Recursos relacionados
 - [Mejores prácticas](best-practices.md)
 - [Guía de prueba](testing.md)
-- [@mission-platform/forge LÉAME](../../../packages/compiler/forge/forge/README.md)
+- [@mission-platform/forge-jsx LÉAME](../../../packages/core/forge-jsx/README.md)

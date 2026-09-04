@@ -1,4 +1,4 @@
-import type { MpChild } from '@mission-platform/forge';
+import type { MpChild } from '@mission-platform/forge-jsx';
 
 export interface IconSvgNode {
   readonly element: string;

@@ -6,7 +6,7 @@
 > 言語: 日本語 (ja)
 
 Mission Platform は **Atomic Design** システムを使用して、コンポーネントを複雑な階層レベルに編成します。毎
-コンポーネントは、中立的な Forge JSX 方言 (`@mission-platform/forge`)、確保する
+コンポーネントは、中立的な Forge JSX 方言 (`@mission-platform/forge-jsx`)、確保する
 複数のフレームワークにわたる一貫性。
 
 ## 設計レベル
@@ -75,7 +75,7 @@ const meta = {
 
 ## オーサリング標準
 
-1. **フレームワークの中立性**: 決して別個に作成しない Vue そして React バージョン。使用 `@mission-platform/forge`。
+1. **フレームワークの中立性**: 決して別個に作成しない Vue そして React バージョン。使用 `@mission-platform/forge-jsx`。
 2. **命名**: コンポーネントは `Base` プレフィックス (例: `ForgeCard`) 特定の実装でない限り。
 3. **タイプ セーフティ**: エクスポート `*Properties` コンポーネントの小道具のインターフェース。
 4. **テスト**: 同じ場所にある `.spec.ts` すべてのコンポーネントに必要です。

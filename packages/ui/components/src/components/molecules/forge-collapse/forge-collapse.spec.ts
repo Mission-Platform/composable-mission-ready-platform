@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeCollapse } from './forge-collapse';
 
 /**
  * Exercises the **neutral** `ForgeCollapse` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/forge` runtime adapters.
+ * it on both frameworks through the `@mission-platform/forge-jsx` runtime adapters.
  * Covers the `<details>` shell, the fallback summary, the disabled modifier, and
  * the default-slot body.
  */

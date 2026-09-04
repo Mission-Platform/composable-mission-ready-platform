@@ -106,7 +106,7 @@ export const CLASS_NAME_ATTRIBUTE;
 `className={…}` (`class` 属性は静的文字列用に予約されています)、
 `classNames` ランタイム ヘルパーが受け入れるのと同じ引数を渡します。
 通常はクラス値の **配列** (`className={['base', { active }]}`)、
-ただし、単一の {@link import ('@mission-platform/forge').ClassValue} も機能します。
+ただし、単一の {@link import ('@mission-platform/forge-jsx').ClassValue} も機能します。
 この属性は、React 自身の `className` と同じスペルです (
 ランタイム ヘルパー (`classNames` のまま) なので、コンポーネントは独自のものをマージできます。
 名前なしで転送された `properties.className` を持つ計算クラス
@@ -154,7 +154,7 @@ export const COMPONENTS_JSX_MODULES;
 `@mission-platform/icons`、中立的な作成者はこれらからコンポーネントをインポートします
 パッケージ (例: `@mission-platform/components/forge-drawer` から `ForgeDrawer`、または
 `ForgeVerticalLayout` から `@mission-platform/layouts`)、型チェックを行います。
-ニュートラル ソースに対して、`@mission-platform/forge` を通じてレンダリングします。
+ニュートラル ソースに対して、`@mission-platform/forge-jsx` を通じてレンダリングします。
 単体テストのアダプター。生成されたフレームワークごとのソースは、以下にインポートされます。
 まったく同じ裸の指定子 — フレームワークの選択はそれぞれを通じて行われます。
 サブパス経由ではなく、パッケージの `mp:<framework>` エクスポート条件を使用します。
@@ -796,12 +796,12 @@ to エイリアス ({@link REACT_TYPE_ALIASES} とは異なります) ですが�
 `MpRenderProperty<S>`、スコープ付きスロット/レンダープロップ関数は、
 指定されたスコープのスロットのコンテンツ。
 
-生成されたファイル内で `@mission-platform/forge` インポートとして保持するのではなく、
+生成されたファイル内で `@mission-platform/forge-jsx` インポートとして保持するのではなく、
 コードでは、各フレームワーク ビルドが同じ場所に配置された小さなモジュールを生成します。
 **フレームワーク固有のバリアント**を定義する ({@link LOCAL_JSX_TYPES_MODULE})
 そのうちの — React は `ReactNode` を超え、Vue は `VNodeChild` を超えます — およびすべてのエミッター
 そこに型インポートをリダイレクトします (React および Vue `imports` ビルダーを参照)。
-したがって、生成されたソースにはニュートラル `@mission-platform/forge` が含まれません。
+したがって、生成されたソースにはニュートラル `@mission-platform/forge-jsx` が含まれません。
 render-prop **type** インポートはまったくありません。
 
 ### LOCAL_JSX_TYPES_FILE
@@ -867,7 +867,7 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 フレームワーク: ニュートラル レンダー プリミティブのフレームワーク固有のバリアント。
 {@link LOCAL_JSX_TYPE_NAMES} にあるため、生成されたコンポーネントがインポートされます
 ニュートラルではなく、このローカル モジュールからの `MpRenderProperty`
-`@mission-platform/forge` パッケージ。定義はフレームワークごとに異なります。
+`@mission-platform/forge-jsx` パッケージ。定義はフレームワークごとに異なります。
 「レンダリング可能なコンテンツ」の位置は React の `ReactNode` および Vue の `VNodeChild` です。
 したがって、各ビルドの宣言は、そのランタイムに合わせて慣用的に読み取られます。
 
@@ -944,7 +944,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 コンテキスト プリミティブである中立 **値** インポート。 React では、それらは * です*
 React 自体 (`createContext`/`useContext`) であるため、これらは
 `react` 値のインポート。 Vue では、インポートは
-`@mission-platform/forge/vue` アダプター (`provide`/`inject` 対応)
+`@mission-platform/forge-adapters/vue` アダプター (`provide`/`inject` 対応)
 `createContext`/`useContext`)。
 
 ### NEUTRAL_FRAMEWORK_COMPONENTS
@@ -958,15 +958,15 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 実際のフレームワークごとの **コンポーネント**である中立的な **値** インポート
 マーカー、ランタイム ユーティリティ、または React 独自のプリミティブよりも優れています。 JSX の使用法
 は変更されずに残されますが (コンポーネント タグのままです)、
-`import { … } from '@mission-platform/forge'` がターゲットに再マップされます
+`import { … } from '@mission-platform/forge-jsx'` がターゲットに再マップされます
 フレームワークのネイティブ実装: `Teleport` (ポータル プリミティブ) は次のようになります。
-`import { Teleport } from '@mission-platform/forge/react'` (`createPortal`)
+`import { Teleport } from '@mission-platform/forge-adapters/react'` (`createPortal`)
 React の場合はラッパー)、Vue の場合は `import { Teleport } from 'vue'` (組み込み)。
 `Transition` (enter/leave プリミティブ) は、
-`@mission-platform/forge/react` React および組み込み用の CSS クラス ドライバー
+`@mission-platform/forge-adapters/react` React および組み込み用の CSS クラス ドライバー
 Vue の場合は `import { Transition } from 'vue'`。 `TransitionGroup` (リスト
 enter/leave/move プリミティブ) も同じ方法で再マップされます (
-React 用の `@mission-platform/forge/react` グループ ドライバー、組み込み
+React 用の `@mission-platform/forge-adapters/react` グループ ドライバー、組み込み
 Vue の場合は `import { TransitionGroup } from 'vue'`)。
 
 ### ニュートラル_モジュール
@@ -989,7 +989,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 
 フレームワークに依存しないランタイム ユーティリティである中立 **値** インポート -
 すべてのターゲットで同じように動作するため、(`h` やフックとは異なります。
-フレームワークごとに翻訳/エイリアス化)、`import { … } from '@mission-platform/forge'`
+フレームワークごとに翻訳/エイリアス化)、`import { … } from '@mission-platform/forge-jsx'`
 生成された React および Vue ソースにそのまま保存する必要があります。
 
 ### NEUTRAL_VUE_RUNTIME_HOOKS
@@ -1113,7 +1113,7 @@ props インターフェイスの単一の (独自の) プロパティ — そ�
 export const REACT_ADAPTER_MODULE;
 ```
 
-React フレームワーク コンポーネントのインポート元の `@mission-platform/forge/react` サブパス。
+React フレームワーク コンポーネントのインポート元の `@mission-platform/forge-adapters/react` サブパス。
 
 ### REACT_TYPE_ALIASES
 
@@ -1126,7 +1126,7 @@ export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ファーストクラス React と同等の中立 **タイプ** 輸入品。
 `react` 自体。 React ターゲットでは、これらは React 名に書き換えられます。
 (`import type { … } from 'react'` をインポート) ニュートラルとして維持するのではなく
-`@mission-platform/forge` タイプなので、React の作成者には慣用的なタイプが表示されます。毎
+`@mission-platform/forge-jsx` タイプなので、React の作成者には慣用的なタイプが表示されます。毎
 発行されたソース内のニュートラル名への参照は、マップされたソース名に変更されます。
 React 名 (React エミッタを参照)。ニュートラルフック/レンダープリミティブそれぞれ
 正確に React に相当するものがあります。
@@ -1284,7 +1284,7 @@ function readHasSlotName(call: ts.CallExpression): string | undefined;
 function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
-モジュールの `import … from '@mission-platform/forge'` バインディングを検査します。
+モジュールの `import … from '@mission-platform/forge-jsx'` バインディングを検査します。
 
 #### パラメータ
 
@@ -1625,7 +1625,7 @@ Oxc モジュールまたは node が `i18next.t(...)` を呼び出すかどう�
 export const VUE_ADAPTER_MODULE;
 ```
 
-Vue コンテキスト プリミティブのインポート元の `@mission-platform/forge/vue` サブパス。
+Vue コンテキスト プリミティブのインポート元の `@mission-platform/forge-adapters/vue` サブパス。
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -1651,7 +1651,7 @@ export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ニュートラル **要素** プリミティブ `MpChild` および `MpElement` を次のように再宣言します。
 Vue の `VNodeChild` / `VNode`。 `jsxImportSource: 'vue'` a に基づいて
 生成された SFC の JSX 式のタイプは `JSX.Element` (つまり、Vue の `VNode`) です。
-中立的な `@mission-platform/forge` 定義を維持します (ブランド名は
+中立的な `@mission-platform/forge-jsx` 定義を維持します (ブランド名は
 `__mpElement`) は、すべての `const x: MpElement = <div/>` / を作成します。
 `MpChild[] = items.map(() => <li/>)` は、`vue-tsc` での型チェックに失敗します。 React
 代わりに、これらの名前を `ReactNode`/`ReactElement` に変更します (「
@@ -1803,7 +1803,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 1 つのニュートラル **フック モジュール** (に対して作成された追記型コンポーザブル) をコンパイルします。
-`@mission-platform/forge` の React スタイルのフック (UI コンポーネントではありません))
+`@mission-platform/forge-jsx` の React スタイルのフック (UI コンポーネントではありません))
 フレームワークごとのソース (ステージ 1)。
 
 #### パラメータ

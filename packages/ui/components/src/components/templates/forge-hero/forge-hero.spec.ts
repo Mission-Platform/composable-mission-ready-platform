@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeHero } from './forge-hero';
 
 /**
  * Exercises the **neutral** `ForgeHero` (which composes the neutral
- * `ForgeTypography`) on both frameworks through the `@mission-platform/forge`
+ * `ForgeTypography`) on both frameworks through the `@mission-platform/forge-jsx`
  * runtime adapters. Covers the eyebrow/title/subtitle props, the body default
  * slot, the `media` region + `has-media` modifier, and the alignment/size
  * modifiers.

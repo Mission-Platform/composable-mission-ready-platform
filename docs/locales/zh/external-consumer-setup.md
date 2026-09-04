@@ -9,7 +9,7 @@
 
 ## 通过条件选择框架
 
-Mission Platform 组件使用 `@mission-platform/forge` 编写一次，并在单个包中作为多个特定于框架的捆绑包（Vue 3、React、Solid 和 Web 组件）进行分发。
+Mission Platform 组件使用 `@mission-platform/forge-jsx` 编写一次，并在单个包中作为多个特定于框架的捆绑包（Vue 3、React、Solid 和 Web 组件）进行分发。
 
 要选择正确的捆绑包，您必须配置构建工具和 TypeScript 以使用 **自定义导出条件**。
 

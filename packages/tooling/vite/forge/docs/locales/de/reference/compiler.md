@@ -199,7 +199,7 @@ Der Treiber besitzt eine generische Orchestrierung. und jedes Zielpaket besitzt 
 
 ## Komponentenaufbauten
 
-Komponentenpakete erstellen neutrale Module gegen `@mission-platform/forge`, normalerweise über einen neutralen Komponentenzylinder.
+Komponentenpakete erstellen neutrale Module gegen `@mission-platform/forge-jsx`, normalerweise über einen neutralen Komponentenzylinder.
 `defineTsdownForgeComponents` erstellt einen Ziel-Build für jedes bereitgestellte Plugin. Für jedes Ziel gilt Folgendes:
 
 1. analysiert, normalisiert und analysiert die neutralen Komponentenmodule;

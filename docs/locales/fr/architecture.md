@@ -44,7 +44,7 @@ graph TD
 
 ## Moteur indépendant du framework : Forge
 
-Le cœur de Mission Platform est `@mission-platform/forge`, un modèle de création indépendant du framework pour les composants et
+Le cœur de Mission Platform est `@mission-platform/forge-jsx`, un modèle de création indépendant du framework pour les composants et
 composables. `@mission-platform/vite-plugin-forge` est le pilote neutre du compilateur : il analyse et normalise la source,
 crée une IR sémantique, exécute une analyse et une optimisation partagées et distribue à un destinataire explicitement fourni
 `FrameworkOutputPlugin`.

@@ -1,6 +1,6 @@
 # @mission-platform/observers
 
-Framework-neutral browser observer composables for Mission Platform. Authored once against the `@mission-platform/forge`
+Framework-neutral browser observer composables for Mission Platform. Authored once against the `@mission-platform/forge-jsx`
 neutral hooks and compiled to Vue 3, React 18/19, Solid, and Web Components.
 
 ## Hooks

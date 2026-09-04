@@ -20,7 +20,7 @@
 
 ## コアフレームワーク
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 「ライトワンス」アーキテクチャの基盤であり、フレームワークに依存しない JSX ランタイムとフックを提供します。
 
@@ -32,8 +32,8 @@
 | `useMemo` |フック |フレームワークに依存しないメモ化フック。                                                     |
 | `useRef` |フック |フレームワークに依存しない参照フック。                                                       |
 | `useContext` |フック |フレームワークに依存しないコンテキスト フック。                                                         |
-| `toVueComponent` |アダプター | forge コンポーネントを Vue 3 コンポーネント (`@mission-platform/forge/vue` から) に変換します。   |
-| `toReactComponent` |アダプター | forge コンポーネントを React コンポーネント (`@mission-platform/forge/react` から) に変換します。 |
+| `toVueComponent` |アダプター | forge コンポーネントを Vue 3 コンポーネント (`@mission-platform/forge-adapters/vue` から) に変換します。   |
+| `toReactComponent` |アダプター | forge コンポーネントを React コンポーネント (`@mission-platform/forge-adapters/react` から) に変換します。 |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ Forge Web Script アーティファクトは、`sha256-v1:<hex>` 形式のバー
 
 |パッケージ |目的 |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` |フレームワークに依存しない JSX ランタイムとアダプター。                   |
+| `@mission-platform/forge-jsx` |フレームワークに依存しない JSX ランタイムとアダプター。                   |
 | `@mission-platform/components` |ライトワンス UI コンポーネント。                                     |
 | `@mission-platform/icons` |ライトワンス SVG アイコン コンポーネント。                               |
 | `@mission-platform/layouts` |アプリケーション、コンテナ、およびレスポンシブ レイアウトのコンポーネント。     |

@@ -66,7 +66,7 @@ pnpm install
 스모크 테스트를 실행하여 빌드 시스템과 환경이 올바르게 구성되었는지 확인하세요.
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 그만큼 `...` 또한 패키지에 필요한 Forge 종속성을 빌드합니다. 는

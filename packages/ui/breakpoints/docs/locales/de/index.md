@@ -7,7 +7,7 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 
 `@mission-platform/breakpoints` bietet reaktionsfähige Haltepunkt-Dienstprogramme und **einmal beschreibbare** Ansichtsfensterkomponenten für
 Missionsplattform. Die Komponenten (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) werden einmal im Neutralen verfasst
-`@mission-platform/forge`-Dialekt und von `@mission-platform/vite-plugin-forge` zu **sowohl Vue 3 als auch React** kompiliert.
+`@mission-platform/forge-jsx`-Dialekt und von `@mission-platform/vite-plugin-forge` zu **sowohl Vue 3 als auch React** kompiliert.
 
 ## Exporte
 

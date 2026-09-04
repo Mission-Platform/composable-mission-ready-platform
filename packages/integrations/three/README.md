@@ -1,6 +1,6 @@
 # @mission-platform/three
 
-Framework-neutral Three.js integration for Mission Platform. Authored once against `@mission-platform/forge` and
+Framework-neutral Three.js integration for Mission Platform. Authored once against `@mission-platform/forge-jsx` and
 compiled to Vue 3 and React 18/19.
 
 ## Components

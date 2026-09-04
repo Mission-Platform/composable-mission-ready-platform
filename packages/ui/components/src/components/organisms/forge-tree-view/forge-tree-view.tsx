@@ -4,7 +4,7 @@ import {
   type MpElement,
   type MpRenderProperty,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 import { ForgeTreeViewItem } from './forge-tree-view-item';
 import styles from './forge-tree-view.module.scss';

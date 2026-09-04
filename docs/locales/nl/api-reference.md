@@ -20,7 +20,7 @@ pakket in plaats van deze pagina.
 
 ## Kernkader
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 De basis van de "write-once"-architectuur, die een raamwerkneutrale JSX-runtime en hooks biedt.
 
@@ -32,8 +32,8 @@ De basis van de "write-once"-architectuur, die een raamwerkneutrale JSX-runtime 
 | `useMemo` | Haak | Kaderneutrale memoisatiehaak.                                                     |
 | `useRef` | Haak | Kaderneutrale referentiehaak.                                                       |
 | `useContext` | Haak | Kaderneutrale contexthaak.                                                         |
-| `toVueComponent` | Adapter | Converteert een smederijcomponent naar een Vue 3-component (van `@mission-platform/forge/vue`).   |
-| `toReactComponent` | Adapter | Converteert een smederijcomponent naar een React-component (van `@mission-platform/forge/react`). |
+| `toVueComponent` | Adapter | Converteert een smederijcomponent naar een Vue 3-component (van `@mission-platform/forge-adapters/vue`).   |
+| `toReactComponent` | Adapter | Converteert een smederijcomponent naar een React-component (van `@mission-platform/forge-adapters/react`). |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ pakket in `packages/`, inclusief de getypte WebAssembly gevels.
 
 | Pakket | Doel |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` | Framework-neutrale JSX-runtime en adapters.                   |
+| `@mission-platform/forge-jsx` | Framework-neutrale JSX-runtime en adapters.                   |
 | `@mission-platform/components` | UI-componenten die eenmalig kunnen worden geschreven.                                     |
 | `@mission-platform/icons` | Eenmalig beschrijfbare SVG-pictogramcomponenten.                               |
 | `@mission-platform/layouts` | Applicatie-, container- en responsieve lay-outcomponenten.     |

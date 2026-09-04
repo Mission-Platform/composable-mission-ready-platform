@@ -35,7 +35,7 @@ Gli archivi di pacchetti evitano dipendenze specifiche del framework. Invece, se
 
 ## Regole di creazione
 
-1. **Indipendente dal framework**: non importare dagli hook `vue`, `react` o `@mission-platform/forge` all'interno del modulo negozio
+1. **Indipendente dal framework**: non importare dagli hook `vue`, `react` o `@mission-platform/forge-jsx` all'interno del modulo negozio
    stesso.
 2. **Tipi espliciti**: definisci ed esporta sempre un'interfaccia per lo stato del negozio.
 3. **Sicurezza SSR**: protegge l'accesso alle API del browser (ad esempio, `localStorage`) in modo che lo store possa essere inizializzato in un Node.js
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Consumo di negozi nei componenti
 
-Per utilizzare un archivio all'interno di un componente riscrivibile una sola volta, collegarlo utilizzando `useState` e `useEffect` da `@mission-platform/forge`:
+Per utilizzare un archivio all'interno di un componente riscrivibile una sola volta, collegarlo utilizzando `useState` e `useEffect` da `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

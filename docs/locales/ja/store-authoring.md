@@ -35,7 +35,7 @@ src/stores/
 
 ## オーサリングルール
 
-1. **フレームワークに依存しない**: ストア モジュール内の `vue`、`react`、または `@mission-platform/forge` フックからインポートしないでください。
+1. **フレームワークに依存しない**: ストア モジュール内の `vue`、`react`、または `@mission-platform/forge-jsx` フックからインポートしないでください。
    それ自体。
 2. **明示的なタイプ**: 常にストアの状態のインターフェイスを定義してエクスポートします。
 3. **SSR の安全性**: ブラウザ API (`localStorage` など) へのアクセスを保護し、Node.js でストアを初期化できるようにします。
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## コンポーネント内のストアの使用
 
-ライトワンスコンポーネント内でストアを使用するには、`@mission-platform/forge` から `useState` と `useEffect` を使用してストアをブリッジします。
+ライトワンスコンポーネント内でストアを使用するには、`@mission-platform/forge-jsx` から `useState` と `useEffect` を使用してストアをブリッジします。
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

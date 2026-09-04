@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeThemeComposer } from './forge-theme-composer';
 
 /**
  * Exercises the **neutral** `ForgeThemeComposer` through the
- * `@mission-platform/forge` runtime adapters. The composer resolves its (initial)
+ * `@mission-platform/forge-jsx` runtime adapters. The composer resolves its (initial)
  * `modelValue` config into `--mp-*` custom properties on its wrapper; the
  * assertions confirm cross-framework parity of that resolved inline style and
  * the forwarded content. The scoped-slot data + `onUpdateModelValue` handoff is

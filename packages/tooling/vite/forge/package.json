@@ -2,7 +2,7 @@
   "name": "@mission-platform/vite-plugin-forge",
   "version": "1.2.0",
   "license": "BSD-4-Clause",
-  "description": "A Vite plugin that compiles framework-neutral @mission-platform/forge components to React, Astro, Vue 3, Solid, Svelte, or Web Components at build time",
+  "description": "A Vite plugin that compiles framework-neutral @mission-platform/forge-jsx components to React, Astro, Vue 3, Solid, Svelte, or Web Components at build time",
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -62,7 +62,7 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/forge-plugin-api": "workspace:*",
     "@mission-platform/forge-router-plugin-api": "workspace:*",
     "@sveltejs/vite-plugin-svelte": "catalog:svelte",

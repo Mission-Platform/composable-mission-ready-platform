@@ -6,7 +6,7 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 > Lingua: Italiano (it)
 
 `@mission-platform/components` è la libreria dei componenti riscrivibili residui per Mission Platform. Ogni componente dentro
-questa libreria viene creata una volta utilizzando un dialetto JSX indipendente dal framework (tramite `@mission-platform/forge`) e quindi compilata in
+questa libreria viene creata una volta utilizzando un dialetto JSX indipendente dal framework (tramite `@mission-platform/forge-jsx`) e quindi compilata in
 creare il tempo negli output nativi **Vue 3**, **React**, **Svelte**, **Solid** e **Componente Web**.
 
 `ForgeTypography` è di proprietà del pacchetto `@mission-platform/typography` dedicato. Importalo piuttosto da quel pacchetto
@@ -16,7 +16,7 @@ che da `@mission-platform/components`.
 
 Questo pacchetto dimostra un'architettura cross-framework ad alta efficienza:
 
-- **Sorgente neutra**: i componenti sono scritti nei file `.tsx` utilizzando `@mission-platform/forge`.
+- **Sorgente neutra**: i componenti sono scritti nei file `.tsx` utilizzando `@mission-platform/forge-jsx`.
 - **Compilazione in due fasi**: Utilizzando `@mission-platform/vite-plugin-forge`, la fonte neutra viene trasformata in
   codice sorgente specifico del framework (Vue SFC e React TSX) e quindi compilato dalle rispettive toolchain native.
 - **Zero sovraccarico di runtime**: non sono presenti adattatori di runtime. I consumatori importano componenti nativi con il bare

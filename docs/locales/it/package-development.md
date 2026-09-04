@@ -139,7 +139,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### Regole di creazione
 
-1. **TypeScript Ovunque**: tutto il codice sorgente deve essere in `.ts` o `.tsx` (utilizzando `@mission-platform/forge`).
+1. **TypeScript Ovunque**: tutto il codice sorgente deve essere in `.ts` o `.tsx` (utilizzando `@mission-platform/forge-jsx`).
 2. **Neutralità del framework**: favorire la logica indipendente dal framework. I componenti devono essere creati una volta in Forge JSX per essere targetizzati
    molteplici quadri.
 3. **Isolamento**: i pacchetti non devono mai essere importati da `apps/`.

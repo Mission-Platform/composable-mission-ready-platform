@@ -44,7 +44,7 @@ graph TD
 
 ## Motor neutral en el marco: Forge
 
-El corazón de Mission Platform es `@mission-platform/forge`, un modelo de creación de marco neutral para componentes y
+El corazón de Mission Platform es `@mission-platform/forge-jsx`, un modelo de creación de marco neutral para componentes y
 componibles. `@mission-platform/vite-plugin-forge` es el controlador del compilador neutral: analiza y normaliza la fuente,
 construye IR semántica, ejecuta análisis y optimización compartidos y envía a un
 `FrameworkOutputPlugin`.

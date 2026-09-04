@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -21,7 +21,7 @@ const feedbackContract = JSON.parse(
 
 /**
  * Exercises the **neutral** `ForgeSpinner` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/forge` runtime adapters.
+ * on both frameworks through the `@mission-platform/forge-jsx` runtime adapters.
  * Covers the tone/size modifiers and the accessible label.
  */
 const ReactSpinner = toReactComponent(ForgeSpinner, 'Spinner');

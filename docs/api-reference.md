@@ -14,20 +14,32 @@ package rather than this page.
 
 ## Core Framework
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 The foundation of the "write-once" architecture, providing a framework-neutral JSX runtime and hooks.
 
-| Export             | Type     | Description                                                                             |
-| :----------------- | :------- | :-------------------------------------------------------------------------------------- |
-| `h`, `Fragment`    | Function | JSX factory and fragment for authoring components.                                      |
-| `useState`         | Hook     | Framework-neutral state hook.                                                           |
-| `useEffect`        | Hook     | Framework-neutral effect hook.                                                          |
-| `useMemo`          | Hook     | Framework-neutral memoization hook.                                                     |
-| `useRef`           | Hook     | Framework-neutral reference hook.                                                       |
-| `useContext`       | Hook     | Framework-neutral context hook.                                                         |
-| `toVueComponent`   | Adapter  | Converts a forge component to a Vue 3 component (from `@mission-platform/forge/vue`).   |
-| `toReactComponent` | Adapter  | Converts a forge component to a React component (from `@mission-platform/forge/react`). |
+| Export          | Type     | Description                                        |
+| :-------------- | :------- | :------------------------------------------------- |
+| `h`, `Fragment` | Function | JSX factory and fragment for authoring components. |
+| `useState`      | Hook     | Framework-neutral state hook.                      |
+| `useEffect`     | Hook     | Framework-neutral effect hook.                     |
+| `useMemo`       | Hook     | Framework-neutral memoization hook.                |
+| `useRef`        | Hook     | Framework-neutral reference hook.                  |
+| `useContext`    | Hook     | Framework-neutral context hook.                    |
+
+### @mission-platform/forge-adapters
+
+Framework-specific adapters for rendering neutral Forge JSX components. Each
+framework is exposed as an independent subpath so applications can select only
+the runtime they use.
+
+| Export             | Type    | Description                                                                                        |
+| :----------------- | :------ | :------------------------------------------------------------------------------------------------- |
+| `toVueComponent`   | Adapter | Converts a Forge component to a Vue 3 component from `@mission-platform/forge-adapters/vue`.       |
+| `toReactComponent` | Adapter | Converts a Forge component to a React component from `@mission-platform/forge-adapters/react`.     |
+| SolidJS primitives | Adapter | `Teleport`, `Transition`, and `TransitionGroup` from `@mission-platform/forge-adapters/solid`.     |
+| Svelte primitives  | Adapter | Raw HTML and transition helpers from `@mission-platform/forge-adapters/svelte`.                    |
+| Web Components     | Runtime | Native custom-element rendering primitives from `@mission-platform/forge-adapters/web-components`. |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -319,7 +331,7 @@ package in `packages/`, including the typed WebAssembly façades.
 
 | Package                        | Purpose                                                       |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge`      | Framework-neutral JSX runtime and adapters.                   |
+| `@mission-platform/forge-jsx`  | Framework-neutral JSX runtime and adapters.                   |
 | `@mission-platform/components` | Write-once UI components.                                     |
 | `@mission-platform/icons`      | Write-once SVG icon components.                               |
 | `@mission-platform/layouts`    | Application, container, and responsive layout components.     |

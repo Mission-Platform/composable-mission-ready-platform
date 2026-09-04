@@ -1,12 +1,12 @@
 // ─── Map context ──────────────────────────────────────────────────────────────
 //
-// Framework-neutral: authored once against the `@mission-platform/forge` context
+// Framework-neutral: authored once against the `@mission-platform/forge-jsx` context
 // primitives and compiled to React / Vue by `@mission-platform/vite-plugin-forge`
 // (React's own `createContext`/`useContext`; the `provide`/`inject`-backed Vue
 // adapter). `<MapLibre>` provides the loaded MapLibre `Map` instance through this
 // context, and descendant components/composables read it via {@link useMap}.
 
-import { createContext, type MpContext } from '@mission-platform/forge';
+import { createContext, type MpContext } from '@mission-platform/forge-jsx';
 
 import type { Map } from 'maplibre-gl';
 

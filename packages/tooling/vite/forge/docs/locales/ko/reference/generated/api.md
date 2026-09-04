@@ -106,7 +106,7 @@ export const CLASS_NAME_ATTRIBUTE;
 `className={…}`(`class` 속성은 정적 문자열용으로 예약되어 있음)
 `classNames` 런타임 도우미가 허용하는 것과 동일한 인수 전달 — 대부분
 일반적으로 클래스 값의 **배열**(`className={['base', { active }]}`),
-그러나 단일 {@link import ('@mission-platform/forge').ClassValue}도 작동합니다.
+그러나 단일 {@link import ('@mission-platform/forge-jsx').ClassValue}도 작동합니다.
 속성의 철자는 React의 자체 `className`와 동일합니다(
 `classNames`로 유지되는 런타임 도우미) 구성 요소가 자체 병합할 수 있음
 이름 지정 없이 전달된 `properties.className`을 사용하여 계산된 클래스
@@ -154,7 +154,7 @@ export const COMPONENTS_JSX_MODULES;
 `@mission-platform/icons`, 중립 작성자는 다음에서 구성 요소를 가져옵니다.
 패키지(예: `@mission-platform/components/forge-drawer`의 `ForgeDrawer` 또는
 `@mission-platform/layouts`의 `ForgeVerticalLayout`), 유형 확인
-중립 소스에 대해 `@mission-platform/forge`를 통해 렌더링합니다.
+중립 소스에 대해 `@mission-platform/forge-jsx`를 통해 렌더링합니다.
 단위 테스트의 어댑터. 생성된 프레임워크별 소스는 다음으로 가져옵니다.
 매우 동일한 지정자 - 프레임워크 선택은 각각을 통해 발생합니다.
 하위 경로를 통하지 않고 패키지의 `mp:<framework>` 내보내기 조건입니다.
@@ -796,12 +796,12 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 `MpRenderProperty<S>`, 범위가 지정된 슬롯/렌더링 소품 함수
 특정 범위에 대한 슬롯의 콘텐츠입니다.
 
-생성된 파일에서 `@mission-platform/forge` 가져오기로 유지하는 대신
+생성된 파일에서 `@mission-platform/forge-jsx` 가져오기로 유지하는 대신
 코드를 사용하면 각 프레임워크 빌드는 함께 배치된 작은 모듈을 내보냅니다.
 **프레임워크별 변형**을 정의하는 ({@link LOCAL_JSX_TYPES_MODULE})
 그 중 — React은 `ReactNode` 위에 있고, Vue은 `VNodeChild` 위에 있고 — 그리고 모든 이미터
 유형 가져오기를 그곳으로 리디렉션합니다(React 및 Vue `imports` 빌더 참조).
-따라서 생성된 소스에는 중립 `@mission-platform/forge`가 없습니다.
+따라서 생성된 소스에는 중립 `@mission-platform/forge-jsx`가 없습니다.
 render-prop **type** 가져오기를 전혀 수행하지 않습니다.
 
 ### LOCAL_JSX_TYPES_FILE
@@ -867,7 +867,7 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 프레임워크: 명명된 중립 렌더 프리미티브의 프레임워크별 변형
 {@link LOCAL_JSX_TYPE_NAMES}에서 생성된 구성요소를 가져옵니다.
 중립 대신 이 로컬 모듈의 `MpRenderProperty`
-`@mission-platform/forge` 패키지. 정의는 프레임워크마다 다릅니다.
+`@mission-platform/forge-jsx` 패키지. 정의는 프레임워크마다 다릅니다.
 "렌더링 가능한 콘텐츠" 위치는 React의 `ReactNode` 및 Vue의 `VNodeChild`입니다.
 따라서 각 빌드의 선언은 런타임에 대해 관용적으로 읽혀집니다.
 
@@ -944,7 +944,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 컨텍스트 프리미티브인 중립 **값** 가져오기입니다. React에서는 _그렇습니다_
 React 자신의 것(`createContext`/`useContext`)이므로
 `react` 값 가져오기; Vue에서 해당 가져오기는
-`@mission-platform/forge/vue` 어댑터(`provide`/`inject` 지원
+`@mission-platform/forge-adapters/vue` 어댑터(`provide`/`inject` 지원
 `createContext`/`useContext`).
 
 ### NEUTRAL_FRAMEWORK_COMPONENTS
@@ -958,15 +958,15 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 실제 프레임워크별 **구성 요소**인 중립 **값** 가져오기
 마커, 런타임 유틸리티 또는 React 자체 기본 요소보다 JSX 사용법
 그대로 유지되지만(구성요소 태그로 유지됨)
-`import { … } from '@mission-platform/forge'`이 대상에 다시 매핑됩니다.
+`import { … } from '@mission-platform/forge-jsx'`이 대상에 다시 매핑됩니다.
 프레임워크의 기본 구현: `Teleport`(포털 기본 요소)은
-`import { Teleport } from '@mission-platform/forge/react'`(`createPortal`
+`import { Teleport } from '@mission-platform/forge-adapters/react'`(`createPortal`
 React의 경우 래퍼) 및 Vue의 경우 `import { Teleport } from 'vue'`(내장);
 `Transition`(입력/나가기 기본 요소)는
-`@mission-platform/forge/react` React용 CSS 클래스 드라이버 및 내장
+`@mission-platform/forge-adapters/react` React용 CSS 클래스 드라이버 및 내장
 Vue에 대한 `import { Transition } from 'vue'`; `TransitionGroup`(목록
 입력/나가기/이동 기본 요소)는 같은 방식으로 다시 매핑됩니다(
-`@mission-platform/forge/react` React용 그룹 드라이버 내장
+`@mission-platform/forge-adapters/react` React용 그룹 드라이버 내장
 Vue에 대한 `import { TransitionGroup } from 'vue'`).
 
 ### 중립_모듈
@@ -989,7 +989,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 
 프레임워크에 구애받지 않는 런타임 유틸리티인 중립 **값** 가져오기 —
 모든 대상에서 동일하게 동작하므로(`h` 및 후크와 달리
-프레임워크별로 번역/별명 지정됨) 해당 `import { … } from '@mission-platform/forge'`
+프레임워크별로 번역/별명 지정됨) 해당 `import { … } from '@mission-platform/forge-jsx'`
 생성된 React 및 Vue 소스에서 그대로 보존되어야 합니다.
 
 ### NEUTRAL_VUE_RUNTIME_HOOKS
@@ -1113,7 +1113,7 @@ props 인터페이스의 단일(자체) 속성 — 이름, 선언된 유형 텍�
 export const REACT_ADAPTER_MODULE;
 ```
 
-React 프레임워크 구성 요소를 가져오는 `@mission-platform/forge/react` 하위 경로입니다.
+React 프레임워크 구성 요소를 가져오는 `@mission-platform/forge-adapters/react` 하위 경로입니다.
 
 ### REACT_TYPE_ALIASES
 
@@ -1126,7 +1126,7 @@ export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 일류 React와 동등한 중립 **유형** 수입품이 배송됩니다.
 `react` 자체. React 대상에서는 React 이름으로 다시 작성됩니다.
 (`import type { … } from 'react'` 가져옴) 중립으로 유지되지 않음
-`@mission-platform/forge` 유형이므로 React 작성자는 관용적 유형을 참조합니다. 매
+`@mission-platform/forge-jsx` 유형이므로 React 작성자는 관용적 유형을 참조합니다. 매
 방출된 소스의 중립 이름에 대한 참조는 매핑된 이름으로 변경됩니다.
 React 이름(React 이미터 참조) 중립 후크/렌더 프리미티브는 각각
 정확한 React 대응 항목이 있습니다.
@@ -1284,7 +1284,7 @@ function readHasSlotName(call: ts.CallExpression): string | undefined;
 function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
-모듈의 `import … from '@mission-platform/forge'` 바인딩을 검사합니다.
+모듈의 `import … from '@mission-platform/forge-jsx'` 바인딩을 검사합니다.
 
 #### 매개변수
 
@@ -1625,7 +1625,7 @@ Oxc 모듈 또는 node이 `i18next.t(...)`을 호출하는지 여부.
 export const VUE_ADAPTER_MODULE;
 ```
 
-Vue 컨텍스트 프리미티브를 가져오는 `@mission-platform/forge/vue` 하위 경로입니다.
+Vue 컨텍스트 프리미티브를 가져오는 `@mission-platform/forge-adapters/vue` 하위 경로입니다.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -1651,7 +1651,7 @@ export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 중립 **요소** 프리미티브 `MpChild` 및 `MpElement`를 다음과 같이 다시 선언합니다.
 Vue의 `VNodeChild` / `VNode`. `jsxImportSource: 'vue'`에서
 생성된 SFC의 JSX 표현식에는 `JSX.Element` 유형(예: Vue의 `VNode`)이 있습니다.
-중립적인 `@mission-platform/forge` 정의를 유지합니다(브랜드
+중립적인 `@mission-platform/forge-jsx` 정의를 유지합니다(브랜드
 `__mpElement`)는 모든 `const x: MpElement = <div/>` /
 `MpChild[] = items.map(() => <li/>)`이 `vue-tsc`에서 유형 확인에 실패했습니다. React
 대신 `ReactNode`/`ReactElement`로 이름을 바꿉니다(참조:
@@ -1803,7 +1803,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 하나의 중립 **후크 모듈**(1회 쓰기 컴포저블)을 컴파일합니다.
-`@mission-platform/forge`의 React 스타일 후크(UI 구성 요소 _아님_)를 해당 항목에 연결합니다.
+`@mission-platform/forge-jsx`의 React 스타일 후크(UI 구성 요소 _아님_)를 해당 항목에 연결합니다.
 프레임워크별 소스(1단계)
 
 #### 매개변수

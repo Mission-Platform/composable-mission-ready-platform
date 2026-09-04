@@ -13,7 +13,7 @@ import { forgeSvelteFramework } from '../../../../../compiler/plugins/forge-svel
 import { compileComponentModule } from './compiler-test-helpers';
 
 const CALENDAR_INITIALIZATION_SOURCE = `
-import { useState } from '@mission-platform/forge';
+import { useState } from '@mission-platform/forge-jsx';
 
 export function ForgeCalendar(properties: { value?: number }) {
   const initialBase = properties.value ?? 1;

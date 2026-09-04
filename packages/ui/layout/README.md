@@ -1,6 +1,6 @@
 # `@mission-platform/layouts`
 
-Mission Platform application layout components authored with `@mission-platform/forge` and exported for both Vue 3 and
+Mission Platform application layout components authored with `@mission-platform/forge-jsx` and exported for both Vue 3 and
 React.
 
 ---

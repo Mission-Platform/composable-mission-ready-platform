@@ -1,7 +1,7 @@
 # `@mission-platform/icons`
 
 Write-once SVG icon components for Mission Platform, authored in a framework-neutral JSX dialect
-(`@mission-platform/forge`) and compiled into native Vue 3, React, Solid, Svelte, and Web Component builds.
+(`@mission-platform/forge-jsx`) and compiled into native Vue 3, React, Solid, Svelte, and Web Component builds.
 
 ## Features
 

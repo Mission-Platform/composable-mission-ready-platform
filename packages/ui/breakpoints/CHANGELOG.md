@@ -14,7 +14,7 @@
 - Updated dependencies [f216404]
 - Updated dependencies [89aab02]
 - Updated dependencies [8a15dbc]
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/i18n@2.1.1
 
 ## 6.0.0
@@ -50,7 +50,7 @@
 - be97ac0: Use deterministic fixtures and interaction setup in React Storybook stories.
 - Updated dependencies [be97ac0]
   - @mission-platform/i18n@2.1.0
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
 
 ## 5.0.0
 
@@ -58,7 +58,7 @@
 
 - 204ed8e: split breakpoints into a framework-agnostic, write-once package
 
-  `@mission-platform/breakpoints` is now authored once in the neutral `@mission-platform/forge` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge` (mirroring `@mission-platform/icons`), replacing the hand-written Vue SFCs.
+  `@mission-platform/breakpoints` is now authored once in the neutral `@mission-platform/forge-jsx` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge` (mirroring `@mission-platform/icons`), replacing the hand-written Vue SFCs.
 
   - **New subpaths:** import components from `@mission-platform/breakpoints/vue` or `@mission-platform/breakpoints/react`. The framework-agnostic utilities (`breakpointKeys`, `breakpoints`, `getBreakpointValue`, `mediaQuery`, `maxMediaQuery`, `resolveBreakpoint`) and types now live on `@mission-platform/breakpoints/core`. The root `.` entry is the neutral JSX source barrel for write-once components.
   - **Breaking — root exports:** the root `.` entry no longer re-exports the core utilities/values; import them from `@mission-platform/breakpoints/core` instead.
@@ -103,7 +103,7 @@
   +import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
   ```
 
-  The `@mission-platform/forge` adapter subpaths (`/react`, `/vue`, `/solid`,
+  The `@mission-platform/forge-jsx` adapter subpaths (`/react`, `/vue`, `/solid`,
   `/web-components`, `/runtime`, `/jsx-globals`), the Storyblok wrappers (`/storyblok/react`, `/storyblok/vue`),
   `@mission-platform/router/redwood`,
   `@mission-platform/breakpoints/core` and every `…/styles` entry are unaffected.
@@ -173,7 +173,7 @@
 - Updated dependencies [3fb8ddb]
 - Updated dependencies [7d95459]
 - Updated dependencies [f67e304]
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
   - @mission-platform/i18n@2.0.0
 
 ## 4.0.0

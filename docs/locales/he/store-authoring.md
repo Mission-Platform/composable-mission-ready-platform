@@ -35,7 +35,7 @@ src/stores/
 
 ## כללי כתיבה
 
-1. **Framework Agnostic**: אין לייבא מ-`vue`, `react` או `@mission-platform/forge` ווים בתוך מודול החנות
+1. **Framework Agnostic**: אין לייבא מ-`vue`, `react` או `@mission-platform/forge-jsx` ווים בתוך מודול החנות
    עצמו.
 2. **סוגים מפורשים**: הגדר וייצא תמיד ממשק עבור מצב החנות.
 3. **בטיחות SSR**: שמירה על גישה לממשקי API של דפדפן (למשל, `localStorage`) כך שניתן לאתחל את החנות ב-Node.js
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## צריכת חנויות ברכיבים
 
-כדי להשתמש בחנות בתוך רכיב כתיבה פעם אחת, גשר עליו באמצעות `useState` ו-`useEffect` מ-`@mission-platform/forge`:
+כדי להשתמש בחנות בתוך רכיב כתיבה פעם אחת, גשר עליו באמצעות `useState` ו-`useEffect` מ-`@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

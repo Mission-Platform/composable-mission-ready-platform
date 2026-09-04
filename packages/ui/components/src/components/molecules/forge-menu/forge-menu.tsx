@@ -5,7 +5,7 @@ import {
   createForgeStyle,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 import { ForgeIconChevron, type IconDirection } from '@mission-platform/icons';
 
 import styles from './forge-menu.module.scss';

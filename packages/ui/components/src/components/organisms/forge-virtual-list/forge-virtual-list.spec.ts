@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeVirtualList, type VirtualListItemScope } from './forge-virtual-lis
 
 /**
  * Exercises the **neutral** `ForgeVirtualList` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/forge` runtime adapters.
+ * it on both frameworks through the `@mission-platform/forge-jsx` runtime adapters.
  * The key behaviour is the **scoped `row` slot** (`<Slot name="row" item index/>`),
  * which compiles to a Vue scoped slot and a React render-prop and is exercised
  * here through the adapters' named-slot forwarding.

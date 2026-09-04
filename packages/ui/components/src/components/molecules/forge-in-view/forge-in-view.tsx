@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 export type InViewAnimation = 'fade' | 'slide-up' | 'slide-left' | 'slide-right' | 'scale' | 'none';
 /** Size token — canonical 2xs → 2xl scale. */

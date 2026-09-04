@@ -1,5 +1,5 @@
 import { ForgeDropdown } from '@mission-platform/float';
-import { useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
 import { BLOCK_FORMAT_COMMANDS, type WysiwygCommand } from '../../../utils/commands';

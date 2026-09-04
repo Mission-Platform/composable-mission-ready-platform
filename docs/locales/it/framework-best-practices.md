@@ -9,11 +9,11 @@ Questo documento fornisce indicazioni su modelli idiomatici, modelli di reattivi
 
 ## Strategia multi-quadro
 
-La filosofia fondamentale di Mission Platform è costruire una volta ed eseguire il rendering ovunque. Ciò si ottiene tramite **@mission-platform/forge**, il framework principale della piattaforma: un runtime JSX indipendente dal framework in cui vengono creati tutti i componenti condivisi (tutto tranne le app) e da cui viene eseguito il rendering senza problemi in Vue 3, React e altri ambienti supportati.
+La filosofia fondamentale di Mission Platform è costruire una volta ed eseguire il rendering ovunque. Ciò si ottiene tramite **@mission-platform/forge-jsx**, il framework principale della piattaforma: un runtime JSX indipendente dal framework in cui vengono creati tutti i componenti condivisi (tutto tranne le app) e da cui viene eseguito il rendering senza problemi in Vue 3, React e altri ambienti supportati.
 
 ### Il dialetto della Forgia
 Quando crei pacchetti condivisi, crea componenti utilizzando le primitive neutre di Forge:
-- **JSX Factory**: utilizzare `h` e `Fragment` da `@mission-platform/forge`.
+- **JSX Factory**: utilizzare `h` e `Fragment` da `@mission-platform/forge-jsx`.
 - **Hook neutri**: utilizzare `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback` e `useId`.
 - **Primitive**: utilizzare `Slot`, `Teleport`, `Transition` e `Dynamic` per strutture UI complesse.
 
@@ -23,7 +23,7 @@ Vue 3 è il framework con cui sono create le applicazioni in `apps/` e la destin
 
 ### Modelli idiomatici
 - **API di composizione**: utilizzare `<script setup lang="ts">` per tutti i nuovi componenti.
-- **Integrazione Forge**: avvolgere i componenti neutri utilizzando `toVueComponent` da `@mission-platform/forge/vue`.
+- **Integrazione Forge**: avvolgere i componenti neutri utilizzando `toVueComponent` da `@mission-platform/forge-adapters/vue`.
 - **Componibili**: estrae la logica con stato nelle funzioni `useXxx` per promuovere la riusabilità.
 
 ### Ottimizzazioni delle prestazioni
@@ -37,7 +37,7 @@ React è supportato tramite l'adattatore runtime Forge, principalmente per integ
 
 ### Modelli idiomatici
 - **Componenti funzionali**: utilizza componenti funzionali con ganci.
-- **Integrazione Forge**: avvolgere i componenti neutri utilizzando `toReactComponent` da `@mission-platform/forge/react`.
+- **Integrazione Forge**: avvolgere i componenti neutri utilizzando `toReactComponent` da `@mission-platform/forge-adapters/react`.
 - **Disciplina degli Hooks**: seguire rigorosamente le "Regole degli Hooks" per garantire un comportamento prevedibile.
 
 ### Ottimizzazioni delle prestazioni
@@ -65,4 +65,4 @@ Mission Platform fornisce diversi livelli di supporto per altri framework tramit
 ## Risorse correlate
 - [Migliori pratiche](best-practices.md)
 - [Guida al test](testing.md)
-- [@mission-platform/forge LEGGIMI](../../../packages/compiler/forge/forge/README.md)
+- [@mission-platform/forge-jsx LEGGIMI](../../../packages/core/forge-jsx/README.md)

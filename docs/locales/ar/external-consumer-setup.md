@@ -9,7 +9,7 @@
 
 ## اختيار الإطار عبر الشروط
 
-يتم تأليف مكونات Mission Platform مرة واحدة باستخدام `@mission-platform/forge` ويتم توزيعها كحزم متعددة خاصة بإطار العمل (Vue 3 وReact وSolid وWeb Components) ضمن حزمة واحدة.
+يتم تأليف مكونات Mission Platform مرة واحدة باستخدام `@mission-platform/forge-jsx` ويتم توزيعها كحزم متعددة خاصة بإطار العمل (Vue 3 وReact وSolid وWeb Components) ضمن حزمة واحدة.
 
 لتحديد الحزمة الصحيحة، يجب عليك تكوين أداة البناء الخاصة بك وTypeScript لاستخدام **شروط التصدير المخصصة**.
 

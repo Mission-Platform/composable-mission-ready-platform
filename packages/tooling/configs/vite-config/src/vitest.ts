@@ -18,7 +18,7 @@ export interface VitestConfigOptions {
    *
    * Component packages contain two kinds of suites: cross-framework *parity*
    * specs, which render the neutral source on every framework through the
-   * `@mission-platform/forge` adapters and therefore need bare workspace imports
+   * `@mission-platform/forge-jsx` adapters and therefore need bare workspace imports
    * to stay neutral, and suites that mount a **compiled** framework build via a
    * bare specifier, which need the `mp:<framework>` condition. Listing the latter
    * here splits the run into two Vitest projects so each gets the resolution it

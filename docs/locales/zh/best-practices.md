@@ -59,7 +59,7 @@ done
 
 ### 框架中立组件
 
-只要有可能，就使用以下方式编写 UI 组件 `@mission-platform/forge` 方言。这使得组件能够
+只要有可能，就使用以下方式编写 UI 组件 `@mission-platform/forge-jsx` 方言。这使得组件能够
 编译并使用在 Vue, React, Svelte, Solid，以及Web Components，无需重写核心逻辑。配置
 消费者的解析器与匹配 `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`， 或者 `mp:web-component` 健康）状况。
 

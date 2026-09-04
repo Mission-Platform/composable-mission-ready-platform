@@ -93,7 +93,8 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/forge": "workspace:*"
+    "@mission-platform/forge-adapters": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*"
   },
   "peerDependencies": {
     "lit": "^3.0.0",

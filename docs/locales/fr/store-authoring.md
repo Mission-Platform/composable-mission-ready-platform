@@ -35,7 +35,7 @@ Les magasins de packages évitent les dépendances spécifiques au framework. Au
 
 ## Règles de création
 
-1. **Agnostique du framework** : n'importez pas à partir des hooks `vue`, `react` ou `@mission-platform/forge` à l'intérieur du module de magasin.
+1. **Agnostique du framework** : n'importez pas à partir des hooks `vue`, `react` ou `@mission-platform/forge-jsx` à l'intérieur du module de magasin.
    lui-même.
 2. **Types explicites** : définissez et exportez toujours une interface pour l'état du magasin.
 3. **Sécurité SSR** : protégez l'accès aux API du navigateur (par exemple, `localStorage`) afin que le magasin puisse être initialisé dans un Node.js.
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Consommer des magasins dans les composants
 
-Pour utiliser un magasin dans un composant à écriture unique, reliez-le à l'aide de `useState` et `useEffect` à partir de `@mission-platform/forge` :
+Pour utiliser un magasin dans un composant à écriture unique, reliez-le à l'aide de `useState` et `useEffect` à partir de `@mission-platform/forge-jsx` :
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

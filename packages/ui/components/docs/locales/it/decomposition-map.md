@@ -21,7 +21,7 @@ da questa migrazione.
 
 Questi componenti condividono la navigazione tramite tastiera, il focus mobile, lo stato dei menu/schede e
 contratti di interazione orientati alla navigazione. Le loro implementazioni neutre dipendono
-su `@mission-platform/forge`; utilizzano anche menu e controlli simili a tabelle
+su `@mission-platform/forge-jsx`; utilizzano anche menu e controlli simili a tabelle
 `@mission-platform/icons`, mentre il contenuto breadcrumb/navbar costituisce il file proprietario
 Pacchetto `@mission-platform/typography`. `ForgeNavbar` attualmente compone il file
 `ForgeDrawer` residuo, quindi per estrarre la navigazione è necessario mantenerlo
@@ -36,7 +36,7 @@ una dipendenza da `@mission-platform/components` nuovamente nella navigazione.
 
 La preoccupazione comune è il rendering di dati strutturati o ad alto volume, inclusi
 finestre, ordinamento, espansione dell'albero e presentazione dello stato. La fonte attuale
-utilizza `@mission-platform/forge` e, dove sono composti testo o glifi,
+utilizza `@mission-platform/forge-jsx` e, dove sono composti testo o glifi,
 `@mission-platform/typography` e `@mission-platform/icons`; questi dovrebbero rimanere
 dipendenze di livello inferiore di un pacchetto futuro. I componenti virtuali dovrebbero spostarsi con
 i loro stili/specifiche/storie co-localizzati, quindi il loro comportamento di aggancio neutro e cinque
@@ -60,7 +60,7 @@ albero di origine del pacchetto di dominio.
 
 I primi tre possiedono la semantica di caricamento/rendering dei media, mentre carosello e dispositivo
 simula l'aggiunta di presentazioni sui media. La loro fonte neutra dipende attualmente da
-`@mission-platform/forge` e, per i controlli del carosello, `@mission-platform/icons`;
+`@mission-platform/forge-jsx` e, per i controlli del carosello, `@mission-platform/icons`;
 non esiste alcuna dipendenza dai pacchetti estratti. Conservare il movimento ridotto e
 CSS per componente come parte di una mossa futura piuttosto che dividere il comportamento dei media
 dai suoi stili.
@@ -101,7 +101,7 @@ implementazioni duplicate come scorciatoia per la compatibilità.
 L'origine dei componenti residui è stata controllata per le importazioni dei pacchetti estratti:
 non ci sono importazioni di `@mission-platform/theme`, `@mission-platform/float` o
 `@mission-platform/select` sotto `packages/ui/components/src`. Componenti neutri
-utilizzare `@mission-platform/forge`, icone selezionate da `@mission-platform/icons`,
+utilizzare `@mission-platform/forge-jsx`, icone selezionate da `@mission-platform/icons`,
 tipografia da `@mission-platform/typography` e stili/utilità locali del pacchetto.
 Le storie possono importare il pacchetto barile per esercitare la superficie pubblica; non lo è
 una dipendenza di implementazione o un ciclo del pacchetto.

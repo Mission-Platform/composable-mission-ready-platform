@@ -1,4 +1,4 @@
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 /**
  * Framework-neutral MutationObserver hook.

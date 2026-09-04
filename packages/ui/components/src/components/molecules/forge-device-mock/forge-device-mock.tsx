@@ -5,7 +5,7 @@ import {
   type MpChild,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 import styles from './forge-device-mock.module.scss';
 
@@ -122,7 +122,7 @@ const defaultLabels: Record<DeviceMockType, string> = {
 /**
  * `ForgeDeviceMock` — a decorative device frame that wraps arbitrary screen
  * content (the default slot) in a `mobile`, `tablet`, `desktop`, or `browser`
- * chrome, authored once in the neutral JSX dialect (`@mission-platform/forge`)
+ * chrome, authored once in the neutral JSX dialect (`@mission-platform/forge-jsx`)
  * and compiled straight to React or Vue by
  * `@mission-platform/vite-plugin-forge`.
  *

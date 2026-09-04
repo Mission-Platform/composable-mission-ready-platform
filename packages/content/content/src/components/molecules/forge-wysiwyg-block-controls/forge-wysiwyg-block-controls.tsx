@@ -1,4 +1,4 @@
-import { createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 import {
   ForgeIconAlignCenter,
   ForgeIconAlignJustify,

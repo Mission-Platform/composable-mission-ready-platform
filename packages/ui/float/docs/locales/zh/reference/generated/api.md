@@ -523,7 +523,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 
 进入/离开动画通过中性点与 Vue SFC 相匹配
 **`<TransitionGroup>`** 原语，编译为 Vue 的内置
-`<TransitionGroup>` 和 `@mission-platform/forge/react` CSS 级组
+`<TransitionGroup>` 和 `@mission-platform/forge-adapters/react` CSS 级组
 司机。四种样式的进入/离开阶段类作为 **hashed 传递
 CSS-Module 类**（通过 `<TransitionGroup>` 类道具），因此
 动画样式保持组件范围，而不是依赖于全局

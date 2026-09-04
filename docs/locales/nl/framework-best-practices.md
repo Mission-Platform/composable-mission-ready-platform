@@ -9,11 +9,11 @@ Dit document biedt richtlijnen voor idiomatische patronen, reactiviteitsmodellen
 
 ## Multi-framework-strategie
 
-De kernfilosofie van het Mission Platform is om één keer te bouwen en overal weer te geven. Dit wordt bereikt via **@mission-platform/forge**, het primaire raamwerk van het platform: een raamwerkneutrale JSX-runtime waarin alle gedeelde componenten (alles behalve de apps) zijn geschreven en van waaruit ze naadloos worden weergegeven in Vue 3, React en andere ondersteunde omgevingen.
+De kernfilosofie van het Mission Platform is om één keer te bouwen en overal weer te geven. Dit wordt bereikt via **@mission-platform/forge-jsx**, het primaire raamwerk van het platform: een raamwerkneutrale JSX-runtime waarin alle gedeelde componenten (alles behalve de apps) zijn geschreven en van waaruit ze naadloos worden weergegeven in Vue 3, React en andere ondersteunde omgevingen.
 
 ### Het smedendialect
 Bij het bouwen van gedeelde pakketten, auteurscomponenten met behulp van de neutrale primitieven van Forge:
-- **JSX Factory**: gebruik `h` en `Fragment` van `@mission-platform/forge`.
+- **JSX Factory**: gebruik `h` en `Fragment` van `@mission-platform/forge-jsx`.
 - **Neutrale haken**: gebruik `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback` en `useId`.
 - **Primitieven**: gebruik `Slot`, `Teleport`, `Transition` en `Dynamic` voor complexe UI-structuren.
 
@@ -23,7 +23,7 @@ Vue 3 is het raamwerk waarmee de applicaties in `apps/` zijn gebouwd, en het pri
 
 ### Idiomatische patronen
 - **Compositie-API**: gebruik `<script setup lang="ts">` voor alle nieuwe componenten.
-- **Forge-integratie**: verpak neutrale componenten met `toVueComponent` van `@mission-platform/forge/vue`.
+- **Forge-integratie**: verpak neutrale componenten met `toVueComponent` van `@mission-platform/forge-adapters/vue`.
 - **Composables**: extraheer stateful logica in `useXxx`-functies om herbruikbaarheid te bevorderen.
 
 ### Prestatie-optimalisaties
@@ -37,7 +37,7 @@ React wordt ondersteund via de Forge runtime-adapter, voornamelijk voor externe 
 
 ### Idiomatische patronen
 - **Functionele componenten**: gebruik functionele componenten met haken.
-- **Forge-integratie**: verpak neutrale componenten met `toReactComponent` van `@mission-platform/forge/react`.
+- **Forge-integratie**: verpak neutrale componenten met `toReactComponent` van `@mission-platform/forge-adapters/react`.
 - **Hooks Discipline**: volg strikt de "Rules of Hooks" om voorspelbaar gedrag te garanderen.
 
 ### Prestatie-optimalisaties
@@ -65,4 +65,4 @@ Mission Platform biedt verschillende niveaus van ondersteuning voor andere raamw
 ## Gerelateerde bronnen
 - [Beste praktijken](best-practices.md)
 - [Gids voor testen](testing.md)
-- [@mission-platform/forge LEESMIJ](../../../packages/compiler/forge/forge/README.md)
+- [@mission-platform/forge-jsx LEESMIJ](../../../packages/core/forge-jsx/README.md)

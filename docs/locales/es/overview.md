@@ -23,7 +23,7 @@ garantiza una experiencia de usuario consistente en todo el conjunto de producto
 
 ### Marco múltiple por diseño
 
-Mission Platform introduce un paradigma de desarrollo neutral en cuanto al marco. Usando el dialecto `@mission-platform/forge` JSX,
+Mission Platform introduce un paradigma de desarrollo neutral en cuanto al marco. Usando el dialecto `@mission-platform/forge-jsx` JSX,
 los desarrolladores pueden crear componentes una vez y compilarlos en salidas nativas para Vue 3, React, Solid, Svelte y Web.
 Componentes. Esto prepara el código base para el futuro y permite una integración perfecta en diversos entornos frontend.
 
@@ -48,7 +48,7 @@ velocidad y calidad del código.
 
 Mission Platform se basa en una pila moderna y de alto rendimiento:
 
-- **Forge JSX (`@mission-platform/forge`)**: el marco de interfaz de usuario principal: un tiempo de ejecución JSX neutral en el marco en el que todos
+- **Forge JSX (`@mission-platform/forge-jsx`)**: el marco de interfaz de usuario principal: un tiempo de ejecución JSX neutral en el marco en el que todos
   Los componentes compartidos (todo excepto las aplicaciones) son de creación.
 - **Vue 3**: el marco con el que se construyen las aplicaciones en `apps/` y uno de varios objetivos de renderizado nativos para
   Componentes de forja.

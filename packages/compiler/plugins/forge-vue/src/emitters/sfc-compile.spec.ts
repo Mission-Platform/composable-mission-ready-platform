@@ -33,8 +33,8 @@ import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 /** The neutral import every fixture module declares. */
 const NEUTRAL_IMPORT = moduleImport(
-  "import type { MpElement } from '@mission-platform/forge';",
-  "@mission-platform/forge",
+  "import type { MpElement } from '@mission-platform/forge-jsx';",
+  "@mission-platform/forge-jsx",
   { typeNames: ["MpElement"], typeOnly: true },
 );
 
@@ -420,8 +420,8 @@ describe("the Vue emitter generates SFCs the Vue compiler accepts", () => {
     const module = semanticModule({
       imports: [
         moduleImport(
-          "import type { MpChild, MpElement } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import type { MpChild, MpElement } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           { typeNames: ["MpChild", "MpElement"], typeOnly: true },
         ),
       ],

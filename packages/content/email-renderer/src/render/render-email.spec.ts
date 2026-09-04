@@ -1,4 +1,4 @@
-import { Dynamic, h } from '@mission-platform/forge';
+import { Dynamic, h } from '@mission-platform/forge-jsx';
 import { describe, expect, it } from 'vitest';
 
 import { renderMarkdown } from '../markdown';

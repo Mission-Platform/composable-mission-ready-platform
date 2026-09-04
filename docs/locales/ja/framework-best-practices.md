@@ -9,11 +9,11 @@
 
 ## マルチフレームワーク戦略
 
-Mission Platform の中心的な哲学は、一度構築すればどこでもレンダリングできるということです。これは、プラットフォームの主要なフレームワークである **@mission-platform/forge** によって実現されます。フレームワークに依存しない JSX ランタイムであり、すべての共有コンポーネント (アプリを除くすべて) が作成され、そこから Vue 3、React、およびその他のサポートされている環境でシームレスにレンダリングされます。
+Mission Platform の中心的な哲学は、一度構築すればどこでもレンダリングできるということです。これは、プラットフォームの主要なフレームワークである **@mission-platform/forge-jsx** によって実現されます。フレームワークに依存しない JSX ランタイムであり、すべての共有コンポーネント (アプリを除くすべて) が作成され、そこから Vue 3、React、およびその他のサポートされている環境でシームレスにレンダリングされます。
 
 ### 鍛冶の方言
 共有パッケージを構築するときは、Forge のニュートラル プリミティブを使用してコンポーネントを作成します。
-- **JSX ファクトリー**: `@mission-platform/forge` から `h` および `Fragment` を使用します。
+- **JSX ファクトリー**: `@mission-platform/forge-jsx` から `h` および `Fragment` を使用します。
 - **ニュートラル フック**: `useState`、`useRef`、`useEffect`、`useMemo`、`useCallback`、および `useId` を使用します。
 - **プリミティブ**: 複雑な UI 構造には、`Slot`、`Teleport`、`Transition`、および `Dynamic` を使用します。
 
@@ -23,7 +23,7 @@ Vue 3 は、`apps/` のアプリケーションが構築されるフレームワ
 
 ### 慣用的なパターン
 - **Composition API**: すべての新しいコンポーネントに `<script setup lang="ts">` を使用します。
-- **Forge Integration**: `@mission-platform/forge/vue` から `toVueComponent` を使用してニュートラル コンポーネントをラップします。
+- **Forge Integration**: `@mission-platform/forge-adapters/vue` から `toVueComponent` を使用してニュートラル コンポーネントをラップします。
 - **コンポーザブル**: ステートフル ロジックを `useXxx` 関数に抽出して、再利用性を高めます。
 
 ### パフォーマンスの最適化
@@ -37,7 +37,7 @@ React は、主に外部統合と特定の内部ツールに対して、Forge �
 
 ### 慣用的なパターン
 - **機能コンポーネント**: フック付きの機能コンポーネントを使用します。
-- **Forge Integration**: `@mission-platform/forge/react` から `toReactComponent` を使用してニュートラル コンポーネントをラップします。
+- **Forge Integration**: `@mission-platform/forge-adapters/react` から `toReactComponent` を使用してニュートラル コンポーネントをラップします。
 - **フックの規律**: 予測可能な動作を保証するために「フックの規則」に厳密に従ってください。
 
 ### パフォーマンスの最適化
@@ -65,4 +65,4 @@ Mission Platform は、Forge アダプターを通じて他のフレームワー
 ## 関連リソース
 - [ベストプラクティス](best-practices.md)
 - [テストガイド](testing.md)
-- [@mission-platform/forge の README](../../../packages/compiler/forge/forge/README.md)
+- [@mission-platform/forge-jsx の README](../../../packages/core/forge-jsx/README.md)

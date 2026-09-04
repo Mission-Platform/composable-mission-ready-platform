@@ -1,4 +1,4 @@
-import { useEffect, useState } from '@mission-platform/forge';
+import { useEffect, useState } from '@mission-platform/forge-jsx';
 
 /** Per-utterance options applied to a {@link useSpeechSynthesis} `speak` call. */
 export interface SpeakOptions {

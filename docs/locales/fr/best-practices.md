@@ -59,7 +59,7 @@ Tout nouveau code source doit être écrit en TypeScript (`.ts`) ou Vue SFC avec
 
 ### Composants neutres par rapport au framework
 
-Dans la mesure du possible, créez des composants d'interface utilisateur à l'aide du `@mission-platform/forge` dialecte. Cela permet aux composants d'être
+Dans la mesure du possible, créez des composants d'interface utilisateur à l'aide du `@mission-platform/forge-jsx` dialecte. Cela permet aux composants d'être
 compilé et utilisé dans Vue, React, Svelte, Solidet les composants Web sans réécrire la logique de base. Configurez le
 le résolveur du consommateur avec la correspondance `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, ou `mp:web-component` condition.
 

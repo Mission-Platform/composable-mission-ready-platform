@@ -77,7 +77,7 @@ Als twee pakketten zo nauw met elkaar verbonden zijn dat ze voortdurend elkaars 
 ## Beste praktijken op het gebied van preventie
 
 1. **Volg de eenrichtingsverkeer**: houd u strikt aan de `Apps → Packages → Configs` afhankelijkheid richting.
-2. **Auteur Framework-neutrale logica**: gebruik `@mission-platform/forge` voor kernlogica om raamwerkspecifieke cycli te vermijden.
+2. **Auteur Framework-neutrale logica**: gebruik `@mission-platform/forge-jsx` voor kernlogica om raamwerkspecifieke cycli te vermijden.
 3. **Gebruik werkruimteprotocollen**: altijd gebruiken `workspace:*` om de interne afhankelijkheden te waarborgen pnpm correct kan oplossen
    de grafiek.
 4. **Controleer imports regelmatig**: let op de suggesties voor automatisch importeren in uw IDE, aangezien deze soms

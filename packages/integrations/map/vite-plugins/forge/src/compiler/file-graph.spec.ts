@@ -25,7 +25,7 @@ describe('createFileGraph', () => {
       writeFileSync(path.join(sourceRoot, 'ui', 'card', 'card.scss'), '.card {}');
       writeFileSync(
         path.join(sourceRoot, 'shared', 'use-card.ts'),
-        "import { useState } from '@mission-platform/forge';\nexport function useCard() { return useState(false); }\n",
+        "import { useState } from '@mission-platform/forge-jsx';\nexport function useCard() { return useState(false); }\n",
       );
 
       const graph = createFileGraph({

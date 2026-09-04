@@ -1,4 +1,4 @@
-import { useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 
 import { beginPointerDrag, clamp } from '../../../utils/pointer-drag/pointer-drag';
 

@@ -1,4 +1,11 @@
-import { createContext, h, type MpChild, type MpContext, type MpElement, useContext } from '@mission-platform/forge';
+import {
+  createContext,
+  h,
+  type MpChild,
+  type MpContext,
+  type MpElement,
+  useContext,
+} from '@mission-platform/forge-jsx';
 
 import { ICON_SYMBOL_DEFINITIONS } from './definitions';
 

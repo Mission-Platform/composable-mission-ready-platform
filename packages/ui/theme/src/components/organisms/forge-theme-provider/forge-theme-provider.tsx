@@ -1,4 +1,4 @@
-import { type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
+import { type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge-jsx';
 
 import {
   configureTheme,

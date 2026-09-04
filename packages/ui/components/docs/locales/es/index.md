@@ -6,7 +6,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > Idioma: Español (es)
 
 `@mission-platform/components` es la biblioteca de componentes residuales de escritura única para Mission Platform. Cada componente en
-esta biblioteca se crea una vez utilizando un dialecto JSX de marco neutral (a través de `@mission-platform/forge`) y luego se compila en
+esta biblioteca se crea una vez utilizando un dialecto JSX de marco neutral (a través de `@mission-platform/forge-jsx`) y luego se compila en
 tiempo de compilación en salidas nativas **Vue 3**, **React**, **Svelte**, **Solid** y **Componente web**.
 
 `ForgeTypography` es propiedad del paquete `@mission-platform/typography` dedicado. Importarlo desde ese paquete en lugar
@@ -16,7 +16,7 @@ que de `@mission-platform/components`.
 
 Este paquete demuestra una arquitectura entre marcos de alta eficiencia:
 
-- **Fuente neutral**: los componentes se escriben en archivos `.tsx` usando `@mission-platform/forge`.
+- **Fuente neutral**: los componentes se escriben en archivos `.tsx` usando `@mission-platform/forge-jsx`.
 - **Compilación en dos etapas**: Usando `@mission-platform/vite-plugin-forge`, la fuente neutra se transforma en
   código fuente específico del marco (Vue SFC y React TSX) y luego compilado por las respectivas cadenas de herramientas nativas.
 - **Cero gastos generales de tiempo de ejecución**: no hay adaptadores de tiempo de ejecución. Los consumidores importan componentes nativos con el producto básico.

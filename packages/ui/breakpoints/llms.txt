@@ -1,6 +1,6 @@
 # @mission-platform/breakpoints
 
-Responsive breakpoint utilities and **write-once** viewport components for Mission Platform. The components (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) are authored once in the neutral `@mission-platform/forge` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge`.
+Responsive breakpoint utilities and **write-once** viewport components for Mission Platform. The components (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) are authored once in the neutral `@mission-platform/forge-jsx` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge`.
 
 ## Subpath Exports
 

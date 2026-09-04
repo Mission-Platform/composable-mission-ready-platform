@@ -5,7 +5,7 @@
  * exact source text, so the import block is rebuilt from those records rather
  * than by transforming import declarations. Four rules apply:
  *
- * - the neutral `@mission-platform/forge` import is **split**: the reactive
+ * - the neutral `@mission-platform/forge-jsx` import is **split**: the reactive
  *   primitives the lowered body now uses come from `solid-js`, an explicit `h`
  *   from `solid-js/h`, the framework-agnostic runtime helpers (`classNames`)
  *   stay on the neutral package, the per-framework marker components come from
@@ -68,7 +68,7 @@ export interface NeutralImportNames {
   readonly types: readonly string[];
 }
 
-/** Read the value/type names imported from `@mission-platform/forge`. */
+/** Read the value/type names imported from `@mission-platform/forge-jsx`. */
 export function readNeutralImportNames(
   module: SemanticModule,
 ): NeutralImportNames {

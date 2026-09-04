@@ -304,7 +304,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
 
   // Carry a shared **helper module** (a relative value import that is not itself
   // a component) into the flat generated tree so the re-pointed `./<base>` import
-  // resolves at Stage 2. A helper that authors against `@mission-platform/forge`
+  // resolves at Stage 2. A helper that authors against `@mission-platform/forge-jsx`
   // (a composable or a `createContext` module) is a *neutral* module, so it is
   // compiled per-framework via {@link compileHookModule} (React `.tsx` / Vue
   // `.ts`) just like a hook-library module; a purely framework-agnostic helper
@@ -679,7 +679,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // neutral render primitives (`MpRenderProperty`, and the element primitives
   // where a target re-declares them) the emitters redirect those type imports to
   // (see `LOCAL_JSX_TYPE_NAMES`), so the generated components carry no neutral
-  // `@mission-platform/forge` render type import. Written once per tree; only
+  // `@mission-platform/forge-jsx` render type import. Written once per tree; only
   // referenced via `import type`, so it adds no runtime chunk and simply emits
   // its own `.d.ts` alongside the build.
   if (

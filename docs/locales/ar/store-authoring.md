@@ -35,7 +35,7 @@ src/stores/
 
 ## قواعد التأليف
 
-1. **غير محدد الإطار**: لا تقم بالاستيراد من خطافات `vue` أو `react` أو `@mission-platform/forge` داخل وحدة المتجر
+1. **غير محدد الإطار**: لا تقم بالاستيراد من خطافات `vue` أو `react` أو `@mission-platform/forge-jsx` داخل وحدة المتجر
    نفسها.
 2. **الأنواع الصريحة**: قم دائمًا بتحديد واجهة وتصديرها لحالة المتجر.
 3. **أمان SSR**: حماية الوصول إلى واجهات برمجة تطبيقات المتصفح (على سبيل المثال، `localStorage`) بحيث يمكن تهيئة المتجر في Node.js
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## استهلاك المخازن في المكونات
 
-لاستخدام مخزن ضمن مكون للكتابة مرة واحدة، قم بتوصيله باستخدام `useState` و`useEffect` من `@mission-platform/forge`:
+لاستخدام مخزن ضمن مكون للكتابة مرة واحدة، قم بتوصيله باستخدام `useState` و`useEffect` من `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

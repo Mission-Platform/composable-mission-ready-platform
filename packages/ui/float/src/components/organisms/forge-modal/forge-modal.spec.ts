@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeModal } from './forge-modal';
 
 /**
  * Exercises the **neutral** `ForgeModal` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/forge` runtime adapters. The
+ * on both frameworks through the `@mission-platform/forge-jsx` runtime adapters. The
  * component is a native `<dialog>` whose content always ships in the markup
  * (the UA hides it until `showModal()` runs on the client); the size variant,
  * title, body, footer, and close control must match across React and Vue.
