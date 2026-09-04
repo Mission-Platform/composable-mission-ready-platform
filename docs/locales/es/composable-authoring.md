@@ -1,18 +1,13 @@
-# Autoría componible
+# Composable Authoring
 
-Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
+Composables are the primary way to encapsulate and reuse reactive logic within the Mission Platform. To ensure these
+units of logic are portable across all supported UI frameworks, they are authored as **write-once** modules using the
+framework-neutral hooks provided by `@mission-platform/forge-jsx`.
 
-> Fuente en inglés: [docs/composable-authoring.md](../../composable-authoring.md)
-> Idioma: Español (es)
+## Directory Layout
 
-Los componibles son la forma principal de encapsular y reutilizar la lógica reactiva dentro de Mission Platform. Para asegurar estos
-Las unidades de lógica son portátiles en todos los marcos de UI compatibles, se crean como módulos de **escritura única** utilizando el
-ganchos neutrales proporcionados por `@mission-platform/forge`.
-
-## Diseño del directorio
-
-Cada elemento componible DEBE residir en su propio subdirectorio con nombre dentro `src/composables/`, acompañado de una prueba coubicada
-Lima y barril local.
+Each composable MUST reside in its own named subdirectory within `src/composables/`, accompanied by a co-located test
+file and a local barrel.
 
 ```text
 src/composables/
@@ -23,23 +18,23 @@ src/composables/
 └── index.ts                     # Package-level re-exports
 ```
 
-## Reglas de creación
+## Authoring Rules
 
-1. **Utilice Forge Hooks**: solo importe primitivas reactivas (p. ej., `useState`, `useEffect`, `useMemo`, `useRef`) de
-   `@mission-platform/forge`. Nunca importe directamente desde `vue` o `react`.
-2. **Convención de nomenclatura**: Los nombres componibles deben usar kebab-case y tener el prefijo `use-` (e.g., `use-media-query`).
-3. **Seguridad SSR**: asegúrese de que la lógica sea segura para la representación del lado del servidor. Proteja cualquier acceso a API exclusivas del navegador como `window`,
-   `document`, o `localStorage`.
-4. **Sin componentes de interfaz de usuario**: los elementos componibles deben centrarse en la lógica. No devuelva ni manipule los componentes de la interfaz de usuario directamente; en cambio,
-   estado de devolución, referencias o devoluciones de llamada.
-5. **Pruebas obligatorias**: cada elemento componible debe tener una ubicación compartida `.spec.ts` archivo usando Vitest.
+1. **Use Forge Hooks**: Only import reactive primitives (e.g., `useState`, `useEffect`, `useMemo`, `useRef`) from
+   `@mission-platform/forge-jsx`. Never import directly from `vue` or `react`.
+2. **Naming Convention**: Composable names must use kebab-case and be prefixed with `use-` (e.g., `use-media-query`).
+3. **SSR Safety**: Ensure logic is safe for Server-Side Rendering. Guard any access to browser-only APIs like `window`,
+   `document`, or `localStorage`.
+4. **No UI Components**: Composables should focus on logic. Do not return or manipulate UI components directly; instead,
+   return state, refs, or callbacks.
+5. **Mandatory Testing**: Every composable must have a co-located `.spec.ts` file using Vitest.
 
-## Ejemplo básico
+## Basic Example
 
-A continuación se muestra un elemento componible típico de escritura única que administra un detector de eventos.
+Here is a typical write-once composable that manages an event listener.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,
@@ -53,6 +48,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);
@@ -61,18 +57,18 @@ export function useEventListener(
 }
 ```
 
-## Andamio
+## Scaffolding
 
-La forma más rápida de crear un nuevo elemento componible es a través de la herramienta MCP de Mission Platform Developer:
+The fastest way to create a new composable is via the Mission Platform Developer MCP tool:
 
 ```bash
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```
 
-## Guías relacionadas
+## Related Guides
 
-- [Desarrollo de paquetes](package-development.md)
-- [Diseño de componentes atómicos](atomic-component-design.md)
-- [Creación de tiendas](store-authoring.md)
-- [Autoría de utilidades](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
