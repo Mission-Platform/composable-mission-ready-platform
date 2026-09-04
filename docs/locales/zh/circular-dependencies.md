@@ -1,90 +1,85 @@
-# 循环依赖管理
+# Circular Dependency Management
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+This document explains the impact of circular dependencies within the Mission Platform monorepo and provides a **How-to
+guide** for detecting, resolving, and preventing them. It serves as both an **Explanation** of monorepo health and a
+technical recipe for refactoring.
 
-> 英文原文: [docs/circular-dependencies.md](../../circular-dependencies.md)
-> 语言: 简体中文 (zh)
+## What are Circular Dependencies?
 
-本文档解释了 Mission Platform monorepo 中循环依赖关系的影响，并提供了 **操作方法
-检测、解决和预防这些问题的指南**。它既可以作为 monorepo 健康状况的**解释**，也可以作为
-重构的技术秘诀。
+A circular dependency occurs when two or more packages depend on each other, either directly or indirectly. For example:
 
-## 什么是循环依赖？
+- Package A imports from Package B.
+- Package B imports from Package A.
 
-当两个或多个包直接或间接相互依赖时，就会发生循环依赖。例如：
+In a monorepo, these cycles are particularly harmful because they can cause:
 
-- 包 A 从包 B 导入。
-- 包 B 从包 A 导入。
+- **Build Failures**: Dependency graph resolution (e.g., by Turborepo or pnpm) can deadlock or fail.
+- **Runtime Errors**: One module may be partially initialized when the other attempts to use its exports.
+- **Increased Coupling**: Packages become impossible to use or test in isolation.
 
-在单一存储库中，这些循环特别有害，因为它们可能导致：
+## Detection
 
-- **构建失败**：依赖图解析（例如，通过 Turborepo 或 pnpm) 可能会死锁或失败。
-- **运行时错误**：当另一个模块尝试使用其导出时，一个模块可能会部分初始化。
-- **增加耦合**：包变得不可能单独使用或测试。
-
-## 检测
-
-Mission Platform 使用多种自动化工具在循环依赖关系到达生产环境之前捕获它们。
+Mission Platform uses several automated tools to catch circular dependencies before they reach production.
 
 ### ESLint `no-restricted-paths`
 
-我们共同的 ESLint 配置强制执行单向依赖流。如果您尝试从包中导入
-应该在层次结构中“高于”你的，linter 会抛出错误。
+Our shared ESLint configuration enforces the one-way dependency flow. If you attempt to import from a package that
+should be "above" yours in the hierarchy, the linter will throw an error.
 
-运行 linter 检查是否存在违规行为：
+Run the linter to check for violations:
 
 ```bash
 pnpm lint
 ```
 
-### 使用 Madge 进行手动审核
+### Manual Audit with Madge
 
-对于跨越多个文件的复杂循环，您可以使用 `madge` （如果已安装）或类似的可视化工具来映射
-依赖图。
+For complex cycles that span multiple files, you can use `madge` (if installed) or similar visualizers to map the
+dependency graph.
 
-## 操作方法：解决循环依赖关系
+## How-to: Resolve Circular Dependencies
 
-当检测到循环依赖时，请使用以下策略之一来解决它。
+When a circular dependency is detected, use one of the following strategies to resolve it.
 
-### 策略一：提取共享代码（推荐）
+### Strategy 1: Extract Shared Code (Recommended)
 
-如果包 A 和包 B 都需要一个公共逻辑块，则将该逻辑移至一个新的、较低级别的包中（例如，
+If Package A and Package B both need a common piece of logic, move that logic into a new, lower-level package (e.g.,
 `packages/utils-shared`).
 
-**前**：
+**Before**:
 
-- 套餐 A ↔ 套餐 B
+- Package A ↔ Package B
 
-**后**：
+**After**:
 
-- 套餐A → 套餐C
-- 套餐 B → 套餐 C
+- Package A → Package C
+- Package B → Package C
 
-### 策略2：依赖倒置
+### Strategy 2: Dependency Inversion
 
-让包 B 接受所需的功能作为 prop，而不是直接从包 A 导入包 B
-配置对象，或通过事件总线。
+Instead of Package B importing directly from Package A, have Package B accept the required functionality as a prop, a
+configuration object, or via an event bus.
 
-**示例**：
-而不是 `AuthService` 输入 `UserService` 更新个人资料， `AuthService` 可以发射出 `AUTH_SUCCESS` 事件
-那个 `UserService` 听.
+**Example**:
+Instead of `AuthService` importing `UserService` to update a profile, `AuthService` can emit an `AUTH_SUCCESS` event
+that `UserService` listens for.
 
-### 策略 3：整合
+### Strategy 3: Consolidation
 
-如果两个包紧密耦合以至于它们不断需要彼此的内部结构，那么它们实际上可能是一个
-单个逻辑单元。考虑将它们合并到一个包中。
+If two packages are so tightly coupled that they constantly require each other's internals, they might actually be a
+single logical unit. Consider merging them into one package.
 
-## 预防最佳实践
+## Prevention Best Practices
 
-1. **遵循单向流程**：严格遵守 `Apps → Packages → Configs` 依赖方向。
-2. **作者框架中立逻辑**：使用 `@mission-platform/forge` 用于核心逻辑以避免特定于框架的循环。
-3. **使用工作区协议**：始终使用 `workspace:*` 用于内部依赖关系以确保 pnpm 可以正确解决
-   图表。
-4. **定期审核导入**：注意 IDE 中的“自动导入”建议，因为它们有时会引入
-   意外的跨包依赖。
+1. **Follow the One-Way Flow**: Strictly adhere to the `Apps → Packages → Configs` dependency direction.
+2. **Author Framework-Neutral Logic**: Use `@mission-platform/forge-jsx` for core logic to avoid framework-specific cycles.
+3. **Use Workspace Protocols**: Always use `workspace:*` for internal dependencies to ensure pnpm can correctly resolve
+   the graph.
+4. **Regularly Audit Imports**: Pay attention to "auto-import" suggestions in your IDE, as they can sometimes introduce
+   unintended cross-package dependencies.
 
-## 相关文档
+## Related Documentation
 
-- [最佳实践](best-practices.md)
-- [工作区结构](workspace-structure.md)
-- [故障排除指南](troubleshooting.md)
+- [Best Practices](best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting Guide](troubleshooting.md)
