@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/website",
   "private": true,
-  "version": "0.0.9",
+  "version": "0.0.10",
   "license": "BSD-4-Clause",
   "description": "Mission Platform public documentation and product website",
   "type": "module",

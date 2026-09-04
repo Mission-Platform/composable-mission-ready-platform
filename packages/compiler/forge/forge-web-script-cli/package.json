@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-web-script-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Standalone Forge Web Script v1 compiler and checker CLI",
   "type": "module",
   "bin": {

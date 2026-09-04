@@ -1,5 +1,12 @@
 # @mission-platform/forge-web-script-lsp
 
+## 0.2.1
+
+### Patch Changes
+
+- 7788642: Update the language server text document dependency.
+  - @mission-platform/forge-web-script-language-service@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

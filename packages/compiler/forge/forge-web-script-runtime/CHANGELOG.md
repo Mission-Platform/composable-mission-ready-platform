@@ -1,5 +1,12 @@
 # @mission-platform/forge-web-script-runtime
 
+## 0.2.1
+
+### Patch Changes
+
+- 7788642: Reject re-entrant execution of reusable Forge Web Script VM instances.
+  - @mission-platform/forge-web-script@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

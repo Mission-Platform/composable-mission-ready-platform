@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-router-redwood",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Forge router target for RedwoodSDK",
   "type": "module",
   "sideEffects": false,

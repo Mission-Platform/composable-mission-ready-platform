@@ -1,5 +1,19 @@
 # @mission-platform/select
 
+## 1.1.1
+
+### Patch Changes
+
+- 7788642: Render the language switcher without an implicit icon sprite provider.
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/typography@1.1.1
+  - @mission-platform/float@1.1.1
+
 ## 1.1.0
 
 ### Minor Changes

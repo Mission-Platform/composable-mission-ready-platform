@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/barcode",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "BSD-4-Clause",
   "description": "Dependency-free 1D (linear) barcode encoder and decoder backed by Forge Web Script with a typed ES module wrapper and a write-once React/Vue component",
   "type": "module",

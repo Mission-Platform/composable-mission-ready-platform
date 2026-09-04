@@ -1,5 +1,22 @@
 # @mission-platform/layouts
 
+## 2.1.1
+
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/components@3.1.1
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/harper@0.2.2
+  - @mission-platform/hunspell@0.4.2
+  - @mission-platform/phone-number@0.3.2
+  - @mission-platform/forms-core@0.3.1
+  - @mission-platform/tokens@2.0.0
+
 ## 2.1.0
 
 ### Minor Changes
@@ -107,7 +124,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc

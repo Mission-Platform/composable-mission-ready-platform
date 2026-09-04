@@ -1,5 +1,23 @@
 # @mission-platform/docs
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+  - @mission-platform/components@3.1.1
+  - @mission-platform/forms@2.1.1
+  - @mission-platform/i18n@2.1.2
+  - @mission-platform/layouts@2.1.1
+  - @mission-platform/router@1.1.1
+  - @mission-platform/select@1.1.1
+  - @mission-platform/content@1.1.1
+  - @mission-platform/theme@1.1.1
+  - @mission-platform/forge-router-web-components@0.1.2
+  - @mission-platform/seo@0.3.4
+  - @mission-platform/tokens@2.0.0
+
 ## 0.0.3
 
 ### Patch Changes

@@ -1,5 +1,30 @@
 # @mission-platform/website
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/breakpoints@6.0.2
+  - @mission-platform/components@3.1.1
+  - @mission-platform/forms@2.1.1
+  - @mission-platform/i18n@2.1.2
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/layouts@2.1.1
+  - @mission-platform/qr-code@2.1.1
+  - @mission-platform/select@1.1.1
+  - @mission-platform/typography@1.1.1
+  - @mission-platform/content@1.1.1
+  - @mission-platform/theme@1.1.1
+  - @mission-platform/hunspell@0.4.2
+  - @mission-platform/seo@0.3.4
+  - @mission-platform/tokens@2.0.0
+
 ## 0.0.9
 
 ### Patch Changes

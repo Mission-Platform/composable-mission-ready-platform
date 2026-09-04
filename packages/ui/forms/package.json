@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forms",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "BSD-4-Clause",
   "description": "Write-once Mission Platform form builder and schema form authored with @mission-platform/forge-jsx and shipped as Vue, React, Svelte, Solid, and Web Component outputs",
   "type": "module",

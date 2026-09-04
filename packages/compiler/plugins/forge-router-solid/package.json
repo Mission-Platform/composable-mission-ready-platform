@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-router-solid",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Forge router target for SolidJS Router",
   "type": "module",
   "sideEffects": false,

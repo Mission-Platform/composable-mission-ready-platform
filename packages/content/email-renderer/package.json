@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/email-renderer",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Framework-agnostic email, Markdown, and browser renderer for Forge component trees",
   "type": "module",
   "sideEffects": false,

@@ -1,5 +1,13 @@
 # @mission-platform/email-renderer
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [355f413]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+
 ## 0.1.2
 
 ### Patch Changes
