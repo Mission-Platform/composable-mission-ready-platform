@@ -1,80 +1,75 @@
-# نظرة عامة على منصة المهمة
+# Mission Platform Overview
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+Mission Platform is a composable, package-driven, framework-neutral component platform designed for building
+production-ready applications with reusable building blocks. It leverages a modern monorepo architecture to provide a
+highly efficient development environment for complex, multi-application ecosystems.
 
-> المصدر الإنجليزي: [docs/overview.md](../../overview.md)
-> اللغة: العربية (ar)
+## The Composable Philosophy
 
-Mission Platform عبارة عن منصة مكونة قابلة للتركيب وموجهة بالحزمة ومحايدة للإطار ومصممة للبناء
-تطبيقات جاهزة للإنتاج مع وحدات بناء قابلة لإعادة الاستخدام. إنه يستفيد من بنية monorepo الحديثة لتوفير
-بيئة تطوير عالية الكفاءة للأنظمة البيئية المعقدة ومتعددة التطبيقات.
+At its core, Mission Platform is built on the principle of **composition over inheritance**. Instead of providing a
+monolithic framework that dictates application structure, the platform offers a suite of small, focused, and highly
+interoperable packages.
 
-## الفلسفة المركبة
+### Composable Building Blocks
 
-تم بناء Mission Platform في جوهره على مبدأ **التركيب على الميراث**. بدلاً من تقديم أ
-إطار عمل متجانس يحدد بنية التطبيق، توفر المنصة مجموعة من التطبيقات الصغيرة والمركزة وعالية الجودة
-حزم قابلة للتشغيل البيني.
+Applications are assembled from shared packages, ensuring that common logic—from UI components to internationalisation
+and routing—is authored once and reused everywhere. This approach reduces duplication, simplifies maintenance, and
+ensures a consistent user experience across the entire product suite.
 
-### اللبنات المركبة
+### Multi-Framework by Design
 
-يتم تجميع التطبيقات من حزم مشتركة، مما يضمن المنطق المشترك - بدءًا من مكونات واجهة المستخدم وحتى التدويل
-والتوجيه — يتم تأليفه مرة واحدة وإعادة استخدامه في كل مكان. هذا الأسلوب يقلل من الازدواجية، ويبسط الصيانة، و
-يضمن تجربة مستخدم متسقة عبر مجموعة المنتجات بأكملها.
+Mission Platform introduces a framework-neutral development paradigm. Using the `@mission-platform/forge-jsx` JSX dialect,
+developers can author components once and compile them to native outputs for Vue 3, React, Solid, Svelte, and Web
+Components. This future-proofs the codebase and allows for seamless integration into diverse frontend environments.
 
-### أطر متعددة حسب التصميم
+### Type-Safe Foundation
 
-تقدم Mission Platform نموذجًا تنمويًا محايدًا للإطار. باستخدام `@mission-platform/forge` لهجة جي إس إكس،
-يمكن للمطورين تأليف المكونات مرة واحدة وتجميعها إلى مخرجات أصلية Vue 3, React, Solid, Svelte، والويب
-المكونات. يعمل هذا على إثبات قاعدة التعليمات البرمجية في المستقبل ويسمح بالتكامل السلس في بيئات الواجهة الأمامية المتنوعة.
+The entire platform is authored in **TypeScript**, providing a robust, self-documenting developer experience. Explicit
+typing across all public APIs ensures that errors are caught at compile-time, significantly increasing development
+velocity and code quality.
 
-### مؤسسة النوع الآمن
+## Key Features
 
-تم تأليف المنصة بأكملها في **TypeScript**، توفير تجربة مطور قوية ذاتية التوثيق. صريح
-الكتابة عبر جميع واجهات برمجة التطبيقات العامة تضمن اكتشاف الأخطاء في وقت الترجمة، مما يزيد بشكل كبير من التطوير
-السرعة وجودة الكود.
+| Feature               | Description                                                                                                                                                            |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX Runtime** | A framework-neutral JSX dialect: author once and build for Vue 3, React, Svelte, Solid, and Web Components with zero runtime overhead. |
+| **Component Library** | A comprehensive set of layout, typography, and interactive components authored once for multiple frameworks.                                           |
+| **Design Tokens**     | A DTCG-compliant token system that generates SCSS and TypeScript artifacts for consistent theming.                                                     |
+| **Agnostic Routing**  | A type-safe routing system that works independently of the UI framework.                                                                               |
+| **Universal I18n**    | A framework-agnostic internationalisation wrapper based on i18next with dedicated Vue and React adapters.                                              |
+| **Wasm Utilities**    | High-performance utilities for barcode scanning, spell checking, and more, powered by WebAssembly.                                                     |
 
-## الميزات الرئيسية
+## Technology Stack
 
-| ميزة | الوصف |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| ** صياغة وقت تشغيل JSX ** | لهجة JSX محايدة للإطار: المؤلف مرة واحدة والبناء من أجلها Vue 3, React, Svelte, Solidومكونات الويب بدون أي عبء تشغيلي. |
-| **مكتبة المكونات** | مجموعة شاملة من التخطيط والطباعة والمكونات التفاعلية التي تم تأليفها مرة واحدة لأطر عمل متعددة.                           |
-| **رموز التصميم** | نظام رمزي متوافق مع DTCG يقوم بإنشاء SCSS و TypeScript التحف لموضوعات متسقة.                                     |
-| ** التوجيه الملحد ** | نظام توجيه آمن النوع يعمل بشكل مستقل عن إطار عمل واجهة المستخدم.                                                               |
-| **عالمي I18n** | غلاف تدويل حيادي لإطار العمل يعتمد على i18next مع Vue و React محولات.                              |
-| **مرافق وسم** | أدوات مساعدة عالية الأداء لمسح الباركود والتدقيق الإملائي والمزيد، مدعومة من WebAssembly.                                     |
+Mission Platform is built on a modern, high-performance stack:
 
-## كومة التكنولوجيا
+- **Forge JSX (`@mission-platform/forge-jsx`)**: The primary UI framework — a framework-neutral JSX runtime in which all
+  shared components (everything except the apps) are authored.
+- **Vue 3**: The framework the applications in `apps/` are built with, and one of several native render targets for
+  Forge components.
+- **TypeScript**: The standard for all source code.
+- **Vite**: The build tool powering fast HMR and optimised production bundles.
+- **pnpm Workspaces**: Efficient dependency management with shared lockfiles.
+- **Turborepo**: High-performance task orchestration and caching.
+- **Cloudflare Workers/Pages**: The primary deployment target for applications and APIs.
+- **Storybook**: The workbench for component development and visual testing.
 
-تم تصميم Mission Platform على مجموعة حديثة وعالية الأداء:
+## Ecosystem Structure
 
-- ** صياغة JSX (`@mission-platform/forge`)**: إطار عمل واجهة المستخدم الأساسي - وقت تشغيل JSX محايد للإطار حيث يتم تنفيذ جميع
-  تتم تأليف المكونات المشتركة (كل شيء باستثناء التطبيقات).
-- **Vue 3**: إطار عمل التطبيقات `apps/` تم إنشاؤها باستخدام أحد أهداف العرض الأصلية العديدة
-  مكونات صياغة.
-- **TypeScript**: المعيار لجميع التعليمات البرمجية المصدر.
-- **Vite**: أداة البناء التي تعمل على تشغيل HMR السريع وحزم الإنتاج المحسنة.
-- **pnpm مساحات العمل**: إدارة التبعية الفعالة من خلال ملفات القفل المشتركة.
-- **Turborepo**: تنسيق المهام والتخزين المؤقت عالي الأداء.
-- **عمال/صفحات Cloudflare**: هدف النشر الأساسي للتطبيقات وواجهات برمجة التطبيقات.
-- **Storybook**: طاولة العمل لتطوير المكونات والاختبار البصري.
+The repository is organised into several distinct areas:
 
-## هيكل النظام البيئي
-
-يتم تنظيم المستودع في عدة مجالات متميزة:
-
-- **`apps/`**: التطبيقات القابلة للنشر (على سبيل المثال، `my-care-notes`, `website`) التي تشكل الحزم في المنتجات.
-- **`packages/`**: اللبنات الأساسية، بما في ذلك `@mission-platform/components`, `@mission-platform/router`، و
+- **`apps/`**: Deployable applications (e.g., `my-care-notes`, `website`) that compose packages into products.
+- **`packages/`**: The core building blocks, including `@mission-platform/components`, `@mission-platform/router`, and
   `@mission-platform/i18n`.
-- **`configs/`**: التكوينات المشتركة لـ ESLint, Prettier, TypeScript، و Vite.
-- **`vite-plugins/`**: أدوات مخصصة لوقت البناء لرموز التصميم وتجميع Forge وتحسين محركات البحث.
-- **`workers/`**: يوفر عمال Cloudflare إمكانات منطقية للواجهة الخلفية وخدمة SPA.
+- **`packages/tooling/configs/`**: Shared configurations for ESLint, Prettier, TypeScript, and Vite.
+- **`packages/tooling/vite/`**: Custom build-time tooling for design tokens, Forge compilation, and SEO.
+- **`packages/edge/workers/`**: Cloudflare Workers providing backend logic and SPA serving capabilities.
 
-## الخطوات التالية
+## Next Steps
 
-لبدء التطوير على منصة المهمة، يرجى الرجوع إلى الأدلة التالية:
+To begin developing on the Mission Platform, please refer to the following guides:
 
-- **[إعداد التطوير](development-setup.md)**: جهز بيئتك وقم بتثبيت التبعيات.
-- **[بنيان](architecture.md)**: تعمق في مبادئ تصميم النظام الأساسي وتدفق التبعية.
-- **[هيكل مساحة العمل](workspace-structure.md)**: فهم تخطيط الدليل واتفاقيات الحزمة.
-- **[اختبار](testing.md)**: تعرف على استراتيجيات وأدوات الاختبار لدينا.
+- **[Development Setup](./development-setup.md)**: Get your environment ready and install dependencies.
+- **[Architecture](./architecture.md)**: Deep dive into the platform's design principles and dependency flow.
+- **[Workspace Structure](./workspace-structure.md)**: Understand the directory layout and package conventions.
+- **[Testing](./testing.md)**: Learn about our testing strategies and tools.
