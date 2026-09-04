@@ -1,90 +1,85 @@
-# Circulair afhankelijkheidsmanagement
+# Circular Dependency Management
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+This document explains the impact of circular dependencies within the Mission Platform monorepo and provides a **How-to
+guide** for detecting, resolving, and preventing them. It serves as both an **Explanation** of monorepo health and a
+technical recipe for refactoring.
 
-> Engelse bron: [docs/circular-dependencies.md](../../circular-dependencies.md)
-> Taal: Nederlands (nl)
+## What are Circular Dependencies?
 
-Dit document legt de impact uit van circulaire afhankelijkheden binnen het Mission Platform monorepo en biedt een **How-to
-gids** voor het detecteren, oplossen en voorkomen ervan. Het dient zowel als een **Verklaring** van monorepo-gezondheid als als een
-technisch recept voor refactoring.
+A circular dependency occurs when two or more packages depend on each other, either directly or indirectly. For example:
 
-## Wat zijn circulaire afhankelijkheden?
+- Package A imports from Package B.
+- Package B imports from Package A.
 
-Er is sprake van een circulaire afhankelijkheid wanneer twee of meer pakketten direct of indirect van elkaar afhankelijk zijn. Bijvoorbeeld:
+In a monorepo, these cycles are particularly harmful because they can cause:
 
-- Pakket A importeert uit pakket B.
-- Pakket B importeert uit pakket A.
+- **Build Failures**: Dependency graph resolution (e.g., by Turborepo or pnpm) can deadlock or fail.
+- **Runtime Errors**: One module may be partially initialized when the other attempts to use its exports.
+- **Increased Coupling**: Packages become impossible to use or test in isolation.
 
-In een monorepo zijn deze cycli bijzonder schadelijk omdat ze het volgende kunnen veroorzaken:
+## Detection
 
-- **Buildfouten**: resolutie van de afhankelijkheidsgrafiek (bijvoorbeeld door Turborepo of pnpm) kan vastlopen of mislukken.
-- **Runtimefouten**: de ene module wordt mogelijk gedeeltelijk geïnitialiseerd wanneer de andere de export probeert te gebruiken.
-- **Verbeterde koppeling**: pakketten kunnen onmogelijk afzonderlijk worden gebruikt of getest.
-
-## Detectie
-
-Mission Platform maakt gebruik van verschillende geautomatiseerde tools om circulaire afhankelijkheden op te sporen voordat deze in productie gaan.
+Mission Platform uses several automated tools to catch circular dependencies before they reach production.
 
 ### ESLint `no-restricted-paths`
 
-Onze gedeelde ESLint configuratie dwingt de eenrichtingsafhankelijkheidsstroom af. Als u probeert te importeren uit een pakket dat
-moet "boven" de jouwe zijn in de hiërarchie, dan zal de linter een foutmelding geven.
+Our shared ESLint configuration enforces the one-way dependency flow. If you attempt to import from a package that
+should be "above" yours in the hierarchy, the linter will throw an error.
 
-Voer de linter uit om te controleren op overtredingen:
+Run the linter to check for violations:
 
 ```bash
 pnpm lint
 ```
 
-### Handmatige audit met Madge
+### Manual Audit with Madge
 
-Voor complexe cycli die meerdere bestanden bestrijken, kunt u gebruik maken van `madge` (indien geïnstalleerd) of vergelijkbare visualisaties om de
-afhankelijkheidsgrafiek.
+For complex cycles that span multiple files, you can use `madge` (if installed) or similar visualizers to map the
+dependency graph.
 
-## How-to: circulaire afhankelijkheden oplossen
+## How-to: Resolve Circular Dependencies
 
-Wanneer er een circulaire afhankelijkheid wordt gedetecteerd, gebruikt u een van de volgende strategieën om deze op te lossen.
+When a circular dependency is detected, use one of the following strategies to resolve it.
 
-### Strategie 1: gedeelde code extraheren (aanbevolen)
+### Strategy 1: Extract Shared Code (Recommended)
 
-Als pakket A en pakket B beide een gemeenschappelijk stukje logica nodig hebben, verplaats die logica dan naar een nieuw pakket op een lager niveau (bijv.
+If Package A and Package B both need a common piece of logic, move that logic into a new, lower-level package (e.g.,
 `packages/utils-shared`).
 
-**Voor**:
+**Before**:
 
-- Pakket A ↔ Pakket B
+- Package A ↔ Package B
 
-**Na**:
+**After**:
 
-- Pakket A → Pakket C
-- Pakket B → Pakket C
+- Package A → Package C
+- Package B → Package C
 
-### Strategie 2: Omkering van afhankelijkheid
+### Strategy 2: Dependency Inversion
 
-In plaats van dat Pakket B rechtstreeks uit Pakket A importeert, kunt u Pakket B de vereiste functionaliteit als hulpmiddel laten accepteren, a
-configuratieobject of via een gebeurtenisbus.
+Instead of Package B importing directly from Package A, have Package B accept the required functionality as a prop, a
+configuration object, or via an event bus.
 
-**Voorbeeld**:
-In plaats van `AuthService` importeren `UserService` een profiel bijwerken, `AuthService` kan een uitzenden `AUTH_SUCCESS` evenement
-dat `UserService` luistert naar.
+**Example**:
+Instead of `AuthService` importing `UserService` to update a profile, `AuthService` can emit an `AUTH_SUCCESS` event
+that `UserService` listens for.
 
-### Strategie 3: Consolidatie
+### Strategy 3: Consolidation
 
-Als twee pakketten zo nauw met elkaar verbonden zijn dat ze voortdurend elkaars interne onderdelen nodig hebben, kunnen ze feitelijk een
-één logische eenheid. Overweeg om ze samen te voegen tot één pakket.
+If two packages are so tightly coupled that they constantly require each other's internals, they might actually be a
+single logical unit. Consider merging them into one package.
 
-## Beste praktijken op het gebied van preventie
+## Prevention Best Practices
 
-1. **Volg de eenrichtingsverkeer**: houd u strikt aan de `Apps → Packages → Configs` afhankelijkheid richting.
-2. **Auteur Framework-neutrale logica**: gebruik `@mission-platform/forge` voor kernlogica om raamwerkspecifieke cycli te vermijden.
-3. **Gebruik werkruimteprotocollen**: altijd gebruiken `workspace:*` om interne afhankelijkheden te waarborgen pnpm correct kan oplossen
-   de grafiek.
-4. **Controleer imports regelmatig**: let op de suggesties voor automatisch importeren in uw IDE, aangezien deze soms
-   onbedoelde afhankelijkheden tussen pakketten.
+1. **Follow the One-Way Flow**: Strictly adhere to the `Apps → Packages → Configs` dependency direction.
+2. **Author Framework-Neutral Logic**: Use `@mission-platform/forge-jsx` for core logic to avoid framework-specific cycles.
+3. **Use Workspace Protocols**: Always use `workspace:*` for internal dependencies to ensure pnpm can correctly resolve
+   the graph.
+4. **Regularly Audit Imports**: Pay attention to "auto-import" suggestions in your IDE, as they can sometimes introduce
+   unintended cross-package dependencies.
 
-## Gerelateerde documentatie
+## Related Documentation
 
-- [Beste praktijken](best-practices.md)
-- [Structuur van de werkruimte](workspace-structure.md)
-- [Gids voor probleemoplossing](troubleshooting.md)
+- [Best Practices](best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting Guide](troubleshooting.md)
