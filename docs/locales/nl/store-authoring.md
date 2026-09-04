@@ -1,18 +1,13 @@
-# Winkelontwerp
+# Store Authoring
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+Stores are used to manage shared, cross-component state within a package. Unlike application-level stores (like Pinia or
+Redux), package stores in the Mission Platform are designed to be **framework-neutral observable modules**. This allows
+write-once components to consume them via Forge hooks regardless of the host framework.
 
-> Engelse bron: [docs/store-authoring.md](../../store-authoring.md)
-> Taal: Nederlands (nl)
+## Directory Layout
 
-Winkels worden gebruikt om de gedeelde, componentoverschrijdende status binnen een pakket te beheren. In tegenstelling tot winkels op applicatieniveau (zoals Pinia of
-Redux), pakketwinkels in het Mission Platform zijn ontworpen als **framework-neutrale waarneembare modules**. Dit maakt het mogelijk
-write-once-componenten om ze via Forge-hooks te gebruiken, ongeacht het hostframework.
-
-## Directory-indeling
-
-Elke winkel MOET zich in zijn eigen benoemde submap bevinden `src/stores/`, vergezeld van een co-located testbestand en een
-lokaal vat.
+Each store MUST reside in its own named subdirectory within `src/stores/`, accompanied by a co-located test file and a
+local barrel.
 
 ```text
 src/stores/
@@ -23,26 +18,26 @@ src/stores/
 └── index.ts                  # Package-level re-exports
 ```
 
-## Het waarneembare patroon
+## The Observable Pattern
 
-Pakketwinkels vermijden raamwerkspecifieke afhankelijkheden. In plaats daarvan volgen ze een eenvoudig waarneembaar patroon:
+Package stores avoid framework-specific dependencies. Instead, they follow a simple observable pattern:
 
-1. **Privéstatus**: houd de status binnen het bereik van de module (gewoon TypeScript waarden).
-2. **Toegang tot momentopname**: geef een `getSnapshot()` functie om de huidige status op te halen.
-3. **Abonnement**: Geef een `subscribe(listener)` functie die een callback aan een lijst toevoegt en een uitschrijving retourneert
-   functie.
-4. **Mutators**: Biedt functies om de status bij te werken, die alle luisteraars na de update MOET informeren.
+1. **Private State**: Keep state within the module scope (plain TypeScript values).
+2. **Snapshot Access**: Provide a `getSnapshot()` function to retrieve the current state.
+3. **Subscription**: Provide a `subscribe(listener)` function that adds a callback to a list and returns an unsubscribe
+   function.
+4. **Mutators**: Provide functions to update the state, which MUST notify all listeners after the update.
 
-## Auteursregels
+## Authoring Rules
 
-1. **Framework-agnostisch**: niet importeren uit `vue`, `react`, of `@mission-platform/forge` haken in de winkelmodule
-   zelf.
-2. **Expliciete typen**: definieer en exporteer altijd een interface voor de status van de winkel.
-3. **SSR-veiligheid**: bewaak de toegang tot browser-API's (bijv. `localStorage`) zodat de winkel kan worden geïnitialiseerd in a Node.js
-   omgeving.
-4. **Verplicht testen**: Elke winkel moet een co-locatie hebben `.spec.ts` bestand.
+1. **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge-jsx` hooks inside the store module
+   itself.
+2. **Explicit Types**: Always define and export an interface for the store's state.
+3. **SSR Safety**: Guard access to browser APIs (e.g., `localStorage`) so the store can be initialized in a Node.js
+   environment.
+4. **Mandatory Testing**: Every store must have a co-located `.spec.ts` file.
 
-## Voorbeeld winkel
+## Example Store
 
 ```ts
 export interface ThemeState {
@@ -67,9 +62,9 @@ export function setTheme(theme: ThemeState['theme']): void {
 }
 ```
 
-## Winkels in componenten consumeren
+## Consuming Stores in Components
 
-Als u een opslag binnen een eenmalige-schrijfcomponent wilt gebruiken, overbrugt u deze met behulp van `useState` En `useEffect` van `@mission-platform/forge`:
+To use a store within a write-once component, bridge it using `useState` and `useEffect` from `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());
@@ -79,18 +74,18 @@ useEffect(() => {
 }, []);
 ```
 
-## Steiger
+## Scaffolding
 
-Gebruik de Mission Platform Developer MCP-tool om een ​​nieuw winkelskelet te genereren:
+Use the Mission Platform Developer MCP tool to generate a new store skeleton:
 
 ```bash
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
 
-## Gerelateerde gidsen
+## Related Guides
 
-- [Pakketontwikkeling](package-development.md)
-- [Ontwerp van atomaire componenten](atomic-component-design.md)
-- [Composeerbaar schrijven](composable-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
 - [Util Authoring](util-authoring.md)
