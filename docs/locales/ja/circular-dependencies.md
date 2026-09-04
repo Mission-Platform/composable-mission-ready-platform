@@ -1,90 +1,85 @@
-# 循環依存関係の管理
+# Circular Dependency Management
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+This document explains the impact of circular dependencies within the Mission Platform monorepo and provides a **How-to
+guide** for detecting, resolving, and preventing them. It serves as both an **Explanation** of monorepo health and a
+technical recipe for refactoring.
 
-> 英語の原典: [docs/circular-dependencies.md](../../circular-dependencies.md)
-> 言語: 日本語 (ja)
+## What are Circular Dependencies?
 
-このドキュメントでは、Mission Platform モノリポジトリ内の循環依存関係の影響について説明し、**ハウツーを提供します。
-それらを検出、解決、防止するためのガイド**。これは、モノリポジトリの健全性の**説明**と、
-リファクタリングのための技術的なレシピ。
+A circular dependency occurs when two or more packages depend on each other, either directly or indirectly. For example:
 
-## 循環依存関係とは何ですか?
+- Package A imports from Package B.
+- Package B imports from Package A.
 
-循環依存関係は、2 つ以上のパッケージが直接的または間接的に相互に依存する場合に発生します。例えば：
+In a monorepo, these cycles are particularly harmful because they can cause:
 
-- パッケージ A はパッケージ B からインポートします。
-- パッケージ B はパッケージ A からインポートします。
+- **Build Failures**: Dependency graph resolution (e.g., by Turborepo or pnpm) can deadlock or fail.
+- **Runtime Errors**: One module may be partially initialized when the other attempts to use its exports.
+- **Increased Coupling**: Packages become impossible to use or test in isolation.
 
-モノリポジトリでは、これらのサイクルは次の原因となる可能性があるため、特に有害です。
+## Detection
 
-- **ビルドの失敗**: 依存関係グラフの解決 (例: Turborepo または pnpm) デッドロックまたは失敗する可能性があります。
-- **実行時エラー**: 一方のモジュールがそのエクスポートを使用しようとすると、もう一方のモジュールが部分的に初期化される可能性があります。
-- **結合の増加**: パッケージを単独で使用またはテストすることができなくなります。
-
-## 検出
-
-Mission Platform は、循環依存関係が運用環境に到達する前に、いくつかの自動化ツールを使用して検出します。
+Mission Platform uses several automated tools to catch circular dependencies before they reach production.
 
 ### ESLint `no-restricted-paths`
 
-私たちの共有 ESLint 構成により、一方向の依存関係フローが強制されます。パッケージからインポートしようとすると、
-階層内で自分の「上」にある必要がある場合、リンターはエラーをスローします。
+Our shared ESLint configuration enforces the one-way dependency flow. If you attempt to import from a package that
+should be "above" yours in the hierarchy, the linter will throw an error.
 
-リンターを実行して違反をチェックします。
+Run the linter to check for violations:
 
 ```bash
 pnpm lint
 ```
 
-### Madge による手動監査
+### Manual Audit with Madge
 
-複数のファイルにまたがる複雑なサイクルの場合は、次のように使用できます。 `madge` (インストールされている場合) または同様のビジュアライザをマップするための
-依存関係グラフ。
+For complex cycles that span multiple files, you can use `madge` (if installed) or similar visualizers to map the
+dependency graph.
 
-## ハウツー: 循環依存関係を解決する
+## How-to: Resolve Circular Dependencies
 
-循環依存関係が検出された場合は、次のいずれかの方法を使用して解決します。
+When a circular dependency is detected, use one of the following strategies to resolve it.
 
-### 戦略 1: 共有コードを抽出する (推奨)
+### Strategy 1: Extract Shared Code (Recommended)
 
-パッケージ A とパッケージ B の両方に共通のロジックが必要な場合は、そのロジックを新しい下位レベルのパッケージに移動します (例:
+If Package A and Package B both need a common piece of logic, move that logic into a new, lower-level package (e.g.,
 `packages/utils-shared`).
 
-**前に**：
+**Before**:
 
-- パッケージA ↔ パッケージB
+- Package A ↔ Package B
 
-**後**：
+**After**:
 
-- パッケージA → パッケージC
-- パッケージB → パッケージC
+- Package A → Package C
+- Package B → Package C
 
-### 戦略 2: 依存関係の逆転
+### Strategy 2: Dependency Inversion
 
-パッケージ B がパッケージ A から直接インポートする代わりに、パッケージ B に必要な機能をプロップとして受け入れさせます。
-構成オブジェクト、またはイベントバス経由。
+Instead of Package B importing directly from Package A, have Package B accept the required functionality as a prop, a
+configuration object, or via an event bus.
 
-**例**:
-代わりに `AuthService` 輸入する `UserService` プロフィールを更新するには、 `AuthService` を発することができます `AUTH_SUCCESS` イベント
-それ `UserService` を聞きます。
+**Example**:
+Instead of `AuthService` importing `UserService` to update a profile, `AuthService` can emit an `AUTH_SUCCESS` event
+that `UserService` listens for.
 
-### 戦略 3: 統合
+### Strategy 3: Consolidation
 
-2 つのパッケージが非常に緊密に結合されており、常に互いの内部を必要とする場合、それらは実際には
-単一の論理ユニット。それらを 1 つのパッケージに統合することを検討してください。
+If two packages are so tightly coupled that they constantly require each other's internals, they might actually be a
+single logical unit. Consider merging them into one package.
 
-## 予防のベストプラクティス
+## Prevention Best Practices
 
-1. **一方通行のフローに従う**: を厳守してください。 `Apps → Packages → Configs` 依存関係の方向。
-2. **作成者フレームワーク中立ロジック**: 使用する `@mission-platform/forge` コアロジックでフレームワーク固有のサイクルを回避します。
-3. **ワークスペース プロトコルを使用**: 常に使用します。 `workspace:*` 内部依存関係を確保するため pnpm 正しく解決できる
-   グラフ。
-4. **インポートを定期的に監査する**: IDE での「自動インポート」の提案に注意してください。
-   意図しないパッケージ間の依存関係。
+1. **Follow the One-Way Flow**: Strictly adhere to the `Apps → Packages → Configs` dependency direction.
+2. **Author Framework-Neutral Logic**: Use `@mission-platform/forge-jsx` for core logic to avoid framework-specific cycles.
+3. **Use Workspace Protocols**: Always use `workspace:*` for internal dependencies to ensure pnpm can correctly resolve
+   the graph.
+4. **Regularly Audit Imports**: Pay attention to "auto-import" suggestions in your IDE, as they can sometimes introduce
+   unintended cross-package dependencies.
 
-## 関連ドキュメント
+## Related Documentation
 
-- [ベストプラクティス](best-practices.md)
-- [ワークスペースの構造](workspace-structure.md)
-- [トラブルシューティングガイド](troubleshooting.md)
+- [Best Practices](best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting Guide](troubleshooting.md)
