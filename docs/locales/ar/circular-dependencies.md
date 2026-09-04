@@ -1,90 +1,85 @@
-# إدارة التبعية الدائرية
+# Circular Dependency Management
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+This document explains the impact of circular dependencies within the Mission Platform monorepo and provides a **How-to
+guide** for detecting, resolving, and preventing them. It serves as both an **Explanation** of monorepo health and a
+technical recipe for refactoring.
 
-> المصدر الإنجليزي: [docs/circular-dependencies.md](../../circular-dependencies.md)
-> اللغة: العربية (ar)
+## What are Circular Dependencies?
 
-تشرح هذه الوثيقة تأثير التبعيات الدائرية داخل Mission Platform monorepo وتوفر **كيفية القيام بذلك
-دليل ** لاكتشافها وحلها ومنعها. إنه بمثابة **شرح** لصحة المونوريبو و
-وصفة فنية لإعادة الهيكلة.
+A circular dependency occurs when two or more packages depend on each other, either directly or indirectly. For example:
 
-## ما هي التبعيات الدائرية؟
+- Package A imports from Package B.
+- Package B imports from Package A.
 
-تحدث التبعية الدائرية عندما تعتمد حزمتان أو أكثر على بعضها البعض، إما بشكل مباشر أو غير مباشر. على سبيل المثال:
+In a monorepo, these cycles are particularly harmful because they can cause:
 
-- الحزمة "أ" تستورد من الحزمة "ب".
-- تستورد الحزمة "ب" من الحزمة "أ".
+- **Build Failures**: Dependency graph resolution (e.g., by Turborepo or pnpm) can deadlock or fail.
+- **Runtime Errors**: One module may be partially initialized when the other attempts to use its exports.
+- **Increased Coupling**: Packages become impossible to use or test in isolation.
 
-في حالة monorepo، تكون هذه الدورات ضارة بشكل خاص لأنها يمكن أن تسبب:
+## Detection
 
-- **فشل البناء**: دقة الرسم البياني للتبعية (على سبيل المثال، بواسطة Turborepo أو pnpm) يمكن أن تصل إلى طريق مسدود أو تفشل.
-- **أخطاء وقت التشغيل**: قد تتم تهيئة إحدى الوحدات جزئيًا عندما تحاول الوحدة الأخرى استخدام صادراتها.
-- **زيادة الاقتران**: يصبح من المستحيل استخدام الحزم أو اختبارها بشكل منفصل.
-
-## كشف
-
-تستخدم Mission Platform العديد من الأدوات الآلية لالتقاط التبعيات الدائرية قبل أن تصل إلى مرحلة الإنتاج.
+Mission Platform uses several automated tools to catch circular dependencies before they reach production.
 
 ### ESLint `no-restricted-paths`
 
-لدينا المشتركة ESLint يفرض التكوين تدفق التبعية أحادي الاتجاه. إذا حاولت الاستيراد من حزمة
-يجب أن يكون "أعلى" من رتبتك في التسلسل الهرمي، وسيقوم جهاز linter بإلقاء خطأ.
+Our shared ESLint configuration enforces the one-way dependency flow. If you attempt to import from a package that
+should be "above" yours in the hierarchy, the linter will throw an error.
 
-قم بتشغيل linter للتحقق من الانتهاكات:
+Run the linter to check for violations:
 
 ```bash
 pnpm lint
 ```
 
-### التدقيق اليدوي مع Madge
+### Manual Audit with Madge
 
-بالنسبة للدورات المعقدة التي تمتد لملفات متعددة، يمكنك استخدامها `madge` (إذا تم تثبيتها) أو متخيلات مماثلة لتعيين ملف
-الرسم البياني التبعية.
+For complex cycles that span multiple files, you can use `madge` (if installed) or similar visualizers to map the
+dependency graph.
 
-## الكيفية: حل التبعيات الدائرية
+## How-to: Resolve Circular Dependencies
 
-عند اكتشاف تبعية دائرية، استخدم إحدى الاستراتيجيات التالية لحلها.
+When a circular dependency is detected, use one of the following strategies to resolve it.
 
-### الإستراتيجية 1: استخراج التعليمات البرمجية المشتركة (مستحسن)
+### Strategy 1: Extract Shared Code (Recommended)
 
-إذا كانت الحزمة (أ) والحزمة (ب) بحاجة إلى منطق مشترك، فانقل هذا المنطق إلى حزمة جديدة ذات مستوى أدنى (على سبيل المثال،
+If Package A and Package B both need a common piece of logic, move that logic into a new, lower-level package (e.g.,
 `packages/utils-shared`).
 
-**قبل**:
+**Before**:
 
-- الحزمة أ ↔ الحزمة ب
+- Package A ↔ Package B
 
-**بعد**:
+**After**:
 
-- الحزمة أ → الحزمة ج
-- الحزمة ب → الحزمة ج
+- Package A → Package C
+- Package B → Package C
 
-### الاستراتيجية 2: انقلاب التبعية
+### Strategy 2: Dependency Inversion
 
-بدلاً من استيراد الحزمة B مباشرة من الحزمة A، اطلب من الحزمة B قبول الوظيفة المطلوبة كدعم، أ
-كائن التكوين، أو عبر ناقل الحدث.
+Instead of Package B importing directly from Package A, have Package B accept the required functionality as a prop, a
+configuration object, or via an event bus.
 
-**مثال**:
-بدلا من `AuthService` import `UserService` لتحديث الملف الشخصي، `AuthService` يمكن أن تنبعث منها `AUTH_SUCCESS` حدث
-ذلك `UserService` يستمع ل.
+**Example**:
+Instead of `AuthService` importing `UserService` to update a profile, `AuthService` can emit an `AUTH_SUCCESS` event
+that `UserService` listens for.
 
-### الاستراتيجية 3: التوحيد
+### Strategy 3: Consolidation
 
-إذا كانت الحزمتان مقترنتان بإحكام لدرجة أنهما تتطلبان باستمرار الأجزاء الداخلية لبعضهما البعض، فقد تكونان في الواقع عبارة عن حزمة
-وحدة منطقية واحدة فكر في دمجها في حزمة واحدة.
+If two packages are so tightly coupled that they constantly require each other's internals, they might actually be a
+single logical unit. Consider merging them into one package.
 
-## أفضل ممارسات الوقاية
+## Prevention Best Practices
 
-1. **اتبع التدفق أحادي الاتجاه**: التزم بدقة بما يلي `Apps → Packages → Configs` اتجاه التبعية
-2. ** إطار عمل المؤلف - المنطق المحايد **: الاستخدام `@mission-platform/forge` للمنطق الأساسي لتجنب الدورات الخاصة بالإطار.
-3. **استخدم بروتوكولات مساحة العمل**: استخدمها دائمًا `workspace:*` لضمان التبعيات الداخلية pnpm يمكن حلها بشكل صحيح
-   الرسم البياني.
-4. **تدقيق الواردات بانتظام**: انتبه لاقتراحات "الاستيراد التلقائي" في بيئة التطوير المتكاملة (IDE) الخاصة بك، لأنها يمكن أن تقدم في بعض الأحيان
-   التبعيات غير المقصودة عبر الحزمة.
+1. **Follow the One-Way Flow**: Strictly adhere to the `Apps → Packages → Configs` dependency direction.
+2. **Author Framework-Neutral Logic**: Use `@mission-platform/forge-jsx` for core logic to avoid framework-specific cycles.
+3. **Use Workspace Protocols**: Always use `workspace:*` for internal dependencies to ensure pnpm can correctly resolve
+   the graph.
+4. **Regularly Audit Imports**: Pay attention to "auto-import" suggestions in your IDE, as they can sometimes introduce
+   unintended cross-package dependencies.
 
-## الوثائق ذات الصلة
+## Related Documentation
 
-- [أفضل الممارسات](best-practices.md)
-- [هيكل مساحة العمل](workspace-structure.md)
-- [دليل استكشاف الأخطاء وإصلاحها](troubleshooting.md)
+- [Best Practices](best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting Guide](troubleshooting.md)
