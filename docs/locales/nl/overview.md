@@ -1,80 +1,75 @@
-# Overzicht missieplatform
+# Mission Platform Overview
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+Mission Platform is a composable, package-driven, framework-neutral component platform designed for building
+production-ready applications with reusable building blocks. It leverages a modern monorepo architecture to provide a
+highly efficient development environment for complex, multi-application ecosystems.
 
-> Engelse bron: [docs/overview.md](../../overview.md)
-> Taal: Nederlands (nl)
+## The Composable Philosophy
 
-Mission Platform is een samenstelbaar, pakketgestuurd, raamwerkneutraal componentenplatform dat is ontworpen om te bouwen
-productieklare toepassingen met herbruikbare bouwstenen. Het maakt gebruik van een moderne monorepo-architectuur om een
-zeer efficiënte ontwikkelomgeving voor complexe ecosystemen met meerdere toepassingen.
+At its core, Mission Platform is built on the principle of **composition over inheritance**. Instead of providing a
+monolithic framework that dictates application structure, the platform offers a suite of small, focused, and highly
+interoperable packages.
 
-## De composeerbare filosofie
+### Composable Building Blocks
 
-In de kern is Mission Platform gebouwd op het principe van **compositie boven overerving**. In plaats van het verstrekken van een
-monolithisch raamwerk dat de applicatiestructuur dicteert, het platform biedt een reeks kleine, gerichte en hoogstaande
-interoperabele pakketten.
+Applications are assembled from shared packages, ensuring that common logic—from UI components to internationalisation
+and routing—is authored once and reused everywhere. This approach reduces duplication, simplifies maintenance, and
+ensures a consistent user experience across the entire product suite.
 
-### Samenstelbare bouwstenen
+### Multi-Framework by Design
 
-Applicaties worden samengesteld uit gedeelde pakketten, waardoor een gemeenschappelijke logica wordt gewaarborgd: van UI-componenten tot internationalisering
-en routing – wordt één keer geschreven en overal hergebruikt. Deze aanpak vermindert dubbel werk, vereenvoudigt het onderhoud en
-zorgt voor een consistente gebruikerservaring in de hele productsuite.
+Mission Platform introduces a framework-neutral development paradigm. Using the `@mission-platform/forge-jsx` JSX dialect,
+developers can author components once and compile them to native outputs for Vue 3, React, Solid, Svelte, and Web
+Components. This future-proofs the codebase and allows for seamless integration into diverse frontend environments.
 
-### Multiframework per ontwerp
+### Type-Safe Foundation
 
-Mission Platform introduceert een raamwerkneutraal ontwikkelingsparadigma. Met behulp van de `@mission-platform/forge` JSX-dialect,
-ontwikkelaars kunnen componenten één keer schrijven en deze compileren naar native uitvoer Vue 3, React, Solid, Svelteen Web
-Componenten. Dit maakt de codebase toekomstbestendig en maakt naadloze integratie in diverse frontend-omgevingen mogelijk.
+The entire platform is authored in **TypeScript**, providing a robust, self-documenting developer experience. Explicit
+typing across all public APIs ensures that errors are caught at compile-time, significantly increasing development
+velocity and code quality.
 
-### Typeveilige basis
+## Key Features
 
-Het hele platform is geschreven in **TypeScript**, wat een robuuste, zelfdocumenterende ontwikkelaarservaring biedt. Expliciet
-typen in alle openbare API's zorgt ervoor dat fouten worden opgemerkt tijdens het compileren, waardoor de ontwikkeling aanzienlijk wordt vergroot
-snelheid en codekwaliteit.
+| Feature               | Description                                                                                                                                                            |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX Runtime** | A framework-neutral JSX dialect: author once and build for Vue 3, React, Svelte, Solid, and Web Components with zero runtime overhead. |
+| **Component Library** | A comprehensive set of layout, typography, and interactive components authored once for multiple frameworks.                                           |
+| **Design Tokens**     | A DTCG-compliant token system that generates SCSS and TypeScript artifacts for consistent theming.                                                     |
+| **Agnostic Routing**  | A type-safe routing system that works independently of the UI framework.                                                                               |
+| **Universal I18n**    | A framework-agnostic internationalisation wrapper based on i18next with dedicated Vue and React adapters.                                              |
+| **Wasm Utilities**    | High-performance utilities for barcode scanning, spell checking, and more, powered by WebAssembly.                                                     |
 
-## Belangrijkste kenmerken
+## Technology Stack
 
-| Kenmerk | Beschrijving |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| **Forge JSX-runtime** | Een raamwerkneutraal JSX-dialect: één keer schrijven en daarna bouwen Vue 3, React, Svelte, Soliden webcomponenten zonder runtime-overhead. |
-| **Componentenbibliotheek** | Een uitgebreide set lay-out, typografie en interactieve componenten, één keer geschreven voor meerdere raamwerken.                           |
-| **Ontwerpfiches** | Een DTCG-compatibel tokensysteem dat SCSS genereert en TypeScript artefacten voor consistente thema's.                                     |
-| **Agnostische routering** | Een typeveilig routeringssysteem dat onafhankelijk van het UI-framework werkt.                                                               |
-| **Universeel I18n** | Een raamwerk-agnostische internationaliseringswrapper gebaseerd op i18next met dedicated Vue En React adapters.                              |
-| **Wasm-hulpprogramma's** | Hoogwaardige hulpprogramma's voor het scannen van streepjescodes, spellingcontrole en meer, mogelijk gemaakt door WebAssembly.                                     |
+Mission Platform is built on a modern, high-performance stack:
 
-## Technologie stapel
+- **Forge JSX (`@mission-platform/forge-jsx`)**: The primary UI framework — a framework-neutral JSX runtime in which all
+  shared components (everything except the apps) are authored.
+- **Vue 3**: The framework the applications in `apps/` are built with, and one of several native render targets for
+  Forge components.
+- **TypeScript**: The standard for all source code.
+- **Vite**: The build tool powering fast HMR and optimised production bundles.
+- **pnpm Workspaces**: Efficient dependency management with shared lockfiles.
+- **Turborepo**: High-performance task orchestration and caching.
+- **Cloudflare Workers/Pages**: The primary deployment target for applications and APIs.
+- **Storybook**: The workbench for component development and visual testing.
 
-Mission Platform is gebouwd op een moderne, krachtige stack:
+## Ecosystem Structure
 
-- **JSX smeden (`@mission-platform/forge`)**: Het primaire UI-framework — een raamwerkneutrale JSX-runtime waarin alle
-  gedeelde componenten (alles behalve de apps) zijn geschreven.
-- **Vue 3**: Het raamwerk waarin de applicaties zich bevinden `apps/` zijn gebouwd met, en een van de vele native renderdoelen voor
-  Smeed componenten.
-- **TypeScript**: De standaard voor alle broncode.
-- **Vite**: De bouwtool die snelle HMR en geoptimaliseerde productiebundels mogelijk maakt.
-- **pnpm Werkruimten**: efficiënt afhankelijkheidsbeheer met gedeelde lockfiles.
-- **Turborepo**: hoogwaardige taakorkestratie en caching.
-- **Cloudflare Workers/Pages**: het primaire implementatiedoel voor applicaties en API's.
-- **Verhalenboek**: de werkbank voor componentontwikkeling en visuele tests.
+The repository is organised into several distinct areas:
 
-## Ecosysteemstructuur
-
-De repository is georganiseerd in verschillende afzonderlijke gebieden:
-
-- **`apps/`**: inzetbare applicaties (bijv. `my-care-notes`, `website`) die pakketten samenstellen tot producten.
-- **`packages/`**: De belangrijkste bouwstenen, inclusief `@mission-platform/components`, `@mission-platform/router`, En
+- **`apps/`**: Deployable applications (e.g., `my-care-notes`, `website`) that compose packages into products.
+- **`packages/`**: The core building blocks, including `@mission-platform/components`, `@mission-platform/router`, and
   `@mission-platform/i18n`.
-- **`configs/`**: Gedeelde configuraties voor ESLint, Prettier, TypeScript, En Vite.
-- **`vite-plugins/`**: Aangepaste buildtime-tools voor ontwerptokens, Forge-compilatie en SEO.
-- **`workers/`**: Cloudflare Workers die backend-logica en SPA-servicemogelijkheden bieden.
+- **`packages/tooling/configs/`**: Shared configurations for ESLint, Prettier, TypeScript, and Vite.
+- **`packages/tooling/vite/`**: Custom build-time tooling for design tokens, Forge compilation, and SEO.
+- **`packages/edge/workers/`**: Cloudflare Workers providing backend logic and SPA serving capabilities.
 
-## Volgende stappen
+## Next Steps
 
-Raadpleeg de volgende handleidingen om te beginnen met ontwikkelen op het Mission Platform:
+To begin developing on the Mission Platform, please refer to the following guides:
 
-- **[Ontwikkeling instellen](development-setup.md)**: Bereid uw omgeving voor en installeer afhankelijkheden.
-- **[Architectuur](architecture.md)**: Diepe duik in de ontwerpprincipes en de afhankelijkheidsstroom van het platform.
-- **[Structuur van de werkruimte](workspace-structure.md)**: Begrijp de mapindeling en pakketconventies.
-- **[Testen](testing.md)**: Leer meer over onze teststrategieën en tools.
+- **[Development Setup](./development-setup.md)**: Get your environment ready and install dependencies.
+- **[Architecture](./architecture.md)**: Deep dive into the platform's design principles and dependency flow.
+- **[Workspace Structure](./workspace-structure.md)**: Understand the directory layout and package conventions.
+- **[Testing](./testing.md)**: Learn about our testing strategies and tools.
