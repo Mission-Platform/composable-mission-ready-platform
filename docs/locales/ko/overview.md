@@ -1,80 +1,75 @@
-# 미션 플랫폼 개요
+# Mission Platform Overview
 
-정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
+Mission Platform is a composable, package-driven, framework-neutral component platform designed for building
+production-ready applications with reusable building blocks. It leverages a modern monorepo architecture to provide a
+highly efficient development environment for complex, multi-application ecosystems.
 
-> 영어 원문: [docs/overview.md](../../overview.md)
-> 언어: 한국어 (ko)
+## The Composable Philosophy
 
-Mission Platform은 구축을 위해 설계된 구성 가능하고 패키지 중심이며 프레임워크 중립적인 구성 요소 플랫폼입니다.
-재사용 가능한 빌딩 블록을 갖춘 생산 준비 애플리케이션. 최신 모노레포 아키텍처를 활용하여
-복잡한 다중 애플리케이션 생태계를 위한 매우 효율적인 개발 환경입니다.
+At its core, Mission Platform is built on the principle of **composition over inheritance**. Instead of providing a
+monolithic framework that dictates application structure, the platform offers a suite of small, focused, and highly
+interoperable packages.
 
-## 구성 가능 철학
+### Composable Building Blocks
 
-미션 플랫폼의 핵심은 **상속보다 구성**의 원칙을 바탕으로 구축되었습니다. 제공하는 대신
-애플리케이션 구조를 규정하는 모놀리식 프레임워크인 이 플랫폼은 작고 집중적이며 높은 수준의 기능을 갖춘 제품군을 제공합니다.
-상호 운용 가능한 패키지.
+Applications are assembled from shared packages, ensuring that common logic—from UI components to internationalisation
+and routing—is authored once and reused everywhere. This approach reduces duplication, simplifies maintenance, and
+ensures a consistent user experience across the entire product suite.
 
-### 구성 가능한 빌딩 블록
+### Multi-Framework by Design
 
-애플리케이션은 공유 패키지로 조립되어 UI 구성 요소부터 국제화까지 공통 논리를 보장합니다.
-및 라우팅—한 번 작성되면 어디에서나 재사용됩니다. 이 접근 방식은 중복을 줄이고 유지 관리를 단순화하며
-전체 제품군에 걸쳐 일관된 사용자 경험을 보장합니다.
+Mission Platform introduces a framework-neutral development paradigm. Using the `@mission-platform/forge-jsx` JSX dialect,
+developers can author components once and compile them to native outputs for Vue 3, React, Solid, Svelte, and Web
+Components. This future-proofs the codebase and allows for seamless integration into diverse frontend environments.
 
-### 다중 프레임워크 설계
+### Type-Safe Foundation
 
-Mission Platform은 프레임워크 중립적인 개발 패러다임을 도입합니다. 사용하여 `@mission-platform/forge` JSX 방언,
-개발자는 구성 요소를 한 번 작성하고 이를 기본 출력으로 컴파일할 수 있습니다. Vue 3, React, Solid, Svelte및 웹
-구성 요소. 이를 통해 코드베이스가 미래에 대비하고 다양한 프런트엔드 환경에 원활하게 통합될 수 있습니다.
+The entire platform is authored in **TypeScript**, providing a robust, self-documenting developer experience. Explicit
+typing across all public APIs ensures that errors are caught at compile-time, significantly increasing development
+velocity and code quality.
 
-### 유형 안전 기초
+## Key Features
 
-전체 플랫폼은 **로 작성되었습니다.TypeScript**, 강력한 자체 문서화 개발자 경험을 제공합니다. 명시적
-모든 공개 API에 걸쳐 입력하면 컴파일 타임에 오류가 포착되어 개발 속도가 크게 향상됩니다.
-속도와 코드 품질.
+| Feature               | Description                                                                                                                                                            |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX Runtime** | A framework-neutral JSX dialect: author once and build for Vue 3, React, Svelte, Solid, and Web Components with zero runtime overhead. |
+| **Component Library** | A comprehensive set of layout, typography, and interactive components authored once for multiple frameworks.                                           |
+| **Design Tokens**     | A DTCG-compliant token system that generates SCSS and TypeScript artifacts for consistent theming.                                                     |
+| **Agnostic Routing**  | A type-safe routing system that works independently of the UI framework.                                                                               |
+| **Universal I18n**    | A framework-agnostic internationalisation wrapper based on i18next with dedicated Vue and React adapters.                                              |
+| **Wasm Utilities**    | High-performance utilities for barcode scanning, spell checking, and more, powered by WebAssembly.                                                     |
 
-## 주요 특징
+## Technology Stack
 
-| 기능 | 설명 |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| **Forge JSX 런타임** | 프레임워크 중립적인 JSX 언어: 한 번 작성하고 빌드 Vue 3, React, Svelte, Solid및 런타임 오버헤드가 없는 웹 구성 요소입니다. |
-| **구성요소 라이브러리** | 여러 프레임워크에 대해 한 번 작성된 포괄적인 레이아웃, 타이포그래피 및 대화형 구성 요소 세트입니다.                           |
-| **디자인 토큰** | SCSS를 생성하는 DTCG 호환 토큰 시스템 TypeScript 일관된 테마를 위한 아티팩트.                                     |
-| **불문적 라우팅** | UI 프레임워크와 독립적으로 작동하는 유형 안전 라우팅 시스템입니다.                                                               |
-| **유니버설 I18n** | 전용 기능을 갖춘 i18next 기반의 프레임워크에 구애받지 않는 국제화 래퍼 Vue 그리고 React 어댑터.                              |
-| **Wasm 유틸리티** | WebAssembly로 구동되는 바코드 스캐닝, 맞춤법 검사 등을 위한 고성능 유틸리티입니다.                                     |
+Mission Platform is built on a modern, high-performance stack:
 
-## 기술 스택
+- **Forge JSX (`@mission-platform/forge-jsx`)**: The primary UI framework — a framework-neutral JSX runtime in which all
+  shared components (everything except the apps) are authored.
+- **Vue 3**: The framework the applications in `apps/` are built with, and one of several native render targets for
+  Forge components.
+- **TypeScript**: The standard for all source code.
+- **Vite**: The build tool powering fast HMR and optimised production bundles.
+- **pnpm Workspaces**: Efficient dependency management with shared lockfiles.
+- **Turborepo**: High-performance task orchestration and caching.
+- **Cloudflare Workers/Pages**: The primary deployment target for applications and APIs.
+- **Storybook**: The workbench for component development and visual testing.
 
-Mission Platform은 최신 고성능 스택을 기반으로 구축되었습니다.
+## Ecosystem Structure
 
-- **포지 JSX(`@mission-platform/forge`)**: 기본 UI 프레임워크 — 프레임워크 중립적인 JSX 런타임
-  공유 구성 요소(앱을 제외한 모든 것)가 작성됩니다.
-- **Vue 3**: 애플리케이션이 포함된 프레임워크 `apps/` 에 대한 여러 기본 렌더 타겟 중 하나와 함께 구축되었습니다.
-  위조 구성 요소.
-- **TypeScript**: 모든 소스코드의 표준입니다.
-- **Vite**: 빠른 HMR 및 최적화된 생산 번들을 지원하는 빌드 도구입니다.
-- **pnpm 작업 공간**: 공유 잠금 파일을 통한 효율적인 종속성 관리.
-- **Turborepo**: 고성능 작업 조정 및 캐싱.
-- **Cloudflare 작업자/페이지**: 애플리케이션과 API의 기본 배포 대상입니다.
-- **스토리북**: 구성요소 개발 및 시각적 테스트를 위한 워크벤치입니다.
+The repository is organised into several distinct areas:
 
-## 생태계 구조
-
-저장소는 다음과 같은 여러 개별 영역으로 구성됩니다.
-
-- **`apps/`**: 배포 가능한 애플리케이션(예: `my-care-notes`, `website`) 패키지를 제품으로 구성하는 것입니다.
-- **`packages/`**: 다음을 포함한 핵심 빌딩 블록 `@mission-platform/components`, `@mission-platform/router`, 그리고
+- **`apps/`**: Deployable applications (e.g., `my-care-notes`, `website`) that compose packages into products.
+- **`packages/`**: The core building blocks, including `@mission-platform/components`, `@mission-platform/router`, and
   `@mission-platform/i18n`.
-- **`configs/`**: 공유 구성: ESLint, Prettier, TypeScript, 그리고 Vite.
-- **`vite-plugins/`**: 디자인 토큰, Forge 컴파일 및 SEO를 위한 맞춤형 빌드 타임 도구입니다.
-- **`workers/`**: 백엔드 논리 및 SPA 제공 기능을 제공하는 Cloudflare Workers.
+- **`packages/tooling/configs/`**: Shared configurations for ESLint, Prettier, TypeScript, and Vite.
+- **`packages/tooling/vite/`**: Custom build-time tooling for design tokens, Forge compilation, and SEO.
+- **`packages/edge/workers/`**: Cloudflare Workers providing backend logic and SPA serving capabilities.
 
-## 다음 단계
+## Next Steps
 
-Mission Platform 개발을 시작하려면 다음 가이드를 참조하십시오.
+To begin developing on the Mission Platform, please refer to the following guides:
 
-- **[개발 설정](development-setup.md)**: 환경을 준비하고 종속성을 설치합니다.
-- **[건축학](architecture.md)**: 플랫폼의 설계 원칙과 종속성 흐름에 대해 자세히 알아보세요.
-- **[작업공간 구조](workspace-structure.md)**: 디렉터리 레이아웃과 패키지 규칙을 이해합니다.
-- **[테스트](testing.md)**: 테스트 전략 및 도구에 대해 알아보세요.
+- **[Development Setup](./development-setup.md)**: Get your environment ready and install dependencies.
+- **[Architecture](./architecture.md)**: Deep dive into the platform's design principles and dependency flow.
+- **[Workspace Structure](./workspace-structure.md)**: Understand the directory layout and package conventions.
+- **[Testing](./testing.md)**: Learn about our testing strategies and tools.
