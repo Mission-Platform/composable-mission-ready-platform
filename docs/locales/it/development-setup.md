@@ -105,7 +105,7 @@ done
 
 Forge-backed packages publish matching `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, and `mp:web-component` conditions. The active condition must be
-configured by the consuming bundler; see [the compiler reference](../vite-plugins/forge/docs/reference/compiler.md)
+configured by the consuming bundler; see [the compiler reference](../packages/tooling/vite/forge/docs/reference/compiler.md)
 for the target plugin and declaration pipeline.
 
 ### Application Development
