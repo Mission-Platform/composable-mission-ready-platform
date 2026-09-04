@@ -4,13 +4,13 @@ This document provides guidance on idiomatic patterns, reactivity models, and pe
 
 ## Multi-Framework Strategy
 
-The Mission Platform core philosophy is to build once and render everywhere. This is achieved through **@mission-platform/forge**, the primary framework of the platform: a framework-neutral JSX runtime in which all shared components (everything except the apps) are authored and from which they are rendered seamlessly in Vue 3, React, and other supported environments.
+The Mission Platform core philosophy is to build once and render everywhere. This is achieved through **@mission-platform/forge-jsx**, the primary framework of the platform: a framework-neutral JSX runtime in which all shared components (everything except the apps) are authored and from which they are rendered seamlessly in Vue 3, React, and other supported environments.
 
 ### The Forge Dialect
 
 When building shared packages, author components using Forge's neutral primitives:
 
-- **JSX Factory**: Use `h` and `Fragment` from `@mission-platform/forge`.
+- **JSX Factory**: Use `h` and `Fragment` from `@mission-platform/forge-jsx`.
 - **Neutral Hooks**: Use `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`, and `useId`.
 - **Primitives**: Use `Slot`, `Teleport`, `Transition`, and `Dynamic` for complex UI structures.
 
@@ -21,7 +21,7 @@ Vue 3 is the framework the applications in `apps/` are built with, and the prima
 ### Idiomatic Patterns
 
 - **Composition API**: Use `<script setup lang="ts">` for all new components.
-- **Forge Integration**: Wrap neutral components using `toVueComponent` from `@mission-platform/forge/vue`.
+- **Forge Integration**: Wrap neutral components using `toVueComponent` from `@mission-platform/forge-adapters/vue`.
 - **Composables**: Extract stateful logic into `useXxx` functions to promote reusability.
 
 ### Performance Optimizations
@@ -37,7 +37,7 @@ React is supported via the Forge runtime adapter, primarily for external integra
 ### Idiomatic Patterns
 
 - **Functional Components**: Use functional components with hooks.
-- **Forge Integration**: Wrap neutral components using `toReactComponent` from `@mission-platform/forge/react`.
+- **Forge Integration**: Wrap neutral components using `toReactComponent` from `@mission-platform/forge-adapters/react`.
 - **Hooks Discipline**: strictly follow the "Rules of Hooks" to ensure predictable behavior.
 
 ### Performance Optimizations
@@ -67,4 +67,5 @@ Mission Platform provides varying levels of support for other frameworks through
 
 - [Best Practices](best-practices.md)
 - [Testing Guide](testing.md)
-- [@mission-platform/forge README](../packages/compiler/forge/forge/README.md)
+- [@mission-platform/forge-jsx README](../packages/core/forge-jsx/README.md)
+- [@mission-platform/forge-adapters README](../packages/core/forge-adapters/README.md)
