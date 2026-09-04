@@ -1,18 +1,13 @@
-# עריכת חנות
+# Store Authoring
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+Stores are used to manage shared, cross-component state within a package. Unlike application-level stores (like Pinia or
+Redux), package stores in the Mission Platform are designed to be **framework-neutral observable modules**. This allows
+write-once components to consume them via Forge hooks regardless of the host framework.
 
-> מקור באנגלית: [docs/store-authoring.md](../../store-authoring.md)
-> שפה: עברית (he)
+## Directory Layout
 
-חנויות משמשות לניהול מצב משותף, חוצה רכיבים בתוך חבילה. בניגוד לחנויות ברמת האפליקציה (כמו פיניה או
-Redux), חנויות החבילות ב-Mission Platform מתוכננות להיות **מודולים ניתנים לצפייה ניטרליים במסגרת**. זה מאפשר
-רכיבי כתיבה פעם אחת כדי לצרוך אותם באמצעות Forge hooks ללא קשר למסגרת המארח.
-
-## פריסת ספרייה
-
-כל חנות חייבת להתגורר בספריית המשנה בעלת השם שלה `src/stores/`, מלווה בקובץ בדיקה משותף וא
-חבית מקומית.
+Each store MUST reside in its own named subdirectory within `src/stores/`, accompanied by a co-located test file and a
+local barrel.
 
 ```text
 src/stores/
@@ -23,26 +18,26 @@ src/stores/
 └── index.ts                  # Package-level re-exports
 ```
 
-## התבנית הנצפה
+## The Observable Pattern
 
-חנויות חבילות נמנעות מתלות ספציפיות למסגרת. במקום זאת, הם עוקבים אחר דפוס פשוט שניתן לצפות בו:
+Package stores avoid framework-specific dependencies. Instead, they follow a simple observable pattern:
 
-1. **מצב פרטי**: שמור את המצב בטווח המודול (רגיל TypeScript ערכים).
-2. **גישה לתמונת מצב**: ספק א `getSnapshot()` פונקציה כדי לאחזר את המצב הנוכחי.
-3. **מינוי**: ספק א `subscribe(listener)` פונקציה שמוסיפה התקשרות חזרה לרשימה ומחזירה ביטול הרשמה
-   פונקציה.
-4. **מוטטורים**: ספק פונקציות לעדכון המצב, אשר חייב להודיע ​​לכל המאזינים לאחר העדכון.
+1. **Private State**: Keep state within the module scope (plain TypeScript values).
+2. **Snapshot Access**: Provide a `getSnapshot()` function to retrieve the current state.
+3. **Subscription**: Provide a `subscribe(listener)` function that adds a callback to a list and returns an unsubscribe
+   function.
+4. **Mutators**: Provide functions to update the state, which MUST notify all listeners after the update.
 
-## כללי כתיבה
+## Authoring Rules
 
-1. **Framework Agnostic**: אין לייבא מ `vue`, `react`, או `@mission-platform/forge` ווים בתוך מודול החנות
-   עצמו.
-2. **סוגים מפורשים**: הגדר וייצא תמיד ממשק עבור מצב החנות.
-3. **בטיחות SSR**: שמירה על גישה לממשקי API של דפדפן (למשל, `localStorage`) כך שניתן לאתחל את החנות ב-a Node.js
-   סביבה.
-4. **בדיקה חובה**: בכל חנות חייבת להיות מיקום משותף `.spec.ts` קוֹבֶץ.
+1. **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge-jsx` hooks inside the store module
+   itself.
+2. **Explicit Types**: Always define and export an interface for the store's state.
+3. **SSR Safety**: Guard access to browser APIs (e.g., `localStorage`) so the store can be initialized in a Node.js
+   environment.
+4. **Mandatory Testing**: Every store must have a co-located `.spec.ts` file.
 
-## חנות לדוגמה
+## Example Store
 
 ```ts
 export interface ThemeState {
@@ -67,9 +62,9 @@ export function setTheme(theme: ThemeState['theme']): void {
 }
 ```
 
-## צריכת חנויות ברכיבים
+## Consuming Stores in Components
 
-כדי להשתמש בחנות בתוך רכיב כתיבה פעם אחת, גשר עליו באמצעות `useState` ו `useEffect` מִן `@mission-platform/forge`:
+To use a store within a write-once component, bridge it using `useState` and `useEffect` from `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());
@@ -79,18 +74,18 @@ useEffect(() => {
 }, []);
 ```
 
-## פיגומים
+## Scaffolding
 
-השתמש בכלי Mission Platform Developer MCP כדי ליצור שלד חנות חדש:
+Use the Mission Platform Developer MCP tool to generate a new store skeleton:
 
 ```bash
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
 
-## מדריכים קשורים
+## Related Guides
 
-- [פיתוח חבילות](package-development.md)
-- [עיצוב רכיבים אטומיים](atomic-component-design.md)
-- [כתיבה ניתנת לחיבור](composable-authoring.md)
-- [השתמש בכתיבה](util-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Util Authoring](util-authoring.md)
