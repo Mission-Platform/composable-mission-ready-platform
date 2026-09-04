@@ -53,7 +53,7 @@ All new source code must be written in TypeScript (`.ts`) or Vue SFCs with `<scr
 
 ### Framework-Neutral Components
 
-Whenever possible, author UI components using the `@mission-platform/forge` dialect. This allows components to be
+Whenever possible, author UI components using the `@mission-platform/forge-jsx` dialect. This allows components to be
 compiled and used in Vue, React, Svelte, Solid, and Web Components without rewriting the core logic. Configure the
 consumer's resolver with the matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, or `mp:web-component` condition.
 
