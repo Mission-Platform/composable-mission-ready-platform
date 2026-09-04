@@ -1,6 +1,6 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeDialog } from '@mission-platform/float';
-import { type MpElement, Teleport, useEffect, useRef, useState } from '@mission-platform/forge';
+import { type MpElement, Teleport, useEffect, useRef, useState } from '@mission-platform/forge-jsx';
 
 import { toHtml } from '../../../builders';
 import { parseHtml } from '../../../parsers';

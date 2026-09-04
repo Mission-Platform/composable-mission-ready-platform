@@ -34,7 +34,7 @@ export interface FileGraph {
   node(filePath: string): FileGraphNode | undefined;
 }
 
-const NEUTRAL_MODULE = '@mission-platform/forge';
+const NEUTRAL_MODULE = '@mission-platform/forge-jsx';
 
 const SOURCE_EXTENSIONS = [
   '',

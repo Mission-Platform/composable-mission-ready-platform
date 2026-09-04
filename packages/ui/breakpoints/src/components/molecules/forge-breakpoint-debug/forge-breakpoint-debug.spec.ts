@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import i18next from 'i18next';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -10,7 +10,7 @@ import { renderToString } from 'vue/server-renderer';
 import { ForgeBreakpointDebug } from './forge-breakpoint-debug';
 
 /**
- * Exercises the **neutral** `ForgeBreakpointDebug` through the `@mission-platform/forge`
+ * Exercises the **neutral** `ForgeBreakpointDebug` through the `@mission-platform/forge-jsx`
  * runtime adapters at the SSR baseline viewport width `0` (the `2xs` band). A
  * minimal i18next instance is initialised so the localised labels resolve; the
  * assertions focus on cross-framework parity of the rendered overlay.

@@ -134,7 +134,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### Authoring Rules
 
-1. **TypeScript Everywhere**: All source code must be in `.ts` or `.tsx` (using `@mission-platform/forge`).
+1. **TypeScript Everywhere**: All source code must be in `.ts` or `.tsx` (using `@mission-platform/forge-jsx`).
 2. **Framework Neutrality**: Favor framework-agnostic logic. Components should be authored once in Forge JSX to target
    multiple frameworks.
 3. **Isolation**: Packages must never import from `apps/`.

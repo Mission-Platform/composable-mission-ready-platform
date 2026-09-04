@@ -4,15 +4,15 @@
  * The helper keeps component tests independent from the Forge build compiler by
  * rendering the same neutral source through the React and Vue runtime adapters.
  */
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement, type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
-import type { MpChild, MpComponent, MpPropertyBag } from '@mission-platform/forge';
+import type { MpChild, MpComponent, MpPropertyBag } from '@mission-platform/forge-jsx';
 
 export type ParityChildren = string | number | undefined;
 

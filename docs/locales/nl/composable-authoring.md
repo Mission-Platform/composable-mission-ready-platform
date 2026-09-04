@@ -7,7 +7,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Composables zijn de belangrijkste manier om reactieve logica binnen het Mission Platform in te kapselen en opnieuw te gebruiken. Om deze te garanderen
 logica-eenheden zijn draagbaar binnen alle ondersteunde UI-frameworks, ze zijn geschreven als **write-once**-modules met behulp van de
-raamwerkneutrale haken geleverd door `@mission-platform/forge`.
+raamwerkneutrale haken geleverd door `@mission-platform/forge-jsx`.
 
 ## Directory-indeling
 
@@ -26,7 +26,7 @@ src/composables/
 ## Auteursregels
 
 1. **Gebruik Forge Hooks**: importeer alleen reactieve primitieven (bijv. `useState`, `useEffect`, `useMemo`, `useRef`) van
-   `@mission-platform/forge`. Importeer nooit rechtstreeks uit `vue` of `react`.
+   `@mission-platform/forge-jsx`. Importeer nooit rechtstreeks uit `vue` of `react`.
 2. **Naamgevingsconventie**: samengestelde namen moeten kebab-case gebruiken en worden voorafgegaan door `use-` (e.g., `use-media-query`).
 3. **SSR-veiligheid**: Zorg ervoor dat de logica veilig is voor server-side rendering. Bewaak elke toegang tot browser-only API's zoals `window`,
    `document`, of `localStorage`.
@@ -39,7 +39,7 @@ src/composables/
 Hier is een typische write-once-composable die een gebeurtenislistener beheert.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,

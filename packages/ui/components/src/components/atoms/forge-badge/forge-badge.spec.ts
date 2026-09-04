@@ -6,7 +6,7 @@ import { ForgeBadge } from './forge-badge';
 
 /**
  * Exercises the **neutral** `ForgeBadge` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/forge` runtime adapters via
+ * on both frameworks through the `@mission-platform/forge-jsx` runtime adapters via
  * the shared {@link expectSsrParity} helper. That keeps the assertions
  * independent of the build-time plugin (whose React/Vue parity is covered in
  * `@mission-platform/vite-plugin-forge`), while proving the component itself is

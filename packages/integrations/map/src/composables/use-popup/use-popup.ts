@@ -1,9 +1,9 @@
 // ─── usePopup ─────────────────────────────────────────────────────────────────
 //
-// Framework-neutral: authored once against the `@mission-platform/forge` hooks and
+// Framework-neutral: authored once against the `@mission-platform/forge-jsx` hooks and
 // compiled to React / Vue by `@mission-platform/vite-plugin-forge`.
 
-import { useEffect, useRef, useState } from '@mission-platform/forge';
+import { useEffect, useRef, useState } from '@mission-platform/forge-jsx';
 import { type LngLatLike, type Map, Popup, type PopupOptions } from 'maplibre-gl';
 
 export interface UsePopupOptions extends PopupOptions {

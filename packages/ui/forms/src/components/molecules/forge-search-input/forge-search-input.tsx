@@ -1,4 +1,4 @@
-import { useId, useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { useId, useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 import { ForgeIconClose, ForgeIconSearch } from '@mission-platform/icons';
 
 import styles from './forge-search-input.module.scss';

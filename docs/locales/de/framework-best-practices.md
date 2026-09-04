@@ -9,11 +9,11 @@ Dieses Dokument bietet Anleitungen zu idiomatischen Mustern, Reaktivitätsmodell
 
 ## Multi-Framework-Strategie
 
-Die Kernphilosophie der Mission Platform besteht darin, einmal zu erstellen und überall zu rendern. Dies wird durch **@mission-platform/forge** erreicht, das primäre Framework der Plattform: eine Framework-neutrale JSX-Laufzeit, in der alle gemeinsam genutzten Komponenten (alles außer den Apps) erstellt und von der aus sie nahtlos in Vue 3, React und anderen unterstützten Umgebungen gerendert werden.
+Die Kernphilosophie der Mission Platform besteht darin, einmal zu erstellen und überall zu rendern. Dies wird durch **@mission-platform/forge-jsx** erreicht, das primäre Framework der Plattform: eine Framework-neutrale JSX-Laufzeit, in der alle gemeinsam genutzten Komponenten (alles außer den Apps) erstellt und von der aus sie nahtlos in Vue 3, React und anderen unterstützten Umgebungen gerendert werden.
 
 ### Der Forge-Dialekt
 Erstellen Sie beim Erstellen gemeinsam genutzter Pakete Komponenten mithilfe der neutralen Grundelemente von Forge:
-- **JSX Factory**: Verwenden Sie `h` und `Fragment` von `@mission-platform/forge`.
+- **JSX Factory**: Verwenden Sie `h` und `Fragment` von `@mission-platform/forge-jsx`.
 - **Neutrale Hooks**: Verwenden Sie `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback` und `useId`.
 - **Grundelemente**: Verwenden Sie `Slot`, `Teleport`, `Transition` und `Dynamic` für komplexe UI-Strukturen.
 
@@ -23,7 +23,7 @@ Vue 3 ist das Framework, mit dem die Anwendungen in `apps/` erstellt werden, und
 
 ### Idiomatische Muster
 - **Composition API**: Verwenden Sie `<script setup lang="ts">` für alle neuen Komponenten.
-- **Forge-Integration**: Neutrale Komponenten mit `toVueComponent` aus `@mission-platform/forge/vue` umschließen.
+- **Forge-Integration**: Neutrale Komponenten mit `toVueComponent` aus `@mission-platform/forge-adapters/vue` umschließen.
 - **Composables**: Stateful-Logik in `useXxx`-Funktionen extrahieren, um die Wiederverwendbarkeit zu fördern.
 
 ### Leistungsoptimierungen
@@ -37,7 +37,7 @@ React wird über den Forge-Laufzeitadapter unterstützt, hauptsächlich für ext
 
 ### Idiomatische Muster
 - **Funktionskomponenten**: Verwenden Sie Funktionskomponenten mit Haken.
-- **Forge-Integration**: Neutrale Komponenten mit `toReactComponent` aus `@mission-platform/forge/react` umschließen.
+- **Forge-Integration**: Neutrale Komponenten mit `toReactComponent` aus `@mission-platform/forge-adapters/react` umschließen.
 - **Hooks-Disziplin**: Befolgen Sie strikt die „Hooks-Regeln“, um vorhersehbares Verhalten sicherzustellen.
 
 ### Leistungsoptimierungen
@@ -65,4 +65,4 @@ Mission Platform bietet über Forge-Adapter unterschiedliche Unterstützungsstuf
 ## Verwandte Ressourcen
 - [Best Practices](best-practices.md)
 - [Testleitfaden](testing.md)
-- [@mission-platform/forge README](../../../packages/compiler/forge/forge/README.md)
+- [@mission-platform/forge-jsx README](../../../packages/core/forge-jsx/README.md)

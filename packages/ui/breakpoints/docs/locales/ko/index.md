@@ -7,7 +7,7 @@
 
 `@mission-platform/breakpoints`은 반응형 중단점 유틸리티와 **한 번 쓰기** 뷰포트 구성 요소를 제공합니다.
 미션 플랫폼. 구성요소(`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`)는 중립에서 한 번 작성됩니다.
-`@mission-platform/forge` 방언으로 `@mission-platform/vite-plugin-forge`에 의해 **Vue 3 및 React**로 컴파일되었습니다.
+`@mission-platform/forge-jsx` 방언으로 `@mission-platform/vite-plugin-forge`에 의해 **Vue 3 및 React**로 컴파일되었습니다.
 
 ## 수출
 

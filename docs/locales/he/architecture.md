@@ -44,7 +44,7 @@ graph TD
 
 ## מנוע ניטרלי מסגרת: Forge
 
-הלב של Mission Platform הוא `@mission-platform/forge`, מודל עריכת מסגרת ניטרלי עבור רכיבים ו
+הלב של Mission Platform הוא `@mission-platform/forge-jsx`, מודל עריכת מסגרת ניטרלי עבור רכיבים ו
 חומרים מורכבים. `@mission-platform/vite-plugin-forge` הוא מנהל ההדר הנייטרלי: הוא מנתח ומנרמל את המקור,
 בונה IR סמנטי, מפעיל ניתוח ואופטימיזציה משותפים, ומשגר למכשיר מסופק במפורש
 `FrameworkOutputPlugin`.

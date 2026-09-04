@@ -35,7 +35,7 @@ Paketspeicher vermeiden Framework-spezifische Abhängigkeiten. Stattdessen folge
 
 ## Autorenregeln
 
-1. **Framework-unabhängig**: Importieren Sie nicht aus `vue`-, `react`- oder `@mission-platform/forge`-Hooks innerhalb des Store-Moduls
+1. **Framework-unabhängig**: Importieren Sie nicht aus `vue`-, `react`- oder `@mission-platform/forge-jsx`-Hooks innerhalb des Store-Moduls
    sich selbst.
 2. **Explizite Typen**: Definieren und exportieren Sie immer eine Schnittstelle für den Status des Geschäfts.
 3. **SSR-Sicherheit**: Schützen Sie den Zugriff auf Browser-APIs (z. B. `localStorage`), damit der Store in einer Node.js initialisiert werden kann
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Verbrauchende Speicher in Komponenten
 
-Um einen Speicher innerhalb einer einmal beschreibbaren Komponente zu verwenden, überbrücken Sie ihn mit `useState` und `useEffect` von `@mission-platform/forge`:
+Um einen Speicher innerhalb einer einmal beschreibbaren Komponente zu verwenden, überbrücken Sie ihn mit `useState` und `useEffect` von `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

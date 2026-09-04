@@ -3,7 +3,7 @@ import { ForgeTypography } from '@mission-platform/typography';
 
 import { toVCardOptions, type VCard, type VCardOptions } from '../ast/vcard';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface ForgeVCardProperties {
   card: VCard | VCardOptions;

@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeWysiwygEditor } from './forge-wysiwyg-editor';
 
 /**
  * Exercises the **neutral** `ForgeWysiwygEditor` authored in this package,
- * rendering it on both frameworks through the `@mission-platform/forge` adapters.
+ * rendering it on both frameworks through the `@mission-platform/forge-jsx` adapters.
  * The contenteditable content is written imperatively in a client mount effect,
  * so the SSR markup is the empty surface plus its toolbar and status bar — which
  * keeps the component SSG-safe.

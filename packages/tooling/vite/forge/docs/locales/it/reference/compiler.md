@@ -198,7 +198,7 @@ il conducente possiede un'orchestrazione generica; e ogni pacchetto target possi
 
 ## Costruzioni di componenti
 
-I pacchetti di componenti creano moduli neutri rispetto a `@mission-platform/forge`, solitamente attraverso un barile di componenti neutri.
+I pacchetti di componenti creano moduli neutri rispetto a `@mission-platform/forge-jsx`, solitamente attraverso un barile di componenti neutri.
 `defineTsdownForgeComponents` crea una build di destinazione per ciascun plug-in fornito. Per ogni target:
 
 1. analizza, normalizza e analizza i moduli dei componenti neutri;

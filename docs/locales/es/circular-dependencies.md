@@ -77,7 +77,7 @@ unidad lógica única. Considere fusionarlos en un solo paquete.
 ## Mejores prácticas de prevención
 
 1. **Siga el flujo unidireccional**: respete estrictamente el `Apps → Packages → Configs` dirección de dependencia.
-2. **Marco de autor: lógica neutral**: uso `@mission-platform/forge` para que la lógica central evite ciclos específicos del marco.
+2. **Marco de autor: lógica neutral**: uso `@mission-platform/forge-jsx` para que la lógica central evite ciclos específicos del marco.
 3. **Utilice protocolos de espacio de trabajo**: utilice siempre `workspace:*` para dependencias internas para asegurar pnpm puede resolver correctamente
    el gráfico.
 4. **Audite las importaciones periódicamente**: preste atención a las sugerencias de "importación automática" en su IDE, ya que a veces pueden introducir

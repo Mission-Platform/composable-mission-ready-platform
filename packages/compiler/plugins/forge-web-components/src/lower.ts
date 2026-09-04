@@ -444,9 +444,9 @@ export interface WebComponentsListKey {
 
 /** The imports a generated element module needs. */
 export interface WebComponentsRuntimeImports {
-  /** Values imported from `@mission-platform/forge/web-components`. */
+  /** Values imported from `@mission-platform/forge-adapters/web-components`. */
   readonly values: readonly string[];
-  /** Types imported from `@mission-platform/forge/web-components`. */
+  /** Types imported from `@mission-platform/forge-adapters/web-components`. */
   readonly types: readonly string[];
   /** Local JSX type names imported from the co-located `./mp-jsx-types` module. */
   readonly localTypes: readonly string[];

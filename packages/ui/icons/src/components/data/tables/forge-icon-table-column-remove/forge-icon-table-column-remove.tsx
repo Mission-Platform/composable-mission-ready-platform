@@ -2,7 +2,7 @@ import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-table-column-remove.module.scss';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface IconTableColumnRemoveProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */

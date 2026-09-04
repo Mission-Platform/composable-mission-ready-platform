@@ -2,7 +2,7 @@
  * Shared AST utilities for the Stage-1 source-to-source compiler.
  *
  * The neutral components are authored as ordinary TypeScript functions in the
- * classic-`h` JSX dialect against `@mission-platform/forge`. Stage 1 parses that
+ * classic-`h` JSX dialect against `@mission-platform/forge-jsx`. Stage 1 parses that
  * source with Oxc and rewrites it into a per-framework
  * **source module** (a React `.tsx` or a Vue `.vue` SFC); Stage 2 then compiles
  * that module with the framework's own toolchain (React JSX / `@vitejs/plugin-vue`),
@@ -175,12 +175,12 @@ namespace ts {
 }
 
 /** The neutral package the components import their primitives from. */
-export const NEUTRAL_MODULE = '@mission-platform/forge';
+export const NEUTRAL_MODULE = '@mission-platform/forge-jsx';
 
 /**
  * Neutral **value** imports that are framework-agnostic runtime utilities — they
  * behave identically on every target, so (unlike `h` and the hooks, which are
- * translated/aliased per framework) their `import { … } from '@mission-platform/forge'`
+ * translated/aliased per framework) their `import { … } from '@mission-platform/forge-jsx'`
  * must be preserved verbatim in the generated React and Vue sources.
  */
 export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string> = new Set(['classNames']);
@@ -190,7 +190,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string> = new Set(['classNames'
  * `className={…}` (the `class` attribute is reserved for static strings),
  * passing the same arguments the `classNames` runtime helper accepts — most
  * commonly an **array** of class values (`className={['base', { active }]}`),
- * but any single {@link import('@mission-platform/forge').ClassValue} works too.
+ * but any single {@link import('@mission-platform/forge-jsx').ClassValue} works too.
  * The attribute is spelled the same as React's own `className` (unlike the
  * runtime helper, which stays `classNames`) so a component can merge its own
  * computed classes with a forwarded `properties.className` without a naming
@@ -230,15 +230,15 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string> = new Set(['Slot'
  * Neutral **value** imports that are real, per-framework **components** rather
  * than markers, runtime utilities, or React's own primitives. Their JSX usage
  * is left untouched (they stay a component tag), but their
- * `import { … } from '@mission-platform/forge'` is remapped to the target
+ * `import { … } from '@mission-platform/forge-jsx'` is remapped to the target
  * framework's native implementation: `Teleport` (the portal primitive) becomes
- * `import { Teleport } from '@mission-platform/forge/react'` (a `createPortal`
+ * `import { Teleport } from '@mission-platform/forge-adapters/react'` (a `createPortal`
  * wrapper) for React and `import { Teleport } from 'vue'` (the built-in) for Vue;
  * `Transition` (the enter/leave primitive) becomes the
- * `@mission-platform/forge/react` CSS-class driver for React and the built-in
+ * `@mission-platform/forge-adapters/react` CSS-class driver for React and the built-in
  * `import { Transition } from 'vue'` for Vue; `TransitionGroup` (the list
  * enter/leave/move primitive) is remapped the same way (the
- * `@mission-platform/forge/react` group driver for React, the built-in
+ * `@mission-platform/forge-adapters/react` group driver for React, the built-in
  * `import { TransitionGroup } from 'vue'` for Vue).
  */
 
@@ -256,7 +256,7 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string> = new Set(['useId'])
  * Neutral **value** imports that are the context primitives. On React they *are*
  * React's own (`createContext`/`useContext`), so they fall through to the
  * `react` value import; on Vue their import is remapped to the
- * `@mission-platform/forge/vue` adapter (a `provide`/`inject`-backed
+ * `@mission-platform/forge-adapters/vue` adapter (a `provide`/`inject`-backed
  * `createContext`/`useContext`).
  */
 export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string> = new Set(['createContext', 'useContext']);
@@ -265,7 +265,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string> = new Set(['createConte
  * Neutral **type** imports that have a first-class React equivalent shipped by
  * `react` itself. On the React target these are rewritten to their React name
  * (imported `import type { … } from 'react'`) rather than kept as a neutral
- * `@mission-platform/forge` type, so React authors see the idiomatic type. Every
+ * `@mission-platform/forge-jsx` type, so React authors see the idiomatic type. Every
  * reference to the neutral name in the emitted source is renamed to the mapped
  * React name (see the React emitter). The neutral hook/render primitives each
  * have an exact React counterpart:
@@ -289,12 +289,12 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string> = new Set(['createConte
  * `MpRenderProperty<S>`, a scoped-slot / render-prop function returning a
  * slot's content for a given scope.
  *
- * Rather than keep it as an `@mission-platform/forge` import in the generated
+ * Rather than keep it as an `@mission-platform/forge-jsx` import in the generated
  * code, each framework build emits a tiny co-located module
  * ({@link LOCAL_JSX_TYPES_MODULE}) that defines a **framework-specific variant**
  * of it — React's over `ReactNode`, Vue's over `VNodeChild` — and every emitter
  * redirects the type import there (see the React and Vue `imports` builders).
- * So the generated sources carry no neutral `@mission-platform/forge`
+ * So the generated sources carry no neutral `@mission-platform/forge-jsx`
  * render-prop **type** import at all.
  */
 export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set(['MpRenderProperty']);
@@ -306,7 +306,7 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set(['MpRenderPrope
  * re-declares the neutral **element** primitives `MpChild` and `MpElement` as
  * Vue's `VNodeChild` / `VNode`. Under `jsxImportSource: 'vue'` a
  * JSX expression in a generated SFC has type `JSX.Element` (i.e. Vue's `VNode`);
- * keeping the neutral `@mission-platform/forge` definitions (branded with
+ * keeping the neutral `@mission-platform/forge-jsx` definitions (branded with
  * `__mpElement`) would make every `const x: MpElement = <div/>` /
  * `MpChild[] = items.map(() => <li/>)` fail to type-check under `vue-tsc`. React
  * instead renames these to `ReactNode`/`ReactElement` (see
@@ -325,7 +325,7 @@ export const LOCAL_JSX_TYPES_FILE = 'mp-jsx-types.ts';
  * framework: framework-specific variants of the neutral render primitives named
  * in {@link LOCAL_JSX_TYPE_NAMES}, so the generated components import
  * `MpRenderProperty` from this local module instead of the neutral
- * `@mission-platform/forge` package. The definitions differ per framework: the
+ * `@mission-platform/forge-jsx` package. The definitions differ per framework: the
  * "renderable content" position is React's `ReactNode` and Vue's `VNodeChild`,
  * so each build's declarations read idiomatically for its runtime.
  *
@@ -424,7 +424,7 @@ export interface NeutralImports {
   types: string[];
 }
 
-/** Inspect a module's `import … from '@mission-platform/forge'` bindings. */
+/** Inspect a module's `import … from '@mission-platform/forge-jsx'` bindings. */
 export function readNeutralImports(fileName: string, source: string): NeutralImports {
   const values: string[] = [];
   const types: string[] = [];

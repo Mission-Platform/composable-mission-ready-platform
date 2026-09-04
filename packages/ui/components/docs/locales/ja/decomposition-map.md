@@ -21,7 +21,7 @@
 
 これらのコンポーネントは、キーボード ナビゲーション、移動フォーカス、メニュー/タブの状態、および
 ナビゲーション指向のインタラクション コントラクト。それらの中立的な実装は依存します
-`@mission-platform/forge` で;メニューやテーブルのようなコントロールも使用します
+`@mission-platform/forge-jsx` で;メニューやテーブルのようなコントロールも使用します
 `@mission-platform/icons`、ブレッドクラム/ナビゲーションバーのコンテンツが所有権を構成します
 `@mission-platform/typography` パッケージ。 `ForgeNavbar` は現在、
 残りの `ForgeDrawer` なので、ナビゲーションを抽出するには、それを保持する必要があります。
@@ -36,7 +36,7 @@
 
 一般的な懸念は、次のような構造化データまたは大量データのレンダリングです。
 ウィンドウ処理、並べ替え、ツリー展開、およびステータス表示。現在のソース
-`@mission-platform/forge` を使用し、テキストまたはグリフが構成される場合、
+`@mission-platform/forge-jsx` を使用し、テキストまたはグリフが構成される場合、
 `@mission-platform/typography` および `@mission-platform/icons`。これらは残すべきです
 将来のパッケージの下位レベルの依存関係。仮想コンポーネントは一緒に移動する必要があります
 それらのスタイル/仕様/ストーリーが同じ場所にあるため、ニュートラルなフック動作と 5
@@ -60,7 +60,7 @@ Forge ターゲットは引き続き一緒にテストされます。
 
 最初の 3 つは独自のメディア読み込み/レンダリング セマンティクス、カルーセルとデバイス
 メディアの周囲にプレゼンテーションを追加するモック。彼らの中立的な情報源は現在、
-`@mission-platform/forge`、およびカルーセル コントロールの場合は `@mission-platform/icons`。
+`@mission-platform/forge-jsx`、およびカルーセル コントロールの場合は `@mission-platform/icons`。
 抽出されたパッケージには依存関係はありません。低減されたモーションを維持し、
 メディア動作を分割するのではなく、将来の動きの一環としてのコンポーネントごとの CSS
 そのスタイルから。
@@ -101,7 +101,7 @@ Forge ターゲットは引き続き一緒にテストされます。
 抽出されたパッケージのインポートについて、残りのコンポーネント ソースがチェックされました。
 `@mission-platform/theme`、`@mission-platform/float`、または
 `packages/ui/components/src` の下の `@mission-platform/select`。ニュートラルな成分
-`@mission-platform/forge` を使用、`@mission-platform/icons` から選択したアイコン、
+`@mission-platform/forge-jsx` を使用、`@mission-platform/icons` から選択したアイコン、
 `@mission-platform/typography` のタイポグラフィー、およびパッケージローカルのスタイル/ユーティリティ。
 ストーリーはパッケージ バレルをインポートして公開面を利用する場合があります。それは違います
 実装の依存関係またはパッケージのサイクル。

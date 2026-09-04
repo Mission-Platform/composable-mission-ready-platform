@@ -9,11 +9,11 @@
 
 ## אסטרטגיה מרובת מסגרות
 
-פילוסופיית הליבה של פלטפורמת המשימה היא לבנות פעם אחת ולעבד בכל מקום. זה מושג באמצעות **@mission-platform/forge**, המסגרת הראשית של הפלטפורמה: זמן ריצה JSX ניטרלי במסגרתו כל הרכיבים המשותפים (הכל מלבד האפליקציות) וממנו הם מעובדים בצורה חלקה ב-Vue 3, React, ובסביבות נתמכות אחרות.
+פילוסופיית הליבה של פלטפורמת המשימה היא לבנות פעם אחת ולעבד בכל מקום. זה מושג באמצעות **@mission-platform/forge-jsx**, המסגרת הראשית של הפלטפורמה: זמן ריצה JSX ניטרלי במסגרתו כל הרכיבים המשותפים (הכל מלבד האפליקציות) וממנו הם מעובדים בצורה חלקה ב-Vue 3, React, ובסביבות נתמכות אחרות.
 
 ### דיאלקט הפורג'
 בעת בניית חבילות משותפות, מחבר רכיבים באמצעות הפרימיטיבים הנייטרליים של Forge:
-- **JSX Factory**: השתמש ב-`h` וב-`Fragment` מ-`@mission-platform/forge`.
+- **JSX Factory**: השתמש ב-`h` וב-`Fragment` מ-`@mission-platform/forge-jsx`.
 - **ווים ניטרליים**: השתמש ב-`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback` ו-`useId`.
 - **פרימיטיבים**: השתמש ב-`Slot`, `Teleport`, `Transition` ו-`Dynamic` עבור מבני UI מורכבים.
 
@@ -23,7 +23,7 @@ Vue 3 היא המסגרת שאיתה בנויים היישומים ב-`apps/`, �
 
 ### דפוסים אידיומטיים
 - **Composition API**: השתמש ב-`<script setup lang="ts">` עבור כל הרכיבים החדשים.
-- **שילוב Forge**: עטפו רכיבים ניטרליים באמצעות `toVueComponent` מ-`@mission-platform/forge/vue`.
+- **שילוב Forge**: עטפו רכיבים ניטרליים באמצעות `toVueComponent` מ-`@mission-platform/forge-adapters/vue`.
 - **Composables**: חלץ היגיון מצבי לפונקציות `useXxx` כדי לקדם שימוש חוזר.
 
 ### אופטימיזציות של ביצועים
@@ -37,7 +37,7 @@ React נתמך באמצעות מתאם זמן הריצה Forge, בעיקר עב�
 
 ### דפוסים אידיומטיים
 - **רכיבים פונקציונליים**: השתמשו ברכיבים פונקציונליים עם ווים.
-- **שילוב Forge**: עטפו רכיבים ניטרליים באמצעות `toReactComponent` מ-`@mission-platform/forge/react`.
+- **שילוב Forge**: עטפו רכיבים ניטרליים באמצעות `toReactComponent` מ-`@mission-platform/forge-adapters/react`.
 - **משמעת הוקס**: עקבו בקפדנות אחר "כללי הוקס" כדי להבטיח התנהגות צפויה.
 
 ### אופטימיזציות של ביצועים
@@ -65,4 +65,4 @@ Mission Platform מספקת רמות שונות של תמיכה עבור מסג�
 ## משאבים קשורים
 - [שיטות עבודה מומלצות](best-practices.md)
 - [מדריך בדיקות](testing.md)
-- [@mission-platform/forge README](../../../packages/compiler/forge/forge/README.md)
+- [@mission-platform/forge-jsx README](../../../packages/core/forge-jsx/README.md)

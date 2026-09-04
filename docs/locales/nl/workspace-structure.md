@@ -44,7 +44,7 @@ en nooit gepubliceerd in een register.
 
 Herbruikbare bibliotheken met versiebeheer die door apps worden gebruikt. Deze zijn bedoeld om waar mogelijk raamwerk-agnostisch te zijn.
 
-- **`@mission-platform/forge`**: de raamwerkneutrale JSX-runtime en adapters.
+- **`@mission-platform/forge-jsx`**: de raamwerkneutrale JSX-runtime en adapters.
 - **`@mission-platform/components`**: de componentenbibliotheek met meerdere raamwerken.
 - **`@mission-platform/forms`** en **`@mission-platform/forms-core`**: schemagestuurde formulierprimitieven.
 - **`@mission-platform/content`** en **`@mission-platform/email-renderer`**: pijplijnen voor inhoud en weergave.

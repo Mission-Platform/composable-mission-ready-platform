@@ -12,7 +12,7 @@ système.
 
 Ce package relie le rendu impératif basé sur la sélection D3 avec les arborescences d'interface utilisateur réactives déclaratives :
 
-- **Implémentation neutre** : construit sur les hooks `@mission-platform/forge` (`useRef`, `useEffect`).
+- **Implémentation neutre** : construit sur les hooks `@mission-platform/forge-jsx` (`useRef`, `useEffect`).
 - **Cible à double framework** : transpilé par `@mission-platform/vite-plugin-forge` en React natif (`./react`) et Vue 3
   (`./vue`) composables.
 - **Dépendance sélective** : importe directement `d3-selection` pour maintenir la taille des bundles clients à un minimum.

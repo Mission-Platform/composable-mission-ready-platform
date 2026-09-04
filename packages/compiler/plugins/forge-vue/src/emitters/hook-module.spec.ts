@@ -5,8 +5,8 @@ import { moduleImport, semanticModule, statement } from "../ir-test-helpers.js";
 import { emitVueHookModule } from "./hook-module.js";
 
 const NEUTRAL_IMPORT = moduleImport(
-  "import { useEffect, useState, type MpRef } from '@mission-platform/forge';",
-  "@mission-platform/forge",
+  "import { useEffect, useState, type MpRef } from '@mission-platform/forge-jsx';",
+  "@mission-platform/forge-jsx",
   { valueNames: ["useEffect", "useState"], typeNames: ["MpRef"] },
 );
 
@@ -166,8 +166,8 @@ describe("the Vue hook-module emitter compiles a neutral composable", () => {
       fileName: "sprite-provider.ts",
       imports: [
         moduleImport(
-          "import { createContext, h, type MpElement, useContext } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { createContext, h, type MpElement, useContext } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           {
             valueNames: ["createContext", "h", "useContext"],
             typeNames: ["MpElement"],
@@ -192,9 +192,9 @@ describe("the Vue hook-module emitter compiles a neutral composable", () => {
 
     const code = emitVueHookModule(module);
 
-    expect(code).toContain("import { h } from '@mission-platform/forge';");
+    expect(code).toContain("import { h } from '@mission-platform/forge-jsx';");
     expect(code).toContain(
-      "import { createContext, useContext } from '@mission-platform/forge/vue';",
+      "import { createContext, useContext } from '@mission-platform/forge-adapters/vue';",
     );
     expect(code).toContain(
       "return h('svg', { href: useContext(SpriteContext) });",

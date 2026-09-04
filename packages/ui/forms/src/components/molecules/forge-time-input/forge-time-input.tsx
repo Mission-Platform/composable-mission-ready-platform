@@ -10,7 +10,7 @@ import {
   type MpChild,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import {

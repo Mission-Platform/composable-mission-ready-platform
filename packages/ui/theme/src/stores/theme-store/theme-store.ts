@@ -17,7 +17,7 @@
  * which the compiler translates to a `ref` + lifecycle on Vue and keeps as React
  * hooks — so a single authored source stays reactive on both frameworks.
  *
- * This module is a plain helper (no `@mission-platform/forge` import), so
+ * This module is a plain helper (no `@mission-platform/forge-jsx` import), so
  * `@mission-platform/vite-plugin-forge` copies it verbatim into both the React and
  * Vue generated trees.
  */

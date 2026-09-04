@@ -22,7 +22,7 @@ src/utils/
 
 1. **Purity**: Prefer pure functions that do not have side effects. Given the same input, they should always return the
    same output.
-2. **No UI Hooks**: Never import `vue`, `react`, or `@mission-platform/forge` hooks in a util. Logic requiring
+2. **No UI Hooks**: Never import `vue`, `react`, or `@mission-platform/forge-jsx` hooks in a util. Logic requiring
    reactivity belongs in [Composables](composable-authoring.md).
 3. **Explicit Typing**: Provide full TypeScript types for all arguments and return values.
 4. **Mandatory Testing**: Every util must have a co-located `.spec.ts` file.

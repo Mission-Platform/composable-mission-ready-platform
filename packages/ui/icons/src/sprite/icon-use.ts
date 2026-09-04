@@ -1,4 +1,4 @@
-import { h, type MpElement } from '@mission-platform/forge';
+import { h, type MpElement } from '@mission-platform/forge-jsx';
 
 import { useIconHref } from './provider';
 

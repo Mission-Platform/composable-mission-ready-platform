@@ -139,7 +139,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### Auteursregels
 
-1. **TypeScript overal**: alle broncode moet in `.ts` of `.tsx` staan ​​(met behulp van `@mission-platform/forge`).
+1. **TypeScript overal**: alle broncode moet in `.ts` of `.tsx` staan ​​(met behulp van `@mission-platform/forge-jsx`).
 2. **Framework-neutraliteit**: geef de voorkeur aan raamwerk-agnostische logica. Componenten moeten één keer in Forge JSX worden geschreven om te targeten
    meerdere raamwerken.
 3. **Isolatie**: pakketten mogen nooit worden geïmporteerd vanuit `apps/`.

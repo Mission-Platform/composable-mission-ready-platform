@@ -11,7 +11,7 @@ import {
 import { parseOxcModule } from './oxc.js';
 
 const BADGE = [
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface BadgeProperties {',
   '  children?: MpChild | readonly MpChild[];',
@@ -26,7 +26,7 @@ const BADGE = [
 ].join('\n');
 
 const CLASS_NAMES = [
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface ChipProperties {',
   '  children?: MpChild | readonly MpChild[];',
@@ -50,7 +50,7 @@ const CLASS_NAMES = [
 // `CLASS_NAMES`) — used to check the Svelte emitter unwraps it to a native
 // clsx `class` array.
 const INLINE_CLASS_NAMES = [
-  "import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface TagProperties {',
   '  children?: MpChild | readonly MpChild[];',
@@ -65,7 +65,7 @@ const INLINE_CLASS_NAMES = [
 ].join('\n');
 
 const IN_VIEW = [
-  "import { h, type MpChild, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface InViewProperties {',
   '  children?: MpChild | readonly MpChild[];',
@@ -95,7 +95,7 @@ const IN_VIEW = [
 ].join('\n');
 
 const IMAGE = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface ImageProperties {',
   '  src?: string;',
@@ -115,7 +115,7 @@ const IMAGE = [
 ].join('\n');
 
 const LAYOUT = [
-  "import { h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface LayoutProperties {',
   '  sticky?: boolean;',
@@ -133,7 +133,7 @@ const LAYOUT = [
 ].join('\n');
 
 const SCOPED_LIST = [
-  "import { h, type MpElement, Slot } from '@mission-platform/forge';",
+  "import { h, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface ListProperties {',
   '  items: string[];',
@@ -153,7 +153,7 @@ const SCOPED_LIST = [
 ].join('\n');
 
 const TELEPORT_OVERLAY = [
-  "import { h, type MpElement, Slot, Teleport, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, Slot, Teleport, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface OverlayProperties {',
   '  open?: boolean;',
@@ -178,8 +178,8 @@ describe('the emitters remap the neutral `Teleport` import to each framework por
   const react = compileComponentModule(TELEPORT_OVERLAY, { framework: 'react', componentName: 'ForgeOverlay' });
   const vue = compileComponentModule(TELEPORT_OVERLAY, { framework: 'vue', componentName: 'ForgeOverlay' });
 
-  it('imports the React `Teleport` from the `@mission-platform/forge/react` adapter (not React core or the marker)', () => {
-    expect(react.code).toContain('import { Teleport } from "@mission-platform/forge/react"');
+  it('imports the React `Teleport` from the `@mission-platform/forge-adapters/react` adapter (not React core or the marker)', () => {
+    expect(react.code).toContain('import { Teleport } from "@mission-platform/forge-adapters/react"');
     // `Teleport` must not be imported from React core, nor kept as a value import
     // from the neutral package.
     expect(react.code).not.toMatch(/import \{[^}]*\bTeleport\b[^}]*\} from ["']react["']/);
@@ -204,7 +204,7 @@ describe('the emitters remap the neutral `Teleport` import to each framework por
 // which the classic-`h` JSX transform lowers to `createElement(Fragment, …)`, so
 // the `react` value import must include `Fragment`.
 const SLOT_FALLBACK = [
-  "import { h, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';",
+  "import { h, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface PanelScope {',
   '  index: number;',
@@ -250,7 +250,7 @@ describe('the React emitter imports `Fragment` when slot fallback compiles to a 
 // `<Fragment />` (the neutral render-nothing form). React's idiom for rendering
 // nothing is `null`, so the React emitter collapses the empty fragment to it.
 const EMPTY_FRAGMENT = [
-  "import { Fragment, h, type MpElement } from '@mission-platform/forge';",
+  "import { Fragment, h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface MarkerProperties {',
   '  id: string;',
@@ -266,7 +266,7 @@ const EMPTY_FRAGMENT = [
 // children. The React emitter rewrites the named `<Fragment>` element to the
 // `<>…</>` shorthand.
 const FRAGMENT_GROUP = [
-  "import { Fragment, h, type MpElement } from '@mission-platform/forge';",
+  "import { Fragment, h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface GroupProperties {',
   '  title: string;',
@@ -314,7 +314,7 @@ describe('the React emitter maps a neutral `<Fragment>` to React idioms', () => 
 // transform's fragment factory). Both emitters must lower it: React keeps the
 // `<>…</>` shorthand, Vue inlines the children with no wrapper element.
 const FRAGMENT_SHORTHAND = [
-  "import { Fragment, h, type MpElement } from '@mission-platform/forge';",
+  "import { Fragment, h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface StackProperties {',
   '  title: string;',
@@ -334,7 +334,7 @@ const FRAGMENT_SHORTHAND = [
 // authored as `null` (not an empty fragment): React returns `null` verbatim and
 // Vue's render returns `null`, so neither framework outputs any markup.
 const EMPTY_RENDER_NULL = [
-  "import { type MpElement } from '@mission-platform/forge';",
+  "import { type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface ProbeProperties {',
   '  id: string;',
@@ -392,7 +392,7 @@ describe('the emitters lower a `null` (empty) render', () => {
 // (React) — never the JSX-child `{ … }` wrapper, which would print the invalid
 // `return {slots.default?.()};` that broke the map Vue build.
 const SLOT_RETURN_CLOSURE = [
-  "import { type MpElement, Slot } from '@mission-platform/forge';",
+  "import { type MpElement, Slot } from '@mission-platform/forge-jsx';",
   "import { registerThing } from '@acme/thing';",
   '',
   'export interface WrapProperties {',
@@ -430,7 +430,7 @@ describe('the emitters lower a top-level `<Slot>` return to a bare expression', 
 // (`onDragOver`/`onDrop`/`onDragEnter`) with a multi-word **component** event
 // (`onValueChange`).
 const DRAG_BOARD = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "import ForgeColumn from './forge-column';",
   '',
   'export interface BoardProperties {',
@@ -459,7 +459,7 @@ const DRAG_BOARD = [
 // A template-able drag tile (a single element tree, so it takes the `<template>`
 // path) carrying multi-word DOM events on a native element.
 const DRAG_TILE = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface TileProperties {',
   '  label?: string;',
@@ -557,7 +557,7 @@ describe('the emitters translate named `<Slot>` elements', () => {
     // The (non-slot) `sticky` prop keeps its declared type via a type-based
     // macro; the slot-backed `header` stays out of the runtime props macro.
     expect(vue.code).toContain(
-      "defineProps<{\n  sticky?: boolean;\n  className?: import('@mission-platform/forge').ClassValue;\n}>();",
+      "defineProps<{\n  sticky?: boolean;\n  className?: import('@mission-platform/forge-jsx').ClassValue;\n}>();",
     );
     expect(vue.code).not.toContain('header?: MpChild;\n}>');
   });
@@ -584,7 +584,7 @@ describe('the emitters translate named `<Slot>` elements', () => {
 // type. The wrapper must be unwrapped so the props interface is still resolved
 // and a type-based `defineProps` is emitted.
 const READONLY_PROPS = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface TagProperties {',
   '  label: string;',
@@ -609,7 +609,7 @@ describe('the Vue emitter resolves a `Readonly<…>`-wrapped props parameter', (
 // A template-able card: a single element tree (no node-valued consts) whose
 // optional header/footer regions are gated by the `hasSlot(…)` presence marker.
 const HAS_SLOT_CARD = [
-  "import { h, hasSlot, type MpElement, Slot } from '@mission-platform/forge';",
+  "import { h, hasSlot, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface CardProperties {',
   '  bordered?: boolean;',
@@ -631,7 +631,7 @@ const HAS_SLOT_CARD = [
 // `v-for` form, so it forces the `<script setup>` render-closure fallback —
 // exercising the `hasSlot(…)` → `!!slots.x` rewrite.
 const HAS_SLOT_CLOSURE = [
-  "import { h, hasSlot, type MpElement, Slot } from '@mission-platform/forge';",
+  "import { h, hasSlot, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface FeedProperties {',
   '  items: string[];',
@@ -687,7 +687,7 @@ describe('the emitters translate the `hasSlot(…)` presence marker', () => {
 // forms render as native `<slot>` tags and the kebab presence check uses bracket
 // access.
 const SLOT_CALL_LAYOUT = [
-  "import { h, hasSlot, type MpElement, Slot } from '@mission-platform/forge';",
+  "import { h, hasSlot, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface ShellProperties {',
   '  startTitle?: string;',
@@ -731,7 +731,7 @@ describe('the emitters translate the `h(Slot, …)` call form of the named-slot 
 });
 
 const HELPER_CONSUMER = [
-  "import { h, type MpElement, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, useState } from '@mission-platform/forge-jsx';",
   '',
   "import { getCount, subscribeCount } from '../counter-store';",
   '',
@@ -775,7 +775,7 @@ describe('the Vue emitter partitions relative imports into components and helper
 // one mixed statement — the type is used in the props interface, so it must
 // survive into the emitted source (and its declaration), not be dropped.
 const HELPER_TYPE_CONSUMER = [
-  "import { h, type MpElement, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, useState } from '@mission-platform/forge-jsx';",
   '',
   "import { getCount, type CountSnapshot } from '../counter-store';",
   '',
@@ -821,7 +821,7 @@ describe('the emitters preserve the type-only members of a mixed relative helper
 // interface, so on Vue it must be preserved as an `import type` from the child's
 // compiled `.vue` module (not dropped alongside the default component import).
 const CHILD_TYPE_CONSUMER = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   "import { ForgeTypography, type TypographyVariant } from '../forge-typography';",
   '',
@@ -872,7 +872,7 @@ describe('the Vue emitter preserves a type imported alongside a sibling componen
 
 const EXTERNAL_DEFAULT = [
   "import { DEFAULT_TYPES, type Descriptor } from '@scope/forms-core';",
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface PaletteProperties {',
   '  types?: Descriptor[];',
@@ -915,7 +915,7 @@ describe('the emitters carry external (bare package) imports referenced by prop 
 // against the neutral icon source and renders through the runtime adapters in
 // unit tests, but the package publishes only the per-framework builds.
 const ICON_CONSUMER = [
-  "import { h, type MpElement, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, useState } from '@mission-platform/forge-jsx';",
   '',
   "import { ForgeIconChevron } from '@mission-platform/icons';",
   '',
@@ -967,7 +967,7 @@ describe('the emitters carry the `@mission-platform/icons` import through as a b
 // into the child's named slot with `slot="trigger"`. The template-able variant
 // (no node-valued consts) exercises the `<template>` path.
 const SLOT_PASS_TEMPLATE = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   "import { ForgeDropdown } from '../forge-dropdown';",
   '',
@@ -984,7 +984,7 @@ const SLOT_PASS_TEMPLATE = [
 // The render-closure variant (the imperative `.map()` callback forces the
 // fallback path).
 const SLOT_PASS_CLOSURE = [
-  "import { h, type MpElement, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, useState } from '@mission-platform/forge-jsx';",
   '',
   "import { ForgeDropdown } from '../forge-dropdown';",
   '',
@@ -1177,7 +1177,7 @@ describe('the React emitter creates RSC boundaries', () => {
 // that has no single first-class framework equivalent and is instead redirected
 // to each build's co-located `./mp-jsx-types` variants module.
 const RENDER_PROPS_PANEL = [
-  "import { h, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';",
+  "import { h, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface PanelScope {',
   '  index: number;',
@@ -1254,7 +1254,7 @@ describe('the local JSX types module source (`localJsxTypesModuleSource`)', () =
   it('binds the Web-Components variants to the native template result types', () => {
     const source = localJsxTypesModuleSource('web-components');
     expect(source).toContain(
-      "import type { HtmlContentResult, SuspenseResult, TemplateResult } from '@mission-platform/forge/web-components';",
+      "import type { HtmlContentResult, SuspenseResult, TemplateResult } from '@mission-platform/forge-adapters/web-components';",
     );
     expect(source).toContain('export type MpElement = TemplateResult | HtmlContentResult | SuspenseResult;');
     expect(source).toContain('export type MpChild = MpElement | string | number | boolean | null | undefined;');
@@ -1294,7 +1294,7 @@ describe('the `className` attribute', () => {
   });
 
   it('re-injects the neutral `classNames` runtime import on React (the author never imports it)', () => {
-    expect(react.code).toContain('import { classNames } from "@mission-platform/forge"');
+    expect(react.code).toContain('import { classNames } from "@mission-platform/forge-jsx"');
   });
 
   it('passes a non-array React value straight through as `className`', () => {
@@ -1437,7 +1437,7 @@ describe('the Vue emitter translates hooks to Vue reactivity', () => {
 // `defineEmits` emit). Model reads/writes live in the setup body (effects) so
 // the reference rewriter — not the template printer — exercises the mapping.
 const MODEL_EDITOR = [
-  "import { h, type MpElement, useEffect } from '@mission-platform/forge';",
+  "import { h, type MpElement, useEffect } from '@mission-platform/forge-jsx';",
   '',
   'export interface EditorProperties {',
   '  /**',
@@ -1516,7 +1516,7 @@ describe('the Vue emitter fuses a `@model`-tagged prop and its change event into
 // `update:<name>`, so the camelCase `onUpdateOpen` (which Vue never wires to the
 // model, and `vue-tsc` rejects) must not survive.
 const MODEL_FORWARD_CLOSURE = [
-  "import { h, type MpChild, type MpElement, useState } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface ForwardProperties {',
   '  items: string[];',
@@ -1554,7 +1554,7 @@ describe('the Vue emitter folds an imperative node-array build to a native `v-fo
 // callback to a child component — exercising the template emitter's listener
 // rewrite (`@update:<name>`) rather than the render-closure JSX path above.
 const MODEL_FORWARD_TEMPLATE = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface WrapProperties {',
   '  value?: string;',
@@ -1586,7 +1586,7 @@ describe('the Vue emitter binds a forwarded `@model` listener as `@update:<name>
 // A single-element component (the `<template>` path) whose `useRef` is bound to
 // a DOM node via `ref={boxReference}` — a genuine **template ref**.
 const TEMPLATE_REF = [
-  "import { h, type MpElement, useEffect, useRef } from '@mission-platform/forge';",
+  "import { h, type MpElement, useEffect, useRef } from '@mission-platform/forge-jsx';",
   '',
   'export interface PanelProperties {',
   '  label?: string;',
@@ -1632,7 +1632,7 @@ describe('the Vue emitter declares a `<template>`-bound ref with `useTemplateRef
 // `@click="cond ? a : b"` as an *inline statement* (evaluated, never invoked), so
 // the emitter must wrap it so the resolved handler is actually called.
 const CONDITIONAL_HANDLER = [
-  "import { h, type MpElement, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface ToggleProperties {',
   '  onStart?: () => void;',
@@ -1672,7 +1672,7 @@ describe('the Vue emitter invokes a conditional (non-method-reference) event han
 // callback) whose root element still carries a `ref={rootReference}` — an
 // **object** ref binding inside the render closure's JSX, not a string template ref.
 const RENDER_CLOSURE_REF = [
-  "import { h, type MpElement, useRef } from '@mission-platform/forge';",
+  "import { h, type MpElement, useRef } from '@mission-platform/forge-jsx';",
   '',
   'export interface GalleryProperties {',
   '  items: string[];',
@@ -1724,7 +1724,7 @@ describe('the Vue emitter keeps a render-closure (object) ref as a plain `ref(nu
 // on the native `<template>` path — where the scoped slot renders as a native
 // `<slot name="toolbar" :mode="mode">` element (the form the original request asked for).
 const CONDITIONAL_LET_SLOT = [
-  "import { type MpElement, Slot } from '@mission-platform/forge';",
+  "import { type MpElement, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface DrawProperties {',
   '  mode?: string;',
@@ -1776,7 +1776,7 @@ describe('the Vue emitter widens native-`<template>` coverage for `let`+`if` der
 // `buildVueTemplate` throws `UnsupportedTemplate('JSX spread attribute')` and the
 // emitter takes the render-closure fallback — now annotated with the reason.
 const SPREAD_FALLBACK = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface SpreadProperties {',
   '  rest?: Record<string, unknown>;',
@@ -1794,10 +1794,10 @@ describe('the Vue emitter annotates a render-closure fallback with the reason it
   it('prepends a comment naming the specific `UnsupportedTemplate` reason', () => {
     expect(vue.code).toContain('const render = () => {');
     expect(vue.code).toContain(
-      '<!-- @mission-platform/forge: native <template> unavailable — JSX spread attribute -->',
+      '<!-- @mission-platform/forge-jsx: native <template> unavailable — JSX spread attribute -->',
     );
     // The comment leads the SFC (it travels with the affected component).
-    expect(vue.code.trimStart().startsWith('<!-- @mission-platform/forge:')).toBe(true);
+    expect(vue.code.trimStart().startsWith('<!-- @mission-platform/forge-jsx:')).toBe(true);
   });
 
   it('emits no such comment for a component that compiles to a native `<template>`', () => {
@@ -1807,7 +1807,7 @@ describe('the Vue emitter annotates a render-closure fallback with the reason it
 });
 
 const EFFECT_DERIVED = [
-  "import { h, type MpChild, type MpElement, useEffect, useState } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement, useEffect, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface CarouselProperties {',
   '  slides: string[];',
@@ -1870,7 +1870,7 @@ describe('the Vue emitter hoists derived declarations an effect depends on into 
 });
 
 const HOOK_INITIALISER_DERIVED = [
-  "import { h, type MpElement, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface TimeProperties {',
   '  modelValue?: string;',
@@ -1912,7 +1912,7 @@ describe('the Vue emitter hoists derived declarations a hook initialiser depends
 });
 
 const TRANSITION_FADE = [
-  "import { h, type MpElement, Transition } from '@mission-platform/forge';",
+  "import { h, type MpElement, Transition } from '@mission-platform/forge-jsx';",
   '',
   'export interface FadeProperties {',
   '  open?: boolean;',
@@ -1934,8 +1934,8 @@ describe('the emitters remap the neutral `Transition` import to each framework t
   const react = compileComponentModule(TRANSITION_FADE, { framework: 'react', componentName: 'ForgeFade' });
   const vue = compileComponentModule(TRANSITION_FADE, { framework: 'vue', componentName: 'ForgeFade' });
 
-  it('imports the React `Transition` from the `@mission-platform/forge/react` adapter (not React core or the marker)', () => {
-    expect(react.code).toContain('import { Transition } from "@mission-platform/forge/react"');
+  it('imports the React `Transition` from the `@mission-platform/forge-adapters/react` adapter (not React core or the marker)', () => {
+    expect(react.code).toContain('import { Transition } from "@mission-platform/forge-adapters/react"');
     expect(react.code).not.toMatch(/import \{[^}]*\bTransition\b[^}]*\} from ["']react["']/);
     expect(react.code).not.toMatch(/import \{[^}]*\bTransition\b[^}]*\} from ["']@mission-platform\/jsx["']/);
   });
@@ -1948,7 +1948,7 @@ describe('the emitters remap the neutral `Transition` import to each framework t
 });
 
 const TRANSITION_GROUP_LIST = [
-  "import { h, type MpElement, TransitionGroup } from '@mission-platform/forge';",
+  "import { h, type MpElement, TransitionGroup } from '@mission-platform/forge-jsx';",
   '',
   'export interface ListProperties {',
   '  items?: { id: number; label: string }[];',
@@ -1972,8 +1972,8 @@ describe('the emitters remap the neutral `TransitionGroup` import to each framew
   const react = compileComponentModule(TRANSITION_GROUP_LIST, { framework: 'react', componentName: 'ForgeList' });
   const vue = compileComponentModule(TRANSITION_GROUP_LIST, { framework: 'vue', componentName: 'ForgeList' });
 
-  it('imports the React `TransitionGroup` from the `@mission-platform/forge/react` adapter (not React core or the marker)', () => {
-    expect(react.code).toContain('import { TransitionGroup } from "@mission-platform/forge/react"');
+  it('imports the React `TransitionGroup` from the `@mission-platform/forge-adapters/react` adapter (not React core or the marker)', () => {
+    expect(react.code).toContain('import { TransitionGroup } from "@mission-platform/forge-adapters/react"');
     expect(react.code).not.toMatch(/import \{[^}]*\bTransitionGroup\b[^}]*\} from ["']react["']/);
     expect(react.code).not.toMatch(/import \{[^}]*\bTransitionGroup\b[^}]*\} from ["']@mission-platform\/jsx["']/);
   });
@@ -1986,7 +1986,7 @@ describe('the emitters remap the neutral `TransitionGroup` import to each framew
 });
 
 const DYNAMIC_LINK = [
-  "import { Dynamic, h, type MpElement } from '@mission-platform/forge';",
+  "import { Dynamic, h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface LinkProperties {',
   '  href?: string;',
@@ -2029,7 +2029,7 @@ describe('the emitters translate the `<Dynamic is>` marker to each framework dyn
 });
 
 const DYNAMIC_ARIA_SLOT = [
-  "import { Dynamic, h, type MpElement, Slot } from '@mission-platform/forge';",
+  "import { Dynamic, h, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface ItemProperties {',
   '  href?: string;',
@@ -2072,7 +2072,7 @@ describe('the `<Dynamic is>` marker supports hyphenated attributes and slotted c
 });
 
 const CONTEXT_THEMED = [
-  "import { createContext, h, type MpElement, useContext } from '@mission-platform/forge';",
+  "import { createContext, h, type MpElement, useContext } from '@mission-platform/forge-jsx';",
   '',
   "const ThemeContext = createContext('light');",
   '',
@@ -2096,8 +2096,8 @@ describe('the emitters map the context primitives to each framework provide/inje
     expect(react.code).not.toMatch(/import \{[^}]*\bcreateContext\b[^}]*\} from ["']@mission-platform\/jsx["']/);
   });
 
-  it('imports `createContext`/`useContext` from the `@mission-platform/forge/vue` adapter', () => {
-    expect(vue.code).toContain("import { createContext, useContext } from '@mission-platform/forge/vue';");
+  it('imports `createContext`/`useContext` from the `@mission-platform/forge-adapters/vue` adapter', () => {
+    expect(vue.code).toContain("import { createContext, useContext } from '@mission-platform/forge-adapters/vue';");
     expect(vue.code).toContain("const ThemeContext = createContext('light');");
   });
 
@@ -2108,7 +2108,7 @@ describe('the emitters map the context primitives to each framework provide/inje
 });
 
 const CUSTOM_HOOK_NULL = [
-  "import { type MpElement } from '@mission-platform/forge';",
+  "import { type MpElement } from '@mission-platform/forge-jsx';",
   '',
   "import { useThing } from './use-thing';",
   "import { useRegister } from './use-register';",
@@ -2166,7 +2166,7 @@ describe('the Vue emitter runs custom composable hooks in `setup` (not the rende
 });
 
 const TREE = [
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface TreeNode {',
   '  label: string;',
@@ -2218,7 +2218,7 @@ describe('the emitters support a recursive (self-referencing) component', () => 
 // return tree at their use sites (the projection becoming a native `v-for`),
 // keeping the whole component on the `<template>` path (no render closure).
 const NODE_CONST_INLINE = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface PanelProperties {',
   '  title: string;',
@@ -2261,7 +2261,7 @@ describe('the Vue emitter inlines node-valued derived consts into the template',
 });
 
 const TOGGLE = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface ToggleProperties {',
   '  on?: boolean;',
@@ -2309,7 +2309,7 @@ describe('the Vue emitter lowers JSX ternaries to `v-if` / `v-else`', () => {
 // template expressions and still renders the projection as a native `v-for`
 // (rather than the render-closure fallback).
 const V_FOR_LIST = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface RowsProperties {',
   '  rows: string[];',
@@ -2349,7 +2349,7 @@ describe("the Vue emitter inlines a `.map()` callback's leading scalar consts in
 
 const USE_VUE_WIDGET = [
   '"use vue";',
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface WidgetProperties {',
   '  children?: MpChild | readonly MpChild[];',
@@ -2420,7 +2420,7 @@ describe('the compiler reads and applies `"use <framework>";` module directives'
 // form, but its argument-bound body can be spliced into the call site, so the
 // surrounding tree templates natively (the `.map()` becomes a `v-for`).
 const RENDER_HELPER = [
-  "import { h, type MpElement, Slot } from '@mission-platform/forge';",
+  "import { h, type MpElement, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface MenuNode { label: string; children?: MenuNode[]; }',
   'export interface MenubarProperties { items?: MenuNode[]; }',
@@ -2462,7 +2462,7 @@ describe('the Vue emitter inlines a single-call function-valued node helper', ()
 // (the surviving value reference would dangle), so it keeps the safe render-closure
 // fallback rather than splice a JSX body into an interpolation.
 const VALUE_REFERENCED_HELPER = [
-  "import { type MpElement } from '@mission-platform/forge';",
+  "import { type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface ListProperties { items?: string[]; }',
   '',
@@ -2497,7 +2497,7 @@ describe('the Vue emitter keeps the fallback for a helper referenced as a value'
 // guard, so it is wrapped in a `<template v-if>` / `<template v-else>` block —
 // never stringified into an interpolation of the raw JSX.
 const ARRAY_OR_MAP_CONDITIONAL = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface TableProperties { rows: string[]; empty?: string; }',
   '',
@@ -2533,7 +2533,7 @@ describe('the Vue emitter templates a conditional between an element array and a
 // — a `.map()` equivalent that isn't a `.map()` — becomes a `v-for` over the
 // materialised `Array.from({ length: n })`, rather than a raw interpolation.
 const ARRAY_FROM_LIST = [
-  "import { type MpElement } from '@mission-platform/forge';",
+  "import { type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface RulerProperties { count?: number; }',
   '',
@@ -2565,7 +2565,7 @@ describe('the Vue emitter templates an `Array.from(length, mapper)` list as a `v
 // `v-if` / `v-else-if` chain (with no trailing `v-else` for the `null` arm),
 // rather than falling back to a render closure.
 const NESTED_CONDITIONAL_CHAIN = [
-  "import { type MpElement } from '@mission-platform/forge';",
+  "import { type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface FieldProperties { error?: string; hint?: string; }',
   '',
@@ -2600,7 +2600,7 @@ describe('the Vue emitter flattens a chained conditional into `v-if` / `v-else-i
 // source computed plus a per-name computed reading each element off it, so the
 // bound names stay usable in the template rather than forcing a fallback.
 const DESTRUCTURING_CONST = [
-  "import { type MpElement } from '@mission-platform/forge';",
+  "import { type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface RangeProperties { from: number; to: number; }',
   '',
@@ -2639,7 +2639,7 @@ describe('the Vue emitter expands a destructuring const into computeds', () => {
 // Inlining `content` structurally must emit the nested `...childList` as the
 // default `<slot>` and the conditional node const as a `v-if` element.
 const HERO_VARIADIC_NODE_CONSTS = [
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface HeroProperties { children?: MpChild | readonly MpChild[]; title?: string; eyebrow?: string; }',
   '',
@@ -2676,7 +2676,7 @@ describe('the Vue emitter renders variadic node-const children as native markup 
 // element array and a `.map()`, spread as `...itemNodes`, plus the normalised
 // children spread `...extraChildren`.
 const LIST_FLATMAP_ELEMENT_ARRAY = [
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface ListItem { label?: string; term?: string; content?: string; }',
   'export interface ListProperties { children?: MpChild | readonly MpChild[]; items?: ListItem[]; variant?: string; }',
@@ -2730,7 +2730,7 @@ describe('the Vue emitter renders a flatMap element array + map conditional as `
 // (dynamic first argument) renders via `<component :is="as">` wrapping the
 // converted child markup.
 const DYNAMIC_TAG_WITH_CHILDREN = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface BoxProperties { as?: string; label?: string; }',
   '',
@@ -2755,7 +2755,7 @@ describe('the Vue emitter renders a dynamic-tag component with children via `<co
 // (`const style = {}; if (width !== undefined) style.width = width; …`) lifted to
 // a reactive `computed` bound via `:style`.
 const IMPERATIVE_STYLE_OBJECT = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface SkeletonProperties { width?: string; height?: string; }',
   '',
@@ -2796,7 +2796,7 @@ describe('the Vue emitter lifts an imperative style-object build to a reactive `
 // captured handlers (`isPathOpen`/`handleItemClick`) lifted to props — and
 // rewrites the parent to render it via `v-for`.
 const RECURSIVE_MENU = [
-  "import { h, type MpElement, Slot, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, Slot, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface MenusNode { label: string; icon?: string; href?: string; children?: MenusNode[]; }',
   'export interface MenusProperties { items?: MenusNode[]; }',
@@ -2877,7 +2877,7 @@ describe('the Vue emitter extracts a recursive helper into an auxiliary componen
 // `v-if`/`v-else` roots, and the normalised children rendered a second time in the
 // popup (`{childList}`) becomes a second default `<slot />`.
 const EARLY_RETURN_BRANCHES = [
-  "import { h, type MpChild, type MpElement, useRef, useState } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement, useRef, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface TextProperties { children?: MpChild | readonly MpChild[]; as?: string; truncatePopup?: boolean; }',
   '',
@@ -2933,7 +2933,7 @@ describe('the Vue emitter splits an early-return guard into `v-if`/`v-else` root
 // below them and the `watch(() => [lngLat], …)` getter (evaluated eagerly on
 // setup) would hit `lngLat` in the temporal dead zone at runtime.
 const POPUP_HOOK = [
-  "import { useEffect, useRef, useState } from '@mission-platform/forge';",
+  "import { useEffect, useRef, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface UsePopupOptions {',
   '  lngLat: [number, number];',
@@ -2980,7 +2980,7 @@ describe('the Vue hook emitter preserves the authored statement order of a compo
 // kept as a neutral import: React imports it from `react`, Vue from `vue`, and
 // the `const generatedId = useId()` call is preserved verbatim in both.
 const USE_ID_FIELD = [
-  "import { h, type MpElement, useId } from '@mission-platform/forge';",
+  "import { h, type MpElement, useId } from '@mission-platform/forge-jsx';",
   '',
   'export interface FieldProperties {',
   '  id?: string;',
@@ -3008,7 +3008,7 @@ describe('the compiler maps the neutral `useId` hook to each framework native `u
     expect(react.code).toContain('const generatedId = useId();');
     expect(react.code).toContain('const resolvedId = properties.id ?? generatedId;');
     // The id hook must never fall back to the neutral package or a helper.
-    expect(react.code).not.toContain("from '@mission-platform/forge'");
+    expect(react.code).not.toContain("from '@mission-platform/forge-jsx'");
     expect(react.code).not.toContain('nextFieldId');
   });
 
@@ -3020,7 +3020,7 @@ describe('the compiler maps the neutral `useId` hook to each framework native `u
 });
 
 const I18N_CHECKBOX = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   "import i18next from 'i18next';",
   '',
   'export interface CheckboxProperties {',
@@ -3055,7 +3055,7 @@ describe('the compiler rewrites `i18next.t(...)` to `useI18n()` and `t(...)`', (
 // exercises `useState`/`useMemo`, a ternary, a `.map()`, and a click handler —
 // every construct the emitted `<template>`-equivalent markup must convert.
 const TOGGLE_PANEL = [
-  "import { h, type MpElement, useMemo, useState } from '@mission-platform/forge';",
+  "import { h, type MpElement, useMemo, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface TogglePanelProperties {',
   '  items: string[];',
@@ -3086,7 +3086,7 @@ describe('the compiler emits Svelte 5 components with runes', () => {
 
   it('emits Svelte 5 SFC with script setup and $props / $state / $effect runes', () => {
     expect(svelte.lang).toBe('svelte');
-    expect(svelte.code).not.toContain('@mission-platform/forge');
+    expect(svelte.code).not.toContain('@mission-platform/forge-jsx');
     expect(svelte.code).not.toContain('from "react"');
     expect(svelte.code).toContain('<script');
     expect(svelte.code).toContain('$props');
@@ -3096,7 +3096,7 @@ describe('the compiler emits Svelte 5 components with runes', () => {
 
   it('converts the returned JSX to real Svelte markup: `{#if}`, `{#each}`, `{expr}`, and lowercase `onclick`', () => {
     expect(panel.lang).toBe('svelte');
-    expect(panel.code).not.toContain('@mission-platform/forge');
+    expect(panel.code).not.toContain('@mission-platform/forge-jsx');
     // Runes: the destructured prop, the `useState` pair, and the `useMemo` derivation.
     expect(panel.code).toContain('$props()');
     expect(panel.code).toContain('$state(false)');
@@ -3131,7 +3131,7 @@ describe('the compiler emits Svelte 5 components with runes', () => {
 // (rather than leak a bare `return`/`h(…)` into the `<script>`), modelled on
 // `forge-typography`.
 const HYPERSCRIPT_TEXT = [
-  "import { classNames, h, type MpChild, type MpElement, useState } from '@mission-platform/forge';",
+  "import { classNames, h, type MpChild, type MpElement, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface TextProperties {',
   '  children?: MpChild | readonly MpChild[];',
@@ -3185,7 +3185,7 @@ describe('the compiler emits SolidJS components with signals', () => {
 
   it('emits SolidJS TSX module mapping hooks to Solid primitives', () => {
     expect(solid.lang).toBe('tsx');
-    expect(solid.code).not.toContain('@mission-platform/forge');
+    expect(solid.code).not.toContain('@mission-platform/forge-jsx');
     expect(solid.code).not.toContain('from "react"');
     expect(solid.code).toContain('from "solid-js"');
     expect(solid.code).toContain('createSignal');
@@ -3213,7 +3213,7 @@ describe('the compiler emits Web Components custom elements', () => {
 });
 
 const SLOT_PROJECTION_FIXTURE = [
-  "import { Slot, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { Slot, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface ProjectionProperties {',
   '  children?: MpChild | readonly MpChild[];',
@@ -3265,7 +3265,7 @@ describe('the Web Components compiler preserves slot ownership', () => {
 //   2. `label={properties.label}` forwards the scoped slot to the recursive child;
 //      it must become a `<template #label>` forwarding block, not a `:label` prop.
 const RECURSIVE_TREE_ITEM = [
-  "import { h, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';",
+  "import { h, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge-jsx';",
   '',
   'export interface TreeNode {',
   '  id: string;',
@@ -3343,7 +3343,7 @@ describe('the compiler flattens a recursive render-prop component to native Vue 
 // so a same-named plain field (`{crumb.icon}` where a *different* item type
 // declares `icon: string`) still renders as a normal interpolation.
 const NODE_TYPED_MAP_ITEM = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface ToolbarItem {',
   '  label: string;',
@@ -3416,7 +3416,7 @@ describe('the compiler renders a node-typed `.map()` item field as `<component :
 // (`renderBody`). None of these should be misread as node-producing, and the two
 // render helpers must inline so the whole component templates natively.
 const RANGE_SLOTS = [
-  "import { h, hasSlot, type MpChild, type MpElement, Slot, useState } from '@mission-platform/forge';",
+  "import { h, hasSlot, type MpChild, type MpElement, Slot, useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface RangeValue { start: string; end: string; }',
   '',
@@ -3496,7 +3496,7 @@ describe('the compiler flattens object-key / data-map / helper false positives t
 // default-slot spread — modelled on `forge-calendar`/`forge-list`. It has no
 // `emitExpressionChild` interpolation form and must emit as native child markup.
 const ARRAY_CHILDREN = [
-  "import { Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface GridProperties {',
   '  children?: MpChild | readonly MpChild[];',
@@ -3542,7 +3542,7 @@ describe('the compiler renders an array-literal child natively (Category B)', ()
 // be scope-aware: it appends `.value` to genuine memo reads but leaves the
 // handler-local binding (and its uses) untouched, so neither is corrupted.
 const MEMO_SHADOW = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface ClockProperties {',
   '  hour?: number;',
@@ -3593,7 +3593,7 @@ describe('the Vue memo rewriter is scope-aware for a shadowing handler-local (Ca
 // node, so it must be lifted to a reactive `watchEffect`, not rejected as a
 // "non-const derived statement".
 const REF_SYNC = [
-  "import { h, type MpElement, useRef } from '@mission-platform/forge';",
+  "import { h, type MpElement, useRef } from '@mission-platform/forge-jsx';",
   '',
   'export interface SliderProperties {',
   '  modelValue?: number;',
@@ -3637,7 +3637,7 @@ describe('the Vue emitter lifts a render-scope ref-sync to a reactive `watchEffe
 // `forge-toast`/`forge-alert-banner`. It inlines as a native `v-if`/`v-else-if`/
 // `v-else` chain rather than being stringified.
 const SWITCH_HELPER = [
-  "import { h, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   "export type Variant = 'success' | 'error' | 'info';",
   '',
@@ -3692,7 +3692,7 @@ describe('the Vue emitter inlines an element-returning `switch` helper as a `v-i
 // render natively via `<component :is>`, and the render-prop must stay a real
 // prop (never a Vue named slot) so a compiled neutral parent can pass it plainly.
 const RENDER_PROP_CALL = [
-  "import { h, type MpElement, type MpRenderProperty } from '@mission-platform/forge';",
+  "import { h, type MpElement, type MpRenderProperty } from '@mission-platform/forge-jsx';",
   '',
   'export interface TabItem { id: string; label: string; }',
   'export interface PanelScope { tab: TabItem; }',
@@ -3738,7 +3738,7 @@ describe('the Vue emitter renders a render-prop call natively via `<component :i
 });
 
 const MEMBER_RENDER_PROP_CALL = [
-  "import { h, type MpElement, type MpRenderProperty } from '@mission-platform/forge';",
+  "import { h, type MpElement, type MpRenderProperty } from '@mission-platform/forge-jsx';",
   '',
   'export interface WizardStep {',
   '  when?: boolean;',
@@ -3773,7 +3773,7 @@ describe('the Vue emitter renders a render-property member call as a node', () =
 });
 
 const DESTRUCTURED_CHILDREN = [
-  "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+  "import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';",
   '',
   'export interface TextProperties {',
   '  children?: MpChild | readonly MpChild[];',

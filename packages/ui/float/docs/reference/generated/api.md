@@ -21,8 +21,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type AlertBannerVariant =
-  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type AlertBannerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Intent / colour treatment of the banner — the canonical colour set.
@@ -32,7 +31,7 @@ Intent / colour treatment of the banner — the canonical colour set.
 **Kind:** function
 
 ```typescript
-function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement;
+function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement
 ```
 
 `ForgeAlertBanner` — an inline alert / notification banner authored once in the
@@ -58,9 +57,9 @@ has no conditional-root return).
 
 #### Parameters
 
-| Name       | Type                            | Description |
-| ---------- | ------------------------------- | ----------- |
-| properties | Readonly<AlertBannerProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<AlertBannerProperties> |  |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -89,7 +88,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
+function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement
 ```
 
 `ForgeDropdown` — a floating menu/list panel anchored to a trigger, authored
@@ -134,9 +133,9 @@ props. It owns its styling through the co-located CSS Module
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<DropdownProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DropdownProperties> |  |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -145,7 +144,7 @@ props. It owns its styling through the co-located CSS Module
 **Kind:** function
 
 ```typescript
-function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
+function ForgePopover(properties: Readonly<PopoverProperties>): MpElement
 ```
 
 `ForgePopover` — a floating dialog anchored to a trigger, authored once in the
@@ -190,28 +189,16 @@ callback props. It owns its styling through the co-located CSS Module
 
 #### Parameters
 
-| Name       | Type                        | Description |
-| ---------- | --------------------------- | ----------- |
-| properties | Readonly<PopoverProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<PopoverProperties> |  |
 
 ### PopoverPlacement
 
 **Kind:** type
 
 ```typescript
-export type PopoverPlacement =
-  | 'top'
-  | 'top-start'
-  | 'top-end'
-  | 'bottom'
-  | 'bottom-start'
-  | 'bottom-end'
-  | 'left'
-  | 'left-start'
-  | 'left-end'
-  | 'right'
-  | 'right-start'
-  | 'right-end';
+export type PopoverPlacement = | 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end';
 ```
 
 Preferred placement of the popover relative to its trigger.
@@ -233,7 +220,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
+function ForgeToast(properties: Readonly<ToastProperties>): MpElement
 ```
 
 `ForgeToast` — a single toast notification card authored once in the neutral
@@ -255,9 +242,9 @@ set (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/`ForgeIconInfo`).
 
 #### Parameters
 
-| Name       | Type                      | Description |
-| ---------- | ------------------------- | ----------- |
-| properties | Readonly<ToastProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ToastProperties> |  |
 
 ### ToastProperties
 
@@ -284,8 +271,7 @@ Size token — canonical 2xs → 2xl scale.
 **Kind:** type
 
 ```typescript
-export type ToastVariant =
-  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ToastVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Intent / colour treatment of the toast — the canonical colour set.
@@ -297,7 +283,7 @@ Intent / colour treatment of the toast — the canonical colour set.
 **Kind:** function
 
 ```typescript
-function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
+function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
 ```
 
 `ForgeTooltip` — a short contextual hint anchored to its trigger, authored once
@@ -339,9 +325,9 @@ owns its styling through the co-located CSS Module `forge-tooltip.module.scss`.
 
 #### Parameters
 
-| Name       | Type                        | Description |
-| ---------- | --------------------------- | ----------- |
-| properties | Readonly<TooltipProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TooltipProperties> |  |
 
 ### TooltipPlacement
 
@@ -400,7 +386,7 @@ Size token — canonical 2xs → 2xl scale.
 **Kind:** function
 
 ```typescript
-function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
+function ForgeDialog(properties: Readonly<DialogProperties>): MpElement
 ```
 
 `ForgeDialog` — a modal dialog authored once in the neutral JSX dialect and
@@ -428,9 +414,9 @@ props. It owns its styling through the co-located CSS Module
 
 #### Parameters
 
-| Name       | Type                       | Description |
-| ---------- | -------------------------- | ----------- |
-| properties | Readonly<DialogProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DialogProperties> |  |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -439,7 +425,7 @@ props. It owns its styling through the co-located CSS Module
 **Kind:** function
 
 ```typescript
-function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
+function ForgeModal(properties: Readonly<ModalProperties>): MpElement
 ```
 
 `ForgeModal` — a centred modal authored once in the neutral JSX dialect and
@@ -465,9 +451,9 @@ co-located CSS Module `forge-modal.module.scss`.
 
 #### Parameters
 
-| Name       | Type                      | Description |
-| ---------- | ------------------------- | ----------- |
-| properties | Readonly<ModalProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ModalProperties> |  |
 
 ### ModalProperties
 
@@ -496,7 +482,7 @@ Width step of the modal on tablet/desktop (`sm`+); mobile is always full-width.
 **Kind:** function
 
 ```typescript
-function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement;
+function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement
 ```
 
 `ForgeToastContainer` — renders the toasts held in the shared `toast-store`,
@@ -512,13 +498,12 @@ observable store with the neutral {@link useState}/{@link useEffect} hooks
 source stays reactive on both frameworks.
 
 Accessibility:
-
 - The stack is a `role="region"` with a configurable `aria-label`; each
   `ForgeToast` carries its own `role="status"` / `role="alert"`.
 
 Enter/leave animation matches the Vue SFC via the neutral
 **`<TransitionGroup>`** primitive, which compiles to Vue's built-in
-`<TransitionGroup>` and the `@mission-platform/forge/react` CSS-class group
+`<TransitionGroup>` and the `@mission-platform/forge-adapters/react` CSS-class group
 driver. The four styled enter/leave phase classes are passed as **hashed
 CSS-Module classes** (via the `<TransitionGroup>` class props), so the
 animation styling stays component-scoped instead of relying on global
@@ -536,9 +521,9 @@ composable → the static `notification` z-index layer applied in CSS.
 
 #### Parameters
 
-| Name       | Type                               | Description |
-| ---------- | ---------------------------------- | ----------- |
-| properties | Readonly<ToastContainerProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ToastContainerProperties> |  |
 
 ### ToastContainerProperties
 
@@ -567,7 +552,7 @@ Size token — canonical 2xs → 2xl scale.
 **Kind:** function
 
 ```typescript
-function clearToasts(): void;
+function clearToasts(): void
 ```
 
 Dismiss all toasts.
@@ -577,23 +562,23 @@ Dismiss all toasts.
 **Kind:** function
 
 ```typescript
-function dismissToast(id: number): void;
+function dismissToast(id: number): void
 ```
 
 Dismiss a toast by id.
 
 #### Parameters
 
-| Name | Type   | Description |
-| ---- | ------ | ----------- |
-| id   | number |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| id | number |  |
 
 ### errorToast
 
 **Kind:** constant
 
 ```typescript
-export const errorToast: ReturnType<typeof withVariant>;
+export const errorToast: ReturnType<typeof withVariant>
 ```
 
 Convenience: show an `error` toast.
@@ -603,7 +588,7 @@ Convenience: show an `error` toast.
 **Kind:** function
 
 ```typescript
-function getToastsSnapshot(): readonly ToastRecord[];
+function getToastsSnapshot(): readonly ToastRecord[]
 ```
 
 Read an immutable snapshot of the active toasts.
@@ -613,7 +598,7 @@ Read an immutable snapshot of the active toasts.
 **Kind:** constant
 
 ```typescript
-export const infoToast: ReturnType<typeof withVariant>;
+export const infoToast: ReturnType<typeof withVariant>
 ```
 
 Convenience: show an `info` toast.
@@ -623,39 +608,39 @@ Convenience: show an `info` toast.
 **Kind:** function
 
 ```typescript
-function showToast(options: ToastOptions | string): number;
+function showToast(options: ToastOptions | string): number
 ```
 
 Show a toast and return its id.
 
 #### Parameters
 
-| Name    | Type                   | Description |
-| ------- | ---------------------- | ----------- |
-| options | ToastOptions \| string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | ToastOptions \| string |  |
 
 ### subscribeToasts
 
 **Kind:** function
 
 ```typescript
-function subscribeToasts(listener: () => void): () => void;
+function subscribeToasts(listener: () => void): () => void
 ```
 
 Subscribe to store changes; returns an unsubscribe function.
 
 #### Parameters
 
-| Name     | Type       | Description |
-| -------- | ---------- | ----------- |
-| listener | () => void |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| listener | () => void |  |
 
 ### successToast
 
 **Kind:** constant
 
 ```typescript
-export const successToast: ReturnType<typeof withVariant>;
+export const successToast: ReturnType<typeof withVariant>
 ```
 
 Convenience: show a `success` toast.
@@ -695,7 +680,7 @@ A resolved toast held in the store.
 **Kind:** function
 
 ```typescript
-function useToast(): UseToastReturn;
+function useToast(): UseToastReturn
 ```
 
 Imperative helpers to show and dismiss toasts, mirroring the Vue
@@ -717,7 +702,7 @@ The public API returned by {@link useToast}.
 **Kind:** constant
 
 ```typescript
-export const warningToast: ReturnType<typeof withVariant>;
+export const warningToast: ReturnType<typeof withVariant>
 ```
 
 Convenience: show a `warning` toast.

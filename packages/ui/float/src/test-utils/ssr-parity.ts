@@ -2,8 +2,8 @@
  * Cross-framework **SSR DOM parity** test helper.
  *
  * Each write-once component in this package is authored once in the neutral
- * `@mission-platform/forge` dialect and shipped to **both** React and Vue. This
- * helper renders a neutral component through the `@mission-platform/forge` React
+ * `@mission-platform/forge-jsx` dialect and shipped to **both** React and Vue. This
+ * helper renders a neutral component through the `@mission-platform/forge-jsx` React
  * and Vue runtime adapters to static SSR markup and lets a `<name>.spec.ts`
  * assert the two frameworks produce the **same DOM** for a given prop set —
  * proving the component is framework-portable independently of the build-time
@@ -22,15 +22,15 @@
  * });
  * ```
  */
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement, type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
-import type { MpChild, MpComponent, MpPropertyBag } from '@mission-platform/forge';
+import type { MpChild, MpComponent, MpPropertyBag } from '@mission-platform/forge-jsx';
 
 /** Children accepted by the parity helpers (plain text/markup only for SSR). */
 export type ParityChildren = string | number | undefined;

@@ -4,7 +4,7 @@ import {
   type ClassValue,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 import { ForgeIconCheck, ForgeIconError } from '@mission-platform/icons';
 import { ForgeSelect, type SelectOption } from '@mission-platform/select';
 import { ForgeTypography } from '@mission-platform/typography';

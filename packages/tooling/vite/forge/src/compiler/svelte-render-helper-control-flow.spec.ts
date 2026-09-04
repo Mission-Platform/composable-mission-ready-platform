@@ -17,7 +17,7 @@ function source(relativePath: string): string {
 }
 
 const SWITCH_HELPER_SOURCE = `
-import { h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';
 import { ForgeTabs } from '@mission-platform/components';
 
 interface FixtureProperties {
@@ -49,7 +49,7 @@ export function PanelFixture(properties: Readonly<FixtureProperties>): MpElement
 `;
 
 const FIELD_HELPER_SOURCE = `
-import { h, type MpElement } from '@mission-platform/forge';
+import { h, type MpElement } from '@mission-platform/forge-jsx';
 
 interface Field {
   key: string;

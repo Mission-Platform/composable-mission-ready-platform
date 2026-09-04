@@ -24,7 +24,7 @@ import { compileComponentModule } from './compiler-test-helpers';
 const SVELTE_FRAMEWORK = forgeSvelteFramework();
 
 const SELECT_SOURCE = `
-import { type MpChild } from '@mission-platform/forge';
+import { type MpChild } from '@mission-platform/forge-jsx';
 
 export interface SelectOption {
   /** The value chosen when the option is selected. */

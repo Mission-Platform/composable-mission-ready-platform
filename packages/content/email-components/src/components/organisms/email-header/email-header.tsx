@@ -2,7 +2,7 @@ import { colorValue, spacingValue, typographyStyle } from '../../../tokens';
 import { EmailImage } from '../../atoms';
 import { EmailColumn, EmailRow } from '../../molecules';
 
-import type { MpChild, MpElement } from '@mission-platform/forge';
+import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 export interface EmailHeaderProperties {
   /** The content rendered inside the component. */

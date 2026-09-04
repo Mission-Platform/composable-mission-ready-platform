@@ -35,7 +35,7 @@ Las tiendas de paquetes evitan dependencias específicas del marco. En cambio, s
 
 ## Reglas de creación
 
-1. **Independiente del marco**: no importe desde los ganchos `vue`, `react` o `@mission-platform/forge` dentro del módulo de tienda.
+1. **Independiente del marco**: no importe desde los ganchos `vue`, `react` o `@mission-platform/forge-jsx` dentro del módulo de tienda.
    mismo.
 2. **Tipos explícitos**: siempre defina y exporte una interfaz para el estado de la tienda.
 3. **Seguridad SSR**: proteja el acceso a las API del navegador (por ejemplo, `localStorage`) para que la tienda se pueda inicializar en Node.js.
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Consumir tiendas en componentes
 
-Para usar una tienda dentro de un componente de escritura única, conéctela usando `useState` y `useEffect` desde `@mission-platform/forge`:
+Para usar una tienda dentro de un componente de escritura única, conéctela usando `useState` y `useEffect` desde `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

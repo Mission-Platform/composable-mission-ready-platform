@@ -66,7 +66,7 @@ pnpm install
 スモーク テストを実行して、ビルド システムと環境が正しく構成されていることを確認します。
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 の `...` また、パッケージに必要な Forge の依存関係も構築します。の

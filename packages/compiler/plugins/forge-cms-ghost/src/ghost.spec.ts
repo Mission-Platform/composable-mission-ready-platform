@@ -148,7 +148,7 @@ function settingsSource(count: number): string {
     );
   }
   return [
-    "import { h, type MpElement } from '@mission-platform/forge';",
+    "import { h, type MpElement } from '@mission-platform/forge-jsx';",
     "",
     "export interface SettingsProperties {",
     ...members,
@@ -331,7 +331,7 @@ describe("the Ghost theme config fragment", () => {
 
   it("maps every neutral kind onto one of Ghost's five setting types", () => {
     const source = [
-      "import { h, type MpElement } from '@mission-platform/forge';",
+      "import { h, type MpElement } from '@mission-platform/forge-jsx';",
       "",
       "export type Tone = 'light' | 'dark';",
       "",
@@ -425,7 +425,7 @@ describe("Ghost diagnostics", () => {
 
   it("warns when a numeric `@cmsSetting` field is exposed as a text setting", () => {
     const source = [
-      "import { h, type MpElement } from '@mission-platform/forge';",
+      "import { h, type MpElement } from '@mission-platform/forge-jsx';",
       "",
       "export interface TickerProperties {",
       "  /**",

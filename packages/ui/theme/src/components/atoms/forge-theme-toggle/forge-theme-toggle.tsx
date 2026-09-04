@@ -6,7 +6,7 @@ import {
   type MpChild,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 import { cycleTheme, getThemeSnapshot, subscribeTheme, type Theme } from '@/stores/theme-store/theme-store';
 

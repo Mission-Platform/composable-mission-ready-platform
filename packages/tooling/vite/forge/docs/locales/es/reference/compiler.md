@@ -198,7 +198,7 @@ el conductor posee orquestación genérica; y cada paquete de destino posee la i
 
 ## Construcciones de componentes
 
-Los paquetes de componentes crean módulos neutrales contra `@mission-platform/forge`, generalmente a través de un barril de componentes neutrales.
+Los paquetes de componentes crean módulos neutrales contra `@mission-platform/forge-jsx`, generalmente a través de un barril de componentes neutrales.
 `defineTsdownForgeComponents` crea una compilación de destino para cada complemento proporcionado. Para cada objetivo:
 
 1. analiza, normaliza y analiza los módulos de componentes neutrales;

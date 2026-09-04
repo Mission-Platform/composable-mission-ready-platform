@@ -9,7 +9,7 @@
  * - `props-type.ts` — the component's own props type, for indexed-access field
  *   annotations,
  * - `template.ts` — the render node → tagged `html\`…\`` template conversion (the
- *   lit-html template dialect interpreted by `@mission-platform/forge/web-components`).
+ *   lit-html template dialect interpreted by `@mission-platform/forge-adapters/web-components`).
  */
 export {
   type ElementScope,

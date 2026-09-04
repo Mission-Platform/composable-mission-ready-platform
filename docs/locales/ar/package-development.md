@@ -139,7 +139,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### قواعد التأليف
 
-1. **TypeScript Everywhere**: يجب أن تكون كافة التعليمات البرمجية المصدر في `.ts` أو `.tsx` (باستخدام `@mission-platform/forge`).
+1. **TypeScript Everywhere**: يجب أن تكون كافة التعليمات البرمجية المصدر في `.ts` أو `.tsx` (باستخدام `@mission-platform/forge-jsx`).
 2. **حيادية الإطار**: تفضيل المنطق الحيادي لإطار العمل. يجب تأليف المكونات مرة واحدة في Forge JSX لاستهدافها
    أطر متعددة.
 3. **العزل**: يجب ألا يتم استيراد الحزم مطلقًا من `apps/`.

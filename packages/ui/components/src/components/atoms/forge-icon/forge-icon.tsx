@@ -1,4 +1,4 @@
-import { classNames, Dynamic, type MpComponent, type MpElement } from '@mission-platform/forge';
+import { classNames, Dynamic, type MpComponent, type MpElement } from '@mission-platform/forge-jsx';
 import * as iconCatalog from '@mission-platform/icons';
 
 import styles from './forge-icon.module.scss';

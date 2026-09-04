@@ -4,7 +4,7 @@ import { compileHookModule } from './compiler-test-helpers';
 
 // A `useState` + `useEffect` hook (the `useObservable` shape).
 const USE_OBSERVABLE = [
-  "import { useEffect, useState } from '@mission-platform/forge';",
+  "import { useEffect, useState } from '@mission-platform/forge-jsx';",
   "import type { Observable } from 'rxjs';",
   '',
   'export function useObservable<T>(source: Observable<T>, initialValue?: T): T | undefined {',
@@ -23,7 +23,7 @@ const USE_OBSERVABLE = [
 
 // A `useRef` + `useEffect` hook (the `useD3` shape).
 const USE_D3 = [
-  "import { useEffect, useRef, type MpDependencyList, type MpRef } from '@mission-platform/forge';",
+  "import { useEffect, useRef, type MpDependencyList, type MpRef } from '@mission-platform/forge-jsx';",
   "import { select, type Selection } from 'd3-selection';",
   '',
   'export function useD3<E extends Element>(draw: (selection: unknown) => void, dependencies: MpDependencyList = []): MpRef<E | null> {',
@@ -44,7 +44,7 @@ const USE_D3 = [
 // must be preserved so `tsc` never re-infers them (an inferred type that
 // narrows a large union would overflow the declaration emitter — TS2589).
 const USE_HELPERS = [
-  "import { useEffect, useRef } from '@mission-platform/forge';",
+  "import { useEffect, useRef } from '@mission-platform/forge-jsx';",
   '',
   'export function sourceKey(spec: { source?: string }): string | undefined {',
   "  return 'source' in spec ? String(spec.source) : undefined;",
@@ -62,7 +62,7 @@ const USE_HELPERS = [
 // an imperative method — the `useDrawing` shape. Unlike a single-ref return,
 // each reactive field must stay live on Vue (see the reactive-getter emitter).
 const USE_BUNDLE = [
-  "import { useState } from '@mission-platform/forge';",
+  "import { useState } from '@mission-platform/forge-jsx';",
   '',
   'export interface UseCounterReturn {',
   '  count: number;',

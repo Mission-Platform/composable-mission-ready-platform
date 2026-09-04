@@ -20,7 +20,7 @@ package plutôt que cette page.
 
 ## Cadre de base
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 La base de l'architecture « à écriture unique », fournissant un environnement d'exécution et des hooks JSX neutres en termes de framework.
 
@@ -32,8 +32,8 @@ La base de l'architecture « à écriture unique », fournissant un environnemen
 | `useMemo` | Crochet | Crochet de mémorisation indépendant du framework.                                                     |
 | `useRef` | Crochet | Crochet de référence indépendant du framework.                                                       |
 | `useContext` | Crochet | Hook contextuel indépendant du framework.                                                         |
-| `toVueComponent` | Adaptateur | Convertit un composant forge en composant Vue 3 (à partir de `@mission-platform/forge/vue`).   |
-| `toReactComponent` | Adaptateur | Convertit un composant forge en composant React (à partir de `@mission-platform/forge/react`). |
+| `toVueComponent` | Adaptateur | Convertit un composant forge en composant Vue 3 (à partir de `@mission-platform/forge-adapters/vue`).   |
+| `toReactComponent` | Adaptateur | Convertit un composant forge en composant React (à partir de `@mission-platform/forge-adapters/react`). |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ package dans `packages/`, incluant les façades typées WebAssembly.
 
 | Forfait | Objectif |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` | Exécution et adaptateurs JSX indépendants du framework.                   |
+| `@mission-platform/forge-jsx` | Exécution et adaptateurs JSX indépendants du framework.                   |
 | `@mission-platform/components` | Composants d'interface utilisateur à écriture unique.                                     |
 | `@mission-platform/icons` | Composants d'icône SVG à écriture unique.                               |
 | `@mission-platform/layouts` | Composants d’application, de conteneur et de mise en page réactive.     |

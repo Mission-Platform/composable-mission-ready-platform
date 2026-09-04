@@ -44,7 +44,7 @@ graph TD
 
 ## フレームワーク中立エンジン: Forge
 
-ミッションプラットフォームの中心となるのは、 `@mission-platform/forge`、コンポーネントのフレームワーク中立なオーサリング モデル、および
+ミッションプラットフォームの中心となるのは、 `@mission-platform/forge-jsx`、コンポーネントのフレームワーク中立なオーサリング モデル、および
 コンポーザブル。 `@mission-platform/vite-plugin-forge` 中立的なコンパイラ ドライバです。ソースを解析して正規化します。
 セマンティック IR を構築し、共有分析と最適化を実行し、明示的に提供された IR にディスパッチします。
 `FrameworkOutputPlugin`.

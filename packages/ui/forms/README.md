@@ -1,6 +1,6 @@
 # `@mission-platform/forms`
 
-Write-once form orchestration components (`ForgeSchemaForm`, `ForgeFormBuilder`) authored with `@mission-platform/forge`
+Write-once form orchestration components (`ForgeSchemaForm`, `ForgeFormBuilder`) authored with `@mission-platform/forge-jsx`
 and shipped as native Vue 3, React, Solid and Web Components behind a single bare
 `@mission-platform/forms` entry point.
 

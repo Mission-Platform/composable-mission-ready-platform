@@ -19,7 +19,7 @@
 - Updated dependencies [9e59f09]
 - Updated dependencies [97c3f20]
   - @mission-platform/email-renderer@0.1.2
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/tokens@2.0.0
 
 ## 1.0.0
@@ -71,4 +71,4 @@
 - Updated dependencies [4714506]
   - @mission-platform/email-renderer@0.1.1
   - @mission-platform/tokens@1.1.0
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0

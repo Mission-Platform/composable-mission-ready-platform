@@ -59,7 +59,7 @@ done
 
 ### 프레임워크 중립 구성 요소
 
-가능할 때마다 다음을 사용하여 UI 구성 요소를 작성하세요. `@mission-platform/forge` 방언. 이를 통해 구성 요소를
+가능할 때마다 다음을 사용하여 UI 구성 요소를 작성하세요. `@mission-platform/forge-jsx` 방언. 이를 통해 구성 요소를
 컴파일되어 사용됨 Vue, React, Svelte, Solid및 핵심 논리를 다시 작성하지 않고 웹 구성 요소를 사용할 수 있습니다. 구성
 일치하는 소비자의 확인자 `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, 또는 `mp:web-component` 상태.
 

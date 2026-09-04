@@ -9,11 +9,11 @@
 
 ## 다중 프레임워크 전략
 
-Mission Platform의 핵심 철학은 한 번 구축하면 모든 곳에서 렌더링하는 것입니다. 이는 플랫폼의 기본 프레임워크인 **@mission-platform/forge**을 통해 달성됩니다. 즉, 모든 공유 구성 요소(앱을 제외한 모든 것)가 작성되고 Vue 3, React 및 기타 지원되는 환경에서 원활하게 렌더링되는 프레임워크 중립적인 JSX 런타임입니다.
+Mission Platform의 핵심 철학은 한 번 구축하면 모든 곳에서 렌더링하는 것입니다. 이는 플랫폼의 기본 프레임워크인 **@mission-platform/forge-jsx**을 통해 달성됩니다. 즉, 모든 공유 구성 요소(앱을 제외한 모든 것)가 작성되고 Vue 3, React 및 기타 지원되는 환경에서 원활하게 렌더링되는 프레임워크 중립적인 JSX 런타임입니다.
 
 ### 포지 방언
 공유 패키지를 구축할 때 Forge의 중립 기본 요소를 사용하여 구성 요소를 작성하세요.
-- **JSX Factory**: `@mission-platform/forge`에서 `h` 및 `Fragment`을 사용합니다.
+- **JSX Factory**: `@mission-platform/forge-jsx`에서 `h` 및 `Fragment`을 사용합니다.
 - **중립 후크**: `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback` 및 `useId`을 사용합니다.
 - **기본 요소**: 복잡한 UI 구조에는 `Slot`, `Teleport`, `Transition` 및 `Dynamic`를 사용합니다.
 
@@ -23,7 +23,7 @@ Vue 3은 `apps/`의 애플리케이션이 구축된 프레임워크이자 Forge 
 
 ### 관용적 패턴
 - **Composition API**: 모든 새 구성 요소에 `<script setup lang="ts">`을 사용합니다.
-- **Forge Integration**: `@mission-platform/forge/vue`의 `toVueComponent`을 사용하여 중립 구성 요소를 래핑합니다.
+- **Forge Integration**: `@mission-platform/forge-adapters/vue`의 `toVueComponent`을 사용하여 중립 구성 요소를 래핑합니다.
 - **컴포저블**: 상태 저장 논리를 `useXxx` 함수로 추출하여 재사용성을 높입니다.
 
 ### 성능 최적화
@@ -37,7 +37,7 @@ React은 주로 외부 통합 및 특정 내부 도구를 위해 Forge 런타임
 
 ### 관용적 패턴
 - **기능적 구성요소**: 후크가 있는 기능적 구성요소를 사용합니다.
-- **Forge Integration**: `@mission-platform/forge/react`의 `toReactComponent`을 사용하여 중립 구성 요소를 래핑합니다.
+- **Forge Integration**: `@mission-platform/forge-adapters/react`의 `toReactComponent`을 사용하여 중립 구성 요소를 래핑합니다.
 - **후크 규율**: 예측 가능한 동작을 보장하려면 "후크 규칙"을 엄격히 따르십시오.
 
 ### 성능 최적화
@@ -65,4 +65,4 @@ Mission Platform은 Forge 어댑터를 통해 다른 프레임워크에 대한 �
 ## 관련 자료
 - [모범 사례](best-practices.md)
 - [테스트 가이드](testing.md)
-- [@mission-platform/forge 읽어보기](../../../packages/compiler/forge/forge/README.md)
+- [@mission-platform/forge-jsx 읽어보기](../../../packages/core/forge-jsx/README.md)

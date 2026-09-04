@@ -1,6 +1,6 @@
 import { useMap, useMarker } from '@/composables';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 import type { LngLatLike, MarkerOptions } from 'maplibre-gl';
 
 export interface MapMarkerProperties {

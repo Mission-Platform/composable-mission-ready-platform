@@ -7,7 +7,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 `@mission-platform/breakpoints` biedt responsieve breekpunthulpprogramma's en **eenmalig te schrijven** viewportcomponenten voor de
 Missieplatform. De componenten (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) zijn één keer geschreven in de neutrale
-`@mission-platform/forge`-dialect en gecompileerd naar **zowel Vue 3 als React** door `@mission-platform/vite-plugin-forge`.
+`@mission-platform/forge-jsx`-dialect en gecompileerd naar **zowel Vue 3 als React** door `@mission-platform/vite-plugin-forge`.
 
 ## Exporteert
 

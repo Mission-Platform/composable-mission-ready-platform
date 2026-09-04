@@ -15,8 +15,8 @@ import {
 import { emitWebComponentModule } from "./module.ts";
 
 const NEUTRAL_IMPORT = moduleImport(
-  "import { classNames, h, useState, type MpElement, type MpRenderProperty } from '@mission-platform/forge';",
-  "@mission-platform/forge",
+  "import { classNames, h, useState, type MpElement, type MpRenderProperty } from '@mission-platform/forge-jsx';",
+  "@mission-platform/forge-jsx",
   {
     valueNames: ["classNames", "h", "useState"],
     typeNames: ["MpElement", "MpRenderProperty"],
@@ -29,7 +29,7 @@ describe("the Web-Components module emitter", () => {
 
     expect(
       code.startsWith(
-        "import { ForgeElement, domTemplate, nothing, type DomTemplateDefinition } from '@mission-platform/forge/web-components';",
+        "import { ForgeElement, domTemplate, nothing, type DomTemplateDefinition } from '@mission-platform/forge-adapters/web-components';",
       ),
     ).toBe(true);
     expect(code).not.toContain("unsafeHtml");
@@ -86,7 +86,7 @@ describe("the Web-Components module emitter", () => {
     // contract rides the same header as an inline type specifier.
     expect(
       code.startsWith(
-        "import { ForgeElement, domTemplate, dynamicElement, nothing, ForgeElementMixin, type DomTemplateDefinition, type PropertyDeclaration } from '@mission-platform/forge/web-components';",
+        "import { ForgeElement, domTemplate, dynamicElement, nothing, ForgeElementMixin, type DomTemplateDefinition, type PropertyDeclaration } from '@mission-platform/forge-adapters/web-components';",
       ),
     ).toBe(true);
   });
@@ -98,7 +98,7 @@ describe("the Web-Components module emitter", () => {
     );
 
     expect(code).toContain(
-      "import { classNames } from '@mission-platform/forge';",
+      "import { classNames } from '@mission-platform/forge-jsx';",
     );
     expect(code).toContain(
       "import type { MpRenderProperty } from './mp-jsx-types';",
@@ -114,8 +114,8 @@ describe("the Web-Components module emitter", () => {
       semanticModule({
         imports: [
           moduleImport(
-            "import { type ClassValue, h, type MpChild, type MpRenderProperty } from '@mission-platform/forge';",
-            "@mission-platform/forge",
+            "import { type ClassValue, h, type MpChild, type MpRenderProperty } from '@mission-platform/forge-jsx';",
+            "@mission-platform/forge-jsx",
             {
               valueNames: ["h"],
               typeNames: ["ClassValue", "MpChild", "MpRenderProperty"],
@@ -140,7 +140,7 @@ describe("the Web-Components module emitter", () => {
     // verbatim, so it keeps its neutral import; the element primitives resolve
     // through the generated local module instead.
     expect(code).toContain(
-      "import type { ClassValue } from '@mission-platform/forge';",
+      "import type { ClassValue } from '@mission-platform/forge-jsx';",
     );
     expect(code).toContain(
       "import type { MpRenderProperty } from './mp-jsx-types';",
@@ -378,7 +378,7 @@ describe("the Web-Components module emitter", () => {
     );
 
     expect(withId.code).toContain(
-      "import { ForgeElement, domTemplate, nothing, useId, type DomTemplateDefinition } from '@mission-platform/forge/web-components';",
+      "import { ForgeElement, domTemplate, nothing, useId, type DomTemplateDefinition } from '@mission-platform/forge-adapters/web-components';",
     );
     expect(withId.code).toContain("  readonly generatedId: string;");
     expect(withId.code).toContain("    this.generatedId = useId();");

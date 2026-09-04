@@ -9,7 +9,7 @@
 
 ## 条件によるフレームワークの選択
 
-Mission Platform コンポーネントは、`@mission-platform/forge` を使用して一度作成され、単一のパッケージ内の複数のフレームワーク固有のバンドル (Vue 3、React、Solid、および Web コンポーネント) として配布されます。
+Mission Platform コンポーネントは、`@mission-platform/forge-jsx` を使用して一度作成され、単一のパッケージ内の複数のフレームワーク固有のバンドル (Vue 3、React、Solid、および Web コンポーネント) として配布されます。
 
 正しいバンドルを選択するには、**カスタム エクスポート条件**を使用するようにビルド ツールと TypeScript を構成する必要があります。
 

@@ -18,7 +18,7 @@ ensures a consistent user experience across the entire product suite.
 
 ### Multi-Framework by Design
 
-Mission Platform introduces a framework-neutral development paradigm. Using the `@mission-platform/forge` JSX dialect,
+Mission Platform introduces a framework-neutral development paradigm. Using the `@mission-platform/forge-jsx` JSX dialect,
 developers can author components once and compile them to native outputs for Vue 3, React, Solid, Svelte, and Web
 Components. This future-proofs the codebase and allows for seamless integration into diverse frontend environments.
 
@@ -43,7 +43,7 @@ velocity and code quality.
 
 Mission Platform is built on a modern, high-performance stack:
 
-- **Forge JSX (`@mission-platform/forge`)**: The primary UI framework — a framework-neutral JSX runtime in which all
+- **Forge JSX (`@mission-platform/forge-jsx`)**: The primary UI framework — a framework-neutral JSX runtime in which all
   shared components (everything except the apps) are authored.
 - **Vue 3**: The framework the applications in `apps/` are built with, and one of several native render targets for
   Forge components.

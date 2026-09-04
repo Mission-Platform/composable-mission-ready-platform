@@ -44,7 +44,7 @@ graph TD
 
 ## 框架中立引擎：Forge
 
-Mission Platform 的核心是 `@mission-platform/forge`，一个框架中立的组件创作模型
+Mission Platform 的核心是 `@mission-platform/forge-jsx`，一个框架中立的组件创作模型
 可组合项。 `@mission-platform/vite-plugin-forge` 是中立的编译器驱动程序：它解析并规范化源代码，
 构建语义 IR，运行共享分析和优化，并分派到显式提供的
 `FrameworkOutputPlugin`.

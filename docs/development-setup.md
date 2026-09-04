@@ -61,7 +61,7 @@ package links are correctly established.
 Run a smoke test to ensure the build system and environment are correctly configured:
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 The `...` also builds the Forge dependencies required by the package. The

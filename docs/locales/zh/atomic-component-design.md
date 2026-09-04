@@ -6,7 +6,7 @@
 > 语言: 简体中文 (zh)
 
 任务平台使用**原子设计**系统将组件组织成复杂的层次结构。每个
-组件是用中立的 Forge JSX 方言编写的“一次写入”单元（`@mission-platform/forge`)，确保
+组件是用中立的 Forge JSX 方言编写的“一次写入”单元（`@mission-platform/forge-jsx`)，确保
 跨多个框架的一致性。
 
 ## 设计水平
@@ -75,7 +75,7 @@ const meta = {
 
 ## 编写标准
 
-1. **框架中立性**：切勿单独创作 Vue 和 React 版本。使用 `@mission-platform/forge`。
+1. **框架中立性**：切勿单独创作 Vue 和 React 版本。使用 `@mission-platform/forge-jsx`。
 2. **命名**：组件应使用 `Base` 前缀（例如， `ForgeCard`) 除非它们是具体的实现。
 3. **类型安全**：导出 `*Properties` 组件道具的接口。
 4. **测试**：同地办公 `.spec.ts` 每个组件都需要。

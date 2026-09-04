@@ -44,7 +44,7 @@ composable_mission_ready_platform/
 
 مكتبات ذات إصدارات قابلة لإعادة الاستخدام تستهلكها التطبيقات. تهدف هذه إلى أن تكون حيادية للإطار حيثما أمكن ذلك.
 
-- **`@mission-platform/forge`**: وقت تشغيل JSX والمحولات المحايدة لإطار العمل.
+- **`@mission-platform/forge-jsx`**: وقت تشغيل JSX والمحولات المحايدة لإطار العمل.
 - **`@mission-platform/components`**: مكتبة المكونات متعددة الإطارات.
 - **`@mission-platform/forms`** و **`@mission-platform/forms-core`**: أوليات النموذج المستندة إلى المخطط.
 - **`@mission-platform/content`** و **`@mission-platform/email-renderer`**: مسارات المحتوى والعرض.

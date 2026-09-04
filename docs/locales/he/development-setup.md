@@ -66,7 +66,7 @@ pnpm install
 הפעל בדיקת עשן כדי לוודא שמערכת הבנייה והסביבה מוגדרות כהלכה:
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 ה `...` גם בונה את התלות של Forge הנדרשת על ידי החבילה. ה

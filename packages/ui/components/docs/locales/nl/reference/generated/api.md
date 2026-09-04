@@ -1243,7 +1243,7 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 
 `ForgeDeviceMock` — een decoratief apparaatframe dat een willekeurig scherm omhult
 inhoud (de standaardsleuf) in een `mobile`, `tablet`, `desktop` of `browser`
-chroom, één keer geschreven in het neutrale JSX-dialect (`@mission-platform/forge`)
+chroom, één keer geschreven in het neutrale JSX-dialect (`@mission-platform/forge-jsx`)
 en rechtstreeks gecompileerd naar React of Vue door
 `@mission-platform/vite-plugin-forge`.
 

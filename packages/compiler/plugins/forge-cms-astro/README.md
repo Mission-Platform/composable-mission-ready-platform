@@ -46,7 +46,7 @@ A component is _interactive_ when its neutral IR carries state, refs, effects, o
 ```astro
 ---
 // forge-badge.astro — presentational
-import { classNames } from '@mission-platform/forge';
+import { classNames } from '@mission-platform/forge-jsx';
 
 export type BadgeVariant = 'default' | 'primary' | 'secondary';
 

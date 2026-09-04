@@ -9,7 +9,7 @@ import {
   IconSpriteProvider,
 } from '@mission-platform/icons';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /** Neutral icon component shape used by the gallery grid. */
@@ -17,7 +17,7 @@ type IconComponent = (properties: { size?: number | string }) => MpElement;
 
 /**
  * The Mission Platform icons, authored **once** in the framework-neutral JSX
- * dialect (`@mission-platform/forge`) and compiled straight to every supported
+ * dialect (`@mission-platform/forge-jsx`) and compiled straight to every supported
  * framework at build time by `@mission-platform/vite-plugin-forge`. This
  * overview consumes the bare `@mission-platform/icons` import, which
  * auto-resolves to the framework selected by `STORYBOOK_FRAMEWORK`. Every

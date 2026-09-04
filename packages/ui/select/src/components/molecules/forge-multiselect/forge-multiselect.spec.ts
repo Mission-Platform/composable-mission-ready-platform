@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeMultiselect } from './forge-multiselect';
 
 /**
  * Exercises the **neutral** `ForgeMultiselect` authored in this package,
- * rendering it on both frameworks through the `@mission-platform/forge` runtime
+ * rendering it on both frameworks through the `@mission-platform/forge-jsx` runtime
  * adapters. Covers the selected chips, the hidden native multi-select, and the
  * error association. The available-options listbox is rendered through
  * `ForgeDropdown`, whose panel is mounted only while open, so the closed

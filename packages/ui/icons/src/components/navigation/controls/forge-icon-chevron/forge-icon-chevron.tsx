@@ -2,7 +2,7 @@ import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-chevron.module.scss';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 /** The direction the chevron points. */
 export type IconDirection = 'up' | 'right' | 'down' | 'left';

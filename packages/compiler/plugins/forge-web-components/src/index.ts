@@ -52,7 +52,7 @@ export function forgeWebComponentsFramework(): FrameworkOutputPlugin {
       componentExport: "element",
     },
     runtimeExternals: [
-      "@mission-platform/forge",
+      "@mission-platform/forge-jsx",
       frameworkAdapterModule("web-components"),
     ],
     displayNameSuffix: "WebComponents",

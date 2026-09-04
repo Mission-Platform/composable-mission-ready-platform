@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 /**
  * `ForgeIconDrawLine` is a cross-framework icon
  * `ForgeIconDrawLine` in `@mission-platform/icons`, authored once in the neutral JSX
- * dialect (`@mission-platform/forge`) and compiled straight to both frameworks by
+ * dialect (`@mission-platform/forge-jsx`) and compiled straight to both frameworks by
  * `@mission-platform/vite-plugin-forge`. This single neutral story renders on the framework selected by `STORYBOOK_FRAMEWORK`.
  */
 const meta = {

@@ -11,8 +11,8 @@ describe("the Web-Components hook-module emitter", () => {
         moduleKind: "composable",
         imports: [
           moduleImport(
-            "import { createContext, hasSlot, useContext, type MpRenderProperty, type ClassValue } from '@mission-platform/forge';",
-            "@mission-platform/forge",
+            "import { createContext, hasSlot, useContext, type MpRenderProperty, type ClassValue } from '@mission-platform/forge-jsx';",
+            "@mission-platform/forge-jsx",
             {
               valueNames: ["createContext", "hasSlot", "useContext"],
               typeNames: ["MpRenderProperty", "ClassValue"],
@@ -33,13 +33,13 @@ describe("the Web-Components hook-module emitter", () => {
     );
 
     expect(code).toContain(
-      "import { createContext, useContext } from '@mission-platform/forge';",
+      "import { createContext, useContext } from '@mission-platform/forge-jsx';",
     );
     expect(code).toContain(
       "import type { MpRenderProperty } from './mp-jsx-types';",
     );
     expect(code).toContain(
-      "import type { ClassValue } from '@mission-platform/forge';",
+      "import type { ClassValue } from '@mission-platform/forge-jsx';",
     );
     expect(code).not.toContain("hasSlot");
     expect(code).toContain(

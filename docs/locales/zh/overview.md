@@ -23,7 +23,7 @@ Mission Platform 的核心是建立在**组合优于继承**的原则之上。�
 
 ### 多框架设计
 
-任务平台引入了框架中立的开发范例。使用 `@mission-platform/forge` JSX方言，
+任务平台引入了框架中立的开发范例。使用 `@mission-platform/forge-jsx` JSX方言，
 开发人员可以编写一次组件并将其编译为本机输出 Vue 3, React, Solid, Svelte，和网络
 组件。这使代码库面向未来，并允许无缝集成到不同的前端环境中。
 
@@ -48,7 +48,7 @@ Mission Platform 的核心是建立在**组合优于继承**的原则之上。�
 
 Mission Platform 建立在现代化的高性能堆栈之上：
 
-- **锻造 JSX (`@mission-platform/forge`)**：主要 UI 框架 — 一个框架中立的 JSX 运行时，其中所有
+- **锻造 JSX (`@mission-platform/forge-jsx`)**：主要 UI 框架 — 一个框架中立的 JSX 运行时，其中所有
   共享组件（除应用程序之外的所有组件）都是创作的。
 - **Vue 3**：应用程序的框架 `apps/` 是用几个本机渲染目标之一构建的
   锻造组件。

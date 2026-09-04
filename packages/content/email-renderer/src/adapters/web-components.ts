@@ -1,4 +1,4 @@
-import { html, type TemplateResult } from '@mission-platform/forge/web-components';
+import { html, type TemplateResult } from '@mission-platform/forge-adapters/web-components';
 
 import { renderEmailFragment, type EmailNode } from '../render';
 

@@ -27,7 +27,7 @@ src/utils/
 
 1. **Pureté** : Préférez les fonctions pures qui n'ont pas d'effets secondaires. Étant donné la même entrée, ils devraient toujours renvoyer le
    même sortie.
-2. **Aucun hook d'interface utilisateur** : n'importez jamais les hooks `vue`, `react` ou `@mission-platform/forge` dans un utilitaire. Logique nécessitant
+2. **Aucun hook d'interface utilisateur** : n'importez jamais les hooks `vue`, `react` ou `@mission-platform/forge-jsx` dans un utilitaire. Logique nécessitant
    la réactivité appartient à [Composables](composable-authoring.md).
 3. **Saisie explicite** : fournissez des types TypeScript complets pour tous les arguments et valeurs de retour.
 4. **Tests obligatoires** : chaque utilitaire doit avoir un fichier `.spec.ts` colocalisé.

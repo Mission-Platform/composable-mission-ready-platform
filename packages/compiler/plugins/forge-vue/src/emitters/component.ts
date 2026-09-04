@@ -182,7 +182,7 @@ function templateBindingTypes(
 /** The neutral `className` prop every component accepts. */
 const CLASS_NAME_SIGNATURE: VuePropertySignature = {
   name: "className",
-  typeText: "import('@mission-platform/forge').ClassValue",
+  typeText: "import('@mission-platform/forge-jsx').ClassValue",
   optional: true,
 };
 
@@ -993,7 +993,7 @@ export function emitVueModule(
   const reasonComment =
     fallbackReason === undefined
       ? ""
-      : `<!-- @mission-platform/forge: native <template> unavailable — ${fallbackReason} -->\n`;
+      : `<!-- @mission-platform/forge-jsx: native <template> unavailable — ${fallbackReason} -->\n`;
   return {
     code:
       reasonComment +

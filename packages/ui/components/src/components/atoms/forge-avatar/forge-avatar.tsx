@@ -1,4 +1,4 @@
-import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 
 /** Canonical 2xs → 2xl size scale shared across the display components. */
 export type AvatarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';

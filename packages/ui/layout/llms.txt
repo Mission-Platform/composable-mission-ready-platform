@@ -1,10 +1,10 @@
 # @mission-platform/components
 
 Sample "write once, run on both frameworks" components for Mission Platform.
-Each component is authored once in JSX with `@mission-platform/forge` and shipped
+Each component is authored once in JSX with `@mission-platform/forge-jsx` and shipped
 as both a Vue 3 component and a React component.
 
-This package is the demonstration/reference consumer of `@mission-platform/forge`
+This package is the demonstration/reference consumer of `@mission-platform/forge-jsx`
 (the framework-neutral runtime + adapters live there, the components live here)
 and of `@mission-platform/vite-plugin-forge`: the `./react` and `./vue` subpaths
 are produced by **compiling the neutral components to each framework at build
@@ -275,7 +275,7 @@ now models Vue `<Teleport>` via the neutral `<Teleport>` primitive (compiled to
 React `createPortal` / Vue's built-in `<Teleport>`), the enter/leave
 `<Transition>` and the keyed-list `<TransitionGroup>` (enter/leave/move) via the
 neutral transition primitives (compiled to Vue's built-ins / the
-`@mission-platform/forge/react` CSS-class drivers — e.g. `ForgeDrawer`'s slide/fade
+`@mission-platform/forge-jsx/react` CSS-class drivers — e.g. `ForgeDrawer`'s slide/fade
 and `ForgeToastContainer`'s stack), the dynamic host tag via `<Dynamic is>`, and
 provide/inject via the neutral context primitives; it also replaces the
 `@floating-ui` popup with the **CSS Anchor Positioning API** (as the migrated
@@ -292,7 +292,7 @@ src/components/<component-name>/
 ├── <component-name>.tsx          # the write-once neutral component (JSX → MpElement)
 ├── <component-name>.module.scss  # co-located CSS Module, @layer mp.components (no :global)
 ├── <component-name>.stories.tsx  # Storybook story (consumes the built ./vue subpath)
-├── <component-name>.spec.ts      # cross-framework SSR parity test (via the @mission-platform/forge adapters)
+├── <component-name>.spec.ts      # cross-framework SSR parity test (via the @mission-platform/forge-jsx adapters)
 └── index.ts                      # re-exports the component + its prop types
 ```
 
@@ -530,7 +530,7 @@ shared `dist/components/**` declarations, but no neutral `index`.
 
 1. Create the folder `src/components/<name>/` and add
    `<name>.tsx` (import `h`, any hooks, and types from
-   `@mission-platform/forge`; author it in JSX returning an `MpElement`, driving
+   `@mission-platform/forge-jsx`; author it in JSX returning an `MpElement`, driving
    dynamic classes with the platform-owned `className={[…]}` attribute — never
    import the `classNames` helper), an
    `index.ts` that re-exports the component and its prop types (export the props
@@ -548,7 +548,7 @@ shared `dist/components/**` declarations, but no neutral `index`.
    `defineComponent` SFC, the React build to a function component, and the
    Storyblok build derives its `<Name>Blok` wrapper + `<name>.json` config).
 3. Add `<name>.spec.ts` (a cross-framework SSR parity test via the
-   `@mission-platform/forge` adapters) and `<name>.stories.tsx` (importing the
+   `@mission-platform/forge-jsx` adapters) and `<name>.stories.tsx` (importing the
    built `@mission-platform/components/vue` subpath; a story for an
    inline-styled primitive also imports its `.module.scss` as a hashed map and
    binds `:class="styles['…']"`) in the same folder. The story is picked up by

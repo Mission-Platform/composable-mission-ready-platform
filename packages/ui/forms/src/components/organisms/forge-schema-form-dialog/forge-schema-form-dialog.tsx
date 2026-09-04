@@ -1,6 +1,6 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeModal, type ModalSize } from '@mission-platform/float';
-import { createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 
 import {
   ForgeSchemaForm,

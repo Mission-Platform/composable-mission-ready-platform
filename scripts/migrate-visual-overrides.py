@@ -228,9 +228,9 @@ function create{pascal}Style(
 
 
 def ensure_import(tsx: str, names: list[str]) -> str:
-    match = re.search(r"import\s*\{([^}]+)\}\s*from\s*'@mission-platform/forge';", tsx)
+    match = re.search(r"import\s*\{([^}]+)\}\s*from\s*'@mission-platform/forge-jsx';", tsx)
     if not match:
-        return "import { " + ", ".join(names) + " } from '@mission-platform/forge';\n" + tsx
+        return "import { " + ", ".join(names) + " } from '@mission-platform/forge-jsx';\n" + tsx
 
     parts = [part.strip() for part in match.group(1).split(",") if part.strip()]
     have = {part.replace("type ", "").strip() for part in parts}
@@ -258,9 +258,9 @@ def ensure_import(tsx: str, names: list[str]) -> str:
 
     joined = values + types
     if "\n" not in match.group(0) and sum(len(item) for item in joined) < 90:
-        new_import = "import { " + ", ".join(joined) + " } from '@mission-platform/forge';"
+        new_import = "import { " + ", ".join(joined) + " } from '@mission-platform/forge-jsx';"
     else:
-        new_import = "import {\n  " + ",\n  ".join(joined) + ",\n} from '@mission-platform/forge';"
+        new_import = "import {\n  " + ",\n  ".join(joined) + ",\n} from '@mission-platform/forge-jsx';"
     return tsx[: match.start()] + new_import + tsx[match.end() :]
 
 

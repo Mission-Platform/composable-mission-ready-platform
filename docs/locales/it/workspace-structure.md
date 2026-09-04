@@ -44,7 +44,7 @@ e mai pubblicato in un registro.
 
 Librerie riutilizzabili e con versione utilizzate dalle app. Questi sono destinati ad essere indipendenti dal framework, ove possibile.
 
-- **`@mission-platform/forge`**: runtime e adattatori JSX indipendenti dal framework.
+- **`@mission-platform/forge-jsx`**: runtime e adattatori JSX indipendenti dal framework.
 - **`@mission-platform/components`**: libreria di componenti multi-framework.
 - **`@mission-platform/forms`** e **`@mission-platform/forms-core`**: primitive del modulo guidate da schema.
 - **`@mission-platform/content`** e **`@mission-platform/email-renderer`**: pipeline di contenuti e rendering.

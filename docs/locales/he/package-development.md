@@ -139,7 +139,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### כללי כתיבה
 
-1. **TypeScript בכל מקום**: כל קוד המקור חייב להיות ב-`.ts` או `.tsx` (באמצעות `@mission-platform/forge`).
+1. **TypeScript בכל מקום**: כל קוד המקור חייב להיות ב-`.ts` או `.tsx` (באמצעות `@mission-platform/forge-jsx`).
 2. **ניטרליות המסגרת**: העדיפו היגיון אגנוסטי של מסגרת. יש ליצור רכיבים פעם אחת ב-Forge JSX כדי למקד אותם
    מסגרות מרובות.
 3. **בידוד**: אסור לייבא חבילות מ-`apps/`.

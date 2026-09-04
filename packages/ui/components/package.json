@@ -2,7 +2,7 @@
   "name": "@mission-platform/components",
   "version": "3.1.0",
   "license": "BSD-4-Clause",
-  "description": "Sample write-once Mission Platform components authored with @mission-platform/forge and shipped as both Vue 3 and React components",
+  "description": "Sample write-once Mission Platform components authored with @mission-platform/forge-jsx and shipped as both Vue 3 and React components",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -117,7 +117,8 @@
   "dependencies": {
     "@mission-platform/forms-core": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-adapters": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/phone-number": "workspace:*",
     "@mission-platform/typography": "workspace:*",
     "@mission-platform/tokens": "workspace:*",

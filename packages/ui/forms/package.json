@@ -2,7 +2,7 @@
   "name": "@mission-platform/forms",
   "version": "2.1.0",
   "license": "BSD-4-Clause",
-  "description": "Write-once Mission Platform form builder and schema form authored with @mission-platform/forge and shipped as Vue, React, Svelte, Solid, and Web Component outputs",
+  "description": "Write-once Mission Platform form builder and schema form authored with @mission-platform/forge-jsx and shipped as Vue, React, Svelte, Solid, and Web Component outputs",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -84,7 +84,8 @@
     "@mission-platform/content": "workspace:*",
     "@mission-platform/forms-core": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-adapters": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/layouts": "workspace:*",
     "@mission-platform/select": "workspace:*",
     "@mission-platform/phone-number": "workspace:*",

@@ -21,6 +21,6 @@ Plays an audio clip from `src` (HTMLAudioElement) and synthesizes tones via the 
 Web MIDI access and note playback. Returns `{ isSupported, isConnected, inputs, outputs, error, requestAccess, playNote }`.
 
 ## Implementation Details
-- Authored against `@mission-platform/forge` neutral hooks and compiled to React, Vue, Solid, Svelte, and Web Components.
+- Authored against `@mission-platform/forge-jsx` neutral hooks and compiled to React, Vue, Solid, Svelte, and Web Components.
 - SSR-safe (`isSupported` is `false` and controls are no-ops when the browser API is undefined).
 - Automatic cleanup on unmount (speech cancelled, recognition aborted, audio stopped, contexts closed).

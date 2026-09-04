@@ -2,7 +2,7 @@
   "name": "@mission-platform/float",
   "version": "1.1.0",
   "license": "BSD-4-Clause",
-  "description": "Mission Platform floating, overlay, and notification components authored with @mission-platform/forge",
+  "description": "Mission Platform floating, overlay, and notification components authored with @mission-platform/forge-jsx",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -92,7 +92,8 @@
   },
   "dependencies": {
     "@mission-platform/components": "workspace:*",
-    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-adapters": "workspace:*",
+    "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "@mission-platform/typography": "workspace:*"

@@ -1,4 +1,4 @@
-import { classNames, useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { classNames, useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 
 import styles from './forge-segment-control.module.scss';
 

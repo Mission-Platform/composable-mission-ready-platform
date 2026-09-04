@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -12,7 +12,7 @@ import type { TabItem } from '@/components/molecules/forge-tabs';
 
 /**
  * Exercises the **neutral** `ForgeVirtualTabs` authored in this package,
- * rendering it on both frameworks through the `@mission-platform/forge` runtime
+ * rendering it on both frameworks through the `@mission-platform/forge-jsx` runtime
  * adapters. Confirms only the active panel is mounted and the tab roles/scoped
  * panel slot are present.
  */

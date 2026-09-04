@@ -7,7 +7,7 @@
 
 تعتبر العناصر القابلة للتركيب هي الطريقة الأساسية لتغليف وإعادة استخدام المنطق التفاعلي داخل منصة المهمة. لضمان هذه
 وحدات المنطق قابلة للنقل عبر جميع أطر عمل واجهة المستخدم المدعومة، ويتم تأليفها كوحدات **كتابة مرة واحدة** باستخدام
-خطافات محايدة للإطار مقدمة من `@mission-platform/forge`.
+خطافات محايدة للإطار مقدمة من `@mission-platform/forge-jsx`.
 
 ## تخطيط الدليل
 
@@ -26,7 +26,7 @@ src/composables/
 ## قواعد التأليف
 
 1. **استخدم Forge Hooks**: قم باستيراد العناصر الأولية التفاعلية فقط (على سبيل المثال، `useState`, `useEffect`, `useMemo`, `useRef`) من
-   `@mission-platform/forge`. لا تستورد مباشرة من `vue` أو `react`.
+   `@mission-platform/forge-jsx`. لا تستورد مباشرة من `vue` أو `react`.
 2. **اصطلاح التسمية**: يجب أن تستخدم الأسماء القابلة للتركيب حالة الكباب وأن تكون مسبوقة بـ `use-` (e.g., `use-media-query`).
 3. **سلامة SSR**: تأكد من أن المنطق آمن للعرض من جانب الخادم. حماية أي وصول إلى واجهات برمجة التطبيقات للمتصفح فقط مثل `window`,
    `document`، أو `localStorage`.
@@ -39,7 +39,7 @@ src/composables/
 فيما يلي نموذج نموذجي قابل للكتابة مرة واحدة يدير مستمع الحدث.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,

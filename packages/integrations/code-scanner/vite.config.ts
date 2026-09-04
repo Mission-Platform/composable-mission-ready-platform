@@ -27,7 +27,7 @@ const scannerProjectRoots = [
 
 /** Resolve the Vue declaration compiler from the Forge dependency tree. */
 const vueTscBin = createRequire(path.join(__dirname, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
-  paths: [path.join(__dirname, 'node_modules/@mission-platform/forge')],
+  paths: [path.join(__dirname, 'node_modules/@mission-platform/forge-jsx')],
 });
 
 function scannerForgePlugin(linkProfile: 'static' | 'dynamic'): Plugin {

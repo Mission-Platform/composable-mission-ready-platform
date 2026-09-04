@@ -6,7 +6,7 @@ import {
   type MpChild,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 import { ForgeStatusIcon } from '../../atoms/forge-status-icon/forge-status-icon';
 

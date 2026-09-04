@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 /**
  * `ForgeWysiwygEditor` is the write-once `ForgeWysiwygEditor` in
  * `@mission-platform/content`, authored once in the neutral JSX dialect
- * (`@mission-platform/forge`) and compiled straight to every supported framework
+ * (`@mission-platform/forge-jsx`) and compiled straight to every supported framework
  * by `@mission-platform/vite-plugin-forge`.
  *
  * It composes `@mission-platform/components` (`ForgeButton`, and — in the HTML

@@ -11,22 +11,18 @@ Generated from public source declarations in `@mission-platform/vite-plugin-forg
 **Kind:** function
 
 ```typescript
-function createForgeArtifactManifest(
-  targetId: string,
-  artifacts: readonly ForgeArtifactRecord[],
-  complete = true,
-): ForgeArtifactManifest;
+function createForgeArtifactManifest(targetId: string, artifacts: readonly ForgeArtifactRecord[], complete = true): ForgeArtifactManifest
 ```
 
 Build a stable manifest without introducing timestamps into generated output.
 
 #### Parameters
 
-| Name      | Type                           | Description |
-| --------- | ------------------------------ | ----------- |
-| targetId  | string                         |             |
-| artifacts | readonly ForgeArtifactRecord[] |             |
-| complete  |                                |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| targetId | string |  |
+| artifacts | readonly ForgeArtifactRecord[] |  |
+| complete |  |  |
 
 ### ForgeArtifactKind
 
@@ -65,7 +61,7 @@ One deterministic output recorded by a target-scoped artifact manifest.
 **Kind:** function
 
 ```typescript
-function assertForgeArtifactRoot(root: string): string;
+function assertForgeArtifactRoot(root: string): string
 ```
 
 Validate an output root and reject an existing symlink or non-directory.
@@ -73,75 +69,75 @@ Descendant components are checked by the artifact resolver before use.
 
 #### Parameters
 
-| Name | Type   | Description |
-| ---- | ------ | ----------- |
-| root | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| root | string |  |
 
 ### ensureForgeArtifactDirectory
 
 **Kind:** function
 
 ```typescript
-function ensureForgeArtifactDirectory(root: string, directory: string): string;
+function ensureForgeArtifactDirectory(root: string, directory: string): string
 ```
 
 Create an output directory one component at a time without following links.
 
 #### Parameters
 
-| Name      | Type   | Description |
-| --------- | ------ | ----------- |
-| root      | string |             |
-| directory | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| root | string |  |
+| directory | string |  |
 
 ### resolveForgeArtifactPath
 
 **Kind:** function
 
 ```typescript
-function resolveForgeArtifactPath(root: string, relativeName: string): string;
+function resolveForgeArtifactPath(root: string, relativeName: string): string
 ```
 
 Resolve an artifact name and verify that existing path components are safe.
 
 #### Parameters
 
-| Name         | Type   | Description |
-| ------------ | ------ | ----------- |
-| root         | string |             |
-| relativeName | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| root | string |  |
+| relativeName | string |  |
 
 ### validateForgeArtifactName
 
 **Kind:** function
 
 ```typescript
-function validateForgeArtifactName(relativeName: string): string;
+function validateForgeArtifactName(relativeName: string): string
 ```
 
 Validate an artifact name without normalising away unsafe path segments.
 
 #### Parameters
 
-| Name         | Type   | Description |
-| ------------ | ------ | ----------- |
-| relativeName | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| relativeName | string |  |
 
 ### validateForgeArtifactSegment
 
 **Kind:** function
 
 ```typescript
-function validateForgeArtifactSegment(segment: string): string;
+function validateForgeArtifactSegment(segment: string): string
 ```
 
 Validate a single path component used to construct an artifact root.
 
 #### Parameters
 
-| Name    | Type   | Description |
-| ------- | ------ | ----------- |
-| segment | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| segment | string |  |
 
 ## `src/compiler/artifact-writer`
 
@@ -150,17 +146,17 @@ Validate a single path component used to construct an artifact root.
 **Kind:** function
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
+function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| outDir   | string |             |
-| targetId | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| outDir | string |  |
+| targetId | string |  |
 
 ### ForgeArtifactWriter
 
@@ -179,14 +175,14 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE;
+export const CLASS_NAME_ATTRIBUTE
 ```
 
 The neutral JSX attribute that drives class-name management. Authors write
 `className={…}` (the `class` attribute is reserved for static strings),
 passing the same arguments the `classNames` runtime helper accepts — most
 commonly an **array** of class values (`className={['base', { active }]}`),
-but any single {@link import('@mission-platform/forge').ClassValue} works too.
+but any single {@link import('@mission-platform/forge-jsx').ClassValue} works too.
 The attribute is spelled the same as React's own `className` (unlike the
 runtime helper, which stays `classNames`) so a component can merge its own
 computed classes with a forwarded `properties.className` without a naming
@@ -201,16 +197,16 @@ the array/object forms.
 **Kind:** function
 
 ```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
+function collectSlotNames(sourceFile: ts.SourceFile): Set<string>
 ```
 
 Collect every static slot name declared by `<Slot name="…" />` elements in the module.
 
 #### Parameters
 
-| Name       | Type          | Description |
-| ---------- | ------------- | ----------- |
-| sourceFile | ts.SourceFile |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
 
 ### ComponentImport
 
@@ -227,35 +223,25 @@ A relative import of a sibling component, e.g. `import { ForgeBadge } from '../f
 **Kind:** function
 
 ```typescript
-function createReactHasSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-): ts.Expression;
+function createReactHasSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined): ts.Expression
 ```
 
 `<props>.<name> != null` — React's presence read for `hasSlot('name')`.
 
 #### Parameters
 
-| Name           | Type                | Description |
-| -------------- | ------------------- | ----------- |
-| factory        | ts.NodeFactory      |             |
-| propsParamName | string              |             |
-| name           | string \| undefined |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| propsParamName | string |  |
+| name | string \| undefined |  |
 
 ### createReactSlotCallExpression
 
 **Kind:** function
 
 ```typescript
-function createReactSlotCallExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
+function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
 ```
 
 `typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
@@ -264,26 +250,20 @@ function createReactSlotCallExpression(
 
 #### Parameters
 
-| Name           | Type                     | Description |
-| -------------- | ------------------------ | ----------- |
-| factory        | ts.NodeFactory           |             |
-| propsParamName | string                   |             |
-| name           | string \| undefined      |             |
-| fallback       | readonly ts.Expression[] |             |
-| scope          | ts.Expression            |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| propsParamName | string |  |
+| name | string \| undefined |  |
+| fallback | readonly ts.Expression[] |  |
+| scope | ts.Expression |  |
 
 ### createReactSlotExpression
 
 **Kind:** function
 
 ```typescript
-function createReactSlotExpression(
-  factory: ts.NodeFactory,
-  propsParamName: string,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
+function createReactSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
 ```
 
 `<props>.<name>` (with `?? <fallback>` when the slot declares fallback
@@ -293,20 +273,20 @@ render-prop function, or evaluated directly if it is a React node
 
 #### Parameters
 
-| Name           | Type                   | Description |
-| -------------- | ---------------------- | ----------- |
-| factory        | ts.NodeFactory         |             |
-| propsParamName | string                 |             |
-| name           | string \| undefined    |             |
-| fallback       | readonly ts.JsxChild[] |             |
-| scope          | ts.Expression          |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| propsParamName | string |  |
+| name | string \| undefined |  |
+| fallback | readonly ts.JsxChild[] |  |
+| scope | ts.Expression |  |
 
 ### createReferenceRewriter
 
 **Kind:** function
 
 ```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
+function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>
 ```
 
 Build a TS transformer that rewrites references inside a component body for
@@ -316,16 +296,16 @@ calls → assignments, and `useRef`'s `.current` → `.value`.
 
 #### Parameters
 
-| Name  | Type         | Description |
-| ----- | ------------ | ----------- |
-| scope | RewriteScope |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| scope | RewriteScope |  |
 
 ### createStateSnapshotHoister
 
 **Kind:** function
 
 ```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
+function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>
 ```
 
 Preserve TypeScript control-flow narrowing of `useState` / `useMemo` values
@@ -341,7 +321,7 @@ narrowing TypeScript discards on entering any nested function — so the guarded
 `a[sortKey.value]` / `draft.value.uid` fails to type-check.
 
 For each block-bodied function this pass snapshots every such value read
-_inside a nested closure_ into a leading `const <name>$ = <name>.value;`, and
+*inside a nested closure* into a leading `const <name>$ = <name>.value;`, and
 rewrites the value **reads** (not the `<name>.value = …` write targets) within
 the function to that `const` alias. The snapshot restores the original `const`
 semantics — narrowing flows into the nested closures again — while the `.value`
@@ -349,38 +329,33 @@ access at the top keeps the read reactive (a `computed` still re-tracks it).
 
 #### Parameters
 
-| Name  | Type         | Description |
-| ----- | ------------ | ----------- |
-| scope | RewriteScope |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| scope | RewriteScope |  |
 
 ### createVueHasSlotExpression
 
 **Kind:** function
 
 ```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
+function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression
 ```
 
 `slots.<name>` — Vue's `useSlots()` presence read for `hasSlot('name')` (`!!slots.x`).
 
 #### Parameters
 
-| Name    | Type                | Description |
-| ------- | ------------------- | ----------- |
-| factory | ts.NodeFactory      |             |
-| name    | string \| undefined |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| name | string \| undefined |  |
 
 ### createVueSlotCallExpression
 
 **Kind:** function
 
 ```typescript
-function createVueSlotCallExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.Expression[],
-  scope?: ts.Expression,
-): ts.Expression;
+function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
 ```
 
 `slots.<name>?.(scope) ?? <fallback>` — the Vue translation of the `h(Slot, …)`
@@ -389,24 +364,19 @@ fallback here is the call's child **expressions** rather than JSX children.
 
 #### Parameters
 
-| Name     | Type                     | Description |
-| -------- | ------------------------ | ----------- |
-| factory  | ts.NodeFactory           |             |
-| name     | string \| undefined      |             |
-| fallback | readonly ts.Expression[] |             |
-| scope    | ts.Expression            |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| name | string \| undefined |  |
+| fallback | readonly ts.Expression[] |  |
+| scope | ts.Expression |  |
 
 ### createVueSlotExpression
 
 **Kind:** function
 
 ```typescript
-function createVueSlotExpression(
-  factory: ts.NodeFactory,
-  name: string | undefined,
-  fallback: readonly ts.JsxChild[],
-  scope?: ts.Expression,
-): ts.Expression;
+function createVueSlotExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
 ```
 
 `slots.<name>?.(scope)` (with `?? <fallback>` when the slot declares fallback
@@ -415,12 +385,12 @@ Vue **scoped** slot call.
 
 #### Parameters
 
-| Name     | Type                   | Description |
-| -------- | ---------------------- | ----------- |
-| factory  | ts.NodeFactory         |             |
-| name     | string \| undefined    |             |
-| fallback | readonly ts.JsxChild[] |             |
-| scope    | ts.Expression          |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| name | string \| undefined |  |
+| fallback | readonly ts.JsxChild[] |  |
+| scope | ts.Expression |  |
 
 ### DestructuredProperty
 
@@ -437,13 +407,7 @@ A binding pulled out of a `const { … } = properties` destructuring.
 **Kind:** function
 
 ```typescript
-function dynamicToHCall(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visitExpression: (expression: ts.Expression) => ts.Expression,
-  aliasAttribute: (name: string) => string = (name) => name,
-  variadicChildren = false,
-): ts.CallExpression;
+function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visitExpression: (expression: ts.Expression) => ts.Expression, aliasAttribute: (name: string) => string = (name) => name, variadicChildren = false): ts.CallExpression
 ```
 
 Rewrite a `<Dynamic is={X} a={…} …>children</Dynamic>` element into an
@@ -458,37 +422,37 @@ prop keys for the target (identity on Vue, the DOM aliases on React).
 
 #### Parameters
 
-| Name             | Type                                         | Description |
-| ---------------- | -------------------------------------------- | ----------- |
-| factory          | ts.NodeFactory                               |             |
-| node             | ts.JsxSelfClosingElement \| ts.JsxElement    |             |
-| visitExpression  | (expression: ts.Expression) => ts.Expression |             |
-| aliasAttribute   | (name: string) => string                     |             |
-| variadicChildren |                                              |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
+| visitExpression | (expression: ts.Expression) => ts.Expression |  |
+| aliasAttribute | (name: string) => string |  |
+| variadicChildren |  |  |
 
 ### ensureI18nHookInComponent
 
 **Kind:** function
 
 ```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
+function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile
 ```
 
 Ensure component functions that call `i18next.t(...)` have a top-level `const { t } = useI18n();` statement.
 
 #### Parameters
 
-| Name       | Type           | Description |
-| ---------- | -------------- | ----------- |
-| factory    | ts.NodeFactory |             |
-| sourceFile | ts.SourceFile  |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| sourceFile | ts.SourceFile |  |
 
 ### eventNameForProperty
 
 **Kind:** function
 
 ```typescript
-function eventNameForProperty(propName: string): string;
+function eventNameForProperty(propName: string): string
 ```
 
 Derive the Vue event name for an `on<Event>` prop: strip the `on` prefix and
@@ -497,9 +461,9 @@ lower-case the first remaining letter (`onChange` → `change`,
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| propName | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| propName | string |  |
 
 ### EventSignature
 
@@ -519,7 +483,7 @@ declared type is an inline function type (e.g. `onChange?: (openIds: string[])
 **Kind:** function
 
 ```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
+function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[]
 ```
 
 Extract the (own) **event** signatures declared by a props interface — members
@@ -531,17 +495,17 @@ than carrying them as runtime props. A callback prop typed via a named alias
 
 #### Parameters
 
-| Name          | Type          | Description |
-| ------------- | ------------- | ----------- |
-| sourceFile    | ts.SourceFile |             |
-| interfaceName | string        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
+| interfaceName | string |  |
 
 ### extractModelSignatures
 
 **Kind:** function
 
 ```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
+function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[]
 ```
 
 Extract the props-interface members marked `@model <onEvent>` — a prop and its
@@ -551,34 +515,34 @@ two-way binding. The model name is the prop name, except the canonical
 
 #### Parameters
 
-| Name          | Type          | Description |
-| ------------- | ------------- | ----------- |
-| sourceFile    | ts.SourceFile |             |
-| interfaceName | string        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
+| interfaceName | string |  |
 
 ### extractPropertyNames
 
 **Kind:** function
 
 ```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
+function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[]
 ```
 
 Extract the (own) property names declared by a props interface, excluding `children`.
 
 #### Parameters
 
-| Name          | Type          | Description |
-| ------------- | ------------- | ----------- |
-| sourceFile    | ts.SourceFile |             |
-| interfaceName | string        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
+| interfaceName | string |  |
 
 ### extractPropertySignatures
 
 **Kind:** function
 
 ```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
+function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[]
 ```
 
 Extract the (own) property signatures declared by a props interface, excluding
@@ -590,30 +554,27 @@ fall back to `unknown`.
 
 #### Parameters
 
-| Name          | Type          | Description |
-| ------------- | ------------- | ----------- |
-| sourceFile    | ts.SourceFile |             |
-| interfaceName | string        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
+| interfaceName | string |  |
 
 ### findComponentFunction
 
 **Kind:** function
 
 ```typescript
-function findComponentFunction(
-  sourceFile: ts.SourceFile | OxcParsedModule,
-  name: string,
-): ts.FunctionDeclaration | OxcNode | undefined;
+function findComponentFunction(sourceFile: ts.SourceFile | OxcParsedModule, name: string): ts.FunctionDeclaration | OxcNode | undefined
 ```
 
 Find the exported function declaration for a neutral component by name.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| sourceFile | ts.SourceFile \| OxcParsedModule |             |
-| name       | string                           |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile \| OxcParsedModule |  |
+| name | string |  |
 
 ### ForgeExportFact
 
@@ -660,40 +621,40 @@ A source location used by graph diagnostics and import/export facts.
 **Kind:** function
 
 ```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
+function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean
 ```
 
 Whether any of a parent's children carries a `slot="…"` marker.
 
 #### Parameters
 
-| Name     | Type                   | Description |
-| -------- | ---------------------- | ----------- |
-| children | readonly ts.JsxChild[] |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| children | readonly ts.JsxChild[] |  |
 
 ### inspectForgeModule
 
 **Kind:** function
 
 ```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts
 ```
 
 Extract static imports, exports, type-only edges, and framework facts from a parsed module.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| fileName | string |             |
-| source   | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| fileName | string |  |
+| source | string |  |
 
 ### isComponentTagName
 
 **Kind:** function
 
 ```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
+function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean
 ```
 
 Whether a JSX tag name refers to a **component** (a capitalised identifier such
@@ -705,16 +666,16 @@ children only when expanding a component (`typeof type === 'function'`).
 
 #### Parameters
 
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| tagName | ts.JsxTagNameExpression |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| tagName | ts.JsxTagNameExpression |  |
 
 ### isDynamicElement
 
 **Kind:** function
 
 ```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
+function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
 ```
 
 Whether a node is a neutral dynamic-component element — `<Dynamic is={…} />`
@@ -722,16 +683,16 @@ or `<Dynamic is={…}>…</Dynamic>` — produced from the `Dynamic` marker.
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| node | ts.Node |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | ts.Node |  |
 
 ### isFragmentElement
 
 **Kind:** function
 
 ```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
+function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
 ```
 
 Whether a node is a neutral `<Fragment>` element — either the self-closing
@@ -739,16 +700,16 @@ Whether a node is a neutral `<Fragment>` element — either the self-closing
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| node | ts.Node |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | ts.Node |  |
 
 ### isHasSlotCall
 
 **Kind:** function
 
 ```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
+function isHasSlotCall(node: ts.Node): node is ts.CallExpression
 ```
 
 Whether a node is a `hasSlot('name')` / `hasSlot()` call — the neutral
@@ -757,16 +718,16 @@ presence check, so it is never emitted as a runtime call.
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| node | ts.Node |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | ts.Node |  |
 
 ### isSlotElement
 
 **Kind:** function
 
 ```typescript
-function isSlotElement(node: ts.Node | OxcNode): boolean;
+function isSlotElement(node: ts.Node | OxcNode): boolean
 ```
 
 Whether a node is a neutral named-slot element — `<Slot … />` or
@@ -774,16 +735,16 @@ Whether a node is a neutral named-slot element — `<Slot … />` or
 
 #### Parameters
 
-| Name | Type               | Description |
-| ---- | ------------------ | ----------- |
-| node | ts.Node \| OxcNode |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | ts.Node \| OxcNode |  |
 
 ### isSlotHCall
 
 **Kind:** function
 
 ```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression;
+function isSlotHCall(node: ts.Node): node is ts.CallExpression
 ```
 
 Whether a node is the **call form** of the named-slot marker — `h(Slot, …)` —
@@ -794,16 +755,16 @@ rather than JSX; both forms must rewrite to each framework's native slot read.
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| node | ts.Node |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | ts.Node |  |
 
 ### JSX_ATTRIBUTE_RENAMES
 
 **Kind:** constant
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
 ```
 
 Native JSX attributes whose author-facing camelCase spelling must be lowered
@@ -816,7 +777,7 @@ to the HTML spelling Vue's JSX intrinsic-element types expect. Vue types the
 **Kind:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
 ```
 
 Neutral **type** imports that have no single first-class framework equivalent
@@ -825,12 +786,12 @@ in each framework's own vocabulary — the render primitive
 `MpRenderProperty<S>`, a scoped-slot / render-prop function returning a
 slot's content for a given scope.
 
-Rather than keep it as an `@mission-platform/forge` import in the generated
+Rather than keep it as an `@mission-platform/forge-jsx` import in the generated
 code, each framework build emits a tiny co-located module
 ({@link LOCAL_JSX_TYPES_MODULE}) that defines a **framework-specific variant**
 of it — React's over `ReactNode`, Vue's over `VNodeChild` — and every emitter
 redirects the type import there (see the React and Vue `imports` builders).
-So the generated sources carry no neutral `@mission-platform/forge`
+So the generated sources carry no neutral `@mission-platform/forge-jsx`
 render-prop **type** import at all.
 
 ### LOCAL_JSX_TYPES_FILE
@@ -838,7 +799,7 @@ render-prop **type** import at all.
 **Kind:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE;
+export const LOCAL_JSX_TYPES_FILE
 ```
 
 The file name (with extension) the local JSX types module is written as in the flat generated tree.
@@ -848,7 +809,7 @@ The file name (with extension) the local JSX types module is written as in the f
 **Kind:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE;
+export const LOCAL_JSX_TYPES_MODULE
 ```
 
 The relative specifier the generated per-framework {@link LOCAL_JSX_TYPES_MODULE} is imported under.
@@ -858,14 +819,14 @@ The relative specifier the generated per-framework {@link LOCAL_JSX_TYPES_MODULE
 **Kind:** function
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string;
+function localJsxTypesModuleSource(framework: JsxFramework): string
 ```
 
 The source of the co-located {@link LOCAL_JSX_TYPES_MODULE} for a target
 framework: framework-specific variants of the neutral render primitives named
 in {@link LOCAL_JSX_TYPE_NAMES}, so the generated components import
 `MpRenderProperty` from this local module instead of the neutral
-`@mission-platform/forge` package. The definitions differ per framework: the
+`@mission-platform/forge-jsx` package. The definitions differ per framework: the
 "renderable content" position is React's `ReactNode` and Vue's `VNodeChild`,
 so each build's declarations read idiomatically for its runtime.
 
@@ -875,9 +836,9 @@ that no longer exists in the neutral dialect.
 
 #### Parameters
 
-| Name      | Type         | Description |
-| --------- | ------------ | ----------- |
-| framework | JsxFramework |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| framework | JsxFramework |  |
 
 ### ModelSignature
 
@@ -898,7 +859,7 @@ and a call of the paired event becomes `<local>.value = …`.
 **Kind:** function
 
 ```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean
 ```
 
 Whether a module should be emitted for `framework`. A framework-neutral module
@@ -907,22 +868,22 @@ is emitted **only** for the framework its directive names.
 
 #### Parameters
 
-| Name      | Type   | Description |
-| --------- | ------ | ----------- |
-| fileName  | string |             |
-| source    | string |             |
-| framework | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| fileName | string |  |
+| source | string |  |
+| framework | string |  |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 ```
 
 Neutral **value** imports that are pure compile-time markers — they exist only
-so the authored JSX type-checks and are _consumed_ by the emitters (their JSX
+so the authored JSX type-checks and are *consumed* by the emitters (their JSX
 usages are rewritten to each framework's own mechanism), so they must never be
 carried into the generated React or Vue source as a real import. `Slot`
 (`<Slot name="…" />`) is the named-slot marker, `Dynamic`
@@ -936,13 +897,13 @@ compiles natively), and `hasSlot` (`hasSlot('x')`) is the slot-presence marker
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
 ```
 
-Neutral **value** imports that are the context primitives. On React they _are_
+Neutral **value** imports that are the context primitives. On React they *are*
 React's own (`createContext`/`useContext`), so they fall through to the
 `react` value import; on Vue their import is remapped to the
-`@mission-platform/forge/vue` adapter (a `provide`/`inject`-backed
+`@mission-platform/forge-adapters/vue` adapter (a `provide`/`inject`-backed
 `createContext`/`useContext`).
 
 ### NEUTRAL_MODULE
@@ -950,7 +911,7 @@ React's own (`createContext`/`useContext`), so they fall through to the
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_MODULE;
+export const NEUTRAL_MODULE
 ```
 
 The neutral package the components import their primitives from.
@@ -960,12 +921,12 @@ The neutral package the components import their primitives from.
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 ```
 
 Neutral **value** imports that are framework-agnostic runtime utilities — they
 behave identically on every target, so (unlike `h` and the hooks, which are
-translated/aliased per framework) their `import { … } from '@mission-platform/forge'`
+translated/aliased per framework) their `import { … } from '@mission-platform/forge-jsx'`
 must be preserved verbatim in the generated React and Vue sources.
 
 ### NEUTRAL_VUE_RUNTIME_HOOKS
@@ -973,7 +934,7 @@ must be preserved verbatim in the generated React and Vue sources.
 **Kind:** constant
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
 ```
 
 Neutral **value** hooks that have an identically-named native counterpart in
@@ -1008,16 +969,16 @@ A component element's children partitioned by their `slot="…"` marker.
 **Kind:** function
 
 ```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
+function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots
 ```
 
 Partition a component element's children into named-slot groups + the default children.
 
 #### Parameters
 
-| Name     | Type                   | Description |
-| -------- | ---------------------- | ----------- |
-| children | readonly ts.JsxChild[] |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| children | readonly ts.JsxChild[] |  |
 
 ### PropertySignature
 
@@ -1034,12 +995,12 @@ A single (own) property of a props interface — its name, declared type text, a
 **Kind:** function
 
 ```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
+function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression
 ```
 
 Collapse a `className={…}` attribute value into the **React** `className`
 value. React's `className` only accepts a string, so the conditional/array/
-object forms must be reduced _before_ they reach the element. An **array
+object forms must be reduced *before* they reach the element. An **array
 literal** (the canonical form — `className={['base', { active }]}`) is
 spread into a `classNames(…)` runtime call (`classNames('base', { active })`),
 matching the variadic helper signature; any other expression is already a
@@ -1048,17 +1009,17 @@ a ternary) and is passed straight through as the `className` value.
 
 #### Parameters
 
-| Name    | Type           | Description |
-| ------- | -------------- | ----------- |
-| factory | ts.NodeFactory |             |
-| value   | ts.Expression  |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| value | ts.Expression |  |
 
 ### readChildSlotName
 
 **Kind:** function
 
 ```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined;
+function readChildSlotName(child: ts.JsxChild): string | undefined
 ```
 
 Read the static `slot="…"` marker of a JSX **child** element — the attribute
@@ -1068,33 +1029,33 @@ child carries no usable `slot` marker (so it belongs to the default slot).
 
 #### Parameters
 
-| Name  | Type        | Description |
-| ----- | ----------- | ----------- |
-| child | ts.JsxChild |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| child | ts.JsxChild |  |
 
 ### readComponentImports
 
 **Kind:** function
 
 ```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
+function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[]
 ```
 
 Collect relative (sibling-component) value + type imports from a module.
 
 #### Parameters
 
-| Name       | Type          | Description |
-| ---------- | ------------- | ----------- |
-| sourceFile | ts.SourceFile |             |
-| sourceRoot | string        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
+| sourceRoot | string |  |
 
 ### readExternalImports
 
 **Kind:** function
 
 ```typescript
-function readExternalImports(fileName: string, source: string): string[];
+function readExternalImports(fileName: string, source: string): string[]
 ```
 
 Collect the **external** (bare package) imports of a module — every
@@ -1114,17 +1075,17 @@ generated source naming a framework subpath.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| fileName | string |             |
-| source   | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| fileName | string |  |
+| source | string |  |
 
 ### readFrameworkDirective
 
 **Kind:** function
 
 ```typescript
-function readFrameworkDirective(fileName: string, source: string): JsxFramework | undefined;
+function readFrameworkDirective(fileName: string, source: string): JsxFramework | undefined
 ```
 
 Read a module's `"use <framework>";` directive, if any.
@@ -1141,70 +1102,66 @@ directives (e.g. `"use strict"`) are ignored.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| fileName | string |             |
-| source   | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| fileName | string |  |
+| source | string |  |
 
 ### readHasSlotName
 
 **Kind:** function
 
 ```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined;
+function readHasSlotName(call: ts.CallExpression): string | undefined
 ```
 
 Read the static slot name of a `hasSlot('name')` call (`undefined` → the default slot).
 
 #### Parameters
 
-| Name | Type              | Description |
-| ---- | ----------------- | ----------- |
-| call | ts.CallExpression |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| call | ts.CallExpression |  |
 
 ### readNeutralImports
 
 **Kind:** function
 
 ```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports;
+function readNeutralImports(fileName: string, source: string): NeutralImports
 ```
 
-Inspect a module's `import … from '@mission-platform/forge'` bindings.
+Inspect a module's `import … from '@mission-platform/forge-jsx'` bindings.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| fileName | string |             |
-| source   | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| fileName | string |  |
+| source | string |  |
 
 ### readSlotHCallName
 
 **Kind:** function
 
 ```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined;
+function readSlotHCallName(call: ts.CallExpression): string | undefined
 ```
 
 Read the static `name` from an `h(Slot, { name: 'x' }, …)` call (`undefined` → the default slot).
 
 #### Parameters
 
-| Name | Type              | Description |
-| ---- | ----------------- | ----------- |
-| call | ts.CallExpression |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| call | ts.CallExpression |  |
 
 ### readSlotHCallScope
 
 **Kind:** function
 
 ```typescript
-function readSlotHCallScope(
-  factory: ts.NodeFactory,
-  call: ts.CallExpression,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
+function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
 ```
 
 Read the **scope** (every prop other than `name`) of an `h(Slot, props, …)`
@@ -1215,38 +1172,34 @@ target framework.
 
 #### Parameters
 
-| Name    | Type              | Description |
-| ------- | ----------------- | ----------- |
-| factory | ts.NodeFactory    |             |
-| call    | ts.CallExpression |             |
-| visit   | ts.Visitor        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| call | ts.CallExpression |  |
+| visit | ts.Visitor |  |
 
 ### readSlotName
 
 **Kind:** function
 
 ```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement | OxcNode): string | undefined;
+function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement | OxcNode): string | undefined
 ```
 
 Read the static `name="…"` of a `<Slot>` element (`undefined` → the default slot).
 
 #### Parameters
 
-| Name | Type                                                 | Description |
-| ---- | ---------------------------------------------------- | ----------- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement \| OxcNode |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | ts.JsxSelfClosingElement \| ts.JsxElement \| OxcNode |  |
 
 ### readSlotScope
 
 **Kind:** function
 
 ```typescript
-function readSlotScope(
-  factory: ts.NodeFactory,
-  node: ts.JsxSelfClosingElement | ts.JsxElement,
-  visit: ts.Visitor,
-): ts.ObjectLiteralExpression | undefined;
+function readSlotScope(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
 ```
 
 Read the **scope** of a `<Slot>` element — every attribute other than `name`
@@ -1259,18 +1212,18 @@ the compiler emits Vue `slots.x?.(scope)` and React `properties.x?.(scope)`.
 
 #### Parameters
 
-| Name    | Type                                      | Description |
-| ------- | ----------------------------------------- | ----------- |
-| factory | ts.NodeFactory                            |             |
-| node    | ts.JsxSelfClosingElement \| ts.JsxElement |             |
-| visit   | ts.Visitor                                |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
+| visit | ts.Visitor |  |
 
 ### readStyleImports
 
 **Kind:** function
 
 ```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[]
 ```
 
 Collect the relative stylesheet imports of a module (CSS Modules and bare CSS
@@ -1280,22 +1233,18 @@ a component can own (and ship) its own `.module.scss`.
 
 #### Parameters
 
-| Name       | Type   | Description |
-| ---------- | ------ | ----------- |
-| fileName   | string |             |
-| source     | string |             |
-| sourceRoot | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| fileName | string |  |
+| source | string |  |
+| sourceRoot | string |  |
 
 ### resolveWorkspaceLocalImport
 
 **Kind:** function
 
 ```typescript
-function resolveWorkspaceLocalImport(
-  specifier: string,
-  sourceFileName: string,
-  sourceRoot: string | undefined,
-): string | undefined;
+function resolveWorkspaceLocalImport(specifier: string, sourceFileName: string, sourceRoot: string | undefined): string | undefined
 ```
 
 Resolve a workspace-local `@/` import to a path relative to its owning source
@@ -1304,11 +1253,11 @@ inside the supplied workspace source root own the `@/` alias.
 
 #### Parameters
 
-| Name           | Type                | Description |
-| -------------- | ------------------- | ----------- |
-| specifier      | string              |             |
-| sourceFileName | string              |             |
-| sourceRoot     | string \| undefined |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| specifier | string |  |
+| sourceFileName | string |  |
+| sourceRoot | string \| undefined |  |
 
 ### RewriteScope
 
@@ -1326,66 +1275,66 @@ for the Vue target.
 **Kind:** function
 
 ```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
+function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile
 ```
 
 Rewrite workspace-local `@/` imports before framework-specific emission.
 
 #### Parameters
 
-| Name       | Type          | Description |
-| ---------- | ------------- | ----------- |
-| sourceFile | ts.SourceFile |             |
-| sourceRoot | string        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
+| sourceRoot | string |  |
 
 ### slotFallbackChildren
 
 **Kind:** function
 
 ```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
+function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[]
 ```
 
 The fallback children of a `<Slot>…</Slot>` (empty for a self-closing slot).
 
 #### Parameters
 
-| Name | Type                                      | Description |
-| ---- | ----------------------------------------- | ----------- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
 
 ### slotHCallFallback
 
 **Kind:** function
 
 ```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
+function slotHCallFallback(call: ts.CallExpression): ts.Expression[]
 ```
 
 The fallback children (arguments after the props) of an `h(Slot, props, …fallback)` call.
 
 #### Parameters
 
-| Name | Type              | Description |
-| ---- | ----------------- | ----------- |
-| call | ts.CallExpression |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| call | ts.CallExpression |  |
 
 ### stripSlotAttribute
 
 **Kind:** function
 
 ```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
+function stripSlotAttribute(factory: ts.NodeFactory, element: T): T
 ```
 
 A copy of a JSX element / self-closing element with its `slot="…"` marker attribute removed.
 
 #### Parameters
 
-| Name    | Type           | Description |
-| ------- | -------------- | ----------- |
-| factory | ts.NodeFactory |             |
-| element | T              |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| element | T |  |
 
 ### StyleImport
 
@@ -1402,24 +1351,24 @@ A stylesheet import in a neutral component, e.g. `import styles from './x.module
 **Kind:** function
 
 ```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
+function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node
 ```
 
 Rewrite `i18next.t(...)` call expressions to `t(...)`.
 
 #### Parameters
 
-| Name    | Type           | Description |
-| ------- | -------------- | ----------- |
-| factory | ts.NodeFactory |             |
-| node    | ts.Node        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | ts.NodeFactory |  |
+| node | ts.Node |  |
 
 ### usesClassNamesArrayAttribute
 
 **Kind:** function
 
 ```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
+function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
 ```
 
 Whether the module carries a `className={[…]}` attribute whose value is an
@@ -1429,16 +1378,16 @@ call on the React target, so the emitter must (re-)inject the neutral
 
 #### Parameters
 
-| Name       | Type          | Description |
-| ---------- | ------------- | ----------- |
-| sourceFile | ts.SourceFile |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
 
 ### usesComponentSelfReference
 
 **Kind:** function
 
 ```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
+function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean
 ```
 
 Whether a component references **itself** as a JSX tag (`<ForgeTreeView …>`
@@ -1448,49 +1397,49 @@ closure, so a recursive component compiles natively on both frameworks.
 
 #### Parameters
 
-| Name          | Type          | Description |
-| ------------- | ------------- | ----------- |
-| sourceFile    | ts.SourceFile |             |
-| componentName | string        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
+| componentName | string |  |
 
 ### usesHFactoryCall
 
 **Kind:** function
 
 ```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
+function usesHFactoryCall(sourceFile: ts.SourceFile): boolean
 ```
 
 Whether the module references `h` as a call expression (an explicit `h(...)`).
 
 #### Parameters
 
-| Name       | Type          | Description |
-| ---------- | ------------- | ----------- |
-| sourceFile | ts.SourceFile |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| sourceFile | ts.SourceFile |  |
 
 ### usesI18nextT
 
 **Kind:** function
 
 ```typescript
-function usesI18nextT(node: OxcNode): boolean;
+function usesI18nextT(node: OxcNode): boolean
 ```
 
 Whether an Oxc module or node calls `i18next.t(...)`.
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| node | OxcNode |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode |  |
 
 ### vueComponentModelListenerTransformer
 
 **Kind:** function
 
 ```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
+function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>
 ```
 
 Vue's `v-model` update events are named `update:<model>`: a child compiled
@@ -1512,7 +1461,7 @@ so it is idempotent and safe to apply universally on the render-closure path.
 **Kind:** function
 
 ```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
+function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>
 ```
 
 Vue-target transformer that rewrites the named-slot **passing** form — a
@@ -1531,7 +1480,7 @@ still rewritten to Vue reactivity (`.value`, etc.).
 **Kind:** function
 
 ```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
+function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>
 ```
 
 Vue-target transformer that fixes the casing of React-style multi-word DOM
@@ -1551,7 +1500,7 @@ universally on the render-closure path.
 **Kind:** function
 
 ```typescript
-function createEmptyForgeCacheStats(): ForgeCacheStats;
+function createEmptyForgeCacheStats(): ForgeCacheStats
 ```
 
 No description provided.
@@ -1561,7 +1510,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>;
+export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>
 ```
 
 No description provided.
@@ -1593,7 +1542,7 @@ Observable cache counters for one compiler service lifetime.
 **Kind:** function
 
 ```typescript
-function compileComponentModule(source: string, options: CompileOptions): CompiledModule;
+function compileComponentModule(source: string, options: CompileOptions): CompiledModule
 ```
 
 Compile one neutral (or framework-gated) component module to its per-framework
@@ -1606,10 +1555,10 @@ non-matching framework's build is handled upstream by the discovery step
 
 #### Parameters
 
-| Name    | Type           | Description |
-| ------- | -------------- | ----------- |
-| source  | string         |             |
-| options | CompileOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| source | string |  |
+| options | CompileOptions |  |
 
 ### CompiledModule
 
@@ -1626,19 +1575,19 @@ The Stage-1 result: emitted source and the extension it should be written under.
 **Kind:** function
 
 ```typescript
-function compileHookModule(source: string, options: CompileHookOptions): CompiledModule;
+function compileHookModule(source: string, options: CompileHookOptions): CompiledModule
 ```
 
 Compile one neutral **hook module** (a write-once composable authored against
-`@mission-platform/forge`'s React-style hooks, _not_ a UI component) to its
+`@mission-platform/forge-jsx`'s React-style hooks, *not* a UI component) to its
 per-framework source (Stage 1).
 
 #### Parameters
 
-| Name    | Type               | Description |
-| ------- | ------------------ | ----------- |
-| source  | string             |             |
-| options | CompileHookOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| source | string |  |
+| options | CompileHookOptions |  |
 
 ### CompileHookOptions
 
@@ -1655,7 +1604,7 @@ Options for {@link compileHookModule}.
 **Kind:** function
 
 ```typescript
-function compileModule(source: string, options: CompileModuleOptions): CompiledModule;
+function compileModule(source: string, options: CompileModuleOptions): CompiledModule
 ```
 
 Compile one neutral module through a caller-supplied output plugin.
@@ -1666,10 +1615,10 @@ shared seam used by standalone target packages such as Astro.
 
 #### Parameters
 
-| Name    | Type                 | Description |
-| ------- | -------------------- | ----------- |
-| source  | string               |             |
-| options | CompileModuleOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| source | string |  |
+| options | CompileModuleOptions |  |
 
 ### CompileModuleOptions
 
@@ -1698,7 +1647,7 @@ Options for {@link compileComponentModule}.
 **Kind:** function
 
 ```typescript
-function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[];
+function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[]
 ```
 
 Discover the components a barrel exports and derive their public shape. Each
@@ -1708,27 +1657,27 @@ in (the re-export's module base name).
 
 #### Parameters
 
-| Name         | Type   | Description |
-| ------------ | ------ | ----------- |
-| barrelSource | string |             |
-| stripPrefix  |        |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| barrelSource | string |  |
+| stripPrefix |  |  |
 
 ### discoverComponentsFromGraph
 
 **Kind:** function
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
+function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[]
 ```
 
 Project public component exports from the canonical graph while retaining the legacy result shape.
 
 #### Parameters
 
-| Name        | Type           | Description |
-| ----------- | -------------- | ----------- |
-| graph       | ForgeFileGraph |             |
-| stripPrefix |                |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| graph | ForgeFileGraph |  |
+| stripPrefix |  |  |
 
 ### DiscoveredComponent
 
@@ -1757,7 +1706,7 @@ A non-component **helper module** re-exported from the barrel (e.g. the
 **Kind:** function
 
 ```typescript
-function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[];
+function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
 ```
 
 Discover the **helper modules** a barrel re-exports — every `export { … }
@@ -1769,30 +1718,27 @@ consumers drive the very same per-framework singleton the components use.
 
 #### Parameters
 
-| Name             | Type                | Description |
-| ---------------- | ------------------- | ----------- |
-| barrelSource     | string              |             |
-| componentFolders | ReadonlySet<string> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| barrelSource | string |  |
+| componentFolders | ReadonlySet<string> |  |
 
 ### discoverHelperExportsFromGraph
 
 **Kind:** function
 
 ```typescript
-function discoverHelperExportsFromGraph(
-  graph: ForgeFileGraph,
-  componentFolders: ReadonlySet<string>,
-): DiscoveredHelperExport[];
+function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
 ```
 
 Project non-component public exports from the canonical graph.
 
 #### Parameters
 
-| Name             | Type                | Description |
-| ---------------- | ------------------- | ----------- |
-| graph            | ForgeFileGraph      |             |
-| componentFolders | ReadonlySet<string> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| graph | ForgeFileGraph |  |
+| componentFolders | ReadonlySet<string> |  |
 
 ## `src/compiler/frontends`
 
@@ -1801,7 +1747,7 @@ Project non-component public exports from the canonical graph.
 **Kind:** function
 
 ```typescript
-function parseForgeSource(fileName: string, source: string): OxcParsedModule;
+function parseForgeSource(fileName: string, source: string): OxcParsedModule
 ```
 
 Parse Forge source through Oxc into the serializable module the neutral
@@ -1810,34 +1756,29 @@ created; the returned module is the single parser-backed representation.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| fileName | string |             |
-| source   | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| fileName | string |  |
+| source | string |  |
 
 ### parseFrontendModule
 
 **Kind:** function
 
 ```typescript
-function parseFrontendModule(
-  fileName: string,
-  source: string,
-  moduleKind: 'component' | 'composable',
-  componentName?: string,
-): FrontendModule;
+function parseFrontendModule(fileName: string, source: string, moduleKind: 'component' | 'composable', componentName?: string): FrontendModule
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name          | Type                        | Description |
-| ------------- | --------------------------- | ----------- |
-| fileName      | string                      |             |
-| source        | string                      |             |
-| moduleKind    | 'component' \| 'composable' |             |
-| componentName | string                      |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| fileName | string |  |
+| source | string |  |
+| moduleKind | 'component' \| 'composable' |  |
+| componentName | string |  |
 
 ## `src/compiler/generation-context`
 
@@ -1846,16 +1787,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext;
+function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name    | Type                          | Description |
-| ------- | ----------------------------- | ----------- |
-| options | ForgeGenerationContextOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | ForgeGenerationContextOptions |  |
 
 ### ForgeGenerationContext
 
@@ -1884,16 +1825,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
+function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph
 ```
 
 Build the canonical source graph from one configured entry module.
 
 #### Parameters
 
-| Name    | Type                  | Description |
-| ------- | --------------------- | ----------- |
-| options | ForgeFileGraphOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | ForgeFileGraphOptions |  |
 
 ### ForgeFileEdge
 
@@ -1930,8 +1871,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type ForgeFileKind =
-  'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
+export type ForgeFileKind = 'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
 ```
 
 No description provided.
@@ -1961,13 +1901,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type ForgeGraphDiagnosticCode =
-  | 'missing-entry'
-  | 'missing-file'
-  | 'unsupported-extension'
-  | 'ambiguous-export'
-  | 'unsupported-authoring-form'
-  | 'cycle';
+export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'unsupported-extension' | 'ambiguous-export' | 'unsupported-authoring-form' | 'cycle';
 ```
 
 No description provided.
@@ -1979,11 +1913,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function hoistStaticJsx(
-  module: OxcParsedModule,
-  moduleKind: 'component' | 'composable' = 'component',
-  componentName?: string,
-): GenericHoistResult;
+function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'composable' = 'component', componentName?: string): GenericHoistResult
 ```
 
 Static-mark then hoist the render tree of an Oxc-parsed module, returning the
@@ -1992,11 +1922,11 @@ Stage-1 static-marking pass followed by generic hoisting.
 
 #### Parameters
 
-| Name          | Type                        | Description |
-| ------------- | --------------------------- | ----------- |
-| module        | OxcParsedModule             |             |
-| moduleKind    | 'component' \| 'composable' |             |
-| componentName | string                      |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| module | OxcParsedModule |  |
+| moduleKind | 'component' \| 'composable' |  |
+| componentName | string |  |
 
 ## `src/compiler/optimize`
 
@@ -2005,7 +1935,7 @@ Stage-1 static-marking pass followed by generic hoisting.
 **Kind:** function
 
 ```typescript
-function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule;
+function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule
 ```
 
 Run the source-level Stage-1 optimisation passes (dead-branch pruning and
@@ -2017,17 +1947,17 @@ Defaults every pass ON; pass `{ deadBranchPruning: false, … }` to disable.
 
 #### Parameters
 
-| Name    | Type            | Description |
-| ------- | --------------- | ----------- |
-| module  | OxcParsedModule |             |
-| options | OptimizeOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| module | OxcParsedModule |  |
+| options | OptimizeOptions |  |
 
 ### optimizeSourceFile
 
 **Kind:** constant
 
 ```typescript
-export const optimizeSourceFile;
+export const optimizeSourceFile
 ```
 
 Compatibility alias retained for compiler integrations using the old name.
@@ -2039,81 +1969,81 @@ Compatibility alias retained for compiler integrations using the old name.
 **Kind:** function
 
 ```typescript
-function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
+function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| root | OxcNode |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| root | OxcNode |  |
 
 ### isOxcJsxRoot
 
 **Kind:** function
 
 ```typescript
-function isOxcJsxRoot(node: OxcNode): boolean;
+function isOxcJsxRoot(node: OxcNode): boolean
 ```
 
 True when the node is a JSX element, self-closing element, or fragment.
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| node | OxcNode |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode |  |
 
 ### isOxcNode
 
 **Kind:** function
 
 ```typescript
-function isOxcNode(value: unknown): value is OxcNode;
+function isOxcNode(value: unknown): value is OxcNode
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name  | Type    | Description |
-| ----- | ------- | ----------- |
-| value | unknown |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| value | unknown |  |
 
 ### oxcArray
 
 **Kind:** function
 
 ```typescript
-function oxcArray(node: OxcNode, key: string): OxcNode[];
+function oxcArray(node: OxcNode, key: string): OxcNode[]
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| node | OxcNode |             |
-| key  | string  |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode |  |
+| key | string |  |
 
 ### oxcChildren
 
 **Kind:** function
 
 ```typescript
-function oxcChildren(node: OxcNode): OxcNode[];
+function oxcChildren(node: OxcNode): OxcNode[]
 ```
 
 Depth-first child walk over enumerable node-valued properties.
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| node | OxcNode |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode |  |
 
 ### OxcComment
 
@@ -2130,32 +2060,32 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function oxcIdentifierName(node: OxcNode | undefined): string | undefined;
+function oxcIdentifierName(node: OxcNode | undefined): string | undefined
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type                 | Description |
-| ---- | -------------------- | ----------- |
-| node | OxcNode \| undefined |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode \| undefined |  |
 
 ### oxcLiteralValue
 
 **Kind:** function
 
 ```typescript
-function oxcLiteralValue(node: OxcNode | undefined): unknown;
+function oxcLiteralValue(node: OxcNode | undefined): unknown
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type                 | Description |
-| ---- | -------------------- | ----------- |
-| node | OxcNode \| undefined |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode \| undefined |  |
 
 ### OxcNode
 
@@ -2172,34 +2102,34 @@ The serializable subset of an Oxc node used by the neutral frontend.
 **Kind:** function
 
 ```typescript
-function oxcNodeText(source: string, node: OxcNode | undefined): string;
+function oxcNodeText(source: string, node: OxcNode | undefined): string
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name   | Type                 | Description |
-| ------ | -------------------- | ----------- |
-| source | string               |             |
-| node   | OxcNode \| undefined |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| source | string |  |
+| node | OxcNode \| undefined |  |
 
 ### oxcObject
 
 **Kind:** function
 
 ```typescript
-function oxcObject(node: OxcNode, key: string): OxcNode | undefined;
+function oxcObject(node: OxcNode, key: string): OxcNode | undefined
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| node | OxcNode |             |
-| key  | string  |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode |  |
+| key | string |  |
 
 ### OxcParentMap
 
@@ -2236,88 +2166,84 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function oxcProgramBody(program: OxcNode): OxcNode[];
+function oxcProgramBody(program: OxcNode): OxcNode[]
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name    | Type    | Description |
-| ------- | ------- | ----------- |
-| program | OxcNode |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| program | OxcNode |  |
 
 ### oxcSourceExpression
 
 **Kind:** function
 
 ```typescript
-function oxcSourceExpression(
-  source: string,
-  node: OxcNode,
-  syntax: SourceBackedExpression['syntax'] = 'expression',
-): SourceBackedExpression;
+function oxcSourceExpression(source: string, node: OxcNode, syntax: SourceBackedExpression['syntax'] = 'expression'): SourceBackedExpression
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name   | Type                             | Description |
-| ------ | -------------------------------- | ----------- |
-| source | string                           |             |
-| node   | OxcNode                          |             |
-| syntax | SourceBackedExpression['syntax'] |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| source | string |  |
+| node | OxcNode |  |
+| syntax | SourceBackedExpression['syntax'] |  |
 
 ### oxcSourceSpan
 
 **Kind:** function
 
 ```typescript
-function oxcSourceSpan(source: string, node: OxcNode): SourceSpan;
+function oxcSourceSpan(source: string, node: OxcNode): SourceSpan
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name   | Type    | Description |
-| ------ | ------- | ----------- |
-| source | string  |             |
-| node   | OxcNode |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| source | string |  |
+| node | OxcNode |  |
 
 ### oxcString
 
 **Kind:** function
 
 ```typescript
-function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive' = 'name'): string | undefined;
+function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive' = 'name'): string | undefined
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type                             | Description |
-| ---- | -------------------------------- | ----------- |
-| node | OxcNode \| undefined             |             |
-| key  | 'name' \| 'value' \| 'directive' |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode \| undefined |  |
+| key | 'name' \| 'value' \| 'directive' |  |
 
 ### oxcTypeNode
 
 **Kind:** function
 
 ```typescript
-function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined;
+function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type                 | Description |
-| ---- | -------------------- | ----------- |
-| node | OxcNode \| undefined |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode \| undefined |  |
 
 ### oxcUnwrapModuleStatement
 
@@ -2328,66 +2254,66 @@ function oxcUnwrapModuleStatement(statement: OxcNode): {
   readonly node: OxcNode;
   readonly exported: boolean;
   readonly exportStatement: OxcNode | undefined;
-};
+}
 ```
 
 Unwrap `export …` wrappers so callers see the underlying declaration.
 
 #### Parameters
 
-| Name      | Type    | Description |
-| --------- | ------- | ----------- |
-| statement | OxcNode |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| statement | OxcNode |  |
 
 ### parseOxcModule
 
 **Kind:** function
 
 ```typescript
-function parseOxcModule(fileName: string, source: string): OxcParsedModule;
+function parseOxcModule(fileName: string, source: string): OxcParsedModule
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| fileName | string |             |
-| source   | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| fileName | string |  |
+| source | string |  |
 
 ### stripOxcFrameworkDirective
 
 **Kind:** function
 
 ```typescript
-function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule;
+function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule
 ```
 
 Drop leading `"use <framework>"` prologue directives from a parsed module.
 
 #### Parameters
 
-| Name   | Type            | Description |
-| ------ | --------------- | ----------- |
-| module | OxcParsedModule |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| module | OxcParsedModule |  |
 
 ### visitOxc
 
 **Kind:** function
 
 ```typescript
-function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): void;
+function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): void
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name    | Type                               | Description |
-| ------- | ---------------------------------- | ----------- |
-| node    | OxcNode                            |             |
-| visitor | (node: OxcNode) => void \| boolean |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| node | OxcNode |  |
+| visitor | (node: OxcNode) => void \| boolean |  |
 
 ## `src/compiler/pipeline`
 
@@ -2396,10 +2322,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function analyzeForgeModule(
-  input: CompilerInput,
-  service: ForgeCompilerService = defaultCompilerService,
-): SemanticModule;
+function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService = defaultCompilerService): SemanticModule
 ```
 
 Parse, normalize, and infer the target-neutral semantic module.
@@ -2411,10 +2334,10 @@ component analysed for several targets in one build is only inferred once.
 
 #### Parameters
 
-| Name    | Type                 | Description |
-| ------- | -------------------- | ----------- |
-| input   | CompilerInput        |             |
-| service | ForgeCompilerService |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| input | CompilerInput |  |
+| service | ForgeCompilerService |  |
 
 ### CompilerInput
 
@@ -2441,16 +2364,16 @@ Pipeline contract shared by all compiler entry points.
 **Kind:** function
 
 ```typescript
-function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline;
+function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline
 ```
 
 Create the phase dispatcher used by compiler entry points.
 
 #### Parameters
 
-| Name    | Type                 | Description |
-| ------- | -------------------- | ----------- |
-| service | ForgeCompilerService |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| service | ForgeCompilerService |  |
 
 ## `src/compiler/report`
 
@@ -2471,41 +2394,39 @@ Diagnostics and metrics collected during one service lifetime.
 **Kind:** function
 
 ```typescript
-function analyzeRouterCapabilities(
-  input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>,
-): RouterCapabilityModule;
+function analyzeRouterCapabilities(input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>): RouterCapabilityModule
 ```
 
 Parse neutral router imports and uses without importing any native router.
 
 #### Parameters
 
-| Name  | Type                                                              | Description |
-| ----- | ----------------------------------------------------------------- | ----------- |
-| input | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| input | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |  |
 
 ### compileRouterModule
 
 **Kind:** function
 
 ```typescript
-function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult;
+function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult
 ```
 
 Compile neutral router usage through a selected native target adapter.
 
 #### Parameters
 
-| Name  | Type                | Description |
-| ----- | ------------------- | ----------- |
-| input | RouterCompilerInput |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| input | RouterCompilerInput |  |
 
 ### createRouterCompilerPipeline
 
 **Kind:** function
 
 ```typescript
-function createRouterCompilerPipeline();
+function createRouterCompilerPipeline()
 ```
 
 Dispatcher form used by the Forge compiler and by standalone target fixtures.
@@ -2527,16 +2448,16 @@ Target output plus service metadata, without changing GeneratedModule itself.
 **Kind:** function
 
 ```typescript
-function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService;
+function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name   | Type             | Description |
-| ------ | ---------------- | ----------- |
-| limits | ForgeCacheLimits |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| limits | ForgeCacheLimits |  |
 
 ### ForgeCompileRequest
 
@@ -2605,7 +2526,7 @@ Long-lived, synchronous compiler state for one process/build session.
 **Kind:** function
 
 ```typescript
-function reactJsxPlugin(): Plugin;
+function reactJsxPlugin(): Plugin
 ```
 
 No description provided.
@@ -2615,32 +2536,32 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig;
+function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name    | Type                        | Description |
-| ------- | --------------------------- | ----------- |
-| options | JsxHookLibraryConfigOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | JsxHookLibraryConfigOptions |  |
 
 ### defineJsxLibraryConfig
 
 **Kind:** function
 
 ```typescript
-function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
+function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| options | JsxLibraryConfigOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | JsxLibraryConfigOptions |  |
 
 ### JsxHookLibraryConfigOptions
 
@@ -2667,7 +2588,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function reactJsxPlugin(): Plugin;
+function reactJsxPlugin(): Plugin
 ```
 
 No description provided.
@@ -2677,7 +2598,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function solidJsxPlugin(): Plugin[];
+function solidJsxPlugin(): Plugin[]
 ```
 
 The `vite-plugin-solid` plugin that compiles the generated Solid `.tsx`
@@ -2697,7 +2618,7 @@ sources against `react/jsx-runtime`, producing non-functional output.
 **Kind:** function
 
 ```typescript
-function solidJsxTsdownPlugin(): Plugin;
+function solidJsxTsdownPlugin(): Plugin
 ```
 
 Rolldown/tsdown-compatible Solid JSX plugin. Delegates to `vite-plugin-solid`'s
@@ -2710,7 +2631,7 @@ not rewrite Solid JSX as React.
 **Kind:** function
 
 ```typescript
-function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
+function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[]
 ```
 
 Stage-2 plugins for a forge framework build under **tsdown** (Rolldown).
@@ -2720,16 +2641,16 @@ they require Vite's resolved config.
 
 #### Parameters
 
-| Name   | Type                  | Description |
-| ------ | --------------------- | ----------- |
-| plugin | FrameworkOutputPlugin |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| plugin | FrameworkOutputPlugin |  |
 
 ### sveltePlugin
 
 **Kind:** function
 
 ```typescript
-function sveltePlugin(): Plugin[];
+function sveltePlugin(): Plugin[]
 ```
 
 Vite plugin for compiling generated Svelte components.
@@ -2739,7 +2660,7 @@ Vite plugin for compiling generated Svelte components.
 **Kind:** function
 
 ```typescript
-function svelteTsdownPlugin(): Plugin;
+function svelteTsdownPlugin(): Plugin
 ```
 
 Rolldown/tsdown-compatible Svelte compiler plugin. Compiles `.svelte` SFCs via
@@ -2753,7 +2674,7 @@ Prefer this (or {@link stagePluginsForTsdown}) when building with tsdown.
 **Kind:** function
 
 ```typescript
-function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string;
+function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string
 ```
 
 Compile a neutral hook library to its per-framework source tree (Stage 1),
@@ -2761,9 +2682,9 @@ returning the generated entry module path.
 
 #### Parameters
 
-| Name    | Type                              | Description |
-| ------- | --------------------------------- | ----------- |
-| options | GenerateHookLibrarySourcesOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | GenerateHookLibrarySourcesOptions |  |
 
 ### GenerateHookLibrarySourcesOptions
 
@@ -2790,7 +2711,7 @@ Options for {@link hookLibraryDtsPlugin}.
 **Kind:** function
 
 ```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
+function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
 ```
 
 A post-build Vite plugin that emits **genuine, per-framework** declarations
@@ -2798,7 +2719,7 @@ for a hook library's generated source tree.
 
 Each framework build ({@link generateHookLibrarySources} + the framework's
 Stage-2 bundler) produces JS but no declarations, since the generated tree is
-not a `tsc`-visible source file. Rather than re-export a single _common_
+not a `tsc`-visible source file. Rather than re-export a single *common*
 neutral declaration for every framework, this plugin runs the TypeScript 7
 CLI over the generated tree in `writeBundle` and writes the resulting `.d.ts`
 files into the build's own `outDir`. Type diagnostics are surfaced as build
@@ -2806,9 +2727,9 @@ warnings rather than failures so a `.d.ts` is always produced.
 
 #### Parameters
 
-| Name    | Type                  | Description |
-| ------- | --------------------- | ----------- |
-| options | HookLibraryDtsOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | HookLibraryDtsOptions |  |
 
 ## `src/generate`
 
@@ -2817,16 +2738,16 @@ warnings rather than failures so a `.d.ts` is always produced.
 **Kind:** function
 
 ```typescript
-function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget;
+function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget
 ```
 
 Create a source-tree descriptor from an explicit output plugin.
 
 #### Parameters
 
-| Name   | Type                  | Description |
-| ------ | --------------------- | ----------- |
-| plugin | FrameworkOutputPlugin |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| plugin | FrameworkOutputPlugin |  |
 
 ### FrameworkSourceTarget
 
@@ -2843,7 +2764,7 @@ Target-specific source-tree conventions used by the generic package driver.
 **Kind:** function
 
 ```typescript
-function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string;
+function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string
 ```
 
 Compile a neutral components package to its per-framework source tree (Stage 1),
@@ -2851,9 +2772,9 @@ returning the generated entry module path.
 
 #### Parameters
 
-| Name    | Type                            | Description |
-| ------- | ------------------------------- | ----------- |
-| options | GenerateFrameworkSourcesOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | GenerateFrameworkSourcesOptions |  |
 
 ### GenerateFrameworkSourcesOptions
 
@@ -2870,7 +2791,7 @@ Options for {@link generateFrameworkSources}.
 **Kind:** function
 
 ```typescript
-function jsxComponentsCssImportPlugin(): Plugin;
+function jsxComponentsCssImportPlugin(): Plugin
 ```
 
 Re-link per-component CSS to its JS chunk.
@@ -2903,7 +2824,7 @@ package's `./vue` / `./react` barrels pull in that chunk).
 Finally, each CSS-Module stylesheet is emitted under its **source** name —
 `foo.module.css` — with the class-name hashing already applied and the
 resolved names baked into the sibling `foo.module.js` class map. Shipping it
-with that `.module.css` suffix is a trap: every _downstream_ bundler (e.g. the
+with that `.module.css` suffix is a trap: every *downstream* bundler (e.g. the
 React Storybook's own Vite) recognises `*.module.css` as a CSS Module and
 runs the CSS-Modules transform over it **a second time**, re-hashing the
 selectors so they no longer match the (already-hashed) class names baked into
@@ -2928,7 +2849,7 @@ Options for {@link jsxComponentsDtsPlugin}.
 **Kind:** function
 
 ```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
+function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
 ```
 
 A post-build Vite plugin that emits **genuine, per-framework** declarations
@@ -2970,9 +2891,9 @@ Type diagnostics are surfaced as build warnings rather than failures so a
 
 #### Parameters
 
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| options | JsxComponentsDtsOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | JsxComponentsDtsOptions |  |
 
 ### JsxComponentsEntryDtsOptions
 
@@ -2989,7 +2910,7 @@ Options for {@link jsxComponentsEntryDtsPlugin}.
 **Kind:** function
 
 ```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
+function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin
 ```
 
 Emit the synthesised declaration (`<declarationFileName>.d.ts`) for the
@@ -2998,9 +2919,9 @@ though the entry itself is generated (and therefore not seen by `tsc`).
 
 #### Parameters
 
-| Name    | Type                         | Description |
-| ------- | ---------------------------- | ----------- |
-| options | JsxComponentsEntryDtsOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | JsxComponentsEntryDtsOptions |  |
 
 ## `src/tsdown`
 
@@ -3009,7 +2930,7 @@ though the entry itself is generated (and therefore not seen by `tsc`).
 **Kind:** function
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
+function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[]
 ```
 
 Reproduce one Archetype-C **component** framework build under tsdown:
@@ -3018,35 +2939,35 @@ emitting into `dist/<framework>/`.
 
 #### Parameters
 
-| Name    | Type                         | Description |
-| ------- | ---------------------------- | ----------- |
-| options | TsdownForgeComponentsOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | TsdownForgeComponentsOptions |  |
 
 ### defineTsdownForgeEmailComponents
 
 **Kind:** function
 
 ```typescript
-function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig;
+function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig
 ```
 
 Build the server-only neutral Forge email component entry.
 
-It preserves the Forge tree so
+ It preserves the Forge tree so
 `@mission-platform/email-renderer` can serialize it on the server.
 
 #### Parameters
 
-| Name    | Type                              | Description |
-| ------- | --------------------------------- | ----------- |
-| options | TsdownForgeEmailComponentsOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | TsdownForgeEmailComponentsOptions |  |
 
 ### defineTsdownForgeHooks
 
 **Kind:** function
 
 ```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig
 ```
 
 Reproduce one Archetype-C **hook** framework build under tsdown:
@@ -3055,16 +2976,16 @@ emitting into `dist/<framework>/`.
 
 #### Parameters
 
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| options | TsdownForgeHooksOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | TsdownForgeHooksOptions |  |
 
 ### defineTsdownForgeHooksAll
 
 **Kind:** function
 
 ```typescript
-function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[];
+function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[]
 ```
 
 Build an array of tsdown configs for every requested forge hooks framework
@@ -3073,9 +2994,9 @@ Build an array of tsdown configs for every requested forge hooks framework
 
 #### Parameters
 
-| Name    | Type                       | Description |
-| ------- | -------------------------- | ----------- |
-| options | TsdownForgeHooksAllOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | TsdownForgeHooksAllOptions |  |
 
 ### TsdownForgeComponentsOptions
 

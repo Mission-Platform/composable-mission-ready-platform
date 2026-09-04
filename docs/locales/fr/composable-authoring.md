@@ -7,7 +7,7 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 
 Les composables sont le principal moyen d'encapsuler et de réutiliser la logique réactive au sein de la plateforme de mission. Pour assurer ces
 les unités de logique sont portables dans tous les frameworks d'interface utilisateur pris en charge, elles sont créées en tant que modules **à écriture unique** à l'aide du
-crochets neutres en termes de cadre fournis par `@mission-platform/forge`.
+crochets neutres en termes de cadre fournis par `@mission-platform/forge-jsx`.
 
 ## Disposition du répertoire
 
@@ -26,7 +26,7 @@ src/composables/
 ## Règles de création
 
 1. **Utilisez Forge Hooks** : importez uniquement des primitives réactives (par exemple, `useState`, `useEffect`, `useMemo`, `useRef`) depuis
-   `@mission-platform/forge`. N’importez jamais directement depuis `vue` ou `react`.
+   `@mission-platform/forge-jsx`. N’importez jamais directement depuis `vue` ou `react`.
 2. **Convention de dénomination** : les noms composables doivent utiliser kebab-case et être préfixés par `use-` (e.g., `use-media-query`).
 3. **Sécurité SSR** : assurez-vous que la logique est sécurisée pour le rendu côté serveur. Protégez tout accès aux API réservées au navigateur, comme `window`,
    `document`, ou `localStorage`.
@@ -39,7 +39,7 @@ src/composables/
 Voici un composable à écriture unique typique qui gère un écouteur d'événement.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,

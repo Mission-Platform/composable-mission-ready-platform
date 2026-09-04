@@ -20,7 +20,7 @@ pacchetto anziché questa pagina.
 
 ## Quadro fondamentale
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 La base dell'architettura "write-once", che fornisce un runtime JSX e hook indipendenti dal framework.
 
@@ -32,8 +32,8 @@ La base dell'architettura "write-once", che fornisce un runtime JSX e hook indip
 | `useMemo` | Gancio | Gancio di memorizzazione neutro dal framework.                                                     |
 | `useRef` | Gancio | Gancio di riferimento neutro rispetto al contesto.                                                       |
 | `useContext` | Gancio | Hook di contesto neutrale rispetto al contesto.                                                         |
-| `toVueComponent` | Adattatore | Converte un componente forgiato in un componente Vue 3 (da `@mission-platform/forge/vue`).   |
-| `toReactComponent` | Adattatore | Converte un componente forgiato in un componente React (da `@mission-platform/forge/react`). |
+| `toVueComponent` | Adattatore | Converte un componente forgiato in un componente Vue 3 (da `@mission-platform/forge-adapters/vue`).   |
+| `toReactComponent` | Adattatore | Converte un componente forgiato in un componente React (da `@mission-platform/forge-adapters/react`). |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ pacchetto in `packages/`, incluse le facciate WebAssembly tipizzate.
 
 | Pacchetto | Scopo |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` | Runtime e adattatori JSX indipendenti dal framework.                   |
+| `@mission-platform/forge-jsx` | Runtime e adattatori JSX indipendenti dal framework.                   |
 | `@mission-platform/components` | Componenti dell'interfaccia utente scrivibili una sola volta.                                     |
 | `@mission-platform/icons` | Componenti dell'icona SVG scrivibili una sola volta.                               |
 | `@mission-platform/layouts` | Componenti dell'applicazione, del contenitore e del layout reattivo.     |

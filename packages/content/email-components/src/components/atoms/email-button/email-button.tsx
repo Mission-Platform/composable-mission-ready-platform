@@ -11,7 +11,7 @@ import {
 } from '../../../tokens';
 
 import type { EmailColor, EmailSizeScale } from '../../../tokens';
-import type { MpChild, MpElement } from '@mission-platform/forge';
+import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 export type EmailButtonVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';

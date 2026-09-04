@@ -7,7 +7,7 @@
 
 `@mission-platform/breakpoints` 提供响应式断点实用程序和 **一次写入** 视口组件
 任务平台。组件（`ForgeShowAt`、`ForgeHideAt`、`ForgeBreakpointDebug`）在中立环境中编写一次
-`@mission-platform/forge` 方言并由 `@mission-platform/vite-plugin-forge` 编译为 **Vue 3 和 React**。
+`@mission-platform/forge-jsx` 方言并由 `@mission-platform/vite-plugin-forge` 编译为 **Vue 3 和 React**。
 
 ## 出口
 

@@ -44,7 +44,7 @@ et jamais publié dans un registre.
 
 Bibliothèques réutilisables et versionnées consommées par les applications. Ceux-ci sont destinés à être indépendants du framework dans la mesure du possible.
 
-- **`@mission-platform/forge`** : le runtime JSX et les adaptateurs neutres en termes de framework.
+- **`@mission-platform/forge-jsx`** : le runtime JSX et les adaptateurs neutres en termes de framework.
 - **`@mission-platform/components`** : La bibliothèque de composants multi-framework.
 - **`@mission-platform/forms`** et **`@mission-platform/forms-core`** : primitives de formulaire basées sur un schéma.
 - **`@mission-platform/content`** et **`@mission-platform/email-renderer`** : pipelines de contenu et de rendu.

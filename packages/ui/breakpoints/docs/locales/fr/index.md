@@ -7,7 +7,7 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 
 `@mission-platform/breakpoints` fournit des utilitaires de point d'arrêt réactifs et des composants de fenêtre d'affichage **à écriture unique** pour le
 Plateforme de mission. Les composants (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) sont créés une fois dans le mode neutre.
-Dialecte `@mission-platform/forge` et compilé en **Vue 3 et React** par `@mission-platform/vite-plugin-forge`.
+Dialecte `@mission-platform/forge-jsx` et compilé en **Vue 3 et React** par `@mission-platform/vite-plugin-forge`.
 
 ## Exportations
 

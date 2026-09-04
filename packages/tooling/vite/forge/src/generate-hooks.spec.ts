@@ -19,7 +19,7 @@ describe('generateHookLibrarySources', () => {
     writeFileSync(path.join(sourceDirectory, 'index.ts'), "export { useExample } from './composables/use-example';\n");
     writeFileSync(
       path.join(sourceDirectory, 'composables/use-example.ts'),
-      "import { useState } from '@mission-platform/forge';\nexport function useExample(): number { return useState(1); }\n",
+      "import { useState } from '@mission-platform/forge-jsx';\nexport function useExample(): number { return useState(1); }\n",
     );
     try {
       const options = {
@@ -62,7 +62,7 @@ describe('generateHookLibrarySources', () => {
     writeFileSync(
       path.join(composableDirectory, 'use-example.ts'),
       [
-        "import { useEffect, useState } from '@mission-platform/forge';",
+        "import { useEffect, useState } from '@mission-platform/forge-jsx';",
         '',
         'export interface ExampleControls {',
         '  value: number;',

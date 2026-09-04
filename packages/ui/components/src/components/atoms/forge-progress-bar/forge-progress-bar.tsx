@@ -1,4 +1,4 @@
-import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-progress-bar.module.scss';

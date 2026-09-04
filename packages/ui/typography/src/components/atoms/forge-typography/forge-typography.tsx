@@ -8,7 +8,7 @@ import {
   type CSSStyleProperties,
   type MpChild,
   type MpElement,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 import styles from './forge-typography.module.scss';
 

@@ -7,7 +7,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 
 `@mission-platform/breakpoints` proporciona utilidades de punto de interrupción responsivas y componentes de ventana gráfica de **escritura única** para
 Plataforma de la Misión. Los componentes (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) se crean una vez en el estado neutral.
-`@mission-platform/forge` dialecto y compilado en **Vue 3 y React** por `@mission-platform/vite-plugin-forge`.
+`@mission-platform/forge-jsx` dialecto y compilado en **Vue 3 y React** por `@mission-platform/vite-plugin-forge`.
 
 ## Exportaciones
 

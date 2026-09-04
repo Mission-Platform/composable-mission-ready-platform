@@ -2,7 +2,7 @@ import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-arrow.module.scss';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 /** The direction the arrow points. */
 export type IconArrowDirection = 'up' | 'right' | 'down' | 'left';

@@ -1,4 +1,4 @@
-import { useMemo, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { useMemo, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 
 import styles from './forge-markdown.module.scss';
 import { MarkdownBlock } from './markdown-block';

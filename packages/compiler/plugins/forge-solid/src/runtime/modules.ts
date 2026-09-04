@@ -1,7 +1,7 @@
 /**
  * Module specifiers the SolidJS target emits imports against.
  *
- * The neutral `@mission-platform/forge` import is split across these modules by
+ * The neutral `@mission-platform/forge-jsx` import is split across these modules by
  * `../transformers/imports.ts`: the reactive primitives and the `JSX` namespace
  * type come from `solid-js`, the hyperscript factory from `solid-js/h`, the
  * per-framework marker components from the Solid adapter subpath, and the

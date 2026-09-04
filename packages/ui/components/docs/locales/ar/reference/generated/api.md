@@ -1243,7 +1243,7 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 
 `ForgeDeviceMock` — إطار جهاز مزخرف يغلف الشاشة بشكل عشوائي
 المحتوى (الفتحة الافتراضية) في `mobile` أو `tablet` أو `desktop` أو `browser`
-chrome، تم تأليفه مرة واحدة بلهجة JSX المحايدة (`@mission-platform/forge`)
+chrome، تم تأليفه مرة واحدة بلهجة JSX المحايدة (`@mission-platform/forge-jsx`)
 وتجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 

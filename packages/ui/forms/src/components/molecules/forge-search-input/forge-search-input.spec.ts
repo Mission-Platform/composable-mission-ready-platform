@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeSearchInput } from './forge-search-input';
 
 /**
  * Exercises the **neutral** `ForgeSearchInput` authored in this package,
- * rendering it on both frameworks through the `@mission-platform/forge` runtime
+ * rendering it on both frameworks through the `@mission-platform/forge-jsx` runtime
  * adapters. Covers the search field, the clear button, and the loading state.
  */
 const ReactSearchInput = toReactComponent(ForgeSearchInput, 'SearchInput');

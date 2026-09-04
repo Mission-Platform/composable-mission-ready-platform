@@ -20,8 +20,8 @@ describe("emitSolidHookModule", () => {
     const code = emit({
       imports: [
         moduleImport(
-          "import { useState, useEffect } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { useState, useEffect } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           {
             valueNames: ["useState", "useEffect"],
           },
@@ -81,8 +81,8 @@ describe("emitSolidHookModule", () => {
     const code = emit({
       imports: [
         moduleImport(
-          "import { createContext, useContext } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { createContext, useContext } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           { valueNames: ["createContext", "useContext"] },
         ),
       ],

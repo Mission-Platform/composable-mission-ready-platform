@@ -44,7 +44,7 @@ composable_mission_ready_platform/
 
 앱에서 사용하는 재사용 가능하고 버전이 지정된 라이브러리입니다. 이는 가능한 경우 프레임워크에 구애받지 않도록 의도되었습니다.
 
-- **`@mission-platform/forge`**: 프레임워크 중립적인 JSX 런타임 및 어댑터입니다.
+- **`@mission-platform/forge-jsx`**: 프레임워크 중립적인 JSX 런타임 및 어댑터입니다.
 - **`@mission-platform/components`**: 다중 프레임워크 구성 요소 라이브러리입니다.
 - **`@mission-platform/forms`** 및 **`@mission-platform/forms-core`**: 스키마 기반 양식 기본 요소입니다.
 - **`@mission-platform/content`** 및 **`@mission-platform/email-renderer`**: 콘텐츠 및 렌더링 파이프라인.

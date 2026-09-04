@@ -59,7 +59,7 @@ Todo el código fuente nuevo debe escribirse en TypeScript (`.ts`) o Vue SFC con
 
 ### Componentes neutrales al marco
 
-Siempre que sea posible, cree componentes de la interfaz de usuario utilizando el `@mission-platform/forge` dialecto. Esto permite que los componentes sean
+Siempre que sea posible, cree componentes de la interfaz de usuario utilizando el `@mission-platform/forge-jsx` dialecto. Esto permite que los componentes sean
 compilado y utilizado en Vue, React, Svelte, Solidy componentes web sin reescribir la lógica central. Configurar el
 solucionador del consumidor con la coincidencia `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, o `mp:web-component` condición.
 

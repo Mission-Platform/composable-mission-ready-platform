@@ -59,7 +59,7 @@ Alle nieuwe broncode moet worden geschreven TypeScript (`.ts`) of Vue SFC's met 
 
 ### Framework-neutrale componenten
 
-Schrijf waar mogelijk UI-componenten met behulp van de `@mission-platform/forge` dialect. Hierdoor kunnen componenten worden
+Schrijf waar mogelijk UI-componenten met behulp van de `@mission-platform/forge-jsx` dialect. Hierdoor kunnen componenten worden
 samengesteld en gebruikt Vue, React, Svelte, Solid, en Web Components zonder de kernlogica te herschrijven. Configureer de
 consumentenresolver met de matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, of `mp:web-component` voorwaarde.
 

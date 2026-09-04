@@ -9,7 +9,7 @@ Esta guía explica cómo consumir paquetes de Mission Platform en proyectos ubic
 
 ## Selección del marco a través de condiciones
 
-Los componentes de Mission Platform se crean una vez usando `@mission-platform/forge` y se distribuyen como múltiples paquetes específicos del marco (Vue 3, React, Solid y componentes web) dentro de un solo paquete.
+Los componentes de Mission Platform se crean una vez usando `@mission-platform/forge-jsx` y se distribuyen como múltiples paquetes específicos del marco (Vue 3, React, Solid y componentes web) dentro de un solo paquete.
 
 Para seleccionar el paquete correcto, debe configurar su herramienta de compilación y TypeScript para usar **Condiciones de exportación personalizadas**.
 

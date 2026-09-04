@@ -20,7 +20,7 @@ Paket statt dieser Seite.
 
 ## Kern-Framework
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 Die Grundlage der „Write-Once“-Architektur, die eine Framework-neutrale JSX-Laufzeit und Hooks bereitstellt.
 
@@ -32,8 +32,8 @@ Die Grundlage der „Write-Once“-Architektur, die eine Framework-neutrale JSX-
 | `useMemo` | Haken | Framework-neutraler Memoisierungs-Hook.                                                     |
 | `useRef` | Haken | Framework-neutraler Referenz-Hook.                                                       |
 | `useContext` | Haken | Framework-neutraler Kontext-Hook.                                                         |
-| `toVueComponent` | Adapter | Konvertiert eine Forge-Komponente in eine Vue 3-Komponente (von `@mission-platform/forge/vue`).   |
-| `toReactComponent` | Adapter | Konvertiert eine Forge-Komponente in eine React-Komponente (von `@mission-platform/forge/react`). |
+| `toVueComponent` | Adapter | Konvertiert eine Forge-Komponente in eine Vue 3-Komponente (von `@mission-platform/forge-adapters/vue`).   |
+| `toReactComponent` | Adapter | Konvertiert eine Forge-Komponente in eine React-Komponente (von `@mission-platform/forge-adapters/react`). |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ Paket in `packages/`, einschließlich der typisierten WebAssembly-Fassaden.
 
 | Paket | Zweck |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` | Frameworkneutrale JSX-Laufzeit und -Adapter.                   |
+| `@mission-platform/forge-jsx` | Frameworkneutrale JSX-Laufzeit und -Adapter.                   |
 | `@mission-platform/components` | Einmal beschreibbare UI-Komponenten.                                     |
 | `@mission-platform/icons` | Einmal beschreibbare SVG-Symbolkomponenten.                               |
 | `@mission-platform/layouts` | Anwendungs-, Container- und responsive Layoutkomponenten.     |

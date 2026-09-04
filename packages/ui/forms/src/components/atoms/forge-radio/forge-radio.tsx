@@ -1,4 +1,4 @@
-import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-radio.module.scss';

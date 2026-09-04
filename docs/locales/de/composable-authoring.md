@@ -7,7 +7,7 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 
 Composables sind die wichtigste Möglichkeit, reaktive Logik innerhalb der Mission Platform zu kapseln und wiederzuverwenden. Um diese zu gewährleisten
 Logikeinheiten sind auf alle unterstützten UI-Frameworks portierbar, sie werden als **einmal beschreibbare** Module mit erstellt
-Framework-neutrale Haken bereitgestellt von `@mission-platform/forge`.
+Framework-neutrale Haken bereitgestellt von `@mission-platform/forge-jsx`.
 
 ## Verzeichnislayout
 
@@ -26,7 +26,7 @@ src/composables/
 ## Autorenregeln
 
 1. **Forge Hooks verwenden**: Importieren Sie nur reaktive Grundelemente (z. B. `useState`, `useEffect`, `useMemo`, `useRef`) aus
-   `@mission-platform/forge`. Importieren Sie niemals direkt von `vue` oder `react`.
+   `@mission-platform/forge-jsx`. Importieren Sie niemals direkt von `vue` oder `react`.
 2. **Namenskonvention**: Zusammensetzbare Namen müssen die Kebab-Groß-/Kleinschreibung verwenden und mit dem Präfix versehen werden `use-` (e.g., `use-media-query`).
 3. **SSR-Sicherheit**: Stellen Sie sicher, dass die Logik für serverseitiges Rendering sicher ist. Schützen Sie jeglichen Zugriff auf reine Browser-APIs wie `window`,
    `document`, oder `localStorage`.
@@ -39,7 +39,7 @@ src/composables/
 Hier ist ein typisches einmal beschreibbares Composable, das einen Ereignis-Listener verwaltet.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,

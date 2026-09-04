@@ -1,4 +1,4 @@
-import { useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 import { ForgeIconStar } from '@mission-platform/icons';
 
 import styles from './forge-rating.module.scss';

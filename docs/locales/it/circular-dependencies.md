@@ -77,7 +77,7 @@ unica unità logica. Valuta la possibilità di unirli in un unico pacchetto.
 ## Migliori pratiche di prevenzione
 
 1. **Segui il flusso unidirezionale**: aderisci rigorosamente al `Apps → Packages → Configs` direzione della dipendenza.
-2. **Logica neutra rispetto al framework dell'autore**: utilizzo `@mission-platform/forge` per la logica di base per evitare cicli specifici del framework.
+2. **Logica neutra rispetto al framework dell'autore**: utilizzo `@mission-platform/forge-jsx` per la logica di base per evitare cicli specifici del framework.
 3. **Utilizza protocolli Workspace**: utilizzare sempre `workspace:*` per le dipendenze interne da garantire pnpm può risolvere correttamente
    il grafico.
 4. **Controlla regolarmente le importazioni**: presta attenzione ai suggerimenti di "importazione automatica" nel tuo IDE, poiché a volte possono introdurre

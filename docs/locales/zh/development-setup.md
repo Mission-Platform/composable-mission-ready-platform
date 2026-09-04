@@ -66,7 +66,7 @@ pnpm install
 运行冒烟测试以确保构建系统和环境配置正确：
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 这 `...` 还构建包所需的 Forge 依赖项。的

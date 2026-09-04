@@ -20,7 +20,7 @@
 
 ## الإطار الأساسي
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 أساس بنية "الكتابة مرة واحدة"، مما يوفر وقت تشغيل JSX وخطافات محايدة لإطار العمل.
 
@@ -32,8 +32,8 @@
 | `useMemo` | هوك | خطاف تحفيظ محايد للإطار.                                                     |
 | `useRef` | هوك | خطاف مرجعي محايد للإطار.                                                       |
 | `useContext` | هوك | ربط سياق محايد للإطار.                                                         |
-| `toVueComponent` | محول | يحول مكون صياغة إلى مكون Vue 3 (من `@mission-platform/forge/vue`).   |
-| `toReactComponent` | محول | تحويل مكون صياغة إلى مكون React (من `@mission-platform/forge/react`). |
+| `toVueComponent` | محول | يحول مكون صياغة إلى مكون Vue 3 (من `@mission-platform/forge-adapters/vue`).   |
+| `toReactComponent` | محول | تحويل مكون صياغة إلى مكون React (من `@mission-platform/forge-adapters/react`). |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ const router = createWebComponentsRouter({
 
 | الحزمة | الغرض |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` | وقت تشغيل ومحولات JSX المحايدة للإطار.                   |
+| `@mission-platform/forge-jsx` | وقت تشغيل ومحولات JSX المحايدة للإطار.                   |
 | `@mission-platform/components` | مكونات واجهة المستخدم للكتابة مرة واحدة.                                     |
 | `@mission-platform/icons` | مكونات أيقونة SVG للكتابة مرة واحدة.                               |
 | `@mission-platform/layouts` | مكونات التطبيق والحاوية والتخطيط سريع الاستجابة.     |

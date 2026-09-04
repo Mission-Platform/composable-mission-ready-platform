@@ -193,7 +193,7 @@ the driver owns generic orchestration; and each target package owns the framewor
 
 ## Component builds
 
-Component packages author neutral modules against `@mission-platform/forge`, usually through a neutral component barrel.
+Component packages author neutral modules against `@mission-platform/forge-jsx`, usually through a neutral component barrel.
 `defineTsdownForgeComponents` creates one target build for each supplied plugin. For each target it:
 
 1. parses, normalizes, and analyzes the neutral component modules;

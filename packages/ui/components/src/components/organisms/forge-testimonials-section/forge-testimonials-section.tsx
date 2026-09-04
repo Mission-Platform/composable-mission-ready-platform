@@ -5,7 +5,7 @@ import {
   createForgeStyle,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 import { initialsForName } from '../../../utils';
 import { ForgeAvatar } from '../../atoms/forge-avatar/forge-avatar';

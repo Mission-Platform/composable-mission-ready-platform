@@ -1,7 +1,7 @@
 # @mission-platform/vite-plugin-forge
 
 A framework-neutral compiler driver that turns components and composables authored
-against [`@mission-platform/forge`](../../packages/forge) into native target
+against [`@mission-platform/forge-jsx`](../../packages/forge) into native target
 artifacts. The driver owns parsing, normalization, semantic IR, neutral
 optimization, diagnostics, caching, and generic Vite/tsdown orchestration. It
 does not own framework emitters or a target registry.
@@ -70,7 +70,7 @@ differently: each framework build emits a tiny co-located `mp-jsx-types.ts`
 module defining a **framework-specific variant** of it (React over `ReactNode`,
 Vue over `VNodeChild`), and every emitter redirects that type import to the local
 module. So the generated React/Vue sources — and their emitted declarations —
-carry **no** `@mission-platform/forge` render type import (only the
+carry **no** `@mission-platform/forge-jsx` render type import (only the
 framework-agnostic `classNames` runtime value keeps its neutral import).
 
 There is no neutral props **base**: a component declares exactly the properties
@@ -100,11 +100,11 @@ framework therefore means adding a `forge-plugin-*` package rather than
 extending this compiler's source tree.
 
 The same strict pipeline also compiles **hook libraries** — write-once _composables_
-(not UI components) authored against the neutral `@mission-platform/forge` hooks,
+(not UI components) authored against the neutral `@mission-platform/forge-jsx` hooks,
 such as [`@mission-platform/rxjs`](../../packages/rxjs) and
 [`@mission-platform/d3`](../../packages/d3). `generateHookLibrarySources` reads a
 neutral barrel (`src/index.ts`) and, per module, either compiles it with
-`compileHookModule` (React = a light `@mission-platform/forge` → `react` import
+`compileHookModule` (React = a light `@mission-platform/forge-jsx` → `react` import
 rewrite, since the neutral hooks already share React's signatures; Vue = a full
 translation to `ref`/`computed`/`watch`/lifecycle where each returned value
 becomes a `Ref`) or copies framework-agnostic modules verbatim, then emits a

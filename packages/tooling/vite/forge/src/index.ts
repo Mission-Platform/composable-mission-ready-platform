@@ -2,7 +2,7 @@
  * `@mission-platform/vite-plugin-forge`
  *
  * A **two-stage** compiler that turns the framework-neutral components authored
- * against `@mission-platform/forge` into fully native React or Vue 3 components,
+ * against `@mission-platform/forge-jsx` into fully native React or Vue 3 components,
  * with no runtime adapter:
  *
  * 1. **Stage 1 — source-to-source.** {@link generateFrameworkSources} parses the

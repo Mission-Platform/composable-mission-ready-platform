@@ -8,7 +8,7 @@ import {
   useEffect,
   useRef,
   useState,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-window-popout.module.scss';

@@ -44,7 +44,7 @@ graph TD
 
 ## Framework-neutrale Engine: Forge
 
-Das Herzstück der Mission Platform ist `@mission-platform/forge`, ein Framework-neutrales Autorenmodell für Komponenten und
+Das Herzstück der Mission Platform ist `@mission-platform/forge-jsx`, ein Framework-neutrales Autorenmodell für Komponenten und
 Composables. `@mission-platform/vite-plugin-forge` ist der neutrale Compiler-Treiber: Er analysiert und normalisiert den Quellcode.
 erstellt semantische IR, führt gemeinsame Analysen und Optimierungen durch und sendet sie an eine explizit angegebene Adresse
 `FrameworkOutputPlugin`.

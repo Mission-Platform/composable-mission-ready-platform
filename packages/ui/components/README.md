@@ -1,7 +1,7 @@
 # `@mission-platform/components`
 
 Write-once, framework-neutral component library for Mission Platform. Components are authored once in JSX using
-`@mission-platform/forge` and compiled into native **Vue 3**, **React**, **Svelte**, **Solid**, and **Web Component**
+`@mission-platform/forge-jsx` and compiled into native **Vue 3**, **React**, **Svelte**, **Solid**, and **Web Component**
 outputs.
 
 ## Features
@@ -174,7 +174,7 @@ directory directly. This keeps runtime externals, declarations, and auxiliary mo
 
 ### Framework-Neutral Components
 
-When building higher-level write-once components using `@mission-platform/forge`, import from the same
+When building higher-level write-once components using `@mission-platform/forge-jsx`, import from the same
 bare specifier with no `mp:*` condition active — you get the neutral forge source:
 
 ```tsx

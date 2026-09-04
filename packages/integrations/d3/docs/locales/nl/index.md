@@ -12,7 +12,7 @@ systeem.
 
 Dit pakket overbrugt de noodzakelijke op D3-selectie gebaseerde weergave met declaratieve reactieve UI-bomen:
 
-- **Neutrale implementatie**: gebouwd bovenop `@mission-platform/forge`-haken (`useRef`, `useEffect`).
+- **Neutrale implementatie**: gebouwd bovenop `@mission-platform/forge-jsx`-haken (`useRef`, `useEffect`).
 - **Dual-Framework Target**: getranspileerd door `@mission-platform/vite-plugin-forge` naar native React (`./react`) en Vue 3
   (`./vue`) composables.
 - **Selectieve afhankelijkheid**: importeert `d3-selection` rechtstreeks om de clientbundelgroottes minimaal te houden.

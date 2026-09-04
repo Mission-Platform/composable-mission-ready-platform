@@ -22,7 +22,7 @@
   - @mission-platform/content@1.1.0
   - @mission-platform/breakpoints@6.0.1
   - @mission-platform/components@3.1.0
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/forms@2.1.0
   - @mission-platform/hunspell@0.4.2
   - @mission-platform/i18n@2.1.1
@@ -59,7 +59,7 @@
   - @mission-platform/qr-code@2.0.0
   - @mission-platform/i18n@2.1.0
   - @mission-platform/tokens@1.1.0
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
   - @mission-platform/hunspell@0.4.1
   - @mission-platform/seo@0.3.3
 

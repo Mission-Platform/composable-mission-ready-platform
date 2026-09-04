@@ -1244,7 +1244,7 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 
 `ForgeDeviceMock` - מסגרת מכשיר דקורטיבית העוטפת מסך שרירותי
 תוכן (חריץ ברירת המחדל) ב-`mobile`, `tablet`, `desktop` או `browser`
-כרום, נכתב פעם אחת בניב JSX הנייטרלי (`@mission-platform/forge`)
+כרום, נכתב פעם אחת בניב JSX הנייטרלי (`@mission-platform/forge-jsx`)
 והידור ישר ל-React או Vue על ידי
 `@mission-platform/vite-plugin-forge`.
 

@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import { resolvePortalTarget } from '../../../utils/portal-target/portal-target';

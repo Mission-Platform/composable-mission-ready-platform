@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { ForgeMonacoEditor } from './forge-monaco-editor';
 
 /**
  * Exercises the **neutral** `ForgeMonacoEditor` authored in this package,
- * rendering it on both frameworks through the `@mission-platform/forge` adapters.
+ * rendering it on both frameworks through the `@mission-platform/forge-jsx` adapters.
  * Monaco mounts imperatively on the client via a dynamic `import('monaco-editor')`,
  * so the SSR markup is the empty host `<div>` (with its height + language) —
  * which is exactly what keeps the component SSG-safe.

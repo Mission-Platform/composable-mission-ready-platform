@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -9,7 +9,7 @@ import { renderToString } from 'vue/server-renderer';
 import { ForgeHideAt } from './forge-hide-at';
 
 /**
- * Exercises the **neutral** `ForgeHideAt` through the `@mission-platform/forge` runtime
+ * Exercises the **neutral** `ForgeHideAt` through the `@mission-platform/forge-jsx` runtime
  * adapters at the SSR baseline viewport width `0` (the `2xs` band). Asserts
  * cross-framework parity of the initial markup; the live resize behaviour is
  * covered by the Storybook stories.

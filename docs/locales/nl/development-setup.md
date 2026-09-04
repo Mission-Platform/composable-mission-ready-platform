@@ -66,7 +66,7 @@ pakketlinks zijn correct tot stand gebracht.
 Voer een rooktest uit om er zeker van te zijn dat het bouwsysteem en de omgeving correct zijn geconfigureerd:
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 De `...` bouwt ook de Forge-afhankelijkheden die door het pakket vereist zijn. De

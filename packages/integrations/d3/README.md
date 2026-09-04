@@ -1,7 +1,7 @@
 # `@mission-platform/d3`
 
 Framework-neutral D3 integration for Mission Platform. It provides a write-once `useD3` composable authored against
-`@mission-platform/forge` hooks and compiled to native React, Vue 3, Solid and Web Components builds — all reachable
+`@mission-platform/forge-jsx` hooks and compiled to native React, Vue 3, Solid and Web Components builds — all reachable
 through the single bare `@mission-platform/d3` specifier — along with pure margin-convention layout utilities.
 
 ## Features

@@ -59,7 +59,7 @@ done
 
 ### フレームワークに依存しないコンポーネント
 
-可能な限り、UI コンポーネントを作成するには、 `@mission-platform/forge` 方言。これにより、コンポーネントを
+可能な限り、UI コンポーネントを作成するには、 `@mission-platform/forge-jsx` 方言。これにより、コンポーネントを
 でコンパイルされ、使用されます Vue, React, Svelte, Solid、および Web コンポーネントを、コア ロジックを書き換えることなく利用できます。を設定します。
 一致するコンシューマのリゾルバ `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`、 または `mp:web-component` 状態。
 

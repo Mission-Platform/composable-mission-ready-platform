@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/forge/react';
-import { toVueComponent } from '@mission-platform/forge/vue';
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
@@ -20,7 +20,7 @@ vi.mock('mermaid', () => ({
 
 /**
  * Exercises the **neutral** `ForgeMarkdown` renderer authored in this package,
- * rendering it on both frameworks through the `@mission-platform/forge` adapters.
+ * rendering it on both frameworks through the `@mission-platform/forge-jsx` adapters.
  * The renderer maps the `marked` token stream onto real components
  * (`ForgeTypography`, `ForgeCodeBlock`, `ForgeMermaid`, `ForgeTable`) — there is
  * no `v-html`, so the SSR markup already contains the composed component shells.

@@ -13,7 +13,7 @@ const items: BreadcrumbItem[] = [
 /**
  * `ForgeBreadcrumb` is the write-once component of `@mission-platform/components`.
  * It is authored **once** in the framework-neutral JSX dialect
- * (`@mission-platform/forge`) and compiled at build time by
+ * (`@mission-platform/forge-jsx`) and compiled at build time by
  * `@mission-platform/vite-plugin-forge` to every supported framework (Vue 3,
  * React, SolidJS, Svelte, and Web Components).
  *

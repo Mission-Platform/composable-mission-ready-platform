@@ -6,7 +6,7 @@ import {
   type MpRenderProperty,
   Slot,
   useState,
-} from "@mission-platform/forge";
+} from "@mission-platform/forge-jsx";
 import { stepAnchor } from "@mission-platform/scheduler";
 import {
   addDays,

@@ -7,7 +7,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 
 Los componibles son la forma principal de encapsular y reutilizar la lógica reactiva dentro de Mission Platform. Para asegurar estos
 Las unidades de lógica son portátiles en todos los marcos de UI compatibles, se crean como módulos de **escritura única** utilizando el
-ganchos neutrales proporcionados por `@mission-platform/forge`.
+ganchos neutrales proporcionados por `@mission-platform/forge-jsx`.
 
 ## Diseño del directorio
 
@@ -26,7 +26,7 @@ src/composables/
 ## Reglas de creación
 
 1. **Utilice Forge Hooks**: solo importe primitivas reactivas (p. ej., `useState`, `useEffect`, `useMemo`, `useRef`) de
-   `@mission-platform/forge`. Nunca importe directamente desde `vue` o `react`.
+   `@mission-platform/forge-jsx`. Nunca importe directamente desde `vue` o `react`.
 2. **Convención de nomenclatura**: Los nombres componibles deben usar kebab-case y tener el prefijo `use-` (e.g., `use-media-query`).
 3. **Seguridad SSR**: asegúrese de que la lógica sea segura para la representación del lado del servidor. Proteja cualquier acceso a API exclusivas del navegador como `window`,
    `document`, o `localStorage`.
@@ -39,7 +39,7 @@ src/composables/
 A continuación se muestra un elemento componible típico de escritura única que administra un detector de eventos.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,

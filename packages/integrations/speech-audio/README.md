@@ -1,7 +1,7 @@
 # @mission-platform/speech-audio
 
 Framework-neutral browser speech & audio composables for Mission Platform. Authored once against the
-`@mission-platform/forge` neutral hooks and compiled to Vue 3, React 18/19, Solid, and Web Components.
+`@mission-platform/forge-jsx` neutral hooks and compiled to Vue 3, React 18/19, Solid, and Web Components.
 
 ## Hooks
 

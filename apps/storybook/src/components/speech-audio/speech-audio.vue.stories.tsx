@@ -341,7 +341,7 @@ const meta: Meta = {
 
 The \`@mission-platform/speech-audio\` package ships framework-neutral write-once
 composables for the browser's native speech and audio capabilities. Authored once
-against \`@mission-platform/forge\`, they compile to React, Vue, Solid, Svelte, and
+against \`@mission-platform/forge-jsx\`, they compile to React, Vue, Solid, Svelte, and
 Web Components.
 
 | Composable | Purpose |

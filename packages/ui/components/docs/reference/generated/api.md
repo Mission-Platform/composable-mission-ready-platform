@@ -51,7 +51,7 @@ Optional presence indicator rendered as a corner dot.
 **Kind:** function
 
 ```typescript
-function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
+function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement
 ```
 
 `ForgeAvatar` — a user/entity avatar authored once in the neutral JSX dialect
@@ -66,9 +66,9 @@ the Storybook demo content.
 
 #### Parameters
 
-| Name       | Type                       | Description |
-| ---------- | -------------------------- | ----------- |
-| properties | Readonly<AvatarProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<AvatarProperties> |  |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -107,7 +107,7 @@ A single format-specific video source.
 **Kind:** function
 
 ```typescript
-function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement;
+function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement
 ```
 
 `ForgeBackgroundVideo` — a decorative full-bleed background video authored once
@@ -128,9 +128,9 @@ skips autoplay when the user has requested reduced motion, falling back to the
 
 #### Parameters
 
-| Name       | Type                                | Description |
-| ---------- | ----------------------------------- | ----------- |
-| properties | Readonly<BackgroundVideoProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<BackgroundVideoProperties> |  |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -159,8 +159,7 @@ Canonical 2xs → 2xl size scale, matching the shared size tokens.
 **Kind:** type
 
 ```typescript
-export type BadgeVariant =
-  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type BadgeVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Visual tone of the badge. Mirrors the `@mission-platform/components` `ForgeBadge`.
@@ -170,7 +169,7 @@ Visual tone of the badge. Mirrors the `@mission-platform/components` `ForgeBadge
 **Kind:** function
 
 ```typescript
-function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
+function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement
 ```
 
 `ForgeBadge` — a small status/label chip authored once in the neutral JSX
@@ -192,9 +191,9 @@ plain strings as well as the `{ className: boolean }` object form.
 
 #### Parameters
 
-| Name       | Type                      | Description |
-| ---------- | ------------------------- | ----------- |
-| properties | Readonly<BadgeProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<BadgeProperties> |  |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -213,8 +212,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type ButtonVariant =
-  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
+export type ButtonVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 ```
 
 Visual treatment of the button. Mirrors the `@mission-platform/components` `ForgeButton`.
@@ -224,7 +222,7 @@ Visual treatment of the button. Mirrors the `@mission-platform/components` `Forg
 **Kind:** function
 
 ```typescript
-function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
+function ForgeButton(properties: Readonly<ButtonProperties>): MpElement
 ```
 
 `ForgeButton` — a button authored once in the neutral JSX dialect and compiled
@@ -246,9 +244,9 @@ assembled with the framework-neutral {@link classNames} helper, including its
 
 #### Parameters
 
-| Name       | Type                       | Description |
-| ---------- | -------------------------- | ----------- |
-| properties | Readonly<ButtonProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ButtonProperties> |  |
 
 ## `src/components/atoms/forge-divider/forge-divider`
 
@@ -277,7 +275,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeDivider(properties: Readonly<DividerProperties>): MpElement;
+function ForgeDivider(properties: Readonly<DividerProperties>): MpElement
 ```
 
 `ForgeDivider` — a thin border divider authored once in the neutral JSX
@@ -290,9 +288,9 @@ role-bearing `<div>` instead.
 
 #### Parameters
 
-| Name       | Type                        | Description |
-| ---------- | --------------------------- | ----------- |
-| properties | Readonly<DividerProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DividerProperties> |  |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -301,7 +299,7 @@ role-bearing `<div>` instead.
 **Kind:** function
 
 ```typescript
-function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
+function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement
 ```
 
 `ForgeIconButton` — a compact, square, icon-only button authored once in the
@@ -317,9 +315,9 @@ slot. Because it has no visible text, an accessible name is **required** via
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<IconButtonProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<IconButtonProperties> |  |
 
 ### IconButtonProperties
 
@@ -346,8 +344,7 @@ Size token controlling the square padding — canonical 2xs → 2xl scale.
 **Kind:** type
 
 ```typescript
-export type IconButtonVariant =
-  'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Visual treatment of the icon button — the canonical colour set plus a transparent `ghost`.
@@ -359,7 +356,7 @@ Visual treatment of the icon button — the canonical colour set plus a transpar
 **Kind:** function
 
 ```typescript
-function ForgeIcon(properties: Readonly<IconProperties>): MpElement;
+function ForgeIcon(properties: Readonly<IconProperties>): MpElement
 ```
 
 Framework-neutral icon facade backed by the reviewed `@mission-platform/icons`
@@ -368,9 +365,9 @@ component; the wrapper owns the accessible name so catalog SVGs remain silent.
 
 #### Parameters
 
-| Name       | Type                     | Description |
-| ---------- | ------------------------ | ----------- |
-| properties | Readonly<IconProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<IconProperties> |  |
 
 ### IconName
 
@@ -409,16 +406,16 @@ Icon size mapped to the catalog's pixel dimensions.
 **Kind:** function
 
 ```typescript
-function ForgeKbd(properties: Readonly<KbdProperties>): MpElement;
+function ForgeKbd(properties: Readonly<KbdProperties>): MpElement
 ```
 
 A semantic keyboard key/chord label rendered in the neutral JSX dialect.
 
 #### Parameters
 
-| Name       | Type                    | Description |
-| ---------- | ----------------------- | ----------- |
-| properties | Readonly<KbdProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<KbdProperties> |  |
 
 ### KbdProperties
 
@@ -447,7 +444,7 @@ Keyboard key size.
 **Kind:** function
 
 ```typescript
-function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement;
+function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElement
 ```
 
 `ForgeProgressBar` — a determinate or indeterminate progress indicator authored
@@ -462,9 +459,9 @@ an indeterminate mode. It owns its styling through the co-located CSS Module
 
 #### Parameters
 
-| Name       | Type                            | Description |
-| ---------- | ------------------------------- | ----------- |
-| properties | Readonly<ProgressBarProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ProgressBarProperties> |  |
 
 ### ProgressBarProperties
 
@@ -491,8 +488,7 @@ Canonical 2xs → 2xl size scale (track thickness).
 **Kind:** type
 
 ```typescript
-export type ProgressVariant =
-  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type ProgressVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Tone of the progress fill.
@@ -504,7 +500,7 @@ Tone of the progress fill.
 **Kind:** function
 
 ```typescript
-function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
+function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement
 ```
 
 `ForgeQuote` — a semantic blockquote / pull-quote authored once in the neutral
@@ -524,9 +520,9 @@ drops that scoped slot — attribution is driven by the `author`/`source` props
 
 #### Parameters
 
-| Name       | Type                      | Description |
-| ---------- | ------------------------- | ----------- |
-| properties | Readonly<QuoteProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<QuoteProperties> |  |
 
 ### QuoteProperties
 
@@ -565,7 +561,7 @@ Visual treatment of the quote.
 **Kind:** function
 
 ```typescript
-function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement;
+function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement
 ```
 
 `ForgeResponsiveImage` — an art-directed, responsive `<picture>` element
@@ -586,9 +582,9 @@ convention used across the migrated components).
 
 #### Parameters
 
-| Name       | Type                                | Description |
-| ---------- | ----------------------------------- | ----------- |
-| properties | Readonly<ResponsiveImageProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ResponsiveImageProperties> |  |
 
 ### ResponsiveImageFit
 
@@ -627,7 +623,7 @@ A single art-directed / format-specific image source.
 **Kind:** function
 
 ```typescript
-function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement;
+function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement
 ```
 
 `ForgeResponsiveVideo` — a responsive `<video>` element authored once in the
@@ -650,9 +646,9 @@ components).
 
 #### Parameters
 
-| Name       | Type                                | Description |
-| ---------- | ----------------------------------- | ----------- |
-| properties | Readonly<ResponsiveVideoProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ResponsiveVideoProperties> |  |
 
 ### ResponsiveVideoFit
 
@@ -691,7 +687,7 @@ A single format-specific video source.
 **Kind:** function
 
 ```typescript
-function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
+function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement
 ```
 
 `ForgeSeparator` — a visual separator / divider authored once in the neutral
@@ -712,9 +708,9 @@ hashed module class names are assembled with the framework-neutral
 
 #### Parameters
 
-| Name       | Type                          | Description |
-| ---------- | ----------------------------- | ----------- |
-| properties | Readonly<SeparatorProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SeparatorProperties> |  |
 
 ### SeparatorOrientation
 
@@ -763,7 +759,7 @@ Line style.
 **Kind:** function
 
 ```typescript
-function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
+function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement
 ```
 
 `ForgeSkeleton` — a loading placeholder authored once in the neutral JSX
@@ -778,9 +774,9 @@ It renders an `aria-hidden` block in one of three shapes (`line`/`circle`/
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<SkeletonProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SkeletonProperties> |  |
 
 ### SkeletonProperties
 
@@ -809,7 +805,7 @@ The shape the skeleton placeholder is rendered as.
 **Kind:** function
 
 ```typescript
-function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement;
+function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement
 ```
 
 `ForgeSpinner` — an indeterminate loading spinner authored once in the neutral
@@ -826,9 +822,9 @@ the neutral version (i18n is not part of this library) defaults the `label` to
 
 #### Parameters
 
-| Name       | Type                        | Description |
-| ---------- | --------------------------- | ----------- |
-| properties | Readonly<SpinnerProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SpinnerProperties> |  |
 
 ### SpinnerProperties
 
@@ -855,8 +851,7 @@ Canonical 2xs → 2xl size scale.
 **Kind:** type
 
 ```typescript
-export type SpinnerVariant =
-  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type SpinnerVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Tone of the spinner ring.
@@ -868,7 +863,7 @@ Tone of the spinner ring.
 **Kind:** function
 
 ```typescript
-function ForgeStack(properties: Readonly<StackProperties>): MpElement;
+function ForgeStack(properties: Readonly<StackProperties>): MpElement
 ```
 
 `ForgeStack` — a flexbox stack layout primitive that lays its children out in
@@ -883,9 +878,9 @@ styling lives in the co-located `forge-stack.module.scss` (imported by
 
 #### Parameters
 
-| Name       | Type                      | Description |
-| ---------- | ------------------------- | ----------- |
-| properties | Readonly<StackProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<StackProperties> |  |
 
 ### StackAlign
 
@@ -944,24 +939,23 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
+function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<StatusIconProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<StatusIconProperties> |  |
 
 ### StatusIconLevel
 
 **Kind:** type
 
 ```typescript
-export type StatusIconLevel =
-  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type StatusIconLevel = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Status / tone conveyed by the icon — the canonical colour set.
@@ -993,16 +987,16 @@ Canonical 2xs → 2xl size scale.
 **Kind:** function
 
 ```typescript
-function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement;
+function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement
 ```
 
 A themeable semantic surface with a default slot.
 
 #### Parameters
 
-| Name       | Type                        | Description |
-| ---------- | --------------------------- | ----------- |
-| properties | Readonly<SurfaceProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SurfaceProperties> |  |
 
 ### SurfaceElevation
 
@@ -1051,16 +1045,16 @@ Surface corner radius treatment.
 **Kind:** function
 
 ```typescript
-function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement;
+function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement
 ```
 
 A compact, accessible synchronization state indicator.
 
 #### Parameters
 
-| Name       | Type                                    | Description |
-| ---------- | --------------------------------------- | ----------- |
-| properties | Readonly<SyncStatusIndicatorProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SyncStatusIndicatorProperties> |  |
 
 ### SyncStatus
 
@@ -1119,7 +1113,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement;
+function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement
 ```
 
 `ForgeAccordion` — a vertically stacked container of collapsible rows authored
@@ -1142,9 +1136,9 @@ that fall back to the item's `title`/`content` text.
 
 #### Parameters
 
-| Name       | Type                          | Description |
-| ---------- | ----------------------------- | ----------- |
-| properties | Readonly<AccordionProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<AccordionProperties> |  |
 
 ## `src/components/molecules/forge-alert/forge-alert`
 
@@ -1183,16 +1177,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeAlert(properties: Readonly<AlertProperties>): MpElement;
+function ForgeAlert(properties: Readonly<AlertProperties>): MpElement
 ```
 
 An accessible, dismissible status message with a composable message and action slot.
 
 #### Parameters
 
-| Name       | Type                      | Description |
-| ---------- | ------------------------- | ----------- |
-| properties | Readonly<AlertProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<AlertProperties> |  |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -1221,7 +1215,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
+function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement
 ```
 
 `ForgeBreadcrumb` — breadcrumb trail authored once in the neutral JSX dialect
@@ -1241,9 +1235,9 @@ substitution), so only the `href` link form is carried over.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<BreadcrumbProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<BreadcrumbProperties> |  |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1282,7 +1276,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement;
+function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement
 ```
 
 `ForgeButtonGroup` — groups related buttons into a single visual unit. Authored
@@ -1301,9 +1295,9 @@ It owns its styling through the co-located CSS Module
 
 #### Parameters
 
-| Name       | Type                            | Description |
-| ---------- | ------------------------------- | ----------- |
-| properties | Readonly<ButtonGroupProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ButtonGroupProperties> |  |
 
 ## `src/components/molecules/forge-callout-block/forge-callout-block`
 
@@ -1342,16 +1336,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement;
+function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement
 ```
 
 A prominent informational block with title, description, content, and action slots.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| properties | Readonly<CalloutBlockProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CalloutBlockProperties> |  |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1380,7 +1374,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeCard(properties: Readonly<CardProperties>): MpElement;
+function ForgeCard(properties: Readonly<CardProperties>): MpElement
 ```
 
 `ForgeCard` — a surface container with optional header/footer regions, authored
@@ -1400,9 +1394,9 @@ frameworks.
 
 #### Parameters
 
-| Name       | Type                     | Description |
-| ---------- | ------------------------ | ----------- |
-| properties | Readonly<CardProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CardProperties> |  |
 
 ## `src/components/molecules/forge-carousel-indicator/forge-carousel-indicator`
 
@@ -1441,16 +1435,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement;
+function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement
 ```
 
 Accessible, keyboard-operable pagination dots for a carousel.
 
 #### Parameters
 
-| Name       | Type                                  | Description |
-| ---------- | ------------------------------------- | ----------- |
-| properties | Readonly<CarouselIndicatorProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CarouselIndicatorProperties> |  |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1489,7 +1483,7 @@ Bubble colour treatment.
 **Kind:** function
 
 ```typescript
-function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
+function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement
 ```
 
 `ForgeChatBubble` — a single message bubble authored once in the neutral JSX
@@ -1510,9 +1504,9 @@ presence detected through the framework-neutral {@link hasSlot} helper.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<ChatBubbleProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ChatBubbleProperties> |  |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1531,7 +1525,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
+function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement
 ```
 
 `ForgeCollapse` — a native `<details>`-based disclosure authored once in the
@@ -1554,9 +1548,9 @@ collide with same-named props).
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<CollapseProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CollapseProperties> |  |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1605,12 +1599,12 @@ The device frame the screen content is displayed inside.
 **Kind:** function
 
 ```typescript
-function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
+function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement
 ```
 
 `ForgeDeviceMock` — a decorative device frame that wraps arbitrary screen
 content (the default slot) in a `mobile`, `tablet`, `desktop`, or `browser`
-chrome, authored once in the neutral JSX dialect (`@mission-platform/forge`)
+chrome, authored once in the neutral JSX dialect (`@mission-platform/forge-jsx`)
 and compiled straight to React or Vue by
 `@mission-platform/vite-plugin-forge`.
 
@@ -1622,9 +1616,9 @@ handheld frames (`mobile`/`tablet`) honour the `orientation` prop; the
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<DeviceMockProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DeviceMockProperties> |  |
 
 ## `src/components/molecules/forge-drop-zone/forge-drop-zone`
 
@@ -1683,16 +1677,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement;
+function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement
 ```
 
 A keyboard-accessible drag-and-drop file target with client-side validation.
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<DropZoneProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DropZoneProperties> |  |
 
 ## `src/components/molecules/forge-empty-state/forge-empty-state`
 
@@ -1731,16 +1725,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement;
+function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement
 ```
 
 A centered no-content message with optional icon, supporting copy, and action.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<EmptyStateProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<EmptyStateProperties> |  |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1749,7 +1743,7 @@ A centered no-content message with optional icon, supporting copy, and action.
 **Kind:** function
 
 ```typescript
-function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
+function ForgeGrid(properties: Readonly<GridProperties>): MpElement
 ```
 
 `ForgeGrid` — a CSS Grid layout primitive that arranges its content into a
@@ -1769,9 +1763,9 @@ lives in the co-located `forge-grid.module.scss` (imported by
 
 #### Parameters
 
-| Name       | Type                     | Description |
-| ---------- | ------------------------ | ----------- |
-| properties | Readonly<GridProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<GridProperties> |  |
 
 ### GridAlignment
 
@@ -1810,7 +1804,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
+function ForgeInView(properties: Readonly<InViewProperties>): MpElement
 ```
 
 `ForgeInView` — wraps content and uses `IntersectionObserver` to reveal it with
@@ -1825,9 +1819,9 @@ is conveyed purely through the wrapper's animated style and the
 
 #### Parameters
 
-| Name       | Type                       | Description |
-| ---------- | -------------------------- | ----------- |
-| properties | Readonly<InViewProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<InViewProperties> |  |
 
 ### InViewAnimation
 
@@ -1856,16 +1850,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement;
+function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement
 ```
 
 A compact read/edit control with keyboard submit, cancel, and validation.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<InlineEditProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<InlineEditProperties> |  |
 
 ### InlineEditInputType
 
@@ -1914,7 +1908,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeList(properties: Readonly<ListProperties>): MpElement;
+function ForgeList(properties: Readonly<ListProperties>): MpElement
 ```
 
 `ForgeList` — an ordered/unordered/description/plain list authored once in the
@@ -1935,9 +1929,9 @@ other migrated components dropped scoped slots.
 
 #### Parameters
 
-| Name       | Type                     | Description |
-| ---------- | ------------------------ | ----------- |
-| properties | Readonly<ListProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ListProperties> |  |
 
 ### ListItem
 
@@ -1986,7 +1980,7 @@ Semantic/visual list style.
 **Kind:** function
 
 ```typescript
-function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement;
+function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement
 ```
 
 `ForgeMasonry` — a CSS multi-column masonry layout primitive authored once in
@@ -2009,9 +2003,9 @@ CSS); the dynamic multi-column properties are applied inline.
 
 #### Parameters
 
-| Name       | Type                        | Description |
-| ---------- | --------------------------- | ----------- |
-| properties | Readonly<MasonryProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MasonryProperties> |  |
 
 ### MasonryGap
 
@@ -2040,16 +2034,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement;
+function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement
 ```
 
 A textarea with accessible, keyboard-navigable mention suggestions.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| properties | Readonly<MentionInputProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MentionInputProperties> |  |
 
 ### MentionInputProperties
 
@@ -2088,7 +2082,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
+function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement
 ```
 
 `ForgeMenuItem` — a single menu entry authored once in the neutral JSX dialect
@@ -2108,9 +2102,9 @@ established router substitution) and exposes the `onClick` callback prop.
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<MenuItemProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MenuItemProperties> |  |
 
 ### MenuItemProperties
 
@@ -2127,8 +2121,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type MenuItemVariant =
-  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type MenuItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 Tone applied to the menu item.
@@ -2140,7 +2133,7 @@ Tone applied to the menu item.
 **Kind:** function
 
 ```typescript
-function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
+function ForgeMenu(properties: Readonly<MenuProperties>): MpElement
 ```
 
 `ForgeMenu` — an accessible menu authored once in the neutral JSX dialect and
@@ -2166,9 +2159,9 @@ substitution), otherwise matching the roles/ARIA of the Vue markup.
 
 #### Parameters
 
-| Name       | Type                     | Description |
-| ---------- | ------------------------ | ----------- |
-| properties | Readonly<MenuProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MenuProperties> |  |
 
 ### MenuNode
 
@@ -2207,7 +2200,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement;
+function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement
 ```
 
 `ForgeMetricCard` — a compact metric summary authored once in neutral JSX.
@@ -2216,9 +2209,9 @@ accessible article while leaving visual treatments to its CSS Module.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<MetricCardProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MetricCardProperties> |  |
 
 ### MetricCardProperties
 
@@ -2277,7 +2270,7 @@ Surface tone of the metric card.
 **Kind:** function
 
 ```typescript
-function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
+function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement
 ```
 
 `ForgeNavbarItem` — a navbar entry authored once in the neutral JSX dialect and
@@ -2305,9 +2298,9 @@ own `direction` prop), and the `onClick` callback prop.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<NavbarItemProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<NavbarItemProperties> |  |
 
 ### NavbarItemChild
 
@@ -2334,8 +2327,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type NavbarItemVariant =
-  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type NavbarItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 Tone applied to the navbar item.
@@ -2347,7 +2339,7 @@ Tone applied to the navbar item.
 **Kind:** function
 
 ```typescript
-function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
+function ForgePagination(properties: Readonly<PaginationProperties>): MpElement
 ```
 
 `ForgePagination` — page navigation control authored once in the neutral JSX
@@ -2367,9 +2359,9 @@ uses the established controlled `modelValue` + callback-prop convention.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<PaginationProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<PaginationProperties> |  |
 
 ### PaginationItem
 
@@ -2408,7 +2400,7 @@ Size token controlling button dimensions — canonical 2xs → 2xl scale.
 **Kind:** function
 
 ```typescript
-function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
+function ForgeTabs(properties: Readonly<TabsProperties>): MpElement
 ```
 
 `ForgeTabs` — an accessible, controlled tabs container authored once in the
@@ -2442,9 +2434,9 @@ compiled neutral parent, leaving the panels blank. It uses the established
 
 #### Parameters
 
-| Name       | Type                     | Description |
-| ---------- | ------------------------ | ----------- |
-| properties | Readonly<TabsProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TabsProperties> |  |
 
 ### TabItem
 
@@ -2493,7 +2485,7 @@ Visual treatment of the tab list.
 **Kind:** function
 
 ```typescript
-function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement;
+function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement
 ```
 
 `ForgeTagInput` — a controlled, accessible tag editor authored in neutral
@@ -2503,9 +2495,9 @@ controlled update callback is fired.
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<TagInputProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TagInputProperties> |  |
 
 ### TagInputProperties
 
@@ -2544,7 +2536,7 @@ Surface tone of the tag input.
 **Kind:** function
 
 ```typescript
-function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
+function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement
 ```
 
 `ForgeTimeline` — an ordered, chronological list of events authored once in the
@@ -2565,9 +2557,9 @@ The per-item `marker`/`time`/`title`/default slots become four scoped slots
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<TimelineProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TimelineProperties> |  |
 
 ### TimelineAlign
 
@@ -2604,8 +2596,7 @@ The scope passed to the scoped item slots.
 **Kind:** type
 
 ```typescript
-export type TimelineItemVariant =
-  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
+export type TimelineItemVariant = 'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
 Colour family applied to a marker dot.
@@ -2637,7 +2628,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement;
+function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement
 ```
 
 `ForgeWindowPopout` — pops its content out into a separate browser window,
@@ -2662,9 +2653,9 @@ are plain props.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| properties | Readonly<WindowPopoutProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<WindowPopoutProperties> |  |
 
 ### WindowPopoutProperties
 
@@ -2727,16 +2718,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement;
+function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| properties | Readonly<ActivityFeedProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ActivityFeedProperties> |  |
 
 ## `src/components/organisms/forge-announcement-bar/forge-announcement-bar`
 
@@ -2765,16 +2756,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement;
+function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                                | Description |
-| ---------- | ----------------------------------- | ----------- |
-| properties | Readonly<AnnouncementBarProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<AnnouncementBarProperties> |  |
 
 ## `src/components/organisms/forge-asset-browser/forge-asset-browser`
 
@@ -2823,16 +2814,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement;
+function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| properties | Readonly<AssetBrowserProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<AssetBrowserProperties> |  |
 
 ## `src/components/organisms/forge-carousel/forge-carousel`
 
@@ -2871,7 +2862,7 @@ The scope passed to the scoped `slide` slot.
 **Kind:** function
 
 ```typescript
-function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
+function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement
 ```
 
 `ForgeCarousel` — a horizontally-scrollable slide deck authored once in the
@@ -2896,9 +2887,9 @@ start coordinates become a `useRef`; `defineExpose` is dropped; and the
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<CarouselProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CarouselProperties> |  |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2917,7 +2908,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
+function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement
 ```
 
 `ForgeChatArea` — a scrollable conversation surface authored once in the
@@ -2942,9 +2933,9 @@ auto-scroll covers the common case.
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<ChatAreaProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ChatAreaProperties> |  |
 
 ## `src/components/organisms/forge-command-palette/forge-command-palette`
 
@@ -2987,7 +2978,7 @@ Size token controlling the command palette scale.
 **Kind:** function
 
 ```typescript
-function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement;
+function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement
 ```
 
 A searchable, keyboard-first command palette with a modal overlay. The neutral
@@ -2996,9 +2987,9 @@ guarding global document listeners for SSR.
 
 #### Parameters
 
-| Name       | Type                               | Description |
-| ---------- | ---------------------------------- | ----------- |
-| properties | Readonly<CommandPaletteProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CommandPaletteProperties> |  |
 
 ## `src/components/organisms/forge-comment-thread/forge-comment-thread`
 
@@ -3037,16 +3028,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement;
+function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                              | Description |
-| ---------- | --------------------------------- | ----------- |
-| properties | Readonly<CommentThreadProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CommentThreadProperties> |  |
 
 ## `src/components/organisms/forge-comparison-table/forge-comparison-table`
 
@@ -3113,16 +3104,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement;
+function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                                | Description |
-| ---------- | ----------------------------------- | ----------- |
-| properties | Readonly<ComparisonTableProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ComparisonTableProperties> |  |
 
 ## `src/components/organisms/forge-cookie-consent/forge-cookie-consent`
 
@@ -3171,7 +3162,7 @@ The consent payload emitted to the host application and persisted in storage.
 **Kind:** function
 
 ```typescript
-function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement;
+function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement
 ```
 
 A consent banner and accessible preferences dialog with required-category
@@ -3179,9 +3170,9 @@ enforcement and guarded local/session storage persistence.
 
 #### Parameters
 
-| Name       | Type                              | Description |
-| ---------- | --------------------------------- | ----------- |
-| properties | Readonly<CookieConsentProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CookieConsentProperties> |  |
 
 ## `src/components/organisms/forge-cta-banner/forge-cta-banner`
 
@@ -3220,16 +3211,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement;
+function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                          | Description |
-| ---------- | ----------------------------- | ----------- |
-| properties | Readonly<CtaBannerProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CtaBannerProperties> |  |
 
 ## `src/components/organisms/forge-data-card/forge-data-card`
 
@@ -3282,8 +3273,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type DataCardVariant =
-  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+export type DataCardVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
 Colour tone of the card surface.
@@ -3293,16 +3283,16 @@ Colour tone of the card surface.
 **Kind:** function
 
 ```typescript
-function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement;
+function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement
 ```
 
 A semantic contact or calendar card with standards-compliant downloads.
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<DataCardProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DataCardProperties> |  |
 
 ## `src/components/organisms/forge-diff-viewer/forge-diff-viewer`
 
@@ -3351,16 +3341,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement;
+function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<DiffViewerProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DiffViewerProperties> |  |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -3432,7 +3422,7 @@ Display behaviour — floating `overlay` (default) or responsive `inline` panel.
 **Kind:** function
 
 ```typescript
-function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
+function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement
 ```
 
 `ForgeDrawer` — a sliding panel authored once in the neutral JSX dialect and
@@ -3462,9 +3452,9 @@ helper) and a `closeLabel` prop in place of i18n.
 
 #### Parameters
 
-| Name       | Type                       | Description |
-| ---------- | -------------------------- | ----------- |
-| properties | Readonly<DrawerProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DrawerProperties> |  |
 
 ## `src/components/organisms/forge-error-page/forge-error-page`
 
@@ -3513,16 +3503,16 @@ Size token controlling the error page scale.
 **Kind:** function
 
 ```typescript
-function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement;
+function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement
 ```
 
 A semantic, slot-friendly error state page with typed action descriptors.
 
 #### Parameters
 
-| Name       | Type                          | Description |
-| ---------- | ----------------------------- | ----------- |
-| properties | Readonly<ErrorPageProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ErrorPageProperties> |  |
 
 ## `src/components/organisms/forge-kanban-board/forge-kanban-board`
 
@@ -3531,16 +3521,16 @@ A semantic, slot-friendly error state page with typed action descriptors.
 **Kind:** function
 
 ```typescript
-function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement;
+function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement
 ```
 
 A responsive board for moving items between columns.
 
 #### Parameters
 
-| Name       | Type                            | Description |
-| ---------- | ------------------------------- | ----------- |
-| properties | Readonly<KanbanBoardProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<KanbanBoardProperties> |  |
 
 ### KanbanBoardProperties
 
@@ -3583,16 +3573,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement;
+function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                          | Description |
-| ---------- | ----------------------------- | ----------- |
-| properties | Readonly<LogoCloudProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<LogoCloudProperties> |  |
 
 ### LogoCloudItem
 
@@ -3625,16 +3615,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement;
+function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                                | Description |
-| ---------- | ----------------------------------- | ----------- |
-| properties | Readonly<MarketingHeaderProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MarketingHeaderProperties> |  |
 
 ### MarketingHeaderAction
 
@@ -3663,7 +3653,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement;
+function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
 ```
 
 `ForgeMenubar` — a horizontal application menubar authored once in the neutral
@@ -3690,9 +3680,9 @@ substitution).
 
 #### Parameters
 
-| Name       | Type                        | Description |
-| ---------- | --------------------------- | ----------- |
-| properties | Readonly<MenubarProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MenubarProperties> |  |
 
 ### MenubarProperties
 
@@ -3711,7 +3701,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
+function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement
 ```
 
 `ForgeNavbar` — the top application navigation bar authored once in the neutral
@@ -3732,9 +3722,9 @@ has no multi-root fragment return).
 
 #### Parameters
 
-| Name       | Type                       | Description |
-| ---------- | -------------------------- | ----------- |
-| properties | Readonly<NavbarProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<NavbarProperties> |  |
 
 ### NavbarAlign
 
@@ -3775,16 +3765,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement;
+function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                                  | Description |
-| ---------- | ------------------------------------- | ----------- |
-| properties | Readonly<NotificationPanelProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<NotificationPanelProperties> |  |
 
 ### NotificationItem
 
@@ -3823,16 +3813,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement;
+function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement
 ```
 
 An accessible spotlight tour with keyboard navigation and optional completion persistence.
 
 #### Parameters
 
-| Name       | Type                               | Description |
-| ---------- | ---------------------------------- | ----------- |
-| properties | Readonly<OnboardingTourProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<OnboardingTourProperties> |  |
 
 ### OnboardingStep
 
@@ -3885,16 +3875,16 @@ Size token controlling the tour dialog scale.
 **Kind:** function
 
 ```typescript
-function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement;
+function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| properties | Readonly<PricingTableProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<PricingTableProperties> |  |
 
 ### PricingFeature
 
@@ -3933,16 +3923,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement;
+function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                            | Description |
-| ---------- | ------------------------------- | ----------- |
-| properties | Readonly<ProfileCardProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ProfileCardProperties> |  |
 
 ### ProfileCardProperties
 
@@ -3961,16 +3951,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement;
+function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| properties | Readonly<SiteFooterProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SiteFooterProperties> |  |
 
 ### SiteFooterColumn
 
@@ -4009,16 +3999,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement;
+function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                          | Description |
-| ---------- | ----------------------------- | ----------- |
-| properties | Readonly<SplitPaneProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SplitPaneProperties> |  |
 
 ### SplitPaneProperties
 
@@ -4037,16 +4027,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement;
+function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| properties | Readonly<StatsSectionProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<StatsSectionProperties> |  |
 
 ### StatItem
 
@@ -4075,7 +4065,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeTable(properties: Readonly<TableProperties>): MpElement;
+function ForgeTable(properties: Readonly<TableProperties>): MpElement
 ```
 
 `ForgeTable` — a sortable data table authored once in the neutral JSX dialect
@@ -4098,9 +4088,9 @@ the other migrated components dropped scoped slots.
 
 #### Parameters
 
-| Name       | Type                      | Description |
-| ---------- | ------------------------- | ----------- |
-| properties | Readonly<TableProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TableProperties> |  |
 
 ### SortDirection
 
@@ -4139,16 +4129,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement;
+function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                                    | Description |
-| ---------- | --------------------------------------- | ----------- |
-| properties | Readonly<TestimonialsSectionProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TestimonialsSectionProperties> |  |
 
 ### Testimonial
 
@@ -4177,16 +4167,16 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement;
+function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| properties | Readonly<TransferListProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TransferListProperties> |  |
 
 ### TransferItem
 
@@ -4237,7 +4227,7 @@ A node in the tree rendered by {@link ForgeTreeView}.
 **Kind:** function
 
 ```typescript
-function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
+function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement
 ```
 
 `ForgeTreeView` — a recursive, accessible tree authored once in the neutral JSX
@@ -4263,9 +4253,9 @@ callback props otherwise match.
 
 #### Parameters
 
-| Name       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| properties | Readonly<TreeViewProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TreeViewProperties> |  |
 
 ### TreeViewProperties
 
@@ -4284,7 +4274,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement;
+function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement
 ```
 
 `ForgeVirtualList` — renders only the rows visible within the scroll container,
@@ -4305,9 +4295,9 @@ forward named — but not default — slots as scoped functions).
 
 #### Parameters
 
-| Name       | Type                            | Description |
-| ---------- | ------------------------------- | ----------- |
-| properties | Readonly<VirtualListProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<VirtualListProperties> |  |
 
 ### VirtualListItemScope
 
@@ -4336,7 +4326,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement;
+function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement
 ```
 
 `ForgeVirtualLogViewer` — a high-performance virtual-scrolling log viewer.
@@ -4356,9 +4346,9 @@ suppression is dropped.
 
 #### Parameters
 
-| Name       | Type                                 | Description |
-| ---------- | ------------------------------------ | ----------- |
-| properties | Readonly<VirtualLogViewerProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<VirtualLogViewerProperties> |  |
 
 ### LogEntry
 
@@ -4397,7 +4387,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement;
+function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement
 ```
 
 `ForgeVirtualTable` — a virtual-scrolling, sortable data table that renders
@@ -4427,9 +4417,9 @@ slots for fully custom (interactive) cell content.
 
 #### Parameters
 
-| Name       | Type                             | Description |
-| ---------- | -------------------------------- | ----------- |
-| properties | Readonly<VirtualTableProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<VirtualTableProperties> |  |
 
 ### VirtualTableCellScope
 
@@ -4468,7 +4458,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement;
+function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement
 ```
 
 `ForgeVirtualTabs` — a controlled tabs container that renders **only the active
@@ -4493,9 +4483,9 @@ plain `panel={({ tab }) => …}` attribute), and uses the established
 
 #### Parameters
 
-| Name       | Type                            | Description |
-| ---------- | ------------------------------- | ----------- |
-| properties | Readonly<VirtualTabsProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<VirtualTabsProperties> |  |
 
 ### VirtualTabPanelScope
 
@@ -4524,7 +4514,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement;
+function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement
 ```
 
 `ForgeVirtualTreeView` — a virtual-scrolling tree that flattens its visible
@@ -4545,9 +4535,9 @@ callback props.
 
 #### Parameters
 
-| Name       | Type                                | Description |
-| ---------- | ----------------------------------- | ----------- |
-| properties | Readonly<VirtualTreeViewProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<VirtualTreeViewProperties> |  |
 
 ### TreeNode
 
@@ -4586,7 +4576,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
+function ForgeHero(properties: Readonly<HeroProperties>): MpElement
 ```
 
 `ForgeHero` — a page hero / banner section authored once in the neutral JSX
@@ -4608,9 +4598,9 @@ helper) and `eyebrow`/`title`/`subtitle` are string props.
 
 #### Parameters
 
-| Name       | Type                     | Description |
-| ---------- | ------------------------ | ----------- |
-| properties | Readonly<HeroProperties> |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<HeroProperties> |  |
 
 ### HeroAlign
 
@@ -4649,7 +4639,7 @@ Vertical padding scale — canonical 2xs → 2xl scale.
 **Kind:** function
 
 ```typescript
-function beginPointerDrag(handlers: PointerDragHandlers): () => void;
+function beginPointerDrag(handlers: PointerDragHandlers): () => void
 ```
 
 Begin a window-tracked pointer drag. Attaches `pointermove`/`pointerup`/
@@ -4660,9 +4650,9 @@ the server (no `window`).
 
 #### Parameters
 
-| Name     | Type                | Description |
-| -------- | ------------------- | ----------- |
-| handlers | PointerDragHandlers |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| handlers | PointerDragHandlers |  |
 
 ### PointerDragHandlers
 

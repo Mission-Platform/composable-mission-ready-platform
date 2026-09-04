@@ -1,5 +1,5 @@
 import { validateUrl } from '@mission-platform/email-renderer';
-import { h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';
 
 import { spacingValue, type EmailSpacingScale } from '../../../tokens';
 

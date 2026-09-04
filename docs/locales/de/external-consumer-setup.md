@@ -9,7 +9,7 @@ In diesem Leitfaden wird erläutert, wie Mission Platform-Pakete in Projekten au
 
 ## Rahmenauswahl über Bedingungen
 
-Mission Platform-Komponenten werden einmal mit `@mission-platform/forge` erstellt und als mehrere Framework-spezifische Bundles (Vue 3, React, Solid und Webkomponenten) innerhalb eines einzigen Pakets verteilt.
+Mission Platform-Komponenten werden einmal mit `@mission-platform/forge-jsx` erstellt und als mehrere Framework-spezifische Bundles (Vue 3, React, Solid und Webkomponenten) innerhalb eines einzigen Pakets verteilt.
 
 Um das richtige Bundle auszuwählen, müssen Sie Ihr Build-Tool und TypeScript für die Verwendung von **Benutzerdefinierten Exportbedingungen** konfigurieren.
 

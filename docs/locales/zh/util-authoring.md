@@ -27,7 +27,7 @@ src/utils/
 
 1. **纯度**：优先选择没有副作用的纯函数。给定相同的输入，它们应该始终返回
    相同的输出。
-2. **无 UI 挂钩**：切勿在 util 中导入 `vue`、`react` 或 `@mission-platform/forge` 挂钩。逻辑要求
+2. **无 UI 挂钩**：切勿在 util 中导入 `vue`、`react` 或 `@mission-platform/forge-jsx` 挂钩。逻辑要求
    反应性属于 [可组合项](composable-authoring.md)。
 3. **显式类型**：为所有参数和返回值提供完整的 TypeScript 类型。
 4. **强制测试**：每个实用程序都必须有一个位于同一位置的 `.spec.ts` 文件。

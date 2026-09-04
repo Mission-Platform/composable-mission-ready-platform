@@ -9,7 +9,7 @@ import { ForgeCodeScanner } from './forge-code-scanner';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-vi.mock('@mission-platform/forge', async (importOriginal) => {
+vi.mock('@mission-platform/forge-jsx', async (importOriginal) => {
   const actual = await importOriginal();
   const react = await import('react');
   const neutral = await import('../../../../../forge/src/runtime');

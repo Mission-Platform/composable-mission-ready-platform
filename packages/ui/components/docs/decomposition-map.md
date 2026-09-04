@@ -16,7 +16,7 @@ by this migration.
 
 These components share keyboard navigation, roving focus, menu/tab state, and
 navigation-oriented interaction contracts. Their neutral implementations depend
-on `@mission-platform/forge`; menu and table-like controls also use
+on `@mission-platform/forge-jsx`; menu and table-like controls also use
 `@mission-platform/icons`, while breadcrumb/navbar content composes the owning
 `@mission-platform/typography` package. `ForgeNavbar` currently composes the
 residual `ForgeDrawer`, so extracting navigation requires either keeping that
@@ -31,7 +31,7 @@ a dependency from `@mission-platform/components` back into navigation.
 
 The common concern is rendering structured or high-volume data, including
 windowing, sorting, tree expansion, and status presentation. The current source
-uses `@mission-platform/forge` and, where text or glyphs are composed,
+uses `@mission-platform/forge-jsx` and, where text or glyphs are composed,
 `@mission-platform/typography` and `@mission-platform/icons`; these should remain
 lower-level dependencies of a future package. Virtual components should move with
 their co-located styles/specs/stories so their neutral hook behavior and five
@@ -55,7 +55,7 @@ domain package's source tree.
 
 The first three own media loading/rendering semantics, while carousel and device
 mock add presentation around media. Their neutral source currently depends on
-`@mission-platform/forge` and, for carousel controls, `@mission-platform/icons`;
+`@mission-platform/forge-jsx` and, for carousel controls, `@mission-platform/icons`;
 there is no dependency on the extracted packages. Preserve reduced-motion and
 per-component CSS as part of a future move rather than splitting media behavior
 from its styles.
@@ -96,7 +96,7 @@ duplicate implementations as a compatibility shortcut.
 The residual component source was checked for imports of the extracted packages:
 there are no imports of `@mission-platform/theme`, `@mission-platform/float`, or
 `@mission-platform/select` under `packages/ui/components/src`. Neutral components
-use `@mission-platform/forge`, selected icons from `@mission-platform/icons`,
+use `@mission-platform/forge-jsx`, selected icons from `@mission-platform/icons`,
 typography from `@mission-platform/typography`, and package-local styles/utilities.
 Stories may import the package barrel to exercise the public surface; that is not
 an implementation dependency or a package cycle.

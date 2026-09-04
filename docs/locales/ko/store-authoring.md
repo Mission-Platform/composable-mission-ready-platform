@@ -35,7 +35,7 @@ src/stores/
 
 ## 저작 규칙
 
-1. **프레임워크 불가지론**: 저장소 모듈 내부의 `vue`, `react` 또는 `@mission-platform/forge` 후크에서 가져오지 마세요.
+1. **프레임워크 불가지론**: 저장소 모듈 내부의 `vue`, `react` 또는 `@mission-platform/forge-jsx` 후크에서 가져오지 마세요.
    그 자체.
 2. **명시적 유형**: 항상 저장소 상태에 대한 인터페이스를 정의하고 내보내십시오.
 3. **SSR 안전성**: 저장소가 Node.js에서 초기화될 수 있도록 브라우저 API(예: `localStorage`)에 대한 액세스를 보호합니다.
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## 구성 요소의 저장소 소비
 
-1회 쓰기 구성 요소 내에서 저장소를 사용하려면 `@mission-platform/forge`에서 `useState` 및 `useEffect`을 사용하여 이를 연결합니다.
+1회 쓰기 구성 요소 내에서 저장소를 사용하려면 `@mission-platform/forge-jsx`에서 `useState` 및 `useEffect`을 사용하여 이를 연결합니다.
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

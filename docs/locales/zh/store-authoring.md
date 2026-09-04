@@ -35,7 +35,7 @@ src/stores/
 
 ## 创作规则
 
-1. **与框架无关**：不要从存储模块内的 `vue`、`react` 或 `@mission-platform/forge` 挂钩导入
+1. **与框架无关**：不要从存储模块内的 `vue`、`react` 或 `@mission-platform/forge-jsx` 挂钩导入
    本身。
 2. **显式类型**：始终为商店状态定义和导出接口。
 3. **SSR 安全**：保护对浏览器 API（例如 `localStorage`）的访问，以便可以在 Node.js 中初始化存储
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## 消费组件中的存储
 
-要在一次写入组件中使用存储，请使用 `@mission-platform/forge` 中的 `useState` 和 `useEffect` 桥接它：
+要在一次写入组件中使用存储，请使用 `@mission-platform/forge-jsx` 中的 `useState` 和 `useEffect` 桥接它：
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

@@ -11,7 +11,7 @@ import {
   type MpElement,
   type MpRenderProperty,
   type CSSStyleProperties,
-} from '@mission-platform/forge';
+} from '@mission-platform/forge-jsx';
 
 import styles from './forge-mention-input.module.scss';
 

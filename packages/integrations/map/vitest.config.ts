@@ -8,7 +8,7 @@ export default defineVitestConfig({
     oxc: {
       jsx: {
         runtime: 'automatic',
-        importSource: '@mission-platform/forge',
+        importSource: '@mission-platform/forge-jsx',
       },
     },
     test: {

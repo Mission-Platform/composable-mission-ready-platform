@@ -1,5 +1,5 @@
 /**
- * Runtime role: the pieces that face the native `@mission-platform/forge/web-components`
+ * Runtime role: the pieces that face the native `@mission-platform/forge-adapters/web-components`
  * runtime rather than the render tree.
  *
  * - `hook-module.ts` — the hook/composable library passthrough, emitted as a

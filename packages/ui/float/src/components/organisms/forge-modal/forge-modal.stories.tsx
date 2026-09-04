@@ -10,7 +10,7 @@ import { ForgeTooltip } from '../../molecules/forge-tooltip/forge-tooltip';
 
 import { ForgeModal } from './forge-modal';
 
-import type { MpChild } from '@mission-platform/forge';
+import type { MpChild } from '@mission-platform/forge-jsx';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /** All currently-open native `<dialog>`s, in DOM (and top-layer) order.

@@ -12,7 +12,7 @@
 
 このパッケージは、命令型 D3 選択ベースのレンダリングと宣言型リアクティブ UI ツリーの橋渡しをします。
 
-- **中立的な実装**: `@mission-platform/forge` フック (`useRef`、`useEffect`) の上に構築されます。
+- **中立的な実装**: `@mission-platform/forge-jsx` フック (`useRef`、`useEffect`) の上に構築されます。
 - **デュアル フレームワーク ターゲット**: `@mission-platform/vite-plugin-forge` によってネイティブ React (`./react`) および Vue にトランスパイルされます 3
   (`./vue`) コンポーザブル。
 - **選択的な依存関係**: `d3-selection` を直接インポートして、クライアント バンドル サイズを最小限に抑えます。

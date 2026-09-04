@@ -1243,7 +1243,7 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 
 `ForgeDeviceMock` — 임의의 화면을 감싸는 장식 장치 프레임
 `mobile`, `tablet`, `desktop` 또는 `browser`의 콘텐츠(기본 슬롯)
-중립 JSX 방언으로 한 번 작성된 크롬(`@mission-platform/forge`)
+중립 JSX 방언으로 한 번 작성된 크롬(`@mission-platform/forge-jsx`)
 다음을 통해 React 또는 Vue으로 바로 컴파일됩니다.
 `@mission-platform/vite-plugin-forge`.
 

@@ -1,4 +1,4 @@
-import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge-jsx';
 
 import { initialsForName } from '../../../utils';
 import { ForgeAvatar } from '../../atoms/forge-avatar';

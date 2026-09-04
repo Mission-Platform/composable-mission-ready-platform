@@ -1,7 +1,7 @@
 /**
  * Import construction for the React target.
  *
- * The neutral `@mission-platform/forge` import is split into the imports the
+ * The neutral `@mission-platform/forge-jsx` import is split into the imports the
  * generated module actually needs, exactly as the lowering plan resolved them:
  * a value import from `react` (`h` → `createElement`, `Fragment`, the hooks,
  * which *are* React's own), the React adapter import for the per-framework

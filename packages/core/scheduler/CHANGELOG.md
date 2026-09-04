@@ -22,7 +22,7 @@
 - Updated dependencies [31ed685]
   - @mission-platform/components@3.1.0
   - @mission-platform/float@1.1.0
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/forms@2.1.0
   - @mission-platform/icons@2.0.1
   - @mission-platform/typography@1.1.0
@@ -58,4 +58,4 @@
   - @mission-platform/forms@2.0.0
   - @mission-platform/icons@2.0.0
   - @mission-platform/vcard@0.2.0
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0

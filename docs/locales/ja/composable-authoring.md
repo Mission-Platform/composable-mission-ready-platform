@@ -7,7 +7,7 @@
 
 コンポーザブルは、Mission Platform 内でリアクティブ ロジックをカプセル化して再利用するための主な方法です。これらを確実にするために
 ロジックのユニットは、サポートされているすべての UI フレームワーク間で移植可能であり、
-によって提供されるフレームワークに依存しないフック `@mission-platform/forge`.
+によって提供されるフレームワークに依存しないフック `@mission-platform/forge-jsx`.
 
 ## ディレクトリのレイアウト
 
@@ -26,7 +26,7 @@ src/composables/
 ## オーサリングルール
 
 1. **Forge フックを使用**: リアクティブ プリミティブのみをインポートします (例: `useState`, `useEffect`, `useMemo`, `useRef`) から
-   `@mission-platform/forge`。 ～から直接輸入しないでください `vue` または `react`。
+   `@mission-platform/forge-jsx`。 ～から直接輸入しないでください `vue` または `react`。
 2. **命名規則**: コンポーザブル名にはケバブケースを使用し、接頭辞を付ける必要があります。 `use-` (e.g., `use-media-query`)。
 3. **SSR の安全性**: ロジックがサーバーサイド レンダリングに対して安全であることを確認します。次のようなブラウザ専用 API へのアクセスを保護します。 `window`,
    `document`、 または `localStorage`。
@@ -39,7 +39,7 @@ src/composables/
 以下は、イベント リスナーを管理する一般的な追記型コンポーザブルです。
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,

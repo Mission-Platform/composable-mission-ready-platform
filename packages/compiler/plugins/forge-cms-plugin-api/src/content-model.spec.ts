@@ -198,7 +198,7 @@ describe("analyzeContentComponent", () => {
 
   it("records the required flag for props without a question token", () => {
     const source = [
-      "import { h, type MpElement } from '@mission-platform/forge';",
+      "import { h, type MpElement } from '@mission-platform/forge-jsx';",
       "export interface TitleProperties {",
       "  /** Heading text. */",
       "  text: string;",
@@ -227,7 +227,7 @@ describe("analyzeContentComponent", () => {
 
   it("captures normalized field tab annotations and leaves blank values absent", () => {
     const source = [
-      "import { h, type MpElement } from '@mission-platform/forge';",
+      "import { h, type MpElement } from '@mission-platform/forge-jsx';",
       "export interface TabbedProperties {",
       "  /** @cmsTab Content */",
       "  title?: string;",
@@ -260,7 +260,7 @@ describe("analyzeContentComponent", () => {
 
   it("captures and normalizes component-level editor metadata annotations", () => {
     const source = [
-      "import { h, type MpElement } from '@mission-platform/forge';",
+      "import { h, type MpElement } from '@mission-platform/forge-jsx';",
       "/**",
       " * A decorated component.",
       " * @cmsIcon   hero-star  ",
@@ -284,7 +284,7 @@ describe("analyzeContentComponent", () => {
 
   it("reports a component with no analysable props as an empty model", () => {
     const source = [
-      "import { h, type MpElement } from '@mission-platform/forge';",
+      "import { h, type MpElement } from '@mission-platform/forge-jsx';",
       "export function ForgeRule(): MpElement {",
       '  return <hr class="rule" />;',
       "}",

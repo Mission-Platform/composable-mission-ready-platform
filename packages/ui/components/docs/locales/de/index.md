@@ -6,7 +6,7 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > Sprache: Deutsch (de)
 
 `@mission-platform/components` ist die verbleibende einmal beschreibbare Komponentenbibliothek für die Mission Platform. Jede Komponente in
-Diese Bibliothek wird einmal mit einem Framework-neutralen JSX-Dialekt (über `@mission-platform/forge`) erstellt und dann unter kompiliert
+Diese Bibliothek wird einmal mit einem Framework-neutralen JSX-Dialekt (über `@mission-platform/forge-jsx`) erstellt und dann unter kompiliert
 Buildzeit in die nativen Ausgaben **Vue 3**, **React**, **Svelte**, **Solid** und **Web Component**.
 
 `ForgeTypography` gehört zum dedizierten Paket `@mission-platform/typography`. Importieren Sie es lieber aus diesem Paket
@@ -16,7 +16,7 @@ als von `@mission-platform/components`.
 
 Dieses Paket demonstriert eine hocheffiziente, rahmenübergreifende Architektur:
 
-- **Neutrale Quelle**: Komponenten werden mit `@mission-platform/forge` in `.tsx`-Dateien geschrieben.
+- **Neutrale Quelle**: Komponenten werden mit `@mission-platform/forge-jsx` in `.tsx`-Dateien geschrieben.
 - **Zweistufige Kompilierung**: Mit `@mission-platform/vite-plugin-forge` wird die neutrale Quelle umgewandelt in
   Framework-spezifischer Quellcode (Vue SFCs und React TSX) und dann von den jeweiligen nativen Toolchains kompiliert.
 - **Kein Laufzeit-Overhead**: Es gibt keine Laufzeitadapter. Verbraucher importieren native Komponenten mit dem Bare

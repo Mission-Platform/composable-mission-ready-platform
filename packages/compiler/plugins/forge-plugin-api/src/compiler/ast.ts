@@ -7,7 +7,8 @@
  */
 import type { JsxFramework } from "../framework.js";
 
-export const NEUTRAL_MODULE = "@mission-platform/forge";
+export const NEUTRAL_MODULE = "@mission-platform/forge-jsx";
+export const ADAPTERS_MODULE = "@mission-platform/forge-adapters";
 export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string> = new Set([
   "classNames",
   "createForgeStyle",
@@ -69,7 +70,7 @@ const FRAMEWORK_DIRECTIVES: ReadonlyMap<string, JsxFramework> = new Map([
 
 /** Derive the Forge adapter/runtime module for any built-in target framework. */
 export function frameworkAdapterModule(framework: JsxFramework): string {
-  return `${NEUTRAL_MODULE}/${framework}`;
+  return `${ADAPTERS_MODULE}/${framework}`;
 }
 
 /** Resolve a leading `use <framework>` directive for any built-in target. */
@@ -133,7 +134,7 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
   if (framework === "solid") {
     return [
       "/**",
-      " * Framework-specific variants of the neutral `@mission-platform/forge` render/props",
+      " * Framework-specific variants of the neutral `@mission-platform/forge-jsx` render/props",
       " * primitives, generated for the solid build so the compiled components",
       " * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).",
       " */",
@@ -153,7 +154,7 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
   if (framework === "svelte") {
     return [
       "/**",
-      " * Framework-specific variants of the neutral `@mission-platform/forge` render/props",
+      " * Framework-specific variants of the neutral `@mission-platform/forge-jsx` render/props",
       " * primitives, generated for the svelte build so the compiled components",
       " * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).",
       " */",
@@ -173,7 +174,7 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
   if (framework === "web-components") {
     return [
       "/**",
-      " * Framework-specific variants of the neutral `@mission-platform/forge` render/props",
+      " * Framework-specific variants of the neutral `@mission-platform/forge-jsx` render/props",
       " * primitives, generated for the web-components build so the compiled components",
       " * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).",
       " */",
@@ -197,7 +198,7 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
       : "import type { VNode, VNodeChild } from 'vue';";
   const lines = [
     "/**",
-    ` * Framework-specific variants of the neutral \`@mission-platform/forge\` render/props`,
+    ` * Framework-specific variants of the neutral \`@mission-platform/forge-jsx\` render/props`,
     " * primitives, generated for the " +
       framework +
       " build so the compiled components",

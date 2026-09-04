@@ -20,7 +20,7 @@
 
 ## 핵심 프레임워크
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 프레임워크 중립적인 JSX 런타임 및 후크를 제공하는 "한 번 쓰기" 아키텍처의 기반입니다.
 
@@ -32,8 +32,8 @@
 | `useMemo` | 후크 | 프레임워크 중립적인 메모 후크.                                                     |
 | `useRef` | 후크 | 프레임워크 중립적인 참조 후크.                                                       |
 | `useContext` | 후크 | 프레임워크 중립적인 컨텍스트 후크.                                                         |
-| `toVueComponent` | 어댑터 | 단조 구성 요소를 Vue 3 구성 요소(`@mission-platform/forge/vue`에서)로 변환합니다.   |
-| `toReactComponent` | 어댑터 | 단조 구성 요소를 React 구성 요소(`@mission-platform/forge/react`에서)로 변환합니다. |
+| `toVueComponent` | 어댑터 | 단조 구성 요소를 Vue 3 구성 요소(`@mission-platform/forge-adapters/vue`에서)로 변환합니다.   |
+| `toReactComponent` | 어댑터 | 단조 구성 요소를 React 구성 요소(`@mission-platform/forge-adapters/react`에서)로 변환합니다. |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ Forge 웹 스크립트 아티팩트는 `sha256-v1:<hex>` 형식의 버전이 지
 
 | 패키지 | 목적 |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` | 프레임워크 중립적인 JSX 런타임 및 어댑터.                   |
+| `@mission-platform/forge-jsx` | 프레임워크 중립적인 JSX 런타임 및 어댑터.                   |
 | `@mission-platform/components` | 한 번만 쓸 수 있는 UI 구성 요소입니다.                                     |
 | `@mission-platform/icons` | 한 번만 쓸 수 있는 SVG 아이콘 구성요소.                               |
 | `@mission-platform/layouts` | 애플리케이션, 컨테이너, 반응형 레이아웃 구성요소.     |

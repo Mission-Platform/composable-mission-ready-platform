@@ -4,8 +4,8 @@ import { useSpeechRecognition } from './use-speech-recognition';
 
 const lifecycle = vi.hoisted(() => ({ cleanup: undefined as (() => void) | undefined }));
 
-vi.mock('@mission-platform/forge', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@mission-platform/forge')>();
+vi.mock('@mission-platform/forge-jsx', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@mission-platform/forge-jsx')>();
   return {
     ...actual,
     useEffect: (effect: () => void | (() => void)): void => {

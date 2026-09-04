@@ -1,5 +1,5 @@
 import { type DrawerDraggable, type DrawerSize, ForgeDrawer } from '@mission-platform/components';
-import { h, hasSlot, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
+import { h, hasSlot, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge-jsx';
 
 import styles from './forge-vertical-layout.module.scss';
 

@@ -11,11 +11,11 @@ into functional tiers:
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── packages/core/          # Framework-neutral runtime, routing, i18n, and scheduling
+├── packages/core/          # Framework-neutral runtime, Forge JSX/adapters, routing, i18n, and scheduling
 ├── packages/ui/            # Components, forms, layouts, themes, and design tokens
 ├── packages/content/       # Content, email, search, and SEO pipelines
 ├── packages/integrations/  # Barcode, maps, media, 3D, and interoperability adapters
-├── packages/compiler/      # Forge runtime, Figma bridges, and compiler plugins
+├── packages/compiler/      # Figma bridges and Forge compiler plugins
 ├── packages/tooling/       # Shared configs and Vite/build-time extensions
 ├── packages/edge/          # Reusable Cloudflare Worker edge functions
 ├── mcp/                    # Model Context Protocol servers
@@ -41,15 +41,15 @@ and never published to a registry.
 
 Reusable, versioned libraries consumed by apps. Domain directories make ownership explicit without changing package names or imports.
 
-- **`core/`**: Framework-neutral runtime, routing, localization, observability, RxJS, and scheduler services.
+- **`core/`**: Framework-neutral runtime, Forge JSX/adapters, routing, localization, observability, RxJS, and scheduler services.
 - **`ui/`**: Components, breakpoints, forms, layouts, selection, themes, tokens, and typography.
 - **`content/`**: Content models, email components/rendering, language tools, and SEO.
 - **`integrations/`**: Barcode, code-scanning, D3, maps, QR/matrix codes, speech, Three.js, and vCards.
-- **`compiler/`**: Forge runtime/compiler packages, Figma bridges, and framework/router/CMS plugins.
+- **`compiler/`**: Figma bridges and framework/router/CMS compiler plugins.
 - **`tooling/`**: Shared configuration packages and Vite plugins.
 - **`edge/`**: Worker packages used by applications and local examples.
 
-- **`@mission-platform/forge`**: The framework-neutral JSX runtime and adapters.
+- **`@mission-platform/forge-jsx`**: The framework-neutral JSX runtime and adapters.
 - **`@mission-platform/components`**: The multi-framework component library.
 - **`@mission-platform/forms`** and **`@mission-platform/forms-core`**: Schema-driven form primitives.
 - **`@mission-platform/content`** and **`@mission-platform/email-renderer`**: Content and rendering pipelines.
@@ -124,7 +124,7 @@ Every directory within `src/` must contain an `index.ts` (barrel file).
 Key files at the repository root govern the monorepo's behaviour:
 
 | File                    | Purpose                                                              |
-|:------------------------|:---------------------------------------------------------------------|
+| :---------------------- | :------------------------------------------------------------------- |
 | `pnpm-workspace.yaml`   | Defines workspace boundaries, member globs, and dependency catalogs. |
 | `turbo.json`            | Orchestrates the build pipeline and task caching.                    |
 | `package.json`          | Root-level scripts and monorepo-wide devDependencies.                |

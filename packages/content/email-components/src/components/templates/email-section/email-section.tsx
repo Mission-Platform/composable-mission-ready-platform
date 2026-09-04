@@ -1,7 +1,7 @@
 import { colorValue, spacingValue } from '../../../tokens';
 
 import type { EmailColor, EmailSpacingScale } from '../../../tokens';
-import type { MpChild, MpElement } from '@mission-platform/forge';
+import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 export interface EmailSectionProperties {
   /** The content rendered inside the component. */

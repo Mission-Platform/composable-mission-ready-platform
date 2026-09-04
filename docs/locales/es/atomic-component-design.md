@@ -6,7 +6,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > Idioma: Español (es)
 
 Mission Platform utiliza un sistema de **Diseño Atómico** para organizar los componentes en niveles jerárquicos de complejidad. cada
-El componente es una unidad de "escritura única" creada en el dialecto neutral Forge JSX (`@mission-platform/forge`), asegurando
+El componente es una unidad de "escritura única" creada en el dialecto neutral Forge JSX (`@mission-platform/forge-jsx`), asegurando
 coherencia entre múltiples marcos.
 
 ## Niveles de diseño
@@ -75,7 +75,7 @@ const meta = {
 
 ## Estándares de creación
 
-1. **Neutralidad del marco**: nunca separe el autor Vue y React versiones. Usar `@mission-platform/forge`.
+1. **Neutralidad del marco**: nunca separe el autor Vue y React versiones. Usar `@mission-platform/forge-jsx`.
 2. **Nombre**: Los componentes deben usar el `Base` prefijo (por ejemplo, `ForgeCard`) a menos que sean implementaciones específicas.
 3. **Seguridad de tipos**: Exportar un `*Properties` interfaz para los accesorios del componente.
 4. **Pruebas**: una ubicación compartida `.spec.ts` Se requiere para cada componente.

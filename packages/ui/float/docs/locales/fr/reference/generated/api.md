@@ -523,7 +523,7 @@ Accessibilité :
 
 L'animation d'entrée/sortie correspond au Vue SFC via le neutre
 Primitive **`<TransitionGroup>`**, qui compile avec la fonction intégrée de Vue.
-`<TransitionGroup>` et le groupe de classes CSS `@mission-platform/forge/react`
+`<TransitionGroup>` et le groupe de classes CSS `@mission-platform/forge-adapters/react`
 conducteur. Les quatre classes de phase d'entrée/sortie stylisées sont transmises sous forme **hachées
 Classes CSS-Module** (via les accessoires de classe `<TransitionGroup>`), donc le
 le style de l'animation reste limité aux composants au lieu de s'appuyer sur des éléments globaux

@@ -59,7 +59,7 @@ Tutto il nuovo codice sorgente deve essere scritto TypeScript (`.ts`) O Vue SFC 
 
 ### Componenti neutrali rispetto al contesto
 
-Quando possibile, crea componenti dell'interfaccia utente utilizzando il file `@mission-platform/forge` dialetto. Ciò consente ai componenti di essere
+Quando possibile, crea componenti dell'interfaccia utente utilizzando il file `@mission-platform/forge-jsx` dialetto. Ciò consente ai componenti di essere
 compilato e utilizzato in Vue, React, Svelte, Solide componenti Web senza riscrivere la logica di base. Configura il
 risolutore del consumatore con la corrispondenza `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, O `mp:web-component` condizione.
 

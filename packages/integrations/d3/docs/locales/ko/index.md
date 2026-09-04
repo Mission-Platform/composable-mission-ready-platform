@@ -12,7 +12,7 @@
 
 이 패키지는 선언적 반응형 UI 트리를 사용하여 필수 D3 선택 기반 렌더링을 연결합니다.
 
-- **중립적 구현**: `@mission-platform/forge` 후크(`useRef`, `useEffect`) 위에 구축되었습니다.
+- **중립적 구현**: `@mission-platform/forge-jsx` 후크(`useRef`, `useEffect`) 위에 구축되었습니다.
 - **이중 프레임워크 대상**: `@mission-platform/vite-plugin-forge`에 의해 기본 React(`./react`) 및 Vue로 변환됨 3
   (`./vue`) 컴포저블.
 - **선택적 종속성**: 클라이언트 번들 크기를 최소로 유지하기 위해 `d3-selection`을 직접 가져옵니다.

@@ -6,7 +6,7 @@
 > 언어: 한국어 (ko)
 
 Mission Platform은 **Atomic Design** 시스템을 사용하여 구성 요소를 계층적 복잡성 수준으로 구성합니다. 매
-구성 요소는 중립 Forge JSX 방언(`@mission-platform/forge`), 보장
+구성 요소는 중립 Forge JSX 방언(`@mission-platform/forge-jsx`), 보장
 여러 프레임워크에 걸쳐 일관성을 유지합니다.
 
 ## 디자인 수준
@@ -75,7 +75,7 @@ const meta = {
 
 ## 저작 표준
 
-1. **프레임워크 중립성**: 별도의 저작물을 작성하지 마세요. Vue 그리고 React 버전. 사용 `@mission-platform/forge`.
+1. **프레임워크 중립성**: 별도의 저작물을 작성하지 마세요. Vue 그리고 React 버전. 사용 `@mission-platform/forge-jsx`.
 2. **이름 지정**: 구성 요소는 다음을 사용해야 합니다. `Base` 접두사(예: `ForgeCard`) 특정 구현이 아닌 한.
 3. **유형 안전성**: `*Properties` 구성 요소의 소품에 대한 인터페이스입니다.
 4. **테스트**: 같은 위치에 있는 `.spec.ts` 모든 구성 요소에 필요합니다.

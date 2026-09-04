@@ -1244,7 +1244,7 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 
 `ForgeDeviceMock`: cornice decorativa del dispositivo che avvolge uno schermo arbitrario
 contenuto (lo slot predefinito) in un `mobile`, `tablet`, `desktop` o `browser`
-chrome, scritto una volta nel dialetto JSX neutro (`@mission-platform/forge`)
+chrome, scritto una volta nel dialetto JSX neutro (`@mission-platform/forge-jsx`)
 e compilato direttamente in React o Vue da
 `@mission-platform/vite-plugin-forge`.
 

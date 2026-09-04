@@ -21,7 +21,7 @@ par cette migration.
 
 Ces composants partagent la navigation au clavier, le focus itinérant, l'état du menu/onglet et
 contrats d’interaction orientés navigation. Leurs implémentations neutres dépendent
-sur `@mission-platform/forge` ; les contrôles de menu et de type tableau utilisent également
+sur `@mission-platform/forge-jsx` ; les contrôles de menu et de type tableau utilisent également
 `@mission-platform/icons`, tandis que le contenu du fil d'Ariane/de la barre de navigation constitue le propriétaire
 Package `@mission-platform/typography`. `ForgeNavbar` compose actuellement le
 `ForgeDrawer` résiduel, donc l'extraction de la navigation nécessite soit de conserver ce
@@ -36,7 +36,7 @@ une dépendance de `@mission-platform/components` dans la navigation.
 
 La préoccupation commune est de restituer des données structurées ou volumineuses, notamment
 fenêtrage, tri, expansion de l'arborescence et présentation de l'état. La source actuelle
-utilise `@mission-platform/forge` et, là où du texte ou des glyphes sont composés,
+utilise `@mission-platform/forge-jsx` et, là où du texte ou des glyphes sont composés,
 `@mission-platform/typography` et `@mission-platform/icons` ; ceux-ci devraient rester
 dépendances de niveau inférieur d’un futur package. Les composants virtuels doivent se déplacer avec
 leurs styles/spécifications/histoires co-localisés donc leur comportement de crochet neutre et cinq
@@ -60,7 +60,7 @@ l'arborescence source du package de domaine.
 
 Les trois premiers possèdent leur propre sémantique de chargement/rendu multimédia, tandis que le carrousel et le périphérique
 simuler ajouter une présentation autour des médias. Leur source neutre dépend actuellement de
-`@mission-platform/forge` et, pour les contrôles de carrousel, `@mission-platform/icons` ;
+`@mission-platform/forge-jsx` et, pour les contrôles de carrousel, `@mission-platform/icons` ;
 il n'y a aucune dépendance sur les packages extraits. Préserver les mouvements réduits et
 CSS par composant dans le cadre d'un mouvement futur plutôt que de diviser le comportement des médias
 de ses styles.
@@ -101,7 +101,7 @@ dupliquer les implémentations comme raccourci de compatibilité.
 La source des composants résiduels a été vérifiée pour les importations des packages extraits :
 il n'y a aucune importation de `@mission-platform/theme`, `@mission-platform/float` ou
 `@mission-platform/select` sous `packages/ui/components/src`. Composants neutres
-utilisez `@mission-platform/forge`, les icônes sélectionnées dans `@mission-platform/icons`,
+utilisez `@mission-platform/forge-jsx`, les icônes sélectionnées dans `@mission-platform/icons`,
 typographie de `@mission-platform/typography` et styles/utilitaires locaux du package.
 Les histoires peuvent importer le paquet baril pour exercer la surface publique ; ce n'est pas
 une dépendance d’implémentation ou un cycle de package.

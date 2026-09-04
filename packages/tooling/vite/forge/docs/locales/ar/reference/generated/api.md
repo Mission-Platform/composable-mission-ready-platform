@@ -106,7 +106,7 @@ export const CLASS_NAME_ATTRIBUTE;
 `className={…}` (السمة `class` محجوزة للسلاسل الثابتة)،
 تمرير نفس الوسائط التي يقبلها مساعد وقت التشغيل `classNames` - معظمها
 عادة **صفيف** من قيم الفئة (`className={['base', { active }]}`)،
-ولكن أي {@link import ('@mission-platform/forge').ClassValue} واحد يعمل أيضًا.
+ولكن أي {@link import ('@mission-platform/forge-jsx').ClassValue} واحد يعمل أيضًا.
 تتم كتابة السمة بنفس طريقة كتابة React الخاصة بـ `className` (على عكس
 مساعد وقت التشغيل، الذي يبقى `classNames`) حتى يتمكن المكون من دمج المكون الخاص به
 الفئات المحسوبة باستخدام `properties.className` المُعاد توجيهها بدون تسمية
@@ -154,7 +154,7 @@ export const COMPONENTS_JSX_MODULES;
 `@mission-platform/icons`، يستورد المؤلفون المحايدون مكوناتهم منها
 الحزم (على سبيل المثال `ForgeDrawer` من `@mission-platform/components/forge-drawer`، أو
 `ForgeVerticalLayout` من `@mission-platform/layouts`)، والذي يتم التحقق من النوع
-مقابل المصدر المحايد وتقديمه من خلال `@mission-platform/forge`
+مقابل المصدر المحايد وتقديمه من خلال `@mission-platform/forge-jsx`
 المحولات في اختبارات الوحدة. تقوم المصادر التي تم إنشاؤها لكل إطار باستيرادها ضمن
 نفس المحدد - يتم اختيار إطار العمل من خلال كل منهما
 حالة تصدير الحزمة `mp:<framework>`، وليس من خلال مسار فرعي.
@@ -796,12 +796,12 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 `MpRenderProperty<S>`، دالة ذات فتحة محددة / عرض دعامة تقوم بإرجاع ملف
 محتوى الفتحة لنطاق معين.
 
-بدلاً من الاحتفاظ به كاستيراد `@mission-platform/forge` في الملف الذي تم إنشاؤه
+بدلاً من الاحتفاظ به كاستيراد `@mission-platform/forge-jsx` في الملف الذي تم إنشاؤه
 الكود، كل بناء إطار عمل يصدر وحدة صغيرة في نفس الموقع
 ({@link LOCAL_JSX_TYPES_MODULE}) الذي يحدد **متغير خاص بالإطار**
 منها - React فوق `ReactNode`، Vue فوق `VNodeChild` - وكل باعث
 يعيد توجيه استيراد النوع هناك (راجع منشئي React وVue `imports`).
-وبالتالي فإن المصادر التي تم إنشاؤها لا تحمل `@mission-platform/forge` محايدة
+وبالتالي فإن المصادر التي تم إنشاؤها لا تحمل `@mission-platform/forge-jsx` محايدة
 render-prop **type** استيراد على الإطلاق.
 
 ### LOCAL_JSX_TYPES_FILE
@@ -867,7 +867,7 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 إطار العمل: المتغيرات الخاصة بإطار العمل لبدائل العرض المحايدة المسماة
 في {@link LOCAL_JSX_TYPE_NAMES}، لذلك يتم استيراد المكونات التي تم إنشاؤها
 `MpRenderProperty` من هذه الوحدة المحلية بدلاً من المحايدة
-حزمة `@mission-platform/forge`. تختلف التعريفات حسب الإطار:
+حزمة `@mission-platform/forge-jsx`. تختلف التعريفات حسب الإطار:
 موضع "المحتوى القابل للعرض" هو React's `ReactNode` وVue's `VNodeChild`،
 لذلك تتم قراءة إعلانات كل بناء بشكل اصطلاحي لوقت التشغيل الخاص به.
 
@@ -944,7 +944,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 واردات **القيمة** المحايدة التي تمثل أساسيات السياق. على React هم * هم *
 React الخاص (`createContext`/`useContext`)، لذلك يقعون في
 استيراد القيمة `react`؛ على Vue، تتم إعادة تعيين استيرادها إلى ملف
-محول `@mission-platform/forge/vue` (مدعوم من `provide`/`inject`
+محول `@mission-platform/forge-adapters/vue` (مدعوم من `provide`/`inject`
 `createContext`/`useContext`).
 
 ### NEUTRAL_FRAMEWORK_COMPONENTS
@@ -958,15 +958,15 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 واردات **القيمة** المحايدة الحقيقية، **المكونات** لكل إطار عمل بدلاً من ذلك
 من العلامات أو الأدوات المساعدة لوقت التشغيل أو العناصر الأولية الخاصة بـ React. استخدامهم لـ JSX
 يتم تركها دون تغيير (تظل علامة مكون)، ولكن
-تتم إعادة تعيين `import { … } from '@mission-platform/forge'` إلى الهدف
+تتم إعادة تعيين `import { … } from '@mission-platform/forge-jsx'` إلى الهدف
 التنفيذ الأصلي لإطار العمل: يصبح `Teleport` (البوابة البدائية).
-`import { Teleport } from '@mission-platform/forge/react'` (`createPortal`
+`import { Teleport } from '@mission-platform/forge-adapters/react'` (`createPortal`
 المجمع) لـ React و`import { Teleport } from 'vue'` (المدمج) لـ Vue؛
 يصبح `Transition` (بدائي الإدخال/المغادرة) هو الملف
-برنامج تشغيل فئة `@mission-platform/forge/react` CSS لـ React والبرنامج المدمج
+برنامج تشغيل فئة `@mission-platform/forge-adapters/react` CSS لـ React والبرنامج المدمج
 `import { Transition } from 'vue'` لـ Vue؛ `TransitionGroup` (القائمة
 إدخال/مغادرة/نقل بدائي) يتم إعادة تعيينه بنفس الطريقة (ملف
-برنامج تشغيل المجموعة `@mission-platform/forge/react` لـ React، المدمج في
+برنامج تشغيل المجموعة `@mission-platform/forge-adapters/react` لـ React، المدمج في
 `import { TransitionGroup } from 'vue'` لـ Vue).
 
 ### NEUTRAL_MODULE
@@ -989,7 +989,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 
 واردات **القيمة** المحايدة التي تعتبر أدوات مساعدة لوقت التشغيل غير محددة لإطار العمل - فهي
 تتصرف بشكل مماثل مع كل هدف، لذلك (على عكس `h` والخطافات، والتي هي
-مترجم/مستعار لكل إطار) `import { … } from '@mission-platform/forge'`
+مترجم/مستعار لكل إطار) `import { … } from '@mission-platform/forge-jsx'`
 يجب الحفاظ عليه حرفيًا في مصادر React وVue التي تم إنشاؤها.
 
 ### NEUTRAL_VUE_RUNTIME_HOOKS
@@ -1113,7 +1113,7 @@ export interface PropertySignature
 export const REACT_ADAPTER_MODULE;
 ```
 
-المسار الفرعي `@mission-platform/forge/react` الذي يتم استيراد مكونات إطار عمل React منه.
+المسار الفرعي `@mission-platform/forge-adapters/react` الذي يتم استيراد مكونات إطار عمل React منه.
 
 ### REACT_TYPE_ALIASES
 
@@ -1126,7 +1126,7 @@ export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 واردات **النوع** المحايدة التي لها مكافئ React من الدرجة الأولى يتم شحنها بواسطة
 `react` نفسها. على الهدف React تتم إعادة كتابتها إلى اسم React الخاص بها
 (`import type { … } from 'react'` مستورد) بدلاً من الاحتفاظ به كمحايد
-`@mission-platform/forge`، لذلك يرى مؤلفو React النوع الاصطلاحي. كل
+`@mission-platform/forge-jsx`، لذلك يرى مؤلفو React النوع الاصطلاحي. كل
 تتم إعادة تسمية الإشارة إلى الاسم المحايد في المصدر المنبعث إلى المعين
 اسم React (راجع باعث React). الخطاف/التجسيد المحايد لكل منهما
 لديك نظير React دقيق:
@@ -1284,7 +1284,7 @@ function readHasSlotName(call: ts.CallExpression): string | undefined;
 function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
-افحص روابط `import … from '@mission-platform/forge'` الخاصة بالوحدة النمطية.
+افحص روابط `import … from '@mission-platform/forge-jsx'` الخاصة بالوحدة النمطية.
 
 #### حدود
 
@@ -1626,7 +1626,7 @@ function usesI18nextT(node: OxcNode): boolean;
 export const VUE_ADAPTER_MODULE;
 ```
 
-المسار الفرعي `@mission-platform/forge/vue` الذي يتم استيراد أساسيات السياق Vue منه.
+المسار الفرعي `@mission-platform/forge-adapters/vue` الذي يتم استيراد أساسيات السياق Vue منه.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -1652,7 +1652,7 @@ export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 يعيد تعريف **العنصر** المحايد `MpChild` و`MpElement` كـ
 Vue's `VNodeChild` / `VNode`. تحت `jsxImportSource: 'vue'` أ
 يحتوي تعبير JSX في SFC المُنشأ على النوع `JSX.Element` (أي Vue's `VNode`)؛
-الحفاظ على تعريفات `@mission-platform/forge` المحايدة (التي تحمل العلامة التجارية
+الحفاظ على تعريفات `@mission-platform/forge-jsx` المحايدة (التي تحمل العلامة التجارية
 `__mpElement`) من شأنه أن يجعل كل `const x: MpElement = <div/>` /
 فشل `MpChild[] = items.map(() => <li/>)` في التحقق من النوع ضمن `vue-tsc`. React
 بدلاً من ذلك يعيد تسمية هذه إلى `ReactNode`/`ReactElement` (انظر
@@ -1804,7 +1804,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 قم بتجميع ** وحدة ربط ** محايدة واحدة (تم تأليف وحدة قابلة للكتابة مرة واحدة مقابل
-خطافات `@mission-platform/forge` ذات النمط React، _ليست_ مكون واجهة المستخدم) إلى
+خطافات `@mission-platform/forge-jsx` ذات النمط React، _ليست_ مكون واجهة المستخدم) إلى
 مصدر لكل إطار (المرحلة 1).
 
 #### حدود

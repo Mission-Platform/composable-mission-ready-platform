@@ -139,7 +139,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 ### Règles de création
 
-1. **TypeScript Partout** : tout le code source doit être au format `.ts` ou `.tsx` (en utilisant `@mission-platform/forge`).
+1. **TypeScript Partout** : tout le code source doit être au format `.ts` ou `.tsx` (en utilisant `@mission-platform/forge-jsx`).
 2. **Neutralité du framework** : privilégier une logique indépendante du framework. Les composants doivent être créés une fois dans Forge JSX pour cibler
    plusieurs cadres.
 3. **Isolement** : les packages ne doivent jamais être importés à partir de `apps/`.

@@ -28,7 +28,7 @@
   - @mission-platform/components@3.1.0
   - @mission-platform/float@1.1.0
   - @mission-platform/forge-web-script-language-service@0.2.0
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/harper@0.2.2
   - @mission-platform/hunspell@0.4.2
   - @mission-platform/icons@2.0.1
@@ -90,6 +90,6 @@
   - @mission-platform/tokens@1.1.0
   - @mission-platform/forge-plugin-react@0.1.1
   - @mission-platform/forge-plugin-web-components@0.1.1
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0
   - @mission-platform/harper@0.2.1
   - @mission-platform/hunspell@0.4.1

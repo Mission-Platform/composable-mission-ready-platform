@@ -7,7 +7,7 @@
 
 חומרים קומפוזיציים הם הדרך העיקרית להקיף ולהשתמש מחדש בלוגיקה תגובתית בתוך פלטפורמת המשימה. כדי להבטיח את אלה
 יחידות הלוגיקה ניתנות לנייד בכל מסגרות ממשק המשתמש הנתמכות, הן נכתבו כמודולים של **כתיבה-פעם אחת** באמצעות
-ווים ניטרליים למסגרת הניתנים על ידי `@mission-platform/forge`.
+ווים ניטרליים למסגרת הניתנים על ידי `@mission-platform/forge-jsx`.
 
 ## פריסת ספרייה
 
@@ -26,7 +26,7 @@ src/composables/
 ## כללי כתיבה
 
 1. **השתמש ב-Forge Hooks**: ייבא רק פרימיטיבים תגובתיים (למשל, `useState`, `useEffect`, `useMemo`, `useRef`) מִן
-   `@mission-platform/forge`. לעולם אל תייבא ישירות מ `vue` אוֹ `react`.
+   `@mission-platform/forge-jsx`. לעולם אל תייבא ישירות מ `vue` אוֹ `react`.
 2. **מוסכמת השמות**: שמות הניתנים לחיבור חייבים להשתמש באותיות קבב ובקדימות `use-` (e.g., `use-media-query`).
 3. **בטיחות SSR**: ודא שהלוגיקה בטוחה לעיבוד בצד השרת. שמרו על כל גישה לממשקי API לדפדפן בלבד כמו `window`,
    `document`, או `localStorage`.
@@ -39,7 +39,7 @@ src/composables/
 הנה רכיב כתיבה טיפוסי לכתיבה פעם אחת שמנהל מאזין אירועים.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,

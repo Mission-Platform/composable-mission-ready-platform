@@ -34,8 +34,8 @@ describe("emitSolidModule", () => {
     const code = emit({
       imports: [
         moduleImport(
-          "import { h } from '@mission-platform/forge';",
-          "@mission-platform/forge",
+          "import { h } from '@mission-platform/forge-jsx';",
+          "@mission-platform/forge-jsx",
           { valueNames: ["h"] },
         ),
       ],
@@ -431,7 +431,7 @@ describe("emitSolidModule", () => {
 
       expect(code).toContain("class={classNames('a', active && 'b')}");
       expect(code).toContain(
-        'import { classNames } from "@mission-platform/forge";',
+        'import { classNames } from "@mission-platform/forge-jsx";',
       );
     });
 
@@ -454,8 +454,8 @@ describe("emitSolidModule", () => {
       const code = emit({
         imports: [
           moduleImport(
-            "import { classNames, Teleport, createContext, type MpChild, type MpRenderProperty } from '@mission-platform/forge';",
-            "@mission-platform/forge",
+            "import { classNames, Teleport, createContext, type MpChild, type MpRenderProperty } from '@mission-platform/forge-jsx';",
+            "@mission-platform/forge-jsx",
             {
               valueNames: ["classNames", "Teleport", "createContext"],
               typeNames: ["MpChild", "MpRenderProperty"],
@@ -466,10 +466,10 @@ describe("emitSolidModule", () => {
       });
 
       expect(code).toContain(
-        'import { classNames } from "@mission-platform/forge";',
+        'import { classNames } from "@mission-platform/forge-jsx";',
       );
       expect(code).toContain(
-        'import { Teleport } from "@mission-platform/forge/solid";',
+        'import { Teleport } from "@mission-platform/forge-adapters/solid";',
       );
       expect(code).toContain('import { createContext } from "solid-js";');
       expect(code).toContain('import type { JSX } from "solid-js";');
@@ -524,8 +524,8 @@ describe("emitSolidModule", () => {
       const code = emit({
         imports: [
           moduleImport(
-            "import type { MpChild } from '@mission-platform/forge';",
-            "@mission-platform/forge",
+            "import type { MpChild } from '@mission-platform/forge-jsx';",
+            "@mission-platform/forge-jsx",
             {
               typeNames: ["MpChild"],
               typeOnly: true,

@@ -39,7 +39,7 @@ graph TD
 
 ## Framework-Neutral Engine: Forge
 
-The heart of Mission Platform is `@mission-platform/forge`, a framework-neutral authoring model for components and
+The heart of Mission Platform is `@mission-platform/forge-jsx`, a framework-neutral authoring model for components and
 composables. `@mission-platform/vite-plugin-forge` is the neutral compiler driver: it parses and normalizes source,
 builds semantic IR, runs shared analysis and optimization, and dispatches to an explicitly supplied
 `FrameworkOutputPlugin`.

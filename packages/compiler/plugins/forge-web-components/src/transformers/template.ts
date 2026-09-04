@@ -5,7 +5,7 @@
  * Walks the neutral component's `GenericRenderNode` tree (never a TypeScript
  * AST, and never the raw module text) and produces a `html\`…\`` tagged-template
  * expression in the lit-html template dialect interpreted at runtime by
- * `@mission-platform/forge/web-components`:
+ * `@mission-platform/forge-adapters/web-components`:
  * - text and `{expr}` children become template text / `${expr}` holes,
  * - `class`/`className` → `class=${…}`, `htmlFor` → `for=${…}`,
  * - `onX` handlers → `@x=${…}` event bindings,

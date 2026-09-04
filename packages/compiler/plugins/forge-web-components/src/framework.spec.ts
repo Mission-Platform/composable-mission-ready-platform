@@ -29,8 +29,8 @@ import type {
 } from "@mission-platform/forge-plugin-api";
 
 const NEUTRAL_IMPORT = moduleImport(
-  "import { HtmlContent, useState, type MpElement } from '@mission-platform/forge';",
-  "@mission-platform/forge",
+  "import { HtmlContent, useState, type MpElement } from '@mission-platform/forge-jsx';",
+  "@mission-platform/forge-jsx",
   { valueNames: ["HtmlContent", "useState"], typeNames: ["MpElement"] },
 );
 
@@ -116,8 +116,8 @@ describe("Web Components Forge framework package", () => {
       semanticModule({
         imports: [
           moduleImport(
-            "import { Suspense } from '@mission-platform/forge';",
-            "@mission-platform/forge",
+            "import { Suspense } from '@mission-platform/forge-jsx';",
+            "@mission-platform/forge-jsx",
             { valueNames: ["Suspense"] },
           ),
         ],
@@ -146,7 +146,7 @@ describe("Web Components Forge framework package", () => {
     const generated = createCompilerPipeline().compile(
       {
         source: [
-          "import { h, type MpElement } from '@mission-platform/forge';",
+          "import { h, type MpElement } from '@mission-platform/forge-jsx';",
           "export function Fixture({ tag, wrapped }: { tag: string; wrapped: boolean }): MpElement {",
           "  if (!wrapped) return h(tag, {}, 'content');",
           "  return <span>content</span>;",
@@ -262,8 +262,8 @@ describe("Web Components Forge framework package", () => {
         moduleKind: "composable",
         imports: [
           moduleImport(
-            "import { useState } from '@mission-platform/forge';",
-            "@mission-platform/forge",
+            "import { useState } from '@mission-platform/forge-jsx';",
+            "@mission-platform/forge-jsx",
             {
               valueNames: ["useState"],
             },
@@ -284,7 +284,7 @@ describe("Web Components Forge framework package", () => {
 
     expect(generated.lang).toBe("ts");
     expect(generated.code).toContain(
-      "import { useState } from '@mission-platform/forge';",
+      "import { useState } from '@mission-platform/forge-jsx';",
     );
     expect(generated.code).toContain("export function useValue(): number {");
     expect(generated.code).not.toContain("ForgeElement");

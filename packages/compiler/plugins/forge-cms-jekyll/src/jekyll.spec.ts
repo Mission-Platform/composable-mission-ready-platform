@@ -377,7 +377,7 @@ describe("a custom include namespace", () => {
 
 describe("Jekyll diagnostics", () => {
   const COLLIDING = [
-    "import { h, Slot, type MpElement } from '@mission-platform/forge';",
+    "import { h, Slot, type MpElement } from '@mission-platform/forge-jsx';",
     "",
     "export interface PanelProperties {",
     "  /** Stick the panel to the top. */",

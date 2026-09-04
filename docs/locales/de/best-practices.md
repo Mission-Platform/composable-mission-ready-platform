@@ -59,7 +59,7 @@ Der gesamte neue Quellcode muss eingeschrieben werden TypeScript (`.ts`) oder Vu
 
 ### Framework-neutrale Komponenten
 
-Wenn möglich, erstellen Sie UI-Komponenten mithilfe von `@mission-platform/forge` Dialekt. Dadurch können Komponenten sein
+Wenn möglich, erstellen Sie UI-Komponenten mithilfe von `@mission-platform/forge-jsx` Dialekt. Dadurch können Komponenten sein
 zusammengestellt und verwendet Vue, React, Svelte, Solidund Webkomponenten, ohne die Kernlogik neu zu schreiben. Konfigurieren Sie die
 Consumer-Resolver mit dem Matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, oder `mp:web-component` Zustand.
 

@@ -38,7 +38,7 @@ function source(relativePath: string): string {
 }
 
 const HELPER_SOURCE = `
-import { h, type MpElement, useState } from '@mission-platform/forge';
+import { h, type MpElement, useState } from '@mission-platform/forge-jsx';
 
 interface Tab {
   id: string;
@@ -66,7 +66,7 @@ export function PanelFixture(properties: Readonly<PanelProperties>): MpElement {
 `;
 
 const BLOCK_BODIED_MENU_SOURCE = `
-import { h, type MpElement } from '@mission-platform/forge';
+import { h, type MpElement } from '@mission-platform/forge-jsx';
 
 type IconDirection = 'left' | 'right' | 'down';
 

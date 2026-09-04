@@ -106,7 +106,7 @@ export const CLASS_NAME_ATTRIBUTE;
 `className={…}` (התכונה `class` שמורה למחרוזות סטטיות),
 מעביר את אותם ארגומנטים שעוזר זמן הריצה `classNames` מקבל - רובם
 בדרך כלל **מערך** של ערכי מחלקה (`className={['base', { active }]}`),
-אבל כל {@link ייבוא בודד ('@mission-platform/forge').ClassValue} עובד גם כן.
+אבל כל {@link ייבוא בודד ('@mission-platform/forge-jsx').ClassValue} עובד גם כן.
 התכונה מאויתת זהה ל-React של `className` עצמו (בניגוד ל-
 עוזר זמן ריצה, שנשאר `classNames`) כך שרכיב יכול למזג את שלו
 מחלקות מחושבות עם `properties.className` מועבר ללא שם
@@ -154,7 +154,7 @@ export const COMPONENTS_JSX_MODULES;
 `@mission-platform/icons`, מחברים ניטרליים מייבאים את הרכיבים שלהם מהם
 חבילות (למשל `ForgeDrawer` מ-`@mission-platform/components/forge-drawer`, או
 `ForgeVerticalLayout` מ-`@mission-platform/layouts`), אשר בודקת סוג
-נגד המקור הנייטרלי ועיבוד דרך `@mission-platform/forge`
+נגד המקור הנייטרלי ועיבוד דרך `@mission-platform/forge-jsx`
 מתאמים בבדיקות יחידה. המקורות שנוצרו לפי מסגרת מייבאים אותם תחת
 אותו מפרט חשוף ממש - בחירת מסגרת מתרחשת דרך כל אחד מהם
 מצב הייצוא `mp:<framework>` של החבילה, לא דרך נתיב משנה.
@@ -796,12 +796,12 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 `MpRenderProperty<S>`, פונקציית scoped-slot / render-prop המחזירה א
 התוכן של משבצת עבור היקף נתון.
 
-במקום לשמור אותו בתור ייבוא `@mission-platform/forge` בקובץ שנוצר
+במקום לשמור אותו בתור ייבוא `@mission-platform/forge-jsx` בקובץ שנוצר
 קוד, כל בניית מסגרת פולטת מודול זעיר במיקום משותף
 ({@link LOCAL_JSX_TYPES_MODULE}) המגדיר **גרסה ספציפית למסגרת**
 ממנו - של React על `ReactNode`, של Vue על `VNodeChild` - וכל פולט
 מפנה את ייבוא הסוג לשם (ראה בוני React ו-Vue `imports`).
-אז המקורות שנוצרו אינם נושאים `@mission-platform/forge` ניטרלי
+אז המקורות שנוצרו אינם נושאים `@mission-platform/forge-jsx` ניטרלי
 render-prop **סוג** ייבוא בכלל.
 
 ### LOCAL_JSX_TYPES_FILE
@@ -867,7 +867,7 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 מסגרת: גרסאות ספציפיות למסגרת של הפרימיטיבים הניטרלים הנקראים
 ב-{@link LOCAL_JSX_TYPE_NAMES}, כך שהרכיבים שנוצרו מייבאים
 `MpRenderProperty` מהמודול המקומי הזה במקום הנייטרלי
-חבילת `@mission-platform/forge`. ההגדרות שונות לפי מסגרת: ה
+חבילת `@mission-platform/forge-jsx`. ההגדרות שונות לפי מסגרת: ה
 מיקום "תוכן שניתן לעיבוד" הוא `ReactNode` של React וה-`VNodeChild` של Vue,
 כך שההצהרות של כל build נקראות באופן אידיומטי עבור זמן הריצה שלה.
 
@@ -944,7 +944,7 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ייבוא ​​**ערך** ניטרלי שהם פרימיטיביות ההקשר. ב-React הם _הם_
 React משלו (`createContext`/`useContext`), כך שהם נופלים ל-
 `react` ייבוא ערך; ב-Vue היבוא שלהם מותאם מחדש ל-
-מתאם `@mission-platform/forge/vue` (מגובה `provide`/`inject`
+מתאם `@mission-platform/forge-adapters/vue` (מגובה `provide`/`inject`
 `createContext`/`useContext`).
 
 ### NEUTRAL_FRAMEWORK_COMPONENTS
@@ -958,15 +958,15 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ייבוא **ערך** ניטרלי שהם **רכיבים** אמיתיים לכל מסגרת
 מאשר סמנים, כלי זמן ריצה או הפרימיטיבים של React עצמו. השימוש ב-JSX שלהם
 נותר ללא נגיעה (הם נשארים תג רכיב), אבל שלהם
-`import { … } from '@mission-platform/forge'` מוקצה מחדש למטרה
+`import { … } from '@mission-platform/forge-jsx'` מוקצה מחדש למטרה
 היישום המקורי של המסגרת: `Teleport` (פרימיטיבי הפורטל) הופך
-`import { Teleport } from '@mission-platform/forge/react'` (א `createPortal`
+`import { Teleport } from '@mission-platform/forge-adapters/react'` (א `createPortal`
 עטיפה) עבור React ו-`import { Teleport } from 'vue'` (המובנית) עבור Vue;
 `Transition` (הפרימיטיבי של כניסה/צא) הופך ל-
-מנהל התקן `@mission-platform/forge/react` בדרגת CSS עבור React והתקן המובנה
+מנהל התקן `@mission-platform/forge-adapters/react` בדרגת CSS עבור React והתקן המובנה
 `import { Transition } from 'vue'` עבור Vue; `TransitionGroup` (הרשימה
 enter/leave/move פרימיטיבי) מותאם מחדש באותו אופן (ה
-מנהל ההתקן של קבוצת `@mission-platform/forge/react` עבור React, המובנה
+מנהל ההתקן של קבוצת `@mission-platform/forge-adapters/react` עבור React, המובנה
 `import { TransitionGroup } from 'vue'` עבור Vue).
 
 ### NEUTRAL_MODULE
@@ -989,7 +989,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 
 ייבוא **ערך** ניטרלי שהם כלי עזר לזמן ריצה אגנוסטיים למסגרת - הם
 להתנהג באופן זהה בכל מטרה, אז (בניגוד ל-`h` והווים, שהם
-תורגם/משנה לפי מסגרת) `import { … } from '@mission-platform/forge'` שלהם
+תורגם/משנה לפי מסגרת) `import { … } from '@mission-platform/forge-jsx'` שלהם
 חייב להישמר מילה במילה במקורות React ו-Vue שנוצרו.
 
 ### NEUTRAL_VUE_RUNTIME_HOOKS
@@ -1113,7 +1113,7 @@ export interface PropertySignature
 export const REACT_ADAPTER_MODULE;
 ```
 
-נתיב המשנה `@mission-platform/forge/react` שממנו מיובאים רכיבי המסגרת React.
+נתיב המשנה `@mission-platform/forge-adapters/react` שממנו מיובאים רכיבי המסגרת React.
 
 ### REACT_TYPE_ALIASES
 
@@ -1126,7 +1126,7 @@ export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 יבוא **סוג** ניטרלי שיש לו מקבילה React ממדרגה ראשונה נשלח על ידי
 `react` עצמו. ביעד React אלה נכתבים מחדש לשם React שלהם
 (מיובא `import type { … } from 'react'`) במקום נשמר כנייטרלי
-סוג `@mission-platform/forge`, אז מחברי React רואים את הסוג האידיומטי. כל
+סוג `@mission-platform/forge-jsx`, אז מחברי React רואים את הסוג האידיומטי. כל
 הפניה לשם הנייטרלי במקור הנפלט משתנה לשם המופה
 שם React (ראה את פולט React). הקרס הנייטרלי / עיבוד פרימיטיביים כל אחד
 יש מקביל React מדויק:
@@ -1284,7 +1284,7 @@ function readHasSlotName(call: ts.CallExpression): string | undefined;
 function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
-בדוק את כריכות `import … from '@mission-platform/forge'` של מודול.
+בדוק את כריכות `import … from '@mission-platform/forge-jsx'` של מודול.
 
 #### פרמטרים
 
@@ -1626,7 +1626,7 @@ function usesI18nextT(node: OxcNode): boolean;
 export const VUE_ADAPTER_MODULE;
 ```
 
-נתיב המשנה `@mission-platform/forge/vue` שממנו מיובאים פרימיטיביות ההקשר Vue.
+נתיב המשנה `@mission-platform/forge-adapters/vue` שממנו מיובאים פרימיטיביות ההקשר Vue.
 
 ### VUE_BUILTIN_COMPONENTS
 
@@ -1652,7 +1652,7 @@ export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 מכריז מחדש על **האלמנט** הפרימיטיביים הנייטרליים `MpChild` ו-`MpElement` בתור
 `VNodeChild` / `VNode` של Vue. תחת `jsxImportSource: 'vue'` א
 לביטוי JSX ב-SFC שנוצר יש סוג `JSX.Element` (כלומר `VNode` של Vue);
-שמירה על הגדרות `@mission-platform/forge` הנייטרליות (ממותגות עם
+שמירה על הגדרות `@mission-platform/forge-jsx` הנייטרליות (ממותגות עם
 `__mpElement`) יעשה כל `const x: MpElement = <div/>` /
 `MpChild[] = items.map(() => <li/>)` נכשל בבדיקת הקלדה תחת `vue-tsc`. React
 במקום זאת משנה את שמות אלה ל-`ReactNode`/`ReactElement` (ראה
@@ -1804,7 +1804,7 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 ```
 
 קומפלו **מודול הוק** ניטרלי אחד (ניתן לכתיבה פעם אחת שנכתב נגד
-ווים בסגנון React של `@mission-platform/forge`, _לא_ רכיב ממשק משתמש)
+ווים בסגנון React של `@mission-platform/forge-jsx`, _לא_ רכיב ממשק משתמש)
 מקור לכל מסגרת (שלב 1).
 
 #### פרמטרים

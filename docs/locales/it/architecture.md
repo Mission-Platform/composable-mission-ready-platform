@@ -44,7 +44,7 @@ graph TD
 
 ## Motore neutro rispetto al framework: Forge
 
-Il cuore di Mission Platform è `@mission-platform/forge`, un modello di creazione indipendente dal framework per componenti e
+Il cuore di Mission Platform è `@mission-platform/forge-jsx`, un modello di creazione indipendente dal framework per componenti e
 componibili. `@mission-platform/vite-plugin-forge` è il driver del compilatore neutro: analizza e normalizza il sorgente,
 crea IR semantico, esegue analisi e ottimizzazione condivise e invia a un file fornito esplicitamente
 `FrameworkOutputPlugin`.

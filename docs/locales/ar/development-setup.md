@@ -66,7 +66,7 @@ pnpm install
 قم بإجراء اختبار الدخان للتأكد من تكوين نظام البناء والبيئة بشكل صحيح:
 
 ```bash
-pnpm exec turbo run build --filter @mission-platform/forge...
+pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
 ال `...` يبني أيضًا تبعيات Forge التي تتطلبها الحزمة. ال

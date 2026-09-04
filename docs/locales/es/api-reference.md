@@ -20,7 +20,7 @@ paquete en lugar de esta página.
 
 ## Marco central
 
-### @mission-platform/forge
+### @mission-platform/forge-jsx
 
 La base de la arquitectura de "escritura única", que proporciona ganchos y un tiempo de ejecución JSX neutral en el marco.
 
@@ -32,8 +32,8 @@ La base de la arquitectura de "escritura única", que proporciona ganchos y un t
 | `useMemo` | Gancho | Gancho de memorización neutral en el marco.                                                     |
 | `useRef` | Gancho | Gancho de referencia neutral en el marco.                                                       |
 | `useContext` | Gancho | Gancho de contexto neutral al marco.                                                         |
-| `toVueComponent` | Adaptador | Convierte un componente de forja en un componente Vue 3 (de `@mission-platform/forge/vue`).   |
-| `toReactComponent` | Adaptador | Convierte un componente de forja en un componente React (de `@mission-platform/forge/react`). |
+| `toVueComponent` | Adaptador | Convierte un componente de forja en un componente Vue 3 (de `@mission-platform/forge-adapters/vue`).   |
+| `toReactComponent` | Adaptador | Convierte un componente de forja en un componente React (de `@mission-platform/forge-adapters/react`). |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -325,7 +325,7 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 
 | Paquete | Propósito |
 | :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge` | Adaptadores y tiempo de ejecución JSX neutrales en el marco de trabajo.                   |
+| `@mission-platform/forge-jsx` | Adaptadores y tiempo de ejecución JSX neutrales en el marco de trabajo.                   |
 | `@mission-platform/components` | Componentes de interfaz de usuario de escritura única.                                     |
 | `@mission-platform/icons` | Componentes de iconos SVG de escritura única.                               |
 | `@mission-platform/layouts` | Componentes de aplicación, contenedor y diseño responsivo.     |

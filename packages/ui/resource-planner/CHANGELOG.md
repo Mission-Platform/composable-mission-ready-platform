@@ -18,7 +18,7 @@
 - Updated dependencies [46fe17a]
 - Updated dependencies [9e59f09]
 - Updated dependencies [97c3f20]
-  - @mission-platform/forge@1.1.0
+  - @mission-platform/forge-jsx@1.1.0
   - @mission-platform/scheduler@0.3.0
   - @mission-platform/vcard@0.2.1
 
@@ -42,4 +42,4 @@
 - Updated dependencies [be97ac0]
   - @mission-platform/scheduler@0.2.0
   - @mission-platform/vcard@0.2.0
-  - @mission-platform/forge@1.0.0
+  - @mission-platform/forge-jsx@1.0.0

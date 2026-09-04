@@ -3,7 +3,7 @@ import { useIconHref } from '../../../../sprite/provider';
 
 import styles from './forge-icon-flag.module.scss';
 
-import type { MpElement } from '@mission-platform/forge';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 /** Supported country codes for the data-driven flag component. */
 export type IconCountryCode = (typeof SUPPORTED_COUNTRY_CODES)[number];

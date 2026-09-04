@@ -1,7 +1,7 @@
 # Atomic Component Design
 
 Mission Platform uses an **Atomic Design** system to organize components into hierarchical levels of complexity. Every
-component is a "write-once" unit authored in the neutral Forge JSX dialect (`@mission-platform/forge`), ensuring
+component is a "write-once" unit authored in the neutral Forge JSX dialect (`@mission-platform/forge-jsx`), ensuring
 consistency across multiple frameworks.
 
 ## Design Levels
@@ -70,7 +70,7 @@ const meta = {
 
 ## Authoring Standards
 
-1. **Framework Neutrality**: Never author separate Vue and React versions. Use `@mission-platform/forge`.
+1. **Framework Neutrality**: Never author separate Vue and React versions. Use `@mission-platform/forge-jsx`.
 2. **Naming**: Components should use the `Base` prefix (e.g., `ForgeCard`) unless they are specific implementations.
 3. **Type Safety**: Export a `*Properties` interface for the component's props.
 4. **Testing**: A co-located `.spec.ts` is required for every component.

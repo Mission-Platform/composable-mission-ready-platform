@@ -6,7 +6,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > Taal: Nederlands (nl)
 
 `@mission-platform/components` is de resterende, eenmaal beschrijfbare componentenbibliotheek voor het Mission Platform. Elk onderdeel erin
-deze bibliotheek is één keer geschreven met behulp van een raamwerkneutraal JSX-dialect (via `@mission-platform/forge`) en vervolgens gecompileerd op
+deze bibliotheek is één keer geschreven met behulp van een raamwerkneutraal JSX-dialect (via `@mission-platform/forge-jsx`) en vervolgens gecompileerd op
 bouw tijd in de native uitvoer van **Vue 3**, **React**, **Svelte**, **Solid** en **Web Component**.
 
 `ForgeTypography` is eigendom van het speciale `@mission-platform/typography`-pakket. Importeer het liever uit dat pakket
@@ -16,7 +16,7 @@ dan van `@mission-platform/components`.
 
 Dit pakket demonstreert een zeer efficiënte cross-framework-architectuur:
 
-- **Neutrale bron**: componenten worden geschreven in `.tsx`-bestanden met behulp van `@mission-platform/forge`.
+- **Neutrale bron**: componenten worden geschreven in `.tsx`-bestanden met behulp van `@mission-platform/forge-jsx`.
 - **Two-Stage Compilation**: met behulp van `@mission-platform/vite-plugin-forge` wordt de neutrale bron omgezet in
   raamwerkspecifieke broncode (Vue SFC's en React TSX) en vervolgens gecompileerd door de respectieve native toolchains.
 - **Zero Runtime Overhead**: er zijn geen runtime-adapters. Consumenten importeren native componenten met de kale

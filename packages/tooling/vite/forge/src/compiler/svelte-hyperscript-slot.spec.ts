@@ -15,7 +15,7 @@ import { compileComponentModule } from './compiler-test-helpers';
 const SVELTE_FRAMEWORK = forgeSvelteFramework();
 
 const SLOT_SOURCE = `
-import { h, Slot } from '@mission-platform/forge';
+import { h, Slot } from '@mission-platform/forge-jsx';
 
 export function SlotFixture() {
   return h(

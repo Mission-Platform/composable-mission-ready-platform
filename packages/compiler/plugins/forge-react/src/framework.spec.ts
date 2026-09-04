@@ -185,7 +185,7 @@ describe("React Forge framework package", () => {
     expect(generated.code).toContain("fallback=");
     expect(generated.code).toContain("loadContent()");
     expect(generated.code).toContain('import { Suspense } from "react";');
-    expect(generated.code).not.toContain("@mission-platform/forge");
+    expect(generated.code).not.toContain("@mission-platform/forge-jsx");
   });
 
   it("generates a composable module without a component", () => {

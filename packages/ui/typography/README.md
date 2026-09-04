@@ -1,7 +1,7 @@
 # `@mission-platform/typography`
 
 Write-once typography components for Mission Platform, authored with
-`@mission-platform/forge` and compiled into native Vue 3, React, Svelte, Solid,
+`@mission-platform/forge-jsx` and compiled into native Vue 3, React, Svelte, Solid,
 and Web Component builds.
 
 ## Installation

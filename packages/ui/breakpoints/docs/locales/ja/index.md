@@ -7,7 +7,7 @@
 
 `@mission-platform/breakpoints` は、応答性の高いブレークポイント ユーティリティと **ライトワンス** ビューポート コンポーネントを提供します。
 ミッションプラットフォーム。コンポーネント (`ForgeShowAt`、`ForgeHideAt`、`ForgeBreakpointDebug`) はニュートラルで一度作成されます。
-`@mission-platform/forge` 方言であり、`@mission-platform/vite-plugin-forge` によって **Vue 3 と React** の両方にコンパイルされています。
+`@mission-platform/forge-jsx` 方言であり、`@mission-platform/vite-plugin-forge` によって **Vue 3 と React** の両方にコンパイルされています。
 
 ## 輸出
 

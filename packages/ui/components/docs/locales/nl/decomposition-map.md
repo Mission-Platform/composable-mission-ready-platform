@@ -21,7 +21,7 @@ door deze migratie.
 
 Deze componenten delen toetsenbordnavigatie, zwervende focus, menu-/tabbladstatus en
 navigatiegerichte interactiecontracten. Hun neutrale implementaties zijn afhankelijk
-op `@mission-platform/forge`; menu- en tabelachtige bedieningselementen worden ook gebruikt
+op `@mission-platform/forge-jsx`; menu- en tabelachtige bedieningselementen worden ook gebruikt
 `@mission-platform/icons`, terwijl de inhoud van de broodkruimel/navigatiebalk het eigendom samenstelt
 `@mission-platform/typography`-pakket. `ForgeNavbar` componeert momenteel de
 resterende `ForgeDrawer`, dus voor het extraheren van de navigatie moet u deze behouden
@@ -36,7 +36,7 @@ een afhankelijkheid van `@mission-platform/components` terug in de navigatie.
 
 De algemene zorg is het gestructureerd weergeven van gegevens of grote hoeveelheden gegevens, inclusief
 venstering, sorteren, boomuitbreiding en statuspresentatie. De huidige bron
-gebruikt `@mission-platform/forge` en, waar tekst of glyphs zijn samengesteld,
+gebruikt `@mission-platform/forge-jsx` en, waar tekst of glyphs zijn samengesteld,
 `@mission-platform/typography` en `@mission-platform/icons`; deze moeten blijven
 afhankelijkheden op een lager niveau van een toekomstig pakket. Virtuele componenten moeten meebewegen
 hun co-located stijlen/specificaties/verhalen, dus hun neutrale hook-gedrag en vijf
@@ -60,7 +60,7 @@ de bronboom van het domeinpakket.
 
 De eerste drie bezitten de semantiek voor het laden/weergave van media, terwijl ze carrousel en apparaat zijn
 mock add-presentatie rond media. Hun neutrale bron is momenteel afhankelijk van
-`@mission-platform/forge` en, voor carrouselbesturingen, `@mission-platform/icons`;
+`@mission-platform/forge-jsx` en, voor carrouselbesturingen, `@mission-platform/icons`;
 er is geen afhankelijkheid van de uitgepakte pakketten. Behoud verminderde beweging en
 CSS per component als onderdeel van een toekomstige stap in plaats van het splitsen van mediagedrag
 van zijn stijlen.
@@ -101,7 +101,7 @@ dubbele implementaties als een snelkoppeling voor compatibiliteit.
 De bron van de resterende componenten werd gecontroleerd op import van de geëxtraheerde pakketten:
 er is geen import van `@mission-platform/theme`, `@mission-platform/float` of
 `@mission-platform/select` onder `packages/ui/components/src`. Neutrale componenten
-gebruik `@mission-platform/forge`, geselecteerde pictogrammen uit `@mission-platform/icons`,
+gebruik `@mission-platform/forge-jsx`, geselecteerde pictogrammen uit `@mission-platform/icons`,
 typografie van `@mission-platform/typography`, en pakket-lokale stijlen/hulpprogramma's.
 Verhalen kunnen het pakketvat importeren om het publieke oppervlak te oefenen; dat is niet zo
 een implementatieafhankelijkheid of een pakketcyclus.

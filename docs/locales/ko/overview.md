@@ -23,7 +23,7 @@ Mission Platform은 구축을 위해 설계된 구성 가능하고 패키지 중
 
 ### 다중 프레임워크 설계
 
-Mission Platform은 프레임워크 중립적인 개발 패러다임을 도입합니다. `@mission-platform/forge` JSX 방언을 사용하여,
+Mission Platform은 프레임워크 중립적인 개발 패러다임을 도입합니다. `@mission-platform/forge-jsx` JSX 방언을 사용하여,
 개발자는 구성 요소를 한 번 작성하고 Vue 3, React, Solid, Svelte 및 웹에 대한 기본 출력으로 컴파일할 수 있습니다.
 구성 요소. 이를 통해 코드베이스가 미래에 대비하고 다양한 프런트엔드 환경에 원활하게 통합될 수 있습니다.
 
@@ -48,7 +48,7 @@ Mission Platform은 프레임워크 중립적인 개발 패러다임을 도입�
 
 Mission Platform은 최신 고성능 스택을 기반으로 구축되었습니다.
 
-- **Forge JSX(`@mission-platform/forge`)**: 기본 UI 프레임워크 — 프레임워크 중립적인 JSX 런타임으로 모든
+- **Forge JSX(`@mission-platform/forge-jsx`)**: 기본 UI 프레임워크 — 프레임워크 중립적인 JSX 런타임으로 모든
   공유 구성 요소(앱을 제외한 모든 것)가 작성됩니다.
 - **Vue 3**: `apps/`의 애플리케이션이 빌드되는 프레임워크이자 여러 기본 렌더 타겟 중 하나입니다.
   위조 구성 요소.
