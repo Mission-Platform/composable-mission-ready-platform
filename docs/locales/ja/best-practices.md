@@ -1,45 +1,39 @@
-# ミッションプラットフォームのベストプラクティス
+# Mission Platform Best Practices
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+This document outlines the core principles, architecture, and coding standards for the Mission Platform monorepo. It
+serves as an **Explanation** of why we follow certain patterns and a **Guideline** for day-to-day development.
 
-> 英語の原典: [docs/best-practices.md](../../best-practices.md)
-> 言語: 日本語 (ja)
+## Core Principles
 
-このドキュメントでは、Mission Platform モノリポジトリの中心となる原則、アーキテクチャ、およびコーディング標準の概要を説明します。それ
-これは、特定のパターンに従う理由の**説明**、および日々の開発の**ガイドライン**として機能します。
+### Composable Architecture
 
-## 基本原則
+Mission Platform follows a package-driven, composable architecture. Reusable building blocks (UI components,
+composables, utilities) live in `packages/`, while deployable applications are assembled from these blocks in `apps/`.
 
-### コンポーザブルアーキテクチャ
+### Dependency Discipline
 
-Mission Platform は、パッケージ駆動型の構成可能なアーキテクチャに従っています。再利用可能なビルディング ブロック (UI コンポーネント、
-コンポーザブル、ユーティリティ) に住んでいます `packages/`一方、デプロイ可能なアプリケーションはこれらのブロックから組み立てられます。 `apps/`.
+To maintain a maintainable monorepo, we enforce a strict one-way dependency flow:
 
-### 依存関係の規律
+- **`apps`** → **`packages`**
+- **`packages`** → lower-level domain packages such as **`core`**, **`tooling`**, and **`compiler`**
 
-保守可能なモノリポジトリを維持するために、厳密な一方向の依存関係フローを強制します。
+**Rule:** Code in `packages/` must **never** import from `apps/`. This prevents circular dependencies and ensure
+packages remain truly reusable.
 
-- **`apps`** → **`packages`** / **`vite-plugins`** / **`workers`**
-- **`packages`** / **`vite-plugins`** / **`workers`** → **`configs`**
-- **`apps`** → **`configs`** (ツール/ビルド構成用に直接)
+### Storybook as Workbench
 
-**ルール:** コードイン `packages/` からインポートしてはなりません** `apps/`。これにより、循環依存関係が防止され、
-パッケージは引き続き真に再利用可能です。
+When adding or modifying components in `packages/`, use the Storybook app (`apps/storybook`) as your primary development
+environment. The `apps/storybook` app does not contain the stories itself — it is the aggregating workbench that
+discovers and renders the stories that live alongside their components.
 
-### ワークベンチとしてのストーリーブック
+- Co-locate each `.stories.tsx` file with its component inside that component's package directory (e.g.
+  `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), not under `apps/storybook`. This matches
+  the convention in [Atomic Component Design](atomic-component-design.md).
+- Verify component behavior across Vue, React, Svelte, Solid, and Web Components by switching the
+  `STORYBOOK_FRAMEWORK` environment variable. Each mode must consume the same neutral story inventory; a missing
+  framework artifact is a package/export failure, not a reason to filter that story out.
 
-コンポーネントを追加または変更する場合 `packages/`、Storybook アプリを使用します (`apps/storybook`) あなたの主な開発として
-環境。の `apps/storybook` アプリにはストーリー自体は含まれていません。それは集約ワークベンチです。
-コンポーネントとともに存在するストーリーを発見してレンダリングします。
-
-- それぞれを同じ場所に配置 `.stories.tsx` ファイルとそのコンポーネントをそのコンポーネントのパッケージ ディレクトリ内に保存します (例:
-  `packages/components/src/components/**/<component>/<component>.stories.tsx`)、以下ではありません `apps/storybook`。これは一致します
-  の大会 [アトミックコンポーネント設計](atomic-component-design.md)。
-- 全体にわたるコンポーネントの動作を検証する Vue, React, Svelte, Solid、Web コンポーネントを切り替えることで、
-  `STORYBOOK_FRAMEWORK` 環境変数。各モードは同じニュートラル ストーリー インベントリを消費する必要があります。行方不明の
-  フレームワークのアーティファクトはパッケージ/エクスポートの失敗であり、その話を除外する理由ではありません。
-
-完全な静的検証ループは次のとおりです。
+The full static validation loop is:
 
 ```bash
 for framework in vue react svelte solid web-component; do
@@ -47,61 +41,61 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-## 開発基準
+## Development Standards
 
-### TypeScript どこでも
+### TypeScript Everywhere
 
-新しいソース コードはすべて次のように記述する必要があります。 TypeScript (`.ts`) または Vue SFCと `<script setup lang="ts">`.
+All new source code must be written in TypeScript (`.ts`) or Vue SFCs with `<script setup lang="ts">`.
 
-- **厳密モード**: `strict: true` すべてに適用されます `tsconfig.json` ファイル。
-- **明示的なタイプ**: すべてのパブリック API、エクスポートされた関数、およびコンポーザブルに明示的なタイプを提供します。
-- **避ける `any`**: 正確な型またはジェネリックを使用します。型が本当に不明な場合は、次を使用します。 `unknown` そして型の絞り込みを実行します。
+- **Strict Mode**: `strict: true` is enforced across all `tsconfig.json` files.
+- **Explicit Types**: Provide explicit types for all public APIs, exported functions, and composables.
+- **Avoid `any`**: Use precise types or generics. If a type is truly unknown, use `unknown` and perform type narrowing.
 
-### フレームワークに依存しないコンポーネント
+### Framework-Neutral Components
 
-可能な限り、UI コンポーネントを作成するには、 `@mission-platform/forge` 方言。これにより、コンポーネントを
-でコンパイルされ、使用されます Vue, React, Svelte, Solid、および Web コンポーネントを、コア ロジックを書き換えることなく利用できます。を設定します。
-一致するコンシューマのリゾルバ `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`、 または `mp:web-component` 状態。
+Whenever possible, author UI components using the `@mission-platform/forge` dialect. This allows components to be
+compiled and used in Vue, React, Svelte, Solid, and Web Components without rewriting the core logic. Configure the
+consumer's resolver with the matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, or `mp:web-component` condition.
 
-### 反応性パターン (Vue 3)
+### Reactivity Patterns (Vue 3)
 
-- **Composition API** のみを使用してください。
-- 好む `ref()` ほとんどの状態では一貫性が維持されます。
-- 複雑なステートフル ロジックを **コンポーザブル** に抽出 (`useXxx`)。
-- すべての副作用 (ウォッチャー、インターバル、イベント リスナー) が適切にクリーンアップされていることを確認します。 `onUnmounted`.
+- Use the **Composition API** exclusively.
+- Prefer `ref()` for most state to maintain consistency.
+- Extract complex stateful logic into **Composables** (`useXxx`).
+- Ensure all side effects (watchers, intervals, event listeners) are properly cleaned up in `onUnmounted`.
 
-## モノリポジトリのワークフロー
+## Monorepo Workflow
 
-### 懸念事項の分離
+### Isolation of Concerns
 
-- **新しい UI コンポーネント**: に属します `packages/`。
-- **共有ユーティリティ**: に属します `packages/`。
-- **Lint/フォーマット/ビルド ツール**: 共有構成は以下に属します。 `configs/`.
+- **New UI Components**: Belong in `packages/`.
+- **Shared Utilities**: Belong in `packages/`.
+- **Lint/Format/Build Tooling**: Shared configurations belong in `packages/tooling/configs/`.
 
-### リンティングとフォーマット
+### Linting and Formatting
 
-一貫したコード スタイルは次の方法で適用されます。 ESLint そして Prettier.
+Consistent code style is enforced via ESLint and Prettier.
 
-- 走る `pnpm lint` 違反をチェックするため。
-- 走る `pnpm format:write` フォーマットの問題を自動的に修正します。
-- コミット メッセージは **従来のコミット** 仕様に従う必要があります。
+- Run `pnpm lint` to check for violations.
+- Run `pnpm format:write` to automatically fix formatting issues.
+- Commit messages must follow the **Conventional Commits** specification.
 
-## パフォーマンスの最適化
+## Performance Optimization
 
-- **コード分割**: 動的を使用する `import()` 重要ではない機能や大規模なライブラリの場合。
-- **アセットの最適化**: 最新の画像形式 (WebP/AVIF) を優先し、すべての静的アセットが圧縮されていることを確認します。
-- **反応性オーバーヘッド**: 使用します `shallowRef` 深い反応性を必要としない大きなオブジェクト用。
+- **Code Splitting**: Use dynamic `import()` for non-critical features and large libraries.
+- **Asset Optimization**: Prefer modern image formats (WebP/AVIF) and ensure all static assets are compressed.
+- **Reactivity Overhead**: Use `shallowRef` for large objects that do not require deep reactivity.
 
-## テストと文書化
+## Testing and Documentation
 
-- **テスト駆動開発**: すべての新機能やバグ修正には単体テストを伴う必要があります (`.spec.ts`)。
-- **Diátaxis ドキュメント**: Diátaxis フレームワークに従ってドキュメントを作成します (チュートリアル、ハウツー、リファレンス、
-  説明）。
-- **TSDoc**: IDE インテリジェンスを強化するために、すべての公開メソッドとプロパティに TSDoc/JSDoc を使用します。
+- **Test-Driven Development**: Every new feature or bug fix should be accompanied by unit tests (`.spec.ts`).
+- **Diátaxis Documentation**: Author documentation following the Diátaxis framework (Tutorials, How-to, Reference,
+  Explanation).
+- **TSDoc**: Use TSDoc/JSDoc for all public-facing methods and properties to power IDE intelligence.
 
-## 関連リソース
+## Related Resources
 
-- [テストガイド](testing.md)
-- [フレームワークのベストプラクティス](framework-best-practices.md)
-- [ワークスペースの構造](workspace-structure.md)
-- [トラブルシューティング](troubleshooting.md)
+- [Testing Guide](testing.md)
+- [Framework Best Practices](framework-best-practices.md)
+- [Workspace Structure](workspace-structure.md)
+- [Troubleshooting](troubleshooting.md)
