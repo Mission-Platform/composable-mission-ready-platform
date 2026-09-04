@@ -2,8 +2,7 @@
 
 This project-wide page is a directory of package capabilities and compatibility
 contracts. The canonical installation, usage, limitations, and API details for
-each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
-and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+each package live beside that package under its full `packages/**/docs/` path. Generated API references must be added to the owning
 package rather than this page.
 
 > **Las importaciones siempre están vacías.** Envío del marco `@mission-platform/*` Los paquetes exponen un solo `.`
@@ -360,9 +359,9 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 
 ### Forjar objetivos del compilador
 
-Estos viven en `forge-plugins/` en vez de `packages/`. Un complemento **framework** decide en qué tiempo de ejecución es un componente neutral
+These live in `packages/compiler/plugins/`. Un complemento **framework** decide en qué tiempo de ejecución es un componente neutral
 se reduce a; un destino **CMS** decide en qué plataforma de contenido se proyecta. Los dos ejes se componen, por lo que cualquier CMS
-El objetivo puede estar vinculado a cualquier complemento del marco. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
+El objetivo puede estar vinculado a cualquier complemento del marco. See the [Forge Compiler Pipeline](../packages/tooling/vite/forge/docs/reference/compiler.md).
 
 | Paquete                                         | Propósito                                                                                                            |
 | :---------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
