@@ -1,30 +1,25 @@
-# アトミックコンポーネント設計
+# Atomic Component Design
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+Mission Platform uses an **Atomic Design** system to organize components into hierarchical levels of complexity. Every
+component is a "write-once" unit authored in the neutral Forge JSX dialect (`@mission-platform/forge-jsx`), ensuring
+consistency across multiple frameworks.
 
-> 英語の原典: [docs/atomic-component-design.md](../../atomic-component-design.md)
-> 言語: 日本語 (ja)
+## Design Levels
 
-Mission Platform は **Atomic Design** システムを使用して、コンポーネントを複雑な階層レベルに編成します。毎
-コンポーネントは、中立的な Forge JSX 方言 (`@mission-platform/forge`)、確保する
-複数のフレームワークにわたる一貫性。
+Components are categorized into five levels based on their scope and responsibility.
 
-## 設計レベル
+| Level         | Folder                      | Description                                                                                                                                                                                                                                                       |
+| :------------ | :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atoms**     | `src/components/atoms/`     | Smallest UI primitives (e.g., `ForgeButton`, `ForgeInput`, `ForgeBadge`). They are typically functional units that cannot be broken down further without losing their purpose. |
+| **Molecules** | `src/components/molecules/` | Simple compositions of atoms (e.g., `ForgeSearchInput`, `ForgeFieldSet`). They function together as a unit.                                                                    |
+| **Organisms** | `src/components/organisms/` | Complex UI sections composed of atoms, molecules, and other organisms (e.g., `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                                       |
+| **Templates** | `src/components/templates/` | Page-level layouts that define the content structure (e.g., `ForgeHero`, `ForgeAppLayout`). They often use slots to define where content should be placed.                     |
+| **Pages**     | `src/components/pages/`     | Specific instances of templates populated with concrete content and data (e.g., `AccountSettingsPage`).                                                                                        |
 
-コンポーネントは、その範囲と責任に基づいて 5 つのレベルに分類されます。
+## Component Folder Layout
 
-|レベル |フォルダー |説明 |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **原子** | `src/components/atoms/`     |最小の UI プリミティブ (例: `ForgeButton`, `ForgeInput`, `ForgeBadge`)。これらは通常、目的を失わずにさらに分解することのできない機能単位です。 |
-| **分子** | `src/components/molecules/` |原子の単純な組成 (例: `ForgeSearchInput`, `ForgeFieldSet`)。これらは 1 つのユニットとして一緒に機能します。                                                                    |
-| **生物** | `src/components/organisms/` |原子、分子、その他の生物で構成される複雑な UI セクション (例: `ForgeNavbar`, `ForgeTable`, `ForgeModal`)。                                                       |
-| **テンプレート** | `src/components/templates/` |コンテンツ構造を定義するページレベルのレイアウト (例: `ForgeHero`, `ForgeAppLayout`)。多くの場合、コンテンツを配置する場所を定義するためにスロットが使用されます。                     |
-| **ページ** | `src/components/pages/`     |具体的なコンテンツとデータが入力されたテンプレートの特定のインスタンス (例: `AccountSettingsPage`).                                                                        |
-
-## コンポーネントフォルダーのレイアウト
-
-各コンポーネントは、適切なレベルのフォルダーの下の独自の名前付きサブディレクトリに存在します。このディレクトリには、
-コンポーネントのソース、ストーリー、テスト、およびオプションのスタイル。
+Each component resides in its own named subdirectory under the appropriate level folder. This directory contains the
+component source, stories, tests, and optional styles.
 
 ```text
 src/components/
@@ -42,28 +37,28 @@ src/components/
 └── index.ts                         # Global barrel re-exporting all levels
 ```
 
-## ストーリーの慣例
+## Story Conventions
 
-ストーリーブックのストーリーは、そのコンポーネントと同じ場所に配置し、クリーンな状態を維持するために厳格なタイトル規則に従う必要があります。
-サイドバー構造。
+Storybook stories MUST be co-located with their components and follow a strict title convention to maintain a clean
+sidebar structure.
 
-### ファイル名
+### Filename
 
-ストーリーでは、 `.stories.tsx` 拡大。
+Stories must use the `.stories.tsx` extension.
 
-### タイトルの表記規則
+### Title Convention
 
-の `title` ストーリーブックのフィールド `meta` オブジェクトは次のパターンに従う必要があります。
+The `title` field in the Storybook `meta` object must follow this pattern:
 
 ```text
 <Level>/<Category>/<Component>
 ```
 
-- **レベル**: 大文字の複数形 (例: `Atoms`, `Molecules`)。
-- **カテゴリ**: 機能的なグループ化 (例: `Forms`, `Navigation`, `Display`, `Feedback`)。
-- **コンポーネント**: PascalCase コンポーネント名 (例: `ForgeButton`).
+- **Level**: Capitalized plural (e.g., `Atoms`, `Molecules`).
+- **Category**: Functional grouping (e.g., `Forms`, `Navigation`, `Display`, `Feedback`).
+- **Component**: PascalCase component name (e.g., `ForgeButton`).
 
-**例 （`forge-button.stories.tsx`):**
+**Example (`forge-button.stories.tsx`):**
 
 ```tsx
 const meta = {
@@ -73,22 +68,22 @@ const meta = {
 };
 ```
 
-## オーサリング標準
+## Authoring Standards
 
-1. **フレームワークの中立性**: 決して別個に作成しない Vue そして React バージョン。使用 `@mission-platform/forge`。
-2. **命名**: コンポーネントは `Base` プレフィックス (例: `ForgeCard`) 特定の実装でない限り。
-3. **タイプ セーフティ**: エクスポート `*Properties` コンポーネントの小道具のインターフェース。
-4. **テスト**: 同じ場所にある `.spec.ts` すべてのコンポーネントに必要です。
-5. **足場**: `scaffold_component` MCP ツールは、正しいディレクトリ構造と定型文を確認します。
+1. **Framework Neutrality**: Never author separate Vue and React versions. Use `@mission-platform/forge-jsx`.
+2. **Naming**: Components should use the `Base` prefix (e.g., `ForgeCard`) unless they are specific implementations.
+3. **Type Safety**: Export a `*Properties` interface for the component's props.
+4. **Testing**: A co-located `.spec.ts` is required for every component.
+5. **Scaffolding**: Use the `scaffold_component` MCP tool to ensure the correct directory structure and boilerplate.
 
 ```bash
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
 
-## 関連ガイド
+## Related Guides
 
-- [パッケージ開発](package-development.md)
-- [コンポーザブルオーサリング](composable-authoring.md)
-- [ストアオーサリング](store-authoring.md)
-- [ユーティリティオーサリング](util-authoring.md)
+- [Package Development](package-development.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
