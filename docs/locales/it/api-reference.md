@@ -2,8 +2,7 @@
 
 This project-wide page is a directory of package capabilities and compatibility
 contracts. The canonical installation, usage, limitations, and API details for
-each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
-and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+each package live beside that package under its full `packages/**/docs/` path. Generated API references must be added to the owning
 package rather than this page.
 
 > **Le importazioni sono sempre scarne.** Spedizione quadro `@mission-platform/*` i pacchetti espongono un singolo `.`
@@ -361,9 +360,9 @@ pacchetto dentro `packages/`, incluse le facciate WebAssembly tipizzate.
 
 ### Obiettivi del compilatore Forge
 
-Questi vivono dentro `forge-plugins/` piuttosto che `packages/`. Un plugin **framework** decide quale runtime è un componente neutro
+These live in `packages/compiler/plugins/`. Un plugin **framework** decide quale runtime è un componente neutro
 è abbassato a; un target **CMS** decide su quale piattaforma di contenuti viene proiettato. I due assi si compongono, quindi qualsiasi CMS
-target può essere associato a qualsiasi plugin del framework. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
+target può essere associato a qualsiasi plugin del framework. See the [Forge Compiler Pipeline](../packages/tooling/vite/forge/docs/reference/compiler.md).
 
 | Pacchetto                                       | Purpose                                                                                                         |
 | :---------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
