@@ -1,50 +1,47 @@
-# Développement d'applications
+# Application Development
 
-Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
+This how-to guide explains how to run, test, and deploy the applications in `apps/`. Applications compose reusable
+packages; shared components, composables, utilities, and configuration belong in their owning workspace instead of being
+copied into an app.
 
-> Source anglaise: [docs/application-development.md](../../application-development.md)
-> Langue: Français (fr)
+## Choose an application
 
-Ce guide pratique explique comment exécuter, tester et déployer les applications dans `apps/`. Les applications composent réutilisable
-forfaits; les composants partagés, les composables, les utilitaires et la configuration appartiennent à leur propre espace de travail au lieu d'être
-copié dans une application.
-
-## Choisissez une application
-
-| Demande | Développement local | Construire | Déploiement |
-|:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | Prévisualiser ou déployer via son hébergeur |
-| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
-| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
+| Application                         | Local development                                     | Build                                                   | Deployment                                                       |
+| :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------- |
+| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | Preview or deploy through its hosting worker                     |
+| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`         |
+| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`   |
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` | Utiliser le flux de travail Storybook/Chromatic configuré |
+| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | Use the configured Storybook/Chromatic workflow                  |
 
-Le dossier de candidature possède son Vite ou Wrangler configuration. Ne cours pas `wrangler deploy` d'un travailleur réutilisable
-package sauf si ce package a son propre `wrangler.jsonc`.
+The application package owns its Vite or Wrangler configuration. Do not run `wrangler deploy` from a reusable worker
+package unless that package has its own `wrangler.jsonc`.
 
-## Développer un changement
+## Develop a change
 
-1. Démarrez l'application cible avec son package `dev` scénario.
-2. Apportez des modifications réutilisables dans `packages/` et les changements de composition spécifiques à l'application dans `apps/<name>/`.
-3. Créez l'application modifiée et ses dépendances :
+1. Start the target application with its package `dev` script.
 
-```bash
+2. Make reusable changes in `packages/` and app-specific composition changes in `apps/<name>/`.
+
+3. Build the changed application and its dependencies:
+
+   ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
    ```
 
-4. Exécutez des tests, des peluches, des vérifications de style et un formatage pour l'espace de travail concerné :
+4. Run tests, lint, style checks, and formatting for the affected workspace:
 
-```bash
+   ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
    ```
 
-Pour un changement de package partagé, remplacez `<app>` avec le nom du package et son utilisation `...` lorsque vous avez besoin d'espaces de travail dépendants
-inclus dans le graphique de construction.
+For a shared package change, replace `<app>` with the package name and use `...` when you need dependent workspaces
+included in the build graph.
 
-## Documentation statique et création de sites Web
+## Static documentation and website builds
 
-Les documents et applications de sites Web utilisent `vite-ssg`. Une version de production génère des routes statiques à partir du contenu source et
-catalogues locaux. Vérifiez la sortie générée avec le package `preview` scénario:
+The docs and website applications use `vite-ssg`. A production build generates static routes from the source content and
+locale catalogues. Check the generated output with the package's `preview` script:
 
 ```bash
 pnpm --filter @mission-platform/docs build
@@ -54,12 +51,12 @@ pnpm --filter @mission-platform/website build
 pnpm --filter @mission-platform/website preview
 ```
 
-Conserver la documentation Markdown sous `docs/` et les messages du site Web dans le catalogue local propriétaire. N'ajoutez pas une seconde
-copie au moment du rendu de l'une ou l'autre source.
+Keep documentation Markdown under `docs/` and website messages in the owning locale catalogue. Do not add a second
+render-time copy of either source.
 
-## Développement et déploiement Cloudflare
+## Cloudflare development and deployment
 
-Les candidatures avec un `wrangler.jsonc` exposez les commandes sensibles à l'environnement :
+Applications with a `wrangler.jsonc` expose environment-aware commands:
 
 ```bash
 pnpm --filter @mission-platform/website cf:dev
@@ -71,13 +68,13 @@ pnpm --filter @mission-platform/my-care-notes deploy:staging
 pnpm --filter @mission-platform/service-monitor deploy:staging
 ```
 
-Utiliser `wrangler secret put` pour les secrets. Conserver les liaisons et les valeurs par défaut non secrètes dans `wrangler.jsonc`, et vérifiez le
-l'environnement sélectionné avant le déploiement.
+Use `wrangler secret put` for secrets. Keep bindings and non-secret defaults in `wrangler.jsonc`, and verify the
+selected environment before deploying.
 
-## Guides associés
+## Related guides
 
-- [Configuration du développement](development-setup.md)
-- [Structure de l'espace de travail](workspace-structure.md)
-- [Construire un système](build-system.md)
-- [Configuration du travailleur](configs/workers-config.md)
-- [Essai](testing.md)
+- [Development Setup](development-setup.md)
+- [Workspace Structure](workspace-structure.md)
+- [Build System](build-system.md)
+- [Worker Configuration](packages/tooling/configs/workers-config.md)
+- [Testing](testing.md)
