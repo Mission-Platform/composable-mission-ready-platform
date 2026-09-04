@@ -1,18 +1,13 @@
-# השתמש בכתיבה
+# Util Authoring
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+Utilities (utils) are pure, framework-agnostic helper functions. They should be free of UI framework imports and, unless
+explicitly required and documented, free of DOM APIs. This ensures they can be used in any context, including
+server-side logic and workers.
 
-> מקור באנגלית: [docs/util-authoring.md](../../util-authoring.md)
-> שפה: עברית (he)
+## Directory Layout
 
-Utilities (Utils) הם פונקציות מסייעות טהורות ואגנוסטיות למסגרת. הם צריכים להיות נקיים מייבוא של מסגרת ממשק משתמש, אלא אם כן
-נדרש ומתועד במפורש, ללא ממשקי API של DOM. זה מבטיח שניתן להשתמש בהם בכל הקשר, כולל
-לוגיקה ועובדים בצד השרת.
-
-## פריסת ספרייה
-
-כל כלי שירות אמור להתגורר בספריית המשנה בעלת השם שלו בתוכו `src/utils/`, מלווה בקובץ בדיקה משותף ו
-חבית מקומית.
+Each utility SHOULD reside in its own named subdirectory within `src/utils/`, accompanied by a co-located test file and
+a local barrel.
 
 ```text
 src/utils/
@@ -23,17 +18,17 @@ src/utils/
 └── index.ts                  # Package-level re-exports
 ```
 
-## כללי כתיבה
+## Authoring Rules
 
-1. **טוהר**: העדיפו פונקציות טהורות שאין להן תופעות לוואי. בהינתן אותו קלט, הם צריכים תמיד להחזיר את
-   אותו פלט.
-2. **ללא ווי UI**: לעולם אל תייבא `vue`, `react`, או `@mission-platform/forge` ווים ב- util. היגיון דורש
-   תגובתיות שייכת ל [חומרי חיבור](composable-authoring.md).
-3. **הקלדה מפורשת**: ספק מלא TypeScript סוגים עבור כל הארגומנטים וערכי החזרה.
-4. **בחינה חובה**: לכל שירות חייב להיות מיקום משותף `.spec.ts` קוֹבֶץ.
-5. **אחריות יחידה**: כל תיקיית util צריכה להתמקד במשימה ספציפית וצרה.
+1. **Purity**: Prefer pure functions that do not have side effects. Given the same input, they should always return the
+   same output.
+2. **No UI Hooks**: Never import `vue`, `react`, or `@mission-platform/forge-jsx` hooks in a util. Logic requiring
+   reactivity belongs in [Composables](composable-authoring.md).
+3. **Explicit Typing**: Provide full TypeScript types for all arguments and return values.
+4. **Mandatory Testing**: Every util must have a co-located `.spec.ts` file.
+5. **Single Responsibility**: Each util folder should focus on a specific, narrow task.
 
-## דוגמה בסיסית
+## Basic Example
 
 ```ts
 /**
@@ -44,18 +39,18 @@ export function clamp(value: number, min: number, max: number): number {
 }
 ```
 
-## פיגומים
+## Scaffolding
 
-השתמש בכלי Mission Platform Developer MCP כדי ליצור שלד שירות חדש:
+Use the Mission Platform Developer MCP tool to generate a new utility skeleton:
 
 ```bash
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
 
-## מדריכים קשורים
+## Related Guides
 
-- [פיתוח חבילות](package-development.md)
-- [עיצוב רכיבים אטומיים](atomic-component-design.md)
-- [כתיבה ניתנת לחיבור](composable-authoring.md)
-- [עריכת חנות](store-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
