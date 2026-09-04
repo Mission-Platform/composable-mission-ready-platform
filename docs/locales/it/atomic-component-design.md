@@ -1,30 +1,25 @@
-# Progettazione di componenti atomici
+# Atomic Component Design
 
-Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
+Mission Platform uses an **Atomic Design** system to organize components into hierarchical levels of complexity. Every
+component is a "write-once" unit authored in the neutral Forge JSX dialect (`@mission-platform/forge-jsx`), ensuring
+consistency across multiple frameworks.
 
-> Fonte inglese: [docs/atomic-component-design.md](../../atomic-component-design.md)
-> Lingua: Italiano (it)
+## Design Levels
 
-Mission Platform utilizza un sistema di **Atomic Design** per organizzare i componenti in livelli gerarchici di complessità. Ogni
-Il componente è un'unità "write-once" creata nel dialetto neutro Forge JSX (`@mission-platform/forge`), assicurando
-coerenza tra più framework.
+Components are categorized into five levels based on their scope and responsibility.
 
-## Livelli di progettazione
+| Level         | Folder                      | Description                                                                                                                                                                                                                                                       |
+| :------------ | :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atoms**     | `src/components/atoms/`     | Smallest UI primitives (e.g., `ForgeButton`, `ForgeInput`, `ForgeBadge`). They are typically functional units that cannot be broken down further without losing their purpose. |
+| **Molecules** | `src/components/molecules/` | Simple compositions of atoms (e.g., `ForgeSearchInput`, `ForgeFieldSet`). They function together as a unit.                                                                    |
+| **Organisms** | `src/components/organisms/` | Complex UI sections composed of atoms, molecules, and other organisms (e.g., `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                                       |
+| **Templates** | `src/components/templates/` | Page-level layouts that define the content structure (e.g., `ForgeHero`, `ForgeAppLayout`). They often use slots to define where content should be placed.                     |
+| **Pages**     | `src/components/pages/`     | Specific instances of templates populated with concrete content and data (e.g., `AccountSettingsPage`).                                                                                        |
 
-I componenti sono classificati in cinque livelli in base al loro ambito e responsabilità.
+## Component Folder Layout
 
-| Livello | Cartella | Descrizione |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Atomi** | `src/components/atoms/`     | Primitive dell'interfaccia utente più piccole (ad es. `ForgeButton`, `ForgeInput`, `ForgeBadge`). Sono tipicamente unità funzionali che non possono essere ulteriormente scomposte senza perdere il loro scopo. |
-| **Molecole** | `src/components/molecules/` | Composizioni semplici di atomi (ad es. `ForgeSearchInput`, `ForgeFieldSet`). Funzionano insieme come un'unità.                                                                    |
-| **Organismi** | `src/components/organisms/` | Sezioni dell'interfaccia utente complesse composte da atomi, molecole e altri organismi (ad es. `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
-| **Modelli** | `src/components/templates/` | Layout a livello di pagina che definiscono la struttura del contenuto (ad es. `ForgeHero`, `ForgeAppLayout`). Spesso utilizzano gli slot per definire dove posizionare il contenuto.                     |
-| **Pagine** | `src/components/pages/`     | Istanze specifiche di modelli popolati con contenuti e dati concreti (ad es. `AccountSettingsPage`).                                                                        |
-
-## Layout della cartella dei componenti
-
-Ciascun componente risiede nella propria sottodirectory denominata nella cartella del livello appropriato. Questa directory contiene il file
-origine dei componenti, storie, test e stili opzionali.
+Each component resides in its own named subdirectory under the appropriate level folder. This directory contains the
+component source, stories, tests, and optional styles.
 
 ```text
 src/components/
@@ -42,28 +37,28 @@ src/components/
 └── index.ts                         # Global barrel re-exporting all levels
 ```
 
-## Convenzioni sulla storia
+## Story Conventions
 
-Le storie dei libri di fiabe DEVONO essere collocate insieme ai loro componenti e seguire una rigorosa convenzione sui titoli per mantenerle pulite
-struttura della barra laterale.
+Storybook stories MUST be co-located with their components and follow a strict title convention to maintain a clean
+sidebar structure.
 
-### Nome file
+### Filename
 
-Le storie devono utilizzare il file `.stories.tsx` estensione.
+Stories must use the `.stories.tsx` extension.
 
-### Convenzione sul titolo
+### Title Convention
 
-IL `title` campo nel libro di fiabe `meta` l'oggetto deve seguire questo schema:
+The `title` field in the Storybook `meta` object must follow this pattern:
 
 ```text
 <Level>/<Category>/<Component>
 ```
 
-- **Livello**: plurale in maiuscolo (ad es. `Atoms`, `Molecules`).
-- **Categoria**: raggruppamento funzionale (ad es. `Forms`, `Navigation`, `Display`, `Feedback`).
-- **Componente**: nome del componente PascalCase (es. `ForgeButton`).
+- **Level**: Capitalized plural (e.g., `Atoms`, `Molecules`).
+- **Category**: Functional grouping (e.g., `Forms`, `Navigation`, `Display`, `Feedback`).
+- **Component**: PascalCase component name (e.g., `ForgeButton`).
 
-**Esempio (`forge-button.stories.tsx`):**
+**Example (`forge-button.stories.tsx`):**
 
 ```tsx
 const meta = {
@@ -73,22 +68,22 @@ const meta = {
 };
 ```
 
-## Standard di creazione
+## Authoring Standards
 
-1. **Neutralità del framework**: non separare mai gli autori Vue E React versioni. Utilizzo `@mission-platform/forge`.
-2. **Denominazione**: i componenti dovrebbero utilizzare l'estensione `Base` prefisso (ad esempio, `ForgeCard`) a meno che non si tratti di implementazioni specifiche.
-3. **Sicurezza del tipo**: Esporta a `*Properties` interfaccia per gli oggetti di scena del componente.
-4. **Test**: un test co-localizzato `.spec.ts` è richiesto per ogni componente.
-5. **Impalcature**: utilizzare il `scaffold_component` Strumento MCP per garantire la struttura di directory e il boilerplate corretti.
+1. **Framework Neutrality**: Never author separate Vue and React versions. Use `@mission-platform/forge-jsx`.
+2. **Naming**: Components should use the `Base` prefix (e.g., `ForgeCard`) unless they are specific implementations.
+3. **Type Safety**: Export a `*Properties` interface for the component's props.
+4. **Testing**: A co-located `.spec.ts` is required for every component.
+5. **Scaffolding**: Use the `scaffold_component` MCP tool to ensure the correct directory structure and boilerplate.
 
 ```bash
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
 
-## Guide correlate
+## Related Guides
 
-- [Sviluppo di pacchetti](package-development.md)
-- [Authoring componibile](composable-authoring.md)
-- [Creazione di archivi](store-authoring.md)
-- [Creazione utile](util-authoring.md)
+- [Package Development](package-development.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
