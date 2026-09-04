@@ -1,18 +1,13 @@
-# Composeerbaar schrijven
+# Composable Authoring
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+Composables are the primary way to encapsulate and reuse reactive logic within the Mission Platform. To ensure these
+units of logic are portable across all supported UI frameworks, they are authored as **write-once** modules using the
+framework-neutral hooks provided by `@mission-platform/forge-jsx`.
 
-> Engelse bron: [docs/composable-authoring.md](../../composable-authoring.md)
-> Taal: Nederlands (nl)
+## Directory Layout
 
-Composables zijn de belangrijkste manier om reactieve logica binnen het Mission Platform in te kapselen en opnieuw te gebruiken. Om deze te garanderen
-logica-eenheden zijn draagbaar binnen alle ondersteunde UI-frameworks, ze zijn geschreven als **write-once**-modules met behulp van de
-raamwerkneutrale haken geleverd door `@mission-platform/forge`.
-
-## Directory-indeling
-
-Elke composable MOET zich in zijn eigen benoemde submap bevinden `src/composables/`, vergezeld van een co-located test
-vijl en een lokaal vat.
+Each composable MUST reside in its own named subdirectory within `src/composables/`, accompanied by a co-located test
+file and a local barrel.
 
 ```text
 src/composables/
@@ -23,23 +18,23 @@ src/composables/
 └── index.ts                     # Package-level re-exports
 ```
 
-## Auteursregels
+## Authoring Rules
 
-1. **Gebruik Forge Hooks**: importeer alleen reactieve primitieven (bijv. `useState`, `useEffect`, `useMemo`, `useRef`) van
-   `@mission-platform/forge`. Importeer nooit rechtstreeks uit `vue` of `react`.
-2. **Naamgevingsconventie**: samengestelde namen moeten kebab-case gebruiken en worden voorafgegaan door `use-` (e.g., `use-media-query`).
-3. **SSR-veiligheid**: Zorg ervoor dat de logica veilig is voor server-side rendering. Bewaak elke toegang tot API's die alleen voor browsers beschikbaar zijn, zoals `window`,
-   `document`, of `localStorage`.
-4. **Geen UI-componenten**: Composables moeten zich richten op logica. Retourneer of manipuleer UI-componenten niet rechtstreeks; in plaats daarvan,
-   retourstatus, refs of callbacks.
-5. **Verplicht testen**: Elke composable moet een co-located hebben `.spec.ts` bestand gebruiken Vitest.
+1. **Use Forge Hooks**: Only import reactive primitives (e.g., `useState`, `useEffect`, `useMemo`, `useRef`) from
+   `@mission-platform/forge-jsx`. Never import directly from `vue` or `react`.
+2. **Naming Convention**: Composable names must use kebab-case and be prefixed with `use-` (e.g., `use-media-query`).
+3. **SSR Safety**: Ensure logic is safe for Server-Side Rendering. Guard any access to browser-only APIs like `window`,
+   `document`, or `localStorage`.
+4. **No UI Components**: Composables should focus on logic. Do not return or manipulate UI components directly; instead,
+   return state, refs, or callbacks.
+5. **Mandatory Testing**: Every composable must have a co-located `.spec.ts` file using Vitest.
 
-## Basisvoorbeeld
+## Basic Example
 
-Hier is een typisch write-once composable dat een gebeurtenislistener beheert.
+Here is a typical write-once composable that manages an event listener.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge';
+import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,
@@ -53,6 +48,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);
@@ -61,18 +57,18 @@ export function useEventListener(
 }
 ```
 
-## Steiger
+## Scaffolding
 
-De snelste manier om een ​​nieuwe composable te maken is via de Mission Platform Developer MCP-tool:
+The fastest way to create a new composable is via the Mission Platform Developer MCP tool:
 
 ```bash
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```
 
-## Gerelateerde gidsen
+## Related Guides
 
-- [Pakketontwikkeling](package-development.md)
-- [Ontwerp van atomaire componenten](atomic-component-design.md)
-- [Winkelontwerp](store-authoring.md)
+- [Package Development](package-development.md)
+- [Atomic Component Design](atomic-component-design.md)
+- [Store Authoring](store-authoring.md)
 - [Util Authoring](util-authoring.md)
