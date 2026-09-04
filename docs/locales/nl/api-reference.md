@@ -2,8 +2,7 @@
 
 This project-wide page is a directory of package capabilities and compatibility
 contracts. The canonical installation, usage, limitations, and API details for
-each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
-and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+each package live beside that package under its full `packages/**/docs/` path. Generated API references must be added to the owning
 package rather than this page.
 
 > **Invoer is altijd kaal.** Kaderverzending `@mission-platform/*` pakketten tonen een single `.`
@@ -361,9 +360,9 @@ inpakken `packages/`, inclusief de getypte WebAssembly gevels.
 
 ### Smeed compilerdoelen
 
-Deze wonen in `forge-plugins/` in plaats van `packages/`. Een **framework**-plug-in bepaalt welke runtime een neutraal onderdeel is
+These live in `packages/compiler/plugins/`. Een **framework**-plug-in bepaalt welke runtime een neutraal onderdeel is
 wordt verlaagd tot; een **CMS**-doel bepaalt op welk contentplatform het wordt geprojecteerd. De twee assen vormen elkaar, dus elk CMS
-target kan aan elke framework-plug-in worden gekoppeld. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
+target kan aan elke framework-plug-in worden gekoppeld. See the [Forge Compiler Pipeline](../packages/tooling/vite/forge/docs/reference/compiler.md).
 
 | Pakket                                          | Purpose                                                                                               |
 | :---------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
