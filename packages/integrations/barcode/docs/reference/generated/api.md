@@ -62,31 +62,6 @@ export interface Barcode
 
 The result of {@link encodeBarcode}: module bits with their total width.
 
-### BarcodeSymbology
-
-**Kind:** type
-
-```typescript
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
-```
-
-Supported linear barcode symbologies.
-
 ### encodeBarcode
 
 **Kind:** function
@@ -124,6 +99,33 @@ Encode `data` asynchronously using the package-local FWS graph.
 | --------- | ---------------- | ----------- |
 | symbology | BarcodeSymbology |             |
 | data      | string           |             |
+
+## `src/encoder/types`
+
+### BarcodeSymbology
+
+**Kind:** type
+
+```typescript
+export type BarcodeSymbology =
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'ean13'
+  | 'ean8'
+  | 'upca'
+  | 'upce'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode';
+```
+
+Supported linear barcode symbologies.
 
 ## `src/fws/index`
 

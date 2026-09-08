@@ -1,6 +1,6 @@
 import { BarcodeSymbology as FwsBarcodeSymbology, type BarcodeSymbology as FwsSymbology } from './barcode-native.fws';
 
-import type { BarcodeSymbology } from '../encoder';
+import type { BarcodeSymbology } from '../encoder/types';
 
 export const FWS_SYMBOLOGY: Record<BarcodeSymbology, FwsSymbology> = {
   code128: FwsBarcodeSymbology.Code128,

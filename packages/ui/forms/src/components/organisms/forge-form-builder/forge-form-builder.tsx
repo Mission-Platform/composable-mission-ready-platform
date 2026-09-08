@@ -38,7 +38,11 @@ import { ForgeVerticalLayout } from '@mission-platform/layouts';
 import { ForgeSelect } from '@mission-platform/select';
 import { ForgeTypography } from '@mission-platform/typography';
 
-import { ForgeCheckbox, ForgeInput, ForgeNumberStepper, ForgeSwitch, ForgeTextarea } from '../..';
+import { ForgeCheckbox } from '../../atoms/forge-checkbox/forge-checkbox';
+import { ForgeInput } from '../../atoms/forge-input/forge-input';
+import { ForgeSwitch } from '../../atoms/forge-switch/forge-switch';
+import { ForgeTextarea } from '../../atoms/forge-textarea/forge-textarea';
+import { ForgeNumberStepper } from '../../molecules/forge-number-stepper/forge-number-stepper';
 import { ForgeSchemaForm } from '../forge-schema-form';
 
 import styles from './forge-form-builder.module.scss';

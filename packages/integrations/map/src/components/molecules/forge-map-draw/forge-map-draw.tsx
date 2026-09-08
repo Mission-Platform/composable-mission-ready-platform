@@ -1,7 +1,6 @@
 import { type MpChild, type MpElement, type MpRenderProperty, Slot, useEffect } from '@mission-platform/forge-jsx';
 import { palette } from '@mission-platform/tokens';
 
-import { ForgeMapLayer, ForgeMapSource } from '@/components';
 import {
   type DrawMode,
   type DrawnFeature,
@@ -11,6 +10,9 @@ import {
   useMap,
 } from '@/composables';
 import { toMapColor } from '@/utils/to-map-color';
+
+import { ForgeMapLayer } from '../forge-map-layer/forge-map-layer';
+import { ForgeMapSource } from '../forge-map-source/forge-map-source';
 
 import type { Feature, FeatureCollection } from 'geojson';
 import type { GeoJSONSourceSpecification } from 'maplibre-gl';
