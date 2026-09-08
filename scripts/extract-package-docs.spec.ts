@@ -1,13 +1,21 @@
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { extractFwsSymbols, extractTypeScriptSymbols, renderReferenceMarkdown } from './extract-package-docs.ts';
+import {
+  discoverPackageRoots,
+  extractFwsSymbols,
+  extractPackageDocs,
+  extractTypeScriptSymbols,
+  formatGeneratedDocumentation,
+  renderReferenceMarkdown,
+} from './extract-package-docs.ts';
 
 const temporaryDirectories: string[] = [];
+const repositoryRoot = fileURLToPath(new URL('..', import.meta.url));
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map((directory) => rm(directory, { recursive: true, force: true })));
@@ -19,7 +27,63 @@ async function createTemporaryDirectory(prefix: string): Promise<string> {
   return directory;
 }
 
+async function createDocumentationPackage(parentDirectory: string, packageName: string): Promise<string> {
+  const packageRoot = join(parentDirectory, packageName);
+  await mkdir(join(packageRoot, 'src'), { recursive: true });
+  await writeFile(
+    join(packageRoot, 'package.json'),
+    JSON.stringify({
+      name: `@mission-platform/${packageName}`,
+      exports: { '.': { types: './dist/index.d.ts' } },
+    }),
+    'utf8',
+  );
+  await writeFile(
+    join(packageRoot, 'src', 'index.ts'),
+    `/**
+ * Adds one to a value.
+ *
+ * @param input Input value.
+ * @returns The incremented value.
+ */
+export function add(input: number): number { return input + 1; }
+`,
+    'utf8',
+  );
+  return packageRoot;
+}
+
+async function pathExists(path: string): Promise<boolean> {
+  try {
+    await readFile(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 describe('package API documentation extraction', () => {
+  it('does not discover generated extension server packages', async () => {
+    const temporaryRoot = await createTemporaryDirectory('discover-package-roots-');
+    await mkdir(join(temporaryRoot, 'packages'), { recursive: true });
+    await mkdir(join(temporaryRoot, 'extensions', 'fws-vscode', 'server', 'dap'), { recursive: true });
+    await mkdir(join(temporaryRoot, 'extensions', 'public-package'), { recursive: true });
+    await writeFile(
+      join(temporaryRoot, 'extensions', 'fws-vscode', 'server', 'dap', 'package.json'),
+      JSON.stringify({ name: '@mission-platform/generated-dap' }),
+      'utf8',
+    );
+    await writeFile(
+      join(temporaryRoot, 'extensions', 'public-package', 'package.json'),
+      JSON.stringify({ name: '@mission-platform/public-extension' }),
+      'utf8',
+    );
+
+    const roots = await discoverPackageRoots(temporaryRoot);
+
+    expect(roots).toEqual([join(temporaryRoot, 'extensions', 'public-package')]);
+  });
+
   it('extracts public exports from an entrypoint and excludes implementation helpers', async () => {
     const symbols = await extractTypeScriptSymbols(fileURLToPath(new URL('../packages/barcode', import.meta.url)), {
       exports: { '.': { types: './dist/index.d.ts' } },
@@ -236,6 +300,85 @@ fn helper() -> unit {}
     expect(markdown).toContain('### first');
     expect(markdown).toContain('| value | string | Input. |');
     expect(markdown).toContain('- **@returns:** The value.');
+  });
+
+  it('runs ESLint autofix before Prettier for the exact generated output path', async () => {
+    const packageRoot = await createTemporaryDirectory('format-generated-');
+    const outputPath = join(packageRoot, 'docs/reference/generated/api.md');
+    const commands: { readonly file: string; readonly args: readonly string[]; readonly cwd?: string }[] = [];
+
+    await formatGeneratedDocumentation(repositoryRoot, outputPath, async (file, args, options) => {
+      commands.push({ file, args, cwd: options.cwd });
+      return { stderr: '', stdout: '' };
+    });
+
+    expect(commands).toEqual([
+      {
+        file: resolve(repositoryRoot, 'scripts/node_modules/.bin/eslint'),
+        args: ['--config', resolve(repositoryRoot, 'scripts/generated-docs-eslint.config.js'), '--fix', outputPath],
+        cwd: repositoryRoot,
+      },
+      {
+        file: resolve(repositoryRoot, 'scripts/node_modules/.bin/prettier'),
+        args: ['--write', outputPath],
+        cwd: repositoryRoot,
+      },
+    ]);
+  });
+
+  it('formats a single package without changing hand-authored documentation', async () => {
+    const temporaryRoot = await createTemporaryDirectory('generate-single-package-');
+    const packageRoot = await createDocumentationPackage(temporaryRoot, 'single-package');
+    const handAuthoredPath = join(packageRoot, 'docs', 'README.md');
+    const handAuthoredContent = '# Hand-authored documentation\n\nKeep this content unchanged.\n';
+    await mkdir(join(packageRoot, 'docs'), { recursive: true });
+    await writeFile(handAuthoredPath, handAuthoredContent, 'utf8');
+    await mkdir(join(packageRoot, 'docs/reference/generated'), { recursive: true });
+    const stalePath = join(packageRoot, 'docs/reference/generated', 'stale.md');
+    await writeFile(stalePath, 'stale generated output', 'utf8');
+
+    await extractPackageDocs(repositoryRoot, packageRoot);
+
+    const outputPath = join(packageRoot, 'docs/reference/generated/api.md');
+    const markdown = await readFile(outputPath, 'utf8');
+    expect(markdown).toContain('<!-- Generated by scripts/extract-package-docs.ts. Do not edit. -->');
+    expect(markdown).toContain('# @mission-platform/single-package API reference');
+    expect(markdown).toContain('### add');
+    expect(markdown).toContain('```typescript\nfunction add(input: number): number;\n```');
+    expect(markdown).toContain('#### Parameters');
+    expect(markdown).toContain('| input | number | Input value. |');
+    expect(markdown).toContain('#### Contract');
+    expect(markdown).toContain('- **@returns:** The incremented value.');
+    expect(await readFile(handAuthoredPath, 'utf8')).toBe(handAuthoredContent);
+    expect(await pathExists(stalePath)).toBe(false);
+  });
+
+  it('formats concurrent all-package outputs independently and is idempotent', async () => {
+    const temporaryRoot = await createTemporaryDirectory('generate-all-packages-');
+    const packageRoots = await Promise.all([
+      createDocumentationPackage(temporaryRoot, 'first-package'),
+      createDocumentationPackage(temporaryRoot, 'second-package'),
+    ]);
+    const unrelatedPath = join(temporaryRoot, 'README.md');
+    const unrelatedContent = '# Repository fixture\n';
+    await writeFile(unrelatedPath, unrelatedContent, 'utf8');
+
+    await Promise.all(packageRoots.map((packageRoot) => extractPackageDocs(repositoryRoot, packageRoot)));
+    const firstOutputPath = join(packageRoots[0], 'docs/reference/generated/api.md');
+    const secondOutputPath = join(packageRoots[1], 'docs/reference/generated/api.md');
+    const firstOutput = await readFile(firstOutputPath, 'utf8');
+    const secondOutput = await readFile(secondOutputPath, 'utf8');
+
+    expect(firstOutput).toContain('# @mission-platform/first-package API reference');
+    expect(secondOutput).toContain('# @mission-platform/second-package API reference');
+    expect(firstOutput).toContain('```typescript\nfunction add(input: number): number;\n```');
+    expect(secondOutput).toContain('| input | number | Input value. |');
+    expect(await readFile(unrelatedPath, 'utf8')).toBe(unrelatedContent);
+
+    await Promise.all(packageRoots.map((packageRoot) => extractPackageDocs(repositoryRoot, packageRoot)));
+
+    expect(await readFile(firstOutputPath, 'utf8')).toBe(firstOutput);
+    expect(await readFile(secondOutputPath, 'utf8')).toBe(secondOutput);
   });
 });
 

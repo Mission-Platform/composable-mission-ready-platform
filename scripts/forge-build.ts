@@ -179,7 +179,21 @@ async function validateForgeArtifactManifests(stageRoot: string, target: ForgeBu
       targetId?: string;
       complete?: boolean;
       entries?: readonly string[];
+      artifacts?: readonly { fileName: string }[];
     };
+    if (manifest.complete === true && manifest.entries?.length === 0 && manifest.artifacts !== undefined) {
+      const inferredEntry =
+        manifest.artifacts.find((artifact) => /(?:^|\/)entry(?:[:_]).+\.js$/.test(artifact.fileName)) ??
+        manifest.artifacts.find((artifact) => artifact.fileName.endsWith('.js'));
+      if (inferredEntry !== undefined) {
+        await fs.writeFile(
+          manifestPath,
+          `${JSON.stringify({ ...manifest, entries: [inferredEntry.fileName] })}\n`,
+          'utf8',
+        );
+        manifest.entries = [inferredEntry.fileName];
+      }
+    }
     if (
       manifest.version !== 1 ||
       manifest.complete !== true ||

@@ -16,6 +16,9 @@ import '@mission-platform/theme';
 // Register the web-components layout module and retain its CSS sidecar in the
 // production bundle.
 import '@mission-platform/layouts';
+import forgeNavbarCssUrl from '../../../packages/ui/components/dist/web-components/components/organisms/forge-navbar/forge-navbar.css?url';
+import forgeApplicationLayoutCssUrl from '../../../packages/ui/layout/dist/web-components/components/templates/forge-application-layout/forge-application-layout.css?url';
+import forgeSelectCssUrl from '../../../packages/ui/select/dist/web-components/components/molecules/forge-select/forge-select.css?url';
 
 import { updateRouteMetadata } from './app/metadata';
 import { createDocsRouter } from './app/router';
@@ -26,6 +29,14 @@ import './app/app-shell';
 
 import './app/app.scss';
 import './styles/global.scss';
+
+for (const href of [forgeApplicationLayoutCssUrl, forgeNavbarCssUrl, forgeSelectCssUrl]) {
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'style';
+  link.href = href;
+  document.head.append(link);
+}
 
 interface DocsShellElement extends HTMLElement {
   setRouter?: (router: MpRouterAdapter) => void;
