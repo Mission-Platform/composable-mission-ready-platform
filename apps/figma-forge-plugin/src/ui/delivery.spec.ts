@@ -29,7 +29,12 @@ describe('Forge artifact delivery', () => {
     const fetcher = vi.fn<typeof fetch>();
     await expect(
       sendBundleToBridge(
-        { bridgeUrl: 'https://example.test/export', repositoryRootId: 'repo', targetDirectory: 'components' },
+        {
+          bridgeUrl: 'https://example.test/export',
+          authToken: 'test-token',
+          repositoryRootId: 'repo',
+          targetDirectory: 'components',
+        },
         bundle,
         false,
         fetcher,
