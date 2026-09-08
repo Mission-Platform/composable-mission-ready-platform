@@ -14,7 +14,11 @@ import { createForgeWebScriptCompilerService } from "@mission-platform/forge-web
 import { build } from "vite";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { ForgeWebScriptViteError, forgeWebScriptPlugin } from ".";
+import {
+  ForgeWebScriptViteError,
+  createForgeWebScriptGraphCache,
+  forgeWebScriptPlugin,
+} from ".";
 
 const temporaryDirectories: string[] = [];
 
@@ -184,6 +188,47 @@ export fn answer() -> i32 {
         join(canonicalRoot, "helper.fws"),
       ]),
     );
+  });
+
+  it("reuses a resolved graph across plugin instances", async () => {
+    const root = await createFixture(`import "./helper.fws" as helper;
+export fn answer() -> i32 {
+  return helper.value();
+}`);
+    await writeFile(
+      join(root, "helper.fws"),
+      "export fn value() -> i32 { return 7; }",
+      "utf8",
+    );
+    const graphCache = createForgeWebScriptGraphCache();
+    let resolveCount = 0;
+    const options = {
+      root,
+      graphCache,
+      graphCacheKey: "shared-fixture",
+      resolveModule: (source: string, importer: string): string | undefined => {
+        resolveCount += 1;
+        return join(
+          importer.slice(0, importer.lastIndexOf("/")),
+          source.slice(2),
+        );
+      },
+    };
+    const loadWith = async (
+      plugin: ReturnType<typeof forgeWebScriptPlugin>,
+    ) => {
+      if (typeof plugin.load !== "function")
+        throw new Error("Expected a load hook.");
+      return plugin.load.call(
+        { resolve: async () => null },
+        join(root, "runtime.fws") + "?import",
+      );
+    };
+
+    await loadWith(forgeWebScriptPlugin(options));
+    await loadWith(forgeWebScriptPlugin(options));
+
+    expect(resolveCount).toBe(1);
   });
 
   it("resolves shared modules from a package-local src/fws root", async () => {

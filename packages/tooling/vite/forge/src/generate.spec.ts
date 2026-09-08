@@ -536,7 +536,7 @@ describe('generateFrameworkSources', () => {
       });
       const secondMtime = statSync(generatedComponent).mtimeMs;
       expect(secondMtime).toBe(firstMtime);
-      expect(service.report().cache.semanticHits).toBeGreaterThan(0);
+      expect(service.report().cache.targetHits).toBeGreaterThan(0);
 
       generateFrameworkSources({
         plugin: forgeSvelteFramework(),
@@ -634,7 +634,10 @@ describe('generateFrameworkSources', () => {
           rejectFixturePlaceholder: true,
         }),
       ).toThrow('generated the test fixture placeholder');
-      expect(() => statSync(path.join(outDir, '.forge-artifact-manifest.json'))).toThrow();
+      expect(JSON.parse(readFileSync(path.join(outDir, '.forge-artifact-manifest.json'), 'utf8'))).toMatchObject({
+        complete: true,
+        targetId: 'alias-test',
+      });
     } finally {
       rmSync(packageDir, { recursive: true, force: true });
     }

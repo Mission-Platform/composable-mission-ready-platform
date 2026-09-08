@@ -72,7 +72,12 @@ describe('ForgeCompilerService', () => {
     service.compile({ input: input(), framework });
 
     expect(phases).toEqual(['lower', 'optimize', 'generate', 'lower', 'optimize', 'generate']);
-    expect(service.report().cache).toMatchObject({ semanticHits: 1, semanticMisses: 1 });
+    expect(service.report().cache).toMatchObject({
+      semanticHits: 1,
+      semanticMisses: 1,
+      targetHits: 0,
+      targetMisses: 0,
+    });
     expect(service.report().phaseTimings.map(({ phase }) => phase)).toEqual([
       'frontend',
       'frontend',

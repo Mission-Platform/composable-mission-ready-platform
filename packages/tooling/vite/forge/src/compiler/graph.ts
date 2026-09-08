@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import { parseOxcModule, type OxcParsedModule } from './oxc.js';
 
-import type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './ast.js';
+import type { ForgeExportFact, ForgeImportFact, ForgeModuleFacts, ForgeSourceSpan } from './ast.js';
 import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
 export type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './ast.js';
@@ -132,9 +132,60 @@ interface AliasConfiguration {
   readonly paths: ForgePathAliases;
 }
 
+function stripJsoncComments(text: string): string {
+  let result = '';
+  let inString = false;
+  let escaped = false;
+  let lineComment = false;
+  let blockComment = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index];
+    const nextCharacter = text[index + 1];
+    if (lineComment) {
+      if (character === '\n') {
+        lineComment = false;
+        result += character;
+      }
+      continue;
+    }
+    if (blockComment) {
+      if (character === '*' && nextCharacter === '/') {
+        blockComment = false;
+        index += 1;
+      }
+      continue;
+    }
+    if (inString) {
+      result += character;
+      if (escaped) {
+        escaped = false;
+      } else if (character === '\\') {
+        escaped = true;
+      } else if (character === '"') {
+        inString = false;
+      }
+      continue;
+    }
+    if (character === '"') {
+      inString = true;
+      result += character;
+    } else if (character === '/' && nextCharacter === '/') {
+      lineComment = true;
+      index += 1;
+    } else if (character === '/' && nextCharacter === '*') {
+      blockComment = true;
+      index += 1;
+    } else {
+      result += character;
+    }
+  }
+  return result;
+}
+
 function parseJsoncObject(text: string): Record<string, unknown> | undefined {
   try {
-    const stripped = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    const stripped = stripJsoncComments(text).replace(/,\s*([}\]])/g, '$1');
     const value = JSON.parse(stripped) as unknown;
     return typeof value === 'object' && value !== null && !Array.isArray(value)
       ? (value as Record<string, unknown>)
@@ -156,8 +207,12 @@ function readAliasConfiguration(options: ForgeFileGraphOptions, sourceRoot: stri
         paths?: unknown;
       };
       const configDirectory = path.dirname(tsconfigPath);
-      if (options.baseUrl === undefined && typeof compilerOptions.baseUrl === 'string') {
-        baseUrl = canonical(path.resolve(configDirectory, compilerOptions.baseUrl));
+      if (options.baseUrl === undefined) {
+        baseUrl = canonical(
+          typeof compilerOptions.baseUrl === 'string'
+            ? path.resolve(configDirectory, compilerOptions.baseUrl)
+            : configDirectory,
+        );
       }
       if (options.paths === undefined && compilerOptions.paths !== undefined) {
         paths = compilerOptions.paths as ForgePathAliases;
@@ -192,12 +247,7 @@ function isStyleSpecifier(specifier: string): boolean {
   return STYLE_EXTENSIONS.has(path.extname(specifier).toLowerCase());
 }
 
-function nodeKind(
-  filePath: string,
-  entry: string,
-  facts: ReturnType<typeof inspectForgeModule>,
-  sourceRoot: string,
-): ForgeFileKind {
+function nodeKind(filePath: string, entry: string, facts: ForgeModuleFacts, sourceRoot: string): ForgeFileKind {
   if (filePath === entry) {
     return 'entry';
   }

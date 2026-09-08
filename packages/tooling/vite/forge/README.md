@@ -142,26 +142,32 @@ semantic IR without electing a target plugin.
 
 ## Usage
 
-Select target plugin instances explicitly in a package build. The helper creates
-one target build per supplied plugin and obtains native stage adapters from that
-plugin:
+Select target plugin instances explicitly in a package build. The helper returns
+native tsdown plugins; add them to one `defineTsdownLibrary` configuration. Each
+plugin injects its Forge lifecycle through tsdown's `tsdownConfig` hook:
 
 ```ts
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { tsdownForgeComponentPlugins } from '@mission-platform/vite-plugin-forge';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 
-export default defineTsdownForgeComponents({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  frameworks: [forgeReactFramework(), forgeVueFramework()],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: 'MissionPlatformComponents',
+  entry: 'src/index.ts',
+  plugins: tsdownForgeComponentPlugins({
+    rootDir: import.meta.dirname,
+    frameworks: [forgeReactFramework(), forgeVueFramework()],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+    name: 'MissionPlatformComponents',
+  }),
 });
 ```
 
-For a hook package, use `defineTsdownForgeHooks` with one explicit plugin. For a
-content platform, pass `defineTsdownForgeCms(All)` from
-`@mission-platform/forge-cms-plugin-api` a target such as
+For a hook package, use `tsdownForgeHookPlugins` with one explicit plugin. For a
+content platform, add `tsdownForgeCmsPlugins` from
+`@mission-platform/forge-cms-plugin-api` to the same `defineTsdownLibrary`
+configuration. A target such as
 `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`; the CMS package
 owns schema, template, and manifest projection while the selected target plugin
 owns lowering and native compilation. Output lands in

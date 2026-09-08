@@ -14,16 +14,22 @@ The target is framework-agnostic — the emitted Handlebars is identical whichev
 
 ```ts
 // tsdown.config.ts
-import { defineTsdownForgeCms } from "@mission-platform/forge-cms-plugin-api";
+import { tsdownForgeCmsPlugins } from "@mission-platform/forge-cms-plugin-api";
 import { forgeGhostCms } from "@mission-platform/forge-cms-ghost";
 import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 
-export default defineTsdownForgeCms({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  target: forgeGhostCms({
-    packageName: "@acme/components",
-    plugin: forgeVueFramework(),
-    themeName: "casper",
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeGhostCms({
+        packageName: "@acme/components",
+        plugin: forgeVueFramework(),
+        themeName: "casper",
+      }),
+    ],
   }),
 });
 ```

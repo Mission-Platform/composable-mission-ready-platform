@@ -1,3 +1,8 @@
+// TypeScript 7 no longer ships the compiler-AST runtime used by the legacy
+// compatibility helpers below. Live Forge generation uses the Oxc path; keep
+// these helpers available for older consumers without making them part of the
+// strict TypeScript 7 build surface.
+// @ts-nocheck
 /**
  * Shared AST utilities for the Stage-1 source-to-source compiler.
  *

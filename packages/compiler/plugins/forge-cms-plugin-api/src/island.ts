@@ -9,10 +9,18 @@
  * a sibling `island/` directory. The emitted template then imports a file it
  * owns, and the tsdown stage plugins of the bound plugin compile it in the very
  * same build.
+ *
+ * Island generation is a pure stage-1 emission step. Callers must invoke it from
+ * a Forge build session `generate` callback (never while evaluating config) so
+ * the shared compiler service and prepared project stay session-owned.
  */
 import path from "node:path";
 
-import { generateFrameworkSources } from "@mission-platform/vite-plugin-forge";
+import {
+  generateFrameworkSources,
+  type ForgeCompilerService,
+  type ForgeProjectSnapshot,
+} from "@mission-platform/vite-plugin-forge";
 
 import type { CmsOutputPlugin } from "./cms.js";
 
@@ -28,6 +36,10 @@ export interface GenerateIslandOptions {
   readonly outDir: string;
   /** Prefix stripped from neutral export names. */
   readonly stripPrefix?: string;
+  /** Compiler service supplied by the owning Forge build session. */
+  readonly service?: ForgeCompilerService;
+  /** Prepared project from the owning session; seeds source-root/fingerprint reuse. */
+  readonly project?: ForgeProjectSnapshot;
 }
 
 /** The generated island tree, or `undefined` when the target does not use islands. */
@@ -42,7 +54,8 @@ export interface GeneratedIsland {
 
 /**
  * Co-generate the framework island tree for a target, returning the specifier
- * an emitted template should import it by.
+ * an emitted template should import it by. This is generation-stage only — the
+ * CMS driver/session owns when it runs.
  */
 export function generateIsland(
   options: GenerateIslandOptions,
@@ -56,6 +69,8 @@ export function generateIsland(
     componentsModule: options.componentsModule,
     outDir: directory,
     stripPrefix: options.stripPrefix,
+    sourceRoot: options.project?.sourceRoot,
+    service: options.service,
   });
   return {
     entry,

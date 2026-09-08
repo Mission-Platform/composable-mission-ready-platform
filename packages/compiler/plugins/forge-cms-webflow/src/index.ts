@@ -5,9 +5,11 @@
  * plugin — Webflow renders through `@webflow/react` and nothing else:
  *
  * ```ts
- * defineTsdownForgeCms({
- *   rootDir: import.meta.dirname,
- *   target: forgeWebflowCms({ packageName: '@acme/components', plugin: forgeReactFramework() }),
+ * defineTsdownLibrary({
+ *   plugins: tsdownForgeCmsPlugins({
+ *     rootDir: import.meta.dirname,
+ *     targets: [forgeWebflowCms({ packageName: '@acme/components', plugin: forgeReactFramework() })],
+ *   }),
  * });
  * ```
  *

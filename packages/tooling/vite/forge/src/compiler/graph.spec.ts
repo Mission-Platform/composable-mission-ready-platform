@@ -73,6 +73,38 @@ describe('buildForgeFileGraph', () => {
     );
   });
 
+  it('reads JSONC wildcard paths without treating path markers as comments', async () => {
+    const fixture = await createFixture({
+      'tsconfig.build.json': `{
+  // Wildcard paths are valid JSONC string values.
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"],
+    },
+  },
+}`,
+      'components/index.ts': `export { useMap } from '@/composables/use-map';`,
+      'composables/use-map.ts': `export function useMap() { return undefined; }`,
+    });
+
+    const graph = await buildForgeFileGraph({
+      entry: fixture.entry,
+      sourceRoot: fixture.root,
+      tsconfig: path.join(fixture.root, 'tsconfig.build.json'),
+    });
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.edges).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          specifier: '@/composables/use-map',
+          to: path.join(fixture.root, 'composables/use-map.ts'),
+          resolved: true,
+        }),
+      ]),
+    );
+  });
+
   it('classifies nested index modules as folder entry files', async () => {
     const fixture = await createFixture({
       'components/index.ts': `export { ForgeMap } from './molecules/forge-map';

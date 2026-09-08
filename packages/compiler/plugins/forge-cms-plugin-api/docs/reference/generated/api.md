@@ -712,7 +712,8 @@ function generateIsland(
 ```
 
 Co-generate the framework island tree for a target, returning the specifier
-an emitted template should import it by.
+an emitted template should import it by. This is generation-stage only — the
+CMS driver/session owns when it runs.
 
 #### Parameters
 
@@ -792,112 +793,47 @@ Convert a public name to its technical name (`InView` → `in_view`).
 
 ## `src/tsdown`
 
-### cmsCacheDirectory
+### ForgeCmsTsdownPlugin
+
+**Kind:** type
+
+```typescript
+export type ForgeCmsTsdownPlugin = TsdownPlugin &
+```
+
+Plugin returned by {@link tsdownForgeCmsPlugins}, including target configs for tests.
+
+### tsdownForgeCmsPlugins
 
 **Kind:** function
 
 ```typescript
-function cmsCacheDirectory(
-  rootDir: string,
-  target: CmsOutputPlugin,
-  cacheRoot = path.join(rootDir, "node_modules/.cache"),
-): string;
+function tsdownForgeCmsPlugins(
+  options: TsdownForgeCmsPluginsOptions,
+): TsdownPlugin[];
 ```
 
-The cache directory a target's generated tree is written to.
+Native tsdown-plugin form of the CMS adapter. The returned
+plugins inject CMS lifecycle/config through `tsdownConfig`, matching the
+Forge component/hook plugin adapters so callers compose one
+`defineTsdownLibrary` configuration.
+
+Multi-framework compositions keep one caller-owned config: the adapter runs
+one nested tsdown build per selected target so entry/outDir/lifecycle plugins
+never last-wins collide on the shared host object.
 
 #### Parameters
 
-| Name      | Type            | Description |
-| --------- | --------------- | ----------- |
-| rootDir   | string          |             |
-| target    | CmsOutputPlugin |             |
-| cacheRoot |                 |             |
+| Name    | Type                         | Description |
+| ------- | ---------------------------- | ----------- |
+| options | TsdownForgeCmsPluginsOptions |             |
 
-### cmsOutputDirectory
-
-**Kind:** function
-
-```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
-```
-
-The distribution directory a target's per-framework modules are emitted to.
-
-#### Parameters
-
-| Name    | Type            | Description |
-| ------- | --------------- | ----------- |
-| rootDir | string          |             |
-| target  | CmsOutputPlugin |             |
-
-### defineTsdownForgeCms
-
-**Kind:** function
-
-```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
-```
-
-Create a tsdown config for one CMS target.
-
-#### Parameters
-
-| Name    | Type                  | Description |
-| ------- | --------------------- | ----------- |
-| options | TsdownForgeCmsOptions |             |
-
-### defineTsdownForgeCmsAll
-
-**Kind:** function
-
-```typescript
-function defineTsdownForgeCmsAll(
-  options: TsdownForgeCmsAllOptions,
-): UserConfig[];
-```
-
-Create tsdown configs for every requested CMS target.
-
-#### Parameters
-
-| Name    | Type                     | Description |
-| ------- | ------------------------ | ----------- |
-| options | TsdownForgeCmsAllOptions |             |
-
-### resolveComponentsModule
-
-**Kind:** function
-
-```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string;
-```
-
-Locate the neutral components barrel of a package.
-
-#### Parameters
-
-| Name     | Type   | Description |
-| -------- | ------ | ----------- |
-| rootDir  | string |             |
-| explicit | string |             |
-
-### TsdownForgeCmsAllOptions
+### TsdownForgeCmsPluginsOptions
 
 **Kind:** interface
 
 ```typescript
-export interface TsdownForgeCmsAllOptions
+export interface TsdownForgeCmsPluginsOptions
 ```
 
-Options for {@link defineTsdownForgeCmsAll}.
-
-### TsdownForgeCmsOptions
-
-**Kind:** interface
-
-```typescript
-export interface TsdownForgeCmsOptions
-```
-
-Options for {@link defineTsdownForgeCms}.
+Options accepted by {@link tsdownForgeCmsPlugins}.

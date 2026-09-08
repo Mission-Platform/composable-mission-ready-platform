@@ -1081,6 +1081,15 @@ const CSS_MODULE_SHIM = [
 /** File name of the CSS-module shim written into a generated tree before declaration emit. */
 const CSS_MODULE_SHIM_FILE = '__mp-css-shim.d.ts';
 
+function hasDeclarationFiles(directory: string): boolean {
+  if (!existsSync(directory)) return false;
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (entry.isFile() && entry.name.endsWith('.d.ts')) return true;
+    if (entry.isDirectory() && hasDeclarationFiles(path.join(directory, entry.name))) return true;
+  }
+  return false;
+}
+
 /**
  * The custom export condition each framework's build is published under. The
  * generated per-framework sources import sibling workspace packages by their
@@ -1237,8 +1246,9 @@ const COMPONENT_DTS_COMPILER_OPTIONS = {
  * Emit declarations for a generated `.ts`/`.tsx` tree with the TypeScript 7
  * CLI, writing the CSS-module shim first so co-located style imports resolve.
  * Shared by React, Solid, and Web-Components toolchains: each passes the
- * `compilerOverrides` its JSX dialect needs. Type diagnostics are surfaced as
- * build warnings (matching the Vue CLI path) rather than aborting emit.
+ * `compilerOverrides` its JSX dialect needs. Type diagnostics are retained in
+ * the build report when TypeScript emitted declarations, and fail the target
+ * when no declaration artifact was produced.
  */
 function emitTscComponentDeclarations(
   this: { warn: (message: string) => void },
@@ -1272,9 +1282,11 @@ function emitTscComponentDeclarations(
   } catch (error) {
     const report = error as { stdout?: string; stderr?: string };
     const message = [report.stdout, report.stderr].filter(Boolean).join('\n').trim();
-    if (message.length > 0) {
-      this.warn(message);
+    const hasDeclarations = hasDeclarationFiles(options.outDir);
+    if (!hasDeclarations) {
+      throw new Error(`Forge declaration generation failed${message.length > 0 ? `:\n${message}` : '.'}`);
     }
+    this.warn(`Forge declaration generation reported diagnostics:\n${message}`);
   }
 }
 
@@ -1374,13 +1386,15 @@ function emitVueComponentDeclarations(
       stdio: ['ignore', 'pipe', 'pipe'],
     });
   } catch (error) {
-    // `vue-tsc` exits non-zero on type diagnostics but has still emitted the
-    // declarations; surface its report as a warning instead of failing.
+    // `vue-tsc` may emit partial declarations before reporting diagnostics;
+    // never allow those incomplete artifacts to become the published target.
     const report = error as { stdout?: string; stderr?: string };
     const message = [report.stdout, report.stderr].filter(Boolean).join('\n').trim();
-    if (message.length > 0) {
-      this.warn(message);
+    const hasDeclarations = hasDeclarationFiles(options.outDir);
+    if (!hasDeclarations) {
+      throw new Error(`Forge declaration generation failed${message.length > 0 ? `:\n${message}` : '.'}`);
     }
+    this.warn(`Forge declaration generation reported diagnostics:\n${message}`);
   }
 }
 

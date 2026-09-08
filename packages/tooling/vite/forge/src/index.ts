@@ -24,19 +24,25 @@
  *
  * @example
  * ```ts
- * // vite.config.ts (mode === 'react')
- * const entry = generateFrameworkSources({ framework: 'react', componentsModule, outDir });
- * defineLibraryConfig({
- *   rootDir: __dirname,
- *   entry,
- *   fileName: 'react',
- *   overrides: {
- *     plugins: [reactJsxPlugin(), jsxComponentsEntryDtsPlugin({ framework: 'react', componentsModule, declarationFileName: 'react' })],
- *   },
+ * // tsdown.config.ts — one library config, Forge plugins inject lifecycle lazily
+ * defineTsdownLibrary({
+ *   rootDir: import.meta.dirname,
+ *   entry: 'src/index.ts',
+ *   plugins: tsdownForgeComponentPlugins({
+ *     rootDir: import.meta.dirname,
+ *     frameworks: [forgeReactFramework(), forgeVueFramework()],
+ *   }),
+ * });
+ *
+ * // vite.config.ts — high-level helper owns a build session; generation runs in buildStart
+ * defineJsxLibraryConfig({
+ *   rootDir: import.meta.dirname,
+ *   plugin: forgeReactFramework(),
+ *   name: 'MissionPlatformComponents',
  * });
  * ```
  */
-export { reactJsxPlugin as default } from './config.js';
+export { forgeArtifactPublishPlugin, forgeBuildLifecyclePlugin, forgeVirtualEntry } from './build-integration.js';
 
 /**
  * A Vite plugin that configures the automatic React JSX runtime for generated
@@ -94,7 +100,11 @@ export {
   type ForgeArtifactManifest,
   type ForgeArtifactRecord,
 } from './compiler/artifact-manifest.js';
-export { createForgeArtifactWriter, type ForgeArtifactWriter } from './compiler/artifact-writer.js';
+export {
+  createForgeArtifactWriter,
+  forgeArtifactAttemptDirectory,
+  type ForgeArtifactWriter,
+} from './compiler/artifact-writer.js';
 export {
   assertForgeArtifactRoot,
   ensureForgeArtifactDirectory,
@@ -107,6 +117,17 @@ export {
   type ForgeGenerationContext,
   type ForgeGenerationContextOptions,
 } from './compiler/generation-context.js';
+export {
+  createForgeBuildSession,
+  type CreateForgeBuildSessionOptions,
+  type ForgeBuildKind,
+  type ForgeBuildPlan,
+  type ForgeBuildSession,
+  type ForgeTargetGenerationContext,
+  type ForgeTargetGenerationResult,
+  type ForgeTargetPlan,
+  type ForgeTargetResult,
+} from './compiler/session.js';
 
 export {
   CompilerDiagnosticError,
@@ -178,29 +199,19 @@ export { analyzeRouterCapabilities, compileRouterModule, createRouterCompilerPip
 export {
   generateFrameworkSources,
   createFrameworkSourceTarget,
-  jsxComponentsCssImportPlugin,
-  jsxComponentsDtsPlugin,
-  jsxComponentsEntryDtsPlugin,
   type GenerateFrameworkSourcesOptions,
   type FrameworkSourceTarget,
-  type JsxComponentsDtsOptions,
-  type JsxComponentsEntryDtsOptions,
 } from './generate.js';
 
-export {
-  generateHookLibrarySources,
-  hookLibraryDtsPlugin,
-  type GenerateHookLibrarySourcesOptions,
-  type HookLibraryDtsOptions,
-} from './generate-hooks.js';
+export { generateHookLibrarySources, type GenerateHookLibrarySourcesOptions } from './generate-hooks.js';
 
 export {
-  defineTsdownForgeComponents,
-  defineTsdownForgeEmailComponents,
-  defineTsdownForgeHooks,
+  defineTsdownForgeComponentsAll,
   defineTsdownForgeHooksAll,
-  type TsdownForgeComponentsOptions,
+  tsdownForgeComponentPlugins,
+  tsdownForgeHookPlugins,
+  defineTsdownForgeEmailComponents,
+  type TsdownForgeComponentPluginsOptions,
   type TsdownForgeEmailComponentsOptions,
   type TsdownForgeHooksAllOptions,
-  type TsdownForgeHooksOptions,
 } from './tsdown.js';

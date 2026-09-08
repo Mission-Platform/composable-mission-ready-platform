@@ -5,9 +5,11 @@
  * plugin should hydrate the interactive components:
  *
  * ```ts
- * defineTsdownForgeCms({
- *   rootDir: import.meta.dirname,
- *   target: forgeAstroCms({ packageName: '@acme/components', plugin: forgeVueFramework() }),
+ * defineTsdownLibrary({
+ *   plugins: tsdownForgeCmsPlugins({
+ *     rootDir: import.meta.dirname,
+ *     targets: [forgeAstroCms({ packageName: '@acme/components', plugin: forgeVueFramework() })],
+ *   }),
  * });
  * ```
  *

@@ -60,6 +60,16 @@ Resolve, link, and compile an imported FWS module graph.
 | resolver | ForgeWebScriptModuleResolver  |             |
 | service  | ForgeWebScriptCompilerService |             |
 
+### createForgeWebScriptGraphCache
+
+**Kind:** function
+
+```typescript
+function createForgeWebScriptGraphCache(): ForgeWebScriptGraphCache;
+```
+
+Create a graph cache that deduplicates both sequential and concurrent graph resolution.
+
 ### ForgeWebScriptCompiledModule
 
 **Kind:** interface
@@ -69,6 +79,16 @@ export interface ForgeWebScriptCompiledModule
 ```
 
 Compiled source, artifact metadata, source map, and optional graph reports.
+
+### ForgeWebScriptGraphCache
+
+**Kind:** interface
+
+```typescript
+export interface ForgeWebScriptGraphCache
+```
+
+Shared, in-memory graph results used by multiple Forge Web Script targets.
 
 ### ForgeWebScriptPluginOptions
 

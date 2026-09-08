@@ -129,24 +129,29 @@ Built-in targets are constructed by their own packages, for example `forgeReactF
 targets it publishes:
 
 ```ts
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { tsdownForgeComponentPlugins } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
-export default defineTsdownForgeComponents({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  frameworks: [
-    forgeVueFramework(),
-    forgeReactFramework(),
-    forgeSvelteFramework(),
-    forgeSolidFramework(),
-    forgeWebComponentsFramework(),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: 'MissionPlatformComponents',
+  entry: 'src/index.ts',
+  plugins: tsdownForgeComponentPlugins({
+    rootDir: import.meta.dirname,
+    frameworks: [
+      forgeVueFramework(),
+      forgeReactFramework(),
+      forgeSvelteFramework(),
+      forgeSolidFramework(),
+      forgeWebComponentsFramework(),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+    name: 'MissionPlatformComponents',
+  }),
 });
 ```
 
@@ -194,7 +199,8 @@ the driver owns generic orchestration; and each target package owns the framewor
 ## Component builds
 
 Component packages author neutral modules against `@mission-platform/forge-jsx`, usually through a neutral component barrel.
-`defineTsdownForgeComponents` creates one target build for each supplied plugin. For each target it:
+`tsdownForgeComponentPlugins` returns native tsdown plugins for each supplied target. Consumers add those plugins to one
+`defineTsdownLibrary` call; generation remains lazy until tsdown invokes its lifecycle hooks. For each target it:
 
 1. parses, normalizes, and analyzes the neutral component modules;
 2. runs neutral passes and creates semantic modules;
@@ -211,7 +217,8 @@ concerns into the generic compiler.
 ## Hook and composable builds
 
 Hooks are neutral composables rather than UI components, but use the same explicit target ownership boundary. A hook
-consumer passes one `FrameworkOutputPlugin` to `defineTsdownForgeHooks`. The generic driver parses the neutral entry,
+consumer passes one `FrameworkOutputPlugin` to `tsdownForgeHookPlugins` and adds the returned plugin to
+`defineTsdownLibrary`. The generic driver parses the neutral entry,
 preserves framework-agnostic modules where possible, and sends target-dependent modules through the plugin’s strict
 lower/optimize/generate path.
 
@@ -240,33 +247,38 @@ Jekyll include, or a Webflow code component — and each of those can be paired 
    configuration time, including a target's `supportedFrameworks` restriction.
 3. **A generic driver and build helpers.** `generateCmsArtifacts` discovers the neutral barrel, obtains each component's
    IR through `analyzeForgeModule`, analyses the content model, calls the target's emitters, and writes every returned
-   `CmsArtifact`. `defineTsdownForgeCms(All)` runs it into a per-target cache and emits
+   `CmsArtifact`. `tsdownForgeCmsPlugins` injects it into one caller-owned tsdown config and emits
    `dist/cms/<cms>/<framework>/**`, mirroring `asset: true` artifacts into `dist/cms/<cms>/`.
 
 The driver never maps a string id onto a target — consumers construct and pass instances, exactly as they do for
 framework plugins:
 
 ```ts
-import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { tsdownForgeCmsPlugins } from '@mission-platform/forge-cms-plugin-api';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
-export default defineTsdownForgeCmsAll({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  targets: [
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeReactFramework(),
-      storyblokRuntime: '@storyblok/react',
-    }),
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeVueFramework(),
-      storyblokRuntime: '@storyblok/vue',
-    }),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  entry: 'src/index.ts',
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeReactFramework(),
+        storyblokRuntime: '@storyblok/react',
+      }),
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeVueFramework(),
+        storyblokRuntime: '@storyblok/vue',
+      }),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  }),
 });
 ```
 
@@ -365,7 +377,7 @@ Adding a content platform follows the same additive shape, one layer up:
 6. add a spec over the shared fixtures exported from `@mission-platform/forge-cms-plugin-api/fixtures`, so the new
    target is exercised against exactly the same inputs as every other one;
 7. add the package as a direct dependency of each consumer that publishes the target and pass a fresh instance to
-   `defineTsdownForgeCms`.
+   `tsdownForgeCmsPlugins`.
 
 Do not add prop-classification logic to the target: a fix to union, JSDoc, default, or slot handling belongs in the
 shared content model so every platform benefits at once.

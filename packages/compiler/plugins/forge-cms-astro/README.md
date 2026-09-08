@@ -11,15 +11,21 @@ are hydrated by a real framework runtime.
 
 ```ts
 // tsdown.config.ts
-import { defineTsdownForgeCms } from "@mission-platform/forge-cms-plugin-api";
+import { tsdownForgeCmsPlugins } from "@mission-platform/forge-cms-plugin-api";
 import { forgeAstroCms } from "@mission-platform/forge-cms-astro";
 import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 
-export default defineTsdownForgeCms({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  target: forgeAstroCms({
-    packageName: "@acme/components",
-    plugin: forgeVueFramework(),
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeAstroCms({
+        packageName: "@acme/components",
+        plugin: forgeVueFramework(),
+      }),
+    ],
   }),
 });
 ```

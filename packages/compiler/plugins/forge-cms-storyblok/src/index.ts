@@ -2,16 +2,18 @@
  * `@mission-platform/forge-cms-storyblok`
  *
  * The Storyblok CMS target for Forge components. Pass a framework output plugin
- * to {@link forgeStoryblokCms} and hand the result to `defineTsdownForgeCms`:
+ * to {@link forgeStoryblokCms} and hand the result to `tsdownForgeCmsPlugins`:
  *
  * ```ts
- * defineTsdownForgeCmsAll({
- *   rootDir,
- *   targets: [
- *     forgeStoryblokCms({ packageName, plugin: forgeReactFramework(), storyblokRuntime: '@storyblok/react' }),
- *     forgeStoryblokCms({ packageName, plugin: forgeVueFramework(), storyblokRuntime: '@storyblok/vue' }),
- *   ],
- *   componentsModule,
+ * defineTsdownLibrary({
+ *   plugins: tsdownForgeCmsPlugins({
+ *     rootDir,
+ *     targets: [
+ *       forgeStoryblokCms({ packageName, plugin: forgeReactFramework(), storyblokRuntime: '@storyblok/react' }),
+ *       forgeStoryblokCms({ packageName, plugin: forgeVueFramework(), storyblokRuntime: '@storyblok/vue' }),
+ *     ],
+ *     componentsModule,
+ *   }),
  * });
  * ```
  *

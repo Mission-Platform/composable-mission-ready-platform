@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import type { CompilerInput } from './pipeline.js';
 
 /** A stable, inspectable key for a neutral semantic-cache entry. */
@@ -6,7 +8,7 @@ export interface ForgeSemanticCacheKey {
   readonly fileName: string;
 }
 
-function stableSerialize(value: unknown): string {
+export function stableSerialize(value: unknown): string {
   if (value === undefined) return 'undefined';
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
     return JSON.stringify(value);
@@ -25,6 +27,11 @@ function stableSerialize(value: unknown): string {
       .join(',')}}`;
   }
   return JSON.stringify(String(value));
+}
+
+/** Hash an ordered set of build inputs without depending on object insertion order. */
+export function createForgeFingerprint(value: unknown): string {
+  return createHash('sha256').update(stableSerialize(value)).digest('hex');
 }
 
 /** Include every neutral-input choice that can change semantic analysis. */
@@ -49,4 +56,21 @@ export function createForgeSemanticCacheKey(input: CompilerInput): ForgeSemantic
       sourceRoot: input.sourceRoot,
     }),
   };
+}
+
+/** Identity for a target output; includes the plugin version and all target inputs. */
+export function createForgeTargetCacheKey(input: {
+  readonly projectFingerprint?: string;
+  readonly dependencyFingerprint?: string;
+  readonly targetId: string;
+  readonly targetVersion?: string;
+  readonly source: CompilerInput;
+}): string {
+  return createForgeFingerprint({
+    projectFingerprint: input.projectFingerprint,
+    dependencyFingerprint: input.dependencyFingerprint,
+    source: createForgeSemanticCacheKey(input.source).value,
+    targetId: input.targetId,
+    targetVersion: input.targetVersion,
+  });
 }

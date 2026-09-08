@@ -13,8 +13,6 @@ import type {
 } from '@mission-platform/forge-plugin-api';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
-let defaultGenerationService: ForgeCompilerService | undefined;
-
 const TEST_FIXTURE_PLACEHOLDER = 'export const fixture = true;';
 
 function languageForExtension(extension: string): string {
@@ -95,7 +93,10 @@ export interface ForgeGenerationContextOptions {
 }
 
 export function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext {
-  const service = options.service ?? (defaultGenerationService ??= createForgeCompilerService());
+  // Direct generation remains supported for low-level callers, but each
+  // context owns its fallback service. Never retain compiler state globally
+  // across unrelated Vite/tsdown invocations.
+  const service = options.service ?? createForgeCompilerService();
   const project = service.prepare({
     entry: options.entry,
     sourceRoot: options.sourceRoot ?? path.dirname(options.entry),

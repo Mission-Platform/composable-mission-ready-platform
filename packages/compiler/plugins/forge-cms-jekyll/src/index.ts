@@ -5,9 +5,11 @@
  * framework plugin the surrounding build compiles the components with:
  *
  * ```ts
- * defineTsdownForgeCms({
- *   rootDir: import.meta.dirname,
- *   target: forgeJekyllCms({ packageName: '@acme/components', plugin: forgeVueFramework() }),
+ * defineTsdownLibrary({
+ *   plugins: tsdownForgeCmsPlugins({
+ *     rootDir: import.meta.dirname,
+ *     targets: [forgeJekyllCms({ packageName: '@acme/components', plugin: forgeVueFramework() })],
+ *   }),
  * });
  * ```
  *

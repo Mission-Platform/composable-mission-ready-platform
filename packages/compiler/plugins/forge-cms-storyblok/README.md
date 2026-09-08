@@ -8,25 +8,29 @@ barrel.
 
 ```ts
 // tsdown.config.ts
-import { defineTsdownForgeCmsAll } from "@mission-platform/forge-cms-plugin-api";
+import { tsdownForgeCmsPlugins } from "@mission-platform/forge-cms-plugin-api";
 import { forgeStoryblokCms } from "@mission-platform/forge-cms-storyblok";
 import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
 import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 
-export default defineTsdownForgeCmsAll({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  targets: [
-    forgeStoryblokCms({
-      packageName: "@acme/components",
-      plugin: forgeReactFramework(),
-      storyblokRuntime: "@storyblok/react",
-    }),
-    forgeStoryblokCms({
-      packageName: "@acme/components",
-      plugin: forgeVueFramework(),
-      storyblokRuntime: "@storyblok/vue",
-    }),
-  ],
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeStoryblokCms({
+        packageName: "@acme/components",
+        plugin: forgeReactFramework(),
+        storyblokRuntime: "@storyblok/react",
+      }),
+      forgeStoryblokCms({
+        packageName: "@acme/components",
+        plugin: forgeVueFramework(),
+        storyblokRuntime: "@storyblok/vue",
+      }),
+    ],
+  }),
 });
 ```
 

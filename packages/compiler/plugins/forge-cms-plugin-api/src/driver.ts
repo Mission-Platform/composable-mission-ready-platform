@@ -23,7 +23,9 @@ import {
   ensureForgeArtifactDirectory,
   resolveForgeArtifactPath,
   validateForgeArtifactName,
+  type ForgeCompilerService,
   type ForgeGraphDiagnostic,
+  type ForgeProjectSnapshot,
 } from "@mission-platform/vite-plugin-forge";
 
 import { analyzeContentComponent } from "./analyze.js";
@@ -74,6 +76,13 @@ export interface GenerateCmsArtifactsOptions {
   /** Root of the consuming package; defaults to the parent of `outDir`. */
   readonly rootDir?: string;
   readonly artifactKinds?: readonly CmsArtifactKind[];
+  /** Service owned by the caller's Forge build session. */
+  readonly service?: ForgeCompilerService;
+  /**
+   * Prepared project snapshot from the owning Forge build session. When present
+   * the driver reuses its graph instead of rediscovering sources eagerly.
+   */
+  readonly project?: ForgeProjectSnapshot;
 }
 
 /** Everything one target run produced. */
@@ -177,10 +186,20 @@ export function generateCmsArtifacts(
   const emits = (kind: CmsArtifactKind): boolean =>
     artifactKinds === undefined || artifactKinds.includes(kind);
   const componentsDirectory = path.dirname(options.componentsModule);
-  const graph = buildForgeFileGraph({
-    entry: options.componentsModule,
-    sourceRoot: componentsDirectory,
-  });
+  // Prefer the session-prepared graph so CMS targets share neutral discovery
+  // with sibling framework builds and never re-walk sources at config time.
+  const project =
+    options.project ??
+    options.service?.prepare({
+      entry: options.componentsModule,
+      sourceRoot: componentsDirectory,
+    });
+  const graph =
+    project?.graph ??
+    buildForgeFileGraph({
+      entry: options.componentsModule,
+      sourceRoot: componentsDirectory,
+    });
   const discovered = discoverComponentsFromGraph(graph, stripPrefix);
   const diagnostics: CompilerDiagnostic[] = graph.diagnostics.map(
     (diagnostic) => toCompilerDiagnostic(diagnostic),
@@ -201,6 +220,8 @@ export function generateCmsArtifacts(
           componentsModule: options.componentsModule,
           outDir: safeOutputDirectory,
           stripPrefix,
+          service: options.service,
+          project,
         })
       : undefined;
 
@@ -224,13 +245,18 @@ export function generateCmsArtifacts(
       sourcePath: discoveredComponent.sourcePath,
     });
     const source = readFileSync(sourcePath, "utf8");
-    const semantic = analyzeForgeModule({
+    const analyzeInput = {
       source,
       fileName: sourcePath,
-      moduleKind: "component",
+      moduleKind: "component" as const,
       componentName: discoveredComponent.neutralName,
       sourceRoot: componentsDirectory,
-    });
+      configFingerprint: project?.fingerprint,
+    };
+    // Session-owned services cache neutral IR across CMS and framework targets.
+    const semantic = options.service
+      ? options.service.analyze(analyzeInput)
+      : analyzeForgeModule(analyzeInput);
     diagnostics.push(...(semantic.diagnostics ?? []));
 
     const component = analyzeContentComponent(

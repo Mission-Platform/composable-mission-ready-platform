@@ -11,15 +11,21 @@ make those partials discoverable from `site.data` and `_config.yml`.
 
 ```ts
 // tsdown.config.ts
-import { defineTsdownForgeCms } from "@mission-platform/forge-cms-plugin-api";
+import { tsdownForgeCmsPlugins } from "@mission-platform/forge-cms-plugin-api";
 import { forgeJekyllCms } from "@mission-platform/forge-cms-jekyll";
 import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 
-export default defineTsdownForgeCms({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  target: forgeJekyllCms({
-    packageName: "@acme/components",
-    plugin: forgeVueFramework(),
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeJekyllCms({
+        packageName: "@acme/components",
+        plugin: forgeVueFramework(),
+      }),
+    ],
   }),
 });
 ```

@@ -4,6 +4,59 @@
 
 Generated from public source declarations in `@mission-platform/vite-plugin-forge`.
 
+## `src/build-integration`
+
+### forgeArtifactPublishPlugin
+
+**Kind:** function
+
+```typescript
+function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions): Plugin;
+```
+
+Publish all native output through the same manifest transaction as Forge
+generated sources. Native bundlers and declaration tools may write freely
+inside `attemptDirectory`; that directory is never the published target.
+
+#### Parameters
+
+| Name    | Type                        | Description |
+| ------- | --------------------------- | ----------- |
+| options | ForgeArtifactPublishOptions |             |
+
+### forgeBuildLifecyclePlugin
+
+**Kind:** function
+
+```typescript
+function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
+```
+
+Connect one target plan to either Vite or Rolldown/tsdown. Generation is
+deliberately awaited from lifecycle hooks, never while a config is created.
+
+#### Parameters
+
+| Name    | Type                       | Description |
+| ------- | -------------------------- | ----------- |
+| options | ForgeBuildLifecycleOptions |             |
+
+### forgeVirtualEntry
+
+**Kind:** function
+
+```typescript
+function forgeVirtualEntry(targetId: string): string;
+```
+
+Stable virtual entry used until the target has been prepared by buildStart.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| targetId | string |             |
+
 ## `src/compiler/artifact-manifest`
 
 ### createForgeArtifactManifest
@@ -150,10 +203,32 @@ Validate a single path component used to construct an artifact root.
 **Kind:** function
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
+function createForgeArtifactWriter(
+  outDir: string,
+  targetId: string,
+  options: ForgeArtifactWriterOptions = {},
+): ForgeArtifactWriter;
 ```
 
 No description provided.
+
+#### Parameters
+
+| Name     | Type                       | Description |
+| -------- | -------------------------- | ----------- |
+| outDir   | string                     |             |
+| targetId | string                     |             |
+| options  | ForgeArtifactWriterOptions |             |
+
+### forgeArtifactAttemptDirectory
+
+**Kind:** function
+
+```typescript
+function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string;
+```
+
+Allocate an owned sibling directory for a native target build attempt.
 
 #### Parameters
 
@@ -2598,17 +2673,107 @@ export class PersistentForgeCompilerService implements ForgeCompilerService
 
 Long-lived, synchronous compiler state for one process/build session.
 
-## `src/config`
+## `src/compiler/session`
 
-### default
+### createForgeBuildSession
 
 **Kind:** function
 
 ```typescript
-function reactJsxPlugin(): Plugin;
+function createForgeBuildSession(options: CreateForgeBuildSessionOptions = {}): ForgeBuildSession;
+```
+
+Create the explicit lifecycle owner used by Vite and tsdown adapters.
+Construction only records service ownership; graph discovery starts in
+`prepare`, which adapters call from a bundler lifecycle hook.
+
+#### Parameters
+
+| Name    | Type                           | Description |
+| ------- | ------------------------------ | ----------- |
+| options | CreateForgeBuildSessionOptions |             |
+
+### CreateForgeBuildSessionOptions
+
+**Kind:** interface
+
+```typescript
+export interface CreateForgeBuildSessionOptions
 ```
 
 No description provided.
+
+### ForgeBuildKind
+
+**Kind:** type
+
+```typescript
+export type ForgeBuildKind = 'component' | 'hook' | 'neutral' | 'router' | 'cms-island';
+```
+
+Build policies supported by the shared Forge lifecycle.
+
+### ForgeBuildPlan
+
+**Kind:** interface
+
+```typescript
+export interface ForgeBuildPlan
+```
+
+The neutral project and selected targets coordinated by one lifecycle.
+
+### ForgeBuildSession
+
+**Kind:** interface
+
+```typescript
+export interface ForgeBuildSession
+```
+
+No description provided.
+
+### ForgeTargetGenerationContext
+
+**Kind:** interface
+
+```typescript
+export interface ForgeTargetGenerationContext
+```
+
+Context passed to a target generation callback after project preparation.
+
+### ForgeTargetGenerationResult
+
+**Kind:** interface
+
+```typescript
+export interface ForgeTargetGenerationResult
+```
+
+The result returned by a target's lazy source-generation stage.
+
+### ForgeTargetPlan
+
+**Kind:** interface
+
+```typescript
+export interface ForgeTargetPlan
+```
+
+One caller-owned target in a Forge build session.
+
+### ForgeTargetResult
+
+**Kind:** interface
+
+```typescript
+export interface ForgeTargetResult
+```
+
+No description provided.
+
+## `src/config`
 
 ### defineJsxHookLibraryConfig
 
@@ -2775,41 +2940,6 @@ export interface GenerateHookLibrarySourcesOptions
 
 Options for {@link generateHookLibrarySources}.
 
-### HookLibraryDtsOptions
-
-**Kind:** interface
-
-```typescript
-export interface HookLibraryDtsOptions
-```
-
-Options for {@link hookLibraryDtsPlugin}.
-
-### hookLibraryDtsPlugin
-
-**Kind:** function
-
-```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
-```
-
-A post-build Vite plugin that emits **genuine, per-framework** declarations
-for a hook library's generated source tree.
-
-Each framework build ({@link generateHookLibrarySources} + the framework's
-Stage-2 bundler) produces JS but no declarations, since the generated tree is
-not a `tsc`-visible source file. Rather than re-export a single _common_
-neutral declaration for every framework, this plugin runs the TypeScript 7
-CLI over the generated tree in `writeBundle` and writes the resulting `.d.ts`
-files into the build's own `outDir`. Type diagnostics are surfaced as build
-warnings rather than failures so a `.d.ts` is always produced.
-
-#### Parameters
-
-| Name    | Type                  | Description |
-| ------- | --------------------- | ----------- |
-| options | HookLibraryDtsOptions |             |
-
 ## `src/generate`
 
 ### createFrameworkSourceTarget
@@ -2865,162 +2995,23 @@ export interface GenerateFrameworkSourcesOptions
 
 Options for {@link generateFrameworkSources}.
 
-### jsxComponentsCssImportPlugin
-
-**Kind:** function
-
-```typescript
-function jsxComponentsCssImportPlugin(): Plugin;
-```
-
-Re-link per-component CSS to its JS chunk.
-
-A Vite **library** build with `cssCodeSplit` extracts one CSS asset per chunk
-but — unlike an app build — does not inject the matching `import './x.css'`
-into the JS chunk, so a consumer importing a single component would get its
-JS without its styles. This plugin restores that link: for every emitted
-chunk it prepends a side-effect import of each CSS file Vite associated with
-it (`chunk.viteMetadata.importedCss`), so importing one component pulls in
-exactly that component's stylesheet (and tree-shakes the rest of the library,
-styles included).
-
-It runs with `enforce: 'post'` so its `generateBundle` hook executes **after**
-Vite's own CSS plugin has populated `importedCss` — otherwise the metadata is
-still empty (which is why the Vue scoped-style assets, emitted under
-`preserveModules`, were previously left orphaned and the components rendered
-unstyled).
-
-Only CSS files that were actually emitted into the bundle are re-linked. Under
-`preserveModules` Vite deduplicates byte-identical CSS assets — e.g. the shared
-`size`/`spacing` utility modules imported by many components collapse to a
-single emitted stylesheet — and drops the duplicates, yet still leaves their
-provisional per-chunk names in `importedCss`. Emitting `import './x.css'` for a
-dropped name produces a dangling reference that breaks every downstream
-consumer's build (unresolved import), so such names are filtered out; the
-deduplicated styles still ship via the one chunk that retained them (and the
-package's `./vue` / `./react` barrels pull in that chunk).
-
-Finally, each CSS-Module stylesheet is emitted under its **source** name —
-`foo.module.css` — with the class-name hashing already applied and the
-resolved names baked into the sibling `foo.module.js` class map. Shipping it
-with that `.module.css` suffix is a trap: every _downstream_ bundler (e.g. the
-React Storybook's own Vite) recognises `*.module.css` as a CSS Module and
-runs the CSS-Modules transform over it **a second time**, re-hashing the
-selectors so they no longer match the (already-hashed) class names baked into
-the JS — the component then renders unstyled. The stylesheet must be processed
-once, here, when the framework code is compiled — not again downstream. So
-every emitted `*.module.css` asset is renamed to a plain `*.css` (a global
-stylesheet consumers ship verbatim), and the re-linked import points at the
-renamed file.
-
-### JsxComponentsDtsOptions
-
-**Kind:** interface
-
-```typescript
-export interface JsxComponentsDtsOptions
-```
-
-Options for {@link jsxComponentsDtsPlugin}.
-
-### jsxComponentsDtsPlugin
-
-**Kind:** function
-
-```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
-```
-
-A post-build Vite plugin that emits **genuine, per-framework** declarations
-for a neutral components package's generated source tree.
-
-Each framework build ({@link generateFrameworkSources} + the framework's
-Stage-2 bundler) produces JS but no declarations, since the generated tree is
-not a `tsc`-visible source file. Rather than synthesise a single entry
-declaration whose props types are re-imported from the **shared neutral**
-declarations (so every framework's consumers would see the same `MpChild` /
-`MpRef`), this plugin runs each framework's own declaration toolchain over
-the generated tree in `closeBundle` and writes the resulting `.d.ts` files
-into the build's own `outDir`:
-
-- **React** — the TypeScript compiler API over the `.tsx` tree, in-process.
-  Because the React emitter already rewrites the neutral render/hook types to
-  their React equivalents (`MpChild` → `ReactNode`, `MpRef` → `RefObject`,
-  `MpDependencyList` → `DependencyList`), the emitted declarations read
-  idiomatically for React.
-- **Vue** — the `vue-tsc` CLI over the `.vue` tree, which emits each SFC's
-  precise `DefineComponent` (props, slots, emits) plus its `.vue.d.ts`
-  sidecar.
-- **Solid** — the same in-process TypeScript compiler API as React, over the
-  generated `.tsx` tree, but with the JSX namespace pointed at `solid-js` so
-  the Solid-flavoured JSX the emitter renders resolves against Solid's own
-  `JSX.Element` vocabulary.
-- **Web-Components** — the same in-process TypeScript compiler API, over the
-  generated (JSX-free) `.ts` tree of `LitElement` subclasses.
-- **Svelte** — attempts `svelte2tsx`'s async `emitDts` over the generated
-  `.svelte` + `.ts` tree first (the SFC-aware declaration emitter from the
-  Svelte language tools), but as of the currently depended-on `svelte2tsx`
-  version its per-component `.svelte.d.ts` sidecars ship a dangling
-  props-type reference they never declare or import (see {@link
-  svelteDtsOutputIsUsable}), so this currently always falls back to the
-  synthesised entry declaration for a valid `index.d.ts`.
-
-Type diagnostics are surfaced as build warnings rather than failures so a
-`.d.ts` is always produced (mirroring {@link hookLibraryDtsPlugin}).
-
-#### Parameters
-
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| options | JsxComponentsDtsOptions |             |
-
-### JsxComponentsEntryDtsOptions
-
-**Kind:** interface
-
-```typescript
-export interface JsxComponentsEntryDtsOptions
-```
-
-Options for {@link jsxComponentsEntryDtsPlugin}.
-
-### jsxComponentsEntryDtsPlugin
-
-**Kind:** function
-
-```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
-```
-
-Emit the synthesised declaration (`<declarationFileName>.d.ts`) for the
-generated entry, so the package's `./react` / `./vue` types resolve even
-though the entry itself is generated (and therefore not seen by `tsc`).
-
-#### Parameters
-
-| Name    | Type                         | Description |
-| ------- | ---------------------------- | ----------- |
-| options | JsxComponentsEntryDtsOptions |             |
-
 ## `src/tsdown`
 
-### defineTsdownForgeComponents
+### defineTsdownForgeComponentsAll
 
 **Kind:** function
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
+function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOptions): UserConfig[];
 ```
 
-Reproduce one Archetype-C **component** framework build under tsdown:
-Stage 1 (`generateFrameworkSources`) + Stage 2 plugins + css-import + dts plugins,
-emitting into `dist/<framework>/`.
+Build independent tsdown configs for every requested Forge component framework.
 
 #### Parameters
 
-| Name    | Type                         | Description |
-| ------- | ---------------------------- | ----------- |
-| options | TsdownForgeComponentsOptions |             |
+| Name    | Type                               | Description |
+| ------- | ---------------------------------- | ----------- |
+| options | TsdownForgeComponentPluginsOptions |             |
 
 ### defineTsdownForgeEmailComponents
 
@@ -3041,24 +3032,6 @@ It preserves the Forge tree so
 | ------- | --------------------------------- | ----------- |
 | options | TsdownForgeEmailComponentsOptions |             |
 
-### defineTsdownForgeHooks
-
-**Kind:** function
-
-```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
-```
-
-Reproduce one Archetype-C **hook** framework build under tsdown:
-Stage 1 (`generateHookLibrarySources`) + Stage 2 plugins + `hookLibraryDtsPlugin`,
-emitting into `dist/<framework>/`.
-
-#### Parameters
-
-| Name    | Type                    | Description |
-| ------- | ----------------------- | ----------- |
-| options | TsdownForgeHooksOptions |             |
-
 ### defineTsdownForgeHooksAll
 
 **Kind:** function
@@ -3077,12 +3050,30 @@ Build an array of tsdown configs for every requested forge hooks framework
 | ------- | -------------------------- | ----------- |
 | options | TsdownForgeHooksAllOptions |             |
 
-### TsdownForgeComponentsOptions
+### tsdownForgeComponentPlugins
+
+**Kind:** function
+
+```typescript
+function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions): TsdownPlugin[];
+```
+
+Reproduce one Archetype-C **component** framework build under tsdown:
+Stage 1 (`generateFrameworkSources`) + Stage 2 plugins + css-import + dts plugins,
+emitting into `dist/<framework>/`.
+
+#### Parameters
+
+| Name    | Type                               | Description |
+| ------- | ---------------------------------- | ----------- |
+| options | TsdownForgeComponentPluginsOptions |             |
+
+### TsdownForgeComponentPluginsOptions
 
 **Kind:** interface
 
 ```typescript
-export interface TsdownForgeComponentsOptions
+export interface TsdownForgeComponentPluginsOptions
 ```
 
 No description provided.
@@ -3097,22 +3088,30 @@ export interface TsdownForgeEmailComponentsOptions
 
 No description provided.
 
+### tsdownForgeHookPlugins
+
+**Kind:** function
+
+```typescript
+function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
+```
+
+Native tsdown-plugin form of the hook adapter. The returned plugins inject
+their target config from `tsdownConfig`, allowing hook builds to be composed
+with one caller-owned `defineTsdownLibrary` configuration.
+
+#### Parameters
+
+| Name    | Type                       | Description |
+| ------- | -------------------------- | ----------- |
+| options | TsdownForgeHooksAllOptions |             |
+
 ### TsdownForgeHooksAllOptions
 
 **Kind:** interface
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
-```
-
-No description provided.
-
-### TsdownForgeHooksOptions
-
-**Kind:** interface
-
-```typescript
-export interface TsdownForgeHooksOptions
 ```
 
 No description provided.
