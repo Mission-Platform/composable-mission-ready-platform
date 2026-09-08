@@ -44,9 +44,11 @@ the runtime they use.
 ### @mission-platform/vite-plugin-forge
 
 The compiler driver accepts explicit `FrameworkOutputPlugin` instances; it does
-not provide a framework registry. `defineViteForgeComponents` and
-`defineTsdownForgeComponents` (plus the hook and CMS helpers) share an in-process
-`ForgeCompilerService` for one build or watch session.
+not provide a framework registry. Vite and tsdown adapters share an in-process
+`ForgeCompilerService` for one build or watch session. Tsdown consumers add
+`tsdownForgeComponentPlugins` or `tsdownForgeHookPlugins` to one
+`defineTsdownLibrary` call; CMS consumers use `tsdownForgeCmsPlugins` from
+`@mission-platform/forge-cms-plugin-api`.
 
 | Capability         | Description                                                                                                                                                         |
 | :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -401,5 +403,4 @@ target may be bound to any framework plugin. See the [Forge Compiler Pipeline](.
 | `CmsOutputPlugin`         | Type     | The target contract: a bound framework plugin plus the four emitters.           |
 | `defineForgeCmsPlugin`    | Function | Validates a CMS target at configuration time.                                   |
 | `generateCmsArtifacts`    | Function | The generic discover → IR → content model → emit → write driver.                |
-| `defineTsdownForgeCms`    | Function | tsdown config for one CMS target, emitting `dist/cms/<cms>/<framework>/**`.     |
-| `defineTsdownForgeCmsAll` | Function | tsdown configs for a list of CMS targets.                                       |
+| `tsdownForgeCmsPlugins`   | Function | Native tsdown plugins for CMS targets, added to one `defineTsdownLibrary` call. |
