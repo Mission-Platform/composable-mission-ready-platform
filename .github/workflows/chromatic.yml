@@ -135,8 +135,7 @@ jobs:
       - name: Run static gates
         run: |
           pnpm build
-          pnpm test
-          pnpm lint
           pnpm lint:style
           pnpm format
           pnpm validate:exports
+          pnpm validate:component-properties

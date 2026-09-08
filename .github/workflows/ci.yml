@@ -119,6 +119,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build all affected workspaces
+        run: pnpm exec turbo run build --affected
+
       - name: Lint all affected workspaces
         run: pnpm exec turbo run lint --affected
 
