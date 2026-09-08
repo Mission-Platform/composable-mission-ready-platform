@@ -1,7 +1,7 @@
 import { defineLibraryConfig } from '@mission-platform/vite-config';
 
 export default defineLibraryConfig({
-  rootDir: __dirname,
+  rootDir: import.meta.dirname,
   name: 'MissionPlatformEmailRenderer',
   entry: {
     index: 'src/index.ts',

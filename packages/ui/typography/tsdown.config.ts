@@ -6,7 +6,7 @@ import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
 
 const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
@@ -27,7 +27,7 @@ export default [
       outDir: path.resolve(import.meta.dirname, 'dist/components'),
     },
   }),
-  ...defineTsdownForgeComponents({
+  ...defineTsdownForgeComponentsAll({
     rootDir: rootDirectory,
     frameworks: [
       forgeReactFramework(),

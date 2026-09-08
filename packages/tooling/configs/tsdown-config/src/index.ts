@@ -170,6 +170,8 @@ export interface TsdownLibraryOptions {
   cssBundle?: boolean;
   /** Override or extend the generated config. */
   overrides?: UserConfig;
+  /** Native tsdown plugins applied directly to the generated config. */
+  plugins?: UserConfig['plugins'];
 }
 
 interface WriteBundleOptions {
@@ -513,6 +515,7 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     platform = 'neutral',
     cssBundle = true,
     overrides,
+    plugins = [],
   } = options;
 
   const resolvedOutDirectory = resolveTsdownOutputDirectory(rootDir, outDirectory, outputRoot);
@@ -552,7 +555,11 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     },
     // Re-link the extracted per-module stylesheets (which Rolldown emits but does
     // not import back into the JS) to the modules that own them.
-    plugins: [tsconfigPathsPlugin(rootDir, tsconfigPathsRoot), ...(cssBundle ? [cssBundlePlugin()] : [])],
+    plugins: [
+      tsconfigPathsPlugin(rootDir, tsconfigPathsRoot),
+      ...(cssBundle ? [cssBundlePlugin()] : []),
+      ...flattenPlugins(plugins),
+    ],
     deps: {
       neverBundle: createExternalMatcher(externalNames),
     },

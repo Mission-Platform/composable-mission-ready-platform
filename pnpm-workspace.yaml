@@ -53,6 +53,7 @@ catalogs:
   eslint:
     "@babel/core": ^8.0.1
     "@babel/eslint-parser": ^8.0.1
+    "@eslint/markdown": ^8.0.3
     eslint-plugin-sonarjs: ^4.2.0
     eslint-plugin-unicorn: ^64.0.0
     eslint: ^10.9.1

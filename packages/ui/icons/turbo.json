@@ -3,6 +3,16 @@
   "extends": ["//"],
   "tasks": {
     "build": {
+      "dependsOn": ["^build", "build:check", "build:generate", "build:sprite"],
+      "env": [
+        "FORGE_BUILD_TARGET",
+        "FORGE_FRAMEWORK_TARGET",
+        "FORGE_CMS_STORYBLOK_TARGET",
+        "FORGE_CMS_ARTIFACT_MODE",
+        "FORGE_BUILD_STAGE_ROOT"
+      ]
+    },
+    "build:generate": {
       "dependsOn": ["^build", "build:check"],
       "env": [
         "FORGE_BUILD_TARGET",
@@ -11,6 +21,10 @@
         "FORGE_CMS_ARTIFACT_MODE",
         "FORGE_BUILD_STAGE_ROOT"
       ]
+    },
+    "build:sprite": {
+      "dependsOn": ["build:generate"],
+      "outputs": ["dist/icons.svg"]
     }
   }
 }

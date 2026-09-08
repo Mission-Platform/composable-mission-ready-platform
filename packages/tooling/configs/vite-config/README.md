@@ -18,7 +18,7 @@ that keeps SFC `<i18n>` custom blocks inert) and a Vitest factory preconfigured 
 import { defineLibraryConfig } from '@mission-platform/vite-config';
 
 export default defineLibraryConfig({
-  rootDir: __dirname,
+  rootDir: import.meta.dirname,
   entry: { ui: 'src/index.ts' },
   name: 'MissionPlatformUi',
 });
@@ -31,7 +31,7 @@ lib-build boilerplate:
 import { defineLibraryConfig } from '@mission-platform/vite-config';
 
 export default defineLibraryConfig({
-  rootDir: __dirname,
+  rootDir: import.meta.dirname,
   entry: 'src/index.ts',
   name: 'MissionPlatformMap',
   external: ['maplibre-gl'],
@@ -120,7 +120,7 @@ export default defineVitestConfig({
 
 ## Conventions
 
-- Always supply `rootDir: __dirname` to `defineLibraryConfig` — it resolves
+- Always supply `rootDir: import.meta.dirname` to `defineLibraryConfig` — it resolves
   `entry` paths absolutely.
 - Use the `overrides` option instead of copy-pasting the shared boilerplate. This guarantees workspaces stay in
   lock-step with platform defaults.

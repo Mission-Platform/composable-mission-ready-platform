@@ -1,18 +1,12 @@
-import { createRequire } from 'node:module';
 import path from 'node:path';
 
-import { defineLibraryConfig } from '@mission-platform/vite-config';
-import {
-  generateFrameworkSources,
-  jsxComponentsCssImportPlugin,
-  jsxComponentsDtsPlugin,
-  type JsxFramework,
-  reactJsxPlugin,
-  solidJsxPlugin,
-  sveltePlugin,
-} from '@mission-platform/vite-plugin-forge';
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import { defineConfig, type Plugin, type UserConfig } from 'vite';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
+import { defineJsxLibraryConfig, type JsxFramework } from '@mission-platform/vite-plugin-forge';
+import { defineConfig, type UserConfig } from 'vite';
 
 /**
  * The package ships **only** framework-specific builds (no neutral artifact),
@@ -35,49 +29,19 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  * `vue-tsc` over the Vue tree). `tsc` also emits the neutral components' own
  * declarations into `dist/components/**` for the package's neutral `.` entry.
  */
-const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
-const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
-
-/**
- * The `vue-tsc` CLI used to emit the Vue build's declarations. It ships as a
- * dependency of `@mission-platform/forge-jsx`, so it is resolved from the jsx package
- * directory rather than assumed hoisted.
- */
-const vueTscBin = createRequire(path.join(__dirname, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
-  paths: [path.join(__dirname, 'node_modules/@mission-platform/forge-jsx')],
-});
-
+const componentsModule = path.resolve(import.meta.dirname, 'src/components/index.ts');
 /** Build the per-framework library config (shared between all framework modes). */
 function defineFrameworkConfig(framework: JsxFramework): UserConfig {
-  const cacheName = `map-${framework}`;
-  const generatedDir = path.join(cacheRoot, cacheName);
-  const entry = generateFrameworkSources({
-    framework,
-    componentsModule,
-    outDir: generatedDir,
-  });
-
-  const stagePlugins: Plugin[] =
-    framework === 'vue'
-      ? [vueJsx()]
-      : framework === 'react'
-        ? [reactJsxPlugin()]
-        : framework === 'solid'
-          ? solidJsxPlugin()
-          : framework === 'svelte'
-            ? sveltePlugin()
-            : [];
-
-  const frameworkSuffix =
+  const plugin =
     framework === 'react'
-      ? 'React'
+      ? forgeReactFramework()
       : framework === 'vue'
-        ? 'Vue'
+        ? forgeVueFramework()
         : framework === 'solid'
-          ? 'Solid'
+          ? forgeSolidFramework()
           : framework === 'svelte'
-            ? 'Svelte'
-            : 'WebComponents';
+            ? forgeSvelteFramework()
+            : forgeWebComponentsFramework();
 
   const frameworkExternals =
     framework === 'react'
@@ -88,36 +52,18 @@ function defineFrameworkConfig(framework: JsxFramework): UserConfig {
           ? ['solid-js']
           : framework === 'svelte'
             ? ['svelte']
-            : framework === 'web-components'
-              ? ['lit']
-              : [];
+            : ['lit'];
 
-  return defineLibraryConfig({
-    rootDir: __dirname,
-    name: `MissionPlatformJsxMap${frameworkSuffix}`,
-    entry,
-    // Each component keeps its own JS chunk + CSS asset for tree shaking.
-    preserveModules: true,
-    preserveModulesRoot: path.join('node_modules/.cache', cacheName),
+  return defineJsxLibraryConfig({
+    rootDir: import.meta.dirname,
+    plugin,
+    name: 'MissionPlatformJsxMap',
+    componentsModule,
     external: frameworkExternals,
     overrides: {
       build: {
-        // Per-framework subtree, so the identically-named chunks never collide.
-        outDir: `dist/${framework}`,
-        // Emit one CSS asset per component module rather than one combined file.
         cssCodeSplit: true,
       },
-      plugins: [
-        ...stagePlugins,
-        jsxComponentsCssImportPlugin(),
-        jsxComponentsDtsPlugin({
-          framework,
-          generatedDir,
-          outDir: path.resolve(__dirname, `dist/${framework}`),
-          vueTscBin,
-          componentsModule,
-        }),
-      ],
     },
   });
 }

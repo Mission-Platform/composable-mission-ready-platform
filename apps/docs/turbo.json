@@ -3,9 +3,28 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "//#docs:generate"],
+      "dependsOn": [
+        "^build",
+        "@mission-platform/scripts#docs:generate",
+        "build:check",
+        "build:bundle",
+        "build:prerender",
+        "build:verify"
+      ],
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".vite/**"]
+    },
+    "build:bundle": {
+      "dependsOn": ["build:check"],
+      "env": ["VITE_*"],
+      "outputs": ["dist/**", ".vite/**"]
+    },
+    "build:prerender": {
+      "dependsOn": ["build:bundle"],
+      "outputs": ["dist/**"]
+    },
+    "build:verify": {
+      "dependsOn": ["build:prerender"]
     }
   }
 }

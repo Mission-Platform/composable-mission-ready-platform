@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { defineTsdownForgeCmsAll } from "@mission-platform/forge-cms-plugin-api";
+import { tsdownForgeCmsPlugins } from "@mission-platform/forge-cms-plugin-api";
 import { forgeStoryblokCmsTargets } from "@mission-platform/forge-cms-storyblok";
 import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
 import { forgeSolidFramework } from "@mission-platform/forge-plugin-solid";
@@ -8,7 +8,7 @@ import { forgeSvelteFramework } from "@mission-platform/forge-plugin-svelte";
 import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
 import { forgeWebComponentsFramework } from "@mission-platform/forge-plugin-web-components";
 import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
-import { defineTsdownForgeComponents } from "@mission-platform/vite-plugin-forge";
+import { defineTsdownForgeComponentsAll } from "@mission-platform/vite-plugin-forge";
 
 const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, "src/components/index.ts");
@@ -18,14 +18,7 @@ export default [
     rootDir: import.meta.dirname,
     entry: "src/index.ts",
   }),
-  defineTsdownLibrary({
-    rootDir: import.meta.dirname,
-    entry: "src/utils/index.ts",
-    overrides: {
-      outDir: "dist/utils",
-    },
-  }),
-  ...defineTsdownForgeComponents({
+  ...defineTsdownForgeComponentsAll({
     rootDir: rootDirectory,
     frameworks: [
       forgeReactFramework(),
@@ -38,18 +31,29 @@ export default [
     name: "MissionPlatformResourcePlanner",
     declarationModule: "..",
   }),
-  ...defineTsdownForgeCmsAll({
+  defineTsdownLibrary({
+    rootDir: import.meta.dirname,
+    entry: "src/utils/index.ts",
+    overrides: {
+      outDir: "dist/utils",
+    },
+  }),
+  defineTsdownLibrary({
     rootDir: rootDirectory,
-    componentsModule,
-    targets: forgeStoryblokCmsTargets({
-      packageName: "@mission-platform/resource-planner",
-      frameworks: [
-        forgeReactFramework(),
-        forgeVueFramework(),
-        forgeSvelteFramework(),
-        forgeSolidFramework(),
-        forgeWebComponentsFramework(),
-      ],
+    entry: componentsModule,
+    plugins: tsdownForgeCmsPlugins({
+      rootDir: rootDirectory,
+      componentsModule,
+      targets: forgeStoryblokCmsTargets({
+        packageName: "@mission-platform/resource-planner",
+        frameworks: [
+          forgeReactFramework(),
+          forgeVueFramework(),
+          forgeSvelteFramework(),
+          forgeSolidFramework(),
+          forgeWebComponentsFramework(),
+        ],
+      }),
     }),
   }),
 ];

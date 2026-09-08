@@ -2,7 +2,7 @@
   "$schema": "https://turborepo.com/schema.json",
   "extends": ["//"],
   "tasks": {
-    "lint": {
+    "test:e2e": {
       "env": ["PLAYWRIGHT_BASE_URL"]
     },
     "build": {

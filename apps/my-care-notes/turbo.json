@@ -12,6 +12,9 @@
       "env": ["VITE_*"],
       "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
     },
+    "test:e2e": {
+      "env": ["PLAYWRIGHT_BASE_URL"]
+    },
     "deploy": {
       "dependsOn": ["build", "@mission-platform/forge-spa#build"],
       "cache": false

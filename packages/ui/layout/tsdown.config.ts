@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { tsdownForgeCmsPlugins } from '@mission-platform/forge-cms-plugin-api';
 import { forgeStoryblokCmsTargets } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
@@ -11,7 +11,7 @@ import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary, resolveTsdownOutputDirectory } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
 import * as sass from 'sass-embedded';
 
 const rootDirectory = import.meta.dirname;
@@ -68,7 +68,7 @@ export default [
       },
     },
   }),
-  ...defineTsdownForgeComponents({
+  ...defineTsdownForgeComponentsAll({
     rootDir: rootDirectory,
     frameworks: [
       forgeReactFramework(),
@@ -82,18 +82,22 @@ export default [
     external: ['i18next'],
     declarationModule: '..',
   }),
-  ...defineTsdownForgeCmsAll({
+  defineTsdownLibrary({
     rootDir: rootDirectory,
-    componentsModule,
-    targets: forgeStoryblokCmsTargets({
-      packageName: '@mission-platform/layouts',
-      frameworks: [
-        forgeReactFramework(),
-        forgeVueFramework(),
-        forgeSvelteFramework(),
-        forgeSolidFramework(),
-        forgeWebComponentsFramework(),
-      ],
+    entry: componentsModule,
+    plugins: tsdownForgeCmsPlugins({
+      rootDir: rootDirectory,
+      componentsModule,
+      targets: forgeStoryblokCmsTargets({
+        packageName: '@mission-platform/layouts',
+        frameworks: [
+          forgeReactFramework(),
+          forgeVueFramework(),
+          forgeSvelteFramework(),
+          forgeSolidFramework(),
+          forgeWebComponentsFramework(),
+        ],
+      }),
     }),
   }),
 ];

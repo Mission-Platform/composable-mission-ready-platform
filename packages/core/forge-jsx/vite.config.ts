@@ -1,7 +1,7 @@
 import { defineLibraryConfig } from '@mission-platform/vite-config';
 
 export default defineLibraryConfig({
-  rootDir: __dirname,
+  rootDir: import.meta.dirname,
   name: 'MissionPlatformJsx',
   // Multiple entries so the framework adapters (which are intentionally kept
   // out of the root barrel) are emitted as their own subpath modules.
