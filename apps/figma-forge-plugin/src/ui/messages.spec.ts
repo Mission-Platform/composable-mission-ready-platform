@@ -23,7 +23,9 @@ describe('Forge Figma UI message security', () => {
     const parent = {} as WindowProxy;
 
     expect(isTrustedForgePluginMessageEvent(messageEvent(parent, 'https://www.figma.com'), parent)).toBe(true);
-    expect(isTrustedForgePluginMessageEvent(messageEvent({}, 'https://www.figma.com'), parent)).toBe(false);
+    expect(isTrustedForgePluginMessageEvent(messageEvent({} as WindowProxy, 'https://www.figma.com'), parent)).toBe(
+      false,
+    );
     expect(isTrustedForgePluginMessageEvent(messageEvent(parent, 'https://attacker.test'), parent)).toBe(false);
   });
 

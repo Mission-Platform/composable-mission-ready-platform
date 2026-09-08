@@ -3,11 +3,15 @@
  * run with Node's built-in test runner (`node --test`).
  */
 import assert from 'node:assert/strict';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
 
+import { findRepoRoot } from '@mission-platform/mcp-shared/repo/paths';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 
+import packageJson from '../package.json' with { type: 'json' };
 import { createServer } from '../src/index.ts';
 import { validateName } from '../src/scaffold/writer.ts';
 
@@ -32,6 +36,13 @@ describe('protocol', () => {
   it('initializes and connects', () => {
     assert.ok(client);
   });
+
+  it('advertises the developer package version', () => {
+    assert.deepEqual(client.getServerVersion(), {
+      name: 'mission-platform-mcp',
+      version: packageJson.version,
+    });
+  });
 });
 
 describe('tools', () => {
@@ -39,6 +50,56 @@ describe('tools', () => {
     const { tools } = await client.listTools();
     const names = new Set(tools.map((tool) => tool.name));
     for (const expected of [
+      'lsp_capabilities',
+      'lsp_config_view',
+      'lsp_config_add',
+      'lsp_config_edit',
+      'lsp_detect_servers',
+      'lsp_status',
+      'lsp_start',
+      'lsp_restart',
+      'lsp_shutdown',
+      'lsp_list_workspace_folders',
+      'lsp_add_workspace_folder',
+      'lsp_get_server_capabilities',
+      'lsp_get_editing_context',
+      'lsp_list_symbols',
+      'lsp_find_symbol',
+      'lsp_inspect_symbol',
+      'lsp_go_to_definition',
+      'lsp_get_symbol_documentation',
+      'lsp_get_symbol_source',
+      'lsp_get_document_highlights',
+      'lsp_find_references',
+      'lsp_find_callers',
+      'lsp_find_implementations',
+      'lsp_type_hierarchy',
+      'lsp_get_cross_repo_references',
+      'lsp_preview_edit',
+      'lsp_simulate_chain',
+      'lsp_apply_edit',
+      'lsp_replace_symbol_body',
+      'lsp_safe_delete_symbol',
+      'lsp_rename',
+      'lsp_suggest_fixes',
+      'lsp_format_document',
+      'lsp_format_range',
+      'lsp_execute_command',
+      'lsp_get_tests_for_file',
+      'lsp_run_build',
+      'lsp_run_tests',
+      'git_status',
+      'git_diff',
+      'git_log',
+      'git_show',
+      'git_branches',
+      'git_grep',
+      'git_blame',
+      'git_ls_files',
+      'git_tags',
+      'git_remotes',
+      'lsp_open_document',
+      'lsp_get_diagnostics',
       'get_guide',
       'list_components',
       'get_component_usage',
@@ -53,7 +114,9 @@ describe('tools', () => {
       'scaffold_composable',
       'scaffold_store',
       'scaffold_util',
+      'test_accessibility',
       'list_locales',
+      'locale_coverage',
       'add_locale',
       'remove_locale',
       'update_translation',
@@ -66,6 +129,180 @@ describe('tools', () => {
     ]) {
       assert.ok(names.has(expected), `missing tool ${expected}`);
     }
+  });
+
+  it('exposes the provider-neutral LSP contract', async () => {
+    const body = await callTool('lsp_capabilities');
+    const report = JSON.parse(body) as {
+      contractVersion: number;
+      provider: string;
+      status: string;
+      capabilities: { name: string; status: string; mutatesWorkspace: boolean }[];
+    };
+
+    assert.equal(report.contractVersion, 1);
+    assert.equal(report.provider, 'mission-platform-developer');
+    assert.equal(report.status, 'available');
+    assert.equal(report.capabilities.find((capability) => capability.name === 'lsp_start')?.status, 'available');
+    assert.equal(
+      report.capabilities.find((capability) => capability.name === 'lsp_detect_servers')?.status,
+      'available',
+    );
+    for (const name of [
+      'lsp_list_workspace_folders',
+      'lsp_add_workspace_folder',
+      'lsp_get_server_capabilities',
+      'lsp_get_editing_context',
+      'lsp_list_symbols',
+      'lsp_find_symbol',
+      'lsp_inspect_symbol',
+      'lsp_go_to_definition',
+      'lsp_get_symbol_documentation',
+      'lsp_get_symbol_source',
+      'lsp_get_document_highlights',
+      'lsp_find_references',
+      'lsp_find_callers',
+      'lsp_find_implementations',
+      'lsp_type_hierarchy',
+      'lsp_get_cross_repo_references',
+      'lsp_preview_edit',
+      'lsp_simulate_chain',
+      'lsp_apply_edit',
+      'lsp_replace_symbol_body',
+      'lsp_safe_delete_symbol',
+      'lsp_rename',
+      'lsp_suggest_fixes',
+      'lsp_format_document',
+      'lsp_format_range',
+      'lsp_execute_command',
+      'lsp_get_tests_for_file',
+      'lsp_run_build',
+      'lsp_run_tests',
+    ]) {
+      assert.equal(report.capabilities.find((capability) => capability.name === name)?.status, 'available');
+    }
+    assert.ok(report.capabilities.some((capability) => capability.name === 'lsp_get_diagnostics'));
+    assert.ok(
+      report.capabilities.some((capability) => capability.name === 'lsp_apply_edit' && capability.mutatesWorkspace),
+    );
+    assert.deepEqual(
+      report.capabilities.find((capability) => capability.name === 'lsp_start'),
+      {
+        name: 'lsp_start',
+        status: 'available',
+        mutatesWorkspace: false,
+      },
+    );
+  });
+
+  it('discovers configured language servers without starting them', async () => {
+    const report = JSON.parse(await callTool('lsp_detect_servers')) as {
+      configPresent: boolean;
+      configPath: string;
+      servers: { languageId: string; command: string[]; executableAvailable: boolean }[];
+    };
+
+    assert.equal(report.configPresent, true);
+    assert.equal(report.configPath, 'agent-lsp.json');
+    assert.ok(report.servers.some((server) => server.languageId === 'typescript'));
+    assert.ok(report.servers.every((server) => server.command.every((part) => !part.startsWith('/'))));
+  });
+
+  it('reports that no LSP process is running in the discovery-only stage', async () => {
+    const report = JSON.parse(await callTool('lsp_status')) as {
+      lifecycle: string;
+      sessionCount: number;
+      activeSessions: unknown[];
+    };
+
+    assert.equal(report.lifecycle, 'discovery-only');
+    assert.equal(report.sessionCount, 0);
+    assert.deepEqual(report.activeSessions, []);
+  });
+
+  it('starts and shuts down a configured language server explicitly', async () => {
+    const started = JSON.parse(await callTool('lsp_start', { languageId: 'yaml' })) as {
+      session: { sessionId: string; languageId: string; state: string; command: string[] };
+    };
+
+    assert.equal(started.session.languageId, 'yaml');
+    assert.match(started.session.sessionId, /^lsp-\d+$/);
+    assert.ok(['starting', 'running', 'failed'].includes(started.session.state));
+    assert.ok(started.session.command.every((part) => !part.startsWith('/')));
+
+    const folders = JSON.parse(
+      await callTool('lsp_list_workspace_folders', { sessionId: started.session.sessionId }),
+    ) as { sessionId: string; workspaceFolders: { path: string; uri: string; name: string }[] };
+    assert.equal(folders.sessionId, started.session.sessionId);
+    assert.equal(folders.workspaceFolders.length, 1);
+    assert.match(folders.workspaceFolders[0]?.uri ?? '', /^file:\/\//);
+
+    const capabilities = JSON.parse(
+      await callTool('lsp_get_server_capabilities', { sessionId: started.session.sessionId }),
+    ) as { sessionId: string; initialized: boolean; capabilities: Record<string, unknown> };
+    assert.equal(capabilities.sessionId, started.session.sessionId);
+    assert.equal(capabilities.initialized, true);
+    assert.equal(typeof capabilities.capabilities, 'object');
+
+    const context = JSON.parse(await callTool('lsp_get_editing_context', { sessionId: started.session.sessionId })) as {
+      sessionId: string;
+      workspaceFolders: unknown[];
+      openDocuments: unknown[];
+    };
+    assert.equal(context.sessionId, started.session.sessionId);
+    assert.equal(context.workspaceFolders.length, 1);
+    assert.deepEqual(context.openDocuments, []);
+
+    const traversal = await callTool('lsp_add_workspace_folder', {
+      sessionId: started.session.sessionId,
+      folderPath: '../outside-repository',
+    });
+    assert.match(traversal, /must remain within the repository root/);
+
+    const stopped = JSON.parse(await callTool('lsp_shutdown', { sessionId: started.session.sessionId })) as {
+      stopped: number;
+      sessionIds: string[];
+    };
+    assert.equal(stopped.stopped, 1);
+    assert.deepEqual(stopped.sessionIds, [started.session.sessionId]);
+
+    const status = JSON.parse(await callTool('lsp_status')) as { sessionCount: number; activeSessions: unknown[] };
+    assert.equal(status.sessionCount, 0);
+    assert.deepEqual(status.activeSessions, []);
+  });
+
+  it('does not start an unconfigured language server', async () => {
+    const result = await callTool('lsp_start', { languageId: 'not-configured' });
+    assert.match(result, /No LSP server is configured/);
+    const status = JSON.parse(await callTool('lsp_status')) as { sessionCount: number };
+    assert.equal(status.sessionCount, 0);
+  });
+
+  it('opens a bounded document and returns published diagnostics', async () => {
+    const started = JSON.parse(await callTool('lsp_start', { languageId: 'yaml' })) as {
+      session: { sessionId: string };
+    };
+
+    const opened = JSON.parse(
+      await callTool('lsp_open_document', {
+        sessionId: started.session.sessionId,
+        filePath: 'package.json',
+        documentLanguageId: 'json',
+      }),
+    ) as { sessionId: string; filePath: string; uri: string; languageId: string; version: number };
+    assert.equal(opened.sessionId, started.session.sessionId);
+    assert.equal(opened.filePath.endsWith('/package.json'), true);
+    assert.match(opened.uri, /^file:\/\//);
+    assert.equal(opened.languageId, 'json');
+    assert.equal(opened.version, 1);
+
+    const diagnostics = JSON.parse(
+      await callTool('lsp_get_diagnostics', { sessionId: started.session.sessionId, filePath: 'package.json' }),
+    ) as { sessionId: string; diagnostics: unknown[] };
+    assert.equal(diagnostics.sessionId, started.session.sessionId);
+    assert.ok(Array.isArray(diagnostics.diagnostics));
+
+    await callTool('lsp_shutdown', { sessionId: started.session.sessionId });
   });
 
   it('returns a guide for every workflow area', async () => {
@@ -401,6 +638,65 @@ describe('tools', () => {
     assert.ok(detail.coverage.every((entry) => entry.code !== 'en'));
   });
 
+  it('reports partial locale coverage for a member', async () => {
+    const coverage = JSON.parse(await callTool('locale_coverage', { name: 'website' })) as {
+      code: string;
+      keyCount: number;
+      missingKeys: string[];
+      extraKeys: string[];
+    }[];
+    const spanish = coverage.find((entry) => entry.code === 'es');
+    assert.ok(spanish, 'website should have Spanish coverage');
+    assert.ok((spanish?.keyCount ?? 0) > 0);
+    assert.deepEqual(spanish?.missingKeys, []);
+    assert.deepEqual(spanish?.extraKeys, []);
+  });
+
+  it('reports members without YAML locale files descriptively', async () => {
+    const result = await client.callTool({ name: 'locale_coverage', arguments: { name: 'docs' } });
+    assert.equal(result.isError, undefined);
+    const content = result.content as { text: string }[];
+    assert.match(content[0]?.text ?? '', /has no YAML locale files/);
+  });
+
+  it('supports flat locale layouts and coverage through the server', async () => {
+    const fixtureName = `.mcp-flat-locale-${Date.now()}`;
+    const fixture = join(findRepoRoot(), 'apps', fixtureName);
+    const locales = join(fixture, 'locales');
+    mkdirSync(locales, { recursive: true });
+    writeFileSync(join(fixture, 'package.json'), JSON.stringify({ name: 'mcp-flat-locale-fixture', version: '0.0.0' }));
+    writeFileSync(join(locales, 'en.yaml'), 'home:\n  title: Hello\n  subtitle: Welcome\n');
+    writeFileSync(join(locales, 'es.yaml'), 'home:\n  title: Hola\nextra:\n  value: Extra\n');
+
+    try {
+      const coverage = JSON.parse(await callTool('locale_coverage', { name: fixtureName })) as {
+        code: string;
+        keyCount: number;
+        missingKeys: string[];
+        extraKeys: string[];
+      }[];
+      assert.deepEqual(coverage, [
+        {
+          code: 'es',
+          keyCount: 2,
+          missingKeys: ['home.subtitle'],
+          extraKeys: ['extra.value'],
+        },
+      ]);
+
+      const added = JSON.parse(
+        await callTool('add_locale', {
+          name: fixtureName,
+          locale: 'fr',
+        }),
+      ) as { applied: boolean; files: string[] };
+      assert.equal(added.applied, false);
+      assert.ok(added.files.some((file) => file.endsWith('/fr.yaml')));
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
+    }
+  });
+
   it('adds a locale as a dry run without writing files', async () => {
     const body = await callTool('add_locale', { name: 'website', locale: 'pt' });
     const result = JSON.parse(body) as { applied: boolean; files: string[] };
@@ -424,6 +720,53 @@ describe('tools', () => {
     const result = JSON.parse(body) as { applied: boolean; updatedKeys: string[] };
     assert.equal(result.applied, false);
     assert.deepEqual(result.updatedKeys, ['nav.about']);
+  });
+
+  it('applies and then removes a locale while keeping writes explicit', async () => {
+    const locale = `zz-mcp-${Date.now()}`;
+    let added = false;
+    try {
+      const created = JSON.parse(await callTool('add_locale', { name: 'website', locale, apply: true })) as {
+        applied: boolean;
+        files: string[];
+      };
+      added = created.applied;
+      assert.equal(created.applied, true);
+      assert.ok(created.files.length > 0);
+
+      const updated = JSON.parse(
+        await callTool('update_translation', {
+          name: 'website',
+          locale,
+          namespace: 'mp.website',
+          entries: { 'seo.title': 'MCP probe' },
+          apply: true,
+        }),
+      ) as { applied: boolean; updatedKeys: string[] };
+      assert.equal(updated.applied, true);
+      assert.deepEqual(updated.updatedKeys, ['seo.title']);
+    } finally {
+      if (added) {
+        const removed = JSON.parse(await callTool('remove_locale', { name: 'website', locale, apply: true })) as {
+          applied: boolean;
+        };
+        assert.equal(removed.applied, true);
+      }
+    }
+  });
+
+  it('rejects invalid locale codes and protects the default locale', async () => {
+    const invalid = await client.callTool({
+      name: 'add_locale',
+      arguments: { name: 'website', locale: 'not a locale' },
+    });
+    assert.equal(invalid.isError, true);
+
+    const removeDefault = await client.callTool({
+      name: 'remove_locale',
+      arguments: { name: 'website', locale: 'en' },
+    });
+    assert.equal(removeDefault.isError, true);
   });
 
   it('refuses to add the default locale', async () => {

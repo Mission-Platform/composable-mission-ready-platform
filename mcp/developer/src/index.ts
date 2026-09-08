@@ -14,11 +14,13 @@ import { registerResources } from '@mission-platform/mcp-shared/resources/index'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
+import packageJson from '../package.json' with { type: 'json' };
+
 import { registerPrompts } from './prompts/index.ts';
 import { registerTools } from './tools/index.ts';
 
 export function createServer(): McpServer {
-  const server = new McpServer({ name: 'mission-platform-mcp', version: '0.1.1' });
+  const server = new McpServer({ name: 'mission-platform-mcp', version: packageJson.version });
   registerTools(server);
   registerResources(server);
   registerPrompts(server);

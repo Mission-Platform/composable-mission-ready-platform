@@ -250,7 +250,7 @@ export function packageFiles(options: PackageScaffoldOptions): Record<string, st
     'vite.config.ts': `import { defineLibraryConfig } from '@mission-platform/vite-config';
 
 export default defineLibraryConfig({
-  rootDir: __dirname,
+  rootDir: import.meta.dirname,
   name: 'MissionPlatform${pascal}',
   fileName: '${name}',
 });
@@ -440,7 +440,7 @@ export function appFiles(options: AppScaffoldOptions): Record<string, string> {
 // \`@mission-platform/typescript-config/tsconfig.framework-<name>.json\` preset.
 export default defineFrameworkAppConfig({
   framework: 'vue',
-  rootDir: __dirname,
+  rootDir: import.meta.dirname,
 });
 `,
     'turbo.json': `{

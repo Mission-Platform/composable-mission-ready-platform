@@ -24,11 +24,11 @@ Give an AI assistant grounded, repo-specific help with core workflows:
 
 ## Capabilities
 
-- Tools: `get_guide`, `list_docs`, `read_doc`, `search_docs`, `list_components`,
+- Tools: `lsp_capabilities`, `lsp_detect_servers`, `lsp_status`, `lsp_start`, `lsp_restart`, `lsp_shutdown`, `lsp_open_document`, `lsp_get_diagnostics`, `get_guide`, `list_docs`, `read_doc`, `search_docs`, `list_components`,
   `get_component_usage`, `list_packages`, `list_apps`, `list_workers`,
   `get_member_info`, `scaffold_package`, `scaffold_app`, `scaffold_worker`,
   `scaffold_crate`, `scaffold_component`, `scaffold_composable`, `scaffold_store`,
-  `scaffold_util`, `list_locales`, `add_locale`, `remove_locale`,
+  `scaffold_util`, `test_accessibility`, `list_locales`, `locale_coverage`, `add_locale`, `remove_locale`,
   `update_translation`, `fws_analyze_source`, `fws_analyze_workspace`,
   `fws_inspect_manifest`, `fws_verify_artifact`, `fws_run_trace`.
 - Resources: `mission://guide/<id>`, `mission://inventory`, `mission://docs/<slug>`.
@@ -47,6 +47,12 @@ FWS tools are root-bounded and size-capped. Analysis and verification delegate
 to canonical FWS packages; `fws_run_trace` uses only the bounded,
 capability-denied self-hosted probe. It never executes arbitrary Wasm, commands,
 filesystem reads, or host imports, and trace values are redacted and capped.
+`lsp_capabilities`, `lsp_detect_servers`, and `lsp_status` are read-only. The
+explicit `lsp_start`, `lsp_restart`, and `lsp_shutdown` tools manage configured
+language-server processes using root-bounded commands and `shell: false`.
+`lsp_open_document` and `lsp_get_diagnostics` use standard JSON-RPC document
+notifications and a size-capped, root-bounded file read; broader protocol
+capabilities remain planned. Status never starts a session.
 
 ## Run
 
