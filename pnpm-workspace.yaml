@@ -47,7 +47,7 @@ catalogs:
     "monaco-editor": ^0.55.1
     marked: ^18.0.11
     mermaid: ^11.17.2
-    dompurify: 3.4.13
+    dompurify: 3.4.14
     "harper.js": ^2.7.0
 
   eslint:
@@ -151,7 +151,7 @@ catalogs:
   map:
     "@types/geojson": ^7946.0.16
     "@turf/turf": ^7.4.0
-    maplibre-gl: ^5.24.0
+    maplibre-gl: ^6.4.1
 
   typescript:
     "@types/js-yaml": ^4.0.9

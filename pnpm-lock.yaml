@@ -33,8 +33,8 @@ catalogs:
       version: 4.128.0
   code:
     dompurify:
-      specifier: 3.4.13
-      version: 3.4.13
+      specifier: 3.4.14
+      version: 3.4.14
     harper.js:
       specifier: ^2.7.0
       version: 2.7.0
@@ -148,8 +148,8 @@ catalogs:
       specifier: ^7946.0.16
       version: 7946.0.16
     maplibre-gl:
-      specifier: ^5.24.0
-      version: 5.24.0
+      specifier: ^6.4.1
+      version: 6.8.0
   mcp:
     '@modelcontextprotocol/sdk':
       specifier: ^1.30.0
@@ -981,7 +981,7 @@ importers:
         version: 5.4.0(i18next@26.4.1(@typescript/typescript6@6.0.2))(vue@3.5.42(@typescript/typescript6@6.0.2))
       maplibre-gl:
         specifier: catalog:map
-        version: 5.24.0
+        version: 6.8.0
       monaco-editor:
         specifier: catalog:code
         version: 0.55.1
@@ -3027,7 +3027,7 @@ importers:
         version: link:../../ui/typography
       dompurify:
         specifier: catalog:code
-        version: 3.4.13
+        version: 3.4.14
       highlight.js:
         specifier: catalog:code
         version: 11.12.0
@@ -4628,7 +4628,7 @@ importers:
         version: 7.4.0
       maplibre-gl:
         specifier: catalog:map
-        version: 5.24.0
+        version: 6.8.0
     devDependencies:
       '@mission-platform/components':
         specifier: workspace:*
@@ -10015,28 +10015,21 @@ packages:
   '@mapbox/tiny-sdf@2.2.0':
     resolution: {integrity: sha512-LVL4wgI9YAum5V+LNVQO6QgFBPw7/MIIY4XJPNsPDMrjEwcE+JfKk1LuIl8GnF197ejVdC9QdPaxrx5gfgdGXg==}
 
-  '@mapbox/unitbezier@0.0.1':
-    resolution: {integrity: sha512-nMkuDXFv60aBr9soUG5q+GvZYL+2KZHVvsqFCzqnkGEf46U2fvmytHaEVc1/YZbiLn8X+eR3QzX1+dwDO1lxlw==}
-
   '@mapbox/unitbezier@1.0.0':
     resolution: {integrity: sha512-fqd515fjBmANKGGsQ286E2Wvj/XvDFpGzwJxq4CI6jMQue6Oy04uCKp+JWKF00xRTmk6cEu1jPJ9p3xqH8YWqQ==}
 
-  '@mapbox/vector-tile@2.0.5':
-    resolution: {integrity: sha512-pXj8m7KTsqZt+1jsE0xIpGvqTSbblfkuEJL/NJmNePMtEwxO8V3XMDo9WMSfDeqHvCtBI9Lmt4mGcGR10zecmw==}
-
-  '@mapbox/whoots-js@3.1.0':
-    resolution: {integrity: sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==}
-    engines: {node: '>=6.0.0'}
+  '@mapbox/vector-tile@3.0.0':
+    resolution: {integrity: sha512-Qf10S1uIHMk20ri/IVBnpS+esUEkVaR5Hftmz88jTInrpmWgPGJfPe3LVjjlE77trLx8tH6qjTG7uWH9hIq/0Q==}
 
   '@maplibre/geojson-vt@6.1.1':
     resolution: {integrity: sha512-FVMOcmSP/yqol45t7StApEyTL5/vmqBCuFhH9n+fFuINenhaX+YgHHIt1yJ86S8kln3uJLcMvmEU2cfn6E2eCQ==}
 
-  '@maplibre/maplibre-gl-style-spec@24.10.0':
-    resolution: {integrity: sha512-lichxSiagMEBBrqHF0trtMQH9RKh+9jUlIJl0qW0QHvt2H/tbvUWdE+ZzI2Jd0/pT7j/iavLonlPu7EQ/ixTOw==}
+  '@maplibre/maplibre-gl-style-spec@26.4.2':
+    resolution: {integrity: sha512-6J0vZqMZvRAJKtdWJdDGHEh1YJ2ZHG08/GOur8gCArYhO8ZkM//OXqtI2AAEz4jc2G+Wq4MfcePg8qNK5TZ4Kg==}
     hasBin: true
 
-  '@maplibre/mlt@1.2.0':
-    resolution: {integrity: sha512-g45M8gEI4sMO3X9ib4K7n3ZKFf0qQOL+NMkHCnEK51lOrYFHiEssOuZncx1+miIgi1IEE2NcbRMcq8RBkL+QHA==}
+  '@maplibre/mlt@1.2.1':
+    resolution: {integrity: sha512-5n5dgolE2EYxwCKgx8vlwURCB8A+kyfJJyThlYimjlGgOcOe2Bhw9VxxnnHC91OC9PgHg+nVdgVPTYPkIo62vg==}
 
   '@maplibre/vt-pbf@4.3.2':
     resolution: {integrity: sha512-j6p0AdjvAR19Z3XaCysle7A4ZSo08tYOzxD0Y9NQylwPAkwJJeYub5b2eVucdeDh7erhv69DahoLOevDRERRUw==}
@@ -13990,9 +13983,6 @@ packages:
   dompurify@3.2.7:
     resolution: {integrity: sha512-WhL/YuveyGXJaerVlMYGWhvQswa7myDG17P7Vu65EWC05o8vfeNbvNf4d/BOvH99+ZW+LlQsc1GDKMa1vNK6dw==}
 
-  dompurify@3.4.13:
-    resolution: {integrity: sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==}
-
   dompurify@3.4.14:
     resolution: {integrity: sha512-dVoH9z+MY+C9IilgGCk3YfFqjLi3fChm2OiKJMzh6axrJ5qwxqWaZamgmHrpv22CN/KdbZJuGEGgfQoL00LTdg==}
 
@@ -15684,8 +15674,8 @@ packages:
     resolution: {integrity: sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==}
     engines: {node: '>=8'}
 
-  maplibre-gl@5.24.0:
-    resolution: {integrity: sha512-ALyFxgtd5R+65UqZ/++lOqwWcC0SNho9c27fYSyLmG7AfnAul2o46F05aDJGPbFU57wos9dgcIySHs0Xe6ia3A==}
+  maplibre-gl@6.8.0:
+    resolution: {integrity: sha512-+ZkjKTodsVLY0ewQThvXRxXQsclcsSgOm5LlnrBM3G8AloMJKt6Haw8mY4xrOl8T0WMqH6DTYjktZ9zGQXZd4w==}
     engines: {node: '>=16.14.0', npm: '>=8.1.0'}
 
   markdown-extensions@2.0.0:
@@ -16305,10 +16295,6 @@ packages:
   pathval@2.0.1:
     resolution: {integrity: sha512-//nshmD55c46FuFw26xV/xFAaB5HF9Xdap7HJBBnrKdAd6/GxDBaNA1870O79+9ueg61cZLSVc+OaFlfmObYVQ==}
     engines: {node: '>= 14.16'}
-
-  pbf@4.0.2:
-    resolution: {integrity: sha512-J0ajxARhZfpUEebxYs1vhMGMuLSXtBe1e+fFPDrf2uA2hgo+UshKfNUWOz92HJNz6/NFEXseQPddnHkTreWRqg==}
-    hasBin: true
 
   pbf@5.1.2:
     resolution: {integrity: sha512-mnvGdvOrIvJOBGUEdGkrVXjN8E/VkIJCkf2eS1DH2yv82ORUlLttmDt0rWY38yYZmVwciZwBUvHM20qxBZf40w==}
@@ -20828,23 +20814,19 @@ snapshots:
 
   '@mapbox/tiny-sdf@2.2.0': {}
 
-  '@mapbox/unitbezier@0.0.1': {}
-
   '@mapbox/unitbezier@1.0.0': {}
 
-  '@mapbox/vector-tile@2.0.5':
+  '@mapbox/vector-tile@3.0.0':
     dependencies:
       '@mapbox/point-geometry': 1.1.0
       '@types/geojson': 7946.0.16
-      pbf: 4.0.2
-
-  '@mapbox/whoots-js@3.1.0': {}
+      pbf: 5.1.2
 
   '@maplibre/geojson-vt@6.1.1':
     dependencies:
       kdbush: 4.1.0
 
-  '@maplibre/maplibre-gl-style-spec@24.10.0':
+  '@maplibre/maplibre-gl-style-spec@26.4.2':
     dependencies:
       '@mapbox/jsonlint-lines-primitives': 2.0.3
       '@mapbox/unitbezier': 1.0.0
@@ -20853,7 +20835,7 @@ snapshots:
       quickselect: 3.0.0
       tinyqueue: 3.0.0
 
-  '@maplibre/mlt@1.2.0':
+  '@maplibre/mlt@1.2.1':
     dependencies:
       '@mapbox/point-geometry': 1.1.0
 
@@ -25585,10 +25567,6 @@ snapshots:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
-  dompurify@3.4.13:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
-
   dompurify@3.4.14:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
@@ -27594,24 +27572,22 @@ snapshots:
 
   map-obj@4.3.0: {}
 
-  maplibre-gl@5.24.0:
+  maplibre-gl@6.8.0:
     dependencies:
-      '@mapbox/jsonlint-lines-primitives': 2.0.3
       '@mapbox/point-geometry': 1.1.0
       '@mapbox/tiny-sdf': 2.2.0
-      '@mapbox/unitbezier': 0.0.1
-      '@mapbox/vector-tile': 2.0.5
-      '@mapbox/whoots-js': 3.1.0
+      '@mapbox/unitbezier': 1.0.0
+      '@mapbox/vector-tile': 3.0.0
       '@maplibre/geojson-vt': 6.1.1
-      '@maplibre/maplibre-gl-style-spec': 24.10.0
-      '@maplibre/mlt': 1.2.0
+      '@maplibre/maplibre-gl-style-spec': 26.4.2
+      '@maplibre/mlt': 1.2.1
       '@maplibre/vt-pbf': 4.3.2
       '@types/geojson': 7946.0.16
       earcut: 3.2.3
       gl-matrix: 3.4.4
       kdbush: 4.1.0
       murmurhash-js: 1.0.0
-      pbf: 4.0.2
+      pbf: 5.1.2
       potpack: 2.1.0
       quickselect: 3.0.0
       tinyqueue: 3.0.0
@@ -28463,10 +28439,6 @@ snapshots:
   pathe@2.0.3: {}
 
   pathval@2.0.1: {}
-
-  pbf@4.0.2:
-    dependencies:
-      resolve-protobuf-schema: 2.1.0
 
   pbf@5.1.2:
     dependencies:
