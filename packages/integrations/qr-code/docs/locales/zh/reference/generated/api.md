@@ -9,55 +9,6 @@
 
 根据 `@mission-platform/qr-code` 中的公共源声明生成。
 
-## `src/decoder/index`
-
-### 解码Qr
-
-**种类：**功能
-
-```typescript
-function decodeQr(matrix: QrMatrix): string | null;
-```
-
-将 {@link QrMatrix} 解码回其原始文本，加载包 -
-首次使用时同步本地 FWS 解码器。
-
-解码器恢复格式信息，取消屏蔽数据区域，读取
-码字，并且 Reed-Solomon 纠正了该级别的错误容量，因此
-耐受受损的基质。仅 `encodeQr` 生成的字节模式段
-是支持的。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 矩阵 | Qr矩阵 |      |
-
-#### 合同
-
-- **@returns:** 解码后的文本，或当矩阵无法解码时 `null`。
-
-### 解码Qr异步
-
-**种类：**功能
-
-```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
-```
-
-将 {@link QrMatrix} 解码回其原始文本，加载包 -
-首次使用时本地 FWS 解码器异步。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 矩阵 | Qr矩阵 |      |
-
-#### 合同
-
-- **@returns:** 解码后的文本，或当矩阵无法解码时 `null`。
-
 ## `src/encoder/index`
 
 ### 编码MicroQr

@@ -9,55 +9,6 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 
 Généré à partir des déclarations de source publique dans `@mission-platform/qr-code`.
 
-## `src/decoder/index`
-
-### décoderQr
-
-**Genre :** fonction
-
-```typescript
-function decodeQr(matrix: QrMatrix): string | null;
-```
-
-Décodez un {@link QrMatrix} dans son texte original, en chargeant le package.
-décodeur FWS local de manière synchrone lors de la première utilisation.
-
-Le décodeur récupère les informations de format, démasque la région de données, lit le
-mots de passe, et Reed-Solomon corrige jusqu'à la capacité d'erreur du niveau, donc il
-tolère une matrice endommagée. Uniquement le segment en mode octet produit par `encodeQr`
-est pris en charge.
-
-#### Paramètres
-
-| Nom     | Tapez     | Descriptif |
-| ------- | --------- | ---------- |
-| matrice | QrMatrice |            |
-
-#### Contracter
-
-- **@retourne :** le texte décodé, ou `null` lorsque la matrice ne peut pas être décodée.
-
-### décoderQrAsync
-
-**Genre :** fonction
-
-```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
-```
-
-Décodez un {@link QrMatrix} dans son texte original, en chargeant le package.
-décodeur FWS local de manière asynchrone lors de la première utilisation.
-
-#### Paramètres
-
-| Nom     | Tapez     | Descriptif |
-| ------- | --------- | ---------- |
-| matrice | QrMatrice |            |
-
-#### Contracter
-
-- **@retourne :** le texte décodé, ou `null` lorsque la matrice ne peut pas être décodée.
-
 ## `src/encoder/index`
 
 ### encoderMicroQr

@@ -9,55 +9,6 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 
 Generato da dichiarazioni di fonte pubblica in `@mission-platform/qr-code`.
 
-## `src/decoder/index`
-
-### decodificareQr
-
-**Tipo:** funzione
-
-```typescript
-function decodeQr(matrix: QrMatrix): string | null;
-```
-
-Decodifica nuovamente un {@link QrMatrix} nel suo testo originale, caricando il pacchetto-
-decoder FWS locale in modo sincrono al primo utilizzo.
-
-Il decodificatore recupera le informazioni sul formato, smaschera la regione dati, legge il file
-parole in codice e Reed-Solomon corregge fino alla capacità di errore del livello, quindi
-tollera una matrice danneggiata. Solo il segmento in modalità byte prodotto da `encodeQr`
-è supportato.
-
-#### Parametri
-
-| Nome    | Digitare | Descrizione |
-| ------- | -------- | ----------- |
-| matrice | QrMatrix |             |
-
-#### Contrarre
-
-- **@restituisce:** il testo decodificato, o `null` quando la matrice non può essere decodificata.
-
-### decodificaQrAsync
-
-**Tipo:** funzione
-
-```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
-```
-
-Decodifica nuovamente un {@link QrMatrix} nel suo testo originale, caricando il pacchetto-
-decoder FWS locale in modo asincrono al primo utilizzo.
-
-#### Parametri
-
-| Nome    | Digitare | Descrizione |
-| ------- | -------- | ----------- |
-| matrice | QrMatrix |             |
-
-#### Contrarre
-
-- **@restituisce:** il testo decodificato, o `null` quando la matrice non può essere decodificata.
-
 ## `src/encoder/index`
 
 ### codificaMicroQr

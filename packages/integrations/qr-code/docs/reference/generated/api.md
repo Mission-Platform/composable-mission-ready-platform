@@ -4,55 +4,6 @@
 
 Generated from public source declarations in `@mission-platform/qr-code`.
 
-## `src/decoder/index`
-
-### decodeQr
-
-**Kind:** function
-
-```typescript
-function decodeQr(matrix: QrMatrix): string | null;
-```
-
-Decode a {@link QrMatrix} back into its original text, loading the package-
-local FWS decoder synchronously on first use.
-
-The decoder recovers the format info, unmasks the data region, reads the
-codewords, and Reed-Solomon-corrects up to the level's error capacity, so it
-tolerates a damaged matrix. Only the byte-mode segment produced by `encodeQr`
-is supported.
-
-#### Parameters
-
-| Name   | Type     | Description |
-| ------ | -------- | ----------- |
-| matrix | QrMatrix |             |
-
-#### Contract
-
-- **@returns:** the decoded text, or `null` when the matrix cannot be decoded.
-
-### decodeQrAsync
-
-**Kind:** function
-
-```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
-```
-
-Decode a {@link QrMatrix} back into its original text, loading the package-
-local FWS decoder asynchronously on first use.
-
-#### Parameters
-
-| Name   | Type     | Description |
-| ------ | -------- | ----------- |
-| matrix | QrMatrix |             |
-
-#### Contract
-
-- **@returns:** the decoded text, or `null` when the matrix cannot be decoded.
-
 ## `src/encoder/index`
 
 ### encodeMicroQr
@@ -452,4 +403,4 @@ Error-correction level: higher levels tolerate more damage but hold less data.
 export interface QrMatrix
 ```
 
-A decoded / encoded QR Code: a square grid of dark (`true`) modules.
+An encoded QR Code: a square grid of dark (`true`) modules.

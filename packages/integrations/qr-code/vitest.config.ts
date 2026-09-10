@@ -19,7 +19,6 @@ export default defineVitestConfig({
         root: import.meta.dirname,
         requireExports: false,
         compilerService: forgeWebScriptCompilerService,
-        requestedCapabilities: (fileName) => (fileName.includes('qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
       }),
     ],
     oxc: {

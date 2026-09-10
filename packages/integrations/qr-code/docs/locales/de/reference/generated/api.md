@@ -9,55 +9,6 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 
 Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/qr-code`.
 
-## `src/decoder/index`
-
-### decodeQr
-
-**Art:** Funktion
-
-```typescript
-function decodeQr(matrix: QrMatrix): string | null;
-```
-
-Dekodieren Sie eine {@link QrMatrix} wieder in ihren ursprünglichen Text und laden Sie das Paket.
-lokalen FWS-Decoder synchron bei der ersten Verwendung.
-
-Der Decoder stellt die Formatinformationen wieder her, entlarvt den Datenbereich und liest die
-Codewörter, und Reed-Solomon-korrigiert bis zur Fehlerkapazität der Ebene, also
-toleriert eine beschädigte Matrix. Nur das von `encodeQr` erzeugte Bytemodus-Segment
-wird unterstützt.
-
-#### Parameter
-
-| Name   | Geben Sie | ein Beschreibung |
-| ------ | --------- | ---------------- |
-| Matrix | QrMatrix  |                  |
-
-#### Vertrag
-
-- **@returns:** der dekodierte Text oder `null`, wenn die Matrix nicht dekodiert werden kann.
-
-### decodeQrAsync
-
-**Art:** Funktion
-
-```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
-```
-
-Dekodieren Sie eine {@link QrMatrix} wieder in ihren ursprünglichen Text und laden Sie das Paket.
-lokaler FWS-Decoder asynchron bei der ersten Verwendung.
-
-#### Parameter
-
-| Name   | Geben Sie | ein Beschreibung |
-| ------ | --------- | ---------------- |
-| Matrix | QrMatrix  |                  |
-
-#### Vertrag
-
-- **@returns:** der dekodierte Text oder `null`, wenn die Matrix nicht dekodiert werden kann.
-
 ## `src/encoder/index`
 
 ### encodeMicroQr

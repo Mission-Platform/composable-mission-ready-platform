@@ -12,13 +12,13 @@ import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-fo
 import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 
 /**
- * No legacy wrapper package is bundled: all QR encoder and decoder paths use
- * package-local Forge Web Script artifacts.
+ * No legacy wrapper package is bundled: the QR encoder uses a package-local
+ * Forge Web Script artifact.
  */
 const WASM_PACKAGES = [] as const;
 
 /**
- * Neutral self-contained encoder/decoder (`dist/index.js` + dts) plus the five
+ * Neutral self-contained encoder (`dist/index.js` + dts) plus the five
  * forge component framework builds (`dist/{vue,react,solid,svelte,web-components}/`).
  */
 export default [

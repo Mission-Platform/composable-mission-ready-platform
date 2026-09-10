@@ -1,15 +1,11 @@
 // Public entry point for `@mission-platform/qr-code`.
 //
-// A dependency-free byte-mode QR Code encoder + decoder. The typed encoder
-// façade lives under `./encoder` and the decoder façade under `./decoder`; both
-// are re-exported here so the package root exposes a flat API. The encoder and
-// decoder are compiled from *separate* Rust crates (`crates/qr-code-encode` /
-// `crates/qr-code-decode`, sharing `crates/qr-code-common`) into two wasm
-// modules emitted under `src/generated/encode` and `src/generated/decode`.
+// A dependency-free byte-mode QR Code encoder backed by a package-local Forge
+// Web Script artifact. The typed encoder façade lives under `./encoder` and is
+// re-exported here so the package root exposes a flat API.
 //
 // This barrel defines no logic of its own: it re-exports the encode API
-// (`./encoder`), the decode API (`decodeQr`, `decodeQrAsync` from `./decoder`),
-// the shared types (`./types`) and the ready-made payload builders
+// (`./encoder`), the shared encoder types (`./types`) and the ready-made payload builders
 // (`./formats`). The per-feature
 // `component/` sibling (a write-once `ForgeQrCode`) is built separately and
 // shipped through the package's `./react` and `./vue` subpath exports.
@@ -22,7 +18,7 @@
  */
 export * as formats from './formats';
 
-/** The shared encoder/decoder result and error-correction types. */
+/** The shared encoder result and error-correction types. */
 export type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from './types';
 
 /**
@@ -31,6 +27,3 @@ export type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from './types';
  * and Rectangular Micro QR / rMQR (`encodeRmqr`), each with an async variant.
  */
 export { encodeMicroQr, encodeMicroQrAsync, encodeQr, encodeQrAsync, encodeRmqr, encodeRmqrAsync } from './encoder';
-
-/** The decoder API. Implemented in `./decoder`. */
-export { decodeQr, decodeQrAsync } from './decoder';

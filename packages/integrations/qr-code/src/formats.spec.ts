@@ -1,13 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { email, geo, iCalEvent, meCard, phone, sms, url, vCard, wifi } from './formats';
-import { decodeQr, encodeQr } from './index';
 
 /**
  * Exercises the ready-made payload builders: the exact wire format each scheme
- * produces, escaping of structural characters, optional-field handling, and a
- * round-trip through the real encoder/decoder to prove the strings survive a
- * QR Code intact.
+ * produces and escaping of structural characters and optional-field handling.
  */
 describe('format builders', () => {
   describe('url', () => {
@@ -135,20 +132,5 @@ describe('format builders', () => {
       expect(result).toContain('DTSTART;VALUE=DATE:20260714');
       expect(result).toContain('SUMMARY:Party\\, big');
     });
-  });
-
-  it('produces payloads that survive an encode/decode round-trip', () => {
-    const payloads = [
-      url('https://mission-platform.dev'),
-      wifi({ ssid: 'Cafe', password: 'latte123' }),
-      email({ to: 'hi@example.com', subject: 'Hi' }),
-      sms({ number: '+100', message: 'hello' }),
-      phone('+100'),
-      geo({ latitude: 1.5, longitude: -2.5 }),
-      meCard({ firstName: 'Ada', lastName: 'Lovelace', phone: '+100' }),
-    ];
-    for (const payload of payloads) {
-      expect(decodeQr(encodeQr(payload, 'M'))).toBe(payload);
-    }
   });
 });
