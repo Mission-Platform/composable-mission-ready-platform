@@ -1,7 +1,7 @@
 # @mission-platform/matrix-code
 
-Dependency-free **2D matrix barcode encoder and decoder** backed by package-local
-Forge Web Script artifacts and wrapped in a typed ES module. Supports **Data
+Dependency-free **2D matrix barcode encoder** backed by package-local Forge Web
+Script artifacts and wrapped in a typed ES module. Supports **Data
 Matrix** (ECC 200, square and rectangular), **GS1 Data Matrix** (the same symbol
 with a leading FNC1), and **Aztec Code** (compact).
 
@@ -21,19 +21,8 @@ artifact is loaded without a runtime `fetch`, so `encodeMatrix` works during SSR
 and in tests with no initialisation step. An async `encodeMatrixAsync` is also
 exported.
 
-Decode a symbol back into its payload with `decodeMatrix` (the inverse of
-`encodeMatrix`):
-
-```ts
-import { decodeMatrix, encodeMatrix } from '@mission-platform/matrix-code';
-
-const code = encodeMatrix('datamatrix', 'https://mission-platform.dev');
-const text = decodeMatrix(code); // 'https://mission-platform.dev', or null if unrecoverable
-```
-
-Reed-Solomon error correction repairs a limited number of flipped modules, so a lightly damaged symbol still decodes.
-Like the encoder, the decoder is **synchronous** and **self-contained** with no initialisation step; an async
-`decodeMatrixAsync` is also exported.
+To decode captured images or camera frames, use the scanner APIs from
+`@mission-platform/code-scanner`.
 
 ## Supported symbologies
 
@@ -50,16 +39,14 @@ scope for this encoder and throw a `RangeError`.
 
 > **Note on Aztec:** payloads of up to 31 bytes use the standard Binary-Shift
 > high-level encoding (byte-compatible with common readers); longer payloads use
-> an unambiguous 11-bit length extension, so the full encode/decode round-trip is
-> guaranteed within this package.
+> an unambiguous 11-bit length extension within the package's supported encoder.
 
 ## Architecture
 
-- `src/fws/` contains the package-local Forge Web Script graphs, handwritten ABI
-  declarations, and focused parity fixtures for the encoder and decoder.
-- `src/encoder/` and `src/decoder/` are typed façades around the direct FWS
-  loaders. They preserve the public matrix-bit contracts and expose synchronous
-  and asynchronous APIs.
+- `src/fws/` contains the package-local Forge Web Script encoder graphs,
+  handwritten ABI declarations, and focused parity fixtures.
+- `src/encoder/` is the typed façade around the direct FWS loaders. It preserves
+  the public matrix-bit contract and exposes synchronous and asynchronous APIs.
 - The package-local artifacts are the complete production implementation; the
   package does not depend on a generated WebAssembly wrapper package.
 

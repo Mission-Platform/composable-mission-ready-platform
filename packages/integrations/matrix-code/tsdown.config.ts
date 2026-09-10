@@ -15,9 +15,9 @@ const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
 /**
- * Neutral self-contained encoder/decoder (`dist/index.js` + dts) plus the five
+ * Neutral self-contained encoder (`dist/index.js` + dts) plus the five
  * forge component framework builds (`dist/{vue,react,solid,svelte,web-components}/`).
- * Encoding and decoding execute through package-local FWS artifacts only.
+ * Encoding executes through package-local FWS artifacts only.
  */
 export default [
   defineTsdownLibrary({

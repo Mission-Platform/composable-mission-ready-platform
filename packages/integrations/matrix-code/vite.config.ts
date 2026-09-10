@@ -14,7 +14,7 @@ import { defineConfig, type UserConfig } from 'vite';
  * `@mission-platform/matrix-code` ships **three** distinct build artifacts from
  * a single Vite config, selected by `--mode`:
  *
- * - **default** — the dependency-free package-local FWS **encoder + decoder**
+ * - **default** — the dependency-free package-local FWS **encoder**
  *   (`src/index.ts`), emitted as the self-contained `dist/index.js`. This is
  *   the package's `.` export.
  * - **`vue` / `react`** — the write-once `ForgeMatrixCode` **component** compiled
@@ -30,7 +30,7 @@ import { defineConfig, type UserConfig } from 'vite';
 
 const componentsModule = path.resolve(import.meta.dirname, 'src/components/index.ts');
 
-/** The self-contained encoder/decoder bundle (`dist/index.js`, the `.` export). */
+/** The self-contained encoder bundle (`dist/index.js`, the `.` export). */
 function defineEncoderConfig(): UserConfig {
   return defineLibraryConfig({
     rootDir: import.meta.dirname,
