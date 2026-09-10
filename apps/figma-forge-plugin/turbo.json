@@ -12,7 +12,7 @@
       "env": ["VITE_*"]
     },
     "build:main": {
-      "dependsOn": ["build:check"],
+      "dependsOn": ["build:ui"],
       "env": ["VITE_*"]
     }
   }
