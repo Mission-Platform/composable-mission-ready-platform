@@ -56,6 +56,22 @@ pnpm install
 This command triggers the `prepare` script, which initializes **Husky** for commit linting and ensures all internal
 package links are correctly established.
 
+### SonarLint Language Server
+
+The repository's `agent-lsp.json` includes the official SonarLint language server for JavaScript and TypeScript. The
+server is distributed as a Java archive rather than an npm package, so install Java and build or download the
+`sonarlint-language-server` archive from [SonarSource](https://github.com/SonarSource/sonarlint-language-server).
+
+Set the server archive and the JavaScript analyzer before starting the LSP:
+
+```bash
+export SONARLINT_LS_JAR=/path/to/sonarlint-language-server.jar
+export SONARLINT_ANALYZERS=/path/to/sonarjs.jar
+```
+
+The optional `SONARLINT_JAVA` variable can select a Java executable. The repository launcher validates the configured
+paths and forwards the server's stdio protocol without requiring a globally installed command.
+
 ### 3. Verify the Installation
 
 Run a smoke test to ensure the build system and environment are correctly configured:

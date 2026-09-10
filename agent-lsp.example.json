@@ -103,6 +103,25 @@
         "vscode-html-language-server",
         "--stdio"
       ]
+    },
+    {
+      "language_id": "sonarlint",
+      "extensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "vue"
+      ],
+      "command": [
+        "pnpm",
+        "--dir",
+        "<project_dir>",
+        "exec",
+        "node",
+        "--experimental-strip-types",
+        "scripts/sonarlint-language-server.ts"
+      ]
     }
   ]
 }

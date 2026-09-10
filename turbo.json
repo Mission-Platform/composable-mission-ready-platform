@@ -12,7 +12,10 @@
     "SSR",
     "STORYBOOK_FRAMEWORK",
     "AUDIT_PORT",
-    "AUDIT_WORKERS"
+    "AUDIT_WORKERS",
+    "SONARLINT_LS_JAR",
+    "SONARLINT_ANALYZERS",
+    "SONARLINT_JAVA"
   ],
   "tasks": {
     "build": {
