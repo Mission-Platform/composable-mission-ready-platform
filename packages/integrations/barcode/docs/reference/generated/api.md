@@ -4,52 +4,6 @@
 
 Generated from public source declarations in `@mission-platform/barcode`.
 
-## `src/decoder/index`
-
-### decodeBarcode
-
-**Kind:** function
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-Decode a run of module bits (`1` = bar, `0` = space) of the given `symbology`
-back into its payload, loading the native FWS graph synchronously on first
-use.
-
-Returns `null` when the module run is not a valid symbol of `symbology` (bad
-framing, an unrecognised pattern, or a failing check digit). The recovered
-payload is the symbology's canonical form — e.g. recomputed check digits are
-included, Code 39/93 text is upper-cased, and UPC-E is returned in its
-`number system + digits + check` form.
-
-#### Parameters
-
-| Name      | Type              | Description |
-| --------- | ----------------- | ----------- |
-| symbology | BarcodeSymbology  |             |
-| modules   | ArrayLike<number> |             |
-
-### decodeBarcodeAsync
-
-**Kind:** function
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-Decode a run of module bits back into its payload, loading the native FWS
-graph asynchronously on first use. Initialisation and conversion failures
-are returned as Promise rejections. See {@link decodeBarcode}.
-
-#### Parameters
-
-| Name      | Type              | Description |
-| --------- | ----------------- | ----------- |
-| symbology | BarcodeSymbology  |             |
-| modules   | ArrayLike<number> |             |
-
 ## `src/encoder/index`
 
 ### Barcode
@@ -128,70 +82,6 @@ export type BarcodeSymbology =
 Supported linear barcode symbologies.
 
 ## `src/fws/index`
-
-### decodeEan13Fws
-
-**Kind:** function
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-Decodes EAN-13 module bits and validates parity and check digit.
-
-#### Parameters
-
-| Name  | Type                        | Description |
-| ----- | --------------------------- | ----------- |
-| value | string \| ArrayLike<number> |             |
-
-### decodeEan13FwsAsync
-
-**Kind:** function
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Asynchronously decodes EAN-13 module bits through FWS.
-
-#### Parameters
-
-| Name  | Type                        | Description |
-| ----- | --------------------------- | ----------- |
-| value | string \| ArrayLike<number> |             |
-
-### decodeEan8Fws
-
-**Kind:** function
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-Decodes EAN-8 module bits and returns the payload with its check digit.
-
-#### Parameters
-
-| Name  | Type                        | Description |
-| ----- | --------------------------- | ----------- |
-| value | string \| ArrayLike<number> |             |
-
-### decodeEan8FwsAsync
-
-**Kind:** function
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Asynchronously decodes EAN-8 module bits through FWS.
-
-#### Parameters
-
-| Name  | Type                        | Description |
-| ----- | --------------------------- | ----------- |
-| value | string \| ArrayLike<number> |             |
 
 ### encodeEan13Fws
 

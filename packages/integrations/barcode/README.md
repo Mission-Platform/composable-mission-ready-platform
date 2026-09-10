@@ -1,11 +1,10 @@
 # @mission-platform/barcode
 
-A dependency-free **1D (linear) barcode encoder and decoder** backed by
-package-local Forge Web Script graphs and typed direct loaders.
+A dependency-free **1D (linear) barcode encoder** backed by package-local Forge
+Web Script graphs and typed direct loaders.
 
 It renders a symbology + payload into a flat run of **module bits** (`1` = bar,
-`0` = space), one entry per unit-width module (no quiet zone) — ready to draw as an SVG or canvas. It also **decodes** a
-clean module run of any supported symbology back into its payload (see `decodeBarcode`). Supported symbologies:
+`0` = space), one entry per unit-width module (no quiet zone) — ready to draw as an SVG or canvas. Supported symbologies:
 
 | Symbology    | Notes                                                                              |
 | ------------ | ---------------------------------------------------------------------------------- |
@@ -49,30 +48,17 @@ const svg = `<svg viewBox="0 0 ${barcode.width} ${height}">${rects}</svg>`;
 `encodeBarcode` throws a `RangeError` when the payload is invalid for the chosen symbology (bad characters, wrong
 length, or a failing check digit).
 
-### Decoding
-
-`decodeBarcode(symbology, modules)` is the inverse: it takes a clean module run (as produced by `encodeBarcode`) and
-recovers the payload, returning `null` when the run is not a valid symbol of that symbology. All supported decoder
-families use direct FWS graphs, including EAN/UPC, Code 39/93, Codabar, ITF, MSI, Pharmacode, and Code 128/GS1-128. The recovered value is the symbology's canonical form (recomputed
-check digits, upper-cased Code 39/93 text, and the `system + digits + check` form for UPC-E). An async
-`decodeBarcodeAsync` mirrors the encoder.
-
-```ts
-import { decodeBarcode, encodeBarcode } from '@mission-platform/barcode';
-
-const { modules } = encodeBarcode('code93', 'MISSION 93');
-const text = decodeBarcode('code93', modules); // -> 'MISSION 93'
-```
+To decode captured images or camera frames, use the scanner APIs from
+`@mission-platform/code-scanner`.
 
 ## Architecture
 
-- `src/fws/` — package-local Forge Web Script graphs, handwritten ABI
-  declarations, and focused parity fixtures. The graphs cover the native 1D
-  encoder and decoder families listed above and expose generated `load` and
-  `loadSync` loaders.
-- `src/encoder/` and `src/decoder/` — typed façades that convert between the
-  direct FWS string ABI and the public module-bit contracts. Generated loaders
-  own linear-memory allocation and result cleanup.
+- `src/fws/` — package-local Forge Web Script encoder graphs, handwritten ABI
+  declarations, and focused parity fixtures. The graphs expose generated `load`
+  and `loadSync` loaders.
+- `src/encoder/` — the typed façade that converts between the direct FWS string
+  ABI and the public module-bit contract. Generated loaders own linear-memory
+  allocation and result cleanup.
 - `src/index.ts` — the package entry, re-exporting direct FWS codec APIs and
   framework component entrypoints.
 - The barcode implementation is package-local and does not depend on a

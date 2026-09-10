@@ -9,52 +9,6 @@
 
 `@mission-platform/barcode`의 공개 소스 선언에서 생성됩니다.
 
-## `src/decoder/index`
-
-### 디코드바코드
-
-**종류:** 기능
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-주어진 `symbology`의 모듈 비트 실행(`1` = 바, `0` = 공백)을 디코딩합니다.
-페이로드로 다시 돌아가서 처음에 기본 FWS 그래프를 동기식으로 로드합니다.
-사용.
-
-모듈 실행이 `symbology`(불량)의 유효한 기호가 아닌 경우 `null`을 반환합니다.
-프레이밍, 인식할 수 없는 패턴 또는 실패한 체크 숫자). 회수된
-페이로드는 기호의 표준 형식입니다. 다시 계산된 체크 숫자는
-포함되어 있으며 코드 39/93 텍스트는 대문자이며 UPC-E는 해당 텍스트로 반환됩니다.
-`number system + digits + check` 양식.
-
-#### 매개변수
-
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 기호 | 바코드기호        |      |
-| 모듈 | ArrayLike<number> |      |
-
-### 디코드바코드비동기화
-
-**종류:** 기능
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-일련의 모듈 비트를 페이로드로 다시 디코딩하여 기본 FWS를 로드합니다.
-처음 사용할 때 비동기적으로 그래프를 작성합니다. 초기화 및 변환 실패
-Promise 거부로 반환됩니다. {@link decodeBarcode}를 참조하세요.
-
-#### 매개변수
-
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 기호 | 바코드기호        |      |
-| 모듈 | ArrayLike<number> |      |
-
 ## `src/encoder/index`
 
 ### 바코드
@@ -132,65 +86,25 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 
 ## `src/fws/index`
 
-### 디코드Ean13Fws
-
-**종류:** 기능
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-EAN-13 모듈 비트를 디코딩하고 패리티 및 검사 숫자를 확인합니다.
-
-#### 매개변수
+### 매개변수
 
 | 이름 | 유형                        | 설명 |
 | ---- | --------------------------- | ---- |
 | 가치 | 문자열 \| ArrayLike<number> |      |
 
-### 디코드Ean13FwsAsync
-
-**종류:** 기능
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-FWS를 통해 EAN-13 모듈 비트를 비동기식으로 디코딩합니다.
-
-#### 매개변수
+### 매개변수
 
 | 이름 | 유형                        | 설명 |
 | ---- | --------------------------- | ---- |
 | 가치 | 문자열 \| ArrayLike<number> |      |
 
-### 디코드Ean8Fws
-
-**종류:** 기능
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-EAN-8 모듈 비트를 디코딩하고 검사 숫자와 함께 페이로드를 반환합니다.
-
-#### 매개변수
+### 매개변수
 
 | 이름 | 유형                        | 설명 |
 | ---- | --------------------------- | ---- |
 | 가치 | 문자열 \| ArrayLike<number> |      |
 
-### 디코드Ean8FwsAsync
-
-**종류:** 기능
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-FWS를 통해 EAN-8 모듈 비트를 비동기식으로 디코딩합니다.
-
-#### 매개변수
+### 매개변수
 
 | 이름 | 유형                        | 설명 |
 | ---- | --------------------------- | ---- |

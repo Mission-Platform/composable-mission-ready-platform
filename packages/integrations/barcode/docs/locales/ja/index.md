@@ -42,15 +42,12 @@ Rust で記述され、**WebAssembly** にコンパイルされた、依存関�
 ### コア エンコーダおよびデコーダ (`@mission-platform/barcode`)
 
 ```ts
-import { decodeBarcode, encodeBarcode } from '@mission-platform/barcode';
+import { encodeBarcode } from '@mission-platform/barcode';
 
 // Encode a 1D barcode
 const barcode = encodeBarcode('code128', 'MISSION-128');
 // barcode.width -> number
 // barcode.modules -> number[] (1 = bar, 0 = space)
-
-// Decode back to string
-const payload = decodeBarcode('code128', barcode.modules);
 ```
 
 ### フレームワーク UI コンポーネント

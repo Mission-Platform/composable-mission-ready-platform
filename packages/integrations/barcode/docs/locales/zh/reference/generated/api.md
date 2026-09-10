@@ -9,52 +9,6 @@
 
 根据 `@mission-platform/barcode` 中的公共源声明生成。
 
-## `src/decoder/index`
-
-### 解码条形码
-
-**种类：**功能
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-解码给定 `symbology` 的一系列模块位（`1` = 条，`0` = 空格）
-回到其有效负载，首先同步加载本机 FWS 图
-使用。
-
-当模块运行不是 `symbology` 的有效符号（错误）时，返回 `null`
-帧、无法识别的模式或失败的校验位）。康复者
-有效负载是符号体系的规范形式——例如重新计算的校验位是
-包括，Code 39/93 文本为大写，UPC-E 在其
-`number system + digits + check` 表格。
-
-#### 参数
-
-| 名称   | 类型              | 描述 |
-| ------ | ----------------- | ---- |
-| 符号学 | 条码符号学        |      |
-| 模块   | ArrayLike<number> |      |
-
-### 解码条形码异步
-
-**种类：**功能
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-将一系列模块位解码回其有效负载，加载本机 FWS
-首次使用时异步绘制图表。初始化和转换失败
-作为 Promise 拒绝返回。请参阅{@link解码条形码}。
-
-#### 参数
-
-| 名称   | 类型              | 描述 |
-| ------ | ----------------- | ---- |
-| 符号学 | 条码符号学        |      |
-| 模块   | ArrayLike<number> |      |
-
 ## `src/encoder/index`
 
 ### 条码
@@ -132,65 +86,25 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 
 ## `src/fws/index`
 
-### 解码Ean13Fws
-
-**种类：**功能
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-解码 EAN-13 模块位并验证奇偶校验和校验位。
-
-#### 参数
+### 参数
 
 | 名称 | 类型                       | 描述 |
 | ---- | -------------------------- | ---- |
 | 价值 | 字符串\| ArrayLike<number> |      |
 
-### 解码Ean13FwsAsync
-
-**种类：**功能
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-通过 FWS 异步解码 EAN-13 模块位。
-
-#### 参数
+### 参数
 
 | 名称 | 类型                       | 描述 |
 | ---- | -------------------------- | ---- |
 | 价值 | 字符串\| ArrayLike<number> |      |
 
-### 解码Ean8Fws
-
-**种类：**功能
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-解码 EAN-8 模块位并返回有效负载及其校验位。
-
-#### 参数
+### 参数
 
 | 名称 | 类型                       | 描述 |
 | ---- | -------------------------- | ---- |
 | 价值 | 字符串\| ArrayLike<number> |      |
 
-### 解码Ean8FwsAsync
-
-**种类：**功能
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-通过 FWS 异步解码 EAN-8 模块位。
-
-#### 参数
+### 参数
 
 | 名称 | 类型                       | 描述 |
 | ---- | -------------------------- | ---- |

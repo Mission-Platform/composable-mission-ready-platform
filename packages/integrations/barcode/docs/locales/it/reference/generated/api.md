@@ -9,52 +9,6 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 
 Generato da dichiarazioni di fonte pubblica in `@mission-platform/barcode`.
 
-## `src/decoder/index`
-
-### decoderBarcode
-
-**Tipo:** funzione
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-Decodifica una sequenza di bit del modulo (`1` = barra, `0` = spazio) del dato `symbology`
-nuovamente nel suo payload, caricando prima il grafico FWS nativo in modo sincrono
-utilizzare.
-
-Restituisce `null` quando l'esecuzione del modulo non è un simbolo valido di `symbology` (errore
-inquadratura, una sequenza non riconosciuta o una cifra di controllo non riuscita). I guariti
-il carico utile è la forma canonica della simbologia - ad es. le cifre di controllo ricalcolate sono
-incluso, il testo del codice 39/93 è in maiuscolo e viene restituito UPC-E nel suo formato
-Modulo `number system + digits + check`.
-
-#### Parametri
-
-| Nome       | Digitare                 | Descrizione |
-| ---------- | ------------------------ | ----------- |
-| simbologia | Codice a barreSimbologia |             |
-| moduli     | ArrayLike<number>        |             |
-
-### decodeBarcodeAsync
-
-**Tipo:** funzione
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-Decodifica una serie di bit del modulo nel suo payload, caricando il FWS nativo
-grafico in modo asincrono al primo utilizzo. Errori di inizializzazione e conversione
-vengono restituiti come rifiuti Promise. Vedi {@link decodeBarcode}.
-
-#### Parametri
-
-| Nome       | Digitare                 | Descrizione |
-| ---------- | ------------------------ | ----------- |
-| simbologia | Codice a barreSimbologia |             |
-| moduli     | ArrayLike<number>        |             |
-
 ## `src/encoder/index`
 
 ### Codice a barre
@@ -132,65 +86,25 @@ Codifica `data` in modo asincrono utilizzando il grafico FWS locale del pacchett
 
 ## `src/fws/index`
 
-### decodificareEan13Fws
-
-**Tipo:** funzione
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-Decodifica i bit del modulo EAN-13 e convalida la parità e la cifra di controllo.
-
-#### Parametri
+### Parametri
 
 | Nome   | Digitare                     | Descrizione |
 | ------ | ---------------------------- | ----------- |
 | valore | stringa \| ArrayLike<number> |             |
 
-### decodificaEan13FwsAsync
-
-**Tipo:** funzione
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Decodifica in modo asincrono i bit del modulo EAN-13 tramite FWS.
-
-#### Parametri
+### Parametri
 
 | Nome   | Digitare                     | Descrizione |
 | ------ | ---------------------------- | ----------- |
 | valore | stringa \| ArrayLike<number> |             |
 
-### decodificareEan8Fws
-
-**Tipo:** funzione
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-Decodifica i bit del modulo EAN-8 e restituisce il carico utile con la sua cifra di controllo.
-
-#### Parametri
+### Parametri
 
 | Nome   | Digitare                     | Descrizione |
 | ------ | ---------------------------- | ----------- |
 | valore | stringa \| ArrayLike<number> |             |
 
-### decodificaEan8FwsAsync
-
-**Tipo:** funzione
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Decodifica in modo asincrono i bit del modulo EAN-8 tramite FWS.
-
-#### Parametri
+### Parametri
 
 | Nome   | Digitare                     | Descrizione |
 | ------ | ---------------------------- | ----------- |

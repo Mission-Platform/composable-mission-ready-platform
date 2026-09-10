@@ -9,52 +9,6 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/barcode`.
 
-## `src/decoder/index`
-
-### decoderenBarcode
-
-**Soort:** functie
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-Decodeer een reeks modulebits (`1` = bar, `0` = spatie) van de gegeven `symbology`
-terug in zijn payload, waarbij eerst de native FWS-grafiek synchroon wordt geladen
-gebruik.
-
-Retourneert `null` wanneer de modulerun geen geldig symbool is van `symbology` (slechte
-framing, een onbekend patroon of een falend controlecijfer). De herstelde
-payload is de canonieke vorm van de symboliek - b.v. herberekende controlecijfers zijn
-opgenomen, wordt de tekst van Code 39/93 in hoofdletters weergegeven en wordt UPC-E geretourneerd in zijn
-`number system + digits + check`-formulier.
-
-#### Parameters
-
-| Naam      | Typ               | Beschrijving |
-| --------- | ----------------- | ------------ |
-| symboliek | BarcodeSymbologie |              |
-| modules   | ArrayLike<number> |              |
-
-### decodeBarcodeAsync
-
-**Soort:** functie
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-Decodeer een reeks modulebits terug naar de payload, waarbij de oorspronkelijke FWS wordt geladen
-grafiek asynchroon bij het eerste gebruik. Initialisatie- en conversiefouten
-worden geretourneerd als belofte-afwijzingen. Zie {@link decodeBarcode}.
-
-#### Parameters
-
-| Naam      | Typ               | Beschrijving |
-| --------- | ----------------- | ------------ |
-| symboliek | BarcodeSymbologie |              |
-| modules   | ArrayLike<number> |              |
-
 ## `src/encoder/index`
 
 ### Streepjescode
@@ -132,65 +86,25 @@ Codeer `data` asynchroon met behulp van de pakket-lokale FWS-grafiek.
 
 ## `src/fws/index`
 
-### decoderenEan13Fws
-
-**Soort:** functie
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-Decodeert EAN-13-modulebits en valideert pariteit en controlecijfer.
-
-#### Parameters
+### Parameters
 
 | Naam   | Typ                             | Beschrijving |
 | ------ | ------------------------------- | ------------ |
 | waarde | tekenreeks \| ArrayLike<number> |              |
 
-### decodeEan13FwsAsync
-
-**Soort:** functie
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Decodeert asynchroon EAN-13-modulebits via FWS.
-
-#### Parameters
+### Parameters
 
 | Naam   | Typ                             | Beschrijving |
 | ------ | ------------------------------- | ------------ |
 | waarde | tekenreeks \| ArrayLike<number> |              |
 
-### decoderenEan8Fws
-
-**Soort:** functie
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-Decodeert EAN-8-modulebits en retourneert de payload met zijn controlecijfer.
-
-#### Parameters
+### Parameters
 
 | Naam   | Typ                             | Beschrijving |
 | ------ | ------------------------------- | ------------ |
 | waarde | tekenreeks \| ArrayLike<number> |              |
 
-### decodeEan8FwsAsync
-
-**Soort:** functie
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Decodeert asynchroon EAN-8-modulebits via FWS.
-
-#### Parameters
+### Parameters
 
 | Naam   | Typ                             | Beschrijving |
 | ------ | ------------------------------- | ------------ |

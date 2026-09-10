@@ -42,15 +42,12 @@ Rust로 작성되고 **WebAssembly**로 컴파일되어 노출되는 종속성 �
 ### 코어 인코더 및 디코더(`@mission-platform/barcode`)
 
 ```ts
-import { decodeBarcode, encodeBarcode } from '@mission-platform/barcode';
+import { encodeBarcode } from '@mission-platform/barcode';
 
 // Encode a 1D barcode
 const barcode = encodeBarcode('code128', 'MISSION-128');
 // barcode.width -> number
 // barcode.modules -> number[] (1 = bar, 0 = space)
-
-// Decode back to string
-const payload = decodeBarcode('code128', barcode.modules);
 ```
 
 ### 프레임워크 UI 구성요소

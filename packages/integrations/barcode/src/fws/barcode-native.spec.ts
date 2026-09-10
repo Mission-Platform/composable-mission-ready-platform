@@ -42,10 +42,9 @@ describe('barcode-native static dispatcher', () => {
       Pharmacode: 14,
     });
 
-    for (const [symbology, value, decoded = value] of cases) {
+    for (const [symbology, value] of cases) {
       const encoded = native.encode_native(symbology, value);
       expect(encoded, `${symbology}:${value}`).not.toBe('');
-      expect(native.decode_native(symbology, Array.from(encoded, Number))).toBe(decoded);
       native.fws_reset();
     }
   });
@@ -54,14 +53,6 @@ describe('barcode-native static dispatcher', () => {
     const native = loadSync();
 
     expect(native.encode_native(99 as never, 'ABC')).toBe('');
-    expect(native.decode_native(-1 as never, [1, 0, 1])).toBe('');
-  });
-
-  it('consumes integer modules through the linked family iterator', () => {
-    const native = loadSync();
-    const encoded = native.encode_native(BarcodeSymbology.Code128, 'ABC');
-
-    expect(native.decode_native(BarcodeSymbology.Code128, Array.from(encoded, Number))).toBe('ABC');
   });
 
   it('keeps async dispatch results identical to sync dispatch', async () => {

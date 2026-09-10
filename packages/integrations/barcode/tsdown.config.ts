@@ -18,7 +18,7 @@ import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script
 const WASM_PACKAGES = [] as const;
 
 /**
- * Neutral self-contained encoder/decoder (`dist/index.js` + dts) plus the five
+ * Neutral self-contained encoder (`dist/index.js` + dts) plus the five
  * forge component framework builds (`dist/{vue,react,solid,web-components}/`).
  */
 export default [

@@ -1,14 +1,13 @@
 # @mission-platform/barcode
 
-A dependency-free **1D (linear) barcode encoder and decoder** written in Rust and compiled to **WebAssembly**, exposed
+A dependency-free **1D (linear) barcode encoder** written in Rust and compiled to **WebAssembly**, exposed
 through a small, fully typed ES module wrapper and a write-once `ForgeBarcode` UI component.
 
 ## Overview
 
-`@mission-platform/barcode` provides high-performance encoding and decoding for 1D linear barcodes:
+`@mission-platform/barcode` provides high-performance encoding for 1D linear barcodes:
 
 - **Encoder**: Renders symbology + payload into a flat run of module bits (`1` = bar, `0` = space).
-- **Decoder**: Reads a clean module run of any supported symbology back into its payload.
 - **UI Component (`ForgeBarcode`)**: Write-once component compiled for Vue 3, React, Solid and Web Components, all
   served from the bare `@mission-platform/barcode` specifier via the `mp:<framework>` export conditions.
 
@@ -34,19 +33,19 @@ through a small, fully typed ES module wrapper and a write-once `ForgeBarcode` U
 
 ## API & Usage
 
-### Core Encoder & Decoder (`@mission-platform/barcode`)
+### Core Encoder (`@mission-platform/barcode`)
 
 ```ts
-import { decodeBarcode, encodeBarcode } from '@mission-platform/barcode';
+import { encodeBarcode } from '@mission-platform/barcode';
 
 // Encode a 1D barcode
 const barcode = encodeBarcode('code128', 'MISSION-128');
 // barcode.width -> number
 // barcode.modules -> number[] (1 = bar, 0 = space)
-
-// Decode back to string
-const payload = decodeBarcode('code128', barcode.modules);
 ```
+
+To decode captured images or camera frames, use the scanner APIs from
+`@mission-platform/code-scanner`.
 
 ### Framework UI Components
 

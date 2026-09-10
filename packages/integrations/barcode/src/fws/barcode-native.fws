@@ -4,6 +4,7 @@
 // the TypeScript boundary maps the public string union to these declarations.
 
 import "./barcode.fws" as ean;
+import "./barcode-upce.fws" as upce;
 import "./code128.fws" as code128;
 import "./code39.fws" as code39;
 import "./code93.fws" as code93;
@@ -41,33 +42,12 @@ export fn encode_native(symbology: BarcodeSymbology, value: string) -> string {
     case Ean13: return string_concat(encode_ean13(value), "");
     case Ean8: return string_concat(encode_ean8(value), "");
     case Upca: return string_concat(encode_upca(value), "");
-    case Upce: return string_concat(encode_upce(value), "");
+    case Upce: return string_concat(upce.encode_upce(value), "");
     case Itf: return string_concat(encode_itf(value), "");
     case Itf14: return string_concat(encode_itf14(value), "");
     case Codabar: return string_concat(encode_codabar(value), "");
     case Msi: return string_concat(encode_msi(value), "");
     case Pharmacode: return string_concat(encode_pharmacode(value), "");
-    default: return "";
-  }
-}
-
-export fn decode_native(symbology: BarcodeSymbology, modules: Array<i32>) -> string {
-  switch symbology {
-    case Ean13: return string_concat(decode_ean13(modules), "");
-    case Ean8: return string_concat(decode_ean8(modules), "");
-    case Upca: return string_concat(decode_upca(modules), "");
-    case Upce: return string_concat(decode_upce(modules), "");
-    case Code128: return string_concat(decode_code128(modules), "");
-    case Gs1_128: return string_concat(decode_gs1_128(modules), "");
-    case Code39: return string_concat(decode_code39(modules), "");
-    case Code39Extended: return string_concat(decode_code39_extended(modules), "");
-    case Code93: return string_concat(decode_code93(modules), "");
-    case Code93Extended: return string_concat(decode_code93_extended(modules), "");
-    case Codabar: return string_concat(decode_codabar(modules), "");
-    case Itf: return string_concat(decode_itf(modules), "");
-    case Itf14: return string_concat(decode_itf14(modules), "");
-    case Msi: return string_concat(decode_msi(modules), "");
-    case Pharmacode: return string_concat(decode_pharmacode(modules), "");
     default: return "";
   }
 }

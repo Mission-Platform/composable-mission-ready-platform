@@ -185,21 +185,6 @@ function encodeUpcaWith(wasm: ForgeBarcodeExports, value: string): string {
   return wasm.encode_upca(value);
 }
 
-function normalizeModuleBits(value: string | ArrayLike<number>): number[] {
-  if (typeof value === 'string') {
-    return Array.from(value, (bit) => (bit === '1' ? 1 : 0));
-  }
-  return Array.from(value, (bit) => (bit === 1 ? 1 : 0));
-}
-
-function decodeEan8With(wasm: ForgeBarcodeExports, value: string | ArrayLike<number>): string {
-  return wasm.decode_ean8(normalizeModuleBits(value));
-}
-
-function decodeEan13With(wasm: ForgeBarcodeExports, value: string | ArrayLike<number>): string {
-  return wasm.decode_ean13(normalizeModuleBits(value));
-}
-
 function validateDataBarWith(wasm: ForgeDataBarExports, value: string): boolean {
   return Boolean(wasm.validate_databar_gtin(value));
 }
@@ -232,26 +217,6 @@ export function encodeUpcaFws(value: string): string {
 /** Asynchronously encodes a UPC-A payload through FWS. */
 export async function encodeUpcaFwsAsync(value: string): Promise<string> {
   return encodeUpcaWith(await loadBarcode(), value);
-}
-
-/** Decodes EAN-8 module bits and returns the payload with its check digit. */
-export function decodeEan8Fws(value: string | ArrayLike<number>): string {
-  return decodeEan8With(loadBarcodeSync(), value);
-}
-
-/** Asynchronously decodes EAN-8 module bits through FWS. */
-export async function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string> {
-  return decodeEan8With(await loadBarcode(), value);
-}
-
-/** Decodes EAN-13 module bits and validates parity and check digit. */
-export function decodeEan13Fws(value: string | ArrayLike<number>): string {
-  return decodeEan13With(loadBarcodeSync(), value);
-}
-
-/** Asynchronously decodes EAN-13 module bits through FWS. */
-export async function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string> {
-  return decodeEan13With(await loadBarcode(), value);
 }
 
 /** Validates a GS1 DataBar/RSS-14 GTIN-14 value in the package-local FWS graph. */

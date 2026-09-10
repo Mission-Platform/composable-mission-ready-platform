@@ -18,7 +18,6 @@ export const BarcodeSymbology: {
 export type BarcodeSymbology = (typeof BarcodeSymbology)[keyof typeof BarcodeSymbology];
 
 export interface ForgeBarcodeNativeExports {
-  readonly decode_native: (symbology: BarcodeSymbology, modules: ArrayLike<number>) => string;
   readonly encode_native: (symbology: BarcodeSymbology, value: string) => string;
 }
 
