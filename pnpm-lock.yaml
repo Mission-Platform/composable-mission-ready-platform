@@ -4530,6 +4530,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/configs/eslint-config
+      '@mission-platform/forge-adapters':
+        specifier: workspace:*
+        version: link:../../core/forge-adapters
       '@mission-platform/forge-cms-plugin-api':
         specifier: workspace:*
         version: link:../../compiler/plugins/forge-cms-plugin-api
