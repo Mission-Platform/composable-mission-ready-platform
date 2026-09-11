@@ -1,6 +1,5 @@
-import { useArgs } from 'storybook/preview-api';
-
 import { ForgeSearchInput } from '@mission-platform/forms';
+import { useArgs } from 'storybook/preview-api';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

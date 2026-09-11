@@ -9,7 +9,7 @@ export {
   type TooltipSize,
 } from './molecules/forge-tooltip';
 export { ForgeDialog, type DialogProperties, type DialogSize } from './organisms/forge-dialog';
-export { ForgeModal, type ModalProperties, type ModalSize } from './organisms/forge-modal';
+export { ForgeModal, type ModalProperties, type ModalSize, type ModalVariant } from './organisms/forge-modal';
 export {
   ForgeToastContainer,
   type ToastContainerProperties,

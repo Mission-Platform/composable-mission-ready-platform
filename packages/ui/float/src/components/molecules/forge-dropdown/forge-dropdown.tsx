@@ -11,6 +11,7 @@ import {
 } from '@mission-platform/forge-jsx';
 
 import sizeStyles from '../../../styles/size.module.scss';
+import { applyFallbackPosition, isAnchorPositioningSupported } from '../../../utils/fallback-position';
 import { resolvePortalTarget } from '../../../utils/portal-target/portal-target';
 
 import styles from './forge-dropdown.module.scss';
@@ -230,6 +231,40 @@ export function ForgeDropdown(properties: Readonly<DropdownProperties>): MpEleme
       cancelAnimationFrame(frame);
     };
   }, [open]);
+
+  // Calculate and apply fallback positioning when CSS Anchor Positioning is not supported.
+  useEffect(() => {
+    if (!open || globalThis.window === undefined || isAnchorPositioningSupported()) {
+      return;
+    }
+
+    const update = (): void => {
+      const trigger = triggerReference.current;
+      const panel = panelReference.current;
+      if (!trigger || !panel) {
+        return;
+      }
+      applyFallbackPosition(trigger, panel, placement, { matchTriggerWidth });
+    };
+
+    let frameId: number | undefined;
+    if (typeof requestAnimationFrame === 'function') {
+      frameId = requestAnimationFrame(update);
+    } else {
+      update();
+    }
+
+    window.addEventListener('scroll', update, true);
+    window.addEventListener('resize', update);
+
+    return () => {
+      if (frameId !== undefined && typeof cancelAnimationFrame === 'function') {
+        cancelAnimationFrame(frameId);
+      }
+      window.removeEventListener('scroll', update, true);
+      window.removeEventListener('resize', update);
+    };
+  }, [open, placement, matchTriggerWidth]);
 
   return (
     <div

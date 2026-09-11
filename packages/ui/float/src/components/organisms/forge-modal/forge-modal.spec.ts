@@ -62,4 +62,23 @@ describe('ForgeModal authors the same component for React and Vue', () => {
       expect(html).not.toContain('forge-modal__footer');
     }
   });
+
+  it('renders dialog and alert variants with appropriate role semantics on both frameworks', async () => {
+    const dialogReact = renderToStaticMarkup(
+      createElement(ReactModal, { open: true, variant: 'dialog', title: 'Dialog Title' }, 'Dialog content'),
+    );
+    const alertVue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueModal, { open: true, variant: 'alert', title: 'Alert Title' }, () => 'Alert content'),
+      }),
+    );
+
+    expect(dialogReact).toContain('role="dialog"');
+    expect(dialogReact).toContain('forge-modal--dialog');
+    expect(dialogReact).toContain('Dialog Title');
+
+    expect(alertVue).toContain('role="alertdialog"');
+    expect(alertVue).toContain('forge-modal--alert');
+    expect(alertVue).toContain('Alert Title');
+  });
 });

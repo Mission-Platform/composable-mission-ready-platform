@@ -80,6 +80,14 @@
       }
     }
 
+    /* Dialog and alert variants are centered on all screen sizes with rounded corners. */
+    &--dialog,
+    &--alert {
+      margin: auto;
+      max-width: min(560px, calc(100vw - 2rem));
+      border-radius: var(--forge-modal-overlay-radius, var(--mp-overlay-radius));
+    }
+
     /* Tablet+ (sm): centred dialog, rounded all corners, width by size. */
     @include bp.bp-up('sm') {
       margin: auto;

@@ -1,5 +1,4 @@
 import { useState } from '@mission-platform/forge-jsx';
-
 import { ForgeFieldSet, ForgeInput, ForgePhoneInput, ForgeTextarea } from '@mission-platform/forms';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
