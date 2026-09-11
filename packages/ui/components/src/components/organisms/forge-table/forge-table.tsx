@@ -291,6 +291,17 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
     properties.onSort?.(column.key, nextDirection);
   };
 
+  const onHeaderKeyDown = (event: unknown, column: TableColumn): void => {
+    if (!column.sortable) {
+      return;
+    }
+    const key = (event as { key?: string }).key;
+    if (key === 'Enter' || key === ' ') {
+      (event as { preventDefault?: () => void }).preventDefault?.();
+      toggleSort(column);
+    }
+  };
+
   const tableClass = classNames(styles['forge-table'], styles[`forge-table--${variant}`], {
     [styles['forge-table--striped']]: striped,
     [styles['forge-table--bordered']]: bordered,
@@ -308,9 +319,12 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
       <th
         className={thClass}
         scope="col"
+        tabindex={column.sortable ? 0 : undefined}
         style={column.width ? { width: column.width } : undefined}
         aria-sort={isActive ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
         onClick={() => toggleSort(column)}
+        onKeyDown={(event) => onHeaderKeyDown(event, column)}
+        onKeydown={(event) => onHeaderKeyDown(event, column)}
       >
         <span className={styles['forge-table__th-content']}>
           <ForgeTypography

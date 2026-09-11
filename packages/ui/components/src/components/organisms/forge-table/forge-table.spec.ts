@@ -2,8 +2,8 @@ import { toReactComponent } from '@mission-platform/forge-adapters/react';
 import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
-import { createSSRApp, h as vueH } from 'vue';
+import { describe, expect, it, vi } from 'vitest';
+import { createApp, createSSRApp, h as vueH, nextTick } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
 import { ForgeTable, type TableColumn } from './forge-table';
@@ -63,5 +63,32 @@ describe('ForgeTable authors the same component for React and Vue', () => {
       expect(html).toContain('forge-table__empty');
       expect(html).toContain('Nothing here');
     }
+  });
+
+  it('renders sortable headers with tabindex="0" and supports keyboard sorting with Enter and Space', async () => {
+    const onSort = vi.fn();
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () => vueH(VueTable, { columns: COLUMNS, rows: ROWS, onSort }),
+    });
+    app.mount(host);
+
+    const sortableTh = host.querySelector('.forge-table__th--sortable') as HTMLElement;
+    expect(sortableTh).not.toBeNull();
+    expect(sortableTh.getAttribute('tabindex')).toBe('0');
+
+    // Press Enter to cycle to 'asc'
+    sortableTh.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    await nextTick();
+    expect(onSort).toHaveBeenNthCalledWith(1, 'name', 'asc');
+
+    // Press Space to trigger sorting
+    sortableTh.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }));
+    await nextTick();
+    expect(onSort).toHaveBeenNthCalledWith(2, 'name', 'asc');
+
+    app.unmount();
+    host.remove();
   });
 });
