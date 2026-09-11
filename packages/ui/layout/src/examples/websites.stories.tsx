@@ -1,6 +1,5 @@
-import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
-
 import { ForgeApplicationLayout, ForgeContainer } from '@mission-platform/layouts';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

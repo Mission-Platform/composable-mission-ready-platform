@@ -415,7 +415,6 @@ export function ForgeTabs(properties: Readonly<TabsProperties>): MpElement {
                   aria-label={`Close ${tab.label}`}
                   className={styles['forge-tabs__close-icon']}
                   data-close-tab-id={tab.id}
-                  role="tab"
                   tabindex={-1}
                   type="button"
                   onClick={(event: MouseEvent) => {

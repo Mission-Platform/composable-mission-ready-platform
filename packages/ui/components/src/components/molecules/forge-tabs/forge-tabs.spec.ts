@@ -85,6 +85,8 @@ describe('ForgeTabs authors the same component for React and Vue', () => {
     for (const html of [react, vue]) {
       expect(html).toContain('data-close-tab-id="overview"');
       expect(html).toContain('aria-label="New tab"');
+      // The close button must NOT carry role="tab" to preserve valid ARIA tablist semantics
+      expect(html).not.toMatch(/data-close-tab-id="overview"[^>]*role="tab"/);
     }
   });
 
