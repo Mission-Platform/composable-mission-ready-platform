@@ -17,6 +17,15 @@ export {
 } from './organisms/forge-date-time-range-input';
 export { ForgeFieldSet, type FieldSetProperties } from './molecules/forge-field-set';
 export { ForgeFileInput, type FileInputProperties, type FileInputSize } from './molecules/forge-file-input';
+export {
+  ForgeForm,
+  FormContext,
+  defaultFormContext,
+  useFormContext,
+  type ForgeFormProps,
+  type ForgeFormProperties,
+  type FormContextValue,
+} from './organisms/forge-form';
 export { ForgeFormWizard, type FormWizardProperties, type WizardStep } from './organisms/forge-form-wizard';
 export {
   ForgeInput,

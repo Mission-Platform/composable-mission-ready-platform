@@ -1,0 +1,62 @@
+@layer mp.forms {
+  .forge-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-form-gap-large, 1.5rem);
+    width: 100%;
+
+    &__error-summary {
+      padding: 1rem 1.25rem;
+      border: 2px solid var(--mp-form-border-invalid, #dc2626);
+      border-radius: var(--mp-form-radius-default, 0.375rem);
+      background-color: var(--mp-form-surface-invalid, #fef2f2);
+      color: var(--mp-form-text-invalid, #991b1b);
+
+      &:focus {
+        outline: 3px solid var(--mp-form-border-focus, #2563eb);
+        outline-offset: 2px;
+      }
+    }
+
+    &__error-heading {
+      margin: 0 0 0.5rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: inherit;
+    }
+
+    &__error-list {
+      margin: 0;
+      padding-left: 1.25rem;
+      list-style-type: disc;
+    }
+
+    &__error-item {
+      margin-bottom: 0.25rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &__error-link {
+      color: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &:focus-visible {
+        outline: 2px solid currentcolor;
+        outline-offset: 2px;
+      }
+    }
+
+    &__error-message {
+      color: inherit;
+    }
+  }
+}
