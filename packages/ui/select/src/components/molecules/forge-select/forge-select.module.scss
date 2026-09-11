@@ -167,6 +167,27 @@
       font-style: italic;
     }
 
+    &__loading {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      flex-shrink: 0;
+      border: 0.15em solid currentcolor;
+      border-inline-end-color: transparent;
+      border-radius: 9999px;
+      color: var(--forge-select-text-secondary, var(--mp-select-text-secondary));
+      margin-inline: 0.25rem;
+      animation: forge-select-spin 0.75s linear infinite;
+    }
+
+    &__loading-item {
+      display: flex;
+      align-items: center;
+      gap: var(--forge-select-option-content-gap, var(--mp-select-option-content-gap));
+      color: var(--forge-select-text-secondary, var(--mp-select-text-secondary));
+      font-style: normal;
+    }
+
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
@@ -214,6 +235,12 @@
       }
     }
 
+    &--loading {
+      .forge-select__field {
+        cursor: progress;
+      }
+    }
+
     &__error {
       color: var(--forge-select-field-error, var(--mp-field-error));
       margin: 0;
@@ -221,6 +248,12 @@
 
     &__hint {
       margin: 0;
+    }
+  }
+
+  @keyframes forge-select-spin {
+    to {
+      transform: rotate(360deg);
     }
   }
 }

@@ -2,8 +2,8 @@ import { toReactComponent } from '@mission-platform/forge-adapters/react';
 import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
-import { createSSRApp, h as vueH } from 'vue';
+import { describe, expect, it, vi } from 'vitest';
+import { createApp, createSSRApp, h as vueH, nextTick } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
 import { ForgeSelect } from './forge-select';
@@ -103,5 +103,79 @@ describe('ForgeSelect authors the same component for React and Vue', () => {
       // The selected option's label shows in the button trigger.
       expect(html).toContain('Green');
     }
+  });
+
+  it('displays a loading indicator when loading is true', () => {
+    const properties = { options: OPTIONS, loading: true, id: 'sel-loading' };
+    const react = renderToStaticMarkup(createElement(ReactSelect, properties));
+    expect(react).toContain('role="status"');
+    expect(react).toContain('aria-label="Loading…"');
+    expect(react).toContain('aria-busy="true"');
+  });
+
+  it('triggers onSearch when input text changes in searchable mode', async () => {
+    const onSearch = vi.fn().mockResolvedValue([
+      { label: 'Dynamic Option 1', value: 'dyn1' },
+      { label: 'Dynamic Option 2', value: 'dyn2' },
+    ]);
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        vueH(VueSelect, {
+          id: 'async-select',
+          options: OPTIONS,
+          searchDebounceMs: 0,
+          onSearch,
+        }),
+    });
+    app.mount(host);
+
+    const input = host.querySelector('input');
+    expect(input).not.toBeNull();
+    if (input) {
+      input.value = 'dyn';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await nextTick();
+      expect(onSearch).toHaveBeenCalledWith('dyn');
+    }
+    app.unmount();
+    host.remove();
+  });
+
+  it('debounces onSearch queries when searchDebounceMs is set', async () => {
+    vi.useFakeTimers();
+    const onSearch = vi.fn().mockResolvedValue([]);
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        vueH(VueSelect, {
+          id: 'debounce-select',
+          options: OPTIONS,
+          searchDebounceMs: 250,
+          onSearch,
+        }),
+    });
+    app.mount(host);
+
+    const input = host.querySelector('input');
+    if (input) {
+      input.value = 'a';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.value = 'ab';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.value = 'abc';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+
+      expect(onSearch).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(250);
+      expect(onSearch).toHaveBeenCalledTimes(1);
+      expect(onSearch).toHaveBeenCalledWith('abc');
+    }
+
+    vi.useRealTimers();
+    app.unmount();
+    host.remove();
   });
 });
