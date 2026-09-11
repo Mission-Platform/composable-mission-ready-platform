@@ -214,6 +214,8 @@ export interface MultiselectProperties {
   error?: string;
   /** Placeholder shown in the search input when nothing is selected. */
   placeholder?: string;
+  /** Maximum number of tags to display before collapsing into a "+N more" badge. */
+  maxTags?: number;
   /** Disable the control. */
   disabled?: boolean;
   /** Mark the field as required (renders a `*` after the label). */
@@ -334,7 +336,12 @@ export function ForgeMultiselect(properties: Readonly<MultiselectProperties>): M
     </option>
   ));
 
-  const tagChips: MpChild[] = selectedOptions.map((option) => (
+  const maxTags = properties.maxTags;
+  const isTruncated = maxTags !== undefined && maxTags >= 0 && selectedOptions.length > maxTags;
+  const displayedOptions = isTruncated ? selectedOptions.slice(0, maxTags) : selectedOptions;
+  const hiddenCount = isTruncated ? selectedOptions.length - maxTags : 0;
+
+  const tagChips: MpChild[] = displayedOptions.map((option) => (
     <ForgeTag
       key={option.value}
       disabled={disabled}
@@ -345,6 +352,17 @@ export function ForgeMultiselect(properties: Readonly<MultiselectProperties>): M
       onRemove={() => removeOption(option.value)}
     />
   ));
+  if (isTruncated) {
+    tagChips.push(
+      <ForgeTag
+        key="__more__"
+        disabled={disabled}
+        label={`+${hiddenCount} more`}
+        size={size === 'lg' ? 'md' : 'sm'}
+        variant="secondary"
+      />,
+    );
+  }
   tagChips.push(
     <input
       id={resolvedId}
