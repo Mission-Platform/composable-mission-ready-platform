@@ -79,6 +79,7 @@ export function ForgeTreeViewItem(properties: Readonly<TreeViewItemProperties>):
         style={{ paddingLeft: `${depth * 20}px` }}
         onClick={() => selectNode(node)}
         onKeyDown={(event: KeyboardEvent) => keyDownNode(event, node)}
+        onKeydown={(event: KeyboardEvent) => keyDownNode(event, node)}
       >
         {hasChildren(node) ? (
           <button

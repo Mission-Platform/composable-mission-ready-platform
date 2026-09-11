@@ -4,7 +4,7 @@ import { h } from '@mission-platform/forge-jsx';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { createSSRApp, h as vueH } from 'vue';
+import { createApp, createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
 import { ForgeTreeView, type TreeViewNode } from './forge-tree-view';
@@ -90,5 +90,43 @@ describe('ForgeTreeView authors the same component for React and Vue', () => {
       expect(html).toContain('[Alpha]');
       expect(html).toContain('data-depth="1"');
     }
+  });
+
+  it('supports ArrowDown, ArrowUp, Home, and End keyboard navigation across visible nodes', () => {
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () => vueH(VueTree, { nodes: NODES, defaultOpen: true }),
+    });
+    app.mount(host);
+
+    const items = [...host.querySelectorAll<HTMLElement>('[role="treeitem"]')];
+    expect(items).toHaveLength(3);
+
+    const [rootItem, alphaItem, bravoItem] = items;
+    rootItem?.focus();
+
+    // ArrowDown from root moves focus to Alpha
+    rootItem?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(alphaItem);
+
+    // ArrowDown from Alpha moves focus to Bravo
+    alphaItem?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(bravoItem);
+
+    // ArrowUp from Bravo moves focus back to Alpha
+    bravoItem?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(alphaItem);
+
+    // Home from Alpha moves focus to Root
+    alphaItem?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(rootItem);
+
+    // End from Root moves focus to Bravo
+    rootItem?.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(bravoItem);
+
+    app.unmount();
+    host.remove();
   });
 });
