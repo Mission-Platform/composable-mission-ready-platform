@@ -4,7 +4,7 @@ import { h } from '@mission-platform/forge-jsx';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
-import { createApp, createSSRApp, h as vueH, nextTick } from 'vue';
+import { createApp, createSSRApp, h as vueH, nextTick, ref } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
 import { ForgeTable, type TableColumn } from './forge-table';
@@ -108,6 +108,100 @@ describe('ForgeTable authors the same component for React and Vue', () => {
       expect(html).toContain('Badge: Author');
       expect(html).toContain('Badge: Admiral');
       expect(html).toContain('Ada');
+    }
+  });
+
+  it('supports row selection with checkboxes and fires selection callbacks', async () => {
+    const onSelectionChange = vi.fn();
+    const onSelectRow = vi.fn();
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        vueH(VueTable, {
+          columns: COLUMNS,
+          rows: ROWS,
+          selectable: true,
+          rowKey: 'name',
+          onSelectionChange,
+          onSelectRow,
+        }),
+    });
+    app.mount(host);
+
+    const checkboxes = host.querySelectorAll('input[type="checkbox"]');
+    // 1 header checkbox + 2 row checkboxes
+    expect(checkboxes.length).toBe(3);
+
+    // Toggle select Ada
+    const adaCheckbox = checkboxes[1] as HTMLInputElement;
+    adaCheckbox.click();
+    await nextTick();
+
+    expect(onSelectRow).toHaveBeenCalledWith(ROWS[0], true);
+    expect(onSelectionChange).toHaveBeenCalledWith(['Ada']);
+
+    // Toggle select-all
+    const selectAllCheckbox = checkboxes[0] as HTMLInputElement;
+    selectAllCheckbox.click();
+    await nextTick();
+
+    expect(onSelectionChange).toHaveBeenCalledWith(['Ada', 'Grace']);
+
+    app.unmount();
+    host.remove();
+  });
+
+  it('supports row expansion and renders detail content', async () => {
+    const expandedKeys = ref<string[]>([]);
+    const onExpansionChange = vi.fn((keys: string[]) => {
+      expandedKeys.value = keys;
+    });
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        vueH(VueTable, {
+          columns: COLUMNS,
+          rows: ROWS,
+          rowKey: 'name',
+          expandable: true,
+          expandedRowKeys: expandedKeys.value,
+          expandedRowRender: (row) => h('div', { class: 'detail-content' }, `Details for ${String(row.name)}`),
+          onExpansionChange,
+        }),
+    });
+    app.mount(host);
+
+    const expandButtons = host.querySelectorAll('.forge-table__expand-button');
+    expect(expandButtons.length).toBe(2);
+
+    // Expand Ada
+    (expandButtons[0] as HTMLElement).click();
+    await nextTick();
+
+    expect(onExpansionChange).toHaveBeenCalledWith(['Ada']);
+    expect(host.innerHTML).toContain('Details for Ada');
+
+    app.unmount();
+    host.remove();
+  });
+
+  it('renders sticky column pinning classes on pinned columns', async () => {
+    const pinnedColumns: TableColumn[] = [
+      { key: 'name', label: 'Name', fixed: 'left' },
+      { key: 'role', label: 'Role', fixed: 'right' },
+    ];
+    const react = renderToStaticMarkup(createElement(ReactTable, { columns: pinnedColumns, rows: ROWS }));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueTable, { columns: pinnedColumns, rows: ROWS }) }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('forge-table__th--fixed-left');
+      expect(html).toContain('forge-table__th--fixed-right');
+      expect(html).toContain('forge-table__td--fixed-left');
+      expect(html).toContain('forge-table__td--fixed-right');
     }
   });
 });

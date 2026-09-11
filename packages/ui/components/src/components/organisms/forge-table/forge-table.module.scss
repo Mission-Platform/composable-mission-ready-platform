@@ -168,6 +168,70 @@
       background-color: var(--forge-table-data-table-row-hover-surface, var(--mp-data-table-row-hover-surface));
     }
 
+    /* Fixed / Pinned columns */
+    &__th--fixed-left,
+    &__td--fixed-left {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background-color: inherit;
+    }
+
+    &__th--fixed-right,
+    &__td--fixed-right {
+      position: sticky;
+      right: 0;
+      z-index: 2;
+      background-color: inherit;
+    }
+
+    /* Selected row */
+    &__row--selected {
+      background-color: var(--mp-color-surface-selected, rgb(0 100 255 / 8%));
+    }
+
+    /* Selection checkbox cell */
+    &__th--selection,
+    &__td--selection {
+      width: 48px;
+      text-align: center;
+      padding-inline: 12px;
+    }
+
+    /* Expand toggle cell */
+    &__th--expand,
+    &__td--expand {
+      width: 40px;
+      text-align: center;
+      padding-inline: 8px;
+    }
+
+    &__expand-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      color: inherit;
+      border-radius: 4px;
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focused, #2563eb);
+      }
+    }
+
+    /* Expanded detail row */
+    &__expanded-row {
+      background-color: var(--mp-color-surface-subtle, rgb(0 0 0 / 2%));
+    }
+
+    &__expanded-cell {
+      padding: var(--forge-table-data-table-cell-padding-block, var(--mp-data-table-cell-padding-block))
+        var(--forge-table-data-table-cell-padding-inline, var(--mp-data-table-cell-padding-inline));
+    }
+
     /**
      * Colour variants — tint the head background and the row/header borders.
      * `neutral` is omitted so it keeps the plain treatment.
