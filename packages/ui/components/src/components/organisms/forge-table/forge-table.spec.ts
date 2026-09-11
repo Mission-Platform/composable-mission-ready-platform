@@ -1,5 +1,6 @@
 import { toReactComponent } from '@mission-platform/forge-adapters/react';
 import { toVueComponent } from '@mission-platform/forge-adapters/vue';
+import { h } from '@mission-platform/forge-jsx';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
@@ -90,5 +91,23 @@ describe('ForgeTable authors the same component for React and Vue', () => {
 
     app.unmount();
     host.remove();
+  });
+
+  it('renders custom cell content via the scoped cell slot on both frameworks', async () => {
+    const properties = {
+      columns: COLUMNS,
+      rows: ROWS,
+      cell: ({ column, value }: { column: TableColumn; value: unknown }) =>
+        column.key === 'role' ? h('strong', { 'data-custom-cell': 'true' }, `Badge: ${value}`) : String(value),
+    };
+    const react = renderToStaticMarkup(createElement(ReactTable, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTable, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('data-custom-cell="true"');
+      expect(html).toContain('Badge: Author');
+      expect(html).toContain('Badge: Admiral');
+      expect(html).toContain('Ada');
+    }
   });
 });

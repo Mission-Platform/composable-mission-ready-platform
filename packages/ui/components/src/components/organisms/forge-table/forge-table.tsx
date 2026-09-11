@@ -1,9 +1,11 @@
 import {
+  Slot,
   classNames,
   useMemo,
   useState,
   createForgeStyle,
   type MpElement,
+  type MpRenderProperty,
   type CSSStyleProperties,
 } from '@mission-platform/forge-jsx';
 import { ForgeIconChevron } from '@mission-platform/icons';
@@ -35,6 +37,16 @@ export interface TableColumn {
   align?: 'left' | 'center' | 'right';
   /** Optional cell formatter; receives the cell value and its row. */
   render?: (value: unknown, row: Record<string, unknown>) => string;
+}
+
+/** The scope passed to the scoped `cell` slot. */
+export interface TableCellScope {
+  /** The column the cell belongs to. */
+  column: TableColumn;
+  /** The full row record the cell is rendered from. */
+  row: Record<string, unknown>;
+  /** The cell's raw value (`row[column.key]`). */
+  value: unknown;
 }
 
 /* ── Visual property overrides (generated) ───────────────────────────── */
@@ -215,6 +227,12 @@ export interface TableProperties {
   loading?: boolean;
   /** Message shown when there are no rows. Defaults to `'No data available'`. */
   emptyText?: string;
+  /**
+   * Renders every body cell; receives `{ column, row, value }` (a scoped slot /
+   * render-prop). Falls back to the column's `render` formatter (or the stringified
+   * value), so consumers opt in only for the columns that need custom content.
+   */
+  cell?: MpRenderProperty<TableCellScope>;
   /** Fired when the sort changes; receives the column key and the new direction (`undefined` when cleared). */
   onSort?: (key: string, direction: SortDirection | undefined) => void;
 
@@ -379,13 +397,20 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
                   className={tdClass}
                   style={style}
                 >
-                  <ForgeTypography
-                    as="span"
-                    color="primary"
-                    variant="body-sm"
+                  <Slot
+                    name="cell"
+                    column={column}
+                    row={row}
+                    value={value}
                   >
-                    {text}
-                  </ForgeTypography>
+                    <ForgeTypography
+                      as="span"
+                      color="primary"
+                      variant="body-sm"
+                    >
+                      {text}
+                    </ForgeTypography>
+                  </Slot>
                 </td>
               );
             })}
