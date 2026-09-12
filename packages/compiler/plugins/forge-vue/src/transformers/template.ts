@@ -1686,8 +1686,28 @@ function emitMarkupExpression(
 
   // A slot call returns VNodes, not a displayable value. Split a children
   // fallback structurally so Vue never sends the slot result to `toDisplayString`.
+  // Markup fallbacks (`children ?? <Slot />`, `children ?? <span/>`) lower as
+  // nested template content; plain value fallbacks stay interpolated.
   const fallback = slotFallback(expression, context);
   if (fallback !== undefined) {
+    const fallbackMarkup = emitMarkupExpression(
+      fallback,
+      nested,
+      depth + 1,
+      context,
+    );
+    if (fallbackMarkup !== undefined) {
+      const trimmedFallback = fallbackMarkup.trim();
+      // `properties.children ?? <Slot />` is equivalent to a bare default slot —
+      // Vue already supplies empty content when the parent omits the slot.
+      if (
+        trimmedFallback === "<slot />" ||
+        trimmedFallback === "<slot></slot>"
+      ) {
+        return `${pad(depth)}<slot />`;
+      }
+      return `${pad(depth)}<slot v-if="$slots.default" />\n${pad(depth)}<template v-else>\n${fallbackMarkup}\n${pad(depth)}</template>`;
+    }
     return `${pad(depth)}<slot v-if="$slots.default" />\n${pad(depth)}<template v-else>{{ ${binding(fallback, context)} }}</template>`;
   }
 
