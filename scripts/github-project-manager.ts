@@ -86,7 +86,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Tooling & LSP',
       priority: 'P0 - Critical',
       complexity: 'L',
-      initialStatus: 'Todo',
+      initialStatus: 'Done',
+      pullRequest: 73,
     },
     {
       issueNumber: 43,
@@ -103,7 +104,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Wasm & SIMD',
       priority: 'P1 - High',
       complexity: 'L',
-      initialStatus: 'Todo',
+      initialStatus: 'Done',
+      pullRequest: 73,
     },
     {
       issueNumber: 45,
@@ -147,7 +149,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Memory & Runtime',
       priority: 'P1 - High',
       complexity: 'XL',
-      initialStatus: 'Todo',
+      initialStatus: 'In Review',
     },
     {
       issueNumber: 50,
@@ -155,7 +157,7 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Memory & Runtime',
       priority: 'P2 - Medium',
       complexity: 'XL',
-      initialStatus: 'Todo',
+      initialStatus: 'In Review',
     },
   ],
 };
@@ -304,15 +306,15 @@ export type BoardStage = (typeof BOARD_STAGES)[number];
 export const CURRENT_BOARD_STATE: Record<number, BoardStage> = {
   // Milestone 1 (FWS)
   41: 'Done',
-  42: 'In Progress',
+  42: 'Done',
   43: 'Done',
-  44: 'In Progress',
+  44: 'Done',
   45: 'Done',
   46: 'Done',
   47: 'Done',
   48: 'Done',
-  49: 'Backlog',
-  50: 'Backlog',
+  49: 'In Review',
+  50: 'In Review',
 
   // Milestone 2 (The Board / UI Components)
   51: 'Done',

@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { createForgeWebScriptAsyncRuntime, FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES } from './async.ts';
+import {
+  createForgeWebScriptAsyncRuntime,
+  createForgeWebScriptJspiSuspender,
+  FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES,
+} from './async.ts';
+
+const multiplyByThree = (x: number): Promise<number> => Promise.resolve(x * 3);
 
 describe('Forge Web Script async runtime', () => {
   it('requires explicit microtask capabilities and runs VM tasks in sequence order', () => {
@@ -53,5 +59,21 @@ describe('Forge Web Script async runtime', () => {
       ok: false,
       code: 'invalid-message',
     });
+  });
+
+  it('suspends and resumes asynchronous execution with JSPI stack-switching', async () => {
+    expect(() => createForgeWebScriptJspiSuspender({ capabilities: [] })).toThrowError(/wasm\.jspi/i);
+
+    const jspi = createForgeWebScriptJspiSuspender({
+      capabilities: [FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.jspi],
+    });
+
+    const wrapped = jspi.promising(async (value: number) => {
+      const intermediate = await jspi.suspend(multiplyByThree(value));
+      return intermediate + 10;
+    });
+
+    const result = await wrapped(5);
+    expect(result).toBe(25);
   });
 });
