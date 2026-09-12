@@ -11,7 +11,7 @@
  */
 import { execFile as execFileCallback } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { copyFile, mkdir } from 'node:fs/promises';
+import { copyFile, mkdir, symlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { promisify } from 'node:util';
 
@@ -121,24 +121,29 @@ export async function setupWorktree(targetPathInput?: string): Promise<void> {
     console.log(`[worktree-manager] Initialized main Turbo cache directory: ${mainTurboCache}`);
   }
 
-  // Also ensure target worktree has .turbo directory
+  // Also ensure target worktree has .turbo directory and link its cache to main repository
   const targetTurbo = resolve(targetPath, '.turbo');
+  const targetTurboCache = resolve(targetTurbo, 'cache');
   if (!existsSync(targetTurbo)) {
     await mkdir(targetTurbo, { recursive: true });
     console.log(`[worktree-manager] Created worktree .turbo directory.`);
   }
+  if (!existsSync(targetTurboCache) && resolve(targetPath) !== resolve(mainRoot)) {
+    try {
+      await symlink(mainTurboCache, targetTurboCache, process.platform === 'win32' ? 'junction' : 'dir');
+      console.log(`[worktree-manager] Linked worktree Turbo cache to main repository.`);
+    } catch (symlinkError) {
+      console.warn(`[worktree-manager] Could not link Turbo cache: ${String(symlinkError)}`);
+    }
+  }
 
-  // 2. Synchronize agent-lsp.json if missing in worktree
+  // 2. Synchronize agent-lsp.json from main repository
   const mainLspConfig = resolve(mainRoot, 'agent-lsp.json');
   const targetLspConfig = resolve(targetPath, 'agent-lsp.json');
 
-  if (existsSync(mainLspConfig)) {
-    if (existsSync(targetLspConfig)) {
-      console.log(`[worktree-manager] agent-lsp.json is already present.`);
-    } else {
-      await copyFile(mainLspConfig, targetLspConfig);
-      console.log(`[worktree-manager] Synchronized agent-lsp.json from main repository.`);
-    }
+  if (existsSync(mainLspConfig) && resolve(targetPath) !== resolve(mainRoot)) {
+    await copyFile(mainLspConfig, targetLspConfig);
+    console.log(`[worktree-manager] Synchronized agent-lsp.json from main repository.`);
   }
 
   // 3. Verify node_modules / pnpm dependencies
@@ -173,7 +178,10 @@ export async function setupWorktree(targetPathInput?: string): Promise<void> {
     });
     console.log(`[worktree-manager] Verification passed: @mission-platform/forge-web-script-regex tests green.`);
   } catch (error) {
-    console.warn(`[worktree-manager] Warning: verification check encountered an issue: ${String(error)}`);
+    console.error(
+      `[worktree-manager] Worktree is not ready: verification check encountered an issue: ${String(error)}`,
+    );
+    throw error;
   }
 
   console.log(`[worktree-manager] Worktree setup complete and ready for development: ${targetPath}`);
@@ -212,7 +220,17 @@ export async function createWorktree(
   await runGit(gitArgs);
 
   // Setup the newly created worktree
-  await setupWorktree(targetPath);
+  try {
+    await setupWorktree(targetPath);
+  } catch (error) {
+    console.error(`[worktree-manager] Worktree setup failed; removing ${targetPath}: ${String(error)}`);
+    try {
+      await removeWorktree(targetPath, true);
+    } catch (cleanupError) {
+      console.error(`[worktree-manager] Failed to remove worktree at ${targetPath}: ${String(cleanupError)}`);
+    }
+    throw error;
+  }
   console.log(`[worktree-manager] New worktree successfully provisioned at: ${targetPath}`);
   console.log(`To switch to the worktree: cd "${targetPath}"`);
 }
