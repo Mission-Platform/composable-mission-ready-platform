@@ -177,6 +177,26 @@ Canonical control size scale.
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### ForgeCombobox
+
+**Kind:** constant
+
+```typescript
+export const ForgeCombobox;
+```
+
+No description provided.
+
+### ForgeComboboxProps
+
+**Kind:** type
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+No description provided.
+
 ### ForgeSelect
 
 **Kind:** function
@@ -219,6 +239,16 @@ preserved as neutral named slots.
 | Name       | Type                       | Description |
 | ---------- | -------------------------- | ----------- |
 | properties | Readonly<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**Kind:** type
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+No description provided.
 
 ### SelectOption
 
