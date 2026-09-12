@@ -43,18 +43,22 @@ the runtime they use.
 ### @mission-platform/vite-plugin-forge
 
 The compiler driver accepts explicit `FrameworkOutputPlugin` instances; it does
-not provide a framework registry. `defineViteForgeComponents` and
-`defineTsdownForgeComponents` (plus the hook and CMS helpers) share an in-process
-`ForgeCompilerService` for one build or watch session.
+not provide a framework registry. Vite and tsdown adapters share an in-process
+`ForgeCompilerService` for one build or watch session. Tsdown consumers add
+`tsdownForgeComponentPlugins` or `tsdownForgeHookPlugins` to one
+`defineTsdownLibrary` call; CMS consumers use `tsdownForgeCmsPlugins` from
+`@mission-platform/forge-cms-plugin-api`.
 
-| 후크                 | 설명                                                                                                                                                                                  |
-| :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Service lifecycle  | Reuse source, graph, parsed-source, semantic-IR, and target-artifact state across builds; dispose one-shot services after completion and watcher services on close. |
-| Cache keys         | Source/dependency/config fingerprints, compiler and router options, `tsconfig` `baseUrl`/`paths`, target ID, plugin identity/version, and relevant conditions.      |
-| Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable.                     |
-| Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion.                 |
-| Artifact manifest  | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion.                                                     |
-| Extension point    | Implement and pass a `FrameworkOutputPlugin` from a caller-owned `forge-plugin-*` package; do not add target branches to the neutral driver.                        |
+| 후크                 | 설명                                                                                                                                                                                                    |
+| :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Service lifecycle  | Reuse source, graph, parsed-source, semantic-IR, and target-artifact state across builds; dispose one-shot services after completion and watcher services on close.                   |
+| Cache keys         | Source/dependency/config fingerprints, compiler and router options, `tsconfig` `baseUrl`/`paths`, target ID, plugin identity/version, and relevant conditions.                        |
+| Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable.                                       |
+| Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion.                                   |
+| Artifact manifest  | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion.                                                                       |
+| Extension point    | Implement and pass a `FrameworkOutputPlugin` with an open `FrameworkId` (`JsxFramework \| (string & {})`); do not add target branches or registries to the driver. |
+| Target pipeline    | Enforces strict `lower → optimize → generate`; target generators accept only lowered intentions validated by `assertTargetIntentionsLowered`.                                         |
+| Compiler AST path  | Oxc is the sole compiler AST path; legacy TypeScript AST compatibility layers and shims have been removed.                                                                            |
 
 Configure aliases through the project `tsconfig.json` (`baseUrl` and
 `paths`); Vite and tsdown graph preparation use the same alias facts. Router
@@ -316,6 +320,7 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 ## Further Reading
 
 - [Vue 2 ~ Vue 3 마이그레이션 가이드](migration-guides/vue2-to-vue3.md)
+- [Forge Compiler Pipeline & Migration Notes](../packages/tooling/vite/forge/docs/reference/compiler.md#migration-guidance)
 - [프로젝트 구성 개요](configs/index.md)
 - [작업공간 구조](workspace-structure.md)
 
@@ -386,15 +391,27 @@ These live in `packages/compiler/plugins/`. **프레임워크** 플러그인은 
 | `@mission-platform/forge-cms-jekyll`            | 지킬 리퀴드에는 다음이 포함됩니다. `_data` 스키마 및 `_config.yml` 파편. |
 | `@mission-platform/forge-cms-webflow`           | 웹플로우 `declareComponent` 코드 구성 요소 및 `webflow.json` 라이브러리 조각.         |
 
+#### @mission-platform/forge-plugin-api
+
+| Export                          | 유형       | Description                                                                                                                                |
+| :------------------------------ | :------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| `FrameworkId`                   | Type     | Open framework identifier (`JsxFramework \| (string & {})`) supporting arbitrary custom plugin targets. |
+| `TargetFrameworkId`             | 유형       | Alias for `FrameworkId`.                                                                                                   |
+| `JsxFramework`                  | Type     | Closed union of built-in frameworks (`"react" \| "vue" \| "svelte" \| "solid" \| "web-components"`).    |
+| `assertTargetIntentionsLowered` | Function | Asserts that target intentions contain a non-null lowered plan matching the target framework ID.                           |
+| `TargetIntentions<TLowered>`    | Type     | Container for target intentions with a **required** `lowered: TLowered` target plan.                                       |
+| `TargetLoweredModule`           | Type     | Base interface for lowered plans, discriminated on `framework: FrameworkId`.                                               |
+| `FrameworkOutputPlugin`         | Type     | Composable target output contract with `id: FrameworkId`, `lower`, `optimize`, `generate`, and `build`.                    |
+| `defineForgeOutputPlugin`       | Function | Validates and returns a `FrameworkOutputPlugin` instance.                                                                  |
+
 #### @mission-platform/forge-cms-plugin-api
 
-| Export                    | 유형       | Description                                                                                     |
+| Export                    | Type     | Description                                                                                     |
 | :------------------------ | :------- | :---------------------------------------------------------------------------------------------- |
-| `analyzeContentComponent` | Function | 중립 구성 요소의 소품을 플랫폼 중립 콘텐츠 모델에 투영합니다.                                             |
-| `ContentComponent`        | 유형       | 주문하다 `ContentField`s, 슬롯 및 `interactive` 깃발.                                    |
-| `ContentFieldKind`        | 유형       | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
+| `analyzeContentComponent` | 기능       | 중립 구성 요소의 소품을 플랫폼 중립 콘텐츠 모델에 투영합니다.                                             |
+| `ContentComponent`        | Type     | 주문하다 `ContentField`s, 슬롯 및 `interactive` 깃발.                                    |
+| `ContentFieldKind`        | Type     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
 | `CmsOutputPlugin`         | Type     | 대상 계약: 바인딩된 프레임워크 플러그인과 4개의 이미터.                                |
 | `defineForgeCmsPlugin`    | 기능       | 구성 시 CMS 대상의 유효성을 검사합니다.                                                        |
 | `generateCmsArtifacts`    | 기능       | 일반 검색 → IR → 콘텐츠 모델 → 방출 → 드라이버 작성.                                             |
-| `defineTsdownForgeCms`    | 기능       | 하나의 CMS 대상에 대한 tsdown 구성, 방출 `dist/cms/<cms>/<framework>/**`.                   |
-| `defineTsdownForgeCmsAll` | 기능       | CMS 대상 목록에 대한 tsdown 구성.                                                        |
+| `tsdownForgeCmsPlugins`   | Function | Native tsdown plugins for CMS targets, added to one `defineTsdownLibrary` call. |
