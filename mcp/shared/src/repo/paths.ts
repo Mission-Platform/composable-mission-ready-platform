@@ -81,13 +81,12 @@ export function resolveRepoPath(path: string, label: string, options: RepoPathOp
 }
 
 export function findRepoRoot(): string {
-  if (cachedRoot) {
-    return cachedRoot;
-  }
-
   const override = process.env['MISSION_REPO_ROOT'];
   if (override && existsSync(join(override, 'pnpm-workspace.yaml'))) {
-    cachedRoot = realpathSync(resolve(override));
+    return realpathSync(resolve(override));
+  }
+
+  if (cachedRoot) {
     return cachedRoot;
   }
 
