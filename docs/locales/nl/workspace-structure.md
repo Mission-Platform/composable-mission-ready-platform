@@ -32,6 +32,7 @@ Applications are deployable units that compose functionality from the `packages/
 and never published to a registry.
 
 - **`docs/`**: The Vite + Vue documentation site for the Markdown corpus.
+- **`figma-forge-plugin/`**: The Figma plugin that integrates Forge-authored components with Figma workflows.
 - **`my-care-notes/`**: The flagship care-notes application.
 - **`service-monitor/`**: The RedwoodSDK service health dashboard backed by a Durable Object.
 - **`website/`**: The Mission Platform marketing and product website.
