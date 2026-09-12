@@ -266,4 +266,62 @@ describe('Forge Web Script Wasm artifact verifier', () => {
     expect(result.verified).toBe(false);
     expect(result.diagnostics.some(({ code }) => code === 'FWS-ARTIFACT-001')).toBe(true);
   });
+
+  it('accepts and verifies a valid deterministic SIMD artifact when simd is enabled', () => {
+    const simdModule = moduleWith([
+      {
+        name: 'simdCheck',
+        exported: true,
+        parameters: [],
+        result: { name: 'i32' },
+        body: [
+          {
+            kind: 'let',
+            name: 'v',
+            type: { name: 'v128', span },
+            value: {
+              kind: 'call',
+              callee: 'fws_simd_i8x16_splat',
+              standardLibrary: 'simd-i8x16-splat',
+              arguments: [{ kind: 'literal', value: 1, type: 'i32', span }],
+              span,
+            },
+            span,
+          },
+          {
+            kind: 'return',
+            value: {
+              kind: 'call',
+              callee: 'fws_simd_i8x16_bitmask',
+              standardLibrary: 'simd-i8x16-bitmask',
+              arguments: [{ kind: 'identifier', name: 'v', span }],
+              span,
+            },
+            span,
+          },
+        ],
+        span,
+      },
+    ]);
+
+    const backend = backendFor(simdModule, metadata, { simd: true });
+    expect(backend.wasm).toBeDefined();
+    expect(backend.targetFeatures.simd).toBe(true);
+    expect(WebAssembly.validate(backend.wasm!)).toBe(true);
+
+    const verification = verifyForgeWebScriptWasmArtifact({
+      wasm: backend.wasm!,
+      unoptimizedWasm: backend.unoptimizedWasm,
+      manifest: {
+        ...manifest,
+        exports: [{ name: 'simdCheck', parameters: [], result: 'i32' }],
+        targetFeatures: { simd: true },
+      },
+      metadata: { ...metadata, targetFeatures: { simd: true } },
+      targetFeatures: { simd: true },
+      expectedContentHash: backend.contentHash,
+    });
+    expect(verification.verified).toBe(true);
+    expect(verification.diagnostics).toEqual([]);
+  });
 });

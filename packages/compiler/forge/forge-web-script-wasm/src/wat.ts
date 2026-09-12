@@ -12,6 +12,7 @@ function valueType(type: ForgeWebScriptWasmPrimitiveType): string {
   if (type === 'f32') return 'f32';
   if (type === 'f64') return 'f64';
   if (type === 'i64' || type === 'u64') return 'i64';
+  if (type === 'v128') return 'v128';
   return 'i32';
 }
 
@@ -38,11 +39,72 @@ function renderExpression(value: ForgeWebScriptWasmExpression, indent: string): 
     ];
   }
   if (value.kind === 'identifier') return [`${indent}local.get $${value.name}`];
-  if (value.kind === 'call')
+  if (value.kind === 'call') {
+    if (value.standardLibrary === 'memory-copy') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}memory.copy`,
+      ];
+    }
+    if (value.standardLibrary === 'memory-fill') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}memory.fill`,
+      ];
+    }
+    if (value.standardLibrary === 'simd-v128-load') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}v128.load align=4 offset=0`,
+      ];
+    }
+    if (value.standardLibrary === 'simd-v128-store') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}v128.store align=4 offset=0`,
+      ];
+    }
+    if (value.standardLibrary === 'simd-i8x16-splat') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}i8x16.splat`,
+      ];
+    }
+    if (value.standardLibrary === 'simd-i8x16-eq') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}i8x16.eq`,
+      ];
+    }
+    if (value.standardLibrary === 'simd-i8x16-lt-u') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}i8x16.lt_u`,
+      ];
+    }
+    if (value.standardLibrary === 'simd-i8x16-bitmask') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}i8x16.bitmask`,
+      ];
+    }
+    if (value.standardLibrary === 'simd-i32x4-splat') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}i32x4.splat`,
+      ];
+    }
+    if (value.standardLibrary === 'simd-i32x4-add') {
+      return [
+        ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
+        `${indent}i32x4.add`,
+      ];
+    }
     return [
       ...value.arguments.flatMap((argument) => renderExpression(argument, indent)),
       `${indent}call $${value.standardLibrary === undefined ? value.callee : `fws_${value.standardLibrary}`}`,
     ];
+  }
   if (value.kind === 'atomic') {
     const lines = [...renderExpression(value.address, indent)];
     if (value.operation === 'load') lines.push(`${indent}i32.atomic.load align=4 offset=0`);

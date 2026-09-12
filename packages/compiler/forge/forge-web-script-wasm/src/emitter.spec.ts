@@ -1763,4 +1763,237 @@ describe('Forge Web Script WASM backend', () => {
     // Out-of-range write (index 2 equals the logical length) should throw RuntimeError
     expect(() => writeTest(2)).toThrow(WebAssembly.RuntimeError);
   });
+
+  it('emits bulk memory instructions for memory.copy and memory.fill and executes correctly', () => {
+    const module = moduleWith([
+      {
+        kind: 'function',
+        name: 'testBulkMemory',
+        exported: true,
+        parameters: [],
+        result: { name: 'i32', span },
+        span,
+        body: [
+          // fws_alloc(64)
+          {
+            kind: 'let',
+            name: 'buf',
+            type: { name: 'i32', span },
+            value: {
+              kind: 'call',
+              callee: 'fws_alloc',
+              standardLibrary: 'memory-alloc',
+              arguments: [index32(64)],
+              span,
+            },
+            span,
+          },
+          // memory-fill: dest=buf, val=42, size=16
+          {
+            kind: 'expression-statement',
+            expression: {
+              kind: 'call',
+              callee: 'fws_memory_fill',
+              standardLibrary: 'memory-fill',
+              arguments: [{ kind: 'identifier', name: 'buf', span }, index32(42), index32(16)],
+              span,
+            },
+            span,
+          },
+          // memory-copy: dest=buf+16, src=buf, size=16
+          {
+            kind: 'expression-statement',
+            expression: {
+              kind: 'call',
+              callee: 'fws_memory_copy',
+              standardLibrary: 'memory-copy',
+              arguments: [
+                {
+                  kind: 'binary',
+                  operator: '+',
+                  left: { kind: 'identifier', name: 'buf', span },
+                  right: index32(16),
+                  span,
+                },
+                { kind: 'identifier', name: 'buf', span },
+                index32(16),
+              ],
+              span,
+            },
+            span,
+          },
+          // return u32 at buf+16
+          {
+            kind: 'return',
+            value: {
+              kind: 'call',
+              callee: 'fws_memory_load_u32',
+              standardLibrary: 'memory-load-u32',
+              arguments: [
+                {
+                  kind: 'binary',
+                  operator: '+',
+                  left: { kind: 'identifier', name: 'buf', span },
+                  right: index32(16),
+                  span,
+                },
+              ],
+              span,
+            },
+            span,
+          },
+        ],
+      },
+    ]);
+
+    const result = compileForgeWebScriptWasm({
+      ir: module,
+      optimizedIr: module,
+      abi: {},
+      links: {},
+      metadata,
+    });
+    expect(result.diagnostics).toEqual([]);
+    expect(result.wat).toContain('memory.fill');
+    expect(result.wat).toContain('memory.copy');
+
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {});
+    const testFunction = instance.exports.testBulkMemory as () => number;
+    expect(testFunction()).toBe(0x2a_2a_2a_2a);
+  });
+
+  it('emits v128 SIMD vector instructions and executes them in WebAssembly runtime', () => {
+    const module = moduleWith([
+      {
+        kind: 'function',
+        name: 'testSimd',
+        exported: true,
+        parameters: [],
+        result: { name: 'i32', span },
+        span,
+        body: [
+          // let ptr = fws_alloc(32)
+          {
+            kind: 'let',
+            name: 'ptr',
+            type: { name: 'i32', span },
+            value: {
+              kind: 'call',
+              callee: 'fws_alloc',
+              standardLibrary: 'memory-alloc',
+              arguments: [index32(32)],
+              span,
+            },
+            span,
+          },
+          // v1 = simd-i8x16-splat(7)
+          {
+            kind: 'let',
+            name: 'v1',
+            type: { name: 'v128', span },
+            value: {
+              kind: 'call',
+              callee: 'fws_simd_i8x16_splat',
+              standardLibrary: 'simd-i8x16-splat',
+              arguments: [index32(7)],
+              span,
+            },
+            span,
+          },
+          // simd-v128-store(ptr, v1)
+          {
+            kind: 'expression-statement',
+            expression: {
+              kind: 'call',
+              callee: 'fws_simd_v128_store',
+              standardLibrary: 'simd-v128-store',
+              arguments: [{ kind: 'identifier', name: 'ptr', span }, { kind: 'identifier', name: 'v1', span }],
+              span,
+            },
+            span,
+          },
+          // vLoaded = simd-v128-load(ptr)
+          {
+            kind: 'let',
+            name: 'vLoaded',
+            type: { name: 'v128', span },
+            value: {
+              kind: 'call',
+              callee: 'fws_simd_v128_load',
+              standardLibrary: 'simd-v128-load',
+              arguments: [{ kind: 'identifier', name: 'ptr', span }],
+              span,
+            },
+            span,
+          },
+          // vTarget = simd-i8x16-splat(7)
+          {
+            kind: 'let',
+            name: 'vTarget',
+            type: { name: 'v128', span },
+            value: {
+              kind: 'call',
+              callee: 'fws_simd_i8x16_splat',
+              standardLibrary: 'simd-i8x16-splat',
+              arguments: [index32(7)],
+              span,
+            },
+            span,
+          },
+          // vEq = simd-i8x16-eq(vLoaded, vTarget)
+          {
+            kind: 'let',
+            name: 'vEq',
+            type: { name: 'v128', span },
+            value: {
+              kind: 'call',
+              callee: 'fws_simd_i8x16_eq',
+              standardLibrary: 'simd-i8x16-eq',
+              arguments: [{ kind: 'identifier', name: 'vLoaded', span }, { kind: 'identifier', name: 'vTarget', span }],
+              span,
+            },
+            span,
+          },
+          // mask = simd-i8x16-bitmask(vEq) -> should be 0xFFFF (65535)
+          {
+            kind: 'let',
+            name: 'mask',
+            type: { name: 'i32', span },
+            value: {
+              kind: 'call',
+              callee: 'fws_simd_i8x16_bitmask',
+              standardLibrary: 'simd-i8x16-bitmask',
+              arguments: [{ kind: 'identifier', name: 'vEq', span }],
+              span,
+            },
+            span,
+          },
+          {
+            kind: 'return',
+            value: { kind: 'identifier', name: 'mask', span },
+            span,
+          },
+        ],
+      },
+    ]);
+
+    const result = compileForgeWebScriptWasm({
+      ir: module,
+      optimizedIr: module,
+      abi: {},
+      links: {},
+      metadata: { ...metadata, targetFeatures: { simd: true } },
+    });
+    expect(result.diagnostics).toEqual([]);
+    expect(result.targetFeatures.simd).toBe(true);
+    expect(result.wat).toContain('i8x16.splat');
+    expect(result.wat).toContain('v128.store');
+    expect(result.wat).toContain('v128.load');
+    expect(result.wat).toContain('i8x16.eq');
+    expect(result.wat).toContain('i8x16.bitmask');
+
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {});
+    const testFunction = instance.exports.testSimd as () => number;
+    expect(testFunction()).toBe(0xff_ff);
+  });
 });

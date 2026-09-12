@@ -185,6 +185,9 @@ export function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspa
       const analysis = diagnose(uri);
       return documentSymbolsForgeWebScript(getDocument(uri).text, analysis.module, analysis.symbols);
     },
+    workspaceSymbols(query?: string) {
+      return workspaceIndex?.workspaceSymbols(query) ?? [];
+    },
     refreshWorkspace,
     invalidateWorkspace,
     tokenize(uri) {

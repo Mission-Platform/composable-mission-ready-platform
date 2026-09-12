@@ -42,6 +42,8 @@ interface WorkspaceRecord {
   readonly graphKey?: string;
   readonly module?: ForgeWebScriptModule;
   readonly symbols: readonly IndexedSymbol[];
+  readonly importEnvironmentHash?: string;
+  readonly optionsHash?: string;
 }
 
 interface IndexedSymbol {
@@ -114,8 +116,21 @@ export class ForgeWebScriptWorkspaceSemanticIndex implements ForgeWebScriptWorks
         version: 0,
       };
       const importTypeEnvironment = resolveForgeWebScriptImportTypeEnvironment(module, result.graph);
-      const analysis = analyzeForgeWebScript(document, options, { importTypeEnvironment });
-      nextRecords.set(document.uri, this.#createRecord(document, analysis, module, undefined, graphKey));
+      const importEnvironmentHash = JSON.stringify(importTypeEnvironment);
+      const optionsHash = JSON.stringify(options);
+      const existing = this.#records.get(document.uri);
+      const analysis: ForgeWebScriptAnalysis =
+        existing !== undefined &&
+        existing.source === document.text &&
+        existing.optionsHash === optionsHash &&
+        existing.importEnvironmentHash === importEnvironmentHash &&
+        (open === undefined || existing.analysis.version === open.version)
+          ? existing.analysis
+          : analyzeForgeWebScript(document, options, { importTypeEnvironment });
+      nextRecords.set(
+        document.uri,
+        this.#createRecord(document, analysis, module, undefined, graphKey, importEnvironmentHash, optionsHash),
+      );
     }
 
     for (const edge of result.graph.edges) {
@@ -244,6 +259,21 @@ export class ForgeWebScriptWorkspaceSemanticIndex implements ForgeWebScriptWorks
     return [...own, ...workspace];
   }
 
+  public workspaceSymbols(query?: string): readonly { readonly symbol: ForgeWebScriptSymbol; readonly uri: string }[] {
+    this.#ensureIndexed();
+    const normalized = query?.trim().toLowerCase();
+    const results: { readonly symbol: ForgeWebScriptSymbol; readonly uri: string }[] = [];
+    for (const record of this.#records.values()) {
+      for (const symbol of record.analysis.symbols) {
+        if (symbol.kind === 'local' || symbol.kind === 'parameter') continue;
+        if (normalized === undefined || normalized === '' || symbol.name.toLowerCase().includes(normalized)) {
+          results.push({ symbol, uri: record.uri });
+        }
+      }
+    }
+    return results;
+  }
+
   async #optionsFor(uri: string): Promise<ForgeWebScriptWorkspaceOptions> {
     return this.#host?.getOptions(uri).catch(() => ({})) ?? Promise.resolve({});
   }
@@ -275,6 +305,8 @@ export class ForgeWebScriptWorkspaceSemanticIndex implements ForgeWebScriptWorks
     graphModule?: ForgeWebScriptResolvedModule,
     previous?: WorkspaceRecord,
     graphKey?: string,
+    importEnvironmentHash?: string,
+    optionsHash?: string,
   ): WorkspaceRecord {
     // Do not reuse a parsed module after the current source becomes malformed.
     // Keeping the old AST would make navigation target declarations that no
@@ -287,6 +319,8 @@ export class ForgeWebScriptWorkspaceSemanticIndex implements ForgeWebScriptWorks
       analysis,
       ...(graphKey === undefined ? {} : { graphKey }),
       ...(module === undefined ? {} : { module }),
+      ...(importEnvironmentHash === undefined ? {} : { importEnvironmentHash }),
+      ...(optionsHash === undefined ? {} : { optionsHash }),
       symbols: [],
     };
     return { ...record, symbols: this.#indexSymbols(record) };

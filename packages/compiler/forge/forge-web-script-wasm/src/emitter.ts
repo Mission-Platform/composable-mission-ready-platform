@@ -37,7 +37,7 @@ import { optimizeForgeWebScriptWasmModule } from './optimizer.js';
 
 const STATIC_DATA_START = 1024;
 const encoder = new TextEncoder();
-type WasmValueType = 0x7f | 0x7e | 0x7d | 0x7c;
+type WasmValueType = 0x7f | 0x7e | 0x7d | 0x7c | 0x7b;
 type ValueLocation = {
   readonly indexes: readonly number[];
   readonly type: ForgeWebScriptWasmPrimitiveType;
@@ -60,6 +60,7 @@ const wasmTypes: Readonly<Record<ForgeWebScriptWasmPrimitiveType, readonly WasmV
   u32: [0x7f],
   u64: [0x7e],
   unit: [],
+  v128: [0x7b],
 };
 
 function unsignedLeb(value: number): number[] {
@@ -127,6 +128,7 @@ function defaultValue(type: ForgeWebScriptWasmPrimitiveType): number[] {
     if (valueType === 0x7d) return [0x43, ...appendF32(0)];
     if (valueType === 0x7c) return [0x44, ...appendF64(0)];
     if (valueType === 0x7e) return [0x42, ...signedLeb(0n)];
+    if (valueType === 0x7b) return [0xfd, 0x0c, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     return [0x41, ...signedLeb(0)];
   });
 }
@@ -166,7 +168,8 @@ function projectPrimitive(
     name === 'string' ||
     name === 'u32' ||
     name === 'u64' ||
-    name === 'unit'
+    name === 'unit' ||
+    name === 'v128'
   )
     return name;
   return 'i32';
@@ -698,6 +701,20 @@ function expressionType(
       return 'u32';
     if (expression.standardLibrary === 'memory-load-f64' || expression.standardLibrary === 'f64-from-u32') return 'f64';
     if (
+      expression.standardLibrary === 'simd-i8x16-splat' ||
+      expression.standardLibrary === 'simd-i8x16-eq' ||
+      expression.standardLibrary === 'simd-i8x16-lt-u' ||
+      expression.standardLibrary === 'simd-i32x4-splat' ||
+      expression.standardLibrary === 'simd-i32x4-add' ||
+      expression.standardLibrary === 'simd-v128-load'
+    )
+      return 'v128';
+    if (expression.standardLibrary === 'simd-i8x16-bitmask' || expression.standardLibrary === 'simd-binarize')
+      return 'i32';
+    if (
+      expression.standardLibrary === 'memory-copy' ||
+      expression.standardLibrary === 'memory-fill' ||
+      expression.standardLibrary === 'simd-v128-store' ||
       expression.standardLibrary === 'memory-dealloc' ||
       expression.standardLibrary === 'memory-store-u32' ||
       expression.standardLibrary === 'memory-store-f64'
@@ -785,9 +802,53 @@ function binaryOpcode(operator: ForgeWebScriptWasmBinaryOperator, type: ForgeWeb
   return table[operator] ?? 0x46;
 }
 
+function moduleHasSimd(module: ForgeWebScriptWasmModule): boolean {
+  for (const functionDeclaration of module.functions) {
+    if (
+      functionDeclaration.result.name === 'v128' ||
+      functionDeclaration.parameters.some((parameter) => parameter.type.name === 'v128')
+    )
+      return true;
+    for (const stmt of functionDeclaration.body) {
+      if (statementUsesSimd(stmt)) return true;
+    }
+  }
+  return false;
+}
+
+function statementUsesSimd(statement: ForgeWebScriptWasmStatement): boolean {
+  if (statement.kind === 'let' && statement.type.name === 'v128') return true;
+  if (statement.kind === 'assignment' && expressionUsesSimd(statement.value)) return true;
+  if (statement.kind === 'return' && statement.value !== undefined && expressionUsesSimd(statement.value)) return true;
+  if (statement.kind === 'expression-statement' && expressionUsesSimd(statement.expression)) return true;
+  if (statement.kind === 'if') {
+    return (
+      expressionUsesSimd(statement.condition) ||
+      statement.consequent.some((item) => statementUsesSimd(item)) ||
+      (statement.alternate !== undefined && statement.alternate.some((item) => statementUsesSimd(item)))
+    );
+  }
+  if (statement.kind === 'while' || statement.kind === 'for' || statement.kind === 'do-while') {
+    return statement.body.some((item) => statementUsesSimd(item));
+  }
+  return false;
+}
+
+function expressionUsesSimd(expression: ForgeWebScriptWasmExpression): boolean {
+  if (expression.kind === 'literal' && expression.type === 'v128') return true;
+  if (expression.kind === 'call') {
+    if (expression.standardLibrary !== undefined && expression.standardLibrary.startsWith('simd-')) return true;
+    return expression.arguments.some((argument) => expressionUsesSimd(argument));
+  }
+  if (expression.kind === 'binary') return expressionUsesSimd(expression.left) || expressionUsesSimd(expression.right);
+  if (expression.kind === 'unary') return expressionUsesSimd(expression.operand);
+  return false;
+}
+
 function featureRequirements(module: ForgeWebScriptWasmModule): ForgeWebScriptWasmFeatureRequirements {
+  const hasSimd = module.featureRequirements?.simd === true || moduleHasSimd(module);
   return {
-    ...(module.featureRequirements?.simd === true ? { simd: true } : {}),
+    ...(hasSimd ? { simd: true } : {}),
     ...(module.featureRequirements?.tailCall === true ? { tailCall: true } : {}),
     ...(module.featureRequirements?.memory64 === true ? { memory64: true } : {}),
     ...(module.featureRequirements?.threads === true ? { threads: true } : {}),
@@ -1457,6 +1518,98 @@ function emitWasm(
             if (value === undefined) throw new Error('FWS-NUMERIC-001: f64_from_u32 requires a value.');
             emitExpression(value, visible);
             body.push(0xb8);
+            return;
+          }
+          if (expression.standardLibrary === 'memory-copy') {
+            const destination = expression.arguments[0];
+            const source = expression.arguments[1];
+            const size = expression.arguments[2];
+            if (destination === undefined || source === undefined || size === undefined)
+              throw new Error('FWS-MEMORY-005: memory_copy requires dest, src, and size.');
+            emitExpression(destination, visible);
+            emitExpression(source, visible);
+            emitExpression(size, visible);
+            body.push(0xfc, 0x0a, 0x00, 0x00);
+            return;
+          }
+          if (expression.standardLibrary === 'memory-fill') {
+            const destination = expression.arguments[0];
+            const value = expression.arguments[1];
+            const size = expression.arguments[2];
+            if (destination === undefined || value === undefined || size === undefined)
+              throw new Error('FWS-MEMORY-006: memory_fill requires dest, value, and size.');
+            emitExpression(destination, visible);
+            emitExpression(value, visible);
+            emitExpression(size, visible);
+            body.push(0xfc, 0x0b, 0x00);
+            return;
+          }
+          if (expression.standardLibrary === 'simd-v128-load') {
+            const address = expression.arguments[0];
+            if (address === undefined) throw new Error('FWS-SIMD-001: simd_v128_load requires address.');
+            emitExpression(address, visible);
+            body.push(0xfd, 0x00, 0x02, 0x00);
+            return;
+          }
+          if (expression.standardLibrary === 'simd-v128-store') {
+            const address = expression.arguments[0];
+            const value = expression.arguments[1];
+            if (address === undefined || value === undefined)
+              throw new Error('FWS-SIMD-002: simd_v128_store requires address and value.');
+            emitExpression(address, visible);
+            emitExpression(value, visible);
+            body.push(0xfd, 0x0b, 0x02, 0x00);
+            return;
+          }
+          if (expression.standardLibrary === 'simd-i8x16-splat') {
+            const value = expression.arguments[0];
+            if (value === undefined) throw new Error('FWS-SIMD-003: simd_i8x16_splat requires value.');
+            emitExpression(value, visible);
+            body.push(0xfd, 0x0f);
+            return;
+          }
+          if (expression.standardLibrary === 'simd-i8x16-eq') {
+            const left = expression.arguments[0];
+            const right = expression.arguments[1];
+            if (left === undefined || right === undefined)
+              throw new Error('FWS-SIMD-004: simd_i8x16_eq requires two operands.');
+            emitExpression(left, visible);
+            emitExpression(right, visible);
+            body.push(0xfd, 0x23);
+            return;
+          }
+          if (expression.standardLibrary === 'simd-i8x16-lt-u') {
+            const left = expression.arguments[0];
+            const right = expression.arguments[1];
+            if (left === undefined || right === undefined)
+              throw new Error('FWS-SIMD-005: simd_i8x16_lt_u requires two operands.');
+            emitExpression(left, visible);
+            emitExpression(right, visible);
+            body.push(0xfd, 0x26);
+            return;
+          }
+          if (expression.standardLibrary === 'simd-i8x16-bitmask') {
+            const value = expression.arguments[0];
+            if (value === undefined) throw new Error('FWS-SIMD-006: simd_i8x16_bitmask requires value.');
+            emitExpression(value, visible);
+            body.push(0xfd, 0x64);
+            return;
+          }
+          if (expression.standardLibrary === 'simd-i32x4-splat') {
+            const value = expression.arguments[0];
+            if (value === undefined) throw new Error('FWS-SIMD-007: simd_i32x4_splat requires value.');
+            emitExpression(value, visible);
+            body.push(0xfd, 0x11);
+            return;
+          }
+          if (expression.standardLibrary === 'simd-i32x4-add') {
+            const left = expression.arguments[0];
+            const right = expression.arguments[1];
+            if (left === undefined || right === undefined)
+              throw new Error('FWS-SIMD-008: simd_i32x4_add requires two operands.');
+            emitExpression(left, visible);
+            emitExpression(right, visible);
+            body.push(0xfd, 0xae, 0x01);
             return;
           }
           if (expression.standardLibrary.startsWith('string-') || expression.standardLibrary.startsWith('bytes-')) {
