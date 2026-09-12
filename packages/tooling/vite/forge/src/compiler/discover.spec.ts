@@ -216,6 +216,44 @@ describe('discoverComponents', () => {
     ]);
   });
 
+  it('preserves PascalCase provider and helper function exports from non-component helper modules', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-provider-helper-'));
+    temporaryDirectories.push(root);
+    const files: Record<string, string> = {
+      'components/index.ts':
+        "export { IconSpriteContext, IconSpriteProvider, useIconHref } from '../sprite/provider';\n",
+      'sprite/provider.ts': [
+        'export const IconSpriteContext = { src: undefined };',
+        'export function IconSpriteProvider(props: { src?: string }) { return props; }',
+        'export function useIconHref(id: string) { return id; }',
+      ].join('\n'),
+    };
+    await Promise.all(
+      Object.entries(files).map(async ([relativePath, source]) => {
+        const filePath = path.join(root, relativePath);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, source);
+      }),
+    );
+
+    const graph = buildForgeFileGraph({ entry: path.join(root, 'components/index.ts'), sourceRoot: root });
+    const components = discoverComponentsFromGraph(graph);
+    const helpers = discoverHelperExportsFromGraph(graph, new Set(components.map((c) => c.folder)));
+
+    expect(components).toEqual([]);
+    expect(helpers).toEqual([
+      expect.objectContaining({
+        base: 'provider',
+        values: [
+          { localName: 'IconSpriteContext', exportedName: 'IconSpriteContext' },
+          { localName: 'IconSpriteProvider', exportedName: 'IconSpriteProvider' },
+          { localName: 'useIconHref', exportedName: 'useIconHref' },
+        ],
+        sourcePath: path.join(root, 'sprite/provider.ts'),
+      }),
+    ]);
+  });
+
   it('keeps folder as the basename and sourceDir flat for a flat re-export', () => {
     const components = discoverComponents(BARREL);
     const badge = components.find((component) => component.neutralName === 'ForgeBadge');

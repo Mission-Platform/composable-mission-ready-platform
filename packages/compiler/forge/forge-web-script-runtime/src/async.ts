@@ -293,8 +293,7 @@ export class ForgeWebScriptJspiSuspender {
     this.logger = (options.logger ?? createForgeWebScriptLogger({ scope: 'fws.async' })).child('jspi');
     this.capabilities = options.capabilities ?? [];
     const hasJspi =
-      this.capabilities.includes(FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.jspi) ||
-      this.capabilities.includes('jspi');
+      this.capabilities.includes(FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.jspi) || this.capabilities.includes('jspi');
     if (!hasJspi) {
       throw new Error(`Capability '${FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.jspi}' is not declared.`);
     }
@@ -330,8 +329,6 @@ export class ForgeWebScriptJspiSuspender {
 /**
  * Creates an instance of the Forge Web Script JSPI stack suspender.
  */
-export function createForgeWebScriptJspiSuspender(
-  options?: ForgeWebScriptJspiOptions,
-): ForgeWebScriptJspiSuspender {
+export function createForgeWebScriptJspiSuspender(options?: ForgeWebScriptJspiOptions): ForgeWebScriptJspiSuspender {
   return new ForgeWebScriptJspiSuspender(options);
 }

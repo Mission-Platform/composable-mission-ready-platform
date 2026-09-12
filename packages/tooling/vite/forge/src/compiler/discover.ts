@@ -720,7 +720,7 @@ export function discoverHelperExportsFromGraph(
       if (componentNames.has(exportedName) || componentNames.has(localName)) {
         continue;
       }
-      if (isComponentExport(sourceNode.id, localName, astCache)) {
+      if (sourceNode.kind === 'component' && isComponentExport(sourceNode.id, localName, astCache)) {
         continue;
       }
     }
