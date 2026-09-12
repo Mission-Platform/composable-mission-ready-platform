@@ -231,9 +231,16 @@ export interface SelectProperties {
    * Callback fired when search query changes in searchable mode.
    * Can return a Promise of options to asynchronously populate the dropdown list.
    */
-  onSearch?: (query: string) => Promise<SelectOption[]> | void;
+  onSearch?: (query: string) => Promise<SelectOption[] | undefined> | Promise<void> | void;
   /** Whether the control is currently loading data. Displays a loading indicator. */
   loading?: boolean;
+  /**
+   * Whether the dropdown listbox is open. When omitted, open state is managed internally.
+   * @model onUpdateOpen
+   */
+  open?: boolean;
+  /** Fired with the next open state (the controlled `update:open`). */
+  onUpdateOpen?: (open: boolean) => void;
   /**
    * Debounce delay in milliseconds before invoking `onSearch`.
    * Defaults to 250ms (set to 0 for immediate execution).
@@ -305,6 +312,8 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
     onSearch,
     loading = false,
     searchDebounceMs = 250,
+    open: controlledOpen,
+    onUpdateOpen,
   } = properties;
 
   const generatedId = useId();
@@ -314,10 +323,13 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   const debounceTimerReference = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const searchRequestId = useRef<number>(0);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(controlledOpen ?? false);
+  const isDropdownOpen = controlledOpen ?? isOpen;
   const [searchQuery, setSearchQuery] = useState<string>('');
+  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
   const [asyncOptions, setAsyncOptions] = useState<SelectOption[] | undefined>(undefined);
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
   const [selectedAsyncOption, setSelectedAsyncOption] = useState<SelectOption | undefined>(undefined);
 
   const isLoading = Boolean(loading || isSearching);
@@ -335,6 +347,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
       ? currentOptions.filter((option) => option.label.toLowerCase().includes(searchQuery.toLowerCase()))
       : currentOptions;
 
+  /** Cancels any active search debounce timer. */
   const cancelDebounce = (): void => {
     if (debounceTimerReference.current) {
       clearTimeout(debounceTimerReference.current);
@@ -345,9 +358,14 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   useEffect(() => {
     return () => {
       cancelDebounce();
+      searchRequestId.current += 1;
     };
   }, []);
 
+  /**
+   * Executes the asynchronous search callback, sequencing requests via an
+   * incrementing request ID so stale or out-of-order responses are discarded.
+   */
   const executeSearch = (query: string): void => {
     if (!onSearch) {
       return;
@@ -355,9 +373,9 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
     const currentRequestId = ++searchRequestId.current;
     try {
       const result = onSearch(query);
-      if (result && typeof (result as Promise<SelectOption[]>).then === 'function') {
+      if (result && typeof (result as Promise<SelectOption[] | undefined>).then === 'function') {
         setIsSearching(true);
-        (result as Promise<SelectOption[]>).then(
+        (result as Promise<SelectOption[] | undefined>).then(
           (resolvedOptions) => {
             if (searchRequestId.current === currentRequestId) {
               if (Array.isArray(resolvedOptions)) {
@@ -385,16 +403,20 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
       return;
     }
     cancelDebounce();
+    searchRequestId.current += 1;
     setSearchQuery('');
     setAsyncOptions(undefined);
     setIsSearching(false);
     setIsOpen(true);
+    onUpdateOpen?.(true);
     properties.onFocus?.(new FocusEvent('focus'));
   };
 
   const closeDropdown = (): void => {
     cancelDebounce();
+    searchRequestId.current += 1;
     setIsOpen(false);
+    onUpdateOpen?.(false);
     setSearchQuery('');
     setAsyncOptions(undefined);
     setIsSearching(false);
@@ -449,7 +471,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
     switch (event.key) {
       case 'Enter': {
         event.preventDefault();
-        if (isOpen) {
+        if (isDropdownOpen) {
           if (searchable) {
             selectFirstVisibleOption();
           } else {
@@ -466,7 +488,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
         // button trigger toggles the dropdown on Space.
         if (!searchable) {
           event.preventDefault();
-          if (isOpen) {
+          if (isDropdownOpen) {
             closeDropdown();
           } else {
             openDropdown();
@@ -482,7 +504,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
       }
       case 'ArrowDown': {
         event.preventDefault();
-        if (isOpen) {
+        if (isDropdownOpen) {
           selectAdjacentOption(1);
         } else {
           openDropdown();
@@ -503,8 +525,9 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
   const handleSearchInput = (event: Event): void => {
     const query = (event.target as HTMLInputElement).value;
     setSearchQuery(query);
-    if (!isOpen) {
+    if (!isDropdownOpen) {
       setIsOpen(true);
+      onUpdateOpen?.(true);
     }
     if (onSearch) {
       cancelDebounce();
@@ -565,7 +588,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
         aria-disabled="true"
         aria-selected="false"
         className={[styles['forge-select__empty'], styles['forge-select__loading-item']]}
-        role="status"
+        role="option"
         tabindex={-1}
       >
         <span
@@ -621,9 +644,9 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
 
   // Text shown/typed in the search trigger: the live query while open,
   // otherwise the selected option's label (never the placeholder text).
-  const searchValue = isOpen ? searchQuery : selectedOption ? selectedOption.label : '';
+  const searchValue = isDropdownOpen ? searchQuery : selectedOption ? selectedOption.label : '';
   // While open, keep the current selection visible as the input placeholder.
-  const searchPlaceholder = isOpen && selectedOption ? selectedOption.label : (placeholder ?? '');
+  const searchPlaceholder = isDropdownOpen && selectedOption ? selectedOption.label : (placeholder ?? '');
 
   const triggerControl: MpChild = searchable ? (
     <input
@@ -631,9 +654,9 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
       id={resolvedId}
       aria-autocomplete="list"
       aria-busy={isLoading || undefined}
-      aria-controls={`${resolvedId}-listbox`}
+      aria-controls={isDropdownOpen ? `${resolvedId}-listbox` : undefined}
       aria-describedby={describedBy}
-      aria-expanded={isOpen}
+      aria-expanded={isDropdownOpen}
       aria-haspopup="listbox"
       aria-invalid={error ? 'true' : undefined}
       aria-labelledby={label ? `${resolvedId}-label` : undefined}
@@ -661,9 +684,9 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
       ref={triggerReference}
       id={resolvedId}
       aria-busy={isLoading || undefined}
-      aria-controls={`${resolvedId}-listbox`}
+      aria-controls={isDropdownOpen ? `${resolvedId}-listbox` : undefined}
       aria-describedby={describedBy}
-      aria-expanded={isOpen}
+      aria-expanded={isDropdownOpen}
       aria-haspopup="listbox"
       aria-invalid={error ? 'true' : undefined}
       aria-labelledby={label ? `${resolvedId}-label` : undefined}
@@ -679,7 +702,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
       type="button"
       onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
       onClick={() => {
-        if (isOpen) {
+        if (isDropdownOpen) {
           closeDropdown();
         } else {
           openDropdown();
@@ -700,7 +723,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
           [styles['forge-select--error']]: !!error,
           [styles['forge-select--disabled']]: disabled,
           [styles['forge-select--loading']]: isLoading,
-          [styles['forge-select--open']]: isOpen,
+          [styles['forge-select--open']]: isDropdownOpen,
         },
         properties.className,
       ]}
@@ -751,12 +774,13 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
       </select>
       <ForgeDropdown
         matchTriggerWidth={true}
-        open={isOpen}
+        open={isDropdownOpen}
         onUpdateOpen={(open: boolean) => {
-          if (!open) {
-            closeDropdown();
-          } else {
+          if (open) {
             setIsOpen(true);
+            onUpdateOpen?.(true);
+          } else {
+            closeDropdown();
           }
         }}
       >
@@ -764,7 +788,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
           className={styles['forge-select__wrapper']}
           slot="trigger"
           onClick={() => {
-            if (searchable && !disabled && !isOpen) {
+            if (searchable && !disabled && !isDropdownOpen) {
               openDropdown();
               searchReference.current?.focus();
             }
@@ -789,7 +813,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
             className={styles['forge-select__chevron']}
           >
             <ForgeIconChevron
-              direction={isOpen ? 'up' : 'down'}
+              direction={isDropdownOpen ? 'up' : 'down'}
               size="sm"
             />
           </span>

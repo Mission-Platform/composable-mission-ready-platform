@@ -20,6 +20,8 @@ import { ForgeSelect } from './forge-select';
 const ReactSelect = toReactComponent(ForgeSelect, 'Select');
 const VueSelect = toVueComponent(ForgeSelect, 'Select');
 
+const noop = (): void => {};
+
 const OPTIONS = [
   { label: 'Red', value: 'red' },
   { label: 'Green', value: 'green' },
@@ -143,7 +145,7 @@ describe('ForgeSelect authors the same component for React and Vue', () => {
     host.remove();
   });
 
-  it('debounces onSearch queries when searchDebounceMs is set', async () => {
+  it('debounces onSearch queries when searchDebounceMs is set', () => {
     vi.useFakeTimers();
     const onSearch = vi.fn().mockResolvedValue([]);
     const host = document.createElement('div');
@@ -175,6 +177,187 @@ describe('ForgeSelect authors the same component for React and Vue', () => {
     }
 
     vi.useRealTimers();
+    app.unmount();
+    host.remove();
+  });
+
+  it('cancels pending search responses when closed before resolution', async () => {
+    let resolveSearch: (value: Array<{ label: string; value: string }>) => void = noop;
+    const pendingPromise = new Promise<Array<{ label: string; value: string }>>((resolve) => {
+      resolveSearch = resolve;
+    });
+    const onSearch = vi.fn().mockReturnValue(pendingPromise);
+
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        vueH(VueSelect, {
+          id: 'cancel-select',
+          options: OPTIONS,
+          searchDebounceMs: 0,
+          onSearch,
+        }),
+    });
+    app.mount(host);
+
+    const input = host.querySelector('input');
+    expect(input).not.toBeNull();
+    if (input) {
+      input.value = 'test';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      expect(onSearch).toHaveBeenCalledWith('test');
+
+      // Close dropdown by pressing Escape
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      await nextTick();
+
+      // Resolve the pending promise after close
+      resolveSearch([{ label: 'Delayed Result', value: 'delayed' }]);
+      await nextTick();
+
+      // Reopen dropdown
+      input.dispatchEvent(new Event('focus', { bubbles: true }));
+      await nextTick();
+
+      // Options should not contain the stale delayed result
+      const optionElements = host.querySelectorAll('li[role="option"]');
+      const texts = [...optionElements].map((element) => element.textContent?.trim());
+      expect(texts).not.toContain('Delayed Result');
+    }
+
+    app.unmount();
+    host.remove();
+  });
+
+  it('cancels debounce timer when dropdown is closed before timer fires', async () => {
+    vi.useFakeTimers();
+    const onSearch = vi.fn().mockResolvedValue([]);
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        vueH(VueSelect, {
+          id: 'cancel-debounce-select',
+          options: OPTIONS,
+          searchDebounceMs: 250,
+          onSearch,
+        }),
+    });
+    app.mount(host);
+
+    const input = host.querySelector('input');
+    expect(input).not.toBeNull();
+    if (input) {
+      input.value = 'query';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+
+      // Close before timer fires
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      await nextTick();
+
+      vi.advanceTimersByTime(300);
+      expect(onSearch).not.toHaveBeenCalled();
+    }
+
+    vi.useRealTimers();
+    app.unmount();
+    host.remove();
+  });
+
+  it('cancels in-flight search requests on component unmount', async () => {
+    let resolveSearch: (value: Array<{ label: string; value: string }>) => void = noop;
+    const pendingPromise = new Promise<Array<{ label: string; value: string }>>((resolve) => {
+      resolveSearch = resolve;
+    });
+    const onSearch = vi.fn().mockReturnValue(pendingPromise);
+
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        vueH(VueSelect, {
+          id: 'unmount-select',
+          options: OPTIONS,
+          searchDebounceMs: 0,
+          onSearch,
+        }),
+    });
+    app.mount(host);
+
+    const input = host.querySelector('input');
+    expect(input).not.toBeNull();
+    if (input) {
+      input.value = 'unmount-test';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      expect(onSearch).toHaveBeenCalledWith('unmount-test');
+    }
+
+    // Unmount while request is pending
+    app.unmount();
+    host.remove();
+
+    // Resolving after unmount should not throw or cause errors
+    expect(() => {
+      resolveSearch([{ label: 'Unmounted Result', value: 'unmounted' }]);
+    }).not.toThrow();
+    await nextTick();
+  });
+
+  it('renders loading item with role="option" inside listbox and status outside listbox when loading and open', async () => {
+    const properties = { options: OPTIONS, loading: true, open: true, id: 'loading-a11y-select' };
+    const react = renderToStaticMarkup(createElement(ReactSelect, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSelect, properties) }));
+
+    for (const html of [react, vue]) {
+      // Trigger has aria-busy and status role outside listbox
+      expect(html).toContain('role="status"');
+      expect(html).toContain('aria-label="Loading…"');
+      expect(html).toContain('aria-busy="true"');
+
+      // The listbox must be rendered when open
+      expect(html).toContain('role="listbox"');
+
+      // The loading indicator item inside the listbox must use role="option" with aria-disabled="true"
+      expect(html).toContain('role="option"');
+      expect(html).toContain('aria-disabled="true"');
+      expect(html).toContain('Loading…');
+    }
+
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        vueH(VueSelect, {
+          id: 'loading-a11y-select-dom',
+          options: OPTIONS,
+          loading: true,
+          open: true,
+        }),
+    });
+    app.mount(host);
+
+    const input = host.querySelector('input');
+    expect(input).not.toBeNull();
+    if (input) {
+      expect(input.getAttribute('aria-busy')).toBe('true');
+      const statusElement = host.querySelector('[role="status"]');
+      expect(statusElement).not.toBeNull();
+      expect(statusElement?.getAttribute('aria-label')).toBe('Loading…');
+
+      // The listbox must NOT contain any element with role="status"
+      const listbox = document.body.querySelector('ul[role="listbox"]');
+      expect(listbox).not.toBeNull();
+      if (listbox) {
+        expect(listbox.querySelector('[role="status"]')).toBeNull();
+
+        // The loading indicator item inside the listbox must use role="option" with aria-disabled="true"
+        const loadingOption = listbox.querySelector('li[role="option"][aria-disabled="true"]');
+        expect(loadingOption).not.toBeNull();
+        expect(loadingOption?.textContent).toContain('Loading…');
+      }
+    }
+
     app.unmount();
     host.remove();
   });
