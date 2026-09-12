@@ -19,18 +19,18 @@
 今天是存储库文件链接，并成为包命名空间的路由
 文档站点：
 
-|套餐 |目的|主构型面|
-|:---|:---|:---|
-| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/zh/index.md) |平坦的 ESLint JS/TS 的规则和 Vue. | `eslint.config.js` |
-| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/zh/index.md) |存储库格式默认值。 | `prettier.config.js` |
-| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/zh/index.md) | TypeScript 编译器预设。 | `tsconfig.json` |
-| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/zh/index.md) | CSS 和 SCSS linting。 | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/zh/index.md) | Vite 和 Vitest 配置助手。 | `vite.config.ts` |
-| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/zh/index.md) |图书馆捆绑助手。 | `tsdown.config.ts` |
-| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/zh/index.md) |共享 PostCSS 管道。 | `postcss.config.mjs` |
-| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/zh/index.md) |共享区域设置和提取设置。 | `i18next.config.ts` |
-| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/zh/index.md) |环境选择的 Storybook 框架预设。 | `.storybook/main.ts` |
-| [工人配置](workers-config.md) |跨工作空间 Cloudflare Worker 约定。 | `wrangler.jsonc` |
+| 套餐                                                                                                                         | 目的                                | 主构型面               |
+| :--------------------------------------------------------------------------------------------------------------------------- | :---------------------------------- | :--------------------- |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/zh/index.md)             | 平坦的 ESLint JS/TS 的规则和 Vue.   | `eslint.config.js`     |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/zh/index.md)         | 存储库格式默认值。                  | `prettier.config.js`   |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/zh/index.md)     | TypeScript 编译器预设。             | `tsconfig.json`        |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/zh/index.md)       | CSS 和 SCSS linting。               | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/zh/index.md)                 | Vite 和 Vitest 配置助手。           | `vite.config.ts`       |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/zh/index.md)             | 图书馆捆绑助手。                    | `tsdown.config.ts`     |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/zh/index.md)           | 共享 PostCSS 管道。                 | `postcss.config.mjs`   |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/zh/index.md)                 | 共享区域设置和提取设置。            | `i18next.config.ts`    |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/zh/index.md) | 环境选择的 Storybook 框架预设。     | `.storybook/main.ts`   |
+| [工人配置](workers-config.md)                                                                                                | 跨工作空间 Cloudflare Worker 约定。 | `wrangler.jsonc`       |
 
 ## 核心工具
 
@@ -59,7 +59,10 @@ TypeScript, Vue 3、交通方便。
 提供工厂函数来创建 Vite 应用程序和库的配置。
 
 ```ts
-import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-config';
+import {
+  defineAppConfig,
+  defineLibraryConfig,
+} from "@mission-platform/vite-config";
 ```
 
 - `defineAppConfig`：适用于顶级应用程序（SPA、workers）。
@@ -74,13 +77,11 @@ import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-con
 
 要在工作区中使用配置：
 
-1.添加配置包为 `devDependency` 在 `package.json`。
-2. 创建本地配置文件（例如， `eslint.config.js`)。
-3. 导入和导出/扩展基本配置。
+1.添加配置包为 `devDependency` 在 `package.json`。2. 创建本地配置文件（例如， `eslint.config.js`)。3. 导入和导出/扩展基本配置。
 
 ```js
 // Example: eslint.config.js
-import baseConfig from '@mission-platform/eslint-config';
+import baseConfig from "@mission-platform/eslint-config";
 
 export default [
   ...baseConfig,
@@ -92,7 +93,7 @@ export default [
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```

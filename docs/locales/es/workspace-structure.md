@@ -108,12 +108,12 @@ Cada directorio dentro de `src/` debe contener un `index.ts` (archivo barril).
 
 Los archivos clave en la raíz del repositorio gobiernan el comportamiento del monorepo:
 
-| Archivo | Propósito |
-|:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml` | Define los límites del espacio de trabajo, los miembros globales y los catálogos de dependencias. |
-| `turbo.json` | Orquesta la canalización de compilación y el almacenamiento en caché de tareas.                    |
-| `package.json` | Scripts de nivel raíz y devDependencies en todo monorepo.                |
-| `commitlint.config.mjs` | Hace cumplir la especificación de compromisos convencionales.                     |
+| Archivo                 | Propósito                                                                                         |
+| :---------------------- | :------------------------------------------------------------------------------------------------ |
+| `pnpm-workspace.yaml`   | Define los límites del espacio de trabajo, los miembros globales y los catálogos de dependencias. |
+| `turbo.json`            | Orquesta la canalización de compilación y el almacenamiento en caché de tareas.                   |
+| `package.json`          | Scripts de nivel raíz y devDependencies en todo monorepo.                                         |
+| `commitlint.config.mjs` | Hace cumplir la especificación de compromisos convencionales.                                     |
 
 ## Gestión de dependencias y espacios de trabajo
 

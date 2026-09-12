@@ -115,7 +115,7 @@ packages/<name>/
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
@@ -217,12 +217,13 @@ export default {
 פלטפורמת המשימה משתמשת [ערכות שינויים](https://github.com/changesets/changesets) עבור גרסאות ופרסום.
 
 1. **הוסף ערכת שינויים**: לאחר ביצוע שינויים, הפעל:
+
 ```bash
    pnpm changeset
-   ```
-   בחר את החבילה ואת סוג השינוי (תיקון, מינור, עיקרי).
-2. **Commit the Changeset**: הגדר את קובץ `.changeset/*.md` שנוצר.
-3. **גרסה ופרסום**: CI/CD מטפל בפרסום בפועל, אך ניתן להציג גרסאות מקומית עם:
+```
+
+בחר את החבילה ואת סוג השינוי (תיקון, מינור, עיקרי). 2. **Commit the Changeset**: הגדר את קובץ `.changeset/*.md` שנוצר. 3. **גרסה ופרסום**: CI/CD מטפל בפרסום בפועל, אך ניתן להציג גרסאות מקומית עם:
+
 ```bash
    pnpm changeset version
-   ```
+```

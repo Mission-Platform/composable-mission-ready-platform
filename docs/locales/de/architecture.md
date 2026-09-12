@@ -61,7 +61,7 @@ Deklarationen, Externals und Ausgabekonventionen des Ziels.
 Eine zweite, orthogonale Achse projiziert dieselben neutralen Komponenten auf **Inhaltsplattformen**.
 `@mission-platform/forge-cms-plugin-api` besitzt ein plattformneutrales Content-Modell, das `CmsOutputPlugin` Vertrag und a
 generischer Treiber; die Adapterpakete `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
-Und `forge-cms-webflow` Jeder besitzt eine Plattform. Ein CMS-Ziel *erstellt* ein Framework-Plugin, anstatt eines zu ersetzen
+Und `forge-cms-webflow` Jeder besitzt eine Plattform. Ein CMS-Ziel _erstellt_ ein Framework-Plugin, anstatt eines zu ersetzen
 Jede Plattform paart sich mit jedem Framework und die Ausgabe landet darin `dist/cms/<cms>/<framework>/**`.
 
 Die vollständige Pipeline, Komponenten- und Hook-Konsumenten, CMS-Projektion und Erweiterungsanleitungen finden Sie unter

@@ -149,7 +149,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Memory & Runtime',
       priority: 'P1 - High',
       complexity: 'XL',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
+      pullRequest: 74,
     },
     {
       issueNumber: 50,
@@ -157,7 +158,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Memory & Runtime',
       priority: 'P2 - Medium',
       complexity: 'XL',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
+      pullRequest: 74,
     },
   ],
 };
@@ -313,8 +315,8 @@ export const CURRENT_BOARD_STATE: Record<number, BoardStage> = {
   46: 'Done',
   47: 'Done',
   48: 'Done',
-  49: 'In Review',
-  50: 'In Review',
+  49: 'Done',
+  50: 'Done',
 
   // Milestone 2 (The Board / UI Components)
   51: 'Done',

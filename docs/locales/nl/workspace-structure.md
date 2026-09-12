@@ -108,12 +108,12 @@ Elke map binnen `src/` moet een `index.ts` (barrel-bestand) bevatten.
 
 Sleutelbestanden in de root van de repository bepalen het gedrag van de monorepo:
 
-| Bestand | Doel |
-|:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml` | Definieert werkruimtegrenzen, ledenglobs en afhankelijkheidscatalogi. |
-| `turbo.json` | Organiseert de build-pijplijn en taakcaching.                    |
-| `package.json` | Scripts op rootniveau en monorepo-brede devDependencies.                |
-| `commitlint.config.mjs` | Dwingt de Conventionele Commits-specificatie af.                     |
+| Bestand                 | Doel                                                                  |
+| :---------------------- | :-------------------------------------------------------------------- |
+| `pnpm-workspace.yaml`   | Definieert werkruimtegrenzen, ledenglobs en afhankelijkheidscatalogi. |
+| `turbo.json`            | Organiseert de build-pijplijn en taakcaching.                         |
+| `package.json`          | Scripts op rootniveau en monorepo-brede devDependencies.              |
+| `commitlint.config.mjs` | Dwingt de Conventionele Commits-specificatie af.                      |
 
 ## Afhankelijkheids- en werkruimtebeheer
 

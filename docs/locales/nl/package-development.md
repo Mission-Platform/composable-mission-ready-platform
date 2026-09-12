@@ -115,7 +115,7 @@ Gebruik de gedeelde configuratie vanuit `stylelint.config.mjs` in plaats van `ex
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
@@ -217,12 +217,13 @@ extractor beschreven in de docs-app README.
 Het Mission Platform maakt gebruik van [Wijzigingssets](https://github.com/changesets/changesets) voor versiebeheer en publicatie.
 
 1. **Een wijzigingenset toevoegen**: Voer na het aanbrengen van de wijzigingen het volgende uit:
+
 ```bash
    pnpm changeset
-   ```
-   Selecteer het pakket en het type wijziging (patch, minor, major).
-2. **De wijzigingenset vastleggen**: voer het gegenereerde `.changeset/*.md`-bestand door.
-3. **Versie en publicatie**: CI/CD zorgt voor de daadwerkelijke publicatie, maar u kunt lokaal voorbeelden van versies bekijken met:
+```
+
+Selecteer het pakket en het type wijziging (patch, minor, major). 2. **De wijzigingenset vastleggen**: voer het gegenereerde `.changeset/*.md`-bestand door. 3. **Versie en publicatie**: CI/CD zorgt voor de daadwerkelijke publicatie, maar u kunt lokaal voorbeelden van versies bekijken met:
+
 ```bash
    pnpm changeset version
-   ```
+```

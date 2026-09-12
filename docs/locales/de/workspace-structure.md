@@ -47,7 +47,7 @@ Wiederverwendbare, versionierte Bibliotheken, die von Apps genutzt werden. Diese
 - **`@mission-platform/forge-jsx`**: Die Framework-neutrale JSX-Laufzeit und -Adapter.
 - **`@mission-platform/components`**: Die Multi-Framework-Komponentenbibliothek.
 - **`@mission-platform/forms`** und **`@mission-platform/forms-core`**: Schemagesteuerte Formularprimitive.
-– **`@mission-platform/content`** und **`@mission-platform/email-renderer`**: Inhalts- und Rendering-Pipelines.
+  – **`@mission-platform/content`** und **`@mission-platform/email-renderer`**: Inhalts- und Rendering-Pipelines.
 - **`@mission-platform/tokens`**: Design-Token-Quelle der Wahrheit.
 - **`@mission-platform/router`** und **`@mission-platform/i18n`**: Framework-neutrales Routing und Lokalisierung.
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`** und
@@ -77,7 +77,7 @@ Cloudflare Workers für serverseitige Logik und optimierte Asset-Bereitstellung.
 
 - **`api-proxy/`**: Bietet eingeschränkten Lesezugriff auf genehmigte API-Routen.
 - **`email-sender/`**: Lokaler, von MailPit unterstützter E-Mail-Showcase-Worker.
-– **`forge-spa/`**: Stellt statische Assets mit einem `ASSETS`-bindenden SPA-Fallback bereit.
+  – **`forge-spa/`**: Stellt statische Assets mit einem `ASSETS`-bindenden SPA-Fallback bereit.
 
 Bereitstellbare Anwendungs-Worker werden durch `apps/website/wrangler.jsonc` konfiguriert.
 `apps/my-care-notes/wrangler.jsonc` und `apps/service-monitor/wrangler.jsonc`. Die
@@ -102,18 +102,18 @@ Der Quellcode ist nach Funktionstyp organisiert:
 Jedes Verzeichnis innerhalb von `src/` muss eine `index.ts` (Barrel-Datei) enthalten.
 
 - Unterverzeichnisse exportieren ihre internen Symbole über ihr lokales `index.ts`.
-– Der Stamm `src/index.ts` fungiert als öffentlicher Einstiegspunkt für das gesamte Arbeitsbereichsmitglied.
+  – Der Stamm `src/index.ts` fungiert als öffentlicher Einstiegspunkt für das gesamte Arbeitsbereichsmitglied.
 
 ## Root-Konfigurationsregistrierung
 
 Schlüsseldateien im Repository-Stammverzeichnis bestimmen das Verhalten des Monorepos:
 
-| Datei | Zweck |
-|:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml` | Definiert Arbeitsbereichsgrenzen, Member-Globs und Abhängigkeitskataloge. |
-| `turbo.json` | Orchestriert die Build-Pipeline und das Aufgaben-Caching.                    |
-| `package.json` | Skripte auf Root-Ebene und monorepoweite DevDependencies.                |
-| `commitlint.config.mjs` | Erzwingt die Spezifikation für konventionelle Commits.                     |
+| Datei                   | Zweck                                                                     |
+| :---------------------- | :------------------------------------------------------------------------ |
+| `pnpm-workspace.yaml`   | Definiert Arbeitsbereichsgrenzen, Member-Globs und Abhängigkeitskataloge. |
+| `turbo.json`            | Orchestriert die Build-Pipeline und das Aufgaben-Caching.                 |
+| `package.json`          | Skripte auf Root-Ebene und monorepoweite DevDependencies.                 |
+| `commitlint.config.mjs` | Erzwingt die Spezifikation für konventionelle Commits.                    |
 
 ## Abhängigkeits- und Arbeitsbereichsmanagement
 

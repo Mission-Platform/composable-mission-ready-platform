@@ -109,7 +109,7 @@ optional chaining (`?.`) or provide default values.
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
 ### "Unhandled Promise Rejection"

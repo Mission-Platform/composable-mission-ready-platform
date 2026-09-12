@@ -14,13 +14,13 @@ Voordat u de repository gaat klonen, moet u ervoor zorgen dat uw systeem aan de 
 
 ### Systeemvereisten
 
-| Gereedschap | Vereiste versie | Doel |
-| :---------- | :--------------- | :---------------------------------------------- |
-| **Node.js** | `24.19.0`        | Runtime-omgeving (actieve LTS) |
-| **pnpm**    | `11.21.0`        | Pakketbeheerder en werkruimteorkestrator |
-| **Git** | Laatste stabiele | Versiebeheer |
-| **Roest** | Stabiele gereedschapsketen | Optionele standalone Rust-benchmarkontwikkeling |
-| **Dokker** | Laatste stabiele | Alleen vereist voor de Emscripten Hunspell-build |
+| Gereedschap | Vereiste versie            | Doel                                             |
+| :---------- | :------------------------- | :----------------------------------------------- |
+| **Node.js** | `24.19.0`                  | Runtime-omgeving (actieve LTS)                   |
+| **pnpm**    | `11.21.0`                  | Pakketbeheerder en werkruimteorkestrator         |
+| **Git**     | Laatste stabiele           | Versiebeheer                                     |
+| **Roest**   | Stabiele gereedschapsketen | Optionele standalone Rust-benchmarkontwikkeling  |
+| **Dokker**  | Laatste stabiele           | Alleen vereist voor de Emscripten Hunspell-build |
 
 ### Versiebeheer (aanbevolen)
 
@@ -126,11 +126,11 @@ De applicatie is doorgaans beschikbaar op `http://localhost:5173`.
 
 ### Algemene opdrachten
 
-| Taak | Commando | Beschrijving |
-| :--------- | :------------ | :----------------------------- |
-| **Bouw** | `pnpm build`  | Bouw alle apps en pakketten |
-| **Test** | `pnpm test`   | Alles uitvoeren Vitest suites |
-| **Lint** | `pnpm lint`   | Loop ESLint over de monorepo |
+| Taak        | Commando      | Beschrijving                      |
+| :---------- | :------------ | :-------------------------------- |
+| **Bouw**    | `pnpm build`  | Bouw alle apps en pakketten       |
+| **Test**    | `pnpm test`   | Alles uitvoeren Vitest suites     |
+| **Lint**    | `pnpm lint`   | Loop ESLint over de monorepo      |
 | **Formaat** | `pnpm format` | Controleer de opmaak met Prettier |
 
 ## Problemen oplossen

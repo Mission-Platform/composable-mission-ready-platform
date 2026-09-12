@@ -18,12 +18,12 @@ Umgebungen.
 
 ## Anwendungsbereitstellungskarte
 
-| Bewerbung | Handler | Konfiguration | Vermögenswerte |
-| :---------- | :------ | :------------ | :----- |
-| Website | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, gebunden als `ASSETS` |
-| Meine Pflegenotizen | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, gebunden als `ASSETS` |
-| Servicemonitor | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, gebunden als `ASSETS` |
-| Dokumente | Statische Vermögenswerte | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| Bewerbung           | Handler                                         | Konfiguration                         | Vermögenswerte                                        |
+| :------------------ | :---------------------------------------------- | :------------------------------------ | :---------------------------------------------------- |
+| Website             | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, gebunden als `ASSETS`           |
+| Meine Pflegenotizen | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, gebunden als `ASSETS`     |
+| Servicemonitor      | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, gebunden als `ASSETS` |
+| Dokumente           | Statische Vermögenswerte                        | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                     |
 
 Website und My Care Notes verbrauchen den gemeinsamen Forge SPA-Worker. Servicemonitor
 besitzt seinen Worker-Einstiegspunkt und die dauerhafte Objektbindung. Die Dokumentationsseite ist eine

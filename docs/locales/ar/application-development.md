@@ -11,13 +11,13 @@
 
 ## اختر تطبيقًا
 
-| التطبيق | التنمية المحلية | بناء | النشر |
-|:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | معاينة أو نشر من خلال عامل الاستضافة |
-| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
-| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
+| التطبيق                             | التنمية المحلية                                       | بناء                                                    | النشر                                                            |
+| :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------- |
+| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | معاينة أو نشر من خلال عامل الاستضافة                             |
+| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`         |
+| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`   |
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` | استخدم Storybook/سير العمل اللوني الذي تم تكوينه |
+| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | استخدم Storybook/سير العمل اللوني الذي تم تكوينه                 |
 
 تمتلك حزمة التطبيق Vite أو Wrangler إعدادات. لا تركض `wrangler deploy` من عامل قابل لإعادة الاستخدام
 package ما لم تكن تلك الحزمة خاصة بها `wrangler.jsonc`.
@@ -30,13 +30,13 @@ package ما لم تكن تلك الحزمة خاصة بها `wrangler.jsonc`.
 
 ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
-   ```
+```
 
 4. قم بإجراء الاختبارات والفحص والتحقق من الأنماط والتنسيق لمساحة العمل المتأثرة:
 
 ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
-   ```
+```
 
 لتغيير الحزمة المشتركة، استبدل `<app>` مع اسم الحزمة والاستخدام `...` عندما تحتاج إلى مساحات عمل تابعة
 المدرجة في الرسم البياني للبناء.

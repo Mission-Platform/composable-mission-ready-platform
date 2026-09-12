@@ -24,16 +24,16 @@
 
 “一次写入”架构的基础，提供框架中立的 JSX 运行时和挂钩。
 
-|出口|类型 |描述 |
-| :----------------- | :------- | :-------------------------------------------------------------------------------------- |
-| `h`、`Fragment` |功能|用于创作组件的 JSX 工厂和片段。                                      |
-| `useState` |钩|框架中立的状态钩子。                                                           |
-| `useEffect` |钩|框架中性效果钩子。                                                          |
-| `useMemo` |钩|框架中立的记忆钩子。                                                     |
-| `useRef` |钩|框架中立的参考钩子。                                                       |
-| `useContext` |钩|框架中立的上下文挂钩。                                                         |
-| `toVueComponent` |适配器|将 forge 组件转换为 Vue 3 组件（来自 `@mission-platform/forge-adapters/vue`）。   |
-| `toReactComponent` |适配器|将 forge 组件转换为 React 组件（来自 `@mission-platform/forge-adapters/react`）。 |
+| 出口               | 类型   | 描述                                                                              |
+| :----------------- | :----- | :-------------------------------------------------------------------------------- |
+| `h`、`Fragment`    | 功能   | 用于创作组件的 JSX 工厂和片段。                                                   |
+| `useState`         | 钩     | 框架中立的状态钩子。                                                              |
+| `useEffect`        | 钩     | 框架中性效果钩子。                                                                |
+| `useMemo`          | 钩     | 框架中立的记忆钩子。                                                              |
+| `useRef`           | 钩     | 框架中立的参考钩子。                                                              |
+| `useContext`       | 钩     | 框架中立的上下文挂钩。                                                            |
+| `toVueComponent`   | 适配器 | 将 forge 组件转换为 Vue 3 组件（来自 `@mission-platform/forge-adapters/vue`）。   |
+| `toReactComponent` | 适配器 | 将 forge 组件转换为 React 组件（来自 `@mission-platform/forge-adapters/react`）。 |
 
 ### @mission-platform/vite-plugin-forge
 
@@ -42,14 +42,14 @@
 `defineTsdownForgeComponents`（加上挂钩和 CMS 帮助程序）共享进程内
 `ForgeCompilerService` 用于一次构建或观看会话。
 
-|能力|描述 |
-| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-|服务生命周期|跨构建重用源、图、解析源、语义 IR 和目标工件状态；完成后处理一次性服务，并在关闭时处理观察者服务。 |
-|缓存键 |源/依赖项/配置指纹、编译器和路由器选项、`tsconfig` `baseUrl`/`paths`、目标 ID、插件标识/版本以及相关条件。      |
-|观看失效|更改的文件使反向图依赖项无效，包括传递组件和钩子条目；不相关的目标快照仍然可重用。                     |
-|诊断/报告 |报告阶段计时、缓存命中/未命中计数、受影响的文件、警告、错误和发出的工件计数。错误会阻碍晋升。                                 |
-|工件清单 |在原子升级之前列出目标范围的条目、模块、声明、源映射、资产和校验和。                                                     |
-|扩展点|实现并从调用者拥有的 `forge-plugin-*` 包传递 `FrameworkOutputPlugin`；不要将目标分支添加到中性驱动程序。                        |
+| 能力         | 描述                                                                                                       |
+| :----------- | :--------------------------------------------------------------------------------------------------------- |
+| 服务生命周期 | 跨构建重用源、图、解析源、语义 IR 和目标工件状态；完成后处理一次性服务，并在关闭时处理观察者服务。         |
+| 缓存键       | 源/依赖项/配置指纹、编译器和路由器选项、`tsconfig` `baseUrl`/`paths`、目标 ID、插件标识/版本以及相关条件。 |
+| 观看失效     | 更改的文件使反向图依赖项无效，包括传递组件和钩子条目；不相关的目标快照仍然可重用。                         |
+| 诊断/报告    | 报告阶段计时、缓存命中/未命中计数、受影响的文件、警告、错误和发出的工件计数。错误会阻碍晋升。              |
+| 工件清单     | 在原子升级之前列出目标范围的条目、模块、声明、源映射、资产和校验和。                                       |
+| 扩展点       | 实现并从调用者拥有的 `forge-plugin-*` 包传递 `FrameworkOutputPlugin`；不要将目标分支添加到中性驱动程序。   |
 
 通过项目 `tsconfig.json` 配置别名（`baseUrl` 和
 `paths`); Vite 和 tsdown 图准备使用相同的别名事实。路由器
@@ -63,13 +63,13 @@
 共享包。应用程序拥有路由记录和本机路由器实例；的
 应用程序选择的 Forge 路由器目标提供运行时功能。
 
-|出口/包装|类型 |描述 |
-| :----------------------------------------------------------------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
-| `MpRoute`、`MpRouteLocationRaw`、`MpResolvedLocation` |类型 |路由记录、参数、查询/哈希状态、元数据和导航目标。                                                            |
-| `defineRoutes`、`matchRoutes`、`resolveLocation` |功能|无需 DOM 或框架运行时即可定义路由树和解析路径。                                                              |
-| `MpNavigationResult`、`MpRouteGuard`、`MpHistory`、`MpRouterAdapter` |类型 |导航结果/事件、防护、可插入历史记录和适配器合约。                                                         |
-| `MpLink`、`useMpRoute`、`useMpRouter`、`useMpNavigation`、`MpRouterView` |编译器标记 |共享包消耗的中性链接、路由状态、导航、分辨率和出口功能。                               |
-| `@mission-platform/forge-router-*` |锻造目标 |为 Vue 路由器、React 路由器、SolidJS 路由器、SvelteKit、RedwoodSDK 和 Web 组件独立选择本机路由器目标。 |
+| 出口/包装                                                                | 类型       | 描述                                                                                                   |
+| :----------------------------------------------------------------------- | :--------- | :----------------------------------------------------------------------------------------------------- |
+| `MpRoute`、`MpRouteLocationRaw`、`MpResolvedLocation`                    | 类型       | 路由记录、参数、查询/哈希状态、元数据和导航目标。                                                      |
+| `defineRoutes`、`matchRoutes`、`resolveLocation`                         | 功能       | 无需 DOM 或框架运行时即可定义路由树和解析路径。                                                        |
+| `MpNavigationResult`、`MpRouteGuard`、`MpHistory`、`MpRouterAdapter`     | 类型       | 导航结果/事件、防护、可插入历史记录和适配器合约。                                                      |
+| `MpLink`、`useMpRoute`、`useMpRouter`、`useMpNavigation`、`MpRouterView` | 编译器标记 | 共享包消耗的中性链接、路由状态、导航、分辨率和出口功能。                                               |
+| `@mission-platform/forge-router-*`                                       | 锻造目标   | 为 Vue 路由器、React 路由器、SolidJS 路由器、SvelteKit、RedwoodSDK 和 Web 组件独立选择本机路由器目标。 |
 
 运行时包拥有自己的历史记录和反应状态；中性包从不导入 UI 框架。对于 Web 组件，
 注册元素一次并通过 DOM 属性而不是序列化属性传递复杂目标：
@@ -134,20 +134,20 @@ const router = createWebComponentsRouter({
 
 颜色、排版和间距的集中设计标记。
 
-|出口|描述 |
-| :------------ | :------------------------------------------------------------------------ |
-| `tokens` |包含所有设计标记的 JS/TS 对象（例如 `tokens.color.primary`）。 |
-| `tokens.scss` |用于样式表的 SCSS 变量。                                    |
+| 出口          | 描述                                                           |
+| :------------ | :------------------------------------------------------------- |
+| `tokens`      | 包含所有设计标记的 JS/TS 对象（例如 `tokens.color.primary`）。 |
+| `tokens.scss` | 用于样式表的 SCSS 变量。                                       |
 
 ### @mission-platform/breakpoints
 
 响应式实用程序和可见性组件。
 
-|出口|类型 |描述 |
-| :--------------- | :-------- | :--------------------------------------------------------- |
-| `useBreakpoints` |钩|返回反应断点状态。                        |
-| `ShowIf` |组件|仅当断点条件匹配时才渲染子项。 |
-| `HideIf` |组件|当断点条件匹配时隐藏子项。        |
+| 出口             | 类型 | 描述                           |
+| :--------------- | :--- | :----------------------------- |
+| `useBreakpoints` | 钩   | 返回反应断点状态。             |
+| `ShowIf`         | 组件 | 仅当断点条件匹配时才渲染子项。 |
+| `HideIf`         | 组件 | 当断点条件匹配时隐藏子项。     |
 
 ### @mission-platform/components
 
@@ -166,35 +166,35 @@ const router = createWebComponentsRouter({
 
 基于i18next的国际化系统。
 
-|出口|描述 |
-| :---------------- | :-------------------------------------------------------- |
-| `createForgeI18N` |使用平台默认值初始化 i18n 实例。     |
-| `useI18n` |用于组件中翻译和区域设置切换的挂钩。 |
+| 出口              | 描述                                 |
+| :---------------- | :----------------------------------- |
+| `createForgeI18N` | 使用平台默认值初始化 i18n 实例。     |
+| `useI18n`         | 用于组件中翻译和区域设置切换的挂钩。 |
 
 ### @mission-platform/seo
 
 元标记和 SEO 管理。
 
-|出口|描述 |
-| :------- | :-------------------------------------------------------------------- |
-| `useSeo` |用于以声明方式设置页面标题、元标记和开放图数据的挂钩。 |
+| 出口     | 描述                                                   |
+| :------- | :----------------------------------------------------- |
+| `useSeo` | 用于以声明方式设置页面标题、元标记和开放图数据的挂钩。 |
 
 ### @mission-platform/map
 
 MapLibre GL 的反应式包装器。
 
-|组件|描述 |
-| :-------------- | :---------------------------------------- |
-| `<MpMap>` |主要地图容器组件。             |
-| `<MpMapMarker>` |用于在地图上放置标记的组件。 |
+| 组件            | 描述                         |
+| :-------------- | :--------------------------- |
+| `<MpMap>`       | 主要地图容器组件。           |
+| `<MpMapMarker>` | 用于在地图上放置标记的组件。 |
 
 ### @mission-platform/code-scanner
 
 基于摄像头的条形码和二维码扫描。
 
-|组件|描述 |
-| :---------------- | :--------------------------------------------------------------- |
-| `<MpCodeScanner>` |初始化相机流并发出扫描结果的组件。 |
+| 组件              | 描述                               |
+| :---------------- | :--------------------------------- |
+| `<MpCodeScanner>` | 初始化相机流并发出扫描结果的组件。 |
 
 ## 集成
 
@@ -202,27 +202,27 @@ MapLibre GL 的反应式包装器。
 
 将 RxJS Observables 桥接到组件状态。
 
-|钩|描述 |
-| :-------------- | :-------------------------------------------------------------------------- |
-| `useObservable` |订阅可观察对象并返回其最新值作为反应状态。 |
+| 钩              | 描述                                       |
+| :-------------- | :----------------------------------------- |
+| `useObservable` | 订阅可观察对象并返回其最新值作为反应状态。 |
 
 ### @mission-platform/d3
 
 框架中立的 D3.js 集成。
 
-|钩|描述 |
-| :------ | :----------------------------------------------------------------- |
-| `useD3` |通过生命周期管理将 D3 选择绑定到组件引用。 |
+| 钩      | 描述                                       |
+| :------ | :----------------------------------------- |
+| `useD3` | 通过生命周期管理将 D3 选择绑定到组件引用。 |
 
 ### @mission-platform/hunspell
 
 WebAssembly 支持的拼写检查。
 
-|出口|描述 |
-| :------------- | :------------------------------------------------------ |
-| `initHunspell` |加载并实例化 Hunspell WebAssembly 模块。 |
-| `spell` |检查单词拼写是否正确。                  |
-| `suggest` |提供单词的拼写建议。               |
+| 出口           | 描述                                     |
+| :------------- | :--------------------------------------- |
+| `initHunspell` | 加载并实例化 Hunspell WebAssembly 模块。 |
+| `spell`        | 检查单词拼写是否正确。                   |
+| `suggest`      | 提供单词的拼写建议。                     |
 
 ## 服务监控
 
@@ -323,46 +323,46 @@ Forge Web 脚本工件使用格式为 `sha256-v1:<hex>` 的版本化 SHA-256 内
 
 ### 核心和用户界面
 
-|套餐 |目的|
-| :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge-jsx` |框架中立的 JSX 运行时和适配器。                   |
-| `@mission-platform/components` |一次性编写 UI 组件。                                     |
-| `@mission-platform/icons` |一次性编写 SVG 图标组件。                               |
-| `@mission-platform/layouts` |应用程序、容器和响应式布局组件。     |
-| `@mission-platform/forms` |模式表单和视觉表单生成器组件。              |
-| `@mission-platform/forms-core` |模式派生、验证和表单构建器域逻辑。 |
-| `@mission-platform/tokens` | CSS 自定义属性和 SCSS 设计令牌。                 |
+| 套餐                           | 目的                               |
+| :----------------------------- | :--------------------------------- |
+| `@mission-platform/forge-jsx`  | 框架中立的 JSX 运行时和适配器。    |
+| `@mission-platform/components` | 一次性编写 UI 组件。               |
+| `@mission-platform/icons`      | 一次性编写 SVG 图标组件。          |
+| `@mission-platform/layouts`    | 应用程序、容器和响应式布局组件。   |
+| `@mission-platform/forms`      | 模式表单和视觉表单生成器组件。     |
+| `@mission-platform/forms-core` | 模式派生、验证和表单构建器域逻辑。 |
+| `@mission-platform/tokens`     | CSS 自定义属性和 SCSS 设计令牌。   |
 
 ### 可组合性和集成
 
-|套餐 |目的|
-| :---------------------------------------------- | :--------------------------------------------------------------- |
-| `@mission-platform/breakpoints` |响应式断点状态和可见性助手。              |
-| `@mission-platform/d3` | D3 选择生命周期可组合项和保证金实用程序。          |
-| `@mission-platform/i18n` | i18next 状态和框架集成助手。                 |
-| `@mission-platform/map` | MapLibre 地图组件和可组合项。                         |
-| `@mission-platform/observers` |交集、突变和性能观察者可组合项。    |
-| `@mission-platform/phone-number` |键入 WebAssembly 电话号码解析和格式化。           |
-| `@mission-platform/router` |框架中立的路由契约和编译器功能。     |
-| `@mission-platform/forge-router-web-components` | Web 组件路由器目标和无框架运行时。         |
-| `@mission-platform/rxjs` | RxJS 可观察对象和订阅可组合对象。                    |
-| `@mission-platform/scheduler` |调度程序 UI、重复周期和日历布局域逻辑。      |
-| `@mission-platform/vcard` | RFC 6350 vCard 和 RFC 5545 iCalendar 数据和组件。       |
-| `@mission-platform/content` |内容 AST、构建器、Monaco、Markdown 和 WYSIWYG 组件。 |
-| `@mission-platform/seo` |元数据、开放图谱和结构化数据可组合项。           |
-| `@mission-platform/speech-audio` |语音、音频和 Web MIDI 可组合项。                         |
-| `@mission-platform/three` | Three.js 画布和生命周期可组合项。                       |
+| 套餐                                            | 目的                                                 |
+| :---------------------------------------------- | :--------------------------------------------------- |
+| `@mission-platform/breakpoints`                 | 响应式断点状态和可见性助手。                         |
+| `@mission-platform/d3`                          | D3 选择生命周期可组合项和保证金实用程序。            |
+| `@mission-platform/i18n`                        | i18next 状态和框架集成助手。                         |
+| `@mission-platform/map`                         | MapLibre 地图组件和可组合项。                        |
+| `@mission-platform/observers`                   | 交集、突变和性能观察者可组合项。                     |
+| `@mission-platform/phone-number`                | 键入 WebAssembly 电话号码解析和格式化。              |
+| `@mission-platform/router`                      | 框架中立的路由契约和编译器功能。                     |
+| `@mission-platform/forge-router-web-components` | Web 组件路由器目标和无框架运行时。                   |
+| `@mission-platform/rxjs`                        | RxJS 可观察对象和订阅可组合对象。                    |
+| `@mission-platform/scheduler`                   | 调度程序 UI、重复周期和日历布局域逻辑。              |
+| `@mission-platform/vcard`                       | RFC 6350 vCard 和 RFC 5545 iCalendar 数据和组件。    |
+| `@mission-platform/content`                     | 内容 AST、构建器、Monaco、Markdown 和 WYSIWYG 组件。 |
+| `@mission-platform/seo`                         | 元数据、开放图谱和结构化数据可组合项。               |
+| `@mission-platform/speech-audio`                | 语音、音频和 Web MIDI 可组合项。                     |
+| `@mission-platform/three`                       | Three.js 画布和生命周期可组合项。                    |
 
 ### 代码和 WebAssembly 包
 
-|套餐 |目的|
-| :------------------------------- | :----------------------------------------------- |
-| `@mission-platform/barcode` |一维条形码编码/解码外观和组件。   |
-| `@mission-platform/code-scanner` |摄像头和图像扫码组件。        |
-| `@mission-platform/matrix-code` | Data Matrix 和 Aztec 编码/解码外观。      |
-| `@mission-platform/qr-code` | QR 编码/解码外观和组件。           |
-| `@mission-platform/harper` |摩纳哥的 Harper 语法和风格整合。 |
-| `@mission-platform/hunspell` | Emscripten Hunspell 拼写检查包装器。      |
+| 套餐                             | 目的                                 |
+| :------------------------------- | :----------------------------------- |
+| `@mission-platform/barcode`      | 一维条形码编码/解码外观和组件。      |
+| `@mission-platform/code-scanner` | 摄像头和图像扫码组件。               |
+| `@mission-platform/matrix-code`  | Data Matrix 和 Aztec 编码/解码外观。 |
+| `@mission-platform/qr-code`      | QR 编码/解码外观和组件。             |
+| `@mission-platform/harper`       | 摩纳哥的 Harper 语法和风格整合。     |
+| `@mission-platform/hunspell`     | Emscripten Hunspell 拼写检查包装器。 |
 
 ### Forge 编译器目标
 
@@ -370,30 +370,30 @@ Forge Web 脚本工件使用格式为 `sha256-v1:<hex>` 的版本化 SHA-256 内
 降低至； **CMS** 目标决定将其投影到哪个内容平台。两个轴组成，因此任何 CMS
 目标可以绑定到任何框架插件。请参阅 [Forge 编译器管道](../../../packages/tooling/vite/forge/docs/locales/zh/reference/compiler.md)。
 
-|套餐 |目的|
-| :---------------------------------------------- | :-------------------------------------------------------------------------------- |
-| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin` 合约、语义 IR 类型和构建适配器类型。     |
-| `@mission-platform/forge-plugin-react` | React 输出目标。                                                              |
-| `@mission-platform/forge-plugin-vue` | Vue 3 输出目标。                                                              |
-| `@mission-platform/forge-plugin-solid` | Solid 输出目标。                                                              |
-| `@mission-platform/forge-plugin-svelte` | Svelte 5 输出目标。                                                           |
-| `@mission-platform/forge-plugin-web-components` | Web 组件输出目标。                                                     |
-| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin` 合约、中性内容模型、CMS 驱动程序和构建助手。 |
-| `@mission-platform/forge-cms-storyblok` | Storyblok 组件对象、blok 包装器和 `components.json`。                |
-| `@mission-platform/forge-cms-astro` |静态 `.astro` 模板和 `client:load` 框架岛。                    |
-| `@mission-platform/forge-cms-ghost` | Ghost Handlebars 部分和 `config.custom` 主题片段。                   |
-| `@mission-platform/forge-cms-jekyll` | Jekyll Liquid 包括 `_data` 架构和 `_config.yml` 片段。             |
-| `@mission-platform/forge-cms-webflow` | Webflow `declareComponent` 代码组件和 `webflow.json` 库片段。 |
+| 套餐                                            | 目的                                                           |
+| :---------------------------------------------- | :------------------------------------------------------------- |
+| `@mission-platform/forge-plugin-api`            | `FrameworkOutputPlugin` 合约、语义 IR 类型和构建适配器类型。   |
+| `@mission-platform/forge-plugin-react`          | React 输出目标。                                               |
+| `@mission-platform/forge-plugin-vue`            | Vue 3 输出目标。                                               |
+| `@mission-platform/forge-plugin-solid`          | Solid 输出目标。                                               |
+| `@mission-platform/forge-plugin-svelte`         | Svelte 5 输出目标。                                            |
+| `@mission-platform/forge-plugin-web-components` | Web 组件输出目标。                                             |
+| `@mission-platform/forge-cms-plugin-api`        | `CmsOutputPlugin` 合约、中性内容模型、CMS 驱动程序和构建助手。 |
+| `@mission-platform/forge-cms-storyblok`         | Storyblok 组件对象、blok 包装器和 `components.json`。          |
+| `@mission-platform/forge-cms-astro`             | 静态 `.astro` 模板和 `client:load` 框架岛。                    |
+| `@mission-platform/forge-cms-ghost`             | Ghost Handlebars 部分和 `config.custom` 主题片段。             |
+| `@mission-platform/forge-cms-jekyll`            | Jekyll Liquid 包括 `_data` 架构和 `_config.yml` 片段。         |
+| `@mission-platform/forge-cms-webflow`           | Webflow `declareComponent` 代码组件和 `webflow.json` 库片段。  |
 
 #### @mission-platform/forge-cms-plugin-api
 
-|出口|类型 |描述 |
-| :------------------------ | :------- | :------------------------------------------------------------------------------ |
-| `analyzeContentComponent` |功能|将中立组件的 props 投影到平台中立内容模型上。   |
-| `ContentComponent` |类型 |订购 `ContentField`、插槽和 `interactive` 标志。                     |
-| `ContentFieldKind` |类型 | `text`、`richtext`、`number`、`boolean`、`option`、`asset`、`link`、`children`。 |
-| `CmsOutputPlugin` |类型 |目标合约：一个绑定框架插件加上四个发射器。           |
-| `defineForgeCmsPlugin` |功能|在配置时验证 CMS 目标。                                   |
-| `generateCmsArtifacts` |功能|通用发现 → IR → 内容模型 → 发出 → 写入驱动程序。                |
-| `defineTsdownForgeCms` |功能|一个 CMS 目标的 tsdown 配置，发出 `dist/cms/<cms>/<framework>/**`。     |
-| `defineTsdownForgeCmsAll` |功能| CMS 目标列表的 tsdown 配置。                                       |
+| 出口                      | 类型 | 描述                                                                             |
+| :------------------------ | :--- | :------------------------------------------------------------------------------- |
+| `analyzeContentComponent` | 功能 | 将中立组件的 props 投影到平台中立内容模型上。                                    |
+| `ContentComponent`        | 类型 | 订购 `ContentField`、插槽和 `interactive` 标志。                                 |
+| `ContentFieldKind`        | 类型 | `text`、`richtext`、`number`、`boolean`、`option`、`asset`、`link`、`children`。 |
+| `CmsOutputPlugin`         | 类型 | 目标合约：一个绑定框架插件加上四个发射器。                                       |
+| `defineForgeCmsPlugin`    | 功能 | 在配置时验证 CMS 目标。                                                          |
+| `generateCmsArtifacts`    | 功能 | 通用发现 → IR → 内容模型 → 发出 → 写入驱动程序。                                 |
+| `defineTsdownForgeCms`    | 功能 | 一个 CMS 目标的 tsdown 配置，发出 `dist/cms/<cms>/<framework>/**`。              |
+| `defineTsdownForgeCmsAll` | 功能 | CMS 目标列表的 tsdown 配置。                                                     |

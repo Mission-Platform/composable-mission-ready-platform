@@ -115,7 +115,7 @@ packages/<name>/
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
@@ -217,12 +217,13 @@ Web コンポーネント Storybook ワークベンチ。
 ミッションプラットフォームが使用するのは、 [変更セット](https://github.com/changesets/changesets) をバージョン管理と公開に使用します。
 
 1. **変更セットの追加**: 変更を加えた後、次のコマンドを実行します。
+
 ```bash
    pnpm changeset
-   ```
-   パッケージと変更の種類 (パッチ、マイナー、メジャー) を選択します。
-2. **変更セットをコミット**: 生成された `.changeset/*.md` ファイルをコミットします。
-3. **バージョンと公開**: CI/CD が実際の公開を処理しますが、次の方法でバージョンをローカルでプレビューできます。
+```
+
+パッケージと変更の種類 (パッチ、マイナー、メジャー) を選択します。2. **変更セットをコミット**: 生成された `.changeset/*.md` ファイルをコミットします。3. **バージョンと公開**: CI/CD が実際の公開を処理しますが、次の方法でバージョンをローカルでプレビューできます。
+
 ```bash
    pnpm changeset version
-   ```
+```

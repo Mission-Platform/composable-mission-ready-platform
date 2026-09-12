@@ -332,12 +332,12 @@ export default defineVitestConfig({
 
 ### Samenvatting van scripts
 
-| Script | Commando | Doel |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
-| `test` | `pnpm exec turbo run test` | Voer alle werkruimtetesttaken uit.          |
-| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Voer componententests uit in de horlogemodus.    |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Genereer een componentendekkingsrapport. |
-| Roest/WASM | `cargo test --workspace` | Voer native Rust-krattests uit.           |
+| Script          | Commando                                                   | Doel                                          |
+| :-------------- | :--------------------------------------------------------- | :-------------------------------------------- |
+| `test`          | `pnpm exec turbo run test`                                 | Voer alle werkruimtetesttaken uit.            |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Voer componententests uit in de horlogemodus. |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Genereer een componentendekkingsrapport.      |
+| Roest/WASM      | `cargo test --workspace`                                   | Voer native Rust-krattests uit.               |
 
 Wasm-wrapperpakketten worden getest via hun eigen pakkettaken. Voer bijvoorbeeld het scannerpakket en de bijbehorende
 samenvouwen bij het wijzigen van het scannergedrag:

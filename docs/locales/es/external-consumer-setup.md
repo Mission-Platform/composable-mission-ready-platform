@@ -15,12 +15,12 @@ Para seleccionar el paquete correcto, debe configurar su herramienta de compilac
 
 ### Condiciones marco admitidas
 
-| Marco | Condición de exportación |
-| :----------------- | :----------------- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
-| **Componentes web** | `mp:web-component` |
+| Marco               | Condición de exportación |
+| :------------------ | :----------------------- |
+| **Vue 3**           | `mp:vue`                 |
+| **React**           | `mp:react`               |
+| **Solid**           | `mp:solid`               |
+| **Componentes web** | `mp:web-component`       |
 
 ## Configuración del proyecto
 

@@ -26,12 +26,14 @@ Mission Platform 将 Vue 3 与 Composition API 和 `<script setup>` 语法结合
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
 ## 第 2 步：将选项 API 转换为组合 API
@@ -48,16 +50,16 @@ export default defineConfig(defineAppConfig({
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3：**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
@@ -88,23 +90,23 @@ const increment = () => {
 
 生命周期挂钩已重命名并且必须导入。
 
-| Vue 2 | Vue 3 |
-|:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | `beforeCreate` / `created` |直接使用`setup()` / `<script setup>` |
-| `beforeMount` | `onBeforeMount` |
-| `mounted` | `onMounted` |
-| `beforeUpdate` | `onBeforeUpdate` |
-| `updated` | `onUpdated` |
-| `beforeDestroy` | `onBeforeUnmount` |
-| `destroyed` | `onUnmounted` |
+| Vue 2                      | Vue 3                      |
+| :------------------------- | :------------------------- |
+| `beforeCreate` / `created` | `beforeCreate` / `created` | 直接使用`setup()` / `<script setup>` |
+| `beforeMount`              | `onBeforeMount`            |
+| `mounted`                  | `onMounted`                |
+| `beforeUpdate`             | `onBeforeUpdate`           |
+| `updated`                  | `onUpdated`                |
+| `beforeDestroy`            | `onBeforeUnmount`          |
+| `destroyed`                | `onUnmounted`              |
 
 例子：
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
@@ -118,7 +120,7 @@ Mission Platform 中的所有新组件和迁移组件均应使用 `<script setup
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
@@ -141,7 +143,7 @@ const increment = () => count.value++;
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 

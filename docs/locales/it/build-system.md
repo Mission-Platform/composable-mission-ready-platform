@@ -111,14 +111,14 @@ mappe, incluse `mp:*` condizioni e percorsi secondari CMS, continuano a risolver
 
 ### Attività del pacchetto
 
-| Compito | Descrizione |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       | Aggrega output neutrali, framework, dichiarazioni, e-mail e CMS configurati tramite il runner Forge condiviso. |
-| `build:forge` | Alias ​​di compatibilità dell'output Forge neutro mirato.                                                      |
-| `build:react`, `build:vue`, `build:svelte` | Alias ​​di compatibilità del framework mirato.                                      |
-| `build:solid`, `build:web-components` | Alias ​​di compatibilità del framework mirato.                                         |
-| `build:check` | Convalida i tipi per un'area di lavoro senza pubblicare l'output.                                               |
-| `build:watch` | Avvia una compilazione incrementale in modalità orologio per un'area di lavoro.                                               |
+| Compito                                    | Descrizione                                                                                                    |
+| :----------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
+| `build`                                    | Aggrega output neutrali, framework, dichiarazioni, e-mail e CMS configurati tramite il runner Forge condiviso. |
+| `build:forge`                              | Alias ​​di compatibilità dell'output Forge neutro mirato.                                                      |
+| `build:react`, `build:vue`, `build:svelte` | Alias ​​di compatibilità del framework mirato.                                                                 |
+| `build:solid`, `build:web-components`      | Alias ​​di compatibilità del framework mirato.                                                                 |
+| `build:check`                              | Convalida i tipi per un'area di lavoro senza pubblicare l'output.                                              |
+| `build:watch`                              | Avvia una compilazione incrementale in modalità orologio per un'area di lavoro.                                |
 
 Turbo esegue l'hashing dei selettori di destinazione (`FORGE_BUILD_TARGET` e i selettori Forge/CMS legacy) insieme a shared
 fonti del corridore e della stadiazione. Di conseguenza, le build aggregate e mirate non possono riutilizzare reciprocamente i risultati memorizzati nella cache. Finale
@@ -146,12 +146,12 @@ ripristinato dalla cache.
 
 Le configurazioni di build sono centralizzate in `packages/tooling/configs/` directory per mantenere la coerenza nel monorepo.
 
-| Pacchetto | Scopo |
-| :------------------------------------ | :----------------------------------------------------------- |
+| Pacchetto                             | Scopo                                                          |
+| :------------------------------------ | :------------------------------------------------------------- |
 | `@mission-platform/vite-config`       | Condiviso Vite logica per app e Vue-build specifiche.          |
-| `@mission-platform/tsdown-config`     | Logica tsdown condivisa per i pacchetti di librerie.                    |
+| `@mission-platform/tsdown-config`     | Logica tsdown condivisa per i pacchetti di librerie.           |
 | `@mission-platform/typescript-config` | Base `tsconfig.json` preimpostazioni per app, librerie e test. |
-| `@mission-platform/postcss-config`    | Elaborazione CSS standardizzata (Autoprefixer, ecc.).            |
+| `@mission-platform/postcss-config`    | Elaborazione CSS standardizzata (Autoprefixer, ecc.).          |
 
 ## Sviluppo locale vs. produzione
 

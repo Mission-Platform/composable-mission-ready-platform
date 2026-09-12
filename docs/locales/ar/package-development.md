@@ -29,7 +29,7 @@ scaffold_package(name="date-utils", description="Shared date manipulation utilit
 - `package.json` مع البرامج النصية الجاهزة لمساحة العمل والتكوينات المشتركة.
 - `tsconfig.json` توسيع إعدادات النظام الأساسي الافتراضية.
 - `vite.config.ts` للبنيات المحسنة.
--ملف برميل `src/index.ts`.
+  -ملف برميل `src/index.ts`.
 - `llms.txt` للتوثيق بمساعدة الذكاء الاصطناعي.
 
 ### 2. الإعداد اليدوي (اختياري)
@@ -115,7 +115,7 @@ packages/<name>/
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
@@ -217,12 +217,13 @@ export default {
 تستخدم منصة المهمة [مجموعات التغييرات](https://github.com/changesets/changesets) للإصدار والنشر.
 
 1. **إضافة مجموعة التغييرات**: بعد إجراء التغييرات، قم بتشغيل:
+
 ```bash
    pnpm changeset
-   ```
-   حدد الحزمة ونوع التغيير (تصحيح، ثانوي، رئيسي).
-2. ** تنفيذ مجموعة التغييرات **: تنفيذ ملف `.changeset/*.md` الذي تم إنشاؤه.
-3. **الإصدار والنشر**: يتولى CI/CD عملية النشر الفعلية، ولكن يمكنك معاينة الإصدارات محليًا باستخدام:
+```
+
+حدد الحزمة ونوع التغيير (تصحيح، ثانوي، رئيسي). 2. ** تنفيذ مجموعة التغييرات **: تنفيذ ملف `.changeset/*.md` الذي تم إنشاؤه. 3. **الإصدار والنشر**: يتولى CI/CD عملية النشر الفعلية، ولكن يمكنك معاينة الإصدارات محليًا باستخدام:
+
 ```bash
    pnpm changeset version
-   ```
+```

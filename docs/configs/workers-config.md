@@ -13,12 +13,12 @@ environments.
 
 ## Application deployment map
 
-| Application | Handler | Configuration | Assets |
-| :---------- | :------ | :------------ | :----- |
-| Website | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, bound as `ASSETS` |
-| My Care Notes | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, bound as `ASSETS` |
-| Service Monitor | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, bound as `ASSETS` |
-| Docs | Static assets | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| Application     | Handler                                         | Configuration                         | Assets                                            |
+| :-------------- | :---------------------------------------------- | :------------------------------------ | :------------------------------------------------ |
+| Website         | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, bound as `ASSETS`           |
+| My Care Notes   | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, bound as `ASSETS`     |
+| Service Monitor | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, bound as `ASSETS` |
+| Docs            | Static assets                                   | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                 |
 
 Website and My Care Notes consume the shared Forge SPA worker. Service Monitor
 owns its Worker entrypoint and Durable Object binding. The docs site is a

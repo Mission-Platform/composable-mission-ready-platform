@@ -61,7 +61,7 @@ Vite or tsdown adapter, which also provides the target's declarations, externals
 A second, orthogonal axis projects the same neutral components onto **content platforms**.
 `@mission-platform/forge-cms-plugin-api` owns a platform-neutral content model, the `CmsOutputPlugin` contract, and a
 generic driver; the adapter packages `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
-and `forge-cms-webflow` each own one platform. A CMS target *composes* a framework plugin rather than replacing one, so
+and `forge-cms-webflow` each own one platform. A CMS target _composes_ a framework plugin rather than replacing one, so
 any platform pairs with any framework and the output lands in `dist/cms/<cms>/<framework>/**`.
 
 For the complete pipeline, component and hook consumers, CMS projection, and extension guidance, see

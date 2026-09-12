@@ -69,10 +69,11 @@ rm -rf .turbo
 2. Zorg ervoor dat de versie overeenkomt (`workspace:*` wordt aanbevolen).
 3. Voer `pnpm install` uit om symlinks te vernieuwen.
 4. Als het probleem aanhoudt, probeer dan een grondige reiniging:
+
 ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-   ```
+```
 
 ### Type fouten in CI maar niet lokaal
 
@@ -114,7 +115,7 @@ optionele ketening (`?.`) of geef standaardwaarden op.
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
 ### "Onverwerkte belofte afwijzing"

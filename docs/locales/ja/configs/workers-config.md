@@ -18,12 +18,12 @@
 
 ## アプリケーション展開マップ
 
-|アプリケーション |ハンドラー |構成 |資産 |
-| :---------- | :------ | :------------ | :----- |
-|ウェブサイト | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`、次のようにバインドされます `ASSETS` |
-|私のケアノート | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`、次のようにバインドされます `ASSETS` |
-|サービスモニター | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`、次のようにバインドされます `ASSETS` |
-|ドキュメント |静的資産 | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| アプリケーション | ハンドラー                                      | 構成                                  | 資産                                                                |
+| :--------------- | :---------------------------------------------- | :------------------------------------ | :------------------------------------------------------------------ |
+| ウェブサイト     | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`、次のようにバインドされます `ASSETS`           |
+| 私のケアノート   | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`、次のようにバインドされます `ASSETS`     |
+| サービスモニター | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`、次のようにバインドされます `ASSETS` |
+| ドキュメント     | 静的資産                                        | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                                   |
 
 Web サイトと My Care Notes は、共有された Forge SPA ワーカーを消費します。サービスモニター
 は、その Worker エントリポイントと Durable Object バインディングを所有します。ドキュメント サイトは、

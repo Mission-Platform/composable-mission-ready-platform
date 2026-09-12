@@ -111,14 +111,14 @@ CMS 工件模式命令在公开的地方仍然可用，包括共享 Storyblok �
 
 ### 打包任务
 
-|任务|描述 |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       |通过共享的 Forge 运行程序聚合中立、框架、声明、电子邮件和配置的 CMS 输出。 |
-| `build:forge` |目标中立的 Forge 输出兼容性别名。                                                      |
-| `build:react`, `build:vue`, `build:svelte` |目标框架兼容性别名。                                      |
-| `build:solid`, `build:web-components` |目标框架兼容性别名。                                         |
-| `build:check` |验证工作区的类型而不发布输出。                                               |
-| `build:watch` |在工作区的监视模式下启动增量构建。                                               |
+| 任务                                       | 描述                                                                       |
+| :----------------------------------------- | :------------------------------------------------------------------------- |
+| `build`                                    | 通过共享的 Forge 运行程序聚合中立、框架、声明、电子邮件和配置的 CMS 输出。 |
+| `build:forge`                              | 目标中立的 Forge 输出兼容性别名。                                          |
+| `build:react`, `build:vue`, `build:svelte` | 目标框架兼容性别名。                                                       |
+| `build:solid`, `build:web-components`      | 目标框架兼容性别名。                                                       |
+| `build:check`                              | 验证工作区的类型而不发布输出。                                             |
+| `build:watch`                              | 在工作区的监视模式下启动增量构建。                                         |
 
 Turbo 散列目标选择器（`FORGE_BUILD_TARGET` 以及遗留的 Forge/CMS 选择器）以及共享的
 运行器和暂存源。因此，聚合构建和目标构建无法重用彼此的缓存结果。最终的
@@ -146,12 +146,12 @@ pnpm build:force
 
 构建配置集中在 `packages/tooling/configs/` 目录以保持整个 monorepo 的一致性。
 
-|套餐 |目的|
-| :------------------------------------ | :----------------------------------------------------------- |
-| `@mission-platform/vite-config`       |共享 Vite 应用程序的逻辑和 Vue-特定的构建。          |
-| `@mission-platform/tsdown-config`     |库包的共享 tsdown 逻辑。                    |
-| `@mission-platform/typescript-config` |根据 `tsconfig.json` 应用程序、库和测试的预设。 |
-| `@mission-platform/postcss-config`    |标准化 CSS 处理（Autoprefixer 等）。            |
+| 套餐                                  | 目的                                            |
+| :------------------------------------ | :---------------------------------------------- |
+| `@mission-platform/vite-config`       | 共享 Vite 应用程序的逻辑和 Vue-特定的构建。     |
+| `@mission-platform/tsdown-config`     | 库包的共享 tsdown 逻辑。                        |
+| `@mission-platform/typescript-config` | 根据 `tsconfig.json` 应用程序、库和测试的预设。 |
+| `@mission-platform/postcss-config`    | 标准化 CSS 处理（Autoprefixer 等）。            |
 
 ## 本地开发与生产
 

@@ -332,12 +332,12 @@ export default defineVitestConfig({
 
 ### Riepilogo degli script
 
-| Scrittura | Comando | Scopo |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
-| `test` | `pnpm exec turbo run test` | Esegui tutte le attività di test dell'area di lavoro.          |
-| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Esegui test dei componenti in modalità orologio.    |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Genera un report sulla copertura dei componenti. |
-| Ruggine/WASM | `cargo test --workspace` | Esegui test dei crate nativi di Rust.           |
+| Scrittura       | Comando                                                    | Scopo                                                 |
+| :-------------- | :--------------------------------------------------------- | :---------------------------------------------------- |
+| `test`          | `pnpm exec turbo run test`                                 | Esegui tutte le attività di test dell'area di lavoro. |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Esegui test dei componenti in modalità orologio.      |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Genera un report sulla copertura dei componenti.      |
+| Ruggine/WASM    | `cargo test --workspace`                                   | Esegui test dei crate nativi di Rust.                 |
 
 I pacchetti wrapper Wasm vengono testati tramite le attività del pacchetto proprietario. Ad esempio, esegui il pacchetto scanner e il suo file
 wrapper insieme quando si modifica il comportamento dello scanner:

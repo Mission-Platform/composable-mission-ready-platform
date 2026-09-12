@@ -69,10 +69,11 @@ rm -rf .turbo
 2. تأكد من تطابق الإصدار (يوصى باستخدام `workspace:*`).
 3. قم بتشغيل `pnpm install` لتحديث الروابط الرمزية.
 4. إذا استمرت المشكلات، فجرّب التنظيف العميق:
+
 ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-   ```
+```
 
 ### اكتب الأخطاء في CI ولكن ليس المحلية
 
@@ -114,7 +115,7 @@ pnpm exec turbo run build:check
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
 ### "رفض الوعد غير المعالج"

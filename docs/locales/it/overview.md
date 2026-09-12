@@ -35,14 +35,14 @@ velocità e qualità del codice.
 
 ## Caratteristiche principali
 
-| Caratteristica | Descrizione |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| **Forgia JSX Runtime** | Un dialetto JSX indipendente dal framework: crea una volta e crea per Vue 3, React, Svelte, Solid e componenti Web con zero sovraccarico di runtime. |
-| **Libreria componenti** | Un set completo di layout, tipografia e componenti interattivi creati una volta per più framework.                           |
-| **Gettoni di design** | Un sistema di token conforme a DTCG che genera artefatti SCSS e TypeScript per temi coerenti.                                     |
-| **Routing agnostico** | Un sistema di routing indipendente dai tipi che funziona indipendentemente dal framework dell'interfaccia utente.                                                               |
-| **I18n universale** | Un wrapper di internazionalizzazione indipendente dal framework basato su i18next con adattatori Vue e React dedicati.                              |
-| **Utilità Wasm** | Utilità ad alte prestazioni per la scansione di codici a barre, il controllo ortografico e altro ancora, basate su WebAssembly.                                     |
+| Caratteristica          | Descrizione                                                                                                                                          |
+| :---------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forgia JSX Runtime**  | Un dialetto JSX indipendente dal framework: crea una volta e crea per Vue 3, React, Svelte, Solid e componenti Web con zero sovraccarico di runtime. |
+| **Libreria componenti** | Un set completo di layout, tipografia e componenti interattivi creati una volta per più framework.                                                   |
+| **Gettoni di design**   | Un sistema di token conforme a DTCG che genera artefatti SCSS e TypeScript per temi coerenti.                                                        |
+| **Routing agnostico**   | Un sistema di routing indipendente dai tipi che funziona indipendentemente dal framework dell'interfaccia utente.                                    |
+| **I18n universale**     | Un wrapper di internazionalizzazione indipendente dal framework basato su i18next con adattatori Vue e React dedicati.                               |
+| **Utilità Wasm**        | Utilità ad alte prestazioni per la scansione di codici a barre, il controllo ortografico e altro ancora, basate su WebAssembly.                      |
 
 ## Pila tecnologica
 

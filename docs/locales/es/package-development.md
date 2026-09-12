@@ -115,7 +115,7 @@ Usa la configuración compartida desde `stylelint.config.mjs` en lugar de duplic
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
@@ -217,12 +217,13 @@ extractor descrito en la aplicación de documentos README.
 La Plataforma de la Misión utiliza [Conjuntos de cambios](https://github.com/changesets/changesets) para control de versiones y publicación.
 
 1. **Agregar un conjunto de cambios**: Después de realizar cambios, ejecute:
+
 ```bash
    pnpm changeset
-   ```
-   Seleccione el paquete y el tipo de cambio (parche, menor, mayor).
-2. **Confirmar el conjunto de cambios**: confirma el archivo `.changeset/*.md` generado.
-3. **Versión y publicación**: CI/CD maneja la publicación real, pero puedes obtener una vista previa de las versiones localmente con:
+```
+
+Seleccione el paquete y el tipo de cambio (parche, menor, mayor). 2. **Confirmar el conjunto de cambios**: confirma el archivo `.changeset/*.md` generado. 3. **Versión y publicación**: CI/CD maneja la publicación real, pero puedes obtener una vista previa de las versiones localmente con:
+
 ```bash
    pnpm changeset version
-   ```
+```

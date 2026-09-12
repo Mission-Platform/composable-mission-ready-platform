@@ -11,13 +11,13 @@ gekopieerd naar een app.
 
 ## Kies een applicatie
 
-| Toepassing | Lokale ontwikkeling | Bouw | Implementatie |
-|:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | Bekijk een voorbeeld of implementeer via de hostingwerker |
-| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
-| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
+| Toepassing                          | Lokale ontwikkeling                                   | Bouw                                                    | Implementatie                                                    |
+| :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------- |
+| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | Bekijk een voorbeeld of implementeer via de hostingwerker        |
+| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`         |
+| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`   |
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` | Gebruik de geconfigureerde Storybook/Chromatic-workflow |
+| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | Gebruik de geconfigureerde Storybook/Chromatic-workflow          |
 
 Het applicatiepakket is eigenaar van zijn Vite of Wrangler configuratie. Niet rennen `wrangler deploy` van een herbruikbare werknemer
 pakket, tenzij dat pakket een eigen pakket heeft `wrangler.jsonc`.
@@ -30,13 +30,13 @@ pakket, tenzij dat pakket een eigen pakket heeft `wrangler.jsonc`.
 
 ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
-   ```
+```
 
 4. Voer tests, pluisjes, stijlcontroles en opmaak uit voor de getroffen werkruimte:
 
 ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
-   ```
+```
 
 Voor een gedeelde pakketwijziging vervangt u `<app>` met de pakketnaam en het gebruik `...` wanneer u afhankelijke werkruimten nodig heeft
 opgenomen in de buildgrafiek.

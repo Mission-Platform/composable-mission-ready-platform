@@ -15,11 +15,11 @@ Mission Platform 组件使用 `@mission-platform/forge-jsx` 编写一次，并�
 
 ### 支持的框架条件
 
-|框架|出口情况 |
-| :----------------- | :----------------- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
+| 框架         | 出口情况           |
+| :----------- | :----------------- |
+| **Vue 3**    | `mp:vue`           |
+| **React**    | `mp:react`         |
+| **Solid**    | `mp:solid`         |
 | **网络组件** | `mp:web-component` |
 
 ## 项目配置

@@ -332,12 +332,12 @@ export default defineVitestConfig({
 
 ### 스크립트 요약
 
-| 스크립트 | 명령 | 목적 |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
-| `test` | `pnpm exec turbo run test` | 모든 작업 영역 테스트 작업을 실행합니다.          |
-| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | 감시 모드에서 구성 요소 테스트를 실행합니다.    |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | 구성 요소 적용 범위 보고서를 생성합니다. |
-| 러스트/WASM | `cargo test --workspace` | 기본 Rust 상자 테스트를 실행하세요.           |
+| 스크립트        | 명령                                                       | 목적                                         |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------------- |
+| `test`          | `pnpm exec turbo run test`                                 | 모든 작업 영역 테스트 작업을 실행합니다.     |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | 감시 모드에서 구성 요소 테스트를 실행합니다. |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | 구성 요소 적용 범위 보고서를 생성합니다.     |
+| 러스트/WASM     | `cargo test --workspace`                                   | 기본 Rust 상자 테스트를 실행하세요.          |
 
 Wasm 래퍼 패키지는 자체 패키지 작업을 통해 테스트됩니다. 예를 들어, scanner 패키지와 해당 패키지를 실행합니다.
 스캐너 동작을 변경할 때 함께 래퍼:

@@ -18,12 +18,12 @@
 
 ## 애플리케이션 배포 맵
 
-| 신청 | 핸들러 | 구성 | 자산 |
-| :---------- | :------ | :------------ | :----- |
-| 웹사이트 | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, 다음과 같이 바인딩됨 `ASSETS` |
-| 나의 케어 노트 | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, 다음과 같이 바인딩됨 `ASSETS` |
-| 서비스 모니터 | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, 다음과 같이 바인딩됨 `ASSETS` |
-| 문서 | 정적 자산 | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| 신청           | 핸들러                                          | 구성                                  | 자산                                                          |
+| :------------- | :---------------------------------------------- | :------------------------------------ | :------------------------------------------------------------ |
+| 웹사이트       | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, 다음과 같이 바인딩됨 `ASSETS`           |
+| 나의 케어 노트 | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, 다음과 같이 바인딩됨 `ASSETS`     |
+| 서비스 모니터  | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, 다음과 같이 바인딩됨 `ASSETS` |
+| 문서           | 정적 자산                                       | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                             |
 
 웹사이트와 My Care Notes는 공유 Forge SPA 작업자를 사용합니다. 서비스 모니터
 Worker 진입점과 지속성 개체 바인딩을 소유합니다. 문서 사이트는

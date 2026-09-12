@@ -61,7 +61,7 @@ les déclarations de la cible, les éléments externes et les conventions de sor
 Un deuxième axe orthogonal projette les mêmes composants neutres sur des **plates-formes de contenu**.
 `@mission-platform/forge-cms-plugin-api` possède un modèle de contenu neutre en termes de plate-forme, le `CmsOutputPlugin` contrat, et un
 pilote générique ; les packages d'adaptateurs `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
-et `forge-cms-webflow` chacun possède une plateforme. Une cible CMS *compose* un plugin de framework plutôt que d'en remplacer un, donc
+et `forge-cms-webflow` chacun possède une plateforme. Une cible CMS _compose_ un plugin de framework plutôt que d'en remplacer un, donc
 n'importe quelle plate-forme s'associe à n'importe quel framework et le résultat arrive dans `dist/cms/<cms>/<framework>/**`.
 
 Pour obtenir le pipeline complet, les consommateurs de composants et de hooks, la projection CMS et les conseils d'extension, voir
@@ -88,7 +88,7 @@ Les services d'application de base tels que le routage et l'internationalisation
   `-web-components` abaissez ces marqueurs vers le routeur natif sélectionné par l’application consommatrice. Les candidatures sont conservées
   propriété des définitions de routes natives, des fournisseurs, des gardes, des chargeurs et des instances de routeur ; la cible fournit uniquement
   capacités de consommation.
--**`@mission-platform/i18n`** : Un emballage autour `i18next` qui fournit un universel `createForgeI18N` usine.
+  \-**`@mission-platform/i18n`** : Un emballage autour `i18next` qui fournit un universel `createForgeI18N` usine.
   Les adaptateurs spécifiques au framework fournissent `useI18n` crochets et composants pour Vue et React.
 
 ## Stratégie de construction et de déploiement

@@ -57,9 +57,9 @@ not provide a framework registry. Vite and tsdown adapters share an in-process
 | Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable.                     |
 | Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion.                                 |
 | Artifact manifest  | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion.                                                     |
-| Extension point    | Implement and pass a `FrameworkOutputPlugin` with an open `FrameworkId` (`JsxFramework \| (string & {})`); do not add target branches or registries to the driver. |
-| Target pipeline    | Enforces strict `lower → optimize → generate`; target generators accept only lowered intentions validated by `assertTargetIntentionsLowered`.                        |
-| Compiler AST path  | Oxc is the sole compiler AST path; legacy TypeScript AST compatibility layers and shims have been removed.                                                         |
+| Extension point    | Implement and pass a `FrameworkOutputPlugin` with an open `FrameworkId` (`JsxFramework \| (string & {})`); do not add target branches or registries to the driver.  |
+| Target pipeline    | Enforces strict `lower → optimize → generate`; target generators accept only lowered intentions validated by `assertTargetIntentionsLowered`.                       |
+| Compiler AST path  | Oxc is the sole compiler AST path; legacy TypeScript AST compatibility layers and shims have been removed.                                                          |
 
 Configure aliases through the project `tsconfig.json` (`baseUrl` and
 `paths`); Vite and tsdown graph preparation use the same alias facts. Router
@@ -398,16 +398,16 @@ target may be bound to any framework plugin. See the [Forge Compiler Pipeline](.
 
 #### @mission-platform/forge-plugin-api
 
-| Export                          | Type     | Description                                                                                               |
-| :------------------------------ | :------- | :-------------------------------------------------------------------------------------------------------- |
-| `FrameworkId`                   | Type     | Open framework identifier (`JsxFramework \| (string & {})`) supporting arbitrary custom plugin targets.   |
-| `TargetFrameworkId`            | Type     | Alias for `FrameworkId`.                                                                                  |
-| `JsxFramework`                  | Type     | Closed union of built-in frameworks (`"react" \| "vue" \| "svelte" \| "solid" \| "web-components"`).     |
-| `assertTargetIntentionsLowered` | Function | Asserts that target intentions contain a non-null lowered plan matching the target framework ID.         |
-| `TargetIntentions<TLowered>`    | Type     | Container for target intentions with a **required** `lowered: TLowered` target plan.                      |
-| `TargetLoweredModule`           | Type     | Base interface for lowered plans, discriminated on `framework: FrameworkId`.                             |
-| `FrameworkOutputPlugin`         | Type     | Composable target output contract with `id: FrameworkId`, `lower`, `optimize`, `generate`, and `build`.  |
-| `defineForgeOutputPlugin`       | Function | Validates and returns a `FrameworkOutputPlugin` instance.                                                 |
+| Export                          | Type     | Description                                                                                             |
+| :------------------------------ | :------- | :------------------------------------------------------------------------------------------------------ |
+| `FrameworkId`                   | Type     | Open framework identifier (`JsxFramework \| (string & {})`) supporting arbitrary custom plugin targets. |
+| `TargetFrameworkId`             | Type     | Alias for `FrameworkId`.                                                                                |
+| `JsxFramework`                  | Type     | Closed union of built-in frameworks (`"react" \| "vue" \| "svelte" \| "solid" \| "web-components"`).    |
+| `assertTargetIntentionsLowered` | Function | Asserts that target intentions contain a non-null lowered plan matching the target framework ID.        |
+| `TargetIntentions<TLowered>`    | Type     | Container for target intentions with a **required** `lowered: TLowered` target plan.                    |
+| `TargetLoweredModule`           | Type     | Base interface for lowered plans, discriminated on `framework: FrameworkId`.                            |
+| `FrameworkOutputPlugin`         | Type     | Composable target output contract with `id: FrameworkId`, `lower`, `optimize`, `generate`, and `build`. |
+| `defineForgeOutputPlugin`       | Function | Validates and returns a `FrameworkOutputPlugin` instance.                                               |
 
 #### @mission-platform/forge-cms-plugin-api
 

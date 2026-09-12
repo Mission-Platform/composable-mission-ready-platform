@@ -61,7 +61,7 @@ declaraciones del objetivo, elementos externos y convenciones de salida.
 Un segundo eje ortogonal proyecta los mismos componentes neutrales en **plataformas de contenido**.
 `@mission-platform/forge-cms-plugin-api` posee un modelo de contenido neutral en cuanto a plataforma, el `CmsOutputPlugin` contrato, y un
 controlador genérico; los paquetes de adaptadores `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
-y `forge-cms-webflow` cada uno posee una plataforma. Un destino CMS *compone* un complemento de marco en lugar de reemplazarlo, por lo que
+y `forge-cms-webflow` cada uno posee una plataforma. Un destino CMS _compone_ un complemento de marco en lugar de reemplazarlo, por lo que
 cualquier plataforma se empareja con cualquier marco y la salida aterriza en `dist/cms/<cms>/<framework>/**`.
 
 Para conocer la canalización completa, los consumidores de componentes y ganchos, la proyección de CMS y la guía de extensión, consulte

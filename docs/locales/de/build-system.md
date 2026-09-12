@@ -102,7 +102,7 @@ ignoriert von TurboDie Eingaben werden niemals veröffentlicht. Ein erfolgreiche
   löscht einen Geschwister-CMS-Wrapper, den der aktuelle Build nicht neu erstellt hat.
 - Gemeinsame CMS-Assets wie Storyblok-Schemata und `components.json` haben ein gemeinsames Ziel und werden nicht von einem gelöscht
   spätere Rahmenförderung.
-– Ein Compilerfehler, eine leere Phase oder ein Hochstufungsfehler lässt den zuvor veröffentlichten Baum unberührt und entfernt den
+  – Ein Compilerfehler, eine leere Phase oder ein Hochstufungsfehler lässt den zuvor veröffentlichten Baum unberührt und entfernt den
   temporäres Bühnen- und Promotionverzeichnis.
 
 Die veröffentlichte Ausgabe bleibt unter der bestehenden `dist` Vertrag: neutrale Module und Deklarationen, Framework-Verzeichnisse
@@ -111,14 +111,14 @@ Karten, einschließlich `mp:*` Bedingungen und CMS-Unterpfade werden weiterhin a
 
 ### Paketaufgaben
 
-| Aufgabe | Beschreibung |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       | Aggregieren Sie Neutral-, Framework-, Deklarations-, E-Mail- und konfigurierte CMS-Ausgaben über den gemeinsamen Forge-Runner. |
-| `build:forge` | Gezielter neutraler Forge-Ausgabekompatibilitätsalias.                                                      |
-| `build:react`, `build:vue`, `build:svelte` | Gezielte Framework-Kompatibilitätsaliase.                                      |
-| `build:solid`, `build:web-components` | Gezielte Framework-Kompatibilitätsaliase.                                         |
-| `build:check` | Validiert Typen für einen Arbeitsbereich, ohne die Ausgabe zu veröffentlichen.                                               |
-| `build:watch` | Startet einen inkrementellen Build im Überwachungsmodus für einen Arbeitsbereich.                                               |
+| Aufgabe                                    | Beschreibung                                                                                                                   |
+| :----------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| `build`                                    | Aggregieren Sie Neutral-, Framework-, Deklarations-, E-Mail- und konfigurierte CMS-Ausgaben über den gemeinsamen Forge-Runner. |
+| `build:forge`                              | Gezielter neutraler Forge-Ausgabekompatibilitätsalias.                                                                         |
+| `build:react`, `build:vue`, `build:svelte` | Gezielte Framework-Kompatibilitätsaliase.                                                                                      |
+| `build:solid`, `build:web-components`      | Gezielte Framework-Kompatibilitätsaliase.                                                                                      |
+| `build:check`                              | Validiert Typen für einen Arbeitsbereich, ohne die Ausgabe zu veröffentlichen.                                                 |
+| `build:watch`                              | Startet einen inkrementellen Build im Überwachungsmodus für einen Arbeitsbereich.                                              |
 
 Turbo hasht die Zielselektoren (`FORGE_BUILD_TARGET` und die alten Forge/CMS-Selektoren) zusammen mit den freigegebenen
 Runner- und Staging-Quellen. Folglich können aggregierte und gezielte Builds das zwischengespeicherte Ergebnis des anderen nicht wiederverwenden. Finale
@@ -146,12 +146,12 @@ aus dem Cache wiederhergestellt.
 
 Build-Konfigurationen sind im zentralisiert `packages/tooling/configs/` Verzeichnis, um die Konsistenz im gesamten Monorepo aufrechtzuerhalten.
 
-| Paket | Zweck |
-| :------------------------------------ | :----------------------------------------------------------- |
-| `@mission-platform/vite-config`       | Geteilt Vite Logik für Apps und Vue-spezifische Builds.          |
-| `@mission-platform/tsdown-config`     | Gemeinsame Tsdown-Logik für Bibliothekspakete.                    |
+| Paket                                 | Zweck                                                                   |
+| :------------------------------------ | :---------------------------------------------------------------------- |
+| `@mission-platform/vite-config`       | Geteilt Vite Logik für Apps und Vue-spezifische Builds.                 |
+| `@mission-platform/tsdown-config`     | Gemeinsame Tsdown-Logik für Bibliothekspakete.                          |
 | `@mission-platform/typescript-config` | Base `tsconfig.json` Voreinstellungen für Apps, Bibliotheken und Tests. |
-| `@mission-platform/postcss-config`    | Standardisierte CSS-Verarbeitung (Autoprefixer usw.).            |
+| `@mission-platform/postcss-config`    | Standardisierte CSS-Verarbeitung (Autoprefixer usw.).                   |
 
 ## Lokale Entwicklung vs. Produktion
 

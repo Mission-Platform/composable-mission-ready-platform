@@ -11,13 +11,13 @@ copié dans une application.
 
 ## Choisissez une application
 
-| Demande | Développement local | Construire | Déploiement |
-|:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | Prévisualiser ou déployer via son hébergeur |
-| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
-| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
+| Demande                             | Développement local                                   | Construire                                              | Déploiement                                                      |
+| :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------- |
+| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | Prévisualiser ou déployer via son hébergeur                      |
+| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`         |
+| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`   |
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` | Utiliser le flux de travail Storybook/Chromatic configuré |
+| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | Utiliser le flux de travail Storybook/Chromatic configuré        |
 
 Le dossier de candidature possède son Vite ou Wrangler configuration. Ne cours pas `wrangler deploy` d'un travailleur réutilisable
 package sauf si ce package a son propre `wrangler.jsonc`.
@@ -30,13 +30,13 @@ package sauf si ce package a son propre `wrangler.jsonc`.
 
 ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
-   ```
+```
 
 4. Exécutez des tests, du lint, des vérifications de style et du formatage pour l'espace de travail concerné :
 
 ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
-   ```
+```
 
 Pour un changement de package partagé, remplacez `<app>` avec le nom du package et son utilisation `...` lorsque vous avez besoin d'espaces de travail dépendants
 inclus dans le graphique de construction.

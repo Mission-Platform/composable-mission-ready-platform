@@ -13,13 +13,13 @@ consistentie binnen meerdere raamwerken.
 
 Componenten zijn onderverdeeld in vijf niveaus op basis van hun reikwijdte en verantwoordelijkheid.
 
-| Niveau | Map | Beschrijving |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Atomen** | `src/components/atoms/`     | Kleinste UI-primitieven (bijv. `ForgeButton`, `ForgeInput`, `ForgeBadge`). Het zijn doorgaans functionele eenheden die niet verder kunnen worden afgebroken zonder hun doel te verliezen. |
-| **Moleculen** | `src/components/molecules/` | Eenvoudige composities van atomen (bijv. `ForgeSearchInput`, `ForgeFieldSet`). Ze functioneren samen als een eenheid.                                                                    |
-| **Organismen** | `src/components/organisms/` | Complexe UI-secties bestaande uit atomen, moleculen en andere organismen (bijv. `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
-| **Sjablonen** | `src/components/templates/` | Lay-outs op paginaniveau die de inhoudsstructuur definiëren (bijv. `ForgeHero`, `ForgeAppLayout`). Ze gebruiken vaak slots om te definiëren waar inhoud moet worden geplaatst.                     |
-| **Pagina's** | `src/components/pages/`     | Specifieke exemplaren van sjablonen gevuld met concrete inhoud en gegevens (bijv. `AccountSettingsPage`).                                                                        |
+| Niveau         | Map                         | Beschrijving                                                                                                                                                                              |
+| :------------- | :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atomen**     | `src/components/atoms/`     | Kleinste UI-primitieven (bijv. `ForgeButton`, `ForgeInput`, `ForgeBadge`). Het zijn doorgaans functionele eenheden die niet verder kunnen worden afgebroken zonder hun doel te verliezen. |
+| **Moleculen**  | `src/components/molecules/` | Eenvoudige composities van atomen (bijv. `ForgeSearchInput`, `ForgeFieldSet`). Ze functioneren samen als een eenheid.                                                                     |
+| **Organismen** | `src/components/organisms/` | Complexe UI-secties bestaande uit atomen, moleculen en andere organismen (bijv. `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                               |
+| **Sjablonen**  | `src/components/templates/` | Lay-outs op paginaniveau die de inhoudsstructuur definiëren (bijv. `ForgeHero`, `ForgeAppLayout`). Ze gebruiken vaak slots om te definiëren waar inhoud moet worden geplaatst.            |
+| **Pagina's**   | `src/components/pages/`     | Specifieke exemplaren van sjablonen gevuld met concrete inhoud en gegevens (bijv. `AccountSettingsPage`).                                                                                 |
 
 ## Componentmapindeling
 
@@ -67,7 +67,7 @@ De `title` veld in het verhalenboek `meta` object moet dit patroon volgen:
 
 ```tsx
 const meta = {
-  title: 'Atoms/Display/ForgeButton',
+  title: "Atoms/Display/ForgeButton",
   component: Button,
   // ...
 };

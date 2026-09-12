@@ -26,12 +26,14 @@ Assicurati che `package.json` e `vite.config.ts` abbiano come target Vue 3.
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
 ## Passaggio 2: converti l'API delle opzioni nell'API di composizione
@@ -48,16 +50,16 @@ In Vue 2, lo stato è stato definito nella funzione `data()`. In Vue 3, utilizza
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3:**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
@@ -88,23 +90,23 @@ const increment = () => {
 
 Gli hook del ciclo di vita sono stati rinominati e devono essere importati.
 
-| Vue 2 | Vue 3 |
-|:---------------------------|:------------------------------------------|
+| Vue 2                      | Vue 3                                                |
+| :------------------------- | :--------------------------------------------------- |
 | `beforeCreate` / `created` | Utilizzare direttamente `setup()` / `<script setup>` |
-| `beforeMount` | `onBeforeMount` |
-| `mounted` | `onMounted` |
-| `beforeUpdate` | `onBeforeUpdate` |
-| `updated` | `onUpdated` |
-| `beforeDestroy` | `onBeforeUnmount` |
-| `destroyed` | `onUnmounted` |
+| `beforeMount`              | `onBeforeMount`                                      |
+| `mounted`                  | `onMounted`                                          |
+| `beforeUpdate`             | `onBeforeUpdate`                                     |
+| `updated`                  | `onUpdated`                                          |
+| `beforeDestroy`            | `onBeforeUnmount`                                    |
+| `destroyed`                | `onUnmounted`                                        |
 
 Esempio:
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
@@ -118,7 +120,7 @@ Tutti i componenti nuovi e migrati nella Mission Platform devono utilizzare la s
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
@@ -141,7 +143,7 @@ In Vue 3, il nome prop predefinito per `v-model` è `modelValue` e l'evento è `
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 

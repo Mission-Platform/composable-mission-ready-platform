@@ -11,13 +11,13 @@
 
 ## בחר אפליקציה
 
-| יישום | פיתוח מקומי | לבנות | פריסה |
-|:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | תצוגה מקדימה או פריסה דרך עובד האירוח שלו |
-| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
-| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
+| יישום                               | פיתוח מקומי                                           | לבנות                                                   | פריסה                                                            |
+| :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------- |
+| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | תצוגה מקדימה או פריסה דרך עובד האירוח שלו                        |
+| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`         |
+| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`   |
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` | השתמש בזרימת העבודה המוגדרת של Storybook/Chromatic |
+| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | השתמש בזרימת העבודה המוגדרת של Storybook/Chromatic               |
 
 חבילת האפליקציה היא הבעלים שלה Vite אוֹ Wrangler תְצוּרָה. אל תרוץ `wrangler deploy` מעובד רב פעמי
 חבילה אלא אם כן יש לחבילה משלה `wrangler.jsonc`.
@@ -30,13 +30,13 @@
 
 ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
-   ```
+```
 
 4. הפעל בדיקות, בדיקות מוך, סגנון ועיצוב עבור סביבת העבודה המושפעת:
 
 ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
-   ```
+```
 
 לשינוי חבילה משותפת, החלף `<app>` עם שם החבילה והשימוש `...` כאשר אתה צריך סביבות עבודה תלויות
 נכלל בגרף הבנייה.

@@ -332,12 +332,12 @@ export default defineVitestConfig({
 
 ### スクリプトの概要
 
-|スクリプト |コマンド |目的 |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
-| `test` | `pnpm exec turbo run test` |すべてのワークスペース テスト タスクを実行します。          |
-| `test:watch` | `pnpm --filter @mission-platform/components test:watch` |監視モードでコンポーネントのテストを実行します。    |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` |コンポーネント カバレッジ レポートを生成します。 |
-|錆/WASM | `cargo test --workspace` |ネイティブ Rust クレート テストを実行します。           |
+| スクリプト      | コマンド                                                   | 目的                                               |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------------------- |
+| `test`          | `pnpm exec turbo run test`                                 | すべてのワークスペース テスト タスクを実行します。 |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | 監視モードでコンポーネントのテストを実行します。   |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | コンポーネント カバレッジ レポートを生成します。   |
+| 錆/WASM         | `cargo test --workspace`                                   | ネイティブ Rust クレート テストを実行します。      |
 
 Wasm ラッパー パッケージは、所有するパッケージ タスクを通じてテストされます。たとえば、スキャナー パッケージとその
 スキャナーの動作を変更する場合は、ラッパーを一緒に使用します。

@@ -18,12 +18,12 @@
 
 ## מפת פריסת יישומים
 
-| יישום | מטפל | תצורה | נכסים |
-| :---------- | :------ | :------------ | :----- |
-| אתר | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, קשור כ `ASSETS` |
-| הערות הטיפול שלי | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, קשור כ `ASSETS` |
-| מוניטור שירות | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, קשור כ `ASSETS` |
-| מסמכים | נכסים סטטיים | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| יישום            | מטפל                                            | תצורה                                 | נכסים                                           |
+| :--------------- | :---------------------------------------------- | :------------------------------------ | :---------------------------------------------- |
+| אתר              | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, קשור כ `ASSETS`           |
+| הערות הטיפול שלי | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, קשור כ `ASSETS`     |
+| מוניטור שירות    | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, קשור כ `ASSETS` |
+| מסמכים           | נכסים סטטיים                                    | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                               |
 
 אתר האינטרנט ו-My Care Notes צורכים את עובד Forge SPA המשותף. מוניטור שירות
 הבעלים של נקודת ה-Werker ו-Durable Object מחייב. אתר המסמכים הוא א

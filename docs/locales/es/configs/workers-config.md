@@ -18,12 +18,12 @@ ambientes.
 
 ## Mapa de implementación de aplicaciones
 
-| Solicitud | Manejador | Configuración | Activos |
-| :---------- | :------ | :------------ | :----- |
-| Sitio web | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, obligado como `ASSETS` |
-| Mis notas de cuidado | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, obligado como `ASSETS` |
-| Monitor de servicio | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, obligado como `ASSETS` |
-| Documentos | Activos estáticos | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| Solicitud            | Manejador                                       | Configuración                         | Activos                                                |
+| :------------------- | :---------------------------------------------- | :------------------------------------ | :----------------------------------------------------- |
+| Sitio web            | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, obligado como `ASSETS`           |
+| Mis notas de cuidado | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, obligado como `ASSETS`     |
+| Monitor de servicio  | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, obligado como `ASSETS` |
+| Documentos           | Activos estáticos                               | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                      |
 
 El sitio web y Mis notas de atención consumen el trabajador compartido de Forge SPA. Monitor de servicio
 posee su punto de entrada de trabajador y su enlace de objeto duradero. El sitio de documentos es un

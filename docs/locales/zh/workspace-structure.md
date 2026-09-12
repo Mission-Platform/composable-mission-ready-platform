@@ -108,12 +108,12 @@ Cloudflare Workers 用于服务器端逻辑和优化的资产交付。
 
 存储库根目录中的关键文件控制 monorepo 的行为：
 
-|文件 |目的|
-|:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml` |定义工作区边界、成员全局和依赖项目录。 |
-| `turbo.json` |协调构建管道和任务缓存。                    |
-| `package.json` |根级脚本和 monorepo 范围的 devDependency。                |
-| `commitlint.config.mjs` |强制执行常规提交规范。                     |
+| 文件                    | 目的                                       |
+| :---------------------- | :----------------------------------------- |
+| `pnpm-workspace.yaml`   | 定义工作区边界、成员全局和依赖项目录。     |
+| `turbo.json`            | 协调构建管道和任务缓存。                   |
+| `package.json`          | 根级脚本和 monorepo 范围的 devDependency。 |
+| `commitlint.config.mjs` | 强制执行常规提交规范。                     |
 
 ## 依赖关系和工作空间管理
 

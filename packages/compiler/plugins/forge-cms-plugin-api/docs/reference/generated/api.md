@@ -184,6 +184,96 @@ Create a stub framework plugin with an overridable id.
 | ---- | ---- | ----------- |
 | id   |      |             |
 
+## `src/__fixtures__/workspace`
+
+### BADGE_COMPONENT
+
+**Kind:** constant
+
+```typescript
+export const BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No description provided.
+
+### CmsWorkspace
+
+**Kind:** interface
+
+```typescript
+export interface CmsWorkspace
+```
+
+No description provided.
+
+### COUNTER_COMPONENT
+
+**Kind:** constant
+
+```typescript
+export const COUNTER_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No description provided.
+
+### createCmsWorkspace
+
+**Kind:** function
+
+```typescript
+function createCmsWorkspace(
+  components: readonly WorkspaceComponentDefinition[],
+): CmsWorkspace;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name       | Type                                    | Description |
+| ---------- | --------------------------------------- | ----------- |
+| components | readonly WorkspaceComponentDefinition[] |             |
+
+### GRID_COMPONENT
+
+**Kind:** constant
+
+```typescript
+export const GRID_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No description provided.
+
+### LAYOUT_COMPONENT
+
+**Kind:** constant
+
+```typescript
+export const LAYOUT_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No description provided.
+
+### NESTED_BADGE_COMPONENT
+
+**Kind:** constant
+
+```typescript
+export const NESTED_BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No description provided.
+
+### WorkspaceComponentDefinition
+
+**Kind:** interface
+
+```typescript
+export interface WorkspaceComponentDefinition
+```
+
+No description provided.
+
 ## `src/analyze`
 
 ### analyzeContentComponent

@@ -14,18 +14,18 @@ Configuration package documentation is owned by each package. The links below
 are repository file links today and become package-namespaced routes in the
 documentation site:
 
-| Package | Purpose | Primary configuration surface |
-|:---|:---|:---|
-| [`@mission-platform/eslint-config`](../../packages/tooling/configs/eslint-config/docs/index.md) | Flat ESLint rules for JS/TS and Vue. | `eslint.config.js` |
-| [`@mission-platform/prettier-config`](../../packages/tooling/configs/prettier-config/docs/index.md) | Repository formatting defaults. | `prettier.config.js` |
-| [`@mission-platform/typescript-config`](../../packages/tooling/configs/typescript-config/docs/index.md) | TypeScript compiler presets. | `tsconfig.json` |
-| [`@mission-platform/stylelint-config`](../../packages/tooling/configs/stylelint-config/docs/index.md) | CSS and SCSS linting. | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../packages/tooling/configs/vite-config/docs/index.md) | Vite and Vitest configuration helpers. | `vite.config.ts` |
-| [`@mission-platform/tsdown-config`](../../packages/tooling/configs/tsdown-config/docs/index.md) | Library bundling helpers. | `tsdown.config.ts` |
-| [`@mission-platform/postcss-config`](../../packages/tooling/configs/postcss-config/docs/index.md) | Shared PostCSS pipeline. | `postcss.config.mjs` |
-| [`@mission-platform/i18n-config`](../../packages/tooling/configs/i18n-config/docs/index.md) | Shared locale and extraction settings. | `i18next.config.ts` |
-| [`@mission-platform/storybook-framework`](../../packages/tooling/configs/storybook-framework/docs/index.md) | Environment-selected Storybook framework preset. | `.storybook/main.ts` |
-| [Workers Configuration](./workers-config.md) | Cross-workspace Cloudflare Worker conventions. | `wrangler.jsonc` |
+| Package                                                                                                     | Purpose                                          | Primary configuration surface |
+| :---------------------------------------------------------------------------------------------------------- | :----------------------------------------------- | :---------------------------- |
+| [`@mission-platform/eslint-config`](../../packages/tooling/configs/eslint-config/docs/index.md)             | Flat ESLint rules for JS/TS and Vue.             | `eslint.config.js`            |
+| [`@mission-platform/prettier-config`](../../packages/tooling/configs/prettier-config/docs/index.md)         | Repository formatting defaults.                  | `prettier.config.js`          |
+| [`@mission-platform/typescript-config`](../../packages/tooling/configs/typescript-config/docs/index.md)     | TypeScript compiler presets.                     | `tsconfig.json`               |
+| [`@mission-platform/stylelint-config`](../../packages/tooling/configs/stylelint-config/docs/index.md)       | CSS and SCSS linting.                            | `stylelint.config.mjs`        |
+| [`@mission-platform/vite-config`](../../packages/tooling/configs/vite-config/docs/index.md)                 | Vite and Vitest configuration helpers.           | `vite.config.ts`              |
+| [`@mission-platform/tsdown-config`](../../packages/tooling/configs/tsdown-config/docs/index.md)             | Library bundling helpers.                        | `tsdown.config.ts`            |
+| [`@mission-platform/postcss-config`](../../packages/tooling/configs/postcss-config/docs/index.md)           | Shared PostCSS pipeline.                         | `postcss.config.mjs`          |
+| [`@mission-platform/i18n-config`](../../packages/tooling/configs/i18n-config/docs/index.md)                 | Shared locale and extraction settings.           | `i18next.config.ts`           |
+| [`@mission-platform/storybook-framework`](../../packages/tooling/configs/storybook-framework/docs/index.md) | Environment-selected Storybook framework preset. | `.storybook/main.ts`          |
+| [Workers Configuration](./workers-config.md)                                                                | Cross-workspace Cloudflare Worker conventions.   | `wrangler.jsonc`              |
 
 ## Core Tooling
 
@@ -54,7 +54,10 @@ Provides base `tsconfig` presets for different targets:
 Provides factory functions to create Vite configurations for both applications and libraries.
 
 ```ts
-import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-config';
+import {
+  defineAppConfig,
+  defineLibraryConfig,
+} from "@mission-platform/vite-config";
 ```
 
 - `defineAppConfig`: For top-level applications (SPA, workers).
@@ -75,7 +78,7 @@ To use a configuration in a workspace:
 
 ```js
 // Example: eslint.config.js
-import baseConfig from '@mission-platform/eslint-config';
+import baseConfig from "@mission-platform/eslint-config";
 
 export default [
   ...baseConfig,
@@ -87,7 +90,7 @@ For Stylelint, use the same ESM import/spread pattern in `stylelint.config.mjs`:
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```

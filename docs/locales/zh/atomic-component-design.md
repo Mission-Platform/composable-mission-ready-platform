@@ -13,13 +13,13 @@
 
 组件根据其范围和职责分为五个级别。
 
-|水平|文件夹|描述 |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **原子** | `src/components/atoms/`     |最小的 UI 原语（例如， `ForgeButton`, `ForgeInput`, `ForgeBadge`)。它们通常是功能单元，不能在不失去其用途的情况下进一步分解。 |
-| **分子** | `src/components/molecules/` |原子的简单组成（例如， `ForgeSearchInput`, `ForgeFieldSet`)。它们作为一个整体共同发挥作用。                                                                    |
-| **生物体** | `src/components/organisms/` |由原子、分子和其他有机体（例如， `ForgeNavbar`, `ForgeTable`, `ForgeModal`)。                                                       |
-| **模板** | `src/components/templates/` |定义内容结构的页面级布局（例如， `ForgeHero`, `ForgeAppLayout`)。他们经常使用插槽来定义内容的放置位置。                     |
-| **页面** | `src/components/pages/`     |填充有具体内容和数据的模板的特定实例（例如， `AccountSettingsPage`).                                                                        |
+| 水平       | 文件夹                      | 描述                                                                                                                          |
+| :--------- | :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| **原子**   | `src/components/atoms/`     | 最小的 UI 原语（例如， `ForgeButton`, `ForgeInput`, `ForgeBadge`)。它们通常是功能单元，不能在不失去其用途的情况下进一步分解。 |
+| **分子**   | `src/components/molecules/` | 原子的简单组成（例如， `ForgeSearchInput`, `ForgeFieldSet`)。它们作为一个整体共同发挥作用。                                   |
+| **生物体** | `src/components/organisms/` | 由原子、分子和其他有机体（例如， `ForgeNavbar`, `ForgeTable`, `ForgeModal`)。                                                 |
+| **模板**   | `src/components/templates/` | 定义内容结构的页面级布局（例如， `ForgeHero`, `ForgeAppLayout`)。他们经常使用插槽来定义内容的放置位置。                       |
+| **页面**   | `src/components/pages/`     | 填充有具体内容和数据的模板的特定实例（例如， `AccountSettingsPage`).                                                          |
 
 ## 组件文件夹布局
 
@@ -67,7 +67,7 @@ src/components/
 
 ```tsx
 const meta = {
-  title: 'Atoms/Display/ForgeButton',
+  title: "Atoms/Display/ForgeButton",
   component: Button,
   // ...
 };

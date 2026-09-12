@@ -332,12 +332,12 @@ export default defineVitestConfig({
 
 ### 脚本摘要
 
-|脚本 |命令|目的|
-| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
-| `test` | `pnpm exec turbo run test` |运行所有工作区测试任务。          |
-| `test:watch` | `pnpm --filter @mission-platform/components test:watch` |在监视模式下运行组件测试。    |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` |生成组件覆盖率报告。 |
-| Rust/WASM | `cargo test --workspace` |运行本机 Rust 板条箱测试。           |
+| 脚本            | 命令                                                       | 目的                       |
+| :-------------- | :--------------------------------------------------------- | :------------------------- |
+| `test`          | `pnpm exec turbo run test`                                 | 运行所有工作区测试任务。   |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | 在监视模式下运行组件测试。 |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | 生成组件覆盖率报告。       |
+| Rust/WASM       | `cargo test --workspace`                                   | 运行本机 Rust 板条箱测试。 |
 
 Wasm 包装器包通过其自己的包任务进行测试。例如，运行扫描程序包及其
 更改扫描仪行为时将包装器放在一起：

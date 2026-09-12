@@ -18,12 +18,12 @@ omgevingen.
 
 ## Applicatie-implementatiekaart
 
-| Toepassing | Behandelaar | Configuratie | Activa |
-| :---------- | :------ | :------------ | :----- |
-| Website | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, gebonden als `ASSETS` |
-| Mijn zorgnotities | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, gebonden als `ASSETS` |
-| Servicemonitor | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, gebonden als `ASSETS` |
-| Documenten | Statische activa | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| Toepassing        | Behandelaar                                     | Configuratie                          | Activa                                                |
+| :---------------- | :---------------------------------------------- | :------------------------------------ | :---------------------------------------------------- |
+| Website           | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, gebonden als `ASSETS`           |
+| Mijn zorgnotities | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, gebonden als `ASSETS`     |
+| Servicemonitor    | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, gebonden als `ASSETS` |
+| Documenten        | Statische activa                                | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                     |
 
 Website en My Care Notes verbruiken de gedeelde Forge SPA-werknemer. Servicemonitor
 is eigenaar van het Worker-ingangspunt en de Sustainable Object-binding. De documentensite is een

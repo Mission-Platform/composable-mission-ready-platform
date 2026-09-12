@@ -18,12 +18,12 @@
 
 ## خريطة نشر التطبيق
 
-| التطبيق | معالج | التكوين | الأصول |
-| :---------- | :------ | :------------ | :----- |
-| الموقع | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`، ملزمة كما `ASSETS` |
-| ملاحظات العناية الخاصة بي | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`، ملزمة كما `ASSETS` |
-| مراقب الخدمة | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`، ملزمة كما `ASSETS` |
-| مستندات | الأصول الثابتة | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| التطبيق                   | معالج                                           | التكوين                               | الأصول                                             |
+| :------------------------ | :---------------------------------------------- | :------------------------------------ | :------------------------------------------------- |
+| الموقع                    | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`، ملزمة كما `ASSETS`           |
+| ملاحظات العناية الخاصة بي | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`، ملزمة كما `ASSETS`     |
+| مراقب الخدمة              | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`، ملزمة كما `ASSETS` |
+| مستندات                   | الأصول الثابتة                                  | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                  |
 
 يستهلك موقع الويب وملاحظات الرعاية الخاصة بي عامل Forge SPA المشترك. مراقب الخدمة
 تمتلك نقطة دخول العامل وربط الكائن المتين. موقع المستندات هو أ

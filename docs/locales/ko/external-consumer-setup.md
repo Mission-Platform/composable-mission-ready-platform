@@ -15,11 +15,11 @@ Mission Platform 구성 요소는 `@mission-platform/forge-jsx`을 사용하여 
 
 ### 지원되는 프레임워크 조건
 
-| 프레임워크 | 수출조건 |
-| :----------------- | :----------------- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
+| 프레임워크      | 수출조건           |
+| :-------------- | :----------------- |
+| **Vue 3**       | `mp:vue`           |
+| **React**       | `mp:react`         |
+| **Solid**       | `mp:solid`         |
 | **웹 구성요소** | `mp:web-component` |
 
 ## 프로젝트 구성

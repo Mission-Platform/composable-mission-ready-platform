@@ -31,7 +31,7 @@ velocity and code quality.
 ## Key Features
 
 | Feature               | Description                                                                                                                            |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
+| :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
 | **Forge JSX Runtime** | A framework-neutral JSX dialect: author once and build for Vue 3, React, Svelte, Solid, and Web Components with zero runtime overhead. |
 | **Component Library** | A comprehensive set of layout, typography, and interactive components authored once for multiple frameworks.                           |
 | **Design Tokens**     | A DTCG-compliant token system that generates SCSS and TypeScript artifacts for consistent theming.                                     |

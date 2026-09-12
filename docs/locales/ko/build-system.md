@@ -111,14 +111,14 @@ pnpm --filter @mission-platform/components run build:web-components
 
 ### 패키지 작업
 
-| 작업 | 설명 |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       | 공유 Forge 실행기를 통해 중립, 프레임워크, 선언, 이메일 및 구성된 CMS 출력을 집계합니다. |
-| `build:forge` | 대상 중립 Forge 출력 호환성 별칭입니다.                                                      |
-| `build:react`, `build:vue`, `build:svelte` | 대상 프레임워크 호환성 별칭입니다.                                      |
-| `build:solid`, `build:web-components` | 대상 프레임워크 호환성 별칭입니다.                                         |
-| `build:check` | 출력을 게시하지 않고 작업공간의 유형을 검증합니다.                                               |
-| `build:watch` | 작업공간에 대해 감시 모드에서 증분 빌드를 시작합니다.                                               |
+| 작업                                       | 설명                                                                                     |
+| :----------------------------------------- | :--------------------------------------------------------------------------------------- |
+| `build`                                    | 공유 Forge 실행기를 통해 중립, 프레임워크, 선언, 이메일 및 구성된 CMS 출력을 집계합니다. |
+| `build:forge`                              | 대상 중립 Forge 출력 호환성 별칭입니다.                                                  |
+| `build:react`, `build:vue`, `build:svelte` | 대상 프레임워크 호환성 별칭입니다.                                                       |
+| `build:solid`, `build:web-components`      | 대상 프레임워크 호환성 별칭입니다.                                                       |
+| `build:check`                              | 출력을 게시하지 않고 작업공간의 유형을 검증합니다.                                       |
+| `build:watch`                              | 작업공간에 대해 감시 모드에서 증분 빌드를 시작합니다.                                    |
 
 Turbo 대상 선택기를 해시합니다(`FORGE_BUILD_TARGET` 레거시 Forge/CMS 선택기)와 공유
 러너 및 스테이징 소스. 결과적으로 집계 빌드와 대상 빌드는 서로의 캐시된 결과를 재사용할 수 없습니다. 결정적인
@@ -146,12 +146,12 @@ pnpm build:force
 
 빌드 구성은 중앙 집중화되어 있습니다. `packages/tooling/configs/` 모노레포 전체에서 일관성을 유지하기 위한 디렉터리입니다.
 
-| 패키지 | 목적 |
-| :------------------------------------ | :----------------------------------------------------------- |
-| `@mission-platform/vite-config`       | 공유됨 Vite 앱에 대한 논리 및 Vue- 특정 빌드.          |
-| `@mission-platform/tsdown-config`     | 라이브러리 패키지에 대한 공유 tsdown 논리.                    |
+| 패키지                                | 목적                                                              |
+| :------------------------------------ | :---------------------------------------------------------------- |
+| `@mission-platform/vite-config`       | 공유됨 Vite 앱에 대한 논리 및 Vue- 특정 빌드.                     |
+| `@mission-platform/tsdown-config`     | 라이브러리 패키지에 대한 공유 tsdown 논리.                        |
 | `@mission-platform/typescript-config` | 베이스 `tsconfig.json` 앱, 라이브러리 및 테스트에 대한 사전 설정. |
-| `@mission-platform/postcss-config`    | 표준화된 CSS 처리(Autoprefixer 등).            |
+| `@mission-platform/postcss-config`    | 표준화된 CSS 처리(Autoprefixer 등).                               |
 
 ## 지역 개발과 생산
 

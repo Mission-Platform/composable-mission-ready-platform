@@ -35,14 +35,14 @@ Geschwindigkeit und Codequalität.
 
 ## Hauptmerkmale
 
-| Funktion | Beschreibung |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| **Forge JSX Runtime** | Ein Framework-neutraler JSX-Dialekt: Einmal erstellen und für Vue 3, React, Svelte, Solid und Webkomponenten ohne Laufzeitaufwand erstellen. |
-| **Komponentenbibliothek** | Ein umfassender Satz an Layout-, Typografie- und interaktiven Komponenten, die einmal für mehrere Frameworks erstellt wurden.                           |
-| **Design-Token** | Ein DTCG-kompatibles Token-System, das SCSS- und TypeScript-Artefakte für ein konsistentes Design generiert.                                     |
-| **Agnostisches Routing** | Ein typsicheres Routingsystem, das unabhängig vom UI-Framework funktioniert.                                                               |
-| **Universal I18n** | Ein Framework-unabhängiger Internationalisierungs-Wrapper basierend auf i18next mit dedizierten Vue- und React-Adaptern.                              |
-| **Wasm-Dienstprogramme** | Leistungsstarke Dienstprogramme zum Barcode-Scannen, zur Rechtschreibprüfung und mehr, unterstützt von WebAssembly.                                     |
+| Funktion                  | Beschreibung                                                                                                                                 |
+| :------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX Runtime**     | Ein Framework-neutraler JSX-Dialekt: Einmal erstellen und für Vue 3, React, Svelte, Solid und Webkomponenten ohne Laufzeitaufwand erstellen. |
+| **Komponentenbibliothek** | Ein umfassender Satz an Layout-, Typografie- und interaktiven Komponenten, die einmal für mehrere Frameworks erstellt wurden.                |
+| **Design-Token**          | Ein DTCG-kompatibles Token-System, das SCSS- und TypeScript-Artefakte für ein konsistentes Design generiert.                                 |
+| **Agnostisches Routing**  | Ein typsicheres Routingsystem, das unabhängig vom UI-Framework funktioniert.                                                                 |
+| **Universal I18n**        | Ein Framework-unabhängiger Internationalisierungs-Wrapper basierend auf i18next mit dedizierten Vue- und React-Adaptern.                     |
+| **Wasm-Dienstprogramme**  | Leistungsstarke Dienstprogramme zum Barcode-Scannen, zur Rechtschreibprüfung und mehr, unterstützt von WebAssembly.                          |
 
 ## Technologie-Stack
 

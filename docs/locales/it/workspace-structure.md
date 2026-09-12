@@ -108,12 +108,12 @@ Ogni directory all'interno di `src/` deve contenere un `index.ts` (file barile).
 
 I file chiave nella root del repository governano il comportamento del monorepo:
 
-| File | Scopo |
-|:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml` | Definisce i confini dell'area di lavoro, i glob di membri e i cataloghi delle dipendenze. |
-| `turbo.json` | Orchestra la pipeline di compilazione e la memorizzazione nella cache delle attività.                    |
-| `package.json` | Script a livello di root e devDependencies a livello di monorepo.                |
-| `commitlint.config.mjs` | Applica la specifica dei commit convenzionali.                     |
+| File                    | Scopo                                                                                     |
+| :---------------------- | :---------------------------------------------------------------------------------------- |
+| `pnpm-workspace.yaml`   | Definisce i confini dell'area di lavoro, i glob di membri e i cataloghi delle dipendenze. |
+| `turbo.json`            | Orchestra la pipeline di compilazione e la memorizzazione nella cache delle attività.     |
+| `package.json`          | Script a livello di root e devDependencies a livello di monorepo.                         |
+| `commitlint.config.mjs` | Applica la specifica dei commit convenzionali.                                            |
 
 ## Gestione delle dipendenze e dello spazio di lavoro
 
