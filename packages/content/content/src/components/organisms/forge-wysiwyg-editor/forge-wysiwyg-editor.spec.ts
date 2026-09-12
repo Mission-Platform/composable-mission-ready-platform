@@ -1,6 +1,5 @@
 import { toReactComponent } from '@mission-platform/forge-adapters/react';
 import { toVueComponent } from '@mission-platform/forge-adapters/vue';
-import type { MpElement } from '@mission-platform/forge-jsx';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
@@ -9,9 +8,11 @@ import { renderToString } from 'vue/server-renderer';
 
 import { toHtml } from '../../../builders';
 import { insertHtmlAtSelection, type WysiwygCommand } from '../../../utils/commands';
+
 import { ForgeWysiwygEditor } from './forge-wysiwyg-editor';
 
 import type { ContentDocument } from '../../../ast';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 /**
  * Exercises the **neutral** `ForgeWysiwygEditor` authored in this package,
@@ -109,7 +110,7 @@ describe('ForgeWysiwygEditor modern DOM formatting commands', () => {
     const surface = document.createElement('div');
     surface.contentEditable = 'true';
     surface.innerHTML = initialHtml;
-    document.body.appendChild(surface);
+    document.body.append(surface);
 
     const execCommandSpy = vi.fn();
     (document as unknown as { execCommand: unknown }).execCommand = execCommandSpy;
@@ -138,7 +139,7 @@ describe('ForgeWysiwygEditor modern DOM formatting commands', () => {
       cleanup: () => {
         surface.remove();
         delete (document as unknown as { execCommand?: unknown }).execCommand;
-        window.getSelection()?.removeAllRanges();
+        globalThis.getSelection()?.removeAllRanges();
       },
     };
   }
@@ -148,11 +149,15 @@ describe('ForgeWysiwygEditor modern DOM formatting commands', () => {
     try {
       const textNode = harness.surface.querySelector('p')?.firstChild;
       expect(textNode).toBeDefined();
+      expect(textNode).not.toBeNull();
+      if (!textNode) {
+        throw new Error('Expected textNode to exist');
+      }
 
       const range = document.createRange();
-      range.setStart(textNode!, 6);
-      range.setEnd(textNode!, 11);
-      const selection = window.getSelection();
+      range.setStart(textNode, 6);
+      range.setEnd(textNode, 11);
+      const selection = globalThis.getSelection();
       selection?.removeAllRanges();
       selection?.addRange(range);
 
@@ -179,10 +184,15 @@ describe('ForgeWysiwygEditor modern DOM formatting commands', () => {
     const harness = createEditorHarness('<p>Hello world</p>');
     try {
       const textNode = harness.surface.querySelector('p')?.firstChild;
+      expect(textNode).toBeDefined();
+      expect(textNode).not.toBeNull();
+      if (!textNode) {
+        throw new Error('Expected textNode to exist');
+      }
       const range = document.createRange();
-      range.setStart(textNode!, 0);
+      range.setStart(textNode, 0);
       range.collapse(true);
-      const selection = window.getSelection();
+      const selection = globalThis.getSelection();
       selection?.removeAllRanges();
       selection?.addRange(range);
 
@@ -217,10 +227,15 @@ describe('ForgeWysiwygEditor modern DOM formatting commands', () => {
 
     try {
       const textNode = harness.surface.querySelector('p')?.firstChild;
+      expect(textNode).toBeDefined();
+      expect(textNode).not.toBeNull();
+      if (!textNode) {
+        throw new Error('Expected textNode to exist');
+      }
       const range = document.createRange();
-      range.setStart(textNode!, 0);
-      range.setEnd(textNode!, 6);
-      const selection = window.getSelection();
+      range.setStart(textNode, 0);
+      range.setEnd(textNode, 6);
+      const selection = globalThis.getSelection();
       selection?.removeAllRanges();
       selection?.addRange(range);
 
@@ -241,10 +256,15 @@ describe('ForgeWysiwygEditor modern DOM formatting commands', () => {
     const harness = createEditorHarness('<p>Start End</p>');
     try {
       const textNode = harness.surface.querySelector('p')?.firstChild;
+      expect(textNode).toBeDefined();
+      expect(textNode).not.toBeNull();
+      if (!textNode) {
+        throw new Error('Expected textNode to exist');
+      }
       const range = document.createRange();
-      range.setStart(textNode!, 6);
+      range.setStart(textNode, 6);
       range.collapse(true);
-      const selection = window.getSelection();
+      const selection = globalThis.getSelection();
       selection?.removeAllRanges();
       selection?.addRange(range);
 
