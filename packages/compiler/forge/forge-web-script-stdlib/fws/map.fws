@@ -1,4 +1,33 @@
+// Owned key-value hash map collection.
 struct Map<K, V> {
   entries: bytes,
   length: u32,
+  capacity: u32,
 }
+
+// Create an empty owned Map with zero elements.
+fn empty_map<K, V>() -> Map<K, V>;
+
+// Return the number of key-value pairs stored in the map.
+fn map_length<K, V>(map: Map<K, V>) -> u32;
+
+// Return true when the map contains zero key-value pairs.
+fn map_is_empty<K, V>(map: Map<K, V>) -> bool;
+
+// Return the value associated with key, or Option.none when not present.
+fn map_get<K, V>(map: Map<K, V>, key: K) -> Option<V>;
+
+// Return true if the map contains key.
+fn map_has<K, V>(map: Map<K, V>, key: K) -> bool;
+
+// Insert or update a key-value mapping and return the updated owned map.
+fn map_set<K, V>(map: Map<K, V>, key: K, value: V) -> Map<K, V>;
+
+// Remove a key and return the updated owned map.
+fn map_delete<K, V>(map: Map<K, V>, key: K) -> Map<K, V>;
+
+// Return a Vector containing all keys in the map.
+fn map_keys<K, V>(map: Map<K, V>) -> Vector<K>;
+
+// Return a Vector containing all values in the map.
+fn map_values<K, V>(map: Map<K, V>) -> Vector<V>;

@@ -25,5 +25,6 @@ export * from './stdlib/regex.js';
 export * from './stdlib/string.js';
 export * from './stdlib/memory.js';
 export * from './generics.js';
+export * from './type-algebra.js';
 export * from './safety.js';
 export * from './self-hosted.js';

@@ -4,6 +4,7 @@ import { checkForgeWebScriptSafety } from './safety.js';
 import { FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS, type ForgeWebScriptMemoryFunction } from './stdlib/memory.js';
 import { FORGE_WEB_SCRIPT_REGEX_FUNCTIONS, type ForgeWebScriptStandardLibraryFunction } from './stdlib/regex.js';
 import { FORGE_WEB_SCRIPT_STRING_FUNCTIONS, type ForgeWebScriptStringFunction } from './stdlib/string.js';
+import { TypeAlgebra, createTypeAlgebra } from './type-algebra.js';
 
 import type {
   ForgeWebScriptExpression,
@@ -14,6 +15,9 @@ import type {
   ForgeWebScriptStatement,
   ForgeWebScriptTypeName,
 } from './ast.js';
+
+/** Shared intern table for checker type keys within a process. */
+const checkerAlgebra: TypeAlgebra = createTypeAlgebra();
 
 export interface ForgeWebScriptTypeCheckOptions {
   readonly requestedCapabilities?: readonly string[];
@@ -1196,12 +1200,9 @@ function validateType(
 }
 
 function typeNameKey(type: ForgeWebScriptTypeName): string {
-  const name = type.reference ?? type.name;
-  const generic =
-    type.arguments === undefined || type.arguments.length === 0
-      ? name
-      : `${name}<${type.arguments.map((argument) => typeNameKey(argument)).join(',')}>`;
-  return type.length === undefined ? generic : `${generic}[${type.length}]`;
+  // Historical checker keys ignore referenceMode so `&T` and `T` share a carrier key.
+  const id = checkerAlgebra.fromAst(type.referenceMode === undefined ? type : { ...type, referenceMode: undefined });
+  return checkerAlgebra.display(id);
 }
 
 function mismatch(
@@ -1217,27 +1218,87 @@ function isNumber(type: string): boolean {
   return ['i32', 'i64', 'u32', 'u64', 'f32', 'f64'].includes(type);
 }
 
+function internKey(type: string) {
+  // Rebuild a minimal AST from checker keys for structural queries.
+  return parseCheckerTypeKey(type);
+}
+
 function isIteratorLike(type: string): boolean {
-  return type.startsWith('Iterable<') || type.startsWith('Iterator<');
+  const id = internKey(type);
+  return id !== undefined && checkerAlgebra.isIteratorLike(id);
 }
 
 function isOptionType(type: string): boolean {
-  return type.startsWith('Option<');
+  const id = internKey(type);
+  return id !== undefined && checkerAlgebra.isOption(id);
 }
 
 function elementType(type: string): string {
-  const start = type.indexOf('<');
-  return start === -1 ? 'unit' : type.slice(start + 1, type.lastIndexOf('>')) || 'unit';
+  const id = internKey(type);
+  if (id === undefined) return 'unit';
+  const element = checkerAlgebra.elementType(id);
+  return element === undefined ? 'unit' : checkerAlgebra.display(element);
 }
 
 function collectionKind(type: string | undefined): CollectionKind | undefined {
-  if (type?.startsWith('Array<')) return 'Array';
-  if (type?.startsWith('Vector<')) return 'Vector';
-  return undefined;
+  if (type === undefined) return undefined;
+  const id = internKey(type);
+  return id === undefined ? undefined : checkerAlgebra.collectionKind(id);
 }
 
 function collectionElementFromType(type: string | undefined): string | undefined {
   return collectionKind(type) === undefined ? undefined : elementType(type!);
+}
+
+/**
+ * Parse checker type keys produced by `typeNameKey` back into interned nodes.
+ * Supports the closed grammar emitted by the checker (nominal apps, arrays, Fn).
+ */
+function parseCheckerTypeKey(type: string): ReturnType<TypeAlgebra['fromAst']> | undefined {
+  const span = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 };
+  const parse = (value: string): ForgeWebScriptTypeName | undefined => {
+    const trimmed = value.trim();
+    if (trimmed.length === 0) return undefined;
+
+    const arrayMatch = /^(.+)\[(\d+)]$/.exec(trimmed);
+    if (arrayMatch !== null) {
+      const inner = parse(arrayMatch[1]!);
+      if (inner === undefined) return undefined;
+      return { ...inner, length: Number(arrayMatch[2]) };
+    }
+
+    const genericStart = trimmed.indexOf('<');
+    if (genericStart !== -1 && trimmed.endsWith('>')) {
+      const name = trimmed.slice(0, genericStart);
+      const arguments_ = splitGenericArguments(trimmed.slice(genericStart + 1, -1))
+        .map((part) => parse(part))
+        .filter((part): part is ForgeWebScriptTypeName => part !== undefined);
+      if (arguments_.length === 0 && trimmed.slice(genericStart + 1, -1).trim() !== '') return undefined;
+      const primitive = primitiveTypes.has(name as ForgeWebScriptPrimitiveType)
+        ? (name as ForgeWebScriptPrimitiveType)
+        : ('unit' as const);
+      return {
+        kind: 'type-name',
+        name: primitive,
+        ...(primitive === name && arguments_.length === 0 ? {} : { reference: name }),
+        ...(arguments_.length === 0 ? {} : { arguments: arguments_ }),
+        span,
+      };
+    }
+
+    const primitive = primitiveTypes.has(trimmed as ForgeWebScriptPrimitiveType)
+      ? (trimmed as ForgeWebScriptPrimitiveType)
+      : ('unit' as const);
+    return {
+      kind: 'type-name',
+      name: primitive,
+      ...(primitive === trimmed ? {} : { reference: trimmed }),
+      span,
+    };
+  };
+
+  const ast = parse(type);
+  return ast === undefined ? undefined : checkerAlgebra.fromAst(ast);
 }
 
 function memberReceiverType(
@@ -1259,12 +1320,15 @@ function memberReceiverType(
 }
 
 function callableFromType(type: string | undefined): Callable | undefined {
-  if (type === undefined || !type.startsWith('Fn<') || !type.endsWith('>')) return undefined;
-  const parts = splitGenericArguments(type.slice(3, -1));
-  if (parts.length === 0) return undefined;
-  const result = parts.at(-1);
-  if (result === undefined) return undefined;
-  return { parameters: parts.slice(0, -1), result };
+  if (type === undefined) return undefined;
+  const id = internKey(type);
+  if (id === undefined) return undefined;
+  const parts = checkerAlgebra.functionParts(id);
+  if (parts === undefined) return undefined;
+  return {
+    parameters: parts.parameters.map((parameter) => checkerAlgebra.display(parameter)),
+    result: checkerAlgebra.display(parts.result),
+  };
 }
 
 function functionTypeKey(callable: Callable): string {
