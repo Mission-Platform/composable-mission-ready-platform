@@ -4,6 +4,7 @@
   import { copyForgeFile, downloadForgeFile, fileForPath, fileText, sendBundleToBridge } from './delivery';
   import {
     FORGE_FIGMA_UI_ORIGIN,
+    generateRequestId,
     isForgeBridgeConfig,
     isForgePluginMainMessage,
     isTrustedForgePluginMessageEvent,
@@ -23,6 +24,7 @@
   const statusKind = ref<'info' | 'success' | 'error'>('info');
   const isConverting = ref(false);
   const isExporting = ref(false);
+  const currentRequestId = ref<string>();
   const overwrite = ref(false);
   const diagnostics = ref<readonly ForgeDiagnostic[]>([]);
   const bridgeResults = ref<readonly ForgeBridgeFileResult[]>([]);
@@ -44,7 +46,10 @@
     );
   });
   const canConvert = computed(() => selectionCount.value === 1 && !isConverting.value);
-  const canExport = computed(() => Boolean(bundle.value) && isForgeBridgeConfig(bridgeConfig) && !isExporting.value);
+  const canExport = computed(
+    () =>
+      Boolean(bundle.value) && isForgeBridgeConfig(bridgeConfig) && !isExporting.value && selectionCount.value === 1,
+  );
 
   function send(message: ForgePluginUiMessage): void {
     window.parent.postMessage({ pluginMessage: message }, FORGE_FIGMA_UI_ORIGIN);
@@ -61,13 +66,26 @@
     if (!isForgePluginMainMessage(message)) return;
     if (message.type === 'selection-status') {
       selectionCount.value = message.selectionCount;
+      bundle.value = undefined;
+      diagnostics.value = [];
+      bridgeResults.value = [];
+      selectedPath.value = '';
+      currentRequestId.value = undefined;
+      isConverting.value = false;
       if (message.selectionCount !== 1) {
         setStatus(message.selectionCount === 0 ? 'Select one frame or component to begin.' : 'Select only one layer.');
+      } else {
+        selectionError.value = '';
+        setStatus('Ready to convert selection.');
       }
       return;
     }
     if (message.type === 'conversion-result') {
+      if (!currentRequestId.value || message.requestId !== currentRequestId.value || selectionCount.value !== 1) {
+        return;
+      }
       isConverting.value = false;
+      currentRequestId.value = undefined;
       if (message.error || !message.bundle) {
         bundle.value = undefined;
         diagnostics.value = [];
@@ -95,10 +113,12 @@
 
   function convert(): void {
     if (!canConvert.value) return;
+    const requestId = generateRequestId();
+    currentRequestId.value = requestId;
     isConverting.value = true;
     selectionError.value = '';
     setStatus('Converting selection…');
-    send({ type: 'convert' });
+    send({ type: 'convert', requestId });
   }
 
   async function copySelected(): Promise<void> {
@@ -125,7 +145,7 @@
   }
 
   async function exportBundle(): Promise<void> {
-    if (!bundle.value || !canExport.value) return;
+    if (!bundle.value || !canExport.value || selectionCount.value !== 1) return;
     if (!window.confirm(`Send the reviewed ${bundle.value.componentName} bundle to the configured repository bridge?`))
       return;
     isExporting.value = true;
@@ -137,7 +157,18 @@
       if (result.ok) setStatus('Repository export accepted.', 'success');
       else setStatus(result.error ?? 'Repository export completed with rejected files.', 'error');
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : 'Repository export failed.', 'error');
+      const messageText =
+        typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string'
+          ? error.message
+          : undefined;
+
+      const message =
+        messageText === undefined
+          ? 'Repository export failed.'
+          : messageText.includes('bridge') || messageText.includes('timed out')
+            ? messageText
+            : `Repository bridge request failed: ${messageText}`;
+      setStatus(message, 'error');
     } finally {
       isExporting.value = false;
     }
