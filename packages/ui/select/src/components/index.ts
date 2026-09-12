@@ -5,7 +5,15 @@ export {
   type MultiselectProperties,
   type MultiselectSize,
 } from './molecules/forge-multiselect';
-export { ForgeSelect, type SelectOption, type SelectProperties, type SelectSize } from './molecules/forge-select';
+export {
+  ForgeSelect,
+  ForgeCombobox,
+  type ForgeSelectProps,
+  type ForgeComboboxProps,
+  type SelectOption,
+  type SelectProperties,
+  type SelectSize,
+} from './molecules/forge-select';
 export {
   ForgeLanguageSwitcher,
   type ForgeLanguageSwitcherOption,
