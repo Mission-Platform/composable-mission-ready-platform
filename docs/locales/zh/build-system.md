@@ -39,12 +39,12 @@ Deployable applications in `apps/` use **Vite** for development and production b
 ### Forge package builds
 
 Forge package builds add a neutral compiler front end to the normal `tsdown` or Vite flow. A consuming package imports
-the framework plugins it wants and passes explicit instances to `defineTsdownForgeComponents` or
-`defineTsdownForgeHooks`. The neutral driver creates semantic IR once, then the selected plugin owns target lowering,
+the framework plugins it wants and passes explicit instances to `tsdownForgeComponentPlugins` or
+`tsdownForgeHookPlugins` inside one `defineTsdownLibrary` call. The neutral driver creates semantic IR once, then the selected plugin owns target lowering,
 source generation, declarations, runtime externals, and its native Vite/tsdown adapter.
 
 Content-platform output is a second, orthogonal axis configured through `@mission-platform/forge-cms-plugin-api`. A
-consumer passes `defineTsdownForgeCms` (or `defineTsdownForgeCmsAll`) a list of `CmsOutputPlugin` instances, each of
+consumer passes `tsdownForgeCmsPlugins` a list of `CmsOutputPlugin` instances, each of
 which _composes_ a framework plugin — `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`,
 `forgeAstroCms({ packageName, plugin })`, and so on for Ghost, Jekyll, and Webflow. Because the platform and the
 framework are chosen independently, `storyblok × vue` and `astro × solid` are configuration rather than new code.
@@ -119,6 +119,19 @@ Turbo hashes the target selectors (`FORGE_BUILD_TARGET` and the legacy Forge/CMS
 runner and staging sources. Consequently, aggregate and targeted builds cannot reuse one another's cached result. Final
 `dist/**` output is cached; temporary staging and promotion directories are explicitly excluded.
 
+### Application build stages
+
+Applications that have independently meaningful build stages expose those stages as Turbo tasks rather than chaining
+them inside `build`:
+
+- `@mission-platform/docs` runs `build:check`, `build:bundle`, `build:prerender`, and `build:verify` in order.
+- `@mission-platform/figma-forge-plugin` runs `build:check`, `build:ui`, and `build:main` through its aggregate `build` task.
+- `@mission-platform/icons` runs `build:check`, `build:generate`, and `build:sprite` through its aggregate `build` task.
+
+The aggregate scripts only verify that the task-owned output exists; Turbo owns scheduling, dependency ordering, and
+cache restoration. This keeps the individual stages observable and avoids nested Turbo invocations or shell-level build
+orchestration.
+
 ### Caching Strategy
 
 Turborepo caches the following artifacts:
@@ -132,6 +145,9 @@ To bypass the cache and force a fresh build, use the `--force` flag:
 ```bash
 pnpm build:force
 ```
+
+Declaration-only tasks are also cacheable: `build:types` records `dist/**/*.d.ts` and declaration maps as outputs, so
+targeted type builds restore the files required by downstream packages.
 
 The compatibility aliases and CMS artifact-mode tasks are package tasks, so Turbo still applies their dependency graph and
 target-specific cache inputs. Temporary stages are not cache outputs; only the promoted `dist` tree is published or
