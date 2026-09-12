@@ -17,6 +17,7 @@ import {
 } from '../../../utils/blocks';
 import {
   commandRequiresArgument,
+  insertHtmlAtSelection,
   isCommandActive,
   queryBlockFormat,
   runCommand,
@@ -65,18 +66,6 @@ const CODE_BLOCK_LANGUAGES: readonly CodeBlockLanguage[] = [
 
 function normalizeCodeBlockLanguage(language: string): CodeBlockLanguage {
   return CODE_BLOCK_LANGUAGES.includes(language as CodeBlockLanguage) ? (language as CodeBlockLanguage) : 'plaintext';
-}
-
-/** Insert an HTML fragment at the current selection, guarded for SSR/jsdom. */
-function insertHtmlAtSelection(documentReference: Document | undefined, html: string): boolean {
-  if (documentReference === undefined || typeof documentReference.execCommand !== 'function') {
-    return false;
-  }
-  try {
-    return documentReference.execCommand('insertHTML', false, html);
-  } catch {
-    return false;
-  }
 }
 
 export interface WysiwygEditorProperties {
@@ -273,10 +262,11 @@ export function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>
   };
 
   const refreshActiveState = (): void => {
-    const documentReference = surfaceReference.current?.ownerDocument;
-    const nextActiveCommands = TOGGLE_COMMANDS.filter((command) => isCommandActive(documentReference, command));
+    const host = surfaceReference.current ?? undefined;
+    const documentReference = host?.ownerDocument;
+    const nextActiveCommands = TOGGLE_COMMANDS.filter((command) => isCommandActive(documentReference, command, host));
     setActiveCommands(nextActiveCommands);
-    setBlockFormat(queryBlockFormat(documentReference));
+    setBlockFormat(queryBlockFormat(documentReference, host));
     updateActiveBlockFromSelection();
   };
 
@@ -328,7 +318,7 @@ export function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>
     if (disabled || readonly) {
       return;
     }
-    const host = surfaceReference.current;
+    const host = surfaceReference.current ?? undefined;
     const documentReference = host?.ownerDocument;
     host?.focus();
 
@@ -343,7 +333,7 @@ export function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>
       value = entered;
     }
 
-    runCommand(documentReference, command, value);
+    runCommand(documentReference, command, value, host);
     emitContent();
     refreshActiveState();
   };

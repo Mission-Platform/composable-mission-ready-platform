@@ -10,6 +10,8 @@
  * environments (so SSR and unit tests never throw).
  */
 
+import { topLevelBlockFor } from './blocks';
+
 /** Every rich-text command the editor toolbar can invoke. */
 export type WysiwygCommand =
   | 'bold'
@@ -112,12 +114,679 @@ export function commandRequiresArgument(command: WysiwygCommand): boolean {
 }
 
 /**
+ * Insert an HTML fragment at the current selection, guarded for SSR/jsdom.
+ * Uses modern Selection and Range APIs first, degrading gracefully to
+ * `execCommand('insertHTML')` when Range manipulation is unavailable.
+ */
+export function insertHtmlAtSelection(documentReference: Document | undefined, html: string): boolean {
+  if (documentReference === undefined) {
+    return false;
+  }
+  const selection = documentReference.getSelection?.() ?? documentReference.defaultView?.getSelection?.();
+  if (selection && selection.rangeCount > 0) {
+    try {
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      const fragment = range.createContextualFragment(html);
+      const lastChild = fragment.lastChild;
+      range.insertNode(fragment);
+      if (lastChild) {
+        const nextRange = documentReference.createRange();
+        nextRange.setStartAfter(lastChild);
+        nextRange.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(nextRange);
+      }
+      return true;
+    } catch {
+      // Degrade to execCommand fallback
+    }
+  }
+  if (typeof documentReference.execCommand === 'function') {
+    try {
+      return documentReference.execCommand('insertHTML', false, html);
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
+const INLINE_TAGS: Readonly<Record<string, { tag: string; aliases: readonly string[] }>> = {
+  bold: { tag: 'strong', aliases: ['STRONG', 'B'] },
+  italic: { tag: 'em', aliases: ['EM', 'I'] },
+  underline: { tag: 'u', aliases: ['U'] },
+  strikethrough: { tag: 's', aliases: ['S', 'DEL', 'STRIKE'] },
+};
+
+const BLOCK_TAGS: Readonly<Record<string, string>> = {
+  heading1: 'h1',
+  heading2: 'h2',
+  heading3: 'h3',
+  heading4: 'h4',
+  heading5: 'h5',
+  heading6: 'h6',
+  paragraph: 'p',
+  blockquote: 'blockquote',
+  monospace: 'pre',
+};
+
+/** Finds the closest ancestor element that matches one of the provided tag names. */
+function findAncestorTag(
+  node: Node | null | undefined,
+  tags: readonly string[],
+  boundary?: HTMLElement | null,
+): HTMLElement | undefined {
+  let current: Node | null | undefined = node;
+  while (current && current !== boundary && current !== current.ownerDocument?.body) {
+    if (current.nodeType === Node.ELEMENT_NODE) {
+      const element = current as HTMLElement;
+      if (tags.includes(element.tagName.toUpperCase())) {
+        return element;
+      }
+    }
+    current = current.parentNode;
+  }
+  return undefined;
+}
+
+/** Unwraps an element by moving its children to its parent and removing the element. */
+function unwrapElement(element: Element): void {
+  const parent = element.parentNode;
+  if (!parent) {
+    return;
+  }
+  while (element.firstChild) {
+    parent.insertBefore(element.firstChild, element);
+  }
+  element.remove();
+}
+
+/** Checks if a fragment contains meaningful content (text or specific non-empty elements). */
+function fragmentHasMeaningfulContent(fragment: DocumentFragment, ignoreWhitespace = false): boolean {
+  if (ignoreWhitespace) {
+    return (
+      (fragment.textContent ?? '').trim().length > 0 ||
+      fragment.querySelector('img, br, video, audio, input, textarea, hr') !== null
+    );
+  }
+  return (
+    (fragment.textContent ?? '').length > 0 ||
+    fragment.querySelector('img, br, video, audio, input, textarea, hr') !== null
+  );
+}
+
+/** Locates the contenteditable editing surface enclosing a node, defaulting to the document body. */
+function findEditingSurface(node: Node | null, documentReference: Document): HTMLElement | undefined {
+  if (!node) {
+    return undefined;
+  }
+  const element = node.nodeType === Node.ELEMENT_NODE ? (node as HTMLElement) : node.parentElement;
+  return element?.closest<HTMLElement>('[contenteditable="true"]') ?? documentReference.body;
+}
+
+/** Resolves the nearest enclosing block-level element for a node within an editing surface. */
+function findBlockElement(node: Node | null | undefined, surface?: HTMLElement | null): HTMLElement | undefined {
+  if (surface) {
+    const top = topLevelBlockFor(surface, node);
+    if (top) {
+      return top;
+    }
+  }
+  const blockTags = new Set(['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'PRE', 'DIV', 'LI', 'UL', 'OL']);
+  let current: Node | null | undefined = node;
+  while (current && current !== surface && current !== current.ownerDocument?.body) {
+    if (current.nodeType === Node.ELEMENT_NODE) {
+      const element = current as HTMLElement;
+      if (blockTags.has(element.tagName.toUpperCase())) {
+        return element;
+      }
+    }
+    current = current.parentNode;
+  }
+  return undefined;
+}
+
+/** Splits an active ancestor element into extracted content fragments before and after a selection range. */
+function splitAncestorFragments(
+  documentReference: Document,
+  range: Range,
+  activeAncestor: HTMLElement,
+): { beforeFragment: DocumentFragment; afterFragment: DocumentFragment } {
+  const afterRange = documentReference.createRange();
+  afterRange.setStart(range.endContainer, range.endOffset);
+  afterRange.setEnd(activeAncestor, activeAncestor.childNodes.length);
+  const afterFragment = afterRange.extractContents();
+
+  const beforeRange = documentReference.createRange();
+  beforeRange.setStart(activeAncestor, 0);
+  beforeRange.setEnd(range.startContainer, range.startOffset);
+  const beforeFragment = beforeRange.extractContents();
+
+  return { beforeFragment, afterFragment };
+}
+
+/** Clones and reinserts outer formatting wrappers for non-empty fragments before and after an unformatted selection. */
+function preserveSurroundingFragments(
+  activeAncestor: HTMLElement,
+  beforeFragment: DocumentFragment,
+  afterFragment: DocumentFragment,
+): void {
+  const parent = activeAncestor.parentNode;
+  if (beforeFragment.childNodes.length > 0 && fragmentHasMeaningfulContent(beforeFragment, true)) {
+    const beforeElement = activeAncestor.cloneNode(false) as HTMLElement;
+    beforeElement.append(beforeFragment);
+    parent?.insertBefore(beforeElement, activeAncestor);
+  }
+
+  if (afterFragment.childNodes.length > 0 && fragmentHasMeaningfulContent(afterFragment, true)) {
+    const afterElement = activeAncestor.cloneNode(false) as HTMLElement;
+    afterElement.append(afterFragment);
+    parent?.insertBefore(afterElement, activeAncestor.nextSibling);
+  }
+}
+
+/** Toggles an active inline format off when the caret is collapsed inside an active ancestor element. */
+function toggleInlineTagCollapsed(
+  documentReference: Document,
+  selection: Selection,
+  range: Range,
+  activeAncestor: HTMLElement,
+): boolean {
+  const { beforeFragment, afterFragment } = splitAncestorFragments(documentReference, range, activeAncestor);
+  const parent = activeAncestor.parentNode;
+  preserveSurroundingFragments(activeAncestor, beforeFragment, afterFragment);
+
+  const zeroWidthSpace = documentReference.createTextNode('\u200B');
+  parent?.insertBefore(zeroWidthSpace, activeAncestor);
+  activeAncestor.remove();
+
+  const nextRange = documentReference.createRange();
+  nextRange.setStart(zeroWidthSpace, 1);
+  nextRange.collapse(true);
+  selection.removeAllRanges();
+  selection.addRange(nextRange);
+  return true;
+}
+
+/** Unwraps an active inline format across a non-collapsed selection range. */
+function unwrapInlineTag(
+  documentReference: Document,
+  selection: Selection,
+  range: Range,
+  activeAncestor: HTMLElement,
+): boolean {
+  const { beforeFragment, afterFragment } = splitAncestorFragments(documentReference, range, activeAncestor);
+  preserveSurroundingFragments(activeAncestor, beforeFragment, afterFragment);
+
+  const firstChild = activeAncestor.firstChild;
+  const lastChild = activeAncestor.lastChild;
+  unwrapElement(activeAncestor);
+
+  if (firstChild && lastChild) {
+    const nextRange = documentReference.createRange();
+    nextRange.setStartBefore(firstChild);
+    nextRange.setEndAfter(lastChild);
+    selection.removeAllRanges();
+    selection.addRange(nextRange);
+  }
+  return true;
+}
+
+/** Wraps a collapsed caret in a new inline format tag with a zero-width space placeholder. */
+function wrapCollapsedRange(documentReference: Document, selection: Selection, range: Range, tag: string): boolean {
+  const wrapper = documentReference.createElement(tag);
+  const zeroWidthSpace = documentReference.createTextNode('\u200B');
+  wrapper.append(zeroWidthSpace);
+  range.insertNode(wrapper);
+
+  const nextRange = documentReference.createRange();
+  nextRange.setStart(zeroWidthSpace, 1);
+  nextRange.collapse(true);
+  selection.removeAllRanges();
+  selection.addRange(nextRange);
+  return true;
+}
+
+/** Wraps a non-collapsed selection range in a new inline format tag, unwrapping any duplicate inner aliases. */
+function wrapInlineRange(
+  documentReference: Document,
+  selection: Selection,
+  range: Range,
+  spec: { tag: string; aliases: readonly string[] },
+): boolean {
+  const wrapper = documentReference.createElement(spec.tag);
+  const fragment = range.extractContents();
+  for (const alias of spec.aliases) {
+    for (const inner of fragment.querySelectorAll(alias.toLowerCase())) {
+      unwrapElement(inner);
+    }
+  }
+  wrapper.append(fragment);
+  range.insertNode(wrapper);
+
+  const nextRange = documentReference.createRange();
+  nextRange.selectNodeContents(wrapper);
+  selection.removeAllRanges();
+  selection.addRange(nextRange);
+  return true;
+}
+
+/**
+ * Executes an inline formatting command (bold, italic, etc.) on the current selection.
+ */
+function executeInlineFormat(
+  documentReference: Document,
+  selection: Selection,
+  range: Range,
+  spec: { tag: string; aliases: readonly string[] },
+  surface: HTMLElement,
+): boolean {
+  const activeAncestor =
+    findAncestorTag(range.commonAncestorContainer, spec.aliases, surface) ??
+    findAncestorTag(selection.anchorNode, spec.aliases, surface);
+
+  if (activeAncestor) {
+    return range.collapsed
+      ? toggleInlineTagCollapsed(documentReference, selection, range, activeAncestor)
+      : unwrapInlineTag(documentReference, selection, range, activeAncestor);
+  }
+
+  return range.collapsed
+    ? wrapCollapsedRange(documentReference, selection, range, spec.tag)
+    : wrapInlineRange(documentReference, selection, range, spec);
+}
+
+/**
+ * Formats the current block into a new block tag (e.g. heading or blockquote).
+ */
+function executeBlockFormat(
+  documentReference: Document,
+  selection: Selection,
+  targetTag: string,
+  surface: HTMLElement,
+): boolean {
+  const currentBlock =
+    topLevelBlockFor(surface, selection.anchorNode) ?? findBlockElement(selection.anchorNode, surface);
+  if (!currentBlock) {
+    return false;
+  }
+
+  if (currentBlock.tagName.toLowerCase() === targetTag.toLowerCase()) {
+    return true;
+  }
+
+  const newBlock = documentReference.createElement(targetTag);
+  if (currentBlock.style.textAlign) {
+    newBlock.style.textAlign = currentBlock.style.textAlign;
+  }
+  while (currentBlock.firstChild) {
+    newBlock.append(currentBlock.firstChild);
+  }
+  if (!newBlock.firstChild || (newBlock.textContent?.length === 0 && !newBlock.querySelector('br, img'))) {
+    newBlock.append(documentReference.createElement('br'));
+  }
+  currentBlock.replaceWith(newBlock);
+
+  const nextRange = documentReference.createRange();
+  nextRange.selectNodeContents(newBlock);
+  nextRange.collapse(false);
+  selection.removeAllRanges();
+  selection.addRange(nextRange);
+  return true;
+}
+
+/**
+ * Toggles an existing list off by converting all child list items back to paragraph elements.
+ */
+function toggleListOff(documentReference: Document, selection: Selection, existingListElement: HTMLElement): boolean {
+  const items = [...existingListElement.querySelectorAll(':scope > li')];
+  const paragraphs: HTMLElement[] = [];
+  for (const listItem of items) {
+    const paragraph = documentReference.createElement('p');
+    while (listItem.firstChild) {
+      paragraph.append(listItem.firstChild);
+    }
+    if (!paragraph.firstChild) {
+      paragraph.append(documentReference.createElement('br'));
+    }
+    paragraphs.push(paragraph);
+  }
+  if (paragraphs.length === 0) {
+    const paragraph = documentReference.createElement('p');
+    paragraph.append(documentReference.createElement('br'));
+    paragraphs.push(paragraph);
+  }
+  existingListElement.replaceWith(...paragraphs);
+
+  const nextRange = documentReference.createRange();
+  const firstParagraph = paragraphs[0];
+  if (firstParagraph) {
+    nextRange.selectNodeContents(firstParagraph);
+  }
+  nextRange.collapse(false);
+  selection.removeAllRanges();
+  selection.addRange(nextRange);
+  return true;
+}
+
+/**
+ * Switches an existing list's type (e.g. ordered list to unordered list or vice versa).
+ */
+function switchListType(
+  documentReference: Document,
+  selection: Selection,
+  existingListElement: HTMLElement,
+  targetTag: string,
+): boolean {
+  const newListElement = documentReference.createElement(targetTag);
+  while (existingListElement.firstChild) {
+    newListElement.append(existingListElement.firstChild);
+  }
+  existingListElement.replaceWith(newListElement);
+
+  const nextRange = documentReference.createRange();
+  nextRange.selectNodeContents(newListElement);
+  nextRange.collapse(false);
+  selection.removeAllRanges();
+  selection.addRange(nextRange);
+  return true;
+}
+
+/**
+ * Converts selected or enclosing block elements into a list of the specified tag.
+ */
+function convertBlockToList(
+  documentReference: Document,
+  selection: Selection,
+  range: Range,
+  targetTag: string,
+  surface: HTMLElement,
+): boolean {
+  const selectedBlocks = [...surface.children].filter(
+    (child): child is HTMLElement => child instanceof HTMLElement && range.intersectsNode(child),
+  );
+
+  const fallbackBlock =
+    topLevelBlockFor(surface, selection.anchorNode) ?? findBlockElement(selection.anchorNode, surface);
+  const blocksToConvert = selectedBlocks.length > 0 ? selectedBlocks : fallbackBlock ? [fallbackBlock] : [];
+
+  if (blocksToConvert.length === 0) {
+    return false;
+  }
+
+  const listElement = documentReference.createElement(targetTag);
+  for (const block of blocksToConvert) {
+    const listItem = documentReference.createElement('li');
+    while (block.firstChild) {
+      listItem.append(block.firstChild);
+    }
+    if (!listItem.firstChild) {
+      listItem.append(documentReference.createElement('br'));
+    }
+    listElement.append(listItem);
+  }
+
+  const firstBlock = blocksToConvert[0];
+  if (firstBlock) {
+    firstBlock.replaceWith(listElement);
+  }
+  for (let index = 1; index < blocksToConvert.length; index++) {
+    const block = blocksToConvert[index];
+    if (block) {
+      block.remove();
+    }
+  }
+
+  const nextRange = documentReference.createRange();
+  nextRange.selectNodeContents(listElement.firstElementChild ?? listElement);
+  nextRange.collapse(false);
+  selection.removeAllRanges();
+  selection.addRange(nextRange);
+  return true;
+}
+
+/**
+ * Executes a list format command, either toggling an existing list off,
+ * switching list types, or converting selected blocks into a new list.
+ */
+function executeListFormat(
+  documentReference: Document,
+  selection: Selection,
+  range: Range,
+  listType: 'bulletList' | 'numberedList',
+  surface: HTMLElement,
+): boolean {
+  const targetTag = listType === 'bulletList' ? 'ul' : 'ol';
+  const existingListElement = findAncestorTag(selection.anchorNode, ['UL', 'OL'], surface);
+
+  if (existingListElement) {
+    if (existingListElement.tagName.toLowerCase() === targetTag) {
+      return toggleListOff(documentReference, selection, existingListElement);
+    }
+    return switchListType(documentReference, selection, existingListElement, targetTag);
+  }
+
+  return convertBlockToList(documentReference, selection, range, targetTag, surface);
+}
+
+const SAFE_URL_PATTERN = /^(?:https?:\/\/|mailto:|tel:|\/|#|\?)/i;
+
+/** Returns true when the URL scheme is considered safe for hyperlinks and media sources. */
+function isSafeUrl(url: string): boolean {
+  const trimmed = url.trim();
+  if (!trimmed) {
+    return false;
+  }
+  return SAFE_URL_PATTERN.test(trimmed);
+}
+
+/**
+ * Inserts or updates a hyperlink at the current selection.
+ */
+function executeLink(
+  documentReference: Document,
+  selection: Selection,
+  range: Range,
+  url: string,
+  surface: HTMLElement,
+): boolean {
+  if (!isSafeUrl(url)) {
+    return false;
+  }
+  const existingAnchor =
+    findAncestorTag(range.commonAncestorContainer, ['A'], surface) ??
+    findAncestorTag(selection.anchorNode, ['A'], surface);
+
+  if (existingAnchor) {
+    existingAnchor.setAttribute('href', url);
+    return true;
+  }
+
+  if (range.collapsed) {
+    const anchorElement = documentReference.createElement('a');
+    anchorElement.href = url;
+    anchorElement.textContent = url;
+    range.insertNode(anchorElement);
+
+    const nextRange = documentReference.createRange();
+    nextRange.setStartAfter(anchorElement);
+    nextRange.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(nextRange);
+    return true;
+  }
+
+  const anchorElement = documentReference.createElement('a');
+  anchorElement.href = url;
+  const fragment = range.extractContents();
+  anchorElement.append(fragment);
+  range.insertNode(anchorElement);
+
+  const nextRange = documentReference.createRange();
+  nextRange.selectNodeContents(anchorElement);
+  selection.removeAllRanges();
+  selection.addRange(nextRange);
+  return true;
+}
+
+/**
+ * Removes hyperlinks intersecting the current selection.
+ */
+function executeUnlink(
+  _documentReference: Document,
+  selection: Selection,
+  range: Range,
+  surface: HTMLElement,
+): boolean {
+  const existingAnchor =
+    findAncestorTag(range.commonAncestorContainer, ['A'], surface) ??
+    findAncestorTag(selection.anchorNode, ['A'], surface);
+
+  if (existingAnchor) {
+    unwrapElement(existingAnchor);
+    return true;
+  }
+
+  if (range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE) {
+    const containerElement = range.commonAncestorContainer as Element;
+    const links = [...containerElement.querySelectorAll('a')].filter((anchorElement) =>
+      range.intersectsNode(anchorElement),
+    );
+    for (const anchorElement of links) {
+      unwrapElement(anchorElement);
+    }
+    return links.length > 0;
+  }
+  return false;
+}
+
+/**
+ * Inserts an image element at the current selection.
+ */
+function executeImage(documentReference: Document, selection: Selection, range: Range, url: string): boolean {
+  if (!isSafeUrl(url)) {
+    return false;
+  }
+  const imageElement = documentReference.createElement('img');
+  imageElement.src = url;
+  imageElement.alt = '';
+  range.deleteContents();
+  range.insertNode(imageElement);
+
+  const nextRange = documentReference.createRange();
+  nextRange.setStartAfter(imageElement);
+  nextRange.collapse(true);
+  selection.removeAllRanges();
+  selection.addRange(nextRange);
+  return true;
+}
+
+/**
+ * Applies text alignment styling to the block element containing the selection.
+ */
+function executeAlignment(
+  command: 'alignLeft' | 'alignCenter' | 'alignRight' | 'alignJustify',
+  surface: HTMLElement,
+  selection: Selection,
+): boolean {
+  const alignMap: Record<string, string> = {
+    alignLeft: 'left',
+    alignCenter: 'center',
+    alignRight: 'right',
+    alignJustify: 'justify',
+  };
+  const block = topLevelBlockFor(surface, selection.anchorNode) ?? findBlockElement(selection.anchorNode, surface);
+  if (block) {
+    block.style.textAlign = alignMap[command] ?? 'left';
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Removes inline formatting elements and wraps across the selection.
+ */
+function executeClearFormatting(selection: Selection, range: Range, surface: HTMLElement): boolean {
+  const formattingTags = ['STRONG', 'B', 'EM', 'I', 'U', 'S', 'DEL', 'STRIKE', 'A', 'SPAN'];
+  let ancestor = findAncestorTag(selection.anchorNode, formattingTags, surface);
+  while (ancestor) {
+    const next = findAncestorTag(ancestor.parentNode, formattingTags, surface);
+    unwrapElement(ancestor);
+    ancestor = next;
+  }
+  if (!range.collapsed) {
+    const fragment = range.extractContents();
+    for (const tag of formattingTags) {
+      for (const formattingElement of fragment.querySelectorAll(tag.toLowerCase())) {
+        unwrapElement(formattingElement);
+      }
+    }
+    range.insertNode(fragment);
+  }
+  return true;
+}
+
+/**
+ * Dispatches a WYSIWYG command to modern DOM Range-based manipulation handlers.
+ */
+function executeDomCommand(
+  documentReference: Document,
+  selection: Selection,
+  range: Range,
+  command: WysiwygCommand,
+  value: string | undefined,
+  surface: HTMLElement,
+): boolean {
+  if (command in INLINE_TAGS) {
+    const tagSpec = INLINE_TAGS[command];
+    if (tagSpec) {
+      return executeInlineFormat(documentReference, selection, range, tagSpec, surface);
+    }
+    return false;
+  }
+  if (command in BLOCK_TAGS) {
+    const blockTag = BLOCK_TAGS[command];
+    if (blockTag) {
+      return executeBlockFormat(documentReference, selection, blockTag, surface);
+    }
+    return false;
+  }
+  if (command === 'bulletList' || command === 'numberedList') {
+    return executeListFormat(documentReference, selection, range, command, surface);
+  }
+  if (command === 'link') {
+    return value ? executeLink(documentReference, selection, range, value, surface) : false;
+  }
+  if (command === 'unlink') {
+    return executeUnlink(documentReference, selection, range, surface);
+  }
+  if (command === 'image') {
+    return value ? executeImage(documentReference, selection, range, value) : false;
+  }
+  if (command === 'alignLeft' || command === 'alignCenter' || command === 'alignRight' || command === 'alignJustify') {
+    return executeAlignment(command, surface, selection);
+  }
+  if (command === 'clearFormatting') {
+    return executeClearFormatting(selection, range, surface);
+  }
+  return false;
+}
+
+/**
  * Run a rich-text command against a document's current selection, guarded so it
  * never throws when `execCommand` is unavailable (SSR, jsdom, locked-down
- * browsers). Returns whether the command was executed.
+ * browsers). Uses modern DOM Selection/Range APIs first and degrades to
+ * `document.execCommand` only when Range execution is not applicable.
+ * Returns whether the command was executed.
  */
-export function runCommand(documentReference: Document | undefined, command: WysiwygCommand, value?: string): boolean {
-  if (documentReference === undefined || typeof documentReference.execCommand !== 'function') {
+export function runCommand(
+  documentReference: Document | undefined,
+  command: WysiwygCommand,
+  value?: string,
+  surface?: HTMLElement,
+): boolean {
+  if (documentReference === undefined) {
     return false;
   }
   const resolved = resolveExecCommand(command, value);
@@ -125,19 +794,71 @@ export function runCommand(documentReference: Document | undefined, command: Wys
     // A url/image command with no value supplied is a no-op rather than an error.
     return false;
   }
-  try {
-    return documentReference.execCommand(resolved.command, false, resolved.value);
-  } catch {
-    return false;
+
+  const selection = documentReference.getSelection?.() ?? documentReference.defaultView?.getSelection?.();
+  if (selection && selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const editingSurface = surface ?? findEditingSurface(range.commonAncestorContainer, documentReference);
+    if (
+      editingSurface &&
+      (editingSurface === range.commonAncestorContainer || editingSurface.contains(range.commonAncestorContainer))
+    ) {
+      try {
+        const handled = executeDomCommand(documentReference, selection, range, command, value, editingSurface);
+        if (handled) {
+          return true;
+        }
+      } catch {
+        // Fall back below if modern DOM execution failed
+      }
+    }
   }
+
+  if (typeof documentReference.execCommand === 'function') {
+    try {
+      return documentReference.execCommand(resolved.command, false, resolved.value);
+    } catch {
+      return false;
+    }
+  }
+  return false;
 }
 
 /**
  * Whether a toggle command (`bold`, `italic`, …) is currently active for the
- * selection, guarded so it never throws when `queryCommandState` is unavailable.
+ * selection, inspecting the DOM ancestry when available and falling back to
+ * `queryCommandState`.
  */
-export function isCommandActive(documentReference: Document | undefined, command: WysiwygCommand): boolean {
-  if (documentReference === undefined || typeof documentReference.queryCommandState !== 'function') {
+export function isCommandActive(
+  documentReference: Document | undefined,
+  command: WysiwygCommand,
+  surface?: HTMLElement,
+): boolean {
+  if (documentReference === undefined) {
+    return false;
+  }
+  const selection = documentReference.getSelection?.() ?? documentReference.defaultView?.getSelection?.();
+  if (selection && selection.rangeCount > 0) {
+    const anchor = selection.anchorNode;
+    if (anchor && (!surface || surface.contains(anchor))) {
+      const tagSpec: Record<string, string[]> = {
+        bold: ['STRONG', 'B'],
+        italic: ['EM', 'I'],
+        underline: ['U'],
+        strikethrough: ['S', 'DEL', 'STRIKE'],
+        bulletList: ['UL'],
+        numberedList: ['OL'],
+        blockquote: ['BLOCKQUOTE'],
+        monospace: ['PRE'],
+        link: ['A'],
+      };
+      const tags = tagSpec[command];
+      if (tags) {
+        return findAncestorTag(anchor, tags, surface) !== undefined;
+      }
+    }
+  }
+  if (typeof documentReference.queryCommandState !== 'function') {
     return false;
   }
   try {
@@ -182,11 +903,29 @@ const BLOCK_TAG_TO_COMMAND: Readonly<Record<string, WysiwygCommand>> = {
 /**
  * Resolve the {@link WysiwygCommand} describing the block format of the current
  * selection (e.g. `'heading1'` when the caret sits inside an `<h1>`), defaulting
- * to `'paragraph'`. Guarded so it never throws when `queryCommandValue` is
- * unavailable (SSR, jsdom, locked-down browsers).
+ * to `'paragraph'`. Inspects DOM container first, falling back to `queryCommandValue`.
  */
-export function queryBlockFormat(documentReference: Document | undefined): WysiwygCommand {
-  if (documentReference === undefined || typeof documentReference.queryCommandValue !== 'function') {
+export function queryBlockFormat(documentReference: Document | undefined, surface?: HTMLElement): WysiwygCommand {
+  if (documentReference === undefined) {
+    return 'paragraph';
+  }
+  const selection = documentReference.getSelection?.() ?? documentReference.defaultView?.getSelection?.();
+  if (selection && selection.rangeCount > 0) {
+    const anchor = selection.anchorNode;
+    if (anchor && (!surface || surface.contains(anchor))) {
+      let current: Node | null = anchor;
+      while (current && current !== surface && current !== current.ownerDocument?.body) {
+        if (current.nodeType === Node.ELEMENT_NODE) {
+          const tag = (current as Element).tagName.toLowerCase();
+          if (BLOCK_TAG_TO_COMMAND[tag]) {
+            return BLOCK_TAG_TO_COMMAND[tag];
+          }
+        }
+        current = current.parentNode;
+      }
+    }
+  }
+  if (typeof documentReference.queryCommandValue !== 'function') {
     return 'paragraph';
   }
   try {
