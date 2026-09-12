@@ -109,6 +109,28 @@ fn scan_two_d_from_luma_with_hint(
     }
   }
 
+  if try_harder {
+    let mut rotation: i32 = 90;
+    while rotation <= 270 {
+      let rotated: u32 = image.rotate_luma(data, width, height, rotation, meta);
+      if rotated != 0 {
+        let rotated_width: i32 = meta[0];
+        let rotated_height: i32 = meta[1];
+        let rotated_bits: u32 = image.binarize(rotated, rotated_width, rotated_height);
+        if rotated_bits != 0 {
+          let rotated_value: string = string_concat("", scan_two_d_with_hint(rotated_bits, rotated_width, rotated_height, modules, erasures, packed, meta, possible_format));
+          if string_length(rotated_value) > 0 { return string_concat("", rotated_value); }
+        }
+        let rotated_adaptive_bits: u32 = image.binarize_adaptive(rotated, rotated_width, rotated_height);
+        if rotated_adaptive_bits != 0 {
+          let rotated_adaptive_value: string = string_concat("", scan_two_d_with_hint(rotated_adaptive_bits, rotated_width, rotated_height, modules, erasures, packed, meta, possible_format));
+          if string_length(rotated_adaptive_value) > 0 { return string_concat("", rotated_adaptive_value); }
+        }
+      }
+      rotation = rotation + 90;
+    }
+  }
+
   if !also_inverted { return ""; }
   let inverted: u32 = image.invert_luma_copy(data, width, height);
   if inverted == 0 { return ""; }
@@ -118,8 +140,32 @@ fn scan_two_d_from_luma_with_hint(
     if string_length(inverted_global_value) > 0 { return string_concat("", inverted_global_value); }
   }
   let inverted_adaptive_bits: u32 = image.binarize_adaptive(inverted, width, height);
-  if inverted_adaptive_bits == 0 { return ""; }
-  return string_concat("", scan_two_d_with_hint(inverted_adaptive_bits, width, height, modules, erasures, packed, meta, possible_format));
+  if inverted_adaptive_bits != 0 {
+    let inverted_adaptive_value: string = string_concat("", scan_two_d_with_hint(inverted_adaptive_bits, width, height, modules, erasures, packed, meta, possible_format));
+    if string_length(inverted_adaptive_value) > 0 { return string_concat("", inverted_adaptive_value); }
+  }
+  if try_harder {
+    let mut inverted_rotation: i32 = 90;
+    while inverted_rotation <= 270 {
+      let rotated_inverted: u32 = image.rotate_luma(inverted, width, height, inverted_rotation, meta);
+      if rotated_inverted != 0 {
+        let rotated_inverted_width: i32 = meta[0];
+        let rotated_inverted_height: i32 = meta[1];
+        let rotated_inverted_bits: u32 = image.binarize(rotated_inverted, rotated_inverted_width, rotated_inverted_height);
+        if rotated_inverted_bits != 0 {
+          let rotated_inverted_value: string = string_concat("", scan_two_d_with_hint(rotated_inverted_bits, rotated_inverted_width, rotated_inverted_height, modules, erasures, packed, meta, possible_format));
+          if string_length(rotated_inverted_value) > 0 { return string_concat("", rotated_inverted_value); }
+        }
+        let rotated_inverted_adaptive_bits: u32 = image.binarize_adaptive(rotated_inverted, rotated_inverted_width, rotated_inverted_height);
+        if rotated_inverted_adaptive_bits != 0 {
+          let rotated_inverted_adaptive_value: string = string_concat("", scan_two_d_with_hint(rotated_inverted_adaptive_bits, rotated_inverted_width, rotated_inverted_height, modules, erasures, packed, meta, possible_format));
+          if string_length(rotated_inverted_adaptive_value) > 0 { return string_concat("", rotated_inverted_adaptive_value); }
+        }
+      }
+      inverted_rotation = inverted_rotation + 90;
+    }
+  }
+  return "";
 }
 
 fn scan_two_d_from_luma(data: u32, width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>, packed: Array<i32>, meta: Array<i32>) -> string {

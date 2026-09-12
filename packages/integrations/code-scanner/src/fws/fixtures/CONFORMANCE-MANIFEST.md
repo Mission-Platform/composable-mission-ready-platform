@@ -61,12 +61,13 @@ they are used as release conformance gates.
 
 ## Validation record
 
-- Focused and full scanner graph: 26 tests passed, including the standalone QR
+- Focused and full scanner graph: 25 tests passed, including the standalone QR
   graph and the linked reduced-reader graph.
-- Package Vitest: 56 passed and 32 skipped; the skipped cases are the QR and
+- Package Vitest: 60 passed and 32 skipped; the skipped cases are the QR and
   multi-symbol scenarios that require unavailable combined-reader behavior.
 - Package `build:check`, ESLint, Stylelint, Prettier, and all Forge framework
   and Storyblok builds passed on 2026-09-12.
 - Strict FWS source analysis and the complete ZXing black-box/golden corpus are
   not release gates yet: standalone directory analysis cannot resolve the
-  product graph's imported symbols, and no corpus files are redistributed.
+  product graph's imported symbols, no corpus files are redistributed, and the
+  current all-results entry remains a single-result compatibility path.

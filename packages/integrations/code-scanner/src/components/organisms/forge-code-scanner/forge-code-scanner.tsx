@@ -1,3 +1,12 @@
+import {
+  scanFile,
+  scanImageData,
+  type ScanFormat,
+  type ScanOptions,
+  type ScanResult,
+  setCodeScannerDebug,
+  videoFrameToImageData,
+} from '@mission-platform/code-scanner';
 import { ForgeButton } from '@mission-platform/components';
 import {
   useEffect,
@@ -9,16 +18,6 @@ import {
 } from '@mission-platform/forge-jsx';
 import { ForgeIconCamera, ForgeIconClose, ForgeIconUpload } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
-
-import {
-  scanFile,
-  scanImageData,
-  type ScanFormat,
-  type ScanOptions,
-  type ScanResult,
-  setCodeScannerDebug,
-  videoFrameToImageData,
-} from '@mission-platform/code-scanner';
 
 import { scannerLog } from '../../../debug';
 
