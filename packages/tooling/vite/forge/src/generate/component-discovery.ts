@@ -2,11 +2,10 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { moduleTargetsFramework } from '../compiler/directives.js';
-import {
-  discoverComponentsFromGraph,
-  type DiscoveredComponent,
-} from '../compiler/discover.js';
+import { discoverComponentsFromGraph, type DiscoveredComponent } from '../compiler/discover.js';
+
 import type { ForgeFileGraph } from '../compiler/graph.js';
+import type { CompilerDiagnostic } from '@mission-platform/forge-plugin-api';
 
 const toPosix = (value: string): string => value.split(path.sep).join('/');
 
@@ -25,8 +24,9 @@ export function discoverAndFilterComponents(
   graph: ForgeFileGraph,
   stripPrefix: string,
   targetId: string,
+  diagnostics?: CompilerDiagnostic[],
 ): DiscoveredComponent[] {
-  return discoverComponentsFromGraph(graph, stripPrefix).filter((component) => {
+  return discoverComponentsFromGraph(graph, stripPrefix, diagnostics).filter((component) => {
     if (component.sourcePath === undefined || !existsSync(component.sourcePath)) {
       return false;
     }
@@ -49,9 +49,7 @@ export interface DiscoverSiblingComponentsOptions {
  * They are found recursively by following relative PascalCase imports to co-located
  * neutral components.
  */
-export function discoverSiblingComponents(
-  options: DiscoverSiblingComponentsOptions,
-): DiscoveredComponent[] {
+export function discoverSiblingComponents(options: DiscoverSiblingComponentsOptions): DiscoveredComponent[] {
   const { graph, components, stripPrefix, targetId, componentsDir, componentFolders } = options;
   const siblingComponents: DiscoveredComponent[] = [];
   const discoveredFolders = new Set(components.map((component) => component.folder));

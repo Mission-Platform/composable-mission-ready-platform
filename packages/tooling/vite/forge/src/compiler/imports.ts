@@ -73,7 +73,8 @@ export function readStyleImports(fileName: string, source: string, sourceRoot?: 
     if (specifier === undefined) continue;
 
     const base =
-      specifier.split('/').findLast((segment) => segment !== '.' && segment !== '..' && segment.length > 0) ?? specifier;
+      specifier.split('/').findLast((segment) => segment !== '.' && segment !== '..' && segment.length > 0) ??
+      specifier;
     const defaultName = oxcArray(statement, 'specifiers').find(
       (specifierNode) => specifierNode.type === 'ImportDefaultSpecifier',
     );

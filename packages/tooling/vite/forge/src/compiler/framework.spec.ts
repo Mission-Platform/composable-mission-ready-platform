@@ -17,7 +17,12 @@ function fixtureFramework(id: string): FrameworkOutputPlugin {
       componentExport: 'named',
     },
     lower(ir, context) {
-      return { framework: context.framework, module: ir, context };
+      return {
+        framework: context.framework,
+        module: ir,
+        context,
+        lowered: { framework: context.framework, appliedOptimizations: [] },
+      };
     },
     optimize(intentions) {
       return intentions;
@@ -47,7 +52,12 @@ describe('framework output plugin contracts', () => {
       },
       lower(ir, context) {
         phases.push(`lower:${ir.moduleKind}:${context.framework}`);
-        return { framework: context.framework, module: ir, context };
+        return {
+          framework: context.framework,
+          module: ir,
+          context,
+          lowered: { framework: context.framework, appliedOptimizations: [] },
+        };
       },
       optimize(intentions) {
         phases.push('optimize');
@@ -106,7 +116,12 @@ describe('framework output plugin contracts', () => {
       ...fixtureFramework('missing-component-fixture'),
       lower(ir, context) {
         phases.push('lower');
-        return { framework: context.framework, module: ir, context };
+        return {
+          framework: context.framework,
+          module: ir,
+          context,
+          lowered: { framework: context.framework, appliedOptimizations: [] },
+        };
       },
     };
 
@@ -134,6 +149,7 @@ describe('framework output plugin contracts', () => {
           framework: context.framework,
           module: ir,
           context,
+          lowered: { framework: context.framework, appliedOptimizations: [] },
           diagnostics: [
             {
               phase: 'generation',
@@ -179,7 +195,13 @@ describe('framework output plugin contracts', () => {
     const plugin: FrameworkOutputPlugin = {
       ...fixtureFramework('diagnostic-fixture'),
       lower(ir, context) {
-        return { framework: context.framework, module: ir, context, diagnostics: [warning] };
+        return {
+          framework: context.framework,
+          module: ir,
+          context,
+          lowered: { framework: context.framework, appliedOptimizations: [] },
+          diagnostics: [warning],
+        };
       },
       optimize(intentions) {
         return intentions;
@@ -213,7 +235,12 @@ describe('framework output plugin contracts', () => {
         componentExport: 'default',
       },
       lower(ir, context) {
-        return { framework: context.framework, module: ir, context };
+        return {
+          framework: context.framework,
+          module: ir,
+          context,
+          lowered: { framework: context.framework, appliedOptimizations: [] },
+        };
       },
       optimize(intentions) {
         return intentions;
@@ -257,5 +284,76 @@ describe('framework output plugin contracts', () => {
     ]);
     expect(frameworks.map((framework) => framework.build.vite?.({}))).toHaveLength(6);
     expect(frameworks.map((framework) => framework.build.tsdown?.({}))).toHaveLength(6);
+  });
+
+  it('compiles custom plugin targets without requiring driver registry or enum updates', () => {
+    const customPlugin: FrameworkOutputPlugin = {
+      id: 'custom-embedded-qt',
+      outputLanguage: 'cpp-qml',
+      source: {
+        componentExtension: '.qml',
+        componentImportExtension: '.qml',
+        composableExtension: '.ts',
+        entryExtension: '.ts',
+        componentExport: 'default',
+      },
+      lower(ir, context) {
+        return {
+          framework: context.framework,
+          module: ir,
+          context,
+          lowered: {
+            framework: context.framework,
+            appliedOptimizations: ['custom-lowering-pass'],
+          },
+        };
+      },
+      optimize(intentions) {
+        return intentions;
+      },
+      generate(intentions) {
+        return {
+          code: `// QML for ${intentions.context.framework}\nItem {}`,
+          lang: 'qml',
+        };
+      },
+      build: {},
+    };
+
+    const result = createCompilerPipeline().compile(
+      {
+        source: 'export function Widget() { return <div />; }',
+        fileName: 'Widget.tsx',
+        moduleKind: 'component',
+      },
+      customPlugin,
+    );
+
+    expect(result.code).toContain('// QML for custom-embedded-qt');
+    expect(result.lang).toBe('qml');
+  });
+
+  it('rejects pipeline execution when lower or optimize omits the lowered plan', () => {
+    const missingLowerPlan: FrameworkOutputPlugin = {
+      ...fixtureFramework('missing-plan'),
+      lower(ir, context) {
+        return {
+          framework: context.framework,
+          module: ir,
+          context,
+        } as unknown as ReturnType<FrameworkOutputPlugin['lower']>;
+      },
+    };
+
+    expect(() =>
+      createCompilerPipeline().compile(
+        {
+          source: 'export const fixture = true;',
+          fileName: 'fixture.tsx',
+          moduleKind: 'composable',
+        },
+        missingLowerPlan,
+      ),
+    ).toThrow('must contain a lowered target plan');
   });
 });

@@ -325,7 +325,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
           forgeArtifactPublishPlugin({
             publishedDirectory: publishedOutDir,
             attemptDirectory: attemptOutDir,
-            generatedDirectory,
+            generatedDirectory: generatedDir,
             targetId: framework,
           }),
         ],

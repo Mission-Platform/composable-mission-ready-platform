@@ -1,9 +1,11 @@
-import type {
-  DiscoveredComponent,
-  DiscoveredExternalExport,
-  DiscoveredHelperBinding,
-  DiscoveredHelperExport,
+import {
+  deriveDisambiguatedFolderFromDir,
+  type DiscoveredComponent,
+  type DiscoveredExternalExport,
+  type DiscoveredHelperBinding,
+  type DiscoveredHelperExport,
 } from '../compiler/discover.js';
+
 import type { FrameworkSourceTarget } from '../generate.js';
 import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
@@ -63,14 +65,43 @@ export function helperBindingReExportName(binding: DiscoveredHelperBinding, type
   return `${typeOnly ? 'type ' : ''}${binding.localName}${alias}`;
 }
 
+function findDuplicateFolders(components: readonly DiscoveredComponent[]): Set<string> {
+  const seen = new Set<string>();
+  const duplicates = new Set<string>();
+  for (const component of components) {
+    if (seen.has(component.folder)) {
+      duplicates.add(component.folder);
+    } else {
+      seen.add(component.folder);
+    }
+  }
+  return duplicates;
+}
+
+function resolveComponentEntryFolder(component: DiscoveredComponent, duplicateFolders: ReadonlySet<string>): string {
+  if (
+    duplicateFolders.has(component.folder) &&
+    component.sourceDir !== '' &&
+    component.sourceDir !== component.folder
+  ) {
+    return deriveDisambiguatedFolderFromDir(component.sourceDir, component.folder);
+  }
+  return component.folder;
+}
+
 /**
  * Re-export one compiled component under a given export name.
  *
  * React re-exports the neutral function binding (`ForgeBadge`) under the target
  * name; Vue re-exports the SFC's `default` export.
  */
-function componentReExportLine(target: FrameworkSourceTarget, component: DiscoveredComponent, as: string): string {
-  const fileName = `${component.folder}${target.componentImportExtension}`;
+function componentReExportLine(
+  target: FrameworkSourceTarget,
+  component: DiscoveredComponent,
+  as: string,
+  folder: string = component.folder,
+): string {
+  const fileName = `${folder}${target.componentImportExtension}`;
   return target.componentReExport(component, as, `./${fileName}`);
 }
 
@@ -129,17 +160,19 @@ export function generateEntry(
 ): string {
   const target = typeof frameworkOrTarget === 'string' ? legacyEntryTarget(frameworkOrTarget) : frameworkOrTarget;
 
+  const duplicateFolders = findDuplicateFolders(components);
   const claimedComponentNames = new Set<string>();
   const componentLines = components.flatMap((component) => {
     if (claimedComponentNames.has(component.publicName)) {
       return [];
     }
     claimedComponentNames.add(component.publicName);
-    const lines = [componentReExportLine(target, component, component.publicName)];
+    const folder = resolveComponentEntryFolder(component, duplicateFolders);
+    const lines = [componentReExportLine(target, component, component.publicName, folder)];
     // Also ship the neutral `Base*` name as an alias of the same component.
     if (component.neutralName !== component.publicName && !claimedComponentNames.has(component.neutralName)) {
       claimedComponentNames.add(component.neutralName);
-      lines.push(componentReExportLine(target, component, component.neutralName));
+      lines.push(componentReExportLine(target, component, component.neutralName, folder));
     }
     return lines;
   });
@@ -157,18 +190,20 @@ export function generateEntry(
   const typesByModule = new Map<string, { origin: TypeOrigin; types: string[] }>();
   const claimedTypes = new Set<string>(claimedComponentNames);
   for (const component of components) {
+    const folder = resolveComponentEntryFolder(component, duplicateFolders);
     for (const type of component.typeExports) {
       if (claimedTypes.has(type)) {
         continue;
       }
-      const origin = resolveTypeOrigin(component.folder, type);
+      const origin = resolveTypeOrigin(folder, type) ?? resolveTypeOrigin(component.folder, type);
       if (origin === undefined) {
         continue;
       }
       claimedTypes.add(type);
-      const group = typesByModule.get(origin.base) ?? { origin, types: [] };
+      const effectiveOrigin = origin.base === component.folder ? { ...origin, base: folder } : origin;
+      const group = typesByModule.get(effectiveOrigin.base) ?? { origin: effectiveOrigin, types: [] };
       group.types.push(type);
-      typesByModule.set(origin.base, group);
+      typesByModule.set(effectiveOrigin.base, group);
     }
   }
 

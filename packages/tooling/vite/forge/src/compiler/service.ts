@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 
-import { throwOnCompilerErrors } from '@mission-platform/forge-plugin-api';
+import { assertTargetIntentionsLowered, throwOnCompilerErrors } from '@mission-platform/forge-plugin-api';
 
 import { createForgeArtifactManifest, type ForgeArtifactRecord } from './artifact-manifest.js';
 import {
@@ -320,6 +320,7 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
 
     const lowerStart = now();
     const lowered = framework.lower(semantic, context);
+    assertTargetIntentionsLowered(lowered, framework.id);
     this.recordPhase('target-lowering', lowerStart);
     this.recordDiagnostics(lowered.diagnostics ?? []);
     throwOnCompilerErrors(lowered.diagnostics);
@@ -328,6 +329,7 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
     const optimized = framework.optimize(lowered, {
       neutral: input.optimize === false ? {} : (input.optimize ?? {}),
     } satisfies TargetOptimizeOptions);
+    assertTargetIntentionsLowered(optimized, framework.id);
     this.recordPhase('optimization', optimizeStart);
     this.recordDiagnostics(optimized.diagnostics ?? []);
     throwOnCompilerErrors(optimized.diagnostics);

@@ -26,16 +26,8 @@ export interface IndexSourceBuilderOptions {
 }
 
 export function createGeneratedIndexSourceBuilder(options: IndexSourceBuilderOptions) {
-  const {
-    graphs,
-    components,
-    siblingComponents,
-    sourceModuleRegistry,
-    moduleBase,
-    mirrorDir,
-    relSpecifier,
-    target,
-  } = options;
+  const { graphs, components, siblingComponents, sourceModuleRegistry, moduleBase, mirrorDir, relSpecifier, target } =
+    options;
 
   const graphForSource = (sourcePath: string): ForgeFileGraph | undefined =>
     graphs.find((candidate) => candidate.nodes.has(path.resolve(sourcePath)));

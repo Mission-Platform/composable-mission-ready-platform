@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { readExternalImports, readStyleImports } from './ast.js';
 import { compileComponentModule } from './compiler-test-helpers.js';
 import { createGenericAst, parseForgeSource, parseFrontendModule } from './frontends.js';
+import { readExternalImports, readStyleImports } from './imports.js';
 import { inferSemanticModule } from './infer.js';
 import { analyzeForgeModule } from './pipeline.js';
 

@@ -1,7 +1,8 @@
 import path from 'node:path';
 
+import { deriveDisambiguatedFolderFromDir, type DiscoveredComponent } from '../compiler/discover.js';
+
 import type { ForgeArtifactWriter } from '../compiler/artifact-writer.js';
-import type { DiscoveredComponent } from '../compiler/discover.js';
 import type { ForgeFileGraph } from '../compiler/graph.js';
 
 type RewriteFlatImports = (code: string, fromDir: string, sourceId?: string) => string;
@@ -46,7 +47,12 @@ export function createFlatImportRewriter(input: {
           ? sourceModuleRegistry.get(path.resolve(graphTargets[0].edge.to as string))
           : undefined;
 
-      const componentTarget = components.find((component) => component.folder === moduleBase(fileName));
+      const componentTarget =
+        components.find((component) => component.folder === moduleBase(fileName)) ??
+        components.find(
+          (component) =>
+            deriveDisambiguatedFolderFromDir(component.sourceDir, component.folder) === moduleBase(fileName),
+        );
       const registeredTarget =
         graphTarget ??
         (componentTarget?.sourcePath === undefined

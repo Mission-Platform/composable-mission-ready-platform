@@ -1,13 +1,13 @@
 import { localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 import { describe, expect, it } from 'vitest';
 
-import { localJsxTypesModuleSource } from './ast';
 import {
   compileComponentModule,
   compileHookModule,
   moduleTargetsFramework,
   readFrameworkDirective,
 } from './compiler-test-helpers';
+import { localJsxTypesModuleSource } from './constants.js';
 import { parseOxcModule } from './oxc.js';
 
 const BADGE = [

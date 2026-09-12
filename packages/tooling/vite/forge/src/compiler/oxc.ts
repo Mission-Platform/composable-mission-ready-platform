@@ -1,7 +1,7 @@
 import { frameworkForDirective } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 import { parseSync } from 'oxc-parser';
 
-import type { ForgeExportFact, ForgeImportFact, ForgeModuleFacts, ForgeSourceSpan } from './ast.js';
+import type { ForgeExportFact, ForgeImportFact, ForgeModuleFacts, ForgeSourceSpan } from './facts.js';
 import type { JsxFramework, SourceBackedExpression, SourceSpan } from '@mission-platform/forge-plugin-api';
 
 /** The serializable subset of an Oxc node used by the neutral frontend. */

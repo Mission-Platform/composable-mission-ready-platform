@@ -202,3 +202,57 @@ Targets remain explicit caller-owned `FrameworkOutputPlugin` instances. The
 neutral compiler has no framework registry and does not import target packages.
 Future worker/daemon transport is possible behind the service contract, but is
 not part of the current in-process implementation.
+
+## Target extensibility and plugin contract
+
+The compiler distinguishes built-in framework conveniences from arbitrary plugin targets:
+
+- **`FrameworkId` (`JsxFramework | (string & {})`)**: The open framework identifier
+  type used across plugin contracts (`FrameworkOutputPlugin.id`, `TargetContext.framework`,
+  and `TargetLoweredModule.framework`). Any target package can define its own unique string
+  ID without extending driver enums or modifying compiler internals.
+- **`JsxFramework`**: The closed union of five built-in frameworks (`react`, `vue`,
+  `solid`, `svelte`, `web-components`), reserved for built-in conveniences such as
+  framework directives (`use react`, `use vue`, etc.) and built-in adapter module resolution.
+- **No central registry**: Targets are registered simply by passing a `FrameworkOutputPlugin`
+  instance to the compiler service or build configuration. The driver maintains no central
+  registry or framework switch.
+
+## Strict lowering pipeline
+
+Forge strictly enforces the `lower` → `optimize` → `generate` phase pipeline:
+
+1. `framework.lower(module, context)` produces a target-owned plan in `TargetIntentions.lowered`.
+2. `framework.optimize(intentions, options)` refines the plan.
+3. `framework.generate(intentions, context)` strictly requires a valid lowered plan
+   (`assertTargetIntentionsLowered`).
+4. Direct-generation fallback lowering has been removed from all built-in plugins
+   (`forge-vue`, `forge-web-components`, `forge-react`, `forge-solid`, `forge-svelte`).
+   Calling `generate()` with unlowered intentions immediately throws a `TypeError`.
+
+## Migration guidance
+
+### Removed legacy AST compatibility exports
+
+The legacy TypeScript AST compatibility layer in `compiler/ast.ts` (factories, visitors,
+transformers, and `@ts-nocheck` compatibility shims) was removed. Oxc is now the sole
+compiler AST path:
+
+- If your code imported AST utilities from `compiler/ast.ts`, migrate to the focused
+  sibling modules:
+  - `compiler/components.js`: Component boundary and declaration facts.
+  - `compiler/constants.js`: Neutral module and runtime marker constants.
+  - `compiler/directives.js`: Directive inspection and framework resolution.
+  - `compiler/facts.js`: AST facts, spans, and inspection utilities.
+  - `compiler/imports.js`: Import declaration and specifier inspection.
+
+### Direct target generation without lowering
+
+Built-in plugins no longer silently lower intentions during `generate()`:
+
+- If your tests or custom scripts called `plugin.generate(...)` directly with raw or
+  unlowered intentions, update them to run `plugin.lower(...)` and `plugin.optimize(...)`
+  first, or invoke the compiler pipeline through `createCompilerPipeline().compile(...)`
+  or `createForgeCompilerService().compile(...)`.
+- Ensure all custom plugins set `lowered: { framework: context.framework, appliedOptimizations: [] }`
+  (or their target-specific plan) on the returned `TargetIntentions`.

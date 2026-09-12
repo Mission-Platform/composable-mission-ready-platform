@@ -10,8 +10,8 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
-import { readNeutralImports } from './compiler/ast.js';
 import { createForgeGenerationContext, type ForgeGenerationContext } from './compiler/generation-context.js';
+import { readNeutralImports } from './compiler/imports.js';
 
 import type { DiscoveredHelperBinding, DiscoveredHelperExport } from './compiler/discover.js';
 import type {

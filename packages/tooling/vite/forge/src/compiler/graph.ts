@@ -4,10 +4,10 @@ import path from 'node:path';
 
 import { parseOxcModule, type OxcParsedModule } from './oxc.js';
 
-import type { ForgeExportFact, ForgeImportFact, ForgeModuleFacts, ForgeSourceSpan } from './ast.js';
+import type { ForgeExportFact, ForgeImportFact, ForgeModuleFacts, ForgeSourceSpan } from './facts.js';
 import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
-export type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './ast.js';
+export type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './facts.js';
 
 export type ForgeFileKind =
   'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';

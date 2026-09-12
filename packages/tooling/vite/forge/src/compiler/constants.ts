@@ -1,6 +1,4 @@
-import {
-  localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource,
-} from '@mission-platform/forge-plugin-api/compiler/ast.js';
+import { localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 
 import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 

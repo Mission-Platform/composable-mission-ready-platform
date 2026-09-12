@@ -8,11 +8,12 @@ import {
   type GeneratedModule,
 } from '@mission-platform/forge-plugin-api';
 
+import { sourceBase, type DiscoveredComponent } from '../compiler/discover.js';
 import { compileRouterModule } from '../compiler/router.js';
-import { copyComponentOwnStyles } from './helper-carry.js';
-import { componentSourcePath } from './component-discovery.js';
 
-import type { DiscoveredComponent } from '../compiler/discover.js';
+import { componentSourcePath } from './component-discovery.js';
+import { copyComponentOwnStyles } from './helper-carry.js';
+
 import type { ForgeGenerationContext } from '../compiler/generation-context.js';
 import type { ForgeFileGraph } from '../compiler/graph.js';
 import type { FrameworkSourceTarget } from '../generate.js';
@@ -133,7 +134,7 @@ export function compileComponentTree(options: CompileComponentTreeOptions): void
       routerPlugins,
       routerConditions,
     });
-    writeCompiledModule(mirrorDir(sourcePath), component.folder, compiled, sourcePath);
+    writeCompiledModule(mirrorDir(sourcePath), sourceBase(sourcePath), compiled, sourcePath);
 
     // Carry each shared helper module the component imports into the flat tree
     for (const edge of graph.edges.filter(

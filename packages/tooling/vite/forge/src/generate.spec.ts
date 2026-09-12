@@ -143,7 +143,12 @@ const aliasPreservingPlugin: FrameworkOutputPlugin = {
     componentExport: 'default',
   },
   lower(ir, context) {
-    return { framework: context.framework, module: ir, context };
+    return {
+      framework: context.framework,
+      module: ir,
+      context,
+      lowered: { framework: context.framework, appliedOptimizations: [] },
+    };
   },
   optimize(intentions) {
     return intentions;
@@ -316,6 +321,73 @@ describe('generateFrameworkSources', () => {
           }
         }
       }
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('preserves distinct mirrored modules and entry paths for same-basename components', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-generation-component-collision-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const atomsButtonDir = path.join(componentsDir, 'atoms', 'button');
+    const moleculesButtonDir = path.join(componentsDir, 'molecules', 'button');
+    const outDir = path.join(packageDir, 'generated', 'vue');
+    const componentsModule = path.join(componentsDir, 'index.ts');
+
+    try {
+      mkdirSync(atomsButtonDir, { recursive: true });
+      mkdirSync(moleculesButtonDir, { recursive: true });
+      writeFileSync(
+        componentsModule,
+        [
+          "export { ForgeButton as ForgeAtomsButton } from './atoms/button/button';",
+          "export { ForgeButton as ForgeMoleculesButton } from './molecules/button/button';",
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(
+        path.join(atomsButtonDir, 'button.tsx'),
+        [
+          "import { h, type MpElement } from '@mission-platform/forge-jsx';",
+          '',
+          'export function ForgeButton(): MpElement {',
+          '  return <button data-source="atoms" />;',
+          '}',
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(
+        path.join(moleculesButtonDir, 'button.tsx'),
+        [
+          "import { h, type MpElement } from '@mission-platform/forge-jsx';",
+          '',
+          'export function ForgeButton(): MpElement {',
+          '  return <button data-source="molecules" />;',
+          '}',
+          '',
+        ].join('\n'),
+      );
+
+      generateFrameworkSources({
+        plugin: forgeVueFramework(),
+        componentsModule,
+        outDir,
+      });
+
+      const atomsOutput = path.join(outDir, 'components', 'atoms', 'button', 'button.vue');
+      const moleculesOutput = path.join(outDir, 'components', 'molecules', 'button', 'button.vue');
+      expect(existsSync(atomsOutput)).toBe(true);
+      expect(existsSync(moleculesOutput)).toBe(true);
+      expect(readFileSync(atomsOutput, 'utf8')).toContain('data-source="atoms"');
+      expect(readFileSync(moleculesOutput, 'utf8')).toContain('data-source="molecules"');
+
+      const entrySource = readFileSync(path.join(outDir, 'index.ts'), 'utf8');
+      expect(entrySource).toContain("export { default as AtomsButton } from './components/atoms/button/button.vue';");
+      expect(entrySource).toContain(
+        "export { default as MoleculesButton } from './components/molecules/button/button.vue';",
+      );
+      expect(entrySource).not.toContain("from './atoms-button.vue';");
+      expect(entrySource).not.toContain("from './molecules-button.vue';");
     } finally {
       rmSync(packageDir, { recursive: true, force: true });
     }
@@ -764,7 +836,12 @@ describe('generateFrameworkSources', () => {
         componentExport: 'default',
       },
       lower(ir, context) {
-        return { framework: context.framework, module: ir, context };
+        return {
+          framework: context.framework,
+          module: ir,
+          context,
+          lowered: { framework: context.framework, appliedOptimizations: [] },
+        };
       },
       optimize(intentions) {
         return intentions;

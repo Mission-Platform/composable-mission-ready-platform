@@ -36,7 +36,12 @@ function fixtureFramework(id: string): FrameworkOutputPlugin {
       componentExport: 'named',
     },
     lower(ir, context) {
-      return { framework: context.framework, module: ir, context };
+      return {
+        framework: context.framework,
+        module: ir,
+        context,
+        lowered: { framework: context.framework, appliedOptimizations: [] },
+      };
     },
     optimize(intentions) {
       return intentions;

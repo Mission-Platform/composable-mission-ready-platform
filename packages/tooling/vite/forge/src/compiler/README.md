@@ -36,14 +36,29 @@ TypeScript remains only in separate compatibility or type-oriented operations:
 - `generate.ts` retains TypeScript and `svelte2tsx` only for declaration and
   exported-type analysis, outside per-module Forge lowering. Import inspection
   and generated barrel rewriting use the Oxc facts/source spans.
-- `compiler/ast.ts` still exports legacy static-analysis helpers used by CMS
-  content classification; these are compatibility/type-analysis APIs, not part
-  of the active neutral compile path.
+- `compiler/ast.ts` serves only as a compatibility re-export surface for live
+  Oxc facts, directives, and import helpers from focused sibling modules
+  (`components.js`, `constants.js`, `directives.js`, `facts.js`, `imports.js`).
+  The legacy TypeScript AST compatibility shims, factories, visitors, and
+  transformers were completely removed.
 
 CMS type-oriented analysis may therefore retain TypeScript types and nodes. No
 target plugin contract exposes those implementation types: target lowerers
 consume `SemanticModule`, diagnostics, generated-module records, and source
 edits only.
+
+## Target pipeline and lowering invariants
+
+Forge enforces a strict `lower` → `optimize` → `generate` sequence:
+
+1. Target lowering (`framework.lower`) produces a target-owned plan stored in
+   `TargetIntentions.lowered`.
+2. Target optimization (`framework.optimize`) refines that plan.
+3. Target generation (`framework.generate`) strictly requires a valid lowered plan
+   discriminated by `lowered.framework` matching the target framework ID.
+4. The invariant is asserted in the compiler service and pipeline via
+   `assertTargetIntentionsLowered`. Direct generation without lowering is rejected
+   rather than silently falling back to on-demand lowering.
 
 Astro is no longer a framework output plugin: it is a **CMS target** (`@mission-platform/forge-cms-astro`) that composes one of the framework plugins to hydrate its islands. Web Components expose empty build bundles because their generated output is TypeScript and needs no framework compiler.
 

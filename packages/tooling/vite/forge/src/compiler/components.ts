@@ -1,11 +1,4 @@
-import {
-  oxcArray,
-  oxcIdentifierName,
-  oxcObject,
-  oxcProgramBody,
-  type OxcNode,
-  type OxcParsedModule,
-} from './oxc.js';
+import { oxcArray, oxcIdentifierName, oxcObject, oxcProgramBody, type OxcNode, type OxcParsedModule } from './oxc.js';
 
 const SLOT_TAG = 'Slot';
 

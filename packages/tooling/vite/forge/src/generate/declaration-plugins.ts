@@ -4,8 +4,6 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import { emitDts } from 'svelte2tsx';
-import type { JsxFramework } from '@mission-platform/forge-plugin-api';
-import type { Plugin } from 'vite';
 
 import {
   discoverComponentsFromGraph,
@@ -16,7 +14,11 @@ import {
   type DiscoveredHelperExport,
 } from '../compiler/discover.js';
 import { buildForgeFileGraph } from '../compiler/graph.js';
+
 import { externalReExportLine, helperBindingReExportName } from './entry-synthesis.js';
+
+import type { JsxFramework } from '@mission-platform/forge-plugin-api';
+import type { Plugin } from 'vite';
 
 /** Options for {@link jsxComponentsEntryDtsPlugin}. */
 export interface JsxComponentsEntryDtsOptions {
