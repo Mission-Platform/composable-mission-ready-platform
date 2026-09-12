@@ -12,6 +12,7 @@ import {
 } from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 
+import { applyFallbackPosition, isAnchorPositioningSupported } from '../../../utils/fallback-position';
 import { resolvePortalTarget } from '../../../utils/portal-target/portal-target';
 
 import styles from './forge-tooltip.module.scss';
@@ -136,6 +137,7 @@ export function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
   const anchorName = `--${baseId}`;
 
   const timerReference = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const triggerReference = useRef<HTMLElement | null>(null);
   const panelReference = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -171,6 +173,41 @@ export function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
     };
   }, [isOpen]);
 
+  // Calculate and apply fallback positioning when CSS Anchor Positioning is not supported.
+  useEffect(() => {
+    if (!isOpen || globalThis.window === undefined || isAnchorPositioningSupported()) {
+      // eslint-disable-next-line unicorn/no-useless-undefined -- consistent return in effect with cleanup
+      return undefined;
+    }
+
+    const update = (): void => {
+      const trigger = triggerReference.current;
+      const panel = panelReference.current;
+      if (!trigger || !panel) {
+        return;
+      }
+      applyFallbackPosition(trigger, panel, placement, { offset: 4 });
+    };
+
+    let frameId: number | undefined;
+    if (typeof requestAnimationFrame === 'function') {
+      frameId = requestAnimationFrame(update);
+    } else {
+      update();
+    }
+
+    window.addEventListener('scroll', update, true);
+    window.addEventListener('resize', update);
+
+    return () => {
+      if (frameId !== undefined && typeof cancelAnimationFrame === 'function') {
+        cancelAnimationFrame(frameId);
+      }
+      window.removeEventListener('scroll', update, true);
+      window.removeEventListener('resize', update);
+    };
+  }, [isOpen, placement]);
+
   const show = (delayMs: number): void => {
     if (disabled) {
       return;
@@ -200,6 +237,7 @@ export function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
       onMouseleave={hide}
     >
       <span
+        ref={triggerReference}
         id={triggerId}
         aria-describedby={isOpen ? tooltipId : undefined}
         className={styles['forge-tooltip__trigger']}

@@ -166,11 +166,13 @@ export function ForgeDialog(properties: Readonly<DialogProperties>): MpElement {
     }
   };
 
-  const hasHeader = title !== undefined || hasSlot('header');
+  const hasHeader = title !== undefined || hasSlot('header') || properties.header !== undefined;
+  const hasFooter = hasSlot('footer') || properties.footer !== undefined;
 
   return (
     <dialog
       ref={dialogReference}
+      aria-label={title}
       className={[styles['forge-dialog'], size ? `forge-size--${size}` : undefined]}
       onClick={handleClick}
       onClose={requestClose}
@@ -179,7 +181,9 @@ export function ForgeDialog(properties: Readonly<DialogProperties>): MpElement {
       <div className={styles['forge-dialog__panel']}>
         {hasHeader ? (
           <header className={styles['forge-dialog__header']}>
-            <Slot name="header">
+            {hasSlot('header') ? (
+              <Slot name="header" />
+            ) : properties.header === undefined ? (
               <ForgeTypography
                 as="h2"
                 className={styles['forge-dialog__title']}
@@ -188,7 +192,9 @@ export function ForgeDialog(properties: Readonly<DialogProperties>): MpElement {
               >
                 {title}
               </ForgeTypography>
-            </Slot>
+            ) : (
+              properties.header
+            )}
             <ForgeIconButton
               label={closeLabel}
               size="sm"
@@ -199,9 +205,9 @@ export function ForgeDialog(properties: Readonly<DialogProperties>): MpElement {
           </header>
         ) : undefined}
         <div className={styles['forge-dialog__body']}>{properties.children}</div>
-        {hasSlot('footer') ? (
+        {hasFooter ? (
           <footer className={styles['forge-dialog__footer']}>
-            <Slot name="footer" />
+            {hasSlot('footer') ? <Slot name="footer" /> : properties.footer}
           </footer>
         ) : undefined}
       </div>

@@ -1,5 +1,14 @@
 export * from './components';
 export {
+  applyFallbackPosition,
+  calculateFallbackPosition,
+  isAnchorPositioningSupported,
+  supportsAnchorPositioning,
+  type FallbackPlacement,
+  type FallbackPositionOptions,
+  type FallbackPositionResult,
+} from './utils/fallback-position';
+export {
   clearToasts,
   dismissToast,
   errorToast,

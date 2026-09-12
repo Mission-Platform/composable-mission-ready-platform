@@ -1,1 +1,1 @@
-export { ForgeModal, type ModalProperties, type ModalSize } from './forge-modal';
+export { ForgeModal, type ModalProperties, type ModalSize, type ModalVariant } from './forge-modal';

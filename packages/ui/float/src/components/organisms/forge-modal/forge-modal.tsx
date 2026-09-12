@@ -18,6 +18,9 @@ import styles from './forge-modal.module.scss';
 /** Width step of the modal on tablet/desktop (`sm`+); mobile is always full-width. */
 export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
+/** Visual and semantic variant of the modal overlay primitive. */
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+
 /* ── Visual property overrides (generated) ───────────────────────────── */
 export interface ModalStyleProperties {
   readonly 'overlay-body-padding'?: string;
@@ -107,13 +110,20 @@ export interface ModalProperties {
    * @model onUpdateOpen
    */
   open?: boolean;
+  /**
+   * Visual and semantic variant of the overlay primitive. Defaults to `'modal'`.
+   * - `'modal'`: Standard centred modal on sm+, bottom sheet on mobile.
+   * - `'dialog'`: Centred dialog on all viewports.
+   * - `'alert'`: Alert dialog with `role="alertdialog"` semantics and suppressed backdrop close.
+   */
+  variant?: ModalVariant;
   /** Title rendered in the header. When omitted (and no `header`), the header is hidden. */
   title?: string;
   /** Width step on tablet/desktop. Defaults to `'md'`. */
   size?: ModalSize;
-  /** Close the modal when a pointer lands on the backdrop. Defaults to `true`. */
+  /** Close the modal when a pointer lands on the backdrop. Defaults to `true` (false for `'alert'`). */
   closeOnBackdrop?: boolean;
-  /** Close the modal when `Escape` is pressed. Defaults to `true`. */
+  /** Close the modal when `Escape` is pressed. Defaults to `true` (false for `'alert'`). */
   closeOnEsc?: boolean;
   /** Accessible label for the close button. Defaults to `'Close'`. */
   closeLabel?: string;
@@ -192,10 +202,11 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
 
   const {
     open = false,
+    variant = 'modal',
     title,
     size = 'md',
-    closeOnBackdrop = true,
-    closeOnEsc = true,
+    closeOnBackdrop = variant !== 'alert',
+    closeOnEsc = variant !== 'alert',
     closeLabel = 'Close',
   } = properties;
 
@@ -247,14 +258,16 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
   };
 
   const headerId = `${useId()}-header`;
-  const hasHeader = title !== undefined || hasSlot('header');
+  const hasHeader = title !== undefined || hasSlot('header') || properties.header !== undefined;
+  const hasFooter = hasSlot('footer') || properties.footer !== undefined;
 
   return (
     <dialog
       ref={dialogReference}
-      aria-label={title}
+      aria-label={title ?? (variant === 'alert' && !hasHeader ? 'Alert' : undefined)}
       aria-labelledby={title === undefined && hasHeader ? headerId : undefined}
-      className={[styles['forge-modal'], styles[`forge-modal--${size}`]]}
+      className={[styles['forge-modal'], styles[`forge-modal--${size}`], styles[`forge-modal--${variant}`]]}
+      role={variant === 'alert' ? 'alertdialog' : 'dialog'}
       onCancel={handleCancel}
       onClick={handleClick}
       onClose={requestClose}
@@ -265,7 +278,9 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
           id={headerId}
           className={styles['forge-modal__header']}
         >
-          <Slot name="header">
+          {hasSlot('header') ? (
+            <Slot name="header" />
+          ) : properties.header === undefined ? (
             <ForgeTypography
               as="h2"
               className={styles['forge-modal__title']}
@@ -274,7 +289,9 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
             >
               {title}
             </ForgeTypography>
-          </Slot>
+          ) : (
+            properties.header
+          )}
           <ForgeIconButton
             label={closeLabel}
             size="sm"
@@ -285,9 +302,9 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
         </header>
       ) : undefined}
       <div className={styles['forge-modal__body']}>{properties.children}</div>
-      {hasSlot('footer') ? (
+      {hasFooter ? (
         <footer className={styles['forge-modal__footer']}>
-          <Slot name="footer" />
+          {hasSlot('footer') ? <Slot name="footer" /> : properties.footer}
         </footer>
       ) : undefined}
     </dialog>
