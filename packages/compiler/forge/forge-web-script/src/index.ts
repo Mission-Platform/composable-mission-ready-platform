@@ -28,3 +28,4 @@ export * from './generics.js';
 export * from './type-algebra.js';
 export * from './safety.js';
 export * from './self-hosted.js';
+export * from './interop';
