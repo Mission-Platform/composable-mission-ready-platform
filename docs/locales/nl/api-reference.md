@@ -44,18 +44,22 @@ the runtime they use.
 ### @mission-platform/vite-plugin-forge
 
 The compiler driver accepts explicit `FrameworkOutputPlugin` instances; it does
-not provide a framework registry. `defineViteForgeComponents` and
-`defineTsdownForgeComponents` (plus the hook and CMS helpers) share an in-process
-`ForgeCompilerService` for one build or watch session.
+not provide a framework registry. Vite and tsdown adapters share an in-process
+`ForgeCompilerService` for one build or watch session. Tsdown consumers add
+`tsdownForgeComponentPlugins` or `tsdownForgeHookPlugins` to one
+`defineTsdownLibrary` call; CMS consumers use `tsdownForgeCmsPlugins` from
+`@mission-platform/forge-cms-plugin-api`.
 
-| Capability         | Beschrijving                                                                                                                                                                        |
-| :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Service lifecycle  | Reuse source, graph, parsed-source, semantic-IR, and target-artifact state across builds; dispose one-shot services after completion and watcher services on close. |
-| Cache keys         | Source/dependency/config fingerprints, compiler and router options, `tsconfig` `baseUrl`/`paths`, target ID, plugin identity/version, and relevant conditions.      |
-| Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable.                     |
-| Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion.                 |
-| Artifact manifest  | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion.                                                     |
-| Extension point    | Implement and pass a `FrameworkOutputPlugin` from a caller-owned `forge-plugin-*` package; do not add target branches to the neutral driver.                        |
+| Capability         | Beschrijving                                                                                                                                                                                          |
+| :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Service lifecycle  | Reuse source, graph, parsed-source, semantic-IR, and target-artifact state across builds; dispose one-shot services after completion and watcher services on close.                   |
+| Cache keys         | Source/dependency/config fingerprints, compiler and router options, `tsconfig` `baseUrl`/`paths`, target ID, plugin identity/version, and relevant conditions.                        |
+| Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable.                                       |
+| Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion.                                   |
+| Artifact manifest  | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion.                                                                       |
+| Extension point    | Implement and pass a `FrameworkOutputPlugin` with an open `FrameworkId` (`JsxFramework \| (string & {})`); do not add target branches or registries to the driver. |
+| Target pipeline    | Enforces strict `lower → optimize → generate`; target generators accept only lowered intentions validated by `assertTargetIntentionsLowered`.                                         |
+| Compiler AST path  | Oxc is the sole compiler AST path; legacy TypeScript AST compatibility layers and shims have been removed.                                                                            |
 
 Configure aliases through the project `tsconfig.json` (`baseUrl` and
 `paths`); Vite and tsdown graph preparation use the same alias facts. Router
@@ -319,6 +323,7 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 ## Verder lezen
 
 - [Vue 2 tot Vue 3 Migratiegids](migration-guides/vue2-to-vue3.md)
+- [Forge Compiler Pipeline & Migration Notes](../packages/tooling/vite/forge/docs/reference/compiler.md#migration-guidance)
 - [Overzicht projectconfiguratie](configs/index.md)
 - [Structuur van de werkruimte](workspace-structure.md)
 
@@ -391,15 +396,27 @@ target kan aan elke framework-plug-in worden gekoppeld. See the [Forge Compiler 
 | `@mission-platform/forge-cms-jekyll`            | Jekyll-vloeistof omvat, `_data` schema, en een `_config.yml` fragment.                |
 | `@mission-platform/forge-cms-webflow`           | Webstroom `declareComponent` codecomponenten en a `webflow.json` bibliotheekfragment. |
 
+#### @mission-platform/forge-plugin-api
+
+| Export                          | Typ      | Description                                                                                                                                |
+| :------------------------------ | :------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| `FrameworkId`                   | Type     | Open framework identifier (`JsxFramework \| (string & {})`) supporting arbitrary custom plugin targets. |
+| `TargetFrameworkId`             | Typ      | Alias for `FrameworkId`.                                                                                                   |
+| `JsxFramework`                  | Type     | Closed union of built-in frameworks (`"react" \| "vue" \| "svelte" \| "solid" \| "web-components"`).    |
+| `assertTargetIntentionsLowered` | Function | Asserts that target intentions contain a non-null lowered plan matching the target framework ID.                           |
+| `TargetIntentions<TLowered>`    | Type     | Container for target intentions with a **required** `lowered: TLowered` target plan.                                       |
+| `TargetLoweredModule`           | Type     | Base interface for lowered plans, discriminated on `framework: FrameworkId`.                                               |
+| `FrameworkOutputPlugin`         | Type     | Composable target output contract with `id: FrameworkId`, `lower`, `optimize`, `generate`, and `build`.                    |
+| `defineForgeOutputPlugin`       | Function | Validates and returns a `FrameworkOutputPlugin` instance.                                                                  |
+
 #### @mission-platform/forge-cms-plugin-api
 
-| Export                    | Typ      | Description                                                                                                 |
+| Export                    | Type     | Description                                                                                                 |
 | :------------------------ | :------- | :---------------------------------------------------------------------------------------------------------- |
-| `analyzeContentComponent` | Function | Projecteert de rekwisieten van een neutrale component op het platformneutrale inhoudsmodel. |
-| `ContentComponent`        | Typ      | Besteld `ContentField`s, slots en de `interactive` vlag.                                    |
-| `ContentFieldKind`        | Typ      | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.             |
+| `analyzeContentComponent` | Functie  | Projecteert de rekwisieten van een neutrale component op het platformneutrale inhoudsmodel. |
+| `ContentComponent`        | Type     | Besteld `ContentField`s, slots en de `interactive` vlag.                                    |
+| `ContentFieldKind`        | Type     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.             |
 | `CmsOutputPlugin`         | Type     | Het doelcontract: een gebonden raamwerkplug-in plus de vier emitters.       |
 | `defineForgeCmsPlugin`    | Functie  | Valideert een CMS-doel tijdens de configuratie.                                             |
 | `generateCmsArtifacts`    | Functie  | Het generieke stuurprogramma Discover → IR → Content Model → Emit → Write.                  |
-| `defineTsdownForgeCms`    | Functie  | tsdown-configuratie voor één CMS-doel, uitzendend `dist/cms/<cms>/<framework>/**`.          |
-| `defineTsdownForgeCmsAll` | Functie  | tsdown-configuraties voor een lijst met CMS-doelen.                                         |
+| `tsdownForgeCmsPlugins`   | Function | Native tsdown plugins for CMS targets, added to one `defineTsdownLibrary` call.             |
