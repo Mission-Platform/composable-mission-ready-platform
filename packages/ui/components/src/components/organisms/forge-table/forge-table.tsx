@@ -326,20 +326,26 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
   const selectedKeysSet = useMemo(() => new Set(selectedRowKeys), [selectedRowKeys]);
   const expandedKeysSet = useMemo(() => new Set(expandedRowKeys), [expandedRowKeys]);
 
+  const rowIdentityMap = useMemo(() => {
+    const map = new Map<Record<string, unknown>, string>();
+    for (const [originalIndex, row] of rows.entries()) {
+      let key = String(originalIndex);
+      if (typeof rowKey === 'function') {
+        key = rowKey(row);
+      } else if (typeof rowKey === 'string' && row[rowKey] !== undefined) {
+        key = String(row[rowKey]);
+      } else if (row.id !== undefined) {
+        key = String(row.id);
+      } else if (row.key !== undefined) {
+        key = String(row.key);
+      }
+      map.set(row, key);
+    }
+    return map;
+  }, [rows, rowKey]);
+
   const getRowKey = (row: Record<string, unknown>, index: number): string => {
-    if (typeof rowKey === 'function') {
-      return rowKey(row);
-    }
-    if (typeof rowKey === 'string' && row[rowKey] !== undefined) {
-      return String(row[rowKey]);
-    }
-    if (row.id !== undefined) {
-      return String(row.id);
-    }
-    if (row.key !== undefined) {
-      return String(row.key);
-    }
-    return String(index);
+    return rowIdentityMap.get(row) ?? String(index);
   };
 
   const sortedRows = useMemo(() => {
@@ -352,9 +358,11 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
     });
   }, [rows, sortKey, sortDirection]);
 
-  const allRowKeys = useMemo(() => sortedRows.map((r, i) => getRowKey(r, i)), [sortedRows, rowKey]);
+  const allRowKeys = useMemo(() => sortedRows.map((r, i) => getRowKey(r, i)), [sortedRows, getRowKey]);
 
-  const isAllSelected = sortedRows.length > 0 && allRowKeys.every((k) => selectedKeysSet.has(k));
+  const selectedCount = allRowKeys.filter((k) => selectedKeysSet.has(k)).length;
+  const isAllSelected = sortedRows.length > 0 && selectedCount === sortedRows.length;
+  const isPartiallySelected = selectedCount > 0 && selectedCount < sortedRows.length;
 
   const toggleSelectAll = (): void => {
     const nextKeys = isAllSelected ? [] : [...allRowKeys];
@@ -419,6 +427,34 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
     [styles['forge-table--hoverable']]: hoverable,
   });
 
+  const columnOffsets = useMemo(() => {
+    const leftOffsets = new Map<string, number>();
+    const rightOffsets = new Map<string, number>();
+
+    let currentLeft = selectable ? 48 : 0;
+    for (const column of columns) {
+      if (column.fixed === 'left') {
+        leftOffsets.set(column.key, currentLeft);
+        const width =
+          typeof column.width === 'number' ? column.width : Number.parseInt(String(column.width ?? '120'), 10) || 120;
+        currentLeft += width;
+      }
+    }
+
+    let currentRight = 0;
+    for (let index = columns.length - 1; index >= 0; index--) {
+      const column = columns[index]!;
+      if (column.fixed === 'right') {
+        rightOffsets.set(column.key, currentRight);
+        const width =
+          typeof column.width === 'number' ? column.width : Number.parseInt(String(column.width ?? '120'), 10) || 120;
+        currentRight += width;
+      }
+    }
+
+    return { leftOffsets, rightOffsets };
+  }, [columns, selectable]);
+
   const headCells = columns.map((column) => {
     const isActive = sortKey === column.key;
     const thClass = classNames(
@@ -428,12 +464,18 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
       { [styles['forge-table__th--fixed-left']]: column.fixed === 'left' },
       { [styles['forge-table__th--fixed-right']]: column.fixed === 'right' },
     );
+    const thStyle: Record<string, string | number> = column.width ? { width: column.width } : {};
+    if (column.fixed === 'left') {
+      thStyle.left = `${columnOffsets.leftOffsets.get(column.key) ?? 0}px`;
+    } else if (column.fixed === 'right') {
+      thStyle.right = `${columnOffsets.rightOffsets.get(column.key) ?? 0}px`;
+    }
     return (
       <th
         className={thClass}
         scope="col"
         tabindex={column.sortable ? 0 : undefined}
-        style={column.width ? { width: column.width } : undefined}
+        style={Object.keys(thStyle).length > 0 ? thStyle : undefined}
         aria-sort={isActive ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
         onClick={() => toggleSort(column)}
         onKeyDown={(event: unknown) => onHeaderKeyDown(event, column)}
@@ -526,10 +568,16 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
                   [styles['forge-table__td--fixed-left']]: column.fixed === 'left',
                   [styles['forge-table__td--fixed-right']]: column.fixed === 'right',
                 });
+                const tdStyle: Record<string, string | number> = column.width ? { width: column.width } : {};
+                if (column.fixed === 'left') {
+                  tdStyle.left = `${columnOffsets.leftOffsets.get(column.key) ?? 0}px`;
+                } else if (column.fixed === 'right') {
+                  tdStyle.right = `${columnOffsets.rightOffsets.get(column.key) ?? 0}px`;
+                }
                 return (
                   <td
                     className={tdClass}
-                    style={style}
+                    style={Object.keys(tdStyle).length > 0 ? tdStyle : undefined}
                   >
                     <Slot
                       name="cell"
@@ -610,8 +658,14 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
                 scope="col"
               >
                 <input
+                  ref={(element: HTMLInputElement | null) => {
+                    if (element) {
+                      element.indeterminate = isPartiallySelected;
+                    }
+                  }}
                   type="checkbox"
                   checked={isAllSelected}
+                  aria-checked={isAllSelected ? 'true' : isPartiallySelected ? 'mixed' : 'false'}
                   aria-label="Select all rows"
                   onChange={toggleSelectAll}
                 />

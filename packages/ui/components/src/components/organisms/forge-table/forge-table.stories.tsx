@@ -70,3 +70,40 @@ export const Bordered: Story = { args: { bordered: true } };
 export const Loading: Story = { args: { loading: true } };
 
 export const Empty: Story = { args: { rows: [], emptyText: 'No components found' } };
+
+export const Selectable: Story = {
+  args: {
+    selectable: true,
+    defaultSelectedRowKeys: ['Badge'],
+    rowKey: 'name',
+  },
+};
+
+export const Expandable: Story = {
+  args: {
+    expandable: true,
+    rowKey: 'name',
+    expandedRowRender: (row: Record<string, unknown>) => (
+      <div style={{ padding: '0.75rem 1rem' }}>
+        <strong>{String(row.name)}</strong> is deployed across frameworks with {String(row.downloads)} active downloads.
+      </div>
+    ),
+  },
+};
+
+export const PinnedColumns: Story = {
+  args: {
+    columns: [
+      { key: 'name', label: 'Component Name', fixed: 'left', width: 160 },
+      { key: 'framework', label: 'Framework Target', width: 180 },
+      { key: 'downloads', label: 'Weekly Downloads', align: 'right', width: 160 },
+      { key: 'status', label: 'Release Status', width: 140 },
+      { key: 'actions', label: 'Actions', fixed: 'right', width: 120 },
+    ],
+    rows: [
+      { name: 'Badge', framework: 'React, Vue, Solid', downloads: 1280, status: 'Stable', actions: 'Edit' },
+      { name: 'ForgeTable', framework: 'React, Vue, Solid', downloads: 940, status: 'Beta', actions: 'Edit' },
+      { name: 'Collapse', framework: 'React, Vue, Solid', downloads: 612, status: 'Stable', actions: 'Edit' },
+    ],
+  },
+};

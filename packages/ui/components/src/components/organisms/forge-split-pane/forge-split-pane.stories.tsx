@@ -19,3 +19,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
+
+export const VerticalResizable: Story = {
+  args: {
+    direction: 'vertical',
+    initialSize: 40,
+    min: 20,
+    max: 80,
+    resizable: true,
+  },
+};

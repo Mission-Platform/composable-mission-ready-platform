@@ -336,8 +336,12 @@ export function ForgeMultiselect(properties: Readonly<MultiselectProperties>): M
     </option>
   ));
 
-  const maxTags = properties.maxTags;
-  const isTruncated = maxTags !== undefined && maxTags >= 0 && selectedOptions.length > maxTags;
+  const rawMaxTags = properties.maxTags;
+  const maxTags =
+    typeof rawMaxTags === 'number' && Number.isFinite(rawMaxTags) && rawMaxTags >= 0
+      ? Math.floor(rawMaxTags)
+      : undefined;
+  const isTruncated = maxTags !== undefined && selectedOptions.length > maxTags;
   const displayedOptions = isTruncated ? selectedOptions.slice(0, maxTags) : selectedOptions;
   const hiddenCount = isTruncated ? selectedOptions.length - maxTags : 0;
 
