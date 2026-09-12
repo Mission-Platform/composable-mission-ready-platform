@@ -163,10 +163,16 @@ export type ForgeFormProperties = ForgeFormProps;
 
 function handleErrorLinkClick(_event: Event, field: string): void {
   if (typeof document !== 'undefined') {
-    const target =
-      document.querySelector<HTMLElement>(`#${field}`) ?? document.querySelector<HTMLElement>(`[name="${field}"]`);
-    if (target) {
-      target.focus();
+    try {
+      const escapedField = typeof CSS !== 'undefined' && typeof CSS.escape === 'function' ? CSS.escape(field) : field;
+      const target =
+        document.querySelector<HTMLElement>(`#${escapedField}`) ??
+        document.querySelector<HTMLElement>(`[name="${escapedField}"]`);
+      if (target) {
+        target.focus();
+      }
+    } catch {
+      // Ignore querySelector syntax errors for malformed field names
     }
   }
 }
@@ -291,6 +297,7 @@ export function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [dirty, setDirty] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const validationSequenceReference = useRef<number>(0);
 
   const setFieldValue = (name: string, value: unknown): void => {
     const nextValues = { ...currentValues, [name]: value };
@@ -316,8 +323,11 @@ export function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement {
     properties.onValuesChange?.(nextValues);
 
     if (properties.validateOnChange) {
+      const currentSequence = ++validationSequenceReference.current;
       void runValidation(nextValues, properties.validate, properties.schema).then((validationErrors) => {
-        setErrors(validationErrors);
+        if (currentSequence === validationSequenceReference.current) {
+          setErrors(validationErrors);
+        }
       });
     }
   };
@@ -374,15 +384,21 @@ export function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement {
 
   const validateForm = async (targetVals?: Record<string, unknown>): Promise<Record<string, string>> => {
     const vals = targetVals ?? currentValues;
+    const currentSequence = ++validationSequenceReference.current;
     const validationErrors = await runValidation(vals, properties.validate, properties.schema);
-    setErrors(validationErrors);
+    if (currentSequence === validationSequenceReference.current) {
+      setErrors(validationErrors);
+    }
     return validationErrors;
   };
 
   const validateField = async (name: string): Promise<string | undefined> => {
+    const currentSequence = ++validationSequenceReference.current;
     const validationErrors = await runValidation(currentValues, properties.validate, properties.schema);
     const fieldError = validationErrors[name];
-    setFieldError(name, fieldError);
+    if (currentSequence === validationSequenceReference.current) {
+      setFieldError(name, fieldError);
+    }
     return fieldError;
   };
 
@@ -415,6 +431,7 @@ export function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement {
     setIsSubmitting(true);
 
     try {
+      const currentSequence = ++validationSequenceReference.current;
       const validationErrors = await runValidation(currentValues, properties.validate, properties.schema);
 
       const allFieldNames = new Set([
@@ -431,7 +448,9 @@ export function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement {
 
       const hasValidationErrors = Object.keys(validationErrors).length > 0;
       if (hasValidationErrors) {
-        setErrors(validationErrors);
+        if (currentSequence === validationSequenceReference.current) {
+          setErrors(validationErrors);
+        }
         if (typeof document !== 'undefined') {
           setTimeout(() => {
             const summaryElement = document.querySelector<HTMLElement>(`#${summaryId}`);
@@ -443,7 +462,9 @@ export function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement {
         return;
       }
 
-      setErrors({});
+      if (currentSequence === validationSequenceReference.current) {
+        setErrors({});
+      }
       await properties.onSubmit?.(currentValues, contextValue);
     } finally {
       setIsSubmitting(false);
