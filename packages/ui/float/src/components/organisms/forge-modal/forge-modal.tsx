@@ -264,7 +264,7 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
   return (
     <dialog
       ref={dialogReference}
-      aria-label={title}
+      aria-label={title ?? (variant === 'alert' && !hasHeader ? 'Alert' : undefined)}
       aria-labelledby={title === undefined && hasHeader ? headerId : undefined}
       className={[styles['forge-modal'], styles[`forge-modal--${size}`], styles[`forge-modal--${variant}`]]}
       role={variant === 'alert' ? 'alertdialog' : 'dialog'}
