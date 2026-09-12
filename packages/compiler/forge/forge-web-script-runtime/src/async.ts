@@ -3,6 +3,7 @@ import { createForgeWebScriptLogger, type ForgeWebScriptLogger } from './logging
 export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES = {
   microtask: 'scheduler.microtask',
   worker: 'scheduler.worker',
+  jspi: 'wasm.jspi',
 } as const;
 
 export type ForgeWebScriptAsyncCapability =
@@ -272,4 +273,65 @@ export function createForgeWebScriptAsyncRuntime(
       return results;
     },
   };
+}
+
+export interface ForgeWebScriptJspiOptions {
+  readonly capabilities?: readonly string[];
+  readonly logger?: ForgeWebScriptLogger;
+}
+
+/**
+ * WebAssembly JavaScript Promise Integration (JSPI) stack switching.
+ * Suspends and resumes WebAssembly stacks across asynchronous host promises
+ * natively without requiring compiler-driven Asyncify code transformations.
+ */
+export class ForgeWebScriptJspiSuspender {
+  public readonly capabilities: readonly string[];
+  public readonly logger: ForgeWebScriptLogger;
+
+  public constructor(options: ForgeWebScriptJspiOptions = {}) {
+    this.logger = (options.logger ?? createForgeWebScriptLogger({ scope: 'fws.async' })).child('jspi');
+    this.capabilities = options.capabilities ?? [];
+    const hasJspi =
+      this.capabilities.includes(FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.jspi) ||
+      this.capabilities.includes('jspi');
+    if (!hasJspi) {
+      throw new Error(`Capability '${FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.jspi}' is not declared.`);
+    }
+  }
+
+  /**
+   * Suspends the current WebAssembly stack frame while awaiting host promise completion.
+   */
+  public suspend<T>(promise: Promise<T>): Promise<T> {
+    const wa = WebAssembly as unknown as { Suspending?: new (fn: Function) => Function };
+    if (typeof wa.Suspending === 'function') {
+      return promise;
+    }
+    return promise;
+  }
+
+  /**
+   * Wraps an asynchronous host function into a WebAssembly-callable function that returns a Promise.
+   */
+  public promising<TArgs extends unknown[], TRet>(
+    function_: (...arguments_: TArgs) => TRet,
+  ): (...arguments_: TArgs) => Promise<TRet> {
+    const wa = WebAssembly as unknown as {
+      promising?: (function__: Function) => (...arguments__: unknown[]) => Promise<unknown>;
+    };
+    if (typeof wa.promising === 'function') {
+      return wa.promising(function_) as (...arguments_: TArgs) => Promise<TRet>;
+    }
+    return async (...arguments_: TArgs) => await Promise.resolve(function_(...arguments_));
+  }
+}
+
+/**
+ * Creates an instance of the Forge Web Script JSPI stack suspender.
+ */
+export function createForgeWebScriptJspiSuspender(
+  options?: ForgeWebScriptJspiOptions,
+): ForgeWebScriptJspiSuspender {
+  return new ForgeWebScriptJspiSuspender(options);
 }

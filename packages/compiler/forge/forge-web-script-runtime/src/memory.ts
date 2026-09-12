@@ -23,6 +23,7 @@ export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES = {
   memory64: 'wasm.memory64',
   threads: 'wasm.threads',
   sharedMemory: 'wasm.shared-memory',
+  multiMemory: 'wasm.multi-memory',
 } as const;
 
 export class ForgeWebScriptMemory {
@@ -289,4 +290,106 @@ export class ForgeWebScriptMemory {
 
 export function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory {
   return new ForgeWebScriptMemory(undefined, options);
+}
+
+export type ForgeWebScriptMemoryPartitionName = 'guestHeap' | 'hostInterop' | 'staticData';
+
+export interface ForgeWebScriptMultiMemoryOptions {
+  readonly guestHeap?: ForgeWebScriptMemoryOptions;
+  readonly hostInterop?: ForgeWebScriptMemoryOptions;
+  readonly staticData?: ForgeWebScriptMemoryOptions;
+  readonly capabilities?: readonly string[];
+  readonly logger?: ForgeWebScriptLogger;
+  readonly trace?: ForgeWebScriptTraceRecorder;
+}
+
+/**
+ * WebAssembly multi-memory segregation coordinator.
+ * Isolates memory into dedicated spaces for guest execution (Memory 0),
+ * host interop buffer (Memory 1), and static constants/tables (Memory 2).
+ */
+export class ForgeWebScriptMultiMemory {
+  public readonly guestHeap: ForgeWebScriptMemory;
+  public readonly hostInterop: ForgeWebScriptMemory;
+  public readonly staticData: ForgeWebScriptMemory;
+  public readonly capabilities: readonly string[];
+  private readonly logger: ForgeWebScriptLogger;
+
+  public constructor(options: ForgeWebScriptMultiMemoryOptions = {}) {
+    this.logger = (options.logger ?? createForgeWebScriptLogger({ scope: 'fws' })).child('multi-memory');
+    this.capabilities = options.capabilities ?? [];
+
+    const has = (capability: string): boolean =>
+      options.capabilities === undefined || options.capabilities.includes(capability);
+
+    if (!has(FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES.multiMemory)) {
+      throw new ForgeWebScriptTrap(
+        'CapabilityDenied',
+        `Capability '${FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES.multiMemory}' is not declared.`,
+        FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES.multiMemory,
+        { logger: this.logger },
+      );
+    }
+
+    const baseCaps = options.capabilities;
+    this.guestHeap = new ForgeWebScriptMemory(undefined, {
+      ...options.guestHeap,
+      capabilities: options.guestHeap?.capabilities ?? baseCaps,
+      logger: this.logger.child('guestHeap'),
+      trace: options.trace,
+    });
+    this.hostInterop = new ForgeWebScriptMemory(undefined, {
+      ...options.hostInterop,
+      capabilities: options.hostInterop?.capabilities ?? baseCaps,
+      logger: this.logger.child('hostInterop'),
+      trace: options.trace,
+    });
+    this.staticData = new ForgeWebScriptMemory(undefined, {
+      ...options.staticData,
+      capabilities: options.staticData?.capabilities ?? baseCaps,
+      logger: this.logger.child('staticData'),
+      trace: options.trace,
+    });
+  }
+
+  /**
+   * Returns the requested memory partition by index (0, 1, 2) or logical name.
+   */
+  public getPartition(partition: 0 | 1 | 2 | ForgeWebScriptMemoryPartitionName): ForgeWebScriptMemory {
+    if (partition === 0 || partition === 'guestHeap') return this.guestHeap;
+    if (partition === 1 || partition === 'hostInterop') return this.hostInterop;
+    if (partition === 2 || partition === 'staticData') return this.staticData;
+    throw new ForgeWebScriptTrap('MemoryOutOfBounds', `Unknown memory partition: ${String(partition)}`, undefined, {
+      logger: this.logger,
+    });
+  }
+
+  /**
+   * Safely copies a memory range from the guest heap into the host interop buffer.
+   */
+  public transferToInterop(pointer: ForgeWebScriptMemoryAddress, length: number): ForgeWebScriptMemoryAddress {
+    const bytes = this.guestHeap.readBytes(pointer, length);
+    const destination = this.hostInterop.allocate(length);
+    this.hostInterop.writeBytes(destination, bytes);
+    return destination;
+  }
+
+  /**
+   * Safely copies a memory range from the host interop buffer into the guest heap.
+   */
+  public transferFromInterop(pointer: ForgeWebScriptMemoryAddress, length: number): ForgeWebScriptMemoryAddress {
+    const bytes = this.hostInterop.readBytes(pointer, length);
+    const destination = this.guestHeap.allocate(length);
+    this.guestHeap.writeBytes(destination, bytes);
+    return destination;
+  }
+}
+
+/**
+ * Creates an isolated multi-memory instance with dedicated guest heap, host interop, and static partitions.
+ */
+export function createForgeWebScriptMultiMemory(
+  options?: ForgeWebScriptMultiMemoryOptions,
+): ForgeWebScriptMultiMemory {
+  return new ForgeWebScriptMultiMemory(options);
 }

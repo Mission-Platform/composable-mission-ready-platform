@@ -308,3 +308,73 @@ export function createForgeWebScriptWorkerRuntime(
     },
   };
 }
+
+export interface ForgeWebScriptThreadSafetyMarker {
+  readonly __isSend?: boolean;
+  readonly __isSync?: boolean;
+}
+
+/**
+ * Validates whether a value satisfies the 'Send' contract (safe to transfer across thread boundaries).
+ * Recursively verifies plain objects, arrays, primitives, and typed buffers.
+ */
+export function isForgeWebScriptSend(value: unknown, visited = new Set<unknown>()): boolean {
+  if (typeof value === 'function') return false;
+  if (value === null || typeof value !== 'object') return true;
+  if (visited.has(value)) return true;
+  visited.add(value);
+
+  if (value instanceof SharedArrayBuffer || value instanceof ArrayBuffer) return true;
+  if (ArrayBuffer.isView(value)) return true;
+
+  const marker = value as ForgeWebScriptThreadSafetyMarker;
+  if (marker.__isSend !== undefined) return marker.__isSend;
+
+  if (Array.isArray(value)) {
+    return value.every((item) => isForgeWebScriptSend(item, visited));
+  }
+
+  for (const property of Object.values(value as Record<string, unknown>)) {
+    if (!isForgeWebScriptSend(property, visited)) return false;
+  }
+  return true;
+}
+
+/**
+ * Validates whether a value satisfies the 'Sync' contract (safe to share concurrently across threads).
+ */
+export function isForgeWebScriptSync(value: unknown): boolean {
+  if (typeof value === 'function') return false;
+  if (value === null || typeof value !== 'object') return true;
+  if (value instanceof SharedArrayBuffer) return true;
+  if (ArrayBuffer.isView(value) && value.buffer instanceof SharedArrayBuffer) return true;
+  const marker = value as ForgeWebScriptThreadSafetyMarker;
+  if (marker.__isSync !== undefined) return marker.__isSync;
+  return false;
+}
+
+/**
+ * Asserts that a value satisfies the 'Send' contract, throwing a trap if violated.
+ */
+export function assertForgeWebScriptSend<T>(value: T, context = 'value'): T {
+  if (!isForgeWebScriptSend(value)) {
+    throw new ForgeWebScriptTrap(
+      'InvalidOwnership',
+      `Type verification failed: ${context} does not satisfy the 'Send' contract and cannot cross thread boundaries.`,
+    );
+  }
+  return value;
+}
+
+/**
+ * Asserts that a value satisfies the 'Sync' contract, throwing a trap if violated.
+ */
+export function assertForgeWebScriptSync<T>(value: T, context = 'value'): T {
+  if (!isForgeWebScriptSync(value)) {
+    throw new ForgeWebScriptTrap(
+      'InvalidOwnership',
+      `Type verification failed: ${context} does not satisfy the 'Sync' contract and cannot be shared across threads.`,
+    );
+  }
+  return value;
+}

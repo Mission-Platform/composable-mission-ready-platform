@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { createForgeWebScriptMemory, FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES } from './memory.js';
+import {
+  createForgeWebScriptMemory,
+  createForgeWebScriptMultiMemory,
+  FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES,
+} from './memory.js';
 import { ForgeWebScriptTrap } from './traps.js';
 
 const trapCode = (run: () => unknown): ForgeWebScriptTrap['code'] => {
@@ -95,5 +99,30 @@ describe('Forge Web Script memory capabilities', () => {
     expect(trapCode(() => memory.reallocate(pointer, 65_528, 65_529))).toBe('MemoryExhausted');
     expect(memory.reallocate(pointer, 65_528, 65_528)).toBe(pointer);
     expect(memory.readBytes(pointer, 1)).toEqual(new Uint8Array([7]));
+  });
+
+  it('partitions linear memory into isolated guest heap, host interop, and static data', () => {
+    expect(() => createForgeWebScriptMultiMemory({ capabilities: [] })).toThrow(ForgeWebScriptTrap);
+
+    const multi = createForgeWebScriptMultiMemory({
+      capabilities: [FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES.multiMemory],
+    });
+
+    expect(multi.getPartition(0)).toBe(multi.guestHeap);
+    expect(multi.getPartition(1)).toBe(multi.hostInterop);
+    expect(multi.getPartition(2)).toBe(multi.staticData);
+    expect(multi.getPartition('guestHeap')).toBe(multi.guestHeap);
+    expect(multi.getPartition('hostInterop')).toBe(multi.hostInterop);
+    expect(multi.getPartition('staticData')).toBe(multi.staticData);
+
+    const guestPtr = multi.guestHeap.allocate(4);
+    multi.guestHeap.writeBytes(guestPtr, new Uint8Array([11, 22, 33, 44]));
+
+    const interopPtr = multi.transferToInterop(guestPtr, 4);
+    expect(multi.hostInterop.readBytes(interopPtr, 4)).toEqual(new Uint8Array([11, 22, 33, 44]));
+
+    multi.hostInterop.writeBytes(interopPtr, new Uint8Array([99, 88, 77, 66]));
+    const roundtripPtr = multi.transferFromInterop(interopPtr, 4);
+    expect(multi.guestHeap.readBytes(roundtripPtr, 4)).toEqual(new Uint8Array([99, 88, 77, 66]));
   });
 });
