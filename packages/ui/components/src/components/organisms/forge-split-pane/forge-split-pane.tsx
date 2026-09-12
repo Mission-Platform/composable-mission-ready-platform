@@ -147,9 +147,7 @@ export function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpEle
         aria-label="Resize panes"
         aria-disabled={!resizable}
         onKeyDown={onKeyDown}
-        onKeydown={onKeyDown}
         onPointerDown={handlePointerDown}
-        onPointerdown={handlePointerDown}
       />
       <section
         className={styles['forge-split-pane__secondary']}

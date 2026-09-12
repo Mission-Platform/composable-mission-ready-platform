@@ -4078,23 +4078,7 @@ No description provided.
 function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
-`ForgeTable` — a sortable data table authored once in the neutral JSX dialect
-and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
-
-It renders the `columns`/`rows` as a semantic `<table>`, with click-to-sort
-headers (cycling asc → desc → unsorted) that fire the `onSort` callback, an
-optional caption, a loading overlay, and an empty state. Cell text is rendered
-through the composed neutral {@link ForgeTypography}; sort state is held with
-the neutral {@link useState}/{@link useMemo} hooks. It owns its styling
-through the co-located CSS Module `forge-table.module.scss`.
-
-The original Vue SFC was generic over the row type, composed
-`ForgeTableHead`/`ForgeTableBody` sub-components, used a `sort` emit, and exposed
-per-column scoped `cell-<key>` slots. The neutral version uses
-`Record<string, unknown>` rows, inlines the head/body, uses the `onSort`
-callback, and drives per-cell rendering through each column's optional
-`render` formatter (the scoped cell slots are dropped) — consistent with how
-the other migrated components dropped scoped slots.
+No description provided.
 
 #### Parameters
 
