@@ -1,9 +1,15 @@
+import fs from 'node:fs';
 import path from 'node:path';
 
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, mergeConfig, type ViteUserConfig } from 'vitest/config';
 
-import { frameworkResolveConditions, ignoreVueI18nBlocksPlugin, type MissionPlatformFramework } from './index.js';
+import {
+  DEFAULT_CSS_CONFIG,
+  frameworkResolveConditions,
+  ignoreVueI18nBlocksPlugin,
+  type MissionPlatformFramework,
+} from './index.js';
 
 export interface VitestConfigOptions {
   /**
@@ -25,8 +31,16 @@ export interface VitestConfigOptions {
    * needs. Omit it to apply the conditions to the whole suite.
    */
   frameworkInclude?: readonly string[];
-  /** Test environment. Defaults to `'jsdom'` (Vue components require a DOM). */
+  /**
+   * Test environment.
+   * Defaults to `'node'` for packages without DOM requirements, or `'jsdom'` / `'happy-dom'`
+   * when DOM APIs or component mounting are detected or requested.
+   */
   environment?: 'jsdom' | 'happy-dom' | 'node';
+  /** Default test timeout in milliseconds. Defaults to 30,000 ms. */
+  testTimeout?: number;
+  /** Default hook timeout in milliseconds. Defaults to 30,000 ms. */
+  hookTimeout?: number;
   /** Expose Vitest globals (`describe`, `it`, ...). Defaults to `true`. */
   globals?: boolean;
   /** Glob patterns for test files. Defaults to `['src/**\/*.spec.ts']`. */
@@ -39,16 +53,124 @@ export interface VitestConfigOptions {
   overrides?: ViteUserConfig;
 }
 
+function hasComponentFiles(directory: string): boolean {
+  try {
+    const entries = fs.readdirSync(directory, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        if (entry.name === 'node_modules' || entry.name === 'dist') {
+          continue;
+        }
+        if (hasComponentFiles(path.join(directory, entry.name))) {
+          return true;
+        }
+      } else if (entry.isFile() && (entry.name.endsWith('.vue') || entry.name.endsWith('.tsx'))) {
+        return true;
+      }
+    }
+  } catch {
+    // ignore
+  }
+  return false;
+}
+
+/**
+ * Detect whether a package requires a DOM environment (e.g. `jsdom` or `happy-dom`)
+ * or can safely run in a lightweight `node` environment.
+ */
+export function detectTestEnvironment(
+  rootDirectory: string = process.cwd(),
+  options: VitestConfigOptions = {},
+): 'jsdom' | 'happy-dom' | 'node' {
+  if (options.environment !== undefined) {
+    return options.environment;
+  }
+  const overrideEnvironment = (
+    options.overrides as { test?: { environment?: 'jsdom' | 'happy-dom' | 'node' } } | undefined
+  )?.test?.environment;
+  if (overrideEnvironment !== undefined) {
+    return overrideEnvironment;
+  }
+  if (options.framework !== undefined) {
+    return 'jsdom';
+  }
+  if (options.frameworkInclude !== undefined && options.frameworkInclude.length > 0) {
+    return 'jsdom';
+  }
+
+  const normalizedRoot = rootDirectory.replaceAll('\\', '/');
+  if (
+    normalizedRoot.includes('/packages/ui/') ||
+    normalizedRoot.includes('/packages/integrations/') ||
+    normalizedRoot.includes('/apps/') ||
+    normalizedRoot.endsWith('/forge-adapters') ||
+    normalizedRoot.endsWith('/observers') ||
+    normalizedRoot.includes('/forge-router-web-components') ||
+    normalizedRoot.includes('/forge-router-vue')
+  ) {
+    return 'jsdom';
+  }
+
+  if (fs.existsSync(path.resolve(rootDirectory, 'src', 'components'))) {
+    return 'jsdom';
+  }
+
+  const packageJsonPath = path.resolve(rootDirectory, 'package.json');
+  if (fs.existsSync(packageJsonPath)) {
+    try {
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')) as {
+        dependencies?: Record<string, string>;
+        devDependencies?: Record<string, string>;
+        peerDependencies?: Record<string, string>;
+      };
+      const allDependencies = {
+        ...packageJson.dependencies,
+        ...packageJson.devDependencies,
+        ...packageJson.peerDependencies,
+      };
+      if (allDependencies['happy-dom'] !== undefined && allDependencies['jsdom'] === undefined) {
+        return 'happy-dom';
+      }
+      if (
+        allDependencies['jsdom'] !== undefined ||
+        allDependencies['happy-dom'] !== undefined ||
+        allDependencies['@vue/test-utils'] !== undefined ||
+        allDependencies['@testing-library/vue'] !== undefined ||
+        allDependencies['@testing-library/react'] !== undefined ||
+        allDependencies['@testing-library/dom'] !== undefined ||
+        allDependencies['@testing-library/svelte'] !== undefined ||
+        allDependencies['@testing-library/solid'] !== undefined ||
+        allDependencies['@unhead/vue'] !== undefined ||
+        allDependencies['@unhead/dom'] !== undefined ||
+        allDependencies['lit'] !== undefined
+      ) {
+        return 'jsdom';
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  const sourceDirectory = path.resolve(rootDirectory, 'src');
+  if (fs.existsSync(sourceDirectory) && hasComponentFiles(sourceDirectory)) {
+    return 'jsdom';
+  }
+
+  return 'node';
+}
+
 /**
  * Build a Vitest config for Mission Platform packages and apps. Provides the
- * standard Vue plugin, a jsdom environment, and a v8 coverage provider
+ * standard Vue plugin, a jsdom or node environment, and a v8 coverage provider
  * preconfigured for `src/**\/*.vue` components.
  */
 export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig {
   const {
     framework,
     frameworkInclude,
-    environment = 'jsdom',
+    environment = detectTestEnvironment(process.cwd(), options),
+    testTimeout = 30_000,
+    hookTimeout = 30_000,
     globals = true,
     include = ['src/**/*.spec.ts'],
     coverageInclude,
@@ -61,6 +183,7 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
 
   const base = defineConfig({
     plugins: [vue(), ignoreVueI18nBlocksPlugin()],
+    css: DEFAULT_CSS_CONFIG,
     resolve: {
       alias: {
         '@': path.resolve(process.cwd(), 'src'),
@@ -70,6 +193,8 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
     },
     test: {
       environment,
+      testTimeout,
+      hookTimeout,
       globals,
       // When the framework conditions are scoped, each project declares its own
       // `include` instead: a project `extends: true` *merges* with this config,
@@ -86,6 +211,9 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
                 extends: true,
                 test: {
                   name: 'neutral',
+                  environment,
+                  testTimeout,
+                  hookTimeout,
                   include: [...include],
                   exclude: ['**/node_modules/**', '**/dist/**', ...frameworkInclude],
                 },
@@ -95,6 +223,9 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
                 resolve: { conditions, tsconfigPaths: true },
                 test: {
                   name: `mp:${framework}`,
+                  environment,
+                  testTimeout,
+                  hookTimeout,
                   include: [...frameworkInclude],
                 },
               },

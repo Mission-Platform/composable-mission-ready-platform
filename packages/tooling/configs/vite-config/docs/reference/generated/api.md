@@ -33,6 +33,16 @@ Build a Rollup/Rolldown `external` predicate that treats every name in
 | ----- | ----------------- | ----------- |
 | names | readonly string[] |             |
 
+### DEFAULT_CSS_CONFIG
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_CSS_CONFIG: NonNullable<UserConfig['css']>;
+```
+
+Shared CSS configuration for Vite builds: PostCSS pipeline + modern Sass preprocessor options.
+
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Kind:** constant
@@ -54,6 +64,17 @@ export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 
 Default Rollup output globals for UMD/IIFE consumers. We only target ESM but
 Rollup still warns without this map when externals are declared.
+
+### DEFAULT_SASS_PREPROCESSOR_OPTIONS
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_SASS_PREPROCESSOR_OPTIONS;
+```
+
+Shared Sass preprocessor options enabling the modern Dart Sass JS API and
+silencing legacy JS API deprecation warnings.
 
 ### defineAppConfig
 
@@ -256,7 +277,7 @@ function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Build a Vitest config for Mission Platform packages and apps. Provides the
-standard Vue plugin, a jsdom environment, and a v8 coverage provider
+standard Vue plugin, a jsdom or node environment, and a v8 coverage provider
 preconfigured for `src/**\/*.vue` components.
 
 #### Parameters
@@ -264,6 +285,27 @@ preconfigured for `src/**\/*.vue` components.
 | Name    | Type                | Description |
 | ------- | ------------------- | ----------- |
 | options | VitestConfigOptions |             |
+
+### detectTestEnvironment
+
+**Kind:** function
+
+```typescript
+function detectTestEnvironment(
+  rootDirectory: string = process.cwd(),
+  options: VitestConfigOptions = {},
+): 'jsdom' | 'happy-dom' | 'node';
+```
+
+Detect whether a package requires a DOM environment (e.g. `jsdom` or `happy-dom`)
+or can safely run in a lightweight `node` environment.
+
+#### Parameters
+
+| Name          | Type                | Description |
+| ------------- | ------------------- | ----------- |
+| rootDirectory | string              |             |
+| options       | VitestConfigOptions |             |
 
 ### VitestConfigOptions
 
