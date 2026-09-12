@@ -3,9 +3,11 @@ import { describe, expect, it } from 'vitest';
 import {
   createForgeWebScriptGenericSpecialization,
   createForgeWebScriptIteratorBoundaryDescriptor,
+  createMonomorphizationCache,
+  monomorphizeForgeWebScriptGeneric,
 } from './generics.ts';
 
-const type = (name: 'i32' | 'bytes') => ({
+const type = (name: 'i32' | 'bytes' | 'i64') => ({
   kind: 'type-name' as const,
   name,
   span: { start: 0, end: 1, line: 1, column: 1, endLine: 1, endColumn: 2 },
@@ -29,5 +31,34 @@ describe('Forge Web Script hybrid generic contracts', () => {
       representation: 'descriptor-boundary',
       ownership: 'borrowed',
     });
+  });
+
+  it('uses TypeAlgebra monomorphization for layout-aware specialization caching', () => {
+    const { algebra, cache } = createMonomorphizationCache();
+    const first = monomorphizeForgeWebScriptGeneric({
+      generic: 'Option',
+      arguments: [type('i32')],
+      algebra,
+      cache,
+    });
+    const second = monomorphizeForgeWebScriptGeneric({
+      generic: 'Option',
+      arguments: [type('i32')],
+      algebra,
+      cache,
+    });
+    const nested = monomorphizeForgeWebScriptGeneric({
+      generic: 'Option',
+      arguments: [type('i64')],
+      algebra,
+      cache,
+    });
+
+    expect(first).toBe(second);
+    expect(first.specialization.representation).toBe('monomorphized');
+    expect(first.layout.size).toBe(8);
+    expect(nested.specialization.id).toBe('Option<i64>:value');
+    expect(nested.layout.layoutKey).not.toBe(first.layout.layoutKey);
+    expect(cache.size).toBe(2);
   });
 });

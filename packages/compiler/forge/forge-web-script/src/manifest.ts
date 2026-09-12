@@ -4,6 +4,7 @@ import {
   DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY,
   type ForgeWebScriptStandardLibraryIdentity,
 } from './stdlib/regex.js';
+import { createMonomorphizationCache, primitiveLayout } from './type-algebra.js';
 
 import type {
   ForgeWebScriptModule,
@@ -266,54 +267,93 @@ function iteratorDescriptors(module: ForgeWebScriptModule): readonly ForgeWebScr
   });
 }
 
+function fieldCarrierSize(type: ForgeWebScriptTypeName): { readonly size: number; readonly alignment: number } {
+  // Seed ABI keeps non-primitive aggregates as 4-byte handles; primitives use TypeAlgebra sizes.
+  if (type.reference !== undefined || type.arguments !== undefined || type.referenceMode !== undefined) {
+    return { size: 4, alignment: 4 };
+  }
+  if (type.length !== undefined) {
+    const element = primitiveLayout(type.name);
+    return { size: Math.max(element.size, 4) * type.length, alignment: Math.max(element.alignment, 4) };
+  }
+  const primitive = primitiveLayout(type.name);
+  return { size: primitive.size, alignment: primitive.alignment === 0 ? 1 : primitive.alignment };
+}
+
 function aggregateLayouts(module: ForgeWebScriptModule): readonly ForgeWebScriptAggregateLayout[] {
   const structs = module.structs.map((declaration) => {
     let offset = 0;
+    let alignment = 1;
     const fields = declaration.fields.map((field) => {
-      const size = field.type.name === 'unit' && field.type.reference === undefined ? 0 : 4;
+      const carrier = fieldCarrierSize(field.type);
+      const size = carrier.size;
+      const fieldAlignment = carrier.alignment;
+      const alignedOffset = fieldAlignment <= 1 ? offset : (offset + fieldAlignment - 1) & ~(fieldAlignment - 1);
       const layout = {
         name: field.name,
         type: typeKey(field.type),
-        offset,
+        offset: alignedOffset,
         size,
-        alignment: size === 0 ? 1 : 4,
+        alignment: fieldAlignment,
         ownership: field.ownership ?? ('owned' as const),
       };
-      offset += size;
+      offset = alignedOffset + size;
+      alignment = Math.max(alignment, fieldAlignment);
       return layout;
     });
+    const structAlignment = Math.max(alignment, 1);
+    const size = structAlignment <= 1 ? offset : (offset + structAlignment - 1) & ~(structAlignment - 1);
     return {
       name: declaration.name,
       kind: 'struct' as const,
       ...(declaration.record ? { record: true as const } : {}),
-      size: offset,
-      alignment: 4,
+      size,
+      alignment: structAlignment,
       fields,
       immutable: true as const,
     };
   });
   const enums = module.enums.map((declaration) => {
-    const fields = declaration.variants.flatMap((variant) =>
-      variant.fields.map((field, index) => ({
-        name: `${variant.name}.${field.name}`,
-        type: typeKey(field.type),
-        offset: 4 + index * 4,
-        size: 4,
-        alignment: 4,
-        ownership: 'owned' as const,
-      })),
-    );
+    let maxVariantAlignment = 4;
+    const fields = declaration.variants.flatMap((variant) => {
+      let offset = 4;
+      return variant.fields.map((field) => {
+        const carrier = fieldCarrierSize(field.type);
+        const size = Math.max(carrier.size, 4);
+        const fieldAlignment = carrier.alignment;
+        maxVariantAlignment = Math.max(maxVariantAlignment, fieldAlignment);
+        const alignedOffset = fieldAlignment <= 1 ? offset : (offset + fieldAlignment - 1) & ~(fieldAlignment - 1);
+        const layout = {
+          name: `${variant.name}.${field.name}`,
+          type: typeKey(field.type),
+          offset: alignedOffset,
+          size,
+          alignment: fieldAlignment,
+          ownership: 'owned' as const,
+        };
+        offset = alignedOffset + size;
+        return layout;
+      });
+    });
+    const enumSize = Math.max(4, ...fields.map(({ offset, size }) => offset + size));
+    const alignedEnumSize =
+      maxVariantAlignment <= 1 ? enumSize : (enumSize + maxVariantAlignment - 1) & ~(maxVariantAlignment - 1);
     return {
       name: declaration.name,
       kind: 'enum' as const,
-      size: Math.max(4, ...fields.map(({ offset, size }) => offset + size)),
-      alignment: 4,
+      size: alignedEnumSize,
+      alignment: maxVariantAlignment,
       discriminantSize: 4 as const,
       fields,
       immutable: true as const,
     };
   });
   return [...structs, ...enums].toSorted((left, right) => left.name.localeCompare(right.name));
+}
+
+function collectSpecializations(module: ForgeWebScriptModule): readonly ForgeWebScriptSpecialization[] {
+  const { cache } = createMonomorphizationCache(module);
+  return cache.collectFromModule(module).map((entry) => entry.specialization);
 }
 
 function collectionLayouts(module: ForgeWebScriptModule): readonly ForgeWebScriptCollectionLayout[] {
@@ -486,7 +526,9 @@ export function createForgeWebScriptAbiManifest(
       }))
       .toSorted((left, right) => left.name.localeCompare(right.name)),
     collectionLayouts: collectionLayouts(module),
-    specializations: options.specializations?.toSorted((left, right) => left.id.localeCompare(right.id)) ?? [],
+    specializations: (options.specializations ?? collectSpecializations(module)).toSorted((left, right) =>
+      left.id.localeCompare(right.id),
+    ),
     iteratorDescriptors: (options.iteratorDescriptors ?? iteratorDescriptors(module)).toSorted((left, right) =>
       left.id.localeCompare(right.id),
     ),

@@ -5,10 +5,22 @@ import {
   captureEnd,
   captureStart,
   fullMatch,
+  fullMatchBacktracking,
+  fullMatchLinear,
+  PikeRunner,
   prefixMatch,
+  prefixMatchBacktracking,
+  prefixMatchLinear,
+  Runner,
   search,
+  searchBacktracking,
+  searchLinear,
   test,
+  testBacktracking,
+  testLinear,
 } from "./reference-vm.js";
+
+import * as RootApi from ".";
 
 const CASES = [
   [String.raw`[13-689]\d{9}`, "4155552671"],
@@ -196,5 +208,200 @@ describe("Forge regex compiler and reference oracle", () => {
         expect((error as RegexSyntaxError).code).toBe(code);
       }
     }
+  });
+
+  describe("Linear-time PikeVM execution engine", () => {
+    it("exports all linear matching APIs and runners from the package root", () => {
+      expect(typeof RootApi.compileRegex).toBe("function");
+      expect(typeof RootApi.fullMatch).toBe("function");
+      expect(typeof RootApi.fullMatchLinear).toBe("function");
+      expect(typeof RootApi.prefixMatch).toBe("function");
+      expect(typeof RootApi.prefixMatchLinear).toBe("function");
+      expect(typeof RootApi.search).toBe("function");
+      expect(typeof RootApi.searchLinear).toBe("function");
+      expect(typeof RootApi.test).toBe("function");
+      expect(typeof RootApi.testLinear).toBe("function");
+      expect(typeof RootApi.captureStart).toBe("function");
+      expect(typeof RootApi.captureEnd).toBe("function");
+      expect(RootApi.PikeRunner).toBe(PikeRunner);
+      expect(RootApi.Runner).toBe(Runner);
+    });
+
+    it("matches the native engine across the pattern/input matrix without backtracking", () => {
+      for (const pattern of PATTERNS) {
+        const compiled = compileRegex(pattern);
+        for (const input of INPUTS) {
+          expect(
+            testLinear(compiled, input),
+            `linear pattern=${JSON.stringify(pattern)} input=${JSON.stringify(input)}`,
+          ).toBe(nativeFullWithoutUnicode(pattern, input));
+        }
+      }
+    });
+
+    it("conforms exactly to backtracking oracle across pattern/input matrix for fullMatch and test", () => {
+      for (const pattern of PATTERNS) {
+        const compiled = compileRegex(pattern);
+        for (const input of INPUTS) {
+          const linearResult = fullMatch(compiled, input);
+          const backtrackingResult = fullMatchBacktracking(compiled, input);
+          expect(
+            linearResult,
+            `fullMatch pattern=${JSON.stringify(pattern)} input=${JSON.stringify(input)}`,
+          ).toEqual(backtrackingResult);
+          expect(test(compiled, input)).toBe(testBacktracking(compiled, input));
+        }
+      }
+    });
+
+    it("conforms exactly to backtracking oracle across pattern/input matrix for prefixMatch and search", () => {
+      for (const pattern of PATTERNS) {
+        const compiled = compileRegex(pattern);
+        for (const input of INPUTS) {
+          const linearResult = prefixMatch(compiled, input);
+          const linearAliasResult = prefixMatchLinear(compiled, input);
+          const backtrackingResult = prefixMatchBacktracking(compiled, input);
+          expect(linearAliasResult).toEqual(linearResult);
+          expect(
+            linearResult !== null,
+            `prefixMatch pattern=${JSON.stringify(pattern)} input=${JSON.stringify(input)}`,
+          ).toBe(backtrackingResult !== null);
+          if (linearResult !== null && backtrackingResult !== null) {
+            expect(linearResult[0]).toBe(backtrackingResult[0]);
+            expect(linearResult[1]).toBe(backtrackingResult[1]);
+          }
+
+          const searchResult = search(compiled, input);
+          const searchBacktrackingResult = searchBacktracking(compiled, input);
+          expect(
+            searchResult !== null,
+            `search pattern=${JSON.stringify(pattern)} input=${JSON.stringify(input)}`,
+          ).toBe(searchBacktrackingResult !== null);
+          if (searchResult !== null && searchBacktrackingResult !== null) {
+            expect(searchResult[0]).toBe(searchBacktrackingResult[0]);
+            expect(searchResult[1]).toBe(searchBacktrackingResult[1]);
+          }
+        }
+      }
+    });
+
+    it("preserves capture spans accurately in linear time", () => {
+      const compiled = compileRegex(String.raw`(\d{3})(\d{3})(\d{4})`);
+      const captures = fullMatchLinear(compiled, "4155552671");
+      expect(captures).not.toBeNull();
+      expect(captures).toEqual([0, 10, 0, 3, 3, 6, 6, 10]);
+    });
+
+    it("handles complex capturing and greedy/lazy precedence correctly", () => {
+      // Lazy followed by greedy
+      const lazyGreedy = compileRegex("(a+?)(a+)");
+      expect(fullMatch(lazyGreedy, "aaaa")).toEqual([0, 4, 0, 1, 1, 4]);
+
+      // Greedy followed by lazy
+      const greedyLazy = compileRegex("(a+)(a+?)");
+      expect(fullMatch(greedyLazy, "aaaa")).toEqual([0, 4, 0, 3, 3, 4]);
+
+      // Nested capturing groups
+      const nested = compileRegex("((a)(b))");
+      expect(fullMatch(nested, "ab")).toEqual([0, 2, 0, 2, 0, 1, 1, 2]);
+
+      // Alternation priority in prefix matching
+      const altA = compileRegex("a|ab");
+      expect(prefixMatch(altA, "ab")).toEqual([0, 1]);
+
+      const altB = compileRegex("ab|a");
+      expect(prefixMatch(altB, "ab")).toEqual([0, 2]);
+
+      // Last iteration capture in quantified group
+      const repeatGroup = compileRegex("(a)+");
+      expect(fullMatch(repeatGroup, "aaa")).toEqual([0, 3, 2, 3]);
+
+      // Alternative branches with unselected capture groups
+      const disjoint = compileRegex("(a)|(b)");
+      const capA = fullMatch(disjoint, "a");
+      expect(capA).toEqual([0, 1, 0, 1, -1, -1]);
+      expect(captureStart(capA, 1)).toBe(0);
+      expect(captureEnd(capA, 1)).toBe(1);
+      expect(captureStart(capA, 2)).toBe(-1);
+      expect(captureEnd(capA, 2)).toBe(-1);
+
+      const capB = fullMatch(disjoint, "b");
+      expect(capB).toEqual([0, 1, -1, -1, 0, 1]);
+      expect(captureStart(capB, 1)).toBe(-1);
+      expect(captureEnd(capB, 1)).toBe(-1);
+      expect(captureStart(capB, 2)).toBe(0);
+      expect(captureEnd(capB, 2)).toBe(1);
+    });
+
+    it("supports searchLinear with offsets and unanchored patterns", () => {
+      const compiled = compileRegex(String.raw`\d{2}`);
+      expect(searchLinear(compiled, "abc12def34", 0)).toEqual([3, 5]);
+      expect(searchLinear(compiled, "abc12def34", 4)).toEqual([8, 10]);
+      expect(searchLinear(compiled, "abc12def34", 9)).toBeNull();
+
+      const bolPattern = compileRegex(String.raw`^\d{2}`);
+      expect(searchLinear(bolPattern, "12abc")).toEqual([0, 2]);
+      expect(searchLinear(bolPattern, "x12abc")).toBeNull();
+
+      const eolPattern = compileRegex(String.raw`\d{2}$`);
+      expect(searchLinear(eolPattern, "abc12")).toEqual([3, 5]);
+      expect(searchLinear(eolPattern, "abc12x")).toBeNull();
+    });
+
+    it("resists catastrophic backtracking (ReDoS) on pathological nested quantifiers", () => {
+      const pathological = [
+        String.raw`(a+)+$`,
+        String.raw`(a|aa)+$`,
+        String.raw`(a*)*$`,
+      ];
+      const nonMatchingInput = "a".repeat(28) + "!";
+
+      for (const pattern of pathological) {
+        const compiled = compileRegex(pattern);
+        const startTime = Date.now();
+        const result = testLinear(compiled, nonMatchingInput);
+        const durationMs = Date.now() - startTime;
+
+        expect(result).toBe(false);
+        // PikeVM must complete instantaneously in < 100ms, whereas backtracking takes seconds or minutes
+        expect(durationMs).toBeLessThan(100);
+      }
+    });
+
+    it("exhibits strictly linear O(M * N) scaling across orders of magnitude without exponential slowdown", () => {
+      const pathological = [
+        String.raw`(a+)+$`,
+        String.raw`(a|aa)+$`,
+        String.raw`(a*)*$`,
+        String.raw`(a|b|ab)*$`,
+      ];
+      const lengths = [50, 200, 500, 1000];
+
+      for (const pattern of pathological) {
+        const compiled = compileRegex(pattern);
+
+        for (const length of lengths) {
+          const input = "a".repeat(length) + "!";
+          const start = Date.now();
+          const matched = test(compiled, input);
+          const elapsed = Date.now() - start;
+
+          expect(matched).toBe(false);
+          // Even at N=1000, linear PikeVM must finish well within 100ms
+          expect(elapsed).toBeLessThan(100);
+        }
+      }
+    });
+
+    it("prevents ReDoS in unanchored search on pathological inputs", () => {
+      const compiled = compileRegex(String.raw`(a+)+$`);
+      const input = "a".repeat(100) + "!";
+      const start = Date.now();
+      const result = search(compiled, input);
+      const elapsed = Date.now() - start;
+
+      expect(result).toBeNull();
+      expect(elapsed).toBeLessThan(100);
+    });
   });
 });

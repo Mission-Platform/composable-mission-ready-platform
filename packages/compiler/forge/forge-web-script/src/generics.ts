@@ -1,18 +1,31 @@
+import {
+  MonomorphizationCache,
+  type ForgeWebScriptGenericBoundary,
+  type MonomorphizedSpecialization,
+  type TypeAlgebra,
+  createTypeAlgebra,
+} from './type-algebra.js';
+
 import type { ForgeWebScriptOwnership, ForgeWebScriptTypeName } from './ast.js';
 import type { ForgeWebScriptIteratorBoundaryDescriptor, ForgeWebScriptSpecialization } from './manifest.js';
 
-export type ForgeWebScriptGenericBoundary = 'value' | 'interface' | 'iterator';
+export type { ForgeWebScriptGenericBoundary } from './type-algebra.js';
 
 export interface ForgeWebScriptGenericSpecializationRequest {
   readonly generic: string;
   readonly arguments: readonly ForgeWebScriptTypeName[];
   readonly boundary?: ForgeWebScriptGenericBoundary;
+  /** Optional shared algebra so callers can reuse interned ids across requests. */
+  readonly algebra?: TypeAlgebra;
 }
 
-function canonicalType(type: ForgeWebScriptTypeName): string {
-  const base = type.reference ?? type.name;
-  const arguments_ = type.arguments?.map((argument) => canonicalType(argument)).join(',') ?? '';
-  return `${base}${arguments_.length === 0 ? '' : `<${arguments_}>`}`;
+export interface ForgeWebScriptMonomorphizeRequest extends ForgeWebScriptGenericSpecializationRequest {
+  /** Optional shared monomorphization cache; created when omitted. */
+  readonly cache?: MonomorphizationCache;
+}
+
+function canonicalType(type: ForgeWebScriptTypeName, algebra = createTypeAlgebra()): string {
+  return algebra.display(algebra.fromAst(type));
 }
 
 export function forgeWebScriptGenericRepresentation(
@@ -21,16 +34,36 @@ export function forgeWebScriptGenericRepresentation(
   return boundary === 'value' ? 'monomorphized' : 'descriptor-boundary';
 }
 
+/**
+ * Build a manifest specialization descriptor using interned TypeAlgebra keys.
+ * Prefer `monomorphizeForgeWebScriptGeneric` when layout metadata is required.
+ */
 export function createForgeWebScriptGenericSpecialization(
   request: ForgeWebScriptGenericSpecializationRequest,
 ): ForgeWebScriptSpecialization {
-  const arguments_ = request.arguments.map((argument) => canonicalType(argument));
+  const algebra = request.algebra ?? createTypeAlgebra();
+  const argumentIds = request.arguments.map((argument) => algebra.fromAst(argument));
+  const boundary = algebra.defaultBoundary(request.generic, request.boundary);
+  const arguments_ = argumentIds.map((argument) => algebra.display(argument));
   return {
-    id: `${request.generic}<${arguments_.join(',')}>:${request.boundary ?? 'value'}`,
+    id: `${request.generic}<${arguments_.join(',')}>:${boundary}`,
     generic: request.generic,
     arguments: arguments_,
-    representation: forgeWebScriptGenericRepresentation(request.boundary),
+    representation: algebra.representationFor(boundary),
   };
+}
+
+/**
+ * Monomorphize a generic application through the layout-aware cache.
+ * Identical expanded layouts share a layout owner while keeping distinct specialization ids.
+ */
+export function monomorphizeForgeWebScriptGeneric(
+  request: ForgeWebScriptMonomorphizeRequest,
+): MonomorphizedSpecialization {
+  const algebra = request.algebra ?? createTypeAlgebra();
+  const cache = request.cache ?? new MonomorphizationCache(algebra);
+  const argumentIds = request.arguments.map((argument) => algebra.fromAst(argument));
+  return cache.monomorphize(request.generic, argumentIds, request.boundary);
 }
 
 export function createForgeWebScriptIteratorBoundaryDescriptor(
@@ -54,3 +87,5 @@ export function sortForgeWebScriptSpecializations(
 ): readonly ForgeWebScriptSpecialization[] {
   return [...specializations].toSorted((left, right) => left.id.localeCompare(right.id));
 }
+
+export { MonomorphizationCache, TypeAlgebra, createMonomorphizationCache, createTypeAlgebra } from './type-algebra.js';

@@ -1,4 +1,27 @@
+// Owned unique-value set collection.
 struct Set<T> {
   entries: bytes,
   length: u32,
+  capacity: u32,
 }
+
+// Create an empty owned Set with zero elements.
+fn empty_set<T>() -> Set<T>;
+
+// Return the number of elements in the set.
+fn set_length<T>(set: Set<T>) -> u32;
+
+// Return true when the set contains zero elements.
+fn set_is_empty<T>(set: Set<T>) -> bool;
+
+// Return true if value exists in the set.
+fn set_has<T>(set: Set<T>, value: T) -> bool;
+
+// Insert value into the set and return the updated owned set.
+fn set_add<T>(set: Set<T>, value: T) -> Set<T>;
+
+// Remove value from the set and return the updated owned set.
+fn set_delete<T>(set: Set<T>, value: T) -> Set<T>;
+
+// Return a Vector containing all elements in the set.
+fn set_values<T>(set: Set<T>) -> Vector<T>;
