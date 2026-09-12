@@ -16,7 +16,10 @@ export default [
       'unicorn/prefer-switch': 'off',
       'unicorn/text-encoding-identifier-case': 'off',
       'unicorn/no-array-sort': 'off',
+      'unicorn/consistent-function-scoping': 'off',
       'import-x/no-useless-path-segments': 'off',
+      'sonarjs/no-skipped-tests': 'off',
+      'sonarjs/assertions-in-tests': 'off',
     },
   },
 ];

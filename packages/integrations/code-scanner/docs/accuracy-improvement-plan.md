@@ -17,6 +17,13 @@ frames), and for keeping the scan pipeline inside one statically linked Forge We
 > (item 4), the Aztec locator (item 6) and multi-symbol + ROI scanning (item 7)
 > have all landed.
 
+> **ZXing port status (2026-09-12):** The scanner-owned FWS graph now contains
+> bounded ZXing-shaped foundation, 1D/RSS, Data Matrix, compact Aztec, PDF417,
+> and MaxiCode paths. The public result model is versioned and carries text,
+> bytes, bit count, points, metadata, and timestamp. QR decoder graphs emit
+> independently, but combined QR linkage is blocked by Forge Web Script
+> `FWS-EMIT-001`; the reduced 2D paths do not claim full ZXing parity.
+
 The original implementation split the pipeline:
 
 - **Locate + sample** ran in a legacy native/wasm pipeline: `binarize` → per-symbology locators. Its `scan` entry point

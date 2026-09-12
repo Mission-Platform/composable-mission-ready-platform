@@ -14,7 +14,16 @@
 // `./react` and `./vue` subpath exports.
 
 /** The shared result and image types. */
-export type { ImageLike, Roi, ScanFormat, ScanResult } from './types';
+export type {
+  ImageLike,
+  Roi,
+  ScanFormat,
+  ScanMetadata,
+  ScanMetadataValue,
+  ScanOptions,
+  ScanPoint,
+  ScanResult,
+} from './types';
 
 /** The luma + contrast-stretch helpers and their image type (handy for custom capture pipelines). */
 export { contrastStretchLuma, imageDataToLuma, type LumaImage } from './image';

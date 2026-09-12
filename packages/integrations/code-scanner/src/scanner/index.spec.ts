@@ -12,7 +12,6 @@ import {
   scanImageDataAsync,
 } from './index';
 
-
 import type { ImageLike } from '../types';
 
 /** Module pixel size and quiet-zone width used when rendering test images. */
@@ -451,13 +450,13 @@ function renderBarcodeImage(bits: readonly number[]): ImageLike {
 }
 
 describe('scanImageData — QR codes', () => {
-    it.skip('locates and decodes a clean QR code through the linked graph', () => {
+  it.skip('locates and decodes a clean QR code through the linked graph', () => {
     const value = 'https://mission-platform.dev';
     const result = scanImageData(renderCleanQr(value));
 
     expect(result).not.toBeNull();
-    expect(result?.format).toBe('qr');
-    expect(result?.value).toBe(value);
+    expect(result?.format).toBe('QR_CODE');
+    expect(result?.text).toBe(value);
   });
 
   it.skip('locates and decodes a degraded QR code back to its payload', () => {
@@ -465,14 +464,14 @@ describe('scanImageData — QR codes', () => {
     const result = scanImageData(renderQrImage(value, 'M'));
 
     expect(result).not.toBeNull();
-    expect(result?.format).toBe('qr');
-    expect(result?.value).toBe(value);
+    expect(result?.format).toBe('QR_CODE');
+    expect(result?.text).toBe(value);
   });
 
   it.skip('decodes QR payloads across error-correction levels', () => {
     for (const ecc of ['L', 'M', 'Q', 'H'] as const) {
       const value = `ecc-${ecc}-payload`;
-      expect(scanImageData(renderQrImage(value, ecc))?.value, `ecc=${ecc}`).toBe(value);
+      expect(scanImageData(renderQrImage(value, ecc))?.text, `ecc=${ecc}`).toBe(value);
     }
   });
 
@@ -488,12 +487,10 @@ describe('scanImageData — QR codes', () => {
     ['long', 'MISSION-PLATFORM/'.repeat(8)],
   ])('round-trips a %s QR payload', (_label, value) => {
     const result = scanImageData(renderQrImage(value, 'M'));
-    expect(result?.format).toBe('qr');
-    expect(result?.value).toBe(value);
+    expect(result?.format).toBe('QR_CODE');
+    expect(result?.text).toBe(value);
   });
 });
-
-
 
 describe('scanImageData — Data Matrix codes', () => {
   it('locates and decodes a clean Data Matrix code through the linked graph', () => {
@@ -502,8 +499,13 @@ describe('scanImageData — Data Matrix codes', () => {
     const result = scanImageData(image);
 
     expect(result).not.toBeNull();
-    expect(result?.format).toBe('datamatrix');
-    expect(result?.value).toBe('HELLO');
+    expect(result?.format).toBe('DATA_MATRIX');
+    expect(result?.text).toBe('HELLO');
+    expect(Array.from(result?.rawBytes ?? [])).toEqual(Array.from(new TextEncoder().encode('HELLO')));
+    expect(result?.numBits).toBe(40);
+    expect(result?.points).toEqual([]);
+    expect(result?.metadata).toEqual({});
+    expect(result?.timestamp).toBeGreaterThan(0);
   });
 
   it.skip('locates and decodes a Data Matrix code back to its payload', () => {
@@ -511,8 +513,8 @@ describe('scanImageData — Data Matrix codes', () => {
     const result = scanImageData(renderDataMatrixImage(value));
 
     expect(result).not.toBeNull();
-    expect(result?.format).toBe('datamatrix');
-    expect(result?.value).toBe(value);
+    expect(result?.format).toBe('DATA_MATRIX');
+    expect(result?.text).toBe(value);
   });
 
   it.skip.each([
@@ -522,8 +524,8 @@ describe('scanImageData — Data Matrix codes', () => {
     ['digits', '123456'],
   ])('round-trips a %s Data Matrix payload', (_label, value) => {
     const result = scanImageData(renderDataMatrixImage(value));
-    expect(result?.format).toBe('datamatrix');
-    expect(result?.value).toBe(value);
+    expect(result?.format).toBe('DATA_MATRIX');
+    expect(result?.text).toBe(value);
   });
 });
 
@@ -575,7 +577,8 @@ describe('scanImageData — Aztec codes', () => {
     const result = scanImageData(renderAztecImage(value));
 
     expect(result).not.toBeNull();
-    expect(result?.format).toBe('aztec');
+    expect(result?.format).toBe('AZTEC');
+    expect(result?.text).toBe(value);
     expect(result?.value).toBe(value);
   });
 

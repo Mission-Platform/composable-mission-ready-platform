@@ -24,6 +24,18 @@ export interface ForgeScannerExports {
     packed: ArrayLike<number>,
     meta: ArrayLike<number>,
   ) => string;
+  readonly scan_and_decode_with_options: (
+    width: number,
+    height: number,
+    luma: ArrayLike<number>,
+    modules: ArrayLike<number>,
+    erasures: ArrayLike<number>,
+    packed: ArrayLike<number>,
+    meta: ArrayLike<number>,
+    possibleFormat: number,
+    tryHarder: number,
+    alsoInverted: number,
+  ) => string;
   readonly scan_and_decode_roi: (
     width: number,
     height: number,
@@ -36,6 +48,22 @@ export interface ForgeScannerExports {
     erasures: ArrayLike<number>,
     packed: ArrayLike<number>,
     meta: ArrayLike<number>,
+  ) => string;
+  readonly scan_and_decode_roi_with_options: (
+    width: number,
+    height: number,
+    luma: ArrayLike<number>,
+    roiX: number,
+    roiY: number,
+    roiWidth: number,
+    roiHeight: number,
+    modules: ArrayLike<number>,
+    erasures: ArrayLike<number>,
+    packed: ArrayLike<number>,
+    meta: ArrayLike<number>,
+    possibleFormat: number,
+    tryHarder: number,
+    alsoInverted: number,
   ) => string;
   readonly scan_and_decode_all: (
     width: number,
@@ -59,6 +87,18 @@ export interface ForgeScannerRawExports {
     packed: number,
     meta: number,
   ) => ForgeScannerRawBytes;
+  readonly scan_and_decode_with_options: (
+    width: number,
+    height: number,
+    luma: number,
+    modules: number,
+    erasures: number,
+    packed: number,
+    meta: number,
+    possibleFormat: number,
+    tryHarder: number,
+    alsoInverted: number,
+  ) => ForgeScannerRawBytes;
   readonly scan_and_decode_roi: (
     width: number,
     height: number,
@@ -71,6 +111,22 @@ export interface ForgeScannerRawExports {
     erasures: number,
     packed: number,
     meta: number,
+  ) => ForgeScannerRawBytes;
+  readonly scan_and_decode_roi_with_options: (
+    width: number,
+    height: number,
+    luma: number,
+    roiX: number,
+    roiY: number,
+    roiWidth: number,
+    roiHeight: number,
+    modules: number,
+    erasures: number,
+    packed: number,
+    meta: number,
+    possibleFormat: number,
+    tryHarder: number,
+    alsoInverted: number,
   ) => ForgeScannerRawBytes;
   readonly scan_and_decode_all: (
     width: number,

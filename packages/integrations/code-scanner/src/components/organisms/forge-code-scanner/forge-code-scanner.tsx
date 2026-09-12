@@ -13,6 +13,8 @@ import { ForgeTypography } from '@mission-platform/typography';
 import {
   scanFile,
   scanImageData,
+  type ScanFormat,
+  type ScanOptions,
   type ScanResult,
   setCodeScannerDebug,
   videoFrameToImageData,
@@ -95,6 +97,12 @@ export interface CodeScannerProperties {
   showCamera?: boolean;
   /** Stop the live camera automatically once a payload is successfully decoded. Defaults to `true`. */
   stopOnDecode?: boolean;
+  /** Restrict decoding to the selected ZXing formats. */
+  formats?: readonly ScanFormat[];
+  /** Try adaptive binarization and additional reader work. Defaults to `true`. */
+  tryHarder?: boolean;
+  /** Retry the image with inverted luminance. Defaults to `true`. */
+  alsoInverted?: boolean;
   /**
    * Emit opt-in diagnostic logging to the console for every scan (capture size,
    * the located format, its sampled payload, and each decoder's verdict). Handy
@@ -109,7 +117,7 @@ export interface CodeScannerProperties {
   stopCameraLabel?: string;
   /** Accessible label for the scanner region. */
   ariaLabel?: string;
-  /** Fired with each successful detection (its `value` is `null` when undecodable). */
+  /** Fired with each detection (`text` is `null` when the payload is undecodable). */
   onResult?: (result: ScanResult) => void;
   /** Fired when reading a file, decoding a frame, or opening the camera fails. */
   onError?: (error: Error) => void;
@@ -151,6 +159,9 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
     showFileUpload = true,
     showCamera = true,
     stopOnDecode = true,
+    formats,
+    tryHarder = true,
+    alsoInverted = true,
     debug = false,
     uploadLabel = 'Upload image',
     startCameraLabel = 'Scan with camera',
@@ -159,6 +170,8 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
     onResult,
     onError,
   } = properties;
+
+  const scanOptions: ScanOptions = { formats, tryHarder, alsoInverted };
 
   const fileInputReference = useRef<HTMLInputElement | null>(null);
   const videoReference = useRef<HTMLVideoElement | null>(null);
@@ -216,10 +229,10 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
         videoHeight: video.videoHeight,
         scanRoi,
       });
-      const found = scanImageData(videoFrameToImageData(video, scanRoi));
+      const found = scanImageData(videoFrameToImageData(video, scanRoi), scanOptions);
       if (found) {
         publish(found);
-        if (stopOnDecode && found.value !== null) {
+        if (stopOnDecode && found.text !== null) {
           stopCamera();
         }
       }
@@ -318,7 +331,7 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
     }
     void (async () => {
       try {
-        const found = await scanFile(file);
+        const found = await scanFile(file, scanOptions);
         if (found) {
           publish(found);
         } else {
@@ -415,13 +428,13 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
             color="secondary"
             variant="caption"
           >
-            {result.format.toUpperCase()}
+            {result.format}
           </ForgeTypography>
           <ForgeTypography
             as="p"
             variant="code"
           >
-            {result.value ?? 'Detected, but the payload could not be decoded.'}
+            {result.text ?? 'Detected, but the payload could not be decoded.'}
           </ForgeTypography>
         </div>
       ) : null}

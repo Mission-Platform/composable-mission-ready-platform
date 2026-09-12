@@ -1,8 +1,9 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
-import { beforeAll, describe, expect, it } from 'vitest';
 import { encodeMatrix } from '@mission-platform/matrix-code';
+import { beforeAll, describe, expect, it } from 'vitest';
+
 import {
   createForgeWebScriptCompilerService,
   resolveForgeWebScriptModuleGraph,
@@ -12,6 +13,7 @@ interface ScannerExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly scan_and_decode: (...args: number[]) => RawString;
+  readonly scan_and_decode_with_options: (...args: number[]) => RawString;
   readonly scan_and_decode_bytes: (...args: number[]) => RawString;
   readonly sc_foundation_version: () => number;
   readonly sc_foundation_validate_dimensions: (width: number, height: number, stride: number) => number;
@@ -75,7 +77,7 @@ function writeArray(api: ScannerExports, values: readonly number[]): number {
   const pointer = api.fws_alloc((values.length + 1) * 4);
   const view = new DataView(api.memory.buffer, pointer, (values.length + 1) * 4);
   view.setInt32(0, values.length, true);
-  values.forEach((value, index) => view.setInt32((index + 1) * 4, value, true));
+  for (const [index, value] of values.entries()) view.setInt32((index + 1) * 4, value, true);
   return pointer;
 }
 
@@ -83,20 +85,69 @@ function readString(api: ScannerExports, value: RawString): string {
   return new TextDecoder().decode(new Uint8Array(api.memory.buffer, value[0], value[1]));
 }
 
-const EAN_L = ['0001101', '0011001', '0010011', '0111101', '0100011', '0110001', '0101111', '0111011', '0110111', '0001011'];
-const EAN_G = ['0100111', '0110011', '0011011', '0100001', '0011101', '0111001', '0000101', '0010001', '0001001', '0010111'];
-const EAN_R = ['1110010', '1100110', '1101100', '1000010', '1011100', '1001110', '1010000', '1000100', '1001000', '1110100'];
+const EAN_L = [
+  '0001101',
+  '0011001',
+  '0010011',
+  '0111101',
+  '0100011',
+  '0110001',
+  '0101111',
+  '0111011',
+  '0110111',
+  '0001011',
+];
+const EAN_G = [
+  '0100111',
+  '0110011',
+  '0011011',
+  '0100001',
+  '0011101',
+  '0111001',
+  '0000101',
+  '0010001',
+  '0001001',
+  '0010111',
+];
+const EAN_R = [
+  '1110010',
+  '1100110',
+  '1101100',
+  '1000010',
+  '1011100',
+  '1001110',
+  '1010000',
+  '1000100',
+  '1001000',
+  '1110100',
+];
 const EAN_PARITY = ['LLLLLL', 'LLGLGG', 'LLGGLG', 'LLGGGL', 'LGLLGG', 'LGGLLG', 'LGGGLL', 'LGLGLG', 'LGLGGL', 'LGLLGL'];
 
 function ean8Modules(value: string): number[] {
-  const bits = `101${value.slice(0, 4).split('').map((digit) => EAN_L[Number(digit)]).join('')}01010${value.slice(4).split('').map((digit) => EAN_R[Number(digit)]).join('')}101`;
+  const bits = `101${value
+    .slice(0, 4)
+    .split('')
+    .map((digit) => EAN_L[Number(digit)])
+    .join('')}01010${value
+    .slice(4)
+    .split('')
+    .map((digit) => EAN_R[Number(digit)])
+    .join('')}101`;
   return [...bits].map(Number);
 }
 
 function ean13Modules(value: string): number[] {
   const parity = EAN_PARITY[Number(value[0])];
-  const left = value.slice(1, 7).split('').map((digit, index) => (parity[index] === 'L' ? EAN_L : EAN_G)[Number(digit)]).join('');
-  const right = value.slice(7).split('').map((digit) => EAN_R[Number(digit)]).join('');
+  const left = value
+    .slice(1, 7)
+    .split('')
+    .map((digit, index) => (parity[index] === 'L' ? EAN_L : EAN_G)[Number(digit)])
+    .join('');
+  const right = value
+    .slice(7)
+    .split('')
+    .map((digit) => EAN_R[Number(digit)])
+    .join('');
   return [...`101${left}01010${right}101`].map(Number);
 }
 
@@ -111,10 +162,14 @@ function upceModules(value: string): number[] {
     ['LLLGGG', 'LLGLGG', 'LLGGLG', 'LLGGGL', 'LGLLGG', 'LGGLLG', 'LGGGLL', 'LGLGLG', 'LGLGGL', 'LGLLGL'],
   ];
   const parity = parityByNumberSystem[Number(value[0])][Number(value[7])];
-  const left = value.slice(1, 7).split('').map((digit, index) => {
-    const patterns = parity[index] === 'L' ? EAN_L : EAN_G;
-    return patterns[Number(digit)];
-  }).join('');
+  const left = value
+    .slice(1, 7)
+    .split('')
+    .map((digit, index) => {
+      const patterns = parity[index] === 'L' ? EAN_L : EAN_G;
+      return patterns[Number(digit)];
+    })
+    .join('');
   return [...`101${left}010101`].map(Number);
 }
 
@@ -124,24 +179,35 @@ function extensionModules(value: string, parity: string): number[] {
     return patterns[Number(digit)];
   });
   const bits = ['1011'];
-  digits.forEach((digit, index) => {
+  for (const [index, digit] of digits.entries()) {
     bits.push(digit);
     if (index < digits.length - 1) bits.push('01');
-  });
+  }
   return bits.join('').split('').map(Number);
 }
 
 const CODE39_PATTERNS: Record<string, string> = {
-  '*': 'nwnnwnwnn', A: 'wnnnnwnnw', B: 'nnwnnwnnw', C: 'wnwnnwnnn',
-  '1': 'wnnwnnnnw', '2': 'nnwwnnnnw', '3': 'wnwwnnnnn',
+  '*': 'nwnnwnwnn',
+  A: 'wnnnnwnnw',
+  B: 'nnwnnwnnw',
+  C: 'wnwnnwnnn',
+  '1': 'wnnwnnnnw',
+  '2': 'nnwwnnnnw',
+  '3': 'wnwwnnnnn',
 };
 
 function code39Modules(value: string): number[] {
   const symbols = `*${value}*`.split('').map((symbol) => CODE39_PATTERNS[symbol]);
-  const bits = symbols.map((pattern) => [...pattern].map((unit, index) => {
-    const bit = index % 2 === 0 ? '1' : '0';
-    return unit === 'w' ? bit + bit : bit;
-  }).join('')).join('0');
+  const bits = symbols
+    .map((pattern) =>
+      [...pattern]
+        .map((unit, index) => {
+          const bit = index % 2 === 0 ? '1' : '0';
+          return unit === 'w' ? bit + bit : bit;
+        })
+        .join(''),
+    )
+    .join('0');
   return [...`00000000${bits}00000000`].map(Number);
 }
 
@@ -153,15 +219,17 @@ function itfModules(value: string): number[] {
     const bars = ITF_PATTERNS[Number(value[index])];
     const spaces = ITF_PATTERNS[Number(value[index + 1])];
     for (let run = 0; run < 5; run += 1) {
-      bits.push(bars[run] === 'w' ? '11' : '1');
-      bits.push(spaces[run] === 'w' ? '00' : '0');
+      bits.push(bars[run] === 'w' ? '11' : '1', spaces[run] === 'w' ? '00' : '0');
     }
   }
   bits.push('11101');
   return [...`00000000${bits.join('')}00000000`].map(Number);
 }
 
-const CODABAR_ENCODINGS = [0x003, 0x006, 0x009, 0x060, 0x012, 0x042, 0x021, 0x024, 0x030, 0x048, 0x00c, 0x018, 0x045, 0x051, 0x054, 0x015, 0x01a, 0x029, 0x00b, 0x00e];
+const CODABAR_ENCODINGS = [
+  0x0_03, 0x0_06, 0x0_09, 0x0_60, 0x0_12, 0x0_42, 0x0_21, 0x0_24, 0x0_30, 0x0_48, 0x0_0c, 0x0_18, 0x0_45, 0x0_51,
+  0x0_54, 0x0_15, 0x0_1a, 0x0_29, 0x0_0b, 0x0_0e,
+];
 
 function codabarModules(value: string): number[] {
   const alphabet = '0123456789-$:/.+ABCD';
@@ -180,11 +248,10 @@ function codabarModules(value: string): number[] {
 
 const CODE93_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%abcd*';
 const CODE93_ENCODINGS = [
-  0x114, 0x148, 0x144, 0x142, 0x128, 0x124, 0x122, 0x150, 0x112, 0x10a,
-  0x1a8, 0x1a4, 0x1a2, 0x194, 0x192, 0x18a, 0x168, 0x164, 0x162, 0x134,
-  0x11a, 0x158, 0x14c, 0x146, 0x12c, 0x116, 0x1b4, 0x1b2, 0x1ac, 0x1a6,
-  0x196, 0x19a, 0x16c, 0x166, 0x136, 0x13a, 0x12e, 0x1d4, 0x1d2, 0x1ca,
-  0x16e, 0x176, 0x1ae, 0x126, 0x1da, 0x1d6, 0x132, 0x15e,
+  0x1_14, 0x1_48, 0x1_44, 0x1_42, 0x1_28, 0x1_24, 0x1_22, 0x1_50, 0x1_12, 0x1_0a, 0x1_a8, 0x1_a4, 0x1_a2, 0x1_94,
+  0x1_92, 0x1_8a, 0x1_68, 0x1_64, 0x1_62, 0x1_34, 0x1_1a, 0x1_58, 0x1_4c, 0x1_46, 0x1_2c, 0x1_16, 0x1_b4, 0x1_b2,
+  0x1_ac, 0x1_a6, 0x1_96, 0x1_9a, 0x1_6c, 0x1_66, 0x1_36, 0x1_3a, 0x1_2e, 0x1_d4, 0x1_d2, 0x1_ca, 0x1_6e, 0x1_76,
+  0x1_ae, 0x1_26, 0x1_da, 0x1_d6, 0x1_32, 0x1_5e,
 ];
 
 function code93Checksum(value: string, maxWeight: number): number {
@@ -202,13 +269,15 @@ function code93Modules(value: string): number[] {
   const withC = `${value}${CODE93_ALPHABET[c]}`;
   const k = code93Checksum(withC, 15);
   const symbols = [47, ...[...value].map((symbol) => CODE93_ALPHABET.indexOf(symbol)), c, k, 47];
-  const bits = symbols.map((index) => (index === 47 ? 0x15e : CODE93_ENCODINGS[index]).toString(2).padStart(9, '0')).join('');
+  const bits = symbols
+    .map((index) => (index === 47 ? 0x1_5e : CODE93_ENCODINGS[index]).toString(2).padStart(9, '0'))
+    .join('');
   return [...`00000000${bits}1${'00000000'}`].map(Number);
 }
 
 function code128Symbol(runs: readonly number[]): number[] {
   const modules: number[] = [];
-  runs.forEach((run, index) => modules.push(...new Array(run).fill(index % 2 === 0 ? 1 : 0)));
+  for (const [index, run] of runs.entries()) modules.push(...new Array(run).fill(index % 2 === 0 ? 1 : 0));
   return modules;
 }
 
@@ -242,16 +311,25 @@ function rssCombins(n: number, r: number): number {
   if (r < 0 || n < 0 || r > n) return 0;
   let minDenom = r;
   let maxDenom = n - r;
-  if (n - r <= r) { minDenom = n - r; maxDenom = r; }
+  if (n - r <= r) {
+    minDenom = n - r;
+    maxDenom = r;
+  }
   let value = 1;
   let denominator = 1;
   let numerator = n;
   while (numerator > maxDenom) {
     value *= numerator;
-    if (denominator <= minDenom) { value = Math.trunc(value / denominator); denominator += 1; }
+    if (denominator <= minDenom) {
+      value = Math.trunc(value / denominator);
+      denominator += 1;
+    }
     numerator -= 1;
   }
-  while (denominator <= minDenom) { value = Math.trunc(value / denominator); denominator += 1; }
+  while (denominator <= minDenom) {
+    value = Math.trunc(value / denominator);
+    denominator += 1;
+  }
   return value;
 }
 
@@ -265,8 +343,8 @@ function rssGroupValue(counts: readonly number[], parityOffset: number, maxWidth
     const elementsLeft = 4 - bar - 1;
     for (let elementWidth = 1; elementWidth < width; elementWidth += 1) {
       let subValue = rssCombins(remaining - elementWidth - 1, elementsLeft - 1);
-      const applyNoNarrow = noNarrow && elementWidth > 1 && stuckCount === 0
-        && (remaining - elementWidth - elementsLeft >= elementsLeft);
+      const applyNoNarrow =
+        noNarrow && elementWidth > 1 && stuckCount === 0 && remaining - elementWidth - elementsLeft >= elementsLeft;
       if (applyNoNarrow) subValue -= rssCombins(remaining - elementWidth - 4 + bar, elementsLeft - 1);
       if (elementsLeft > 1) {
         let lessValue = 0;
@@ -287,8 +365,15 @@ function rssGroupValue(counts: readonly number[], parityOffset: number, maxWidth
 }
 
 const RSS14_FINDER_PATTERNS = [
-  [3, 8, 2, 1], [3, 5, 5, 1], [3, 3, 7, 1], [3, 1, 9, 1], [2, 7, 4, 1],
-  [2, 5, 6, 1], [2, 3, 8, 1], [1, 5, 7, 1], [1, 3, 9, 1],
+  [3, 8, 2, 1],
+  [3, 5, 5, 1],
+  [3, 3, 7, 1],
+  [3, 1, 9, 1],
+  [2, 7, 4, 1],
+  [2, 5, 6, 1],
+  [2, 3, 8, 1],
+  [1, 5, 7, 1],
+  [1, 3, 9, 1],
 ];
 const RSS14_OUTSIDE_EVEN_TOTAL = [1, 10, 34, 70, 126];
 const RSS14_OUTSIDE_GSUM = [0, 161, 961, 2015, 2715];
@@ -297,7 +382,11 @@ const RSS14_INSIDE_ODD_TOTAL = [4, 20, 48, 81];
 const RSS14_INSIDE_GSUM = [0, 336, 1036, 1516];
 const RSS14_INSIDE_ODD_WIDEST = [2, 4, 6, 8];
 
-function rss14CharacterValue(odd: readonly number[], even: readonly number[], outside: boolean): { value: number; checksumPortion: number } {
+function rss14CharacterValue(
+  odd: readonly number[],
+  even: readonly number[],
+  outside: boolean,
+): { value: number; checksumPortion: number } {
   const counts: number[] = [];
   for (let index = 0; index < 4; index += 1) counts.push(odd[index], even[index]);
   let oddChecksum = 0;
@@ -325,30 +414,56 @@ function rss14CharacterValue(odd: readonly number[], even: readonly number[], ou
   return { value: vEven * RSS14_INSIDE_ODD_TOTAL[group] + vOdd + RSS14_INSIDE_GSUM[group], checksumPortion };
 }
 
-function rss14PairValue(outsideOdd: readonly number[], outsideEven: readonly number[], insideOdd: readonly number[], insideEven: readonly number[]) {
+function rss14PairValue(
+  outsideOdd: readonly number[],
+  outsideEven: readonly number[],
+  insideOdd: readonly number[],
+  insideEven: readonly number[],
+) {
   const outside = rss14CharacterValue(outsideOdd, outsideEven, true);
   const inside = rss14CharacterValue(insideOdd, insideEven, false);
-  return { value: 1597 * outside.value + inside.value, checksumPortion: outside.checksumPortion + 4 * inside.checksumPortion };
+  return {
+    value: 1597 * outside.value + inside.value,
+    checksumPortion: outside.checksumPortion + 4 * inside.checksumPortion,
+  };
 }
 
-
 function rss14ConstructResult(left: number, right: number): string {
-  const symbolValue = 4537077n * BigInt(left) + BigInt(right);
+  const symbolValue = 4_537_077n * BigInt(left) + BigInt(right);
   const text = symbolValue.toString().padStart(13, '0');
   let checksum = 0;
-  for (let index = 0; index < 13; index += 1) checksum += index % 2 === 0 ? Number(text[index]) * 3 : Number(text[index]);
+  for (let index = 0; index < 13; index += 1)
+    checksum += index % 2 === 0 ? Number(text[index]) * 3 : Number(text[index]);
   let checkDigit = 10 - (checksum % 10);
   if (checkDigit === 10) checkDigit = 0;
   return text + String(checkDigit);
 }
 
-function rss14PairRuns(finderValue: number, outsideOdd: readonly number[], outsideEven: readonly number[], insideOdd: readonly number[], insideEven: readonly number[]): number[] {
+function rss14PairRuns(
+  finderValue: number,
+  outsideOdd: readonly number[],
+  outsideEven: readonly number[],
+  insideOdd: readonly number[],
+  insideEven: readonly number[],
+): number[] {
   return [
-    outsideOdd[0], outsideEven[0], outsideOdd[1], outsideEven[1],
-    outsideOdd[2], outsideEven[2], outsideOdd[3], outsideEven[3],
+    outsideOdd[0],
+    outsideEven[0],
+    outsideOdd[1],
+    outsideEven[1],
+    outsideOdd[2],
+    outsideEven[2],
+    outsideOdd[3],
+    outsideEven[3],
     ...RSS14_FINDER_PATTERNS[finderValue],
-    insideEven[3], insideOdd[3], insideEven[2], insideOdd[2],
-    insideEven[1], insideOdd[1], insideEven[0], insideOdd[0],
+    insideEven[3],
+    insideOdd[3],
+    insideEven[2],
+    insideOdd[2],
+    insideEven[1],
+    insideOdd[1],
+    insideEven[0],
+    insideOdd[0],
   ];
 }
 
@@ -362,13 +477,20 @@ function runsToBits(runs: readonly number[]): number[] {
   return bits;
 }
 
-function rss14Row(outsideOdd: readonly number[], outsideEven: readonly number[], insideOdd: readonly number[], insideEven: readonly number[], leftFinder: number, rightFinder: number): number[] {
+function rss14Row(
+  outsideOdd: readonly number[],
+  outsideEven: readonly number[],
+  insideOdd: readonly number[],
+  insideEven: readonly number[],
+  leftFinder: number,
+  rightFinder: number,
+): number[] {
   const leftBits = runsToBits(rss14PairRuns(leftFinder, outsideOdd, outsideEven, insideOdd, insideEven));
   // The decoder reads the right pair on the physically reversed row (ZXing's
   // `row.reverse()`), so the right symbol is the bit-level mirror of a forward
   // pair. Reverse the generated bits (not the run array) to preserve colour
   // polarity so the reversed-row scan sees a valid `outside|finder|inside`.
-  const rightBits = [...runsToBits(rss14PairRuns(rightFinder, outsideOdd, outsideEven, insideOdd, insideEven))].reverse();
+  const rightBits = runsToBits(rss14PairRuns(rightFinder, outsideOdd, outsideEven, insideOdd, insideEven)).toReversed();
   const quiet = new Array(24).fill(0);
   const mid = new Array(22).fill(0);
   // Each pair's inside character ends in a white run adjacent to the mid/quiet
@@ -434,7 +556,11 @@ const RSS_EXP_WEIGHTS: Record<number, readonly number[]> = {
   2: [189, 145, 13, 39, 117, 140, 209, 205],
 };
 
-function rssExpCharacter(odd: readonly number[], even: readonly number[], weightRow: number | null): { value: number; checksumPortion: number } {
+function rssExpCharacter(
+  odd: readonly number[],
+  even: readonly number[],
+  weightRow: number | null,
+): { value: number; checksumPortion: number } {
   const counts: number[] = [];
   for (let index = 0; index < 4; index += 1) counts.push(odd[index], even[index]);
   let oddSum = 0;
@@ -462,10 +588,23 @@ function rssExpPairRuns(
   finder: readonly number[],
 ): number[] {
   return [
-    odd[0], even[0], odd[1], even[1], odd[2], even[2], odd[3], even[3],
+    odd[0],
+    even[0],
+    odd[1],
+    even[1],
+    odd[2],
+    even[2],
+    odd[3],
+    even[3],
     ...finder,
-    rightEven[3], rightOdd[3], rightEven[2], rightOdd[2],
-    rightEven[1], rightOdd[1], rightEven[0], rightOdd[0],
+    rightEven[3],
+    rightOdd[3],
+    rightEven[2],
+    rightOdd[2],
+    rightEven[1],
+    rightOdd[1],
+    rightEven[0],
+    rightOdd[0],
   ];
 }
 
@@ -496,7 +635,7 @@ function rssExpChecksumMatches(
 }
 
 function rssExpNumericText(values: readonly number[]): string | undefined {
-  if ((values[0] & 0x600) !== 0) return undefined;
+  if ((values[0] & 0x6_00) !== 0) return undefined;
   const totalBits = 36;
   const bitValue = (pos: number): number => {
     const charIndex = Math.trunc(pos / 12);
@@ -546,17 +685,19 @@ function buildRssExpandedFixture() {
   const secondRightCandidates = rssExpCharacters(2).filter(({ value }) => value >= 64 && value <= 71);
   const checkCharCandidates = rssExpCharacters(null).filter(({ value }) => value <= 210);
 
-  let found: {
-    checkOdd: number[];
-    checkEven: number[];
-    firstOdd: number[];
-    firstEven: number[];
-    secondLeftOdd: number[];
-    secondLeftEven: number[];
-    secondRightOdd: number[];
-    secondRightEven: number[];
-    expected: string;
-  } | undefined;
+  let found:
+    | {
+        checkOdd: number[];
+        checkEven: number[];
+        firstOdd: number[];
+        firstEven: number[];
+        secondLeftOdd: number[];
+        secondLeftEven: number[];
+        secondRightOdd: number[];
+        secondRightEven: number[];
+        expected: string;
+      }
+    | undefined;
   outer: for (const firstCandidate of firstCandidates) {
     for (const secondLeft of secondLeftCandidates) {
       for (const secondRight of secondRightCandidates) {
@@ -582,17 +723,36 @@ function buildRssExpandedFixture() {
   }
   if (!found) throw new Error('failed to find a valid checksum-consistent RSS Expanded fixture');
   const {
-    checkOdd, checkEven, firstOdd, firstEven,
-    secondLeftOdd, secondLeftEven, secondRightOdd, secondRightEven, expected,
+    checkOdd,
+    checkEven,
+    firstOdd,
+    firstEven,
+    secondLeftOdd,
+    secondLeftEven,
+    secondRightOdd,
+    secondRightEven,
+    expected,
   } = found;
 
   const pair0Runs = rssExpPairRuns(checkOdd, checkEven, firstOdd, firstEven, RSS_EXP_FINDER_A);
   const pair1Runs = [
-    secondLeftOdd[0], secondLeftEven[0], secondLeftOdd[1], secondLeftEven[1],
-    secondLeftOdd[2], secondLeftEven[2], secondLeftOdd[3], secondLeftEven[3],
-    ...[...RSS_EXP_FINDER_A].reverse(),
-    secondRightEven[3], secondRightOdd[3], secondRightEven[2], secondRightOdd[2],
-    secondRightEven[1], secondRightOdd[1], secondRightEven[0], secondRightOdd[0],
+    secondLeftOdd[0],
+    secondLeftEven[0],
+    secondLeftOdd[1],
+    secondLeftEven[1],
+    secondLeftOdd[2],
+    secondLeftEven[2],
+    secondLeftOdd[3],
+    secondLeftEven[3],
+    ...RSS_EXP_FINDER_A.toReversed(),
+    secondRightEven[3],
+    secondRightOdd[3],
+    secondRightEven[2],
+    secondRightOdd[2],
+    secondRightEven[1],
+    secondRightOdd[1],
+    secondRightEven[0],
+    secondRightOdd[0],
   ];
 
   const quiet = new Array(24).fill(0);
@@ -600,7 +760,12 @@ function buildRssExpandedFixture() {
   const modules = [...quiet, ...runsToBits(pair0Runs), 1, ...gap, ...runsToBits(pair1Runs), 1, ...quiet];
   return { modules, expected };
 }
-function renderMatrixLuma(width: number, modules: readonly number[], scale = 4, quiet = 4): { width: number; height: number; luma: number[] } {
+function renderMatrixLuma(
+  width: number,
+  modules: readonly number[],
+  scale = 4,
+  quiet = 4,
+): { width: number; height: number; luma: number[] } {
   const side = (width + quiet * 2) * scale;
   const luma = new Array(side * side).fill(255);
   for (let y = 0; y < width; y += 1) {
@@ -616,16 +781,33 @@ function renderMatrixLuma(width: number, modules: readonly number[], scale = 4, 
   return { width: side, height: side, luma };
 }
 
-function loadPackedModuleFixture(fileName: string, width: number): { width: number; height: number; modules: number[] } {
-  const rows = readFileSync(resolve(scannerDirectory, 'fixtures', fileName), 'utf8').trim().split(/\r?\n/);
-  const modules = rows.flatMap((row) => row.trim().split(/\s+/).flatMap((hex) => {
-    const byte = Number.parseInt(hex, 16);
-    return Array.from({ length: 8 }, (_, bit) => (byte >> (7 - bit)) & 1);
-  }).slice(0, width));
+function loadPackedModuleFixture(
+  fileName: string,
+  width: number,
+): { width: number; height: number; modules: number[] } {
+  const rows = readFileSync(resolve(scannerDirectory, 'fixtures', fileName), 'utf8')
+    .trim()
+    .split(/\r?\n/);
+  const modules = rows.flatMap((row) =>
+    row
+      .trim()
+      .split(/\s+/)
+      .flatMap((hex) => {
+        const byte = Number.parseInt(hex, 16);
+        return Array.from({ length: 8 }, (_, bit) => (byte >> (7 - bit)) & 1);
+      })
+      .slice(0, width),
+  );
   return { width, height: rows.length, modules };
 }
 
-function renderRectangularLuma(width: number, height: number, modules: readonly number[], scale = 4, quiet = 4): { width: number; height: number; luma: number[] } {
+function renderRectangularLuma(
+  width: number,
+  height: number,
+  modules: readonly number[],
+  scale = 4,
+  quiet = 4,
+): { width: number; height: number; luma: number[] } {
   const imageWidth = (width + quiet * 2) * scale;
   const imageHeight = (height + quiet * 2) * scale;
   const luma = new Array(imageWidth * imageHeight).fill(255);
@@ -642,7 +824,11 @@ function renderRectangularLuma(width: number, height: number, modules: readonly 
   return { width: imageWidth, height: imageHeight, luma };
 }
 
-function renderMaxicodeLuma(modules: readonly number[], scale = 4, quiet = 4): { width: number; height: number; luma: number[] } {
+function renderMaxicodeLuma(
+  modules: readonly number[],
+  scale = 4,
+  quiet = 4,
+): { width: number; height: number; luma: number[] } {
   const moduleWidth = 30;
   const moduleHeight = 33;
   const width = (moduleWidth + quiet * 2) * scale;
@@ -662,7 +848,8 @@ function renderMaxicodeLuma(modules: readonly number[], scale = 4, quiet = 4): {
   return { width, height, luma };
 }
 
-describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExports;
+describe('compiled scanner FWS foundation graph', () => {
+  let api: ScannerExports;
 
   beforeAll(async () => {
     const files: Record<string, string> = {};
@@ -736,7 +923,7 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
         writeArray(api, new Array(image.width * image.height + 1).fill(0)),
         writeArray(api, new Array(16).fill(0)),
       );
-      expect(readString(api, result)).toBe(`D0${format}072069076076079`);
+      expect(readString(api, result)).toBe(`R10${format}00000000072069076076079`);
     }
 
     const invertedMatrix = encodeMatrix('datamatrix', 'HELLO');
@@ -744,14 +931,45 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     const invertedResult = api.scan_and_decode(
       invertedImage.width,
       invertedImage.height,
-      writeArray(api, invertedImage.luma.map((value) => 255 - value)),
+      writeArray(
+        api,
+        invertedImage.luma.map((value) => 255 - value),
+      ),
       writeArray(api, new Array(invertedImage.width * invertedImage.height).fill(0)),
       writeArray(api, new Array(invertedImage.width * invertedImage.height).fill(0)),
       writeArray(api, new Array(invertedImage.width * invertedImage.height + 1).fill(0)),
       writeArray(api, new Array(16).fill(0)),
     );
-    expect(readString(api, invertedResult)).toBe('D05072069076076079');
+    expect(readString(api, invertedResult)).toBe('R10500000000072069076076079');
+  });
 
+  it('applies possible-format and retry options inside the scanner graph', () => {
+    const matrix = encodeMatrix('datamatrix', 'HELLO');
+    const image = renderMatrixLuma(matrix.width, matrix.modules);
+    const args = [
+      image.width,
+      image.height,
+      writeArray(api, image.luma),
+      writeArray(api, new Array(image.width * image.height).fill(0)),
+      writeArray(api, new Array(image.width * image.height).fill(0)),
+      writeArray(api, new Array(image.width * image.height + 1).fill(0)),
+      writeArray(api, new Array(16).fill(0)),
+    ];
+    expect(readString(api, api.scan_and_decode_with_options(...args, 5, 1, 1))).toBe('R10500000000072069076076079');
+    expect(readString(api, api.scan_and_decode_with_options(...args, 0, 1, 1))).toBe('');
+    const invertedArgs = [
+      image.width,
+      image.height,
+      writeArray(
+        api,
+        image.luma.map((value) => 255 - value),
+      ),
+      writeArray(api, new Array(image.width * image.height).fill(0)),
+      writeArray(api, new Array(image.width * image.height).fill(0)),
+      writeArray(api, new Array(image.width * image.height + 1).fill(0)),
+      writeArray(api, new Array(16).fill(0)),
+    ];
+    expect(readString(api, api.scan_and_decode_with_options(...invertedArgs, -1, 0, 0))).toBe('');
   });
 
   it('decodes packed PDF417 and MaxiCode fixtures through the linked image entry', () => {
@@ -766,7 +984,7 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
       writeArray(api, new Array(pdfImage.width * pdfImage.height + 1).fill(0)),
       writeArray(api, new Array(16).fill(0)),
     );
-    expect(readString(api, pdfResult)).toBe('D10ZXing PDF417 text compaction corpus 0123456789');
+    expect(readString(api, pdfResult)).toBe('R11000000000ZXing PDF417 text compaction corpus 0123456789');
 
     const maxi = loadPackedModuleFixture('maxicode-hello.modules.txt', 30);
     const maxiImage = renderMaxicodeLuma(maxi.modules);
@@ -779,7 +997,7 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
       writeArray(api, new Array(maxiImage.width * maxiImage.height + 1).fill(0)),
       writeArray(api, new Array(16).fill(0)),
     );
-    expect(readString(api, maxiResult)).toBe('D09HELLO');
+    expect(readString(api, maxiResult)).toBe('R10900000000HELLO');
   });
 
   it('fails closed for a blank 2D image instead of returning a fallback payload', () => {
@@ -846,7 +1064,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
 
   it('decodes a one-row luminance image through the scanner entry point', () => {
     const bits = ean13Modules('5901234123457');
-    const luma = writeArray(api, bits.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      bits.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const modules = writeArray(api, new Array(bits.length).fill(0));
     const result = api.scan_and_decode(
       bits.length,
@@ -862,7 +1083,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
 
   it('decodes a scaled, padded EAN-13 row through the scanner entry point', () => {
     const bits = scaledPaddedModules(ean13Modules('5901234123457'), 3, 8);
-    const luma = writeArray(api, bits.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      bits.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const modules = writeArray(api, new Array(bits.length).fill(0));
     const result = api.scan_and_decode(
       bits.length,
@@ -882,7 +1106,7 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_upce(row))).toBe('01234505');
 
     const invalid = upceModules('01234505');
-    invalid[invalid.length - 1] = invalid[invalid.length - 1] === 0 ? 1 : 0;
+    invalid[invalid.length - 1] = invalid.at(-1) === 0 ? 1 : 0;
     expect(readString(api, api.sc_oned_decode_upce(writeArray(api, invalid)))).toBe('');
   });
 
@@ -891,7 +1115,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_with_hint(writeArray(api, modules), 15))).toBe('01234505');
 
     const scaled = scaledPaddedModules(modules, 2, 8);
-    const luma = writeArray(api, scaled.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      scaled.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const result = api.scan_and_decode(
       scaled.length,
       1,
@@ -912,7 +1139,7 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_extension5(writeArray(api, extension5)))).toBe('00000');
 
     const invalid = extension5.slice();
-    invalid[invalid.length - 1] = invalid[invalid.length - 1] === 0 ? 1 : 0;
+    invalid[invalid.length - 1] = invalid.at(-1) === 0 ? 1 : 0;
     expect(readString(api, api.sc_oned_decode_extension5(writeArray(api, invalid)))).toBe('');
 
     const invalidParity = extensionModules('00000', 'LLLLL');
@@ -925,7 +1152,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_code39(direct))).toBe('ABC');
 
     const scaled = scaledPaddedModules(code39Modules('ABC'), 2, 8);
-    const luma = writeArray(api, scaled.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      scaled.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const modules = writeArray(api, new Array(scaled.length).fill(0));
     const result = api.scan_and_decode(
       scaled.length,
@@ -949,7 +1179,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_itf(direct))).toBe('123456');
 
     const scaled = scaledPaddedModules(itfModules('123456'), 2, 8);
-    const luma = writeArray(api, scaled.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      scaled.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const modules = writeArray(api, new Array(scaled.length).fill(0));
     const result = api.scan_and_decode(
       scaled.length,
@@ -973,7 +1206,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_with_hint(writeArray(api, modules), 1))).toBe('1234');
 
     const scaled = scaledPaddedModules(modules, 2, 8);
-    const luma = writeArray(api, scaled.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      scaled.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const result = api.scan_and_decode(
       scaled.length,
       1,
@@ -986,7 +1222,7 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, result)).toContain('1234');
 
     const invalid = modules.slice();
-    invalid[invalid.length - 12] = invalid[invalid.length - 12] === 0 ? 1 : 0;
+    invalid[invalid.length - 12] = invalid.at(-12) === 0 ? 1 : 0;
     expect(readString(api, api.sc_oned_decode_codabar(writeArray(api, invalid)))).toBe('');
   });
 
@@ -995,7 +1231,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_code93(writeArray(api, modules)))).toBe('ABC');
 
     const scaled = scaledPaddedModules(modules, 2, 8);
-    const luma = writeArray(api, scaled.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      scaled.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const result = api.scan_and_decode(
       scaled.length,
       1,
@@ -1008,7 +1247,7 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, result)).toContain('ABC');
 
     const invalid = modules.slice();
-    invalid[invalid.length - 18] = invalid[invalid.length - 18] === 0 ? 1 : 0;
+    invalid[invalid.length - 18] = invalid.at(-18) === 0 ? 1 : 0;
     expect(readString(api, api.sc_oned_decode_code93(writeArray(api, invalid)))).toBe('');
   });
 
@@ -1018,7 +1257,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_with_hint(writeArray(api, modules), 4))).toBe('AB');
 
     const scaled = scaledPaddedModules(modules, 2, 8);
-    const luma = writeArray(api, scaled.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      scaled.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const result = api.scan_and_decode(
       scaled.length,
       1,
@@ -1041,7 +1283,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_with_hint(writeArray(api, modules), 12))).toBe(expected);
 
     const scaled = scaledPaddedModules(modules, 2, 8);
-    const luma = writeArray(api, scaled.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      scaled.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const result = api.scan_and_decode(
       scaled.length,
       1,
@@ -1054,7 +1299,7 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, result)).toContain(expected);
 
     const invalid = modules.slice();
-    invalid[invalid.length - 30] = invalid[invalid.length - 30] === 0 ? 1 : 0;
+    invalid[invalid.length - 30] = invalid.at(-30) === 0 ? 1 : 0;
     expect(readString(api, api.sc_oned_decode_rss14(writeArray(api, invalid)))).toBe('');
   });
 
@@ -1065,7 +1310,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
     expect(readString(api, api.sc_oned_decode_with_hint(writeArray(api, modules), 13))).toBe(expected);
 
     const scaled = scaledPaddedModules(modules, 2, 8);
-    const luma = writeArray(api, scaled.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      scaled.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const result = api.scan_and_decode(
       scaled.length,
       1,
@@ -1084,7 +1332,10 @@ describe('compiled scanner FWS foundation graph', () => {  let api: ScannerExpor
 
   it('extracts a luminance row and applies bounded variance/quiet-zone checks', () => {
     const bits = ean8Modules('55123457');
-    const luma = writeArray(api, bits.map((bit) => (bit === 1 ? 0 : 255)));
+    const luma = writeArray(
+      api,
+      bits.map((bit) => (bit === 1 ? 0 : 255)),
+    );
     const modules = writeArray(api, new Array(bits.length).fill(0));
     expect(api.sc_oned_extract_row(luma, bits.length, 1, 0, 128, modules)).toBe(1);
     expect(api.sc_oned_quiet_zone(writeArray(api, [0, 0, 1, 0, 0]), 2, 1, 2)).toBe(1);

@@ -61,7 +61,7 @@ describe('QR decoder graph', () => {
       const api = await module.load({
         'qr.decode.utf8': { matrix_decode_utf8: () => '', decode_utf8: () => '' },
       });
-      expect(api.decode_qr_modules(21, Array(441).fill(0), Array(442).fill(0))).toBe('');
+      expect(api.decode_qr_modules(21, new Array(441).fill(0), new Array(442).fill(0))).toBe('');
     } finally {
       service.dispose();
     }

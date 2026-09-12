@@ -16,21 +16,26 @@ import "./decoders/matrix/matrix-decoder.fws" as matrix_decoder;
 import "./pdf417.fws" as pdf417;
 import "./maxicode.fws" as maxicode;
 
-fn scan_two_d(
+fn scan_format_allowed(possible_format: i32, format: i32) -> bool {
+  return possible_format < 0 || possible_format == format;
+}
+
+fn scan_two_d_with_hint(
   bits: u32,
   width: i32,
   height: i32,
   mut modules: Array<i32>,
   mut erasures: Array<i32>,
   mut packed: Array<i32>,
-  mut meta: Array<i32>
+  mut meta: Array<i32>,
+  possible_format: i32
 ) -> string {
   if c.array_len_i32(meta) < 16 || c.array_len_i32(modules) < 1 || c.array_len_i32(erasures) < 1 || c.array_len_i32(packed) < 2 { return ""; }
   image.clear_array(modules, c.array_len_i32(modules));
   image.clear_array(erasures, c.array_len_i32(erasures));
   image.clear_array(meta, c.array_len_i32(meta));
   let matrix_status: i32 = matrix_locator.locate_datamatrix_modules(bits, width, height, modules, erasures, meta);
-  if matrix_status == 1 {
+  if matrix_status == 1 && scan_format_allowed(possible_format, foundation.FORMAT_DATA_MATRIX()) {
     let matrix_kind: i32 = meta[4];
     let matrix_width: i32 = meta[0];
     let matrix_height: i32 = meta[1];
@@ -43,7 +48,7 @@ fn scan_two_d(
   image.clear_array(erasures, c.array_len_i32(erasures));
   image.clear_array(meta, c.array_len_i32(meta));
   let aztec_status: i32 = matrix_locator.locate_aztec_modules(bits, width, height, modules, erasures, meta);
-  if aztec_status == 1 && meta[4] == 1 {
+  if aztec_status == 1 && meta[4] == 1 && scan_format_allowed(possible_format, foundation.FORMAT_AZTEC()) {
     let aztec_value: string = string_concat("", matrix_decoder.decode_aztec_modules(meta[0], meta[1], modules, erasures));
     if string_length(aztec_value) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_AZTEC(), aztec_value)); }
   }
@@ -51,7 +56,7 @@ fn scan_two_d(
   image.clear_array(modules, c.array_len_i32(modules));
   image.clear_array(meta, c.array_len_i32(meta));
   let pdf_status: i32 = pdf417.locate_pdf417_modules(bits, width, height, modules, meta);
-  if pdf_status == 1 {
+  if pdf_status == 1 && scan_format_allowed(possible_format, foundation.FORMAT_PDF_417()) {
     let pdf_value: string = string_concat("", pdf417.decode_pdf417_modules(meta[0], meta[1], modules));
     if string_length(pdf_value) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_PDF_417(), pdf_value)); }
   }
@@ -59,35 +64,65 @@ fn scan_two_d(
   image.clear_array(modules, c.array_len_i32(modules));
   image.clear_array(meta, c.array_len_i32(meta));
   let maxi_status: i32 = maxicode.locate_maxicode_modules(bits, width, height, modules, meta);
-  if maxi_status == 1 {
+  if maxi_status == 1 && scan_format_allowed(possible_format, foundation.FORMAT_MAXICODE()) {
     let maxi_value: string = string_concat("", maxicode.decode_maxicode_modules(modules));
     if string_length(maxi_value) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_MAXICODE(), maxi_value)); }
   }
   return "";
 }
 
-fn scan_two_d_from_luma(data: u32, width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>, packed: Array<i32>, meta: Array<i32>) -> string {
+fn scan_two_d(
+  bits: u32,
+  width: i32,
+  height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
+) -> string {
+  return string_concat("", scan_two_d_with_hint(bits, width, height, modules, erasures, packed, meta, -1));
+}
+
+fn scan_two_d_from_luma_with_hint(
+  data: u32,
+  width: i32,
+  height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: bool,
+  also_inverted: bool
+) -> string {
   let global_bits: u32 = image.binarize(data, width, height);
   if global_bits != 0 {
-    let global_value: string = string_concat("", scan_two_d(global_bits, width, height, modules, erasures, packed, meta));
+    let global_value: string = string_concat("", scan_two_d_with_hint(global_bits, width, height, modules, erasures, packed, meta, possible_format));
     if string_length(global_value) > 0 { return string_concat("", global_value); }
   }
-  let adaptive_bits: u32 = image.binarize_adaptive(data, width, height);
-  if adaptive_bits != 0 {
-    let adaptive_value: string = string_concat("", scan_two_d(adaptive_bits, width, height, modules, erasures, packed, meta));
-    if string_length(adaptive_value) > 0 { return string_concat("", adaptive_value); }
+  if try_harder {
+    let adaptive_bits: u32 = image.binarize_adaptive(data, width, height);
+    if adaptive_bits != 0 {
+      let adaptive_value: string = string_concat("", scan_two_d_with_hint(adaptive_bits, width, height, modules, erasures, packed, meta, possible_format));
+      if string_length(adaptive_value) > 0 { return string_concat("", adaptive_value); }
+    }
   }
 
+  if !also_inverted { return ""; }
   let inverted: u32 = image.invert_luma_copy(data, width, height);
   if inverted == 0 { return ""; }
   let inverted_global_bits: u32 = image.binarize(inverted, width, height);
   if inverted_global_bits != 0 {
-    let inverted_global_value: string = string_concat("", scan_two_d(inverted_global_bits, width, height, modules, erasures, packed, meta));
+    let inverted_global_value: string = string_concat("", scan_two_d_with_hint(inverted_global_bits, width, height, modules, erasures, packed, meta, possible_format));
     if string_length(inverted_global_value) > 0 { return string_concat("", inverted_global_value); }
   }
   let inverted_adaptive_bits: u32 = image.binarize_adaptive(inverted, width, height);
   if inverted_adaptive_bits == 0 { return ""; }
-  return string_concat("", scan_two_d(inverted_adaptive_bits, width, height, modules, erasures, packed, meta));
+  return string_concat("", scan_two_d_with_hint(inverted_adaptive_bits, width, height, modules, erasures, packed, meta, possible_format));
+}
+
+fn scan_two_d_from_luma(data: u32, width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>, packed: Array<i32>, meta: Array<i32>) -> string {
+  return string_concat("", scan_two_d_from_luma_with_hint(data, width, height, modules, erasures, packed, meta, -1, true, true));
 }
 fn scan_two_d_from_array(width: i32, height: i32, luma: Array<i32>, modules: Array<i32>, erasures: Array<i32>, packed: Array<i32>, meta: Array<i32>) -> string {
   let data: u32 = image.luma_copy_from_array(width, height, luma);
@@ -99,32 +134,67 @@ fn valid_scan_dimensions(width: i32, height: i32) -> bool {
   return foundation.foundation_validate_dimensions(width, height, width) >= 0;
 }
 
-fn scan_one_row(width: i32, height: i32, luma: Array<i32>, mut modules: Array<i32>) -> string {
+fn scan_one_row_with_hint(width: i32, height: i32, luma: Array<i32>, mut modules: Array<i32>, possible_format: i32) -> string {
   if !valid_scan_dimensions(width, height) { return ""; }
   if oned.oned_extract_row(luma, width, height, height / 2, 128, modules) < 0 { return ""; }
-  let ean13: string = string_concat("", oned.oned_decode_ean13(modules));
-  if string_length(ean13) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_EAN_13(), ean13)); }
-  let ean8: string = string_concat("", oned.oned_decode_ean8(modules));
-  if string_length(ean8) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_EAN_8(), ean8)); }
-  let upca: string = string_concat("", oned.oned_decode_upca(modules));
-  if string_length(upca) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_UPC_A(), upca)); }
-  let upce: string = string_concat("", oned.oned_decode_upce(modules));
-  if string_length(upce) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_UPC_E(), upce)); }
-  let code39: string = string_concat("", oned.oned_decode_code39(modules));
-  if string_length(code39) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_CODE_39(), code39)); }
-  let itf: string = string_concat("", oned.oned_decode_itf(modules));
-  if string_length(itf) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_ITF(), itf)); }
-  let codabar: string = string_concat("", oned.oned_decode_codabar(modules));
-  if string_length(codabar) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_CODABAR(), codabar)); }
-  let code93: string = string_concat("", oned.oned_decode_code93(modules));
-  if string_length(code93) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_CODE_93(), code93)); }
-  let code128: string = string_concat("", oned.oned_decode_code128(modules));
-  if string_length(code128) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_CODE_128(), code128)); }
-  let rss14: string = string_concat("", oned.oned_decode_rss14(modules));
-  if string_length(rss14) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_RSS_14(), rss14)); }
-  let rss_expanded: string = string_concat("", oned.oned_decode_rss_expanded(modules));
-  if string_length(rss_expanded) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_RSS_EXPANDED(), rss_expanded)); }
+  let ean13: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_EAN_13()));
+  if string_length(ean13) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_EAN_13()) { return string_concat("", c.result_decoded(foundation.FORMAT_EAN_13(), ean13)); }
+  let ean8: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_EAN_8()));
+  if string_length(ean8) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_EAN_8()) { return string_concat("", c.result_decoded(foundation.FORMAT_EAN_8(), ean8)); }
+  let upca: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_UPC_A()));
+  if string_length(upca) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_UPC_A()) { return string_concat("", c.result_decoded(foundation.FORMAT_UPC_A(), upca)); }
+  let upce: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_UPC_E()));
+  if string_length(upce) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_UPC_E()) { return string_concat("", c.result_decoded(foundation.FORMAT_UPC_E(), upce)); }
+  let code39: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_CODE_39()));
+  if string_length(code39) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_CODE_39()) { return string_concat("", c.result_decoded(foundation.FORMAT_CODE_39(), code39)); }
+  let itf: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_ITF()));
+  if string_length(itf) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_ITF()) { return string_concat("", c.result_decoded(foundation.FORMAT_ITF(), itf)); }
+  let codabar: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_CODABAR()));
+  if string_length(codabar) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_CODABAR()) { return string_concat("", c.result_decoded(foundation.FORMAT_CODABAR(), codabar)); }
+  let code93: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_CODE_93()));
+  if string_length(code93) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_CODE_93()) { return string_concat("", c.result_decoded(foundation.FORMAT_CODE_93(), code93)); }
+  let code128: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_CODE_128()));
+  if string_length(code128) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_CODE_128()) { return string_concat("", c.result_decoded(foundation.FORMAT_CODE_128(), code128)); }
+  let rss14: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_RSS_14()));
+  if string_length(rss14) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_RSS_14()) { return string_concat("", c.result_decoded(foundation.FORMAT_RSS_14(), rss14)); }
+  let rss_expanded: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_RSS_EXPANDED()));
+  if string_length(rss_expanded) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_RSS_EXPANDED()) { return string_concat("", c.result_decoded(foundation.FORMAT_RSS_EXPANDED(), rss_expanded)); }
   return string_concat("", c.result_none());
+}
+
+fn scan_one_row(width: i32, height: i32, luma: Array<i32>, mut modules: Array<i32>) -> string {
+  return string_concat("", scan_one_row_with_hint(width, height, luma, modules, -1));
+}
+
+fn scan_and_decode_with_options_internal(
+  width: i32,
+  height: i32,
+  luma: Array<i32>,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: bool,
+  also_inverted: bool
+) -> string {
+  if !valid_scan_dimensions(width, height) { return string_concat("", c.result_none()); }
+  let data: u32 = image.luma_copy_from_array(width, height, luma);
+  if data == 0 { return string_concat("", c.result_none()); }
+  let two_d: string = string_concat("", scan_two_d_from_luma_with_hint(
+    data,
+    width,
+    height,
+    modules,
+    erasures,
+    packed,
+    meta,
+    possible_format,
+    try_harder,
+    also_inverted,
+  ));
+  if string_length(two_d) > 0 { return string_concat("", two_d); }
+  return string_concat("", scan_one_row_with_hint(width, height, luma, modules, possible_format));
 }
 
 // Compatibility ABI. The multi-format order follows ZXing's 2D readers before
@@ -138,10 +208,76 @@ export fn scan_and_decode(
   packed: Array<i32>,
   meta: Array<i32>
 ) -> string {
-  if !valid_scan_dimensions(width, height) { return string_concat("", c.result_none()); }
-  let two_d: string = string_concat("", scan_two_d_from_array(width, height, luma, modules, erasures, packed, meta));
-  if string_length(two_d) > 0 { return string_concat("", two_d); }
-  return string_concat("", scan_one_row(width, height, luma, modules));
+  return string_concat("", scan_and_decode_with_options_internal(width, height, luma, modules, erasures, packed, meta, -1, true, true));
+}
+
+export fn scan_and_decode_with_options(
+  width: i32,
+  height: i32,
+  luma: Array<i32>,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: i32,
+  also_inverted: i32
+) -> string {
+  return string_concat("", scan_and_decode_with_options_internal(
+    width,
+    height,
+    luma,
+    modules,
+    erasures,
+    packed,
+    meta,
+    possible_format,
+    try_harder != 0,
+    also_inverted != 0,
+  ));
+}
+
+fn scan_and_decode_roi_with_options_internal(
+  width: i32,
+  height: i32,
+  luma: Array<i32>,
+  roi_x: i32,
+  roi_y: i32,
+  roi_width: i32,
+  roi_height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: bool,
+  also_inverted: bool
+) -> string {
+  if !valid_scan_dimensions(width, height) || roi_x < 0 || roi_y < 0 ||
+     roi_width <= 0 || roi_height <= 0 || roi_x + roi_width > width ||
+     roi_y + roi_height > height {
+    return string_concat("", c.result_none());
+  }
+  let data: u32 = image.luma_copy_from_array(width, height, luma);
+  if data == 0 { return string_concat("", c.result_none()); }
+  let cropped: u32 = image.crop_luma(data, width, height, roi_x, roi_y, roi_width, roi_height, meta);
+  if cropped == 0 { return string_concat("", c.result_none()); }
+  let cropped_width: i32 = meta[0];
+  let cropped_height: i32 = meta[1];
+  let cropped_value: string = string_concat("", scan_two_d_from_luma_with_hint(
+    cropped,
+    cropped_width,
+    cropped_height,
+    modules,
+    erasures,
+    packed,
+    meta,
+    possible_format,
+    try_harder,
+    also_inverted,
+  ));
+  if string_length(cropped_value) > 0 { return string_concat("", cropped_value); }
+  return string_concat("", c.result_none());
 }
 
 export fn scan_and_decode_roi(
@@ -157,20 +293,56 @@ export fn scan_and_decode_roi(
   packed: Array<i32>,
   meta: Array<i32>
 ) -> string {
-  if !valid_scan_dimensions(width, height) || roi_x < 0 || roi_y < 0 ||
-     roi_width <= 0 || roi_height <= 0 || roi_x + roi_width > width ||
-     roi_y + roi_height > height {
-    return string_concat("", c.result_none());
-  }
-  let data: u32 = image.luma_copy_from_array(width, height, luma);
-  if data == 0 { return string_concat("", c.result_none()); }
-  let cropped: u32 = image.crop_luma(data, width, height, roi_x, roi_y, roi_width, roi_height, meta);
-  if cropped == 0 { return string_concat("", c.result_none()); }
-  let cropped_width: i32 = meta[0];
-  let cropped_height: i32 = meta[1];
-  let cropped_value: string = string_concat("", scan_two_d_from_luma(cropped, cropped_width, cropped_height, modules, erasures, packed, meta));
-  if string_length(cropped_value) > 0 { return string_concat("", cropped_value); }
-  return string_concat("", c.result_none());
+  return string_concat("", scan_and_decode_roi_with_options_internal(
+    width,
+    height,
+    luma,
+    roi_x,
+    roi_y,
+    roi_width,
+    roi_height,
+    modules,
+    erasures,
+    packed,
+    meta,
+    -1,
+    true,
+    true,
+  ));
+}
+
+export fn scan_and_decode_roi_with_options(
+  width: i32,
+  height: i32,
+  luma: Array<i32>,
+  roi_x: i32,
+  roi_y: i32,
+  roi_width: i32,
+  roi_height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: i32,
+  also_inverted: i32
+) -> string {
+  return string_concat("", scan_and_decode_roi_with_options_internal(
+    width,
+    height,
+    luma,
+    roi_x,
+    roi_y,
+    roi_width,
+    roi_height,
+    modules,
+    erasures,
+    packed,
+    meta,
+    possible_format,
+    try_harder != 0,
+    also_inverted != 0,
+  ));
 }
 
 export fn scan_and_decode_all(

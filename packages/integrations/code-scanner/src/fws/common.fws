@@ -2,9 +2,12 @@
 // Arrays stay at the ABI boundary. Large image/bitmap buffers live in guest memory.
 
 // Result wire format consumed by the TypeScript adapter:
-//   ""              -> not located
-//   "L" + format    -> located but undecodable (format is a fixed two-digit id)
-//   "D" + format + value -> located and decoded
+//   ""                         -> not located
+//   "R0" + format + numBits    -> located but undecodable
+//   "R1" + format + numBits + value -> located and decoded
+// `format` is a fixed two-digit id and `numBits` is a fixed eight-digit field.
+// The current readers leave `numBits` as zero; the host derives it from the
+// validated payload bytes until binary decoder results are threaded through.
 // Multi-scan joins decoded entries with ASCII RS (0x1e).
 
 export fn format_digit(format: i32) -> string {
@@ -31,11 +34,11 @@ export fn result_none() -> string {
 }
 
 export fn result_located(format: i32) -> string {
-  return string_concat("L", format_digit(format));
+  return string_concat(string_concat(string_concat("R0", format_digit(format)), "00000000"), "");
 }
 
 export fn result_decoded(format: i32, value: string) -> string {
-  return string_concat(string_concat("D", format_digit(format)), value);
+  return string_concat(string_concat(string_concat("R1", format_digit(format)), "00000000"), value);
 }
 
 export fn result_is_none(result: string) -> bool {
@@ -43,11 +46,11 @@ export fn result_is_none(result: string) -> bool {
 }
 
 export fn result_is_decoded(result: string) -> bool {
-  return string_length(result) >= 3 && string_byte_at(result, 0) == 68;
+  return string_length(result) >= 12 && string_byte_at(result, 0) == 82 && string_byte_at(result, 1) == 49;
 }
 
 export fn result_is_located(result: string) -> bool {
-  return string_length(result) >= 3 && string_byte_at(result, 0) == 76;
+  return string_length(result) >= 12 && string_byte_at(result, 0) == 82 && string_byte_at(result, 1) == 48;
 }
 
 export fn result_is_binary_marker(result: string) -> bool {
@@ -55,16 +58,16 @@ export fn result_is_binary_marker(result: string) -> bool {
 }
 
 export fn result_format(result: string) -> i32 {
-  if string_length(result) < 3 { return -1; }
-  let first: i32 = string_byte_at(result, 1) - 48;
-  let second: i32 = string_byte_at(result, 2) - 48;
+  if string_length(result) < 4 { return -1; }
+  let first: i32 = string_byte_at(result, 2) - 48;
+  let second: i32 = string_byte_at(result, 3) - 48;
   if first < 0 || first > 9 || second < 0 || second > 9 { return -1; }
   return first * 10 + second;
 }
 
 export fn result_value(result: string) -> string {
   if !result_is_decoded(result) { return ""; }
-  return string_slice(result, 3, string_length(result));
+  return string_slice(result, 12, string_length(result));
 }
 export fn multi_separator() -> string {
   return "\u001E";
