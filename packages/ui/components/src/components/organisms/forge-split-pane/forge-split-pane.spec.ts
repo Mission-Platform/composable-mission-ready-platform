@@ -53,4 +53,48 @@ describe('ForgeSplitPane', () => {
     app.unmount();
     host.remove();
   });
+
+  it('resizes panes when dragging the separator with a pointer', async () => {
+    const onResize = vi.fn();
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        vueH(VueSplitPane, {
+          primary: 'A',
+          secondary: 'B',
+          direction: 'horizontal',
+          initialSize: 50,
+          min: 20,
+          max: 80,
+          onResize,
+        }),
+    });
+    app.mount(host);
+    const container = host.firstElementChild as HTMLElement;
+    vi.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+      left: 0,
+      top: 0,
+      right: 1000,
+      bottom: 500,
+      width: 1000,
+      height: 500,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
+    });
+
+    const separator = host.querySelector('[role="separator"]');
+    if (!separator) return;
+
+    separator.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, clientX: 500 }));
+    globalThis.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 700 }));
+    globalThis.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
+
+    await nextTick();
+    expect(onResize).toHaveBeenCalledWith(70);
+
+    app.unmount();
+    host.remove();
+  });
 });

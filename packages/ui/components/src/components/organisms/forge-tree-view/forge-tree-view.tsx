@@ -156,6 +156,39 @@ export function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpEleme
     if (event.key === 'ArrowLeft' && hasChildren(node) && isOpen(node)) {
       toggle(node);
     }
+
+    const target = (event.currentTarget ?? event.target) as HTMLElement | null;
+    const tree = target?.closest('[role="tree"]');
+    if (tree) {
+      const items = [...tree.querySelectorAll<HTMLElement>('[role="treeitem"]')];
+      const index = target ? items.indexOf(target) : -1;
+      switch (event.key) {
+        case 'ArrowDown': {
+          event.preventDefault();
+          if (index >= 0 && index < items.length - 1) {
+            items[index + 1]?.focus();
+          }
+          break;
+        }
+        case 'ArrowUp': {
+          event.preventDefault();
+          if (index > 0) {
+            items[index - 1]?.focus();
+          }
+          break;
+        }
+        case 'Home': {
+          event.preventDefault();
+          items[0]?.focus();
+          break;
+        }
+        case 'End': {
+          event.preventDefault();
+          items.at(-1)?.focus();
+          break;
+        }
+      }
+    }
   };
 
   return (

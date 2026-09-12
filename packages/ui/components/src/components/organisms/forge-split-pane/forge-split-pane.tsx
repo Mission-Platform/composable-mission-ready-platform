@@ -7,6 +7,8 @@ import {
   type CSSStyleProperties,
 } from '@mission-platform/forge-jsx';
 
+import { beginPointerDrag } from '../../../utils/pointer-drag/pointer-drag';
+
 import styles from './forge-split-pane.module.scss';
 
 export type SplitPaneDirection = 'horizontal' | 'vertical';
@@ -60,6 +62,7 @@ export function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpEle
   const style = createSplitPaneStyle(properties.properties);
 
   const direction = properties.direction ?? 'horizontal';
+  const isHorizontal = direction === 'horizontal';
   const minSize = Math.max(0, Math.min(100, properties.minSize ?? properties.min ?? 20));
   const maxSize = Math.max(minSize, Math.min(100, properties.maxSize ?? properties.max ?? 80));
   const initialValue = properties.initialSize ?? '50%';
@@ -69,7 +72,7 @@ export function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpEle
   const [size, setSize] = useState(Math.min(maxSize, Math.max(minSize, initialSize)));
   const updateSize = (next: number): void => {
     if (!resizable) return;
-    const value = Math.min(maxSize, Math.max(minSize, next));
+    const value = Math.min(maxSize, Math.max(minSize, Math.round(next * 100) / 100));
     setSize(value);
     properties.onResize?.(value);
   };
@@ -98,6 +101,27 @@ export function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpEle
       }
     }
   };
+  const handlePointerDown = (event: unknown): void => {
+    if (!resizable) return;
+    const pointerEvent = event as PointerEvent;
+    pointerEvent.preventDefault?.();
+    const target = (pointerEvent.currentTarget ?? pointerEvent.target) as HTMLElement | null;
+    const container = target?.parentElement;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    const totalSize = isHorizontal ? rect.width : rect.height;
+    if (totalSize <= 0) return;
+    const offset = isHorizontal ? rect.left : rect.top;
+
+    beginPointerDrag({
+      onMove: (moveEvent: PointerEvent) => {
+        const clientPos = isHorizontal ? moveEvent.clientX : moveEvent.clientY;
+        const relativePos = clientPos - offset;
+        const newPercentage = (relativePos / totalSize) * 100;
+        updateSize(newPercentage);
+      },
+    });
+  };
   const firstContent = properties.first ?? properties.primary;
   const secondContent = properties.second ?? properties.secondary;
   return (
@@ -122,7 +146,10 @@ export function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpEle
         aria-valuenow={size}
         aria-label="Resize panes"
         aria-disabled={!resizable}
+        onKeyDown={onKeyDown}
         onKeydown={onKeyDown}
+        onPointerDown={handlePointerDown}
+        onPointerdown={handlePointerDown}
       />
       <section
         className={styles['forge-split-pane__secondary']}

@@ -75,6 +75,13 @@ export const WithError: Story = { args: { error: 'Select at least one topping.' 
 
 export const Disabled: Story = { args: { disabled: true, modelValue: ['cheese'] } };
 
+export const MaxTagsTruncated: Story = {
+  args: {
+    modelValue: ['cheese', 'mushroom', 'pepperoni', 'olives'],
+    maxTags: 2,
+  },
+};
+
 export const Expanded: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

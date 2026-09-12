@@ -80,4 +80,20 @@ describe('ForgeMultiselect authors the same component for React and Vue', () => 
       expect(html).toContain('role="alert"');
     }
   });
+
+  it('truncates tags and renders "+N more" badge when maxTags is set', async () => {
+    const properties = {
+      options: OPTIONS,
+      modelValue: ['red', 'green', 'blue'],
+      maxTags: 1,
+      id: 'ms-5',
+    };
+    const react = renderToStaticMarkup(createElement(ReactMultiselect, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueMultiselect, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('Red');
+      expect(html).toContain('+2 more');
+    }
+  });
 });

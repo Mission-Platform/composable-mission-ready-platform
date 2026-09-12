@@ -1,9 +1,12 @@
 import {
+  Slot,
   classNames,
   useMemo,
   useState,
   createForgeStyle,
   type MpElement,
+  type MpChild,
+  type MpRenderProperty,
   type CSSStyleProperties,
 } from '@mission-platform/forge-jsx';
 import { ForgeIconChevron } from '@mission-platform/icons';
@@ -33,8 +36,20 @@ export interface TableColumn {
   sortable?: boolean;
   /** Cell text alignment. Defaults to `'left'`. */
   align?: 'left' | 'center' | 'right';
+  /** Optional sticky column pinning. */
+  fixed?: 'left' | 'right';
   /** Optional cell formatter; receives the cell value and its row. */
   render?: (value: unknown, row: Record<string, unknown>) => string;
+}
+
+/** The scope passed to the scoped `cell` slot. */
+export interface TableCellScope {
+  /** The column the cell belongs to. */
+  column: TableColumn;
+  /** The full row record the cell is rendered from. */
+  row: Record<string, unknown>;
+  /** The cell's raw value (`row[column.key]`). */
+  value: unknown;
 }
 
 /* ── Visual property overrides (generated) ───────────────────────────── */
@@ -215,8 +230,38 @@ export interface TableProperties {
   loading?: boolean;
   /** Message shown when there are no rows. Defaults to `'No data available'`. */
   emptyText?: string;
+  /**
+   * Renders every body cell; receives `{ column, row, value }` (a scoped slot /
+   * render-prop). Falls back to the column's `render` formatter (or the stringified
+   * value), so consumers opt in only for the columns that need custom content.
+   */
+  cell?: MpRenderProperty<TableCellScope>;
   /** Fired when the sort changes; receives the column key and the new direction (`undefined` when cleared). */
   onSort?: (key: string, direction: SortDirection | undefined) => void;
+
+  /** Whether rows can be selected with checkboxes. */
+  selectable?: boolean;
+  /** Keys of the currently selected rows. */
+  selectedRowKeys?: string[];
+  /** Default selected row keys when uncontrolled. */
+  defaultSelectedRowKeys?: string[];
+  /** Callback fired when row selection changes. */
+  onSelectionChange?: (selectedRowKeys: string[]) => void;
+  /** Callback fired when an individual row is selected/deselected. */
+  onSelectRow?: (row: Record<string, unknown>, selected: boolean) => void;
+  /** Custom row key getter. Defaults to reading `row.id` or `row.key` or fallback to row index. */
+  rowKey?: string | ((row: Record<string, unknown>) => string);
+
+  /** Whether rows can be expanded with an accordion toggle. */
+  expandable?: boolean;
+  /** Keys of the currently expanded rows. */
+  expandedRowKeys?: string[];
+  /** Default expanded row keys when uncontrolled. */
+  defaultExpandedRowKeys?: string[];
+  /** Callback fired when row expansion changes. */
+  onExpansionChange?: (expandedRowKeys: string[]) => void;
+  /** Render function for the expanded row content. */
+  expandedRowRender?: (row: Record<string, unknown>) => MpChild;
 
   /** Component-owned CSS custom-property overrides. */
   properties?: Readonly<TableStyleProperties>;
@@ -255,12 +300,53 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
     emptyText = 'No data available',
     variant = 'neutral',
     size = 'md',
+    selectable = false,
+    selectedRowKeys: controlledSelectedRowKeys,
+    defaultSelectedRowKeys = [],
+    onSelectionChange,
+    onSelectRow,
+    rowKey,
+    expandable = false,
+    expandedRowKeys: controlledExpandedRowKeys,
+    defaultExpandedRowKeys = [],
+    onExpansionChange,
+    expandedRowRender,
   } = properties;
 
   // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
   const [sortKey, setSortKey] = useState<string | undefined>(undefined);
   // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
   const [sortDirection, setSortDirection] = useState<SortDirection | undefined>(undefined);
+  const [internalSelectedRowKeys, setInternalSelectedRowKeys] = useState<string[]>(defaultSelectedRowKeys);
+  const [internalExpandedRowKeys, setInternalExpandedRowKeys] = useState<string[]>(defaultExpandedRowKeys);
+
+  const selectedRowKeys = controlledSelectedRowKeys ?? internalSelectedRowKeys;
+  const expandedRowKeys = controlledExpandedRowKeys ?? internalExpandedRowKeys;
+
+  const selectedKeysSet = useMemo(() => new Set(selectedRowKeys), [selectedRowKeys]);
+  const expandedKeysSet = useMemo(() => new Set(expandedRowKeys), [expandedRowKeys]);
+
+  const rowIdentityMap = useMemo(() => {
+    const map = new Map<Record<string, unknown>, string>();
+    for (const [originalIndex, row] of rows.entries()) {
+      let key = String(originalIndex);
+      if (typeof rowKey === 'function') {
+        key = rowKey(row);
+      } else if (typeof rowKey === 'string' && row[rowKey] !== undefined) {
+        key = String(row[rowKey]);
+      } else if (row.id !== undefined) {
+        key = String(row.id);
+      } else if (row.key !== undefined) {
+        key = String(row.key);
+      }
+      map.set(row, key);
+    }
+    return map;
+  }, [rows, rowKey]);
+
+  const getRowKey = (row: Record<string, unknown>, index: number): string => {
+    return rowIdentityMap.get(row) ?? String(index);
+  };
 
   const sortedRows = useMemo(() => {
     if (sortKey === undefined || sortDirection === undefined) {
@@ -271,6 +357,39 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
       return sortDirection === 'asc' ? cmp : -cmp;
     });
   }, [rows, sortKey, sortDirection]);
+
+  const allRowKeys = useMemo(() => sortedRows.map((r, i) => getRowKey(r, i)), [sortedRows, getRowKey]);
+
+  const selectedCount = allRowKeys.filter((k) => selectedKeysSet.has(k)).length;
+  const isAllSelected = sortedRows.length > 0 && selectedCount === sortedRows.length;
+  const isPartiallySelected = selectedCount > 0 && selectedCount < sortedRows.length;
+
+  const toggleSelectAll = (): void => {
+    const nextKeys = isAllSelected ? [] : [...allRowKeys];
+    if (controlledSelectedRowKeys === undefined) {
+      setInternalSelectedRowKeys(nextKeys);
+    }
+    onSelectionChange?.(nextKeys);
+  };
+
+  const toggleRowSelect = (row: Record<string, unknown>, key: string): void => {
+    const isSelected = selectedKeysSet.has(key);
+    const nextKeys = isSelected ? selectedRowKeys.filter((k) => k !== key) : [...selectedRowKeys, key];
+    if (controlledSelectedRowKeys === undefined) {
+      setInternalSelectedRowKeys(nextKeys);
+    }
+    onSelectRow?.(row, !isSelected);
+    onSelectionChange?.(nextKeys);
+  };
+
+  const toggleRowExpand = (key: string): void => {
+    const isExpanded = expandedKeysSet.has(key);
+    const nextKeys = isExpanded ? expandedRowKeys.filter((k) => k !== key) : [...expandedRowKeys, key];
+    if (controlledExpandedRowKeys === undefined) {
+      setInternalExpandedRowKeys(nextKeys);
+    }
+    onExpansionChange?.(nextKeys);
+  };
 
   const toggleSort = (column: TableColumn): void => {
     if (!column.sortable) {
@@ -291,11 +410,50 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
     properties.onSort?.(column.key, nextDirection);
   };
 
+  const onHeaderKeyDown = (event: unknown, column: TableColumn): void => {
+    if (!column.sortable) {
+      return;
+    }
+    const key = (event as { key?: string }).key;
+    if (key === 'Enter' || key === ' ') {
+      (event as { preventDefault?: () => void }).preventDefault?.();
+      toggleSort(column);
+    }
+  };
+
   const tableClass = classNames(styles['forge-table'], styles[`forge-table--${variant}`], {
     [styles['forge-table--striped']]: striped,
     [styles['forge-table--bordered']]: bordered,
     [styles['forge-table--hoverable']]: hoverable,
   });
+
+  const columnOffsets = useMemo(() => {
+    const leftOffsets = new Map<string, number>();
+    const rightOffsets = new Map<string, number>();
+
+    let currentLeft = selectable ? 48 : 0;
+    for (const column of columns) {
+      if (column.fixed === 'left') {
+        leftOffsets.set(column.key, currentLeft);
+        const width =
+          typeof column.width === 'number' ? column.width : Number.parseInt(String(column.width ?? '120'), 10) || 120;
+        currentLeft += width;
+      }
+    }
+
+    let currentRight = 0;
+    for (let index = columns.length - 1; index >= 0; index--) {
+      const column = columns[index]!;
+      if (column.fixed === 'right') {
+        rightOffsets.set(column.key, currentRight);
+        const width =
+          typeof column.width === 'number' ? column.width : Number.parseInt(String(column.width ?? '120'), 10) || 120;
+        currentRight += width;
+      }
+    }
+
+    return { leftOffsets, rightOffsets };
+  }, [columns, selectable]);
 
   const headCells = columns.map((column) => {
     const isActive = sortKey === column.key;
@@ -303,14 +461,25 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
       styles['forge-table__th'],
       { [styles[`forge-table__th--align-${column.align ?? 'left'}`]]: true },
       { [styles['forge-table__th--sortable']]: Boolean(column.sortable) },
+      { [styles['forge-table__th--fixed-left']]: column.fixed === 'left' },
+      { [styles['forge-table__th--fixed-right']]: column.fixed === 'right' },
     );
+    const thStyle: Record<string, string | number> = column.width ? { width: column.width } : {};
+    if (column.fixed === 'left') {
+      thStyle.left = `${columnOffsets.leftOffsets.get(column.key) ?? 0}px`;
+    } else if (column.fixed === 'right') {
+      thStyle.right = `${columnOffsets.rightOffsets.get(column.key) ?? 0}px`;
+    }
     return (
       <th
         className={thClass}
         scope="col"
-        style={column.width ? { width: column.width } : undefined}
+        tabindex={column.sortable ? 0 : undefined}
+        style={Object.keys(thStyle).length > 0 ? thStyle : undefined}
         aria-sort={isActive ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
         onClick={() => toggleSort(column)}
+        onKeyDown={(event: unknown) => onHeaderKeyDown(event, column)}
+        onKeydown={(event: unknown) => onHeaderKeyDown(event, column)}
       >
         <span className={styles['forge-table__th-content']}>
           <ForgeTypography
@@ -334,13 +503,16 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
     );
   });
 
+  const hasExpand = expandable || Boolean(expandedRowRender);
+  const totalColSpan = columns.length + (selectable ? 1 : 0) + (hasExpand ? 1 : 0);
+
   const bodyRows =
     sortedRows.length === 0
       ? [
           <tr className={styles['forge-table__row']}>
             <td
               className={styles['forge-table__empty']}
-              colSpan={columns.length}
+              colSpan={totalColSpan}
             >
               <ForgeTypography
                 as="span"
@@ -352,31 +524,97 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
             </td>
           </tr>,
         ]
-      : sortedRows.map((row) => (
-          <tr className={styles['forge-table__row']}>
-            {columns.map((column) => {
-              const value = row[column.key];
-              const text = column.render ? column.render(value, row) : String(value ?? '');
-              const tdClass = classNames(styles['forge-table__td'], {
-                [styles[`forge-table__td--align-${column.align ?? 'left'}`]]: true,
-              });
-              return (
-                <td
-                  className={tdClass}
-                  style={style}
-                >
-                  <ForgeTypography
-                    as="span"
-                    color="primary"
-                    variant="body-sm"
-                  >
-                    {text}
-                  </ForgeTypography>
+      : sortedRows.flatMap((row, index) => {
+          const rowKeyStr = getRowKey(row, index);
+          const isSelected = selectedKeysSet.has(rowKeyStr);
+          const isExpanded = expandedKeysSet.has(rowKeyStr);
+          const rowClass = classNames(styles['forge-table__row'], {
+            [styles['forge-table__row--selected']]: isSelected,
+          });
+
+          const mainRow = (
+            <tr className={rowClass}>
+              {selectable ? (
+                <td className={classNames(styles['forge-table__td'], styles['forge-table__td--selection'])}>
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    aria-label={`Select row ${rowKeyStr}`}
+                    onChange={() => toggleRowSelect(row, rowKeyStr)}
+                  />
                 </td>
-              );
-            })}
-          </tr>
-        ));
+              ) : undefined}
+              {hasExpand ? (
+                <td className={classNames(styles['forge-table__td'], styles['forge-table__td--expand'])}>
+                  <button
+                    type="button"
+                    className={styles['forge-table__expand-button']}
+                    aria-expanded={isExpanded}
+                    aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
+                    onClick={() => toggleRowExpand(rowKeyStr)}
+                  >
+                    <ForgeIconChevron
+                      direction={isExpanded ? 'down' : 'right'}
+                      size="2xs"
+                    />
+                  </button>
+                </td>
+              ) : undefined}
+              {columns.map((column) => {
+                const value = row[column.key];
+                const text = column.render ? column.render(value, row) : String(value ?? '');
+                const tdClass = classNames(styles['forge-table__td'], {
+                  [styles[`forge-table__td--align-${column.align ?? 'left'}`]]: true,
+                  [styles['forge-table__td--fixed-left']]: column.fixed === 'left',
+                  [styles['forge-table__td--fixed-right']]: column.fixed === 'right',
+                });
+                const tdStyle: Record<string, string | number> = column.width ? { width: column.width } : {};
+                if (column.fixed === 'left') {
+                  tdStyle.left = `${columnOffsets.leftOffsets.get(column.key) ?? 0}px`;
+                } else if (column.fixed === 'right') {
+                  tdStyle.right = `${columnOffsets.rightOffsets.get(column.key) ?? 0}px`;
+                }
+                return (
+                  <td
+                    className={tdClass}
+                    style={Object.keys(tdStyle).length > 0 ? tdStyle : undefined}
+                  >
+                    <Slot
+                      name="cell"
+                      column={column}
+                      row={row}
+                      value={value}
+                    >
+                      <ForgeTypography
+                        as="span"
+                        color="primary"
+                        variant="body-sm"
+                      >
+                        {text}
+                      </ForgeTypography>
+                    </Slot>
+                  </td>
+                );
+              })}
+            </tr>
+          );
+
+          if (isExpanded && expandedRowRender) {
+            const detailRow = (
+              <tr className={classNames(styles['forge-table__row'], styles['forge-table__expanded-row'])}>
+                <td
+                  className={styles['forge-table__expanded-cell']}
+                  colSpan={totalColSpan}
+                >
+                  {expandedRowRender(row)}
+                </td>
+              </tr>
+            );
+            return [mainRow, detailRow];
+          }
+
+          return [mainRow];
+        });
 
   return (
     <div
@@ -413,7 +651,35 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
           </caption>
         ) : undefined}
         <thead className={styles['forge-table__head']}>
-          <tr>{headCells}</tr>
+          <tr>
+            {selectable ? (
+              <th
+                className={classNames(styles['forge-table__th'], styles['forge-table__th--selection'])}
+                scope="col"
+              >
+                <input
+                  ref={(element: HTMLInputElement | null) => {
+                    if (element) {
+                      element.indeterminate = isPartiallySelected;
+                    }
+                  }}
+                  type="checkbox"
+                  checked={isAllSelected}
+                  aria-checked={isAllSelected ? 'true' : isPartiallySelected ? 'mixed' : 'false'}
+                  aria-label="Select all rows"
+                  onChange={toggleSelectAll}
+                />
+              </th>
+            ) : undefined}
+            {hasExpand ? (
+              <th
+                className={classNames(styles['forge-table__th'], styles['forge-table__th--expand'])}
+                scope="col"
+                aria-label="Expand row"
+              />
+            ) : undefined}
+            {headCells}
+          </tr>
         </thead>
         <tbody>{bodyRows}</tbody>
       </table>
