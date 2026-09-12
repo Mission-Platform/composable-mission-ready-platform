@@ -11,6 +11,7 @@
  * returned {@link CmsArtifact}; it never maps a string id onto a target, so
  * adding a platform is an additive package with no edits here.
  */
+import { validateForgeOutputPlugin } from "@mission-platform/forge-plugin-api";
 import { validateForgeArtifactSegment } from "@mission-platform/vite-plugin-forge";
 
 import type { ContentComponent } from "./content-model.js";
@@ -139,6 +140,7 @@ export function defineForgeCmsPlugin<T extends CmsOutputPlugin>(plugin: T): T {
       `The Forge CMS plugin "${plugin.id}" requires a safe framework plugin id.`,
     );
   }
+  validateForgeOutputPlugin(plugin.framework);
   if (typeof plugin.emitTemplate !== "function") {
     throw new TypeError(
       `The Forge CMS plugin "${plugin.id}" must implement \`emitTemplate\`.`,
@@ -148,6 +150,17 @@ export function defineForgeCmsPlugin<T extends CmsOutputPlugin>(plugin: T): T {
     throw new TypeError(
       `The Forge CMS plugin "${plugin.id}" must declare \`build\` adapters.`,
     );
+  }
+  const adapters = [
+    ["vite", plugin.build.vite],
+    ["tsdown", plugin.build.tsdown],
+  ] as const;
+  for (const [name, adapter] of adapters) {
+    if (adapter !== undefined && typeof adapter !== "function") {
+      throw new TypeError(
+        `The Forge CMS plugin "${plugin.id}" build.${name} adapter must be a function.`,
+      );
+    }
   }
   if (
     plugin.supportedFrameworks !== undefined &&

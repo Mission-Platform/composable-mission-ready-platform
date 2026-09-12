@@ -29,6 +29,10 @@ export function stubFramework(id = "react"): FrameworkOutputPlugin {
       framework: id,
       module: ir,
       context,
+      lowered: {
+        framework: id,
+        appliedOptimizations: [],
+      },
     }),
     optimize: (intentions: TargetIntentions): TargetIntentions => intentions,
     generate: (intentions: TargetIntentions): GeneratedModule => ({

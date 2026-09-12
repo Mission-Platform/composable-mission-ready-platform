@@ -2,6 +2,7 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   symlinkSync,
@@ -316,6 +317,84 @@ describe("generateCmsArtifacts", () => {
       },
     });
     expect(() => run(failing, workspace)).toThrow(/FORGE_TEST_UNSUPPORTED/);
+  });
+
+  it("preserves existing successful output when generation fails with error diagnostics", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    // First run succeeds and writes initial artifacts
+    run(recordingTarget(), workspace);
+    expect(existsSync(path.join(workspace.outDir, "components.json"))).toBe(
+      true,
+    );
+    const initialContents = readFileSync(
+      path.join(workspace.outDir, "components.json"),
+      "utf8",
+    );
+    const initialFiles = readdirSync(workspace.outDir);
+
+    // Second run fails with a diagnostic error
+    const failing = recordingTarget({
+      id: "failing",
+      emitTemplate(component, _ir, context) {
+        context.diagnostics.push({
+          phase: "generation",
+          severity: "error",
+          code: "FORGE_TEST_UNSUPPORTED",
+          message: `Cannot project ${component.names.publicName}.`,
+          fileName: `${component.names.folder}.tsx`,
+        });
+        return {
+          fileName: `${component.names.folder}.html`,
+          contents: "partial",
+          artifactKind: "template",
+        };
+      },
+    });
+
+    expect(() => run(failing, workspace)).toThrow(/FORGE_TEST_UNSUPPORTED/);
+
+    // Output directory remains completely intact from the previous successful run
+    expect(readdirSync(workspace.outDir)).toEqual(initialFiles);
+    expect(
+      readFileSync(path.join(workspace.outDir, "components.json"), "utf8"),
+    ).toBe(initialContents);
+
+    // No leftover attempt directory in parent
+    const parent = path.dirname(workspace.outDir);
+    const attemptDirectories = readdirSync(parent).filter((name) =>
+      name.startsWith(".forge-attempt-"),
+    );
+    expect(attemptDirectories).toEqual([]);
+  });
+
+  it("preserves existing successful output when template emission throws an unexpected error", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    run(recordingTarget(), workspace);
+    const initialContents = readFileSync(
+      path.join(workspace.outDir, "components.json"),
+      "utf8",
+    );
+
+    const throwing = recordingTarget({
+      id: "throwing",
+      emitTemplate() {
+        throw new Error("Unexpected emitter explosion");
+      },
+    });
+
+    expect(() => run(throwing, workspace)).toThrow(
+      /Unexpected emitter explosion/,
+    );
+    expect(
+      readFileSync(path.join(workspace.outDir, "components.json"), "utf8"),
+    ).toBe(initialContents);
+
+    // No leftover attempt directory in parent
+    const parent = path.dirname(workspace.outDir);
+    const attemptDirectories = readdirSync(parent).filter((name) =>
+      name.startsWith(".forge-attempt-"),
+    );
+    expect(attemptDirectories).toEqual([]);
   });
 
   it.each([

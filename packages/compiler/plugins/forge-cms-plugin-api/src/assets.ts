@@ -44,6 +44,11 @@ export function pruneStaleAssets(
     let isEmpty = true;
     const entries = fs.readdirSync(currentDirectory, { withFileTypes: true });
     for (const entry of entries) {
+      if (entry.name.startsWith(".")) {
+        isEmpty = false;
+        continue;
+      }
+
       const fullPath = path.join(currentDirectory, entry.name);
       const relative = path
         .relative(destinationRoot, fullPath)
@@ -103,10 +108,7 @@ export function copyAndPruneAssets(
   preservedDirectories: ReadonlySet<string> = new Set(),
 ): void {
   const activeAssets = assets.filter((asset) => {
-    const source = resolveForgeArtifactPath(
-      safeCacheDirectory,
-      asset.fileName,
-    );
+    const source = resolveForgeArtifactPath(safeCacheDirectory, asset.fileName);
     return fs.existsSync(source);
   });
   const activeAssetNames = new Set(
@@ -116,18 +118,12 @@ export function copyAndPruneAssets(
   pruneStaleAssets(destinationRoot, activeAssetNames, preservedDirectories);
 
   for (const asset of activeAssets) {
-    const source = resolveForgeArtifactPath(
-      safeCacheDirectory,
-      asset.fileName,
-    );
+    const source = resolveForgeArtifactPath(safeCacheDirectory, asset.fileName);
     const destination = resolveForgeArtifactPath(
       destinationRoot,
       asset.fileName,
     );
-    ensureForgeArtifactDirectory(
-      destinationRoot,
-      path.dirname(destination),
-    );
+    ensureForgeArtifactDirectory(destinationRoot, path.dirname(destination));
     fs.copyFileSync(source, destination);
   }
 }

@@ -79,6 +79,42 @@ describe("defineForgeCmsPlugin", () => {
     ).toThrow(/must declare `build` adapters/);
   });
 
+  it("rejects an invalid framework plugin missing required methods", () => {
+    const invalidFramework = {
+      ...stubFramework("react"),
+      lower: undefined,
+    } as unknown as CmsOutputPlugin["framework"];
+    expect(() =>
+      defineForgeCmsPlugin(validPlugin({ framework: invalidFramework })),
+    ).toThrow(/must define lower\(\)/);
+  });
+
+  it("rejects non-function build adapters", () => {
+    expect(() =>
+      defineForgeCmsPlugin(
+        validPlugin({
+          build: {
+            vite: "not-a-function" as unknown as NonNullable<
+              CmsOutputPlugin["build"]["vite"]
+            >,
+          },
+        }),
+      ),
+    ).toThrow(/build\.vite adapter must be a function/);
+
+    expect(() =>
+      defineForgeCmsPlugin(
+        validPlugin({
+          build: {
+            tsdown: 123 as unknown as NonNullable<
+              CmsOutputPlugin["build"]["tsdown"]
+            >,
+          },
+        }),
+      ),
+    ).toThrow(/build\.tsdown adapter must be a function/);
+  });
+
   it("rejects a framework outside the supported set, naming the offending plugin id", () => {
     expect(() =>
       defineForgeCmsPlugin(

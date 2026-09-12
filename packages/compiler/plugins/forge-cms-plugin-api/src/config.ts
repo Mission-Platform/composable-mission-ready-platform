@@ -11,7 +11,6 @@ import path from "node:path";
 import { defineLibraryConfig } from "@mission-platform/vite-config";
 import {
   assertForgeArtifactRoot,
-  ensureForgeArtifactDirectory,
   forgeArtifactAttemptDirectory,
   forgeArtifactPublishPlugin,
   forgeBuildLifecyclePlugin,
@@ -21,6 +20,7 @@ import {
 } from "@mission-platform/vite-plugin-forge";
 import { mergeConfig } from "vite";
 
+import { copyAndPruneAssets } from "./assets.js";
 import { generateCmsArtifacts } from "./driver.js";
 import { cmsCacheDirectory, resolveComponentsModule } from "./tsdown.js";
 
@@ -62,12 +62,41 @@ function cmsEntryDeclarationsPlugin(cacheDirectory: string): Plugin {
   };
 }
 
-function cmsAssetsPlugin(
+export interface CmsAssetsPluginOptions {
+  readonly frameworkId?: string;
+  readonly supportedFrameworks?: readonly string[];
+}
+
+export function cmsAssetsPlugin(
   rootDir: string,
   cacheDirectory: string,
-  targetId: string,
+  targetOrTargetId: string | CmsOutputPlugin,
   getAssets: () => readonly CmsArtifact[],
+  options?: CmsAssetsPluginOptions,
 ): Plugin {
+  const targetId =
+    typeof targetOrTargetId === "string"
+      ? targetOrTargetId
+      : targetOrTargetId.id;
+  const frameworkId =
+    options?.frameworkId ??
+    (typeof targetOrTargetId === "object"
+      ? targetOrTargetId.framework.id
+      : undefined);
+  const supportedFrameworks =
+    options?.supportedFrameworks ??
+    (typeof targetOrTargetId === "object"
+      ? targetOrTargetId.supportedFrameworks
+      : undefined);
+
+  const preservedDirectories = new Set<string>();
+  if (frameworkId) preservedDirectories.add(frameworkId);
+  if (supportedFrameworks) {
+    for (const fw of supportedFrameworks) {
+      preservedDirectories.add(fw);
+    }
+  }
+
   return {
     name: "mission-platform:cms-assets",
     closeBundle() {
@@ -75,24 +104,12 @@ function cmsAssetsPlugin(
       const destinationRoot = assertForgeArtifactRoot(
         path.resolve(rootDir, `dist/cms/${targetId}`),
       );
-      for (const asset of getAssets()) {
-        const source = resolveForgeArtifactPath(
-          safeCacheDirectory,
-          asset.fileName,
-        );
-        if (!fs.existsSync(source)) {
-          continue;
-        }
-        const destination = resolveForgeArtifactPath(
-          destinationRoot,
-          asset.fileName,
-        );
-        ensureForgeArtifactDirectory(
-          destinationRoot,
-          path.dirname(destination),
-        );
-        fs.copyFileSync(source, destination);
-      }
+      copyAndPruneAssets(
+        safeCacheDirectory,
+        destinationRoot,
+        getAssets(),
+        preservedDirectories,
+      );
     },
   };
 }
@@ -185,7 +202,7 @@ export function defineViteForgeCmsLibrary(
           cmsAssetsPlugin(
             rootDir,
             cacheDirectory,
-            target.id,
+            target,
             () =>
               generated?.artifacts.filter(
                 (artifact) => artifact.asset === true,

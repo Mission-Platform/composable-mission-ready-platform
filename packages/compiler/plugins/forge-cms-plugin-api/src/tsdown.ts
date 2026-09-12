@@ -19,7 +19,6 @@ import {
 import {
   assertForgeArtifactRoot,
   createForgeBuildSession,
-  ensureForgeArtifactDirectory,
   forgeArtifactAttemptDirectory,
   forgeArtifactPublishPlugin,
   forgeBuildLifecyclePlugin,
@@ -28,6 +27,7 @@ import {
   validateForgeArtifactSegment,
 } from "@mission-platform/vite-plugin-forge";
 
+import { copyAndPruneAssets } from "./assets.js";
 import { generateCmsArtifacts } from "./driver.js";
 
 import type { CmsArtifact, CmsArtifactKind, CmsOutputPlugin } from "./cms.js";
@@ -250,17 +250,34 @@ function cmsEntryDeclarationsTsdownPlugin(
 function cmsAssetsTsdownPlugin(
   rootDir: string,
   cacheDirectory: string,
-  targetId: string,
+  targetOrTargetId: string | CmsOutputPlugin,
   getAssets: () => readonly CmsArtifact[],
   outputRoot: string | undefined,
 ): TsdownPlugin {
+  const targetId =
+    typeof targetOrTargetId === "string"
+      ? targetOrTargetId
+      : targetOrTargetId.id;
+  const frameworkId =
+    typeof targetOrTargetId === "object"
+      ? targetOrTargetId.framework.id
+      : undefined;
+  const supportedFrameworks =
+    typeof targetOrTargetId === "object"
+      ? targetOrTargetId.supportedFrameworks
+      : undefined;
+
+  const preservedDirectories = new Set<string>();
+  if (frameworkId) preservedDirectories.add(frameworkId);
+  if (supportedFrameworks) {
+    for (const fw of supportedFrameworks) {
+      preservedDirectories.add(fw);
+    }
+  }
+
   return {
     name: "mission-platform:cms-assets",
     writeBundle() {
-      const assets = getAssets();
-      if (assets.length === 0) {
-        return;
-      }
       const safeCacheDirectory = assertForgeArtifactRoot(cacheDirectory);
       const destinationRoot = assertForgeArtifactRoot(
         resolveTsdownOutputDirectory(
@@ -269,24 +286,12 @@ function cmsAssetsTsdownPlugin(
           outputRoot,
         ),
       );
-      for (const asset of assets) {
-        const source = resolveForgeArtifactPath(
-          safeCacheDirectory,
-          asset.fileName,
-        );
-        if (!fs.existsSync(source)) {
-          continue;
-        }
-        const destination = resolveForgeArtifactPath(
-          destinationRoot,
-          asset.fileName,
-        );
-        ensureForgeArtifactDirectory(
-          destinationRoot,
-          path.dirname(destination),
-        );
-        fs.copyFileSync(source, destination);
-      }
+      copyAndPruneAssets(
+        safeCacheDirectory,
+        destinationRoot,
+        getAssets(),
+        preservedDirectories,
+      );
     },
   } as TsdownPlugin;
 }
@@ -408,7 +413,7 @@ function createTsdownForgeCmsConfig(
         cmsAssetsTsdownPlugin(
           rootDir,
           cacheDirectory,
-          target.id,
+          target,
           () =>
             generated?.artifacts.filter(
               (artifact) => artifact.asset === true,

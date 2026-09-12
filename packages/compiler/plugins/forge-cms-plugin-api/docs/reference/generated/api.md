@@ -304,6 +304,66 @@ True when the neutral IR carries behaviour that only a real runtime can provide.
 | -------- | --------------------------- | ----------- |
 | semantic | SemanticModule \| undefined |             |
 
+## `src/assets`
+
+### copyAndPruneAssets
+
+**Kind:** function
+
+```typescript
+function copyAndPruneAssets(
+  safeCacheDirectory: string,
+  destinationRoot: string,
+  assets: readonly CmsArtifact[],
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+Synchronize assets from `safeCacheDirectory` into `destinationRoot`,
+pruning stale or removed assets from previous builds.
+
+#### Parameters
+
+| Name                 | Type                   | Description |
+| -------------------- | ---------------------- | ----------- |
+| safeCacheDirectory   | string                 |             |
+| destinationRoot      | string                 |             |
+| assets               | readonly CmsArtifact[] |             |
+| preservedDirectories | ReadonlySet<string>    |             |
+
+### KNOWN_FRAMEWORKS
+
+**Kind:** constant
+
+```typescript
+export const KNOWN_FRAMEWORKS: ReadonlySet<string>;
+```
+
+No description provided.
+
+### pruneStaleAssets
+
+**Kind:** function
+
+```typescript
+function pruneStaleAssets(
+  destinationRoot: string,
+  activeAssetNames: ReadonlySet<string>,
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+Prune stale files and empty directories in `destinationRoot` that do not
+correspond to active assets, preserving framework directories and non-asset trees.
+
+#### Parameters
+
+| Name                 | Type                | Description |
+| -------------------- | ------------------- | ----------- |
+| destinationRoot      | string              |             |
+| activeAssetNames     | ReadonlySet<string> |             |
+| preservedDirectories | ReadonlySet<string> |             |
+
 ## `src/classify`
 
 ### ASSET_TYPE_REFERENCES
@@ -495,6 +555,42 @@ reach the driver and silently emit a partial tree.
 | plugin | T    |             |
 
 ## `src/config`
+
+### cmsAssetsPlugin
+
+**Kind:** function
+
+```typescript
+function cmsAssetsPlugin(
+  rootDir: string,
+  cacheDirectory: string,
+  targetOrTargetId: string | CmsOutputPlugin,
+  getAssets: () => readonly CmsArtifact[],
+  options?: CmsAssetsPluginOptions,
+): Plugin;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name             | Type                         | Description |
+| ---------------- | ---------------------------- | ----------- |
+| rootDir          | string                       |             |
+| cacheDirectory   | string                       |             |
+| targetOrTargetId | string \| CmsOutputPlugin    |             |
+| getAssets        | () => readonly CmsArtifact[] |             |
+| options          | CmsAssetsPluginOptions       |             |
+
+### CmsAssetsPluginOptions
+
+**Kind:** interface
+
+```typescript
+export interface CmsAssetsPluginOptions
+```
+
+No description provided.
 
 ### defineViteForgeCmsLibrary
 

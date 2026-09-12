@@ -3,7 +3,6 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
-  readdirSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -26,22 +25,27 @@ afterEach(() => {
 });
 
 function createTestEnvironment(targetId = "storyblok"): {
-  rootDir: string;
+  rootDirectory: string;
   cacheDirectory: string;
   destinationRoot: string;
 } {
-  const rootDir = mkdtempSync(path.join(os.tmpdir(), "forge-cms-assets-"));
-  temporaryDirectories.push(rootDir);
-  const cacheDirectory = path.join(rootDir, "node_modules/.cache/cms-cache");
-  const destinationRoot = path.join(rootDir, `dist/cms/${targetId}`);
+  const rootDirectory = mkdtempSync(
+    path.join(os.tmpdir(), "forge-cms-assets-"),
+  );
+  temporaryDirectories.push(rootDirectory);
+  const cacheDirectory = path.join(
+    rootDirectory,
+    "node_modules/.cache/cms-cache",
+  );
+  const destinationRoot = path.join(rootDirectory, `dist/cms/${targetId}`);
   mkdirSync(cacheDirectory, { recursive: true });
   mkdirSync(destinationRoot, { recursive: true });
-  return { rootDir, cacheDirectory, destinationRoot };
+  return { rootDirectory, cacheDirectory, destinationRoot };
 }
 
 describe("cmsAssetsPlugin", () => {
   it("copies active assets from cacheDirectory to destinationRoot", () => {
-    const { rootDir, cacheDirectory, destinationRoot } =
+    const { rootDirectory, cacheDirectory, destinationRoot } =
       createTestEnvironment("storyblok");
 
     writeFileSync(
@@ -59,7 +63,12 @@ describe("cmsAssetsPlugin", () => {
       },
     ];
 
-    const plugin = cmsAssetsPlugin(rootDir, cacheDirectory, "storyblok", () => assets);
+    const plugin = cmsAssetsPlugin(
+      rootDirectory,
+      cacheDirectory,
+      "storyblok",
+      () => assets,
+    );
     (plugin.closeBundle as () => void)();
 
     const destinationFile = path.join(destinationRoot, "components.json");
@@ -68,7 +77,7 @@ describe("cmsAssetsPlugin", () => {
   });
 
   it("prunes stale asset files from previous builds", () => {
-    const { rootDir, cacheDirectory, destinationRoot } =
+    const { rootDirectory, cacheDirectory, destinationRoot } =
       createTestEnvironment("storyblok");
 
     // Simulate build N left behind components.json and stale.json
@@ -100,7 +109,7 @@ describe("cmsAssetsPlugin", () => {
     ];
 
     const plugin = cmsAssetsPlugin(
-      rootDir,
+      rootDirectory,
       cacheDirectory,
       "storyblok",
       () => activeAssets,
@@ -117,16 +126,12 @@ describe("cmsAssetsPlugin", () => {
   });
 
   it("prunes nested stale assets and deletes empty subdirectories", () => {
-    const { rootDir, cacheDirectory, destinationRoot } =
+    const { rootDirectory, cacheDirectory, destinationRoot } =
       createTestEnvironment("storyblok");
 
-    const nestedStaleDir = path.join(destinationRoot, "schemas/legacy");
-    mkdirSync(nestedStaleDir, { recursive: true });
-    writeFileSync(
-      path.join(nestedStaleDir, "legacy.json"),
-      "{}",
-      "utf8",
-    );
+    const nestedStaleDirectory = path.join(destinationRoot, "schemas/legacy");
+    mkdirSync(nestedStaleDirectory, { recursive: true });
+    writeFileSync(path.join(nestedStaleDirectory, "legacy.json"), "{}", "utf8");
 
     // Active asset in a different folder
     mkdirSync(path.join(cacheDirectory, "templates"), { recursive: true });
@@ -146,7 +151,7 @@ describe("cmsAssetsPlugin", () => {
     ];
 
     const plugin = cmsAssetsPlugin(
-      rootDir,
+      rootDirectory,
       cacheDirectory,
       "storyblok",
       () => activeAssets,
@@ -157,46 +162,41 @@ describe("cmsAssetsPlugin", () => {
     expect(existsSync(path.join(destinationRoot, "schemas"))).toBe(false);
 
     // active template must be copied
-    expect(
-      existsSync(path.join(destinationRoot, "templates/card.html")),
-    ).toBe(true);
+    expect(existsSync(path.join(destinationRoot, "templates/card.html"))).toBe(
+      true,
+    );
   });
 
   it("preserves framework output directories in destinationRoot", () => {
-    const { rootDir, cacheDirectory, destinationRoot } =
+    const { rootDirectory, cacheDirectory, destinationRoot } =
       createTestEnvironment("storyblok");
 
     // Framework directory containing framework-compiled bundle
-    const reactDir = path.join(destinationRoot, "react");
-    mkdirSync(reactDir, { recursive: true });
+    const reactDirectory = path.join(destinationRoot, "react");
+    mkdirSync(reactDirectory, { recursive: true });
     writeFileSync(
-      path.join(reactDir, "index.js"),
+      path.join(reactDirectory, "index.js"),
       "export const Button = () => null;\n",
       "utf8",
     );
 
     // Also a custom framework directory passed in plugin
-    const customFrameworkDir = path.join(destinationRoot, "custom-framework");
-    mkdirSync(customFrameworkDir, { recursive: true });
+    const customFrameworkDirectory = path.join(
+      destinationRoot,
+      "custom-framework",
+    );
+    mkdirSync(customFrameworkDirectory, { recursive: true });
     writeFileSync(
-      path.join(customFrameworkDir, "main.js"),
+      path.join(customFrameworkDirectory, "main.js"),
       "console.log(1);\n",
       "utf8",
     );
 
     // Active asset
-    writeFileSync(
-      path.join(cacheDirectory, "components.json"),
-      "[]\n",
-      "utf8",
-    );
+    writeFileSync(path.join(cacheDirectory, "components.json"), "[]\n", "utf8");
 
     // Stale asset file at root
-    writeFileSync(
-      path.join(destinationRoot, "obsolete.json"),
-      "{}",
-      "utf8",
-    );
+    writeFileSync(path.join(destinationRoot, "obsolete.json"), "{}", "utf8");
 
     const targetPlugin: CmsOutputPlugin = {
       id: "storyblok",
@@ -212,7 +212,7 @@ describe("cmsAssetsPlugin", () => {
     };
 
     const plugin = cmsAssetsPlugin(
-      rootDir,
+      rootDirectory,
       cacheDirectory,
       targetPlugin,
       () => [
@@ -230,21 +230,27 @@ describe("cmsAssetsPlugin", () => {
     expect(existsSync(path.join(destinationRoot, "obsolete.json"))).toBe(false);
 
     // Framework directories and files are strictly preserved
-    expect(existsSync(path.join(reactDir, "index.js"))).toBe(true);
-    expect(
-      readFileSync(path.join(reactDir, "index.js"), "utf8"),
-    ).toBe("export const Button = () => null;\n");
-    expect(existsSync(path.join(customFrameworkDir, "main.js"))).toBe(true);
+    expect(existsSync(path.join(reactDirectory, "index.js"))).toBe(true);
+    expect(readFileSync(path.join(reactDirectory, "index.js"), "utf8")).toBe(
+      "export const Button = () => null;\n",
+    );
+    expect(existsSync(path.join(customFrameworkDirectory, "main.js"))).toBe(
+      true,
+    );
 
     // Active asset is present
-    expect(existsSync(path.join(destinationRoot, "components.json"))).toBe(true);
+    expect(existsSync(path.join(destinationRoot, "components.json"))).toBe(
+      true,
+    );
   });
 
   it("handles destinationRoot not existing yet on first build", () => {
-    const rootDir = mkdtempSync(path.join(os.tmpdir(), "forge-cms-first-build-"));
-    temporaryDirectories.push(rootDir);
-    const cacheDirectory = path.join(rootDir, "cache");
-    const destinationRoot = path.join(rootDir, "dist/cms/storyblok");
+    const rootDirectory = mkdtempSync(
+      path.join(os.tmpdir(), "forge-cms-first-build-"),
+    );
+    temporaryDirectories.push(rootDirectory);
+    const cacheDirectory = path.join(rootDirectory, "cache");
+    const destinationRoot = path.join(rootDirectory, "dist/cms/storyblok");
     mkdirSync(cacheDirectory, { recursive: true });
 
     writeFileSync(
@@ -254,7 +260,7 @@ describe("cmsAssetsPlugin", () => {
     );
 
     const plugin = cmsAssetsPlugin(
-      rootDir,
+      rootDirectory,
       cacheDirectory,
       "storyblok",
       () => [

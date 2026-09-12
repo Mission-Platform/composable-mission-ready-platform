@@ -85,6 +85,14 @@ export {
 } from "./tsdown.js";
 
 export {
+  cmsAssetsPlugin,
   defineViteForgeCmsLibrary,
+  type CmsAssetsPluginOptions,
   type ViteForgeCmsLibraryOptions,
 } from "./config.js";
+
+export {
+  KNOWN_FRAMEWORKS,
+  copyAndPruneAssets,
+  pruneStaleAssets,
+} from "./assets.js";
