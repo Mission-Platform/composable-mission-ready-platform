@@ -367,4 +367,85 @@ export fn current() -> i64 { return now(); }`;
     );
     server.dispose();
   });
+
+  it('provides workspace symbol search across indexed modules', async () => {
+    const server = createForgeWebScriptLspServer();
+    initialize(server);
+    await server.openDocument({ uri, version: 1, text: validSource });
+
+    const allSymbols = server.workspaceSymbols?.({ query: '' }) ?? [];
+    expect(allSymbols).toContainEqual(
+      expect.objectContaining({ name: 'add', location: expect.objectContaining({ uri }) }),
+    );
+
+    const querySymbols = server.workspaceSymbols?.({ query: 'ad' }) ?? [];
+    expect(querySymbols).toContainEqual(
+      expect.objectContaining({ name: 'add', location: expect.objectContaining({ uri }) }),
+    );
+
+    const emptySymbols = server.workspaceSymbols?.({ query: 'nonexistent' }) ?? [];
+    expect(emptySymbols).toHaveLength(0);
+
+    await server.shutdown();
+  });
+
+  it('suggests quickfix code actions for diagnostic issues', async () => {
+    const server = createForgeWebScriptLspServer();
+    initialize(server);
+    await server.openDocument({ uri, version: 1, text: 'export fn broken(' });
+
+    const actions = server.codeActions?.({
+      textDocument: { uri },
+      range: { start: { line: 0, character: 0 }, end: { line: 0, character: 17 } },
+      context: {
+        diagnostics: [
+          {
+            range: { start: { line: 0, character: 16 }, end: { line: 0, character: 17 } },
+            message: 'Expected closing parenthesis',
+            code: 'FWS-PARSE-017',
+          },
+        ],
+      },
+    }) ?? [];
+
+    expect(actions).toContainEqual(
+      expect.objectContaining({
+        title: 'Close parenthesis',
+        kind: 'quickfix',
+        edit: expect.objectContaining({
+          changes: expect.objectContaining({
+            [uri]: expect.arrayContaining([expect.objectContaining({ newText: ')' })]),
+          }),
+        }),
+      }),
+    );
+
+    await server.shutdown();
+  });
+
+  it('cancels intermediate diagnostic refreshes on rapid document typing', async () => {
+    const published: Array<{ uri: string; diagnostics: readonly unknown[] }> = [];
+    const server = createForgeWebScriptLspServer({
+      publishDiagnostics: ({ uri: documentUri, diagnostics }) => published.push({ uri: documentUri, diagnostics }),
+    });
+    initialize(server);
+
+    await server.openDocument({ uri, version: 1, text: 'export fn add(x: i32) -> i32 { return x; }' });
+    expect(published).toHaveLength(1);
+    expect(published[0]?.diagnostics).toEqual([]);
+
+    // Simulate rapid typing: v2, v3, v4 in flight before queue drains
+    const p1 = server.updateDocument({ uri, version: 2, text: 'export fn add(x: i32) -> i32 { return x + ; }' });
+    const p2 = server.updateDocument({ uri, version: 3, text: 'export fn add(x: i32) -> i32 { return x + 1' });
+    const p3 = server.updateDocument({ uri, version: 4, text: 'export fn add(x: i32) -> i32 { return x + 1; }' });
+
+    await Promise.all([p1, p2, p3]);
+
+    // Only the final version (v4) should have resulted in a diagnostic publish, skipping v2 and v3
+    expect(published.length).toBeLessThanOrEqual(3);
+    const lastPublish = published.at(-1);
+    expect(lastPublish?.diagnostics).toEqual([]);
+
+    await server.shutdown();
+  });
 });

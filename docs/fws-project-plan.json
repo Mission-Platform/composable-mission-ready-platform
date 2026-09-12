@@ -44,7 +44,8 @@
       "track": "Compiler Core",
       "priority": "P0 - Critical",
       "complexity": "XL",
-      "initialStatus": "Todo"
+      "initialStatus": "Done",
+      "pullRequest": 65
     },
     {
       "issueNumber": 42,
@@ -60,7 +61,8 @@
       "track": "Standard Library",
       "priority": "P1 - High",
       "complexity": "L",
-      "initialStatus": "In Progress"
+      "initialStatus": "Done",
+      "pullRequest": 65
     },
     {
       "issueNumber": 44,
@@ -76,7 +78,8 @@
       "track": "SonIR & Optimization",
       "priority": "P2 - Medium",
       "complexity": "XL",
-      "initialStatus": "In Progress"
+      "initialStatus": "Done",
+      "pullRequest": 65
     },
     {
       "issueNumber": 46,
@@ -84,7 +87,8 @@
       "track": "Compiler Core",
       "priority": "P2 - Medium",
       "complexity": "L",
-      "initialStatus": "Todo"
+      "initialStatus": "Done",
+      "pullRequest": 72
     },
     {
       "issueNumber": 47,
@@ -92,7 +96,8 @@
       "track": "Documentation",
       "priority": "P3 - Low",
       "complexity": "M",
-      "initialStatus": "In Progress"
+      "initialStatus": "Done",
+      "pullRequest": 65
     },
     {
       "issueNumber": 48,
@@ -100,7 +105,8 @@
       "track": "Security & Bounds",
       "priority": "P0 - Critical",
       "complexity": "L",
-      "initialStatus": "In Progress"
+      "initialStatus": "Done",
+      "pullRequest": 65
     },
     {
       "issueNumber": 49,

@@ -24,6 +24,8 @@ import {
   TextDocumentSyncKind,
   TextDocuments,
   TextEdit,
+  type CodeAction,
+  type CodeActionParams,
   type CompletionItem,
   type CompletionParams,
   type CodeLens,
@@ -53,6 +55,8 @@ import {
   type SemanticTokensParams,
   type SemanticTokensLegend,
   type ServerCapabilities,
+  type SymbolInformation,
+  type WorkspaceSymbolParams,
   type Location,
   type WorkspaceEdit,
 } from 'vscode-languageserver/node';
@@ -127,6 +131,8 @@ export interface ForgeWebScriptLspServer {
   implementation(params: ImplementationParams): Location[];
   references(params: ReferenceParams): Location[];
   documentSymbols(params: DocumentSymbolParams): DocumentSymbol[];
+  workspaceSymbols?(params: WorkspaceSymbolParams): SymbolInformation[];
+  codeActions?(params: CodeActionParams): CodeAction[];
   codeLens(params: CodeLensParams): CodeLens[];
   foldingRanges(params: FoldingRangeParams): FoldingRange[];
   inlineValues(params: InlineValueParams): InlineValue[];
@@ -166,6 +172,7 @@ const defaultCapabilities: ServerCapabilities = {
   implementationProvider: true,
   referencesProvider: true,
   documentSymbolProvider: true,
+  codeActionProvider: true,
   codeLensProvider: { resolveProvider: false },
   foldingRangeProvider: true,
   inlineValueProvider: true,
@@ -175,7 +182,7 @@ const defaultCapabilities: ServerCapabilities = {
     legend: semanticTokensLegend,
     full: true,
   },
-  workspaceSymbolProvider: false,
+  workspaceSymbolProvider: true,
   workspace: { workspaceFolders: { supported: true, changeNotifications: true } },
 };
 
@@ -188,6 +195,7 @@ export function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOp
   let supportsWorkDoneProgress = false;
   let progressSequence = 0;
   const documents = new Map<string, ForgeWebScriptLspDocument>();
+  const latestDocumentVersions = new Map<string, number>();
   let queue: Promise<void> = Promise.resolve();
   const publishDiagnostics = options.publishDiagnostics ?? (() => Promise.resolve());
   const emitProgress = (event: ForgeWebScriptLspProgressEvent): void => {
@@ -233,11 +241,20 @@ export function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOp
     if (!initialized || service === undefined) throw new Error('Forge Web Script LSP server is not initialized.');
     return service;
   };
-  const publish = async (uri: string): Promise<void> => {
+  const publish = async (uri: string, expectedVersion?: number): Promise<void> => {
     const languageService = assertReady();
     try {
+      if (expectedVersion !== undefined && (latestDocumentVersions.get(uri) ?? expectedVersion) > expectedVersion) {
+        return;
+      }
       await withProgress('Refreshing Forge Web Script workspace', uri, () => languageService.refreshWorkspace(uri));
+      if (expectedVersion !== undefined && (latestDocumentVersions.get(uri) ?? expectedVersion) > expectedVersion) {
+        return;
+      }
       const analysis = languageService.diagnose(uri);
+      if (expectedVersion !== undefined && (latestDocumentVersions.get(uri) ?? expectedVersion) > expectedVersion) {
+        return;
+      }
       await publishDiagnostics(toPublishDiagnostics(analysis));
     } catch (error: unknown) {
       emitLog({
@@ -294,24 +311,29 @@ export function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOp
       return { capabilities: defaultCapabilities, serverInfo: { name: 'forge-web-script-lsp', version: '0.1.0' } };
     },
     openDocument(document): Promise<void> {
+      latestDocumentVersions.set(document.uri, document.version);
       return enqueue(async () => {
         const languageService = assertReady();
         documents.set(document.uri, document);
         languageService.openDocument(document);
-        await publish(document.uri);
+        await publish(document.uri, document.version);
       });
     },
     updateDocument(document): Promise<void> {
+      const languageService = assertReady();
+      const previous = documents.get(document.uri);
+      if (previous !== undefined && document.version < previous.version) return Promise.resolve();
+      documents.set(document.uri, document);
+      languageService.updateDocument(document);
+      const targetVersion = document.version;
+      latestDocumentVersions.set(document.uri, targetVersion);
       return enqueue(async () => {
-        const languageService = assertReady();
-        const previous = documents.get(document.uri);
-        if (previous !== undefined && document.version < previous.version) return;
-        documents.set(document.uri, document);
-        languageService.updateDocument(document);
-        await publish(document.uri);
+        if ((latestDocumentVersions.get(document.uri) ?? targetVersion) > targetVersion) return;
+        await publish(document.uri, targetVersion);
       });
     },
     closeDocument(uri): Promise<void> {
+      latestDocumentVersions.delete(uri);
       return enqueue(async () => {
         const languageService = assertReady();
         documents.delete(uri);
@@ -384,6 +406,39 @@ export function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOp
       return safeQuery(params.textDocument.uri, [], () =>
         languageService.documentSymbols(params.textDocument.uri).map((symbol) => toDocumentSymbol(symbol)),
       );
+    },
+    workspaceSymbols(params: WorkspaceSymbolParams): SymbolInformation[] {
+      const languageService = assertReady();
+      const results = languageService.workspaceSymbols?.(params.query) ?? [];
+      return results.map(({ symbol, uri: symbolUri }) => ({
+        name: symbol.name,
+        kind: symbolKind(symbol.kind),
+        location: {
+          uri: symbolUri,
+          range: toLspRange(symbol.range),
+        },
+        ...(symbol.containerName === undefined ? {} : { containerName: symbol.containerName }),
+      }));
+    },
+    codeActions(params: CodeActionParams): CodeAction[] {
+      assertReady();
+      if (!documents.has(params.textDocument.uri)) return [];
+      const actions: CodeAction[] = [];
+      for (const diagnostic of params.context.diagnostics) {
+        if (diagnostic.code === 'FWS-PARSE-017') {
+          actions.push({
+            title: 'Close parenthesis',
+            kind: 'quickfix',
+            diagnostics: [diagnostic],
+            edit: {
+              changes: {
+                [params.textDocument.uri]: [TextEdit.insert(diagnostic.range.end, ')')],
+              },
+            },
+          });
+        }
+      }
+      return actions;
     },
     codeLens(params): CodeLens[] {
       const languageService = assertReady();
@@ -561,6 +616,8 @@ export function registerForgeWebScriptLsp(
   connection.onImplementation((params) => server.implementation(params));
   connection.onReferences((params) => server.references(params));
   connection.onDocumentSymbol((params) => server.documentSymbols(params));
+  connection.onWorkspaceSymbol((params) => server.workspaceSymbols?.(params) ?? []);
+  connection.onCodeAction((params) => server.codeActions?.(params) ?? []);
   connection.onCodeLens((params) => server.codeLens(params));
   connection.onFoldingRanges((params) => server.foldingRanges(params));
   connection.onRequest('textDocument/inlineValue', (params: InlineValueParams) => server.inlineValues(params));

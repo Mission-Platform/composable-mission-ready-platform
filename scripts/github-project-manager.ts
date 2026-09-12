@@ -77,7 +77,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Compiler Core',
       priority: 'P0 - Critical',
       complexity: 'XL',
-      initialStatus: 'Todo',
+      initialStatus: 'Done',
+      pullRequest: 65,
     },
     {
       issueNumber: 42,
@@ -93,7 +94,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Standard Library',
       priority: 'P1 - High',
       complexity: 'L',
-      initialStatus: 'In Progress',
+      initialStatus: 'Done',
+      pullRequest: 65,
     },
     {
       issueNumber: 44,
@@ -109,7 +111,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'SonIR & Optimization',
       priority: 'P2 - Medium',
       complexity: 'XL',
-      initialStatus: 'In Progress',
+      initialStatus: 'Done',
+      pullRequest: 65,
     },
     {
       issueNumber: 46,
@@ -117,7 +120,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Compiler Core',
       priority: 'P2 - Medium',
       complexity: 'L',
-      initialStatus: 'Todo',
+      initialStatus: 'Done',
+      pullRequest: 72,
     },
     {
       issueNumber: 47,
@@ -125,7 +129,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Documentation',
       priority: 'P3 - Low',
       complexity: 'M',
-      initialStatus: 'In Progress',
+      initialStatus: 'Done',
+      pullRequest: 65,
     },
     {
       issueNumber: 48,
@@ -133,7 +138,8 @@ export const FWS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Security & Bounds',
       priority: 'P0 - Critical',
       complexity: 'L',
-      initialStatus: 'In Progress',
+      initialStatus: 'Done',
+      pullRequest: 65,
     },
     {
       issueNumber: 49,
@@ -185,7 +191,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Accessibility',
       priority: 'P0 - Critical',
       complexity: 'S',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 63,
     },
     {
@@ -194,7 +200,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Accessibility',
       priority: 'P0 - Critical',
       complexity: 'S',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 63,
     },
     {
@@ -203,7 +209,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Accessibility',
       priority: 'P0 - Critical',
       complexity: 'M',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 63,
     },
     {
@@ -212,7 +218,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Interaction & Polish',
       priority: 'P1 - High',
       complexity: 'M',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 63,
     },
     {
@@ -221,7 +227,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Data Display Parity',
       priority: 'P1 - High',
       complexity: 'M',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 63,
     },
     {
@@ -230,7 +236,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Interaction & Polish',
       priority: 'P1 - High',
       complexity: 'M',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 63,
     },
     {
@@ -239,7 +245,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Overlay & Float',
       priority: 'P2 - Medium',
       complexity: 'L',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 68,
     },
     {
@@ -248,7 +254,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Forms & Validation',
       priority: 'P2 - Medium',
       complexity: 'XL',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 67,
     },
     {
@@ -257,7 +263,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Selection & Combobox',
       priority: 'P2 - Medium',
       complexity: 'L',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 66,
     },
     {
@@ -266,7 +272,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Data Display Parity',
       priority: 'P2 - Medium',
       complexity: 'XL',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 63,
     },
     {
@@ -275,7 +281,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Overlay & Float',
       priority: 'P2 - Medium',
       complexity: 'L',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 68,
     },
     {
@@ -284,7 +290,7 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Content & Editor',
       priority: 'P2 - Medium',
       complexity: 'XL',
-      initialStatus: 'In Review',
+      initialStatus: 'Done',
       pullRequest: 64,
     },
   ],
@@ -297,30 +303,30 @@ export type BoardStage = (typeof BOARD_STAGES)[number];
 
 export const CURRENT_BOARD_STATE: Record<number, BoardStage> = {
   // Milestone 1 (FWS)
-  41: 'Ready',
-  42: 'Ready',
-  43: 'In Progress',
-  44: 'Ready',
-  45: 'In Progress',
-  46: 'Backlog',
-  47: 'In Review',
-  48: 'In Review',
+  41: 'Done',
+  42: 'In Progress',
+  43: 'Done',
+  44: 'In Progress',
+  45: 'Done',
+  46: 'Done',
+  47: 'Done',
+  48: 'Done',
   49: 'Backlog',
   50: 'Backlog',
 
   // Milestone 2 (The Board / UI Components)
-  51: 'In Review',
-  52: 'In Review',
-  53: 'In Review',
-  54: 'In Review',
-  55: 'In Review',
-  56: 'In Review',
-  57: 'In Review',
-  58: 'In Review',
-  59: 'In Review',
-  60: 'In Review',
-  61: 'In Review',
-  62: 'In Review',
+  51: 'Done',
+  52: 'Done',
+  53: 'Done',
+  54: 'Done',
+  55: 'Done',
+  56: 'Done',
+  57: 'Done',
+  58: 'Done',
+  59: 'Done',
+  60: 'Done',
+  61: 'Done',
+  62: 'Done',
 };
 
 async function runGh(args: readonly string[]): Promise<string> {

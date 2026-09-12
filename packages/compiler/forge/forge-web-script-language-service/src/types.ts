@@ -187,6 +187,7 @@ export interface ForgeWebScriptWorkspaceIndex {
   implementation(uri: string, position: ForgeWebScriptPosition): readonly ForgeWebScriptLocation[];
   references(uri: string, position: ForgeWebScriptPosition): readonly ForgeWebScriptLocation[];
   rename(uri: string, position: ForgeWebScriptPosition, newName: string): ForgeWebScriptWorkspaceEdit | undefined;
+  workspaceSymbols?(query?: string): readonly { readonly symbol: ForgeWebScriptSymbol; readonly uri: string }[];
 }
 
 export interface ForgeWebScriptTokenClassification {
@@ -236,6 +237,7 @@ export interface ForgeWebScriptLanguageService {
   inlineValues(uri: string, range?: ForgeWebScriptRange): readonly ForgeWebScriptInlineValue[];
   inlayHints(uri: string, range?: ForgeWebScriptRange): readonly ForgeWebScriptInlayHint[];
   documentSymbols(uri: string): readonly ForgeWebScriptDocumentSymbol[];
+  workspaceSymbols?(query?: string): readonly { readonly symbol: ForgeWebScriptSymbol; readonly uri: string }[];
   refreshWorkspace(uri?: string): Promise<void>;
   invalidateWorkspace(change?: ForgeWebScriptWorkspaceChange): void;
   tokenize(uri: string): readonly ForgeWebScriptTokenClassification[];
