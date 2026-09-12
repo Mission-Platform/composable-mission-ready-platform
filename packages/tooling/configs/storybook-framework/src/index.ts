@@ -281,7 +281,7 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
   // in Node while the browser never eagerly loads Vite.
   const [
     { mergeConfig },
-    { ignoreVueI18nBlocksPlugin, frameworkResolveConditions },
+    { ignoreVueI18nBlocksPlugin, frameworkResolveConditions, DEFAULT_CSS_CONFIG },
     { default: i18nPlugin },
     { existsSync },
   ] = await Promise.all([
@@ -346,6 +346,7 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
   const slotsEntry = `${process.cwd().split('/').slice(0, -2).join('/')}/packages/tooling/configs/storybook-framework/dist/slots.${framework}.js`;
 
   return mergeConfig(config, {
+    css: DEFAULT_CSS_CONFIG,
     plugins,
     // Svelte and Web Components have no JSX transform of their own (`svelte()`
     // only compiles `.svelte` files, and the web-components renderer expects lit
