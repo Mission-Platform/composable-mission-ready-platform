@@ -213,4 +213,85 @@ describe('Forge artifact delivery', () => {
       ),
     ).rejects.toThrow('Failed to fetch');
   });
+
+  it('handles bridge server 500 error response cleanly', async () => {
+    const fetcher = vi.fn<typeof fetch>(
+      async () =>
+        new Response('Internal Server Error', {
+          status: 500,
+          statusText: 'Internal Server Error',
+          headers: { 'content-type': 'text/plain' },
+        }),
+    );
+
+    await expect(
+      sendBundleToBridge(
+        {
+          bridgeUrl: 'http://127.0.0.1:8787/export',
+          authToken: 'test-token',
+          repositoryRootId: 'repo',
+          targetDirectory: 'components',
+        },
+        bundle,
+        false,
+        fetcher,
+      ),
+    ).rejects.toThrow('The repository bridge returned HTTP 500 without a valid response.');
+  });
+
+  it('handles bridge server error response with JSON error message', async () => {
+    const fetcher = vi.fn<typeof fetch>(async () =>
+      Response.json(
+        {
+          protocolVersion: 1,
+          ok: false,
+          error: 'Repository root "invalid-root" not configured on bridge.',
+          results: [],
+        },
+        { status: 400 },
+      ),
+    );
+
+    const result = await sendBundleToBridge(
+      {
+        bridgeUrl: 'http://127.0.0.1:8787/export',
+        authToken: 'test-token',
+        repositoryRootId: 'invalid-root',
+        targetDirectory: 'components',
+      },
+      bundle,
+      false,
+      fetcher,
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.error).toBe('Repository root "invalid-root" not configured on bridge.');
+    expect(result.results).toEqual([]);
+  });
+
+  it('handles aborted signal mid-request cleanly', async () => {
+    const fetcher = vi.fn<typeof fetch>(async (_url, init) => {
+      const signal = init?.signal;
+      return new Promise<Response>((_resolve, reject) => {
+        signal?.addEventListener('abort', () => {
+          reject(new DOMException('The operation was aborted.', 'AbortError'));
+        });
+      });
+    });
+
+    await expect(
+      sendBundleToBridge(
+        {
+          bridgeUrl: 'http://127.0.0.1:8787/export',
+          authToken: 'test-token',
+          repositoryRootId: 'repo',
+          targetDirectory: 'components',
+        },
+        bundle,
+        false,
+        fetcher,
+        50,
+      ),
+    ).rejects.toThrow('The repository bridge export timed out after 50ms.');
+  });
 });

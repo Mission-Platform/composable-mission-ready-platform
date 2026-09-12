@@ -243,4 +243,79 @@ describe('Figma Forge Plugin UI (App.vue)', () => {
     expect(exportButton?.disabled).toBe(false);
     expect(container.querySelector('.status')?.textContent).toContain('timed out');
   });
+
+  it('handles bridge connection drop and allows immediate retry without lockup', async () => {
+    mountApp();
+    await nextTick();
+
+    postFigmaMessage({
+      type: 'bridge-config',
+      config: {
+        bridgeUrl: 'http://127.0.0.1:8787/export',
+        authToken: 'auth-token',
+        repositoryRootId: 'repo-root',
+        targetDirectory: 'src/components',
+      },
+    });
+    postFigmaMessage({ type: 'selection-status', selectionCount: 1 });
+    await nextTick();
+
+    const convertButton = container.querySelector<HTMLButtonElement>('.conversion-panel button');
+    convertButton?.click();
+    await nextTick();
+
+    const convertCall = postMessageSpy.mock.calls.find(
+      (call) => (call[0] as { pluginMessage: { type: string } }).pluginMessage.type === 'convert',
+    );
+    const sentRequestId = (convertCall?.[0] as { pluginMessage: { requestId: string } }).pluginMessage.requestId;
+
+    postFigmaMessage({
+      type: 'conversion-result',
+      requestId: sentRequestId,
+      bundle: sampleBundle,
+    });
+    await nextTick();
+
+    const exportButton = container.querySelector<HTMLButtonElement>('.bridge-actions button:not(.secondary)');
+    expect(exportButton).toBeDefined();
+    expect(exportButton?.disabled).toBe(false);
+
+    vi.spyOn(globalThis, 'confirm').mockReturnValue(true);
+
+    // First attempt: network error / bridge server unreachable
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementationOnce(async () => {
+      throw new TypeError('Failed to fetch');
+    });
+
+    exportButton?.click();
+    await nextTick();
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    await nextTick();
+
+    // Verify UI recovery
+    expect(exportButton?.disabled).toBe(false);
+    expect(container.querySelector('.status')?.textContent).toContain('Failed to fetch');
+
+    // Second attempt: bridge connection restored, retry succeeds
+    fetchSpy.mockImplementationOnce(async () =>
+      Response.json({
+        protocolVersion: 1,
+        ok: true,
+        results: [
+          { path: 'sample-card.tsx', status: 'written' },
+          { path: 'sample-card.module.scss', status: 'written' },
+        ],
+      }),
+    );
+
+    exportButton?.click();
+    await nextTick();
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    await nextTick();
+
+    expect(exportButton?.disabled).toBe(false);
+    expect(container.querySelector('.status')?.textContent).toContain('Repository export accepted.');
+  });
 });
