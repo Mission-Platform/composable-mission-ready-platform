@@ -1926,3 +1926,376 @@ describe('the native `useId`', () => {
     expect(second).toBeGreaterThan(first);
   });
 });
+
+describe('kebab-case HTML attribute observation and mapping', () => {
+  class KebabAttributeElement extends ForgeElement {
+    static readonly properties = {
+      modelValue: {},
+      tabIndexValue: { type: Number },
+      count: { state: true },
+    };
+
+    declare modelValue?: string;
+    declare tabIndexValue?: number;
+    declare count: number;
+
+    render(): TemplateResult {
+      return html`
+        <span class="value">${this.modelValue}</span>
+        <span class="tab">${this.tabIndexValue}</span>
+      `;
+    }
+  }
+  if (!customElements.get('mp-kebab-observation-test')) {
+    customElements.define('mp-kebab-observation-test', KebabAttributeElement);
+  }
+
+  it('registers both lowercase and kebab-case attribute names in observedAttributes', () => {
+    expect(KebabAttributeElement.observedAttributes).toContain('modelvalue');
+    expect(KebabAttributeElement.observedAttributes).toContain('model-value');
+    expect(KebabAttributeElement.observedAttributes).toContain('tabindexvalue');
+    expect(KebabAttributeElement.observedAttributes).toContain('tab-index-value');
+    // State properties must not be observed
+    expect(KebabAttributeElement.observedAttributes).not.toContain('count');
+  });
+
+  it('adopts kebab-case HTML attributes on connection', async () => {
+    const element = document.createElement('mp-kebab-observation-test') as KebabAttributeElement;
+    element.setAttribute('model-value', 'hello-kebab');
+    element.setAttribute('tab-index-value', '5');
+    document.body.append(element);
+    await tick();
+
+    expect(element.modelValue).toBe('hello-kebab');
+    expect(element.tabIndexValue).toBe(5);
+    expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('hello-kebab');
+    expect(element.shadowRoot?.querySelector('.tab')?.textContent).toBe('5');
+  });
+
+  it('adopts lowercase HTML attributes on connection', async () => {
+    const element = document.createElement('mp-kebab-observation-test') as KebabAttributeElement;
+    element.setAttribute('modelvalue', 'hello-lower');
+    document.body.append(element);
+    await tick();
+
+    expect(element.modelValue).toBe('hello-lower');
+    expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('hello-lower');
+  });
+
+  it('updates reactive property and schedules re-render when kebab-case attribute mutates', async () => {
+    const element = document.createElement('mp-kebab-observation-test') as KebabAttributeElement;
+    document.body.append(element);
+    await tick();
+
+    element.setAttribute('model-value', 'updated-kebab');
+    expect(element.modelValue).toBe('updated-kebab');
+    await tick();
+
+    expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('updated-kebab');
+  });
+
+  it('updates reactive property and schedules re-render when lowercase attribute mutates', async () => {
+    const element = document.createElement('mp-kebab-observation-test') as KebabAttributeElement;
+    document.body.append(element);
+    await tick();
+
+    element.setAttribute('modelvalue', 'updated-lower');
+    expect(element.modelValue).toBe('updated-lower');
+    await tick();
+
+    expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('updated-lower');
+  });
+});
+
+describe('bi-directional property-to-attribute reflection', () => {
+  class ReflectStringElement extends ForgeElement {
+    static readonly properties = {
+      modelValue: { reflect: true },
+      customProp: { attribute: 'custom-attribute', reflect: true },
+    };
+
+    declare modelValue?: string;
+    declare customProp?: string;
+
+    render(): TemplateResult {
+      return html`
+        <span>${this.modelValue}</span>
+      `;
+    }
+  }
+  if (!customElements.get('mp-reflect-string-test')) {
+    customElements.define('mp-reflect-string-test', ReflectStringElement);
+  }
+
+  class ReflectBooleanElement extends ForgeElement {
+    static readonly properties = {
+      checked: { type: Boolean, reflect: true },
+    };
+
+    declare checked?: boolean;
+
+    render(): TemplateResult {
+      return html`
+        <span class="checked">${this.checked ? 'yes' : 'no'}</span>
+      `;
+    }
+  }
+  if (!customElements.get('mp-reflect-boolean-test')) {
+    customElements.define('mp-reflect-boolean-test', ReflectBooleanElement);
+  }
+
+  class ReflectInitialElement extends ForgeElement {
+    static readonly properties = {
+      titleText: { reflect: true },
+    };
+
+    declare titleText?: string;
+
+    constructor() {
+      super();
+      this.titleText = 'initial-title';
+    }
+
+    render(): TemplateResult {
+      return html`
+        <span>${this.titleText}</span>
+      `;
+    }
+  }
+  if (!customElements.get('mp-reflect-initial-test')) {
+    customElements.define('mp-reflect-initial-test', ReflectInitialElement);
+  }
+
+  it('reflects property assignment to kebab-case DOM attribute', () => {
+    const element = new ReflectStringElement();
+    document.body.append(element);
+
+    element.modelValue = 'reflected-value';
+    expect(element.getAttribute('model-value')).toBe('reflected-value');
+    expect(element.modelValue).toBe('reflected-value');
+  });
+
+  it('removes DOM attribute when property is set to undefined or null', () => {
+    const element = new ReflectStringElement();
+    document.body.append(element);
+
+    element.modelValue = 'temp';
+    expect(element.hasAttribute('model-value')).toBe(true);
+
+    element.modelValue = undefined;
+    expect(element.hasAttribute('model-value')).toBe(false);
+  });
+
+  it('reflects property with custom attribute name', () => {
+    const element = new ReflectStringElement();
+    document.body.append(element);
+
+    element.customProp = 'custom-value';
+    expect(element.getAttribute('custom-attribute')).toBe('custom-value');
+    expect(element.customProp).toBe('custom-value');
+  });
+
+  it('handles boolean property reflection in both directions', async () => {
+    const element = new ReflectBooleanElement();
+    document.body.append(element);
+    await tick();
+
+    // Setting property to true reflects as boolean attribute
+    element.checked = true;
+    expect(element.hasAttribute('checked')).toBe(true);
+    expect(element.getAttribute('checked')).toBe('');
+    await tick();
+    expect(element.shadowRoot?.querySelector('.checked')?.textContent).toBe('yes');
+
+    // Setting property to false removes boolean attribute
+    element.checked = false;
+    expect(element.hasAttribute('checked')).toBe(false);
+    await tick();
+    expect(element.shadowRoot?.querySelector('.checked')?.textContent).toBe('no');
+
+    // Setting attribute reflects back to property
+    element.setAttribute('checked', '');
+    expect(element.checked).toBe(true);
+    await tick();
+    expect(element.shadowRoot?.querySelector('.checked')?.textContent).toBe('yes');
+
+    // Removing attribute reflects back to property
+    element.removeAttribute('checked');
+    expect(element.checked).toBe(false);
+    await tick();
+    expect(element.shadowRoot?.querySelector('.checked')?.textContent).toBe('no');
+  });
+
+  it('reflects constructor-seeded property to DOM attribute', () => {
+    const element = new ReflectInitialElement();
+    expect(element.getAttribute('title-text')).toBe('initial-title');
+
+    document.body.append(element);
+    expect(element.getAttribute('title-text')).toBe('initial-title');
+  });
+
+  it('does not produce infinite loop when attribute and property are synchronized', () => {
+    const element = new ReflectStringElement();
+    document.body.append(element);
+
+    element.setAttribute('model-value', 'first');
+    expect(element.modelValue).toBe('first');
+
+    element.modelValue = 'second';
+    expect(element.getAttribute('model-value')).toBe('second');
+
+    element.setAttribute('model-value', 'third');
+    expect(element.modelValue).toBe('third');
+  });
+});
+
+describe('ElementInternals form association and lifecycle hooks', () => {
+  const formValues: Array<string | File | FormData | null> = [];
+  const validityRecords: Array<{ flags: ValidityStateFlags; message: string }> = [];
+  let formAssociatedCalls: Array<HTMLFormElement | null> = [];
+  const statesSet = new Set<string>();
+
+  const mockInternals = {
+    setFormValue: (value: string | File | FormData | null) => formValues.push(value),
+    setValidity: (flags: ValidityStateFlags, message: string) => validityRecords.push({ flags, message }),
+    validity: {
+      badInput: false,
+      customError: false,
+      patternMismatch: false,
+      rangeOverflow: false,
+      rangeUnderflow: false,
+      stepMismatch: false,
+      tooLong: false,
+      tooShort: false,
+      typeMismatch: false,
+      valid: true,
+      valueMissing: false,
+    },
+    validationMessage: 'Validation message',
+    willValidate: true,
+    checkValidity: () => true,
+    reportValidity: () => true,
+    states: statesSet,
+    form: undefined as unknown as HTMLFormElement | null,
+    labels: undefined as unknown as NodeList | null,
+  } as unknown as ElementInternals;
+
+  class ComprehensiveFormElement extends ForgeElement {
+    static readonly formAssociated = true;
+    static readonly internals = { attach: true, formAssociated: true };
+    static readonly properties = {
+      modelValue: { reflect: true },
+      disabled: { type: Boolean, reflect: true },
+    };
+
+    declare modelValue?: string;
+    declare disabled?: boolean;
+
+    attachInternals(): ElementInternals {
+      return mockInternals;
+    }
+
+    formAssociatedCallback(form: HTMLFormElement | null): void {
+      super.formAssociatedCallback(form);
+      formAssociatedCalls.push(form);
+    }
+
+    render(): TemplateResult {
+      return html`
+        <span class="value">${this.modelValue}</span>
+      `;
+    }
+  }
+  if (!customElements.get('mp-comprehensive-form-test')) {
+    customElements.define('mp-comprehensive-form-test', ComprehensiveFormElement);
+  }
+
+  it('exposes standard validity and form getters from ElementInternals', () => {
+    const element = new ComprehensiveFormElement();
+    document.body.append(element);
+
+    expect(element.validity.valid).toBe(true);
+    expect(element.validationMessage).toBe('Validation message');
+    expect(element.willValidate).toBe(true);
+    expect(element.checkValidity()).toBe(true);
+    expect(element.reportValidity()).toBe(true);
+  });
+
+  it('forwards reactive property updates to setFormValue', () => {
+    formValues.length = 0;
+    const element = new ComprehensiveFormElement();
+    document.body.append(element);
+
+    element.modelValue = 'initial-value';
+    expect(formValues).toContain('initial-value');
+
+    element.modelValue = 'second-value';
+    expect(formValues.at(-1)).toBe('second-value');
+  });
+
+  it('manages custom state sets via setCustomState', () => {
+    statesSet.clear();
+    const element = new ComprehensiveFormElement();
+    document.body.append(element);
+
+    element.setCustomState('checked', true);
+    expect(statesSet.has('checked') || statesSet.has('--checked')).toBe(true);
+
+    element.setCustomState('checked', false);
+    expect(statesSet.has('checked')).toBe(false);
+  });
+
+  it('invokes formDisabledCallback and sets custom state on disabled update', () => {
+    statesSet.clear();
+    const element = new ComprehensiveFormElement();
+    document.body.append(element);
+
+    element.formDisabledCallback(true);
+    expect(element.disabled).toBe(true);
+    expect(statesSet.has('disabled') || statesSet.has('--disabled')).toBe(true);
+
+    element.formDisabledCallback(false);
+    expect(element.disabled).toBe(false);
+    expect(statesSet.has('disabled')).toBe(false);
+  });
+
+  it('invokes formAssociatedCallback when connected and disconnected', () => {
+    formAssociatedCalls = [];
+    const form = document.createElement('form');
+    const element = new ComprehensiveFormElement();
+    form.append(element);
+    document.body.append(form);
+
+    expect(formAssociatedCalls.length).toBeGreaterThanOrEqual(1);
+    expect(formAssociatedCalls[0]).toBe(form);
+
+    element.remove();
+    expect(formAssociatedCalls.at(-1)).toBeNull();
+  });
+
+  it('resets component value on formResetCallback', () => {
+    const element = new ComprehensiveFormElement();
+    element.setAttribute('model-value', 'original');
+    document.body.append(element);
+
+    element.modelValue = 'modified';
+    expect(element.modelValue).toBe('modified');
+
+    element.formResetCallback();
+    expect(element.modelValue).toBe('original');
+  });
+
+  it('resets component value when parent form is reset', () => {
+    const form = document.createElement('form');
+    const element = new ComprehensiveFormElement();
+    element.setAttribute('model-value', 'reset-target');
+    form.append(element);
+    document.body.append(form);
+
+    element.modelValue = 'dirty-value';
+    expect(element.modelValue).toBe('dirty-value');
+
+    form.reset();
+    expect(element.modelValue).toBe('reset-target');
+  });
+});
