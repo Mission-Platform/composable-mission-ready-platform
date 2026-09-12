@@ -327,6 +327,18 @@ export function readsChildren(text: string): boolean {
   if (trimmed === CHILDREN_SNIPPET) {
     return true;
   }
+  if (trimmed.includes("children") && trimmed.includes("<Slot")) {
+    const stripped = trimmed.replace(
+      /\s*\?\?\s*<\s*Slot(?:\s*\/|\s*>\s*<\s*\/Slot)\s*>$/,
+      "",
+    );
+    if (
+      stripped === CHILDREN_SNIPPET ||
+      /^[A-Za-z_$][\w$]*\s*\??\.\s*children$/.test(stripped)
+    ) {
+      return true;
+    }
+  }
   return new RegExp(
     `^[A-Za-z_$][\\w$]*\\s*\\??\\.\\s*${CHILDREN_SNIPPET}$`,
   ).test(trimmed);

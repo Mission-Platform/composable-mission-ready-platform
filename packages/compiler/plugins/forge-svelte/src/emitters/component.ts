@@ -323,9 +323,25 @@ export function emitSvelteModule(
       return derivedLineByName.get(entry.name) ?? "";
     }) ?? defaultInitializationLines;
 
+  const hasRuntimeValueExports = script.declarations.some((line) =>
+    /^\s*export\s+(?:const|let|var|function|class)\b/.test(line),
+  );
+
+  const moduleDeclarations = hasRuntimeValueExports
+    ? script.declarations.filter((line) => /^\s*export\s+/.test(line))
+    : [];
+  const instanceDeclarations = hasRuntimeValueExports
+    ? script.declarations.filter((line) => !/^\s*export\s+/.test(line))
+    : script.declarations;
+
+  const hasModuleScript = moduleDeclarations.length > 0;
+  const moduleScriptBody = hasModuleScript
+    ? [...imports, ...moduleDeclarations].map((line) => `  ${line}`).join("\n")
+    : "";
+
   const scriptBody = [
-    ...imports,
-    ...script.declarations,
+    ...(hasModuleScript ? [] : imports),
+    ...instanceDeclarations,
     propsLine,
     ...initializationLines,
     ...lowered.effects.map((entry) => effectLine(entry, scope)),
@@ -391,7 +407,11 @@ export function emitSvelteModule(
       : fallback;
   const template = [...snippets, ...helperSnippets, body].join("\n");
 
+  const moduleBlock = hasModuleScript
+    ? `<script module lang="ts">\n${moduleScriptBody}\n</script>\n\n`
+    : "";
+
   return {
-    code: `<script lang="ts">\n${scriptBody}\n</script>\n\n${template}\n`,
+    code: `${moduleBlock}<script lang="ts">\n${scriptBody}\n</script>\n\n${template}\n`,
   };
 }

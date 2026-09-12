@@ -73,6 +73,7 @@ import {
   isSelfShadowingWrapper,
   objectBindingEntries,
   objectBindingRestName,
+  readForOfPush,
   readIfStatement,
   readPropNames,
   readPushStatement,
@@ -850,10 +851,34 @@ function retainedDeclarations(ir: SemanticModule): string[] {
       (statement) =>
         kinds.has(statement.statementKind) &&
         !/^declare\b/.test(statement.text.text.trim()) &&
+        !isComponentAliasDeclaration(
+          statement.text.text,
+          ir.ast.component?.name ?? ir.componentName,
+        ) &&
         (statement.statementKind !== "function" ||
           !containsJsx(statement.text.text)),
     )
     .map((statement) => statement.text.text);
+}
+
+/**
+ * A neutral component can publish an additional name through
+ * `export const Alias = Component`. Svelte represents the component as the
+ * SFC's default export, so the package entry owns this alias re-export and the
+ * source declaration must not be copied into the instance script where the
+ * neutral function binding no longer exists.
+ */
+function isComponentAliasDeclaration(
+  text: string,
+  componentName: string | undefined,
+): boolean {
+  if (componentName === undefined) {
+    return false;
+  }
+  return new RegExp(
+    `^export\\s+(?:const|let|var)\\s+[A-Za-z_$][\\w$]*(?:\\s*:[^=]+)?\\s*=\\s*${componentName}\\s*;?$`,
+    "s",
+  ).test(text.trim());
 }
 
 /** Every slot the module reads, from the inferred facts and the render tree. */
@@ -1151,6 +1176,24 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
   let finalReturn: SvelteReturnPlan | undefined;
   const allRenderNodes = body.flatMap((statement) => statement.renderNodes);
 
+  // Locals that accumulate markup imperatively via `<name>.push(<jsx/>)` — the
+  // push may sit directly in the body, inside an `if`, or inside a `for…of`
+  // loop, so any statement whose text pushes onto a name AND carries render
+  // nodes marks that name as a markup accumulator. Its (empty) array-literal
+  // declaration then seeds a `jsxConstant`, so the pushes fold into template
+  // markup instead of leaking raw JSX into the `<script>`.
+  const markupPushTargets = new Set<string>();
+  for (const statement of body) {
+    if (statement.renderNodes.length === 0) {
+      continue;
+    }
+    for (const match of statement.text.text.matchAll(
+      /\b([A-Za-z_$][\w$]*)\s*\.\s*push\s*\(/g,
+    )) {
+      markupPushTargets.add(match[1]!);
+    }
+  }
+
   for (const statement of body) {
     const text = statement.text.text;
     const fragments = statementFragments(statement);
@@ -1249,6 +1292,24 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
       jsxConstants.set(push.target, {
         text: `[...${pushTarget.text}, ${push.values.join(", ")}]`,
         nodes: [...pushTarget.nodes, ...statement.renderNodes],
+      });
+      continue;
+    }
+
+    // `for (const item of items) list.push(<jsx/>);` extending a lifted markup
+    // local folds into `[...<original>, ...items.map((item) => <jsx/>)]`, which
+    // the template renderer lowers to a nested `{#each}` block.
+    const forPush = readForOfPush(text, fragments);
+    const forPushTarget =
+      forPush === undefined ? undefined : jsxConstants.get(forPush.target);
+    if (forPush !== undefined && forPushTarget !== undefined) {
+      const projection =
+        forPush.values.length === 1
+          ? `${forPush.iterable}.map((${forPush.item}) => ${forPush.values[0]})`
+          : `${forPush.iterable}.flatMap((${forPush.item}) => [${forPush.values.join(", ")}])`;
+      jsxConstants.set(forPush.target, {
+        text: `[...${forPushTarget.text}, ...${projection}]`,
+        nodes: [...forPushTarget.nodes, ...statement.renderNodes],
       });
       continue;
     }
@@ -1380,6 +1441,23 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
           // A local computed **from** JSX has no script form: every template
           // read substitutes (and converts) its initializer instead.
           if (containsMarkup(initializer, statement, allRenderNodes)) {
+            jsxConstants.set(name, {
+              text: initializer,
+              nodes: fragmentsWithin(initializer, statement, allRenderNodes),
+            });
+            continue;
+          }
+
+          // A markup accumulator (`const listItems: MpChild[] = [];`) declares
+          // an array literal that later gains markup via `.push(<jsx/>)`. Its
+          // declaration carries no markup yet, so seed the `jsxConstant` from
+          // the (empty) literal; the subsequent pushes fold into it above.
+          const seededArray = stripParentheses(initializer);
+          if (
+            markupPushTargets.has(name) &&
+            seededArray.startsWith("[") &&
+            seededArray.endsWith("]")
+          ) {
             jsxConstants.set(name, {
               text: initializer,
               nodes: fragmentsWithin(initializer, statement, allRenderNodes),

@@ -360,6 +360,134 @@ export function readSafeBlockBody(
   return { constants, returned };
 }
 
+/** A callback block body that ends in an early-returning `if` before a terminal return. */
+export interface BranchingBlockBody {
+  /** Single-binding `const`/`let` declarations shared by both branches. */
+  readonly constants: { name: string; value: string }[];
+  /** The `if (…)` guard condition. */
+  readonly condition: string;
+  /** The early-return branch: its own leading `const`s and returned expression. */
+  readonly consequent: {
+    constants: { name: string; value: string }[];
+    returned: string;
+  };
+  /** The terminal `return …` reached when the guard is false. */
+  readonly alternate: string;
+}
+
+/**
+ * A block body of the shape:
+ *
+ * ```
+ * const a = …;                 // shared leading consts
+ * if (cond) {                  // one early-return guard, no else
+ *   const b = …;
+ *   return X;
+ * }
+ * return Y;                    // terminal return
+ * ```
+ *
+ * This lowers to an `{#each}` block whose body is `{@const}`s plus a nested
+ * `{#if cond}branch(X){:else}branch(Y){/if}`. It is the shape a component that
+ * conditionally appends a detail row (`ForgeTable`'s `expandedRowRender`) takes
+ * when its map callback returns `[mainRow, detailRow]` vs `[mainRow]`.
+ *
+ * `blockStatements` splits on top-level `;`, so the guard's closing `}` and the
+ * trailing `return Y;` (with no `;` between them) arrive as one chunk; this
+ * reader re-splits that chunk by matching the guard's braces.
+ */
+export function readBranchingBlockBody(
+  text: string,
+  opaqueFragments: readonly string[] = [],
+): BranchingBlockBody | undefined {
+  const statements = blockStatements(text, opaqueFragments)
+    .map((statement) => stripLeadingComments(statement))
+    .filter((statement) => statement.length > 0);
+  if (statements.length === 0) {
+    return undefined;
+  }
+  const last = statements.at(-1)!;
+  if (!/^if\s*\(/.test(last)) {
+    return undefined;
+  }
+  const open = last.indexOf("(");
+  let depth = 0;
+  let close = -1;
+  for (let index = open; index < last.length; index += 1) {
+    const char = last[index];
+    if (char === "(") {
+      depth += 1;
+    } else if (char === ")") {
+      depth -= 1;
+      if (depth === 0) {
+        close = index;
+        break;
+      }
+    }
+  }
+  if (close === -1) {
+    return undefined;
+  }
+  const condition = last.slice(open + 1, close).trim();
+  let cursor = close + 1;
+  while (cursor < last.length && /\s/.test(last[cursor]!)) {
+    cursor += 1;
+  }
+  if (last[cursor] !== "{") {
+    return undefined;
+  }
+  const scan = scanSource(last, opaqueFragments);
+  let braceDepth = 0;
+  let braceClose = -1;
+  for (let index = cursor; index < last.length; index += 1) {
+    if (scan.masked[index]) {
+      continue;
+    }
+    const char = last[index];
+    if (char === "{") {
+      braceDepth += 1;
+    } else if (char === "}") {
+      braceDepth -= 1;
+      if (braceDepth === 0) {
+        braceClose = index;
+        break;
+      }
+    }
+  }
+  if (braceClose === -1) {
+    return undefined;
+  }
+  const thenBlock = last.slice(cursor, braceClose + 1);
+  const trailing = last.slice(braceClose + 1).trim();
+  // An `else` branch, or anything other than a terminal return, is unsupported.
+  if (/^else\b/.test(trailing)) {
+    return undefined;
+  }
+  const alternate = readReturnExpression(trailing);
+  if (alternate === undefined) {
+    return undefined;
+  }
+  const consequent = readSafeBlockBody(thenBlock, opaqueFragments);
+  if (consequent === undefined) {
+    return undefined;
+  }
+  const constants: { name: string; value: string }[] = [];
+  for (const statement of statements.slice(0, -1)) {
+    const declaration = readVariableStatement(statement, opaqueFragments);
+    if (
+      declaration?.initializer === undefined ||
+      !isIdentifierText(declaration.binding)
+    ) {
+      return undefined;
+    }
+    constants.push({
+      name: declaration.binding,
+      value: declaration.initializer,
+    });
+  }
+  return { constants, condition, consequent, alternate };
+}
+
 /** Read a `<target>.push(<value>, …)` statement. */
 export function readPushStatement(
   text: string,
@@ -375,6 +503,77 @@ export function readPushStatement(
     return undefined;
   }
   return { target: match[1]!, values: splitList(inner, opaqueFragments) };
+}
+
+/** A `for (const <item> of <iterable>) <target>.push(<value>, …);` statement. */
+export interface ForOfPushStatement {
+  readonly item: string;
+  readonly iterable: string;
+  readonly target: string;
+  readonly values: readonly string[];
+}
+
+/**
+ * Read a `for (const <item> of <iterable>) { <target>.push(<jsx>, …); }` loop
+ * whose body is a single `push`. A component that builds a markup array
+ * imperatively (`for (const option of visibleOptions) listItems.push(<li/>)`)
+ * folds into `[...<target>, ...<iterable>.map((<item>) => <jsx>)]`, which the
+ * template renderer lowers to an `{#each}` block — the loop itself has no Svelte
+ * script form.
+ */
+export function readForOfPush(
+  text: string,
+  opaqueFragments: readonly string[] = [],
+): ForOfPushStatement | undefined {
+  const statement = text.trim();
+  if (!/^for\s*\(/.test(statement)) {
+    return undefined;
+  }
+  const open = statement.indexOf("(");
+  let depth = 0;
+  let close = -1;
+  for (let index = open; index < statement.length; index += 1) {
+    const char = statement[index];
+    if (char === "(") {
+      depth += 1;
+    } else if (char === ")") {
+      depth -= 1;
+      if (depth === 0) {
+        close = index;
+        break;
+      }
+    }
+  }
+  if (close === -1) {
+    return undefined;
+  }
+  const head = statement.slice(open + 1, close).trim();
+  const headMatch =
+    /^(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s+of\s+([\s\S]+)$/.exec(head);
+  if (headMatch === null) {
+    return undefined;
+  }
+  const iterable = headMatch[2]!.trim();
+  if (!isBalanced(iterable)) {
+    return undefined;
+  }
+  const [inner, ...rest] = branchStatements(
+    statement.slice(close + 1),
+    opaqueFragments,
+  );
+  if (inner === undefined || rest.length > 0) {
+    return undefined;
+  }
+  const push = readPushStatement(inner, opaqueFragments);
+  if (push === undefined) {
+    return undefined;
+  }
+  return {
+    item: headMatch[1]!,
+    iterable,
+    target: push.target,
+    values: push.values,
+  };
 }
 
 /** Every `<propsParameter>.<name>` read in a source text, in first-read order. */

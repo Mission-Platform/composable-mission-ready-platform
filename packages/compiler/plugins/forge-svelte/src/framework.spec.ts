@@ -812,6 +812,137 @@ describe("Svelte Forge framework package", () => {
     expectCompiles(generated.code);
   });
 
+  it("folds JSX pushed into an accumulator into template markup", () => {
+    const loading = element("li", {
+      children: [textChild("Loading")],
+      source: "<li>Loading</li>",
+    });
+    const list = element("ul", {
+      children: [expressionChild("listItems")],
+      source: "<ul>{listItems}</ul>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const listItems: unknown[] = [];"),
+          statement("listItems.push(<li>Loading</li>);", "expression", {
+            renderNodes: [loading],
+          }),
+        ],
+        returned: { expression: list.expression!.text, nodes: [list] },
+      }),
+    });
+
+    const generated = generate(module);
+
+    expect(markup(generated.code)).toBe("<ul><li>Loading</li></ul>");
+    expect(script(generated.code)).not.toContain("listItems.push");
+    expect(script(generated.code)).not.toContain("<li>");
+    expectCompiles(generated.code);
+  });
+
+  it("folds for-of JSX pushes into an each block", () => {
+    const option = element("li", {
+      attributes: [expressionAttribute("key", "option.value")],
+      children: [expressionChild("option.label")],
+      source: "<li key={option.value}>{option.label}</li>",
+    });
+    const list = element("ul", {
+      children: [expressionChild("listItems")],
+      source: "<ul>{listItems}</ul>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const options = properties.options;"),
+          statement("const listItems: unknown[] = [];"),
+          statement(
+            "for (const option of options) { listItems.push(<li key={option.value}>{option.label}</li>); }",
+            "other",
+            { renderNodes: [option] },
+          ),
+        ],
+        returned: { expression: list.expression!.text, nodes: [list] },
+      }),
+      props: [prop("options")],
+      listKeys: [listKey("options", "option.value", true)],
+    });
+
+    const generated = generate(module);
+
+    expect(markup(generated.code)).toBe(
+      "<ul>{#each options as option (option.value)}<li>{option.label}</li>{/each}</ul>",
+    );
+    expect(script(generated.code)).not.toContain("for (const option");
+    expect(script(generated.code)).not.toContain("listItems.push");
+    expectCompiles(generated.code);
+  });
+
+  it("lowers a flatMap block with an early-return row branch", () => {
+    const mainRow = element("tr", {
+      attributes: [expressionAttribute("key", "key")],
+      children: [
+        element("td", {
+          children: [expressionChild("row.label")],
+          source: "<td>{row.label}</td>",
+        }),
+      ],
+      source: "<tr key={key}><td>{row.label}</td></tr>",
+    });
+    const detailRow = element("tr", {
+      attributes: [expressionAttribute("key", "`${key}__expanded`")],
+      children: [
+        element("td", {
+          children: [textChild("Detail")],
+          source: "<td>Detail</td>",
+        }),
+      ],
+      source: "<tr key={`${key}__expanded`}><td>Detail</td></tr>",
+    });
+    const rowsExpression = [
+      "rows.flatMap((row, index) => {",
+      "  const key = row.id ?? index;",
+      "  const mainRow = (<tr key={key}><td>{row.label}</td></tr>);",
+      "  if (expanded.has(key)) {",
+      "    const detailRow = (<tr key={`${key}__expanded`}><td>Detail</td></tr>);",
+      "    return [mainRow, detailRow];",
+      "  }",
+      "  return [mainRow];",
+      "})",
+    ].join("\n");
+    const body = element("tbody", {
+      children: [expressionChild(rowsExpression, [mainRow, detailRow])],
+      source: `<tbody>{${rowsExpression}}</tbody>`,
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [statement("const rows = properties.rows;")],
+        returned: { expression: body.expression!.text, nodes: [body] },
+      }),
+      props: [prop("rows")],
+      listKeys: [listKey("rows", "row.id", true)],
+    });
+
+    const generated = generate(module);
+
+    expect(markup(generated.code)).toContain(
+      "{#each rows as row, index (row.id)}",
+    );
+    expect(markup(generated.code)).toContain("{@const key = row.id ?? index}");
+    expect(markup(generated.code)).toContain("{#if expanded.has(key)}");
+    expect(markup(generated.code)).toContain("<tr><td>{row.label}</td></tr>");
+    expect(markup(generated.code)).toContain("<tr><td>Detail</td></tr>");
+    expect(generated.code).not.toContain("flatMap");
+    expect(script(generated.code)).not.toContain("const mainRow");
+    expectCompiles(generated.code);
+  });
+
   it("renders an optional-chained iteration as an {#each} over a coalesced list", () => {
     // Regression: `tokens?.map(…)` puts the optional-chaining `?` on the target
     // side of the `.map`, so the list expression used to be printed as
