@@ -515,11 +515,11 @@ function graphTypeExports(
   entry: ForgeFileNode,
   sourceNode: ForgeFileNode,
   componentSpecifier: string | undefined,
-  helperExportNames?: ReadonlySet<string>,
+  helperExportNames: ReadonlySet<string> = new Set(),
 ): string[] {
   const names = new Set<string>();
   const isHelperType = (name: string): boolean => {
-    if (helperExportNames === undefined || helperExportNames.size === 0) {
+    if (helperExportNames.size === 0) {
       return false;
     }
     for (const helperName of helperExportNames) {
