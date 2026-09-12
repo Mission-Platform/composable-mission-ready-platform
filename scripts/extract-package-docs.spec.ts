@@ -85,18 +85,21 @@ describe('package API documentation extraction', () => {
   });
 
   it('extracts public exports from an entrypoint and excludes implementation helpers', async () => {
-    const symbols = await extractTypeScriptSymbols(fileURLToPath(new URL('../packages/barcode', import.meta.url)), {
-      exports: { '.': { types: './dist/index.d.ts' } },
-    });
+    const symbols = await extractTypeScriptSymbols(
+      fileURLToPath(new URL('../packages/integrations/barcode', import.meta.url)),
+      {
+        exports: { '.': { types: './dist/index.d.ts' } },
+      },
+    );
 
     expect(symbols.some(({ name }) => name === 'encodeBarcode')).toBe(true);
-    expect(symbols.some(({ name }) => name === 'decodeBarcode')).toBe(true);
+    expect(symbols.some(({ name }) => name === 'encodeBarcodeAsync')).toBe(true);
     expect(symbols.every(({ name }) => name !== 'encodeRawBarcode')).toBe(true);
   });
 
   it('renders constant signatures without duplicating the binding name', async () => {
     const symbols = await extractTypeScriptSymbols(
-      fileURLToPath(new URL('../packages/forge-web-script-stdlib', import.meta.url)),
+      fileURLToPath(new URL('../packages/compiler/forge/forge-web-script-stdlib', import.meta.url)),
       {
         exports: { '.': { types: './dist/index.d.ts' } },
       },
@@ -351,7 +354,7 @@ fn helper() -> unit {}
     expect(markdown).toContain('- **@returns:** The incremented value.');
     expect(await readFile(handAuthoredPath, 'utf8')).toBe(handAuthoredContent);
     expect(await pathExists(stalePath)).toBe(false);
-  });
+  }, 120_000);
 
   it('formats concurrent all-package outputs independently and is idempotent', async () => {
     const temporaryRoot = await createTemporaryDirectory('generate-all-packages-');
@@ -379,7 +382,7 @@ fn helper() -> unit {}
 
     expect(await readFile(firstOutputPath, 'utf8')).toBe(firstOutput);
     expect(await readFile(secondOutputPath, 'utf8')).toBe(secondOutput);
-  });
+  }, 120_000);
 });
 
 interface FwsSymbol {

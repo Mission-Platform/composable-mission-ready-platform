@@ -1,11 +1,10 @@
 // @vitest-environment jsdom
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
 import mermaid from 'mermaid';
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-
-import { toReactComponent } from '../../../../../forge/src/adapters/react';
 
 import { ForgeMermaid } from './forge-mermaid';
 import { mermaidThemeCSS, mermaidThemeVariables } from './forge-mermaid-theme';
@@ -14,15 +13,10 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const mermaidRender = vi.hoisted(() => vi.fn());
 vi.mock('@mission-platform/forge-jsx', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal<typeof import('@mission-platform/forge-jsx')>();
   const react = await import('react');
-  const neutral = await import('../../../../../forge/src/runtime');
   return {
     ...actual,
-    Dynamic: neutral.Dynamic,
-    Fragment: neutral.Fragment,
-    HtmlContent: neutral.HtmlContent,
-    h: neutral.h,
     useEffect: react.useEffect,
     useId: react.useId,
     useRef: react.useRef,
