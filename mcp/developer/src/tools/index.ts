@@ -60,6 +60,7 @@ import { COMMIT_TYPES, applyCommitPlan, createCommitPlan, type CommitPlan } from
 import {
   readGitBlame,
   readGitBranches,
+  readGitChangedFiles,
   readGitDiff,
   readGitGrep,
   readGitLog,
@@ -112,6 +113,7 @@ import {
   getLspCrossRepoReferences,
   getLspTypeHierarchy,
 } from '../lsp/relationships.ts';
+import { getLspDebugContext, reviewChanges, reviewLspStructure } from '../lsp/reviews.ts';
 import { getLspTestsForFile, runLspBuild, runLspTests } from '../lsp/workflows.ts';
 import { validateName, writeIntoPackage, writeScaffold } from '../scaffold/writer.ts';
 
@@ -253,6 +255,7 @@ const gitReadSchema = {
   timeoutMs: z.number().int().min(10).max(120_000).optional(),
   maxOutputBytes: z.number().int().min(1).max(1_048_576).optional(),
 };
+const reviewLimitSchema = z.number().int().min(1).max(500).optional();
 const commitPathSchema = z
   .string()
   .trim()
@@ -1122,6 +1125,66 @@ export function registerTools(server: McpServer): void {
       }
     },
   );
+  server.registerTool(
+    'lsp_debug_context',
+    {
+      description:
+        'Collect bounded debugging evidence for a symbol: current diagnostics, hover information, definition, incoming callers, and related tests. This is read-only.',
+      inputSchema: {
+        ...lspPositionSchema,
+        limit: reviewLimitSchema,
+      },
+    },
+    async (args) => {
+      try {
+        return json(await getLspDebugContext(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_review_structure',
+    {
+      description:
+        'Review one source file structure with bounded diagnostics, document symbols, and related tests. This is read-only.',
+      inputSchema: {
+        filePath: z.string().min(1).max(4096),
+        ...lspSessionSchema,
+        limit: reviewLimitSchema,
+      },
+    },
+    async (args) => {
+      try {
+        return json(await reviewLspStructure(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'review_changes',
+    {
+      description:
+        'Build a read-only code-review evidence report from changed Git files, diff statistics, optional LSP diagnostics, and optional related tests.',
+      inputSchema: {
+        ...gitReadSchema,
+        ref: z.string().max(512).optional(),
+        path: z.string().min(1).max(4096).optional(),
+        staged: z.boolean().optional(),
+        ...lspSessionSchema,
+        maxFiles: z.number().int().min(1).max(100).optional(),
+        includeTests: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await reviewChanges(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
 
   // ---- Two-phase local Git commit -------------------------------------------
   server.registerTool(
@@ -1178,6 +1241,26 @@ export function registerTools(server: McpServer): void {
     async (args) => {
       try {
         return json(readGitStatus(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_changed_files',
+    {
+      description:
+        'Return structured changed-file status for the current worktree, including staged, unstaged, and untracked flags without changing Git state.',
+      inputSchema: {
+        ...gitReadSchema,
+        ref: z.string().max(512).optional(),
+        path: z.string().min(1).max(4096).optional(),
+        staged: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readGitChangedFiles(args));
       } catch (error) {
         return toolError(error);
       }

@@ -12,6 +12,20 @@ const MAX_BLAME_LINE_RANGE = 10_000;
 export type GitReadOptions = GitCommandOptions;
 export type GitReadResult = GitCommandResult;
 
+export interface GitChangedFile {
+  readonly path: string;
+  readonly indexStatus: string;
+  readonly worktreeStatus: string;
+  readonly staged: boolean;
+  readonly unstaged: boolean;
+  readonly untracked: boolean;
+}
+
+export interface GitChangedFilesResult extends GitCommandResult {
+  readonly operation: 'changed-files';
+  readonly files: readonly GitChangedFile[];
+}
+
 function revision(value: string, label = 'revision'): string {
   const normalized = value.trim();
   if (!normalized || normalized.length > 512 || normalized.includes('\0')) {
@@ -80,6 +94,66 @@ function repositoryPath(value: string): string {
   const resolved = resolveRepoPath(value, 'Git path');
   const relative = resolved.slice(root.length).replace(/^[/\\]/, '');
   return relative || '.';
+}
+
+function parseChangedFiles(output: string): GitChangedFile[] {
+  return output
+    .split('\0')
+    .filter(Boolean)
+    .flatMap((entry) => {
+      if (entry.length < 4) return [];
+      const indexStatus = entry[0] ?? ' ';
+      const worktreeStatus = entry[1] ?? ' ';
+      const path = entry.slice(3);
+      if (!path) return [];
+      return [
+        {
+          path,
+          indexStatus,
+          worktreeStatus,
+          staged: indexStatus !== ' ' && indexStatus !== '?',
+          unstaged: worktreeStatus !== ' ' && worktreeStatus !== '?',
+          untracked: indexStatus === '?' && worktreeStatus === '?',
+        },
+      ];
+    });
+}
+
+function parseDiffChangedFiles(output: string): GitChangedFile[] {
+  const fields = output.split('\0').filter(Boolean);
+  const files: GitChangedFile[] = [];
+  for (let index = 0; index + 1 < fields.length; index += 2) {
+    const status = fields[index] ?? '';
+    const path = fields[index + 1] ?? '';
+    if (!status || !path) continue;
+    files.push({
+      path,
+      indexStatus: status[0] ?? 'M',
+      worktreeStatus: ' ',
+      staged: true,
+      unstaged: false,
+      untracked: false,
+    });
+  }
+  return files;
+}
+
+export function readGitChangedFiles(
+  options: GitReadOptions & { readonly path?: string; readonly ref?: string; readonly staged?: boolean } = {},
+): GitChangedFilesResult {
+  const useDiff = options.ref !== undefined || options.staged === true;
+  const args = useDiff
+    ? ['diff', '--name-status', '-z', '--no-color', '--no-ext-diff']
+    : ['status', '--porcelain=v1', '-z', '--untracked-files=all', '--no-renames'];
+  if (useDiff && options.staged) args.push('--cached');
+  if (useDiff && options.ref) args.push('--end-of-options', revision(options.ref));
+  args.push('--');
+  if (options.path) args.push(repositoryPath(options.path));
+  const result = runGit('changed-files', args, options);
+  const files = (useDiff ? parseDiffChangedFiles(result.stdout) : parseChangedFiles(result.stdout)).filter(
+    (file) => !options.staged || file.staged,
+  );
+  return { ...result, operation: 'changed-files', files };
 }
 
 export function readGitStatus(options: GitReadOptions = {}): GitReadResult {

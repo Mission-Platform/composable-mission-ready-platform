@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { after, before, describe, it } from 'node:test';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolveRepoPath } from '@mission-platform/mcp-shared/repo/paths';
 
@@ -21,8 +21,8 @@ import {
 } from '../src/lsp/edits.ts';
 import { getLspRequestSession, openLspDocument, shutdownLspSessions, startLspSession } from '../src/lsp/registry.ts';
 
-const fixture = 'test/.lsp-edit-fixture.json';
-const secondFixture = 'test/.lsp-edit-fixture-2.json';
+const fixture = fileURLToPath(new URL('.lsp-edit-fixture.json', import.meta.url));
+const secondFixture = fileURLToPath(new URL('.lsp-edit-fixture-2.json', import.meta.url));
 let sessionId: string;
 
 function edit(start: number, end: number, newText: string, line = 0) {

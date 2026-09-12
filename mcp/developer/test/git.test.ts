@@ -12,6 +12,7 @@ import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import {
   readGitBlame,
   readGitBranches,
+  readGitChangedFiles,
   readGitDiff,
   readGitGrep,
   readGitLsFiles,
@@ -42,7 +43,7 @@ async function callTool(
   const content = result.content as { type: string; text: string; isError?: boolean }[];
   return {
     text: content.map((entry) => entry.text).join('\n'),
-    isError: content.some((entry) => !!entry.isError),
+    isError: result.isError === true || content.some((entry) => !!entry.isError),
   };
 }
 
@@ -58,6 +59,19 @@ function runFixtureGit(cwd: string, args: readonly string[]): string {
 }
 
 describe('read-only Git tools', () => {
+  it('returns structured changed-file status', () => {
+    const changed = readGitChangedFiles({ maxOutputBytes: 32 * 1024 });
+    assert.equal(changed.operation, 'changed-files');
+    assert.equal(changed.success, true);
+    assert.ok(Array.isArray(changed.files));
+    for (const file of changed.files) {
+      assert.equal(typeof file.path, 'string');
+      assert.equal(typeof file.staged, 'boolean');
+      assert.equal(typeof file.unstaged, 'boolean');
+      assert.equal(typeof file.untracked, 'boolean');
+    }
+  });
+
   it('reads repository status and branches', () => {
     const status = readGitStatus({ maxOutputBytes: 32 * 1024 });
     assert.equal(status.operation, 'status');
@@ -228,6 +242,7 @@ describe('read-only Git tools', () => {
   it('serves every read-only Git operation through MCP', async () => {
     const calls: readonly [string, Record<string, unknown>, string][] = [
       ['git_status', {}, 'status'],
+      ['git_changed_files', {}, 'changed-files'],
       ['git_diff', { path: 'package.json', stat: true }, 'diff'],
       ['git_log', { limit: 1, path: 'package.json' }, 'log'],
       ['git_show', { revision: 'HEAD', path: 'package.json' }, 'show'],

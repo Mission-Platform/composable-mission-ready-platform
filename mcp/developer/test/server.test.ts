@@ -88,7 +88,11 @@ describe('tools', () => {
       'lsp_get_tests_for_file',
       'lsp_run_build',
       'lsp_run_tests',
+      'lsp_debug_context',
+      'lsp_review_structure',
+      'review_changes',
       'git_status',
+      'git_changed_files',
       'git_diff',
       'git_log',
       'git_show',
@@ -785,6 +789,23 @@ describe('tools', () => {
     const content = result.content as { text: string }[];
     assert.match(content[0]?.text ?? '', /Invalid name/);
   });
+
+  it('returns a bounded read-only change review report', async () => {
+    const report = JSON.parse(await callTool('review_changes', { maxFiles: 2 })) as {
+      operation: string;
+      changed: { operation: string; files: unknown[] };
+      diff: { operation: string };
+      selectedFiles: string[];
+      diagnostics: unknown[];
+      tests: unknown[];
+    };
+    assert.equal(report.operation, 'review_changes');
+    assert.equal(report.changed.operation, 'changed-files');
+    assert.equal(report.diff.operation, 'diff');
+    assert.ok(report.changed.files.length >= report.selectedFiles.length);
+    assert.deepEqual(report.diagnostics, []);
+    assert.deepEqual(report.tests, []);
+  });
 });
 
 describe('resources', () => {
@@ -819,6 +840,9 @@ describe('prompts', () => {
       'fws-secure-review',
       'fws-compile-verify',
       'fws-forensic-debug',
+      'debug-code',
+      'review-changes',
+      'review-structure',
       'use-component',
       'create-package',
       'develop-package',
@@ -846,6 +870,17 @@ describe('prompts', () => {
     });
     const messages = result.messages as { content: { text: string } }[];
     assert.match(messages[0]?.content.text ?? '', /@mission-platform\/demo-utils/);
+  });
+
+  it('builds evidence-first debugging and review prompts', async () => {
+    const debug = await client.getPrompt({ name: 'debug-code', arguments: { filePath: 'package.json' } });
+    const debugText = (debug.messages as { content: { text: string } }[])[0]?.content.text ?? '';
+    assert.match(debugText, /lsp_debug_context/);
+
+    const review = await client.getPrompt({ name: 'review-changes', arguments: { ref: 'HEAD~1' } });
+    const reviewText = (review.messages as { content: { text: string } }[])[0]?.content.text ?? '';
+    assert.match(reviewText, /review_changes/);
+    assert.match(reviewText, /severity/);
   });
 });
 

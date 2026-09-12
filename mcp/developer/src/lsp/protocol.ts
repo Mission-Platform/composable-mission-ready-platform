@@ -2,7 +2,7 @@ import { pathToFileURL } from 'node:url';
 
 import type { ChildProcessWithoutNullStreams } from 'node:child_process';
 
-const DEFAULT_TIMEOUT_MS = 5000;
+const DEFAULT_TIMEOUT_MS = 15_000;
 const MAX_MESSAGE_BYTES = 2 * 1000 * 1000;
 
 export interface LspDiagnostic {

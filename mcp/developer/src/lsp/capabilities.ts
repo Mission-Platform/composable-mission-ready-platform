@@ -217,6 +217,16 @@ export const LSP_CAPABILITIES: readonly LspCapability[] = [
     status: 'available',
     mutatesWorkspace: false,
   },
+  {
+    name: 'lsp_debug_context',
+    status: 'available',
+    mutatesWorkspace: false,
+  },
+  {
+    name: 'lsp_review_structure',
+    status: 'available',
+    mutatesWorkspace: false,
+  },
 ] as const;
 
 export function getLspCapabilityReport(): LspCapabilityReport {

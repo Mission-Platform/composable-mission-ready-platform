@@ -224,10 +224,17 @@ export function captureCommitSnapshot(
   ).sort();
   const paths = untrackedPaths(status).sort();
   const untrackedHashes = paths.map((path) => {
-    const hash = requireGitSuccess(
-      runGit('commit-snapshot-untracked', ['hash-object', '--no-filters', '--', path], options),
-    );
-    return `${path}\0${hash.trim()}`;
+    if (!existsSync(resolveRepoPath(path, 'Untracked path', { allowMissing: true }))) {
+      return `${path}\0<missing>`;
+    }
+    const hash = runGit('commit-snapshot-untracked', ['hash-object', '--no-filters', '--', path], options);
+    if (!hash.success) {
+      if (!existsSync(resolveRepoPath(path, 'Untracked path', { allowMissing: true }))) {
+        return `${path}\0<missing>`;
+      }
+      return requireGitSuccess(hash);
+    }
+    return `${path}\0${hash.stdout.trim()}`;
   });
   const selectedWorktreeHashes =
     normalizedMode.kind === 'paths' ? captureSelectedWorktreeHashes(normalizedMode.paths, options) : [];
