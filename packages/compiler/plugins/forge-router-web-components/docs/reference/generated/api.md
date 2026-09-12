@@ -28,6 +28,16 @@ Router outlet that mounts a route's neutral DOM view. Applications may pass a
 `viewAdapter` to the router when views need a custom lifecycle; otherwise a
 Node, string, or DOM factory in `route.component` is rendered directly.
 
+### MpRouterViewElement
+
+**Kind:** component
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+No description provided.
+
 ### registerRouterElements
 
 **Kind:** function
@@ -296,6 +306,16 @@ history, guards, redirects, subscriptions, and browser scroll behavior.
 | ------- | ---------------------------------- | ----------- |
 | options | MpWebComponentsRouterOptions<View> |             |
 
+### getActiveRouter
+
+**Kind:** function
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+No description provided.
+
 ### MpRouterLoadingFallback
 
 **Kind:** component
@@ -342,6 +362,22 @@ No description provided.
 | ------ | ------------------ | ----------- |
 | router | MpRouterAdapter    |             |
 | to     | MpRouteLocationRaw |             |
+
+### setActiveRouter
+
+**Kind:** function
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name   | Type                                     | Description |
+| ------ | ---------------------------------------- | ----------- |
+| router | MpWebComponentsRouter<View> \| undefined |             |
 
 ## `src/utils/forge-router-web-components`
 

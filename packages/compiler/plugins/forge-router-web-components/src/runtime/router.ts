@@ -60,8 +60,19 @@ export interface MpWebComponentsRouter<View = unknown> extends MpRouterAdapter {
   readonly viewAdapter?: MpRouteViewAdapter<View, HTMLElement>;
   readonly loadingFallback?: MpRouterLoadingFallback;
   recordFor(route: MpResolvedLocation): MpRouteMatch | undefined;
-  resolveView(route: MpResolvedLocation): Promise<View | undefined>;
+  resolveView(route: MpResolvedLocation, depth?: number): Promise<View | undefined>;
+  resolveViewForRoute(targetRoute: MpRoute<View>, route?: MpResolvedLocation): Promise<View | undefined>;
   dispose(): void;
+}
+
+let activeRouter: MpWebComponentsRouter<unknown> | undefined;
+
+export function setActiveRouter<View>(router: MpWebComponentsRouter<View> | undefined): void {
+  activeRouter = router as MpWebComponentsRouter<unknown> | undefined;
+}
+
+export function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined {
+  return activeRouter;
 }
 
 function failure(
@@ -145,18 +156,17 @@ export function createWebComponentsRouter<View = unknown>(
     applyScroll(position);
   };
 
-  const loadView = (route: MpResolvedLocation): View | Promise<View> | undefined => {
-    const match = resolver.match(route.path);
-    const definition = match?.flat.route as MpRoute<View> | undefined;
-    if (!definition) {
-      return undefined;
-    }
+  const loadViewForDefinition = (
+    definition: MpRoute<View>,
+    route: MpResolvedLocation,
+    isRetainedAncestor = false,
+  ): View | Promise<View> | undefined => {
     const factory = definition.component ?? definition.lazy;
     if (!factory) {
       return undefined;
     }
     const cached = viewCache.get(definition);
-    if (cached && (!cached.settled || cached.route === route)) {
+    if (cached && (!cached.settled || cached.route === route || isRetainedAncestor)) {
       return cached.promise;
     }
     if (cached) {
@@ -184,7 +194,25 @@ export function createWebComponentsRouter<View = unknown>(
     return view instanceof Promise ? viewPromise : view;
   };
 
-  const resolveView = (route: MpResolvedLocation): Promise<View | undefined> => Promise.resolve(loadView(route));
+  const resolveViewForRoute = (targetRoute: MpRoute<View>, route?: MpResolvedLocation): Promise<View | undefined> => {
+    const targetLocation = route ?? signal.value ?? resolver.resolve(history.location);
+    return Promise.resolve(loadViewForDefinition(targetRoute, targetLocation, true));
+  };
+
+  const resolveView = (route: MpResolvedLocation, depth?: number): Promise<View | undefined> => {
+    const match = resolver.match(route.path);
+    if (!match) {
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      return Promise.resolve<View | undefined>(undefined);
+    }
+    const branch = [...match.flat.parents, match.flat.route] as MpRoute<View>[];
+    const targetRoute = depth === undefined ? (match.flat.route as MpRoute<View>) : branch[depth];
+    if (!targetRoute) {
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      return Promise.resolve<View | undefined>(undefined);
+    }
+    return Promise.resolve(loadViewForDefinition(targetRoute, route));
+  };
 
   const isPendingView = (view: View | Promise<View> | undefined): view is Promise<View> =>
     view instanceof Promise || (typeof view === 'object' && view !== null && 'then' in view);
@@ -274,9 +302,15 @@ export function createWebComponentsRouter<View = unknown>(
       }
 
       try {
-        const view = loadView(to);
-        if (isPendingView(view)) {
-          await view;
+        const fromMatch = from ? resolver.match(from.path) : undefined;
+        const fromBranch = fromMatch ? ([...fromMatch.flat.parents, fromMatch.flat.route] as MpRoute<View>[]) : [];
+        const branch = [...match.flat.parents, match.flat.route] as MpRoute<View>[];
+        for (const definition of branch) {
+          const isRetainedAncestor = fromBranch.includes(definition) && definition !== match.flat.route;
+          const view = loadViewForDefinition(definition, to, isRetainedAncestor);
+          if (isPendingView(view)) {
+            await view;
+          }
         }
       } catch (error) {
         if (isStale()) {
@@ -376,10 +410,14 @@ export function createWebComponentsRouter<View = unknown>(
     },
     recordFor: (route) => resolver.match(route.path),
     resolveView,
+    resolveViewForRoute,
     ready: initialReady,
     dispose: () => {
       if (!disposed) {
         disposed = true;
+        if (activeRouter === (router as unknown)) {
+          setActiveRouter(undefined);
+        }
         navigationToken += 1;
         const result = failure(
           signal.value ?? resolver.resolve(history.location),
