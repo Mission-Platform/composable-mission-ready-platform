@@ -49,7 +49,15 @@
     "validate:target": "pnpm exec turbo run validate:target --filter=@mission-platform/scripts --",
     "validate:runtime": "pnpm exec turbo run validate:runtime --filter=@mission-platform/scripts --",
     "visual:parity": "pnpm exec turbo run visual:parity --filter=@mission-platform/scripts --",
-    "test:runtime-validation": "pnpm exec turbo run test:runtime-validation --filter=@mission-platform/scripts --"
+    "test:runtime-validation": "pnpm exec turbo run test:runtime-validation --filter=@mission-platform/scripts --",
+    "worktree:list": "node --experimental-strip-types scripts/worktree-manager.ts list",
+    "worktree:setup": "node --experimental-strip-types scripts/worktree-manager.ts setup",
+    "worktree:create": "node --experimental-strip-types scripts/worktree-manager.ts create",
+    "worktree:remove": "node --experimental-strip-types scripts/worktree-manager.ts remove",
+    "project:setup": "node --experimental-strip-types scripts/github-project-manager.ts setup",
+    "project:status": "node --experimental-strip-types scripts/github-project-manager.ts status",
+    "project:board": "node --experimental-strip-types scripts/github-project-manager.ts board",
+    "project:plan": "node --experimental-strip-types scripts/github-project-manager.ts plan"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:utilities",

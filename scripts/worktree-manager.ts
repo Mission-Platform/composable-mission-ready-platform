@@ -260,7 +260,16 @@ async function main(): Promise<void> {
 
     case 'setup': {
       const target = args[1];
-      await setupWorktree(target);
+      if (target === '--all') {
+        const worktrees = await listWorktrees();
+        console.log(`[worktree-manager] Setting up all ${worktrees.length} worktrees...`);
+        for (const wt of worktrees) {
+          console.log(`\n--- Setting up: ${wt.path} (${wt.branch}) ---`);
+          await setupWorktree(wt.path);
+        }
+      } else {
+        await setupWorktree(target);
+      }
       break;
     }
 

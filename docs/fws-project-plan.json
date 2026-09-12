@@ -1,10 +1,12 @@
 {
   "title": "Forge Web Script Architecture & Modernization",
+  "projectTitle": "Forge Web Script Architecture & Modernization",
   "description": "End-to-end modernization of the Forge Web Script (FWS) compiler, Sea-of-Nodes IR (SonIR 2.0), standard library, linear regex engine, and capability security runtime.",
   "organization": "Mission-Platform",
   "repository": "Mission-Platform/composable-mission-ready-platform",
   "milestoneTitle": "FWS Architecture & Runtime Enhancements",
   "milestoneNumber": 1,
+  "planPath": "docs/fws-project-plan.json",
   "fields": {
     "status": [
       "Todo",

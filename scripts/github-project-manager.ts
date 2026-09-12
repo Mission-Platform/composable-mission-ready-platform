@@ -239,7 +239,8 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Overlay & Float',
       priority: 'P2 - Medium',
       complexity: 'L',
-      initialStatus: 'Ready',
+      initialStatus: 'In Review',
+      pullRequest: 68,
     },
     {
       issueNumber: 58,
@@ -247,7 +248,8 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Forms & Validation',
       priority: 'P2 - Medium',
       complexity: 'XL',
-      initialStatus: 'Ready',
+      initialStatus: 'In Review',
+      pullRequest: 67,
     },
     {
       issueNumber: 59,
@@ -255,7 +257,8 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Selection & Combobox',
       priority: 'P2 - Medium',
       complexity: 'L',
-      initialStatus: 'Ready',
+      initialStatus: 'In Review',
+      pullRequest: 66,
     },
     {
       issueNumber: 60,
@@ -263,7 +266,8 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Data Display Parity',
       priority: 'P2 - Medium',
       complexity: 'XL',
-      initialStatus: 'Ready',
+      initialStatus: 'In Review',
+      pullRequest: 63,
     },
     {
       issueNumber: 61,
@@ -271,7 +275,8 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Overlay & Float',
       priority: 'P2 - Medium',
       complexity: 'L',
-      initialStatus: 'Ready',
+      initialStatus: 'In Review',
+      pullRequest: 68,
     },
     {
       issueNumber: 62,
@@ -279,7 +284,8 @@ export const UI_COMPONENTS_PROJECT_CONFIG: ProjectConfig = {
       track: 'Content & Editor',
       priority: 'P2 - Medium',
       complexity: 'XL',
-      initialStatus: 'Ready',
+      initialStatus: 'In Review',
+      pullRequest: 64,
     },
   ],
 };
@@ -309,12 +315,12 @@ export const CURRENT_BOARD_STATE: Record<number, BoardStage> = {
   54: 'In Review',
   55: 'In Review',
   56: 'In Review',
-  57: 'Ready',
-  58: 'Ready',
-  59: 'Ready',
-  60: 'Ready',
-  61: 'Ready',
-  62: 'Ready',
+  57: 'In Review',
+  58: 'In Review',
+  59: 'In Review',
+  60: 'In Review',
+  61: 'In Review',
+  62: 'In Review',
 };
 
 async function runGh(args: readonly string[]): Promise<string> {
@@ -394,7 +400,9 @@ export async function showProjectStatus(which: 'components' | 'fws' | 'all' = 'a
       const stage = CURRENT_BOARD_STATE[item.issueNumber] ?? item.initialStatus;
       const stageStr = stage.padEnd(11);
       const prSuffix = item.pullRequest ? ` [PR #${item.pullRequest}]` : '';
-      console.log(`${issueStr} | ${priorityStr} | ${complexityStr} | ${trackStr} | ${stageStr} | ${item.title}${prSuffix}`);
+      console.log(
+        `${issueStr} | ${priorityStr} | ${complexityStr} | ${trackStr} | ${stageStr} | ${item.title}${prSuffix}`,
+      );
     }
 
     console.log('\nSummary by Priority:');
@@ -409,7 +417,9 @@ export async function showProjectStatus(which: 'components' | 'fws' | 'all' = 'a
 
     console.log('\nSummary by Board Stage:');
     for (const stage of BOARD_STAGES) {
-      const count = config.issues.filter((i) => (CURRENT_BOARD_STATE[i.issueNumber] ?? i.initialStatus) === stage).length;
+      const count = config.issues.filter(
+        (i) => (CURRENT_BOARD_STATE[i.issueNumber] ?? i.initialStatus) === stage,
+      ).length;
       console.log(`- ${stage.padEnd(11)}: ${count} issues`);
     }
   }
@@ -613,9 +623,7 @@ async function main(): Promise<void> {
       break;
     }
     default: {
-      console.log(
-        'Usage: node --experimental-strip-types scripts/github-project-manager.ts [plan|status|setup|board]',
-      );
+      console.log('Usage: node --experimental-strip-types scripts/github-project-manager.ts [plan|status|setup|board]');
       break;
     }
   }
