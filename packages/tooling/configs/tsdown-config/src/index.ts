@@ -192,6 +192,34 @@ function collectCssFiles(directory: string, base: string = directory): string[] 
   return results;
 }
 
+function findJsByBaseName(outputDirectory: string, baseName: string, fileName: string): string | undefined {
+  const matches: string[] = [];
+  function walk(currentDirectory: string): void {
+    for (const entry of fs.readdirSync(currentDirectory, { withFileTypes: true })) {
+      const fullPath = path.join(currentDirectory, entry.name);
+      if (entry.isDirectory()) {
+        walk(fullPath);
+      } else if (entry.isFile() && entry.name.endsWith('.js')) {
+        const nameWithoutExtension = path.posix.basename(entry.name, '.js');
+        if (
+          nameWithoutExtension === baseName ||
+          nameWithoutExtension === `${baseName}.vue` ||
+          nameWithoutExtension === `${baseName}.module` ||
+          nameWithoutExtension === fileName
+        ) {
+          matches.push(path.relative(outputDirectory, fullPath).split(path.sep).join('/'));
+        }
+      }
+    }
+  }
+  try {
+    walk(outputDirectory);
+  } catch {
+    return undefined;
+  }
+  return matches[0];
+}
+
 /**
  * Resolve the JS module that "owns" an extracted stylesheet `cssRelative`, so a
  * side-effect import can be threaded back into a module that consumers actually
@@ -206,17 +234,36 @@ function collectCssFiles(directory: string, base: string = directory): string[] 
  * that chunk is the owner. Returns the owner's path relative to the output dir,
  * or `undefined` when no owning chunk exists on disk.
  */
-function resolveCssOwner(outputDirectory: string, cssRelative: string): string | undefined {
+export function resolveCssOwner(outputDirectory: string, cssRelative: string): string | undefined {
   const directory = path.posix.dirname(cssRelative);
   const fileName = path.posix.basename(cssRelative, '.css');
   const join = (name: string): string => (directory === '.' ? name : `${directory}/${name}`);
 
   const vueMarker = '.vue_vue_type_style';
-  const candidates: string[] = fileName.includes(vueMarker)
-    ? [join(`${fileName.slice(0, fileName.indexOf(vueMarker))}.js`)]
-    : [join(`${fileName}.module.js`), join(`${fileName}.js`)];
+  if (fileName.includes(vueMarker)) {
+    const base = fileName.slice(0, fileName.indexOf(vueMarker));
+    const candidates = [join(`${base}.js`), join(`${base}.vue.js`)];
+    const match = candidates.find((candidate) => fs.existsSync(path.join(outputDirectory, candidate)));
+    if (match !== undefined) return match;
+    return findJsByBaseName(outputDirectory, base, fileName);
+  }
 
-  return candidates.find((candidate) => fs.existsSync(path.join(outputDirectory, candidate)));
+  const baseName = fileName.endsWith('.module') ? fileName.slice(0, -'.module'.length) : fileName;
+  const candidates: string[] = [
+    join(`${fileName}.module.js`),
+    join(`${fileName}.js`),
+    join(`${baseName}.module.js`),
+    join(`${baseName}.js`),
+    join(`${baseName}.vue.js`),
+    join('index.js'),
+  ];
+
+  const localMatch = candidates.find((candidate) => fs.existsSync(path.join(outputDirectory, candidate)));
+  if (localMatch !== undefined) {
+    return localMatch;
+  }
+
+  return findJsByBaseName(outputDirectory, baseName, fileName);
 }
 
 /**
@@ -242,7 +289,7 @@ function resolveCssOwner(outputDirectory: string, cssRelative: string): string |
  * CSS loading. The stylesheets are already hashed once, so downstream bundlers
  * ship them verbatim.
  */
-function cssBundlePlugin(): TsdownPlugin {
+export function cssBundlePlugin(): TsdownPlugin {
   const plugin = {
     name: '@mission-platform/tsdown-config:css-relink',
     enforce: 'post',
@@ -257,14 +304,30 @@ function cssBundlePlugin(): TsdownPlugin {
         if (owner === undefined) {
           continue;
         }
-        const specifier = `./${path.posix.basename(cssRelative)}`;
-        const importStatement = `import ${JSON.stringify(specifier)};`;
+        const ownerDirectory = path.posix.dirname(owner);
+        const relativeCss = path.posix.relative(ownerDirectory, cssRelative);
+        const specifier = relativeCss.startsWith('.') ? relativeCss : `./${relativeCss}`;
         const ownerPath = path.join(outputDirectory, owner);
         const code = fs.readFileSync(ownerPath, 'utf8');
-        if (code.includes(importStatement)) {
+
+        // Check if the import already exists (with any quote style or optional semicolon)
+        const escapedSpecifier = specifier.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+        const importRegex = new RegExp(String.raw`import\s*['"]${escapedSpecifier}['"]`);
+        if (importRegex.test(code)) {
           continue;
         }
-        fs.writeFileSync(ownerPath, `${importStatement}\n${code}`);
+
+        const importStatement = `import ${JSON.stringify(specifier)};`;
+        const directiveMatch = code.match(/^(?:['"]use client['"];?\s*\n?)+/);
+        let updatedCode: string;
+        if (directiveMatch === null) {
+          updatedCode = `${importStatement}\n${code}`;
+        } else {
+          const directive = directiveMatch[0];
+          const rest = code.slice(directive.length);
+          updatedCode = `${directive}${importStatement}\n${rest}`;
+        }
+        fs.writeFileSync(ownerPath, updatedCode);
       }
     },
   };
@@ -284,7 +347,7 @@ function cssBundlePlugin(): TsdownPlugin {
  */
 function resolveDtsOption(
   dts: boolean | DtsOptions,
-  options?: { readonly rootDir: string; readonly outputRoot?: string },
+  options?: { readonly rootDir: string; readonly outputRoot?: string; readonly outDir?: string },
 ): boolean | DtsOptions {
   if (dts === false) {
     return false;
@@ -292,6 +355,7 @@ function resolveDtsOption(
 
   const rootDirectory = options?.rootDir ?? process.cwd();
   const outputRoot = options?.outputRoot;
+  const outDirectory = options?.outDir ?? 'dist';
 
   const resolved: DtsOptions = dts === true ? { build: false, generator: 'tsgo' } : { build: false, ...dts };
   if (outputRoot === undefined) {
@@ -305,7 +369,7 @@ function resolveDtsOption(
     return { ...resolved, generator: 'oxc' };
   }
 
-  const stagedDeclarationDirectory = resolveTsdownOutputDirectory(rootDirectory, 'dist', outputRoot);
+  const stagedDeclarationDirectory = resolveTsdownOutputDirectory(rootDirectory, outDirectory, outputRoot);
   const existingCompilerOptions =
     resolved.compilerOptions !== undefined && typeof resolved.compilerOptions === 'object'
       ? resolved.compilerOptions
@@ -333,7 +397,12 @@ function resolveDtsOption(
  * Materialize a stage-local tsconfig so `tsc -b` cannot reuse the package's
  * live `declarationDir` / `tsBuildInfoFile` from a previous final build.
  */
-function writeStagedTsconfig(rootDirectory: string, outputRoot: string, baseTsconfig: string): string {
+function writeStagedTsconfig(
+  rootDirectory: string,
+  outputRoot: string,
+  baseTsconfig: string,
+  outDirectory: string = 'dist',
+): string {
   fs.mkdirSync(outputRoot, { recursive: true });
   const stagedTsconfigPath = path.join(outputRoot, 'tsconfig.forge-stage.json');
   // Absolute extends stays valid for both package-local stages and external repro roots.
@@ -341,7 +410,7 @@ function writeStagedTsconfig(rootDirectory: string, outputRoot: string, baseTsco
     extends: path.resolve(baseTsconfig),
     compilerOptions: {
       rootDir: path.resolve(rootDirectory, 'src'),
-      declarationDir: resolveTsdownOutputDirectory(rootDirectory, 'dist', outputRoot),
+      declarationDir: resolveTsdownOutputDirectory(rootDirectory, outDirectory, outputRoot),
       tsBuildInfoFile: path.join(outputRoot, 'tsconfig.build.tsbuildinfo'),
       incremental: true,
     },
@@ -355,6 +424,7 @@ function resolveTsconfigOption(
   rootDirectory: string,
   tsconfig: string | boolean | undefined,
   outputRoot?: string,
+  outDirectory: string = 'dist',
 ): string | boolean {
   const resolvedBase =
     tsconfig === undefined
@@ -374,7 +444,7 @@ function resolveTsconfigOption(
         ? packageTsconfig
         : path.resolve(rootDirectory, 'tsconfig.json')
       : resolvedBase;
-  return writeStagedTsconfig(rootDirectory, outputRoot, baseTsconfig);
+  return writeStagedTsconfig(rootDirectory, outputRoot, baseTsconfig, outDirectory);
 }
 
 /**
@@ -538,8 +608,8 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     entry: resolveEntry(rootDir, entry),
     format,
     platform,
-    dts: resolveDtsOption(dts, { rootDir, outputRoot }),
-    tsconfig: resolveTsconfigOption(rootDir, tsconfig, outputRoot),
+    dts: resolveDtsOption(dts, { rootDir, outputRoot, outDir: outDirectory }),
+    tsconfig: resolveTsconfigOption(rootDir, tsconfig, outputRoot, outDirectory),
     clean,
     // Match the historical Vite/tsc library artifacts (no `.map` files in `dist/`).
     sourcemap: false,
