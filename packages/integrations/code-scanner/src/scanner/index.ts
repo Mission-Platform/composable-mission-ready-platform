@@ -294,6 +294,7 @@ function locateAndDecodeAdapted(
           possibleFormat,
           options.tryHarder === false ? 0 : 1,
           options.alsoInverted === false ? 0 : 1,
+          options.pureBarcode === true ? 1 : 0,
         )
       : artifact.scan_and_decode_with_options(
           width,
@@ -306,6 +307,7 @@ function locateAndDecodeAdapted(
           possibleFormat,
           options.tryHarder === false ? 0 : 1,
           options.alsoInverted === false ? 0 : 1,
+          options.pureBarcode === true ? 1 : 0,
         );
     const result = resultFromWire(encoded);
     if (result !== null) return logScanResult(result);
@@ -492,6 +494,7 @@ function locateAndDecode(
           possibleFormat,
           options.tryHarder === false ? 0 : 1,
           options.alsoInverted === false ? 0 : 1,
+          options.pureBarcode === true ? 1 : 0,
         )
       : artifact.scan_and_decode_with_options(
           width,
@@ -504,6 +507,7 @@ function locateAndDecode(
           possibleFormat,
           options.tryHarder === false ? 0 : 1,
           options.alsoInverted === false ? 0 : 1,
+          options.pureBarcode === true ? 1 : 0,
         );
     const result = resultFromRaw(artifact, encoded);
     if (result !== null) return logScanResult(result);

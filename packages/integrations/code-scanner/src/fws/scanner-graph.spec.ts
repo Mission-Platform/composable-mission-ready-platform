@@ -955,8 +955,9 @@ describe('compiled scanner FWS foundation graph', () => {
       writeArray(api, new Array(image.width * image.height + 1).fill(0)),
       writeArray(api, new Array(16).fill(0)),
     ];
-    expect(readString(api, api.scan_and_decode_with_options(...args, 5, 1, 1))).toBe('R10500000000072069076076079');
-    expect(readString(api, api.scan_and_decode_with_options(...args, 0, 1, 1))).toBe('');
+    expect(readString(api, api.scan_and_decode_with_options(...args, 5, 1, 1, 0))).toBe('R10500000000072069076076079');
+    expect(readString(api, api.scan_and_decode_with_options(...args, 5, 1, 1, 1))).toBe('R10500000000072069076076079');
+    expect(readString(api, api.scan_and_decode_with_options(...args, 0, 1, 1, 0))).toBe('');
     const invertedArgs = [
       image.width,
       image.height,
@@ -969,7 +970,7 @@ describe('compiled scanner FWS foundation graph', () => {
       writeArray(api, new Array(image.width * image.height + 1).fill(0)),
       writeArray(api, new Array(16).fill(0)),
     ];
-    expect(readString(api, api.scan_and_decode_with_options(...invertedArgs, -1, 0, 0))).toBe('');
+    expect(readString(api, api.scan_and_decode_with_options(...invertedArgs, -1, 0, 0, 0))).toBe('');
   });
 
   it('decodes packed PDF417 and MaxiCode fixtures through the linked image entry', () => {

@@ -508,6 +508,14 @@ describe('scanImageData — Data Matrix codes', () => {
     expect(result?.timestamp).toBeGreaterThan(0);
   });
 
+  it('honors format filters and pure-barcode mode', () => {
+    const matrix = encodeMatrix('datamatrix', 'HELLO');
+    const image = renderModules(matrix.width, (x, y) => matrix.modules[y * matrix.width + x] === 1);
+
+    expect(scanImageData(image, { formats: ['DATA_MATRIX'], pureBarcode: true })?.text).toBe('HELLO');
+    expect(scanImageData(image, { formats: ['CODE_128'] })).toBeNull();
+  });
+
   it.skip('locates and decodes a Data Matrix code back to its payload', () => {
     const value = 'HELLO';
     const result = scanImageData(renderDataMatrixImage(value));

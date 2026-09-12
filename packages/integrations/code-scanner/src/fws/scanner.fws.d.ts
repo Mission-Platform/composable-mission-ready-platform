@@ -35,6 +35,7 @@ export interface ForgeScannerExports {
     possibleFormat: number,
     tryHarder: number,
     alsoInverted: number,
+    pureBarcode: number,
   ) => string;
   readonly scan_and_decode_roi: (
     width: number,
@@ -64,6 +65,7 @@ export interface ForgeScannerExports {
     possibleFormat: number,
     tryHarder: number,
     alsoInverted: number,
+    pureBarcode: number,
   ) => string;
   readonly scan_and_decode_all: (
     width: number,
@@ -98,6 +100,7 @@ export interface ForgeScannerRawExports {
     possibleFormat: number,
     tryHarder: number,
     alsoInverted: number,
+    pureBarcode: number,
   ) => ForgeScannerRawBytes;
   readonly scan_and_decode_roi: (
     width: number,
@@ -127,6 +130,7 @@ export interface ForgeScannerRawExports {
     possibleFormat: number,
     tryHarder: number,
     alsoInverted: number,
+    pureBarcode: number,
   ) => ForgeScannerRawBytes;
   readonly scan_and_decode_all: (
     width: number,

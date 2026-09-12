@@ -39,7 +39,7 @@ export interface ScanOptions {
 /** Rich ZXing-style result returned by every scanner entry point. */
 export interface ScanResult {
   /** Which ZXing format was located in the image. */
-  format: ScanFormat;
+  readonly format: ScanFormat;
   readonly text: string | null;
   readonly rawBytes: Uint8Array | null;
   readonly numBits: number;

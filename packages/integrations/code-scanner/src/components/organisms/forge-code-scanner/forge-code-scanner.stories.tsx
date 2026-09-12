@@ -7,9 +7,10 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
  * `@mission-platform/code-scanner`. The component is authored **once** in the
  * framework-neutral JSX dialect (`@mission-platform/forge-jsx`) and compiled at
  * build time by `@mission-platform/vite-plugin-forge` to every supported
- * framework. It decodes a QR code, Data Matrix, or 1D barcode from an uploaded
- * image or a live camera stream using the dependency-free Rust/WebAssembly
- * scanner engine.
+ * framework. It decodes linked Data Matrix, Aztec, RSS, PDF417, MaxiCode, and
+ * 1D formats from an uploaded
+ * image or a live camera stream using the dependency-free FWS/WebAssembly
+ * scanner engine and emits the rich `ScanResult` shape.
  *
  * This is a single, framework-agnostic story: the bare
  * `@mission-platform/code-scanner` import auto-resolves to the framework selected
@@ -34,6 +35,12 @@ const meta = {
     showFileUpload: { control: 'boolean' },
     showCamera: { control: 'boolean' },
     stopOnDecode: { control: 'boolean' },
+    formats: {
+      control: 'multi-select',
+      options: ['DATA_MATRIX', 'AZTEC', 'CODE_128', 'PDF_417', 'MAXICODE'],
+    },
+    tryHarder: { control: 'boolean' },
+    alsoInverted: { control: 'boolean' },
     debug: { control: 'boolean' },
   },
   args: {
@@ -43,6 +50,9 @@ const meta = {
     showFileUpload: true,
     showCamera: true,
     stopOnDecode: true,
+    formats: undefined,
+    tryHarder: true,
+    alsoInverted: true,
     debug: false,
     onResult: (result) => console.log('scanned', result),
     onError: (error) => console.warn('scan error', error),

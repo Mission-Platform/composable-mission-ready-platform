@@ -93,7 +93,8 @@ fn scan_two_d_from_luma_with_hint(
   meta: Array<i32>,
   possible_format: i32,
   try_harder: bool,
-  also_inverted: bool
+  also_inverted: bool,
+  pure_barcode: bool
 ) -> string {
   let global_bits: u32 = image.binarize(data, width, height);
   if global_bits != 0 {
@@ -122,7 +123,7 @@ fn scan_two_d_from_luma_with_hint(
 }
 
 fn scan_two_d_from_luma(data: u32, width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>, packed: Array<i32>, meta: Array<i32>) -> string {
-  return string_concat("", scan_two_d_from_luma_with_hint(data, width, height, modules, erasures, packed, meta, -1, true, true));
+  return string_concat("", scan_two_d_from_luma_with_hint(data, width, height, modules, erasures, packed, meta, -1, true, true, false));
 }
 fn scan_two_d_from_array(width: i32, height: i32, luma: Array<i32>, modules: Array<i32>, erasures: Array<i32>, packed: Array<i32>, meta: Array<i32>) -> string {
   let data: u32 = image.luma_copy_from_array(width, height, luma);
@@ -176,7 +177,8 @@ fn scan_and_decode_with_options_internal(
   meta: Array<i32>,
   possible_format: i32,
   try_harder: bool,
-  also_inverted: bool
+  also_inverted: bool,
+  pure_barcode: bool
 ) -> string {
   if !valid_scan_dimensions(width, height) { return string_concat("", c.result_none()); }
   let data: u32 = image.luma_copy_from_array(width, height, luma);
@@ -192,8 +194,10 @@ fn scan_and_decode_with_options_internal(
     possible_format,
     try_harder,
     also_inverted,
+    pure_barcode,
   ));
   if string_length(two_d) > 0 { return string_concat("", two_d); }
+  if pure_barcode { return string_concat("", c.result_none()); }
   return string_concat("", scan_one_row_with_hint(width, height, luma, modules, possible_format));
 }
 
@@ -208,7 +212,7 @@ export fn scan_and_decode(
   packed: Array<i32>,
   meta: Array<i32>
 ) -> string {
-  return string_concat("", scan_and_decode_with_options_internal(width, height, luma, modules, erasures, packed, meta, -1, true, true));
+  return string_concat("", scan_and_decode_with_options_internal(width, height, luma, modules, erasures, packed, meta, -1, true, true, false));
 }
 
 export fn scan_and_decode_with_options(
@@ -221,7 +225,8 @@ export fn scan_and_decode_with_options(
   meta: Array<i32>,
   possible_format: i32,
   try_harder: i32,
-  also_inverted: i32
+  also_inverted: i32,
+  pure_barcode: i32
 ) -> string {
   return string_concat("", scan_and_decode_with_options_internal(
     width,
@@ -234,6 +239,7 @@ export fn scan_and_decode_with_options(
     possible_format,
     try_harder != 0,
     also_inverted != 0,
+    pure_barcode != 0,
   ));
 }
 
@@ -251,7 +257,8 @@ fn scan_and_decode_roi_with_options_internal(
   meta: Array<i32>,
   possible_format: i32,
   try_harder: bool,
-  also_inverted: bool
+  also_inverted: bool,
+  pure_barcode: bool
 ) -> string {
   if !valid_scan_dimensions(width, height) || roi_x < 0 || roi_y < 0 ||
      roi_width <= 0 || roi_height <= 0 || roi_x + roi_width > width ||
@@ -275,6 +282,7 @@ fn scan_and_decode_roi_with_options_internal(
     possible_format,
     try_harder,
     also_inverted,
+    pure_barcode,
   ));
   if string_length(cropped_value) > 0 { return string_concat("", cropped_value); }
   return string_concat("", c.result_none());
@@ -308,6 +316,7 @@ export fn scan_and_decode_roi(
     -1,
     true,
     true,
+    false,
   ));
 }
 
@@ -325,7 +334,8 @@ export fn scan_and_decode_roi_with_options(
   meta: Array<i32>,
   possible_format: i32,
   try_harder: i32,
-  also_inverted: i32
+  also_inverted: i32,
+  pure_barcode: i32
 ) -> string {
   return string_concat("", scan_and_decode_roi_with_options_internal(
     width,
@@ -342,6 +352,7 @@ export fn scan_and_decode_roi_with_options(
     possible_format,
     try_harder != 0,
     also_inverted != 0,
+    pure_barcode != 0,
   ));
 }
 
