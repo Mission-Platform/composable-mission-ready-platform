@@ -1502,6 +1502,85 @@ export interface WizardStep
 
 A single wizard step.
 
+## `src/components/organisms/forge-form/forge-form`
+
+### defaultFormContext
+
+**Kind:** constant
+
+```typescript
+export const defaultFormContext: FormContextValue;
+```
+
+Baseline default form context provided when useFormContext is called outside a ForgeForm.
+
+### ForgeForm
+
+**Kind:** function
+
+```typescript
+function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement;
+```
+
+Context-driven form component supporting controlled and uncontrolled state,
+Standard Schema / Zod / Yup validation, accessible error summary, and framework adapters.
+
+#### Parameters
+
+| Name       | Type                     | Description |
+| ---------- | ------------------------ | ----------- |
+| properties | Readonly<ForgeFormProps> |             |
+
+### ForgeFormProperties
+
+**Kind:** type
+
+```typescript
+export type ForgeFormProperties = ForgeFormProps;
+```
+
+No description provided.
+
+### ForgeFormProps
+
+**Kind:** interface
+
+```typescript
+export interface ForgeFormProps
+```
+
+No description provided.
+
+### FormContext
+
+**Kind:** constant
+
+```typescript
+export const FormContext: MpContext<FormContextValue | undefined>;
+```
+
+No description provided.
+
+### FormContextValue
+
+**Kind:** interface
+
+```typescript
+export interface FormContextValue
+```
+
+No description provided.
+
+### useFormContext
+
+**Kind:** function
+
+```typescript
+function useFormContext(): FormContextValue;
+```
+
+Hook to access the form context in child fields or nested components.
+
 ## `src/components/organisms/forge-schema-form-dialog/forge-schema-form-dialog`
 
 ### ForgeSchemaFormDialog

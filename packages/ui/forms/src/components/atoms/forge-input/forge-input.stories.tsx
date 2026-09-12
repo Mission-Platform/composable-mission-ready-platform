@@ -1,6 +1,7 @@
-import { ForgeInput } from '@mission-platform/forms';
 import { useArgs } from 'storybook/preview-api';
 import { expect, userEvent, within } from 'storybook/test';
+
+import { ForgeInput } from '@mission-platform/forms';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
