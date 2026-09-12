@@ -9,6 +9,16 @@ pnpm workspaces and Turborepo.
 The recommended way to create a package is using the Mission Platform Developer MCP tool, which ensures all
 configurations, scripts, and folder structures follow the platform's standards.
 
+### Forge package builds
+
+Forge component, hook, and CMS packages use one `defineTsdownLibrary` call. Add
+the native plugins returned by `tsdownForgeComponentPlugins`,
+`tsdownForgeHookPlugins`, or `tsdownForgeCmsPlugins` to its `plugins` option;
+these plugins prepare and publish targets from tsdown lifecycle hooks rather than
+performing graph discovery while configuration is evaluated. Keep framework and
+CMS output plugins caller-owned and explicit so target selection remains
+composable and isolated.
+
 ### 1. Scaffold with MCP
 
 Use the `scaffold_package` tool to generate the skeleton.
@@ -110,7 +120,7 @@ Use the shared configuration from `stylelint.config.mjs` instead of duplicating 
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
