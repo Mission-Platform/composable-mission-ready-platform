@@ -394,19 +394,20 @@ export fn current() -> i64 { return now(); }`;
     initialize(server);
     await server.openDocument({ uri, version: 1, text: 'export fn broken(' });
 
-    const actions = server.codeActions?.({
-      textDocument: { uri },
-      range: { start: { line: 0, character: 0 }, end: { line: 0, character: 17 } },
-      context: {
-        diagnostics: [
-          {
-            range: { start: { line: 0, character: 16 }, end: { line: 0, character: 17 } },
-            message: 'Expected closing parenthesis',
-            code: 'FWS-PARSE-017',
-          },
-        ],
-      },
-    }) ?? [];
+    const actions =
+      server.codeActions?.({
+        textDocument: { uri },
+        range: { start: { line: 0, character: 0 }, end: { line: 0, character: 17 } },
+        context: {
+          diagnostics: [
+            {
+              range: { start: { line: 0, character: 16 }, end: { line: 0, character: 17 } },
+              message: 'Expected closing parenthesis',
+              code: 'FWS-PARSE-017',
+            },
+          ],
+        },
+      }) ?? [];
 
     expect(actions).toContainEqual(
       expect.objectContaining({

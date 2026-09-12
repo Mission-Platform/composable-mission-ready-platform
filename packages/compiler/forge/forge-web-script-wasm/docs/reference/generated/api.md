@@ -294,7 +294,7 @@ No description provided.
 
 ```typescript
 export type ForgeWebScriptWasmPrimitiveType =
-  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 ```
 
 No description provided.
@@ -372,7 +372,18 @@ export type ForgeWebScriptWasmStandardLibraryOperation =
   | 'signal-schedule'
   | 'async-schedule-microtask'
   | 'async-worker-post'
-  | 'async-worker-receive';
+  | 'async-worker-receive'
+  | 'memory-copy'
+  | 'memory-fill'
+  | 'simd-binarize'
+  | 'simd-i8x16-splat'
+  | 'simd-i8x16-eq'
+  | 'simd-i8x16-lt-u'
+  | 'simd-i8x16-bitmask'
+  | 'simd-i32x4-splat'
+  | 'simd-i32x4-add'
+  | 'simd-v128-load'
+  | 'simd-v128-store';
 ```
 
 No description provided.
