@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { parseForgeWebScript } from '../../../forge-web-script/dist/index.js';
+import { parseForgeWebScript } from '../../../../compiler/forge/forge-web-script/dist/index.js';
 
 const fileName = resolve(import.meta.dirname, 'locate-qr.fws');
 const source = readFileSync(fileName, 'utf8');

@@ -1,8 +1,8 @@
 // MaxiCode locator/decoder retained in the scanner graph (fixed 30x33 hex grid).
 import "./common.fws" as c;
 import "./image.fws" as img;
-import "../../../matrix-code/src/fws/matrix-decoder-core.fws" as dec;
-import "../../../matrix-code/src/fws/matrix-decoder-rs.fws" as rs;
+import "./decoders/matrix/matrix-decoder-core.fws" as dec;
+import "./decoders/matrix/matrix-decoder-rs.fws" as rs;
 
 // MaxiCode is always 30 columns x 33 rows. Odd rows are shifted half a module.
 // meta: [30, 33, origin_x, origin_y, module_px]

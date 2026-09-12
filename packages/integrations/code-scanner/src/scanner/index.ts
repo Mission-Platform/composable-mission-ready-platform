@@ -21,7 +21,7 @@ import type { ImageLike, Roi, ScanFormat, ScanResult } from '../types';
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
 const textEncoder = new TextEncoder();
 
-function decodeUtf8(value: string): string {
+function decodeTriplets(value: string): string {
   if (value.length === 0 || value.length % 3 !== 0) return '';
   const bytes = new Uint8Array(value.length / 3);
   for (let index = 0; index < bytes.length; index += 1) {
@@ -30,10 +30,15 @@ function decodeUtf8(value: string): string {
     bytes[index] = byte;
   }
   try {
-    return `1${textDecoder.decode(bytes)}`;
+    return textDecoder.decode(bytes);
   } catch {
     return '';
   }
+}
+
+function decodeUtf8(value: string): string {
+  const decoded = decodeTriplets(value);
+  return decoded.length > 0 ? `1${decoded}` : '';
 }
 
 const scannerImports: ForgeScannerImports = {
@@ -101,25 +106,35 @@ async function loadRawScanner(): Promise<RawScannerExports> {
  * {@link ScanFormat} name.
  */
 const FORMAT_NAMES: Readonly<Record<number, ScanFormat>> = {
-  0: 'qr',
-  1: 'datamatrix',
+  0: 'aztec',
+  1: 'barcode',
   2: 'barcode',
-  3: 'aztec',
-  4: 'pdf417',
-  5: 'databar',
-  6: 'maxicode',
+  3: 'barcode',
+  4: 'barcode',
+  5: 'datamatrix',
+  6: 'barcode',
+  7: 'barcode',
+  8: 'barcode',
+  9: 'maxicode',
+  10: 'pdf417',
+  11: 'qr',
+  12: 'databar',
+  13: 'databar',
+  14: 'barcode',
+  15: 'barcode',
 };
 
-/** Convert the compact FWS result wire format into the public scan result. */
+/** Convert the fixed-width FWS result wire format into the public scan result. */
 function resultFromWire(encoded: string): ScanResult | null {
-  if (encoded.length < 2) return null;
-  const format = FORMAT_NAMES[Number(encoded[1])];
+  if (encoded.length < 3) return null;
+  const format = FORMAT_NAMES[Number(encoded.slice(1, 3))];
   if (format === undefined) return null;
   if (encoded[0] === 'L') return { format, value: null };
-  if (encoded[0] === 'D') return { format, value: encoded.slice(2) };
-  return null;
+  if (encoded[0] !== 'D') return null;
+  const rawValue = encoded.slice(3);
+  const value = format === 'datamatrix' || format === 'aztec' ? decodeTriplets(rawValue) || rawValue : rawValue;
+  return { format, value };
 }
-
 interface ScannerScratch {
   readonly modules: Int32Array;
   readonly erasures: Int32Array;

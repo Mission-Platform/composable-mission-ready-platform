@@ -1,0 +1,12 @@
+// Analyzer fixture: foundation callers must reject invalid dimensions before
+// attempting image or packed-bit access. This fixture is not linked into the
+// scanner artifact; it is intentionally small and deterministic.
+import "../foundation.fws" as foundation;
+
+export fn fixture_rejects_invalid_dimensions() -> i32 {
+  return foundation.foundation_validate_dimensions(0, 32, 32);
+}
+
+export fn fixture_rejects_oversized_dimensions() -> i32 {
+  return foundation.foundation_validate_dimensions(4096, 4097, 4096);
+}

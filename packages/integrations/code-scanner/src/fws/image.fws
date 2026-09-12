@@ -123,6 +123,18 @@ export fn luma_get(data: u32, width: i32, height: i32, x: i32, y: i32) -> i32 {
   return c.mem_get_u8(data, y * width + x);
 }
 
+// Create an owned inverted luma copy so raw-pointer callers are never mutated.
+export fn invert_luma_copy(data: u32, width: i32, height: i32) -> u32 {
+  let pixels: i32 = checked_image_len(width, height);
+  if pixels < 0 || data == 0 { return 0; }
+  let out: u32 = c.mem_alloc_bytes(pixels);
+  let mut index: i32 = 0;
+  while index < pixels {
+    c.mem_set_u8(out, index, 255 - c.mem_get_u8(data, index));
+    index = index + 1;
+  }
+  return out;
+}
 // Crop luma into a new buffer. Writes width/height into meta[0]/meta[1]. Returns data ptr or 0.
 export fn crop_luma(
   data: u32,

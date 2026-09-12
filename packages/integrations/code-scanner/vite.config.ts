@@ -12,12 +12,7 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
 
 /** FWS roots used to compile the self-contained scanner graph. */
 const componentsModule = path.resolve(import.meta.dirname, 'src/components/index.ts');
-const scannerProjectRoots = [
-  path.resolve(import.meta.dirname, 'src/fws'),
-  path.resolve(import.meta.dirname, '../qr-code/src/fws'),
-  path.resolve(import.meta.dirname, '../matrix-code/src/fws'),
-  path.resolve(import.meta.dirname, '../barcode/src/fws'),
-];
+const scannerProjectRoots = [path.resolve(import.meta.dirname, 'src/fws')];
 
 function scannerForgePlugin(linkProfile: 'static' | 'dynamic'): Plugin {
   return forgeWebScriptPlugin({

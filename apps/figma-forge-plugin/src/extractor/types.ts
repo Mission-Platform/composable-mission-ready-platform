@@ -13,6 +13,7 @@ export interface FigmaPaint {
   readonly color?: FigmaColor;
   readonly opacity?: number;
   readonly imageReference?: string;
+  readonly imageHash?: string;
   readonly gradientStops?: readonly { readonly position: number; readonly color: FigmaColor }[];
 }
 
@@ -106,7 +107,36 @@ export interface FigmaImageBytes {
 export interface FigmaExtractionOptions {
   readonly fileKey?: string;
   readonly resolveVariable?: (id: string) => FigmaVariableBinding | undefined;
-  readonly loadImage?: (imageReference: string, node: FigmaNode) => Promise<FigmaImageBytes | undefined>;
+  readonly loadImage?: (imageReferenceOrHash: string, node: FigmaNode) => Promise<FigmaImageBytes | undefined>;
+}
+
+export interface FigmaHostImage {
+  readonly getBytesAsync: () => Promise<Uint8Array>;
+}
+
+export interface FigmaHostVariableCollection {
+  readonly id?: string;
+  readonly name?: string;
+  readonly modes?: readonly { readonly modeId: string; readonly name: string }[];
+  readonly defaultModeId?: string;
+}
+
+export interface FigmaHostVariable {
+  readonly id: string;
+  readonly name: string;
+  readonly description?: string;
+  readonly variableCollectionId?: string;
+  readonly resolvedType?: string;
+  readonly valuesByMode?: Readonly<Record<string, unknown>>;
+  readonly collection?: string;
+  readonly alias?: string;
+  readonly mode?: 'Light' | 'Dark';
+  readonly resolvedValue?: string | number;
+}
+
+export interface FigmaHostVariables {
+  readonly getVariableById?: (id: string) => FigmaHostVariable | null | undefined;
+  readonly getVariableCollectionById?: (id: string) => FigmaHostVariableCollection | null | undefined;
 }
 
 export interface FigmaSelectionHost {
@@ -125,4 +155,6 @@ export interface FigmaSelectionHost {
   readonly fileKey?: string;
   readonly resolveVariable?: FigmaExtractionOptions['resolveVariable'];
   readonly loadImage?: FigmaExtractionOptions['loadImage'];
+  readonly getImageByHash?: (hash: string) => FigmaHostImage | null | undefined;
+  readonly variables?: FigmaHostVariables;
 }

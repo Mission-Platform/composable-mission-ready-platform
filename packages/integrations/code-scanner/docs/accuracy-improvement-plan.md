@@ -35,8 +35,7 @@ Before Phase 1 a single scan was:
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → decodeQr / decodeMatrix / decodeBarcode (JS façades)
-  → wasm qr/matrix/barcode-decode    [cross into a *different* wasm module]
+  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 
@@ -70,8 +69,8 @@ image (JS)
 
 `scan_and_decode(width, height, luma) -> Option<ScanOutcome>` runs the whole pipeline inside `src/fws/scanner.fws` and
 returns the **decoded payload** directly (`value` is empty when a symbol is located but undecodable). The JS façade
-(`scanner/index.ts`) is a thin marshalling layer that links the QR, matrix, and barcode FWS sources at build time;
-those packages remain independently publishable.
+(`scanner/index.ts`) is a thin marshalling layer over scanner-owned decoder FWS sources;
+the encoder packages remain independently publishable and expose no decoder façade.
 
 #### Why this is tractable now
 

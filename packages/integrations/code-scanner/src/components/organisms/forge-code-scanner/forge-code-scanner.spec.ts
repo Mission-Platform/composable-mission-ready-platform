@@ -3,7 +3,7 @@ import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { toReactComponent } from '../../../../../forge/src/adapters/react';
+import { toReactComponent } from '../../../../../../core/forge-adapters/src/adapters/react';
 
 import { ForgeCodeScanner } from './forge-code-scanner';
 
@@ -12,7 +12,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 vi.mock('@mission-platform/forge-jsx', async (importOriginal) => {
   const actual = await importOriginal();
   const react = await import('react');
-  const neutral = await import('../../../../../forge/src/runtime');
+  const neutral = await import('../../../../../../core/forge-jsx/src/runtime');
   return {
     ...actual,
     Dynamic: neutral.Dynamic,

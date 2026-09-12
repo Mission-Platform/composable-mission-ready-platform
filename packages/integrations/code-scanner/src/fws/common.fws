@@ -3,18 +3,27 @@
 
 // Result wire format consumed by the TypeScript adapter:
 //   ""              -> not located
-//   "L" + format    -> located but undecodable (format is one ASCII digit 0-6)
+//   "L" + format    -> located but undecodable (format is a fixed two-digit id)
 //   "D" + format + value -> located and decoded
 // Multi-scan joins decoded entries with ASCII RS (0x1e).
 
 export fn format_digit(format: i32) -> string {
-  if format == 0 { return "0"; }
-  if format == 1 { return "1"; }
-  if format == 2 { return "2"; }
-  if format == 3 { return "3"; }
-  if format == 4 { return "4"; }
-  if format == 5 { return "5"; }
-  return "6";
+  if format == 0 { return "00"; }
+  if format == 1 { return "01"; }
+  if format == 2 { return "02"; }
+  if format == 3 { return "03"; }
+  if format == 4 { return "04"; }
+  if format == 5 { return "05"; }
+  if format == 6 { return "06"; }
+  if format == 7 { return "07"; }
+  if format == 8 { return "08"; }
+  if format == 9 { return "09"; }
+  if format == 10 { return "10"; }
+  if format == 11 { return "11"; }
+  if format == 12 { return "12"; }
+  if format == 13 { return "13"; }
+  if format == 14 { return "14"; }
+  return "15";
 }
 
 export fn result_none() -> string {
@@ -34,23 +43,29 @@ export fn result_is_none(result: string) -> bool {
 }
 
 export fn result_is_decoded(result: string) -> bool {
-  return string_length(result) >= 2 && string_byte_at(result, 0) == 68;
+  return string_length(result) >= 3 && string_byte_at(result, 0) == 68;
 }
 
 export fn result_is_located(result: string) -> bool {
-  return string_length(result) >= 2 && string_byte_at(result, 0) == 76;
+  return string_length(result) >= 3 && string_byte_at(result, 0) == 76;
+}
+
+export fn result_is_binary_marker(result: string) -> bool {
+  return string_length(result) >= 3 && string_byte_at(result, 0) == 1;
 }
 
 export fn result_format(result: string) -> i32 {
-  if string_length(result) < 2 { return -1; }
-  return string_byte_at(result, 1) - 48;
+  if string_length(result) < 3 { return -1; }
+  let first: i32 = string_byte_at(result, 1) - 48;
+  let second: i32 = string_byte_at(result, 2) - 48;
+  if first < 0 || first > 9 || second < 0 || second > 9 { return -1; }
+  return first * 10 + second;
 }
 
 export fn result_value(result: string) -> string {
   if !result_is_decoded(result) { return ""; }
-  return string_slice(result, 2, string_length(result));
+  return string_slice(result, 3, string_length(result));
 }
-
 export fn multi_separator() -> string {
   return "\u001E";
 }

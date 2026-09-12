@@ -10,12 +10,7 @@ export default defineVitestConfig({
     plugins: [
       forgeWebScriptPlugin({
         root: import.meta.dirname,
-        projectRoots: [
-          resolve(import.meta.dirname, 'src/fws'),
-          resolve(import.meta.dirname, '../qr-code/src/fws'),
-          resolve(import.meta.dirname, '../matrix-code/src/fws'),
-          resolve(import.meta.dirname, '../barcode/src/fws'),
-        ],
+        projectRoots: [resolve(import.meta.dirname, 'src/fws')],
         crossProjectLinkMode: 'static',
         defaultLinkMode: 'static',
         linkProfile: 'static',

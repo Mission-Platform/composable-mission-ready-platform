@@ -1,0 +1,105 @@
+// Pharmacode encoder graph for values from 3 through 131070.
+
+fn pharm_u32_to_i32_len(value: u32) -> i32 {
+  let mut remaining: u32 = value;
+  let mut place: i32 = 1;
+  let mut result: i32 = 0;
+  while remaining > 0 {
+    let mut bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn pharm_modules_len(modules: Array<i32>) -> i32 {
+  return pharm_u32_to_i32_len(modules.length());
+}
+
+
+fn pharm_is_digit_at(value: string, index: i32) -> bool {
+  let code: i32 = string_byte_at(value, index);
+  return code >= 48 && code <= 57;
+}
+
+
+
+
+
+
+
+
+
+fn pharm_valid_bits(modules: Array<i32>, index: i32, end: i32) -> bool {
+  if index >= end { return true; }
+  if index >= pharm_modules_len(modules) { return false; }
+  let bit: i32 = modules[index];
+  if bit != 0 && bit != 1 { return false; }
+  return pharm_valid_bits(modules, index + 1, end);
+}
+
+fn pharm_run_length(modules: Array<i32>, end: i32, start: i32, bit: i32, length: i32) -> i32 {
+  if start + length >= end || start + length >= pharm_modules_len(modules) { return length; }
+  if modules[start + length] != bit { return length; }
+  return pharm_run_length(modules, end, start, bit, length + 1);
+}
+
+fn pharm_narrowest_run(modules: Array<i32>, end: i32, index: i32, current: i32) -> i32 {
+  if index >= end { return current; }
+  let width: i32 = pharm_run_length(modules, end, index, modules[index], 0);
+  let mut next: i32 = current;
+  if current == 0 || width < current { next = width; }
+  return pharm_narrowest_run(modules, end, index + width, next);
+}
+
+fn pharm_pharmacode_value(modules: Array<i32>, end: i32, index: i32, narrow: i32, result: i32, bars: i32) -> i32 {
+  if index >= end {
+    if bars == 0 || result < 3 || result > 131070 { return -1; }
+    return result;
+  }
+  let bit: i32 = modules[index];
+  let width: i32 = pharm_run_length(modules, end, index, bit, 0);
+  if bit == 1 {
+    let mut next: i32 = result * 2 + 1;
+    if width >= narrow * 2 { next = result * 2 + 2; }
+    if next > 131070 { return -1; }
+    return pharm_pharmacode_value(modules, end, index + width, narrow, next, bars + 1);
+  }
+  return pharm_pharmacode_value(modules, end, index + width, narrow, result, bars);
+}
+
+fn pharm_digit_char(value: i32) -> string {
+  if value == 0 { return "0"; }
+  if value == 1 { return "1"; }
+  if value == 2 { return "2"; }
+  if value == 3 { return "3"; }
+  if value == 4 { return "4"; }
+  if value == 5 { return "5"; }
+  if value == 6 { return "6"; }
+  if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+fn pharm_decimal(value: i32) -> string {
+  if value < 10 { return string_concat(pharm_digit_char(value), ""); }
+  return string_concat(pharm_decimal(value / 10), pharm_digit_char(value % 10));
+}
+
+fn pharm_decode_pharmacode_frame(modules: Array<i32>, length: i32) -> string {
+  if length > pharm_modules_len(modules) || length == 0 || !pharm_valid_bits(modules, 0, length) { return ""; }
+  let narrow: i32 = pharm_narrowest_run(modules, length, 0, 0);
+  if narrow <= 0 { return ""; }
+  let parsed: i32 = pharm_pharmacode_value(modules, length, 0, narrow, 0, 0);
+  if parsed < 0 { return ""; }
+  return string_concat(pharm_decimal(parsed), "");
+}
+
+export fn pharm_decode_pharmacode(modules: Array<i32>) -> string {
+  return string_concat(pharm_decode_pharmacode_frame(modules, pharm_modules_len(modules)), "");
+}
+
+export fn pharm_decode_pharmacode_row(modules: Array<i32>, count: i32) -> string {
+  return string_concat(pharm_decode_pharmacode_frame(modules, count), "");
+}

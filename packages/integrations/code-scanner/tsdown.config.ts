@@ -16,12 +16,7 @@ const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
 /** FWS roots flattened into the neutral scanner artifact. */
-const scannerProjectRoots = [
-  path.resolve(rootDirectory, 'src/fws'),
-  path.resolve(rootDirectory, '../qr-code/src/fws'),
-  path.resolve(rootDirectory, '../matrix-code/src/fws'),
-  path.resolve(rootDirectory, '../barcode/src/fws'),
-];
+const scannerProjectRoots = [path.resolve(rootDirectory, 'src/fws')];
 const scannerForgeWebScriptGraphCache = createForgeWebScriptGraphCache();
 
 function resolveScannerForgeWebScriptModule(source: string, importer: string): string | undefined {
