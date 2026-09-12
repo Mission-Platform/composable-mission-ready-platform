@@ -10,14 +10,14 @@ The scanner runs the **entire pipeline in one statically linked FWS/WebAssembly 
 "L" finder / the Aztec bullseye / linear scan-line runs), samples its module grid, **and decodes it** — the located
 modules never cross back into JS to be decoded. It does this by linking each format's decoder graph directly:
 
-| Format               | Linked FWS library                           |
-| -------------------- | -------------------------------------------- |
-| Data Matrix          | `packages/integrations/code-scanner/src/fws` |
-| Aztec (compact)      | `packages/integrations/code-scanner/src/fws` |
-| 1D and RSS readers   | `packages/integrations/code-scanner/src/fws` |
-| PDF417               | `packages/integrations/code-scanner/src/fws` |
-| GS1 DataBar (RSS-14) | `packages/integrations/code-scanner/src/fws` |
-| MaxiCode             | `packages/integrations/code-scanner/src/fws` |
+| Format             | Linked FWS library                           |
+| ------------------ | -------------------------------------------- |
+| Data Matrix        | `packages/integrations/code-scanner/src/fws` |
+| Aztec (compact)    | `packages/integrations/code-scanner/src/fws` |
+| 1D and RSS readers | `packages/integrations/code-scanner/src/fws` |
+| PDF417             | `packages/integrations/code-scanner/src/fws` |
+| RSS-14             | `packages/integrations/code-scanner/src/fws` |
+| MaxiCode           | `packages/integrations/code-scanner/src/fws` |
 
 The scanner links the decoder FWS sources at build time, so decoder package runtime imports do not cross the neutral
 artifact boundary.
@@ -113,8 +113,7 @@ pnpm exec turbo run build --filter @mission-platform/code-scanner
 
 ## Scope & limitations
 
-- Detection is tuned for clean, reasonably framed captures (file uploads and camera frames). The QR locator is
-  rotation-tolerant (it derives an affine grid from the three finder centres). The **Data Matrix** locator reads at any
+- Detection is tuned for clean, reasonably framed captures (file uploads and camera frames). The **Data Matrix** locator reads at any
   rotation (a corner-based affine locator, plus a straighten-and-retry fallback that recovers the angle and re-samples
   upright) and tolerates mild shear. **1D barcodes** are likewise straightened before sampling, so tilted captures still
   read. The **Aztec** locator finds the central bullseye but samples an axis-aligned grid, so it expects an upright
@@ -126,5 +125,5 @@ pnpm exec turbo run build --filter @mission-platform/code-scanner
   while full ZXing correction, rotation, and metadata parity remain outstanding.
 - Data Matrix currently covers the implemented ASCII subset; compact Aztec currently covers the implemented binary subset.
 - QR decoder graphs emit independently, but combined scanner linkage currently fails Forge Web Script `FWS-EMIT-001` and is
-  intentionally not included in the linked artifact. Full QR integration and the remaining ZXing mode coverage are tracked
-  in `docs/accuracy-improvement-plan.md`.
+  intentionally not included in the linked artifact. The linked result envelope is currently a bounded compatibility string;
+  points, metadata, and binary-result preservation remain follow-up work tracked in `docs/accuracy-improvement-plan.md`.

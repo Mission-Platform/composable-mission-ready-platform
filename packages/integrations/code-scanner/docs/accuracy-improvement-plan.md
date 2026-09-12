@@ -19,8 +19,10 @@ frames), and for keeping the scan pipeline inside one statically linked Forge We
 
 > **ZXing port status (2026-09-12):** The scanner-owned FWS graph now contains
 > bounded ZXing-shaped foundation, 1D/RSS, Data Matrix, compact Aztec, PDF417,
-> and MaxiCode paths. The public result model is versioned and carries text,
-> bytes, bit count, points, metadata, and timestamp. QR decoder graphs emit
+> and MaxiCode paths. The TypeScript model exposes text, bytes, bit count,
+> points, metadata, and timestamp, while the current FWS wire format only
+> serializes the format, bit count, and payload; points and metadata remain
+> empty until the binary envelope migration lands. QR decoder graphs emit
 > independently, but combined QR linkage is blocked by Forge Web Script
 > `FWS-EMIT-001`; the reduced 2D paths do not claim full ZXing parity.
 

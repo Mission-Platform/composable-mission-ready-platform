@@ -46,10 +46,12 @@ one decoder port before committing the tier for the rest.
   locators and Reed–Solomon (GF (929), GF (64), the RSS combinatorics) were the Tier-A core — consistent with the matrix
   above.
 
-> No custom-agent delegation tool was available during implementation, so a
-> single agent performed the work while spending effort per this matrix. The
-> matrix remains the guide for any future re-runs where delegation to multiple
-> model tiers is possible.
+> The implementation used focused delegated reviews for RSS correctness, the
+> stacked 2D readers, and QR graph emission. Those reviews confirmed the
+> bounded reduced-reader boundary and isolated the QR failure to the Forge Web
+> Script emitter rather than masking it with a fallback. The matrix remains the
+> guide for future parity passes where the missing corpus and decoder work can
+> be split safely.
 
 ## Current re-planning boundary
 

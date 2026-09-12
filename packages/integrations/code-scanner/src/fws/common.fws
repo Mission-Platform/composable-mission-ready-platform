@@ -1,13 +1,15 @@
 // Shared scanner primitives: format tags, result encoding, and linear-memory helpers.
 // Arrays stay at the ABI boundary. Large image/bitmap buffers live in guest memory.
 
-// Result wire format consumed by the TypeScript adapter:
+// Transitional result wire format consumed by the TypeScript adapter:
 //   ""                         -> not located
 //   "R0" + format + numBits    -> located but undecodable
 //   "R1" + format + numBits + value -> located and decoded
 // `format` is a fixed two-digit id and `numBits` is a fixed eight-digit field.
 // The current readers leave `numBits` as zero; the host derives it from the
-// validated payload bytes until binary decoder results are threaded through.
+// validated payload bytes. Points and metadata are not serialized yet. This is
+// deliberately documented as transitional until the bounded binary envelope is
+// implemented; do not treat the fixed-width header as the final ABI.
 // Multi-scan joins decoded entries with ASCII RS (0x1e).
 
 export fn format_digit(format: i32) -> string {

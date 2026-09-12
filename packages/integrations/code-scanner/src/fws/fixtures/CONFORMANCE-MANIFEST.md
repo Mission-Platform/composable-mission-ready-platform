@@ -58,3 +58,15 @@ Derived algorithm material is covered by the package `NOTICE`,
 `LICENSE-APACHE-2.0`, and `src/fws/FOUNDATION-ATTRIBUTION.md`. New imported
 ZXing fixtures must be added with the corresponding Apache attribution before
 they are used as release conformance gates.
+
+## Validation record
+
+- Focused and full scanner graph: 26 tests passed, including the standalone QR
+  graph and the linked reduced-reader graph.
+- Package Vitest: 56 passed and 32 skipped; the skipped cases are the QR and
+  multi-symbol scenarios that require unavailable combined-reader behavior.
+- Package `build:check`, ESLint, Stylelint, Prettier, and all Forge framework
+  and Storyblok builds passed on 2026-09-12.
+- Strict FWS source analysis and the complete ZXing black-box/golden corpus are
+  not release gates yet: standalone directory analysis cannot resolve the
+  product graph's imported symbols, and no corpus files are redistributed.

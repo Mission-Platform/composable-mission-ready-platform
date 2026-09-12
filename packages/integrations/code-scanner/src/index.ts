@@ -1,8 +1,9 @@
 // Public entry point for `@mission-platform/code-scanner`.
 //
-// A dependency-free image/camera code scanner: it locates and decodes QR, Data
-// Matrix and 1D barcodes from a decoded image (file upload) or a live camera
-// frame. The detection engine (binarise → locate → sample) is compiled from the
+// A dependency-free image/camera code scanner: it locates and decodes the
+// linked Data Matrix, compact Aztec, PDF417, MaxiCode, 1D, and RSS formats from
+// a decoded image (file upload) or a live camera frame. The QR decoder graph is
+// standalone until the combined emitter failure is resolved. The detection engine (binarise → locate → sample) is compiled from the
 // `packages/integrations/code-scanner/src/fws` and its linked decoder source modules; static
 // builds flatten this graph into the neutral artifact while dynamic builds keep
 // explicit source-module boundaries.
