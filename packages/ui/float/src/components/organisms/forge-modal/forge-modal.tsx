@@ -278,18 +278,20 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
           id={headerId}
           className={styles['forge-modal__header']}
         >
-          <Slot name="header">
-            {properties.header ?? (
-              <ForgeTypography
-                as="h2"
-                className={styles['forge-modal__title']}
-                color="primary"
-                variant="h5"
-              >
-                {title}
-              </ForgeTypography>
-            )}
-          </Slot>
+          {hasSlot('header') ? (
+            <Slot name="header" />
+          ) : properties.header === undefined ? (
+            <ForgeTypography
+              as="h2"
+              className={styles['forge-modal__title']}
+              color="primary"
+              variant="h5"
+            >
+              {title}
+            </ForgeTypography>
+          ) : (
+            properties.header
+          )}
           <ForgeIconButton
             label={closeLabel}
             size="sm"
@@ -302,7 +304,7 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
       <div className={styles['forge-modal__body']}>{properties.children}</div>
       {hasFooter ? (
         <footer className={styles['forge-modal__footer']}>
-          <Slot name="footer">{properties.footer}</Slot>
+          {hasSlot('footer') ? <Slot name="footer" /> : properties.footer}
         </footer>
       ) : undefined}
     </dialog>

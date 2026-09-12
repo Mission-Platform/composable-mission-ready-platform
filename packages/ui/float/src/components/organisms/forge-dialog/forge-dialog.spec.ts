@@ -40,6 +40,7 @@ describe('ForgeDialog authors the same component for React and Vue', () => {
 
     for (const html of [react, vue]) {
       expect(html).toContain('<dialog');
+      expect(html).toContain('aria-label="Confirm"');
       expect(html).toContain('forge-dialog__header');
       expect(html).toContain('Confirm');
       expect(html).toContain('forge-dialog__body');
@@ -60,6 +61,31 @@ describe('ForgeDialog authors the same component for React and Vue', () => {
       expect(html).toContain('Body only');
       expect(html).not.toContain('forge-dialog__header');
       expect(html).not.toContain('forge-dialog__footer');
+    }
+  });
+
+  it('renders custom header prop when supplied on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(
+        ReactDialog,
+        { open: true, header: createElement('span', undefined, 'Custom Header Content') },
+        'Dialog body',
+      ),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(
+            VueDialog,
+            { open: true, header: 'Custom Header Content' },
+            () => 'Dialog body',
+          ),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('forge-dialog__header');
+      expect(html).toContain('Custom Header Content');
     }
   });
 });

@@ -176,7 +176,8 @@ export function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
   // Calculate and apply fallback positioning when CSS Anchor Positioning is not supported.
   useEffect(() => {
     if (!isOpen || globalThis.window === undefined || isAnchorPositioningSupported()) {
-      return;
+      // eslint-disable-next-line unicorn/no-useless-undefined -- consistent return in effect with cleanup
+      return undefined;
     }
 
     const update = (): void => {

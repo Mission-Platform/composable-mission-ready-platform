@@ -63,6 +63,31 @@ describe('ForgeModal authors the same component for React and Vue', () => {
     }
   });
 
+  it('renders custom header prop when supplied on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(
+        ReactModal,
+        { open: true, header: createElement('span', undefined, 'Custom Header Content') },
+        'Modal body',
+      ),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(
+            VueModal,
+            { open: true, header: 'Custom Header Content' },
+            () => 'Modal body',
+          ),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('forge-modal__header');
+      expect(html).toContain('Custom Header Content');
+    }
+  });
+
   it('renders dialog and alert variants with appropriate role semantics on both frameworks', async () => {
     const dialogReact = renderToStaticMarkup(
       createElement(ReactModal, { open: true, variant: 'dialog', title: 'Dialog Title' }, 'Dialog content'),
@@ -80,5 +105,38 @@ describe('ForgeModal authors the same component for React and Vue', () => {
     expect(alertVue).toContain('role="alertdialog"');
     expect(alertVue).toContain('forge-modal--alert');
     expect(alertVue).toContain('Alert Title');
+  });
+
+  it('guarantees accessible label for alert variant with fallback aria-label="Alert" when title and header are omitted', async () => {
+    const react = renderToStaticMarkup(createElement(ReactModal, { open: true, variant: 'alert' }, 'Alert body only'));
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueModal, { open: true, variant: 'alert' }, () => 'Alert body only'),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('role="alertdialog"');
+      expect(html).toContain('aria-label="Alert"');
+      expect(html).toContain('Alert body only');
+      expect(html).not.toContain('forge-modal__header');
+    }
+  });
+
+  it('uses custom title as aria-label when provided on alert variant', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactModal, { open: true, variant: 'alert', title: 'System Warning' }, 'Warning body'),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueModal, { open: true, variant: 'alert', title: 'System Warning' }, () => 'Warning body'),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('role="alertdialog"');
+      expect(html).toContain('aria-label="System Warning"');
+      expect(html).toContain('System Warning');
+    }
   });
 });

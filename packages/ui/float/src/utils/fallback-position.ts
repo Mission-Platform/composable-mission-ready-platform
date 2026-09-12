@@ -139,6 +139,12 @@ export function calculateFallbackPosition(
       transform = 'translate(0, -100%)';
       break;
     }
+    default: {
+      top = triggerRect.bottom + offset;
+      left = triggerRect.left;
+      transform = 'translate(0, 0)';
+      break;
+    }
   }
 
   return { top, left, transform };
