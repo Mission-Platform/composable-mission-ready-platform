@@ -1,4 +1,3 @@
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 import {
   type ElementScope,
   rewriteExpressionText,
@@ -8,12 +7,15 @@ import {
   lowerStatementText,
   type TemplateContext,
 } from "../transformers/template.js";
+
 import { replayedPropsBindings } from "./head-analysis.js";
+
 import type { PropsBindingSite } from "./props-plan.js";
 import type {
   WebComponentsDerivedBody,
   WebComponentsDerivedValue,
 } from "./types.js";
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 /** The name of the module-level constant a hoisted static template is bound to. */
 export const STATIC_TEMPLATE_PREFIX = "__mpStaticTpl";

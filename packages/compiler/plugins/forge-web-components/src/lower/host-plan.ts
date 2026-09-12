@@ -1,12 +1,13 @@
-import type {
-  GenericComponent,
-  GenericRenderNode,
-} from "@mission-platform/forge-plugin-api";
 import {
   WEBCOMPONENTS_NATIVE_HOSTS,
   type WebComponentsHostFallbackReason,
   type WebComponentsHostPlan,
 } from "./types.js";
+
+import type {
+  GenericComponent,
+  GenericRenderNode,
+} from "@mission-platform/forge-plugin-api";
 
 export function autonomousHost(
   fallbackReason: WebComponentsHostFallbackReason,

@@ -4,6 +4,7 @@ import {
   type GenericRenderNode,
   type PropIntention,
 } from "@mission-platform/forge-plugin-api";
+
 import {
   leadingObjectPattern,
   parsePropsBinding,
@@ -11,14 +12,11 @@ import {
 } from "../transformers/props-binding.js";
 import {
   indexedAccessType,
-  resolvePropsTypeReference,
   type PropsTypeReference,
 } from "../transformers/props-type.js";
+
 import { escapeForPattern } from "./identifier.js";
-import {
-  UNKNOWN_TYPE,
-  type WebComponentsReactiveProperty,
-} from "./types.js";
+import { UNKNOWN_TYPE, type WebComponentsReactiveProperty } from "./types.js";
 
 /** The type an optional property or an unseeded state cell is widened with. */
 export const UNDEFINED_TYPE = "undefined";

@@ -1,24 +1,29 @@
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 import {
   type ElementScope,
   rewriteExpressionText,
 } from "../transformers/expression.js";
+
 import {
   type HeadStatement,
   headReplay,
   replayedPropsBindings,
 } from "./head-analysis.js";
+
 import type { PropsBindingSite } from "./props-plan.js";
 import type {
   WebComponentsCleanupField,
   WebComponentsLifecycleHook,
 } from "./types.js";
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 export const CLEANUP_FIELD_PREFIX = "__mpCleanup";
 export const CLEANUP_FIELD_TYPE = "(() => void) | undefined";
 
 /** Invoke an effect callback while keeping recorded cleanup in its lexical scope. */
-export function effectInvocation(body: string, cleanup: string | undefined): string {
+export function effectInvocation(
+  body: string,
+  cleanup: string | undefined,
+): string {
   if (cleanup === undefined) {
     return `(${body})();`;
   }

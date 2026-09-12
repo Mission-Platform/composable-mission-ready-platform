@@ -578,6 +578,28 @@ Abort a compiler pipeline when a phase reported one or more errors.
 
 ## `src/framework`
 
+### assertTargetIntentionsLowered
+
+**Kind:** function
+
+```typescript
+function assertTargetIntentionsLowered(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): asserts intentions is TargetIntentions<TLowered>;
+```
+
+Asserts that the supplied intentions are valid and contain a lowered target plan.
+Throws a TypeError if the intentions are incomplete or if the lowered plan
+discriminator does not match the expected framework.
+
+#### Parameters
+
+| Name              | Type        | Description |
+| ----------------- | ----------- | ----------- |
+| intentions        | unknown     |             |
+| expectedFramework | FrameworkId |             |
+
 ### FrameworkBuildAdapters
 
 **Kind:** interface
@@ -587,6 +609,17 @@ export interface FrameworkBuildAdapters
 ```
 
 Independently typed framework build integrations.
+
+### FrameworkId
+
+**Kind:** type
+
+```typescript
+export type FrameworkId = JsxFramework | (string &
+```
+
+Open framework identifier for target plugins and compiler pipelines.
+Retains auto-completion for known built-in frameworks while accepting arbitrary custom plugin targets.
 
 ### FrameworkOutputPlugin
 
@@ -699,12 +732,23 @@ export interface TargetContext
 
 Context shared by target lowering and optimization.
 
+### TargetFrameworkId
+
+**Kind:** type
+
+```typescript
+export type TargetFrameworkId = FrameworkId;
+```
+
+Open framework identifier alias for target plugins.
+Equivalent to {@link FrameworkId}.
+
 ### TargetIntentions
 
 **Kind:** interface
 
 ```typescript
-export interface TargetIntentions
+export interface TargetIntentions< TLowered extends TargetLoweredModule = TargetLoweredModule, >
 ```
 
 Target-specific intention wrapper; neutral facts remain available to later passes.

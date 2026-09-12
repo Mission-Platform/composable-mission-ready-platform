@@ -57,7 +57,9 @@ not provide a framework registry. Vite and tsdown adapters share an in-process
 | Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable.                     |
 | Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion.                                 |
 | Artifact manifest  | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion.                                                     |
-| Extension point    | Implement and pass a `FrameworkOutputPlugin` from a caller-owned `forge-plugin-*` package; do not add target branches to the neutral driver.                        |
+| Extension point    | Implement and pass a `FrameworkOutputPlugin` with an open `FrameworkId` (`JsxFramework \| (string & {})`); do not add target branches or registries to the driver. |
+| Target pipeline    | Enforces strict `lower → optimize → generate`; target generators accept only lowered intentions validated by `assertTargetIntentionsLowered`.                        |
+| Compiler AST path  | Oxc is the sole compiler AST path; legacy TypeScript AST compatibility layers and shims have been removed.                                                         |
 
 Configure aliases through the project `tsconfig.json` (`baseUrl` and
 `paths`); Vite and tsdown graph preparation use the same alias facts. Router
@@ -321,6 +323,7 @@ The `sha256-v1` prefix allows for future hash algorithm upgrades without ambigui
 ## Further Reading
 
 - [Vue 2 to Vue 3 Migration Guide](./migration-guides/vue2-to-vue3.md)
+- [Forge Compiler Pipeline & Migration Notes](../packages/tooling/vite/forge/docs/reference/compiler.md#migration-guidance)
 - [Project Configuration Overview](./configs/index.md)
 - [Workspace Structure](./workspace-structure.md)
 
@@ -392,6 +395,19 @@ target may be bound to any framework plugin. See the [Forge Compiler Pipeline](.
 | `@mission-platform/forge-cms-ghost`             | Ghost Handlebars partials and a `config.custom` theme fragment.                   |
 | `@mission-platform/forge-cms-jekyll`            | Jekyll Liquid includes, `_data` schema, and a `_config.yml` fragment.             |
 | `@mission-platform/forge-cms-webflow`           | Webflow `declareComponent` code components and a `webflow.json` library fragment. |
+
+#### @mission-platform/forge-plugin-api
+
+| Export                          | Type     | Description                                                                                               |
+| :------------------------------ | :------- | :-------------------------------------------------------------------------------------------------------- |
+| `FrameworkId`                   | Type     | Open framework identifier (`JsxFramework \| (string & {})`) supporting arbitrary custom plugin targets.   |
+| `TargetFrameworkId`            | Type     | Alias for `FrameworkId`.                                                                                  |
+| `JsxFramework`                  | Type     | Closed union of built-in frameworks (`"react" \| "vue" \| "svelte" \| "solid" \| "web-components"`).     |
+| `assertTargetIntentionsLowered` | Function | Asserts that target intentions contain a non-null lowered plan matching the target framework ID.         |
+| `TargetIntentions<TLowered>`    | Type     | Container for target intentions with a **required** `lowered: TLowered` target plan.                      |
+| `TargetLoweredModule`           | Type     | Base interface for lowered plans, discriminated on `framework: FrameworkId`.                             |
+| `FrameworkOutputPlugin`         | Type     | Composable target output contract with `id: FrameworkId`, `lower`, `optimize`, `generate`, and `build`.  |
+| `defineForgeOutputPlugin`       | Function | Validates and returns a `FrameworkOutputPlugin` instance.                                                 |
 
 #### @mission-platform/forge-cms-plugin-api
 

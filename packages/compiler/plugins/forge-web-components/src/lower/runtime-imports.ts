@@ -1,17 +1,13 @@
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
-import {
-  HAS_SLOT_RUNTIME,
-  MODULE_SCOPE,
-} from "../transformers/expression.js";
+import { HAS_SLOT_RUNTIME, MODULE_SCOPE } from "../transformers/expression.js";
 import { renderNodeToDomTemplate } from "../transformers/template.js";
-import { referencesIdentifier } from "./identifier.js";
+
 import { autonomousHost } from "./host-plan.js";
+import { referencesIdentifier } from "./identifier.js";
 import {
   DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY,
   DEFAULT_WEBCOMPONENTS_SHADOW_POLICY,
   LOCAL_ELEMENT_TYPES,
   WEB_COMPONENTS_FRAMEWORK,
-  type WebComponentsCleanupField,
   type WebComponentsDerivedValue,
   type WebComponentsElementRef,
   type WebComponentsGeneratedId,
@@ -25,6 +21,8 @@ import {
   type WebComponentsStateField,
   type WebComponentsTemplatePlan,
 } from "./types.js";
+
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 /** Stylesheet imports resolve to CSS sidecars with the source-relative layout. */
 export const STYLE_IMPORT = /\.(?:css|scss|sass|less|styl)$/u;

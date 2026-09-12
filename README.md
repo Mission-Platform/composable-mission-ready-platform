@@ -17,7 +17,7 @@ The Mission Platform is a monorepo managed with pnpm workspaces. It follows a co
 
 ## Key Features
 
-- **Forge JSX (`@mission-platform/forge-jsx`)**: The primary, framework-neutral UI framework in which all shared components (everything except the apps) are authored
+- **Forge JSX (`@mission-platform/forge-jsx`)**: The primary, framework-neutral UI framework in which all shared components (everything except the apps) are authored; compiled by `@mission-platform/vite-plugin-forge` to native React, Vue 3, Solid, Svelte 5, and Web Components
 - **TypeScript**: Type-safe JavaScript across every workspace
 - **Vite**: Dev server and production bundler
 - **Vitest + Playwright**: Unit and browser-level testing
@@ -47,6 +47,7 @@ The Mission Platform is a monorepo managed with pnpm workspaces. It follows a co
 - **[Testing](docs/testing.md)**: Comprehensive testing strategies and tools
 - **[Build System](docs/build-system.md)**: Overview of the build system and configuration
 - **[API Reference](docs/api-reference.md)**: References for all Mission Platform packages and framework adapters
+- **[Forge Compiler Pipeline](packages/tooling/vite/forge/docs/reference/compiler.md)**: Compiler phases, target extensibility, and migration notes
 - **[Package documentation](DOCUMENTATION.md#documentation-ownership)**: Package-owned installation, usage, API, and
   contributor guides
 - **[Troubleshooting](docs/troubleshooting.md)**: Common issues and solutions for debugging and performance optimization

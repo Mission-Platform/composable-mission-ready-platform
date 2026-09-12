@@ -1,4 +1,3 @@
-import type { GenericStatement } from "@mission-platform/forge-plugin-api";
 import {
   isFunctionExpressionText,
   isPureExpressionText,
@@ -7,11 +6,11 @@ import {
   topLevelAssignmentIndex,
 } from "../transformers/expression.js";
 import { propsBindingStatement } from "../transformers/props-binding.js";
-import {
-  referencesIdentifier,
-  referencesLocal,
-} from "./identifier.js";
+
+import { referencesIdentifier, referencesLocal } from "./identifier.js";
+
 import type { PropsBindingSite } from "./props-plan.js";
+import type { GenericStatement } from "@mission-platform/forge-plugin-api";
 
 const LIFTED_HOOK_DECLARATION = /\buse(?:State|Ref|Memo)\s*[(<]/;
 const LIFTED_HOOK_EFFECT = /\buseEffect\s*\(/;
@@ -33,7 +32,9 @@ export function isHookStatement(statement: GenericStatement): boolean {
 }
 
 /** The name a `const <name> = useId();` statement binds, when it has that exact shape. */
-export function generatedIdName(statement: GenericStatement): string | undefined {
+export function generatedIdName(
+  statement: GenericStatement,
+): string | undefined {
   if (statement.statementKind !== "variable") {
     return undefined;
   }
@@ -322,7 +323,9 @@ export function isReplayableHeadStatement(text: string): boolean {
 }
 
 /** Pair each planned head statement with the names it declares. */
-export function plannedHeadStatements(head: readonly string[]): HeadStatement[] {
+export function plannedHeadStatements(
+  head: readonly string[],
+): HeadStatement[] {
   return head.map((text) => ({ text, declares: declaredNamesOfText(text) }));
 }
 

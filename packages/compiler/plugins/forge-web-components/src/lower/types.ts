@@ -1,8 +1,5 @@
-import type {
-  GenericRenderNode,
-  TargetLoweredModule,
-} from "@mission-platform/forge-plugin-api";
 import type { DomTemplateSource } from "../transformers/template.js";
+import type { TargetLoweredModule } from "@mission-platform/forge-plugin-api";
 
 /** The plugin's framework ID, and the discriminator of its lowered plan. */
 export const WEB_COMPONENTS_FRAMEWORK = "web-components";

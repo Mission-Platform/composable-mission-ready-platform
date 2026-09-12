@@ -25,6 +25,7 @@ import type {
   GeneratedModule,
   SemanticModule,
   TargetContext,
+  TargetIntentions,
   TargetLoweredModule,
 } from "@mission-platform/forge-plugin-api";
 
@@ -86,6 +87,22 @@ describe("Web Components Forge framework package", () => {
     expect(framework.outputLanguage).toBe("ts");
     expect(framework.build.vite?.({})).toEqual([]);
     expect(framework.build.tsdown?.({})).toEqual([]);
+  });
+
+  it("rejects generation without a lowered target plan", () => {
+    const framework = forgeWebComponentsFramework();
+    const incomplete = {
+      framework: "web-components",
+      module: semanticModule({}),
+      context: { framework: "web-components", moduleKind: "component" },
+    } as unknown as TargetIntentions;
+
+    expect(() =>
+      framework.generate(incomplete, {
+        framework: "web-components",
+        moduleKind: "component",
+      }),
+    ).toThrow("must contain a lowered target plan");
   });
 
   it("lowers dynamic tags and spreads before generation", () => {

@@ -62,6 +62,19 @@ describe("Solid Forge framework package", () => {
     expect(framework.build.tsdown?.({})).toHaveLength(1);
   });
 
+  it("rejects generation without a lowered target plan", () => {
+    const framework = forgeSolidFramework();
+    const incomplete = {
+      framework: SOLID_FRAMEWORK,
+      module: semanticModule({}),
+      context: COMPONENT_CONTEXT,
+    } as unknown as TargetIntentions;
+
+    expect(() => framework.generate(incomplete, COMPONENT_CONTEXT)).toThrow(
+      "must contain a lowered target plan",
+    );
+  });
+
   it("drives a component through lower, optimize and generate", () => {
     const framework = forgeSolidFramework();
     const module = semanticModule({
