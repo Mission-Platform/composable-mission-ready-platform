@@ -35,12 +35,42 @@ const defaultTypeOriginResolver: TypeOriginResolver = (folder) => ({ base: folde
  * `date-time` and `forge-date-range-input`), and naming it twice in the entry is
  * a duplicate identifier. Returns `undefined` when nothing is left to forward.
  */
-function helperReExportLine(helper: DiscoveredHelperExport, claimed: Set<string>): string | undefined {
+function helperReExportLines(
+  helper: DiscoveredHelperExport,
+  claimed: Set<string>,
+  target: FrameworkSourceTarget,
+  components: readonly DiscoveredComponent[],
+): string[] {
   const names: string[] = [];
+  const lines: string[] = [];
+  const relativePath = helper.relativePath
+    .replace(/^\.\//, '')
+    .replace(/^\.\.\//, '')
+    .replace(/^components\//, '');
   for (const value of helper.values) {
     if (!claimed.has(value.exportedName)) {
       claimed.add(value.exportedName);
-      names.push(helperBindingReExportName(value));
+      const aliasedComponent =
+        value.componentAlias === undefined
+          ? undefined
+          : components.find(
+              (component) =>
+                component.neutralName === value.componentAlias &&
+                (helper.sourcePath === undefined ||
+                  component.sourcePath === undefined ||
+                  helper.sourcePath === component.sourcePath),
+            );
+      if (aliasedComponent === undefined) {
+        names.push(helperBindingReExportName(value));
+      } else {
+        lines.push(
+          target.componentReExport(
+            aliasedComponent,
+            value.exportedName,
+            `./${relativePath}${target.componentImportExtension}`,
+          ),
+        );
+      }
     }
   }
   for (const type of helper.types) {
@@ -50,13 +80,10 @@ function helperReExportLine(helper: DiscoveredHelperExport, claimed: Set<string>
     }
   }
   if (names.length === 0) {
-    return undefined;
+    return lines;
   }
-  const relativePath = helper.relativePath
-    .replace(/^\.\//, '')
-    .replace(/^\.\.\//, '')
-    .replace(/^components\//, '');
-  return `export { ${names.join(', ')} } from './${relativePath}';`;
+  lines.push(`export { ${names.join(', ')} } from './${relativePath}';`);
+  return lines;
 }
 
 /** Format a helper binding for a runtime or type-only export list. */
@@ -217,7 +244,7 @@ export function generateEntry(
   // against each other, so the same helper reached from two barrels forwards a
   // binding exactly once.
   const claimed = claimedTypes;
-  const helperLines = helpers.flatMap((helper) => helperReExportLine(helper, claimed) ?? []);
+  const helperLines = helpers.flatMap((helper) => helperReExportLines(helper, claimed, target, components));
   const externalLines = externalExports.flatMap((external) => {
     // A named external binding cannot replace a component or helper already
     // selected above. Star exports remain useful because explicit bindings

@@ -256,6 +256,27 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   const carriedHelpers = new Set<string>();
   const pendingIndexSources = new Set<string>();
 
+  // 3. Sibling component discovery
+  const siblingComponents = discoverSiblingComponents({
+    graph,
+    components,
+    stripPrefix,
+    targetId: target.id,
+    componentsDir,
+    componentFolders,
+  });
+
+  const allComponents = [...components, ...siblingComponents];
+  // Absolute paths of modules compiled as components. Helper discovery may still
+  // surface co-located value/type bindings from these files for entry re-export,
+  // but the carrier must never re-emit them as composables.
+  const allComponentSources = new Set(
+    allComponents
+      .map((component) => component.sourcePath)
+      .filter((sourcePath): sourcePath is string => sourcePath !== undefined)
+      .map((sourcePath) => path.resolve(sourcePath)),
+  );
+
   const carryHelperModule = createHelperModuleCarrier({
     graphs: [publicGraph, graph],
     context,
@@ -270,19 +291,8 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     pendingIndexSources,
     helperExportedTypes,
     readExportedTypeNames,
+    componentSources: allComponentSources,
   });
-
-  // 3. Sibling component discovery
-  const siblingComponents = discoverSiblingComponents({
-    graph,
-    components,
-    stripPrefix,
-    targetId: target.id,
-    componentsDir,
-    componentFolders,
-  });
-
-  const allComponents = [...components, ...siblingComponents];
 
   const rewriteFlatImports = createFlatImportRewriter({
     graphs: [publicGraph, graph],
@@ -333,7 +343,11 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   carrySpriteHelpers({ sourceRoot, carryHelperModule });
 
   // 7. Barrel helper exports
-  const helpers = discoverHelperExportsFromGraph(publicGraph, componentFolders);
+  // Co-located helper/value exports from component modules (e.g. FormContext)
+  // remain in `helpers` so the entry re-exports them, but their source paths are
+  // skipped by the carrier via `componentSources` — components were already
+  // compiled above and must not be re-emitted as composables.
+  const helpers = discoverHelperExportsFromGraph(publicGraph, componentFolders, components);
   const externalExports = discoverExternalExportsFromGraph(publicGraph);
   for (const helper of helpers) {
     if (helper.sourcePath === undefined) {

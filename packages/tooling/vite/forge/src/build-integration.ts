@@ -35,6 +35,7 @@ export function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions)
   let writer: ForgeArtifactWriter | undefined;
   let entryNames: string[] = [];
   let finalized = false;
+  let aborted = false;
 
   function findNativeEntryNames(directory: string): string[] {
     const entries: string[] = [];
@@ -163,10 +164,14 @@ export function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions)
     },
     buildEnd(error) {
       if (error !== undefined) {
+        aborted = true;
         writer?.abort();
       }
     },
     closeBundle() {
+      if (aborted) {
+        return;
+      }
       return finalize();
     },
   };

@@ -12,6 +12,7 @@
  * the exported props interface (`BadgeProperties`) — all of which are derived
  * here by parsing the barrel's `export { … } from './…'` re-exports.
  */
+import fs from 'node:fs';
 import path from 'node:path';
 
 import {
@@ -19,6 +20,17 @@ import {
   throwOnCompilerErrors,
   type CompilerDiagnostic,
 } from '@mission-platform/forge-plugin-api';
+
+import {
+  oxcArray,
+  oxcIdentifierName,
+  oxcObject,
+  oxcProgramBody,
+  oxcUnwrapModuleStatement,
+  parseOxcModule,
+  type OxcNode,
+  type OxcParsedModule,
+} from './oxc.js';
 
 import type { ForgeExportFact, ForgeFileGraph, ForgeFileNode } from './graph.js';
 
@@ -149,6 +161,8 @@ export interface DiscoveredHelperExport {
 export interface DiscoveredHelperBinding {
   localName: string;
   exportedName: string;
+  /** Component identifier aliased by this binding (`const Alias = Component`). */
+  componentAlias?: string;
 }
 
 /** A public barrel export whose source is another package rather than local Forge source. */
@@ -299,15 +313,228 @@ function resolveGraphExports(graph: ForgeFileGraph, entry: ForgeFileNode): Resol
   return resolve(entry, false, new Set());
 }
 
+function resolveLocalSymbolName(program: OxcNode, exportedName: string): string {
+  if (exportedName === 'default') {
+    for (const statement of oxcProgramBody(program)) {
+      if (statement.type === 'ExportDefaultDeclaration') {
+        const declaration = oxcObject(statement, 'declaration');
+        const id = oxcObject(declaration, 'id');
+        const name = oxcIdentifierName(id) ?? oxcIdentifierName(declaration);
+        if (name !== undefined) {
+          return name;
+        }
+      }
+    }
+  }
+  for (const statement of oxcProgramBody(program)) {
+    if (statement.type === 'ExportNamedDeclaration') {
+      const specifiers = oxcArray(statement, 'specifiers');
+      for (const spec of specifiers) {
+        const exported = oxcObject(spec, 'exported');
+        const local = oxcObject(spec, 'local');
+        const exportedIdent =
+          oxcIdentifierName(exported) ?? (exported?.type === 'Literal' ? String(exported.value) : undefined);
+        if (exportedIdent === exportedName) {
+          const localIdent = oxcIdentifierName(local);
+          if (localIdent !== undefined) {
+            return localIdent;
+          }
+        }
+      }
+    }
+  }
+  return exportedName;
+}
+
+function findDeclaration(program: OxcNode, localName: string): OxcNode | undefined {
+  for (const statement of oxcProgramBody(program)) {
+    if (statement.type === 'ExportDefaultDeclaration') {
+      const declaration = oxcObject(statement, 'declaration');
+      if (declaration !== undefined) {
+        const id = oxcObject(declaration, 'id');
+        if (oxcIdentifierName(id) === localName || localName === 'default') {
+          return declaration;
+        }
+      }
+    }
+    const unwrapped = oxcUnwrapModuleStatement(statement);
+    const node = unwrapped.node;
+    switch (node.type) {
+      case 'FunctionDeclaration': {
+        const id = oxcObject(node, 'id');
+        if (oxcIdentifierName(id) === localName) {
+          return node;
+        }
+        break;
+      }
+      case 'VariableDeclaration': {
+        for (const declarator of oxcArray(node, 'declarations')) {
+          const id = oxcObject(declarator, 'id');
+          if (oxcIdentifierName(id) === localName) {
+            return declarator;
+          }
+        }
+        break;
+      }
+      case 'ClassDeclaration': {
+        const id = oxcObject(node, 'id');
+        if (oxcIdentifierName(id) === localName) {
+          return node;
+        }
+        break;
+      }
+      case 'TSInterfaceDeclaration':
+      case 'TSTypeAliasDeclaration':
+      case 'TSEnumDeclaration': {
+        const id = oxcObject(node, 'id');
+        if (oxcIdentifierName(id) === localName) {
+          return node;
+        }
+        break;
+      }
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Check whether a declaration is positively identifiable as a non-component value
+ * (such as a createContext call, object literal, constant primitive, class, or type).
+ */
+function isNonComponentDeclaration(declaration: OxcNode): boolean {
+  if (
+    declaration.type === 'ClassDeclaration' ||
+    declaration.type === 'TSEnumDeclaration' ||
+    declaration.type === 'TSInterfaceDeclaration' ||
+    declaration.type === 'TSTypeAliasDeclaration'
+  ) {
+    return true;
+  }
+  if (declaration.type === 'VariableDeclarator') {
+    let init = oxcObject(declaration, 'init');
+    while (
+      init !== undefined &&
+      (init.type === 'ParenthesizedExpression' ||
+        init.type === 'TSAsExpression' ||
+        init.type === 'TSTypeAssertion' ||
+        init.type === 'TSNonNullExpression')
+    ) {
+      init = oxcObject(init, 'expression');
+    }
+    if (init === undefined) {
+      return true;
+    }
+    if (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression') {
+      return false;
+    }
+    if (init.type === 'CallExpression') {
+      const callee = oxcObject(init, 'callee');
+      const calleeName =
+        oxcIdentifierName(callee) ??
+        (callee?.type === 'MemberExpression' ? oxcIdentifierName(oxcObject(callee, 'property')) : undefined);
+      return !(
+        calleeName === 'forwardRef' ||
+        calleeName === 'memo' ||
+        calleeName === 'createComponent' ||
+        calleeName === 'defineComponent'
+      );
+    }
+    // ObjectExpression, Literal, ArrayExpression, NewExpression, MemberExpression, Identifier, etc.
+    return true;
+  }
+  return false;
+}
+
+export function isComponentExport(
+  sourcePath: string,
+  symbolName: string,
+  astCache?: Map<string, OxcParsedModule>,
+): boolean {
+  if (!/^[A-Z]/.test(symbolName)) {
+    return false;
+  }
+  let parsed = astCache?.get(sourcePath);
+  if (parsed === undefined) {
+    if (!fs.existsSync(sourcePath)) {
+      return false;
+    }
+    try {
+      const source = fs.readFileSync(sourcePath, 'utf8');
+      parsed = parseOxcModule(sourcePath, source);
+      astCache?.set(sourcePath, parsed);
+    } catch {
+      return false;
+    }
+  }
+  const localName = resolveLocalSymbolName(parsed.program, symbolName);
+  const declaration = findDeclaration(parsed.program, localName);
+  if (declaration === undefined) {
+    return true;
+  }
+  return !isNonComponentDeclaration(declaration);
+}
+
+/** Resolve a simple identifier alias declared in a source module. */
+function componentAliasTarget(
+  sourcePath: string,
+  symbolName: string,
+  astCache: Map<string, OxcParsedModule>,
+): string | undefined {
+  let parsed = astCache.get(sourcePath);
+  if (parsed === undefined) {
+    if (!fs.existsSync(sourcePath)) {
+      return undefined;
+    }
+    try {
+      parsed = parseOxcModule(sourcePath, fs.readFileSync(sourcePath, 'utf8'));
+      astCache.set(sourcePath, parsed);
+    } catch {
+      return undefined;
+    }
+  }
+  const localName = resolveLocalSymbolName(parsed.program, symbolName);
+  const declaration = findDeclaration(parsed.program, localName);
+  if (declaration?.type !== 'VariableDeclarator') {
+    return undefined;
+  }
+  let initializer = oxcObject(declaration, 'init');
+  while (
+    initializer !== undefined &&
+    (initializer.type === 'ParenthesizedExpression' ||
+      initializer.type === 'TSAsExpression' ||
+      initializer.type === 'TSTypeAssertion' ||
+      initializer.type === 'TSNonNullExpression')
+  ) {
+    initializer = oxcObject(initializer, 'expression');
+  }
+  return oxcIdentifierName(initializer);
+}
+
 function graphTypeExports(
   graph: ForgeFileGraph,
   entry: ForgeFileNode,
   sourceNode: ForgeFileNode,
   componentSpecifier: string | undefined,
+  helperExportNames?: ReadonlySet<string>,
 ): string[] {
   const names = new Set<string>();
+  const isHelperType = (name: string): boolean => {
+    if (helperExportNames === undefined || helperExportNames.size === 0) {
+      return false;
+    }
+    for (const helperName of helperExportNames) {
+      if (name === helperName || name.startsWith(helperName)) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   for (const entryExport of entry.exports) {
     if (!entryExport.typeOnly || entryExport.exportedName === undefined || entryExport.specifier === undefined) {
+      continue;
+    }
+    if (isHelperType(entryExport.exportedName)) {
       continue;
     }
     if (componentSpecifier !== undefined && entryExport.specifier === componentSpecifier) {
@@ -323,7 +550,7 @@ function graphTypeExports(
     }
   }
   for (const entryExport of sourceNode.exports) {
-    if (entryExport.typeOnly && entryExport.exportedName !== undefined) {
+    if (entryExport.typeOnly && entryExport.exportedName !== undefined && !isHelperType(entryExport.exportedName)) {
       names.add(entryExport.exportedName);
     }
   }
@@ -340,6 +567,7 @@ export function discoverComponentsFromGraph(
   if (entry === undefined) {
     return [];
   }
+  const astCache = new Map<string, OxcParsedModule>();
   const exports = resolveGraphExports(graph, entry);
   const components: DiscoveredComponent[] = [];
   for (const resolvedExport of exports) {
@@ -358,6 +586,11 @@ export function discoverComponentsFromGraph(
       )?.exportedName ??
       entryExport.localName ??
       entryExport.exportedName;
+
+    if (!isComponentExport(sourceNode.id, neutralName, astCache)) {
+      continue;
+    }
+
     const publicName =
       entryExport.exportedName !== undefined && entryExport.localName !== undefined
         ? entryExport.exportedName.startsWith(stripPrefix)
@@ -366,7 +599,17 @@ export function discoverComponentsFromGraph(
         : neutralName.startsWith(stripPrefix)
           ? neutralName.slice(stripPrefix.length)
           : neutralName;
-    const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier);
+    const helperExportNames = new Set(
+      sourceNode.exports
+        .filter(
+          (sourceExport) =>
+            !sourceExport.typeOnly &&
+            sourceExport.exportedName !== undefined &&
+            !isComponentExport(sourceNode.id, sourceExport.exportedName, astCache),
+        )
+        .map((sourceExport) => sourceExport.exportedName as string),
+    );
+    const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier, helperExportNames);
     const candidate = `${publicName}Properties`;
     const sourceSpecifier =
       entryExport.specifier ?? `./${path.relative(path.dirname(graph.entry), sourceNode.id).split(path.sep).join('/')}`;
@@ -437,11 +680,21 @@ export function discoverComponentsFromGraph(
 export function discoverHelperExportsFromGraph(
   graph: ForgeFileGraph,
   componentFolders: ReadonlySet<string>,
+  discoveredComponents?: readonly DiscoveredComponent[],
 ): DiscoveredHelperExport[] {
   const entry = graph.nodes.get(graph.entry);
   if (entry === undefined) {
     return [];
   }
+  const components = discoveredComponents ?? discoverComponentsFromGraph(graph);
+  const componentNames = new Set(components.flatMap((c) => [c.neutralName, c.publicName]));
+  const componentTypes = new Set(
+    components.flatMap((c) =>
+      c.propertiesType ? [c.propertiesType, ...(c.typeExports ?? [])] : (c.typeExports ?? []),
+    ),
+  );
+  const astCache = new Map<string, OxcParsedModule>();
+
   const helpers = new Map<string, DiscoveredHelperExport>();
   const entryDirectory = entry.sourceRelativePath.replace(/\/[^/]+$/, '');
   for (const resolvedExport of resolveGraphExports(graph, entry)) {
@@ -450,13 +703,29 @@ export function discoverHelperExportsFromGraph(
       continue;
     }
     const sourceNode = resolvedExport.sourceNode;
-    if (sourceNode === undefined || sourceNode.id === entry.id || sourceNode.kind === 'component') {
+    if (sourceNode === undefined || sourceNode.id === entry.id) {
       continue;
     }
+
+    const exportedName = entryExport.exportedName;
+    const localName = entryExport.localName ?? exportedName;
+    const isType =
+      entryExport.typeOnly || sourceNode.exports.find((e) => e.exportedName === localName)?.typeOnly === true;
+
+    if (isType) {
+      if (componentTypes.has(exportedName)) {
+        continue;
+      }
+    } else {
+      if (componentNames.has(exportedName) || componentNames.has(localName)) {
+        continue;
+      }
+      if (isComponentExport(sourceNode.id, localName, astCache)) {
+        continue;
+      }
+    }
+
     const base = sourceBase(sourceNode.id);
-    if (componentFolders.has(base)) {
-      continue;
-    }
     const key = sourceNode.id;
     const helper = helpers.get(key) ?? {
       base,
@@ -474,10 +743,11 @@ export function discoverHelperExportsFromGraph(
       sourcePath: sourceNode.id,
     };
     const binding: DiscoveredHelperBinding = {
-      localName: entryExport.localName ?? entryExport.exportedName,
-      exportedName: entryExport.exportedName,
+      localName,
+      exportedName,
+      ...(isType ? {} : { componentAlias: componentAliasTarget(sourceNode.id, localName, astCache) }),
     };
-    if (entryExport.typeOnly) {
+    if (isType) {
       if (!helper.types.some((existing) => existing.exportedName === binding.exportedName)) {
         helper.types.push(binding);
       }

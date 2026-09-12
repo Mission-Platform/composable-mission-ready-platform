@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
+import { cssBundlePlugin, defineTsdownLibrary, resolveCssOwner } from '@mission-platform/tsdown-config';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -364,6 +364,44 @@ describe('Forge tsdown component helpers', () => {
       expect(materialized.every((config) => config.clean === false)).toBe(true);
     } finally {
       process.argv = originalArgv;
+    }
+  }, 30_000);
+
+  it('resolves CSS owner and threads CSS imports into JS chunks cleanly', () => {
+    const tempDir = path.resolve(import.meta.dirname, '../../../.test-tmp-css-' + Date.now());
+    fs.mkdirSync(path.join(tempDir, 'components'), { recursive: true });
+    fs.mkdirSync(path.join(tempDir, 'styles'), { recursive: true });
+
+    try {
+      // 1. Direct class-map owner
+      fs.writeFileSync(path.join(tempDir, 'components/btn.module.js'), 'export const cls = {};');
+      expect(resolveCssOwner(tempDir, 'components/btn.css')).toBe('components/btn.module.js');
+
+      // 2. Vue style marker
+      fs.writeFileSync(path.join(tempDir, 'components/card.vue.js'), 'export default {};');
+      expect(resolveCssOwner(tempDir, 'components/card.vue_vue_type_style_0.css')).toBe('components/card.vue.js');
+
+      // 3. Fallback search when CSS is in styles directory
+      fs.writeFileSync(path.join(tempDir, 'components/dialog.js'), 'export const Dialog = () => {};');
+      expect(resolveCssOwner(tempDir, 'styles/dialog.css')).toBe('components/dialog.js');
+
+      // 4. cssBundlePlugin injecting import and preventing duplicates
+      const jsPath = path.join(tempDir, 'components/alert.js');
+      fs.writeFileSync(jsPath, "'use client';\nexport const Alert = () => {};\n");
+      fs.writeFileSync(path.join(tempDir, 'components/alert.css'), '.alert { color: red; }');
+
+      const plugin = cssBundlePlugin() as { writeBundle: (options: { dir: string }) => void };
+      plugin.writeBundle({ dir: tempDir });
+
+      let code = fs.readFileSync(jsPath, 'utf8');
+      expect(code).toBe('\'use client\';\nimport "./alert.css";\nexport const Alert = () => {};\n');
+
+      // Running writeBundle again must not duplicate the import
+      plugin.writeBundle({ dir: tempDir });
+      code = fs.readFileSync(jsPath, 'utf8');
+      expect(code).toBe('\'use client\';\nimport "./alert.css";\nexport const Alert = () => {};\n');
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
     }
   }, 30_000);
 });

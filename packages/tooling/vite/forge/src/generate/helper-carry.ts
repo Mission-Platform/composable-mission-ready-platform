@@ -22,6 +22,13 @@ export function createHelperModuleCarrier(input: {
   readonly pendingIndexSources: Set<string>;
   readonly helperExportedTypes: Map<string, Set<string>>;
   readonly readExportedTypeNames: (fileName: string, source: string) => Set<string>;
+  /**
+   * Absolute paths of modules already compiled as components. Co-located helper
+   * bindings from those files are re-exported via the entry, but the module must
+   * never be re-emitted as a composable/helper (which would clobber the component
+   * artifact and can produce invalid output when neutral JSX imports are present).
+   */
+  readonly componentSources?: ReadonlySet<string>;
 }): (sourcePath: string) => void {
   const {
     graphs,
@@ -37,6 +44,7 @@ export function createHelperModuleCarrier(input: {
     pendingIndexSources,
     helperExportedTypes,
     readExportedTypeNames,
+    componentSources,
   } = input;
 
   const graphForSource = (sourcePath: string): ForgeFileGraph | undefined =>
@@ -72,6 +80,21 @@ export function createHelperModuleCarrier(input: {
     if (carriedHelpers.has(sourceKey)) {
       return;
     }
+
+    // Component sources are compiled by `compileComponentTree`. When discovery
+    // surfaces co-located helper/value exports from those modules (FormContext,
+    // useFormContext, …), keep the bindings for entry re-export but never compile
+    // the component file again as a composable.
+    if (componentSources?.has(sourceKey)) {
+      carriedHelpers.add(sourceKey);
+      const base = path.basename(sourcePath, path.extname(sourcePath));
+      if (!helperExportedTypes.has(base) && existsSync(sourcePath)) {
+        const source = readFileSync(sourcePath, 'utf8');
+        helperExportedTypes.set(base, readExportedTypeNames(sourcePath, source));
+      }
+      return;
+    }
+
     carriedHelpers.add(sourceKey);
 
     if (path.basename(sourcePath, path.extname(sourcePath)) === 'index') {
