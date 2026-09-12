@@ -119,23 +119,6 @@
         "vscode-markdown-language-server",
         "--stdio"
       ]
-    },
-    {
-      "language_id": "sonarlint",
-      "extensions": [
-        "ts",
-        "tsx",
-        "js",
-        "jsx",
-        "vue"
-      ],
-      "command": [
-        "pnpm",
-        "exec",
-        "node",
-        "--experimental-strip-types",
-        "scripts/sonarlint-language-server.ts"
-      ]
     }
   ]
 }
