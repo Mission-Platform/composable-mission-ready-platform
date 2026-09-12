@@ -10,7 +10,7 @@
  * export lines to barrel files, and is dry-run unless `apply: true`.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, isAbsolute, join, relative } from 'node:path';
 
 import { groupDir, resolveRepoPath, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
 
@@ -136,6 +136,15 @@ export function writeIntoPackage(request: PackageWriteRequest): ScaffoldResult {
 
   const entries = Object.entries(files).toSorted(([left], [right]) => left.localeCompare(right));
   const fileList = entries.map(([relativePath]) => relativePath);
+  for (const relativePath of fileList) {
+    const fullPath = join(packageDir, relativePath);
+    const rel = relative(packageDir, fullPath);
+    if (rel === '..' || rel.startsWith(`..${'/'}`) || rel.startsWith(`..\\`) || isAbsolute(rel)) {
+      throw new Error(
+        `${relativePackageDir}/${relativePath} must remain within the package directory and not resolve outside.`,
+      );
+    }
+  }
   const fileTargets = fileList.map((relativePath) =>
     resolveRepoPath(join(packageDir, relativePath), `${relativePackageDir}/${relativePath}`, { allowMissing: true }),
   );
