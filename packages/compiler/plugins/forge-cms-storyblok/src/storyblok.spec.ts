@@ -1,21 +1,29 @@
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
 import {
   analyzeContentComponent,
+  generateCmsArtifacts,
   toDisplayName,
   toTechnicalName,
 } from "@mission-platform/forge-cms-plugin-api";
 import {
   BADGE,
+  BADGE_COMPONENT,
   BUTTON,
   EMPTY,
   GRID,
+  GRID_COMPONENT,
   LAYOUT,
+  LAYOUT_COMPONENT,
+  REQUIRED,
   badgeNames,
   buttonNames,
+  createCmsWorkspace,
   emptyNames,
   gridNames,
   layoutNames,
   requiredNames,
-  REQUIRED,
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
 import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
@@ -774,5 +782,119 @@ describe("the Storyblok CMS target", () => {
     expect(artifacts[0].contents).toBe(
       "export { default as BadgeBlok } from './forge-badge.vue';\n",
     );
+  });
+});
+
+describe("the Storyblok CMS target end-to-end generation", () => {
+  it("generates component schemas, blok templates, manifest, and entry atomically for a multi-component workspace", () => {
+    const workspace = createCmsWorkspace([
+      BADGE_COMPONENT,
+      GRID_COMPONENT,
+      LAYOUT_COMPONENT,
+    ]);
+
+    try {
+      const storyblokPlugin = forgeStoryblokCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("react"),
+      });
+
+      generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: storyblokPlugin,
+        componentsImport: "@acme/components",
+      });
+
+      expect(existsSync(workspace.outDirectory)).toBe(true);
+
+      // Schemas
+      const badgeSchema = path.join(workspace.outDirectory, "forge-badge.json");
+      const gridSchema = path.join(workspace.outDirectory, "forge-grid.json");
+      const layoutSchema = path.join(
+        workspace.outDirectory,
+        "forge-layout.json",
+      );
+      expect(existsSync(badgeSchema)).toBe(true);
+      expect(existsSync(gridSchema)).toBe(true);
+      expect(existsSync(layoutSchema)).toBe(true);
+
+      // Templates
+      const badgeTemplate = path.join(
+        workspace.outDirectory,
+        "forge-badge.tsx",
+      );
+      const gridTemplate = path.join(workspace.outDirectory, "forge-grid.tsx");
+      const layoutTemplate = path.join(
+        workspace.outDirectory,
+        "forge-layout.tsx",
+      );
+      expect(existsSync(badgeTemplate)).toBe(true);
+      expect(existsSync(gridTemplate)).toBe(true);
+      expect(existsSync(layoutTemplate)).toBe(true);
+
+      const badgeContent = readFileSync(badgeTemplate, "utf8");
+      expect(badgeContent).toContain("export function BadgeBlok");
+
+      // Manifest
+      const manifestPath = path.join(workspace.outDirectory, "components.json");
+      expect(existsSync(manifestPath)).toBe(true);
+      const manifest = JSON.parse(readFileSync(manifestPath, "utf8")) as {
+        components: { name: string }[];
+      };
+      expect(manifest.components.map((c) => c.name)).toContain("badge");
+      expect(manifest.components.map((c) => c.name)).toContain("grid");
+      expect(manifest.components.map((c) => c.name)).toContain("layout");
+
+      // Entry
+      const entryPath = path.join(workspace.outDirectory, "index.tsx");
+      const declarationPath = path.join(workspace.outDirectory, "index.d.ts");
+      expect(existsSync(entryPath)).toBe(true);
+      expect(existsSync(declarationPath)).toBe(true);
+    } finally {
+      workspace.cleanup();
+    }
+  });
+
+  it("aborts atomically and preserves existing outputs on compilation error", () => {
+    const workspace = createCmsWorkspace([BADGE_COMPONENT]);
+
+    try {
+      const storyblokPlugin = forgeStoryblokCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("react"),
+      });
+
+      generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: storyblokPlugin,
+        componentsImport: "@acme/components",
+      });
+
+      const canaryFile = path.join(workspace.outDirectory, "canary.txt");
+      writeFileSync(canaryFile, "storyblok-canary-content", "utf8");
+
+      const failingTarget = {
+        ...storyblokPlugin,
+        emitTemplate: () => {
+          throw new Error("Simulated Storyblok template emission failure");
+        },
+      };
+
+      expect(() =>
+        generateCmsArtifacts({
+          componentsModule: workspace.componentsModule,
+          outDir: workspace.outDirectory,
+          plugin: failingTarget,
+          componentsImport: "@acme/components",
+        }),
+      ).toThrow("Simulated Storyblok template emission failure");
+
+      expect(existsSync(canaryFile)).toBe(true);
+      expect(readFileSync(canaryFile, "utf8")).toBe("storyblok-canary-content");
+    } finally {
+      workspace.cleanup();
+    }
   });
 });

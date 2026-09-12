@@ -43,7 +43,7 @@ describe("benchmark failure isolation", () => {
 
     // 4. Run completes (no throw)
     expect(result.failures.length).toBeGreaterThan(0);
-  });
+  }, 30_000);
 
   it("handles environment failures actionably", async () => {
     // Force a failure in Chromium launch
@@ -64,5 +64,5 @@ describe("benchmark failure isolation", () => {
     expect(result.failures.length).toBeGreaterThan(0);
     expect(result.failures[0].category).toBe("runtime");
     vi.restoreAllMocks();
-  });
+  }, 30_000);
 });

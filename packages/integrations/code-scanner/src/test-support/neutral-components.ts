@@ -10,4 +10,4 @@
 // real per-framework builds import the bare `@mission-platform/components`
 // specifier, whose `mp:<framework>` export condition resolves to that
 // framework's built barrel.
-export { ForgeButton } from '../../../components/src/components/atoms/forge-button';
+export { ForgeButton } from '../../../../ui/components/src/components/atoms/forge-button';

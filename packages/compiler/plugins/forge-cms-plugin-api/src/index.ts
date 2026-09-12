@@ -15,7 +15,7 @@
  *    the resulting artifacts under `dist/cms/<cms>/<framework>/`.
  *
  * A new platform is therefore an additive package: implement the contract, pass
- * an instance to `defineTsdownForgeCms`, and the driver does the rest.
+ * an instance to `tsdownForgeCmsPlugins`, and the driver does the rest.
  */
 export {
   contentFields,
@@ -79,16 +79,20 @@ export {
 } from "./driver.js";
 
 export {
-  cmsCacheDirectory,
-  cmsOutputDirectory,
-  defineTsdownForgeCms,
-  defineTsdownForgeCmsAll,
-  resolveComponentsModule,
-  type TsdownForgeCmsAllOptions,
-  type TsdownForgeCmsOptions,
+  tsdownForgeCmsPlugins,
+  type ForgeCmsTsdownPlugin,
+  type TsdownForgeCmsPluginsOptions,
 } from "./tsdown.js";
 
 export {
+  cmsAssetsPlugin,
   defineViteForgeCmsLibrary,
+  type CmsAssetsPluginOptions,
   type ViteForgeCmsLibraryOptions,
 } from "./config.js";
+
+export {
+  KNOWN_FRAMEWORKS,
+  copyAndPruneAssets,
+  pruneStaleAssets,
+} from "./assets.js";

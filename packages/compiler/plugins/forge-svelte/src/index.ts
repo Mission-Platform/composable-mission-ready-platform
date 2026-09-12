@@ -1,18 +1,20 @@
 import { createRequire } from "node:module";
 
-import { defineForgeOutputPlugin } from "@mission-platform/forge-plugin-api";
+import {
+  assertTargetIntentionsLowered,
+  defineForgeOutputPlugin,
+} from "@mission-platform/forge-plugin-api";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 import { emitSvelteModule } from "./emitters/component.js";
 import { emitSvelteHookModule } from "./emitters/hook.js";
-import { isSvelteLowered, lowerSvelteModule } from "./lower.js";
+import { lowerSvelteModule } from "./lower.js";
 import { optimizeSvelteModule } from "./optimize.js";
 
 import type { SvelteLoweredModule } from "./lower.js";
 import type {
   FrameworkBuildAdapters,
   FrameworkOutputPlugin,
-  SemanticModule,
   TargetContext,
   TargetIntentions,
   TargetOptimizeOptions,
@@ -44,21 +46,6 @@ const BUILD: FrameworkBuildAdapters = {
   tsdown: () => [svelteTsdownPlugin() as TsdownPlugin],
 };
 
-/**
- * The Svelte plan for a module: the one carried by the intentions when the
- * driver ran `lower`/`optimize`, or a freshly lowered one when a caller invoked
- * `generate` directly.
- */
-function sveltePlan(
-  module: SemanticModule,
-  context: TargetContext,
-  intentions: TargetIntentions,
-): SvelteLoweredModule {
-  return isSvelteLowered(intentions.lowered)
-    ? intentions.lowered
-    : lowerSvelteModule(module, context).lowered;
-}
-
 /** Create the Svelte output plugin and its Vite/Rolldown compiler adapters. */
 export function forgeSvelteFramework(): FrameworkOutputPlugin {
   return defineForgeOutputPlugin({
@@ -84,6 +71,7 @@ export function forgeSvelteFramework(): FrameworkOutputPlugin {
       return optimizeSvelteModule(intentions, options);
     },
     generate(intentions: TargetIntentions, context: TargetContext) {
+      assertTargetIntentionsLowered<SvelteLoweredModule>(intentions, "svelte");
       if (context.moduleKind === "composable") {
         return {
           code: emitSvelteHookModule(intentions.module),
@@ -94,7 +82,7 @@ export function forgeSvelteFramework(): FrameworkOutputPlugin {
         intentions.module,
         context.componentName,
         context.componentFolders,
-        sveltePlan(intentions.module, context, intentions),
+        intentions.lowered,
       );
       return {
         code: generated.code,

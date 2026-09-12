@@ -7,6 +7,5 @@ export {
   type QrModuleShape,
   type QrVariant,
 } from './forge-qr-code';
-// The component only consumes this type; it is owned by the package's shared
-// types module, which both the encoder and the decoder entry depend on.
+// The component consumes the encoder's shared error-correction type.
 export { type QrErrorCorrection } from '../../../types';

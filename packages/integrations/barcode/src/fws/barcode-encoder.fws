@@ -222,11 +222,11 @@ export fn encode_upca_impl(value: string) -> string {
   let length: i32 = string_length(value);
   if length == 11 {
     if !has_eleven_digits(value) { return ""; }
-    return encode_ean13_impl(string_concat("0", value));
+    return string_concat(encode_ean13_impl(string_concat("0", value)), "");
   }
   if length == 12 {
     if !has_twelve_digits(value) { return ""; }
-    return encode_ean13_impl(string_concat("0", value));
+    return string_concat(encode_ean13_impl(string_concat("0", value)), "");
   }
   return "";
 }

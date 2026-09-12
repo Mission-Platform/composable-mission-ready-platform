@@ -234,77 +234,48 @@ fn syndromes_clean(full_ptr: u32, n: i32, num_ec: i32) -> bool {
 // into next_cell[0]. `mode` is 901 (byte) or 924 (byte, multiple of six).
 fn byte_compaction(mode: i32, full_ptr: u32, start: i32, count: i32, next_cell: u32) -> string {
   let mut out: string = "";
-  let vals: u32 = c.mem_alloc_bytes(5 * 4);
   let bytes: u32 = c.mem_alloc_bytes(6 * 4);
-  let mut ci: i32 = start;
-  let mut ended: bool = false;
-  while ci < count && !ended {
-    if word_get(full_ptr, ci) >= 900 {
-      ended = true;
-    } else {
-      // Collect up to five codewords for a candidate six-pack.
-      let mut n: i32 = 0;
-      let mut collecting: bool = true;
-      while collecting {
-        word_set(vals, n, word_get(full_ptr, ci));
-        ci = ci + 1;
-        n = n + 1;
-        let more: bool = n < 5 && ci < count && word_get(full_ptr, ci) < 900;
-        if !more {
-          collecting = false;
-        }
-      }
-      let mut six_pack: bool = false;
-      if n == 5 {
-        if mode == 924 {
-          six_pack = true;
-        } else {
-          if ci < count && word_get(full_ptr, ci) < 900 {
-            six_pack = true;
-          }
-        }
-      }
-      if six_pack {
-        // base-900 -> base-256 via a six-byte big-endian accumulator (48 bits,
-        // avoids 64-bit arithmetic and int casts).
-        let mut j: i32 = 0;
-        while j < 6 {
-          word_set(bytes, j, 0);
-          j = j + 1;
-        }
-        let mut vi: i32 = 0;
-        while vi < 5 {
-          let mut carry: i32 = word_get(vals, vi);
-          let mut bj: i32 = 5;
-          while bj >= 0 {
-            let mut t: i32 = word_get(bytes, bj) * 900 + carry;
-            word_set(bytes, bj, t - t / 256 * 256);
-            carry = t / 256;
-            bj = bj - 1;
-          }
-          vi = vi + 1;
-        }
-        let mut ob: i32 = 0;
-        while ob < 6 {
-          out = string_concat(out, c.ascii_char_of(word_get(bytes, ob)));
-          ob = ob + 1;
-        }
-      } else {
-        // Not a full six-pack: replay the collected codewords as raw bytes and
-        // continue reading verbatim bytes until the next non-byte codeword.
-        ci = ci - n;
-        while ci < count && !ended {
-          let code: i32 = word_get(full_ptr, ci);
-          ci = ci + 1;
-          if code < 900 {
-            out = string_concat(out, c.ascii_char_of(code));
-          } else {
-            ci = ci - 1;
-            ended = true;
-          }
-        }
-      }
+  let mut ci: i32 = start - 1;
+  let mut groups: bool = true;
+  while ci + 5 < count && groups {
+    let mut valid: bool = true;
+    let mut j: i32 = 0;
+    while j < 5 {
+      if word_get(full_ptr, ci + j) >= 900 { valid = false; }
+      j = j + 1;
     }
+    if !valid {
+      groups = false;
+    } else {
+    j = 0;
+    while j < 6 {
+      word_set(bytes, j, 0);
+      j = j + 1;
+    }
+    let mut vi: i32 = 0;
+    while vi < 5 {
+      let mut carry: i32 = word_get(full_ptr, ci + vi);
+      let mut bj: i32 = 5;
+      while bj >= 0 {
+        let mut t: i32 = word_get(bytes, bj) * 900 + carry;
+        let quotient: i32 = t / 256;
+        word_set(bytes, bj, t - quotient * 256);
+        carry = quotient;
+        bj = bj - 1;
+      }
+      vi = vi + 1;
+    }
+    j = 0;
+    while j < 6 {
+      out = string_concat(out, c.ascii_char_of(word_get(bytes, j)));
+      j = j + 1;
+    }
+      ci = ci + 5;
+    }
+  }
+  while ci < count && word_get(full_ptr, ci) < 900 {
+    out = string_concat(out, c.ascii_char_of(word_get(full_ptr, ci)));
+    ci = ci + 1;
   }
   word_set(next_cell, 0, ci);
   return string_concat("", out);
@@ -363,26 +334,77 @@ fn punct_byte(sub: i32) -> i32 {
   return -1;
 }
 
+fn text_upper(value: i32) -> string {
+  if value == 0 { return "A"; } if value == 1 { return "B"; }
+  if value == 2 { return "C"; } if value == 3 { return "D"; }
+  if value == 4 { return "E"; } if value == 5 { return "F"; }
+  if value == 6 { return "G"; } if value == 7 { return "H"; }
+  if value == 8 { return "I"; } if value == 9 { return "J"; }
+  if value == 10 { return "K"; } if value == 11 { return "L"; }
+  if value == 12 { return "M"; } if value == 13 { return "N"; }
+  if value == 14 { return "O"; } if value == 15 { return "P"; }
+  if value == 16 { return "Q"; } if value == 17 { return "R"; }
+  if value == 18 { return "S"; } if value == 19 { return "T"; }
+  if value == 20 { return "U"; } if value == 21 { return "V"; }
+  if value == 22 { return "W"; } if value == 23 { return "X"; }
+  if value == 24 { return "Y"; }
+  return "Z";
+}
+
+fn text_lower(value: i32) -> string {
+  if value == 0 { return "a"; } if value == 1 { return "b"; }
+  if value == 2 { return "c"; } if value == 3 { return "d"; }
+  if value == 4 { return "e"; } if value == 5 { return "f"; }
+  if value == 6 { return "g"; } if value == 7 { return "h"; }
+  if value == 8 { return "i"; } if value == 9 { return "j"; }
+  if value == 10 { return "k"; } if value == 11 { return "l"; }
+  if value == 12 { return "m"; } if value == 13 { return "n"; }
+  if value == 14 { return "o"; } if value == 15 { return "p"; }
+  if value == 16 { return "q"; } if value == 17 { return "r"; }
+  if value == 18 { return "s"; } if value == 19 { return "t"; }
+  if value == 20 { return "u"; } if value == 21 { return "v"; }
+  if value == 22 { return "w"; } if value == 23 { return "x"; }
+  if value == 24 { return "y"; }
+  return "z";
+}
+
+fn text_digit(value: i32) -> string {
+  if value == 0 { return "0"; } if value == 1 { return "1"; }
+  if value == 2 { return "2"; } if value == 3 { return "3"; }
+  if value == 4 { return "4"; } if value == 5 { return "5"; }
+  if value == 6 { return "6"; } if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+fn text_char(value: i32) -> string {
+  if value == 32 { return " "; }
+  if value >= 48 && value <= 57 { return string_concat("", text_digit(value - 48)); }
+  if value >= 65 && value <= 90 { return string_concat("", text_upper(value - 65)); }
+  if value >= 97 && value <= 122 { return string_concat("", text_lower(value - 97)); }
+  return string_concat("", c.ascii_char_of(value));
+}
+
 // Decode one base-30 Text Compaction value. Modes are Alpha, Lower, Mixed,
 // Punct, AlphaShift and PunctShift; shift modes restore prior_cell afterwards.
-fn text_subchar(sub: i32, state_cell: u32, prior_cell: u32) -> string {
+fn text_subchar(sub: i32, state_cell: u32, prior_cell: u32) -> i32 {
   let state: i32 = word_get(state_cell, 0);
   let mut value: i32 = -1;
   if state == 0 {
-    if sub < 26 { return string_concat("", c.ascii_char_of(65 + sub)); }
-    if sub == 26 { return string_concat("", c.ascii_char_of(32)); }
+    if sub < 26 { return 65 + sub; }
+    if sub == 26 { return 32; }
     if sub == 27 { word_set(state_cell, 0, 1); }
     if sub == 28 { word_set(state_cell, 0, 2); }
     if sub == 29 { word_set(prior_cell, 0, state); word_set(state_cell, 0, 5); }
-    return "";
+    return -1;
   }
   if state == 1 {
-    if sub < 26 { return string_concat("", c.ascii_char_of(97 + sub)); }
-    if sub == 26 { return string_concat("", c.ascii_char_of(32)); }
+    if sub < 26 { return 97 + sub; }
+    if sub == 26 { return 32; }
     if sub == 27 { word_set(prior_cell, 0, state); word_set(state_cell, 0, 4); }
     if sub == 28 { word_set(state_cell, 0, 2); }
     if sub == 29 { word_set(prior_cell, 0, state); word_set(state_cell, 0, 5); }
-    return "";
+    return -1;
   }
   if state == 2 {
     if sub < 25 { value = mixed_byte(sub); }
@@ -406,9 +428,9 @@ fn text_subchar(sub: i32, state_cell: u32, prior_cell: u32) -> string {
     if sub < 29 { value = punct_byte(sub); }
     if sub == 29 { word_set(state_cell, 0, 0); }
   }
-  if value < 0 { return ""; }
-  return string_concat("", c.ascii_char_of(value));
+  return value;
 }
+
 
 // Convert a corrected codeword array (full_ptr[0] = data codeword count) to its
 // payload. Supports Text and Byte Compaction; Numeric Compaction remains
@@ -436,8 +458,10 @@ fn decode_bitstream(full_ptr: u32, n: i32, num_ec: i32) -> string {
     let code: i32 = word_get(full_ptr, ci);
     ci = ci + 1;
     if code < 900 {
-      result = string_concat(result, text_subchar(code / 30, state_cell, prior_cell));
-      result = string_concat(result, text_subchar(code - code / 30 * 30, state_cell, prior_cell));
+      let high: i32 = text_subchar(code / 30, state_cell, prior_cell);
+      let low: i32 = text_subchar(code - code / 30 * 30, state_cell, prior_cell);
+      if high >= 0 { result = string_concat(result, text_char(high)); }
+      if low >= 0 { result = string_concat(result, text_char(low)); }
     } else {
       if code == 900 {
         word_set(state_cell, 0, 0);

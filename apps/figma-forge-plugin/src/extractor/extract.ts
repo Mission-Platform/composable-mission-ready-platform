@@ -188,17 +188,26 @@ function variableFor(context: ExtractionContext, node: FigmaNode, key: string, i
   return resolution;
 }
 
-async function assetsFor(
+function hasBoundVariables(node: FigmaNode): boolean {
+  if (!node.boundVariables) return false;
+  return Object.values(node.boundVariables).some((binding) => {
+    if (Array.isArray(binding)) return binding.length > 0;
+    return Boolean(binding);
+  });
+}
+
+async function resolveImageAsset(
   context: ExtractionContext,
   node: FigmaNode,
-  paints: readonly FigmaPaint[] | undefined,
+  paint: FigmaPaint,
 ): Promise<string | undefined> {
-  const imagePaint = paints?.find((paint) => paint.visible !== false && paint.type === 'IMAGE' && paint.imageReference);
-  if (!imagePaint?.imageReference || !context.options.loadImage) return imagePaint?.imageReference;
-  const assetId = `image-${imagePaint.imageReference}`;
+  const imageIdentifier = paint.imageHash ?? paint.imageReference;
+  if (!imageIdentifier) return undefined;
+  if (!context.options.loadImage) return imageIdentifier;
+  const assetId = `image-${imageIdentifier}`;
   if (!context.assets.has(assetId)) {
-    const bytes = await context.options.loadImage(imagePaint.imageReference, node);
-    if (bytes)
+    const bytes = await context.options.loadImage(imageIdentifier, node);
+    if (bytes) {
       context.assets.set(assetId, {
         id: assetId,
         fileName: `${assetId}.png`,
@@ -207,7 +216,7 @@ async function assetsFor(
         width: bytes.width,
         height: bytes.height,
       });
-    else
+    } else {
       context.diagnostics.push(
         createForgeDiagnostic({
           code: 'MISSING_IMAGE_BYTES',
@@ -219,6 +228,7 @@ async function assetsFor(
           suggestion: 'Re-export the image from Figma and retry conversion.',
         }),
       );
+    }
   }
   return assetId;
 }
@@ -291,8 +301,13 @@ function mapComponent(context: ExtractionContext, node: FigmaNode): ForgeCompone
   };
 }
 
-function mapStyle(context: ExtractionContext, node: FigmaNode, imageAssetId?: string): ForgeStyle | undefined {
-  const fills = node.fills?.filter((paint) => paint.visible !== false).map((paint) => mapPaint(paint, imageAssetId));
+function mapStyle(
+  context: ExtractionContext,
+  node: FigmaNode,
+  fillAssetIds: readonly (string | undefined)[],
+): ForgeStyle | undefined {
+  const visibleFills = node.fills?.filter((paint) => paint.visible !== false);
+  const fills = visibleFills?.map((paint, index) => mapPaint(paint, fillAssetIds[index]));
   const strokes = node.strokes
     ?.filter((paint) => paint.visible !== false)
     .map((paint, index): ForgeStroke => ({
@@ -306,7 +321,12 @@ function mapStyle(context: ExtractionContext, node: FigmaNode, imageAssetId?: st
   const tokenKeys = ['fill', 'stroke', 'opacity', 'cornerRadius', 'itemSpacing', 'padding'];
   for (const key of tokenKeys) {
     const resolution = variableFor(context, node, key);
-    if (resolution?.reference) tokens[key] = resolution.reference;
+    if (resolution?.reference) {
+      tokens[key] = resolution.reference;
+      if (key === 'itemSpacing') {
+        tokens.gap = resolution.reference;
+      }
+    }
   }
   const radius =
     node.cornerRadius === undefined &&
@@ -359,8 +379,37 @@ function nodeType(type: string): ForgeDesignNode['type'] {
   return mapping[type] ?? 'unknown';
 }
 
+async function resolveFillAsset(
+  context: ExtractionContext,
+  node: FigmaNode,
+  paint: FigmaPaint,
+): Promise<string | undefined> {
+  if (paint.type === 'IMAGE') {
+    return resolveImageAsset(context, node, paint);
+  }
+}
+
 async function extractNode(context: ExtractionContext, node: FigmaNode): Promise<ForgeDesignNode> {
-  const assetId = await assetsFor(context, node, node.fills);
+  if (!context.options.resolveVariable && hasBoundVariables(node)) {
+    context.diagnostics.push(
+      createForgeDiagnostic({
+        code: 'MISSING_VARIABLE_RESOLVER',
+        severity: 'warning',
+        message: `Layer "${node.name}" contains bound variables, but no variable resolver is available in the extraction context.`,
+        feature: 'token',
+        nodeId: node.id,
+        nodeName: node.name,
+        suggestion: 'Provide a resolveVariable option or run within an active Figma plugin host.',
+      }),
+    );
+  }
+
+  const visibleFills = node.fills?.filter((paint) => paint.visible !== false);
+  const fillAssetIds = visibleFills
+    ? await Promise.all(visibleFills.map((paint) => resolveFillAsset(context, node, paint)))
+    : [];
+  const primaryAssetId = fillAssetIds.find((id) => id && context.assets.has(id));
+
   const type = nodeType(node.type);
   if (type === 'unknown' || type === 'vector' || type === 'boolean-operation')
     context.diagnostics.push(
@@ -391,7 +440,7 @@ async function extractNode(context: ExtractionContext, node: FigmaNode): Promise
         ? { width: node.width ?? 0, height: node.height ?? 0 }
         : undefined,
     constraints,
-    style: mapStyle(context, node, assetId),
+    style: mapStyle(context, node, fillAssetIds),
     text:
       node.characters === undefined
         ? undefined
@@ -402,7 +451,7 @@ async function extractNode(context: ExtractionContext, node: FigmaNode): Promise
           },
     component: mapComponent(context, node),
     children: await Promise.all((node.children ?? []).map((child) => extractNode(context, child))),
-    assetId: assetId && context.assets.has(assetId) ? assetId : undefined,
+    assetId: primaryAssetId,
   };
 }
 

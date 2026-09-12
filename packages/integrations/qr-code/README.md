@@ -1,39 +1,32 @@
 # @mission-platform/qr-code
 
-A dependency-free **QR Code encoder _and_ decoder** backed by package-local
-Forge Web Script artifacts and exposed through a small, fully typed ES module
-wrapper.
+A dependency-free **QR Code encoder** backed by a package-local Forge Web Script
+artifact and exposed through a small, fully typed ES module wrapper.
 
 The **encoder** supports byte mode (which can represent any text/URL), automatic version selection and lowest-penalty
 data-mask selection per the QR specification (ISO/IEC 18004). It is a port of Project Nayuki's public-domain reference
 QR Code generator.
 
-The **decoder** recovers the payload from a module matrix: it reads the format info (ECC level + data mask), unmasks the
-data region, walks the codewords in the encoder's zig-zag order, de-interleaves the Reed-Solomon blocks and corrects
-errors up to the level's capacity (a full Berlekamp-Massey / Chien / Forney corrector), then parses the byte-mode
-segment.
-
 ## Usage
 
 ```ts
-import { encodeQr, decodeQr } from '@mission-platform/qr-code';
+import { encodeQr } from '@mission-platform/qr-code';
 
 const matrix = encodeQr('https://mission-platform.dev', 'M');
 // matrix.size    -> side length in modules (e.g. 25)
 // matrix.version -> selected QR version (1–40)
 // matrix.modules -> boolean[][]; modules[y][x] === true when dark
-
-const text = decodeQr(matrix); // 'https://mission-platform.dev', or null
 ```
 
-`encodeQr` / `decodeQr` load their package-local FWS graphs **synchronously** on
-first use, so they are safe to call from render paths. Async variants,
-`encodeQrAsync` / `decodeQrAsync`, are also exported and use the corresponding
-asynchronous graph loaders.
+`encodeQr` loads its package-local FWS graph **synchronously** on first use, so it
+is safe to call from render paths. The async variant, `encodeQrAsync`, is also
+exported and uses the asynchronous graph loader.
 
-`encodeQr` throws a `RangeError` when the payload is too long to fit the largest (version 40) QR Code at the chosen
-error-correction level. `decodeQr` returns
-`null` when the matrix cannot be decoded.
+`encodeQr` throws a `RangeError` when the payload is too long to fit the largest
+(version 40) QR Code at the chosen error-correction level.
+
+To decode captured images or camera frames, use the scanner APIs from
+`@mission-platform/code-scanner`.
 
 ## Content formats
 
@@ -63,9 +56,8 @@ graph, so they are cheap and synchronous.
 
 - `src/fws/qr-encoder.fws` — the standard QR byte-mode encoder graph.
 - `src/fws/qr-compact-encoder.fws` — the Micro QR and rMQR encoder graph.
-- `src/fws/qr-decoder.fws` — the packed square-matrix decoder graph.
-- `src/encoder` and `src/decoder` — typed façades that load the graphs lazily
-  through `loadSync()` or `load()` and normalize their compact packed ABI.
+- `src/encoder` — the typed façade that loads the encoder graphs lazily through
+  `loadSync()` or `load()` and normalizes their compact packed ABI.
 - `crates/qr-code-*` — retained Rust algorithm crates used by `code-scan` and
   native scanner tests; they are not runtime dependencies of this package.
 

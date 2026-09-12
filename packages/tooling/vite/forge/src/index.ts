@@ -1,42 +1,62 @@
 /**
  * `@mission-platform/vite-plugin-forge`
  *
- * A **two-stage** compiler that turns the framework-neutral components authored
- * against `@mission-platform/forge-jsx` into fully native React or Vue 3 components,
- * with no runtime adapter:
+ * A framework-neutral compiler driver that turns components and composables authored
+ * against `@mission-platform/forge-jsx` into native target artifacts across five
+ * built-in frameworks (React, Vue 3, Solid, Svelte 5, Web Components) or arbitrary
+ * custom plugin targets, with no generic runtime adapter:
  *
- * 1. **Stage 1 — source-to-source.** {@link generateFrameworkSources} parses the
- *    neutral `.tsx` modules with Oxc and emits a
- *    per-framework source tree: a React `.tsx` module (`class` → `className`,
- *    `h` → `React.createElement`) or a real Vue `.vue` single-file component
- *    (`<script setup>` with native `<template>` markup where the body allows it,
- *    else a `render` closure rendered from the `<template>`; React-style hooks
- *    translated to Vue reactivity/lifecycle). Adding a target framework is just
- *    another emitter.
- * 2. **Stage 2 — native compile.** The generated tree is compiled by the
- *    framework's own toolchain — the classic-`h` React JSX transform (configured
- *    by {@link reactJsxPlugin}) or `@vitejs/plugin-vue` (+ `@vitejs/plugin-vue-jsx`)
- *    — so neither runtime pays for a generic walk.
+ * 1. **Parse & Normalize (Oxc).** Neutral `.tsx` source is parsed with Oxc into a
+ *    generic AST and normalized into stable facts and markers. Oxc is the sole
+ *    compiler AST path; legacy TypeScript AST shims are removed.
+ * 2. **Neutral Optimize & Semantic IR.** Shared optimizations produce a framework-neutral
+ *    `SemanticModule` capturing component/composable intentions, props, state, effects,
+ *    and render trees.
+ * 3. **Target Lower & Target Optimize.** The explicitly supplied `FrameworkOutputPlugin`
+ *    lowers neutral semantics into a target-owned plan (`lower`), then refines it
+ *    (`optimize`). Lowering is a required phase; target generation strictly requires
+ *    a lowered and optimized plan (`assertTargetIntentionsLowered`).
+ * 4. **Generate.** The plugin's `generate` phase emits native target source (e.g.,
+ *    React `.tsx`, Vue `.vue` SFC, Solid `.tsx`, Svelte `.svelte`, or Web Components
+ *    custom elements).
+ * 5. **Native Build.** The generated tree is compiled by native framework toolchains
+ *    configured via the plugin's `build.vite` or `build.tsdown` adapters.
+ *
+ * Custom targets are registered simply by implementing a `FrameworkOutputPlugin` with
+ * an open `FrameworkId` (`JsxFramework | (string & {})`); there is no internal target
+ * registry or enum switch in the driver.
  *
  * Because the generated public entry is not a `tsc`-visible source file,
- * {@link jsxComponentsEntryDtsPlugin} synthesises its `./react` / `./vue`
- * declarations at build time.
+ * {@link jsxComponentsEntryDtsPlugin} synthesises per-framework declarations at
+ * build time.
  *
  * @example
  * ```ts
- * // vite.config.ts (mode === 'react')
- * const entry = generateFrameworkSources({ framework: 'react', componentsModule, outDir });
- * defineLibraryConfig({
- *   rootDir: __dirname,
- *   entry,
- *   fileName: 'react',
- *   overrides: {
- *     plugins: [reactJsxPlugin(), jsxComponentsEntryDtsPlugin({ framework: 'react', componentsModule, declarationFileName: 'react' })],
- *   },
+ * // tsdown.config.ts — one library config, Forge plugins inject lifecycle lazily
+ * defineTsdownLibrary({
+ *   rootDir: import.meta.dirname,
+ *   entry: 'src/index.ts',
+ *   plugins: tsdownForgeComponentPlugins({
+ *     rootDir: import.meta.dirname,
+ *     frameworks: [
+ *       forgeReactFramework(),
+ *       forgeVueFramework(),
+ *       forgeSolidFramework(),
+ *       forgeSvelteFramework(),
+ *       forgeWebComponentsFramework(),
+ *     ],
+ *   }),
+ * });
+ *
+ * // vite.config.ts — high-level helper owns a build session; generation runs in buildStart
+ * defineJsxLibraryConfig({
+ *   rootDir: import.meta.dirname,
+ *   plugin: forgeReactFramework(),
+ *   name: 'MissionPlatformComponents',
  * });
  * ```
  */
-export { reactJsxPlugin as default } from './config.js';
+export { forgeArtifactPublishPlugin, forgeBuildLifecyclePlugin, forgeVirtualEntry } from './build-integration.js';
 
 /**
  * A Vite plugin that configures the automatic React JSX runtime for generated
@@ -94,7 +114,11 @@ export {
   type ForgeArtifactManifest,
   type ForgeArtifactRecord,
 } from './compiler/artifact-manifest.js';
-export { createForgeArtifactWriter, type ForgeArtifactWriter } from './compiler/artifact-writer.js';
+export {
+  createForgeArtifactWriter,
+  forgeArtifactAttemptDirectory,
+  type ForgeArtifactWriter,
+} from './compiler/artifact-writer.js';
 export {
   assertForgeArtifactRoot,
   ensureForgeArtifactDirectory,
@@ -107,6 +131,17 @@ export {
   type ForgeGenerationContext,
   type ForgeGenerationContextOptions,
 } from './compiler/generation-context.js';
+export {
+  createForgeBuildSession,
+  type CreateForgeBuildSessionOptions,
+  type ForgeBuildKind,
+  type ForgeBuildPlan,
+  type ForgeBuildSession,
+  type ForgeTargetGenerationContext,
+  type ForgeTargetGenerationResult,
+  type ForgeTargetPlan,
+  type ForgeTargetResult,
+} from './compiler/session.js';
 
 export {
   CompilerDiagnosticError,
@@ -115,7 +150,7 @@ export {
   throwOnCompilerErrors,
 } from '@mission-platform/forge-plugin-api';
 
-export { findComponentFunction, isSlotElement, readSlotName } from './compiler/ast.js';
+export { findComponentFunction, isSlotElement, readSlotName } from './compiler/components.js';
 export { parseOxcModule, type OxcComment, type OxcNode, type OxcParsedModule } from './compiler/oxc.js';
 export {
   discoverComponentsFromGraph,
@@ -178,29 +213,19 @@ export { analyzeRouterCapabilities, compileRouterModule, createRouterCompilerPip
 export {
   generateFrameworkSources,
   createFrameworkSourceTarget,
-  jsxComponentsCssImportPlugin,
-  jsxComponentsDtsPlugin,
-  jsxComponentsEntryDtsPlugin,
   type GenerateFrameworkSourcesOptions,
   type FrameworkSourceTarget,
-  type JsxComponentsDtsOptions,
-  type JsxComponentsEntryDtsOptions,
 } from './generate.js';
 
-export {
-  generateHookLibrarySources,
-  hookLibraryDtsPlugin,
-  type GenerateHookLibrarySourcesOptions,
-  type HookLibraryDtsOptions,
-} from './generate-hooks.js';
+export { generateHookLibrarySources, type GenerateHookLibrarySourcesOptions } from './generate-hooks.js';
 
 export {
-  defineTsdownForgeComponents,
-  defineTsdownForgeEmailComponents,
-  defineTsdownForgeHooks,
+  defineTsdownForgeComponentsAll,
   defineTsdownForgeHooksAll,
-  type TsdownForgeComponentsOptions,
+  tsdownForgeComponentPlugins,
+  tsdownForgeHookPlugins,
+  defineTsdownForgeEmailComponents,
+  type TsdownForgeComponentPluginsOptions,
   type TsdownForgeEmailComponentsOptions,
   type TsdownForgeHooksAllOptions,
-  type TsdownForgeHooksOptions,
 } from './tsdown.js';

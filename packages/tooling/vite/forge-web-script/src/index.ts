@@ -225,6 +225,7 @@ export function forgeWebScriptPlugin(
         }
       }
       service.invalidate([...invalidated]);
+      options.graphCache?.invalidate([...invalidated]);
       compiled.delete(split.fileName);
       return context.modules;
     },
@@ -241,21 +242,25 @@ export function forgeWebScriptPlugin(
           type: "asset",
           fileName: `${stem}.${hash}.wasm`,
           source: result.artifact.wasm,
+          originalFileName: result.fileName,
         });
         this.emitFile({
           type: "asset",
           fileName: `${stem}.${hash}.abi.json`,
           source: JSON.stringify(result.artifact.manifest, null, 2),
+          originalFileName: result.fileName,
         });
         this.emitFile({
           type: "asset",
           fileName: `${stem}.${hash}.d.ts`,
           source: result.artifact.declarations,
+          originalFileName: result.fileName,
         });
         this.emitFile({
           type: "asset",
           fileName: `${stem}.${hash}.map`,
           source: result.sourceMap,
+          originalFileName: result.fileName,
         });
       }
     },

@@ -17,7 +17,10 @@ import { isVueLowered } from "./lower.js";
 
 import { forgeVueFramework } from ".";
 
-import type { TargetContext } from "@mission-platform/forge-plugin-api";
+import type {
+  TargetContext,
+  TargetIntentions,
+} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "vue",
@@ -32,6 +35,19 @@ describe("Vue Forge framework package", () => {
     expect(framework.outputLanguage).toBe("vue");
     expect(framework.build.vite?.({})).toHaveLength(1);
     expect(framework.build.tsdown?.({})).toHaveLength(2);
+  });
+
+  it("rejects generation without a lowered target plan", () => {
+    const framework = forgeVueFramework();
+    const incomplete = {
+      framework: "vue",
+      module: semanticModule({}),
+      context: CONTEXT,
+    } as unknown as TargetIntentions;
+
+    expect(() => framework.generate(incomplete, CONTEXT)).toThrow(
+      "must contain a lowered target plan",
+    );
   });
 
   it("runs lower → optimize → generate over the neutral module", () => {
@@ -102,7 +118,7 @@ describe("Vue Forge framework package", () => {
     });
 
     const generated = framework.generate(
-      framework.lower(module, CONTEXT),
+      framework.optimize(framework.lower(module, CONTEXT), { neutral: {} }),
       CONTEXT,
     ).code;
 
@@ -137,7 +153,7 @@ describe("Vue Forge framework package", () => {
     });
 
     const generated = framework.generate(
-      framework.lower(module, CONTEXT),
+      framework.optimize(framework.lower(module, CONTEXT), { neutral: {} }),
       CONTEXT,
     ).code;
 
@@ -163,10 +179,13 @@ describe("Vue Forge framework package", () => {
     });
 
     const generated = framework.generate(
-      framework.lower(module, {
-        ...CONTEXT,
-        moduleKind: "composable",
-      }),
+      framework.optimize(
+        framework.lower(module, {
+          ...CONTEXT,
+          moduleKind: "composable",
+        }),
+        { neutral: {} },
+      ),
       { ...CONTEXT, moduleKind: "composable" },
     );
 

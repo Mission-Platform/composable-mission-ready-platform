@@ -1,18 +1,15 @@
 import {
+  assertTargetIntentionsLowered,
   defineForgeOutputPlugin,
   frameworkAdapterModule,
 } from "@mission-platform/forge-plugin-api";
 
 import { emitWebComponentModule } from "./emitters/module.js";
-import {
-  inferWebComponentsHost,
-  isWebComponentsLowered,
-  lowerWebComponentsModule,
-  lowerWebComponentsPlan,
-} from "./lower.js";
+import { inferWebComponentsHost, lowerWebComponentsModule } from "./lower.js";
 import { optimizeWebComponentsModule } from "./optimize.js";
 import { emitWebComponentHookModule } from "./runtime/hook-module.js";
 
+import type { WebComponentsLoweredModule } from "./lower.js";
 import type {
   FrameworkBuildAdapters,
   FrameworkOutputPlugin,
@@ -84,6 +81,10 @@ export function forgeWebComponentsFramework(): FrameworkOutputPlugin {
       return optimizeWebComponentsModule(intentions, options);
     },
     generate(intentions: TargetIntentions, context: TargetContext) {
+      assertTargetIntentionsLowered<WebComponentsLoweredModule>(
+        intentions,
+        "web-components",
+      );
       if (context.moduleKind === "composable") {
         return {
           code: emitWebComponentHookModule(intentions.module),
@@ -91,16 +92,11 @@ export function forgeWebComponentsFramework(): FrameworkOutputPlugin {
         };
       }
       const componentName = context.componentName ?? "CustomElement";
-      // A caller that skipped the lowering phase still gets a plan, so the
-      // emitter is never handed a half-built module.
-      const plan = isWebComponentsLowered(intentions.lowered)
-        ? intentions.lowered
-        : lowerWebComponentsPlan(intentions.module, context);
       const generated = emitWebComponentModule(
         intentions.module,
         componentName,
         context.componentFolders,
-        plan,
+        intentions.lowered,
       );
       return {
         code: generated.code,

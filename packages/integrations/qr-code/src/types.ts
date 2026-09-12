@@ -1,13 +1,12 @@
-// Shared public types for the QR Code encoder/decoder façade.
+// Shared public types for the QR Code encoder façade.
 //
-// These live in their own module so both the encoder entry (`index.ts`) and the
-// decoder (`decode.ts`) can depend on them without importing each other — which
-// keeps the internal module graph acyclic.
+// These live in their own module so the encoder entry and framework components
+// can depend on them without importing each other.
 
 /** Error-correction level: higher levels tolerate more damage but hold less data. */
 export type QrErrorCorrection = 'L' | 'M' | 'Q' | 'H';
 
-/** A decoded / encoded QR Code: a square grid of dark (`true`) modules. */
+/** An encoded QR Code: a square grid of dark (`true`) modules. */
 export interface QrMatrix {
   /** Side length of the matrix, in modules (excluding any quiet-zone margin). */
   size: number;

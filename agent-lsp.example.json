@@ -10,8 +10,6 @@
       ],
       "command": [
         "pnpm",
-        "--dir",
-        "<project_dir>",
         "exec",
         "tsc",
         "--lsp",
@@ -26,9 +24,9 @@
       "command": [
         "pnpm",
         "--dir",
-        "<project_dir>/packages/forge-web-script-lsp",
-        "node",
-        "dist/main.js",
+        "packages/compiler/forge/forge-web-script-lsp",
+        "exec",
+        "./dist/main.js",
         "--stdio"
       ]
     },
@@ -39,8 +37,6 @@
       ],
       "command": [
         "pnpm",
-        "--dir",
-        "<project_dir>",
         "exec",
         "yaml-language-server",
         "--stdio"
@@ -54,8 +50,6 @@
       ],
       "command": [
         "pnpm",
-        "--dir",
-        "<project_dir>",
         "exec",
         "stylelint-lsp",
         "--stdio"
@@ -68,8 +62,6 @@
       ],
       "command": [
         "pnpm",
-        "--dir",
-        "<project_dir>",
         "exec",
         "vscode-json-language-server",
         "--stdio"
@@ -83,8 +75,6 @@
       ],
       "command": [
         "pnpm",
-        "--dir",
-        "<project_dir>",
         "exec",
         "vscode-css-language-server",
         "--stdio"
@@ -97,11 +87,54 @@
       ],
       "command": [
         "pnpm",
-        "--dir",
-        "<project_dir>",
         "exec",
         "vscode-html-language-server",
         "--stdio"
+      ]
+    },
+    {
+      "language_id": "eslint",
+      "extensions": [
+        "js",
+        "jsx",
+        "ts",
+        "tsx",
+        "vue"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "vscode-eslint-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "markdown",
+      "extensions": [
+        "md"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "vscode-markdown-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "sonarlint",
+      "extensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "vue"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "node",
+        "--experimental-strip-types",
+        "scripts/sonarlint-language-server.ts"
       ]
     }
   ]

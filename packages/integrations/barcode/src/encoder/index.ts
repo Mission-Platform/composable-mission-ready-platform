@@ -3,23 +3,9 @@
 import { load as loadBarcodeNative, loadSync as loadBarcodeNativeSync } from '../fws/barcode-native.fws';
 import { FWS_SYMBOLOGY } from '../fws/symbology';
 
-/** Supported linear barcode symbologies. */
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
+import type { BarcodeSymbology } from './types';
+
+export type { BarcodeSymbology } from './types';
 
 /** The result of {@link encodeBarcode}: module bits with their total width. */
 export interface Barcode {

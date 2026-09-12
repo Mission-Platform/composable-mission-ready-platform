@@ -15,7 +15,7 @@ describe('documentation source ownership', () => {
   it('discovers project and package roots with stable qualified prefixes', () => {
     const roots = discoverDocumentationRoots(repositoryRoot);
     const project = roots.find((root) => root.kind === 'project');
-    const barcode = roots.find((root) => root.routePrefix === 'packages/barcode');
+    const barcode = roots.find((root) => root.routePrefix === 'packages/integrations/barcode');
 
     expect(project?.routePrefix).toBe('');
     expect(barcode?.packageName).toBe('@mission-platform/barcode');

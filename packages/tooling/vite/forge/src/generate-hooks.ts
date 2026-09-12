@@ -10,10 +10,10 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
-import { readNeutralImports } from './compiler/ast.js';
 import { createForgeGenerationContext, type ForgeGenerationContext } from './compiler/generation-context.js';
+import { readNeutralImports } from './compiler/imports.js';
 
-import type { DiscoveredHelperExport } from './compiler/discover.js';
+import type { DiscoveredHelperBinding, DiscoveredHelperExport } from './compiler/discover.js';
 import type {
   ForgeExportFact,
   ForgeFileGraph,
@@ -67,10 +67,12 @@ function graphTarget(graph: ForgeFileGraph, node: ForgeFileNode, fact: ForgeExpo
   return target === undefined ? undefined : graph.nodes.get(target);
 }
 
-function exportName(localName: string | undefined, exportedName: string | undefined): string | undefined {
+function exportBinding(
+  localName: string | undefined,
+  exportedName: string | undefined,
+): DiscoveredHelperBinding | undefined {
   if (exportedName === undefined) return undefined;
-  if (localName === undefined || localName === exportedName) return exportedName;
-  return `${localName} as ${exportedName}`;
+  return { localName: localName ?? exportedName, exportedName };
 }
 
 function sourceModulePath(rootDirectory: string, sourcePath: string): string {
@@ -96,7 +98,11 @@ function discoverHookModules(graph: ForgeFileGraph): HookDiscoveryResult {
   const discovered = new Map<string, DiscoveredHelperExport>();
   const visitedBarrels = new Set<string>();
 
-  const add = (sourceNode: ForgeFileNode, values: readonly string[], types: readonly string[]): void => {
+  const add = (
+    sourceNode: ForgeFileNode,
+    values: readonly DiscoveredHelperBinding[],
+    types: readonly DiscoveredHelperBinding[],
+  ): void => {
     const relativePath = sourceModulePath(rootDirectory, sourceNode.id);
     const current = discovered.get(sourceNode.id) ?? {
       base: path.basename(relativePath),
@@ -106,10 +112,22 @@ function discoverHookModules(graph: ForgeFileGraph): HookDiscoveryResult {
       sourcePath: sourceNode.id,
     };
     for (const value of values) {
-      if (!current.values.includes(value)) current.values.push(value);
+      if (
+        !current.values.some(
+          (existing) => existing.localName === value.localName && existing.exportedName === value.exportedName,
+        )
+      ) {
+        current.values.push(value);
+      }
     }
     for (const type of types) {
-      if (!current.types.includes(type)) current.types.push(type);
+      if (
+        !current.types.some(
+          (existing) => existing.localName === type.localName && existing.exportedName === type.exportedName,
+        )
+      ) {
+        current.types.push(type);
+      }
     }
     discovered.set(sourceNode.id, current);
   };
@@ -125,8 +143,8 @@ function discoverHookModules(graph: ForgeFileGraph): HookDiscoveryResult {
       if (target === undefined) continue;
       if (fact.star || target.kind === 'folder') {
         if (!fact.star && target.kind === 'folder') {
-          const name = exportName(fact.localName, fact.exportedName);
-          if (name !== undefined) add(target, fact.typeOnly ? [] : [name], fact.typeOnly ? [name] : []);
+          const binding = exportBinding(fact.localName, fact.exportedName);
+          if (binding !== undefined) add(target, fact.typeOnly ? [] : [binding], fact.typeOnly ? [binding] : []);
         }
         visit(target);
         if (fact.star && target.kind !== 'folder') {
@@ -134,19 +152,19 @@ function discoverHookModules(graph: ForgeFileGraph): HookDiscoveryResult {
             target,
             target.exports
               .filter((entry) => !entry.typeOnly)
-              .map((entry) => exportName(entry.localName, entry.exportedName))
-              .filter((name): name is string => name !== undefined),
+              .map((entry) => exportBinding(entry.localName, entry.exportedName))
+              .filter((binding): binding is DiscoveredHelperBinding => binding !== undefined),
             target.exports
               .filter((entry) => entry.typeOnly)
-              .map((entry) => exportName(entry.localName, entry.exportedName))
-              .filter((name): name is string => name !== undefined),
+              .map((entry) => exportBinding(entry.localName, entry.exportedName))
+              .filter((binding): binding is DiscoveredHelperBinding => binding !== undefined),
           );
         }
         continue;
       }
-      const name = exportName(fact.localName, fact.exportedName);
-      if (name === undefined) continue;
-      add(target, fact.typeOnly ? [] : [name], fact.typeOnly ? [name] : []);
+      const binding = exportBinding(fact.localName, fact.exportedName);
+      if (binding === undefined) continue;
+      add(target, fact.typeOnly ? [] : [binding], fact.typeOnly ? [binding] : []);
     }
   };
 
@@ -177,7 +195,14 @@ function resolveModuleSource(
 
 /** Re-export one module's value + type bindings from the generated tree (nested path preserved). */
 function reExportLine(module: DiscoveredHelperExport): string {
-  const names = [...module.values, ...module.types.map((type) => `type ${type}`)];
+  const bindingText = (binding: DiscoveredHelperBinding): string =>
+    binding.localName === binding.exportedName
+      ? binding.exportedName
+      : `${binding.localName} as ${binding.exportedName}`;
+  const names = [
+    ...module.values.map((binding) => bindingText(binding)),
+    ...module.types.map((binding) => `type ${bindingText(binding)}`),
+  ];
   return `export { ${names.join(', ')} } from './${module.relativePath}';`;
 }
 
@@ -369,8 +394,8 @@ function resolveTscBin(): string {
  * not a `tsc`-visible source file. Rather than re-export a single *common*
  * neutral declaration for every framework, this plugin runs the TypeScript 7
  * CLI over the generated tree in `writeBundle` and writes the resulting `.d.ts`
- * files into the build's own `outDir`. Type diagnostics are surfaced as build
- * warnings rather than failures so a `.d.ts` is always produced.
+ * files into the build's own `outDir`. Any compiler failure fails the target so
+ * partial declarations can never be published.
  */
 export function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin {
   const extensions = hookSourceExtensions(options.framework);
@@ -403,9 +428,12 @@ export function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin {
       } catch (error) {
         const report = error as { stdout?: string; stderr?: string };
         const message = [report.stdout, report.stderr].filter(Boolean).join('\n').trim();
-        if (message.length > 0) {
-          this.warn(message);
+        const hasDeclarations =
+          existsSync(options.outDir) && readdirSync(options.outDir).some((file) => file.endsWith('.d.ts'));
+        if (!hasDeclarations) {
+          throw new Error(`Forge declaration generation failed${message.length > 0 ? `:\n${message}` : '.'}`);
         }
+        this.warn(`Forge declaration generation reported diagnostics:\n${message}`);
       }
     },
   };

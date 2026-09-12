@@ -1,5 +1,9 @@
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
 import {
   analyzeContentComponent,
+  generateCmsArtifacts,
   type CmsArtifact,
   type CmsTargetContext,
   type ContentComponent,
@@ -7,11 +11,16 @@ import {
 } from "@mission-platform/forge-cms-plugin-api";
 import {
   BADGE,
+  BADGE_COMPONENT,
   COUNTER,
+  COUNTER_COMPONENT,
   GRID,
+  GRID_COMPONENT,
   LAYOUT,
+  LAYOUT_COMPONENT,
   badgeNames,
   counterNames,
+  createCmsWorkspace,
   gridNames,
   layoutNames,
   stubFramework,
@@ -341,5 +350,128 @@ describe("the Astro entry barrel", () => {
         "",
       ].join("\n"),
     );
+  });
+});
+
+describe("the Astro CMS target end-to-end generation", () => {
+  it("generates templates, islands, manifest, and entry atomically for a multi-component workspace", () => {
+    const workspace = createCmsWorkspace([
+      BADGE_COMPONENT,
+      COUNTER_COMPONENT,
+      GRID_COMPONENT,
+      LAYOUT_COMPONENT,
+    ]);
+
+    try {
+      const target = forgeAstroCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("vue"),
+      });
+
+      const result = generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: target,
+        componentsImport: "@acme/components",
+      });
+
+      expect(result.diagnostics).toEqual([]);
+      expect(existsSync(workspace.outDirectory)).toBe(true);
+
+      // Emitted templates
+      const badgeTemplate = path.join(
+        workspace.outDirectory,
+        "forge-badge.astro",
+      );
+      const counterTemplate = path.join(
+        workspace.outDirectory,
+        "forge-counter.astro",
+      );
+      const gridTemplate = path.join(
+        workspace.outDirectory,
+        "forge-grid.astro",
+      );
+      const layoutTemplate = path.join(
+        workspace.outDirectory,
+        "forge-layout.astro",
+      );
+      expect(existsSync(badgeTemplate)).toBe(true);
+      expect(existsSync(counterTemplate)).toBe(true);
+      expect(existsSync(gridTemplate)).toBe(true);
+      expect(existsSync(layoutTemplate)).toBe(true);
+
+      // Counter is interactive, so it must use client:load island
+      const counterContent = readFileSync(counterTemplate, "utf8");
+      expect(counterContent).toContain("client:load");
+      expect(counterContent).toContain("./island/index.js");
+
+      // Island runtime artifacts
+      const islandIndex = path.join(workspace.outDirectory, "island/index.tsx");
+      expect(existsSync(islandIndex)).toBe(true);
+
+      // Manifest and entry
+      const manifestPath = path.join(
+        workspace.outDirectory,
+        "content.config.ts",
+      );
+      const entryPath = path.join(workspace.outDirectory, "index.ts");
+      expect(existsSync(manifestPath)).toBe(true);
+      expect(existsSync(entryPath)).toBe(true);
+
+      const entryContent = readFileSync(entryPath, "utf8");
+      expect(entryContent).toContain(
+        "export { default as Badge } from './forge-badge.astro';",
+      );
+      expect(entryContent).toContain(
+        "export { default as Counter } from './forge-counter.astro';",
+      );
+    } finally {
+      workspace.cleanup();
+    }
+  });
+
+  it("aborts atomically and preserves existing outputs on compilation error", () => {
+    const workspace = createCmsWorkspace([BADGE_COMPONENT]);
+
+    try {
+      const target = forgeAstroCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("vue"),
+      });
+
+      // First successful generation
+      generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: target,
+        componentsImport: "@acme/components",
+      });
+
+      const canaryFile = path.join(workspace.outDirectory, "canary.txt");
+      writeFileSync(canaryFile, "pre-existing-content", "utf8");
+
+      // Second generation with a failing target
+      const failingTarget = {
+        ...target,
+        emitTemplate: () => {
+          throw new Error("Simulated downstream template emission failure");
+        },
+      };
+
+      expect(() =>
+        generateCmsArtifacts({
+          componentsModule: workspace.componentsModule,
+          outDir: workspace.outDirectory,
+          plugin: failingTarget,
+          componentsImport: "@acme/components",
+        }),
+      ).toThrow("Simulated downstream template emission failure");
+
+      // Verify canary survives
+      expect(existsSync(canaryFile)).toBe(true);
+      expect(readFileSync(canaryFile, "utf8")).toBe("pre-existing-content");
+    } finally {
+      workspace.cleanup();
+    }
   });
 });

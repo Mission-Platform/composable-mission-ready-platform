@@ -29,6 +29,7 @@ import type {
   GeneratedModule,
   SemanticModule,
   TargetContext,
+  TargetIntentions,
 } from "@mission-platform/forge-plugin-api";
 
 const NEUTRAL = "@mission-platform/forge-jsx";
@@ -76,6 +77,20 @@ describe("Svelte Forge framework package", () => {
     expect(framework.outputLanguage).toBe("svelte");
     expect(framework.build.vite?.({})).toHaveLength(1);
     expect(framework.build.tsdown?.({})).toHaveLength(1);
+  });
+
+  it("rejects generation without a lowered target plan", () => {
+    const framework = forgeSvelteFramework();
+    const target = context();
+    const incomplete = {
+      framework: "svelte",
+      module: semanticModule({}),
+      context: target,
+    } as unknown as TargetIntentions;
+
+    expect(() => framework.generate(incomplete, target)).toThrow(
+      "must contain a lowered target plan",
+    );
   });
 
   it("retains the neutral useId import used by generated components", () => {

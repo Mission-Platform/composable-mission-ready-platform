@@ -2,6 +2,7 @@ import type { FrameworkOutputPlugin } from "./framework.js";
 
 export type {
   FrameworkBuildAdapters,
+  FrameworkId,
   FrameworkOutputPlugin,
   FrameworkSourceMetadata,
   GeneratedExtraModule,
@@ -10,14 +11,16 @@ export type {
   JsxFramework,
   NeutralOptimizeOptions,
   OutputLanguage,
-  TargetContext,
   TargetComponentHost,
+  TargetContext,
+  TargetFrameworkId,
   TargetIntentions,
   TargetLoweredModule,
   TargetOptimizeOptions,
   TsdownBuildContext,
   ViteBuildContext,
 } from "./framework.js";
+export { assertTargetIntentionsLowered } from "./framework.js";
 export type { FrameworkOutputPluginSelection } from "./framework.js";
 export {
   CompilerDiagnosticError,

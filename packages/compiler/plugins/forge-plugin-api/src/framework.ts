@@ -7,6 +7,18 @@ import type { Plugin, UserConfig as ViteUserConfig } from "vite";
 export type JsxFramework =
   "react" | "vue" | "svelte" | "solid" | "web-components";
 
+/**
+ * Open framework identifier for target plugins and compiler pipelines.
+ * Retains auto-completion for known built-in frameworks while accepting arbitrary custom plugin targets.
+ */
+export type FrameworkId = JsxFramework | (string & {});
+
+/**
+ * Open framework identifier alias for target plugins.
+ * Equivalent to {@link FrameworkId}.
+ */
+export type TargetFrameworkId = FrameworkId;
+
 /** Output languages known by Forge, with an open string extension point for new targets. */
 export type OutputLanguage =
   "tsx" | "jsx" | "ts" | "vue" | "svelte" | "astro" | (string & {});
@@ -35,7 +47,7 @@ export interface GeneratedModule {
 
 /** Context shared by target lowering and optimization. */
 export interface TargetContext {
-  readonly framework: string;
+  readonly framework: FrameworkId;
   readonly moduleKind: "component" | "composable";
   readonly componentName?: string;
   readonly componentFolders?: ReadonlySet<string>;
@@ -57,19 +69,64 @@ export interface TargetComponentHost {
  * {@link TargetIntentions} shape.
  */
 export interface TargetLoweredModule {
-  readonly framework: string;
+  readonly framework: FrameworkId;
   /** Identifiers of the target optimizations applied to this plan. */
   readonly appliedOptimizations: readonly string[];
 }
 
 /** Target-specific intention wrapper; neutral facts remain available to later passes. */
-export interface TargetIntentions {
-  readonly framework: string;
+export interface TargetIntentions<
+  TLowered extends TargetLoweredModule = TargetLoweredModule,
+> {
+  readonly framework: FrameworkId;
   readonly module: SemanticModule;
   readonly context: TargetContext;
   readonly diagnostics?: readonly CompilerDiagnostic[];
-  /** The lowered target plan, when the plugin implements a real lowering phase. */
-  readonly lowered?: TargetLoweredModule;
+  /** The lowered target plan produced by target lowering and refined by optimization. */
+  readonly lowered: TLowered;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+/**
+ * Asserts that the supplied intentions are valid and contain a lowered target plan.
+ * Throws a TypeError if the intentions are incomplete or if the lowered plan
+ * discriminator does not match the expected framework.
+ */
+export function assertTargetIntentionsLowered<
+  TLowered extends TargetLoweredModule = TargetLoweredModule,
+>(
+  intentions: unknown,
+  expectedFramework?: FrameworkId,
+): asserts intentions is TargetIntentions<TLowered> {
+  if (!isRecord(intentions)) {
+    throw new TypeError("Target intentions must be an object.");
+  }
+  const frameworkName =
+    typeof intentions.framework === "string" && intentions.framework.length > 0
+      ? intentions.framework
+      : (expectedFramework ?? "unknown");
+  if (!isRecord(intentions.lowered)) {
+    throw new TypeError(
+      `Target intentions for "${frameworkName}" must contain a lowered target plan.`,
+    );
+  }
+  const loweredFramework = intentions.lowered.framework;
+  if (typeof loweredFramework !== "string" || loweredFramework.length === 0) {
+    throw new TypeError(
+      "Target intentions lowered plan must define a non-empty framework discriminator.",
+    );
+  }
+  if (
+    expectedFramework !== undefined &&
+    loweredFramework !== expectedFramework
+  ) {
+    throw new TypeError(
+      `Target intentions lowered plan framework "${loweredFramework}" does not match expected target "${expectedFramework}".`,
+    );
+  }
 }
 
 /** Neutral optimization options shared by the compiler and target plugins. */
@@ -121,7 +178,7 @@ export interface FrameworkSourceMetadata {
 
 /** A composable post-IR framework output plugin. */
 export interface FrameworkOutputPlugin {
-  readonly id: JsxFramework | string;
+  readonly id: FrameworkId;
   /** Optional implementation version used to invalidate target artifacts. */
   readonly version?: string;
   readonly outputLanguage: OutputLanguage;

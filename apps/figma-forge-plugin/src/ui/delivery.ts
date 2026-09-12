@@ -61,11 +61,14 @@ export function mimeTypeForFile(file: ForgeExportFile): string {
   return 'application/octet-stream';
 }
 
+export const DEFAULT_BRIDGE_TIMEOUT_MS = 30_000;
+
 export async function sendBundleToBridge(
   config: ForgeBridgeConfig,
   bundle: ForgeExportBundle,
   overwrite: boolean,
   fetcher: typeof fetch = globalThis.fetch,
+  timeoutMs: number = DEFAULT_BRIDGE_TIMEOUT_MS,
 ): Promise<ForgeBridgeResponse> {
   if (!isForgeBridgeConfig(config)) throw new Error('The repository bridge URL or destination is not allowed.');
   const request: ForgeRepositoryExportRequest = {
@@ -75,20 +78,59 @@ export async function sendBundleToBridge(
     overwrite,
     bundle,
   };
-  const response = await fetcher(config.bridgeUrl, {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${config.authToken}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(request, (_key, value: unknown) => (value instanceof Uint8Array ? [...value] : value)),
+
+  const timeoutText = timeoutMs >= 1000 ? `${Math.round(timeoutMs / 1000)} seconds` : `${timeoutMs}ms`;
+  const controller = new AbortController();
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      controller.abort(new Error(`The repository bridge export timed out after ${timeoutText}.`));
+      reject(new Error(`The repository bridge export timed out after ${timeoutText}.`));
+    }, timeoutMs);
   });
-  let body: unknown;
+
   try {
-    body = await response.json();
-  } catch {
-    throw new Error(`The repository bridge returned HTTP ${response.status} without a valid response.`);
+    const fetchPromise = (async () => {
+      const response = await fetcher(config.bridgeUrl, {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${config.authToken}`,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(request, (_key, value: unknown) => (value instanceof Uint8Array ? [...value] : value)),
+        signal: controller.signal,
+      });
+
+      let body: unknown;
+      try {
+        body = await response.json();
+      } catch {
+        throw new Error(`The repository bridge returned HTTP ${response.status} without a valid response.`);
+      }
+      return body;
+    })();
+
+    const body = await Promise.race([fetchPromise, timeoutPromise]);
+    if (!isForgeBridgeResponse(body)) throw new Error('The repository bridge returned an invalid protocol response.');
+    return body;
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error(`The repository bridge export timed out after ${timeoutText}.`);
+    }
+    const isTimeout =
+      typeof error === 'object' &&
+      error !== null &&
+      ((error as { name?: string }).name === 'AbortError' ||
+        (error as { name?: string }).name === 'TimeoutError' ||
+        ((error as { message?: string }).message?.includes('timed out') ?? false));
+    if (isTimeout) {
+      throw new Error(`The repository bridge export timed out after ${timeoutText}.`);
+    }
+    throw error;
+  } finally {
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId);
+    }
   }
-  if (!isForgeBridgeResponse(body)) throw new Error('The repository bridge returned an invalid protocol response.');
-  return body;
 }

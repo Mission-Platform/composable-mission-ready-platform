@@ -1,6 +1,5 @@
 /// <reference types="vitest/config" />
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { resolveStorybookFramework } from '@mission-platform/storybook-framework';
 import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
@@ -10,7 +9,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import { playwright } from '@vitest/browser-playwright';
 import svgLoader from 'vite-svg-loader';
 
-const dirname = typeof __dirname === 'undefined' ? path.dirname(fileURLToPath(import.meta.url)) : __dirname;
+const dirname = import.meta.dirname;
 const framework = resolveStorybookFramework();
 
 export default defineFrameworkAppConfig({

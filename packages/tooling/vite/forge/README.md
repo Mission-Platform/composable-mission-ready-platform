@@ -142,26 +142,32 @@ semantic IR without electing a target plugin.
 
 ## Usage
 
-Select target plugin instances explicitly in a package build. The helper creates
-one target build per supplied plugin and obtains native stage adapters from that
-plugin:
+Select target plugin instances explicitly in a package build. The helper returns
+native tsdown plugins; add them to one `defineTsdownLibrary` configuration. Each
+plugin injects its Forge lifecycle through tsdown's `tsdownConfig` hook:
 
 ```ts
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { tsdownForgeComponentPlugins } from '@mission-platform/vite-plugin-forge';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 
-export default defineTsdownForgeComponents({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  frameworks: [forgeReactFramework(), forgeVueFramework()],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: 'MissionPlatformComponents',
+  entry: 'src/index.ts',
+  plugins: tsdownForgeComponentPlugins({
+    rootDir: import.meta.dirname,
+    frameworks: [forgeReactFramework(), forgeVueFramework()],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+    name: 'MissionPlatformComponents',
+  }),
 });
 ```
 
-For a hook package, use `defineTsdownForgeHooks` with one explicit plugin. For a
-content platform, pass `defineTsdownForgeCms(All)` from
-`@mission-platform/forge-cms-plugin-api` a target such as
+For a hook package, use `tsdownForgeHookPlugins` with one explicit plugin. For a
+content platform, add `tsdownForgeCmsPlugins` from
+`@mission-platform/forge-cms-plugin-api` to the same `defineTsdownLibrary`
+configuration. A target such as
 `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`; the CMS package
 owns schema, template, and manifest projection while the selected target plugin
 owns lowering and native compilation. Output lands in
@@ -196,3 +202,57 @@ Targets remain explicit caller-owned `FrameworkOutputPlugin` instances. The
 neutral compiler has no framework registry and does not import target packages.
 Future worker/daemon transport is possible behind the service contract, but is
 not part of the current in-process implementation.
+
+## Target extensibility and plugin contract
+
+The compiler distinguishes built-in framework conveniences from arbitrary plugin targets:
+
+- **`FrameworkId` (`JsxFramework | (string & {})`)**: The open framework identifier
+  type used across plugin contracts (`FrameworkOutputPlugin.id`, `TargetContext.framework`,
+  and `TargetLoweredModule.framework`). Any target package can define its own unique string
+  ID without extending driver enums or modifying compiler internals.
+- **`JsxFramework`**: The closed union of five built-in frameworks (`react`, `vue`,
+  `solid`, `svelte`, `web-components`), reserved for built-in conveniences such as
+  framework directives (`use react`, `use vue`, etc.) and built-in adapter module resolution.
+- **No central registry**: Targets are registered simply by passing a `FrameworkOutputPlugin`
+  instance to the compiler service or build configuration. The driver maintains no central
+  registry or framework switch.
+
+## Strict lowering pipeline
+
+Forge strictly enforces the `lower` → `optimize` → `generate` phase pipeline:
+
+1. `framework.lower(module, context)` produces a target-owned plan in `TargetIntentions.lowered`.
+2. `framework.optimize(intentions, options)` refines the plan.
+3. `framework.generate(intentions, context)` strictly requires a valid lowered plan
+   (`assertTargetIntentionsLowered`).
+4. Direct-generation fallback lowering has been removed from all built-in plugins
+   (`forge-vue`, `forge-web-components`, `forge-react`, `forge-solid`, `forge-svelte`).
+   Calling `generate()` with unlowered intentions immediately throws a `TypeError`.
+
+## Migration guidance
+
+### Removed legacy AST compatibility exports
+
+The legacy TypeScript AST compatibility layer in `compiler/ast.ts` (factories, visitors,
+transformers, and `@ts-nocheck` compatibility shims) was removed. Oxc is now the sole
+compiler AST path:
+
+- If your code imported AST utilities from `compiler/ast.ts`, migrate to the focused
+  sibling modules:
+  - `compiler/components.js`: Component boundary and declaration facts.
+  - `compiler/constants.js`: Neutral module and runtime marker constants.
+  - `compiler/directives.js`: Directive inspection and framework resolution.
+  - `compiler/facts.js`: AST facts, spans, and inspection utilities.
+  - `compiler/imports.js`: Import declaration and specifier inspection.
+
+### Direct target generation without lowering
+
+Built-in plugins no longer silently lower intentions during `generate()`:
+
+- If your tests or custom scripts called `plugin.generate(...)` directly with raw or
+  unlowered intentions, update them to run `plugin.lower(...)` and `plugin.optimize(...)`
+  first, or invoke the compiler pipeline through `createCompilerPipeline().compile(...)`
+  or `createForgeCompilerService().compile(...)`.
+- Ensure all custom plugins set `lowered: { framework: context.framework, appliedOptimizations: [] }`
+  (or their target-specific plan) on the returned `TargetIntentions`.

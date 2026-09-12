@@ -40,18 +40,23 @@ graph TD
 ## Framework-Neutral Engine: Forge
 
 The heart of Mission Platform is `@mission-platform/forge-jsx`, a framework-neutral authoring model for components and
-composables. `@mission-platform/vite-plugin-forge` is the neutral compiler driver: it parses and normalizes source,
-builds semantic IR, runs shared analysis and optimization, and dispatches to an explicitly supplied
+composables. `@mission-platform/vite-plugin-forge` is the neutral compiler driver: it parses and normalizes source with
+Oxc, builds semantic IR, runs shared analysis and optimization, and dispatches to an explicitly supplied
 `FrameworkOutputPlugin`.
 
-Framework packages such as `@mission-platform/forge-plugin-react` and `@mission-platform/forge-plugin-vue` own target
-lowering, target optimization, native source generation, diagnostics, runtime metadata, and Vite/tsdown adapters. There
-is no central framework emitter or string-to-framework registry in the driver. Package build configurations select the
-plugin instances they publish, so target implementation dependencies remain at the framework boundary.
+Framework packages such as `@mission-platform/forge-plugin-react`, `@mission-platform/forge-plugin-vue`,
+`@mission-platform/forge-plugin-solid`, `@mission-platform/forge-plugin-svelte`, and
+`@mission-platform/forge-plugin-web-components` own target lowering, target optimization, native source generation,
+diagnostics, runtime metadata, and Vite/tsdown adapters. There is no central framework emitter or string-to-framework
+registry in the driver. Custom targets are registered by implementing a `FrameworkOutputPlugin` with an open
+`FrameworkId` (`JsxFramework | (string & {})`), while `JsxFramework` remains a closed union for built-in conveniences.
+Package build configurations select the plugin instances they publish, so target implementation dependencies remain at
+the framework boundary.
 
-The resulting flow is **parse/normalize → neutral optimize → semantic IR → target lower → target optimize → generate →
-native build**. The native build is performed by the selected plugin's Vite or tsdown adapter, which also provides the
-target's declarations, externals, and output conventions.
+The resulting flow is **parse/normalize (Oxc) → neutral optimize → semantic IR → target lower → target optimize → generate →
+native build**. Lowering and target optimization are strictly required before generation; target generators accept only
+lowered intentions validated by `assertTargetIntentionsLowered`. The native build is performed by the selected plugin's
+Vite or tsdown adapter, which also provides the target's declarations, externals, and output conventions.
 
 A second, orthogonal axis projects the same neutral components onto **content platforms**.
 `@mission-platform/forge-cms-plugin-api` owns a platform-neutral content model, the `CmsOutputPlugin` contract, and a

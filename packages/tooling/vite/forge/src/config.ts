@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import { defineLibraryConfig } from '@mission-platform/vite-config';
@@ -6,16 +6,25 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { mergeConfig, type Plugin, type UserConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
 
-import { forgeServiceLifecyclePlugin, validateForgeBuildPlugin } from './build-integration.js';
-import { createForgeCompilerService, type ForgeCompilerService } from './compiler/service.js';
-import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
 import {
-  generateFrameworkSources,
-  jsxComponentsCssImportPlugin,
-  jsxComponentsDtsPlugin,
-  jsxComponentsEntryDtsPlugin,
-} from './generate.js';
+  forgeArtifactPublishPlugin,
+  forgeBuildLifecyclePlugin,
+  forgeVirtualEntry,
+  validateForgeBuildPlugin,
+} from './build-integration.js';
+import { forgeArtifactAttemptDirectory } from './compiler/artifact-writer.js';
+import { createForgeBuildSession, type ForgeBuildSession } from './compiler/session.js';
+import { hookLibraryDtsPlugin } from './generate-hooks.js';
+import { jsxComponentsCssImportPlugin, jsxComponentsDtsPlugin, jsxComponentsEntryDtsPlugin } from './generate.js';
+import {
+  createComponentTargetPlan,
+  createHookTargetPlan,
+  resolveForgeComponentsModule,
+  resolveForgeHookEntryModule,
+  resolveForgePublicEntryModule,
+} from './target-plan.js';
 
+import type { ForgeCompilerService } from './compiler/service.js';
 import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
@@ -163,7 +172,7 @@ export function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[] {
 }
 
 export interface JsxLibraryConfigOptions {
-  /** Absolute root directory of the package (e.g. `__dirname`). */
+  /** Absolute root directory of the package (e.g. `import.meta.dirname`). */
   rootDir: string;
   /** Explicit output plugin for this framework build. */
   plugin: FrameworkOutputPlugin;
@@ -192,6 +201,8 @@ export interface JsxLibraryConfigOptions {
   overrides?: UserConfig;
   /** Persistent service shared by component and hook helpers in one build session. */
   service?: ForgeCompilerService;
+  /** Explicit lifecycle session shared by component and hook helpers. */
+  session?: ForgeBuildSession;
   /** Native router target selected independently from the framework target. */
   router?: RouterPluginSelection;
   /** Router targets available for id-based selection. */
@@ -216,40 +227,17 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
     routerConditions,
   } = options;
   validateForgeBuildPlugin(plugin, 'vite');
-  const service = options.service ?? createForgeCompilerService();
+  const service = options.service;
+  const session = options.session ?? createForgeBuildSession({ service });
 
   const framework = plugin.id as JsxFramework;
   const cacheName = `${path.basename(rootDir)}-${framework}`;
   const generatedDir = path.join(rootDir, 'node_modules/.cache', cacheName);
+  const publishedOutDir = path.resolve(rootDir, `dist/${framework}`);
+  const attemptOutDir = forgeArtifactAttemptDirectory(publishedOutDir, framework);
 
-  const resolvedComponentsModule =
-    componentsModule ??
-    [
-      path.resolve(rootDir, 'src/components/index.ts'),
-      path.resolve(rootDir, 'src/component/index.ts'),
-      path.resolve(rootDir, 'src/index.ts'),
-    ].find((p) => fs.existsSync(p)) ??
-    path.resolve(rootDir, 'src/index.ts');
-  const resolvedPublicEntryModule =
-    publicEntryModule ??
-    (fs.existsSync(path.resolve(rootDir, 'src/index.ts'))
-      ? path.resolve(rootDir, 'src/index.ts')
-      : resolvedComponentsModule);
-
-  const entry = generateFrameworkSources({
-    plugin,
-    componentsModule: resolvedComponentsModule,
-    publicEntryModule: resolvedPublicEntryModule,
-    sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
-    outDir: generatedDir,
-    // Keep the neutral `Forge` prefix on the public API (do not strip it).
-    stripPrefix: '',
-    service,
-    router,
-    routerPlugins,
-    routerConditions,
-    rejectFixturePlaceholder: true,
-  });
+  const resolvedComponentsModule = resolveForgeComponentsModule(rootDir, componentsModule);
+  const resolvedPublicEntryModule = resolveForgePublicEntryModule(rootDir, resolvedComponentsModule, publicEntryModule);
 
   const stagePlugins =
     plugin.build.vite?.({
@@ -262,6 +250,18 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
   const displayName = name.endsWith(frameworkSuffix) ? name : `${name}${frameworkSuffix}`;
 
   const frameworkExternals = plugin.runtimeExternals ?? [];
+  const target = createComponentTargetPlan({
+    plugin,
+    componentsModule: resolvedComponentsModule,
+    publicEntryModule: resolvedPublicEntryModule,
+    generatedDirectory: generatedDir,
+    // Keep the neutral `Forge` prefix on the public API (do not strip it).
+    stripPrefix: '',
+    router,
+    routerPlugins,
+    routerConditions,
+    rejectFixturePlaceholder: true,
+  });
 
   // `useEntryDts`/`declarationModule` are deliberate caller opt-outs (a
   // synthesised entry declaration whose props types are re-imported from the
@@ -292,7 +292,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
     : jsxComponentsDtsPlugin({
         framework,
         generatedDir,
-        outDir: path.resolve(rootDir, `dist/${framework}`),
+        outDir: attemptOutDir,
         componentsModule: resolvedComponentsModule,
         publicEntryModule: resolvedPublicEntryModule,
         sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
@@ -301,21 +301,33 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
   return defineLibraryConfig({
     rootDir,
     name: displayName,
-    entry,
+    entry: forgeVirtualEntry(framework),
     preserveModules: true,
     preserveModulesRoot: path.join('node_modules/.cache', cacheName),
     external: [...frameworkExternals, ...external],
     overrides: mergeConfig(
       {
         build: {
-          outDir: `dist/${framework}`,
+          outDir: attemptOutDir,
           cssCodeSplit: true,
         },
         plugins: [
-          forgeServiceLifecyclePlugin({ service, disposeService: options.service === undefined }),
+          forgeBuildLifecyclePlugin({
+            session,
+            plan: { rootDir, targets: [target] },
+            target,
+            adapter: 'vite',
+            disposeSession: options.session === undefined,
+          }),
           ...stagePlugins,
           jsxComponentsCssImportPlugin(),
           dtsPlugin,
+          forgeArtifactPublishPlugin({
+            publishedDirectory: publishedOutDir,
+            attemptDirectory: attemptOutDir,
+            generatedDirectory: generatedDir,
+            targetId: framework,
+          }),
         ],
       },
       overrides ?? {},
@@ -324,7 +336,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
 }
 
 export interface JsxHookLibraryConfigOptions {
-  /** Absolute root directory of the package (e.g. `__dirname`). */
+  /** Absolute root directory of the package (e.g. `import.meta.dirname`). */
   rootDir: string;
   /** Explicit output plugin; omit it only for a neutral hook build. */
   plugin?: FrameworkOutputPlugin;
@@ -338,6 +350,8 @@ export interface JsxHookLibraryConfigOptions {
   overrides?: UserConfig;
   /** Persistent service shared by component and hook helpers in one build session. */
   service?: ForgeCompilerService;
+  /** Explicit lifecycle session shared by component and hook helpers. */
+  session?: ForgeBuildSession;
   /** Native router target selected independently from the framework target. */
   router?: RouterPluginSelection;
   /** Router targets available for id-based selection. */
@@ -358,45 +372,59 @@ export function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions)
     routerPlugins,
     routerConditions,
   } = options;
-  const resolvedEntry = entryModule ?? path.resolve(rootDir, 'src/index.ts');
+  const resolvedEntry = resolveForgeHookEntryModule(rootDir, entryModule);
 
   if (plugin !== undefined) {
     validateForgeBuildPlugin(plugin, 'vite');
-    const service = options.service ?? createForgeCompilerService();
+    const service = options.service;
+    const session = options.session ?? createForgeBuildSession({ service });
     const framework = plugin.id as JsxFramework;
     const cacheName = `${path.basename(rootDir)}-${framework}`;
     const generatedDir = path.join(rootDir, 'node_modules/.cache', cacheName);
-    const entry = generateHookLibrarySources({
+    const publishedOutDir = path.resolve(rootDir, `dist/${framework}`);
+    const attemptOutDir = forgeArtifactAttemptDirectory(publishedOutDir, framework);
+    const frameworkSuffix = plugin.displayNameSuffix ?? plugin.id;
+    const frameworkExternals = plugin.runtimeExternals ?? [];
+    const target = createHookTargetPlan({
       plugin,
       entryModule: resolvedEntry,
-      outDir: generatedDir,
-      service,
+      generatedDirectory: generatedDir,
       router,
       routerPlugins,
       routerConditions,
       rejectFixturePlaceholder: true,
     });
-    const frameworkSuffix = plugin.displayNameSuffix ?? plugin.id;
-    const frameworkExternals = plugin.runtimeExternals ?? [];
 
     return defineLibraryConfig({
       rootDir,
       name: name.endsWith(frameworkSuffix) ? name : `${name}${frameworkSuffix}`,
-      entry,
+      entry: forgeVirtualEntry(framework),
       preserveModules: true,
       preserveModulesRoot: path.join('node_modules/.cache', cacheName),
       external: [...frameworkExternals, ...external],
       overrides: mergeConfig(
         {
-          build: { outDir: `dist/${framework}` },
+          build: { outDir: attemptOutDir },
           plugins: [
-            forgeServiceLifecyclePlugin({ service, disposeService: options.service === undefined }),
+            forgeBuildLifecyclePlugin({
+              session,
+              plan: { rootDir, targets: [target] },
+              target,
+              adapter: 'vite',
+              disposeSession: options.session === undefined,
+            }),
             ...(plugin.build.vite?.({
               rootDir,
               generatedDirectory: generatedDir,
               outputDirectory: path.resolve(rootDir, `dist/${framework}`),
             }) ?? []),
-            hookLibraryDtsPlugin({ framework, generatedDir, outDir: path.resolve(rootDir, `dist/${framework}`) }),
+            hookLibraryDtsPlugin({ framework, generatedDir, outDir: attemptOutDir }),
+            forgeArtifactPublishPlugin({
+              publishedDirectory: publishedOutDir,
+              attemptDirectory: attemptOutDir,
+              generatedDirectory: generatedDir,
+              targetId: framework,
+            }),
           ],
         },
         overrides ?? {},

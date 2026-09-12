@@ -10,6 +10,7 @@ import { dirname, isAbsolute, resolve } from "node:path";
 import {
   createForgeWebScriptCompilerService,
   resolveForgeWebScriptModuleGraph,
+  type ForgeWebScriptGraphResult,
   type ForgeWebScriptLinkConfiguration,
   type ForgeWebScriptLinkProfile,
   type ForgeWebScriptModuleGraph,
@@ -55,12 +56,49 @@ export interface ForgeWebScriptPluginOptions {
     readonly string[] | ((fileName: string) => readonly string[] | undefined);
   /** Reuse a compiler service when compiling multiple files or test fixtures. */
   readonly compilerService?: ForgeWebScriptCompilerService;
+  /** Reuse resolved module graphs across plugin instances that share a build. */
+  readonly graphCache?: ForgeWebScriptGraphCache;
+  /** Stable namespace for a graph resolver shared by multiple plugin instances. */
+  readonly graphCacheKey?: string;
   /** Directory used for persisted WAT cache entries. */
   readonly watCacheRoot?: string;
   /** Disable WAT persistence when false; enabled by default for stable inspection. */
   readonly persistWat?: boolean;
   /** Execution mode used by the optional self-hosted compiler stage. */
   readonly selfHostedVmMode?: ForgeWebScriptVmExecutionMode;
+}
+
+/** Shared, in-memory graph results used by multiple Forge Web Script targets. */
+export interface ForgeWebScriptGraphCache {
+  get(key: string): Promise<ForgeWebScriptGraphResult> | undefined;
+  set(key: string, result: Promise<ForgeWebScriptGraphResult>): void;
+  invalidate(files: readonly string[]): void;
+  clear(): void;
+}
+
+/** Create a graph cache that deduplicates both sequential and concurrent graph resolution. */
+export function createForgeWebScriptGraphCache(): ForgeWebScriptGraphCache {
+  const entries = new Map<string, Promise<ForgeWebScriptGraphResult>>();
+
+  return {
+    get(key): Promise<ForgeWebScriptGraphResult> | undefined {
+      return entries.get(key);
+    },
+    set(key, result): void {
+      entries.set(key, result);
+      void result.catch(() => {
+        if (entries.get(key) === result) entries.delete(key);
+      });
+    },
+    invalidate(_files): void {
+      // A pending graph has no module list yet; clear synchronously to avoid
+      // serving stale results during the next rebuild.
+      entries.clear();
+    },
+    clear(): void {
+      entries.clear();
+    },
+  };
 }
 
 /** Compiled source, artifact metadata, source map, and optional graph reports. */
@@ -131,6 +169,44 @@ function watCacheFor(
   };
 }
 
+const graphResolverIds = new WeakMap<
+  NonNullable<ForgeWebScriptPluginOptions["resolveModule"]>,
+  number
+>();
+let nextGraphResolverId = 1;
+
+function graphResolverKey(
+  options: ForgeWebScriptPluginOptions,
+): string | undefined {
+  if (options.graphCacheKey !== undefined) return options.graphCacheKey;
+  if (options.resolveModule === undefined) return undefined;
+  const resolver = options.resolveModule;
+  let id = graphResolverIds.get(resolver);
+  if (id === undefined) {
+    id = nextGraphResolverId++;
+    graphResolverIds.set(resolver, id);
+  }
+  return `resolver-${id}`;
+}
+
+function graphCacheKey(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+): string | undefined {
+  const resolverKey = graphResolverKey(options);
+  if (resolverKey === undefined) return undefined;
+  return JSON.stringify({
+    resolverKey,
+    fileName,
+    root: options.root,
+    projectRoots: options.projectRoots,
+    defaultLinkMode: options.defaultLinkMode,
+    crossProjectLinkMode: options.crossProjectLinkMode,
+    linkModes: options.linkModes,
+    linkProfile: options.linkProfile,
+  });
+}
+
 /** Compile one FWS file and return its artifact plus source-map metadata. */
 export function compileForgeWebScriptFile(
   fileName: string,
@@ -189,15 +265,26 @@ export async function compileForgeWebScriptGraph(
       selfHostedVmMode: options.selfHostedVmMode,
     }),
 ): Promise<ForgeWebScriptCompiledModule> {
-  const result = await resolveForgeWebScriptModuleGraph([fileName], resolver, {
-    projectRoots:
-      options.projectRoots ??
-      (options.root === undefined ? undefined : [options.root]),
-    defaultLinkMode: options.defaultLinkMode,
-    crossProjectLinkMode: options.crossProjectLinkMode,
-    linkModes: options.linkModes,
-    linkProfile: options.linkProfile,
-  });
+  const resolveGraph = (): Promise<ForgeWebScriptGraphResult> =>
+    resolveForgeWebScriptModuleGraph([fileName], resolver, {
+      projectRoots:
+        options.projectRoots ??
+        (options.root === undefined ? undefined : [options.root]),
+      defaultLinkMode: options.defaultLinkMode,
+      crossProjectLinkMode: options.crossProjectLinkMode,
+      linkModes: options.linkModes,
+      linkProfile: options.linkProfile,
+    });
+  const key = graphCacheKey(fileName, options);
+  const cached = key === undefined ? undefined : options.graphCache?.get(key);
+  let result: ForgeWebScriptGraphResult;
+  if (cached === undefined) {
+    const pending = resolveGraph();
+    if (key !== undefined) options.graphCache?.set(key, pending);
+    result = await pending;
+  } else {
+    result = await cached;
+  }
   const source = readFileSync(fileName, "utf8");
   const capabilities =
     typeof options.requestedCapabilities === "function"

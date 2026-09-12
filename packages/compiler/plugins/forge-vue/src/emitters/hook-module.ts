@@ -249,7 +249,7 @@ function emitStatement(
       );
     })();
     const invoke = hasCleanup
-      ? `const result = (${callbackText})(); if (typeof result === "function") onCleanup(result);`
+      ? `const result = (${callbackText})(); if (typeof result === "function") onCleanup(result as () => void);`
       : `(${callbackText})();`;
     if (dependencies === undefined) {
       vueImports.add("watchEffect");
@@ -261,7 +261,7 @@ function emitStatement(
       vueImports.add("onMounted");
       if (hasCleanup) vueImports.add("onUnmounted");
       return hasCleanup
-        ? `(() => { let cleanup: (() => void) | undefined; onMounted(() => { const result = (${callbackText})(); cleanup = typeof result === "function" ? result : undefined; }); onUnmounted(() => cleanup?.()); })();`
+        ? `(() => { let cleanup: (() => void) | undefined; onMounted(() => { const result = (${callbackText})(); cleanup = typeof result === "function" ? result : undefined; }); onUnmounted(() => { if (cleanup !== undefined) cleanup(); }); })();`
         : `onMounted(${callbackText});`;
     }
     vueImports.add("watch");

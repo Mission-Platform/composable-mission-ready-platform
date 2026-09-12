@@ -52,6 +52,19 @@ describe("React Forge framework package", () => {
     expect(framework.build.tsdown?.({})).toHaveLength(1);
   });
 
+  it("rejects generation without a lowered target plan", () => {
+    const framework = forgeReactFramework();
+    const incomplete = {
+      framework: "react",
+      module: semanticModule({}),
+      context: CONTEXT,
+    } as unknown as TargetIntentions;
+
+    expect(() => framework.generate(incomplete, CONTEXT)).toThrow(
+      "must contain a lowered target plan",
+    );
+  });
+
   it("carries the lowered plan through the optimize phase", () => {
     const framework = forgeReactFramework();
     const module = semanticModule({

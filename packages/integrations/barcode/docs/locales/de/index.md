@@ -42,15 +42,12 @@ durch einen kleinen, vollständig typisierten ES-Modul-Wrapper und ein einmal be
 ### Kern-Encoder und -Decoder (`@mission-platform/barcode`)
 
 ```ts
-import { decodeBarcode, encodeBarcode } from '@mission-platform/barcode';
+import { encodeBarcode } from '@mission-platform/barcode';
 
 // Encode a 1D barcode
 const barcode = encodeBarcode('code128', 'MISSION-128');
 // barcode.width -> number
 // barcode.modules -> number[] (1 = bar, 0 = space)
-
-// Decode back to string
-const payload = decodeBarcode('code128', barcode.modules);
 ```
 
 ### Framework-UI-Komponenten

@@ -204,7 +204,7 @@ Sie generierte Token-Dateien nicht in eine Anwendung.
 describe('doc locale package-local output paths', () => {
   it('writes locale pages beside the owning package docs root, not under root docs/', async () => {
     const repo = await createTemporaryDirectory('doc-locales-output-');
-    const barcodeDocs = join(repo, 'packages', 'barcode', 'docs');
+    const barcodeDocs = join(repo, 'packages', 'integrations', 'barcode', 'docs');
     await mkdir(barcodeDocs, { recursive: true });
     await writeFile(
       join(barcodeDocs, 'index.md'),

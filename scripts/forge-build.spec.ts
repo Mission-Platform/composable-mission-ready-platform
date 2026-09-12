@@ -199,7 +199,7 @@ describe('Forge staged build orchestration', () => {
       target: 'vue',
       runCommand: async ({ stageRoot: commandStageRoot, env }: ForgeBuildCommandContext) => {
         // The shared runner must scope both the framework and the CMS
-        // selectors to `vue` so the package's `defineTsdownForgeCmsAll`
+        // selectors to `vue` so the package's `tsdownForgeCmsPlugins`
         // wiring (e.g. `forgeStoryblokCmsTargets`) actually rebuilds the
         // matching CMS wrapper instead of skipping CMS output entirely.
         expect(env.FORGE_FRAMEWORK_TARGET).toBe('vue');

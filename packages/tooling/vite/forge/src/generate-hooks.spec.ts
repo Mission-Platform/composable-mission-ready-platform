@@ -33,7 +33,7 @@ describe('generateHookLibrarySources', () => {
       const firstMtime = statSync(hookPath).mtimeMs;
       generateHookLibrarySources(options);
       expect(statSync(hookPath).mtimeMs).toBe(firstMtime);
-      expect(service.report().cache.semanticHits).toBeGreaterThan(0);
+      expect(service.report().cache.targetHits).toBeGreaterThan(0);
       expect(
         JSON.parse(readFileSync(path.join(outputDirectory, '.forge-artifact-manifest.json'), 'utf8')),
       ).toMatchObject({

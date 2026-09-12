@@ -40,8 +40,7 @@ Antes de la Fase 1, una única exploración era:
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → decodeQr / decodeMatrix / decodeBarcode (JS façades)
-  → wasm qr/matrix/barcode-decode    [cross into a *different* wasm module]
+  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 

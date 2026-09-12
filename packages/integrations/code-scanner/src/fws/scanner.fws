@@ -1,647 +1,291 @@
-// Scanner orchestration entry.
-// ABI:
-//   scan_and_decode(width, height, luma, modules, erasures, packed, meta) -> result string
-//   scan_and_decode_all(...) -> multi result string (RS-separated)
-//   scan_and_decode_roi(..., roi_x, roi_y, roi_w, roi_h, ...) -> result string
-// Scratch arrays are host-provided (FWS cannot allocate Array values).
-// Result encoding: "" | "L"+fmt | "D"+fmt+value  (see common.fws)
+// Step-3 scanner graph entry.
+//
+// The ZXing-shaped foundation, flat 1D readers, and bounded Data Matrix,
+// compact Aztec, PDF417, and MaxiCode paths are linked through this entry.
+// QR remains a standalone graph until its locator/decoder path can be linked
+// without false-positive fallback results or malformed combined Wasm.
+//
+// The scan entry points retain the current façade signatures while the linked
+// reader layers handle the supported formats.
 import "./common.fws" as c;
-import "./image.fws" as img;
-import "./locate-qr.fws" as lqr;
-import "./locate-matrix.fws" as lmx;
-import "./locate-barcode.fws" as lbc;
-import "./decoders.fws" as dec;
-import "./pdf417.fws" as pdf;
-import "./databar.fws" as dbar;
-import "./maxicode.fws" as maxi;
+import "./foundation.fws" as foundation;
+import "./image.fws" as image;
+import "./oned.fws" as oned;
+import "./locate-matrix.fws" as matrix_locator;
+import "./decoders/matrix/matrix-decoder.fws" as matrix_decoder;
+import "./pdf417.fws" as pdf417;
+import "./maxicode.fws" as maxicode;
 
-// Format ids match ScanFormatId in common.fws / public TS union.
-fn FMT_QR() -> i32 { return 0; }
-fn FMT_DM() -> i32 { return 1; }
-fn FMT_BC() -> i32 { return 2; }
-fn FMT_AZ() -> i32 { return 3; }
-fn FMT_PDF() -> i32 { return 4; }
-fn FMT_DB() -> i32 { return 5; }
-fn FMT_MAXI() -> i32 { return 6; }
-
-
-fn decode_only_result(format: i32, value: string) -> string {
-  if string_length(value) == 0 { return string_concat("", c.result_none()); }
-  return string_concat("", c.result_decoded(format, value));
+fn scan_format_allowed(possible_format: i32, format: i32) -> bool {
+  return possible_format < 0 || possible_format == format;
 }
 
-fn prepare_bits(data: u32, width: i32, height: i32) -> u32 {
-  let mut bits: u32 = img.binarize(data, width, height);
-  if bits == 0 {
-    bits = img.binarize_adaptive(data, width, height);
-  }
-  return bits;
-}
-
-fn try_qr_upright(
+fn scan_two_d_with_hint(
   bits: u32,
   width: i32,
   height: i32,
   mut modules: Array<i32>,
   mut erasures: Array<i32>,
   mut packed: Array<i32>,
-  mut meta: Array<i32>
+  mut meta: Array<i32>,
+  possible_format: i32
 ) -> string {
-  let located: i32 = lqr.locate_qr_modules(bits, width, height, modules, erasures, meta);
-  if located == 0 {
-    return string_concat("", c.result_none());
+  if c.array_len_i32(meta) < 16 || c.array_len_i32(modules) < 1 || c.array_len_i32(erasures) < 1 || c.array_len_i32(packed) < 2 { return ""; }
+  image.clear_array(modules, c.array_len_i32(modules));
+  image.clear_array(erasures, c.array_len_i32(erasures));
+  image.clear_array(meta, c.array_len_i32(meta));
+  let matrix_status: i32 = matrix_locator.locate_datamatrix_modules(bits, width, height, modules, erasures, meta);
+  if matrix_status == 1 && scan_format_allowed(possible_format, foundation.FORMAT_DATA_MATRIX()) {
+    let matrix_kind: i32 = meta[4];
+    let matrix_width: i32 = meta[0];
+    let matrix_height: i32 = meta[1];
+    let mut matrix_value: string = string_concat("", matrix_decoder.decode_datamatrix_modules(matrix_width, matrix_height, modules, erasures));
+    if matrix_kind == 1 { matrix_value = string_concat("", matrix_decoder.decode_datamatrix_rectangular_modules(matrix_width, matrix_height, modules, erasures)); }
+    if string_length(matrix_value) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_DATA_MATRIX(), matrix_value)); }
   }
-  let version: i32 = meta[0];
-  let size: i32 = lqr.qr_version_size(version);
-  let value: string = dec.decode_qr_modules(size, modules, packed);
-  if string_length(value) > 0 {
-    return string_concat("", c.result_decoded(FMT_QR(), value));
+
+  image.clear_array(modules, c.array_len_i32(modules));
+  image.clear_array(erasures, c.array_len_i32(erasures));
+  image.clear_array(meta, c.array_len_i32(meta));
+  let aztec_status: i32 = matrix_locator.locate_aztec_modules(bits, width, height, modules, erasures, meta);
+  if aztec_status == 1 && meta[4] == 1 && scan_format_allowed(possible_format, foundation.FORMAT_AZTEC()) {
+    let aztec_value: string = string_concat("", matrix_decoder.decode_aztec_modules(meta[0], meta[1], modules, erasures));
+    if string_length(aztec_value) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_AZTEC(), aztec_value)); }
   }
-  // Perspective and nearest-neighbour capture can move every sampled centre
-  // by a fraction of a module even when the finder geometry is valid. Retry
-  // the affine grid at small offsets before reporting a located-only result.
-  let mut offset: i32 = -128;
-  let mut offset_y: i32 = 0;
-  let mut resampled: i32 = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
+
+  image.clear_array(modules, c.array_len_i32(modules));
+  image.clear_array(meta, c.array_len_i32(meta));
+  let pdf_status: i32 = pdf417.locate_pdf417_modules(bits, width, height, modules, meta);
+  if pdf_status == 1 && scan_format_allowed(possible_format, foundation.FORMAT_PDF_417()) {
+    let pdf_value: string = string_concat("", pdf417.decode_pdf417_modules(meta[0], meta[1], modules));
+    if string_length(pdf_value) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_PDF_417(), pdf_value)); }
   }
-  offset = -128;
-  offset_y = -128;
-  resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
+
+  image.clear_array(modules, c.array_len_i32(modules));
+  image.clear_array(meta, c.array_len_i32(meta));
+  let maxi_status: i32 = maxicode.locate_maxicode_modules(bits, width, height, modules, meta);
+  if maxi_status == 1 && scan_format_allowed(possible_format, foundation.FORMAT_MAXICODE()) {
+    let maxi_value: string = string_concat("", maxicode.decode_maxicode_modules(modules));
+    if string_length(maxi_value) > 0 { return string_concat("", c.result_decoded(foundation.FORMAT_MAXICODE(), maxi_value)); }
   }
-  offset = 128;
-  resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
-  }
-  offset = -128;
-  offset_y = 128;
-  resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
-  }
-  offset = 128;
-  resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
-  }
-  offset = -256;
-  offset_y = 0;
-  resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
-  }
-  offset = 256;
-  resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
-  }
-  offset = 128;
-  resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
-  }
-  offset = 0;
-  offset_y = -128;
-  resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
-  }
-  offset_y = 128;
-  resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
-  if resampled == 1 {
-    let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
-  }
-  let mut dense_version: i32 = 1;
-  while dense_version <= 20 {
-    meta[15] = dense_version + 100;
-    let dense_located: i32 = lqr.locate_qr_modules(bits, width, height, modules, erasures, meta);
-    if dense_located == 1 {
-      let dense_size: i32 = lqr.qr_version_size(meta[0]);
-      let dense_value: string = dec.decode_qr_modules(dense_size, modules, packed);
-      if string_length(dense_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), dense_value)); }
-    }
-    dense_version = dense_version + 1;
-  }
-  return string_concat("", c.result_located(FMT_QR()));
+  return "";
 }
 
-fn try_qr_partial(
+fn scan_two_d(
   bits: u32,
   width: i32,
   height: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let located: i32 = lqr.locate_qr_modules(bits, width, height, modules, erasures, meta);
-  if located == 0 {
-    return string_concat("", c.result_none());
-  }
-  let size: i32 = lqr.qr_version_size(meta[0]);
-  let value: string = dec.decode_qr_modules(size, modules, packed);
-  if string_length(value) > 0 {
-    return string_concat("", c.result_decoded(0, value));
-  }
-  return string_concat("", c.result_located(FMT_QR()));
-}
-
-// The dense-bounds QR sampler is upright by design. Correct modest camera
-// rotation before retrying it, as the Data Matrix path below already does.
-fn try_qr(
-  bits: u32,
-  width: i32,
-  height: i32,
-  data: u32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let result: string = try_qr_upright(bits, width, height, modules, erasures, packed, meta);
-  if c.result_is_decoded(result) {
-    return string_concat("", result);
-  }
-  let angle: i32 = img.estimate_orientation_deg(bits, width, height, meta);
-  if angle == 0 {
-    // A noisy/perspective frame can make the area sweep inconclusive. Keep a
-    // small bounded fallback for the modest capture rotations covered by the
-    // façade contract without replacing the general orientation estimator.
-    let mut fallback: i32 = 3;
-    while fallback <= 9 {
-      let mut rotated: u32 = img.rotate_luma(data, width, height, fallback, meta);
-      if rotated != 0 {
-        let rotated_bits: u32 = prepare_bits(rotated, meta[0], meta[1]);
-        if rotated_bits != 0 {
-          let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
-          if c.result_is_decoded(retry) {
-            return string_concat("", retry);
-          }
-        }
-      }
-      rotated = img.rotate_luma(data, width, height, 0 - fallback, meta);
-      if rotated != 0 {
-        let rotated_bits: u32 = prepare_bits(rotated, meta[0], meta[1]);
-        if rotated_bits != 0 {
-          let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
-          if c.result_is_decoded(retry) {
-            return string_concat("", retry);
-          }
-        }
-      }
-      fallback = fallback + 2;
-    }
-    return string_concat("", result);
-  }
-  let mut rotated: u32 = img.rotate_luma(data, width, height, angle, meta);
-  if rotated != 0 {
-    let rotated_bits: u32 = prepare_bits(rotated, meta[0], meta[1]);
-    if rotated_bits != 0 {
-      let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
-      if c.result_is_decoded(retry) {
-        return string_concat("", retry);
-      }
-    }
-  }
-  rotated = img.rotate_luma(data, width, height, 0 - angle, meta);
-  if rotated != 0 {
-    let rotated_bits: u32 = prepare_bits(rotated, meta[0], meta[1]);
-    if rotated_bits != 0 {
-      let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
-      if c.result_is_decoded(retry) {
-        return string_concat("", retry);
-      }
-    }
-  }
-  // The area estimator can be biased by perspective/noise on larger symbols;
-  // retain a bounded correction at the common five-degree capture tilt.
-  let fallback_angle: i32 = 5;
-  if c.abs_i32(angle) != fallback_angle {
-    rotated = img.rotate_luma(data, width, height, fallback_angle, meta);
-    if rotated != 0 {
-      let rotated_bits: u32 = prepare_bits(rotated, meta[0], meta[1]);
-      if rotated_bits != 0 {
-        let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
-        if c.result_is_decoded(retry) {
-          return string_concat("", retry);
-        }
-      }
-    }
-    rotated = img.rotate_luma(data, width, height, 0 - fallback_angle, meta);
-    if rotated != 0 {
-      let rotated_bits: u32 = prepare_bits(rotated, meta[0], meta[1]);
-      if rotated_bits != 0 {
-        let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
-        if c.result_is_decoded(retry) {
-          return string_concat("", retry);
-        }
-      }
-    }
-  }
-  return string_concat("", result);
-}
-
-fn try_datamatrix_upright(
-  bits: u32,
-  width: i32,
-  height: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  if width * 2 > height * 3 {
-    return string_concat("", c.result_none());
-  }
-  let located: i32 = lmx.locate_datamatrix_modules(bits, width, height, modules, erasures, meta);
-  if located == 0 {
-    return string_concat("", c.result_none());
-  }
-  let mw: i32 = meta[0];
-  let mh: i32 = meta[1];
-  let kind: i32 = meta[4];
-  let mut sym: i32 = dec.matrix_sym_datamatrix();
-  if kind == 1 {
-    sym = dec.matrix_sym_datamatrix_rect();
-  }
-  let value: string = dec.decode_matrix_modules(sym, mw, mh, modules, erasures);
-  if string_length(value) > 0 {
-    // Strip SOH triplet marker if present — host may re-decode; treat as success text when ASCII.
-    if string_byte_at(value, 0) == 1 {
-      return string_concat("", c.result_located(FMT_DM()));
-    }
-    return string_concat("", c.result_decoded(FMT_DM(), value));
-  }
-  return string_concat("", c.result_located(FMT_DM()));
-}
-
-// Straighten-and-retry fallback for a steeply rotated Data Matrix, mirroring
-// crates/code-scan's try_decode_matrix: rotate the whole source frame by the
-// estimated correction, rebinarise, and retry the upright pipeline. Runs at
-// most twice (both handedness signs), only when the upright attempt above
-// did not already decode.
-fn try_datamatrix_rotated(
-  data: u32,
-  width: i32,
-  height: i32,
-  angle: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let rotated: u32 = img.rotate_luma(data, width, height, angle, meta);
-  if rotated == 0 {
-    return string_concat("", c.result_none());
-  }
-  let rw: i32 = meta[0];
-  let rh: i32 = meta[1];
-  let bits: u32 = prepare_bits(rotated, rw, rh);
-  if bits == 0 {
-    return string_concat("", c.result_none());
-  }
-  return string_concat("", try_datamatrix_upright(bits, rw, rh, modules, erasures, meta));
-}
-
-fn try_datamatrix(
-  bits: u32,
-  width: i32,
-  height: i32,
-  data: u32,
   modules: Array<i32>,
   erasures: Array<i32>,
+  packed: Array<i32>,
   meta: Array<i32>
 ) -> string {
-  let result: string = try_datamatrix_upright(bits, width, height, modules, erasures, meta);
-  if c.result_is_decoded(result) {
-    return string_concat("", result);
-  }
-  let angle: i32 = img.estimate_orientation_deg(bits, width, height, meta);
-  if angle != 0 {
-    let mut straightened: string = try_datamatrix_rotated(data, width, height, angle, modules, erasures, meta);
-    if c.result_is_decoded(straightened) {
-      return string_concat("", straightened);
-    }
-    straightened = try_datamatrix_rotated(data, width, height, 0 - angle, modules, erasures, meta);
-    if c.result_is_decoded(straightened) {
-      return string_concat("", straightened);
-    }
-  }
-  // A square symbol's dense bounds do not reveal its rotation reliably. Try
-  // the steep-angle capture used by the façade contract after the estimator
-  // so a weak directional signal cannot select the wrong correction. Keep
-  // this pair outside the angle guard so estimated ±18° still receive it,
-  // while avoiding a second identical pair for all other estimated angles.
-  let mut straightened: string = try_datamatrix_rotated(data, width, height, 18, modules, erasures, meta);
-  if c.result_is_decoded(straightened) {
-    return string_concat("", straightened);
-  }
-  straightened = try_datamatrix_rotated(data, width, height, -18, modules, erasures, meta);
-  if c.result_is_decoded(straightened) {
-    return string_concat("", straightened);
-  }
-  let mut sweep_angle: i32 = 1;
-  while sweep_angle <= 35 {
-    if sweep_angle != angle && sweep_angle != 18 {
-      let mut swept: string = try_datamatrix_rotated(data, width, height, sweep_angle, modules, erasures, meta);
-      if c.result_is_decoded(swept) {
-        return string_concat("", swept);
-      }
-      swept = try_datamatrix_rotated(data, width, height, 0 - sweep_angle, modules, erasures, meta);
-      if c.result_is_decoded(swept) {
-        return string_concat("", swept);
-      }
-    }
-    sweep_angle = sweep_angle + 1;
-  }
-  return string_concat("", result);
+  return string_concat("", scan_two_d_with_hint(bits, width, height, modules, erasures, packed, meta, -1));
 }
 
-fn try_aztec(
-  bits: u32,
-  width: i32,
-  height: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let located: i32 = lmx.locate_aztec_modules(bits, width, height, modules, erasures, meta);
-  if located == 0 {
-    return string_concat("", c.result_none());
-  }
-  let mw: i32 = meta[0];
-  let mh: i32 = meta[1];
-  let value: string = dec.decode_matrix_modules(dec.matrix_sym_aztec(), mw, mh, modules, erasures);
-  if string_length(value) > 0 {
-    if string_byte_at(value, 0) == 1 {
-      return string_concat("", c.result_located(FMT_AZ()));
-    }
-    return string_concat("", c.result_decoded(FMT_AZ(), value));
-  }
-  return string_concat("", c.result_located(FMT_AZ()));
-}
-
-fn try_barcode(
-  bits: u32,
-  width: i32,
-  height: i32,
-  mut modules: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let count: i32 = lbc.locate_barcode_modules(bits, width, height, modules, meta);
-  if count < 20 {
-    return string_concat("", c.result_none());
-  }
-  let value: string = dec.decode_barcode_auto_n(modules, count);
-  if string_length(value) > 0 {
-    let normalized: string = lbc.normalize_upc_ean(value);
-    return string_concat("", c.result_decoded(FMT_BC(), normalized));
-  }
-  let mut fixed_index: i32 = 0;
-  while fixed_index < 2 {
-    let mut fixed_count: i32 = 95;
-    if fixed_index == 1 { fixed_count = 67; }
-    let mut fixed_row: i32 = -4;
-    while fixed_row <= 4 {
-      let fixed_sampled: i32 = lbc.resample_barcode_count(
-        bits, width, height, meta[0], meta[2], meta[4] + fixed_row, fixed_count, modules
-      );
-      if fixed_sampled == fixed_count {
-        let fixed_value: string = dec.decode_retail_n(modules, fixed_sampled);
-        if string_length(fixed_value) > 0 {
-          return string_concat("", c.result_decoded(FMT_BC(), lbc.normalize_upc_ean(fixed_value)));
-        }
-      }
-      fixed_row = fixed_row + 1;
-    }
-    fixed_index = fixed_index + 1;
-  }
-  let measured_pitch: i32 = c.max_i32(1, meta[5]);
-  let measured_span: i32 = meta[2] - meta[0];
-  let measured_count: i32 = c.safe_div_i32(measured_span, measured_pitch);
-  let mut row_offset: i32 = -8;
-  while row_offset <= 8 {
-    let mut row_count: i32 = measured_count - 16;
-    while row_count <= measured_count + 16 {
-      if row_count >= 20 {
-        let row_sampled: i32 = lbc.resample_barcode_count(
-          bits, width, height, meta[0], meta[2], meta[4] + row_offset, row_count, modules
-        );
-        if row_sampled == row_count {
-          let row_value: string = dec.decode_barcode_variable_n(modules, row_sampled);
-          if string_length(row_value) > 0 {
-            return string_concat("", c.result_decoded(FMT_BC(), lbc.normalize_upc_ean(row_value)));
-          }
-        }
-      }
-      row_count = row_count + 1;
-    }
-    row_offset = row_offset + 4;
-  }
-  let mut candidate_count: i32 = measured_count - 80;
-  while candidate_count <= measured_count + 80 {
-    if candidate_count >= 20 {
-      let sampled: i32 = lbc.resample_barcode_count(
-        bits, width, height, meta[0], meta[2], meta[4], candidate_count, modules
-      );
-      if sampled == candidate_count {
-        let retry_value: string = dec.decode_barcode_variable_n(modules, sampled);
-        if string_length(retry_value) > 0 {
-          return string_concat("", c.result_decoded(FMT_BC(), lbc.normalize_upc_ean(retry_value)));
-        }
-      }
-    }
-    candidate_count = candidate_count + 1;
-  }
-  // Located barcode-like runs but undecodable.
-  return string_concat("", c.result_located(FMT_BC()));
-}
-
-fn try_pdf417(
-  bits: u32,
-  width: i32,
-  height: i32,
-  mut modules: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let located: i32 = pdf.locate_pdf417_modules(bits, width, height, modules, meta);
-  if located == 0 {
-    return string_concat("", c.result_none());
-  }
-  let value: string = pdf.decode_pdf417_modules(meta[0], meta[1], modules);
-  return string_concat("", decode_only_result(FMT_PDF(), value));
-}
-
-fn try_databar(
-  bits: u32,
-  width: i32,
-  height: i32,
-  mut modules: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let located: i32 = dbar.locate_databar_modules(bits, width, height, modules, meta);
-  if located == 0 {
-    return string_concat("", c.result_none());
-  }
-  let value: string = dbar.decode_databar_modules(meta[0], meta[1], modules);
-  return string_concat("", decode_only_result(FMT_DB(), value));
-}
-
-fn try_maxicode(
-  bits: u32,
+fn scan_two_d_from_luma_with_hint(
+  data: u32,
   width: i32,
   height: i32,
   modules: Array<i32>,
-  meta: Array<i32>
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: bool,
+  also_inverted: bool,
+  pure_barcode: bool
 ) -> string {
-  let located: i32 = maxi.locate_maxicode_modules(bits, width, height, modules, meta);
-  if located == 0 {
-    return string_concat("", c.result_none());
+  let global_bits: u32 = image.binarize(data, width, height);
+  if global_bits != 0 {
+    let global_value: string = string_concat("", scan_two_d_with_hint(global_bits, width, height, modules, erasures, packed, meta, possible_format));
+    if string_length(global_value) > 0 { return string_concat("", global_value); }
   }
-  let value: string = maxi.decode_maxicode_modules(modules);
-  return string_concat("", decode_only_result(FMT_MAXI(), value));
-}
-
-// Precedence mirrors crates/code-scan: QR, DataMatrix, Aztec, PDF417, DataBar, MaxiCode, Barcode.
-// A *decoded* symbol wins immediately; a symbol that is located but undecodable
-// is remembered and returned only if nothing decodes, so a false-positive
-// located result from a higher-precedence locator never masks a real decode
-// from a lower-precedence format (matches locate_and_decode_first in Rust).
-fn consider(located: string, result: string) -> string {
-  if c.result_is_located(result) && c.result_is_none(located) {
-    return string_concat("", result);
-  }
-  return string_concat("", located);
-}
-
-fn scan_bitmap(
-  bits: u32,
-  width: i32,
-  height: i32,
-  data: u32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let mut located: string = c.result_none();
-  let mut result: string = try_qr(bits, width, height, data, modules, erasures, packed, meta);
-  if c.result_is_decoded(result) { return string_concat("", result); }
-  located = consider(located, result);
-  result = try_datamatrix(bits, width, height, data, modules, erasures, meta);
-  if c.result_is_decoded(result) { return string_concat("", result); }
-  located = consider(located, result);
-  result = try_aztec(bits, width, height, modules, erasures, meta);
-  if c.result_is_decoded(result) { return string_concat("", result); }
-  located = consider(located, result);
-  result = try_pdf417(bits, width, height, modules, meta);
-  if c.result_is_decoded(result) { return string_concat("", result); }
-  located = consider(located, result);
-  result = try_databar(bits, width, height, modules, meta);
-  if c.result_is_decoded(result) { return string_concat("", result); }
-  located = consider(located, result);
-  result = try_maxicode(bits, width, height, modules, meta);
-  if c.result_is_decoded(result) { return string_concat("", result); }
-  located = consider(located, result);
-  result = try_barcode(bits, width, height, modules, meta);
-  if c.result_is_decoded(result) { return string_concat("", result); }
-  located = consider(located, result);
-  return string_concat("", located);
-}
-
-fn scan_prepared_data(
-  data: u32,
-  width: i32,
-  height: i32,
-  bits: u32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let mut result: string = scan_bitmap(bits, width, height, data, modules, erasures, packed, meta);
-  if !c.result_is_none(result) && c.result_is_decoded(result) {
-    return string_concat("", result);
-  }
-  // Adaptive retry when Otsu path only located or failed.
-  let adaptive: u32 = img.binarize_adaptive(data, width, height);
-  if adaptive != 0 {
-    let retry: string = scan_bitmap(adaptive, width, height, data, modules, erasures, packed, meta);
-    if c.result_is_decoded(retry) {
-      return string_concat("", retry);
-    }
-    if c.result_is_none(result) {
-      result = retry;
+  if try_harder {
+    let adaptive_bits: u32 = image.binarize_adaptive(data, width, height);
+    if adaptive_bits != 0 {
+      let adaptive_value: string = string_concat("", scan_two_d_with_hint(adaptive_bits, width, height, modules, erasures, packed, meta, possible_format));
+      if string_length(adaptive_value) > 0 { return string_concat("", adaptive_value); }
     }
   }
-  return string_concat("", result);
+
+  if !also_inverted { return ""; }
+  let inverted: u32 = image.invert_luma_copy(data, width, height);
+  if inverted == 0 { return ""; }
+  let inverted_global_bits: u32 = image.binarize(inverted, width, height);
+  if inverted_global_bits != 0 {
+    let inverted_global_value: string = string_concat("", scan_two_d_with_hint(inverted_global_bits, width, height, modules, erasures, packed, meta, possible_format));
+    if string_length(inverted_global_value) > 0 { return string_concat("", inverted_global_value); }
+  }
+  let inverted_adaptive_bits: u32 = image.binarize_adaptive(inverted, width, height);
+  if inverted_adaptive_bits == 0 { return ""; }
+  return string_concat("", scan_two_d_with_hint(inverted_adaptive_bits, width, height, modules, erasures, packed, meta, possible_format));
 }
 
-// Scan an already-copied luma buffer. Keeping this separate from the host-array
-// entry point lets the multi-region path crop one source image and reuse the
-// same decoder scratch arrays for every tile.
-fn scan_data(
-  data: u32,
+fn scan_two_d_from_luma(data: u32, width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>, packed: Array<i32>, meta: Array<i32>) -> string {
+  return string_concat("", scan_two_d_from_luma_with_hint(data, width, height, modules, erasures, packed, meta, -1, true, true, false));
+}
+fn scan_two_d_from_array(width: i32, height: i32, luma: Array<i32>, modules: Array<i32>, erasures: Array<i32>, packed: Array<i32>, meta: Array<i32>) -> string {
+  let data: u32 = image.luma_copy_from_array(width, height, luma);
+  if data == 0 { return ""; }
+  return string_concat("", scan_two_d_from_luma(data, width, height, modules, erasures, packed, meta));
+}
+
+fn valid_scan_dimensions(width: i32, height: i32) -> bool {
+  return foundation.foundation_validate_dimensions(width, height, width) >= 0;
+}
+
+fn scan_one_row_with_hint(width: i32, height: i32, luma: Array<i32>, mut modules: Array<i32>, possible_format: i32) -> string {
+  if !valid_scan_dimensions(width, height) { return ""; }
+  if oned.oned_extract_row(luma, width, height, height / 2, 128, modules) < 0 { return ""; }
+  let ean13: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_EAN_13()));
+  if string_length(ean13) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_EAN_13()) { return string_concat("", c.result_decoded(foundation.FORMAT_EAN_13(), ean13)); }
+  let ean8: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_EAN_8()));
+  if string_length(ean8) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_EAN_8()) { return string_concat("", c.result_decoded(foundation.FORMAT_EAN_8(), ean8)); }
+  let upca: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_UPC_A()));
+  if string_length(upca) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_UPC_A()) { return string_concat("", c.result_decoded(foundation.FORMAT_UPC_A(), upca)); }
+  let upce: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_UPC_E()));
+  if string_length(upce) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_UPC_E()) { return string_concat("", c.result_decoded(foundation.FORMAT_UPC_E(), upce)); }
+  let code39: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_CODE_39()));
+  if string_length(code39) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_CODE_39()) { return string_concat("", c.result_decoded(foundation.FORMAT_CODE_39(), code39)); }
+  let itf: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_ITF()));
+  if string_length(itf) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_ITF()) { return string_concat("", c.result_decoded(foundation.FORMAT_ITF(), itf)); }
+  let codabar: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_CODABAR()));
+  if string_length(codabar) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_CODABAR()) { return string_concat("", c.result_decoded(foundation.FORMAT_CODABAR(), codabar)); }
+  let code93: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_CODE_93()));
+  if string_length(code93) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_CODE_93()) { return string_concat("", c.result_decoded(foundation.FORMAT_CODE_93(), code93)); }
+  let code128: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_CODE_128()));
+  if string_length(code128) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_CODE_128()) { return string_concat("", c.result_decoded(foundation.FORMAT_CODE_128(), code128)); }
+  let rss14: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_RSS_14()));
+  if string_length(rss14) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_RSS_14()) { return string_concat("", c.result_decoded(foundation.FORMAT_RSS_14(), rss14)); }
+  let rss_expanded: string = string_concat("", oned.oned_decode_with_hint(modules, foundation.FORMAT_RSS_EXPANDED()));
+  if string_length(rss_expanded) > 0 && scan_format_allowed(possible_format, foundation.FORMAT_RSS_EXPANDED()) { return string_concat("", c.result_decoded(foundation.FORMAT_RSS_EXPANDED(), rss_expanded)); }
+  return string_concat("", c.result_none());
+}
+
+fn scan_one_row(width: i32, height: i32, luma: Array<i32>, mut modules: Array<i32>) -> string {
+  return string_concat("", scan_one_row_with_hint(width, height, luma, modules, -1));
+}
+
+fn scan_and_decode_with_options_internal(
   width: i32,
   height: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
+  luma: Array<i32>,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: bool,
+  also_inverted: bool,
+  pure_barcode: bool
 ) -> string {
-  let bits: u32 = prepare_bits(data, width, height);
-  if bits == 0 {
-    return string_concat("", c.result_none());
-  }
-  return string_concat("", scan_prepared_data(data, width, height, bits, modules, erasures, packed, meta));
+  if !valid_scan_dimensions(width, height) { return string_concat("", c.result_none()); }
+  let data: u32 = image.luma_copy_from_array(width, height, luma);
+  if data == 0 { return string_concat("", c.result_none()); }
+  let two_d: string = string_concat("", scan_two_d_from_luma_with_hint(
+    data,
+    width,
+    height,
+    modules,
+    erasures,
+    packed,
+    meta,
+    possible_format,
+    try_harder,
+    also_inverted,
+    pure_barcode,
+  ));
+  if string_length(two_d) > 0 { return string_concat("", two_d); }
+  if pure_barcode { return string_concat("", c.result_none()); }
+  return string_concat("", scan_one_row_with_hint(width, height, luma, modules, possible_format));
 }
 
+// Compatibility ABI. The multi-format order follows ZXing's 2D readers before
+// the flat 1D reader layer, while retaining the existing compact wire format.
 export fn scan_and_decode(
   width: i32,
   height: i32,
   luma: Array<i32>,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
 ) -> string {
-  let pixels: i32 = img.checked_image_len(width, height);
-  if pixels < 0 {
-    return string_concat("", c.result_none());
-  }
-  let data: u32 = img.luma_copy_from_array(width, height, luma);
-  if data == 0 {
-    return string_concat("", c.result_none());
-  }
-  return string_concat("", scan_data(data, width, height, modules, erasures, packed, meta));
+  return string_concat("", scan_and_decode_with_options_internal(width, height, luma, modules, erasures, packed, meta, -1, true, true, false));
 }
 
-export fn scan_and_decode_bytes(
+export fn scan_and_decode_with_options(
   width: i32,
   height: i32,
-  luma: u32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
+  luma: Array<i32>,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: i32,
+  also_inverted: i32,
+  pure_barcode: i32
 ) -> string {
-  let data: u32 = img.luma_from_bytes(width, height, luma);
-  if data == 0 {
+  return string_concat("", scan_and_decode_with_options_internal(
+    width,
+    height,
+    luma,
+    modules,
+    erasures,
+    packed,
+    meta,
+    possible_format,
+    try_harder != 0,
+    also_inverted != 0,
+    pure_barcode != 0,
+  ));
+}
+
+fn scan_and_decode_roi_with_options_internal(
+  width: i32,
+  height: i32,
+  luma: Array<i32>,
+  roi_x: i32,
+  roi_y: i32,
+  roi_width: i32,
+  roi_height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: bool,
+  also_inverted: bool,
+  pure_barcode: bool
+) -> string {
+  if !valid_scan_dimensions(width, height) || roi_x < 0 || roi_y < 0 ||
+     roi_width <= 0 || roi_height <= 0 || roi_x + roi_width > width ||
+     roi_y + roi_height > height {
     return string_concat("", c.result_none());
   }
-  return string_concat("", scan_data(data, width, height, modules, erasures, packed, meta));
+  let data: u32 = image.luma_copy_from_array(width, height, luma);
+  if data == 0 { return string_concat("", c.result_none()); }
+  let cropped: u32 = image.crop_luma(data, width, height, roi_x, roi_y, roi_width, roi_height, meta);
+  if cropped == 0 { return string_concat("", c.result_none()); }
+  let cropped_width: i32 = meta[0];
+  let cropped_height: i32 = meta[1];
+  let cropped_value: string = string_concat("", scan_two_d_from_luma_with_hint(
+    cropped,
+    cropped_width,
+    cropped_height,
+    modules,
+    erasures,
+    packed,
+    meta,
+    possible_format,
+    try_harder,
+    also_inverted,
+    pure_barcode,
+  ));
+  if string_length(cropped_value) > 0 { return string_concat("", cropped_value); }
+  return string_concat("", c.result_none());
 }
 
 export fn scan_and_decode_roi(
@@ -650,32 +294,95 @@ export fn scan_and_decode_roi(
   luma: Array<i32>,
   roi_x: i32,
   roi_y: i32,
-  roi_w: i32,
-  roi_h: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
+  roi_width: i32,
+  roi_height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
 ) -> string {
-  let pixels: i32 = img.checked_image_len(width, height);
-  if pixels < 0 {
-    return string_concat("", c.result_none());
-  }
-  let data: u32 = img.luma_copy_from_array(width, height, luma);
-  if data == 0 {
-    return string_concat("", c.result_none());
-  }
-  let cropped: u32 = img.crop_luma(data, width, height, roi_x, roi_y, roi_w, roi_h, meta);
-  if cropped == 0 {
-    return string_concat("", c.result_none());
-  }
-  let cw: i32 = meta[0];
-  let ch: i32 = meta[1];
-  let bits: u32 = prepare_bits(cropped, cw, ch);
-  if bits == 0 {
-    return string_concat("", c.result_none());
-  }
-  return string_concat("", scan_bitmap(bits, cw, ch, cropped, modules, erasures, packed, meta));
+  return string_concat("", scan_and_decode_roi_with_options_internal(
+    width,
+    height,
+    luma,
+    roi_x,
+    roi_y,
+    roi_width,
+    roi_height,
+    modules,
+    erasures,
+    packed,
+    meta,
+    -1,
+    true,
+    true,
+    false,
+  ));
+}
+
+export fn scan_and_decode_roi_with_options(
+  width: i32,
+  height: i32,
+  luma: Array<i32>,
+  roi_x: i32,
+  roi_y: i32,
+  roi_width: i32,
+  roi_height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>,
+  possible_format: i32,
+  try_harder: i32,
+  also_inverted: i32,
+  pure_barcode: i32
+) -> string {
+  return string_concat("", scan_and_decode_roi_with_options_internal(
+    width,
+    height,
+    luma,
+    roi_x,
+    roi_y,
+    roi_width,
+    roi_height,
+    modules,
+    erasures,
+    packed,
+    meta,
+    possible_format,
+    try_harder != 0,
+    also_inverted != 0,
+    pure_barcode != 0,
+  ));
+}
+
+export fn scan_and_decode_all(
+  width: i32,
+  height: i32,
+  luma: Array<i32>,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
+) -> string {
+  if !valid_scan_dimensions(width, height) { return string_concat("", c.result_none()); }
+  return string_concat("", scan_and_decode(width, height, luma, modules, erasures, packed, meta));
+}
+
+export fn scan_and_decode_bytes(
+  width: i32,
+  height: i32,
+  luma: u32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
+) -> string {
+  if !valid_scan_dimensions(width, height) || luma == 0 { return string_concat("", c.result_none()); }
+  let data: u32 = image.luma_from_bytes(width, height, luma);
+  let two_d: string = string_concat("", scan_two_d_from_luma(data, width, height, modules, erasures, packed, meta));
+  if string_length(two_d) > 0 { return string_concat("", two_d); }
+  return string_concat("", c.result_none());
 }
 
 export fn scan_and_decode_bytes_roi(
@@ -684,281 +391,160 @@ export fn scan_and_decode_bytes_roi(
   luma: u32,
   roi_x: i32,
   roi_y: i32,
-  roi_w: i32,
-  roi_h: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
+  roi_width: i32,
+  roi_height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
 ) -> string {
-  let data: u32 = img.luma_from_bytes(width, height, luma);
-  if data == 0 {
+  if !valid_scan_dimensions(width, height) || luma == 0 || roi_x < 0 || roi_y < 0 ||
+     roi_width <= 0 || roi_height <= 0 || roi_x + roi_width > width ||
+     roi_y + roi_height > height {
     return string_concat("", c.result_none());
   }
-  let cropped: u32 = img.crop_luma(data, width, height, roi_x, roi_y, roi_w, roi_h, meta);
-  if cropped == 0 {
-    return string_concat("", c.result_none());
-  }
-  let cw: i32 = meta[0];
-  let ch: i32 = meta[1];
-  let bits: u32 = prepare_bits(cropped, cw, ch);
-  if bits == 0 {
-    return string_concat("", c.result_none());
-  }
-  return string_concat("", scan_bitmap(bits, cw, ch, cropped, modules, erasures, packed, meta));
-}
-
-fn scan_region(
-  data: u32,
-  width: i32,
-  height: i32,
-  x: i32,
-  y: i32,
-  region_width: i32,
-  region_height: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let cropped: u32 = img.crop_luma(data, width, height, x, y, region_width, region_height, meta);
-  if cropped == 0 {
-    return string_concat("", c.result_none());
-  }
-  let cropped_width: i32 = meta[0];
-  let cropped_height: i32 = meta[1];
-  // Do not send a tile whose dense ink touches its crop boundary to a decoder:
-  // the tile contains a clipped symbol, not a complete candidate. This keeps
-  // malformed partial grids from reaching decoder implementations while still
-  // allowing valid symbols with their quiet zone inside a tile.
-  let preview: u32 = prepare_bits(cropped, cropped_width, cropped_height);
-  if preview == 0 {
-    return string_concat("", c.result_none());
-  }
-  let bounds_ok: i32 = img.dense_dark_bounds(preview, cropped_width, cropped_height, meta);
-  if bounds_ok == 0 || meta[0] <= 0 || meta[1] <= 0 || meta[2] >= cropped_width - 1 || meta[3] >= cropped_height - 1 {
-    // A neighbouring symbol may be clipped by the overlapping crop. The QR
-    // locator can still select a complete symbol farther inside the tile, but
-    // running every decoder on a known partial tile is needlessly expensive.
-    let partial: string = try_qr_partial(preview, cropped_width, cropped_height, modules, erasures, packed, meta);
-    if c.result_is_decoded(partial) {
-      return string_concat("", partial);
-    }
-    return string_concat("", c.result_none());
-  }
-  return string_concat("", scan_prepared_data(cropped, cropped_width, cropped_height, preview, modules, erasures, packed, meta));
-}
-
-// Multi-scan regions mirror the native scanner: whole frame, overlapping
-// half-splits, then overlapping quadrants, all in coarsest-first order.
-fn scan_all_data(
-  data: u32,
-  width: i32,
-  height: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let pixels: i32 = img.checked_image_len(width, height);
-  if pixels < 0 {
-    return string_concat("", c.result_none());
-  }
-  if data == 0 {
-    return string_concat("", c.result_none());
-  }
-
-  // The generated region set processes less than five frame areas. Reject a
-  // request before allocating crops when its aggregate work can exceed the
-  // same 32M-pixel budget as the native implementation.
-  let mut work: i32 = pixels;
-  let half_width: i32 = width / 2;
-  let half_height: i32 = height / 2;
-  let overlap_x: i32 = width * 15 / 100;
-  let overlap_y: i32 = height * 15 / 100;
-  let split_x: bool = width >= 32;
-  let split_y: bool = height >= 32;
-  let left_width: i32 = half_width + overlap_x;
-  let right_width: i32 = width - half_width + overlap_x;
-  let top_height: i32 = half_height + overlap_y;
-  let bottom_height: i32 = height - half_height + overlap_y;
-  if split_x {
-    work = work + left_width * height;
-    work = work + right_width * height;
-  }
-  if split_y {
-    work = work + width * top_height;
-    work = work + width * bottom_height;
-  }
-  if split_x && split_y {
-    work = work + left_width * top_height;
-    work = work + left_width * bottom_height;
-    work = work + right_width * top_height;
-    work = work + right_width * bottom_height;
-  }
-  if work > 32000000 {
-    return string_concat("", c.result_none());
-  }
-
-  let mut results: string = "";
-  let mut result: string = scan_data(data, width, height, modules, erasures, packed, meta);
-  if c.result_is_decoded(result) && !c.multi_contains(results, result) {
-    results = c.multi_append(results, result);
-  }
-  if split_x {
-    result = scan_region(data, width, height, 0, 0, half_width + overlap_x, height, modules, erasures, packed, meta);
-    if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
-    result = scan_region(data, width, height, half_width - overlap_x, 0, width - half_width + overlap_x, height, modules, erasures, packed, meta);
-    if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
-    // The overlapping halves above preserve symbols that straddle the split,
-    // but a locator can choose the first complete symbol in an overlap. Scan
-    // the exact halves as a bounded fallback so adjacent symbols on either
-    // side of the split are independently discoverable as well.
-    result = scan_region(data, width, height, half_width, 0, width - half_width, height, modules, erasures, packed, meta);
-    if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
-  }
-  if split_y {
-    result = scan_region(data, width, height, 0, 0, width, half_height + overlap_y, modules, erasures, packed, meta);
-    if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
-    result = scan_region(data, width, height, 0, half_height - overlap_y, width, height - half_height + overlap_y, modules, erasures, packed, meta);
-    if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
-  }
-  if split_x && split_y {
-    result = scan_region(data, width, height, 0, 0, half_width + overlap_x, half_height + overlap_y, modules, erasures, packed, meta);
-    if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
-    result = scan_region(data, width, height, 0, half_height - overlap_y, half_width + overlap_x, height - half_height + overlap_y, modules, erasures, packed, meta);
-    if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
-    result = scan_region(data, width, height, half_width - overlap_x, 0, width - half_width + overlap_x, half_height + overlap_y, modules, erasures, packed, meta);
-    if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
-    result = scan_region(data, width, height, half_width - overlap_x, half_height - overlap_y, width - half_width + overlap_x, height - half_height + overlap_y, modules, erasures, packed, meta);
-    if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
-  }
-  return string_concat("", results);
-}
-
-export fn scan_and_decode_all(
-  width: i32,
-  height: i32,
-  luma: Array<i32>,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let pixels: i32 = img.checked_image_len(width, height);
-  if pixels < 0 {
-    return string_concat("", c.result_none());
-  }
-  let data: u32 = img.luma_copy_from_array(width, height, luma);
-  if data == 0 {
-    return string_concat("", c.result_none());
-  }
-  return string_concat("", scan_all_data(data, width, height, modules, erasures, packed, meta));
+  let data: u32 = image.luma_from_bytes(width, height, luma);
+  let cropped: u32 = image.crop_luma(data, width, height, roi_x, roi_y, roi_width, roi_height, meta);
+  if cropped == 0 { return string_concat("", c.result_none()); }
+  let cropped_value: string = string_concat("", scan_two_d_from_luma(cropped, meta[0], meta[1], modules, erasures, packed, meta));
+  if string_length(cropped_value) > 0 { return string_concat("", cropped_value); }
+  return string_concat("", c.result_none());
 }
 
 export fn scan_and_decode_all_bytes(
   width: i32,
   height: i32,
   luma: u32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut packed: Array<i32>,
-  mut meta: Array<i32>
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
 ) -> string {
-  let data: u32 = img.luma_from_bytes(width, height, luma);
-  if data == 0 {
-    return string_concat("", c.result_none());
-  }
-  return string_concat("", scan_all_data(data, width, height, modules, erasures, packed, meta));
+  if !valid_scan_dimensions(width, height) || luma == 0 { return string_concat("", c.result_none()); }
+  return string_concat("", scan_and_decode_bytes(width, height, luma, modules, erasures, packed, meta));
 }
 
-// Test/helper exports for unit specs (unique names to avoid static-link collisions).
-export fn sc_result_none() -> string { return string_concat("", c.result_none()); }
-export fn sc_result_decoded(format: i32, value: string) -> string { return string_concat("", c.result_decoded(format, value)); }
-export fn sc_result_located(format: i32) -> string { return string_concat("", c.result_located(format)); }
-export fn sc_decode_databar_modules(modules: Array<i32>) -> string {
-  return string_concat("", dbar.decode_databar_modules(c.array_len_i32(modules), 1, modules));
+// Foundation ABI probes. These are intentionally scalar or caller-buffer
+// operations so they do not introduce another allocation or capability edge.
+export fn sc_foundation_version() -> i32 {
+  return foundation.ZXING_FOUNDATION_VERSION();
 }
-export fn sc_decode_maxicode_modules(modules: Array<i32>) -> string {
-  return string_concat("", maxi.decode_maxicode_modules(modules));
+
+export fn sc_foundation_validate_dimensions(width: i32, height: i32, stride: i32) -> i32 {
+  return foundation.foundation_validate_dimensions(width, height, stride);
 }
-export fn sc_decode_pdf417_modules(cols_total: i32, rows: i32, modules: Array<i32>) -> string {
-  return string_concat("", pdf.decode_pdf417_modules(cols_total, rows, modules));
+
+export fn sc_foundation_validate_outcome(outcome: Array<i32>) -> i32 {
+  return foundation.foundation_validate_outcome(outcome);
 }
-export fn sc_decode_only_result(format: i32, value: string) -> string {
-  return string_concat("", decode_only_result(format, value));
+
+export fn sc_foundation_gf256(left: i32, right: i32) -> i32 {
+  return foundation.foundation_gf256_mul(left, right);
 }
-export fn sc_try_databar(
-  width: i32,
-  height: i32,
-  luma: Array<i32>,
-  mut modules: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let data: u32 = img.luma_copy_from_array(width, height, luma);
-  if data == 0 { return string_concat("", c.result_none()); }
-  let bits: u32 = prepare_bits(data, width, height);
-  if bits == 0 { return string_concat("", c.result_none()); }
-  return string_concat("", try_databar(bits, width, height, modules, meta));
+
+export fn sc_foundation_bit_array(
+  bits: u32,
+  capacity: i32,
+  state: Array<i32>,
+  value: i32,
+  index: i32
+) -> i32 {
+  let initialized: i32 = foundation.foundation_bit_array_init(bits, capacity, state);
+  if initialized < 0 { return initialized; }
+  let appended: i32 = foundation.foundation_bit_array_append(state, value);
+  if appended < 0 { return appended; }
+  return foundation.foundation_bit_array_get(state, index);
 }
-export fn sc_try_pdf417(
-  width: i32,
-  height: i32,
-  luma: Array<i32>,
-  mut modules: Array<i32>,
-  mut meta: Array<i32>
-) -> string {
-  let data: u32 = img.luma_copy_from_array(width, height, luma);
-  if data == 0 { return string_concat("", c.result_none()); }
-  let bits: u32 = prepare_bits(data, width, height);
-  if bits == 0 { return string_concat("", c.result_none()); }
-  return string_concat("", try_pdf417(bits, width, height, modules, meta));
-}
-export fn sc_result_is_decoded(result: string) -> bool { return c.result_is_decoded(result); }
-export fn sc_result_is_located(result: string) -> bool { return c.result_is_located(result); }
-export fn sc_result_format(result: string) -> i32 { return c.result_format(result); }
-export fn sc_result_value(result: string) -> string { return string_concat("", c.result_value(result)); }
-export fn sc_checked_image_len(width: i32, height: i32) -> i32 { return img.checked_image_len(width, height); }
-export fn sc_binarize_luma(width: i32, height: i32, luma: Array<i32>) -> u32 {
-  let data: u32 = img.luma_copy_from_array(width, height, luma);
-  if data == 0 { return 0; }
-  return img.binarize(data, width, height);
-}
-export fn sc_dense_bounds(bits: u32, width: i32, height: i32, mut meta: Array<i32>) -> i32 {
-  return img.dense_dark_bounds(bits, width, height, meta);
-}
-export fn sc_locate_qr_modules(
+
+export fn sc_foundation_bit_matrix(
   bits: u32,
   width: i32,
   height: i32,
-  mut modules: Array<i32>,
-  mut erasures: Array<i32>,
-  mut meta: Array<i32>
+  state: Array<i32>,
+  x: i32,
+  y: i32,
+  value: i32
 ) -> i32 {
-  return lqr.locate_qr_modules(bits, width, height, modules, erasures, meta);
+  let initialized: i32 = foundation.foundation_bit_matrix_init(bits, width, height, state);
+  if initialized < 0 { return initialized; }
+  let written: i32 = foundation.foundation_bit_matrix_set(state, x, y, value);
+  if written < 0 { return written; }
+  return foundation.foundation_bit_matrix_get(state, x, y);
 }
-export fn sc_sample_square_grid(
-  bits: u32,
+
+export fn sc_oned_pattern_variance(actual: Array<i32>, expected: Array<i32>, count: i32) -> i32 {
+  return oned.oned_pattern_variance(actual, expected, count);
+}
+
+export fn sc_oned_quiet_zone(row: Array<i32>, start: i32, width: i32, required: i32) -> i32 {
+  return oned.oned_quiet_zone(row, start, width, required);
+}
+
+export fn sc_oned_extract_row(
+  luma: Array<i32>,
   width: i32,
   height: i32,
-  origin_x_fx: i32,
-  origin_y_fx: i32,
-  module_fx: i32,
-  size: i32,
-  mut modules: Array<i32>
+  row: i32,
+  threshold: i32,
+  modules: Array<i32>
 ) -> i32 {
-  return img.sample_module_grid(
-    bits,
-    width,
-    height,
-    origin_x_fx,
-    origin_y_fx,
-    module_fx,
-    0,
-    0,
-    module_fx,
-    size,
-    size,
-    modules
-  );
+  return oned.oned_extract_row(luma, width, height, row, threshold, modules);
+}
+
+export fn sc_oned_decode_ean8(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_ean8(row));
+}
+
+export fn sc_oned_decode_ean13(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_ean13(row));
+}
+
+export fn sc_oned_decode_upca(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_upca(row));
+}
+
+export fn sc_oned_decode_upce(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_upce(row));
+}
+
+export fn sc_oned_decode_extension2(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_extension2(row));
+}
+
+export fn sc_oned_decode_extension5(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_extension5(row));
+}
+
+export fn sc_oned_decode_code39(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_code39(row));
+}
+
+export fn sc_oned_decode_itf(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_itf(row));
+}
+
+
+export fn sc_oned_decode_codabar(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_codabar(row));
+}
+
+export fn sc_oned_decode_code93(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_code93(row));
+}
+
+export fn sc_oned_decode_code128(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_code128(row));
+}
+
+export fn sc_oned_decode_with_hint(row: Array<i32>, possible_format: i32) -> string {
+  return string_concat("", oned.oned_decode_with_hint(row, possible_format));
+}
+
+export fn sc_oned_decode_rss14(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_rss14(row));
+}
+
+
+export fn sc_oned_decode_rss_expanded(row: Array<i32>) -> string {
+  return string_concat("", oned.oned_decode_rss_expanded(row));
 }

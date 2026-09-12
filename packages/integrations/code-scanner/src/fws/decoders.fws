@@ -1,23 +1,23 @@
-// Decoder-library adapters: direct source-module imports of package FWS graphs.
+// Decoder-library adapters: scanner-owned source-module imports.
 // Normalizes QR packed layout, matrix triplet payloads, and barcode family decode.
 import "./common.fws" as c;
-import "../../../qr-code/src/fws/qr-decoder.fws" as qr;
+import "./decoders/qr/qr-decoder.fws" as qr;
 // Reuses the same host UTF-8 conversion QR already relies on for non-ASCII
 // text: FWS strings are byte-indexed, so turning a validated UTF-8 byte
 // sequence into a real string still needs a host decoder. Data Matrix and
 // Aztec triplets use the identical decimal-triplet-per-byte encoding as the
 // QR byte payload, so the same capability and "1"+text marker apply here.
 import capability "qr.decode.utf8" as matrix_decode_utf8(value: string) -> string;
-import "../../../matrix-code/src/fws/matrix-decoder-datamatrix.fws" as datamatrix;
-import "../../../matrix-code/src/fws/matrix-decoder-aztec.fws" as aztec;
-import "../../../barcode/src/fws/code128.fws" as code128;
-import "../../../barcode/src/fws/code39.fws" as code39;
-import "../../../barcode/src/fws/code93.fws" as code93;
-import "../../../barcode/src/fws/barcode.fws" as retail;
-import "../../../barcode/src/fws/itf.fws" as itf;
-import "../../../barcode/src/fws/codabar.fws" as codabar;
-import "../../../barcode/src/fws/msi.fws" as msi;
-import "../../../barcode/src/fws/pharmacode.fws" as pharmacode;
+import "./decoders/matrix/matrix-decoder-datamatrix.fws" as datamatrix;
+import "./decoders/matrix/matrix-decoder-aztec.fws" as aztec;
+import "./decoders/barcode/code128.fws" as code128;
+import "./decoders/barcode/code39.fws" as code39;
+import "./decoders/barcode/code93.fws" as code93;
+import "./decoders/barcode/barcode.fws" as retail;
+import "./decoders/barcode/itf.fws" as itf;
+import "./decoders/barcode/codabar.fws" as codabar;
+import "./decoders/barcode/msi.fws" as msi;
+import "./decoders/barcode/pharmacode.fws" as pharmacode;
 
 // Pack QR modules into decoder ABI: packed[0]=size, packed[1..]=modules.
 export fn pack_qr_modules(size: i32, modules: Array<i32>, mut packed: Array<i32>) -> i32 {
@@ -122,33 +122,33 @@ export fn barcode_sym_codabar() -> i32 { return 12; }
 export fn barcode_sym_msi() -> i32 { return 13; }
 export fn barcode_sym_pharmacode() -> i32 { return 14; }
 
-fn decode_bc_code128(modules: Array<i32>) -> string { return string_concat("", code128.decode_code128(modules)); }
-fn decode_bc_gs1_128(modules: Array<i32>) -> string { return string_concat("", code128.decode_gs1_128(modules)); }
-fn decode_bc_code39(modules: Array<i32>) -> string { return string_concat("", code39.decode_code39(modules)); }
-fn decode_bc_code39_ext(modules: Array<i32>) -> string { return string_concat("", code39.decode_code39_extended(modules)); }
-fn decode_bc_code93(modules: Array<i32>) -> string { return string_concat("", code93.decode_code93(modules)); }
-fn decode_bc_code93_ext(modules: Array<i32>) -> string { return string_concat("", code93.decode_code93_extended(modules)); }
-fn decode_bc_ean13(modules: Array<i32>) -> string { return string_concat("", retail.decode_ean13(modules)); }
-fn decode_bc_ean8(modules: Array<i32>) -> string { return string_concat("", retail.decode_ean8(modules)); }
-fn decode_bc_upca(modules: Array<i32>) -> string { return string_concat("", retail.decode_upca(modules)); }
-fn decode_bc_upce(modules: Array<i32>) -> string { return string_concat("", retail.decode_upce(modules)); }
-fn decode_bc_itf(modules: Array<i32>) -> string { return string_concat("", itf.decode_itf(modules)); }
-fn decode_bc_itf14(modules: Array<i32>) -> string { return string_concat("", itf.decode_itf14(modules)); }
-fn decode_bc_codabar(modules: Array<i32>) -> string { return string_concat("", codabar.decode_codabar(modules)); }
-fn decode_bc_msi(modules: Array<i32>) -> string { return string_concat("", msi.decode_msi(modules)); }
-fn decode_bc_pharmacode(modules: Array<i32>) -> string { return string_concat("", pharmacode.decode_pharmacode(modules)); }
+fn decode_bc_code128(modules: Array<i32>) -> string { return string_concat("", code128.c128_decode_code128(modules)); }
+fn decode_bc_gs1_128(modules: Array<i32>) -> string { return string_concat("", code128.c128_decode_gs1_128(modules)); }
+fn decode_bc_code39(modules: Array<i32>) -> string { return string_concat("", code39.c39_decode_code39(modules)); }
+fn decode_bc_code39_ext(modules: Array<i32>) -> string { return string_concat("", code39.c39_decode_code39_extended(modules)); }
+fn decode_bc_code93(modules: Array<i32>) -> string { return string_concat("", code93.c93_decode_code93(modules)); }
+fn decode_bc_code93_ext(modules: Array<i32>) -> string { return string_concat("", code93.c93_decode_code93_extended(modules)); }
+fn decode_bc_ean13(modules: Array<i32>) -> string { return string_concat("", retail.barcode_decode_ean13(modules)); }
+fn decode_bc_ean8(modules: Array<i32>) -> string { return string_concat("", retail.barcode_decode_ean8(modules)); }
+fn decode_bc_upca(modules: Array<i32>) -> string { return string_concat("", retail.barcode_decode_upca(modules)); }
+fn decode_bc_upce(modules: Array<i32>) -> string { return string_concat("", retail.barcode_decode_upce(modules)); }
+fn decode_bc_itf(modules: Array<i32>) -> string { return string_concat("", itf.itf_decode_itf(modules)); }
+fn decode_bc_itf14(modules: Array<i32>) -> string { return string_concat("", itf.itf_decode_itf14(modules)); }
+fn decode_bc_codabar(modules: Array<i32>) -> string { return string_concat("", codabar.codabar_decode_codabar(modules)); }
+fn decode_bc_msi(modules: Array<i32>) -> string { return string_concat("", msi.msi_decode_msi(modules)); }
+fn decode_bc_pharmacode(modules: Array<i32>) -> string { return string_concat("", pharmacode.pharm_decode_pharmacode(modules)); }
 
 fn decode_variable_n(symbology: i32, modules: Array<i32>, count: i32) -> string {
-  if symbology == 0 { return string_concat("", code128.decode_code128_row(modules, count)); }
-  if symbology == 1 { return string_concat("", code128.decode_gs1_128_row(modules, count)); }
-  if symbology == 2 { return string_concat("", code39.decode_code39_row(modules, count)); }
-  if symbology == 3 { return string_concat("", code39.decode_code39_extended_row(modules, count)); }
-  if symbology == 4 { return string_concat("", code93.decode_code93_row(modules, count)); }
-  if symbology == 5 { return string_concat("", code93.decode_code93_extended_row(modules, count)); }
-  if symbology == 10 { return string_concat("", itf.decode_itf_row(modules, count)); }
-  if symbology == 11 { return string_concat("", itf.decode_itf14_row(modules, count)); }
-  if symbology == 12 { return string_concat("", codabar.decode_codabar_row(modules, count)); }
-  if symbology == 13 { return string_concat("", msi.decode_msi_row(modules, count)); }
+  if symbology == 0 { return string_concat("", code128.c128_decode_code128_row(modules, count)); }
+  if symbology == 1 { return string_concat("", code128.c128_decode_gs1_128_row(modules, count)); }
+  if symbology == 2 { return string_concat("", code39.c39_decode_code39_row(modules, count)); }
+  if symbology == 3 { return string_concat("", code39.c39_decode_code39_extended_row(modules, count)); }
+  if symbology == 4 { return string_concat("", code93.c93_decode_code93_row(modules, count)); }
+  if symbology == 5 { return string_concat("", code93.c93_decode_code93_extended_row(modules, count)); }
+  if symbology == 10 { return string_concat("", itf.itf_decode_itf_row(modules, count)); }
+  if symbology == 11 { return string_concat("", itf.itf_decode_itf14_row(modules, count)); }
+  if symbology == 12 { return string_concat("", codabar.codabar_decode_codabar_row(modules, count)); }
+  if symbology == 13 { return string_concat("", msi.msi_decode_msi_row(modules, count)); }
   if symbology == 14 { return ""; }
   return "";
 }
@@ -156,17 +156,17 @@ fn decode_variable_n(symbology: i32, modules: Array<i32>, count: i32) -> string 
 export fn decode_retail_n(modules: Array<i32>, count: i32) -> string {
   let mut value: string = "";
   if count == 95 {
-    value = retail.decode_ean13_row(modules, count);
-    if string_length(value) == 0 { value = retail.decode_upca_row(modules, count); }
+    value = retail.barcode_decode_ean13_row(modules, count);
+    if string_length(value) == 0 { value = retail.barcode_decode_upca_row(modules, count); }
   }
   if count == 67 {
-    value = retail.decode_ean8_row(modules, count);
+    value = retail.barcode_decode_ean8_row(modules, count);
   }
   return string_concat("", value);
 }
 
 export fn decode_code128_n(modules: Array<i32>, count: i32) -> string {
-  return string_concat("", code128.decode_code128_row(modules, count));
+  return string_concat("", code128.c128_decode_code128_row(modules, count));
 }
 
 export fn decode_barcode_variable_n(modules: Array<i32>, count: i32) -> string {
@@ -229,13 +229,13 @@ export fn decode_barcode_auto_n(modules: Array<i32>, count: i32) -> string {
   if string_length(value) > 0 { return string_concat("", value); }
   // EAN-13 first: a UPC-A symbol is a zero-prefixed EAN-13 and is normalised by
   // the locator's UPC-A/EAN-13 disambiguation after decode.
-  value = retail.decode_ean13_row(modules, count);
+  value = retail.barcode_decode_ean13_row(modules, count);
   if string_length(value) > 0 { return string_concat("", value); }
-  value = retail.decode_upca_row(modules, count);
+  value = retail.barcode_decode_upca_row(modules, count);
   if string_length(value) > 0 { return string_concat("", value); }
-  value = retail.decode_upce_row(modules, count);
+  value = retail.barcode_decode_upce_row(modules, count);
   if string_length(value) > 0 { return string_concat("", value); }
-  value = retail.decode_ean8_row(modules, count);
+  value = retail.barcode_decode_ean8_row(modules, count);
   if string_length(value) > 0 { return string_concat("", value); }
   value = decode_variable_n(11, modules, count);
   if string_length(value) > 0 { return string_concat("", value); }

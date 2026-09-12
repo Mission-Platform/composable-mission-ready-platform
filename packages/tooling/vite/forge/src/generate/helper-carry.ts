@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { readNeutralImports, readStyleImports } from '../compiler/ast.js';
+import { readNeutralImports, readStyleImports } from '../compiler/imports.js';
 
 import type { ForgeGenerationContext } from '../compiler/generation-context.js';
 import type { ForgeFileGraph } from '../compiler/graph.js';

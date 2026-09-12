@@ -1,38 +1,22 @@
-import { createRequire } from 'node:module';
 import path from 'node:path';
 
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineLibraryConfig } from '@mission-platform/vite-config';
-import {
-  generateFrameworkSources,
-  jsxComponentsCssImportPlugin,
-  jsxComponentsDtsPlugin,
-  type JsxFramework,
-  reactJsxPlugin,
-  solidJsxPlugin,
-  sveltePlugin,
-} from '@mission-platform/vite-plugin-forge';
+import { defineJsxLibraryConfig, type JsxFramework } from '@mission-platform/vite-plugin-forge';
 import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
-import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
 
 /** FWS roots used to compile the self-contained scanner graph. */
-const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
-const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
-const scannerProjectRoots = [
-  path.resolve(__dirname, 'src/fws'),
-  path.resolve(__dirname, '../qr-code/src/fws'),
-  path.resolve(__dirname, '../matrix-code/src/fws'),
-  path.resolve(__dirname, '../barcode/src/fws'),
-];
-
-/** Resolve the Vue declaration compiler from the Forge dependency tree. */
-const vueTscBin = createRequire(path.join(__dirname, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
-  paths: [path.join(__dirname, 'node_modules/@mission-platform/forge-jsx')],
-});
+const componentsModule = path.resolve(import.meta.dirname, 'src/components/index.ts');
+const scannerProjectRoots = [path.resolve(import.meta.dirname, 'src/fws')];
 
 function scannerForgePlugin(linkProfile: 'static' | 'dynamic'): Plugin {
   return forgeWebScriptPlugin({
-    root: __dirname,
+    root: import.meta.dirname,
     projectRoots: scannerProjectRoots,
     crossProjectLinkMode: linkProfile,
     defaultLinkMode: 'static',
@@ -47,7 +31,7 @@ function scannerForgePlugin(linkProfile: 'static' | 'dynamic'): Plugin {
 /** The neutral self-contained scanner bundle (`dist/index.js`, the `.` export). */
 function defineScannerConfig(linkProfile: 'static' | 'dynamic' = 'static'): UserConfig {
   return defineLibraryConfig({
-    rootDir: __dirname,
+    rootDir: import.meta.dirname,
     entry: { index: 'src/index.ts' },
     name: 'MissionPlatformCodeScanner',
     // Static FWS links flatten the scanner and decoder graph into one artifact.
@@ -61,36 +45,16 @@ function defineScannerConfig(linkProfile: 'static' | 'dynamic' = 'static'): User
 
 /** The per-framework `ForgeCodeScanner` component build (`dist/react`, `dist/vue`, `dist/solid`, `dist/svelte`, `dist/web-components`). */
 function defineFrameworkConfig(framework: JsxFramework): UserConfig {
-  const cacheName = `code-scanner-${framework}`;
-  const generatedDir = path.join(cacheRoot, cacheName);
-  const entry = generateFrameworkSources({
-    framework,
-    componentsModule,
-    outDir: generatedDir,
-  });
-
-  const stagePlugins: Plugin[] =
-    framework === 'vue'
-      ? [vueJsx()]
-      : framework === 'react'
-        ? [reactJsxPlugin()]
-        : framework === 'solid'
-          ? solidJsxPlugin()
-          : framework === 'svelte'
-            ? sveltePlugin()
-            : [];
-
-  const frameworkSuffix =
+  const plugin =
     framework === 'react'
-      ? 'React'
+      ? forgeReactFramework()
       : framework === 'vue'
-        ? 'Vue'
+        ? forgeVueFramework()
         : framework === 'solid'
-          ? 'Solid'
+          ? forgeSolidFramework()
           : framework === 'svelte'
-            ? 'Svelte'
-            : 'WebComponents';
-
+            ? forgeSvelteFramework()
+            : forgeWebComponentsFramework();
   const frameworkExternals =
     framework === 'react'
       ? ['react', 'react-dom']
@@ -102,43 +66,28 @@ function defineFrameworkConfig(framework: JsxFramework): UserConfig {
             ? ['svelte']
             : framework === 'web-components'
               ? ['lit']
-              : [];
+              : ['lit'];
 
-  return defineLibraryConfig({
-    rootDir: __dirname,
-    name: `MissionPlatformCodeScanner${frameworkSuffix}`,
-    entry,
-    // Each component keeps its own JS chunk + CSS asset for tree shaking.
-    preserveModules: true,
-    preserveModulesRoot: path.join('node_modules/.cache', cacheName),
+  return defineJsxLibraryConfig({
+    rootDir: import.meta.dirname,
+    plugin,
+    name: 'MissionPlatformCodeScanner',
+    componentsModule,
     // The scanner façade is consumed through the package's own `.` entry, kept
     // external so the shipped component references it rather than re-inlining the
     // wasm.
     external: [...frameworkExternals, '@mission-platform/code-scanner'],
     overrides: {
       build: {
-        // Per-framework subtree, so the identically-named chunks never collide.
-        outDir: `dist/${framework}`,
-        // Emit one CSS asset per component module rather than one combined file.
         cssCodeSplit: true,
       },
-      plugins: [
-        ...stagePlugins,
-        // Re-attach each component's extracted CSS to its JS chunk (Vite lib mode
-        // emits the CSS asset but does not import it), so per-component styles load.
-        jsxComponentsCssImportPlugin(),
-        // Emit each framework's own genuine declarations from its generated tree
-        // (React via the TS compiler API, Vue via `vue-tsc`).
-        jsxComponentsDtsPlugin({
-          framework,
-          generatedDir,
-          outDir: path.resolve(__dirname, `dist/${framework}`),
-          vueTscBin,
-          componentsModule,
-        }),
-      ],
+      plugins: [scannerForgePlugin(linkProfileForFramework(framework))],
     },
   });
+}
+
+function linkProfileForFramework(framework: JsxFramework): 'static' | 'dynamic' {
+  return framework === 'web-components' ? 'dynamic' : 'static';
 }
 
 export default defineConfig(({ mode }): UserConfig => {

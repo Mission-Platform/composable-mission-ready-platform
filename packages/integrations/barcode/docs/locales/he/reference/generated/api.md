@@ -9,52 +9,6 @@
 
 נוצר מהצהרות מקור ציבורי ב-`@mission-platform/barcode`.
 
-## `src/decoder/index`
-
-### decodeBarcode
-
-פונקציה **סוג:**
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-פענוח רצף של סיביות מודול (`1` = bar, `0` = רווח) של `symbology` הנתון
-חזרה למטען שלו, טען תחילה את גרף ה-FWS המקורי באופן סינכרוני
-להשתמש.
-
-מחזירה `null` כאשר הפעלת המודול אינה סמל חוקי של `symbology` (רע
-מסגור, דפוס לא מזוהה או ספרת ביקורת כושלת). המשתקמים
-מטען הוא הצורה הקנונית של הסמליות - למשל. ספרות ביקורת מחושבות מחדש הן
-כלול, טקסט קוד 39/93 הוא באותיות רישיות, ו-UPC-E מוחזר
-טופס `number system + digits + check`.
-
-#### פרמטרים
-
-| שם      | הקלד             | תיאור |
-| ------- | ---------------- | ----- |
-| סמליות  | ברקוד סימבולוגיה |       |
-| מודולים | מערך כמו<number> |       |
-
-### decodeBarcodeAsync
-
-פונקציה **סוג:**
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-פענח רצף של סיביות מודול בחזרה למטען שלה, תוך טעינת ה-FWS המקורי
-גרף באופן אסינכרוני בשימוש הראשון. כשלי אתחול והמרה
-מוחזרים כדחיות הבטחות. ראה {@link decodeBarcode}.
-
-#### פרמטרים
-
-| שם      | הקלד             | תיאור |
-| ------- | ---------------- | ----- |
-| סמליות  | ברקוד סימבולוגיה |       |
-| מודולים | מערך כמו<number> |       |
-
 ## `src/encoder/index`
 
 ### ברקוד
@@ -132,65 +86,25 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 
 ## `src/fws/index`
 
-### decodeEan13Fws
-
-פונקציה **סוג:**
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-מפענח ביטים של מודול EAN-13 ומאמת זוגיות וספרת ביקורת.
-
-#### פרמטרים
+### פרמטרים
 
 | שם  | הקלד                       | תיאור |
 | --- | -------------------------- | ----- |
 | ערך | מחרוזת \| מערך כמו<number> |       |
 
-### decodeEan13FwsAsync
-
-פונקציה **סוג:**
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-מפענח באופן אסינכרוני ביטים של מודול EAN-13 באמצעות FWS.
-
-#### פרמטרים
+### פרמטרים
 
 | שם  | הקלד                       | תיאור |
 | --- | -------------------------- | ----- |
 | ערך | מחרוזת \| מערך כמו<number> |       |
 
-### decodeEan8Fws
-
-פונקציה **סוג:**
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-מפענח ביטים של מודול EAN-8 ומחזיר את המטען עם ספרת הסימון שלו.
-
-#### פרמטרים
+### פרמטרים
 
 | שם  | הקלד                       | תיאור |
 | --- | -------------------------- | ----- |
 | ערך | מחרוזת \| מערך כמו<number> |       |
 
-### decodeEan8FwsAsync
-
-פונקציה **סוג:**
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-מפענח באופן אסינכרוני ביטים של מודול EAN-8 באמצעות FWS.
-
-#### פרמטרים
+### פרמטרים
 
 | שם  | הקלד                       | תיאור |
 | --- | -------------------------- | ----- |

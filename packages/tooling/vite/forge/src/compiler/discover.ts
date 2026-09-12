@@ -14,7 +14,15 @@
  */
 import path from 'node:path';
 
+import {
+  createCompilerDiagnostic,
+  throwOnCompilerErrors,
+  type CompilerDiagnostic,
+} from '@mission-platform/forge-plugin-api';
+
 import type { ForgeExportFact, ForgeFileGraph, ForgeFileNode } from './graph.js';
+
+export const DUPLICATE_COMPONENT_TARGET = 'DUPLICATE_COMPONENT_TARGET';
 
 /** A neutral component discovered in the barrel, plus its derived public shape. */
 export interface DiscoveredComponent {
@@ -157,12 +165,30 @@ export interface DiscoveredExternalExport {
   star: boolean;
 }
 
-function sourceBase(filePath: string): string {
+export function sourceBase(filePath: string): string {
   const fileName = path.basename(filePath);
   if (fileName === 'index.ts' || fileName === 'index.tsx' || fileName === 'index.js' || fileName === 'index.jsx') {
     return path.basename(path.dirname(filePath));
   }
   return fileName.replace(/\.d?\w+$/, '');
+}
+
+export function deriveDisambiguatedFolder(entryPath: string, sourcePath: string, base: string): string {
+  const entryDir = path.dirname(entryPath);
+  const sourceDir = path.dirname(sourcePath);
+  const rel = path.relative(entryDir, sourceDir).split(path.sep).join('/');
+  return deriveDisambiguatedFolderFromDir(rel, base);
+}
+
+export function deriveDisambiguatedFolderFromDir(relDir: string, base: string): string {
+  const segments = relDir.split(/[\\/]/).filter((segment) => segment.length > 0 && segment !== '.' && segment !== '..');
+  if (segments.length >= 1 && segments.at(-1) === base) {
+    segments.pop();
+  }
+  if (segments.length === 0) {
+    return base;
+  }
+  return `${segments.join('-')}-${base}`;
 }
 
 function relativeModulePath(entry: string, sourcePath: string): string {
@@ -305,7 +331,11 @@ function graphTypeExports(
 }
 
 /** Project public component exports from the canonical graph while retaining the legacy result shape. */
-export function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[] {
+export function discoverComponentsFromGraph(
+  graph: ForgeFileGraph,
+  stripPrefix = 'Forge',
+  diagnostics?: CompilerDiagnostic[],
+): DiscoveredComponent[] {
   const entry = graph.nodes.get(graph.entry);
   if (entry === undefined) {
     return [];
@@ -328,7 +358,14 @@ export function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix =
       )?.exportedName ??
       entryExport.localName ??
       entryExport.exportedName;
-    const publicName = neutralName.startsWith(stripPrefix) ? neutralName.slice(stripPrefix.length) : neutralName;
+    const publicName =
+      entryExport.exportedName !== undefined && entryExport.localName !== undefined
+        ? entryExport.exportedName.startsWith(stripPrefix)
+          ? entryExport.exportedName.slice(stripPrefix.length)
+          : entryExport.exportedName
+        : neutralName.startsWith(stripPrefix)
+          ? neutralName.slice(stripPrefix.length)
+          : neutralName;
     const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier);
     const candidate = `${publicName}Properties`;
     const sourceSpecifier =
@@ -344,6 +381,55 @@ export function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix =
       sourcePath: sourceNode.id,
     });
   }
+
+  // Check for collision among component `folder` basenames and disambiguate nested paths
+  const componentsByFolder = new Map<string, DiscoveredComponent[]>();
+  for (const component of components) {
+    const list = componentsByFolder.get(component.folder);
+    if (list === undefined) {
+      componentsByFolder.set(component.folder, [component]);
+    } else {
+      list.push(component);
+    }
+  }
+
+  for (const [folder, group] of componentsByFolder) {
+    const uniqueSources = new Set(group.map((c) => c.sourcePath ?? c.sourceSpecifier));
+    if (uniqueSources.size <= 1) {
+      continue;
+    }
+    for (const component of group) {
+      component.folder =
+        component.sourcePath !== undefined
+          ? deriveDisambiguatedFolder(graph.entry, component.sourcePath, folder)
+          : deriveDisambiguatedFolderFromDir(component.sourceDir, folder);
+    }
+  }
+
+  // Verify that target folders are unique across distinct source components
+  const targetFolders = new Map<string, DiscoveredComponent>();
+  for (const component of components) {
+    const existing = targetFolders.get(component.folder);
+    if (existing !== undefined) {
+      const existingKey = existing.sourcePath ?? existing.sourceSpecifier;
+      const currentKey = component.sourcePath ?? component.sourceSpecifier;
+      if (existingKey !== currentKey) {
+        const diagnostic = createCompilerDiagnostic({
+          phase: 'generation',
+          severity: 'error',
+          code: DUPLICATE_COMPONENT_TARGET,
+          message: `Duplicate component target "${component.folder}" detected for "${component.neutralName}" (${currentKey}) and "${existing.neutralName}" (${existingKey}).`,
+          fileName: component.sourcePath ?? graph.entry,
+          relatedFiles: existing.sourcePath ? [existing.sourcePath] : undefined,
+        });
+        diagnostics?.push(diagnostic);
+        throwOnCompilerErrors([diagnostic]);
+      }
+    } else {
+      targetFolders.set(component.folder, component);
+    }
+  }
+
   return components;
 }
 
@@ -516,5 +602,44 @@ export function discoverComponents(barrelSource: string, stripPrefix = 'Forge'):
       });
     }
   }
+
+  // Check for collision among component `folder` basenames and disambiguate nested paths
+  const componentsByFolder = new Map<string, DiscoveredComponent[]>();
+  for (const component of components) {
+    const list = componentsByFolder.get(component.folder);
+    if (list === undefined) {
+      componentsByFolder.set(component.folder, [component]);
+    } else {
+      list.push(component);
+    }
+  }
+
+  for (const [folder, group] of componentsByFolder) {
+    const uniqueSources = new Set(group.map((c) => c.sourceSpecifier));
+    if (uniqueSources.size <= 1) {
+      continue;
+    }
+    for (const component of group) {
+      component.folder = deriveDisambiguatedFolderFromDir(component.sourceDir, folder);
+    }
+  }
+
+  const targetFolders = new Map<string, DiscoveredComponent>();
+  for (const component of components) {
+    const existing = targetFolders.get(component.folder);
+    if (existing !== undefined && existing.sourceSpecifier !== component.sourceSpecifier) {
+      const diagnostic = createCompilerDiagnostic({
+        phase: 'generation',
+        severity: 'error',
+        code: DUPLICATE_COMPONENT_TARGET,
+        message: `Duplicate component target "${component.folder}" detected for "${component.neutralName}" (${component.sourceSpecifier}) and "${existing.neutralName}" (${existing.sourceSpecifier}).`,
+        fileName: component.sourceSpecifier,
+        relatedFiles: [existing.sourceSpecifier],
+      });
+      throwOnCompilerErrors([diagnostic]);
+    }
+    targetFolders.set(component.folder, component);
+  }
+
   return components;
 }

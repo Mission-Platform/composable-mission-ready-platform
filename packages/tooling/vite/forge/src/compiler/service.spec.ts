@@ -26,6 +26,7 @@ function fixtureFramework(phases: string[], warning = false): FrameworkOutputPlu
         framework: context.framework,
         module: ir,
         context,
+        lowered: { framework: context.framework, appliedOptimizations: [] },
         ...(warning
           ? {
               diagnostics: [
@@ -63,6 +64,36 @@ function input(source = 'export const fixture = true;') {
 }
 
 describe('ForgeCompilerService', () => {
+  it('rejects incomplete intentions returned by target lowering', () => {
+    const phases: string[] = [];
+    const service = createForgeCompilerService();
+    const framework: FrameworkOutputPlugin = {
+      ...fixtureFramework(phases),
+      lower(ir, context) {
+        phases.push('lower');
+        return { framework: context.framework, module: ir, context } as never;
+      },
+    };
+
+    expect(() => service.compile({ input: input(), framework })).toThrow('must contain a lowered target plan');
+    expect(phases).toEqual(['lower']);
+  });
+
+  it('rejects incomplete intentions returned by target optimization', () => {
+    const phases: string[] = [];
+    const service = createForgeCompilerService();
+    const framework: FrameworkOutputPlugin = {
+      ...fixtureFramework(phases),
+      optimize(intentions) {
+        phases.push('optimize');
+        return { ...intentions, lowered: undefined } as never;
+      },
+    };
+
+    expect(() => service.compile({ input: input(), framework })).toThrow('must contain a lowered target plan');
+    expect(phases).toEqual(['lower', 'optimize']);
+  });
+
   it('runs target phases in order and reuses neutral analysis', () => {
     const phases: string[] = [];
     const service = createForgeCompilerService();
@@ -72,7 +103,12 @@ describe('ForgeCompilerService', () => {
     service.compile({ input: input(), framework });
 
     expect(phases).toEqual(['lower', 'optimize', 'generate', 'lower', 'optimize', 'generate']);
-    expect(service.report().cache).toMatchObject({ semanticHits: 1, semanticMisses: 1 });
+    expect(service.report().cache).toMatchObject({
+      semanticHits: 1,
+      semanticMisses: 1,
+      targetHits: 0,
+      targetMisses: 0,
+    });
     expect(service.report().phaseTimings.map(({ phase }) => phase)).toEqual([
       'frontend',
       'frontend',

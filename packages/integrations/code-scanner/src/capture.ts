@@ -5,7 +5,7 @@
 
 import { scanImageData, scanImageDataAsync } from './scanner';
 
-import type { ImageLike, ScanResult } from './types';
+import type { ImageLike, ScanOptions, ScanResult } from './types';
 
 /**
  * Cap the longest edge sampled from a source. Camera frames and photos can be
@@ -142,14 +142,14 @@ export function videoFrameToImageData(video: HTMLVideoElement, roi: number = DEF
  * Decode `file` and scan it for a code, synchronously running the WebAssembly
  * scanner (which self-initialises from its inlined binary in a production build).
  */
-export async function scanFile(file: Blob): Promise<ScanResult | null> {
-  return scanImageData(await blobToImageData(file));
+export async function scanFile(file: Blob, options?: ScanOptions): Promise<ScanResult | null> {
+  return scanImageData(await blobToImageData(file), options);
 }
 
 /**
  * Decode `file` and scan it for a code, initialising the scanner and decoders
  * asynchronously — safe in any environment (no inlined binary required).
  */
-export async function scanFileAsync(file: Blob): Promise<ScanResult | null> {
-  return scanImageDataAsync(await blobToImageData(file));
+export async function scanFileAsync(file: Blob, options?: ScanOptions): Promise<ScanResult | null> {
+  return scanImageDataAsync(await blobToImageData(file), options);
 }

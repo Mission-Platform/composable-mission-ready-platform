@@ -1,9 +1,12 @@
-import { defineForgeOutputPlugin } from "@mission-platform/forge-plugin-api";
+import {
+  assertTargetIntentionsLowered,
+  defineForgeOutputPlugin,
+} from "@mission-platform/forge-plugin-api";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import Vue from "unplugin-vue/rolldown";
 
 import { emitVueHookModule, emitVueModule } from "./emitters";
-import { isVueLowered, lowerVueModule } from "./lower.js";
+import { lowerVueModule } from "./lower.js";
 import { optimizeVueModule } from "./optimize.js";
 
 import type { VueLoweredModule } from "./lower.js";
@@ -25,22 +28,6 @@ const BUILD: FrameworkBuildAdapters = {
     vueJsx() as TsdownPlugin,
   ],
 };
-
-/**
- * The Vue plan for a set of intentions: the one the pipeline lowered, or a
- * freshly lowered plan when the emitter is called directly (without the
- * `lower`/`optimize` phases having run).
- */
-function planFor(
-  intentions: TargetIntentions,
-  context: GeneratorContext,
-): VueLoweredModule | undefined {
-  if (isVueLowered(intentions.lowered)) {
-    return intentions.lowered;
-  }
-  const { lowered } = lowerVueModule(intentions.module, context);
-  return isVueLowered(lowered) ? lowered : undefined;
-}
 
 /** Create the Vue output plugin and its Vite/Rolldown compiler adapters. */
 export function forgeVueFramework(): FrameworkOutputPlugin {
@@ -67,6 +54,7 @@ export function forgeVueFramework(): FrameworkOutputPlugin {
       return optimizeVueModule(intentions, options);
     },
     generate(intentions: TargetIntentions, context: GeneratorContext) {
+      assertTargetIntentionsLowered<VueLoweredModule>(intentions, "vue");
       if (context.moduleKind === "composable") {
         return {
           code: emitVueHookModule(intentions.module),
@@ -77,7 +65,7 @@ export function forgeVueFramework(): FrameworkOutputPlugin {
         intentions.module,
         context.componentName ?? "Component",
         context.componentFolders,
-        planFor(intentions, context),
+        intentions.lowered,
       );
       return {
         code: generated.code,

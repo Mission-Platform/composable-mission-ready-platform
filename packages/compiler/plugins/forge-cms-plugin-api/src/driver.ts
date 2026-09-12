@@ -11,7 +11,7 @@
  * like — it only knows how to place a {@link CmsArtifact}. Adding a platform
  * therefore requires no change here.
  */
-import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import {
@@ -20,10 +20,13 @@ import {
   discoverComponentsFromGraph,
   parseOxcModule,
   assertForgeArtifactRoot,
-  ensureForgeArtifactDirectory,
+  createForgeArtifactWriter,
   resolveForgeArtifactPath,
   validateForgeArtifactName,
+  type ForgeArtifactKind,
+  type ForgeCompilerService,
   type ForgeGraphDiagnostic,
+  type ForgeProjectSnapshot,
 } from "@mission-platform/vite-plugin-forge";
 
 import { analyzeContentComponent } from "./analyze.js";
@@ -38,7 +41,23 @@ import type {
 import type { ContentComponent } from "./content-model.js";
 import type { CompilerDiagnostic } from "@mission-platform/forge-plugin-api";
 
-const RM_RETRY_OPTIONS = { maxRetries: 5, retryDelay: 100 } as const;
+/** Map CMS artifact kind to the closest Forge artifact kind for the writer. */
+function toForgeArtifactKind(kind: CmsArtifactKind): ForgeArtifactKind {
+  switch (kind) {
+    case "entry": {
+      return "entry";
+    }
+    case "declaration": {
+      return "declaration";
+    }
+    case "module": {
+      return "module";
+    }
+    default: {
+      return "asset";
+    }
+  }
+}
 
 /** The entry written when a target declares no `emitEntry` (Handlebars, Liquid). */
 const PLACEHOLDER_ENTRY: CmsArtifact = {
@@ -74,6 +93,13 @@ export interface GenerateCmsArtifactsOptions {
   /** Root of the consuming package; defaults to the parent of `outDir`. */
   readonly rootDir?: string;
   readonly artifactKinds?: readonly CmsArtifactKind[];
+  /** Service owned by the caller's Forge build session. */
+  readonly service?: ForgeCompilerService;
+  /**
+   * Prepared project snapshot from the owning Forge build session. When present
+   * the driver reuses its graph instead of rediscovering sources eagerly.
+   */
+  readonly project?: ForgeProjectSnapshot;
 }
 
 /** Everything one target run produced. */
@@ -119,16 +145,6 @@ function reportDiagnostics(
         errors.map((error) => `  ${formatDiagnostic(error)}`).join("\n"),
     );
   }
-}
-
-/** Write one artifact beneath the target output directory. */
-function writeArtifact(outputDirectory: string, artifact: CmsArtifact): void {
-  const destination = resolveForgeArtifactPath(
-    outputDirectory,
-    artifact.fileName,
-  );
-  ensureForgeArtifactDirectory(outputDirectory, path.dirname(destination));
-  writeFileSync(destination, artifact.contents, "utf8");
 }
 
 /** Resolve both folder-style and flat-file component barrel exports. */
@@ -177,116 +193,149 @@ export function generateCmsArtifacts(
   const emits = (kind: CmsArtifactKind): boolean =>
     artifactKinds === undefined || artifactKinds.includes(kind);
   const componentsDirectory = path.dirname(options.componentsModule);
-  const graph = buildForgeFileGraph({
-    entry: options.componentsModule,
-    sourceRoot: componentsDirectory,
-  });
+  // Prefer the session-prepared graph so CMS targets share neutral discovery
+  // with sibling framework builds and never re-walk sources at config time.
+  const project =
+    options.project ??
+    options.service?.prepare({
+      entry: options.componentsModule,
+      sourceRoot: componentsDirectory,
+    });
+  const graph =
+    project?.graph ??
+    buildForgeFileGraph({
+      entry: options.componentsModule,
+      sourceRoot: componentsDirectory,
+    });
   const discovered = discoverComponentsFromGraph(graph, stripPrefix);
   const diagnostics: CompilerDiagnostic[] = graph.diagnostics.map(
     (diagnostic) => toCompilerDiagnostic(diagnostic),
   );
 
   const safeOutputDirectory = assertForgeArtifactRoot(outDir);
-  rmSync(safeOutputDirectory, {
-    recursive: true,
-    force: true,
-    ...RM_RETRY_OPTIONS,
-  });
-  ensureForgeArtifactDirectory(safeOutputDirectory, safeOutputDirectory);
+  const writer = createForgeArtifactWriter(safeOutputDirectory, plugin.id);
 
-  const island =
-    emits("template") || emits("entry") || emits("declaration")
-      ? generateIsland({
-          plugin,
-          componentsModule: options.componentsModule,
-          outDir: safeOutputDirectory,
-          stripPrefix,
-        })
-      : undefined;
+  try {
+    const island =
+      emits("template") || emits("entry") || emits("declaration")
+        ? generateIsland({
+            plugin,
+            componentsModule: options.componentsModule,
+            outDir: writer.stageDirectory,
+            stripPrefix,
+            service: options.service,
+            project,
+          })
+        : undefined;
 
-  const context: CmsTargetContext = {
-    rootDir: options.rootDir ?? path.dirname(outDir),
-    outDir: safeOutputDirectory,
-    componentsImport: options.componentsImport,
-    framework: plugin.framework,
-    islandEntry: island?.specifier,
-    diagnostics,
-  };
+    const context: CmsTargetContext = {
+      rootDir: options.rootDir ?? path.dirname(outDir),
+      outDir: writer.stageDirectory,
+      componentsImport: options.componentsImport,
+      framework: plugin.framework,
+      islandEntry: island?.specifier,
+      diagnostics,
+    };
 
-  const artifacts: CmsArtifact[] = [];
-  const components: ContentComponent[] = [];
+    const artifacts: CmsArtifact[] = [];
+    const components: ContentComponent[] = [];
 
-  for (const discoveredComponent of discovered) {
-    const sourcePath = resolveComponentSourcePath(componentsDirectory, {
-      sourceDir: discoveredComponent.sourceDir,
-      folder: discoveredComponent.folder,
-      neutralName: discoveredComponent.neutralName,
-      sourcePath: discoveredComponent.sourcePath,
-    });
-    const source = readFileSync(sourcePath, "utf8");
-    const semantic = analyzeForgeModule({
-      source,
-      fileName: sourcePath,
-      moduleKind: "component",
-      componentName: discoveredComponent.neutralName,
-      sourceRoot: componentsDirectory,
-    });
-    diagnostics.push(...(semantic.diagnostics ?? []));
-
-    const component = analyzeContentComponent(
-      parseOxcModule(sourcePath, source),
-      {
-        neutralName: discoveredComponent.neutralName,
-        publicName: discoveredComponent.publicName,
-        folder: discoveredComponent.folder,
-        propertiesType: discoveredComponent.propertiesType,
+    for (const discoveredComponent of discovered) {
+      const sourcePath = resolveComponentSourcePath(componentsDirectory, {
         sourceDir: discoveredComponent.sourceDir,
-      },
-      semantic,
-    );
-    components.push(component);
+        folder: discoveredComponent.folder,
+        neutralName: discoveredComponent.neutralName,
+        sourcePath: discoveredComponent.sourcePath,
+      });
+      const source = readFileSync(sourcePath, "utf8");
+      const analyzeInput = {
+        source,
+        fileName: sourcePath,
+        moduleKind: "component" as const,
+        componentName: discoveredComponent.neutralName,
+        sourceRoot: componentsDirectory,
+        configFingerprint: project?.fingerprint,
+      };
+      // Session-owned services cache neutral IR across CMS and framework targets.
+      const semantic = options.service
+        ? options.service.analyze(analyzeInput)
+        : analyzeForgeModule(analyzeInput);
+      diagnostics.push(...(semantic.diagnostics ?? []));
 
-    if (emits("schema")) {
-      const schema = plugin.emitSchema?.(component, semantic, context);
-      if (schema !== undefined) artifacts.push(schema);
+      const component = analyzeContentComponent(
+        parseOxcModule(sourcePath, source),
+        {
+          neutralName: discoveredComponent.neutralName,
+          publicName: discoveredComponent.publicName,
+          folder: discoveredComponent.folder,
+          propertiesType: discoveredComponent.propertiesType,
+          sourceDir: discoveredComponent.sourceDir,
+        },
+        semantic,
+      );
+      components.push(component);
+
+      if (emits("schema")) {
+        const schema = plugin.emitSchema?.(component, semantic, context);
+        if (schema !== undefined) artifacts.push(schema);
+      }
+      if (emits("template")) {
+        artifacts.push(plugin.emitTemplate(component, semantic, context));
+      }
     }
-    if (emits("template")) {
-      artifacts.push(plugin.emitTemplate(component, semantic, context));
+
+    if (emits("manifest")) {
+      artifacts.push(...(plugin.emitManifest?.(components, context) ?? []));
     }
-  }
 
-  if (emits("manifest")) {
-    artifacts.push(...(plugin.emitManifest?.(components, context) ?? []));
-  }
+    if (emits("entry") || emits("declaration")) {
+      const entries = plugin.emitEntry?.(components, context) ?? [];
+      artifacts.push(...(entries.length > 0 ? entries : [PLACEHOLDER_ENTRY]));
+    }
 
-  if (emits("entry") || emits("declaration")) {
-    const entries = plugin.emitEntry?.(components, context) ?? [];
-    artifacts.push(...(entries.length > 0 ? entries : [PLACEHOLDER_ENTRY]));
-  }
+    for (const artifact of artifacts) {
+      validateForgeArtifactName(artifact.fileName);
+    }
+    for (const artifact of artifacts) {
+      writer.writeText(
+        artifact.fileName,
+        artifact.contents,
+        toForgeArtifactKind(artifact.artifactKind),
+      );
+    }
+    if (!artifacts.some((artifact) => artifact.artifactKind === "entry")) {
+      writer.writeText(
+        PLACEHOLDER_ENTRY.fileName,
+        PLACEHOLDER_ENTRY.contents,
+        "entry",
+      );
+    }
 
-  for (const artifact of artifacts) {
-    validateForgeArtifactName(artifact.fileName);
-  }
-  for (const artifact of artifacts) {
-    writeArtifact(safeOutputDirectory, artifact);
-  }
-  if (!artifacts.some((artifact) => artifact.artifactKind === "entry")) {
-    writeArtifact(safeOutputDirectory, PLACEHOLDER_ENTRY);
-  }
+    reportDiagnostics(plugin.id, diagnostics);
 
-  reportDiagnostics(plugin.id, diagnostics);
+    const entryArtifacts = artifacts
+      .filter((artifact) => artifact.artifactKind === "entry")
+      .map((artifact) => artifact.fileName);
+    const entryNames =
+      entryArtifacts.length > 0 ? entryArtifacts : [PLACEHOLDER_ENTRY.fileName];
 
-  const entryArtifact =
-    artifacts.find((artifact) => artifact.artifactKind === "entry") ??
-    PLACEHOLDER_ENTRY;
+    writer.finalize(entryNames);
 
-  return {
-    entry: resolveForgeArtifactPath(
-      safeOutputDirectory,
-      entryArtifact.fileName,
-    ),
-    artifacts,
-    components,
-    diagnostics,
-  };
+    const entryArtifact =
+      artifacts.find((artifact) => artifact.artifactKind === "entry") ??
+      PLACEHOLDER_ENTRY;
+
+    return {
+      entry: resolveForgeArtifactPath(
+        safeOutputDirectory,
+        entryArtifact.fileName,
+      ),
+      artifacts,
+      components,
+      diagnostics,
+    };
+  } catch (error) {
+    writer.abort();
+    throw error;
+  }
 }

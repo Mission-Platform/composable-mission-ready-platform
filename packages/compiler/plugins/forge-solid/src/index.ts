@@ -1,11 +1,14 @@
-import { defineForgeOutputPlugin } from "@mission-platform/forge-plugin-api";
+import {
+  assertTargetIntentionsLowered,
+  defineForgeOutputPlugin,
+} from "@mission-platform/forge-plugin-api";
 import solidPlugin from "vite-plugin-solid";
 
 import { emitSolidHookModule, emitSolidModule } from "./emitters";
-import { isSolidLowered, lowerSolidModule } from "./lower.js";
+import { lowerSolidModule } from "./lower.js";
 import { optimizeSolidModule } from "./optimize.js";
 
-import type { SolidLoweringPlan } from "./lower.js";
+import type { SolidLoweredModule } from "./lower.js";
 import type {
   FrameworkBuildAdapters,
   FrameworkOutputPlugin,
@@ -67,22 +70,6 @@ const BUILD: FrameworkBuildAdapters = {
   tsdown: () => [solidJsxTsdownPlugin() as TsdownPlugin],
 };
 
-/**
- * The plan the generator prints from. A pipeline run carries it on
- * `intentions.lowered`; a direct `generate` call lowers on the fly, so the
- * emitter keeps working standalone.
- */
-function solidPlan(
-  intentions: TargetIntentions,
-  context: TargetContext,
-): SolidLoweringPlan | undefined {
-  if (isSolidLowered(intentions.lowered)) {
-    return intentions.lowered.plan;
-  }
-  const fallback = lowerSolidModule(intentions.module, context).lowered;
-  return isSolidLowered(fallback) ? fallback.plan : undefined;
-}
-
 /** Create the Solid output plugin and its Vite/Rolldown JSX adapters. */
 export function forgeSolidFramework(): FrameworkOutputPlugin {
   return defineForgeOutputPlugin({
@@ -108,6 +95,7 @@ export function forgeSolidFramework(): FrameworkOutputPlugin {
       return optimizeSolidModule(intentions, options);
     },
     generate(intentions: TargetIntentions, context: TargetContext) {
+      assertTargetIntentionsLowered<SolidLoweredModule>(intentions, "solid");
       if (context.moduleKind === "composable") {
         return {
           code: emitSolidHookModule(intentions.module),
@@ -117,7 +105,7 @@ export function forgeSolidFramework(): FrameworkOutputPlugin {
       const generated = emitSolidModule(intentions.module, {
         componentName: context.componentName,
         componentFolders: context.componentFolders,
-        plan: solidPlan(intentions, context),
+        plan: intentions.lowered.plan,
       });
       return { code: generated.code, lang: "tsx" as const };
     },

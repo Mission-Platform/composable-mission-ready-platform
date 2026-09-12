@@ -5,7 +5,7 @@ import {
 } from '@mission-platform/forge-plugin-api';
 import { hasMpStaticMarker } from '@mission-platform/forge-plugin-api/compiler/optimize.js';
 
-import { NEUTRAL_MODULE } from './ast.js';
+import { NEUTRAL_MODULE } from './constants.js';
 import { createGenericAstFromOxc } from './frontends.js';
 import { optimizeGenericModule, type OptimizeOptions } from './optimize.js';
 import {

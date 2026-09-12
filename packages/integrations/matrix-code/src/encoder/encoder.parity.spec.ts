@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 
-import { decodeMatrix } from '../decoder';
 import { encodeMatrix, type MatrixCode, type MatrixSymbology } from './index';
 
 interface GoldenVector {
@@ -75,19 +74,4 @@ describe('encodeMatrix parity against Rust golden vectors', () => {
       expect(modulesString(code)).toBe(golden.modules);
     });
   }
-
-  it('round-trips all golden vectors through the FWS decoder', () => {
-    for (const golden of GOLDEN_VECTORS) {
-      const code = encodeMatrix(golden.symbology, golden.data);
-      expect(decodeMatrix(code)).toBe(golden.data);
-    }
-  });
-
-  it('round-trips additional Aztec payloads including short and long', () => {
-    for (const text of ['A', 'HELLO', 'https://mission-platform.dev', 'X'.repeat(40)]) {
-      const code = encodeMatrix('aztec', text);
-      expect(code.width).toBe(code.height);
-      expect(decodeMatrix(code)).toBe(text);
-    }
-  });
 });

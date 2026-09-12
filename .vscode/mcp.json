@@ -4,22 +4,11 @@
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/"
     },
-    "a11y-accessibility": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "a11y-mcp-server"
-      ],
-      "tools": [
-        "*"
-      ]
-    },
     "mission-platform": {
       "type": "stdio",
       "command": "node",
       "args": [
-        "mcp/dist/index.js"
+        "/Users/rogan/Developer/sources/composable_mission_ready_platform/mcp/developer/dist/index.js"
       ],
       "tools": [
         "*"
@@ -41,14 +30,6 @@
       ],
       "tools": [
         "*"
-      ]
-    },
-    "agent-lsp": {
-      "type": "stdio",
-      "command": "agent-lsp",
-      "args": [
-        "--config",
-        "agent-lsp.json"
       ]
     }
   },

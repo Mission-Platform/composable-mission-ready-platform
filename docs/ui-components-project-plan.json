@@ -1,0 +1,150 @@
+{
+  "title": "The Board",
+  "projectTitle": "UI Component Platform Improvements & Polish",
+  "description": "End-to-end accessibility compliance, interaction polish, and missing feature parity across Mission Platform Forge UI components.",
+  "organization": "Mission-Platform",
+  "repository": "Mission-Platform/composable-mission-ready-platform",
+  "milestoneTitle": "UI Component Platform Improvements & Polish",
+  "milestoneNumber": 2,
+  "planPath": "docs/ui-components-project-plan.json",
+  "fields": {
+    "status": [
+      "Backlog",
+      "Ready",
+      "In Progress",
+      "In Review",
+      "Done"
+    ],
+    "priority": [
+      "P0 - Critical",
+      "P1 - High",
+      "P2 - Medium",
+      "P3 - Low"
+    ],
+    "track": [
+      "Accessibility",
+      "Interaction & Polish",
+      "Data Display Parity",
+      "Overlay & Float",
+      "Forms & Validation",
+      "Selection & Combobox",
+      "Content & Editor"
+    ],
+    "complexity": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ]
+  },
+  "issues": [
+    {
+      "issueNumber": 51,
+      "title": "fix(table): Sortable header keyboard accessibility and sort activation",
+      "track": "Accessibility",
+      "priority": "P0 - Critical",
+      "complexity": "S",
+      "initialStatus": "In Review",
+      "pullRequest": 63
+    },
+    {
+      "issueNumber": 52,
+      "title": "fix(tabs): Correct ARIA tab semantics by removing role=\"tab\" from close button",
+      "track": "Accessibility",
+      "priority": "P0 - Critical",
+      "complexity": "S",
+      "initialStatus": "In Review",
+      "pullRequest": 63
+    },
+    {
+      "issueNumber": 53,
+      "title": "fix(tree-view): Implement full WAI-ARIA keyboard navigation (ArrowUp, ArrowDown, Home, End)",
+      "track": "Accessibility",
+      "priority": "P0 - Critical",
+      "complexity": "M",
+      "initialStatus": "In Review",
+      "pullRequest": 63
+    },
+    {
+      "issueNumber": 54,
+      "title": "fix(split-pane): Fix onKeyDown prop casing and add pointer drag resizing",
+      "track": "Interaction & Polish",
+      "priority": "P1 - High",
+      "complexity": "M",
+      "initialStatus": "In Review",
+      "pullRequest": 63
+    },
+    {
+      "issueNumber": 55,
+      "title": "feat(table): Scoped slot cell rendering parity with ForgeVirtualTable",
+      "track": "Data Display Parity",
+      "priority": "P1 - High",
+      "complexity": "M",
+      "initialStatus": "In Review",
+      "pullRequest": 63
+    },
+    {
+      "issueNumber": 56,
+      "title": "feat(multiselect): Support tag truncation and collapsed badge (+N more)",
+      "track": "Interaction & Polish",
+      "priority": "P1 - High",
+      "complexity": "M",
+      "initialStatus": "In Review",
+      "pullRequest": 63
+    },
+    {
+      "issueNumber": 57,
+      "title": "feat(float): Add fallback positioning when CSS Anchor Positioning is unsupported",
+      "track": "Overlay & Float",
+      "priority": "P2 - Medium",
+      "complexity": "L",
+      "initialStatus": "In Review",
+      "pullRequest": 68
+    },
+    {
+      "issueNumber": 58,
+      "title": "feat(forms): Context-driven ForgeForm component with schema validation",
+      "track": "Forms & Validation",
+      "priority": "P2 - Medium",
+      "complexity": "XL",
+      "initialStatus": "In Review",
+      "pullRequest": 67
+    },
+    {
+      "issueNumber": 59,
+      "title": "feat(select): Async search query callback and loading state for ForgeSelect / ForgeCombobox",
+      "track": "Selection & Combobox",
+      "priority": "P2 - Medium",
+      "complexity": "L",
+      "initialStatus": "In Review",
+      "pullRequest": 66
+    },
+    {
+      "issueNumber": 60,
+      "title": "feat(table): Row selection, row expansion, and column pinning in ForgeTable",
+      "track": "Data Display Parity",
+      "priority": "P2 - Medium",
+      "complexity": "XL",
+      "initialStatus": "In Review",
+      "pullRequest": 63
+    },
+    {
+      "issueNumber": 61,
+      "title": "refactor(float): Unify ForgeDialog and ForgeModal into consolidated overlay primitive",
+      "track": "Overlay & Float",
+      "priority": "P2 - Medium",
+      "complexity": "L",
+      "initialStatus": "In Review",
+      "pullRequest": 68
+    },
+    {
+      "issueNumber": 62,
+      "title": "refactor(content): Modernize ForgeWysiwygEditor to eliminate deprecated document.execCommand",
+      "track": "Content & Editor",
+      "priority": "P2 - Medium",
+      "complexity": "XL",
+      "initialStatus": "In Review",
+      "pullRequest": 64
+    }
+  ]
+}

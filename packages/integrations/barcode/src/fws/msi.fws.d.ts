@@ -1,8 +1,6 @@
 export interface ForgeMsiExports {
   /** Encodes numeric text as MSI with its mod-10 check digit. */
   readonly encode_msi: (value: string) => string;
-  /** Decodes framed MSI module bits and removes its trailing check digit. */
-  readonly decode_msi: (modules: ArrayLike<number>) => string;
 }
 
 /** Compiler manifest describing the embedded MSI FWS artifact. */

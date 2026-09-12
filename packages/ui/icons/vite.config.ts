@@ -1,17 +1,12 @@
 import path from 'node:path';
 
-import { defineLibraryConfig } from '@mission-platform/vite-config';
-import {
-  generateFrameworkSources,
-  jsxComponentsCssImportPlugin,
-  jsxComponentsEntryDtsPlugin,
-  type JsxFramework,
-  reactJsxPlugin,
-  solidJsxPlugin,
-  sveltePlugin,
-} from '@mission-platform/vite-plugin-forge';
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import { defineConfig, type Plugin, type UserConfig } from 'vite';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
+import { defineJsxLibraryConfig, type JsxFramework } from '@mission-platform/vite-plugin-forge';
+import { defineConfig, type UserConfig } from 'vite';
 
 /**
  * The package ships **only** framework-specific builds (no neutral artifact),
@@ -37,40 +32,19 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  * `tsc` then emits the neutral icons' own declarations into `dist/components/**`,
  * which the synthesised entry `.d.ts` files import from.
  */
-const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
-const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
-
+const componentsModule = path.resolve(import.meta.dirname, 'src/components/index.ts');
 /** Build the per-framework library config (shared between all framework modes). */
 function defineFrameworkConfig(framework: JsxFramework): UserConfig {
-  const cacheName = `icons-${framework}`;
-  const entry = generateFrameworkSources({
-    framework,
-    componentsModule,
-    outDir: path.join(cacheRoot, cacheName),
-  });
-
-  const stagePlugins: Plugin[] =
-    framework === 'vue'
-      ? [vueJsx()]
-      : framework === 'react'
-        ? [reactJsxPlugin()]
-        : framework === 'solid'
-          ? solidJsxPlugin()
-          : framework === 'svelte'
-            ? sveltePlugin()
-            : [];
-
-  const frameworkSuffix =
+  const plugin =
     framework === 'react'
-      ? 'React'
+      ? forgeReactFramework()
       : framework === 'vue'
-        ? 'Vue'
+        ? forgeVueFramework()
         : framework === 'solid'
-          ? 'Solid'
+          ? forgeSolidFramework()
           : framework === 'svelte'
-            ? 'Svelte'
-            : 'WebComponents';
-
+            ? forgeSvelteFramework()
+            : forgeWebComponentsFramework();
   const frameworkExternals =
     framework === 'react'
       ? ['react', 'react-dom']
@@ -82,36 +56,20 @@ function defineFrameworkConfig(framework: JsxFramework): UserConfig {
             ? ['svelte']
             : framework === 'web-components'
               ? ['lit']
-              : [];
+              : ['lit'];
 
-  return defineLibraryConfig({
-    rootDir: __dirname,
-    name: `MissionPlatformIconsJsx${frameworkSuffix}`,
-    entry,
-    // Each icon keeps its own JS chunk + CSS asset for tree shaking.
-    preserveModules: true,
-    preserveModulesRoot: path.join('node_modules/.cache', cacheName),
+  return defineJsxLibraryConfig({
+    rootDir: import.meta.dirname,
+    plugin,
+    name: 'MissionPlatformIconsJsx',
+    componentsModule,
+    useEntryDts: true,
+    declarationModule: '../components',
     external: frameworkExternals,
     overrides: {
       build: {
-        // Per-framework subtree, so the identically-named chunks never collide.
-        outDir: `dist/${framework}`,
-        // Emit one CSS asset per icon module rather than one combined file.
         cssCodeSplit: true,
       },
-      plugins: [
-        ...stagePlugins,
-        // Re-attach each icon's extracted CSS to its JS chunk (Vite lib mode
-        // emits the CSS asset but does not import it), so per-icon styles load.
-        jsxComponentsCssImportPlugin(),
-        jsxComponentsEntryDtsPlugin({
-          framework,
-          componentsModule,
-          declarationFileName: 'index',
-          // `dist/<framework>/index.d.ts` imports the neutral props types from `dist/components`.
-          declarationModule: '../components',
-        }),
-      ],
     },
   });
 }

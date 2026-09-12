@@ -40,6 +40,18 @@ describe('documentation manifest', () => {
     expect(navGroups.length).toBeGreaterThan(0);
     expect(navGroups[0]?.label).toBe('Getting Started');
     expect(navGroups[0]?.items).toContain('overview');
+    const expectedGroups = {
+      'application-development': 'gettingStarted',
+      'configs/index': 'buildTooling',
+      'configs/scripts-config': 'buildTooling',
+      'configs/workers-config': 'buildTooling',
+      'guides/development': 'buildTooling',
+      'visual-component-overrides': 'authoring',
+      'web-lua-compatibility': 'reference',
+    } as const;
+    for (const [slug, key] of Object.entries(expectedGroups)) {
+      expect(navGroups.find((group) => group.items.includes(slug))?.key).toBe(key);
+    }
     const barcodeGroup = navGroups.find((group) => group.items.includes('packages/integrations/barcode/index'));
     expect(barcodeGroup?.key).toBe('packages');
     expect(barcodeGroup?.packageName).toBe('@mission-platform/barcode');

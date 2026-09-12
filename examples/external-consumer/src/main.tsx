@@ -153,14 +153,17 @@ function App() {
         > Send to MailPit </ForgeButton> </ForgeStack> </ForgeStack> </ForgeCard>
 
         {status.message ? (
-          <ForgeTypography
+          <div
             aria-live="polite"
-            color={status.kind === "error" ? "error" : "success"}
             role={status.kind === "error" ? "alert" : "status"}
-            variant="body-md"
           >
-            {status.message}
-          </ForgeTypography>
+            <ForgeTypography
+              color={status.kind === "error" ? "error" : "success"}
+              variant="body-md"
+            >
+              {status.message}
+            </ForgeTypography>
+          </div>
         ) : undefined}
 
         <ForgeCard bordered padding="none" variant="neutral"> <ForgeStack

@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 
-import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { tsdownForgeCmsPlugins } from '@mission-platform/forge-cms-plugin-api';
 import { forgeStoryblokCmsTargets } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
@@ -9,19 +9,15 @@ import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
+import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
+import forgeWebScriptPlugin, { createForgeWebScriptGraphCache } from '@mission-platform/vite-plugin-forge-web-script';
 
 const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
 /** FWS roots flattened into the neutral scanner artifact. */
-const scannerProjectRoots = [
-  path.resolve(rootDirectory, 'src/fws'),
-  path.resolve(rootDirectory, '../qr-code/src/fws'),
-  path.resolve(rootDirectory, '../matrix-code/src/fws'),
-  path.resolve(rootDirectory, '../barcode/src/fws'),
-];
+const scannerProjectRoots = [path.resolve(rootDirectory, 'src/fws')];
+const scannerForgeWebScriptGraphCache = createForgeWebScriptGraphCache();
 
 function resolveScannerForgeWebScriptModule(source: string, importer: string): string | undefined {
   const relative = path.resolve(path.dirname(importer), source);
@@ -45,6 +41,8 @@ const scannerForgeWebScriptOptions = {
   linkProfile: 'static' as const,
   optimization: 'release' as const,
   requireExports: false,
+  graphCache: scannerForgeWebScriptGraphCache,
+  graphCacheKey: 'code-scanner-static',
   resolveModule: resolveScannerForgeWebScriptModule,
   requestedCapabilities: (fileName: string) => (fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
 };
@@ -69,7 +67,7 @@ export default [
   }),
   ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
     ? []
-    : defineTsdownForgeComponents({
+    : defineTsdownForgeComponentsAll({
         rootDir: rootDirectory,
         frameworks: [
           forgeReactFramework(),
@@ -86,18 +84,16 @@ export default [
           plugins: [forgeWebScriptPlugin(scannerForgeWebScriptOptions)],
         },
       })),
-  ...defineTsdownForgeCmsAll({
+  defineTsdownLibrary({
     rootDir: rootDirectory,
-    componentsModule,
-    targets: forgeStoryblokCmsTargets({
-      packageName: '@mission-platform/code-scanner',
-      frameworks: [
-        forgeReactFramework(),
-        forgeVueFramework(),
-        forgeSvelteFramework(),
-        forgeSolidFramework(),
-        forgeWebComponentsFramework(),
-      ],
+    entry: componentsModule,
+    plugins: tsdownForgeCmsPlugins({
+      rootDir: rootDirectory,
+      componentsModule,
+      targets: forgeStoryblokCmsTargets({
+        packageName: '@mission-platform/code-scanner',
+        frameworks: [forgeReactFramework(), forgeVueFramework(), forgeSvelteFramework(), forgeWebComponentsFramework()],
+      }),
     }),
   }),
 ];

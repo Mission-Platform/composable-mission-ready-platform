@@ -14,6 +14,8 @@ export interface ForgeCacheLimits {
 export interface ForgeCacheStats {
   readonly semanticHits: number;
   readonly semanticMisses: number;
+  readonly targetHits: number;
+  readonly targetMisses: number;
   readonly semanticEvictions: number;
   readonly frontendEvictions: number;
   readonly optimizedEvictions: number;
@@ -33,6 +35,8 @@ export function createEmptyForgeCacheStats(): ForgeCacheStats {
   return {
     semanticHits: 0,
     semanticMisses: 0,
+    targetHits: 0,
+    targetMisses: 0,
     semanticEvictions: 0,
     frontendEvictions: 0,
     optimizedEvictions: 0,

@@ -15,14 +15,19 @@ export interface ForgePluginUiBridgeConfigMessage {
 }
 
 export type ForgePluginUiMessage =
-  | { readonly type: 'convert' }
+  | { readonly type: 'convert'; readonly requestId?: string }
   | { readonly type: 'get-bridge-config' }
   | { readonly type: 'request-selection-status' }
   | ForgePluginUiBridgeConfigMessage;
 
 export type ForgePluginMainMessage =
   | { readonly type: 'selection-status'; readonly selectionCount: number }
-  | { readonly type: 'conversion-result'; readonly bundle?: ForgeExportBundle; readonly error?: string }
+  | {
+      readonly type: 'conversion-result';
+      readonly requestId?: string;
+      readonly bundle?: ForgeExportBundle;
+      readonly error?: string;
+    }
   | { readonly type: 'bridge-config'; readonly config: ForgeBridgeConfig }
   | { readonly type: 'bridge-config-saved'; readonly config: ForgeBridgeConfig };
 
@@ -97,6 +102,24 @@ export function isForgeBridgeConfig(value: unknown): value is ForgeBridgeConfig 
   );
 }
 
+export function isValidRequestId(value?: unknown): value is string {
+  return typeof value === 'string' && value.length > 0 && value.length <= 128;
+}
+
+let monotonicRequestId = 0;
+
+export function generateRequestId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    try {
+      return crypto.randomUUID();
+    } catch {
+      // Fallback in case randomUUID fails
+    }
+  }
+  monotonicRequestId = (monotonicRequestId + 1) & 0x7f_ff_ff_ff;
+  return `forge-request-${Date.now()}-${monotonicRequestId}`;
+}
+
 export function isTrustedForgePluginMessageEvent(
   event: MessageEvent<unknown>,
   parent: WindowProxy,
@@ -105,22 +128,26 @@ export function isTrustedForgePluginMessageEvent(
   return event.source === parent && event.origin === expectedOrigin;
 }
 
-export function isForgePluginUiMessage(message: unknown): message is ForgePluginUiMessage {
-  if (typeof message !== 'object' || message === null || !('type' in message)) return false;
-  const type = message.type;
-  return (
-    type === 'convert' ||
-    type === 'get-bridge-config' ||
-    type === 'request-selection-status' ||
-    type === 'set-bridge-config'
-  );
+export function isForgePluginUiMessage(message?: unknown): message is ForgePluginUiMessage {
+  if (!isRecord(message) || typeof message.type !== 'string') return false;
+  if (message.type === 'convert') {
+    return message.requestId === undefined || isValidRequestId(message.requestId);
+  }
+  if (message.type === 'get-bridge-config' || message.type === 'request-selection-status') {
+    return true;
+  }
+  if (message.type === 'set-bridge-config') {
+    return isForgeBridgeConfig(message.config);
+  }
+  return false;
 }
 
-export function isForgePluginMainMessage(message: unknown): message is ForgePluginMainMessage {
+export function isForgePluginMainMessage(message?: unknown): message is ForgePluginMainMessage {
   if (!isRecord(message) || typeof message.type !== 'string') return false;
   if (message.type === 'selection-status')
     return Number.isSafeInteger(message.selectionCount) && (message.selectionCount as number) >= 0;
   if (message.type === 'conversion-result') {
+    if (message.requestId !== undefined && !isValidRequestId(message.requestId)) return false;
     if (message.error !== undefined && typeof message.error !== 'string') return false;
     if (message.bundle === undefined) return true;
     if (

@@ -6,7 +6,7 @@ import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
 
 /**
  * Neutral types/entry (`dist/index.d.ts`, …) plus the two forge component
@@ -19,7 +19,7 @@ export default [
     rootDir: import.meta.dirname,
     clean: true,
   }),
-  ...defineTsdownForgeComponents({
+  ...defineTsdownForgeComponentsAll({
     rootDir: import.meta.dirname,
     frameworks: [
       forgeVueFramework(),
@@ -33,18 +33,22 @@ export default [
     // Encoder is consumed through the package's own `.` entry.
     external: ['i18next'],
   }),
-  // ...defineTsdownForgeCmsAll({
+  // defineTsdownLibrary({
   //   rootDir: import.meta.dirname,
-  //   componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
-  //   targets: forgeStoryblokCmsTargets({
-  //     packageName: '@mission-platform/three',
-  //     frameworks: [
-  //       forgeReactFramework(),
-  //       forgeVueFramework(),
-  //       forgeSvelteFramework(),
-  //       forgeSolidFramework(),
-  //       forgeWebComponentsFramework(),
-  //     ],
+  //   entry: path.resolve(import.meta.dirname, 'src/components/index.ts'),
+  //   plugins: tsdownForgeCmsPlugins({
+  //     rootDir: import.meta.dirname,
+  //     componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
+  //     targets: forgeStoryblokCmsTargets({
+  //       packageName: '@mission-platform/three',
+  //       frameworks: [
+  //         forgeReactFramework(),
+  //         forgeVueFramework(),
+  //         forgeSvelteFramework(),
+  //         forgeSolidFramework(),
+  //         forgeWebComponentsFramework(),
+  //       ],
+  //     }),
   //   }),
   // }),
 ];

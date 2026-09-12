@@ -2,7 +2,7 @@
  * Prompt definitions using `@modelcontextprotocol/sdk`.
  * Each prompt returns a ready-to-run instruction message that embeds the
  * relevant curated guide, so an AI assistant can be dropped straight into one
- * of the seven Mission Platform workflows.
+ * of the Mission Platform workflows.
  */
 
 import { getGuide, type GuideId } from '@mission-platform/mcp-shared/knowledge/guides';
@@ -76,6 +76,75 @@ export function registerPrompts(server: McpServer): void {
     (args) =>
       userMessage(
         `${guideBody('fws-forensics')}\n\n---\nTask: Investigate the FWS behavior${args.sourcePath ? ` from \`${args.sourcePath}\`` : ''}${args.replayId ? ` for replay \`${args.replayId}\`` : ''}. Use fws_run_trace only with its bounded capability-denied self-hosted probe, interpret source locations, caps, traps, and hashes, and propose remediation after analysis. Do not request arbitrary commands, Wasm instantiation, host imports, secrets, or unrestricted snapshots.`,
+      ),
+  );
+
+  server.registerPrompt(
+    'debug-code',
+    {
+      description: 'Guide evidence-first debugging of a TypeScript, Vue, FWS, or configuration file.',
+      argsSchema: {
+        filePath: z.string().optional().describe('Repository-rooted file path, if known.'),
+        languageId: z.string().optional().describe('Configured language-server identifier, if known.'),
+        issue: z.string().optional().describe('Observed failure or symptom.'),
+      },
+    },
+    (args) =>
+      userMessage(
+        [
+          `Task: Debug ${args.filePath ? `the file ${args.filePath}` : 'the reported code'}.`,
+          ...(args.issue ? [`Observed issue: ${args.issue}`] : []),
+          '',
+          'Start read-only. Use git_changed_files, lsp_debug_context, and lsp_get_diagnostics to establish evidence before editing.',
+          'Inspect definitions, callers, related tests, and the smallest relevant diff; state the likely root cause and a falsifiable hypothesis.',
+          'After an approved fix, use lsp_review_structure, lsp_run_build, and lsp_run_tests as appropriate, then report remaining uncertainty.',
+          ...(args.languageId ? [`Prefer the ${args.languageId} language server.`] : []),
+        ].join('\n'),
+      ),
+  );
+
+  server.registerPrompt(
+    'review-changes',
+    {
+      description: 'Guide a bounded, evidence-based review of current Git changes.',
+      argsSchema: {
+        ref: z.string().optional().describe('Optional base revision for the diff.'),
+        path: z.string().optional().describe('Optional repository-rooted path to review.'),
+        languageId: z.string().optional().describe('Configured language-server identifier, if available.'),
+      },
+    },
+    (args) =>
+      userMessage(
+        [
+          `Task: Review the current changes${args.path ? ` under ${args.path}` : ''}${args.ref ? ` against ${args.ref}` : ''}.`,
+          '',
+          'Begin with review_changes and treat git_changed_files as the authoritative changed-file list.',
+          'Review behavior, regressions, error handling, security, API compatibility, dependency direction, tests, and documentation/changeset requirements.',
+          `Use lsp_get_diagnostics or aggregated LSP evidence when ${args.languageId ?? 'a languageId'} is available.`,
+          'Report findings by severity with file/line evidence, then list validation gaps separately; do not make edits or commits during the review.',
+        ].join('\n'),
+      ),
+  );
+
+  server.registerPrompt(
+    'review-structure',
+    {
+      description: 'Guide structural review of a source file and its test coverage.',
+      argsSchema: {
+        filePath: z.string().optional().describe('Repository-rooted source file, if known.'),
+        languageId: z.string().optional().describe('Configured language-server identifier, if known.'),
+      },
+    },
+    (args) =>
+      userMessage(
+        [
+          `Task: Review the structure of ${args.filePath || 'the target source file'}.`,
+          '',
+          'Use lsp_review_structure before proposing refactors.',
+          'Describe public symbols, responsibilities, dependencies, error boundaries, ownership/lifecycle concerns, and related tests; distinguish observed facts from recommendations.',
+          'Check whether shared logic belongs in packages/ rather than an app, and preserve TypeScript, package-boundary, Storybook, and changeset conventions.',
+          ...(args.languageId ? [`Prefer the ${args.languageId} language server.`] : []),
+        ].join('\n'),
       ),
   );
 

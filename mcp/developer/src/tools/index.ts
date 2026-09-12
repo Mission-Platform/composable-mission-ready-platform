@@ -55,6 +55,66 @@ import {
 import { readTokens } from '@mission-platform/mcp-shared/repo/tokens';
 import { z } from 'zod';
 
+import { accessibilityAuditInputSchema, runAccessibilityAudit } from '../accessibility/audit.ts';
+import { COMMIT_TYPES, applyCommitPlan, createCommitPlan, type CommitPlan } from '../git/commit.ts';
+import {
+  readGitBlame,
+  readGitBranches,
+  readGitChangedFiles,
+  readGitDiff,
+  readGitGrep,
+  readGitLog,
+  readGitLsFiles,
+  readGitRemotes,
+  readGitShow,
+  readGitStatus,
+  readGitTags,
+} from '../git/index.ts';
+import { getLspCapabilityReport } from '../lsp/capabilities.ts';
+import { addLspConfigurationServer, editLspConfigurationServer, readLspConfiguration } from '../lsp/configuration.ts';
+import {
+  applyLspEdit,
+  executeLspCommand,
+  formatLspDocument,
+  formatLspRange,
+  previewLspEdit,
+  renameLspSymbol,
+  replaceLspSymbolBody,
+  safeDeleteLspSymbol,
+  simulateLspChain,
+  suggestLspFixes,
+} from '../lsp/edits.ts';
+import {
+  findLspSymbol,
+  getLspDocumentHighlights,
+  getLspSymbolDocumentation,
+  getLspSymbolSource,
+  goToLspDefinition,
+  inspectLspSymbol,
+  listLspSymbols,
+} from '../lsp/navigation.ts';
+import {
+  addLspWorkspaceFolder,
+  detectLspServers,
+  getLspDiagnostics,
+  getLspEditingContext,
+  getLspServerCapabilities,
+  getLspStatus,
+  listLspWorkspaceFolders,
+  openLspDocument,
+  restartLspSession,
+  shutdownLspSessions,
+  startLspSession,
+} from '../lsp/registry.ts';
+import {
+  findLspCallers,
+  findLspImplementations,
+  findLspReferences,
+  getLspCrossRepoReferences,
+  getLspTypeHierarchy,
+} from '../lsp/relationships.ts';
+import { getLspDebugContext, reviewChanges, reviewLspStructure } from '../lsp/reviews.ts';
+import { getLspTestsForFile, runLspBuild, runLspTests } from '../lsp/workflows.ts';
 import { validateName, writeIntoPackage, writeScaffold } from '../scaffold/writer.ts';
 
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -137,6 +197,87 @@ const targetFeaturesSchema = z
     atomics: z.boolean().optional(),
   })
   .optional();
+
+const lspSessionSchema = {
+  sessionId: z.string().max(128).optional(),
+  languageId: z.string().max(128).optional(),
+};
+const lspPositionSchema = {
+  filePath: z.string().min(1).max(4096),
+  line: z.number().int().min(0).max(1_000_000),
+  character: z.number().int().min(0).max(1_000_000),
+  ...lspSessionSchema,
+};
+const lspLimitSchema = z.number().int().min(1).max(500).optional();
+const lspPositionValueSchema = z.object({
+  line: z.number().int().min(0).max(1_000_000),
+  character: z.number().int().min(0).max(1_000_000),
+});
+const lspRangeValueSchema = z.object({ start: lspPositionValueSchema, end: lspPositionValueSchema });
+const lspTextEditSchema = z.object({ range: lspRangeValueSchema, newText: z.string().max(4 * 1024 * 1024) });
+const lspDiagnosticSchema = z.object({
+  range: lspRangeValueSchema,
+  message: z.string(),
+  severity: z.number().optional(),
+  code: z.union([z.number(), z.string()]).optional(),
+  source: z.string().optional(),
+});
+const lspWorkspaceEditSchema = z
+  .object({
+    changes: z.record(z.string().max(4096), z.array(lspTextEditSchema).max(10_000)).optional(),
+    documentChanges: z.array(z.unknown()).max(10_000).optional(),
+  })
+  .passthrough();
+const lspEditInputSchema = {
+  ...lspSessionSchema,
+  filePath: z.string().min(1).max(4096).optional(),
+  edits: z.array(lspTextEditSchema).max(10_000).optional(),
+  workspaceEdit: lspWorkspaceEditSchema.optional(),
+  expectedVersions: z.record(z.string().max(4096), z.number().int().min(0)).optional(),
+  apply: z.boolean().optional(),
+};
+const lspWorkflowSchema = {
+  ...lspSessionSchema,
+  packageName: z.string().trim().min(1).max(256).optional(),
+  command: z
+    .never()
+    .optional()
+    .describe('Arbitrary command strings are rejected; scripts come from repository conventions.'),
+  timeoutMs: z.number().int().min(10).max(120_000).optional(),
+  maxOutputBytes: z.number().int().min(1).max(1_048_576).optional(),
+};
+const lspConfigServerSchema = {
+  languageId: z.string().trim().min(1).max(128),
+  extensions: z.array(z.string().trim().min(1).max(32)).min(1).max(128),
+  command: z.array(z.string().min(1).max(4096)).min(1).max(128),
+};
+const gitReadSchema = {
+  timeoutMs: z.number().int().min(10).max(120_000).optional(),
+  maxOutputBytes: z.number().int().min(1).max(1_048_576).optional(),
+};
+const reviewLimitSchema = z.number().int().min(1).max(500).optional();
+const commitPathSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(4096)
+  .refine((path) => !path.includes('\0'), 'Commit paths must not contain NUL characters.');
+const commitModeSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('staged-only') }),
+  z.object({ kind: z.literal('paths'), paths: z.array(commitPathSchema).min(1).max(256) }),
+]);
+const commitPlanSchema = {
+  type: z.enum(COMMIT_TYPES),
+  scope: z.string().max(128).optional(),
+  description: z.string().min(1).max(1024),
+  body: z
+    .string()
+    .max(256 * 1024)
+    .optional(),
+  footers: z.array(z.string().min(1).max(1024)).max(32).optional(),
+  mode: commitModeSchema,
+  ...gitReadSchema,
+};
 
 function repoPath(path: string, label: string): string {
   return resolveRepoPath(path, label);
@@ -281,6 +422,1017 @@ const artifactMetadataSchema = z
   .optional();
 
 export function registerTools(server: McpServer): void {
+  const commitPlans = new Map<string, { readonly plan: CommitPlan; readonly createdAt: number }>();
+  const commitPlanTtlMs = 30 * 60 * 1000;
+  const maxCommitPlans = 128;
+
+  const pruneCommitPlans = (now: number): void => {
+    for (const [planId, record] of commitPlans) {
+      if (now - record.createdAt >= commitPlanTtlMs) commitPlans.delete(planId);
+    }
+    while (commitPlans.size >= maxCommitPlans) {
+      const oldest = commitPlans.keys().next().value as string | undefined;
+      if (oldest === undefined) break;
+      commitPlans.delete(oldest);
+    }
+  };
+
+  // ---- LSP migration contract ----------------------------------------------
+  server.registerTool(
+    'lsp_capabilities',
+    {
+      description:
+        'Return the versioned developer-MCP LSP capability contract, including canonical names and workspace mutation behavior.',
+      inputSchema: {},
+    },
+    async () => json(getLspCapabilityReport()),
+  );
+  server.registerTool(
+    'lsp_config_view',
+    {
+      description: 'View the validated root-bounded agent-lsp.json configuration without starting language servers.',
+      inputSchema: {},
+    },
+    async () => {
+      try {
+        return json(readLspConfiguration());
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_config_add',
+    {
+      description: 'Preview or apply adding one language-server definition to agent-lsp.json; preview is the default.',
+      inputSchema: {
+        ...lspConfigServerSchema,
+        apply: z.boolean().optional().describe('Write the configuration only when true.'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(
+          addLspConfigurationServer(
+            { languageId: args.languageId, extensions: args.extensions, command: args.command },
+            args.apply,
+          ),
+        );
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_config_edit',
+    {
+      description: 'Preview or apply editing one language-server definition in agent-lsp.json; preview is the default.',
+      inputSchema: {
+        languageId: z.string().trim().min(1).max(128),
+        newLanguageId: z.string().trim().min(1).max(128).optional(),
+        extensions: z.array(z.string().trim().min(1).max(32)).min(1).max(128).optional(),
+        command: z.array(z.string().min(1).max(4096)).min(1).max(128).optional(),
+        apply: z.boolean().optional().describe('Write the configuration only when true.'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(
+          editLspConfigurationServer(
+            args.languageId,
+            { languageId: args.newLanguageId, extensions: args.extensions, command: args.command },
+            args.apply,
+          ),
+        );
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_detect_servers',
+    {
+      description:
+        'Inspect the root-bounded LSP configuration and report server availability without starting a language server.',
+      inputSchema: {},
+    },
+    async () => {
+      try {
+        return json(detectLspServers());
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_status',
+    {
+      description: 'Report the developer-MCP LSP lifecycle state and active configured language-server sessions.',
+      inputSchema: {},
+    },
+    async () => json(getLspStatus()),
+  );
+  server.registerTool(
+    'lsp_start',
+    {
+      description:
+        'Start one configured language server in a root-bounded process without invoking a shell. The languageId is required when multiple servers are configured.',
+      inputSchema: {
+        languageId: z
+          .string()
+          .max(128)
+          .optional()
+          .describe('Configured language identifier, such as "typescript" or "yaml".'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(startLspSession(args.languageId));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_shutdown',
+    {
+      description: 'Stop active developer-MCP LSP sessions by sessionId, languageId, or explicit all=true.',
+      inputSchema: {
+        sessionId: z.string().max(128).optional(),
+        languageId: z.string().max(128).optional(),
+        all: z.boolean().optional().describe('Stop every active session when true.'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(shutdownLspSessions(args.sessionId, args.languageId, args.all));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_restart',
+    {
+      description:
+        'Restart a configured language server by sessionId or languageId, stopping the selected session before starting its replacement.',
+      inputSchema: {
+        sessionId: z.string().max(128).optional(),
+        languageId: z.string().max(128).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(restartLspSession(args.sessionId, args.languageId));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_open_document',
+    {
+      description:
+        'Open or update a root-bounded document in an active language-server session. This sends only standard text-document notifications.',
+      inputSchema: {
+        filePath: z.string().min(1).max(4096),
+        sessionId: z.string().max(128).optional(),
+        languageId: z.string().max(128).optional(),
+        documentLanguageId: z.string().max(128).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await openLspDocument(args.filePath, args.sessionId, args.languageId, args.documentLanguageId));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_get_diagnostics',
+    {
+      description:
+        'Open or update a root-bounded document and return diagnostics published by its active language-server session.',
+      inputSchema: {
+        filePath: z.string().min(1).max(4096),
+        sessionId: z.string().max(128).optional(),
+        languageId: z.string().max(128).optional(),
+        documentLanguageId: z.string().max(128).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await getLspDiagnostics(args.filePath, args.sessionId, args.languageId, args.documentLanguageId));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_list_workspace_folders',
+    {
+      description: 'List the root-bounded workspace folders known by an initialized language-server session.',
+      inputSchema: {
+        sessionId: z.string().max(128).optional(),
+        languageId: z.string().max(128).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await listLspWorkspaceFolders(args.sessionId, args.languageId));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_add_workspace_folder',
+    {
+      description:
+        'Add a root-bounded directory to an initialized language-server session when supported by the server.',
+      inputSchema: {
+        folderPath: z.string().min(1).max(4096),
+        sessionId: z.string().max(128).optional(),
+        languageId: z.string().max(128).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await addLspWorkspaceFolder(args.folderPath, args.sessionId, args.languageId));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_get_server_capabilities',
+    {
+      description: 'Return initialized server capabilities for the selected language-server session.',
+      inputSchema: {
+        sessionId: z.string().max(128).optional(),
+        languageId: z.string().max(128).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await getLspServerCapabilities(args.sessionId, args.languageId));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_get_editing_context',
+    {
+      description: 'Return the selected session, workspace folders, server capabilities, and open-document context.',
+      inputSchema: {
+        sessionId: z.string().max(128).optional(),
+        languageId: z.string().max(128).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await getLspEditingContext(args.sessionId, args.languageId));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_list_symbols',
+    {
+      description: 'List normalized document symbols for a root-bounded file, capped by limit.',
+      inputSchema: { filePath: z.string().min(1).max(4096), ...lspSessionSchema, limit: lspLimitSchema },
+    },
+    async (args) => {
+      try {
+        return json(await listLspSymbols(args.filePath, args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_find_symbol',
+    {
+      description: 'Find normalized symbols by workspace query, capped by limit.',
+      inputSchema: { query: z.string().max(1024), ...lspSessionSchema, limit: lspLimitSchema },
+    },
+    async (args) => {
+      try {
+        return json(await findLspSymbol(args.query, args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_inspect_symbol',
+    {
+      description: 'Inspect the symbol at a root-bounded document position using normalized hover information.',
+      inputSchema: lspPositionSchema,
+    },
+    async (args) => {
+      try {
+        return json(await inspectLspSymbol(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_go_to_definition',
+    {
+      description: 'Resolve definitions at a document position into normalized, root-bounded locations.',
+      inputSchema: { ...lspPositionSchema, limit: lspLimitSchema },
+    },
+    async (args) => {
+      try {
+        return json(await goToLspDefinition(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_get_symbol_documentation',
+    {
+      description: 'Return hover-derived documentation for the symbol at a document position.',
+      inputSchema: lspPositionSchema,
+    },
+    async (args) => {
+      try {
+        return json(await getLspSymbolDocumentation(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_get_symbol_source',
+    {
+      description: 'Return source/code blocks supplied by hover for the symbol at a document position.',
+      inputSchema: lspPositionSchema,
+    },
+    async (args) => {
+      try {
+        return json(await getLspSymbolSource(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_get_document_highlights',
+    {
+      description: 'Return normalized document highlights at a root-bounded document position.',
+      inputSchema: { ...lspPositionSchema, limit: lspLimitSchema },
+    },
+    async (args) => {
+      try {
+        return json(await getLspDocumentHighlights(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_find_references',
+    {
+      description: 'Find normalized references at a document position with an explicit result cap.',
+      inputSchema: {
+        ...lspPositionSchema,
+        includeDeclaration: z.boolean().optional(),
+        limit: lspLimitSchema,
+      },
+    },
+    async (args) => {
+      try {
+        return json(await findLspReferences(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_find_callers',
+    {
+      description: 'Return bounded incoming, outgoing, or combined call hierarchy relationships.',
+      inputSchema: {
+        ...lspPositionSchema,
+        direction: z.enum(['incoming', 'outgoing', 'both']).optional(),
+        limit: lspLimitSchema,
+      },
+    },
+    async (args) => {
+      try {
+        return json(await findLspCallers(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_find_implementations',
+    {
+      description: 'Find bounded normalized implementations at a document position.',
+      inputSchema: { ...lspPositionSchema, limit: lspLimitSchema },
+    },
+    async (args) => {
+      try {
+        return json(await findLspImplementations(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_type_hierarchy',
+    {
+      description: 'Return bounded normalized supertypes and/or subtypes for a document position.',
+      inputSchema: {
+        ...lspPositionSchema,
+        direction: z.enum(['supertypes', 'subtypes', 'both']).optional(),
+        limit: lspLimitSchema,
+      },
+    },
+    async (args) => {
+      try {
+        return json(await getLspTypeHierarchy(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_get_cross_repo_references',
+    {
+      description: 'Aggregate bounded references across the selected session workspace folders.',
+      inputSchema: {
+        ...lspPositionSchema,
+        includeDeclaration: z.boolean().optional(),
+        limit: lspLimitSchema,
+      },
+    },
+    async (args) => {
+      try {
+        return json(await getLspCrossRepoReferences(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'lsp_preview_edit',
+    {
+      description: 'Validate a root-bounded text or WorkspaceEdit and return a no-write preview.',
+      inputSchema: lspEditInputSchema,
+    },
+    async (args) => {
+      try {
+        return json(await previewLspEdit(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_simulate_chain',
+    {
+      description: 'Validate a bounded chain of edits in memory without writing files.',
+      inputSchema: {
+        ...lspSessionSchema,
+        steps: z
+          .array(
+            z.object({
+              filePath: z.string().min(1).max(4096).optional(),
+              edits: z.array(lspTextEditSchema).max(10_000).optional(),
+              workspaceEdit: lspWorkspaceEditSchema.optional(),
+              expectedVersions: z.record(z.string().max(4096), z.number().int().min(0)).optional(),
+            }),
+          )
+          .min(1)
+          .max(500),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await simulateLspChain(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_apply_edit',
+    {
+      description: 'Validate an edit and write it only when apply=true; otherwise return a preview.',
+      inputSchema: lspEditInputSchema,
+    },
+    async (args) => {
+      try {
+        return json(await applyLspEdit(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_replace_symbol_body',
+    {
+      description: 'Preview or explicitly apply replacement text for a validated symbol range.',
+      inputSchema: {
+        ...lspSessionSchema,
+        filePath: z.string().min(1).max(4096),
+        symbolRange: lspRangeValueSchema,
+        newText: z.string().max(4 * 1024 * 1024),
+        expectedVersions: z.record(z.string().max(4096), z.number().int().min(0)).optional(),
+        apply: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await replaceLspSymbolBody(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_safe_delete_symbol',
+    {
+      description: 'Preview or explicitly apply deletion of a validated symbol range.',
+      inputSchema: {
+        ...lspSessionSchema,
+        filePath: z.string().min(1).max(4096),
+        symbolRange: lspRangeValueSchema,
+        expectedVersions: z.record(z.string().max(4096), z.number().int().min(0)).optional(),
+        apply: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await safeDeleteLspSymbol(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_rename',
+    {
+      description: 'Request a server rename and preview its WorkspaceEdit unless apply=true.',
+      inputSchema: {
+        ...lspPositionSchema,
+        newName: z.string().min(1).max(256),
+        expectedVersions: z.record(z.string().max(4096), z.number().int().min(0)).optional(),
+        apply: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await renameLspSymbol(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_suggest_fixes',
+    {
+      description: 'List code actions and preview or explicitly apply one selected action.',
+      inputSchema: {
+        ...lspPositionSchema,
+        start: lspPositionValueSchema,
+        end: lspPositionValueSchema,
+        diagnostics: z.array(lspDiagnosticSchema).max(500).optional(),
+        actionIndex: z.number().int().min(0).max(499).optional(),
+        apply: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await suggestLspFixes(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_format_document',
+    {
+      description: 'Request document formatting and preview edits unless apply=true.',
+      inputSchema: {
+        ...lspSessionSchema,
+        filePath: z.string().min(1).max(4096),
+        expectedVersions: z.record(z.string().max(4096), z.number().int().min(0)).optional(),
+        apply: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await formatLspDocument(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_format_range',
+    {
+      description: 'Request range formatting and preview edits unless apply=true.',
+      inputSchema: {
+        ...lspSessionSchema,
+        filePath: z.string().min(1).max(4096),
+        start: lspPositionValueSchema,
+        end: lspPositionValueSchema,
+        expectedVersions: z.record(z.string().max(4096), z.number().int().min(0)).optional(),
+        apply: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await formatLspRange(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_execute_command',
+    {
+      description: 'Preview a server command or execute it only with apply=true.',
+      inputSchema: {
+        ...lspSessionSchema,
+        command: z.string().min(1).max(1024),
+        arguments: z.array(z.unknown()).max(1000).optional(),
+        apply: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await executeLspCommand(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_get_tests_for_file',
+    {
+      description: 'Find bounded repository test files related to a source file.',
+      inputSchema: {
+        ...lspWorkflowSchema,
+        filePath: z.string().min(1).max(4096),
+        limit: z.number().int().min(1).max(500).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await getLspTestsForFile(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_run_build',
+    {
+      description: 'Run the repository or selected package build script with bounded output and time.',
+      inputSchema: lspWorkflowSchema,
+    },
+    async (args) => {
+      try {
+        return json(await runLspBuild(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_run_tests',
+    {
+      description: 'Run the repository or selected package test script with bounded output and time.',
+      inputSchema: lspWorkflowSchema,
+    },
+    async (args) => {
+      try {
+        return json(await runLspTests(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_debug_context',
+    {
+      description:
+        'Collect bounded debugging evidence for a symbol: current diagnostics, hover information, definition, incoming callers, and related tests. This is read-only.',
+      inputSchema: {
+        ...lspPositionSchema,
+        limit: reviewLimitSchema,
+      },
+    },
+    async (args) => {
+      try {
+        return json(await getLspDebugContext(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'lsp_review_structure',
+    {
+      description:
+        'Review one source file structure with bounded diagnostics, document symbols, and related tests. This is read-only.',
+      inputSchema: {
+        filePath: z.string().min(1).max(4096),
+        ...lspSessionSchema,
+        limit: reviewLimitSchema,
+      },
+    },
+    async (args) => {
+      try {
+        return json(await reviewLspStructure(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'review_changes',
+    {
+      description:
+        'Build a read-only code-review evidence report from changed Git files, diff statistics, optional LSP diagnostics, and optional related tests.',
+      inputSchema: {
+        ...gitReadSchema,
+        ref: z.string().max(512).optional(),
+        path: z.string().min(1).max(4096).optional(),
+        staged: z.boolean().optional(),
+        ...lspSessionSchema,
+        maxFiles: z.number().int().min(1).max(100).optional(),
+        includeTests: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(await reviewChanges(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  // ---- Two-phase local Git commit -------------------------------------------
+  server.registerTool(
+    'git_commit_plan',
+    {
+      description:
+        'Validate and preview a Conventional Commit against the repository commitlint rules. This operation is read-only and does not stage files or create a commit.',
+      inputSchema: commitPlanSchema,
+    },
+    async (args) => {
+      try {
+        const plan = await createCommitPlan(args);
+        pruneCommitPlans(Date.now());
+        commitPlans.set(plan.planId, { plan, createdAt: Date.now() });
+        return json({ operation: 'commit-plan', success: true, ...plan });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_commit_apply',
+    {
+      description:
+        'Apply a still-current git_commit_plan using normal Git hooks. This mutates the local index and commit history but never contacts a remote.',
+      inputSchema: {
+        planId: z.string().uuid(),
+        ...gitReadSchema,
+      },
+    },
+    async (args) => {
+      const record = commitPlans.get(args.planId);
+      if (!record || Date.now() - record.createdAt >= commitPlanTtlMs) {
+        if (record) commitPlans.delete(args.planId);
+        return toolError(new Error('Commit plan is unknown or expired; create a new plan before applying.'));
+      }
+      try {
+        const result = applyCommitPlan(record.plan, args);
+        if (result.success) commitPlans.delete(args.planId);
+        return json(result);
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  // ---- Read-only Git --------------------------------------------------------
+  server.registerTool(
+    'git_status',
+    {
+      description: 'Read the repository Git status without changing the worktree or index.',
+      inputSchema: gitReadSchema,
+    },
+    async (args) => {
+      try {
+        return json(readGitStatus(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_changed_files',
+    {
+      description:
+        'Return structured changed-file status for the current worktree, including staged, unstaged, and untracked flags without changing Git state.',
+      inputSchema: {
+        ...gitReadSchema,
+        ref: z.string().max(512).optional(),
+        path: z.string().min(1).max(4096).optional(),
+        staged: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readGitChangedFiles(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_diff',
+    {
+      description: 'Read a bounded Git diff for the worktree, index, revision, or repository path.',
+      inputSchema: {
+        ...gitReadSchema,
+        ref: z.string().max(512).optional(),
+        path: z.string().min(1).max(4096).optional(),
+        staged: z.boolean().optional(),
+        stat: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readGitDiff(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_log',
+    {
+      description: 'Read bounded Git commit history, optionally limited to a revision or repository path.',
+      inputSchema: {
+        ...gitReadSchema,
+        ref: z.string().max(512).optional(),
+        path: z.string().min(1).max(4096).optional(),
+        limit: z.number().int().min(1).max(500).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readGitLog(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_show',
+    {
+      description: 'Read one Git revision with metadata and a bounded patch, optionally for one repository path.',
+      inputSchema: {
+        ...gitReadSchema,
+        revision: z.string().min(1).max(512),
+        path: z.string().min(1).max(4096).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readGitShow(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_branches',
+    {
+      description: 'List local and remote Git branches without changing repository state.',
+      inputSchema: gitReadSchema,
+    },
+    async (args) => {
+      try {
+        return json(readGitBranches(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_grep',
+    {
+      description:
+        'Search bounded tracked repository content with literal matching by default or explicitly requested regular expressions.',
+      inputSchema: {
+        ...gitReadSchema,
+        pattern: z.string().min(1).max(512),
+        ref: z.string().max(512).optional(),
+        path: z.string().min(1).max(4096).optional(),
+        regex: z.boolean().optional(),
+        ignoreCase: z.boolean().optional(),
+        maxMatches: z.number().int().min(1).max(500).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readGitGrep(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_blame',
+    {
+      description: 'Read bounded line-level provenance for a repository-rooted file without changing Git state.',
+      inputSchema: {
+        ...gitReadSchema,
+        path: z.string().min(1).max(4096),
+        revision: z.string().min(1).max(512).optional(),
+        startLine: z.number().int().min(1).max(1_000_000).optional(),
+        endLine: z.number().int().min(1).max(1_000_000).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readGitBlame(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_ls_files',
+    {
+      description:
+        'List bounded repository paths, tracked by default; optionally include standard-excluded untracked paths without changing the worktree or index.',
+      inputSchema: {
+        ...gitReadSchema,
+        path: z.string().min(1).max(4096).optional(),
+        includeUntracked: z.boolean().optional(),
+        includeStages: z.boolean().optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readGitLsFiles(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_tags',
+    {
+      description: 'Read bounded local Git tag metadata without contacting remotes or changing repository state.',
+      inputSchema: {
+        ...gitReadSchema,
+        pattern: z.string().min(1).max(512).optional(),
+        limit: z.number().int().min(1).max(500).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readGitTags(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+  server.registerTool(
+    'git_remotes',
+    {
+      description: 'Read configured local Git remote metadata with credentials removed and without contacting remotes.',
+      inputSchema: gitReadSchema,
+    },
+    async (args) => {
+      try {
+        return json(readGitRemotes(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
   // ---- Discovery & guidance -------------------------------------------------
   server.registerTool(
     'get_guide',
@@ -1147,6 +2299,17 @@ export function registerTools(server: McpServer): void {
     },
   );
 
+  // ---- accessibility --------------------------------------------------------
+  server.registerTool(
+    'test_accessibility',
+    {
+      description:
+        'Audit a reachable HTTP(S) page with axe-core in a headless browser. Returns normalized accessibility violations and page, console, or browser errors without writing to the repository.',
+      inputSchema: accessibilityAuditInputSchema.shape,
+    },
+    async (args) => json(await runAccessibilityAudit(args)),
+  );
+
   // ---- i18n / localisation --------------------------------------------------
   server.registerTool(
     'list_locales',
@@ -1185,6 +2348,37 @@ export function registerTools(server: McpServer): void {
           locales: resolved.locales,
           coverage: localeCoverage(resolved),
         });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'locale_coverage',
+    {
+      description:
+        'Report translated key counts and missing or extra keys for each non-default locale of a workspace member. This is read-only and never writes locale files.',
+      inputSchema: {
+        name: z.string().describe('Workspace member folder (e.g. "website").'),
+        group: z
+          .enum(['apps', 'packages', 'edge-workers', 'tooling-vite', 'tooling-configs', 'crates'])
+          .optional()
+          .describe('Workspace group. Defaults to "apps".'),
+      },
+    },
+    async (args) => {
+      const group = (args.group as WorkspaceGroup | undefined) ?? 'apps';
+      const name = args.name?.trim();
+      if (!name) {
+        return text('Provide "name" (member folder) to inspect locale coverage.');
+      }
+      try {
+        const resolved = resolveMemberLocales(group, name);
+        if (!resolved) {
+          return text(`"${name}" in ${group}/ has no YAML locale files.`);
+        }
+        return json(localeCoverage(resolved));
       } catch (error) {
         return toolError(error);
       }

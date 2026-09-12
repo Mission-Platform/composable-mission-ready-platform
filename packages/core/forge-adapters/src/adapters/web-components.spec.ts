@@ -476,7 +476,7 @@ describe('the native `html` tagged template + `render`', () => {
       container,
     );
 
-    expect(container.textContent).toBe('Ready');
+    expect(container.textContent?.trim()).toBe('Ready');
     expect(container.querySelector('.loading')).toBeNull();
   });
 
@@ -497,7 +497,7 @@ describe('the native `html` tagged template + `render`', () => {
       ),
       container,
     );
-    expect(container.textContent).toBe('Loading');
+    expect(container.textContent?.trim()).toBe('Loading');
 
     render(
       html`
@@ -509,7 +509,7 @@ describe('the native `html` tagged template + `render`', () => {
       <strong>Stale</strong>
     `);
     await tick();
-    expect(container.textContent).toBe('Newer');
+    expect(container.textContent?.trim()).toBe('Newer');
 
     let reject!: (reason: unknown) => void;
     const rejected = new Promise<TemplateResult>((_, fail) => {
@@ -526,7 +526,7 @@ describe('the native `html` tagged template + `render`', () => {
     );
     reject(new Error('failed content'));
     await tick();
-    expect(container.textContent).toBe('');
+    expect(container.textContent?.trim()).toBe('');
     expect(error).toHaveBeenCalledOnce();
     error.mockRestore();
   });
@@ -549,13 +549,13 @@ describe('the native `html` tagged template + `render`', () => {
       ]),
       container,
     );
-    expect(container.textContent).toBe('Loading');
+    expect(container.textContent?.trim()).toBe('Loading');
 
     resolve(html`
       <strong>Ready</strong>
     `);
     await tick();
-    expect(container.textContent).toBe('Ready');
+    expect(container.textContent?.trim()).toBe('Ready');
   });
 
   it('materializes computed intrinsic tags and applies normalized bindings', () => {

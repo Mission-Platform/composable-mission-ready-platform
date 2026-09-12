@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { decodeQr, decodeQrAsync, encodeQr, encodeQrAsync } from './index';
+import { encodeQr, encodeQrAsync } from './index';
 
 // The wasm module is instantiated once in `src/test-setup.ts` (a Vitest
 // `setupFiles` entry) before any spec runs.
@@ -56,55 +56,5 @@ describe('encodeQr (WebAssembly)', () => {
     const async = await encodeQrAsync('async-parity', 'Q');
     expect(async.version).toBe(sync.version);
     expect(async.modules).toEqual(sync.modules);
-  });
-});
-
-/**
- * Exercises the from-scratch WebAssembly decoder: encode → decode round-trips
- * across error-correction levels and payloads, Reed-Solomon error correction of
- * a damaged matrix, and rejection of an undecodable matrix.
- */
-describe('decodeQr (WebAssembly)', () => {
-  const cases = ['HELLO WORLD', 'https://mission-platform.dev', '', 'héllo — wörld 🚀', '日本語のテスト'];
-
-  for (const level of ['L', 'M', 'Q', 'H'] as const) {
-    it(`round-trips payloads at error-correction level ${level}`, () => {
-      for (const value of cases) {
-        expect(decodeQr(encodeQr(value, level))).toBe(value);
-      }
-    });
-  }
-
-  it('round-trips a longer, multi-block payload', () => {
-    const value = 'The quick brown fox jumps over the lazy dog. '.repeat(6);
-    expect(decodeQr(encodeQr(value, 'M'))).toBe(value);
-  });
-
-  it('recovers the payload from a damaged matrix (error correction)', () => {
-    const value = 'ERROR CORRECTION';
-    const matrix = encodeQr(value, 'H');
-    // Flip a block of interior data modules; high ECC should still recover it.
-    for (let y = Math.floor(matrix.size / 2); y < Math.floor(matrix.size / 2) + 4; y++) {
-      for (let x = Math.floor(matrix.size / 2); x < Math.floor(matrix.size / 2) + 3; x++) {
-        matrix.modules[y][x] = !matrix.modules[y][x];
-      }
-    }
-    expect(decodeQr(matrix)).toBe(value);
-  });
-
-  it('returns null for an undecodable matrix', () => {
-    const matrix = encodeQr('valid', 'M');
-    // Corrupt far beyond the error-correction capacity.
-    for (let y = 9; y < matrix.size; y++) {
-      for (let x = 9; x < matrix.size; x++) {
-        matrix.modules[y][x] = (x + y) % 2 === 0;
-      }
-    }
-    expect(decodeQr(matrix)).toBeNull();
-  });
-
-  it('matches the synchronous decode asynchronously', async () => {
-    const matrix = encodeQr('async-decode', 'Q');
-    expect(await decodeQrAsync(matrix)).toBe(decodeQr(matrix));
   });
 });

@@ -39,8 +39,9 @@ export function useD3<E extends Element>(draw: D3Draw<E>, dependencies: MpDepend
       return;
     }
 
-    const selection = select(element);
-    return draw(selection);
+    const selection = select<E, unknown>(element);
+    const cleanup = draw(selection);
+    return typeof cleanup === 'function' ? cleanup : undefined;
   }, dependencies);
 
   return reference;

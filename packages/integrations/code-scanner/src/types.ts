@@ -1,18 +1,53 @@
 // Shared public types for the code-scanner façade.
 
-/** The code families the scanner can locate and decode. */
-export type ScanFormat = 'qr' | 'datamatrix' | 'barcode' | 'aztec' | 'pdf417' | 'databar' | 'maxicode';
+/** ZXing barcode formats exposed by the scanner graph. */
+export type ScanFormat =
+  | 'AZTEC'
+  | 'CODABAR'
+  | 'CODE_39'
+  | 'CODE_93'
+  | 'CODE_128'
+  | 'DATA_MATRIX'
+  | 'EAN_8'
+  | 'EAN_13'
+  | 'ITF'
+  | 'MAXICODE'
+  | 'PDF_417'
+  | 'QR_CODE'
+  | 'RSS_14'
+  | 'RSS_EXPANDED'
+  | 'UPC_A'
+  | 'UPC_E';
 
-/** The outcome of a successful *detection*. */
+export interface ScanPoint {
+  readonly x: number;
+  readonly y: number;
+}
+
+export type ScanMetadataValue = string | number | readonly number[];
+
+export type ScanMetadata = Readonly<Record<string, ScanMetadataValue>>;
+
+export interface ScanOptions {
+  readonly formats?: readonly ScanFormat[];
+  readonly tryHarder?: boolean;
+  readonly alsoInverted?: boolean;
+  readonly pureBarcode?: boolean;
+  readonly roi?: Roi;
+}
+
+/** Rich ZXing-style result returned by every scanner entry point. */
 export interface ScanResult {
-  /** Which code family was located in the image. */
-  format: ScanFormat;
-  /**
-   * The decoded payload text, or `null` when the symbol was located and sampled
-   * but its contents could not be decoded (e.g. the 1D barcode decoder, whose
-   * linear symbology algorithms are not implemented yet).
-   */
-  value: string | null;
+  /** Which ZXing format was located in the image. */
+  readonly format: ScanFormat;
+  readonly text: string | null;
+  readonly rawBytes: Uint8Array | null;
+  readonly numBits: number;
+  readonly points: readonly ScanPoint[];
+  readonly metadata: ScanMetadata;
+  readonly timestamp: number;
+  /** @deprecated Use `text`; retained as a migration alias for existing callers. */
+  readonly value: string | null;
 }
 
 /**

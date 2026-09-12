@@ -46,7 +46,23 @@ one decoder port before committing the tier for the rest.
   locators and Reed–Solomon (GF (929), GF (64), the RSS combinatorics) were the Tier-A core — consistent with the matrix
   above.
 
-> No custom-agent delegation tool was available during implementation, so a
-> single agent performed the work while spending effort per this matrix. The
-> matrix remains the guide for any future re-runs where delegation to multiple
-> model tiers is possible.
+> The implementation used focused delegated reviews for RSS correctness, the
+> stacked 2D readers, and QR graph emission. Those reviews confirmed the
+> bounded reduced-reader boundary and isolated the QR failure to the Forge Web
+> Script emitter rather than masking it with a fallback. The matrix remains the
+> guide for future parity passes where the missing corpus and decoder work can
+> be split safely.
+
+## Current re-planning boundary
+
+The completed foundation and 1D/RSS work used Tier B for ZXing-shaped ports and
+Tier A review for RSS combinatorics, checksums, and bounded memory behavior. The
+current linked 2D readers are deliberately reduced implementations, so claiming
+full ZXing parity would require a new Tier-A decoder and detector pass rather
+than more documentation or fixture work.
+
+The next highest-value investigation is the Forge Web Script QR emitter failure:
+the standalone QR graph is valid, but linking its decoder into the scanner
+graph fails `FWS-EMIT-001` before runtime. Until that compiler boundary is
+resolved, Tier-C fixture and API work must keep QR as an explicit standalone
+case and must not convert reduced local fixtures into parity claims.

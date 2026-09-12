@@ -9,52 +9,6 @@
 
 تم إنشاؤها من إعلانات المصدر العام في `@mission-platform/barcode`.
 
-## `src/decoder/index`
-
-### com.decodeBarcode
-
-**النوع:** الوظيفة
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-قم بفك تشفير سلسلة من وحدات البت النمطية (`1` = شريط، `0` = مسافة) لـ `symbology` المحدد
-مرة أخرى إلى حمولتها، وتحميل الرسم البياني الأصلي لـ FWS بشكل متزامن في البداية
-استخدام.
-
-إرجاع `null` عندما لا يكون تشغيل الوحدة رمزًا صالحًا لـ `symbology` (سيء
-تأطير أو نمط غير معروف أو رقم فحص فاشل). المتعافين
-الحمولة هي الشكل الأساسي للرمز - على سبيل المثال. أرقام الاختيار المعاد حسابها هي
-تم تضمين نص الرمز 39/93 بأحرف كبيرة، ويتم إرجاع UPC-E في ملفه
-نموذج `number system + digits + check`.
-
-#### حدود
-
-| الاسم  | اكتب             | الوصف |
-| ------ | ---------------- | ----- |
-| الرموز | رموز الباركود    |       |
-| وحدات  | صفيف مثل<number> |       |
-
-### decodeBarcodeAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-قم بفك تشفير مجموعة من وحدات البت النمطية مرة أخرى إلى حمولتها، وتحميل FWS الأصلي
-الرسم البياني بشكل غير متزامن عند الاستخدام الأول. فشل التهيئة والتحويل
-يتم إرجاعها كرفض للوعود. راجع {@link decodeBarcode}.
-
-#### حدود
-
-| الاسم  | اكتب             | الوصف |
-| ------ | ---------------- | ----- |
-| الرموز | رموز الباركود    |       |
-| وحدات  | صفيف مثل<number> |       |
-
 ## `src/encoder/index`
 
 ### الباركود
@@ -132,65 +86,25 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 
 ## `src/fws/index`
 
-### decodeEan13Fws
-
-**النوع:** الوظيفة
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-يقوم بفك تشفير بتات وحدة EAN-13 والتحقق من صحة التكافؤ والتحقق من الأرقام.
-
-#### حدود
+### حدود
 
 | الاسم  | اكتب                      | الوصف |
 | ------ | ------------------------- | ----- |
 | القيمة | سلسلة \| صفيف مثل<number> |       |
 
-### decodeEan13FwsAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-يقوم بفك تشفير بتات وحدة EAN-13 بشكل غير متزامن من خلال FWS.
-
-#### حدود
+### حدود
 
 | الاسم  | اكتب                      | الوصف |
 | ------ | ------------------------- | ----- |
 | القيمة | سلسلة \| صفيف مثل<number> |       |
 
-### decodeEan8Fws
-
-**النوع:** الوظيفة
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-يقوم بفك تشفير بتات وحدة EAN-8 وإرجاع الحمولة برقم الفحص الخاص بها.
-
-#### حدود
+### حدود
 
 | الاسم  | اكتب                      | الوصف |
 | ------ | ------------------------- | ----- |
 | القيمة | سلسلة \| صفيف مثل<number> |       |
 
-### decodeEan8FwsAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-يقوم بفك تشفير بتات وحدة EAN-8 بشكل غير متزامن من خلال FWS.
-
-#### حدود
+### حدود
 
 | الاسم  | اكتب                      | الوصف |
 | ------ | ------------------------- | ----- |

@@ -80,7 +80,7 @@ export function createExternalMatcher(names: readonly string[]): (id: string) =>
 }
 
 export interface LibraryConfigOptions {
-  /** Absolute path of the consuming workspace (typically `__dirname`). */
+  /** Absolute path of the consuming workspace (typically `import.meta.dirname`). */
   rootDir: string;
   /** Entry file or map of named entries, relative to `rootDir`. */
   entry?: string | Record<string, string>;

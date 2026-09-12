@@ -43,8 +43,8 @@ fn digit(value: i32) -> string {
 }
 
 export fn code93_character_for_value(value: i32) -> string {
-  if value >= 0 && value <= 9 { return digit(value); }
-  if value >= 10 && value <= 35 { return code93_letter(value - 10); }
+  if value >= 0 && value <= 9 { return string_concat(digit(value), ""); }
+  if value >= 10 && value <= 35 { return string_concat(code93_letter(value - 10), ""); }
   if value == 36 { return "-"; }
   if value == 37 { return "."; }
   if value == 38 { return " "; }
@@ -64,11 +64,11 @@ fn extended_sequence(value: i32) -> string {
   if value == 45 { return "-"; }
   if value == 46 { return "."; }
   if value == 47 { return "/O"; }
-  if value >= 48 && value <= 57 { return digit(value - 48); }
+  if value >= 48 && value <= 57 { return string_concat(digit(value - 48), ""); }
   if value == 58 { return "/Z"; }
   if value >= 59 && value <= 63 { return string_concat("%", code93_letter(value - 54)); }
   if value == 64 { return "%V"; }
-  if value >= 65 && value <= 90 { return code93_letter(value - 65); }
+  if value >= 65 && value <= 90 { return string_concat(code93_letter(value - 65), ""); }
   if value >= 91 && value <= 95 { return string_concat("%", code93_letter(value - 81)); }
   if value == 96 { return "%W"; }
   if value >= 97 && value <= 122 { return string_concat("+", code93_letter(value - 97)); }
@@ -86,14 +86,14 @@ fn standard_sequence(value: string, index: i32, result: string) -> string {
   let code: i32 = uppercase(string_byte_at(value, index));
   let symbol: string = code93_character_for_value(base_value(code));
   if string_length(symbol) == 0 { return ""; }
-  return standard_sequence(value, index + 1, string_concat(result, symbol));
+  return string_concat(standard_sequence(value, index + 1, string_concat(result, symbol)), "");
 }
 
 fn extended_sequence_for_value(value: string, index: i32, result: string) -> string {
   if index >= string_length(value) { return result; }
   let sequence: string = extended_sequence(string_byte_at(value, index));
   if string_length(sequence) == 0 { return ""; }
-  return extended_sequence_for_value(value, index + 1, string_concat(result, sequence));
+  return string_concat(extended_sequence_for_value(value, index + 1, string_concat(result, sequence)), "");
 }
 
 export fn code93_remainder(value: i32, divisor: i32) -> i32 {
@@ -103,14 +103,14 @@ export fn code93_remainder(value: i32, divisor: i32) -> i32 {
 
 fn weighted_sum(value: string, index: i32, max_weight: i32, weight: i32, extended: i32) -> i32 {
   if index >= string_length(value) { return 0; }
-  let next_weight: i32 = weight - 1;
+  let mut next_weight: i32 = weight - 1;
   if next_weight < 1 { next_weight = max_weight; }
   return sequence_value(string_byte_at(value, index), extended) * weight + weighted_sum(value, index + 1, max_weight, next_weight, extended);
 }
 
 fn render_pattern(value: string, index: i32) -> string {
   if index >= string_length(value) { return ""; }
-  let bit: string = "0";
+  let mut bit: string = "0";
   if string_byte_at(value, index) == 49 { bit = "1"; }
   return string_concat(bit, render_pattern(value, index + 1));
 }
@@ -131,7 +131,7 @@ fn render_values(value: string, index: i32, result: string, check_c: i32, check_
   }
   let next: string = append_value(result, sequence_value(string_byte_at(value, index), extended));
   if string_length(next) == 0 { return ""; }
-  return render_values(value, index + 1, next, check_c, check_k, extended);
+  return string_concat(render_values(value, index + 1, next, check_c, check_k, extended), "");
 }
 
 fn encode_sequence(value: string, extended: i32) -> string {
@@ -140,15 +140,15 @@ fn encode_sequence(value: string, extended: i32) -> string {
   let k_weight: i32 = code93_remainder(string_length(value), 15) + 1;
   let check_c: i32 = code93_remainder(weighted_sum(value, 0, 20, c_weight, extended), 47);
   let check_k: i32 = code93_remainder(weighted_sum(value, 0, 15, k_weight, extended) + check_c, 47);
-  return render_values(value, 0, render_pattern("101011110", 0), check_c, check_k, extended);
+  return string_concat(render_values(value, 0, render_pattern("101011110", 0), check_c, check_k, extended), "");
 }
 
 export fn encode_code93_impl(value: string) -> string {
-  return encode_sequence(standard_sequence(value, 0, ""), 0);
+  return string_concat(encode_sequence(standard_sequence(value, 0, ""), 0), "");
 }
 
 export fn encode_code93_extended_impl(value: string) -> string {
-  return encode_sequence(extended_sequence_for_value(value, 0, ""), 1);
+  return string_concat(encode_sequence(extended_sequence_for_value(value, 0, ""), 1), "");
 }
 
 fn base_value(value: i32) -> i32 {

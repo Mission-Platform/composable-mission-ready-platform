@@ -9,55 +9,6 @@
 
 `@mission-platform/qr-code`의 공개 소스 선언에서 생성됩니다.
 
-## `src/decoder/index`
-
-### 디코드Qr
-
-**종류:** 기능
-
-```typescript
-function decodeQr(matrix: QrMatrix): string | null;
-```
-
-{@link QrMatrix}를 원래 텍스트로 다시 디코딩하고 패키지를 로드합니다.
-처음 사용할 때 로컬 FWS 디코더를 동기식으로 사용합니다.
-
-디코더는 형식 정보를 복구하고, 데이터 영역의 마스크를 해제하고,
-코드워드 및 Reed-Solomon-레벨의 오류 용량까지 수정하므로
-손상된 매트릭스를 견딜 수 있습니다. `encodeQr`에 의해 생성된 바이트 모드 세그먼트만
-지원됩니다.
-
-#### 매개변수
-
-| 이름     | 유형       | 설명 |
-| -------- | ---------- | ---- |
-| 매트릭스 | Qr매트릭스 |      |
-
-#### 계약
-
-- **@returns:** 디코딩된 텍스트 또는 매트릭스를 디코딩할 수 없는 경우 `null`입니다.
-
-### 디코드Qr비동기화
-
-**종류:** 기능
-
-```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
-```
-
-{@link QrMatrix}를 원래 텍스트로 다시 디코딩하고 패키지를 로드합니다.
-로컬 FWS 디코더는 처음 사용할 때 비동기식입니다.
-
-#### 매개변수
-
-| 이름     | 유형       | 설명 |
-| -------- | ---------- | ---- |
-| 매트릭스 | Qr매트릭스 |      |
-
-#### 계약
-
-- **@returns:** 디코딩된 텍스트 또는 매트릭스를 디코딩할 수 없는 경우 `null`입니다.
-
 ## `src/encoder/index`
 
 ### 인코딩MicroQr

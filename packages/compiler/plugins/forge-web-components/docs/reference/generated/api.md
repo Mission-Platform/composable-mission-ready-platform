@@ -62,68 +62,6 @@ Create the TypeScript-only Web Components output plugin.
 
 ## `src/lower`
 
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**Kind:** constant
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-Internals are capability-gated by the runtime; form association stays opt-in.
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**Kind:** constant
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-Compatibility defaults preserved for generated components.
-
-### inferWebComponentsHost
-
-**Kind:** function
-
-```typescript
-function inferWebComponentsHost(
-  returnNode: GenericRenderNode | undefined,
-  component?: GenericComponent,
-): WebComponentsHostPlan;
-```
-
-Infer a customized-built-in host only from a single, static intrinsic root.
-
-The allowlist is intentionally conservative: an intrinsic tag being valid
-HTML does not guarantee that it is a safe or useful customized-built-in
-base across the supported DOM implementations.
-
-#### Parameters
-
-| Name       | Type                           | Description |
-| ---------- | ------------------------------ | ----------- |
-| returnNode | GenericRenderNode \| undefined |             |
-| component  | GenericComponent               |             |
-
-### isWebComponentsLowered
-
-**Kind:** function
-
-```typescript
-function isWebComponentsLowered(
-  lowered: TargetLoweredModule | undefined,
-): lowered is WebComponentsLoweredModule;
-```
-
-Narrow a target plan to the Web-Components plan without casting.
-
-#### Parameters
-
-| Name    | Type                             | Description |
-| ------- | -------------------------------- | ----------- |
-| lowered | TargetLoweredModule \| undefined |             |
-
 ### lowerWebComponentsModule
 
 **Kind:** function
@@ -163,6 +101,72 @@ Build the Web-Components target plan for a neutral module.
 | ------- | -------------- | ----------- |
 | module  | SemanticModule |             |
 | context | TargetContext  |             |
+
+## `src/lower/host-plan`
+
+### inferWebComponentsHost
+
+**Kind:** function
+
+```typescript
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
+```
+
+Infer a customized-built-in host only from a single, static intrinsic root.
+
+The allowlist is intentionally conservative: an intrinsic tag being valid
+HTML does not guarantee that it is a safe or useful customized-built-in
+base across the supported DOM implementations.
+
+#### Parameters
+
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| returnNode | GenericRenderNode \| undefined |             |
+| component  | GenericComponent               |             |
+
+## `src/lower/types`
+
+### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
+```
+
+Internals are capability-gated by the runtime; form association stays opt-in.
+
+### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
+```
+
+Compatibility defaults preserved for generated components.
+
+### isWebComponentsLowered
+
+**Kind:** function
+
+```typescript
+function isWebComponentsLowered(
+  lowered: TargetLoweredModule | undefined,
+): lowered is WebComponentsLoweredModule;
+```
+
+Narrow a target plan to the Web-Components plan without casting.
+
+#### Parameters
+
+| Name    | Type                             | Description |
+| ------- | -------------------------------- | ----------- |
+| lowered | TargetLoweredModule \| undefined |             |
 
 ### UNKNOWN_TYPE
 
@@ -349,9 +353,6 @@ _outside_ `render()`, so a local the render head declares does not exist for
 them. Promoting the declaration to a member is what makes such a read
 resolvable — through `this.<name>` — instead of dangling.
 
-Only a provably effect-free declaration is promoted (see
-{@link promotedHeadLocals}); anything else stays in `render()`.
-
 ### WebComponentsPropertyDeclaration
 
 **Kind:** interface
@@ -401,28 +402,6 @@ export interface WebComponentsSetupPhase
 ```
 
 The element's one-time **setup** phase.
-
-A seed such as `useState(parseTime(modelValue))` reads a reactive property, and
-a property only holds a value once the host's attributes have been adopted —
-which happens on connection, long after the constructor has run. Worse, the
-value is usually reached through a render-head constant (`const initial =
-parseTime(modelValue);`) that could not be proved effect-free and therefore
-stays in `render()`, so a constructor seed would reference a name that does
-not exist there at all.
-
-Such a seed is deferred to `ForgeElement.setup()`, which the runtime calls
-after attribute adoption and before the first render, exactly once per element
-— a reconnect must not re-seed and discard what the user has since changed.
-The head statements the seed needs are replayed there first, in head order and
-transitively closed, and **only** those.
-
-Replaying rather than caching is deliberate. In the neutral source the head
-_is_ the component body, so `const initial = parseTime(modelValue);` already
-runs on every render; evaluating it once more during setup performs no call
-the authored component does not already perform on each pass. Caching it in a
-field would instead _reduce_ the number of evaluations and give the value an
-identity the source never promised. Only a plain `const` (or a function)
-declaration is ever replayed — see {@link headReplay}.
 
 ### WebComponentsShadowPolicy
 

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 
-import { throwOnCompilerErrors } from '@mission-platform/forge-plugin-api';
+import { assertTargetIntentionsLowered, throwOnCompilerErrors } from '@mission-platform/forge-plugin-api';
 
 import { createForgeArtifactManifest, type ForgeArtifactRecord } from './artifact-manifest.js';
 import {
@@ -18,7 +18,7 @@ import {
   type ForgeFileGraphOptions,
 } from './graph.js';
 import { inferSemanticModule } from './infer.js';
-import { createForgeSemanticCacheKey } from './keys.js';
+import { createForgeFingerprint, createForgeSemanticCacheKey, createForgeTargetCacheKey } from './keys.js';
 import { optimizeForgeModule } from './optimize.js';
 import { diagnosticKey, type ForgeCompilationReport, type ForgePhaseTiming } from './report.js';
 import { compileRouterModule } from './router.js';
@@ -83,6 +83,8 @@ export interface ForgeCompilerService {
 interface MutableCacheStats {
   semanticHits: number;
   semanticMisses: number;
+  targetHits: number;
+  targetMisses: number;
   semanticEvictions: number;
   frontendEvictions: number;
   optimizedEvictions: number;
@@ -102,7 +104,7 @@ function uniqueDiagnostics(diagnostics: readonly CompilerDiagnostic[]): Compiler
 }
 
 function projectFingerprint(input: ForgeProjectInput): string {
-  return JSON.stringify({
+  return createForgeFingerprint({
     baseUrl: input.baseUrl,
     configFingerprint: input.configFingerprint,
     entry: input.entry,
@@ -142,11 +144,13 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
   private readonly semanticCache = new Map<string, SemanticModule>();
   private readonly frontendCache = new Map<string, FrontendModule>();
   private readonly optimizedCache = new Map<string, OxcParsedModule>();
+  private readonly targetCache = new Map<string, GeneratedModule>();
   private readonly graphCache = new Map<string, ForgeFileGraph>();
   private readonly cacheKeysByFile = new Map<string, Set<string>>();
   private readonly frontendKeysByFile = new Map<string, Set<string>>();
   private readonly optimizedKeysByFile = new Map<string, Set<string>>();
   private readonly graphKeysByFile = new Map<string, Set<string>>();
+  private readonly targetKeysByFile = new Map<string, Set<string>>();
   private readonly diagnostics: CompilerDiagnostic[] = [];
   private readonly phaseTimings: ForgePhaseTiming[] = [];
   private readonly affectedFiles = new Set<string>();
@@ -264,6 +268,26 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
       throw new TypeError('An explicit Forge output plugin is required to compile a module.');
     }
 
+    const project = request.project ?? this.preparedProject;
+    const targetCacheKey =
+      project === undefined
+        ? undefined
+        : createForgeTargetCacheKey({
+            projectFingerprint: project.fingerprint,
+            targetId: framework.id,
+            targetVersion: framework.version,
+            source: input,
+          });
+    const cachedTarget = targetCacheKey === undefined ? undefined : this.targetCache.get(targetCacheKey);
+    if (targetCacheKey !== undefined && cachedTarget !== undefined) {
+      this.mutableStats.targetHits += 1;
+      this.targetCache.delete(targetCacheKey);
+      this.targetCache.set(targetCacheKey, cachedTarget);
+      this.recordArtifacts(framework.id, input.fileName, cachedTarget);
+      return { module: cachedTarget, targetId: framework.id, cacheKey: targetCacheKey };
+    }
+    if (targetCacheKey !== undefined) this.mutableStats.targetMisses += 1;
+
     const routerStart = now();
     const router = compileRouterModule({
       source: input.source,
@@ -280,7 +304,6 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
     this.recordDiagnostics(router.diagnostics ?? []);
     throwOnCompilerErrors(router.diagnostics);
 
-    const project = request.project ?? this.preparedProject;
     const semantic = this.analyze({
       ...input,
       configFingerprint: project?.fingerprint,
@@ -297,6 +320,7 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
 
     const lowerStart = now();
     const lowered = framework.lower(semantic, context);
+    assertTargetIntentionsLowered(lowered, framework.id);
     this.recordPhase('target-lowering', lowerStart);
     this.recordDiagnostics(lowered.diagnostics ?? []);
     throwOnCompilerErrors(lowered.diagnostics);
@@ -305,6 +329,7 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
     const optimized = framework.optimize(lowered, {
       neutral: input.optimize === false ? {} : (input.optimize ?? {}),
     } satisfies TargetOptimizeOptions);
+    assertTargetIntentionsLowered(optimized, framework.id);
     this.recordPhase('optimization', optimizeStart);
     this.recordDiagnostics(optimized.diagnostics ?? []);
     throwOnCompilerErrors(optimized.diagnostics);
@@ -329,10 +354,14 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
       ...(diagnostics.length > 0 ? { diagnostics } : {}),
     };
     this.recordArtifacts(framework.id, input.fileName, module);
+    if (targetCacheKey !== undefined) {
+      this.targetCache.set(targetCacheKey, module);
+      addIndexedKey(this.targetKeysByFile, input.fileName, targetCacheKey);
+    }
     return {
       module,
       targetId: framework.id,
-      cacheKey: `${request.project?.fingerprint ?? this.preparedProject?.fingerprint ?? ''}:${framework.id}:${framework.version ?? ''}:${input.fileName}`,
+      cacheKey: targetCacheKey ?? `${framework.id}:${framework.version ?? ''}:${input.fileName}`,
     };
   }
 
@@ -353,10 +382,12 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
     const invalidatedFrontendKeys = new Set<string>();
     const invalidatedOptimizedKeys = new Set<string>();
     const invalidatedGraphKeys = new Set<string>();
+    const invalidatedTargetKeys = new Set<string>();
     for (const fileName of affected) {
       collectIndexedKeys(this.frontendKeysByFile, fileName, invalidatedFrontendKeys);
       collectIndexedKeys(this.optimizedKeysByFile, fileName, invalidatedOptimizedKeys);
       collectIndexedKeys(this.graphKeysByFile, fileName, invalidatedGraphKeys);
+      collectIndexedKeys(this.targetKeysByFile, fileName, invalidatedTargetKeys);
     }
     for (const key of invalidatedKeys) {
       if (this.semanticCache.delete(key)) {
@@ -372,6 +403,10 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
       removeIndexedKey(this.optimizedKeysByFile, key);
     }
     for (const key of invalidatedGraphKeys) this.deleteGraphCache(key);
+    for (const key of invalidatedTargetKeys) {
+      this.targetCache.delete(key);
+      removeIndexedKey(this.targetKeysByFile, key);
+    }
     if (this.preparedProject !== undefined) this.deleteGraphCache(this.preparedProject.fingerprint);
     const invalidatedEntries = invalidatedKeys.size;
     this.mutableStats.invalidations += files.length > 0 ? 1 : 0;
@@ -401,11 +436,13 @@ export class PersistentForgeCompilerService implements ForgeCompilerService {
     this.semanticCache.clear();
     this.frontendCache.clear();
     this.optimizedCache.clear();
+    this.targetCache.clear();
     this.graphCache.clear();
     this.cacheKeysByFile.clear();
     this.frontendKeysByFile.clear();
     this.optimizedKeysByFile.clear();
     this.graphKeysByFile.clear();
+    this.targetKeysByFile.clear();
     this.diagnostics.length = 0;
     this.phaseTimings.length = 0;
     this.affectedFiles.clear();

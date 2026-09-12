@@ -1,18 +1,29 @@
-import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
 import { defineTsdownLibrary, resolveTsdownOutputDirectory } from '@mission-platform/tsdown-config';
 
 import {
-  forgeServiceLifecyclePlugin,
+  forgeArtifactPublishPlugin,
+  forgeBuildLifecyclePlugin,
+  forgeVirtualEntry,
   validateForgeBuildPlugin,
   validateForgeBuildSelection,
 } from './build-integration.js';
-import { createForgeCompilerService, type ForgeCompilerService } from './compiler/service.js';
-import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
-import { generateFrameworkSources, jsxComponentsCssImportPlugin, jsxComponentsEntryDtsPlugin } from './generate.js';
+import { cleanupForgeArtifactAttempts, forgeArtifactAttemptDirectory } from './compiler/artifact-writer.js';
+import { createForgeFingerprint } from './compiler/keys.js';
+import { createForgeBuildSession, type ForgeBuildSession } from './compiler/session.js';
+import { hookLibraryDtsPlugin } from './generate-hooks.js';
+import { jsxComponentsCssImportPlugin, jsxComponentsEntryDtsPlugin } from './generate.js';
+import {
+  createComponentTargetPlan,
+  createHookTargetPlan,
+  resolveForgeComponentsModule,
+  resolveForgeHookEntryModule,
+  resolveForgePublicEntryModule,
+} from './target-plan.js';
 
+import type { ForgeCompilerService } from './compiler/service.js';
 import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 import type { TsdownPlugin, UserConfig } from 'tsdown';
@@ -29,26 +40,32 @@ function flattenPlugins(plugins: UserConfig['plugins']): TsdownPlugin[] {
   return [plugins as TsdownPlugin];
 }
 
-function removeGeneratedDirectoryPlugin(generatedDirectory: string): TsdownPlugin {
+function forgeGeneratedDirectory(rootDir: string, targetId: string, entryModule: string, outputRoot?: string): string {
+  const fingerprint = createForgeFingerprint({ entryModule, outputRoot, rootDir, targetId });
+  return path.join(rootDir, 'node_modules/.cache/forge-build', fingerprint.slice(0, 20), targetId);
+}
+
+function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: string): TsdownPlugin {
   return {
     name: '@mission-platform/vite-plugin-forge:remove-generated-directory',
     closeBundle() {
-      fs.rmSync(generatedDirectory, { recursive: true, force: true });
+      // Only remove a directory carrying this target's complete Forge marker;
+      // never recursively clean an arbitrary package cache directory.
+      const manifestPath = path.join(generatedDirectory, '.forge-artifact-manifest.json');
+      try {
+        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
+          targetId?: string;
+          complete?: boolean;
+        };
+        if (manifest.targetId === targetId && manifest.complete === true) {
+          fs.rmSync(generatedDirectory, { recursive: true, force: true });
+        }
+      } catch {
+        // Failed attempts are cleaned by the scoped attempt cleanup below.
+      }
+      cleanupForgeArtifactAttempts(generatedDirectory, targetId);
     },
   } as TsdownPlugin;
-}
-
-function removeCachedCompilerArtifacts(rootDir: string): void {
-  const cacheRoot = path.join(rootDir, 'node_modules/.cache');
-  if (!fs.existsSync(cacheRoot)) return;
-  const walk = (directory: string): void => {
-    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-      const fullPath = path.join(directory, entry.name);
-      if (entry.isDirectory()) walk(fullPath);
-      else if (entry.name.endsWith('.d.ts') || entry.name.endsWith('.js')) fs.rmSync(fullPath, { force: true });
-    }
-  };
-  walk(cacheRoot);
 }
 
 /** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
@@ -116,6 +133,8 @@ export interface TsdownForgeHooksOptions {
   overrides?: UserConfig;
   /** Persistent service shared by component and hook helpers in one build session. */
   service?: ForgeCompilerService;
+  /** Explicit lifecycle session shared by component and hook helpers. */
+  session?: ForgeBuildSession;
   /** Dispose an internally shared service after this config finishes. */
   disposeService?: boolean;
   /** Native router target selected independently from the framework target. */
@@ -147,20 +166,19 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
     rejectFixturePlaceholder = true,
   } = options;
   validateForgeBuildPlugin(plugin, 'tsdown');
-  const service = options.service ?? createForgeCompilerService();
+  const session = options.session ?? createForgeBuildSession({ service: options.service });
   const framework = plugin.id as JsxFramework;
-  const resolvedEntry = entryModule ?? path.resolve(rootDir, 'src/index.ts');
-  const cacheName = `${path.basename(rootDir)}-${framework}-${randomUUID()}`;
-  removeCachedCompilerArtifacts(rootDir);
-  const generatedDirectory = path.join(rootDir, 'node_modules/.cache', cacheName);
+  const resolvedEntry = resolveForgeHookEntryModule(rootDir, entryModule);
+  const generatedDirectory = forgeGeneratedDirectory(rootDir, framework, resolvedEntry, outputRoot);
   const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
-  const outDir = resolveTsdownOutputDirectory(rootDir, finalOutDir, outputRoot);
+  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, finalOutDir, outputRoot);
+  const attemptFinalOutDir = forgeArtifactAttemptDirectory(finalOutDir, framework);
+  const outDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
 
-  const entry = generateHookLibrarySources({
+  const target = createHookTargetPlan({
     plugin,
     entryModule: resolvedEntry,
-    outDir: generatedDirectory,
-    service,
+    generatedDirectory,
     router,
     routerPlugins,
     routerConditions,
@@ -180,11 +198,11 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
 
   const base = defineTsdownLibrary({
     rootDir,
-    entry,
+    entry: forgeVirtualEntry(framework),
     // Declaration emit is owned by hookLibraryDtsPlugin over the generated tree.
     dts: false,
     unbundle: true,
-    outDir: finalOutDir,
+    outDir: attemptFinalOutDir,
     outputRoot,
     // Only wipe this framework's subtree — sibling framework builds must survive.
     clean: true,
@@ -199,9 +217,12 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
         chunkFileNames: '[name].js',
       },
       plugins: [
-        forgeServiceLifecyclePlugin({
-          service,
-          disposeService: options.disposeService ?? options.service === undefined,
+        forgeBuildLifecyclePlugin({
+          session,
+          plan: { rootDir, targets: [target] },
+          target,
+          adapter: 'tsdown',
+          disposeSession: options.disposeService ?? options.session === undefined,
         }) as unknown as TsdownPlugin,
         ...stagePlugins,
         hookLibraryDtsPlugin({
@@ -209,6 +230,13 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
           generatedDir: generatedDirectory,
           outDir,
         }) as TsdownPlugin,
+        removeGeneratedDirectoryPlugin(generatedDirectory, framework),
+        forgeArtifactPublishPlugin({
+          publishedDirectory: publishedOutDir,
+          attemptDirectory: outDir,
+          generatedDirectory,
+          targetId: framework,
+        }) as unknown as TsdownPlugin,
       ],
     },
   });
@@ -240,6 +268,8 @@ export interface TsdownForgeHooksAllOptions {
   frameworkOverrides?: UserConfig;
   /** Persistent service shared by the neutral and framework generation session. */
   service?: ForgeCompilerService;
+  /** Explicit lifecycle session shared by the neutral and framework targets. */
+  session?: ForgeBuildSession;
   /** Native router target selected independently from the framework target. */
   router?: RouterPluginSelection;
   /** Router targets available for id-based selection. */
@@ -272,7 +302,7 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
     rejectFixturePlaceholder = true,
   } = options;
   const selected = validateForgeBuildSelection(frameworks, 'tsdown');
-  const service = options.service ?? createForgeCompilerService();
+  const session = options.session ?? createForgeBuildSession({ service: options.service });
 
   const configs: UserConfig[] = [];
 
@@ -283,10 +313,9 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
         outputRoot,
         entry: entryModule ? path.relative(rootDir, entryModule) : 'src/index.ts',
         external,
-        // Wipe the whole `dist/` once. Framework configs below set `clean: true`
-        // only on their own `dist/<framework>/` outDir so parallel array builds
-        // do not clobber sibling framework trees via a shared clean of `dist/`.
-        clean: true,
+        // The isolated stage starts empty; cleaning its aggregate `dist/` while
+        // framework configs run in parallel would clobber sibling outputs.
+        clean: outputRoot === undefined,
         overrides: neutralOverrides,
       }),
     );
@@ -301,8 +330,9 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
         entryModule,
         name,
         external,
-        service,
-        disposeService: index === selected.length - 1 && options.service === undefined,
+        session,
+        service: options.service,
+        disposeService: index === selected.length - 1 && options.session === undefined,
         router,
         routerPlugins,
         routerConditions,
@@ -316,7 +346,24 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
   return configs;
 }
 
-export interface TsdownForgeComponentsOptions {
+/**
+ * Native tsdown-plugin form of the hook adapter. The returned plugins inject
+ * their target config from `tsdownConfig`, allowing hook builds to be composed
+ * with one caller-owned `defineTsdownLibrary` configuration.
+ */
+export function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[] {
+  return defineTsdownForgeHooksAll(options).map((forgeConfig, index) => ({
+    name: `@mission-platform/vite-plugin-forge:tsdown-hook-${index}`,
+    tsdownConfig(config: UserConfig) {
+      const callerPlugins = flattenPlugins(config.plugins);
+      const injected = mergeTsdownConfig(forgeConfig, { ...config, plugins: [] }, options.rootDir, options.outputRoot);
+      Object.assign(config, injected);
+      config.plugins = [...flattenPlugins(forgeConfig.plugins), ...callerPlugins];
+    },
+  }));
+}
+
+export interface TsdownForgeComponentPluginsOptions {
   /** Absolute root directory of the package. */
   rootDir: string;
   /** Optional isolated output mirror used by the shared Forge runner. */
@@ -345,6 +392,8 @@ export interface TsdownForgeComponentsOptions {
   overrides?: UserConfig;
   /** Persistent service shared by all framework targets in one build session. */
   service?: ForgeCompilerService;
+  /** Explicit lifecycle session shared by all framework targets. */
+  session?: ForgeBuildSession;
   /** Native router target selected independently from the framework target. */
   router?: RouterPluginSelection;
   /** Router targets available for id-based selection. */
@@ -360,35 +409,91 @@ export interface TsdownForgeComponentsOptions {
  * Stage 1 (`generateFrameworkSources`) + Stage 2 plugins + css-import + dts plugins,
  * emitting into `dist/<framework>/`.
  */
-export function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[] {
+export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions): TsdownPlugin[] {
   const selected = validateForgeBuildSelection(options.frameworks, 'tsdown');
   const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
   const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
   const frameworks =
-    requestedFramework === undefined
+    requestedFramework === undefined || requestedFramework === 'none'
       ? cmsOnlyBuild
         ? []
-        : selected
+        : requestedFramework === 'none'
+          ? []
+          : selected
       : selected.filter((plugin) => plugin.id === requestedFramework);
   if (frameworks.length === 0) {
-    if (cmsOnlyBuild && requestedFramework === undefined) return [];
+    if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) return [];
     throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
   }
-  const service = options.service ?? createForgeCompilerService();
+  const session = options.session ?? createForgeBuildSession({ service: options.service });
   return frameworks.map((plugin, index) =>
-    defineTsdownForgeComponent({
+    tsdownConfigPlugin(
+      createTsdownForgeComponentPlugin({
+        ...options,
+        plugin,
+        session,
+        service: options.service,
+        disposeService: index === frameworks.length - 1 && options.session === undefined,
+      }),
+      plugin.id,
+      options.rootDir,
+      options.outputRoot,
+    ),
+  );
+}
+
+/** Build independent tsdown configs for every requested Forge component framework. */
+export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOptions): UserConfig[] {
+  const selected = validateForgeBuildSelection(options.frameworks, 'tsdown');
+  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
+  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
+  const frameworks =
+    requestedFramework === undefined || requestedFramework === 'none'
+      ? cmsOnlyBuild
+        ? []
+        : requestedFramework === 'none'
+          ? []
+          : selected
+      : selected.filter((plugin) => plugin.id === requestedFramework);
+  if (frameworks.length === 0) {
+    if (requestedFramework === 'none' || (cmsOnlyBuild && requestedFramework === undefined)) return [];
+    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
+  }
+
+  const session = options.session ?? createForgeBuildSession({ service: options.service });
+  return frameworks.map((plugin, index) =>
+    createTsdownForgeComponentPlugin({
       ...options,
       plugin,
-      service,
-      disposeService: index === frameworks.length - 1 && options.service === undefined,
+      session,
+      service: options.service,
+      disposeService: index === frameworks.length - 1 && options.session === undefined,
     }),
   );
 }
 
-function defineTsdownForgeComponent(
+function tsdownConfigPlugin(
+  forgeConfig: UserConfig,
+  targetId: string,
+  rootDir: string,
+  outputRoot?: string,
+): TsdownPlugin {
+  return {
+    name: `@mission-platform/vite-plugin-forge:tsdown-component-${targetId}`,
+    tsdownConfig(config: UserConfig) {
+      const callerPlugins = flattenPlugins(config.plugins);
+      const merged = mergeTsdownConfig(forgeConfig, { ...config, plugins: [] }, rootDir, outputRoot);
+      Object.assign(config, merged);
+      config.plugins = [...flattenPlugins(forgeConfig.plugins), ...callerPlugins];
+    },
+  } as TsdownPlugin;
+}
+
+function createTsdownForgeComponentPlugin(
   options: Readonly<
-    Omit<TsdownForgeComponentsOptions, 'frameworks'> & {
+    Omit<TsdownForgeComponentPluginsOptions, 'frameworks'> & {
       plugin: FrameworkOutputPlugin;
+      session: ForgeBuildSession;
       disposeService?: boolean;
     }
   >,
@@ -398,7 +503,6 @@ function defineTsdownForgeComponent(
     plugin,
     componentsModule,
     publicEntryModule,
-    useEntryDts,
     declarationModule,
     external = [],
     outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
@@ -408,6 +512,7 @@ function defineTsdownForgeComponent(
     routerConditions,
     rejectFixturePlaceholder = true,
     service,
+    session,
     disposeService,
   } = options;
   const framework = plugin.id as JsxFramework;
@@ -415,46 +520,36 @@ function defineTsdownForgeComponent(
     (argument) => argument === '--watch' || argument === '-w' || argument.startsWith('--watch='),
   );
 
-  const cacheName = `${path.basename(rootDir)}-${framework}-${randomUUID()}`;
-  const generatedDirectory = path.join(rootDir, 'node_modules/.cache', cacheName);
+  const resolvedComponentsModule = resolveForgeComponentsModule(rootDir, componentsModule);
+  const resolvedPublicEntryModule = resolveForgePublicEntryModule(rootDir, resolvedComponentsModule, publicEntryModule);
 
-  const resolvedComponentsModule =
-    componentsModule ??
-    [
-      path.resolve(rootDir, 'src/components/index.ts'),
-      path.resolve(rootDir, 'src/component/index.ts'),
-      path.resolve(rootDir, 'src/index.ts'),
-    ].find((candidate) => fs.existsSync(candidate)) ??
-    path.resolve(rootDir, 'src/index.ts');
-  const resolvedPublicEntryModule =
-    publicEntryModule ??
-    (fs.existsSync(path.resolve(rootDir, 'src/index.ts'))
-      ? path.resolve(rootDir, 'src/index.ts')
-      : resolvedComponentsModule);
+  const generatedDirectory = forgeGeneratedDirectory(rootDir, framework, resolvedComponentsModule, outputRoot);
 
   validateForgeBuildPlugin(plugin, 'tsdown');
-  const compilerService = service ?? createForgeCompilerService();
-  const entry = generateFrameworkSources({
+  const target = createComponentTargetPlan({
     plugin,
     componentsModule: resolvedComponentsModule,
     publicEntryModule: resolvedPublicEntryModule,
-    sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
-    outDir: generatedDirectory,
+    generatedDirectory,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
     stripPrefix: '',
-    service: compilerService,
     router,
     routerPlugins,
     routerConditions,
     rejectFixturePlaceholder,
   });
 
+  const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
+  const publishedOutDir = resolveTsdownOutputDirectory(rootDir, finalOutDir, outputRoot);
+  const attemptFinalOutDir = forgeArtifactAttemptDirectory(finalOutDir, framework);
+  const attemptOutDir = resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
+
   // Component packages need real Svelte/Solid compilers. Use the tsdown-safe
   // adapters (`stagePluginsForTsdown`) — Vite's svelte/solid plugins crash here.
   const stagePlugins = (plugin.build.tsdown?.({
     rootDir,
     generatedDirectory,
-    outputDirectory: resolveTsdownOutputDirectory(rootDir, path.resolve(rootDir, `dist/${framework}`), outputRoot),
+    outputDirectory: attemptOutDir,
   }) ?? []) as TsdownPlugin[];
 
   // All framework targets use synthesized declarations. This avoids invoking
@@ -472,38 +567,53 @@ function defineTsdownForgeComponent(
   });
 
   const frameworkExternals = plugin.runtimeExternals ?? [];
-  const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
 
-  const base = defineTsdownLibrary({
-    rootDir,
-    entry,
-    dts: false,
-    unbundle: true,
-    outDir: finalOutDir,
-    outputRoot,
-    clean: !watchMode,
-    external: [...frameworkExternals, ...external],
-    tsconfigPathsRoot: generatedDirectory,
-    overrides: {
-      outputOptions: {
-        preserveModulesRoot: generatedDirectory,
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].js',
+  const forgePlugins = [
+    forgeBuildLifecyclePlugin({
+      session,
+      plan: { rootDir, targets: [target] },
+      target,
+      adapter: 'tsdown',
+      disposeSession: disposeService ?? service === undefined,
+    }) as unknown as TsdownPlugin,
+    ...stagePlugins,
+    jsxComponentsCssImportPlugin() as TsdownPlugin,
+    dtsPlugin as TsdownPlugin,
+    removeGeneratedDirectoryPlugin(generatedDirectory, framework),
+    forgeArtifactPublishPlugin({
+      publishedDirectory: publishedOutDir,
+      attemptDirectory: attemptOutDir,
+      generatedDirectory,
+      targetId: framework,
+    }) as unknown as TsdownPlugin,
+  ];
+
+  const forgeConfig = mergeTsdownConfig(
+    defineTsdownLibrary({
+      rootDir,
+      entry: forgeVirtualEntry(framework),
+      dts: false,
+      unbundle: true,
+      outDir: attemptFinalOutDir,
+      outputRoot,
+      clean: !watchMode,
+      external: [...frameworkExternals, ...external],
+      tsconfigPathsRoot: generatedDirectory,
+      overrides: {
+        outputOptions: {
+          preserveModulesRoot: generatedDirectory,
+          entryFileNames: '[name].js',
+          chunkFileNames: '[name].js',
+        },
+        plugins: forgePlugins,
       },
-      plugins: [
-        forgeServiceLifecyclePlugin({
-          service: compilerService,
-          disposeService: disposeService ?? service === undefined,
-        }) as unknown as TsdownPlugin,
-        ...stagePlugins,
-        jsxComponentsCssImportPlugin() as TsdownPlugin,
-        dtsPlugin as TsdownPlugin,
-        removeGeneratedDirectoryPlugin(generatedDirectory),
-      ],
-    },
-  });
+    }),
+    overrides,
+    rootDir,
+    outputRoot,
+  );
 
-  return mergeTsdownConfig(base, overrides, rootDir, outputRoot);
+  return forgeConfig;
 }
 
 export interface TsdownForgeEmailComponentsOptions {

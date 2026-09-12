@@ -9,52 +9,6 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 
 Généré à partir des déclarations de source publique dans `@mission-platform/barcode`.
 
-## `src/decoder/index`
-
-### décoderCodeBarres
-
-**Genre :** fonction
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-Décoder une série de bits de module (`1` = barre, `0` = espace) du `symbology` donné
-dans sa charge utile, en chargeant d'abord le graphique FWS natif de manière synchrone
-utiliser.
-
-Renvoie `null` lorsque l'exécution du module n'est pas un symbole valide de `symbology` (mauvais
-cadrage, un motif non reconnu ou un chiffre de contrôle défaillant). Le récupéré
-la charge utile est la forme canonique de la symbologie - par ex. les chiffres de contrôle recalculés sont
-inclus, le texte du code 39/93 est en majuscule et l'UPC-E est renvoyé dans son
-Formulaire `number system + digits + check`.
-
-#### Paramètres
-
-| Nom        | Tapez                 | Descriptif |
-| ---------- | --------------------- | ---------- |
-| symbologie | Code-barresSymbologie |            |
-| modules    | TableauLike<number>   |            |
-
-### decodeBarcodeAsync
-
-**Genre :** fonction
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-Décoder une série de bits de module dans sa charge utile, en chargeant le FWS natif
-graphique de manière asynchrone lors de la première utilisation. Échecs d’initialisation et de conversion
-sont renvoyés en tant que refus de promesse. Voir {@link decodeBarcode}.
-
-#### Paramètres
-
-| Nom        | Tapez                 | Descriptif |
-| ---------- | --------------------- | ---------- |
-| symbologie | Code-barresSymbologie |            |
-| modules    | TableauLike<number>   |            |
-
 ## `src/encoder/index`
 
 ### Code à barres
@@ -132,65 +86,25 @@ Encodez `data` de manière asynchrone à l’aide du graphique FWS local du pack
 
 ## `src/fws/index`
 
-### décoderEan13Fws
-
-**Genre :** fonction
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-Décode les bits du module EAN-13 et valide la parité et le chiffre de contrôle.
-
-#### Paramètres
+### Paramètres
 
 | Nom    | Tapez                         | Descriptif |
 | ------ | ----------------------------- | ---------- |
 | valeur | chaîne \| TableauLike<number> |            |
 
-### décoderEan13FwsAsync
-
-**Genre :** fonction
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Décode de manière asynchrone les bits du module EAN-13 via FWS.
-
-#### Paramètres
+### Paramètres
 
 | Nom    | Tapez                         | Descriptif |
 | ------ | ----------------------------- | ---------- |
 | valeur | chaîne \| TableauLike<number> |            |
 
-### décoderEan8Fws
-
-**Genre :** fonction
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-Décode les bits du module EAN-8 et renvoie la charge utile avec son chiffre de contrôle.
-
-#### Paramètres
+### Paramètres
 
 | Nom    | Tapez                         | Descriptif |
 | ------ | ----------------------------- | ---------- |
 | valeur | chaîne \| TableauLike<number> |            |
 
-### décoderEan8FwsAsync
-
-**Genre :** fonction
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Décode de manière asynchrone les bits du module EAN-8 via FWS.
-
-#### Paramètres
+### Paramètres
 
 | Nom    | Tapez                         | Descriptif |
 | ------ | ----------------------------- | ---------- |

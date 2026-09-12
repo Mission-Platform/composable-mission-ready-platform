@@ -1,21 +1,13 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 import { describe, expect, it, vi } from 'vitest';
 
-import { forgeServiceLifecyclePlugin } from './build-integration';
+import { forgeArtifactPublishPlugin, forgeBuildLifecyclePlugin } from './build-integration';
+import { createForgeArtifactWriter } from './compiler/artifact-writer';
 
-import type { ForgeCompilerService } from './compiler/service';
-
-function fakeService(): ForgeCompilerService & {
-  invalidate: ReturnType<typeof vi.fn>;
-  dispose: ReturnType<typeof vi.fn>;
-} {
-  return {
-    invalidate: vi.fn(() => ({ changedFiles: [], invalidatedFiles: [], invalidatedEntries: 0 })),
-    dispose: vi.fn(),
-  } as unknown as ForgeCompilerService & {
-    invalidate: ReturnType<typeof vi.fn>;
-    dispose: ReturnType<typeof vi.fn>;
-  };
-}
+import type { ForgeBuildSession } from './compiler/session';
 
 function invokeHook(hook: unknown, receiver: object, ...args: unknown[]): void | Promise<unknown> {
   const handler =
@@ -29,24 +21,121 @@ function invokeHook(hook: unknown, receiver: object, ...args: unknown[]): void |
 }
 
 describe('Forge Vite compiler service lifecycle', () => {
-  it('invalidates changed files and disposes an owned one-shot service', async () => {
-    const service = fakeService();
-    const plugin = forgeServiceLifecyclePlugin({ service, disposeService: true });
+  it('publishes native artifacts through a manifest and preserves them on declaration failure', async () => {
+    const packageDir = fs.mkdtempSync(path.join(os.tmpdir(), 'forge-publish-'));
+    const publishedDirectory = path.join(packageDir, 'dist', 'react');
+    const attemptDirectory = path.join(packageDir, 'attempt');
+    try {
+      const previous = createForgeArtifactWriter(publishedDirectory, 'react');
+      previous.writeText('index.js', 'export const version = "old";\n', 'entry');
+      previous.commit();
+
+      const plugin = forgeArtifactPublishPlugin({
+        publishedDirectory,
+        attemptDirectory,
+        targetId: 'react',
+      });
+      await invokeHook(plugin.buildStart, plugin);
+      fs.writeFileSync(path.join(attemptDirectory, 'index.js'), 'export const version = "new";\n');
+      fs.writeFileSync(path.join(attemptDirectory, 'index.d.ts'), 'export declare const version: string;\n');
+      fs.writeFileSync(path.join(attemptDirectory, 'index.js.map'), '{}');
+      fs.writeFileSync(path.join(attemptDirectory, 'styles.css'), '.forge {}');
+      await invokeHook(plugin.generateBundle, plugin, {}, {});
+      await invokeHook(plugin.closeBundle, plugin);
+
+      expect(fs.readFileSync(path.join(publishedDirectory, 'index.js'), 'utf8')).toContain('new');
+      const manifest = JSON.parse(
+        fs.readFileSync(path.join(publishedDirectory, '.forge-artifact-manifest.json'), 'utf8'),
+      ) as {
+        entries: string[];
+        artifacts: Array<{ fileName: string; kind: string }>;
+      };
+      expect(manifest.entries).toContain('index.js');
+      expect(manifest.artifacts).toEqual(
+        expect.arrayContaining([
+          { fileName: 'index.d.ts', kind: 'declaration', hash: expect.any(String), size: expect.any(Number) },
+          { fileName: 'index.js.map', kind: 'map', hash: expect.any(String), size: expect.any(Number) },
+          { fileName: 'styles.css', kind: 'style', hash: expect.any(String), size: expect.any(Number) },
+        ]),
+      );
+
+      const failedAttempt = path.join(packageDir, 'failed-attempt');
+      const failedPlugin = forgeArtifactPublishPlugin({
+        publishedDirectory,
+        attemptDirectory: failedAttempt,
+        targetId: 'react',
+      });
+      await invokeHook(failedPlugin.buildStart, failedPlugin);
+      fs.writeFileSync(path.join(failedAttempt, 'index.js'), 'export const version = "broken";\n');
+      await invokeHook(failedPlugin.buildEnd, failedPlugin, new Error('declaration generation failed'));
+      await expect(invokeHook(failedPlugin.closeBundle, failedPlugin)).rejects.toThrow(/attempt has been aborted/);
+
+      expect(fs.readFileSync(path.join(publishedDirectory, 'index.js'), 'utf8')).toContain('new');
+      expect(fs.existsSync(failedAttempt)).toBe(false);
+    } finally {
+      fs.rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('invalidates changed files and disposes an owned one-shot session', async () => {
+    const session = {
+      prepare: vi.fn(async () => ({ fingerprint: 'fixture' })),
+      ensureTarget: vi.fn(async () => ({
+        targetId: 'react',
+        entry: '/workspace/.forge/react.ts',
+        manifest: { targetId: 'react', artifacts: [], complete: true },
+        cache: { hit: false, affectedFiles: [] },
+      })),
+      invalidate: vi.fn(() => ({ changedFiles: [], invalidatedFiles: [], invalidatedEntries: 0 })),
+      report: vi.fn(),
+      dispose: vi.fn(async () => undefined),
+    } as unknown as ForgeBuildSession;
+    const target = {
+      targetId: 'react',
+      kind: 'component' as const,
+      entryModule: '/workspace/src/index.ts',
+      generate: vi.fn(async () => '/workspace/.forge/react.ts'),
+    };
+    const plugin = forgeBuildLifecyclePlugin({
+      session,
+      plan: { rootDir: '/workspace', targets: [target] },
+      target,
+      adapter: 'vite',
+      disposeSession: true,
+    });
 
     await invokeHook(plugin.handleHotUpdate, plugin, { file: '/workspace/src/button.tsx' });
     await invokeHook(plugin.closeBundle, plugin);
 
-    expect(service.invalidate).toHaveBeenCalledWith(['/workspace/src/button.tsx']);
-    expect(service.dispose).toHaveBeenCalledOnce();
+    expect(session.invalidate).toHaveBeenCalledWith(['/workspace/src/button.tsx']);
+    expect(session.dispose).toHaveBeenCalledOnce();
   });
 
-  it('keeps an owned service alive across watch rebuilds', async () => {
-    const service = fakeService();
-    const plugin = forgeServiceLifecyclePlugin({ service, disposeService: true });
+  it('keeps an owned session alive across watch rebuilds', async () => {
+    const session = {
+      prepare: vi.fn(),
+      ensureTarget: vi.fn(),
+      invalidate: vi.fn(),
+      report: vi.fn(),
+      dispose: vi.fn(async () => undefined),
+    } as unknown as ForgeBuildSession;
+    const target = {
+      targetId: 'vue',
+      kind: 'component' as const,
+      entryModule: '/workspace/src/index.ts',
+      generate: vi.fn(async () => '/workspace/.forge/vue.ts'),
+    };
+    const plugin = forgeBuildLifecyclePlugin({
+      session,
+      plan: { rootDir: '/workspace', targets: [target] },
+      target,
+      adapter: 'vite',
+      disposeSession: true,
+    });
 
     await invokeHook(plugin.configResolved, plugin, { command: 'serve', server: { watch: {} } });
     await invokeHook(plugin.closeBundle, plugin);
 
-    expect(service.dispose).not.toHaveBeenCalled();
+    expect(session.dispose).not.toHaveBeenCalled();
   });
 });

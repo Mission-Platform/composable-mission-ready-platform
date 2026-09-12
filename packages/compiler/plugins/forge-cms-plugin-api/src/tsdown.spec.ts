@@ -1,16 +1,25 @@
 import path from "node:path";
 
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 import { describe, expect, it, vi } from "vitest";
 
 import { stubFramework } from "./__fixtures__/framework.js";
-import { cmsCacheDirectory, defineTsdownForgeCms } from "./tsdown.js";
+import { cmsCacheDirectory } from "./tsdown.js";
+
+import { tsdownForgeCmsPlugins } from ".";
 
 import type { CmsOutputPlugin } from "./cms.js";
+import type { ForgeCmsTsdownPlugin } from "./tsdown.js";
+import type { TsdownPlugin, UserConfig } from "tsdown";
 
-function fixtureTarget(outputDirectories: string[] = []): CmsOutputPlugin {
+function fixtureTarget(
+  outputDirectories: string[] = [],
+  targetId = "storyblok",
+  frameworkId = "react",
+): CmsOutputPlugin {
   return {
-    id: "storyblok",
-    framework: stubFramework("react"),
+    id: targetId,
+    framework: stubFramework(frameworkId),
     packageName: "@mission-platform/components",
     emitTemplate: () => ({
       fileName: "component.txt",
@@ -29,7 +38,15 @@ function fixtureTarget(outputDirectories: string[] = []): CmsOutputPlugin {
 }
 
 describe("Forge CMS tsdown helper", () => {
-  it("stages framework output and shared assets below the build root", () => {
+  it("exposes only the plugin-based CMS tsdown adapter", async () => {
+    const publicApi = await import(".");
+
+    expect(publicApi.tsdownForgeCmsPlugins).toBeTypeOf("function");
+    expect(publicApi).not.toHaveProperty("defineTsdownForgeCms");
+    expect(publicApi).not.toHaveProperty("defineTsdownForgeCmsAll");
+  });
+
+  it("materializes aggregate, framework, and shared output below the build root", async () => {
     const rootDirectory = path.resolve(
       import.meta.dirname,
       "../../../../ui/components",
@@ -43,34 +60,54 @@ describe("Forge CMS tsdown helper", () => {
     vi.stubEnv("FORGE_BUILD_STAGE_ROOT", outputRoot);
 
     try {
-      const frameworkConfig = defineTsdownForgeCms({
+      const frameworkConfig = await materializeConfig({
         rootDir: rootDirectory,
         outputRoot,
-        target,
+        targets: [target],
         artifactMode: "framework",
       });
-      const sharedConfig = defineTsdownForgeCms({
+      const aggregateConfig = await materializeConfig({
         rootDir: rootDirectory,
         outputRoot,
-        target,
+        targets: [target],
+        artifactMode: "all",
+      });
+      const sharedConfig = await materializeConfig({
+        rootDir: rootDirectory,
+        outputRoot,
+        targets: [target],
         artifactMode: "shared",
       });
 
       expect(frameworkConfig.outDir).toBe(
         path.join(outputRoot, "dist/cms/storyblok/react"),
       );
+      expect(aggregateConfig.outDir).toBe(
+        path.join(outputRoot, "dist/cms/storyblok/react"),
+      );
       expect(sharedConfig.outDir).toBe(
         path.join(outputRoot, "dist/cms/storyblok"),
       );
       expect(frameworkConfig.clean).toBe(true);
+      expect(aggregateConfig.clean).toBe(true);
       expect(sharedConfig.clean).toBe(true);
       expect(outputDirectories).toEqual([
         path.join(outputRoot, "dist/cms/storyblok/react"),
+        path.join(outputRoot, "dist/cms/storyblok/react"),
         path.join(outputRoot, "dist/cms/storyblok"),
       ]);
-      expect(frameworkConfig.entry).toBe(
-        path.join(outputRoot, "components-cms-storyblok-react", "index.ts"),
+      expect(frameworkConfig.entry).toContain(
+        "@mission-platform/forge/entry:storyblok-react",
       );
+      expect(pluginNames(frameworkConfig)).toEqual([
+        "@mission-platform/tsdown-config:tsconfig-paths",
+        "@mission-platform/tsdown-config:css-relink",
+        "@mission-platform/vite-plugin-forge:build-tsdown-storyblok-react",
+        "mission-platform:cms-entry-dts",
+        "mission-platform:cms-assets",
+        "mission-platform:cms-cache-cleanup",
+        "@mission-platform/vite-plugin-forge:publish-storyblok-react",
+      ]);
       expect(cmsCacheDirectory(rootDirectory, target)).toBe(
         path.join(
           rootDirectory,
@@ -81,4 +118,157 @@ describe("Forge CMS tsdown helper", () => {
       vi.unstubAllEnvs();
     }
   }, 30_000);
+
+  it("materializes a separate output directory for every selected framework on one shared config", async () => {
+    const rootDirectory = path.resolve(
+      "/tmp/mission-platform-cms-multi-framework",
+    );
+    const outputRoot = path.join(rootDirectory, "stage");
+    const outputDirectories: string[] = [];
+    const plugins = tsdownForgeCmsPlugins({
+      rootDir: rootDirectory,
+      outputRoot,
+      targets: [
+        fixtureTarget(outputDirectories, "storyblok", "react"),
+        fixtureTarget(outputDirectories, "storyblok", "vue"),
+      ],
+    });
+
+    // One orchestrator plugin owns every selected target — mirrors real package
+    // usage: defineTsdownLibrary({ plugins: tsdownForgeCmsPlugins(...) }).
+    expect(plugins).toHaveLength(1);
+    const plugin = plugins[0] as ForgeCmsTsdownPlugin;
+    expect(plugin.cmsTargetConfigs.map((config) => config.entry)).toEqual([
+      expect.stringContaining("@mission-platform/forge/entry:storyblok-react"),
+      expect.stringContaining("@mission-platform/forge/entry:storyblok-vue"),
+    ]);
+    expect(plugin.cmsTargetConfigs.map((config) => config.outDir)).toEqual([
+      path.join(outputRoot, "dist/cms/storyblok/react"),
+      path.join(outputRoot, "dist/cms/storyblok/vue"),
+    ]);
+    expect(outputDirectories).toEqual([
+      path.join(outputRoot, "dist/cms/storyblok/react"),
+      path.join(outputRoot, "dist/cms/storyblok/vue"),
+    ]);
+
+    const host = defineTsdownLibrary({
+      rootDir: rootDirectory,
+      entry: path.join(rootDirectory, "src/components/index.ts"),
+      plugins,
+    });
+    await plugin.tsdownConfig?.(host);
+
+    // Shared-host composition must not last-wins collapse to one framework while
+    // leaving every framework's publish/lifecycle plugins attached.
+    expect(pluginNames(host)).toEqual([
+      "@mission-platform/forge-cms-plugin-api:tsdown-nested",
+    ]);
+    expect(String(host.entry)).not.toContain("storyblok-react");
+    expect(String(host.entry)).not.toContain("storyblok-vue");
+    expect(host.write).toBe(false);
+  });
+
+  it("skips CMS plugins for an explicit neutral-only build", () => {
+    vi.stubEnv("FORGE_FRAMEWORK_TARGET", "none");
+
+    try {
+      expect(
+        tsdownForgeCmsPlugins({
+          rootDir: path.resolve("/tmp/mission-platform-cms-neutral"),
+          targets: [fixtureTarget()],
+        }),
+      ).toEqual([]);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("preserves caller plugins while applying CMS target selection", async () => {
+    const callerPlugin = { name: "caller-plugin" } as TsdownPlugin;
+    const targets = [
+      fixtureTarget(),
+      { ...fixtureTarget(), framework: stubFramework("vue") },
+      fixtureTarget([], "contentful", "react"),
+    ];
+
+    try {
+      vi.stubEnv("FORGE_CMS_STORYBLOK_TARGET", "storyblok");
+      const plugins = tsdownForgeCmsPlugins({
+        rootDir: path.resolve("/tmp/mission-platform-cms-selection"),
+        targets,
+      });
+      expect(plugins).toHaveLength(1);
+      expect(
+        (plugins[0] as ForgeCmsTsdownPlugin).cmsTargetConfigs,
+      ).toHaveLength(2);
+
+      vi.stubEnv("FORGE_FRAMEWORK_TARGET", "vue");
+      const frameworkPlugins = tsdownForgeCmsPlugins({
+        rootDir: path.resolve("/tmp/mission-platform-cms-selection"),
+        targets,
+      });
+      expect(frameworkPlugins).toHaveLength(1);
+      const config = { plugins: [callerPlugin] } as UserConfig;
+      await (frameworkPlugins[0] as ForgeCmsTsdownPlugin).tsdownConfig?.(
+        config,
+      );
+      expect(config.plugins).toContain(callerPlugin);
+      expect(config.entry).toContain(
+        "@mission-platform/forge/entry:storyblok-vue",
+      );
+      expect(pluginNames(config)).toEqual(
+        expect.arrayContaining([
+          "@mission-platform/vite-plugin-forge:build-tsdown-storyblok-vue",
+          "caller-plugin",
+        ]),
+      );
+      expect(pluginNames(config).at(-1)).toBe("caller-plugin");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("keeps the CMS output directory when composed with defineTsdownLibrary", async () => {
+    const rootDirectory = path.resolve("/tmp/mission-platform-cms-composition");
+    const cmsPlugins = tsdownForgeCmsPlugins({
+      rootDir: rootDirectory,
+      targets: [fixtureTarget()],
+      artifactMode: "framework",
+    });
+    const config = defineTsdownLibrary({
+      rootDir: rootDirectory,
+      plugins: cmsPlugins,
+    });
+    const plugin = cmsPlugins[0] as ForgeCmsTsdownPlugin;
+
+    await plugin.tsdownConfig?.(config);
+
+    expect(config.outDir).toEqual(
+      expect.stringMatching(
+        `${path.join(rootDirectory, "dist/cms/storyblok")}/.forge-attempt-react-storyblok-react-`,
+      ),
+    );
+  });
 });
+
+function pluginNames(config: UserConfig): string[] {
+  return (Array.isArray(config.plugins) ? config.plugins : [config.plugins])
+    .filter((plugin): plugin is TsdownPlugin =>
+      Boolean(plugin && typeof plugin === "object" && "name" in plugin),
+    )
+    .map((plugin) => plugin.name)
+    .filter((name): name is string => typeof name === "string");
+}
+
+async function materializeConfig(options: {
+  rootDir: string;
+  outputRoot: string;
+  targets: readonly CmsOutputPlugin[];
+  artifactMode: "all" | "shared" | "framework";
+}): Promise<UserConfig> {
+  const plugins = tsdownForgeCmsPlugins(options);
+  expect(plugins).toHaveLength(1);
+  const config = {} as UserConfig;
+  await (plugins[0] as ForgeCmsTsdownPlugin).tsdownConfig?.(config);
+  return config;
+}

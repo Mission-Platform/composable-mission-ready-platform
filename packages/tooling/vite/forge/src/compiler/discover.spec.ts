@@ -2,9 +2,11 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
+import { CompilerDiagnosticError } from '@mission-platform/forge-plugin-api';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import {
+  DUPLICATE_COMPONENT_TARGET,
   discoverComponents,
   discoverComponentsFromGraph,
   discoverHelperExports,
@@ -141,6 +143,129 @@ describe('discoverComponents', () => {
       sourceDir: 'atoms/forge-badge',
       propertiesType: 'BadgeProperties',
     });
+  });
+
+  it('disambiguates components in different source directories that share identical folder basenames in graph discovery', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-disambiguate-'));
+    temporaryDirectories.push(root);
+    const files: Record<string, string> = {
+      'components/index.ts': [
+        "export { ForgeButton as AtomButton, type AtomButtonProperties } from './atoms/forge-button/forge-button';",
+        "export { ForgeMoleculeButton as MoleculeButton, type MoleculeButtonProperties } from './molecules/forge-button/forge-button';",
+      ].join('\n'),
+      'components/atoms/forge-button/forge-button.tsx':
+        'export interface AtomButtonProperties { tone: string; }\nexport function ForgeButton() { return null; }\n',
+      'components/molecules/forge-button/forge-button.tsx':
+        'export interface MoleculeButtonProperties { size: string; }\nexport function ForgeMoleculeButton() { return null; }\n',
+    };
+    await Promise.all(
+      Object.entries(files).map(async ([relativePath, source]) => {
+        const filePath = path.join(root, relativePath);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, source);
+      }),
+    );
+
+    const graph = buildForgeFileGraph({ entry: path.join(root, 'components/index.ts'), sourceRoot: root });
+    const components = discoverComponentsFromGraph(graph);
+
+    expect(components).toEqual([
+      expect.objectContaining({
+        neutralName: 'ForgeButton',
+        publicName: 'AtomButton',
+        folder: 'atoms-forge-button',
+        sourceDir: 'atoms/forge-button',
+        sourcePath: path.join(root, 'components/atoms/forge-button/forge-button.tsx'),
+      }),
+      expect.objectContaining({
+        neutralName: 'ForgeMoleculeButton',
+        publicName: 'MoleculeButton',
+        folder: 'molecules-forge-button',
+        sourceDir: 'molecules/forge-button',
+        sourcePath: path.join(root, 'components/molecules/forge-button/forge-button.tsx'),
+      }),
+    ]);
+  });
+
+  it('disambiguates flat component files in different source directories that share identical basenames', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-flat-disambiguate-'));
+    temporaryDirectories.push(root);
+    const files: Record<string, string> = {
+      'components/index.ts': [
+        "export { ForgeAtomButton } from './atoms/button';",
+        "export { ForgeMoleculeButton } from './molecules/button';",
+      ].join('\n'),
+      'components/atoms/button.tsx': 'export function ForgeAtomButton() { return null; }\n',
+      'components/molecules/button.tsx': 'export function ForgeMoleculeButton() { return null; }\n',
+    };
+    await Promise.all(
+      Object.entries(files).map(async ([relativePath, source]) => {
+        const filePath = path.join(root, relativePath);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, source);
+      }),
+    );
+
+    const graph = buildForgeFileGraph({ entry: path.join(root, 'components/index.ts'), sourceRoot: root });
+    const components = discoverComponentsFromGraph(graph);
+
+    expect(components).toEqual([
+      expect.objectContaining({
+        neutralName: 'ForgeAtomButton',
+        folder: 'atoms-button',
+        sourceDir: 'atoms',
+        sourcePath: path.join(root, 'components/atoms/button.tsx'),
+      }),
+      expect.objectContaining({
+        neutralName: 'ForgeMoleculeButton',
+        folder: 'molecules-button',
+        sourceDir: 'molecules',
+        sourcePath: path.join(root, 'components/molecules/button.tsx'),
+      }),
+    ]);
+  });
+
+  it('disambiguates components in different source directories that share identical basenames in barrel discovery', () => {
+    const collidingBarrel = [
+      "export { ForgeAtomButton, type AtomButtonProperties } from './atoms/forge-button';",
+      "export { ForgeMoleculeButton, type MoleculeButtonProperties } from './molecules/forge-button';",
+    ].join('\n');
+    const components = discoverComponents(collidingBarrel);
+
+    expect(components.map((component) => [component.folder, component.sourceDir])).toEqual([
+      ['atoms-forge-button', 'atoms/forge-button'],
+      ['molecules-forge-button', 'molecules/forge-button'],
+    ]);
+  });
+
+  it('throws DUPLICATE_COMPONENT_TARGET diagnostic when component targets collide in the same directory and cannot be disambiguated', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-duplicate-target-'));
+    temporaryDirectories.push(root);
+    const files: Record<string, string> = {
+      'components/index.ts': [
+        "export { ForgeButtonA } from './button';",
+        "export { ForgeButtonB } from './button/button';",
+      ].join('\n'),
+      'components/button.tsx': 'export function ForgeButtonA() { return null; }\n',
+      'components/button/button.tsx': 'export function ForgeButtonB() { return null; }\n',
+    };
+    await Promise.all(
+      Object.entries(files).map(async ([relativePath, source]) => {
+        const filePath = path.join(root, relativePath);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, source);
+      }),
+    );
+
+    const graph = buildForgeFileGraph({ entry: path.join(root, 'components/index.ts'), sourceRoot: root });
+    expect(() => discoverComponentsFromGraph(graph)).toThrow(CompilerDiagnosticError);
+    try {
+      discoverComponentsFromGraph(graph);
+    } catch (error) {
+      expect(error).toBeInstanceOf(CompilerDiagnosticError);
+      const diagnosticError = error as CompilerDiagnosticError;
+      expect(diagnosticError.diagnostics[0]?.code).toBe(DUPLICATE_COMPONENT_TARGET);
+    }
   });
 });
 

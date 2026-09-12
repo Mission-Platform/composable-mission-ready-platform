@@ -1,25 +1,23 @@
 # @mission-platform/code-scanner
 
 A dependency-free **image / camera code scanner** compiled as a Forge Web Script graph with WebAssembly SIMD support. It locates and decodes
-**QR codes**, **Data Matrix** symbols, **compact Aztec** codes, **1D barcodes**, **PDF417**, **GS1 DataBar** (RSS-14)
-and **MaxiCode** from either a decoded image (a file upload) or a live camera stream, and ships a write-once component
-available for both **React** and **Vue 3**. Data Matrix and 1D barcodes read at **any rotation**, and a whole frame can
-be scanned for **multiple codes** at once or restricted to a **region of interest**.
+Data Matrix symbols, compact Aztec codes, 1D/RSS readers, PDF417, and MaxiCode from either a decoded image or a live camera stream,
+and ships a write-once component available for React, Vue 3, Solid, Svelte, and Web Components. QR decoder sources are retained as a
+standalone graph while combined QR emission is blocked by a Forge Web Script emitter limitation; they are not advertised as linked runtime coverage.
 
 The scanner runs the **entire pipeline in one statically linked FWS/WebAssembly call**
-(`src/fws/scanner.fws`, `scan_and_decode`): it binarises the image, locates the code (QR finder patterns / the Data Matrix
+(`src/fws/scanner.fws`, `scan_and_decode`): it binarises the image, locates the code (the Data Matrix
 "L" finder / the Aztec bullseye / linear scan-line runs), samples its module grid, **and decodes it** — the located
 modules never cross back into JS to be decoded. It does this by linking each format's decoder graph directly:
 
-| Format               | Linked FWS library                           |
-| -------------------- | -------------------------------------------- |
-| QR                   | `packages/integrations/qr-code/src/fws`      |
-| Data Matrix          | `packages/integrations/matrix-code/src/fws`  |
-| Aztec (compact)      | `packages/integrations/matrix-code/src/fws`  |
-| 1D barcode           | `packages/integrations/barcode/src/fws`      |
-| PDF417               | `packages/integrations/code-scanner/src/fws` |
-| GS1 DataBar (RSS-14) | `packages/integrations/code-scanner/src/fws` |
-| MaxiCode             | `packages/integrations/code-scanner/src/fws` |
+| Format             | Linked FWS library                           |
+| ------------------ | -------------------------------------------- |
+| Data Matrix        | `packages/integrations/code-scanner/src/fws` |
+| Aztec (compact)    | `packages/integrations/code-scanner/src/fws` |
+| 1D and RSS readers | `packages/integrations/code-scanner/src/fws` |
+| PDF417             | `packages/integrations/code-scanner/src/fws` |
+| RSS-14             | `packages/integrations/code-scanner/src/fws` |
+| MaxiCode           | `packages/integrations/code-scanner/src/fws` |
 
 The scanner links the decoder FWS sources at build time, so decoder package runtime imports do not cross the neutral
 artifact boundary.
@@ -30,15 +28,20 @@ artifact boundary.
 import { scanImageData, scanFile, type ScanResult } from '@mission-platform/code-scanner';
 
 // From a canvas `ImageData` (synchronous; the FWS artifact self-initialises):
-const result: ScanResult | null = scanImageData(imageData);
-// => { format: 'qr', value: 'https://mission-platform.dev' }
+const result: ScanResult | null = scanImageData(imageData, {
+  formats: ['DATA_MATRIX', 'CODE_128'],
+  tryHarder: true,
+  alsoInverted: true,
+});
+// => { format: 'DATA_MATRIX', text: 'HELLO', rawBytes: Uint8Array(...), ... }
 
 // From a File / Blob (decodes the image for you):
 const fromFile = await scanFile(fileInput.files[0]);
 ```
 
-`ScanResult.value` is `null` when a symbol is located and sampled but its payload can't be decoded (e.g. a capture too
-degraded for the symbol's error correction to recover).
+`ScanResult.text` is `null` when a symbol is located and sampled but its payload can't be decoded. `rawBytes`, `numBits`,
+`points`, `metadata`, and `timestamp` are always present in the result model; fields unavailable for a reduced reader are
+represented by an empty byte value, zero, or an empty collection.
 
 ### Initialisation
 
@@ -49,16 +52,17 @@ initialisation behavior.
 ### Region of interest and multiple codes
 
 ```ts
-import { scanImageData, scanImageDataAll, type Roi } from '@mission-platform/code-scanner';
+import { scanImageData, scanImageDataAll, type Roi, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Restrict the scan to a reticle rectangle (cropped before binarisation,
 // so surrounding clutter is ignored):
 const roi: Roi = { x: 120, y: 80, width: 240, height: 240 };
-const hit = scanImageData(imageData, roi);
+const options: ScanOptions = { roi, formats: ['DATA_MATRIX'] };
+const hit = scanImageData(imageData, options);
 
 // Decode every distinct code in one frame (deduplicated, in discovery order):
 const results = scanImageDataAll(imageData);
-// => [{ format: 'qr', value: '…' }, { format: 'barcode', value: '…' }]
+// => [{ format: 'DATA_MATRIX', text: '…', ... }, { format: 'CODE_128', text: '…', ... }]
 ```
 
 ## Component
@@ -76,7 +80,7 @@ the active `mp:<framework>` export condition, selected **once** for the project 
 // React (mp:react) — identical in Vue 3 (mp:vue), Solid and Web Components.
 import { CodeScanner } from '@mission-platform/code-scanner';
 
-<CodeScanner onResult={(result) => console.log(result.value)} />;
+<CodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 ```
 
 ### Props
@@ -88,6 +92,9 @@ import { CodeScanner } from '@mission-platform/code-scanner';
 | `showFileUpload` | `boolean`                      | `true`          | Show the "upload image" control.                       |
 | `showCamera`     | `boolean`                      | `true`          | Show the "scan with camera" control.                   |
 | `stopOnDecode`   | `boolean`                      | `true`          | Stop the camera once a payload is decoded.             |
+| `formats`        | `readonly ScanFormat[]`        | all             | Restrict reader dispatch to selected formats.          |
+| `tryHarder`      | `boolean`                      | `true`          | Enable adaptive binarization and additional retries.   |
+| `alsoInverted`   | `boolean`                      | `true`          | Retry with inverted luminance.                         |
 | `onResult`       | `(result: ScanResult) => void` | —               | Fired with each successful detection.                  |
 | `onError`        | `(error: Error) => void`       | —               | Fired when reading a file / frame or the camera fails. |
 
@@ -106,8 +113,7 @@ pnpm exec turbo run build --filter @mission-platform/code-scanner
 
 ## Scope & limitations
 
-- Detection is tuned for clean, reasonably framed captures (file uploads and camera frames). The QR locator is
-  rotation-tolerant (it derives an affine grid from the three finder centres). The **Data Matrix** locator reads at any
+- Detection is tuned for clean, reasonably framed captures (file uploads and camera frames). The **Data Matrix** locator reads at any
   rotation (a corner-based affine locator, plus a straighten-and-retry fallback that recovers the angle and re-samples
   upright) and tolerates mild shear. **1D barcodes** are likewise straightened before sampling, so tilted captures still
   read. The **Aztec** locator finds the central bullseye but samples an axis-aligned grid, so it expects an upright
@@ -115,7 +121,9 @@ pnpm exec turbo run build --filter @mission-platform/code-scanner
 - 1D barcodes are located **and decoded** end-to-end (Code 128, Code 39, EAN-13/8, UPC-A, ITF, Codabar, …). UPC-A shares
   its module run with a leading-zero EAN-13; the scanner resolves this by the number-system digit, so a UPC-A symbol is
   reported as its **12-digit UPC-A** value rather than its EAN-13 alias (see `docs/accuracy-improvement-plan.md`).
-- **PDF417**, **GS1 DataBar (RSS-14)** and **MaxiCode** are located and decoded upright: they read at 0° (PDF417 also at
-  180°). Rotated captures for these three are a documented follow-up (see `docs/accuracy-improvement-plan.md`).
-  Read-rate for every symbology is covered by the FWS graph and façade conformance suites; the per-stage model tiering
-  used to build them is captured in `docs/model-cost-strategy.md`.
+- **PDF417**, **RSS-14/RSS Expanded**, and **MaxiCode** are bounded reduced readers: clean upright fixtures are covered,
+  while full ZXing correction, rotation, and metadata parity remain outstanding.
+- Data Matrix currently covers the implemented ASCII subset; compact Aztec currently covers the implemented binary subset.
+- QR decoder graphs emit independently, but combined scanner linkage currently fails Forge Web Script `FWS-EMIT-001` and is
+  intentionally not included in the linked artifact. The linked result envelope is currently a bounded compatibility string;
+  points, metadata, and binary-result preservation remain follow-up work tracked in `docs/accuracy-improvement-plan.md`.

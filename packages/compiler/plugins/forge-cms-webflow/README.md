@@ -11,17 +11,23 @@ React component the bound plugin co-generated from the same neutral IR, and bind
 
 ```ts
 // tsdown.config.ts
-import { defineTsdownForgeCms } from "@mission-platform/forge-cms-plugin-api";
+import { tsdownForgeCmsPlugins } from "@mission-platform/forge-cms-plugin-api";
 import { forgeWebflowCms } from "@mission-platform/forge-cms-webflow";
 import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 
-export default defineTsdownForgeCms({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  target: forgeWebflowCms({
-    packageName: "@acme/components",
-    plugin: forgeReactFramework(),
-    libraryName: "Acme UI", // defaults to "Forge"
-    group: "Acme", // Designer group; defaults to "Mission Platform"
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeWebflowCms({
+        packageName: "@acme/components",
+        plugin: forgeReactFramework(),
+        libraryName: "Acme UI", // defaults to "Forge"
+        group: "Acme", // Designer group; defaults to "Mission Platform"
+      }),
+    ],
   }),
 });
 ```

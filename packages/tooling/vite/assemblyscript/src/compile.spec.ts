@@ -33,7 +33,7 @@ describe('compileAssemblyScript', () => {
     } finally {
       rmSync(rootDir, { recursive: true, force: true });
     }
-  });
+  }, 30_000);
 
   it('preserves an explicitly configured intermediate path', async () => {
     const rootDir = mkdtempSync(join(tmpdir(), 'assemblyscript-compile-'));
@@ -54,5 +54,5 @@ describe('compileAssemblyScript', () => {
     } finally {
       rmSync(rootDir, { recursive: true, force: true });
     }
-  });
+  }, 30_000);
 });

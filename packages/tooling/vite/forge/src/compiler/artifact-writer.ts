@@ -1,5 +1,16 @@
 import { createHash } from 'node:crypto';
-import { existsSync, lstatSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  statSync,
+  utimesSync,
+  writeFileSync,
+} from 'node:fs';
 import path from 'node:path';
 
 import {
@@ -18,10 +29,21 @@ import {
 const MANIFEST_FILE = '.forge-artifact-manifest.json';
 
 export interface ForgeArtifactWriter {
+  /** Directory containing the unpublished attempt. */
+  readonly stageDirectory: string;
   writeText(relativeName: string, contents: string, kind: ForgeArtifactKind): void;
   writeBinary(relativeName: string, contents: Buffer, kind: ForgeArtifactKind): void;
   copyFile(relativeName: string, sourcePath: string, kind: ForgeArtifactKind): void;
+  /** Record files emitted by a native bundler into this attempt's manifest. */
+  recordTree(entries?: readonly string[], kindForFile?: (relativeName: string) => ForgeArtifactKind): void;
   readText(relativeName: string): string;
+  /** Validate every recorded artifact and return the unpublished manifest. */
+  validate(entries?: readonly string[]): ForgeArtifactManifest;
+  /** Atomically replace the target output with the validated attempt. */
+  commit(): ForgeArtifactManifest;
+  /** Remove only this writer's unpublished attempt. */
+  abort(): void;
+  /** Compatibility convenience: validate and commit the attempt. */
   finalize(entries?: readonly string[]): ForgeArtifactManifest;
 }
 
@@ -29,71 +51,195 @@ function digest(contents: Buffer): string {
   return createHash('sha256').update(contents).digest('hex');
 }
 
-function readPreviousManifest(outDir: string): ForgeArtifactManifest | undefined {
-  const manifestPath = resolveForgeArtifactPath(outDir, MANIFEST_FILE);
-  if (!existsSync(manifestPath)) return undefined;
-  let manifest: ForgeArtifactManifest;
-  try {
-    manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as ForgeArtifactManifest;
-  } catch {
-    return undefined;
-  }
-  if (manifest.version !== 1 || !Array.isArray(manifest.artifacts)) return undefined;
-  for (const artifact of manifest.artifacts) validateForgeArtifactName(artifact.fileName);
-  return manifest;
+function defaultArtifactKind(relativeName: string): ForgeArtifactKind {
+  if (relativeName.endsWith('.d.ts')) return 'declaration';
+  if (relativeName.endsWith('.map')) return 'map';
+  if (relativeName.endsWith('.css')) return 'style';
+  if (relativeName.endsWith('.js')) return 'module';
+  return 'asset';
 }
 
-function removeUnlistedFiles(outDir: string, retained: ReadonlySet<string>): void {
+function normalizeGeneratedNativePaths(stageDirectory: string): void {
+  const files: string[] = [];
   const visit = (directory: string): void => {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       const absolute = path.join(directory, entry.name);
-      const relative = path.relative(outDir, absolute).split(path.sep).join('/');
+      if (entry.isDirectory()) visit(absolute);
+      else if (entry.isFile()) files.push(path.relative(stageDirectory, absolute).split(path.sep).join('/'));
+    }
+  };
+  visit(stageDirectory);
+  const renames = new Map<string, string>();
+  for (const relativeFile of files.filter((file) => file.endsWith('.js'))) {
+    const source = readFileSync(path.join(stageDirectory, relativeFile), 'utf8');
+    const vueScriptModule = relativeFile.match(/^(.*)\.vue\?vue&type=script&setup=true&lang\.js$/);
+    if (vueScriptModule !== null) {
+      renames.set(relativeFile, `${vueScriptModule[1]}.script.js`);
+      continue;
+    }
+    if (/(?:^|\/)entry(?:[:_])[^/]+\.js$/.test(relativeFile)) {
+      renames.set(relativeFile, 'index.js');
+      continue;
+    }
+    const region = source.match(/\/\/#region .*?\/((?:components|composables|styles|utils)\/[^\n]+)/)?.[1];
+    if (region === undefined) {
+      continue;
+    }
+    const desired = region
+      .replace(/\.(?:tsx?|jsx?|vue|svelte)$/, '.js')
+      .replace(/\.module\.(?:scss|css)$/, '.module.js');
+    renames.set(relativeFile, desired);
+    if (/\.module\.(?:scss|css)$/.test(region)) {
+      const desiredCss = region.replace(/\.module\.(?:scss|css)$/, '.css');
+      for (const importedCss of source.matchAll(/import ["']\.\/([^"']+\.css)["'];/g)) {
+        renames.set(path.posix.join(path.posix.dirname(relativeFile), importedCss[1]), desiredCss);
+      }
+    }
+  }
+  for (const [oldName, newName] of renames) {
+    const oldPath = path.join(stageDirectory, oldName);
+    const newPath = path.join(stageDirectory, newName);
+    if (oldName === newName || !existsSync(oldPath) || existsSync(newPath)) continue;
+    mkdirSync(path.dirname(newPath), { recursive: true });
+    renameSync(oldPath, newPath);
+  }
+  for (const relativeFile of files.filter((file) => file.endsWith('.js'))) {
+    const outputFile = renames.get(relativeFile) ?? relativeFile;
+    const absoluteFile = path.join(stageDirectory, outputFile);
+    if (!existsSync(absoluteFile)) continue;
+    let source = readFileSync(absoluteFile, 'utf8');
+    for (const [oldName, newName] of renames) {
+      const oldSpecifier = path.posix.relative(path.posix.dirname(relativeFile), oldName);
+      const newSpecifier = path.posix.relative(path.posix.dirname(outputFile), newName);
+      source = source.replaceAll(`./${oldSpecifier}`, `./${newSpecifier}`);
+    }
+    source = source.replace(/import (["'])([^"']+\/index\.js)\1;\n/g, (statement, _quote, specifier) => {
+      const target = path.resolve(path.dirname(absoluteFile), specifier);
+      return existsSync(target) ? statement : '';
+    });
+    writeFileSync(absoluteFile, source, 'utf8');
+  }
+}
+
+function validatePreviousManifest(outDir: string): void {
+  const manifestPath = resolveForgeArtifactPath(outDir, MANIFEST_FILE);
+  if (!existsSync(manifestPath)) return;
+  let manifest: Partial<ForgeArtifactManifest>;
+  try {
+    manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as Partial<ForgeArtifactManifest>;
+  } catch {
+    return;
+  }
+  if (manifest.version !== 1 || !Array.isArray(manifest.artifacts)) return;
+  const names = new Set<string>();
+  for (const artifact of manifest.artifacts) {
+    validateForgeArtifactName(artifact.fileName);
+    if (names.has(artifact.fileName)) {
+      throw new Error(`Forge artifact manifest contains a duplicate: ${artifact.fileName}`);
+    }
+    names.add(artifact.fileName);
+  }
+}
+
+interface ExistingArtifactTimes {
+  readonly hash: string;
+  readonly atimeMs: number;
+  readonly mtimeMs: number;
+}
+
+function collectExistingArtifactTimes(root: string): Map<string, ExistingArtifactTimes> {
+  const result = new Map<string, ExistingArtifactTimes>();
+  if (!existsSync(root)) return result;
+  const visit = (directory: string): void => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const absolute = path.join(directory, entry.name);
+      const relative = path.relative(root, absolute).split(path.sep).join('/');
       if (relative === MANIFEST_FILE) continue;
-      const safeAbsolute = resolveForgeArtifactPath(outDir, relative);
-      if (lstatSync(safeAbsolute).isSymbolicLink()) {
+      if (lstatSync(absolute).isSymbolicLink()) {
         throw new Error(`Forge artifact path contains a symlink: ${relative}`);
       }
       if (entry.isDirectory()) {
         visit(absolute);
-        if (readdirSync(absolute).length === 0) rmSync(absolute, { recursive: true, force: true });
-      } else if (!retained.has(relative)) {
-        rmSync(safeAbsolute, { force: true });
+      } else if (entry.isFile()) {
+        const stat = statSync(absolute);
+        result.set(relative, { hash: digest(readFileSync(absolute)), atimeMs: stat.atimeMs, mtimeMs: stat.mtimeMs });
       }
     }
   };
-  visit(outDir);
+  visit(root);
+  return result;
 }
 
-export function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter {
+export interface ForgeArtifactWriterOptions {
+  /** Caller-owned attempt directory. Defaults to a process-scoped sibling. */
+  readonly attemptDirectory?: string;
+}
+
+/** Remove abandoned attempts belonging to one generated target tree only. */
+export function cleanupForgeArtifactAttempts(outDir: string, targetId: string): void {
+  const safeTargetId = targetId.replaceAll('\\', '/').replaceAll('/', '-');
+  const prefix = `.forge-attempt-${path.basename(path.resolve(outDir))}-${safeTargetId}-`;
+  const parent = path.dirname(path.resolve(outDir));
+  if (!existsSync(parent)) return;
+  for (const entry of readdirSync(parent, { withFileTypes: true })) {
+    if (!entry.name.startsWith(prefix)) continue;
+    const candidate = path.join(parent, entry.name);
+    if (entry.isDirectory() && !lstatSync(candidate).isSymbolicLink()) {
+      rmSync(candidate, { recursive: true, force: true });
+    }
+  }
+}
+
+let attemptSequence = 0;
+
+/** Allocate an owned sibling directory for a native target build attempt. */
+export function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string {
   const safeOutDir = assertForgeArtifactRoot(outDir);
+  const safeTargetId = validateForgeArtifactName(targetId.replaceAll('\\', '/').replaceAll('/', '-'));
+  return path.join(
+    path.dirname(safeOutDir),
+    `.forge-attempt-${path.basename(safeOutDir)}-${safeTargetId}-${process.pid}-${++attemptSequence}`,
+  );
+}
+
+export function createForgeArtifactWriter(
+  outDir: string,
+  targetId: string,
+  options: ForgeArtifactWriterOptions = {},
+): ForgeArtifactWriter {
+  const safeOutDir = assertForgeArtifactRoot(outDir);
+  validatePreviousManifest(safeOutDir);
+  const safeTargetId = validateForgeArtifactName(targetId.replaceAll('\\', '/').replaceAll('/', '-'));
+  const stageDirectory = options.attemptDirectory ?? forgeArtifactAttemptDirectory(safeOutDir, safeTargetId);
+  if (path.resolve(stageDirectory) === safeOutDir) {
+    throw new Error('Forge artifact attempt directory must differ from its published output directory.');
+  }
   const records = new Map<string, ForgeArtifactRecord>();
   const pending = new Map<string, Buffer>();
-  const previous = readPreviousManifest(safeOutDir);
-  const manifestPath = resolveForgeArtifactPath(safeOutDir, MANIFEST_FILE);
+  const manifestPath = resolveForgeArtifactPath(stageDirectory, MANIFEST_FILE);
+  let committed = false;
+  let aborted = false;
+  let validatedManifest: ForgeArtifactManifest | undefined;
+  let entryNames: readonly string[] = [];
 
-  // A generated tree is owned by this writer. Never let an interrupted or
-  // differently-targeted build become input to the next generation session:
-  // without a complete matching manifest, there is no safe way to distinguish
-  // current artifacts from stale modules left by an earlier target/build.
-  if (previous === undefined) {
-    if (existsSync(safeOutDir)) rmSync(safeOutDir, { recursive: true, force: true });
-  } else if (previous.targetId !== targetId) {
-    rmSync(safeOutDir, { recursive: true, force: true });
-  }
-  ensureForgeArtifactDirectory(safeOutDir, safeOutDir);
-  // The manifest is the commit marker for a complete generation. Remove it
-  // before compiling so a failed session cannot leave stale output looking
-  // valid to a later build; successful finalize() writes it back atomically.
-  rmSync(manifestPath, { force: true });
-
-  const previousForTarget = previous?.targetId === targetId ? previous : undefined;
+  // Never touch the last successful output while an attempt is being built.
+  // The stage is owned by this invocation and can safely be discarded on any
+  // generation, declaration, native-build, or promotion failure.
+  if (existsSync(stageDirectory)) rmSync(stageDirectory, { recursive: true, force: true });
+  ensureForgeArtifactDirectory(stageDirectory, stageDirectory);
 
   const write = (relativeName: string, contents: Buffer, kind: ForgeArtifactKind): void => {
+    if (aborted) throw new Error('Forge artifact attempt has been aborted.');
     const fileName = validateForgeArtifactName(relativeName);
-    resolveForgeArtifactPath(safeOutDir, fileName);
+    const target = resolveForgeArtifactPath(stageDirectory, fileName);
+    // Also inspect a same-named path in the published tree. A symlink there
+    // must fail closed rather than being hidden by the new isolated attempt.
+    if (existsSync(safeOutDir)) resolveForgeArtifactPath(safeOutDir, fileName);
     const hash = digest(contents);
     pending.set(fileName, contents);
     records.set(fileName, { fileName, kind, hash, size: contents.byteLength });
+    ensureForgeArtifactDirectory(stageDirectory, path.dirname(target));
+    writeFileSync(target, contents);
   };
 
   return {
@@ -106,37 +252,119 @@ export function createForgeArtifactWriter(outDir: string, targetId: string): For
     copyFile(relativeName, sourcePath, kind) {
       write(relativeName, readFileSync(sourcePath), kind);
     },
+    recordTree(entries = [], kindForFile = defaultArtifactKind) {
+      if (aborted) throw new Error('Forge artifact attempt has been aborted.');
+      normalizeGeneratedNativePaths(stageDirectory);
+      const recordedEntryNames = new Set(
+        entries.map((entry) => {
+          const candidate = /(?:^|\/)entry(?:[:_])/.test(entry) ? 'index.js' : entry;
+          return validateForgeArtifactName(existsSync(path.join(stageDirectory, candidate)) ? candidate : entry);
+        }),
+      );
+      const visit = (directory: string): void => {
+        for (const entry of readdirSync(directory, { withFileTypes: true })) {
+          const absolute = path.join(directory, entry.name);
+          const relativeName = path.relative(stageDirectory, absolute).split(path.sep).join('/');
+          if (relativeName === MANIFEST_FILE) continue;
+          if (lstatSync(absolute).isSymbolicLink()) {
+            throw new Error(`Forge artifact path contains a symlink: ${relativeName}`);
+          }
+          if (entry.isDirectory()) {
+            visit(absolute);
+            continue;
+          }
+          if (!entry.isFile()) {
+            throw new Error(`Forge artifact path is not a regular file: ${relativeName}`);
+          }
+          const fileName = validateForgeArtifactName(relativeName);
+          const contents = readFileSync(absolute);
+          const kind = recordedEntryNames.has(fileName) ? 'entry' : kindForFile(fileName);
+          records.set(fileName, { fileName, kind, hash: digest(contents), size: contents.byteLength });
+        }
+      };
+      visit(stageDirectory);
+      const availableEntries = [...recordedEntryNames].filter((entry) => records.has(entry));
+      const fallbackEntry = [...records.keys()].find((fileName) => fileName.endsWith('.js'));
+      const resolvedEntries =
+        availableEntries.length > 0 ? availableEntries : fallbackEntry === undefined ? [] : [fallbackEntry];
+      if (availableEntries.length === 0 && fallbackEntry !== undefined) {
+        const artifact = records.get(fallbackEntry);
+        if (artifact !== undefined) records.set(fallbackEntry, { ...artifact, kind: 'entry' });
+      }
+      recordedEntryNames.clear();
+      resolvedEntries.forEach((entry) => recordedEntryNames.add(entry));
+      entryNames = [...recordedEntryNames];
+    },
     readText(relativeName) {
+      if (aborted) throw new Error('Forge artifact attempt has been aborted.');
       const fileName = validateForgeArtifactName(relativeName);
-      const target = resolveForgeArtifactPath(safeOutDir, fileName);
+      const target = resolveForgeArtifactPath(stageDirectory, fileName);
       const contents = pending.get(fileName) ?? readFileSync(target);
       return contents.toString('utf8');
     },
-    finalize(entries = []) {
-      const safeEntries = entries.map((entry) => validateForgeArtifactName(entry));
+    stageDirectory,
+    validate(entries = entryNames) {
+      if (aborted) throw new Error('Forge artifact attempt has been aborted.');
+      if (committed) throw new Error('Forge artifact attempt has already been committed.');
+      const safeEntries = [...new Set(entries.map((entry) => validateForgeArtifactName(entry)))].sort();
       const manifest = createForgeArtifactManifest(targetId, [...records.values()], true);
-      const retained = new Set(manifest.artifacts.map((artifact) => artifact.fileName));
-      for (const artifact of previousForTarget?.artifacts ?? []) {
-        const previousPath = resolveForgeArtifactPath(safeOutDir, artifact.fileName);
-        if (!retained.has(artifact.fileName)) {
-          rmSync(previousPath, { force: true });
+      const artifacts = new Set(manifest.artifacts.map((artifact) => artifact.fileName));
+      for (const entry of safeEntries) {
+        if (!artifacts.has(entry)) throw new Error(`Forge artifact entry is not recorded: ${entry}`);
+      }
+      for (const artifact of manifest.artifacts) {
+        const artifactPath = resolveForgeArtifactPath(stageDirectory, artifact.fileName);
+        if (!existsSync(artifactPath) || !lstatSync(artifactPath).isFile()) {
+          throw new Error(`Forge artifact is missing from the attempt: ${artifact.fileName}`);
+        }
+        const contents = readFileSync(artifactPath);
+        if (digest(contents) !== artifact.hash || contents.byteLength !== artifact.size) {
+          throw new Error(`Forge artifact failed validation: ${artifact.fileName}`);
         }
       }
-      removeUnlistedFiles(safeOutDir, retained);
-      for (const [fileName, contents] of pending) {
-        const target = resolveForgeArtifactPath(safeOutDir, fileName);
-        if (!existsSync(target) || digest(readFileSync(target)) !== digest(contents)) {
-          ensureForgeArtifactDirectory(safeOutDir, path.dirname(target));
-          writeFileSync(target, contents);
+      const complete = { ...manifest, entries: safeEntries };
+      writeFileSync(manifestPath, `${JSON.stringify(complete, null, 2)}\n`, 'utf8');
+      entryNames = safeEntries;
+      validatedManifest = complete;
+      return complete;
+    },
+    commit() {
+      if (aborted) throw new Error('Forge artifact attempt has been aborted.');
+      const manifest = validatedManifest ?? this.validate();
+      if (committed) return manifest;
+      const parent = path.dirname(safeOutDir);
+      mkdirSync(parent, { recursive: true });
+      const backup = `${safeOutDir}.forge-previous-${process.pid}-${attemptSequence}`;
+      const previousTimes = collectExistingArtifactTimes(safeOutDir);
+      let backedUp = false;
+      try {
+        if (existsSync(safeOutDir)) {
+          renameSync(safeOutDir, backup);
+          backedUp = true;
         }
+        renameSync(stageDirectory, safeOutDir);
+        committed = true;
+        for (const [fileName, previous] of previousTimes) {
+          const currentPath = resolveForgeArtifactPath(safeOutDir, fileName);
+          if (existsSync(currentPath) && digest(readFileSync(currentPath)) === previous.hash) {
+            utimesSync(currentPath, previous.atimeMs / 1000, previous.mtimeMs / 1000);
+          }
+        }
+        if (backedUp) rmSync(backup, { recursive: true, force: true });
+        return manifest;
+      } catch (error) {
+        if (existsSync(safeOutDir)) rmSync(safeOutDir, { recursive: true, force: true });
+        if (backedUp && existsSync(backup)) renameSync(backup, safeOutDir);
+        throw error;
       }
-      const complete = createForgeArtifactManifest(targetId, [...records.values()], true);
-      writeFileSync(
-        manifestPath,
-        `${JSON.stringify({ ...complete, entries: [...safeEntries].sort() }, null, 2)}\n`,
-        'utf8',
-      );
-      return { ...complete, entries: [...safeEntries].sort() };
+    },
+    abort() {
+      aborted = true;
+      if (!committed) rmSync(stageDirectory, { recursive: true, force: true });
+    },
+    finalize(entries = []) {
+      this.validate(entries);
+      return this.commit();
     },
   };
 }

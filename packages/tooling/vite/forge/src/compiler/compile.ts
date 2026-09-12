@@ -20,7 +20,7 @@ import type {
 } from '@mission-platform/forge-plugin-api';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
-export { moduleTargetsFramework, readFrameworkDirective } from './ast.js';
+export { moduleTargetsFramework, readFrameworkDirective } from './directives.js';
 export { analyzeForgeModule, createCompilerPipeline } from './pipeline.js';
 export { analyzeRouterCapabilities, compileRouterModule, createRouterCompilerPipeline } from './router.js';
 export { createGenericAst, parseForgeModule, parseForgeSource } from './frontends.js';

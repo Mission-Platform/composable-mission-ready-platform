@@ -3,7 +3,7 @@
 // This is the bridge between a raw image (a decoded file upload or a live camera
 // frame) and the scanner's decoded result. The entire pipeline — binarise,
 // locate, sample, and decode — runs in the linked Forge Web Script scanner graph.
-// The adapter owns the graph instance and converts its compact result wire format
+// The adapter owns the graph instance and converts its versioned result envelope
 // into the public {@link ScanResult} without exposing the FWS ABI to consumers.
 import { scannerLog } from '../debug';
 import { load as loadScanner, loadRaw, loadRawSync, loadSync as loadScannerSync } from '../fws/scanner.fws';
@@ -16,24 +16,35 @@ import type {
   ForgeScannerRawExports,
   ForgeScannerRawImports,
 } from '../fws/scanner.fws';
-import type { ImageLike, Roi, ScanFormat, ScanResult } from '../types';
+import type { ImageLike, Roi, ScanFormat, ScanMetadata, ScanOptions, ScanPoint, ScanResult } from '../types';
 
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
 const textEncoder = new TextEncoder();
 
-function decodeUtf8(value: string): string {
-  if (value.length === 0 || value.length % 3 !== 0) return '';
+function decodeTripletBytes(value: string): Uint8Array | null {
+  if (value.length === 0 || value.length % 3 !== 0) return null;
   const bytes = new Uint8Array(value.length / 3);
   for (let index = 0; index < bytes.length; index += 1) {
     const byte = Number.parseInt(value.slice(index * 3, index * 3 + 3), 10);
-    if (!Number.isInteger(byte) || byte < 0 || byte > 255) return '';
+    if (!Number.isInteger(byte) || byte < 0 || byte > 255) return null;
     bytes[index] = byte;
   }
+  return bytes;
+}
+
+function decodeTriplets(value: string): string {
+  const bytes = decodeTripletBytes(value);
+  if (bytes === null) return '';
   try {
-    return `1${textDecoder.decode(bytes)}`;
+    return textDecoder.decode(bytes);
   } catch {
     return '';
   }
+}
+
+function decodeUtf8(value: string): string {
+  const decoded = decodeTriplets(value);
+  return decoded.length > 0 ? `1${decoded}` : '';
 }
 
 const scannerImports: ForgeScannerImports = {
@@ -101,25 +112,84 @@ async function loadRawScanner(): Promise<RawScannerExports> {
  * {@link ScanFormat} name.
  */
 const FORMAT_NAMES: Readonly<Record<number, ScanFormat>> = {
-  0: 'qr',
-  1: 'datamatrix',
-  2: 'barcode',
-  3: 'aztec',
-  4: 'pdf417',
-  5: 'databar',
-  6: 'maxicode',
+  0: 'AZTEC',
+  1: 'CODABAR',
+  2: 'CODE_39',
+  3: 'CODE_93',
+  4: 'CODE_128',
+  5: 'DATA_MATRIX',
+  6: 'EAN_8',
+  7: 'EAN_13',
+  8: 'ITF',
+  9: 'MAXICODE',
+  10: 'PDF_417',
+  11: 'QR_CODE',
+  12: 'RSS_14',
+  13: 'RSS_EXPANDED',
+  14: 'UPC_A',
+  15: 'UPC_E',
 };
 
-/** Convert the compact FWS result wire format into the public scan result. */
-function resultFromWire(encoded: string): ScanResult | null {
-  if (encoded.length < 2) return null;
-  const format = FORMAT_NAMES[Number(encoded[1])];
-  if (format === undefined) return null;
-  if (encoded[0] === 'L') return { format, value: null };
-  if (encoded[0] === 'D') return { format, value: encoded.slice(2) };
-  return null;
+const EMPTY_POINTS: readonly ScanPoint[] = Object.freeze([]);
+const EMPTY_METADATA: ScanMetadata = Object.freeze({});
+
+function createScanResult(
+  format: ScanFormat,
+  text: string | null,
+  rawBytes: Uint8Array | null,
+  numBits: number,
+): ScanResult {
+  return {
+    format,
+    text,
+    rawBytes,
+    numBits,
+    points: EMPTY_POINTS,
+    metadata: EMPTY_METADATA,
+    timestamp: Date.now(),
+    value: text,
+  };
 }
 
+function decodePayload(
+  payload: string,
+  format: ScanFormat,
+): { readonly text: string | null; readonly rawBytes: Uint8Array | null } {
+  const tripletBytes =
+    format === 'DATA_MATRIX' || format === 'AZTEC' || format === 'QR_CODE' ? decodeTripletBytes(payload) : null;
+  const rawBytes = tripletBytes ?? textEncoder.encode(payload);
+  try {
+    return { text: textDecoder.decode(rawBytes), rawBytes };
+  } catch {
+    return { text: null, rawBytes };
+  }
+}
+
+/** Convert the versioned FWS result envelope into the public scan result. */
+function resultFromWire(encoded: string): ScanResult | null {
+  if (encoded.length >= 12 && encoded[0] === 'R') {
+    const format = FORMAT_NAMES[Number(encoded.slice(2, 4))];
+    if (format === undefined || (encoded[1] !== '0' && encoded[1] !== '1')) return null;
+    if (encoded[1] === '0') return createScanResult(format, null, null, 0);
+    const payload = encoded.slice(12);
+    const decoded = decodePayload(payload, format);
+    const declaredBits = Number.parseInt(encoded.slice(4, 12), 10);
+    return createScanResult(
+      format,
+      decoded.text,
+      decoded.rawBytes,
+      Number.isFinite(declaredBits) && declaredBits > 0 ? declaredBits : (decoded.rawBytes?.byteLength ?? 0) * 8,
+    );
+  }
+
+  if (encoded.length < 3) return null;
+  const format = FORMAT_NAMES[Number(encoded.slice(1, 3))];
+  if (format === undefined) return null;
+  if (encoded[0] === 'L') return createScanResult(format, null, null, 0);
+  if (encoded[0] !== 'D') return null;
+  const decoded = decodePayload(encoded.slice(3), format);
+  return createScanResult(format, decoded.text, decoded.rawBytes, (decoded.rawBytes?.byteLength ?? 0) * 8);
+}
 interface ScannerScratch {
   readonly modules: Int32Array;
   readonly erasures: Int32Array;
@@ -152,43 +222,110 @@ function adaptedScanArguments(image: ImageLike): {
   };
 }
 
-function locateAndDecodeAdapted(
-  image: ImageLike,
-  roi: Roi | undefined,
-  artifact: ForgeScannerExports,
-): ScanResult | null {
-  resetScannerAllocator(artifact);
-  const { luma, scratch, width, height } = adaptedScanArguments(image);
-  scannerLog('scan: locating and decoding luma image', { width, height, roi });
-  const encoded = roi
-    ? artifact.scan_and_decode_roi(
-        width,
-        height,
-        luma,
-        Math.max(0, Math.round(roi.x)),
-        Math.max(0, Math.round(roi.y)),
-        Math.max(0, Math.round(roi.width)),
-        Math.max(0, Math.round(roi.height)),
-        scratch.modules,
-        scratch.erasures,
-        scratch.packed,
-        scratch.meta,
-      )
-    : artifact.scan_and_decode(width, height, luma, scratch.modules, scratch.erasures, scratch.packed, scratch.meta);
-  const result = resultFromWire(encoded);
+const FORMAT_IDS: Readonly<Record<ScanFormat, number>> = Object.freeze({
+  AZTEC: 0,
+  CODABAR: 1,
+  CODE_39: 2,
+  CODE_93: 3,
+  CODE_128: 4,
+  DATA_MATRIX: 5,
+  EAN_8: 6,
+  EAN_13: 7,
+  ITF: 8,
+  MAXICODE: 9,
+  PDF_417: 10,
+  QR_CODE: 11,
+  RSS_14: 12,
+  RSS_EXPANDED: 13,
+  UPC_A: 14,
+  UPC_E: 15,
+});
+
+function normalizeScanOptions(optionsOrRoi: ScanOptions | Roi | undefined): ScanOptions {
+  if (optionsOrRoi === undefined) return {};
+  if ('x' in optionsOrRoi && 'y' in optionsOrRoi && 'width' in optionsOrRoi && 'height' in optionsOrRoi) {
+    return { roi: optionsOrRoi };
+  }
+  return optionsOrRoi;
+}
+
+function possibleFormatIds(options: ScanOptions): readonly number[] {
+  if (options.formats === undefined || options.formats.length === 0) return [-1];
+  return [...new Set(options.formats.map((format) => FORMAT_IDS[format]))];
+}
+
+function logScanResult(result: ScanResult | null): ScanResult | null {
   if (result === null) {
     scannerLog('scan: no code located in this frame');
     return null;
   }
-  if (result.value === null) {
+  if (result.text === null) {
     scannerLog(`scan: ${result.format} located but its payload could NOT be decoded (undecodable sample)`);
   } else {
-    scannerLog(`scan: ${result.format} decoded successfully`, { value: result.value });
+    scannerLog(`scan: ${result.format} decoded successfully`, { value: result.text });
   }
   return result;
 }
 
-function locateAndDecodeAllAdapted(image: ImageLike, artifact: ForgeScannerExports): ScanResult[] {
+function locateAndDecodeAdapted(
+  image: ImageLike,
+  optionsOrRoi: ScanOptions | Roi | undefined,
+  artifact: ForgeScannerExports,
+): ScanResult | null {
+  resetScannerAllocator(artifact);
+  const { luma, scratch, width, height } = adaptedScanArguments(image);
+  const options = normalizeScanOptions(optionsOrRoi);
+  const roi = options.roi;
+  scannerLog('scan: locating and decoding luma image', { width, height, roi, formats: options.formats });
+  for (const possibleFormat of possibleFormatIds(options)) {
+    const encoded = roi
+      ? artifact.scan_and_decode_roi_with_options(
+          width,
+          height,
+          luma,
+          Math.max(0, Math.round(roi.x)),
+          Math.max(0, Math.round(roi.y)),
+          Math.max(0, Math.round(roi.width)),
+          Math.max(0, Math.round(roi.height)),
+          scratch.modules,
+          scratch.erasures,
+          scratch.packed,
+          scratch.meta,
+          possibleFormat,
+          options.tryHarder === false ? 0 : 1,
+          options.alsoInverted === false ? 0 : 1,
+          options.pureBarcode === true ? 1 : 0,
+        )
+      : artifact.scan_and_decode_with_options(
+          width,
+          height,
+          luma,
+          scratch.modules,
+          scratch.erasures,
+          scratch.packed,
+          scratch.meta,
+          possibleFormat,
+          options.tryHarder === false ? 0 : 1,
+          options.alsoInverted === false ? 0 : 1,
+          options.pureBarcode === true ? 1 : 0,
+        );
+    const result = resultFromWire(encoded);
+    if (result !== null) return logScanResult(result);
+  }
+  return logScanResult(null);
+}
+
+function filterResults(results: ScanResult[], options: ScanOptions | undefined): ScanResult[] {
+  if (options?.formats === undefined || options.formats.length === 0) return results;
+  const formats = new Set(options.formats);
+  return results.filter((result) => formats.has(result.format));
+}
+
+function locateAndDecodeAllAdapted(
+  image: ImageLike,
+  artifact: ForgeScannerExports,
+  options?: ScanOptions,
+): ScanResult[] {
   resetScannerAllocator(artifact);
   const { luma, scratch, width, height } = adaptedScanArguments(image);
   scannerLog('scan: locating and decoding all codes', { width, height });
@@ -207,7 +344,7 @@ function locateAndDecodeAllAdapted(image: ImageLike, artifact: ForgeScannerExpor
     if (result !== null) results.push(result);
   }
   scannerLog(`scan: decoded ${results.length} code(s)`);
-  return results;
+  return filterResults(results, options);
 }
 
 interface ScannerMemory {
@@ -331,47 +468,51 @@ function resultFromRaw(artifact: RawScannerExports, encoded: unknown): ScanResul
 
 function locateAndDecode(
   image: ImageLike,
-  roi: Roi | undefined,
+  optionsOrRoi: ScanOptions | Roi | undefined,
   artifact: RawScannerExports,
   cached: { memory?: ScannerMemory },
 ): ScanResult | null {
   const { luma, width, height } = scanArguments(image);
   const memory = prepareScanMemory(artifact, width, height, luma, cached);
-  scannerLog('scan: locating and decoding luma image', { width, height, roi });
-  const encoded = roi
-    ? artifact.scan_and_decode_bytes_roi(
-        width,
-        height,
-        memory.luma,
-        Math.max(0, Math.round(roi.x)),
-        Math.max(0, Math.round(roi.y)),
-        Math.max(0, Math.round(roi.width)),
-        Math.max(0, Math.round(roi.height)),
-        memory.modules,
-        memory.erasures,
-        memory.packed,
-        memory.meta,
-      )
-    : artifact.scan_and_decode_bytes(
-        width,
-        height,
-        memory.luma,
-        memory.modules,
-        memory.erasures,
-        memory.packed,
-        memory.meta,
-      );
-  const result = resultFromRaw(artifact, encoded);
-  if (result === null) {
-    scannerLog('scan: no code located in this frame');
-    return null;
+  const options = normalizeScanOptions(optionsOrRoi);
+  const roi = options.roi;
+  scannerLog('scan: locating and decoding luma image', { width, height, roi, formats: options.formats });
+  for (const possibleFormat of possibleFormatIds(options)) {
+    const encoded = roi
+      ? artifact.scan_and_decode_roi_with_options(
+          width,
+          height,
+          memory.luma,
+          Math.max(0, Math.round(roi.x)),
+          Math.max(0, Math.round(roi.y)),
+          Math.max(0, Math.round(roi.width)),
+          Math.max(0, Math.round(roi.height)),
+          memory.modules,
+          memory.erasures,
+          memory.packed,
+          memory.meta,
+          possibleFormat,
+          options.tryHarder === false ? 0 : 1,
+          options.alsoInverted === false ? 0 : 1,
+          options.pureBarcode === true ? 1 : 0,
+        )
+      : artifact.scan_and_decode_with_options(
+          width,
+          height,
+          memory.luma,
+          memory.modules,
+          memory.erasures,
+          memory.packed,
+          memory.meta,
+          possibleFormat,
+          options.tryHarder === false ? 0 : 1,
+          options.alsoInverted === false ? 0 : 1,
+          options.pureBarcode === true ? 1 : 0,
+        );
+    const result = resultFromRaw(artifact, encoded);
+    if (result !== null) return logScanResult(result);
   }
-  if (result.value === null) {
-    scannerLog(`scan: ${result.format} located but its payload could NOT be decoded (undecodable sample)`);
-  } else {
-    scannerLog(`scan: ${result.format} decoded successfully`, { value: result.value });
-  }
-  return result;
+  return logScanResult(null);
 }
 
 /**
@@ -383,6 +524,7 @@ function locateAndDecodeAll(
   image: ImageLike,
   artifact: RawScannerExports,
   cached: { memory?: ScannerMemory },
+  options?: ScanOptions,
 ): ScanResult[] {
   const { luma, width, height } = scanArguments(image);
   const memory = prepareScanMemory(artifact, width, height, luma, cached);
@@ -402,14 +544,14 @@ function locateAndDecodeAll(
     if (result !== null) results.push(result);
   }
   scannerLog(`scan: decoded ${results.length} code(s)`);
-  return results;
+  return filterResults(results, options);
 }
 
 export interface ScannerRawPointerSession {
   readonly memory: WebAssembly.Memory;
   readonly reset: () => void;
-  readonly scan: (image: ImageLike, roi?: Roi) => ScanResult | null;
-  readonly scanAll: (image: ImageLike) => ScanResult[];
+  readonly scan: (image: ImageLike, options?: ScanOptions | Roi) => ScanResult | null;
+  readonly scanAll: (image: ImageLike, options?: ScanOptions) => ScanResult[];
 }
 
 function createRawPointerSession(artifact: RawScannerExports): ScannerRawPointerSession {
@@ -420,8 +562,8 @@ function createRawPointerSession(artifact: RawScannerExports): ScannerRawPointer
       artifact.fws_reset();
       cached.memory = undefined;
     },
-    scan: (image, roi) => locateAndDecode(image, roi, artifact, cached),
-    scanAll: (image) => locateAndDecodeAll(image, artifact, cached),
+    scan: (image, options) => locateAndDecode(image, options, artifact, cached),
+    scanAll: (image, options) => locateAndDecodeAll(image, artifact, cached, options),
   };
 }
 
@@ -440,10 +582,10 @@ export async function createScannerRawPointerSessionAsync(): Promise<ScannerRawP
  * @param roi optional region of interest (image pixels) to restrict the scan to
  *   — cropped before binarisation, so surrounding clutter is ignored.
  * @returns the {@link ScanResult}, or `null` when no code is found. When a code
- *   is located but its payload can't be decoded, `result.value` is `null`.
+ *   is located but its payload can't be decoded, `result.text` is `null`.
  */
-export function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null {
-  return locateAndDecodeAdapted(image, roi, loadScannerSyncCached());
+export function scanImageData(image: ImageLike, options?: ScanOptions | Roi): ScanResult | null {
+  return locateAndDecodeAdapted(image, options, loadScannerSyncCached());
 }
 
 /**
@@ -454,8 +596,8 @@ export function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null {
  * @param roi optional region of interest — see {@link scanImageData}.
  * @returns the {@link ScanResult}, or `null` when no code is found.
  */
-export async function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null> {
-  return locateAndDecodeAdapted(image, roi, await loadScannerCached());
+export async function scanImageDataAsync(image: ImageLike, options?: ScanOptions | Roi): Promise<ScanResult | null> {
+  return locateAndDecodeAdapted(image, options, await loadScannerCached());
 }
 
 /**
@@ -465,8 +607,8 @@ export async function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<S
  * @returns the decoded {@link ScanResult}s in discovery order, deduplicated;
  *   empty when nothing is decoded.
  */
-export function scanImageDataAll(image: ImageLike): ScanResult[] {
-  return locateAndDecodeAllAdapted(image, loadScannerSyncCached());
+export function scanImageDataAll(image: ImageLike, options?: ScanOptions): ScanResult[] {
+  return locateAndDecodeAllAdapted(image, loadScannerSyncCached(), options);
 }
 
 /**
@@ -476,6 +618,6 @@ export function scanImageDataAll(image: ImageLike): ScanResult[] {
  *
  * @returns the decoded {@link ScanResult}s in discovery order, deduplicated.
  */
-export async function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]> {
-  return locateAndDecodeAllAdapted(image, await loadScannerCached());
+export async function scanImageDataAllAsync(image: ImageLike, options?: ScanOptions): Promise<ScanResult[]> {
+  return locateAndDecodeAllAdapted(image, await loadScannerCached(), options);
 }

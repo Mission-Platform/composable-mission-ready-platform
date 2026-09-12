@@ -52,27 +52,33 @@ Neutral passes operate before a framework is involved. They can discover compone
 compiler directives, infer stable keys, prune neutral dead branches, and cache reusable analysis. The result is a
 `SemanticModule`: an explicit representation of the module’s component or composable behavior and its neutral facts.
 
-The semantic IR is the contract between the generic compiler and a target plugin. The frontend also keeps the original
-parsed TypeScript `SourceFile` as a non-enumerable runtime detail on the semantic module. Target emitters may consume
-that shared parsed tree for source-backed leaves, but they must never call `parseTsx` on the module source again. This
-keeps the cache serializable while ensuring the source is parsed only once.
+The semantic IR is the contract between the generic compiler and a target plugin. The frontend parses neutral source
+using Oxc into generic AST structures and source-backed expressions/spans without producing or transforming TypeScript
+AST nodes. Target lowerers and emitters consume `SemanticModule` records, diagnostics, and source edits without direct
+coupling to parser AST nodes, keeping the cache serializable while ensuring the source is parsed only once.
 
 ### Target lowering and optimization
 
 The caller supplies a `FrameworkOutputPlugin` instance. The driver calls its `lower` function with the semantic module
-and a `TargetContext`, producing `TargetIntentions`. Lowering maps neutral concepts to target concepts: for example,
-neutral hooks and slots become the target’s state/lifecycle and slot representation, while neutral elements become the
-target’s element or component model.
+and a `TargetContext`, producing `TargetIntentions` with a required `lowered` plan. Lowering maps neutral concepts to
+target concepts: for example, neutral hooks and slots become the target’s state/lifecycle and slot representation, while
+neutral elements become the target’s element or component model.
 
-The plugin’s `optimize` function then performs target-specific simplification. It receives the shared neutral options
-alongside an extension point for target options. This keeps framework rules out of the neutral optimizer while allowing a
-target to optimize its own generated representation before source generation.
+The plugin’s `optimize` function then performs target-specific simplification on the lowered plan. It receives the shared
+neutral options alongside an extension point for target options. This keeps framework rules out of the neutral optimizer
+while allowing a target to optimize its own generated representation before source generation.
+
+The compiler strictly requires lowering before generation: `service.ts` and the compiler pipeline assert that
+`intentions.lowered` exists and that its framework discriminator matches the target ID via
+`assertTargetIntentionsLowered`. Direct generation without lowering is rejected; target plugins no longer silently lower
+on demand.
 
 ### Source generation and native compilation
 
-The plugin’s `generate` function returns a `GeneratedModule`. It can include the primary source, auxiliary modules, and
-target diagnostics. The generated source is deliberately an intermediate artifact owned by the target package: React,
-Vue, Solid, Svelte, and Web Components can each choose the source shape their native toolchain expects.
+The plugin’s `generate` function receives the lowered and optimized `TargetIntentions` and returns a `GeneratedModule`.
+It can include the primary source, auxiliary modules, and target diagnostics. The generated source is deliberately an
+intermediate artifact owned by the target package: React, Vue, Solid, Svelte, and Web Components can each choose the
+source shape their native toolchain expects.
 
 The final stage is not another Forge emitter. The plugin’s `build.vite` or `build.tsdown` adapter supplies the native
 framework plugins and build settings for the generated tree. Native Vite/Rolldown compilation, declaration generation,
@@ -116,9 +122,14 @@ framework registry and is not required for the current Vite/tsdown workflow.
 
 The central contracts live in `packages/compiler/plugins/forge-plugin-api/src/framework.ts`:
 
-- `FrameworkOutputPlugin` identifies a target and owns `lower`, `optimize`, `generate`, and `build`.
+- `FrameworkOutputPlugin` identifies a target via `id: FrameworkId` and owns `lower`, `optimize`, `generate`, and `build`.
+- `FrameworkId` (`JsxFramework | (string & {})`) provides an open framework identifier alias for target plugins, allowing
+  any custom target to define a unique string ID while maintaining IDE auto-completion for known built-in targets.
+- `JsxFramework` represents the closed union of built-in frameworks (`react`, `vue`, `solid`, `svelte`, `web-components`),
+  used where built-in conveniences and directives (`use react`, `use vue`, etc.) are explicitly intended.
 - `TargetContext` carries generic build context such as module kind, component name, and discovered component folders.
-- `TargetIntentions` wraps the semantic module after target lowering while retaining diagnostics.
+- `TargetLoweredModule` represents the target-owned lowered plan, discriminated on `framework: FrameworkId`.
+- `TargetIntentions<TLowered>` wraps the semantic module with a required `lowered: TLowered` plan, retaining diagnostics.
 - `GeneratedModule` describes generated source, its output language, auxiliary modules, and diagnostics.
 - `FrameworkBuildAdapters` provides independently typed Vite and tsdown adapters.
 - `FrameworkSourceMetadata`, runtime externals, and display-name metadata let generic orchestration derive output details
@@ -129,24 +140,29 @@ Built-in targets are constructed by their own packages, for example `forgeReactF
 targets it publishes:
 
 ```ts
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { tsdownForgeComponentPlugins } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
-export default defineTsdownForgeComponents({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  frameworks: [
-    forgeVueFramework(),
-    forgeReactFramework(),
-    forgeSvelteFramework(),
-    forgeSolidFramework(),
-    forgeWebComponentsFramework(),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: 'MissionPlatformComponents',
+  entry: 'src/index.ts',
+  plugins: tsdownForgeComponentPlugins({
+    rootDir: import.meta.dirname,
+    frameworks: [
+      forgeVueFramework(),
+      forgeReactFramework(),
+      forgeSvelteFramework(),
+      forgeSolidFramework(),
+      forgeWebComponentsFramework(),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+    name: 'MissionPlatformComponents',
+  }),
 });
 ```
 
@@ -194,7 +210,8 @@ the driver owns generic orchestration; and each target package owns the framewor
 ## Component builds
 
 Component packages author neutral modules against `@mission-platform/forge-jsx`, usually through a neutral component barrel.
-`defineTsdownForgeComponents` creates one target build for each supplied plugin. For each target it:
+`tsdownForgeComponentPlugins` returns native tsdown plugins for each supplied target. Consumers add those plugins to one
+`defineTsdownLibrary` call; generation remains lazy until tsdown invokes its lifecycle hooks. For each target it:
 
 1. parses, normalizes, and analyzes the neutral component modules;
 2. runs neutral passes and creates semantic modules;
@@ -211,7 +228,8 @@ concerns into the generic compiler.
 ## Hook and composable builds
 
 Hooks are neutral composables rather than UI components, but use the same explicit target ownership boundary. A hook
-consumer passes one `FrameworkOutputPlugin` to `defineTsdownForgeHooks`. The generic driver parses the neutral entry,
+consumer passes one `FrameworkOutputPlugin` to `tsdownForgeHookPlugins` and adds the returned plugin to
+`defineTsdownLibrary`. The generic driver parses the neutral entry,
 preserves framework-agnostic modules where possible, and sends target-dependent modules through the plugin’s strict
 lower/optimize/generate path.
 
@@ -240,33 +258,38 @@ Jekyll include, or a Webflow code component — and each of those can be paired 
    configuration time, including a target's `supportedFrameworks` restriction.
 3. **A generic driver and build helpers.** `generateCmsArtifacts` discovers the neutral barrel, obtains each component's
    IR through `analyzeForgeModule`, analyses the content model, calls the target's emitters, and writes every returned
-   `CmsArtifact`. `defineTsdownForgeCms(All)` runs it into a per-target cache and emits
+   `CmsArtifact`. `tsdownForgeCmsPlugins` injects it into one caller-owned tsdown config and emits
    `dist/cms/<cms>/<framework>/**`, mirroring `asset: true` artifacts into `dist/cms/<cms>/`.
 
 The driver never maps a string id onto a target — consumers construct and pass instances, exactly as they do for
 framework plugins:
 
 ```ts
-import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { tsdownForgeCmsPlugins } from '@mission-platform/forge-cms-plugin-api';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
-export default defineTsdownForgeCmsAll({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  targets: [
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeReactFramework(),
-      storyblokRuntime: '@storyblok/react',
-    }),
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeVueFramework(),
-      storyblokRuntime: '@storyblok/vue',
-    }),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  entry: 'src/index.ts',
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeReactFramework(),
+        storyblokRuntime: '@storyblok/react',
+      }),
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeVueFramework(),
+        storyblokRuntime: '@storyblok/vue',
+      }),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  }),
 });
 ```
 
@@ -365,10 +388,38 @@ Adding a content platform follows the same additive shape, one layer up:
 6. add a spec over the shared fixtures exported from `@mission-platform/forge-cms-plugin-api/fixtures`, so the new
    target is exercised against exactly the same inputs as every other one;
 7. add the package as a direct dependency of each consumer that publishes the target and pass a fresh instance to
-   `defineTsdownForgeCms`.
+   `tsdownForgeCmsPlugins`.
 
 Do not add prop-classification logic to the target: a fix to union, JSDoc, default, or slot handling belongs in the
 shared content model so every platform benefits at once.
+
+## Migration guidance
+
+### Migration from legacy TypeScript AST exports
+
+The legacy TypeScript AST compatibility layer in `packages/tooling/vite/forge/src/compiler/ast.ts` has been removed.
+Oxc is now the sole compiler AST path across the Forge driver:
+
+- Legacy AST factories, visitors, transformers, and `@ts-nocheck` compatibility shims are no longer provided.
+- If your code consumed helpers from `compiler/ast.ts`, migrate to the focused sibling modules:
+  - `compiler/components.js`: Component boundary and declaration facts.
+  - `compiler/constants.js`: Neutral module and runtime marker constants.
+  - `compiler/directives.js`: Directive inspection and framework resolution.
+  - `compiler/facts.js`: AST facts, spans, and inspection utilities.
+  - `compiler/imports.js`: Import declaration and specifier inspection.
+
+### Migration for direct target generation callers
+
+All built-in plugins (`forge-vue`, `forge-web-components`, `forge-react`, `forge-solid`, `forge-svelte`) have removed
+direct-generation fallback lowering:
+
+- Calling `plugin.generate(intentions)` with unlowered intentions (or intentions lacking `lowered`) now throws a
+  `TypeError`.
+- Direct callers and test suites must invoke `plugin.lower(module, context)` and `plugin.optimize(loweredIntentions, options)`
+  before calling `generate()`, or execute compilation through the standard compiler service:
+  `createForgeCompilerService().compile(request, plugin)`.
+- Custom plugin authors must ensure that `lower()` sets a non-empty `lowered` plan with a matching `framework`
+  discriminator on the returned `TargetIntentions`.
 
 For the build-system overview and platform-wide dependency direction, see [Build System](../../../../docs/build-system.md) and
 [Mission Platform Architecture](../../../../docs/architecture.md).

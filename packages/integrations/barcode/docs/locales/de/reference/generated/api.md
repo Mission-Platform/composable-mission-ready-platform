@@ -9,52 +9,6 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 
 Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/barcode`.
 
-## `src/decoder/index`
-
-### decodeBarcode
-
-**Art:** Funktion
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-Dekodieren Sie eine Reihe von Modulbits (`1` = Balken, `0` = Leerzeichen) des angegebenen `symbology`
-zurück in seine Nutzlast, wobei zuerst das native FWS-Diagramm synchron geladen wird
-verwenden.
-
-Gibt `null` zurück, wenn die Modulausführung kein gültiges Symbol von `symbology` ist (fehlerhaft).
-Rahmen, ein nicht erkanntes Muster oder eine fehlerhafte Prüfziffer). Die genesen
-Nutzlast ist die kanonische Form der Symbologie – z. neu berechnete Prüfziffern sind
-enthalten, Code 39/93-Text wird in Großbuchstaben geschrieben und UPC-E wird darin zurückgegeben
-Formular `number system + digits + check`.
-
-#### Parameter
-
-| Name       | Geben Sie         | ein Beschreibung |
-| ---------- | ----------------- | ---------------- |
-| Symbologie | BarcodeSymbologie |                  |
-| Module     | ArrayLike<number> |                  |
-
-### decodeBarcodeAsync
-
-**Art:** Funktion
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-Dekodieren Sie eine Reihe von Modulbits zurück in ihre Nutzlast und laden Sie den nativen FWS
-Bei der ersten Verwendung asynchron grafisch darstellen. Initialisierungs- und Konvertierungsfehler
-werden als Promise-Ablehnungen zurückgegeben. Siehe {@link decodeBarcode}.
-
-#### Parameter
-
-| Name       | Geben Sie         | ein Beschreibung |
-| ---------- | ----------------- | ---------------- |
-| Symbologie | BarcodeSymbologie |                  |
-| Module     | ArrayLike<number> |                  |
-
 ## `src/encoder/index`
 
 ### Barcode
@@ -132,65 +86,25 @@ Codieren Sie `data` asynchron mithilfe des paketlokalen FWS-Diagramms.
 
 ## `src/fws/index`
 
-### decodeEan13Fws
-
-**Art:** Funktion
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-Dekodiert die Bits des EAN-13-Moduls und validiert Parität und Prüfziffer.
-
-#### Parameter
+### Parameter
 
 | Name | Geben Sie                         | ein Beschreibung |
 | ---- | --------------------------------- | ---------------- |
 | Wert | Zeichenfolge \| ArrayLike<number> |                  |
 
-### decodeEan13FwsAsync
-
-**Art:** Funktion
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Dekodiert die EAN-13-Modulbits asynchron über FWS.
-
-#### Parameter
+### Parameter
 
 | Name | Geben Sie                         | ein Beschreibung |
 | ---- | --------------------------------- | ---------------- |
 | Wert | Zeichenfolge \| ArrayLike<number> |                  |
 
-### decodeEan8Fws
-
-**Art:** Funktion
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-Dekodiert die Bits des EAN-8-Moduls und gibt die Nutzlast mit ihrer Prüfziffer zurück.
-
-#### Parameter
+### Parameter
 
 | Name | Geben Sie                         | ein Beschreibung |
 | ---- | --------------------------------- | ---------------- |
 | Wert | Zeichenfolge \| ArrayLike<number> |                  |
 
-### decodeEan8FwsAsync
-
-**Art:** Funktion
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-Dekodiert die EAN-8-Modulbits asynchron über FWS.
-
-#### Parameter
+### Parameter
 
 | Name | Geben Sie                         | ein Beschreibung |
 | ---- | --------------------------------- | ---------------- |

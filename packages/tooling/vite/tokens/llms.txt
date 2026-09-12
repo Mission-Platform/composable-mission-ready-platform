@@ -117,15 +117,15 @@ import { tokensPlugin } from '@mission-platform/vite-plugin-tokens';
 import { defineLibraryConfig } from '@mission-platform/vite-config';
 
 export default defineLibraryConfig({
-  rootDir: __dirname,
+  rootDir: import.meta.dirname,
   entry: 'src/tokens.ts',
   name: 'MissionPlatformTokens',
   preserveModules: false,
   overrides: {
     plugins: [
       tokensPlugin({
-        tokensDir: `${__dirname}/tokens`,
-        outDir: `${__dirname}/src/generated`,
+        tokensDir: `${import.meta.dirname}/tokens`,
+        outDir: `${import.meta.dirname}/src/generated`,
       }),
     ],
   },

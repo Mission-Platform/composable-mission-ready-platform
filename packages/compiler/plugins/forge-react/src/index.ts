@@ -1,9 +1,13 @@
-import { defineForgeOutputPlugin } from "@mission-platform/forge-plugin-api";
+import {
+  assertTargetIntentionsLowered,
+  defineForgeOutputPlugin,
+} from "@mission-platform/forge-plugin-api";
 
 import { emitReactModule } from "./emitters/module.js";
-import { isReactLowered, lowerReactModule, planReactModule } from "./lower.js";
+import { lowerReactModule } from "./lower.js";
 import { optimizeReactModule } from "./optimize.js";
 
+import type { ReactLoweredModule } from "./lower.js";
 import type {
   FrameworkBuildAdapters,
   FrameworkOutputPlugin,
@@ -68,16 +72,11 @@ export function forgeReactFramework(): FrameworkOutputPlugin {
       intentions: TargetIntentions,
       context: TargetContext,
     ): GeneratedModule {
-      // A direct generator call may skip the lowering phase, so the plan is
-      // rebuilt on the fly when the intentions do not carry one.
-      const lowered = intentions.lowered;
-      const plan = isReactLowered(lowered)
-        ? lowered.plan
-        : planReactModule(intentions.module, context.componentName);
+      assertTargetIntentionsLowered<ReactLoweredModule>(intentions, "react");
       const code = emitReactModule(
         intentions.module,
         context.componentName,
-        plan,
+        intentions.lowered.plan,
       );
       return { code, lang: "tsx" as const };
     },

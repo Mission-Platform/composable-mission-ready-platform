@@ -9,55 +9,6 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/qr-code`.
 
-## `src/decoder/index`
-
-### decoderenQr
-
-**Soort:** functie
-
-```typescript
-function decodeQr(matrix: QrMatrix): string | null;
-```
-
-Decodeer een {@link QrMatrix} terug naar de originele tekst en laad het pakket-
-lokale FWS-decoder synchroon bij eerste gebruik.
-
-De decoder herstelt de formaatinformatie, ontmaskert het gegevensgebied, leest de
-codewoorden, en Reed-Solomon corrigeert tot aan de foutcapaciteit van het niveau, dus het
-tolereert een beschadigde matrix. Alleen het bytemodussegment geproduceerd door `encodeQr`
-wordt ondersteund.
-
-#### Parameters
-
-| Naam   | Typ      | Beschrijving |
-| ------ | -------- | ------------ |
-| matrix | QrMatrix |              |
-
-#### Contract
-
-- **@returns:** de gedecodeerde tekst, of `null` wanneer de matrix niet kan worden gedecodeerd.
-
-### decodeQrAsync
-
-**Soort:** functie
-
-```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
-```
-
-Decodeer een {@link QrMatrix} terug naar de originele tekst en laad het pakket-
-lokale FWS-decoder asynchroon bij eerste gebruik.
-
-#### Parameters
-
-| Naam   | Typ      | Beschrijving |
-| ------ | -------- | ------------ |
-| matrix | QrMatrix |              |
-
-#### Contract
-
-- **@returns:** de gedecodeerde tekst, of `null` wanneer de matrix niet kan worden gedecodeerd.
-
 ## `src/encoder/index`
 
 ### coderenMicroQr

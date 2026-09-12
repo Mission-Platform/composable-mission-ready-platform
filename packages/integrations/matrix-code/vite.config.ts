@@ -1,25 +1,20 @@
-import { createRequire } from 'node:module';
 import path from 'node:path';
 
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineLibraryConfig } from '@mission-platform/vite-config';
-import {
-  generateFrameworkSources,
-  jsxComponentsCssImportPlugin,
-  jsxComponentsDtsPlugin,
-  type JsxFramework,
-  reactJsxPlugin,
-  solidJsxPlugin,
-  sveltePlugin,
-} from '@mission-platform/vite-plugin-forge';
+import { defineJsxLibraryConfig, type JsxFramework } from '@mission-platform/vite-plugin-forge';
 import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import { defineConfig, type Plugin, type UserConfig } from 'vite';
+import { defineConfig, type UserConfig } from 'vite';
 
 /**
  * `@mission-platform/matrix-code` ships **three** distinct build artifacts from
  * a single Vite config, selected by `--mode`:
  *
- * - **default** — the dependency-free package-local FWS **encoder + decoder**
+ * - **default** — the dependency-free package-local FWS **encoder**
  *   (`src/index.ts`), emitted as the self-contained `dist/index.js`. This is
  *   the package's `.` export.
  * - **`vue` / `react`** — the write-once `ForgeMatrixCode` **component** compiled
@@ -33,22 +28,12 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  *   `@mission-platform/typography` package.
  */
 
-const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
-const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
+const componentsModule = path.resolve(import.meta.dirname, 'src/components/index.ts');
 
-/**
- * The `vue-tsc` CLI used to emit the Vue build's declarations. It ships as a
- * dependency of `@mission-platform/forge-jsx` (a transitive dependency here), so it is
- * resolved from the jsx package directory rather than assumed hoisted.
- */
-const vueTscBin = createRequire(path.join(__dirname, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
-  paths: [path.join(__dirname, 'node_modules/@mission-platform/forge-jsx')],
-});
-
-/** The self-contained encoder/decoder bundle (`dist/index.js`, the `.` export). */
+/** The self-contained encoder bundle (`dist/index.js`, the `.` export). */
 function defineEncoderConfig(): UserConfig {
   return defineLibraryConfig({
-    rootDir: __dirname,
+    rootDir: import.meta.dirname,
     entry: {
       index: 'src/index.ts',
     },
@@ -57,43 +42,23 @@ function defineEncoderConfig(): UserConfig {
     // separate module graph.
     preserveModules: false,
     overrides: {
-      plugins: [forgeWebScriptPlugin({ root: __dirname, requireExports: false, selfHostedVmMode: 'aot' })],
+      plugins: [forgeWebScriptPlugin({ root: import.meta.dirname, requireExports: false, selfHostedVmMode: 'aot' })],
     },
   });
 }
 
 /** The per-framework `ForgeMatrixCode` component build (`dist/react`, `dist/vue`, `dist/solid`, `dist/svelte`, `dist/web-components`). */
 function defineFrameworkConfig(framework: JsxFramework): UserConfig {
-  const cacheName = `matrix-code-${framework}`;
-  const generatedDir = path.join(cacheRoot, cacheName);
-  const entry = generateFrameworkSources({
-    framework,
-    componentsModule,
-    outDir: generatedDir,
-  });
-
-  const stagePlugins: Plugin[] =
-    framework === 'vue'
-      ? [vueJsx()]
-      : framework === 'react'
-        ? [reactJsxPlugin()]
-        : framework === 'solid'
-          ? solidJsxPlugin()
-          : framework === 'svelte'
-            ? sveltePlugin()
-            : [];
-
-  const frameworkSuffix =
+  const plugin =
     framework === 'react'
-      ? 'React'
+      ? forgeReactFramework()
       : framework === 'vue'
-        ? 'Vue'
+        ? forgeVueFramework()
         : framework === 'solid'
-          ? 'Solid'
+          ? forgeSolidFramework()
           : framework === 'svelte'
-            ? 'Svelte'
-            : 'WebComponents';
-
+            ? forgeSvelteFramework()
+            : forgeWebComponentsFramework();
   const frameworkExternals =
     framework === 'react'
       ? ['react', 'react-dom']
@@ -105,40 +70,20 @@ function defineFrameworkConfig(framework: JsxFramework): UserConfig {
             ? ['svelte']
             : framework === 'web-components'
               ? ['lit']
-              : [];
+              : ['lit'];
 
-  return defineLibraryConfig({
-    rootDir: __dirname,
-    name: `MissionPlatformMatrixCode${frameworkSuffix}`,
-    entry,
-    // Each component keeps its own JS chunk + CSS asset for tree shaking.
-    preserveModules: true,
-    preserveModulesRoot: path.join('node_modules/.cache', cacheName),
+  return defineJsxLibraryConfig({
+    rootDir: import.meta.dirname,
+    plugin,
+    name: 'MissionPlatformMatrixCode',
+    componentsModule,
     // The encoder is consumed through the package's own `.` entry, kept external
     // so the shipped component references it rather than re-inlining the wasm.
     external: [...frameworkExternals, '@mission-platform/matrix-code'],
     overrides: {
       build: {
-        // Per-framework subtree, so the identically-named chunks never collide.
-        outDir: `dist/${framework}`,
-        // Emit one CSS asset per component module rather than one combined file.
         cssCodeSplit: true,
       },
-      plugins: [
-        ...stagePlugins,
-        // Re-attach each component's extracted CSS to its JS chunk (Vite lib mode
-        // emits the CSS asset but does not import it), so per-component styles load.
-        jsxComponentsCssImportPlugin(),
-        // Emit each framework's own genuine declarations from its generated tree
-        // (React via the TS compiler API, Vue via `vue-tsc`).
-        jsxComponentsDtsPlugin({
-          framework,
-          generatedDir,
-          outDir: path.resolve(__dirname, `dist/${framework}`),
-          vueTscBin,
-          componentsModule,
-        }),
-      ],
     },
   });
 }

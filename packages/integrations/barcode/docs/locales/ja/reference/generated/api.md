@@ -9,52 +9,6 @@
 
 `@mission-platform/barcode` のパブリック ソース宣言から生成されます。
 
-## `src/decoder/index`
-
-### デコードバーコード
-
-**種類:** 関数
-
-```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
-```
-
-指定された `symbology` の一連のモジュール ビット (`1` = バー、`0` = スペース) をデコードします。
-ペイロードに戻り、最初にネイティブ FWS グラフを同期的にロードします。
-使用します。
-
-モジュール実行が `symbology` の有効なシンボルではない場合、`null` を返します (不正です)
-フレーム、認識されないパターン、またはチェック ディジットの失敗など）。回収されたのは
-ペイロードは、シンボルの標準形式です。再計算されたチェックデジットは、
-コード 39/93 のテキストは大文字で、UPC-E が返されます。
-`number system + digits + check` フォーム。
-
-#### パラメータ
-
-| 名前       | タイプ             | 説明 |
-| ---------- | ------------------ | ---- |
-| 記号論     | バーコードシンボル |      |
-| モジュール | ArrayLike<number>  |      |
-
-### デコードバーコード非同期
-
-**種類:** 関数
-
-```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
-```
-
-一連のモジュール ビットをデコードしてペイロードに戻し、ネイティブ FWS をロードします
-最初の使用時に非同期でグラフを作成します。初期化と変換の失敗
-Promise の拒否として返されます。 {@link decodeBarcode} を参照してください。
-
-#### パラメータ
-
-| 名前       | タイプ             | 説明 |
-| ---------- | ------------------ | ---- |
-| 記号論     | バーコードシンボル |      |
-| モジュール | ArrayLike<number>  |      |
-
 ## `src/encoder/index`
 
 ### バーコード
@@ -132,65 +86,25 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 
 ## `src/fws/index`
 
-### デコードEan13Fws
-
-**種類:** 関数
-
-```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string;
-```
-
-EAN-13 モジュール ビットをデコードし、パリティとチェック デジットを検証します。
-
-#### パラメータ
+### パラメータ
 
 | 名前 | タイプ                      | 説明 |
 | ---- | --------------------------- | ---- |
 | 値   | 文字列 \| ArrayLike<number> |      |
 
-### decodeEan13FwsAsync
-
-**種類:** 関数
-
-```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-FWS を通じて EAN-13 モジュール ビットを非同期的にデコードします。
-
-#### パラメータ
+### パラメータ
 
 | 名前 | タイプ                      | 説明 |
 | ---- | --------------------------- | ---- |
 | 値   | 文字列 \| ArrayLike<number> |      |
 
-### デコードEan8Fws
-
-**種類:** 関数
-
-```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string;
-```
-
-EAN-8 モジュール ビットをデコードし、チェック ディジットを含むペイロードを返します。
-
-#### パラメータ
+### パラメータ
 
 | 名前 | タイプ                      | 説明 |
 | ---- | --------------------------- | ---- |
 | 値   | 文字列 \| ArrayLike<number> |      |
 
-### decodeEan8FwsAsync
-
-**種類:** 関数
-
-```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
-```
-
-FWS を通じて EAN-8 モジュール ビットを非同期的にデコードします。
-
-#### パラメータ
+### パラメータ
 
 | 名前 | タイプ                      | 説明 |
 | ---- | --------------------------- | ---- |

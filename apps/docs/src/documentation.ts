@@ -209,18 +209,32 @@ export function documentPath(slug: string, locale: DocumentationLocale = DEFAULT
 // repository `DOCUMENTATION.md`. Any document not listed here is appended under
 // an "Additional" group so nothing is silently hidden.
 const CURATED_GROUPS: NavGroup[] = [
-  { key: 'gettingStarted', label: 'Getting Started', items: ['overview', 'development-setup', 'workspace-structure'] },
+  {
+    key: 'gettingStarted',
+    label: 'Getting Started',
+    items: ['overview', 'development-setup', 'application-development', 'workspace-structure'],
+  },
   { key: 'architecture', label: 'Architecture', items: ['architecture', 'forge-compiler', 'atomic-component-design'] },
   {
     key: 'authoring',
     label: 'Authoring',
-    items: ['package-development', 'composable-authoring', 'store-authoring', 'util-authoring'],
+    items: [
+      'package-development',
+      'composable-authoring',
+      'store-authoring',
+      'util-authoring',
+      'visual-component-overrides',
+    ],
   },
   {
     key: 'buildTooling',
     label: 'Build & Tooling',
     items: [
       'build-system',
+      'guides/development',
+      'configs/index',
+      'configs/scripts-config',
+      'configs/workers-config',
       'packages/tooling/configs/eslint-config',
       'packages/tooling/configs/i18n-config',
       'packages/tooling/configs/postcss-config',
@@ -237,7 +251,7 @@ const CURATED_GROUPS: NavGroup[] = [
   {
     key: 'reference',
     label: 'Reference',
-    items: ['api-reference', 'external-consumer-setup', 'migration-guides/vue2-to-vue3'],
+    items: ['api-reference', 'external-consumer-setup', 'migration-guides/vue2-to-vue3', 'web-lua-compatibility'],
   },
 ];
 

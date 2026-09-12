@@ -4,10 +4,25 @@ import path from 'node:path';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { describe, expect, it } from 'vitest';
 
-import { defineTsdownForgeComponents, defineTsdownForgeEmailComponents, defineTsdownForgeHooksAll } from './tsdown';
+import {
+  defineTsdownForgeComponentsAll,
+  defineTsdownForgeEmailComponents,
+  defineTsdownForgeHooksAll,
+  tsdownForgeComponentPlugins,
+} from './tsdown';
 
 import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
-import type { UserConfig } from 'tsdown';
+import type { TsdownPlugin, UserConfig } from 'tsdown';
+
+type ForgeTsdownPlugin = TsdownPlugin & {
+  tsdownConfig?: (config: UserConfig) => void | Promise<void>;
+};
+
+async function materializeConfig(plugin: TsdownPlugin): Promise<UserConfig> {
+  const config = {} as UserConfig;
+  await (plugin as ForgeTsdownPlugin).tsdownConfig?.(config);
+  return config;
+}
 
 function fixtureFramework(id: string): FrameworkOutputPlugin {
   return {
@@ -21,7 +36,12 @@ function fixtureFramework(id: string): FrameworkOutputPlugin {
       componentExport: 'named',
     },
     lower(ir, context) {
-      return { framework: context.framework, module: ir, context };
+      return {
+        framework: context.framework,
+        module: ir,
+        context,
+        lowered: { framework: context.framework, appliedOptimizations: [] },
+      };
     },
     optimize(intentions) {
       return intentions;
@@ -40,7 +60,7 @@ describe('Forge tsdown component helpers', () => {
   it('keeps generic framework builds separate from the email build', () => {
     const componentsRootDir = path.resolve(import.meta.dirname, '../../../../ui/components');
     const componentsModule = path.resolve(componentsRootDir, 'src/components/index.ts');
-    const genericConfigs = defineTsdownForgeComponents({
+    const genericConfigs = tsdownForgeComponentPlugins({
       rootDir: componentsRootDir,
       frameworks: ['vue', 'react', 'astro', 'solid', 'svelte', 'web-components'].map((id) => fixtureFramework(id)),
       componentsModule,
@@ -60,10 +80,10 @@ describe('Forge tsdown component helpers', () => {
     expect(emailConfig.entry).toEqual({ index: componentsModule });
   }, 30_000);
 
-  it('accepts framework output plugins as independent builds', () => {
+  it('accepts framework output plugins as independent builds', async () => {
     const rootDir = path.resolve('/tmp', 'mission-platform-plugin-components');
     const componentsRootDir = path.resolve(import.meta.dirname, '../../../../ui/components');
-    const configs = defineTsdownForgeComponents({
+    const configs = tsdownForgeComponentPlugins({
       rootDir,
       componentsModule: path.resolve(componentsRootDir, 'src/components/index.ts'),
       frameworks: [fixtureFramework('vue'), fixtureFramework('react')],
@@ -71,14 +91,37 @@ describe('Forge tsdown component helpers', () => {
     });
 
     expect(Array.isArray(configs)).toBe(true);
-    expect((configs as UserConfig[]).map((config) => config.outDir)).toEqual([
-      path.resolve(rootDir, 'dist/vue'),
-      path.resolve(rootDir, 'dist/react'),
+    const materialized = await Promise.all(configs.map((plugin) => materializeConfig(plugin)));
+    expect(materialized.map((config) => config.outDir)).toEqual([
+      expect.stringMatching(`${path.resolve(rootDir, 'dist')}/.forge-attempt-vue-vue-`),
+      expect.stringMatching(`${path.resolve(rootDir, 'dist')}/.forge-attempt-react-react-`),
     ]);
-    expect(JSON.stringify(configs)).not.toContain('baseUrl');
+    expect(JSON.stringify(materialized)).not.toContain('baseUrl');
   }, 30_000);
 
-  it('discovers the package public entry by default while preserving component-only fallback', () => {
+  it('skips component configs for the explicit neutral-only target', () => {
+    const originalTarget = process.env.FORGE_FRAMEWORK_TARGET;
+    process.env.FORGE_FRAMEWORK_TARGET = 'none';
+
+    try {
+      const options = {
+        rootDir: path.resolve('/tmp', 'mission-platform-neutral-only'),
+        frameworks: [fixtureFramework('vue')],
+        rejectFixturePlaceholder: false,
+      };
+
+      expect(tsdownForgeComponentPlugins(options)).toEqual([]);
+      expect(defineTsdownForgeComponentsAll(options)).toEqual([]);
+    } finally {
+      if (originalTarget === undefined) {
+        delete process.env.FORGE_FRAMEWORK_TARGET;
+      } else {
+        process.env.FORGE_FRAMEWORK_TARGET = originalTarget;
+      }
+    }
+  });
+
+  it('discovers the package public entry lazily while preserving component-only fallback', async () => {
     const rootDir = fs.mkdtempSync(path.join('/tmp', 'mission-platform-public-entry-'));
     const componentsDir = path.join(rootDir, 'src', 'components');
     const helperDir = path.join(rootDir, 'src', 'helpers');
@@ -95,13 +138,20 @@ describe('Forge tsdown component helpers', () => {
       );
       fs.writeFileSync(path.join(helperDir, 'store.ts'), 'export const publicStore = true;\n');
 
-      const [config] = defineTsdownForgeComponents({
+      const [plugin] = tsdownForgeComponentPlugins({
         rootDir,
         frameworks: [fixtureFramework('vue')],
         componentsModule: componentModule,
         rejectFixturePlaceholder: false,
       });
-      const generatedEntry = fs.readFileSync(config.entry as string, 'utf8');
+      const config = await materializeConfig(plugin);
+      expect(fs.existsSync(config.entry as string)).toBe(false);
+      const forgePlugin = (config.plugins as unknown[]).find(
+        (plugin) =>
+          typeof plugin === 'object' && plugin !== null && 'name' in plugin && String(plugin.name).includes(':build-'),
+      ) as { buildStart?: () => Promise<void>; resolveId?: (source: string) => Promise<string | undefined> };
+      await forgePlugin.buildStart?.();
+      const generatedEntry = fs.readFileSync((await forgePlugin.resolveId?.(config.entry as string)) as string, 'utf8');
       expect(generatedEntry).toContain('publicStore');
       expect(generatedEntry).toContain('ForgeCard');
 
@@ -115,13 +165,29 @@ describe('Forge tsdown component helpers', () => {
         'export function ForgeOnly() {}\n',
       );
       try {
-        const [componentOnlyConfig] = defineTsdownForgeComponents({
+        const [componentOnlyPlugin] = tsdownForgeComponentPlugins({
           rootDir: componentOnlyRootDir,
           frameworks: [fixtureFramework('react')],
           componentsModule: componentOnlyModule,
           rejectFixturePlaceholder: false,
         });
-        expect(fs.readFileSync(componentOnlyConfig.entry as string, 'utf8')).toContain('ForgeOnly');
+        const componentOnlyConfig = await materializeConfig(componentOnlyPlugin);
+        const componentBuildPlugin = (componentOnlyConfig.plugins as unknown[]).find(
+          (plugin) =>
+            typeof plugin === 'object' &&
+            plugin !== null &&
+            'name' in plugin &&
+            String(plugin.name).includes(':build-'),
+        ) as { buildStart?: () => Promise<void>; resolveId?: (source: string) => Promise<string | undefined> };
+        await (componentBuildPlugin as { buildStart?: () => Promise<void> }).buildStart?.();
+        expect(
+          fs.readFileSync(
+            (await (
+              componentBuildPlugin as { resolveId?: (source: string) => Promise<string | undefined> }
+            ).resolveId?.(componentOnlyConfig.entry as string)) as string,
+            'utf8',
+          ),
+        ).toContain('ForgeOnly');
       } finally {
         fs.rmSync(componentOnlyRootDir, { recursive: true, force: true });
       }
@@ -130,7 +196,7 @@ describe('Forge tsdown component helpers', () => {
     }
   }, 30_000);
 
-  it('uses an explicit public-entry override instead of the package root entry', () => {
+  it('uses an explicit public-entry override instead of the package root entry lazily', async () => {
     const rootDir = fs.mkdtempSync(path.join('/tmp', 'mission-platform-public-entry-override-'));
     const componentsDir = path.join(rootDir, 'src', 'components');
     const helperDir = path.join(rootDir, 'src', 'helpers');
@@ -147,14 +213,21 @@ describe('Forge tsdown component helpers', () => {
       fs.writeFileSync(path.join(helperDir, 'default-store.ts'), 'export const defaultStore = true;\n');
       fs.writeFileSync(path.join(helperDir, 'override-store.ts'), 'export const overrideStore = true;\n');
 
-      const [config] = defineTsdownForgeComponents({
+      const [plugin] = tsdownForgeComponentPlugins({
         rootDir,
         frameworks: [fixtureFramework('solid')],
         componentsModule: componentModule,
         publicEntryModule: overrideModule,
         rejectFixturePlaceholder: false,
       });
-      const generatedEntry = fs.readFileSync(config.entry as string, 'utf8');
+      const config = await materializeConfig(plugin);
+      expect(fs.existsSync(config.entry as string)).toBe(false);
+      const forgePlugin = (config.plugins as unknown[]).find(
+        (plugin) =>
+          typeof plugin === 'object' && plugin !== null && 'name' in plugin && String(plugin.name).includes(':build-'),
+      ) as { buildStart?: () => Promise<void>; resolveId?: (source: string) => Promise<string | undefined> };
+      await forgePlugin.buildStart?.();
+      const generatedEntry = fs.readFileSync((await forgePlugin.resolveId?.(config.entry as string)) as string, 'utf8');
       expect(generatedEntry).toContain('overrideStore');
       expect(generatedEntry).not.toContain('defaultStore');
       expect(generatedEntry).toContain('ForgeCard');
@@ -163,11 +236,11 @@ describe('Forge tsdown component helpers', () => {
     }
   }, 30_000);
 
-  it('writes framework output below an isolated stage root when requested', () => {
+  it('writes framework output below an isolated stage root when requested', async () => {
     const rootDir = path.resolve('/tmp', 'mission-platform-staged-components');
     const stageRoot = path.resolve(rootDir, 'node_modules/.cache/forge-build/test');
     const componentsRootDir = path.resolve(import.meta.dirname, '../../../../ui/components');
-    const configs = defineTsdownForgeComponents({
+    const configs = tsdownForgeComponentPlugins({
       rootDir,
       outputRoot: stageRoot,
       componentsModule: path.resolve(componentsRootDir, 'src/components/index.ts'),
@@ -175,11 +248,12 @@ describe('Forge tsdown component helpers', () => {
       rejectFixturePlaceholder: false,
     });
 
-    expect((configs as UserConfig[]).map((config) => config.outDir)).toEqual([
-      path.resolve(stageRoot, 'dist/vue'),
-      path.resolve(stageRoot, 'dist/react'),
+    const materialized = await Promise.all(configs.map((plugin) => materializeConfig(plugin)));
+    expect(materialized.map((config) => config.outDir)).toEqual([
+      expect.stringMatching(`${path.resolve(stageRoot, 'dist')}/.forge-attempt-vue-vue-`),
+      expect.stringMatching(`${path.resolve(stageRoot, 'dist')}/.forge-attempt-react-react-`),
     ]);
-    expect((configs as UserConfig[]).every((config) => config.clean === true)).toBe(true);
+    expect(materialized.every((config) => config.clean === true)).toBe(true);
   }, 30_000);
 
   it('stages neutral hook output alongside framework output', () => {
@@ -194,7 +268,25 @@ describe('Forge tsdown component helpers', () => {
 
     expect((configs as UserConfig[]).map((config) => config.outDir)).toEqual([
       path.resolve(stageRoot, 'dist'),
-      path.resolve(stageRoot, 'dist/react'),
+      expect.stringMatching(`${path.resolve(stageRoot, 'dist')}/.forge-attempt-react-react-`),
+    ]);
+  }, 30_000);
+
+  it('returns independent component configs for each framework target', () => {
+    const rootDir = path.resolve('/tmp', 'mission-platform-component-configs');
+    const stageRoot = path.resolve(rootDir, 'node_modules/.cache/forge-build/test');
+    const componentsRootDir = path.resolve(import.meta.dirname, '../../../../ui/components');
+    const configs = defineTsdownForgeComponentsAll({
+      rootDir,
+      outputRoot: stageRoot,
+      componentsModule: path.resolve(componentsRootDir, 'src/components/index.ts'),
+      frameworks: [fixtureFramework('vue'), fixtureFramework('react')],
+      rejectFixturePlaceholder: false,
+    });
+
+    expect(configs.map((config) => config.outDir)).toEqual([
+      expect.stringMatching(`${path.resolve(stageRoot, 'dist')}/.forge-attempt-vue-vue-`),
+      expect.stringMatching(`${path.resolve(stageRoot, 'dist')}/.forge-attempt-react-react-`),
     ]);
   }, 30_000);
 
@@ -255,20 +347,21 @@ describe('Forge tsdown component helpers', () => {
     expect(stagedTsconfig.compilerOptions.tsBuildInfoFile).toBe(path.join(stageRoot, 'tsconfig.build.tsbuildinfo'));
   }, 30_000);
 
-  it('keeps framework artifacts available while running in watch mode', () => {
+  it('keeps framework artifacts available while running in watch mode', async () => {
     const originalArgv = process.argv;
     process.argv = [...originalArgv, '--watch'];
 
     try {
       const rootDir = path.resolve('/tmp', 'mission-platform-watch-components');
-      const configs = defineTsdownForgeComponents({
+      const configs = tsdownForgeComponentPlugins({
         rootDir,
         componentsModule: path.resolve(import.meta.dirname, '../../../../ui/components/src/components/index.ts'),
         frameworks: [fixtureFramework('web-components')],
         rejectFixturePlaceholder: false,
       });
 
-      expect((configs as UserConfig[]).every((config) => config.clean === false)).toBe(true);
+      const materialized = await Promise.all(configs.map((plugin) => materializeConfig(plugin)));
+      expect(materialized.every((config) => config.clean === false)).toBe(true);
     } finally {
       process.argv = originalArgv;
     }

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build:check": "vue-tsc --project tsconfig.app.json --noEmit",
-    "build": "pnpm build:ui && pnpm build:main",
+    "build": "node --input-type=module -e \"import { existsSync } from 'node:fs'; if (!existsSync('dist')) throw new Error('Turbo build tasks did not produce dist/.');\"",
     "build:main": "vite build --mode main",
     "build:ui": "vite build --mode ui",
     "test": "vitest run",
@@ -31,7 +31,7 @@
     "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",
     "prettier": "catalog:prettier",
-    "typescript": "catalog:typescript",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vitest": "catalog:testing",
     "vite": "catalog:vite",
     "vue-tsc": "catalog:vue",

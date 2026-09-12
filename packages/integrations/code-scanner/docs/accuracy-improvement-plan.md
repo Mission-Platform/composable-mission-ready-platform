@@ -17,6 +17,15 @@ frames), and for keeping the scan pipeline inside one statically linked Forge We
 > (item 4), the Aztec locator (item 6) and multi-symbol + ROI scanning (item 7)
 > have all landed.
 
+> **ZXing port status (2026-09-12):** The scanner-owned FWS graph now contains
+> bounded ZXing-shaped foundation, 1D/RSS, Data Matrix, compact Aztec, PDF417,
+> and MaxiCode paths. The TypeScript model exposes text, bytes, bit count,
+> points, metadata, and timestamp, while the current FWS wire format only
+> serializes the format, bit count, and payload; points and metadata remain
+> empty until the binary envelope migration lands. QR decoder graphs emit
+> independently, but combined QR linkage is blocked by Forge Web Script
+> `FWS-EMIT-001`; the reduced 2D paths do not claim full ZXing parity.
+
 The original implementation split the pipeline:
 
 - **Locate + sample** ran in a legacy native/wasm pipeline: `binarize` → per-symbology locators. Its `scan` entry point
@@ -35,8 +44,7 @@ Before Phase 1 a single scan was:
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → decodeQr / decodeMatrix / decodeBarcode (JS façades)
-  → wasm qr/matrix/barcode-decode    [cross into a *different* wasm module]
+  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 
@@ -70,8 +78,8 @@ image (JS)
 
 `scan_and_decode(width, height, luma) -> Option<ScanOutcome>` runs the whole pipeline inside `src/fws/scanner.fws` and
 returns the **decoded payload** directly (`value` is empty when a symbol is located but undecodable). The JS façade
-(`scanner/index.ts`) is a thin marshalling layer that links the QR, matrix, and barcode FWS sources at build time;
-those packages remain independently publishable.
+(`scanner/index.ts`) is a thin marshalling layer over scanner-owned decoder FWS sources;
+the encoder packages remain independently publishable and expose no decoder façade.
 
 #### Why this is tractable now
 

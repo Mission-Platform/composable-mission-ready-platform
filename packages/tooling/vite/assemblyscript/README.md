@@ -16,13 +16,13 @@ import { assemblyScriptPlugin } from '@mission-platform/vite-plugin-assemblyscri
 import { defineLibraryConfig } from '@mission-platform/vite-config';
 
 export default defineLibraryConfig({
-  rootDir: __dirname,
+  rootDir: import.meta.dirname,
   entry: { index: 'src/index.ts' },
   preserveModules: false,
   overrides: {
     plugins: [
       assemblyScriptPlugin({
-        rootDir: __dirname,
+        rootDir: import.meta.dirname,
         entry: 'assembly/index.ts',
         wasmFile: 'build/module.wasm',
         outFile: 'src/generated/module.js',

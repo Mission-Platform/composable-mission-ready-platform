@@ -11,15 +11,21 @@ import path from "node:path";
 import { defineLibraryConfig } from "@mission-platform/vite-config";
 import {
   assertForgeArtifactRoot,
-  ensureForgeArtifactDirectory,
+  forgeArtifactAttemptDirectory,
+  forgeArtifactPublishPlugin,
+  forgeBuildLifecyclePlugin,
+  createForgeBuildSession,
+  forgeVirtualEntry,
   resolveForgeArtifactPath,
 } from "@mission-platform/vite-plugin-forge";
 import { mergeConfig } from "vite";
 
+import { copyAndPruneAssets } from "./assets.js";
 import { generateCmsArtifacts } from "./driver.js";
 import { cmsCacheDirectory, resolveComponentsModule } from "./tsdown.js";
 
 import type { CmsArtifact, CmsOutputPlugin } from "./cms.js";
+import type { ForgeTargetGenerationContext } from "@mission-platform/vite-plugin-forge";
 import type { Plugin, UserConfig } from "vite";
 
 /* eslint-disable unicorn/prevent-abbreviations -- Vite's public config uses the established rootDir/outDir names. */
@@ -32,6 +38,7 @@ export interface ViteForgeCmsLibraryOptions {
   componentsModule?: string;
   componentsImport?: string;
   external?: readonly string[];
+  session?: import("@mission-platform/vite-plugin-forge").ForgeBuildSession;
   overrides?: UserConfig;
 }
 
@@ -55,12 +62,41 @@ function cmsEntryDeclarationsPlugin(cacheDirectory: string): Plugin {
   };
 }
 
-function cmsAssetsPlugin(
+export interface CmsAssetsPluginOptions {
+  readonly frameworkId?: string;
+  readonly supportedFrameworks?: readonly string[];
+}
+
+export function cmsAssetsPlugin(
   rootDir: string,
   cacheDirectory: string,
-  targetId: string,
-  assets: readonly CmsArtifact[],
+  targetOrTargetId: string | CmsOutputPlugin,
+  getAssets: () => readonly CmsArtifact[],
+  options?: CmsAssetsPluginOptions,
 ): Plugin {
+  const targetId =
+    typeof targetOrTargetId === "string"
+      ? targetOrTargetId
+      : targetOrTargetId.id;
+  const frameworkId =
+    options?.frameworkId ??
+    (typeof targetOrTargetId === "object"
+      ? targetOrTargetId.framework.id
+      : undefined);
+  const supportedFrameworks =
+    options?.supportedFrameworks ??
+    (typeof targetOrTargetId === "object"
+      ? targetOrTargetId.supportedFrameworks
+      : undefined);
+
+  const preservedDirectories = new Set<string>();
+  if (frameworkId) preservedDirectories.add(frameworkId);
+  if (supportedFrameworks) {
+    for (const fw of supportedFrameworks) {
+      preservedDirectories.add(fw);
+    }
+  }
+
   return {
     name: "mission-platform:cms-assets",
     closeBundle() {
@@ -68,26 +104,20 @@ function cmsAssetsPlugin(
       const destinationRoot = assertForgeArtifactRoot(
         path.resolve(rootDir, `dist/cms/${targetId}`),
       );
-      for (const asset of assets) {
-        const source = resolveForgeArtifactPath(
-          safeCacheDirectory,
-          asset.fileName,
-        );
-        if (!fs.existsSync(source)) {
-          continue;
-        }
-        const destination = resolveForgeArtifactPath(
-          destinationRoot,
-          asset.fileName,
-        );
-        ensureForgeArtifactDirectory(
-          destinationRoot,
-          path.dirname(destination),
-        );
-        fs.copyFileSync(source, destination);
-      }
+      copyAndPruneAssets(
+        safeCacheDirectory,
+        destinationRoot,
+        getAssets(),
+        preservedDirectories,
+      );
     },
   };
+}
+
+function resolveForgeTsconfig(rootDir: string): string | undefined {
+  return ["tsconfig.build.json", "tsconfig.json"]
+    .map((fileName) => path.resolve(rootDir, fileName))
+    .find((fileName) => fs.existsSync(fileName));
 }
 
 /** Create a Vite library config for one CMS target. */
@@ -96,38 +126,59 @@ export function defineViteForgeCmsLibrary(
 ): UserConfig {
   const { rootDir, target, name, external = [], overrides } = options;
   const cacheDirectory = cmsCacheDirectory(rootDir, target);
-  const outputDirectory = assertForgeArtifactRoot(
+  const componentsImport = options.componentsImport ?? target.packageName;
+  const componentsModule = resolveComponentsModule(
+    rootDir,
+    options.componentsModule,
+  );
+  const targetId = `${target.id}-${target.framework.id}`;
+  const generatedDirectory = cmsCacheDirectory(rootDir, target);
+  const generatedOutput = assertForgeArtifactRoot(
     path.resolve(rootDir, `dist/cms/${target.id}/${target.framework.id}`),
   );
-  const componentsImport = options.componentsImport ?? target.packageName;
+  const attemptDirectory = forgeArtifactAttemptDirectory(
+    generatedOutput,
+    targetId,
+  );
+  const session = options.session ?? createForgeBuildSession();
+  let generated: ReturnType<typeof generateCmsArtifacts> | undefined;
 
-  const generated = generateCmsArtifacts({
-    plugin: target,
-    componentsModule: resolveComponentsModule(
-      rootDir,
-      options.componentsModule,
-    ),
-    outDir: cacheDirectory,
-    componentsImport,
-    stripPrefix: "",
-    rootDir,
-  });
+  const targetPlan = {
+    targetId,
+    kind: "cms-island" as const,
+    entryModule: componentsModule,
+    sourceRoot: path.dirname(componentsModule),
+    tsconfig: resolveForgeTsconfig(rootDir),
+    generate: ({ service, project }: ForgeTargetGenerationContext) => {
+      generated = generateCmsArtifacts({
+        plugin: target,
+        componentsModule,
+        outDir: generatedDirectory,
+        componentsImport,
+        stripPrefix: "",
+        rootDir,
+        service,
+        project,
+      });
+      return generated.entry;
+    },
+  };
 
   const stagePlugins =
     target.framework.build.vite?.({
       rootDir,
-      generatedDirectory: cacheDirectory,
+      generatedDirectory,
     }) ?? [];
   const targetPlugins =
-    target.build.vite?.({ rootDir, generatedDirectory: cacheDirectory }) ?? [];
+    target.build.vite?.({ rootDir, generatedDirectory }) ?? [];
   const suffix = target.framework.displayNameSuffix ?? target.framework.id;
 
   return defineLibraryConfig({
     rootDir,
     name: name.endsWith(suffix) ? name : `${name}${suffix}`,
-    entry: generated.entry,
+    entry: forgeVirtualEntry(targetId),
     preserveModules: true,
-    preserveModulesRoot: path.relative(rootDir, cacheDirectory),
+    preserveModulesRoot: path.relative(rootDir, generatedDirectory),
     external: [
       ...(target.framework.runtimeExternals ?? []),
       ...(target.runtimeExternals ?? []),
@@ -136,17 +187,32 @@ export function defineViteForgeCmsLibrary(
     ],
     overrides: mergeConfig(
       {
-        build: { outDir: `dist/cms/${target.id}/${target.framework.id}` },
+        build: { outDir: attemptDirectory },
         plugins: [
+          forgeBuildLifecyclePlugin({
+            session,
+            plan: { rootDir, targets: [targetPlan] },
+            target: targetPlan,
+            adapter: "vite",
+            disposeSession: options.session === undefined,
+          }),
           ...stagePlugins,
           ...targetPlugins,
           cmsEntryDeclarationsPlugin(cacheDirectory),
           cmsAssetsPlugin(
             rootDir,
             cacheDirectory,
-            target.id,
-            generated.artifacts.filter((artifact) => artifact.asset === true),
+            target,
+            () =>
+              generated?.artifacts.filter(
+                (artifact) => artifact.asset === true,
+              ) ?? [],
           ),
+          forgeArtifactPublishPlugin({
+            publishedDirectory: generatedOutput,
+            attemptDirectory,
+            targetId,
+          }),
         ],
       },
       overrides ?? {},

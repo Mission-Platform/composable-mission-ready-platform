@@ -1,20 +1,21 @@
 # @mission-platform/code-scanner
 
 A dependency-free **image / camera code scanner** compiled from a statically linked
-Forge Web Script graph to WebAssembly. It locates and decodes QR codes, Data
-Matrix, Aztec, 1D barcodes, PDF417, GS1 DataBar, and MaxiCode from image files
-or live camera streams. A dynamic source-module profile is also available for
-deployments that need independently cacheable decoder modules.
+Forge Web Script graph to WebAssembly. The linked artifact currently decodes Data
+Matrix, compact Aztec, 1D/RSS readers, PDF417, and MaxiCode from image files or
+live camera streams. The QR graph emits independently but remains outside the
+combined artifact while the Forge emitter limitation is investigated.
 
 ## API Overview
 
 ### Core Scanner (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
 // Scan all codes in frame
 const allResults = scanImageDataAll(imageData);
@@ -39,7 +40,7 @@ from `@mission-platform/vite-config`) and `customConditions` (via the
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -49,6 +50,6 @@ from `@mission-platform/vite-config`) and `customConditions` (via the
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

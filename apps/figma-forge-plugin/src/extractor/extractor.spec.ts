@@ -81,4 +81,102 @@ describe('Figma extraction', () => {
     expect(document.root.children?.[1].assetId).toBe('image-hero-ref');
     expect(document.diagnostics.some((diagnostic) => diagnostic.code === 'UNSUPPORTED_NODE')).toBe(true);
   });
+
+  it('extracts native Figma imageHash paints and resolves image bytes', async () => {
+    const root: FigmaNode = {
+      id: '2:1',
+      name: 'ImageCard',
+      type: 'FRAME',
+      fills: [{ type: 'IMAGE', imageHash: 'native-hash-123' }],
+    };
+    const document = await extractFigmaDocument(root, {
+      loadImage: async (imageIdentifier) => {
+        expect(imageIdentifier).toBe('native-hash-123');
+        return { content: new Uint8Array([4, 5, 6]), mimeType: 'image/png' };
+      },
+    });
+
+    expect(document.assets).toHaveLength(1);
+    expect(document.assets[0].id).toBe('image-native-hash-123');
+    expect(document.assets[0].fileName).toBe('image-native-hash-123.png');
+    expect(document.root.assetId).toBe('image-native-hash-123');
+    expect(document.root.style?.fills?.[0]).toMatchObject({
+      kind: 'image',
+      assetId: 'image-native-hash-123',
+    });
+  });
+
+  it('resolves multiple distinct image fills with individual asset IDs', async () => {
+    const root: FigmaNode = {
+      id: '3:1',
+      name: 'MultiImageLayer',
+      type: 'FRAME',
+      fills: [
+        { type: 'IMAGE', imageHash: 'hash-background' },
+        { type: 'SOLID', color: { r: 0, g: 0, b: 0, a: 0.5 } },
+        { type: 'IMAGE', imageReference: 'ref-foreground' },
+      ],
+    };
+    const loadedIdentifiers: string[] = [];
+    const document = await extractFigmaDocument(root, {
+      loadImage: async (imageIdentifier) => {
+        loadedIdentifiers.push(imageIdentifier);
+        return {
+          content: new Uint8Array([1, 2]),
+          mimeType: 'image/png',
+        };
+      },
+    });
+
+    expect(loadedIdentifiers).toEqual(['hash-background', 'ref-foreground']);
+    expect(document.assets).toHaveLength(2);
+    expect(document.root.assetId).toBe('image-hash-background');
+    expect(document.root.style?.fills).toHaveLength(3);
+    expect(document.root.style?.fills?.[0]).toMatchObject({
+      kind: 'image',
+      assetId: 'image-hash-background',
+    });
+    expect(document.root.style?.fills?.[1]).toMatchObject({
+      kind: 'solid',
+    });
+    expect(document.root.style?.fills?.[2]).toMatchObject({
+      kind: 'image',
+      assetId: 'image-ref-foreground',
+    });
+  });
+
+  it('emits MISSING_VARIABLE_RESOLVER diagnostic when bound variables exist without a resolver', async () => {
+    const root: FigmaNode = {
+      id: '4:1',
+      name: 'TokenCard',
+      type: 'FRAME',
+      boundVariables: {
+        itemSpacing: { type: 'VARIABLE_ALIAS', id: 'var-spacing-99' },
+      },
+    };
+
+    const documentWithoutResolver = await extractFigmaDocument(root);
+    const resolverDiagnostic = documentWithoutResolver.diagnostics.find(
+      (diagnostic) => diagnostic.code === 'MISSING_VARIABLE_RESOLVER',
+    );
+
+    expect(resolverDiagnostic).toBeDefined();
+    expect(resolverDiagnostic).toMatchObject({
+      code: 'MISSING_VARIABLE_RESOLVER',
+      severity: 'warning',
+      feature: 'token',
+      nodeId: '4:1',
+      nodeName: 'TokenCard',
+    });
+
+    const rootWithoutBindings: FigmaNode = {
+      id: '4:2',
+      name: 'PlainCard',
+      type: 'FRAME',
+    };
+    const documentWithoutBindings = await extractFigmaDocument(rootWithoutBindings);
+    expect(
+      documentWithoutBindings.diagnostics.some((diagnostic) => diagnostic.code === 'MISSING_VARIABLE_RESOLVER'),
+    ).toBe(false);
+  });
 });
