@@ -74,12 +74,7 @@ describe('ForgeDialog authors the same component for React and Vue', () => {
     );
     const vue = await renderToString(
       createSSRApp({
-        render: () =>
-          vueH(
-            VueDialog,
-            { open: true, header: 'Custom Header Content' },
-            () => 'Dialog body',
-          ),
+        render: () => vueH(VueDialog, { open: true, header: 'Custom Header Content' }, () => 'Dialog body'),
       }),
     );
 

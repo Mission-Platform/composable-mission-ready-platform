@@ -205,10 +205,14 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
     variant = 'modal',
     title,
     size = 'md',
-    closeOnBackdrop = variant !== 'alert',
-    closeOnEsc = variant !== 'alert',
+    closeOnBackdrop,
+    closeOnEsc,
     closeLabel = 'Close',
   } = properties;
+
+  const isAlert = variant === 'alert';
+  const effectiveCloseOnBackdrop = closeOnBackdrop ?? !isAlert;
+  const effectiveCloseOnEsc = closeOnEsc ?? !isAlert;
 
   const dialogReference = useRef<HTMLDialogElement | null>(null);
 
@@ -245,14 +249,14 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
 
   // Suppress the native `Escape`-to-close when `closeOnEsc` is disabled.
   const handleCancel = (event: Event): void => {
-    if (!closeOnEsc) {
+    if (!effectiveCloseOnEsc) {
       event.preventDefault();
     }
   };
 
   // Clicking the dialog element itself is a click on the `::backdrop`.
   const handleClick = (event: MouseEvent): void => {
-    if (closeOnBackdrop && event.target === dialogReference.current) {
+    if (effectiveCloseOnBackdrop && event.target === dialogReference.current) {
       requestClose();
     }
   };

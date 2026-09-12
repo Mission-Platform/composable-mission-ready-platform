@@ -73,12 +73,7 @@ describe('ForgeModal authors the same component for React and Vue', () => {
     );
     const vue = await renderToString(
       createSSRApp({
-        render: () =>
-          vueH(
-            VueModal,
-            { open: true, header: 'Custom Header Content' },
-            () => 'Modal body',
-          ),
+        render: () => vueH(VueModal, { open: true, header: 'Custom Header Content' }, () => 'Modal body'),
       }),
     );
 
