@@ -1,5 +1,9 @@
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
 import {
   analyzeContentComponent,
+  generateCmsArtifacts,
   type CmsArtifact,
   type CmsOutputPlugin,
   type CmsTargetContext,
@@ -8,13 +12,17 @@ import {
 } from "@mission-platform/forge-cms-plugin-api";
 import {
   BADGE,
+  BADGE_COMPONENT,
   BUTTON,
   EMPTY,
   GRID,
+  GRID_COMPONENT,
   LAYOUT,
+  LAYOUT_COMPONENT,
   SITE_HEADER,
   badgeNames,
   buttonNames,
+  createCmsWorkspace,
   emptyNames,
   gridNames,
   layoutNames,
@@ -425,6 +433,117 @@ describe("Jekyll diagnostics", () => {
       const diagnostics: CompilerDiagnostic[] = [];
       include(source, names, { diagnostics });
       expect(diagnostics).toEqual([]);
+    }
+  });
+});
+
+describe("the Jekyll CMS target end-to-end generation", () => {
+  it("generates Liquid includes, YAML data manifests, and placeholder entry atomically for a multi-component workspace", () => {
+    const workspace = createCmsWorkspace([
+      BADGE_COMPONENT,
+      GRID_COMPONENT,
+      LAYOUT_COMPONENT,
+    ]);
+
+    try {
+      const jekyllPlugin = forgeJekyllCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("vue"),
+      });
+
+      generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: jekyllPlugin,
+        componentsImport: "@acme/components",
+      });
+
+      expect(existsSync(workspace.outDirectory)).toBe(true);
+
+      // Includes
+      const badgeInclude = path.join(
+        workspace.outDirectory,
+        "_includes/forge/badge.html",
+      );
+      const gridInclude = path.join(
+        workspace.outDirectory,
+        "_includes/forge/grid.html",
+      );
+      const layoutInclude = path.join(
+        workspace.outDirectory,
+        "_includes/forge/layout.html",
+      );
+      expect(existsSync(badgeInclude)).toBe(true);
+      expect(existsSync(gridInclude)).toBe(true);
+      expect(existsSync(layoutInclude)).toBe(true);
+
+      const badgeContent = readFileSync(badgeInclude, "utf8");
+      expect(badgeContent).toContain('class="forge-badge"');
+
+      // Manifests
+      const dataManifest = path.join(
+        workspace.outDirectory,
+        "_data/forge-components.yml",
+      );
+      const configManifest = path.join(workspace.outDirectory, "_config.yml");
+      expect(existsSync(dataManifest)).toBe(true);
+      expect(existsSync(configManifest)).toBe(true);
+
+      const parsedData = load(
+        readFileSync(dataManifest, "utf8"),
+      ) as ManifestComponent[];
+      expect(parsedData.map((c) => c.name)).toContain("badge");
+      expect(parsedData.map((c) => c.name)).toContain("grid");
+      expect(parsedData.map((c) => c.name)).toContain("layout");
+
+      // Entry
+      const entryPath = path.join(workspace.outDirectory, "index.ts");
+      expect(existsSync(entryPath)).toBe(true);
+      expect(readFileSync(entryPath, "utf8")).toBe("export {};\n");
+    } finally {
+      workspace.cleanup();
+    }
+  });
+
+  it("aborts atomically and preserves existing outputs on compilation error", () => {
+    const workspace = createCmsWorkspace([BADGE_COMPONENT]);
+
+    try {
+      const jekyllPlugin = forgeJekyllCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("vue"),
+      });
+
+      generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: jekyllPlugin,
+        componentsImport: "@acme/components",
+      });
+
+      const canaryFile = path.join(workspace.outDirectory, "canary.txt");
+      writeFileSync(canaryFile, "jekyll-canary-content", "utf8");
+
+      const failingTarget = {
+        ...jekyllPlugin,
+        emitTemplate: () => {
+          throw new Error("Simulated Jekyll template emission failure");
+        },
+      };
+
+      expect(() =>
+        generateCmsArtifacts({
+          componentsModule: workspace.componentsModule,
+          outDir: workspace.outDirectory,
+          plugin: failingTarget,
+          componentsImport: "@acme/components",
+        }),
+      ).toThrow("Simulated Jekyll template emission failure");
+
+      expect(existsSync(canaryFile)).toBe(true);
+      expect(readFileSync(canaryFile, "utf8")).toBe("jekyll-canary-content");
+    } finally {
+      workspace.cleanup();
     }
   });
 });

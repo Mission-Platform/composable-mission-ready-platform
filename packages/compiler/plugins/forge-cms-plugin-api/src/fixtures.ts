@@ -27,3 +27,13 @@ export {
 } from "./__fixtures__/components.js";
 
 export { stubFramework } from "./__fixtures__/framework.js";
+export {
+  BADGE_COMPONENT,
+  COUNTER_COMPONENT,
+  GRID_COMPONENT,
+  LAYOUT_COMPONENT,
+  NESTED_BADGE_COMPONENT,
+  createCmsWorkspace,
+  type CmsWorkspace,
+  type WorkspaceComponentDefinition,
+} from "./__fixtures__/workspace.js";

@@ -276,4 +276,55 @@ describe("cmsAssetsPlugin", () => {
 
     expect(existsSync(path.join(destinationRoot, "manifest.json"))).toBe(true);
   });
+
+  it("preserves dotfiles such as .gitkeep and does not prune directories containing them", () => {
+    const { rootDirectory, cacheDirectory, destinationRoot } =
+      createTestEnvironment("storyblok");
+
+    const nestedDirectory = path.join(destinationRoot, "templates/nested");
+    mkdirSync(nestedDirectory, { recursive: true });
+    writeFileSync(path.join(nestedDirectory, ".gitkeep"), "", "utf8");
+    writeFileSync(
+      path.join(nestedDirectory, "stale.html"),
+      "<div>old</div>\n",
+      "utf8",
+    );
+
+    // Active asset in a different folder
+    mkdirSync(path.join(cacheDirectory, "templates"), { recursive: true });
+    writeFileSync(
+      path.join(cacheDirectory, "templates/new.html"),
+      "<div>new</div>\n",
+      "utf8",
+    );
+
+    const activeAssets: CmsArtifact[] = [
+      {
+        fileName: "templates/new.html",
+        contents: "<div>new</div>\n",
+        artifactKind: "template",
+        asset: true,
+      },
+    ];
+
+    const plugin = cmsAssetsPlugin(
+      rootDirectory,
+      cacheDirectory,
+      "storyblok",
+      () => activeAssets,
+    );
+    (plugin.closeBundle as () => void)();
+
+    // stale.html should be purged
+    expect(existsSync(path.join(nestedDirectory, "stale.html"))).toBe(false);
+
+    // .gitkeep and its containing directory must remain intact
+    expect(existsSync(nestedDirectory)).toBe(true);
+    expect(existsSync(path.join(nestedDirectory, ".gitkeep"))).toBe(true);
+
+    // Active template must be copied
+    expect(existsSync(path.join(destinationRoot, "templates/new.html"))).toBe(
+      true,
+    );
+  });
 });

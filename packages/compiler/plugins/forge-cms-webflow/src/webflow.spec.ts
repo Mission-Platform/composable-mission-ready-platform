@@ -1,10 +1,21 @@
-import { analyzeContentComponent } from "@mission-platform/forge-cms-plugin-api";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
+import {
+  analyzeContentComponent,
+  generateCmsArtifacts,
+} from "@mission-platform/forge-cms-plugin-api";
 import {
   BADGE,
+  BADGE_COMPONENT,
+  COUNTER_COMPONENT,
   EMPTY,
   GRID,
+  GRID_COMPONENT,
   LAYOUT,
+  LAYOUT_COMPONENT,
   badgeNames,
+  createCmsWorkspace,
   emptyNames,
   gridNames,
   layoutNames,
@@ -437,5 +448,125 @@ describe("the Webflow entry barrel", () => {
       ].join("\n"),
     );
     expect(emitWebflowEntry(components)).toBe(entry.contents);
+  });
+});
+
+describe("the Webflow CMS target end-to-end generation", () => {
+  it("generates declarations, islands, manifest, and entry atomically for a multi-component workspace", () => {
+    const workspace = createCmsWorkspace([
+      BADGE_COMPONENT,
+      COUNTER_COMPONENT,
+      GRID_COMPONENT,
+      LAYOUT_COMPONENT,
+    ]);
+
+    try {
+      const webflowPlugin = forgeWebflowCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("react"),
+      });
+
+      generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: webflowPlugin,
+        componentsImport: "@acme/components",
+      });
+
+      expect(existsSync(workspace.outDirectory)).toBe(true);
+
+      // Declarations
+      const badgeDeclaration = path.join(
+        workspace.outDirectory,
+        "Badge.webflow.tsx",
+      );
+      const counterDeclaration = path.join(
+        workspace.outDirectory,
+        "Counter.webflow.tsx",
+      );
+      const gridDeclaration = path.join(
+        workspace.outDirectory,
+        "Grid.webflow.tsx",
+      );
+      const layoutDeclaration = path.join(
+        workspace.outDirectory,
+        "Layout.webflow.tsx",
+      );
+      expect(existsSync(badgeDeclaration)).toBe(true);
+      expect(existsSync(counterDeclaration)).toBe(true);
+      expect(existsSync(gridDeclaration)).toBe(true);
+      expect(existsSync(layoutDeclaration)).toBe(true);
+
+      const badgeContent = readFileSync(badgeDeclaration, "utf8");
+      expect(badgeContent).toContain("declareComponent");
+      expect(badgeContent).toContain("./island/index.js");
+
+      // Island runtime
+      const islandIndex = path.join(workspace.outDirectory, "island/index.tsx");
+      expect(existsSync(islandIndex)).toBe(true);
+
+      // Manifest
+      const manifestPath = path.join(workspace.outDirectory, "webflow.json");
+      expect(existsSync(manifestPath)).toBe(true);
+      const manifest = JSON.parse(
+        readFileSync(manifestPath, "utf8"),
+      ) as WebflowManifest;
+      expect(manifest.library.name).toBe("Forge");
+
+      // Entry
+      const entryPath = path.join(workspace.outDirectory, "index.ts");
+      expect(existsSync(entryPath)).toBe(true);
+      const entryContent = readFileSync(entryPath, "utf8");
+      expect(entryContent).toContain(
+        "export { default as BadgeComponent } from './Badge.webflow.js';",
+      );
+      expect(entryContent).toContain(
+        "export { default as CounterComponent } from './Counter.webflow.js';",
+      );
+    } finally {
+      workspace.cleanup();
+    }
+  });
+
+  it("aborts atomically and preserves existing outputs on compilation error", () => {
+    const workspace = createCmsWorkspace([BADGE_COMPONENT]);
+
+    try {
+      const webflowPlugin = forgeWebflowCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("react"),
+      });
+
+      generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: webflowPlugin,
+        componentsImport: "@acme/components",
+      });
+
+      const canaryFile = path.join(workspace.outDirectory, "canary.txt");
+      writeFileSync(canaryFile, "webflow-canary-content", "utf8");
+
+      const failingTarget = {
+        ...webflowPlugin,
+        emitTemplate: () => {
+          throw new Error("Simulated Webflow template emission failure");
+        },
+      };
+
+      expect(() =>
+        generateCmsArtifacts({
+          componentsModule: workspace.componentsModule,
+          outDir: workspace.outDirectory,
+          plugin: failingTarget,
+          componentsImport: "@acme/components",
+        }),
+      ).toThrow("Simulated Webflow template emission failure");
+
+      expect(existsSync(canaryFile)).toBe(true);
+      expect(readFileSync(canaryFile, "utf8")).toBe("webflow-canary-content");
+    } finally {
+      workspace.cleanup();
+    }
   });
 });

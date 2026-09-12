@@ -1,13 +1,23 @@
-import { analyzeContentComponent } from "@mission-platform/forge-cms-plugin-api";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
+import {
+  analyzeContentComponent,
+  generateCmsArtifacts,
+} from "@mission-platform/forge-cms-plugin-api";
 import {
   BADGE,
+  BADGE_COMPONENT,
   BUTTON,
   EMPTY,
   GRID,
+  GRID_COMPONENT,
   LAYOUT,
+  LAYOUT_COMPONENT,
   SITE_HEADER,
   badgeNames,
   buttonNames,
+  createCmsWorkspace,
   emptyNames,
   gridNames,
   layoutNames,
@@ -493,5 +503,120 @@ describe("Ghost diagnostics", () => {
     manifests([contentOf(settingsSource(23), settingsNames)], diagnostics);
     expect(diagnostics.length).toBeGreaterThan(0);
     expect(diagnostics.some((entry) => entry.severity === "error")).toBe(false);
+  });
+});
+
+describe("the Ghost CMS target end-to-end generation", () => {
+  it("generates Handlebars partials, manifests, and placeholder entry atomically for a multi-component workspace", () => {
+    const workspace = createCmsWorkspace([
+      BADGE_COMPONENT,
+      GRID_COMPONENT,
+      LAYOUT_COMPONENT,
+    ]);
+
+    try {
+      const target = forgeGhostCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("vue"),
+        themeName: "casper",
+      });
+
+      generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: target,
+        componentsImport: "@acme/components",
+      });
+
+      expect(existsSync(workspace.outDirectory)).toBe(true);
+
+      // Partials
+      const badgePartial = path.join(
+        workspace.outDirectory,
+        "partials/forge/badge.hbs",
+      );
+      const gridPartial = path.join(
+        workspace.outDirectory,
+        "partials/forge/grid.hbs",
+      );
+      const layoutPartial = path.join(
+        workspace.outDirectory,
+        "partials/forge/layout.hbs",
+      );
+      expect(existsSync(badgePartial)).toBe(true);
+      expect(existsSync(gridPartial)).toBe(true);
+      expect(existsSync(layoutPartial)).toBe(true);
+
+      const badgeContent = readFileSync(badgePartial, "utf8");
+      expect(badgeContent).toContain('class="forge-badge"');
+
+      // Manifests
+      const manifestPath = path.join(
+        workspace.outDirectory,
+        "forge-components.json",
+      );
+      const themeConfigPath = path.join(
+        workspace.outDirectory,
+        "ghost-theme-config.json",
+      );
+      expect(existsSync(manifestPath)).toBe(true);
+      expect(existsSync(themeConfigPath)).toBe(true);
+
+      const manifest = JSON.parse(
+        readFileSync(manifestPath, "utf8"),
+      ) as GhostComponentsManifest;
+      expect(manifest.components.map((c) => c.name)).toContain("badge");
+      expect(manifest.components.map((c) => c.name)).toContain("grid");
+      expect(manifest.components.map((c) => c.name)).toContain("layout");
+
+      // Entry
+      const entryPath = path.join(workspace.outDirectory, "index.ts");
+      expect(existsSync(entryPath)).toBe(true);
+      expect(readFileSync(entryPath, "utf8")).toBe("export {};\n");
+    } finally {
+      workspace.cleanup();
+    }
+  });
+
+  it("aborts atomically and preserves existing outputs on compilation error", () => {
+    const workspace = createCmsWorkspace([BADGE_COMPONENT]);
+
+    try {
+      const target = forgeGhostCms({
+        packageName: "@acme/components",
+        plugin: stubFramework("vue"),
+      });
+
+      generateCmsArtifacts({
+        componentsModule: workspace.componentsModule,
+        outDir: workspace.outDirectory,
+        plugin: target,
+        componentsImport: "@acme/components",
+      });
+
+      const canaryFile = path.join(workspace.outDirectory, "canary.txt");
+      writeFileSync(canaryFile, "ghost-canary-content", "utf8");
+
+      const failingTarget = {
+        ...target,
+        emitTemplate: () => {
+          throw new Error("Simulated Ghost template emission failure");
+        },
+      };
+
+      expect(() =>
+        generateCmsArtifacts({
+          componentsModule: workspace.componentsModule,
+          outDir: workspace.outDirectory,
+          plugin: failingTarget,
+          componentsImport: "@acme/components",
+        }),
+      ).toThrow("Simulated Ghost template emission failure");
+
+      expect(existsSync(canaryFile)).toBe(true);
+      expect(readFileSync(canaryFile, "utf8")).toBe("ghost-canary-content");
+    } finally {
+      workspace.cleanup();
+    }
   });
 });
