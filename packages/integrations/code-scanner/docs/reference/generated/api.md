@@ -81,6 +81,48 @@ reticle size the UI shows the user greatly raises the hit rate.
 | video | HTMLVideoElement |             |
 | roi   | number           |             |
 
+## `src/components/organisms/forge-code-scanner/forge-code-scanner`
+
+### CodeScannerProperties
+
+**Kind:** interface
+
+```typescript
+export interface CodeScannerProperties
+```
+
+No description provided.
+
+### ForgeCodeScanner
+
+**Kind:** function
+
+```typescript
+function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): MpElement;
+```
+
+`ForgeCodeScanner` — locates and decodes a QR code, Data Matrix, or 1D barcode
+from either an **uploaded image** or a **live camera stream**, authored once
+in the neutral JSX dialect and compiled straight to React or Vue by
+`@mission-platform/vite-plugin-forge`.
+
+Detection runs entirely on the client in the dependency-free Rust/WebAssembly
+scanner from `@mission-platform/code-scanner` (binarise → locate the finder
+patterns → sample the module grid); each located symbol is handed to the
+matching decoder (`@mission-platform/qr-code` / `-/matrix-code` / `-/barcode`).
+
+Uploads are decoded via `createImageBitmap` + a canvas; the live stream is
+opened with `getUserMedia` and its frames are polled on an interval. Both
+paths surface their outcome through the {@link CodeScannerProperties.onResult}
+callback (and a small inline result readout). It owns its styling through the
+co-located CSS Module `forge-code-scanner.module.scss`.
+
+#### Parameters
+
+| Name       | Type                            | Description |
+| ---------- | ------------------------------- | ----------- |
+| properties | Readonly<CodeScannerProperties> |             |
+
 ## `src/debug`
 
 ### isCodeScannerDebugEnabled

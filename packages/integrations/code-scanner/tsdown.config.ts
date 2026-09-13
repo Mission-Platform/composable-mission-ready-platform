@@ -47,6 +47,8 @@ const scannerForgeWebScriptOptions = {
   requestedCapabilities: (fileName: string) => (fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
 };
 
+const buildNeutral = process.env.FORGE_FRAMEWORK_TARGET === undefined || process.env.FORGE_FRAMEWORK_TARGET === 'none';
+
 /**
  * Neutral self-contained scanner façade (`dist/index.js` + dts) plus the five
  * forge component framework builds (`dist/{vue,react,solid,web-components}/`).
@@ -54,17 +56,21 @@ const scannerForgeWebScriptOptions = {
  * runtime package is imported by the published neutral entry.
  */
 export default [
-  defineTsdownLibrary({
-    rootDir: import.meta.dirname,
-    entry: {
-      index: 'src/index.ts',
-    },
-    unbundle: false,
-    clean: true,
-    overrides: {
-      plugins: [forgeWebScriptPlugin(scannerForgeWebScriptOptions)],
-    },
-  }),
+  ...(buildNeutral
+    ? [
+        defineTsdownLibrary({
+          rootDir: import.meta.dirname,
+          entry: {
+            index: 'src/index.ts',
+          },
+          unbundle: false,
+          clean: true,
+          overrides: {
+            plugins: [forgeWebScriptPlugin(scannerForgeWebScriptOptions)],
+          },
+        }),
+      ]
+    : []),
   ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
     ? []
     : defineTsdownForgeComponentsAll({
@@ -84,16 +90,32 @@ export default [
           plugins: [forgeWebScriptPlugin(scannerForgeWebScriptOptions)],
         },
       })),
-  defineTsdownLibrary({
-    rootDir: rootDirectory,
-    entry: componentsModule,
-    plugins: tsdownForgeCmsPlugins({
-      rootDir: rootDirectory,
-      componentsModule,
-      targets: forgeStoryblokCmsTargets({
-        packageName: '@mission-platform/code-scanner',
-        frameworks: [forgeReactFramework(), forgeVueFramework(), forgeSvelteFramework(), forgeWebComponentsFramework()],
-      }),
-    }),
-  }),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : [
+        defineTsdownLibrary({
+          rootDir: rootDirectory,
+          entry: componentsModule,
+          plugins: tsdownForgeCmsPlugins({
+            rootDir: rootDirectory,
+            componentsModule,
+            targets: forgeStoryblokCmsTargets({
+              packageName: '@mission-platform/code-scanner',
+              frameworks: [
+                forgeReactFramework(),
+                forgeVueFramework(),
+                forgeSvelteFramework(),
+                forgeSolidFramework(),
+                forgeWebComponentsFramework(),
+              ],
+            }),
+            overrides: {
+              plugins: [forgeWebScriptPlugin(scannerForgeWebScriptOptions)],
+            },
+          }),
+          overrides: {
+            plugins: [forgeWebScriptPlugin(scannerForgeWebScriptOptions)],
+          },
+        }),
+      ]),
 ];

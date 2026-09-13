@@ -10,6 +10,8 @@ import {
   type MaterializedTree,
 } from './web-components-renderer';
 
+export { createContext, useContext, type MpContext } from '@mission-platform/forge-jsx/runtime';
+
 /** Binding prefixes understood by a compiled direct-DOM template. */
 export type DomTemplateBindingPrefix = '' | '?' | '.' | '@' | '~';
 

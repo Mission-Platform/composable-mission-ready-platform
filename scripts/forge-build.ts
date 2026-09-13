@@ -194,12 +194,16 @@ async function validateForgeArtifactManifests(stageRoot: string, target: ForgeBu
         manifest.entries = [inferredEntry.fileName];
       }
     }
+    const targetMatches =
+      target === 'all' ||
+      manifest.targetId === target ||
+      (manifest.targetId !== undefined && manifest.targetId.endsWith(`-${target}`));
     if (
       manifest.version !== 1 ||
       manifest.complete !== true ||
       !Array.isArray(manifest.entries) ||
       manifest.entries.length === 0 ||
-      (target !== 'all' && manifest.targetId !== target)
+      !targetMatches
     ) {
       throw new Error(`Forge artifact manifest is incomplete or targets the wrong output: ${manifestPath}`);
     }

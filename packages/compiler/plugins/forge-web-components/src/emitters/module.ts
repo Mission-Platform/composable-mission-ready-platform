@@ -34,6 +34,7 @@ import {
   frameworkAdapterModule,
   LOCAL_JSX_TYPE_NAMES,
   LOCAL_JSX_TYPES_MODULE,
+  NEUTRAL_CONTEXT_VALUES,
   NEUTRAL_MODULE,
   NEUTRAL_RUNTIME_VALUES,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
@@ -101,8 +102,9 @@ function rewriteNeutralImport(
   // Keep the surviving runtime values; redirect the render/props type
   // primitives to the co-located per-framework module so no neutral import
   // survives.
-  const runtimeValues = entry.valueNames.filter((name) =>
-    NEUTRAL_RUNTIME_VALUES.has(name),
+  const runtimeValues = entry.valueNames.filter(
+    (name) =>
+      NEUTRAL_RUNTIME_VALUES.has(name) || NEUTRAL_CONTEXT_VALUES.has(name),
   );
   if (runtimeValues.length > 0) {
     lines.push(
@@ -225,7 +227,28 @@ export function emitWebComponentModule(
   // Keep every module-level declaration (type aliases, interfaces, helpers).
   // The component function is already excluded from `ast.declarations`, and the
   // plan has lowered any markup a retained helper carried.
-  kept.push(...plan.retainedDeclarations);
+  // Declarations that reference the component (e.g. `export const ForgeCombobox = ForgeSelect;`)
+  // must be placed after the class and its component alias so they don't hit TDZ.
+  const actualComponentName =
+    componentName ??
+    plan.componentName ??
+    (plan.className.endsWith("Element")
+      ? plan.className.slice(0, -7)
+      : undefined);
+  const componentPattern = actualComponentName
+    ? new RegExp(`\\b${actualComponentName}\\b`, "u")
+    : undefined;
+  const beforeClass: string[] = [];
+  const afterClass: string[] = [];
+  for (const declaration of plan.retainedDeclarations) {
+    if (componentPattern && componentPattern.test(declaration)) {
+      afterClass.push(declaration);
+    } else {
+      beforeClass.push(declaration);
+    }
+  }
+
+  kept.push(...beforeClass);
   if (elementTypes.length > 0) {
     kept.push(
       `import type { ${elementTypes.join(", ")} } from '${LOCAL_JSX_TYPES_MODULE}';`,
@@ -243,9 +266,21 @@ export function emitWebComponentModule(
     ...plan.runtimeImports.types.map((name) => `type ${name}`),
   ];
   const header = `import { ${runtimeNames.join(", ")} } from '${RUNTIME_MODULE}';`;
+  const alias =
+    actualComponentName && actualComponentName !== plan.className
+      ? [`export const ${actualComponentName} = ${plan.className};`]
+      : [];
   return {
-    code: [header, "", ...kept, "", synthesiseElementClass(plan), ""].join(
-      "\n",
-    ),
+    code: [
+      header,
+      "",
+      ...kept,
+      "",
+      synthesiseElementClass(plan),
+      "",
+      ...alias,
+      ...afterClass,
+      "",
+    ].join("\n"),
   };
 }

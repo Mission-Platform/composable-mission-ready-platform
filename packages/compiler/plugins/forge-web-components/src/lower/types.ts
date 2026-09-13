@@ -256,6 +256,8 @@ export interface WebComponentsLoweredModule extends TargetLoweredModule {
   readonly host: WebComponentsHostPlan;
   readonly shadow: WebComponentsShadowPolicy;
   readonly internals: WebComponentsInternalsPolicy;
+  /** The neutral component name (`ForgeInView`). */
+  readonly componentName?: string;
   /** The registered custom-element tag (`ForgeInView` → `forge-in-view`). */
   readonly tagName: string;
   /** The generated class name (`ForgeInView` → `ForgeInViewElement`). */

@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import { tsdownForgeCmsPlugins } from '@mission-platform/forge-cms-plugin-api';
+import { forgeStoryblokCmsTargets } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
@@ -10,6 +12,7 @@ import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-fo
 
 const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
+const buildNeutral = process.env.FORGE_FRAMEWORK_TARGET === undefined || process.env.FORGE_FRAMEWORK_TARGET === 'none';
 
 /**
  * Neutral component tree (`dist/components/**`, including `./forge-drawer`) plus
@@ -25,52 +28,62 @@ const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
  * stay intact. `./styles` keeps pointing at `src/styles/_a11y.scss`.
  */
 export default [
-  defineTsdownLibrary({
-    rootDir: rootDirectory,
-    // Explicit `forge-drawer` entry so `./forge-drawer` resolves to a real
-    // `dist/components/forge-drawer/index.js` (rolldown otherwise inlines the
-    // barrel into the root components entry and omits the file).
-    entry: {
-      index: 'src/index.ts',
-    },
-    // Emit the same neutral `.d.ts` tree previously produced by
-    // `tsc --emitDeclarationOnly` (via tsconfig.build.json declarationDir).
-    dts: true,
-    clean: true,
-    overrides: {
-      outDir: path.resolve(rootDirectory, 'dist/components'),
-    },
-  }),
-  ...defineTsdownForgeComponentsAll({
-    rootDir: rootDirectory,
-    frameworks: [
-      forgeReactFramework(),
-      forgeSolidFramework(),
-      forgeSvelteFramework(),
-      forgeWebComponentsFramework(),
-      forgeVueFramework(),
-    ],
-    componentsModule,
-    name: 'MissionPlatformJsxComponents',
-    external: ['i18next'],
-    declarationModule: '..',
-  }),
-  // defineTsdownLibrary({
-  //   rootDir: rootDirectory,
-  //   entry: componentsModule,
-  //   plugins: tsdownForgeCmsPlugins({
-  //     rootDir: rootDirectory,
-  //     componentsModule,
-  //     targets: forgeStoryblokCmsTargets({
-  //       packageName: '@mission-platform/components',
-  //       frameworks: [
-  //         forgeReactFramework(),
-  //         forgeVueFramework(),
-  //         forgeSvelteFramework(),
-  //         forgeSolidFramework(),
-  //         forgeWebComponentsFramework(),
-  //       ],
-  //     }),
-  //   }),
-  // }),
+  ...(buildNeutral
+    ? [
+        defineTsdownLibrary({
+          rootDir: rootDirectory,
+          // Explicit `forge-drawer` entry so `./forge-drawer` resolves to a real
+          // `dist/components/forge-drawer/index.js` (rolldown otherwise inlines the
+          // barrel into the root components entry and omits the file).
+          entry: {
+            index: 'src/index.ts',
+          },
+          // Emit the same neutral `.d.ts` tree previously produced by
+          // `tsc --emitDeclarationOnly` (via tsconfig.build.json declarationDir).
+          dts: true,
+          clean: true,
+          overrides: {
+            outDir: path.resolve(rootDirectory, 'dist/components'),
+          },
+        }),
+      ]
+    : []),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : defineTsdownForgeComponentsAll({
+        rootDir: rootDirectory,
+        frameworks: [
+          forgeReactFramework(),
+          forgeSolidFramework(),
+          forgeSvelteFramework(),
+          forgeWebComponentsFramework(),
+          forgeVueFramework(),
+        ],
+        componentsModule,
+        name: 'MissionPlatformJsxComponents',
+        external: ['i18next'],
+        declarationModule: '..',
+      })),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : [
+        defineTsdownLibrary({
+          rootDir: rootDirectory,
+          entry: componentsModule,
+          plugins: tsdownForgeCmsPlugins({
+            rootDir: rootDirectory,
+            componentsModule,
+            targets: forgeStoryblokCmsTargets({
+              packageName: '@mission-platform/components',
+              frameworks: [
+                forgeReactFramework(),
+                forgeVueFramework(),
+                forgeSvelteFramework(),
+                forgeSolidFramework(),
+                forgeWebComponentsFramework(),
+              ],
+            }),
+          }),
+        }),
+      ]),
 ];

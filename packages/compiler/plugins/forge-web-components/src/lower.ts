@@ -470,6 +470,7 @@ export function lowerWebComponentsPlan(
     host: inferWebComponentsHost(returnNode, module.ast.component),
     shadow: DEFAULT_WEBCOMPONENTS_SHADOW_POLICY,
     internals: DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY,
+    componentName,
     tagName,
     className,
     styleUrls: styleUrlsOf(module),

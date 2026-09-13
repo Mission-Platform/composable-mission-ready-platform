@@ -278,6 +278,10 @@ function cmsAssetsTsdownPlugin(
   return {
     name: "mission-platform:cms-assets",
     writeBundle() {
+      const assets = getAssets();
+      if (assets.length === 0) {
+        return;
+      }
       const safeCacheDirectory = assertForgeArtifactRoot(cacheDirectory);
       const destinationRoot = assertForgeArtifactRoot(
         resolveTsdownOutputDirectory(
@@ -289,7 +293,7 @@ function cmsAssetsTsdownPlugin(
       copyAndPruneAssets(
         safeCacheDirectory,
         destinationRoot,
-        getAssets(),
+        assets,
         preservedDirectories,
       );
     },

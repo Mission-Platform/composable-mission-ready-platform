@@ -51,3 +51,6 @@ export { isCodeScannerDebugEnabled, setCodeScannerDebug } from './debug';
 
 /** Browser capture helpers (file upload + live `<video>` frame). */
 export { blobToImageData, scanFile, scanFileAsync, videoFrameToImageData } from './capture';
+
+/** Neutral component export for `ForgeCodeScanner`. */
+export * from './components';
