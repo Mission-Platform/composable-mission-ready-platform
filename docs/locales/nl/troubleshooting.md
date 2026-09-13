@@ -1,55 +1,50 @@
-# Gids voor probleemoplossing
+# Troubleshooting Guide
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+This guide provides solutions for common issues encountered during development, build, and deployment within the Mission
+Platform monorepo. It is structured as a **How-to guide** for diagnosing and resolving technical problems.
 
-> Engelse bron: [docs/troubleshooting.md](../../troubleshooting.md)
-> Taal: Nederlands (nl)
+## Performance Issues
 
-Deze gids biedt oplossingen voor veelvoorkomende problemen die zich voordoen tijdens de ontwikkeling, bouw en implementatie binnen de missie
-Platform monorepo. Het is gestructureerd als een **handleiding** voor het diagnosticeren en oplossen van technische problemen.
+### Slow LCP (Largest Contentful Paint)
 
-## Prestatieproblemen
+**Problem**: LCP is above the 2.5s threshold for a "Good" rating.
 
-### Langzame LCP (grootste inhoudsvolle verf)
+**Diagnosis**:
 
-**Probleem**: LCP ligt boven de drempel van 2,5 seconden voor een beoordeling 'Goed'.
+1. Run a Lighthouse audit in Chrome DevTools.
+2. Identify the LCP element in the "Performance" panel.
+3. Check the "Network" tab for resource load delays.
 
-**Diagnose**:
+**Solutions**:
 
-1. Voer een Lighthouse-audit uit in Chrome DevTools.
-2. Identificeer het LCP-element in het paneel "Prestaties".
-3. Controleer het tabblad "Netwerk" op vertragingen bij het laden van bronnen.
+- **Inline Critical CSS**: Ensure styles required for above-the-fold content are inlined.
+- **Image Optimization**: Use WebP/AVIF formats and provide `srcset` for responsive images.
+- **Resource Preloading**: Use `<link rel="preload">` for the LCP image or critical fonts.
+- **Minimize Main Thread Work**: Defer non-essential JavaScript using `async` or `defer`.
 
-**Oplossingen**:
+### Memory Leaks
 
-- **Inline kritische CSS**: zorg ervoor dat de stijlen die vereist zijn voor inhoud boven de vouw, inline zijn.
-- **Beeldoptimalisatie**: gebruik WebP/AVIF-formaten en bied `srcset` voor responsieve afbeeldingen.
-- **Vooraf laden van bronnen**: gebruik `<link rel="preload">` voor de LCP-afbeelding of kritische lettertypen.
-- **Minimaliseer hoofdthreadwerk**: stel niet-essentiële JavaScript-gebruik uit `async` of `defer`.
+**Problem**: The application consumes increasing amounts of memory over time, eventually leading to crashes.
 
-### Geheugenlekken
+**Diagnosis**:
 
-**Probleem**: de applicatie verbruikt in de loop van de tijd steeds meer geheugen, wat uiteindelijk tot crashes kan leiden.
+1. Take multiple "Heap Snapshots" in the Chrome DevTools Memory tab.
+2. Compare snapshots to identify objects that are growing in number or size.
+3. Look for "Detached DOM Elements".
 
-**Diagnose**:
+**Solutions**:
 
-1. Maak meerdere "Heap Snapshots" op het tabblad Chrome DevTools Memory.
-2. Vergelijk momentopnamen om objecten te identificeren die in aantal of omvang groeien.
-3. Zoek naar "Vrijstaande DOM-elementen".
+- **Cleanup in Composables**: Always clear timers and remove event listeners in `onUnmounted`.
+- **Store Management**: Ensure reactive state in Pinia or other stores is cleared when no longer needed.
+- **Dispose of Observables**: If using RxJS, ensure all subscriptions are unsubscribed.
 
-**Oplossingen**:
+## Build and Workspace Issues
 
-- **Opschonen in Composables**: Wis altijd timers en verwijder gebeurtenislisteners `onUnmounted`.
-- **Winkelbeheer**: Zorg ervoor dat de reactieve status in Pinia of andere winkels wordt gewist wanneer deze niet langer nodig is.
-- **Gooi Observables weg**: als u RxJS gebruikt, zorg er dan voor dat alle abonnementen zijn uitgeschreven.
+### Turborepo Caching Errors
 
-## Problemen met bouwen en werkruimte
+**Problem**: Changes are not being reflected in the build, or the build fails with stale artifacts.
 
-### Turborepo-cachefouten
-
-**Probleem**: wijzigingen worden niet doorgevoerd in de build, of de build mislukt met verouderde artefacten.
-
-**Oplossing**: Forceer een nieuwe build door de cache te omzeilen of deze handmatig te wissen.
+**Solution**: Force a fresh build by bypassing the cache or manually clearing it.
 
 ```bash
 # Force a build without cache
@@ -59,67 +54,67 @@ pnpm build:force
 rm -rf .turbo
 ```
 
-### Module niet gevonden / Werkruimteresolutie
+### Module Not Found / Workspace Resolution
 
-**Probleem**: TypeScript of Vite kan geen pakket vinden dat in de werkruimte is gedefinieerd.
+**Problem**: TypeScript or Vite cannot find a package that is defined in the workspace.
 
-**Oplossingen**:
+**Solutions**:
 
-1. Controleer of het pakket in de verbruikende werkruimte staat `package.json`.
-2. Zorg ervoor dat de versie overeenkomt (`workspace:*` wordt aanbevolen).
-3. Rennen `pnpm install` om symlinks te vernieuwen.
-4. Als het probleem aanhoudt, probeer dan een grondige reiniging:
-```bash
+1. Verify the package is listed in the consuming workspace's `package.json`.
+2. Ensure the version matches (`workspace:*` is recommended).
+3. Run `pnpm install` to refresh symlinks.
+4. If issues persist, try a deep clean:
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
    ```
 
-### Type fouten in CI maar niet lokaal
+### Type Errors in CI but not Local
 
-**Probleem**: Build mislukt in CI met TypeScript fouten die niet in uw IDE voorkomen.
+**Problem**: Build fails in CI with TypeScript errors that don't appear in your IDE.
 
-**Oplossing**: voer de typecontrole lokaal uit in de gehele werkruimte.
+**Solution**: Run the type checker locally across the entire workspace.
 
 ```bash
 pnpm exec turbo run build:check
 ```
 
-Dit zorgt ervoor dat alle pakketgrenzen correct worden gerespecteerd en dat typen netjes worden gevalideerd.
+This ensures that all package boundaries are correctly respected and that types validate cleanly.
 
-## Problemen met MCP-server oplossen
+## MCP Server Troubleshooting
 
-### Kan geen verbinding maken
+### Failed to Connect
 
-**Probleem**: uw AI-client of IDE kan geen verbinding maken met de Mission Platform MCP-server.
+**Problem**: Your AI client or IDE cannot connect to the Mission Platform MCP server.
 
-**Diagnose**:
+**Diagnosis**:
 
-1. Controleer of de MCP-server is gebouwd: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
-2. Controleer of de server handmatig start: `node mcp/developer/dist/index.js`.
+1. Verify the MCP server is built: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
+2. Check if the server starts manually: `node mcp/developer/dist/index.js`.
 
-**Oplossingen**:
+**Solutions**:
 
-- Zorg ervoor dat u het absolute pad naar het node binary en het script in uw clientconfiguratie.
-- Controleer de MCP-serverlogboeken op specifieke foutmeldingen (bijvoorbeeld ontbrekende omgevingsvariabelen).
+- Ensure you are using the absolute path to the node binary and the script in your client configuration.
+- Check the MCP server logs for specific error messages (e.g., missing environment variables).
 
-## Veelvoorkomende foutpatronen
+## Common Error Patterns
 
-### "Kan eigenschap van ongedefinieerd niet lezen"
+### "Cannot read property of undefined"
 
-**Oorzaak**: toegang tot eigenschappen van een null- of ongedefinieerd object, vaak voordat de gegevens volledig zijn geladen. **Oplossing**: Gebruik
-optionele kettingschakeling (`?.`) of geef standaardwaarden op.
+**Cause**: Accessing properties on a null or undefined object, often before data has finished loading. **Fix**: Use
+optional chaining (`?.`) or provide default values.
 
 ```typescript
 // Instead of:
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
-### "Onverwerkte belofte afwijzing"
+### "Unhandled Promise Rejection"
 
-**Oorzaak**: een asynchrone functie heeft een fout gegenereerd die niet is opgemerkt. **Opgelost**: asynchrone oproepen altijd inpakken `try/catch` blokken.
+**Cause**: An async function threw an error that wasn't caught. **Fix**: Always wrap async calls in `try/catch` blocks.
 
 ```typescript
 try {
@@ -129,8 +124,8 @@ try {
 }
 ```
 
-## Gerelateerde bronnen
+## Related Resources
 
-- [Beste praktijken](best-practices.md)
-- [Ontwikkeling instellen](development-setup.md)
-- [Gids voor testen](testing.md)
+- [Best Practices](best-practices.md)
+- [Development Setup](development-setup.md)
+- [Testing Guide](testing.md)
