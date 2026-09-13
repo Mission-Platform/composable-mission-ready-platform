@@ -1,46 +1,43 @@
-# Vue 2 tot Vue 3 Migratiegids
+# Vue 2 to Vue 3 Migration Guide
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+This guide describes how to migrate existing Vue 2 codebases to Vue 3 within the Mission Platform monorepo.
 
-> Engelse bron: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
-> Taal: Nederlands (nl)
+## Overview
 
-In deze handleiding wordt beschreven hoe u bestaande Vue 2 codebases voor Vue 3 binnen de monorepo van het Mission Platform.
+The Mission Platform uses Vue 3 with the Composition API and `<script setup>` syntax. Migration involves moving away
+from the Options API and updating component lifecycle and reactivity patterns.
 
-## Overzicht
+## Prerequisites
 
-Het Mission Platform maakt gebruik van Vue 3 met de Composition API en `<script setup>` syntaxis. Migratie houdt in dat je weggaat
-vanuit de Options API en het bijwerken van de levenscyclus- en reactiviteitspatronen van componenten.
+Before migrating, ensure your package follows the platform's dependency rules:
 
-## Vereisten
+- No imports from `apps/`.
+- All shared logic should reside in `packages/`.
+- Configuration should come from `packages/tooling/configs/`.
 
-Voordat u migreert, moet u ervoor zorgen dat uw pakket de afhankelijkheidsregels van het platform volgt:
+## Step 1: Update Build Configuration
 
-- Geen import uit `apps/`.
-- Alle gedeelde logica moet zich daarin bevinden `packages/`.
-- Configuratie zou vandaan moeten komen `configs/`.
-
-## Stap 1: Update de build-configuratie
-
-Verzeker uw `package.json` En `vite.config.ts` zijn gericht Vue 3.
+Ensure your `package.json` and `vite.config.ts` are targeting Vue 3.
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
-## Stap 2: Converteer Opties-API naar Composition-API
+## Step 2: Convert Options API to Composition API
 
-Vervang de Vue 2 Opties-API (`data`, `methods`, `computed`) met de Vue 3 Samenstelling-API.
+Replace the Vue 2 Options API (`data`, `methods`, `computed`) with the Vue 3 Composition API.
 
-### Gegevens naar ref
+### Data to Refs
 
-In Vue 2, staat werd gedefinieerd in de `data()` functie. In Vue 3, gebruik `ref()` of `reactive()`.
+In Vue 2, state was defined in the `data()` function. In Vue 3, use `ref()` or `reactive()`.
 
 **Vue 2:**
 
@@ -48,23 +45,23 @@ In Vue 2, staat werd gedefinieerd in de `data()` functie. In Vue 3, gebruik `ref
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3:**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
 
-### Methoden voor functies
+### Methods to Functions
 
-Methoden worden eenvoudige functies in de `<script setup>` blok.
+Methods become plain functions in the `<script setup>` block.
 
 **Vue 2:**
 
@@ -84,13 +81,13 @@ const increment = () => {
 };
 ```
 
-## Stap 3: Levenscyclushaken bijwerken
+## Step 3: Update Lifecycle Hooks
 
-Lifecycle-hooks hebben een nieuwe naam gekregen en moeten worden geïmporteerd.
+Lifecycle hooks have been renamed and must be imported.
 
 | Vue 2                      | Vue 3                                     |
-|:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | Gebruik `setup()` / `<script setup>` direct |
+| :------------------------- | :---------------------------------------- |
+| `beforeCreate` / `created` | Use `setup()` / `<script setup>` directly |
 | `beforeMount`              | `onBeforeMount`                           |
 | `mounted`                  | `onMounted`                               |
 | `beforeUpdate`             | `onBeforeUpdate`                          |
@@ -98,19 +95,19 @@ Lifecycle-hooks hebben een nieuwe naam gekregen en moeten worden geïmporteerd.
 | `beforeDestroy`            | `onBeforeUnmount`                         |
 | `destroyed`                | `onUnmounted`                             |
 
-Voorbeeld:
+Example:
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
-## Stap 4: Adopteer `<script setup>`
+## Step 4: Adopt `<script setup>`
 
-Alle nieuwe en gemigreerde componenten in het Mission Platform moeten de `<script setup>` syntaxis met TypeScript.
+All new and migrated components in the Mission Platform should use the `<script setup>` syntax with TypeScript.
 
 ```vue
 <template>
@@ -118,22 +115,22 @@ Alle nieuwe en gemigreerde componenten in het Mission Platform moeten de `<scrip
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
 </script>
 ```
 
-## Stap 5: Behandel belangrijke wijzigingen
+## Step 5: Handle Breaking Changes
 
 ### V-model
 
-In Vue 3, de standaard propnaam voor `v-model` is `modelValue` en het evenement is `update:modelValue`.
+In Vue 3, the default prop name for `v-model` is `modelValue` and the event is `update:modelValue`.
 
-### Ref-toegang
+### Ref access
 
-`this.$refs` wordt niet meer gebruikt. Definieer een ref met dezelfde naam als de `ref` attribuut op het element.
+`this.$refs` is no longer used. Define a ref with the same name as the `ref` attribute on the element.
 
 ```vue
 <template>
@@ -141,7 +138,7 @@ In Vue 3, de standaard propnaam voor `v-model` is `modelValue` en het evenement 
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 
@@ -151,9 +148,9 @@ onMounted(() => {
 </script>
 ```
 
-## Stap 6: Verificatie
+## Step 6: Verification
 
-Voer de volgende opdrachten uit om ervoor te zorgen dat de migratie succesvol is en voldoet aan de platformstandaarden:
+Run the following commands to ensure the migration is successful and adheres to platform standards:
 
 ```bash
 # Type-check the package
