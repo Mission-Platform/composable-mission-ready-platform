@@ -1,55 +1,50 @@
-# دليل استكشاف الأخطاء وإصلاحها
+# Troubleshooting Guide
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+This guide provides solutions for common issues encountered during development, build, and deployment within the Mission
+Platform monorepo. It is structured as a **How-to guide** for diagnosing and resolving technical problems.
 
-> المصدر الإنجليزي: [docs/troubleshooting.md](../../troubleshooting.md)
-> اللغة: العربية (ar)
+## Performance Issues
 
-يوفر هذا الدليل حلولاً للمشكلات الشائعة التي تمت مواجهتها أثناء التطوير والبناء والنشر داخل المهمة
-منصة مونوريبو. لقد تم تصميمه ليكون **دليل إرشادي** لتشخيص المشكلات الفنية وحلها.
+### Slow LCP (Largest Contentful Paint)
 
-## قضايا الأداء
+**Problem**: LCP is above the 2.5s threshold for a "Good" rating.
 
-### LCP البطيء (أكبر طلاء محتوى)
+**Diagnosis**:
 
-**المشكلة**: يتجاوز LCP حد 2.5 ثانية للحصول على تصنيف "جيد".
+1. Run a Lighthouse audit in Chrome DevTools.
+2. Identify the LCP element in the "Performance" panel.
+3. Check the "Network" tab for resource load delays.
 
-**تشخبص**:
+**Solutions**:
 
-1. قم بإجراء تدقيق Lighthouse في Chrome DevTools.
-2. حدد عنصر LCP في لوحة "الأداء".
-3. تحقق من علامة التبويب "الشبكة" لمعرفة تأخيرات تحميل الموارد.
+- **Inline Critical CSS**: Ensure styles required for above-the-fold content are inlined.
+- **Image Optimization**: Use WebP/AVIF formats and provide `srcset` for responsive images.
+- **Resource Preloading**: Use `<link rel="preload">` for the LCP image or critical fonts.
+- **Minimize Main Thread Work**: Defer non-essential JavaScript using `async` or `defer`.
 
-**الحلول**:
+### Memory Leaks
 
-- **CSS الحرجة المضمنة**: تأكد من تضمين الأنماط المطلوبة للمحتوى الموجود في الجزء العلوي.
-- **تحسين الصورة**: استخدم تنسيقات WebP/AVIF وقم بتوفيرها `srcset` للصور المستجيبة.
-- **التحميل المسبق للمورد**: الاستخدام `<link rel="preload">` لصورة LCP أو الخطوط الهامة.
-- **تقليل عمل الموضوع الرئيسي**: قم بتأجيل استخدام جافا سكريبت غير الضروري `async` أو `defer`.
+**Problem**: The application consumes increasing amounts of memory over time, eventually leading to crashes.
 
-### تسرب الذاكرة
+**Diagnosis**:
 
-**المشكلة**: يستهلك التطبيق كميات متزايدة من الذاكرة بمرور الوقت، مما يؤدي في النهاية إلى حدوث أعطال.
+1. Take multiple "Heap Snapshots" in the Chrome DevTools Memory tab.
+2. Compare snapshots to identify objects that are growing in number or size.
+3. Look for "Detached DOM Elements".
 
-**تشخبص**:
+**Solutions**:
 
-1. التقط عدة "لقطات كومة" في علامة التبويب "ذاكرة Chrome DevTools".
-2. قارن اللقطات لتحديد الكائنات التي تتزايد في العدد أو الحجم.
-3. ابحث عن "عناصر DOM المنفصلة".
+- **Cleanup in Composables**: Always clear timers and remove event listeners in `onUnmounted`.
+- **Store Management**: Ensure reactive state in Pinia or other stores is cleared when no longer needed.
+- **Dispose of Observables**: If using RxJS, ensure all subscriptions are unsubscribed.
 
-**الحلول**:
+## Build and Workspace Issues
 
-- **التنظيف في العناصر المركبة**: قم دائمًا بمسح المؤقتات وإزالة مستمعي الأحداث `onUnmounted`.
-- **إدارة المتجر**: تأكد من مسح حالة التفاعل في Pinia أو المتاجر الأخرى عند عدم الحاجة إليها.
-- **التخلص من العناصر التي يمكن ملاحظتها**: في حالة استخدام RxJS، تأكد من إلغاء الاشتراك في جميع الاشتراكات.
+### Turborepo Caching Errors
 
-## قضايا البناء ومساحة العمل
+**Problem**: Changes are not being reflected in the build, or the build fails with stale artifacts.
 
-### أخطاء التخزين المؤقت Turborepo
-
-**المشكلة**: لا تنعكس التغييرات في البناء، أو يفشل البناء مع العناصر القديمة.
-
-**الحل**: فرض إنشاء جديد عن طريق تجاوز ذاكرة التخزين المؤقت أو مسحها يدويًا.
+**Solution**: Force a fresh build by bypassing the cache or manually clearing it.
 
 ```bash
 # Force a build without cache
@@ -59,67 +54,67 @@ pnpm build:force
 rm -rf .turbo
 ```
 
-### لم يتم العثور على الوحدة النمطية / دقة مساحة العمل
+### Module Not Found / Workspace Resolution
 
-**مشكلة**: TypeScript أو Vite لا يمكن العثور على الحزمة التي تم تعريفها في مساحة العمل.
+**Problem**: TypeScript or Vite cannot find a package that is defined in the workspace.
 
-**الحلول**:
+**Solutions**:
 
-1. تحقق من إدراج الحزمة في مساحة العمل المستهلكة `package.json`.
-2. تأكد من تطابق الإصدار (`workspace:*` يوصى).
-3. اركض `pnpm install` لتحديث الروابط الرمزية.
-4. إذا استمرت المشكلات، فجرّب التنظيف العميق:
-```bash
+1. Verify the package is listed in the consuming workspace's `package.json`.
+2. Ensure the version matches (`workspace:*` is recommended).
+3. Run `pnpm install` to refresh symlinks.
+4. If issues persist, try a deep clean:
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
    ```
 
-### اكتب الأخطاء في CI ولكن ليس المحلية
+### Type Errors in CI but not Local
 
-**المشكلة**: فشل البناء في CI مع TypeScript الأخطاء التي لا تظهر في IDE الخاص بك.
+**Problem**: Build fails in CI with TypeScript errors that don't appear in your IDE.
 
-**الحل**: قم بتشغيل مدقق النوع محليًا عبر مساحة العمل بأكملها.
+**Solution**: Run the type checker locally across the entire workspace.
 
 ```bash
 pnpm exec turbo run build:check
 ```
 
-وهذا يضمن احترام جميع حدود الحزمة بشكل صحيح والتحقق من صحة الأنواع بشكل نظيف.
+This ensures that all package boundaries are correctly respected and that types validate cleanly.
 
-## استكشاف أخطاء خادم MCP وإصلاحها
+## MCP Server Troubleshooting
 
-### فشل الاتصال
+### Failed to Connect
 
-**المشكلة**: لا يمكن لعميل AI أو IDE الاتصال بخادم Mission Platform MCP.
+**Problem**: Your AI client or IDE cannot connect to the Mission Platform MCP server.
 
-**تشخبص**:
+**Diagnosis**:
 
-1. تحقق من إنشاء خادم MCP: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
-2. تحقق مما إذا كان الخادم يبدأ يدويًا: `node mcp/developer/dist/index.js`.
+1. Verify the MCP server is built: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
+2. Check if the server starts manually: `node mcp/developer/dist/index.js`.
 
-**الحلول**:
+**Solutions**:
 
-- تأكد من أنك تستخدم المسار المطلق إلى node ثنائي والبرنامج النصي في تكوين العميل الخاص بك.
-- التحقق من سجلات خادم MCP بحثًا عن رسائل خطأ محددة (على سبيل المثال، متغيرات البيئة المفقودة).
+- Ensure you are using the absolute path to the node binary and the script in your client configuration.
+- Check the MCP server logs for specific error messages (e.g., missing environment variables).
 
-## أنماط الأخطاء الشائعة
+## Common Error Patterns
 
-### "لا يمكن قراءة خاصية غير محددة"
+### "Cannot read property of undefined"
 
-**السبب**: الوصول إلى خصائص كائن فارغ أو غير محدد، غالبًا قبل انتهاء تحميل البيانات. **إصلاح**: الاستخدام
-تسلسل اختياري (`?.`) أو توفير القيم الافتراضية.
+**Cause**: Accessing properties on a null or undefined object, often before data has finished loading. **Fix**: Use
+optional chaining (`?.`) or provide default values.
 
 ```typescript
 // Instead of:
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
-### "رفض الوعد غير المعالج"
+### "Unhandled Promise Rejection"
 
-**السبب**: تسببت إحدى الوظائف غير المتزامنة في ظهور خطأ لم يتم اكتشافه. **الإصلاح**: قم دائمًا بتغطية المكالمات غير المتزامنة `try/catch` كتل.
+**Cause**: An async function threw an error that wasn't caught. **Fix**: Always wrap async calls in `try/catch` blocks.
 
 ```typescript
 try {
@@ -129,8 +124,8 @@ try {
 }
 ```
 
-## الموارد ذات الصلة
+## Related Resources
 
-- [أفضل الممارسات](best-practices.md)
-- [إعداد التطوير](development-setup.md)
-- [دليل الاختبار](testing.md)
+- [Best Practices](best-practices.md)
+- [Development Setup](development-setup.md)
+- [Testing Guide](testing.md)
