@@ -15,12 +15,12 @@ Per selezionare il pacchetto corretto, è necessario configurare lo strumento di
 
 ### Condizioni quadro supportate
 
-| Quadro | Condizione di esportazione |
-| :----------------- | :----------------- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
-| **Componenti Web** | `mp:web-component` |
+| Quadro             | Condizione di esportazione |
+| :----------------- | :------------------------- |
+| **Vue 3**          | `mp:vue`                   |
+| **React**          | `mp:react`                 |
+| **Solid**          | `mp:solid`                 |
+| **Componenti Web** | `mp:web-component`         |
 
 ## Configurazione del progetto
 

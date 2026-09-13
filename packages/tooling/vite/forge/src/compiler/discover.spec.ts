@@ -88,6 +88,105 @@ describe('discoverComponents', () => {
     ]);
   });
 
+  it('distinguishes component functions from co-located context and helper exports in mixed modules', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-mixed-'));
+    temporaryDirectories.push(root);
+    const files: Record<string, string> = {
+      'components/index.ts': [
+        'export {',
+        '  ForgeForm,',
+        '  FormContext,',
+        '  defaultFormContext,',
+        '  useFormContext,',
+        '  type ForgeFormProps,',
+        '  type ForgeFormProperties,',
+        '  type FormContextValue,',
+        "} from './organisms/forge-form';",
+      ].join('\n'),
+      'components/organisms/forge-form/index.ts': [
+        'export {',
+        '  ForgeForm,',
+        '  FormContext,',
+        '  defaultFormContext,',
+        '  useFormContext,',
+        '  type ForgeFormProps,',
+        '  type ForgeFormProperties,',
+        '  type FormContextValue,',
+        "} from './forge-form';",
+      ].join('\n'),
+      'components/organisms/forge-form/forge-form.tsx': [
+        'export interface FormContextValue { state: Record<string, unknown>; }',
+        'export interface ForgeFormProps { id?: string; }',
+        'export interface ForgeFormProperties extends ForgeFormProps { name?: string; }',
+        'export const defaultFormContext: FormContextValue = { state: {} };',
+        'export const FormContext = { current: defaultFormContext };',
+        'export function useFormContext() { return FormContext.current; }',
+        'export function ForgeForm(props: ForgeFormProperties) { return <form id={props.id} />; }',
+      ].join('\n'),
+    };
+    await Promise.all(
+      Object.entries(files).map(async ([relativePath, source]) => {
+        const filePath = path.join(root, relativePath);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, source);
+      }),
+    );
+
+    const graph = buildForgeFileGraph({ entry: path.join(root, 'components/index.ts'), sourceRoot: root });
+    const components = discoverComponentsFromGraph(graph);
+    const helpers = discoverHelperExportsFromGraph(graph, new Set(components.map((component) => component.folder)));
+
+    expect(components).toEqual([
+      expect.objectContaining({
+        neutralName: 'ForgeForm',
+        publicName: 'Form',
+        folder: 'forge-form',
+        sourceDir: 'organisms/forge-form',
+        sourcePath: path.join(root, 'components/organisms/forge-form/forge-form.tsx'),
+      }),
+    ]);
+    expect(components.map((component) => component.neutralName)).toEqual(['ForgeForm']);
+
+    expect(helpers).toEqual([
+      expect.objectContaining({
+        base: 'forge-form',
+        relativePath: 'organisms/forge-form/forge-form',
+        sourcePath: path.join(root, 'components/organisms/forge-form/forge-form.tsx'),
+        values: [
+          { localName: 'FormContext', exportedName: 'FormContext' },
+          { localName: 'defaultFormContext', exportedName: 'defaultFormContext' },
+          { localName: 'useFormContext', exportedName: 'useFormContext' },
+        ],
+        types: [{ localName: 'FormContextValue', exportedName: 'FormContextValue' }],
+      }),
+    ]);
+  });
+
+  it('classifies PascalCase function exports as components even without explicit JSX returns', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-func-'));
+    temporaryDirectories.push(root);
+    const files: Record<string, string> = {
+      'components/index.ts': [
+        "export { ForgeCard } from './forge-card';",
+        "export { ForgeEmpty } from './forge-empty';",
+      ].join('\n'),
+      'components/forge-card.tsx': 'export function ForgeCard() {}\n',
+      'components/forge-empty.tsx': 'export const ForgeEmpty = () => {};\n',
+    };
+    await Promise.all(
+      Object.entries(files).map(async ([relativePath, source]) => {
+        const filePath = path.join(root, relativePath);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, source);
+      }),
+    );
+
+    const graph = buildForgeFileGraph({ entry: path.join(root, 'components/index.ts'), sourceRoot: root });
+    const components = discoverComponentsFromGraph(graph);
+
+    expect(components.map((c) => c.neutralName)).toEqual(['ForgeCard', 'ForgeEmpty']);
+  });
+
   it('matches type-only exports from composable modules', async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-composable-types-'));
     temporaryDirectories.push(root);
@@ -113,6 +212,44 @@ describe('discoverComponents', () => {
         values: [{ localName: 'useLayer', exportedName: 'useLayer' }],
         types: [{ localName: 'UseLayerOptions', exportedName: 'UseLayerOptions' }],
         sourcePath: path.join(root, 'composables/use-layer.ts'),
+      }),
+    ]);
+  });
+
+  it('preserves PascalCase provider and helper function exports from non-component helper modules', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-provider-helper-'));
+    temporaryDirectories.push(root);
+    const files: Record<string, string> = {
+      'components/index.ts':
+        "export { IconSpriteContext, IconSpriteProvider, useIconHref } from '../sprite/provider';\n",
+      'sprite/provider.ts': [
+        'export const IconSpriteContext = { src: undefined };',
+        'export function IconSpriteProvider(props: { src?: string }) { return props; }',
+        'export function useIconHref(id: string) { return id; }',
+      ].join('\n'),
+    };
+    await Promise.all(
+      Object.entries(files).map(async ([relativePath, source]) => {
+        const filePath = path.join(root, relativePath);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, source);
+      }),
+    );
+
+    const graph = buildForgeFileGraph({ entry: path.join(root, 'components/index.ts'), sourceRoot: root });
+    const components = discoverComponentsFromGraph(graph);
+    const helpers = discoverHelperExportsFromGraph(graph, new Set(components.map((c) => c.folder)));
+
+    expect(components).toEqual([]);
+    expect(helpers).toEqual([
+      expect.objectContaining({
+        base: 'provider',
+        values: [
+          { localName: 'IconSpriteContext', exportedName: 'IconSpriteContext' },
+          { localName: 'IconSpriteProvider', exportedName: 'IconSpriteProvider' },
+          { localName: 'useIconHref', exportedName: 'useIconHref' },
+        ],
+        sourcePath: path.join(root, 'sprite/provider.ts'),
       }),
     ]);
   });

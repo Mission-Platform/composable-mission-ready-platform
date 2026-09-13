@@ -781,6 +781,20 @@ function renderMatrixLuma(
   return { width: side, height: side, luma };
 }
 
+function rotateLuma90(image: { width: number; height: number; luma: number[] }): {
+  width: number;
+  height: number;
+  luma: number[];
+} {
+  const luma = new Array(image.width * image.height).fill(255);
+  for (let y = 0; y < image.height; y += 1) {
+    for (let x = 0; x < image.width; x += 1) {
+      luma[x * image.height + image.height - 1 - y] = image.luma[y * image.width + x];
+    }
+  }
+  return { width: image.height, height: image.width, luma };
+}
+
 function loadPackedModuleFixture(
   fileName: string,
   width: number,
@@ -941,6 +955,28 @@ describe('compiled scanner FWS foundation graph', () => {
       writeArray(api, new Array(16).fill(0)),
     );
     expect(readString(api, invertedResult)).toBe('R10500000000072069076076079');
+  });
+
+  it('retries linked 2D readers at quarter-turn rotations when try-harder is enabled', () => {
+    const matrix = encodeMatrix('datamatrix', 'HELLO');
+    let image = renderMatrixLuma(matrix.width, matrix.modules);
+    for (let turn = 0; turn < 3; turn += 1) {
+      image = rotateLuma90(image);
+      const result = api.scan_and_decode_with_options(
+        image.width,
+        image.height,
+        writeArray(api, image.luma),
+        writeArray(api, new Array(image.width * image.height).fill(0)),
+        writeArray(api, new Array(image.width * image.height).fill(0)),
+        writeArray(api, new Array(image.width * image.height + 1).fill(0)),
+        writeArray(api, new Array(16).fill(0)),
+        5,
+        1,
+        0,
+        0,
+      );
+      expect(readString(api, result)).toBe('R10500000000072069076076079');
+    }
   });
 
   it('applies possible-format and retry options inside the scanner graph', () => {

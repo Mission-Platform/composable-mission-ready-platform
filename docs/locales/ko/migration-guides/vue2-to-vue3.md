@@ -26,12 +26,14 @@
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
 ## 2단계: 옵션 API를 컴포지션 API로 변환
@@ -48,16 +50,16 @@ Vue 2에서는 상태가 `data()` 함수에 정의되었습니다. Vue 3에서�
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3:**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
@@ -88,23 +90,23 @@ const increment = () => {
 
 수명 주기 후크의 이름이 바뀌었으므로 가져와야 합니다.
 
-| Vue 2 | Vue 3 |
-|:---------------------------|:------------------------------------------|
+| Vue 2                      | Vue 3                                  |
+| :------------------------- | :------------------------------------- |
 | `beforeCreate` / `created` | `setup()` / `<script setup>` 직접 사용 |
-| `beforeMount` | `onBeforeMount` |
-| `mounted` | `onMounted` |
-| `beforeUpdate` | `onBeforeUpdate` |
-| `updated` | `onUpdated` |
-| `beforeDestroy` | `onBeforeUnmount` |
-| `destroyed` | `onUnmounted` |
+| `beforeMount`              | `onBeforeMount`                        |
+| `mounted`                  | `onMounted`                            |
+| `beforeUpdate`             | `onBeforeUpdate`                       |
+| `updated`                  | `onUpdated`                            |
+| `beforeDestroy`            | `onBeforeUnmount`                      |
+| `destroyed`                | `onUnmounted`                          |
 
 예:
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
@@ -118,7 +120,7 @@ Mission Platform의 모든 신규 및 마이그레이션 구성 요소는 TypeSc
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
@@ -141,7 +143,7 @@ Vue 3에서 `v-model`의 기본 소품 이름은 `modelValue`이고 이벤트는
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 

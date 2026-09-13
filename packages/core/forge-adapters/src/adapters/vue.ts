@@ -53,12 +53,21 @@ import {
  * string/array/object forms directly, so the value passes straight through,
  * matching the native `:class` the two-stage compiler emits for the Vue target.
  */
-function toVueProperties(properties: MpPropertyBag): Record<string, unknown> {
-  if (!('className' in properties)) {
-    return properties as Record<string, unknown>;
+function toVueProperties(properties: MpPropertyBag, isNativeElement = false): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(properties)) {
+    if (key === 'className') {
+      result.class = value;
+    } else if (isNativeElement && key === 'onDoubleClick') {
+      result.onDblclick = value;
+    } else if (isNativeElement && /^on[A-Z]/.test(key) && typeof value === 'function') {
+      const normalizedKey = 'on' + key.slice(2, 3).toUpperCase() + key.slice(3).toLowerCase();
+      result[normalizedKey] = value;
+    } else {
+      result[key] = value;
+    }
   }
-  const { className: classValue, ...rest } = properties as Record<string, unknown>;
-  return { ...rest, class: classValue };
+  return result;
 }
 
 function toVueChild(child: MpChild | VNode): VNodeChild {
@@ -92,7 +101,7 @@ function toVueChildren(children: readonly (MpChild | VNode)[]): VNodeChild[] {
 export function HtmlContent(properties: HtmlContentProperties): VNode {
   const { html, as = 'div', children: _children, ...hostProperties } = properties;
   void _children;
-  return createVueElement(as, { ...toVueProperties(hostProperties), innerHTML: html });
+  return createVueElement(as, { ...toVueProperties(hostProperties, true), innerHTML: html });
 }
 
 /** Render a neutral {@link MpElement} tree into a Vue `VNode`. */
@@ -182,8 +191,9 @@ export function renderToVue(element: MpElement): VNode {
     }
   }
 
+  const isNative = typeof type === 'string';
   const vueChildren = toVueChildren(children);
-  const vueProperties = toVueProperties(properties);
+  const vueProperties = toVueProperties(properties, isNative);
 
   // Neutral components can contain Vue component values after a target-specific
   // context import is rewritten. Vue expects component children as slot

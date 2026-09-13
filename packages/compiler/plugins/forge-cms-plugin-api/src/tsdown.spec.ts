@@ -79,22 +79,28 @@ describe("Forge CMS tsdown helper", () => {
         artifactMode: "shared",
       });
 
-      expect(frameworkConfig.outDir).toBe(
-        path.join(outputRoot, "dist/cms/storyblok/react"),
+      expect(frameworkConfig.outDir).toMatch(
+        new RegExp(
+          String.raw`^${path.join(outputRoot, "dist/cms/storyblok")}/\.forge-attempt-react-storyblok-react-`,
+        ),
       );
-      expect(aggregateConfig.outDir).toBe(
-        path.join(outputRoot, "dist/cms/storyblok/react"),
+      expect(aggregateConfig.outDir).toMatch(
+        new RegExp(
+          String.raw`^${path.join(outputRoot, "dist/cms/storyblok")}/\.forge-attempt-react-storyblok-react-`,
+        ),
       );
-      expect(sharedConfig.outDir).toBe(
-        path.join(outputRoot, "dist/cms/storyblok"),
+      expect(sharedConfig.outDir).toMatch(
+        new RegExp(
+          String.raw`^${path.join(outputRoot, "dist/cms")}/\.forge-attempt-storyblok-storyblok-react-`,
+        ),
       );
       expect(frameworkConfig.clean).toBe(true);
       expect(aggregateConfig.clean).toBe(true);
       expect(sharedConfig.clean).toBe(true);
       expect(outputDirectories).toEqual([
-        path.join(outputRoot, "dist/cms/storyblok/react"),
-        path.join(outputRoot, "dist/cms/storyblok/react"),
-        path.join(outputRoot, "dist/cms/storyblok"),
+        frameworkConfig.outDir,
+        aggregateConfig.outDir,
+        sharedConfig.outDir,
       ]);
       expect(frameworkConfig.entry).toContain(
         "@mission-platform/forge/entry:storyblok-react",
@@ -143,12 +149,20 @@ describe("Forge CMS tsdown helper", () => {
       expect.stringContaining("@mission-platform/forge/entry:storyblok-vue"),
     ]);
     expect(plugin.cmsTargetConfigs.map((config) => config.outDir)).toEqual([
-      path.join(outputRoot, "dist/cms/storyblok/react"),
-      path.join(outputRoot, "dist/cms/storyblok/vue"),
+      expect.stringMatching(
+        new RegExp(
+          String.raw`^${path.join(outputRoot, "dist/cms/storyblok")}/\.forge-attempt-react-storyblok-react-`,
+        ),
+      ),
+      expect.stringMatching(
+        new RegExp(
+          String.raw`^${path.join(outputRoot, "dist/cms/storyblok")}/\.forge-attempt-vue-storyblok-vue-`,
+        ),
+      ),
     ]);
     expect(outputDirectories).toEqual([
-      path.join(outputRoot, "dist/cms/storyblok/react"),
-      path.join(outputRoot, "dist/cms/storyblok/vue"),
+      plugin.cmsTargetConfigs[0]?.outDir,
+      plugin.cmsTargetConfigs[1]?.outDir,
     ]);
 
     const host = defineTsdownLibrary({

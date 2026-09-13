@@ -557,6 +557,182 @@ function rewriteDeclaration(
   return { text: declarators.join(","), end };
 }
 
+/** Whether `text` is a single plain identifier (no pattern, no member access). */
+function isPlainIdentifier(text: string): boolean {
+  return /^[A-Za-z_$][\w$]*$/.test(text);
+}
+
+/**
+ * The simple identifier names an arrow-function parameter list binds.
+ *
+ * Only plain identifier parameters (`open`, `open: boolean`, `open = false`,
+ * `...rest`) are recognised — a destructured or array parameter contributes no
+ * name here. Its locals are still copied verbatim by {@link rewriteBinding}
+ * when the parameter list is reassembled, so it never gets corrupted; it just
+ * is not a candidate this pass can prove shadows the outer scope, which in
+ * practice is rare for a destructured callback parameter.
+ */
+function arrowParameterNames(parameterListText: string): Set<string> {
+  const names = new Set<string>();
+  for (const part of splitTopLevel(parameterListText, ",")) {
+    const trimmed = part.trim();
+    if (trimmed.length === 0) {
+      continue;
+    }
+    const withoutRest = trimmed.startsWith("...")
+      ? trimmed.slice(3).trim()
+      : trimmed;
+    const assignment = topLevelAssignmentIndex(withoutRest);
+    const binding =
+      assignment === -1 ? withoutRest : withoutRest.slice(0, assignment);
+    const withoutType = splitTopLevel(binding, ":")[0] ?? binding;
+    const name = withoutType.trim().replace(/\?$/, "");
+    if (isPlainIdentifier(name)) {
+      names.add(name);
+    }
+  }
+  return names;
+}
+
+/** Whether reading any of `names` bare would resolve against `scope`. */
+function parameterShadowsScope(
+  names: ReadonlySet<string>,
+  scope: ElementScope,
+): boolean {
+  for (const name of names) {
+    if (
+      name === scope.propsParameterName ||
+      scope.scoped.has(name) ||
+      scope.setters.has(name) ||
+      (scope.aliases?.has(name) ?? false)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * A copy of `scope` with `names` removed from every lookup table — the
+ * bindings an arrow function's own parameter list shadows for the extent of
+ * its body, so a read inside resolves to the local parameter rather than
+ * `this.<name>`.
+ */
+function shrinkScope(
+  scope: ElementScope,
+  names: ReadonlySet<string>,
+): ElementScope {
+  const scoped = new Set(scope.scoped);
+  const setters = new Map(scope.setters);
+  const aliases =
+    scope.aliases === undefined ? undefined : new Map(scope.aliases);
+  for (const name of names) {
+    scoped.delete(name);
+    setters.delete(name);
+    aliases?.delete(name);
+  }
+  return {
+    propsParameterName:
+      scope.propsParameterName !== undefined &&
+      names.has(scope.propsParameterName)
+        ? undefined
+        : scope.propsParameterName,
+    scoped,
+    setters,
+    aliases,
+  };
+}
+
+/**
+ * Rewrite a parenthesized or bare arrow-function parameter list into its
+ * reassembled, scope-aware form — every bound name (and its type annotation)
+ * copied verbatim, while a default value is rewritten against the *outer*
+ * scope, matching how {@link rewriteDeclaration} treats a declarator's
+ * initializer.
+ */
+function rewriteArrowParameterList(
+  parameterListText: string,
+  scope: ElementScope,
+): string {
+  return splitTopLevel(parameterListText, ",")
+    .map((part) => {
+      const assignment = topLevelAssignmentIndex(part);
+      if (assignment < 0) {
+        return rewriteBinding(part, scope);
+      }
+      const binding = rewriteBinding(part.slice(0, assignment), scope);
+      const initializer = rewriteExpressionText(
+        part.slice(assignment + 1),
+        scope,
+      );
+      return `${binding}=${initializer}`;
+    })
+    .join(",");
+}
+
+/**
+ * The end (exclusive) of the expression starting at `start`, stopping at the
+ * first top-level `,` or an unmatched closing bracket — the boundary of an
+ * arrow function's **expression** body within its enclosing call, array, or
+ * object.
+ */
+function expressionExtentEnd(text: string, start: number): number {
+  let cursor = start;
+  let depth = 0;
+  while (cursor < text.length) {
+    const char = text[cursor] ?? "";
+    if (char === "'" || char === '"' || char === "`") {
+      cursor = skipLiteral(text, cursor);
+      continue;
+    }
+    if (char === "(" || char === "[" || char === "{") {
+      depth += 1;
+      cursor += 1;
+      continue;
+    }
+    if (char === ")" || char === "]" || char === "}") {
+      if (depth === 0) {
+        return cursor;
+      }
+      depth -= 1;
+      cursor += 1;
+      continue;
+    }
+    if (char === "," && depth === 0) {
+      return cursor;
+    }
+    cursor += 1;
+  }
+  return text.length;
+}
+
+/**
+ * Rewrite an arrow function's body — a `{ … }` block copied whole, or a bare
+ * expression bounded by {@link expressionExtentEnd} — against a `scope` that
+ * has already had the arrow's own parameters shadowed out of it.
+ */
+function rewriteArrowBody(
+  text: string,
+  bodyStart: number,
+  narrowedScope: ElementScope,
+): IdentifierRewrite {
+  if (text[bodyStart] === "{") {
+    const bodyEnd = matchingBracket(text, bodyStart) + 1;
+    return {
+      text: rewriteExpressionText(
+        text.slice(bodyStart, bodyEnd),
+        narrowedScope,
+      ),
+      end: bodyEnd,
+    };
+  }
+  const bodyEnd = expressionExtentEnd(text, bodyStart);
+  return {
+    text: rewriteExpressionText(text.slice(bodyStart, bodyEnd), narrowedScope),
+    end: bodyEnd,
+  };
+}
+
 /** Rewrite the identifier spanning `[start, end)` according to the element scope. */
 function rewriteIdentifier(
   text: string,
@@ -594,6 +770,30 @@ function rewriteIdentifier(
   // `[a, b]`, neither of which may grow a `name:` prefix.
   const inObjectPosition =
     enclosing === "object" && (previous === "{" || previous === ",");
+
+  let isObjectMemberName = false;
+  if (enclosing === "object") {
+    if (inObjectPosition && next === "(") {
+      isObjectMemberName = true;
+    } else if (previousIndex >= 0 && isIdentifierPart(text[previousIndex])) {
+      let wordStart = previousIndex;
+      while (wordStart > 0 && isIdentifierPart(text[wordStart - 1])) {
+        wordStart -= 1;
+      }
+      const previousWord = text.slice(wordStart, previousIndex + 1);
+      if (previousWord === "get" || previousWord === "set") {
+        const beforeWordIndex = previousSignificant(text, wordStart);
+        const beforeWord = beforeWordIndex >= 0 ? text[beforeWordIndex] : "";
+        if (beforeWord === "{" || beforeWord === ",") {
+          isObjectMemberName = true;
+        }
+      }
+    }
+  }
+
+  if (isObjectMemberName) {
+    return { text: name, end };
+  }
 
   // `properties.x` / `properties?.x` → `this.x`; a bare `properties` read is the
   // element itself, since every prop lives on the instance.
@@ -737,6 +937,32 @@ export function rewriteExpressionText(
       cursor = end;
       continue;
     }
+    // A parenthesized arrow-function parameter list (`(open: boolean) => …`)
+    // binds new locals for the extent of its body — a parameter that happens
+    // to share a name with a reactive property must shadow it there, or the
+    // parameter declaration itself gets corrupted into `(this.open: …)`.
+    if (char === "(") {
+      const closeParen = matchingBracket(text, cursor);
+      const afterParen = nextSignificant(text, closeParen + 1);
+      if (text[afterParen] === "=" && text[afterParen + 1] === ">") {
+        const parameterListText = text.slice(cursor + 1, closeParen);
+        const shadowed = arrowParameterNames(parameterListText);
+        if (shadowed.size > 0 && parameterShadowsScope(shadowed, scope)) {
+          const params = rewriteArrowParameterList(parameterListText, scope);
+          const arrowEnd = afterParen + 2;
+          const bodyStart = nextSignificant(text, arrowEnd);
+          out += `(${params})${text.slice(closeParen + 1, bodyStart)}`;
+          const body = rewriteArrowBody(
+            text,
+            bodyStart,
+            shrinkScope(scope, shadowed),
+          );
+          out += body.text;
+          cursor = body.end;
+          continue;
+        }
+      }
+    }
     if (char === "(" || char === "[" || char === "{") {
       brackets.push(
         char === "("
@@ -772,6 +998,30 @@ export function rewriteExpressionText(
         out += name + declaration.text;
         cursor = declaration.end;
         continue;
+      }
+      // A bare single-parameter arrow (`open => …`) binds a new local the
+      // same way the parenthesized form above does, just without a parameter
+      // list to reassemble.
+      const afterName = nextSignificant(text, end);
+      if (
+        text[afterName] === "=" &&
+        text[afterName + 1] === ">" &&
+        text[previousSignificant(text, cursor)] !== "."
+      ) {
+        const shadowed = new Set([name]);
+        if (parameterShadowsScope(shadowed, scope)) {
+          const arrowEnd = afterName + 2;
+          const bodyStart = nextSignificant(text, arrowEnd);
+          out += `${name}${text.slice(end, bodyStart)}`;
+          const body = rewriteArrowBody(
+            text,
+            bodyStart,
+            shrinkScope(scope, shadowed),
+          );
+          out += body.text;
+          cursor = body.end;
+          continue;
+        }
       }
       const rewritten = rewriteIdentifier(
         text,

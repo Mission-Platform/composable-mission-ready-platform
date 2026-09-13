@@ -216,6 +216,8 @@ export interface MultiselectProperties {
   placeholder?: string;
   /** Maximum number of tags to display before collapsing into a "+N more" badge. */
   maxTags?: number;
+  /** Maximum number of tags to display before collapsing into a "+N more" badge (standard alias). */
+  maxTagCount?: number;
   /** Disable the control. */
   disabled?: boolean;
   /** Mark the field as required (renders a `*` after the label). */
@@ -336,7 +338,7 @@ export function ForgeMultiselect(properties: Readonly<MultiselectProperties>): M
     </option>
   ));
 
-  const rawMaxTags = properties.maxTags;
+  const rawMaxTags = properties.maxTags ?? properties.maxTagCount;
   const maxTags =
     typeof rawMaxTags === 'number' && Number.isFinite(rawMaxTags) && rawMaxTags >= 0
       ? Math.floor(rawMaxTags)

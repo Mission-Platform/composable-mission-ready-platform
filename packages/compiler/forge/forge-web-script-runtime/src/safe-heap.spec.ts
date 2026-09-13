@@ -1,10 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { ForgeWebScriptMemory } from './memory.ts';
-import {
-  createForgeWebScriptSafeHeap,
-  ForgeWebScriptTlsfAllocator,
-} from './safe-heap.ts';
+import { createForgeWebScriptSafeHeap, ForgeWebScriptTlsfAllocator } from './safe-heap.ts';
 import { ForgeWebScriptTrap } from './traps.ts';
 
 describe('Forge Web Script safe heap', () => {

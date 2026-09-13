@@ -35,14 +35,14 @@ velocidad y calidad del código.
 
 ## Características clave
 
-| Característica | Descripción |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
+| Característica                    | Descripción                                                                                                                                        |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Tiempo de ejecución Forge JSX** | Un dialecto JSX neutral en el marco: cree una vez y cree para Vue 3, React, Svelte, Solid y componentes web sin sobrecarga de tiempo de ejecución. |
-| **Biblioteca de componentes** | Un conjunto completo de diseño, tipografía y componentes interactivos creados una vez para múltiples marcos.                           |
-| **Fichas de diseño** | Un sistema de tokens compatible con DTCG que genera artefactos SCSS y TypeScript para una temática coherente.                                     |
-| **Enrutamiento agnóstico** | Un sistema de enrutamiento con seguridad de tipos que funciona independientemente del marco de la interfaz de usuario.                                                               |
-| **Universal I18n** | Un contenedor de internacionalización independiente del marco basado en i18next con adaptadores Vue y React dedicados.                              |
-| **Servicios de lavado** | Utilidades de alto rendimiento para escaneo de códigos de barras, revisión ortográfica y más, con tecnología de WebAssembly.                                     |
+| **Biblioteca de componentes**     | Un conjunto completo de diseño, tipografía y componentes interactivos creados una vez para múltiples marcos.                                       |
+| **Fichas de diseño**              | Un sistema de tokens compatible con DTCG que genera artefactos SCSS y TypeScript para una temática coherente.                                      |
+| **Enrutamiento agnóstico**        | Un sistema de enrutamiento con seguridad de tipos que funciona independientemente del marco de la interfaz de usuario.                             |
+| **Universal I18n**                | Un contenedor de internacionalización independiente del marco basado en i18next con adaptadores Vue y React dedicados.                             |
+| **Servicios de lavado**           | Utilidades de alto rendimiento para escaneo de códigos de barras, revisión ortográfica y más, con tecnología de WebAssembly.                       |
 
 ## Pila de tecnología
 

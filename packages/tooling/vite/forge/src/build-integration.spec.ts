@@ -68,7 +68,9 @@ describe('Forge Vite compiler service lifecycle', () => {
       await invokeHook(failedPlugin.buildStart, failedPlugin);
       fs.writeFileSync(path.join(failedAttempt, 'index.js'), 'export const version = "broken";\n');
       await invokeHook(failedPlugin.buildEnd, failedPlugin, new Error('declaration generation failed'));
-      await expect(invokeHook(failedPlugin.closeBundle, failedPlugin)).rejects.toThrow(/attempt has been aborted/);
+      // After abort, closeBundle must be a no-op (not rethrow) so Rolldown/Vite
+      // do not surface an unhandled rejection that masks the original build error.
+      expect(() => invokeHook(failedPlugin.closeBundle, failedPlugin)).not.toThrow();
 
       expect(fs.readFileSync(path.join(publishedDirectory, 'index.js'), 'utf8')).toContain('new');
       expect(fs.existsSync(failedAttempt)).toBe(false);

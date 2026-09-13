@@ -20,6 +20,7 @@
   ],
   "scripts": {
     "build": "tsdown",
+    "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",

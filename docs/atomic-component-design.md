@@ -9,7 +9,7 @@ consistency across multiple frameworks.
 Components are categorized into five levels based on their scope and responsibility.
 
 | Level         | Folder                      | Description                                                                                                                                                                    |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Atoms**     | `src/components/atoms/`     | Smallest UI primitives (e.g., `ForgeButton`, `ForgeInput`, `ForgeBadge`). They are typically functional units that cannot be broken down further without losing their purpose. |
 | **Molecules** | `src/components/molecules/` | Simple compositions of atoms (e.g., `ForgeSearchInput`, `ForgeFieldSet`). They function together as a unit.                                                                    |
 | **Organisms** | `src/components/organisms/` | Complex UI sections composed of atoms, molecules, and other organisms (e.g., `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
@@ -62,7 +62,7 @@ The `title` field in the Storybook `meta` object must follow this pattern:
 
 ```tsx
 const meta = {
-  title: 'Atoms/Display/ForgeButton',
+  title: "Atoms/Display/ForgeButton",
   component: Button,
   // ...
 };

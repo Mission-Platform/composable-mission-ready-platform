@@ -1,3 +1,5 @@
+import { getActiveRouter, setActiveRouter } from './router';
+
 import type { MpWebComponentsRouter } from './router';
 import type { MpRouteLocationRaw, MpRouterCapabilities } from '@mission-platform/router';
 
@@ -8,15 +10,13 @@ export {
   createMemoryHistory,
   createWebHistory,
 } from './history';
-export { MpRouterLinkElement, MpRouterOutletElement, registerRouterElements } from './elements';
-export { createWebComponentsRouter, routeHref } from './router';
+export { MpRouterLinkElement, MpRouterOutletElement, MpRouterViewElement, registerRouterElements } from './elements';
+export { createWebComponentsRouter, getActiveRouter, routeHref, setActiveRouter } from './router';
 export type { MpRouterLoadingFallback, MpWebComponentsRouter, MpWebComponentsRouterOptions } from './router';
-
-let activeRouter: MpWebComponentsRouter<unknown> | undefined;
 
 /** Bind the app-owned router for compiled framework-free package capabilities. */
 export function setForgeRouter<View>(router: MpWebComponentsRouter<View>): void {
-  activeRouter = router as unknown as MpWebComponentsRouter<unknown>;
+  setActiveRouter(router);
 }
 
 /** Custom-element tag used for compiled neutral links. */
@@ -32,15 +32,15 @@ export const ForgeRouterOutlet = MpRouterView;
 /** Read the current app-owned route as a neutral location. */
 export function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'] {
   // eslint-disable-next-line unicorn/no-null
-  return activeRouter?.current.value ?? null;
+  return getActiveRouter()?.current.value ?? null;
 }
 
 /** Read the neutral capability object backed by the Web Components runtime. */
 export function useMpRouter(): MpRouterCapabilities {
-  if (!activeRouter) {
+  const router = getActiveRouter();
+  if (!router) {
     throw new Error('A Web Components router must be bound with setForgeRouter().');
   }
-  const router = activeRouter;
   return {
     link: (to) => router.resolve(to).fullPath,
     route: () => router.current.value,

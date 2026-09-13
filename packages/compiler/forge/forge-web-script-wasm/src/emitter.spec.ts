@@ -1907,7 +1907,10 @@ describe('Forge Web Script WASM backend', () => {
               kind: 'call',
               callee: 'fws_simd_v128_store',
               standardLibrary: 'simd-v128-store',
-              arguments: [{ kind: 'identifier', name: 'ptr', span }, { kind: 'identifier', name: 'v1', span }],
+              arguments: [
+                { kind: 'identifier', name: 'ptr', span },
+                { kind: 'identifier', name: 'v1', span },
+              ],
               span,
             },
             span,
@@ -1949,7 +1952,10 @@ describe('Forge Web Script WASM backend', () => {
               kind: 'call',
               callee: 'fws_simd_i8x16_eq',
               standardLibrary: 'simd-i8x16-eq',
-              arguments: [{ kind: 'identifier', name: 'vLoaded', span }, { kind: 'identifier', name: 'vTarget', span }],
+              arguments: [
+                { kind: 'identifier', name: 'vLoaded', span },
+                { kind: 'identifier', name: 'vTarget', span },
+              ],
               span,
             },
             span,

@@ -14,13 +14,13 @@ Prima di clonare il repository, assicurati che il tuo sistema soddisfi i seguent
 
 ### Requisiti di sistema
 
-| Strumento | Versione richiesta | Scopo |
-| :---------- | :--------------- | :---------------------------------------------- |
-| **Node.js** | `24.19.0`        | Ambiente runtime (LTS attivo) |
-| **pnpm**    | `11.21.0`        | Gestore di pacchetti e orchestratore dell'area di lavoro |
-| **Git** | Ultima stabile | Controllo della versione |
-| **Ruggine** | Catena di strumenti stabile | Sviluppo opzionale di benchmark Rust autonomo |
-| **Docker** | Ultima stabile | Necessario solo per la build Emscripten Hunspell |
+| Strumento   | Versione richiesta          | Scopo                                                    |
+| :---------- | :-------------------------- | :------------------------------------------------------- |
+| **Node.js** | `24.19.0`                   | Ambiente runtime (LTS attivo)                            |
+| **pnpm**    | `11.21.0`                   | Gestore di pacchetti e orchestratore dell'area di lavoro |
+| **Git**     | Ultima stabile              | Controllo della versione                                 |
+| **Ruggine** | Catena di strumenti stabile | Sviluppo opzionale di benchmark Rust autonomo            |
+| **Docker**  | Ultima stabile              | Necessario solo per la build Emscripten Hunspell         |
 
 ### Gestione delle versioni (consigliato)
 
@@ -126,12 +126,12 @@ L'applicazione sarà generalmente disponibile all'indirizzo `http://localhost:51
 
 ### Comandi comuni
 
-| Compito | Comando | Descrizione |
-| :--------- | :------------ | :----------------------------- |
-| **Costruisci** | `pnpm build`  | Crea tutte le app e i pacchetti |
-| **Prova** | `pnpm test`   | Corri tutto Vitest suite |
-| **Lanugine** | `pnpm lint`   | Correre ESLint attraverso il monorepo |
-| **Formato** | `pnpm format` | Controlla la formattazione con Prettier |
+| Compito        | Comando       | Descrizione                             |
+| :------------- | :------------ | :-------------------------------------- |
+| **Costruisci** | `pnpm build`  | Crea tutte le app e i pacchetti         |
+| **Prova**      | `pnpm test`   | Corri tutto Vitest suite                |
+| **Lanugine**   | `pnpm lint`   | Correre ESLint attraverso il monorepo   |
+| **Formato**    | `pnpm format` | Controlla la formattazione con Prettier |
 
 ## Risoluzione dei problemi
 

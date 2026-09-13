@@ -14,13 +14,13 @@ Antes de clonar el repositorio, asegúrese de que su sistema cumpla con los sigu
 
 ### Requisitos del sistema
 
-| Herramienta | Versión requerida | Propósito |
-| :---------- | :--------------- | :---------------------------------------------- |
-| **Node.js** | `24.19.0`        | Entorno de ejecución (LTS activo) |
-| **pnpm**    | `11.21.0`        | Gestor de paquetes y orquestador del espacio de trabajo |
-| **Git** | Último establo | Control de versiones |
-| **Óxido** | Cadena de herramientas estable | Desarrollo de referencia de Rust independiente opcional |
-| **Acoplador** | Último establo | Requerido sólo para la compilación Emscripten Hunspell |
+| Herramienta   | Versión requerida              | Propósito                                               |
+| :------------ | :----------------------------- | :------------------------------------------------------ |
+| **Node.js**   | `24.19.0`                      | Entorno de ejecución (LTS activo)                       |
+| **pnpm**      | `11.21.0`                      | Gestor de paquetes y orquestador del espacio de trabajo |
+| **Git**       | Último establo                 | Control de versiones                                    |
+| **Óxido**     | Cadena de herramientas estable | Desarrollo de referencia de Rust independiente opcional |
+| **Acoplador** | Último establo                 | Requerido sólo para la compilación Emscripten Hunspell  |
 
 ### Gestión de versiones (recomendado)
 
@@ -126,12 +126,12 @@ La aplicación normalmente estará disponible en `http://localhost:5173`.
 
 ### Comandos comunes
 
-| Tarea | Comando | Descripción |
-| :--------- | :------------ | :----------------------------- |
+| Tarea         | Comando       | Descripción                            |
+| :------------ | :------------ | :------------------------------------- |
 | **Construir** | `pnpm build`  | Cree todas las aplicaciones y paquetes |
-| **Prueba** | `pnpm test`   | ejecutar todo Vitest suites |
-| **Pelusa** | `pnpm lint`   | Correr ESLint a través del monorepo |
-| **Formato** | `pnpm format` | Verifique el formato con Prettier |
+| **Prueba**    | `pnpm test`   | ejecutar todo Vitest suites            |
+| **Pelusa**    | `pnpm lint`   | Correr ESLint a través del monorepo    |
+| **Formato**   | `pnpm format` | Verifique el formato con Prettier      |
 
 ## Solución de problemas
 

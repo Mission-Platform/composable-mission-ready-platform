@@ -69,10 +69,11 @@ rm -rf .turbo
 2. バージョンが一致していることを確認します (`workspace:*` を推奨します)。
 3. `pnpm install` を実行してシンボリックリンクを更新します。
 4. 問題が解決しない場合は、徹底的なクリーンアップを試してください。
+
 ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-   ```
+```
 
 ### CI ではタイプエラーが発生するが、ローカルでは発生しない
 
@@ -114,7 +115,7 @@ pnpm exec turbo run build:check
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
 ### 「未処理の約束の拒否」

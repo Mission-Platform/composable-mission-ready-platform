@@ -407,6 +407,30 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
     expect(code).not.toContain("{{ $slots.default?.()");
   });
 
+  it("collapses `children ?? <Slot />` to a bare default slot", () => {
+    const module = semanticModule({
+      component: component({
+        name: "FormBody",
+        parameter: "properties",
+        returnNode: element("form", {
+          children: [
+            expressionChild("properties.children ?? <Slot />", [
+              element("Slot", { source: "<Slot />" }),
+            ]),
+          ],
+        }),
+      }),
+      props: [prop("children", "MpChildren", { optional: true })],
+      slots: [slot("default")],
+    });
+
+    const code = emitVueModule(module, "FormBody").code;
+
+    expect(code).toContain("<slot />");
+    expect(code).not.toContain("{{ <Slot");
+    expect(code).not.toContain('<slot v-if="$slots.default" />');
+  });
+
   it("renders a dynamic tag as `<component :is>`", () => {
     const module = semanticModule({
       component: component({

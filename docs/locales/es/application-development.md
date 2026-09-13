@@ -11,13 +11,13 @@ copiado en una aplicación.
 
 ## Elige una aplicación
 
-| Solicitud | Desarrollo local | Construir | Implementación |
-|:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | Vista previa o implementación a través de su trabajador de hosting |
-| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
-| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
-| `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` | Utilice el flujo de trabajo Storybook/Chromatic configurado |
+| Solicitud                           | Desarrollo local                                      | Construir                                               | Implementación                                                     |
+| :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :----------------------------------------------------------------- |
+| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | Vista previa o implementación a través de su trabajador de hosting |
+| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`           |
+| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`     |
+| `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging`   |
+| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | Utilice el flujo de trabajo Storybook/Chromatic configurado        |
 
 El paquete de aplicación posee su Vite o Wrangler configuración. no corras `wrangler deploy` de un trabajador reutilizable
 paquete a menos que ese paquete tenga su propio `wrangler.jsonc`.
@@ -30,13 +30,13 @@ paquete a menos que ese paquete tenga su propio `wrangler.jsonc`.
 
 ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
-   ```
+```
 
 4. Ejecute pruebas, pelusa, comprobaciones de estilo y formato para el espacio de trabajo afectado:
 
 ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
-   ```
+```
 
 Para un cambio de paquete compartido, reemplace `<app>` con el nombre del paquete y el uso `...` cuando necesitas espacios de trabajo dependientes
 incluido en el gráfico de construcción.

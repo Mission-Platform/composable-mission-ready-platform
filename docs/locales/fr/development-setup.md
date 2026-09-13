@@ -14,13 +14,13 @@ Avant de cloner le référentiel, assurez-vous que votre système répond aux ex
 
 ### Configuration système requise
 
-| Outil | Version requise | Objectif |
-| :---------- | :--------------- | :---------------------------------------------- |
-| **Node.js** | `24.19.0`        | Environnement d'exécution (Active LTS) |
-| **pnpm**    | `11.21.0`        | Gestionnaire de packages et orchestrateur d'espace de travail |
-| **Git** | Dernière stable | Contrôle des versions |
-| **Rouille** | Chaîne d'outils stable | Développement de benchmark Rust autonome en option |
-| **Docker** | Dernière stable | Requis uniquement pour la version Emscripten Hunspell |
+| Outil       | Version requise        | Objectif                                                      |
+| :---------- | :--------------------- | :------------------------------------------------------------ |
+| **Node.js** | `24.19.0`              | Environnement d'exécution (Active LTS)                        |
+| **pnpm**    | `11.21.0`              | Gestionnaire de packages et orchestrateur d'espace de travail |
+| **Git**     | Dernière stable        | Contrôle des versions                                         |
+| **Rouille** | Chaîne d'outils stable | Développement de benchmark Rust autonome en option            |
+| **Docker**  | Dernière stable        | Requis uniquement pour la version Emscripten Hunspell         |
 
 ### Gestion des versions (recommandé)
 
@@ -126,12 +126,12 @@ L'application sera généralement disponible à l'adresse `http://localhost:5173
 
 ### Commandes communes
 
-| Tâche | Commande | Descriptif |
-| :--------- | :------------ | :----------------------------- |
+| Tâche          | Commande      | Descriptif                                         |
+| :------------- | :------------ | :------------------------------------------------- |
 | **Construire** | `pnpm build`  | Créez toutes les applications et tous les packages |
-| **Tester** | `pnpm test`   | Exécutez tout Vitest suites |
-| **Charpie** | `pnpm lint`   | Courir ESLint à travers le monorepo |
-| **Format** | `pnpm format` | Vérifiez le formatage avec Prettier |
+| **Tester**     | `pnpm test`   | Exécutez tout Vitest suites                        |
+| **Charpie**    | `pnpm lint`   | Courir ESLint à travers le monorepo                |
+| **Format**     | `pnpm format` | Vérifiez le formatage avec Prettier                |
 
 ## Dépannage
 

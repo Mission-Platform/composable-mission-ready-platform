@@ -69,10 +69,11 @@ rm -rf .turbo
 2. Asegúrese de que la versión coincida (se recomienda `workspace:*`).
 3. Ejecute `pnpm install` para actualizar los enlaces simbólicos.
 4. Si los problemas persisten, intente una limpieza profunda:
+
 ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-   ```
+```
 
 ### Errores de tipo en CI pero no locales
 
@@ -114,7 +115,7 @@ encadenamiento opcional (`?.`) o proporcione valores predeterminados.
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
 ### "Rechazo de promesa no controlado"

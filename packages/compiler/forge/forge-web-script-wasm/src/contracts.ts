@@ -104,17 +104,7 @@ export interface ForgeWebScriptWasmAsyncContract {
 }
 
 export type ForgeWebScriptWasmPrimitiveType =
-  | 'bool'
-  | 'bytes'
-  | 'f32'
-  | 'f64'
-  | 'i32'
-  | 'i64'
-  | 'string'
-  | 'u32'
-  | 'u64'
-  | 'unit'
-  | 'v128';
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 
 export interface ForgeWebScriptWasmSourceSpan {
   readonly start: number;

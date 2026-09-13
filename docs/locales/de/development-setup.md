@@ -14,13 +14,13 @@ Stellen Sie vor dem Klonen des Repositorys sicher, dass Ihr System die folgenden
 
 ### Systemanforderungen
 
-| Werkzeug | Erforderliche Version | Zweck |
-| :---------- | :--------------- | :---------------------------------------------- |
-| **Node.js** | `24.19.0`        | Laufzeitumgebung (Aktives LTS) |
-| **pnpm**    | `11.21.0`        | Paketmanager und Arbeitsbereich-Orchestrator |
-| **Git** | Neueste stabile | Versionskontrolle |
-| **Rost** | Stabile Toolchain | Optionale eigenständige Rust-Benchmark-Entwicklung |
-| **Docker** | Neueste stabile | Nur für den Emscripten Hunspell-Build erforderlich |
+| Werkzeug    | Erforderliche Version | Zweck                                              |
+| :---------- | :-------------------- | :------------------------------------------------- |
+| **Node.js** | `24.19.0`             | Laufzeitumgebung (Aktives LTS)                     |
+| **pnpm**    | `11.21.0`             | Paketmanager und Arbeitsbereich-Orchestrator       |
+| **Git**     | Neueste stabile       | Versionskontrolle                                  |
+| **Rost**    | Stabile Toolchain     | Optionale eigenständige Rust-Benchmark-Entwicklung |
+| **Docker**  | Neueste stabile       | Nur für den Emscripten Hunspell-Build erforderlich |
 
 ### Versionsverwaltung (empfohlen)
 
@@ -126,11 +126,11 @@ Die Anwendung ist in der Regel unter verfügbar `http://localhost:5173`.
 
 ### Allgemeine Befehle
 
-| Aufgabe | Befehl | Beschreibung |
-| :--------- | :------------ | :----------------------------- |
-| **Bauen** | `pnpm build`  | Erstellen Sie alle Apps und Pakete |
-| **Test** | `pnpm test`   | Alles ausführen Vitest Suiten |
-| **Fussel** | `pnpm lint`   | Laufen ESLint über das Monorepo |
+| Aufgabe         | Befehl        | Beschreibung                                 |
+| :-------------- | :------------ | :------------------------------------------- |
+| **Bauen**       | `pnpm build`  | Erstellen Sie alle Apps und Pakete           |
+| **Test**        | `pnpm test`   | Alles ausführen Vitest Suiten                |
+| **Fussel**      | `pnpm lint`   | Laufen ESLint über das Monorepo              |
 | **Formatieren** | `pnpm format` | Überprüfen Sie die Formatierung mit Prettier |
 
 ## Fehlerbehebung

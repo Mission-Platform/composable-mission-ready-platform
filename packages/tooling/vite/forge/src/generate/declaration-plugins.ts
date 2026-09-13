@@ -219,7 +219,11 @@ export function discoverGeneratedEntrySources(
   const components = discoverComponentsFromGraph(componentGraph, stripPrefix);
   return {
     components,
-    helpers: discoverHelperExportsFromGraph(publicGraph, new Set(components.map((component) => component.folder))),
+    helpers: discoverHelperExportsFromGraph(
+      publicGraph,
+      new Set(components.map((component) => component.folder)),
+      components,
+    ),
     externalExports: discoverExternalExportsFromGraph(publicGraph),
   };
 }

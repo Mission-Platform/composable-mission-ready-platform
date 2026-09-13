@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { MpRouterLinkElement, MpRouterOutletElement, registerRouterElements } from './elements';
+import { MpRouterLinkElement, MpRouterOutletElement, MpRouterViewElement, registerRouterElements } from './elements';
 import { MpMemoryHistory } from './history';
 import { createWebComponentsRouter } from './router';
 
@@ -12,6 +12,7 @@ describe('router custom elements', () => {
     registerRouterElements();
     expect(customElements.get('forge-router-link')).toBe(MpRouterLinkElement);
     expect(customElements.get('forge-router-outlet')).toBe(MpRouterOutletElement);
+    expect(customElements.get('mp-router-view')).toBe(MpRouterViewElement);
 
     const router = createWebComponentsRouter({
       routes: [
@@ -185,6 +186,222 @@ describe('router custom elements', () => {
     targeted.querySelector('a')?.dispatchEvent(targetedClick);
     expect(targetedClick.defaultPrevented).toBe(false);
     expect(router.current.value?.path).toBe('/');
+    router.dispose();
+  });
+
+  it('resolves multi-level nested layouts through context-driven depth tracking without remounting parent layout', async () => {
+    let parentMountCount = 0;
+    const router = createWebComponentsRouter({
+      routes: [
+        {
+          path: '/dashboard',
+          component: () => {
+            parentMountCount += 1;
+            const container = document.createElement('section');
+            container.className = 'dashboard-layout';
+            const title = document.createElement('h1');
+            title.textContent = 'Dashboard Shell';
+            const childOutlet = document.createElement('mp-router-view');
+            container.append(title, childOutlet);
+            return container;
+          },
+          children: [
+            {
+              path: 'settings',
+              component: () => {
+                const element = document.createElement('div');
+                element.className = 'settings-page';
+                element.textContent = 'Settings View';
+                return element;
+              },
+            },
+            {
+              path: 'analytics',
+              component: () => {
+                const element = document.createElement('div');
+                element.className = 'analytics-page';
+                element.textContent = 'Analytics View';
+                return element;
+              },
+            },
+          ],
+        },
+      ],
+      history: new MpMemoryHistory('/dashboard/settings'),
+    });
+
+    const rootOutlet = document.createElement('mp-router-view') as MpRouterOutletElement;
+    rootOutlet.setRouter(router);
+    document.body.append(rootOutlet);
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(rootOutlet.depth).toBe(0);
+    expect(rootOutlet.textContent).toContain('Dashboard Shell');
+    expect(rootOutlet.textContent).toContain('Settings View');
+    expect(parentMountCount).toBe(1);
+
+    const childOutlet = rootOutlet.querySelector('mp-router-view') as MpRouterOutletElement;
+    expect(childOutlet).not.toBeNull();
+    expect(childOutlet.depth).toBe(1);
+
+    // Navigate to sister child route
+    await router.push('/dashboard/analytics');
+    await Promise.resolve();
+
+    expect(rootOutlet.textContent).toContain('Dashboard Shell');
+    expect(rootOutlet.textContent).toContain('Analytics View');
+    expect(rootOutlet.textContent).not.toContain('Settings View');
+    expect(parentMountCount).toBe(1);
+
+    router.dispose();
+  });
+
+  it('resolves arbitrary 3-level route hierarchy across nested outlets', async () => {
+    const router = createWebComponentsRouter({
+      routes: [
+        {
+          path: '/admin',
+          component: () => {
+            const admin = document.createElement('div');
+            admin.className = 'admin-layout';
+            const child = document.createElement('forge-router-outlet');
+            admin.append(child);
+            return admin;
+          },
+          children: [
+            {
+              path: 'users',
+              component: () => {
+                const users = document.createElement('div');
+                users.className = 'users-layout';
+                const subChild = document.createElement('forge-router-outlet');
+                users.append(subChild);
+                return users;
+              },
+              children: [
+                {
+                  path: 'detail',
+                  component: () => 'user detail leaf',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      history: new MpMemoryHistory('/admin/users/detail'),
+    });
+
+    const rootOutlet = document.createElement('forge-router-outlet') as MpRouterOutletElement;
+    rootOutlet.setRouter(router);
+    document.body.append(rootOutlet);
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(rootOutlet.depth).toBe(0);
+    const middleOutlet = rootOutlet.querySelector('forge-router-outlet') as MpRouterOutletElement;
+    expect(middleOutlet).not.toBeNull();
+    expect(middleOutlet.depth).toBe(1);
+
+    const leafOutlet = middleOutlet.querySelector('forge-router-outlet') as MpRouterOutletElement;
+    expect(leafOutlet).not.toBeNull();
+    expect(leafOutlet.depth).toBe(2);
+    expect(leafOutlet.textContent).toBe('user detail leaf');
+
+    router.dispose();
+  });
+
+  it('tracks active state, prefix matches, and aria-current with robust normalization', async () => {
+    const router = createWebComponentsRouter({
+      routes: [
+        { path: '/', name: 'home' },
+        {
+          path: '/dashboard',
+          name: 'dashboard',
+          children: [{ path: 'settings', name: 'dashboard-settings' }],
+        },
+        { path: '/search', name: 'search' },
+        { path: '/docs', name: 'docs' },
+      ],
+      history: new MpMemoryHistory('/dashboard/settings'),
+    });
+
+    const homeLink = document.createElement('forge-router-link') as MpRouterLinkElement;
+    homeLink.to = '/';
+    homeLink.setRouter(router);
+
+    const parentLink = document.createElement('forge-router-link') as MpRouterLinkElement;
+    parentLink.to = '/dashboard';
+    parentLink.setRouter(router);
+
+    const exactLink = document.createElement('forge-router-link') as MpRouterLinkElement;
+    exactLink.to = '/dashboard/settings';
+    exactLink.setRouter(router);
+
+    const trailingSlashLink = document.createElement('forge-router-link') as MpRouterLinkElement;
+    trailingSlashLink.to = '/dashboard/settings/';
+    trailingSlashLink.setRouter(router);
+
+    document.body.append(homeLink, parentLink, exactLink, trailingSlashLink);
+
+    // Root link must NOT be active when on /dashboard/settings
+    expect(homeLink.hasAttribute('active')).toBe(false);
+    expect(homeLink.hasAttribute('exact-active')).toBe(false);
+    expect(homeLink.classList.contains('forge-router-link-active')).toBe(false);
+    expect(homeLink.querySelector('a')?.getAttribute('aria-current')).toBeNull();
+
+    // Parent link must be active, but NOT exact-active, and aria-current must NOT be set
+    expect(parentLink.hasAttribute('active')).toBe(true);
+    expect(parentLink.hasAttribute('exact-active')).toBe(false);
+    expect(parentLink.classList.contains('forge-router-link-active')).toBe(true);
+    expect(parentLink.classList.contains('forge-router-link-exact-active')).toBe(false);
+    expect(parentLink.querySelector('a')?.getAttribute('aria-current')).toBeNull();
+
+    // Exact link must be active, exact-active, with classes and aria-current="page"
+    expect(exactLink.hasAttribute('active')).toBe(true);
+    expect(exactLink.hasAttribute('exact-active')).toBe(true);
+    expect(exactLink.classList.contains('forge-router-link-active')).toBe(true);
+    expect(exactLink.classList.contains('forge-router-link-exact-active')).toBe(true);
+    expect(exactLink.querySelector('a')?.classList.contains('forge-router-link-active')).toBe(true);
+    expect(exactLink.querySelector('a')?.classList.contains('forge-router-link-exact-active')).toBe(true);
+    expect(exactLink.getAttribute('aria-current')).toBe('page');
+    expect(exactLink.querySelector('a')?.getAttribute('aria-current')).toBe('page');
+
+    // Trailing slash link should normalize and match exact
+    expect(trailingSlashLink.hasAttribute('active')).toBe(true);
+    expect(trailingSlashLink.hasAttribute('exact-active')).toBe(true);
+    expect(trailingSlashLink.getAttribute('aria-current')).toBe('page');
+
+    // Query parameters normalization (order-insensitive)
+    await router.push({ path: '/search', query: { a: '1', b: '2' } });
+    const queryLink = document.createElement('forge-router-link') as MpRouterLinkElement;
+    queryLink.to = '/search?b=2&a=1';
+    queryLink.setRouter(router);
+    document.body.append(queryLink);
+
+    expect(queryLink.hasAttribute('active')).toBe(true);
+    expect(queryLink.hasAttribute('exact-active')).toBe(true);
+    expect(queryLink.getAttribute('aria-current')).toBe('page');
+
+    // Hash normalization
+    await router.push({ path: '/docs', hash: '#intro' });
+    const hashLink = document.createElement('forge-router-link') as MpRouterLinkElement;
+    hashLink.to = '/docs#intro';
+    hashLink.setRouter(router);
+    document.body.append(hashLink);
+
+    expect(hashLink.hasAttribute('active')).toBe(true);
+    expect(hashLink.hasAttribute('exact-active')).toBe(true);
+    expect(hashLink.getAttribute('aria-current')).toBe('page');
+
+    // Reactive attribute update
+    hashLink.setAttribute('to', '/');
+    expect(hashLink.hasAttribute('active')).toBe(false);
+    expect(hashLink.hasAttribute('exact-active')).toBe(false);
+    expect(hashLink.getAttribute('aria-current')).toBeNull();
+
     router.dispose();
   });
 });

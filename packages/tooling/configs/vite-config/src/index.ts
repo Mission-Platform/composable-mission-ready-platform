@@ -6,6 +6,31 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig, mergeConfig, type Plugin, type UserConfig } from 'vite';
 
 /**
+ * Shared Sass preprocessor options enabling the modern Dart Sass JS API and
+ * silencing legacy JS API deprecation warnings.
+ */
+export const DEFAULT_SASS_PREPROCESSOR_OPTIONS = {
+  scss: {
+    api: 'modern-compiler',
+    quietDeps: true,
+    silenceDeprecations: ['legacy-js-api'],
+  },
+  sass: {
+    api: 'modern-compiler',
+    quietDeps: true,
+    silenceDeprecations: ['legacy-js-api'],
+  },
+} as const;
+
+/**
+ * Shared CSS configuration for Vite builds: PostCSS pipeline + modern Sass preprocessor options.
+ */
+export const DEFAULT_CSS_CONFIG: NonNullable<UserConfig['css']> = {
+  postcss: postcssConfig,
+  preprocessorOptions: DEFAULT_SASS_PREPROCESSOR_OPTIONS,
+};
+
+/**
  * Vite plugin that turns Vue SFC `<i18n>` custom blocks into no-op modules.
  *
  * The platform's `<i18n>` blocks hold the English source strings consumed by
@@ -199,9 +224,7 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
   const useFileName = Boolean(fileName) && typeof entry === 'string';
 
   const base = defineConfig({
-    css: {
-      postcss: postcssConfig,
-    },
+    css: DEFAULT_CSS_CONFIG,
     resolve: {
       tsconfigPaths: true,
     },
@@ -265,9 +288,7 @@ export function frameworkResolveConditions(framework: MissionPlatformFramework):
 export function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig {
   const conditions = frameworkResolveConditions('web-component');
   const base = defineConfig({
-    css: {
-      postcss: postcssConfig,
-    },
+    css: DEFAULT_CSS_CONFIG,
     resolve: {
       conditions,
       tsconfigPaths: true,
@@ -346,9 +367,7 @@ export interface AppConfigOptions {
  */
 export function defineAppConfig(options: AppConfigOptions = {}): UserConfig {
   const base = defineConfig({
-    css: {
-      postcss: postcssConfig,
-    },
+    css: DEFAULT_CSS_CONFIG,
     resolve: {
       tsconfigPaths: true,
     },

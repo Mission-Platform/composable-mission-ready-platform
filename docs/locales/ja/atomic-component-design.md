@@ -13,13 +13,13 @@ Mission Platform は **Atomic Design** システムを使用して、コンポ�
 
 コンポーネントは、その範囲と責任に基づいて 5 つのレベルに分類されます。
 
-|レベル |フォルダー |説明 |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **原子** | `src/components/atoms/`     |最小の UI プリミティブ (例: `ForgeButton`, `ForgeInput`, `ForgeBadge`)。これらは通常、目的を失わずにさらに分解することのできない機能単位です。 |
-| **分子** | `src/components/molecules/` |原子の単純な組成 (例: `ForgeSearchInput`, `ForgeFieldSet`)。これらは 1 つのユニットとして一緒に機能します。                                                                    |
-| **生物** | `src/components/organisms/` |原子、分子、その他の生物で構成される複雑な UI セクション (例: `ForgeNavbar`, `ForgeTable`, `ForgeModal`)。                                                       |
-| **テンプレート** | `src/components/templates/` |コンテンツ構造を定義するページレベルのレイアウト (例: `ForgeHero`, `ForgeAppLayout`)。多くの場合、コンテンツを配置する場所を定義するためにスロットが使用されます。                     |
-| **ページ** | `src/components/pages/`     |具体的なコンテンツとデータが入力されたテンプレートの特定のインスタンス (例: `AccountSettingsPage`).                                                                        |
+| レベル           | フォルダー                  | 説明                                                                                                                                                               |
+| :--------------- | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **原子**         | `src/components/atoms/`     | 最小の UI プリミティブ (例: `ForgeButton`, `ForgeInput`, `ForgeBadge`)。これらは通常、目的を失わずにさらに分解することのできない機能単位です。                     |
+| **分子**         | `src/components/molecules/` | 原子の単純な組成 (例: `ForgeSearchInput`, `ForgeFieldSet`)。これらは 1 つのユニットとして一緒に機能します。                                                        |
+| **生物**         | `src/components/organisms/` | 原子、分子、その他の生物で構成される複雑な UI セクション (例: `ForgeNavbar`, `ForgeTable`, `ForgeModal`)。                                                         |
+| **テンプレート** | `src/components/templates/` | コンテンツ構造を定義するページレベルのレイアウト (例: `ForgeHero`, `ForgeAppLayout`)。多くの場合、コンテンツを配置する場所を定義するためにスロットが使用されます。 |
+| **ページ**       | `src/components/pages/`     | 具体的なコンテンツとデータが入力されたテンプレートの特定のインスタンス (例: `AccountSettingsPage`).                                                                |
 
 ## コンポーネントフォルダーのレイアウト
 
@@ -67,7 +67,7 @@ src/components/
 
 ```tsx
 const meta = {
-  title: 'Atoms/Display/ForgeButton',
+  title: "Atoms/Display/ForgeButton",
   component: Button,
   // ...
 };

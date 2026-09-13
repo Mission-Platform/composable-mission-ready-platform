@@ -180,8 +180,8 @@ typed `style` value; they must not add a framework-specific `styles` attribute.
 These are the exact existing custom-property sites. They are regression and
 compatibility anchors, not a request to replace semantic APIs with bags.
 
-| Component                  | Style module                                                                                                     | Existing variables                                                                                      | Current owner/disposition                                                                          | Later touch points                                                                                                                |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Component                  | Style module                                                                                                        | Existing variables                                                                                      | Current owner/disposition                                                                          | Later touch points                                                                                                                |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `ForgeTypography`          | `packages/ui/typography/src/components/atoms/forge-typography/forge-typography.module.scss`                         | Complete `--forge-typography-*` surface, including base, display, variant, color, link and popup values | Prototype; inherited through the typography root and truncate-popup wrapper                        | `forge-typography.tsx`, local `index.ts`, `.spec.ts`, `.stories.tsx`; all concrete names are registered in the co-located partial |
 | `ForgeLogoCloud`           | `packages/ui/components/src/components/organisms/forge-logo-cloud/forge-logo-cloud.module.scss`                     | `--forge-logo-columns`                                                                                  | Existing semantic variable; retain `columns` and its clamping                                      | `forge-logo-cloud.tsx`, local barrel, spec, story; no duplicate `properties.columns`                                              |
 | `ForgeStatsSection`        | `packages/ui/components/src/components/organisms/forge-stats-section/forge-stats-section.module.scss`               | `--forge-stats-columns`                                                                                 | Existing semantic variable; retain `columns`                                                       | `forge-stats-section.tsx`, local barrel, spec, story; no duplicate `properties.columns`                                           |
@@ -201,26 +201,26 @@ present) spec are in the same directory under the package's existing atom,
 molecule, organism, or template path. The package module glob in the first
 column is an exact pathspec for the style files.
 
-| Package and exact module pathspec                           |   Count | Disposition                                                        |
-| ----------------------------------------------------------- | ------: | ------------------------------------------------------------------ |
-| `packages/integrations/barcode/src/components/**/*.module.scss`          |       1 | Migrate/review generated barcode presentation                      |
-| `packages/ui/breakpoints/src/components/**/*.module.scss`      |       1 | Excluded diagnostic/debug presentation                             |
-| `packages/integrations/code-scanner/src/components/**/*.module.scss`     |       1 | Migrate/review scanner host/frame presentation                     |
-| `packages/ui/components/src/components/**/*.module.scss`       |      84 | 3 existing semantic variables; 81 migrate/review                   |
-| `packages/content/content/content/src/components/**/*.module.scss`          |      10 | 8 migrate/review; 2 editor-owned/excluded                          |
-| `packages/ui/float/src/components/**/*.module.scss`            |       8 | Migrate/review; popup/portal inheritance priority                  |
-| `packages/ui/forms/src/components/**/*.module.scss`            |      28 | Migrate/review, preserving control semantics                       |
-| `packages/ui/icons/src/components/**/*.module.scss`            |     106 | Excluded generated glyph wrappers                                  |
-| `packages/ui/layout/src/components/**/*.module.scss`           |       7 | 1 existing semantic variable; 6 migrate/review                     |
-| `packages/integrations/map/src/components/**/*.module.scss`              |       1 | Excluded MapLibre/canvas host                                      |
-| `packages/integrations/matrix-code/src/components/**/*.module.scss`      |       1 | Migrate/review generated code presentation                         |
-| `packages/integrations/qr-code/src/components/**/*.module.scss`          |       1 | Migrate/review generated code presentation                         |
-| `packages/ui/resource-planner/src/components/**/*.module.scss` |       1 | Migrate/review domain presentation                                 |
-| `packages/core/scheduler/src/components/**/*.module.scss`        |       1 | Migrate/review domain presentation                                 |
-| `packages/ui/select/src/components/**/*.module.scss`           |       3 | Migrate/review, preserving selection semantics                     |
-| `packages/ui/theme/src/components/**/*.module.scss`            |       3 | 1 migrate/review; 2 renderless/state exclusions                    |
-| `packages/ui/typography/src/components/**/*.module.scss`       |       1 | Prototype                                                          |
-| **Total**                                                   | **258** | **141 migrate/review, 5 prototype/semantic anchors, 112 excluded** |
+| Package and exact module pathspec                                    |   Count | Disposition                                                        |
+| -------------------------------------------------------------------- | ------: | ------------------------------------------------------------------ |
+| `packages/integrations/barcode/src/components/**/*.module.scss`      |       1 | Migrate/review generated barcode presentation                      |
+| `packages/ui/breakpoints/src/components/**/*.module.scss`            |       1 | Excluded diagnostic/debug presentation                             |
+| `packages/integrations/code-scanner/src/components/**/*.module.scss` |       1 | Migrate/review scanner host/frame presentation                     |
+| `packages/ui/components/src/components/**/*.module.scss`             |      84 | 3 existing semantic variables; 81 migrate/review                   |
+| `packages/content/content/content/src/components/**/*.module.scss`   |      10 | 8 migrate/review; 2 editor-owned/excluded                          |
+| `packages/ui/float/src/components/**/*.module.scss`                  |       8 | Migrate/review; popup/portal inheritance priority                  |
+| `packages/ui/forms/src/components/**/*.module.scss`                  |      28 | Migrate/review, preserving control semantics                       |
+| `packages/ui/icons/src/components/**/*.module.scss`                  |     106 | Excluded generated glyph wrappers                                  |
+| `packages/ui/layout/src/components/**/*.module.scss`                 |       7 | 1 existing semantic variable; 6 migrate/review                     |
+| `packages/integrations/map/src/components/**/*.module.scss`          |       1 | Excluded MapLibre/canvas host                                      |
+| `packages/integrations/matrix-code/src/components/**/*.module.scss`  |       1 | Migrate/review generated code presentation                         |
+| `packages/integrations/qr-code/src/components/**/*.module.scss`      |       1 | Migrate/review generated code presentation                         |
+| `packages/ui/resource-planner/src/components/**/*.module.scss`       |       1 | Migrate/review domain presentation                                 |
+| `packages/core/scheduler/src/components/**/*.module.scss`            |       1 | Migrate/review domain presentation                                 |
+| `packages/ui/select/src/components/**/*.module.scss`                 |       3 | Migrate/review, preserving selection semantics                     |
+| `packages/ui/theme/src/components/**/*.module.scss`                  |       3 | 1 migrate/review; 2 renderless/state exclusions                    |
+| `packages/ui/typography/src/components/**/*.module.scss`             |       1 | Prototype                                                          |
+| **Total**                                                            | **258** | **141 migrate/review, 5 prototype/semantic anchors, 112 excluded** |
 
 ### Coverage signals
 

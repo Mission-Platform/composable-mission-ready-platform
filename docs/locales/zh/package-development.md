@@ -115,7 +115,7 @@ packages/<name>/
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
@@ -217,12 +217,13 @@ Web Components Storybook 工作台。
 任务平台使用 [变更集](https://github.com/changesets/changesets) 用于版本控制和发布。
 
 1. **添加变更集**：进行更改后，运行：
+
 ```bash
    pnpm changeset
-   ```
-   选择软件包和更改类型（补丁、次要、主要）。
-2. **提交变更集**：提交生成的 `.changeset/*.md` 文件。
-3. **版本和发布**：CI/CD 处理实际的发布，但您可以通过以下方式在本地预览版本：
+```
+
+选择软件包和更改类型（补丁、次要、主要）。2. **提交变更集**：提交生成的 `.changeset/*.md` 文件。3. **版本和发布**：CI/CD 处理实际的发布，但您可以通过以下方式在本地预览版本：
+
 ```bash
    pnpm changeset version
-   ```
+```

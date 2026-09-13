@@ -35,14 +35,14 @@ snelheid en codekwaliteit.
 
 ## Belangrijkste kenmerken
 
-| Kenmerk | Beschrijving |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| **Forge JSX-runtime** | Een raamwerkneutraal JSX-dialect: één keer schrijven en bouwen voor Vue 3, React, Svelte, Solid en webcomponenten zonder runtime-overhead. |
-| **Componentenbibliotheek** | Een uitgebreide set lay-out, typografie en interactieve componenten, één keer geschreven voor meerdere raamwerken.                           |
-| **Ontwerpfiches** | Een DTCG-compatibel tokensysteem dat SCSS- en TypeScript-artefacten genereert voor consistente thema's.                                     |
-| **Agnostische routering** | Een typeveilig routeringssysteem dat onafhankelijk van het UI-framework werkt.                                                               |
-| **Universeel I18n** | Een framework-agnostische internationaliseringswrapper gebaseerd op i18next met speciale Vue- en React-adapters.                              |
-| **Wasm-hulpprogramma's** | Hoogwaardige hulpprogramma's voor het scannen van streepjescodes, spellingcontrole en meer, mogelijk gemaakt door WebAssembly.                                     |
+| Kenmerk                    | Beschrijving                                                                                                                               |
+| :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX-runtime**      | Een raamwerkneutraal JSX-dialect: één keer schrijven en bouwen voor Vue 3, React, Svelte, Solid en webcomponenten zonder runtime-overhead. |
+| **Componentenbibliotheek** | Een uitgebreide set lay-out, typografie en interactieve componenten, één keer geschreven voor meerdere raamwerken.                         |
+| **Ontwerpfiches**          | Een DTCG-compatibel tokensysteem dat SCSS- en TypeScript-artefacten genereert voor consistente thema's.                                    |
+| **Agnostische routering**  | Een typeveilig routeringssysteem dat onafhankelijk van het UI-framework werkt.                                                             |
+| **Universeel I18n**        | Een framework-agnostische internationaliseringswrapper gebaseerd op i18next met speciale Vue- en React-adapters.                           |
+| **Wasm-hulpprogramma's**   | Hoogwaardige hulpprogramma's voor het scannen van streepjescodes, spellingcontrole en meer, mogelijk gemaakt door WebAssembly.             |
 
 ## Technologie stapel
 

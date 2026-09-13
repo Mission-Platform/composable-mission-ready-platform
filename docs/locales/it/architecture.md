@@ -61,7 +61,7 @@ dichiarazioni di destinazione, elementi esterni e convenzioni di output.
 Un secondo asse ortogonale proietta gli stessi componenti neutrali su **piattaforme di contenuto**.
 `@mission-platform/forge-cms-plugin-api` possiede un modello di contenuto neutrale rispetto alla piattaforma, the `CmsOutputPlugin` contratto e a
 driver generico; i pacchetti di adattatori `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
-E `forge-cms-webflow` ognuno possiede una piattaforma. Un target CMS *compone* un plugin framework invece di sostituirne uno, quindi
+E `forge-cms-webflow` ognuno possiede una piattaforma. Un target CMS _compone_ un plugin framework invece di sostituirne uno, quindi
 qualsiasi piattaforma si accoppia con qualsiasi framework e l'output arriva `dist/cms/<cms>/<framework>/**`.
 
 Per la pipeline completa, i consumatori di componenti e hook, la proiezione CMS e le indicazioni sull'estensione, vedere

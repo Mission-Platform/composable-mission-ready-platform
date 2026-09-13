@@ -625,8 +625,22 @@ export function emitVueModule(
   // a fixed point: a dispatch helper kept for a script call site pulls the view
   // helpers in its own body back with it.
   const scriptCalledHelpers = new Set<string>();
-  const isRetained = (name: string | undefined): boolean =>
-    name === undefined || scriptCalledHelpers.has(name) || !helpers.has(name);
+  const isRetained = (statement: GenericStatement): boolean => {
+    if (statement.name === undefined) {
+      return true;
+    }
+    if (statement.name === componentName) {
+      return false;
+    }
+    if (
+      new RegExp(String.raw`=\s*${componentName}\b`).test(statement.text.text)
+    ) {
+      return false;
+    }
+    return (
+      scriptCalledHelpers.has(statement.name) || !helpers.has(statement.name)
+    );
+  };
   // A derived const survives as a script declaration unless the markup consumes
   // it structurally — as a slot source, as inlined markup, or as a spliced
   // helper body.
@@ -650,7 +664,7 @@ export function emitVueModule(
         .filter((entry) => isRetainedDerived(entry.name))
         .map((entry) => entry.initializer),
       ...ast.declarations
-        .filter((statement) => isRetained(statement.name))
+        .filter((statement) => isRetained(statement))
         .map((statement) => statement.text.text),
       ...analysis.setupLines,
     ];
@@ -712,7 +726,7 @@ export function emitVueModule(
   // same set; only the props interface they prune differs (the fallback restores
   // the slot props its closure reads).
   const retainedDeclarations = ast.declarations.filter((statement) =>
-    isRetained(statement.name),
+    isRetained(statement),
   );
 
   const sfcParts: SfcParts = {

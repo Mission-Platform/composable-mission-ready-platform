@@ -108,12 +108,12 @@ Chaque répertoire de `src/` doit contenir un `index.ts` (fichier baril).
 
 Les fichiers clés à la racine du référentiel régissent le comportement du monorepo :
 
-| Fichier | Objectif |
-|:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml` | Définit les limites de l'espace de travail, les globes de membres et les catalogues de dépendances. |
-| `turbo.json` | Orchestre le pipeline de build et la mise en cache des tâches.                    |
-| `package.json` | Scripts au niveau racine et dépendances de développement à l'échelle du monorepo.                |
-| `commitlint.config.mjs` | Applique la spécification Conventional Commits.                     |
+| Fichier                 | Objectif                                                                                            |
+| :---------------------- | :-------------------------------------------------------------------------------------------------- |
+| `pnpm-workspace.yaml`   | Définit les limites de l'espace de travail, les globes de membres et les catalogues de dépendances. |
+| `turbo.json`            | Orchestre le pipeline de build et la mise en cache des tâches.                                      |
+| `package.json`          | Scripts au niveau racine et dépendances de développement à l'échelle du monorepo.                   |
+| `commitlint.config.mjs` | Applique la spécification Conventional Commits.                                                     |
 
 ## Gestion des dépendances et de l'espace de travail
 

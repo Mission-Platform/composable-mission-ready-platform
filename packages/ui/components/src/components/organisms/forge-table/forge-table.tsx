@@ -1,7 +1,9 @@
 import {
   Slot,
   classNames,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   createForgeStyle,
   type MpElement,
@@ -286,6 +288,42 @@ export interface TableProperties {
  * `render` formatter (the scoped cell slots are dropped) — consistent with how
  * the other migrated components dropped scoped slots.
  */
+function getThClass(column: TableColumn): string {
+  return classNames(
+    styles['forge-table__th'],
+    { [styles[`forge-table__th--align-${column.align ?? 'left'}`]]: true },
+    { [styles['forge-table__th--sortable']]: Boolean(column.sortable) },
+    { [styles['forge-table__th--fixed-left']]: column.fixed === 'left' },
+    { [styles['forge-table__th--fixed-right']]: column.fixed === 'right' },
+  );
+}
+
+function getCellFixedStyle(
+  column: TableColumn,
+  columnOffsets: { leftOffsets: Map<string, number>; rightOffsets: Map<string, number> },
+): Record<string, string | number> | undefined {
+  const style: Record<string, string | number> = column.width ? { width: column.width } : {};
+  if (column.fixed === 'left') {
+    style.left = `${columnOffsets.leftOffsets.get(column.key) ?? 0}px`;
+  } else if (column.fixed === 'right') {
+    style.right = `${columnOffsets.rightOffsets.get(column.key) ?? 0}px`;
+  }
+  return Object.keys(style).length > 0 ? style : undefined;
+}
+
+function getTdClass(column: TableColumn): string {
+  return classNames(styles['forge-table__td'], {
+    [styles[`forge-table__td--align-${column.align ?? 'left'}`]]: true,
+    [styles['forge-table__td--fixed-left']]: column.fixed === 'left',
+    [styles['forge-table__td--fixed-right']]: column.fixed === 'right',
+  });
+}
+
+function getCellText(column: TableColumn, row: Record<string, unknown>): string {
+  const value = row[column.key];
+  return column.render ? column.render(value, row) : String(value ?? '');
+}
+
 export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
   const style = createTableStyle(properties.properties);
 
@@ -410,6 +448,14 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
     properties.onSort?.(column.key, nextDirection);
   };
 
+  const selectAllInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (selectAllInputRef.current) {
+      selectAllInputRef.current.indeterminate = isPartiallySelected;
+    }
+  }, [isPartiallySelected]);
+
   const onHeaderKeyDown = (event: unknown, column: TableColumn): void => {
     if (!column.sortable) {
       return;
@@ -455,166 +501,8 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
     return { leftOffsets, rightOffsets };
   }, [columns, selectable]);
 
-  const headCells = columns.map((column) => {
-    const isActive = sortKey === column.key;
-    const thClass = classNames(
-      styles['forge-table__th'],
-      { [styles[`forge-table__th--align-${column.align ?? 'left'}`]]: true },
-      { [styles['forge-table__th--sortable']]: Boolean(column.sortable) },
-      { [styles['forge-table__th--fixed-left']]: column.fixed === 'left' },
-      { [styles['forge-table__th--fixed-right']]: column.fixed === 'right' },
-    );
-    const thStyle: Record<string, string | number> = column.width ? { width: column.width } : {};
-    if (column.fixed === 'left') {
-      thStyle.left = `${columnOffsets.leftOffsets.get(column.key) ?? 0}px`;
-    } else if (column.fixed === 'right') {
-      thStyle.right = `${columnOffsets.rightOffsets.get(column.key) ?? 0}px`;
-    }
-    return (
-      <th
-        className={thClass}
-        scope="col"
-        tabindex={column.sortable ? 0 : undefined}
-        style={Object.keys(thStyle).length > 0 ? thStyle : undefined}
-        aria-sort={isActive ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
-        onClick={() => toggleSort(column)}
-        onKeyDown={(event: unknown) => onHeaderKeyDown(event, column)}
-        onKeydown={(event: unknown) => onHeaderKeyDown(event, column)}
-      >
-        <span className={styles['forge-table__th-content']}>
-          <ForgeTypography
-            as="span"
-            color="primary"
-            variant="body-sm"
-            weight="semibold"
-          >
-            {column.label}
-          </ForgeTypography>
-          {column.sortable && isActive ? (
-            <span className={styles['forge-table__sort-icon']}>
-              <ForgeIconChevron
-                direction={sortDirection === 'asc' ? 'up' : 'down'}
-                size="2xs"
-              />
-            </span>
-          ) : undefined}
-        </span>
-      </th>
-    );
-  });
-
   const hasExpand = expandable || Boolean(expandedRowRender);
   const totalColSpan = columns.length + (selectable ? 1 : 0) + (hasExpand ? 1 : 0);
-
-  const bodyRows =
-    sortedRows.length === 0
-      ? [
-          <tr className={styles['forge-table__row']}>
-            <td
-              className={styles['forge-table__empty']}
-              colSpan={totalColSpan}
-            >
-              <ForgeTypography
-                as="span"
-                color="secondary"
-                variant="body-sm"
-              >
-                {emptyText}
-              </ForgeTypography>
-            </td>
-          </tr>,
-        ]
-      : sortedRows.flatMap((row, index) => {
-          const rowKeyStr = getRowKey(row, index);
-          const isSelected = selectedKeysSet.has(rowKeyStr);
-          const isExpanded = expandedKeysSet.has(rowKeyStr);
-          const rowClass = classNames(styles['forge-table__row'], {
-            [styles['forge-table__row--selected']]: isSelected,
-          });
-
-          const mainRow = (
-            <tr className={rowClass}>
-              {selectable ? (
-                <td className={classNames(styles['forge-table__td'], styles['forge-table__td--selection'])}>
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    aria-label={`Select row ${rowKeyStr}`}
-                    onChange={() => toggleRowSelect(row, rowKeyStr)}
-                  />
-                </td>
-              ) : undefined}
-              {hasExpand ? (
-                <td className={classNames(styles['forge-table__td'], styles['forge-table__td--expand'])}>
-                  <button
-                    type="button"
-                    className={styles['forge-table__expand-button']}
-                    aria-expanded={isExpanded}
-                    aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
-                    onClick={() => toggleRowExpand(rowKeyStr)}
-                  >
-                    <ForgeIconChevron
-                      direction={isExpanded ? 'down' : 'right'}
-                      size="2xs"
-                    />
-                  </button>
-                </td>
-              ) : undefined}
-              {columns.map((column) => {
-                const value = row[column.key];
-                const text = column.render ? column.render(value, row) : String(value ?? '');
-                const tdClass = classNames(styles['forge-table__td'], {
-                  [styles[`forge-table__td--align-${column.align ?? 'left'}`]]: true,
-                  [styles['forge-table__td--fixed-left']]: column.fixed === 'left',
-                  [styles['forge-table__td--fixed-right']]: column.fixed === 'right',
-                });
-                const tdStyle: Record<string, string | number> = column.width ? { width: column.width } : {};
-                if (column.fixed === 'left') {
-                  tdStyle.left = `${columnOffsets.leftOffsets.get(column.key) ?? 0}px`;
-                } else if (column.fixed === 'right') {
-                  tdStyle.right = `${columnOffsets.rightOffsets.get(column.key) ?? 0}px`;
-                }
-                return (
-                  <td
-                    className={tdClass}
-                    style={Object.keys(tdStyle).length > 0 ? tdStyle : undefined}
-                  >
-                    <Slot
-                      name="cell"
-                      column={column}
-                      row={row}
-                      value={value}
-                    >
-                      <ForgeTypography
-                        as="span"
-                        color="primary"
-                        variant="body-sm"
-                      >
-                        {text}
-                      </ForgeTypography>
-                    </Slot>
-                  </td>
-                );
-              })}
-            </tr>
-          );
-
-          if (isExpanded && expandedRowRender) {
-            const detailRow = (
-              <tr className={classNames(styles['forge-table__row'], styles['forge-table__expanded-row'])}>
-                <td
-                  className={styles['forge-table__expanded-cell']}
-                  colSpan={totalColSpan}
-                >
-                  {expandedRowRender(row)}
-                </td>
-              </tr>
-            );
-            return [mainRow, detailRow];
-          }
-
-          return [mainRow];
-        });
 
   return (
     <div
@@ -658,11 +546,7 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
                 scope="col"
               >
                 <input
-                  ref={(element: HTMLInputElement | null) => {
-                    if (element) {
-                      element.indeterminate = isPartiallySelected;
-                    }
-                  }}
+                  ref={selectAllInputRef}
                   type="checkbox"
                   checked={isAllSelected}
                   aria-checked={isAllSelected ? 'true' : isPartiallySelected ? 'mixed' : 'false'}
@@ -678,10 +562,138 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
                 aria-label="Expand row"
               />
             ) : undefined}
-            {headCells}
+            {columns.map((column) => (
+              <th
+                key={column.key}
+                className={getThClass(column)}
+                scope="col"
+                tabIndex={column.sortable ? 0 : undefined}
+                style={getCellFixedStyle(column, columnOffsets)}
+                aria-sort={sortKey === column.key ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
+                onClick={() => toggleSort(column)}
+                onKeyDown={(event: unknown) => onHeaderKeyDown(event, column)}
+              >
+                <span className={styles['forge-table__th-content']}>
+                  <ForgeTypography
+                    as="span"
+                    color="primary"
+                    variant="body-sm"
+                    weight="semibold"
+                  >
+                    {column.label}
+                  </ForgeTypography>
+                  {column.sortable && sortKey === column.key ? (
+                    <span className={styles['forge-table__sort-icon']}>
+                      <ForgeIconChevron
+                        direction={sortDirection === 'asc' ? 'up' : 'down'}
+                        size="2xs"
+                      />
+                    </span>
+                  ) : undefined}
+                </span>
+              </th>
+            ))}
           </tr>
         </thead>
-        <tbody>{bodyRows}</tbody>
+        <tbody>
+          {sortedRows.length === 0 ? (
+            <tr className={styles['forge-table__row']}>
+              <td
+                className={styles['forge-table__empty']}
+                colSpan={totalColSpan}
+              >
+                <ForgeTypography
+                  as="span"
+                  color="secondary"
+                  variant="body-sm"
+                >
+                  {emptyText}
+                </ForgeTypography>
+              </td>
+            </tr>
+          ) : (
+            sortedRows.flatMap((row, index) => {
+              const key = getRowKey(row, index);
+              const isExpanded = expandedKeysSet.has(key);
+              const mainRow = (
+                <tr
+                  key={key}
+                  className={classNames(styles['forge-table__row'], {
+                    [styles['forge-table__row--selected']]: selectedKeysSet.has(key),
+                  })}
+                >
+                  {selectable ? (
+                    <td className={classNames(styles['forge-table__td'], styles['forge-table__td--selection'])}>
+                      <input
+                        type="checkbox"
+                        checked={selectedKeysSet.has(key)}
+                        aria-label={`Select row ${key}`}
+                        onChange={() => toggleRowSelect(row, key)}
+                      />
+                    </td>
+                  ) : undefined}
+                  {hasExpand ? (
+                    <td className={classNames(styles['forge-table__td'], styles['forge-table__td--expand'])}>
+                      <button
+                        type="button"
+                        className={styles['forge-table__expand-button']}
+                        aria-expanded={isExpanded}
+                        aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
+                        onClick={() => toggleRowExpand(key)}
+                      >
+                        <ForgeIconChevron
+                          direction={isExpanded ? 'down' : 'right'}
+                          size="2xs"
+                        />
+                      </button>
+                    </td>
+                  ) : undefined}
+                  {columns.map((column) => (
+                    <td
+                      key={column.key}
+                      className={getTdClass(column)}
+                      style={getCellFixedStyle(column, columnOffsets)}
+                    >
+                      <Slot
+                        name="cell"
+                        column={column}
+                        row={row}
+                        value={row[column.key]}
+                      >
+                        <ForgeTypography
+                          as="span"
+                          color="primary"
+                          variant="body-sm"
+                        >
+                          {getCellText(column, row)}
+                        </ForgeTypography>
+                      </Slot>
+                    </td>
+                  ))}
+                </tr>
+              );
+
+              if (isExpanded && expandedRowRender) {
+                const detailRow = (
+                  <tr
+                    key={`${key}__expanded`}
+                    className={classNames(styles['forge-table__row'], styles['forge-table__expanded-row'])}
+                  >
+                    <td
+                      className={styles['forge-table__expanded-cell']}
+                      colSpan={totalColSpan}
+                    >
+                      {expandedRowRender(row)}
+                    </td>
+                  </tr>
+                );
+                return [mainRow, detailRow];
+              }
+
+              return [mainRow];
+            })
+          )}
+        </tbody>
       </table>
     </div>
   );

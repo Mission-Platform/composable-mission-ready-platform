@@ -74,26 +74,51 @@ describe('Git commit core', () => {
   });
 
   it('previews staged-only and explicit-path modes without staging', async () => {
-    const staged = await createCommitPlan({
-      type: 'test',
-      scope: 'git',
-      description: 'preview staged changes',
-      mode: { kind: 'staged-only' },
-    });
-    assert.deepEqual(staged.preview.command, ['git', 'commit', '-F', '-']);
-    assert.equal(
-      staged.preview.actions.some((action) => action.command[1] === 'add'),
-      false,
-    );
+    const fixture = mkdtempSync(join(tmpdir(), 'mcp-commit-preview-'));
+    const previousRoot = process.env.MISSION_REPO_ROOT;
+    try {
+      runFixtureGit(fixture, ['init', '--quiet']);
+      runFixtureGit(fixture, ['config', 'user.name', 'Commit Test']);
+      runFixtureGit(fixture, ['config', 'user.email', 'commit-test@example.test']);
+      writeFileSync(join(fixture, 'pnpm-workspace.yaml'), 'packages:\n  - packages/*\n');
+      writeFileSync(
+        join(fixture, 'commitlint.config.mjs'),
+        'export default { rules: { "subject-empty": [2, "never"] } };\n',
+      );
+      writeFileSync(join(fixture, 'staged.txt'), 'staged\n');
+      runFixtureGit(fixture, ['add', '--', 'pnpm-workspace.yaml']);
+      runFixtureGit(fixture, ['commit', '--quiet', '-m', 'chore: initial']);
+      runFixtureGit(fixture, ['add', '--', 'staged.txt']);
+      process.env.MISSION_REPO_ROOT = fixture;
 
-    const paths = await createCommitPlan({
-      type: 'test',
-      scope: 'git',
-      description: 'preview selected paths',
-      mode: { kind: 'paths', paths: ['package.json'] },
-    });
-    assert.deepEqual(paths.preview.command, ['git', 'commit', '--only', '-F', '-', '--', 'package.json']);
-    assert.deepEqual(paths.preview.actions[0]?.command, ['git', 'add', '--', 'package.json']);
+      const staged = await createCommitPlan({
+        type: 'test',
+        scope: 'git',
+        description: 'preview staged changes',
+        mode: { kind: 'staged-only' },
+      });
+      assert.deepEqual(staged.preview.command, ['git', 'commit', '-F', '-']);
+      assert.equal(
+        staged.preview.actions.some((action) => action.command[1] === 'add'),
+        false,
+      );
+
+      const paths = await createCommitPlan({
+        type: 'test',
+        scope: 'git',
+        description: 'preview selected paths',
+        mode: { kind: 'paths', paths: ['staged.txt'] },
+      });
+      assert.deepEqual(paths.preview.command, ['git', 'commit', '--only', '-F', '-', '--', 'staged.txt']);
+      assert.deepEqual(paths.preview.actions[0]?.command, ['git', 'add', '--', 'staged.txt']);
+    } finally {
+      if (previousRoot === undefined) {
+        delete process.env.MISSION_REPO_ROOT;
+      } else {
+        process.env.MISSION_REPO_ROOT = previousRoot;
+      }
+      rmSync(fixture, { recursive: true, force: true });
+    }
   });
 
   it('rejects stale snapshots before any commit command', async () => {

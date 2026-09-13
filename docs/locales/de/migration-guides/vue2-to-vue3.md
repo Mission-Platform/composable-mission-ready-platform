@@ -17,7 +17,7 @@ Die Mission Platform verwendet Vue 3 mit der Composition API und der `<script se
 Stellen Sie vor der Migration sicher, dass Ihr Paket den Abhängigkeitsregeln der Plattform entspricht:
 
 - Keine Importe aus `apps/`.
-– Die gesamte gemeinsame Logik sollte sich in `packages/` befinden.
+  – Die gesamte gemeinsame Logik sollte sich in `packages/` befinden.
 - Die Konfiguration sollte von `packages/tooling/configs/` stammen.
 
 ## Schritt 1: Build-Konfiguration aktualisieren
@@ -26,12 +26,14 @@ Stellen Sie sicher, dass Ihre `package.json` und `vite.config.ts` auf Vue 3 ausg
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
 ## Schritt 2: Konvertieren Sie die Options-API in die Composition-API
@@ -48,16 +50,16 @@ In Vue 2 wurde der Status in der Funktion `data()` definiert. Verwenden Sie in V
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3:**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
@@ -88,23 +90,23 @@ const increment = () => {
 
 Lifecycle-Hooks wurden umbenannt und müssen importiert werden.
 
-| Vue 2 | Vue 3 |
-|:---------------------------|:------------------------------------------|
+| Vue 2                      | Vue 3                                             |
+| :------------------------- | :------------------------------------------------ |
 | `beforeCreate` / `created` | Verwenden Sie `setup()` / `<script setup>` direkt |
-| `beforeMount` | `onBeforeMount` |
-| `mounted` | `onMounted` |
-| `beforeUpdate` | `onBeforeUpdate` |
-| `updated` | `onUpdated` |
-| `beforeDestroy` | `onBeforeUnmount` |
-| `destroyed` | `onUnmounted` |
+| `beforeMount`              | `onBeforeMount`                                   |
+| `mounted`                  | `onMounted`                                       |
+| `beforeUpdate`             | `onBeforeUpdate`                                  |
+| `updated`                  | `onUpdated`                                       |
+| `beforeDestroy`            | `onBeforeUnmount`                                 |
+| `destroyed`                | `onUnmounted`                                     |
 
 Beispiel:
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
@@ -118,7 +120,7 @@ Alle neuen und migrierten Komponenten in der Mission Platform sollten die Syntax
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
@@ -141,7 +143,7 @@ In Vue 3 ist der Standard-Requisitenname für `v-model` `modelValue` und das Ere
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 

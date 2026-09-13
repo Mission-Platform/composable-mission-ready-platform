@@ -39,7 +39,7 @@ src/composables/
 这是一个管理事件侦听器的典型一次性写入可组合项。
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
+import { type MpRef, useEffect } from "@mission-platform/forge-jsx";
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,
@@ -53,7 +53,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
-    
+
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);

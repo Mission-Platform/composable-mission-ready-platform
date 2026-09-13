@@ -74,12 +74,11 @@ export function ForgeTreeViewItem(properties: Readonly<TreeViewItemProperties>):
         role="treeitem"
         aria-expanded={hasChildren(node) ? open : undefined}
         aria-selected={false}
-        tabindex={0}
+        tabIndex={0}
         className={[styles['tree-node__label']]}
         style={{ paddingLeft: `${depth * 20}px` }}
         onClick={() => selectNode(node)}
         onKeyDown={(event: KeyboardEvent) => keyDownNode(event, node)}
-        onKeydown={(event: KeyboardEvent) => keyDownNode(event, node)}
       >
         {hasChildren(node) ? (
           <button

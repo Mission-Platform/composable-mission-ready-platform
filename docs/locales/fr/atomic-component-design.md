@@ -13,13 +13,13 @@ cohérence entre plusieurs cadres.
 
 Les composants sont classés en cinq niveaux en fonction de leur portée et de leur responsabilité.
 
-| Niveau | Dossier | Descriptif |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Atomes** | `src/components/atoms/`     | Les plus petites primitives de l'interface utilisateur (par exemple, `ForgeButton`, `ForgeInput`, `ForgeBadge`). Il s’agit généralement d’unités fonctionnelles qui ne peuvent être décomposées davantage sans perdre leur objectif. |
-| **Molécules** | `src/components/molecules/` | Compositions simples d'atomes (par exemple, `ForgeSearchInput`, `ForgeFieldSet`). Ils fonctionnent ensemble comme une unité.                                                                    |
-| **Organismes** | `src/components/organisms/` | Sections d'interface utilisateur complexes composées d'atomes, de molécules et d'autres organismes (par exemple, `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
-| **Modèles** | `src/components/templates/` | Mises en page au niveau de la page qui définissent la structure du contenu (par exemple, `ForgeHero`, `ForgeAppLayout`). Ils utilisent souvent des emplacements pour définir où le contenu doit être placé.                     |
-| **Pages** | `src/components/pages/`     | Instances spécifiques de modèles remplis de contenu et de données concrets (par exemple, `AccountSettingsPage`).                                                                        |
+| Niveau         | Dossier                     | Descriptif                                                                                                                                                                                                                           |
+| :------------- | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atomes**     | `src/components/atoms/`     | Les plus petites primitives de l'interface utilisateur (par exemple, `ForgeButton`, `ForgeInput`, `ForgeBadge`). Il s’agit généralement d’unités fonctionnelles qui ne peuvent être décomposées davantage sans perdre leur objectif. |
+| **Molécules**  | `src/components/molecules/` | Compositions simples d'atomes (par exemple, `ForgeSearchInput`, `ForgeFieldSet`). Ils fonctionnent ensemble comme une unité.                                                                                                         |
+| **Organismes** | `src/components/organisms/` | Sections d'interface utilisateur complexes composées d'atomes, de molécules et d'autres organismes (par exemple, `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                                         |
+| **Modèles**    | `src/components/templates/` | Mises en page au niveau de la page qui définissent la structure du contenu (par exemple, `ForgeHero`, `ForgeAppLayout`). Ils utilisent souvent des emplacements pour définir où le contenu doit être placé.                          |
+| **Pages**      | `src/components/pages/`     | Instances spécifiques de modèles remplis de contenu et de données concrets (par exemple, `AccountSettingsPage`).                                                                                                                     |
 
 ## Disposition du dossier de composants
 
@@ -67,7 +67,7 @@ Le `title` champ dans le livre d'histoires `meta` l'objet doit suivre ce modèle
 
 ```tsx
 const meta = {
-  title: 'Atoms/Display/ForgeButton',
+  title: "Atoms/Display/ForgeButton",
   component: Button,
   // ...
 };

@@ -111,14 +111,14 @@ kaarten, incl `mp:*` voorwaarden en CMS-subpaden blijven oplossen via deze gepro
 
 ### Pakkettaken
 
-| Taak | Beschrijving |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       | Voeg neutrale, raamwerk-, declaratie-, e-mail- en geconfigureerde CMS-uitvoer samen via de gedeelde Forge-runner. |
-| `build:forge` | Gerichte neutrale Forge-uitvoercompatibiliteitsalias.                                                      |
-| `build:react`, `build:vue`, `build:svelte` | Gerichte aliassen voor compatibiliteit van frameworks.                                      |
-| `build:solid`, `build:web-components` | Gerichte aliassen voor compatibiliteit van frameworks.                                         |
-| `build:check` | Valideert typen voor een werkruimte zonder uitvoer te publiceren.                                               |
-| `build:watch` | Start een incrementele opbouw in de bewakingsmodus voor een werkruimte.                                               |
+| Taak                                       | Beschrijving                                                                                                      |
+| :----------------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
+| `build`                                    | Voeg neutrale, raamwerk-, declaratie-, e-mail- en geconfigureerde CMS-uitvoer samen via de gedeelde Forge-runner. |
+| `build:forge`                              | Gerichte neutrale Forge-uitvoercompatibiliteitsalias.                                                             |
+| `build:react`, `build:vue`, `build:svelte` | Gerichte aliassen voor compatibiliteit van frameworks.                                                            |
+| `build:solid`, `build:web-components`      | Gerichte aliassen voor compatibiliteit van frameworks.                                                            |
+| `build:check`                              | Valideert typen voor een werkruimte zonder uitvoer te publiceren.                                                 |
+| `build:watch`                              | Start een incrementele opbouw in de bewakingsmodus voor een werkruimte.                                           |
 
 Turbo hasheert de doelkiezers (`FORGE_BUILD_TARGET` en de oudere Forge/CMS-selectors) samen met de gedeelde
 runner- en ensceneringsbronnen. Bijgevolg kunnen geaggregeerde en gerichte builds elkaars in de cache opgeslagen resultaat niet hergebruiken. Finale
@@ -146,12 +146,12 @@ hersteld vanuit de cache.
 
 Buildconfiguraties worden gecentraliseerd in het `packages/tooling/configs/` directory om de consistentie binnen de monorepo te behouden.
 
-| Pakket | Doel |
-| :------------------------------------ | :----------------------------------------------------------- |
-| `@mission-platform/vite-config`       | Gedeeld Vite logica voor apps en Vue-specifieke constructies.          |
-| `@mission-platform/tsdown-config`     | Gedeelde tsdown-logica voor bibliotheekpakketten.                    |
+| Pakket                                | Doel                                                                       |
+| :------------------------------------ | :------------------------------------------------------------------------- |
+| `@mission-platform/vite-config`       | Gedeeld Vite logica voor apps en Vue-specifieke constructies.              |
+| `@mission-platform/tsdown-config`     | Gedeelde tsdown-logica voor bibliotheekpakketten.                          |
 | `@mission-platform/typescript-config` | Baseren `tsconfig.json` voorinstellingen voor apps, bibliotheken en tests. |
-| `@mission-platform/postcss-config`    | Gestandaardiseerde CSS-verwerking (Autoprefixer, enz.).            |
+| `@mission-platform/postcss-config`    | Gestandaardiseerde CSS-verwerking (Autoprefixer, enz.).                    |
 
 ## Lokale ontwikkeling versus productie
 

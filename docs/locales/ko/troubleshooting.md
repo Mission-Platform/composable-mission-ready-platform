@@ -69,10 +69,11 @@ rm -rf .turbo
 2. 버전이 일치하는지 확인하세요(`workspace:*` 권장).
 3. `pnpm install`를 실행하여 심볼릭 링크를 새로 고칩니다.
 4. 문제가 지속되면 철저하게 청소해 보십시오.
+
 ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-   ```
+```
 
 ### CI에는 오류가 있지만 로컬에는 오류가 없습니다.
 
@@ -114,7 +115,7 @@ pnpm exec turbo run build:check
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
 ### "처리되지 않은 약속 거부"

@@ -332,12 +332,12 @@ export default defineVitestConfig({
 
 ### Résumé des scripts
 
-| Scénario | Commande | Objectif |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
-| `test` | `pnpm exec turbo run test` | Exécutez toutes les tâches de test de l’espace de travail.          |
-| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Exécutez des tests de composants en mode surveillance.    |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Générez un rapport de couverture des composants. |
-| Rouille/WASM | `cargo test --workspace` | Exécutez des tests de caisse Rust natifs.           |
+| Scénario        | Commande                                                   | Objectif                                                   |
+| :-------------- | :--------------------------------------------------------- | :--------------------------------------------------------- |
+| `test`          | `pnpm exec turbo run test`                                 | Exécutez toutes les tâches de test de l’espace de travail. |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Exécutez des tests de composants en mode surveillance.     |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Générez un rapport de couverture des composants.           |
+| Rouille/WASM    | `cargo test --workspace`                                   | Exécutez des tests de caisse Rust natifs.                  |
 
 Les packages wrapper Wasm sont testés via leurs propres tâches de package. Par exemple, exécutez le package du scanner et son
 wrapper ensemble lors de la modification du comportement du scanner :

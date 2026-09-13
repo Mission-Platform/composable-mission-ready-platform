@@ -15,12 +15,12 @@ Pour sélectionner le bon bundle, vous devez configurer votre outil de générat
 
 ### Conditions cadres prises en charge
 
-| Cadre | Conditions d'exportation |
-| :----------------- | :----------------- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
-| **Composants Web** | `mp:web-component` |
+| Cadre              | Conditions d'exportation |
+| :----------------- | :----------------------- |
+| **Vue 3**          | `mp:vue`                 |
+| **React**          | `mp:react`               |
+| **Solid**          | `mp:solid`               |
+| **Composants Web** | `mp:web-component`       |
 
 ## Configuration du projet
 

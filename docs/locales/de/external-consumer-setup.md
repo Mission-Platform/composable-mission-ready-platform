@@ -15,11 +15,11 @@ Um das richtige Bundle auszuwählen, müssen Sie Ihr Build-Tool und TypeScript f
 
 ### Unterstützte Rahmenbedingungen
 
-| Rahmen | Exportbedingung |
+| Rahmen             | Exportbedingung    |
 | :----------------- | :----------------- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
+| **Vue 3**          | `mp:vue`           |
+| **React**          | `mp:react`         |
+| **Solid**          | `mp:solid`         |
 | **Webkomponenten** | `mp:web-component` |
 
 ## Projektkonfiguration

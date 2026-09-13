@@ -115,7 +115,7 @@ Verwenden Sie die gemeinsame Konfiguration aus `stylelint.config.mjs`, statt `ex
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
@@ -217,12 +217,13 @@ Extraktor, der in der README-Datei der Dokumenten-App beschrieben ist.
 Die Missionsplattform nutzt [Änderungssätze](https://github.com/changesets/changesets) zur Versionierung und Veröffentlichung.
 
 1. **Änderungssatz hinzufügen**: Nachdem Sie Änderungen vorgenommen haben, führen Sie Folgendes aus:
+
 ```bash
    pnpm changeset
-   ```
-   Wählen Sie das Paket und die Art der Änderung (Patch, Minor, Major) aus.
-2. **Änderungssatz festschreiben**: Übertragen Sie die generierte `.changeset/*.md`-Datei.
-3. **Version und Veröffentlichung**: CI/CD übernimmt die eigentliche Veröffentlichung, Sie können Versionen jedoch lokal in der Vorschau anzeigen mit:
+```
+
+Wählen Sie das Paket und die Art der Änderung (Patch, Minor, Major) aus. 2. **Änderungssatz festschreiben**: Übertragen Sie die generierte `.changeset/*.md`-Datei. 3. **Version und Veröffentlichung**: CI/CD übernimmt die eigentliche Veröffentlichung, Sie können Versionen jedoch lokal in der Vorschau anzeigen mit:
+
 ```bash
    pnpm changeset version
-   ```
+```

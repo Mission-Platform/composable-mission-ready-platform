@@ -388,8 +388,6 @@ export class ForgeWebScriptMultiMemory {
 /**
  * Creates an isolated multi-memory instance with dedicated guest heap, host interop, and static partitions.
  */
-export function createForgeWebScriptMultiMemory(
-  options?: ForgeWebScriptMultiMemoryOptions,
-): ForgeWebScriptMultiMemory {
+export function createForgeWebScriptMultiMemory(options?: ForgeWebScriptMultiMemoryOptions): ForgeWebScriptMultiMemory {
   return new ForgeWebScriptMultiMemory(options);
 }

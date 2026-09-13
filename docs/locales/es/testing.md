@@ -332,12 +332,12 @@ export default defineVitestConfig({
 
 ### Resumen de guiones
 
-| Guión | Comando | Propósito |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
-| `test` | `pnpm exec turbo run test` | Ejecute todas las tareas de prueba del espacio de trabajo.          |
-| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Ejecute pruebas de componentes en modo reloj.    |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Generar un informe de cobertura de componentes. |
-| Óxido/WASM | `cargo test --workspace` | Ejecute pruebas de cajas nativas de Rust.           |
+| Guión           | Comando                                                    | Propósito                                                  |
+| :-------------- | :--------------------------------------------------------- | :--------------------------------------------------------- |
+| `test`          | `pnpm exec turbo run test`                                 | Ejecute todas las tareas de prueba del espacio de trabajo. |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Ejecute pruebas de componentes en modo reloj.              |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Generar un informe de cobertura de componentes.            |
+| Óxido/WASM      | `cargo test --workspace`                                   | Ejecute pruebas de cajas nativas de Rust.                  |
 
 Los paquetes contenedores de Wasm se prueban a través de las tareas de su paquete propietario. Por ejemplo, ejecute el paquete del escáner y su
 contenedor juntos al cambiar el comportamiento del escáner:

@@ -111,14 +111,14 @@ mapas, incluyendo `mp:*` condiciones y subrutas de CMS, continúan resolviendo c
 
 ### Tareas de paquete
 
-| Tarea | Descripción |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       | Agregue salida neutral, marco, declaración, correo electrónico y CMS configurado a través del ejecutor compartido de Forge. |
-| `build:forge` | Alias ​​de compatibilidad de salida de Forge neutral dirigido.                                                      |
-| `build:react`, `build:vue`, `build:svelte` | Alias ​​de compatibilidad de marcos de destino.                                      |
-| `build:solid`, `build:web-components` | Alias ​​de compatibilidad de marcos de destino.                                         |
-| `build:check` | Valida tipos para un espacio de trabajo sin publicar resultados.                                               |
-| `build:watch` | Inicia una compilación incremental en modo de vigilancia para un espacio de trabajo.                                               |
+| Tarea                                      | Descripción                                                                                                                 |
+| :----------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| `build`                                    | Agregue salida neutral, marco, declaración, correo electrónico y CMS configurado a través del ejecutor compartido de Forge. |
+| `build:forge`                              | Alias ​​de compatibilidad de salida de Forge neutral dirigido.                                                              |
+| `build:react`, `build:vue`, `build:svelte` | Alias ​​de compatibilidad de marcos de destino.                                                                             |
+| `build:solid`, `build:web-components`      | Alias ​​de compatibilidad de marcos de destino.                                                                             |
+| `build:check`                              | Valida tipos para un espacio de trabajo sin publicar resultados.                                                            |
+| `build:watch`                              | Inicia una compilación incremental en modo de vigilancia para un espacio de trabajo.                                        |
 
 Turbo aplica un hash a los selectores de destino (`FORGE_BUILD_TARGET` y los selectores heredados de Forge/CMS) junto con el compartido
 corredor y fuentes de puesta en escena. En consecuencia, las compilaciones agregadas y específicas no pueden reutilizar el resultado almacenado en caché de otra. Final
@@ -146,12 +146,12 @@ restaurado desde el caché.
 
 Las configuraciones de compilación están centralizadas en el `packages/tooling/configs/` directorio para mantener la coherencia en todo el monorepo.
 
-| Paquete | Propósito |
-| :------------------------------------ | :----------------------------------------------------------- |
-| `@mission-platform/vite-config`       | Compartido Vite lógica para aplicaciones y Vue-construcciones específicas.          |
-| `@mission-platform/tsdown-config`     | Lógica tsdown compartida para paquetes de biblioteca.                    |
+| Paquete                               | Propósito                                                                              |
+| :------------------------------------ | :------------------------------------------------------------------------------------- |
+| `@mission-platform/vite-config`       | Compartido Vite lógica para aplicaciones y Vue-construcciones específicas.             |
+| `@mission-platform/tsdown-config`     | Lógica tsdown compartida para paquetes de biblioteca.                                  |
 | `@mission-platform/typescript-config` | Base `tsconfig.json` ajustes preestablecidos para aplicaciones, bibliotecas y pruebas. |
-| `@mission-platform/postcss-config`    | Procesamiento CSS estandarizado (Autoprefixer, etc.).            |
+| `@mission-platform/postcss-config`    | Procesamiento CSS estandarizado (Autoprefixer, etc.).                                  |
 
 ## Desarrollo local versus producción
 

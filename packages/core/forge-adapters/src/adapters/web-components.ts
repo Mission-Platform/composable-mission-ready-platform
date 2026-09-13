@@ -89,6 +89,14 @@ export interface DomTemplateDefinition {
 export interface PropertyDeclaration {
   /** When `true`, the property is internal render state (no observed attribute). */
   state?: boolean;
+  /** When `true`, property changes reflect back to the element's DOM attribute. */
+  reflect?: boolean;
+  /** When `false`, the property is not observed as an attribute; or a custom attribute name. */
+  attribute?: boolean | string;
+  /** Type constructor used for attribute conversion (e.g. Boolean, String, Number). */
+  type?: unknown;
+  /** When `true`, writes to this property synchronize with ElementInternals form value. */
+  formValue?: boolean;
 }
 
 /**
@@ -179,6 +187,8 @@ function attachShadowWithPolicy(host: Element, policy: WebComponentsShadowPolicy
   }
 }
 
+const patchedForms = new WeakSet<HTMLFormElement>();
+
 function internalsPropertyName(name: string): string {
   if (!name.startsWith('aria-')) {
     return name;
@@ -191,6 +201,12 @@ function ariaAttributeName(name: string): string {
     return name;
   }
   return `aria-${name.replaceAll(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`;
+}
+
+function toKebabCase(string_: string): string {
+  return string_
+    .replace(/^[A-Z]/, (match) => match.toLowerCase())
+    .replaceAll(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
 }
 
 /**
@@ -853,6 +869,19 @@ export class ForgeElement extends ForgeHTMLElement {
   private mpSetUp = false;
   /** Watches light-DOM projection inputs added after the element connects. */
   private mpChildrenObserver: MutationObserver | undefined;
+  /** Whether the element constructor has finished executing. */
+  private mpConstructed = false;
+  /** Guard preventing attribute mutation during reflection from re-triggering property setter. */
+  private mpReflecting = false;
+  /** Guard preventing property setter from reflecting back to attribute when set from attribute. */
+  private mpSettingFromAttribute = false;
+  /** Cached initial form value for formResetCallback. */
+  private mpInitialFormValue: unknown = undefined;
+  /** Registered reset listener on the parent form for environments lacking native FACE dispatch. */
+  private mpAttachedForm: HTMLFormElement | undefined;
+  private readonly mpFormResetHandler = (): void => {
+    this.formResetCallback();
+  };
 
   constructor() {
     super();
@@ -861,6 +890,11 @@ export class ForgeElement extends ForgeHTMLElement {
 
   /** Initialize host-independent state after the native host has run super(). */
   protected initializeForgeElement(): void {
+    this.mpConstructed = false;
+    this.mpReflecting = false;
+    this.mpSettingFromAttribute = false;
+    this.mpInitialFormValue = undefined;
+    this.mpAttachedForm = undefined;
     this.mpValues = new Map<string, unknown>();
     this.mpSlotOutlets = [];
     this.mpDirty = false;
@@ -888,6 +922,7 @@ export class ForgeElement extends ForgeHTMLElement {
       delete (this as unknown as Record<string, unknown>)[name];
       (this as unknown as Record<string, unknown>)[name] = descriptor.value;
     }
+    this.mpConstructed = true;
   }
 
   /** The runtime-owned root, including a closed root hidden by `shadowRoot`. */
@@ -905,12 +940,26 @@ export class ForgeElement extends ForgeHTMLElement {
     return (this.mpChildren ?? nativeChildrenGetter?.call(this) ?? []) as unknown as HTMLCollection;
   }
 
-  /** The observed attributes — the lower-cased names of every non-state property. */
+  /** The observed attributes — the lower-cased and kebab-cased names of every non-state property. */
   static get observedAttributes(): string[] {
     this.finalize();
-    return Object.entries(this.properties)
-      .filter(([, declaration]) => declaration.state !== true)
-      .map(([name]) => name.toLowerCase());
+    const attributes = new Set<string>();
+    for (const [name, declaration] of Object.entries(this.properties)) {
+      if (declaration.state === true || declaration.attribute === false) {
+        continue;
+      }
+      if (typeof declaration.attribute === 'string') {
+        attributes.add(declaration.attribute.toLowerCase());
+        continue;
+      }
+      const lower = name.toLowerCase();
+      attributes.add(lower);
+      const kebab = toKebabCase(name);
+      if (kebab !== lower) {
+        attributes.add(kebab);
+      }
+    }
+    return [...attributes];
   }
 
   /**
@@ -923,7 +972,7 @@ export class ForgeElement extends ForgeHTMLElement {
       return;
     }
     const prototype = this.prototype as ForgeElement;
-    for (const name of Object.keys(this.properties)) {
+    for (const [name, declaration] of Object.entries(this.properties)) {
       if (Object.prototype.hasOwnProperty.call(prototype, name)) {
         continue;
       }
@@ -936,6 +985,15 @@ export class ForgeElement extends ForgeHTMLElement {
         set(this: ForgeElement, value: unknown): void {
           if (this.mpValues.get(name) !== value) {
             this.mpValues.set(name, value);
+            if (declaration.reflect === true && !this.mpSettingFromAttribute) {
+              this.reflectPropertyToAttribute(name, declaration, value);
+            }
+            if (
+              this.isFormAssociated() &&
+              (declaration.formValue === true || name === 'value' || name === 'modelValue')
+            ) {
+              this.forwardFormValue(value);
+            }
             this.requestUpdate();
           }
         },
@@ -953,6 +1011,11 @@ export class ForgeElement extends ForgeHTMLElement {
     this.adoptAttributes();
     this.applyInternalsDefaults();
     this.syncDeclaredFormValue();
+    this.reflectInitialProperties();
+    this.attachFormResetListener();
+    if (this.isFormAssociated()) {
+      this.formAssociatedCallback(this.form);
+    }
     if (!this.mpSetUp) {
       this.mpSetUp = true;
       this.setup();
@@ -967,6 +1030,103 @@ export class ForgeElement extends ForgeHTMLElement {
   disconnectedCallback(): void {
     this.mpChildrenObserver?.disconnect();
     this.mpChildrenObserver = undefined;
+    this.detachFormResetListener();
+    if (this.isFormAssociated()) {
+      // eslint-disable-next-line unicorn/no-null -- Web Components spec specifies passing null to formAssociatedCallback when detached.
+      this.formAssociatedCallback(null);
+    }
+  }
+
+  private reflectInitialProperties(): void {
+    const { properties } = this.constructor as typeof ForgeElement;
+    for (const [name, declaration] of Object.entries(properties)) {
+      if (declaration.reflect === true && declaration.state !== true) {
+        const value = this.mpValues.get(name);
+        if (value !== undefined) {
+          const customAttribute = typeof declaration.attribute === 'string' ? declaration.attribute : undefined;
+          const kebab = toKebabCase(name);
+          const lower = name.toLowerCase();
+          const attribute = customAttribute ?? kebab;
+          if (!this.hasAttribute(attribute) && !this.hasAttribute(lower)) {
+            this.reflectPropertyToAttribute(name, declaration, value);
+          }
+        }
+      }
+    }
+  }
+
+  private reflectPropertyToAttribute(name: string, declaration: PropertyDeclaration, value: unknown): void {
+    if (!this.mpConstructed) {
+      return;
+    }
+    const customAttribute = typeof declaration.attribute === 'string' ? declaration.attribute : undefined;
+    const kebab = toKebabCase(name);
+    const lower = name.toLowerCase();
+    let attributeName = customAttribute ?? kebab;
+    if (customAttribute === undefined && !this.hasAttribute(kebab) && this.hasAttribute(lower)) {
+      attributeName = lower;
+    }
+    this.mpReflecting = true;
+    try {
+      if (declaration.type === Boolean || typeof value === 'boolean') {
+        if (value) {
+          if (!this.hasAttribute(attributeName)) {
+            this.setAttribute(attributeName, '');
+          }
+        } else if (this.hasAttribute(attributeName)) {
+          this.removeAttribute(attributeName);
+        }
+      } else if (value === null || value === undefined) {
+        if (this.hasAttribute(kebab)) {
+          this.removeAttribute(kebab);
+        }
+        if (this.hasAttribute(lower)) {
+          this.removeAttribute(lower);
+        }
+        if (customAttribute !== undefined && this.hasAttribute(customAttribute)) {
+          this.removeAttribute(customAttribute);
+        }
+      } else {
+        const stringValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+        if (this.getAttribute(attributeName) !== stringValue) {
+          this.setAttribute(attributeName, stringValue);
+        }
+      }
+    } finally {
+      this.mpReflecting = false;
+    }
+  }
+
+  private attachFormResetListener(): void {
+    if (!this.isFormAssociated()) {
+      return;
+    }
+    const currentForm = this.form ?? undefined;
+    if (currentForm !== undefined && currentForm !== this.mpAttachedForm) {
+      this.detachFormResetListener();
+      this.mpAttachedForm = currentForm;
+      currentForm.addEventListener('reset', this.mpFormResetHandler);
+
+      if (!patchedForms.has(currentForm)) {
+        patchedForms.add(currentForm);
+        const nativeReset = currentForm.reset;
+        currentForm.reset = function (this: HTMLFormElement): void {
+          nativeReset.call(this);
+          for (const element of this.querySelectorAll('*')) {
+            if (element instanceof ForgeElement) {
+              element.formResetCallback();
+            }
+          }
+        };
+      }
+    }
+  }
+
+  private detachFormResetListener(): void {
+    if (this.mpAttachedForm !== undefined) {
+      this.mpAttachedForm.removeEventListener('reset', this.mpFormResetHandler);
+      this.mpAttachedForm = undefined;
+    }
   }
 
   /**
@@ -987,20 +1147,31 @@ export class ForgeElement extends ForgeHTMLElement {
   }
 
   /** Set or clear a custom state when ElementInternals supports custom states. */
-  protected setCustomState(name: string, active: boolean): void {
+  setCustomState(name: string, active: boolean): void {
     const states = this.mpInternals?.states;
     if (states === undefined || typeof states.add !== 'function' || typeof states.delete !== 'function') {
       return;
     }
+    const altName = name.startsWith('--') ? name.slice(2) : `--${name}`;
     if (active) {
-      states.add(name);
+      try {
+        states.add(name);
+      } catch {}
+      try {
+        states.add(altName);
+      } catch {}
     } else {
-      states.delete(name);
+      try {
+        states.delete(name);
+      } catch {}
+      try {
+        states.delete(altName);
+      } catch {}
     }
   }
 
   /** Synchronize a form value through ElementInternals when form association is requested. */
-  protected setFormValue(value: string | File | FormData | null, state?: string | File | FormData | null): void {
+  setFormValue(value: string | File | FormData | null, state?: string | File | FormData | null): void {
     if (!this.isFormAssociated() || this.mpInternals?.setFormValue === undefined) {
       return;
     }
@@ -1008,11 +1179,68 @@ export class ForgeElement extends ForgeHTMLElement {
   }
 
   /** Report form validity without making non-form components participate in forms. */
-  protected setValidity(flags: ValidityStateFlags = {}, message = '', anchor?: HTMLElement): void {
+  setValidity(flags: ValidityStateFlags = {}, message = '', anchor?: HTMLElement): void {
     if (!this.isFormAssociated() || this.mpInternals?.setValidity === undefined) {
       return;
     }
     this.mpInternals.setValidity(flags, message, anchor);
+  }
+
+  /** Form validity state from ElementInternals. */
+  get validity(): ValidityState {
+    return (
+      this.mpInternals?.validity ?? {
+        badInput: false,
+        customError: false,
+        patternMismatch: false,
+        rangeOverflow: false,
+        rangeUnderflow: false,
+        stepMismatch: false,
+        tooLong: false,
+        tooShort: false,
+        typeMismatch: false,
+        valid: true,
+        valueMissing: false,
+      }
+    );
+  }
+
+  /** Validation message from ElementInternals. */
+  get validationMessage(): string {
+    return this.mpInternals?.validationMessage ?? '';
+  }
+
+  /** Whether this element participates in constraint validation. */
+  get willValidate(): boolean {
+    return this.mpInternals?.willValidate ?? false;
+  }
+
+  /** Check validity using ElementInternals. */
+  checkValidity(): boolean {
+    if (typeof this.mpInternals?.checkValidity === 'function') {
+      return this.mpInternals.checkValidity();
+    }
+    return this.validity.valid;
+  }
+
+  /** Report validity using ElementInternals. */
+  reportValidity(): boolean {
+    if (typeof this.mpInternals?.reportValidity === 'function') {
+      return this.mpInternals.reportValidity();
+    }
+    return this.validity.valid;
+  }
+
+  /** Associated native form element, if any. */
+  get form(): HTMLFormElement | null {
+    // eslint-disable-next-line unicorn/no-null -- Element.form returns HTMLFormElement | null per DOM standard.
+    return this.mpInternals?.form ?? (this.closest?.('form') as HTMLFormElement | null) ?? null;
+  }
+
+  /** Labels associated with this control via ElementInternals. */
+  get labels(): NodeList | null {
+    // eslint-disable-next-line unicorn/no-null -- Element.labels returns NodeList | null per DOM standard.
+    return this.mpInternals?.labels ?? null;
   }
 
   /** Platform callback for form association; subclasses may override it safely. */
@@ -1021,28 +1249,83 @@ export class ForgeElement extends ForgeHTMLElement {
   }
 
   /** Platform callback for disabled-state changes. */
-  formDisabledCallback(_disabled: boolean): void {
-    // Overridden by generated form-associated components when needed.
+  formDisabledCallback(disabled: boolean): void {
+    const properties = (this.constructor as typeof ForgeElement).properties;
+    if (properties && 'disabled' in properties) {
+      (this as unknown as Record<string, unknown>).disabled = disabled;
+    }
+    this.setCustomState('disabled', disabled);
   }
 
   /** Restore the declared default value when a form is reset. */
   formResetCallback(): void {
-    const formValue = this.formPolicy().formValue;
-    if (formValue !== undefined) {
-      this.setFormValue(formValue);
+    const formPolicy = this.formPolicy();
+    let targetValue: unknown = formPolicy.formValue;
+
+    if (targetValue === undefined && 'defaultValue' in this) {
+      targetValue = (this as unknown as Record<string, unknown>).defaultValue;
+    }
+
+    if (targetValue === undefined && this.mpInitialFormValue !== undefined) {
+      targetValue = this.mpInitialFormValue;
+    }
+
+    if (targetValue === undefined) {
+      if (this.hasAttribute('value')) {
+        targetValue = this.getAttribute('value');
+      } else if (this.hasAttribute('model-value')) {
+        targetValue = this.getAttribute('model-value');
+      } else if (this.hasAttribute('modelvalue')) {
+        targetValue = this.getAttribute('modelvalue');
+      }
+    }
+
+    if (targetValue === undefined && this.isFormAssociated()) {
+      targetValue = '';
+    }
+
+    if (targetValue !== undefined) {
+      const properties = (this.constructor as typeof ForgeElement).properties;
+      if (properties && 'value' in properties) {
+        (this as unknown as Record<string, unknown>).value = targetValue;
+      }
+      if (properties && 'modelValue' in properties) {
+        (this as unknown as Record<string, unknown>).modelValue = targetValue;
+      }
+      this.forwardFormValue(targetValue);
     }
     this.requestUpdate();
   }
 
   /** Platform callback for browser-restored form state. */
-  formStateRestoreCallback(_state: string | File | FormData | null, _mode: 'autocomplete' | 'restore'): void {
-    // Overridden by generated form-associated components when needed.
+  formStateRestoreCallback(state: string | File | FormData | null, _mode: 'autocomplete' | 'restore'): void {
+    if (state !== null && state !== undefined) {
+      const properties = (this.constructor as typeof ForgeElement).properties;
+      if (properties && 'value' in properties) {
+        (this as unknown as Record<string, unknown>).value = state;
+      }
+      if (properties && 'modelValue' in properties) {
+        (this as unknown as Record<string, unknown>).modelValue = state;
+      }
+      this.setFormValue(state);
+      this.requestUpdate();
+    }
   }
 
-  attributeChangedCallback(name: string, _previous: string | null, value: string | null): void {
+  attributeChangedCallback(name: string, previous: string | null, value: string | null): void {
+    if (this.mpReflecting || previous === value) {
+      return;
+    }
     const propertyName = this.attributeToProperty(name);
     if (propertyName !== undefined) {
-      (this as unknown as Record<string, unknown>)[propertyName] = value;
+      const declaration = (this.constructor as typeof ForgeElement).properties[propertyName];
+      const convertedValue = this.convertAttributeValue(value, declaration);
+      this.mpSettingFromAttribute = true;
+      try {
+        (this as unknown as Record<string, unknown>)[propertyName] = convertedValue;
+      } finally {
+        this.mpSettingFromAttribute = false;
+      }
     }
   }
 
@@ -1078,18 +1361,95 @@ export class ForgeElement extends ForgeHTMLElement {
 
   /** Reflect any attributes already present on the host onto their properties. */
   private adoptAttributes(): void {
-    for (const attribute of this.attributes) {
-      const propertyName = this.attributeToProperty(attribute.name);
-      if (propertyName !== undefined && this.mpValues.get(propertyName) === undefined) {
-        (this as unknown as Record<string, unknown>)[propertyName] = attribute.value;
+    this.mpSettingFromAttribute = true;
+    try {
+      const { properties } = this.constructor as typeof ForgeElement;
+      for (const [name, declaration] of Object.entries(properties)) {
+        if (declaration.state === true || declaration.attribute === false) {
+          continue;
+        }
+        if (this.mpValues.get(name) !== undefined) {
+          continue;
+        }
+        const customAttribute = typeof declaration.attribute === 'string' ? declaration.attribute : undefined;
+        const kebab = toKebabCase(name);
+        const lower = name.toLowerCase();
+
+        let attributeName: string | undefined;
+        if (customAttribute !== undefined && this.hasAttribute(customAttribute)) {
+          attributeName = customAttribute;
+        } else if (this.hasAttribute(kebab)) {
+          attributeName = kebab;
+        } else if (this.hasAttribute(lower)) {
+          attributeName = lower;
+        }
+
+        if (attributeName !== undefined) {
+          const attributeValue = this.getAttribute(attributeName);
+          const value = this.convertAttributeValue(attributeValue, declaration);
+          (this as unknown as Record<string, unknown>)[name] = value;
+        }
       }
+    } finally {
+      this.mpSettingFromAttribute = false;
     }
   }
 
-  /** Resolve a (lower-cased) attribute name back to its declared property name. */
+  /** Resolve an attribute name (kebab-case or lowercase) back to its declared property name. */
   private attributeToProperty(attribute: string): string | undefined {
     const { properties } = this.constructor as typeof ForgeElement;
-    return Object.keys(properties).find((name) => name.toLowerCase() === attribute);
+    const lower = attribute.toLowerCase();
+    for (const [name, declaration] of Object.entries(properties)) {
+      if (declaration.state === true || declaration.attribute === false) {
+        continue;
+      }
+      if (typeof declaration.attribute === 'string') {
+        if (declaration.attribute.toLowerCase() === lower) {
+          return name;
+        }
+        continue;
+      }
+      if (name.toLowerCase() === lower || toKebabCase(name) === lower) {
+        return name;
+      }
+    }
+    return undefined;
+  }
+
+  private convertAttributeValue(value: string | null, declaration?: PropertyDeclaration): unknown {
+    if (declaration?.type === Boolean) {
+      return value !== null;
+    }
+    if (declaration?.type === Number) {
+      return value === null ? undefined : Number(value);
+    }
+    if (declaration?.type === Object || declaration?.type === Array) {
+      if (value === null) {
+        return undefined;
+      }
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value;
+      }
+    }
+    return value;
+  }
+
+  private forwardFormValue(value: unknown): void {
+    if (value === undefined) {
+      // eslint-disable-next-line unicorn/no-null -- ElementInternals.setFormValue accepts null to clear value.
+      this.setFormValue(null);
+    } else if (
+      typeof value === 'string' ||
+      value === null ||
+      (typeof File !== 'undefined' && value instanceof File) ||
+      (typeof FormData !== 'undefined' && value instanceof FormData)
+    ) {
+      this.setFormValue(value as string | File | FormData | null);
+    } else {
+      this.setFormValue(String(value));
+    }
   }
 
   private internalsPolicy(): WebComponentsInternalsPolicy {
@@ -1109,9 +1469,26 @@ export class ForgeElement extends ForgeHTMLElement {
   }
 
   private syncDeclaredFormValue(): void {
-    const formValue = this.formPolicy().formValue;
-    if (formValue !== undefined) {
-      this.setFormValue(formValue);
+    if (this.isFormAssociated()) {
+      const formValue = this.formPolicy().formValue;
+      if (formValue === undefined) {
+        const currentValue =
+          (this as unknown as Record<string, unknown>).value ?? (this as unknown as Record<string, unknown>).modelValue;
+        if (currentValue !== undefined) {
+          this.forwardFormValue(currentValue);
+        }
+      } else {
+        this.setFormValue(formValue);
+      }
+      if (this.mpInitialFormValue === undefined) {
+        const initial =
+          (this as unknown as Record<string, unknown>).value ??
+          (this as unknown as Record<string, unknown>).modelValue ??
+          formValue;
+        if (initial !== undefined) {
+          this.mpInitialFormValue = initial;
+        }
+      }
     }
   }
 

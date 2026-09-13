@@ -76,6 +76,15 @@ describe("the source-backed expression rewriter", () => {
     expect(rewrite("{ open: 'date' }")).toBe("{ open: 'date' }");
     expect(rewrite("{ open }")).toBe("{ open: this.open }");
     expect(rewrite("{ id, open }")).toBe("{ id, open: this.open }");
+    expect(rewrite("{ get open() { return true; } }")).toBe(
+      "{ get open() { return true; } }",
+    );
+    expect(rewrite("{ set open(value) { console.log(value); } }")).toBe(
+      "{ set open(value) { console.log(value); } }",
+    );
+    expect(rewrite("{ open() { return 1; } }")).toBe(
+      "{ open() { return 1; } }",
+    );
   });
 
   it("never expands a positional call argument into a shorthand property", () => {
@@ -103,6 +112,36 @@ describe("the source-backed expression rewriter", () => {
       "if (this.open) { this.label; }",
     );
     expect(rewrite("return { open };")).toBe("return { open: this.open };");
+  });
+
+  it("shadows a reactive name with an arrow function's own parameter", () => {
+    // Regression: `onUpdateOpen={(open: boolean) => { if (open) { … } }}` (as
+    // authored in forge-select) must not lower its own parameter into
+    // `this.open`, since the parameter shadows the outer `open` state for the
+    // extent of the callback body — the previous behaviour corrupted the
+    // parameter declaration itself into invalid syntax (`(this.open: boolean)`).
+    expect(rewrite("(open: boolean) => { if (open) { setOpen(open); } }")).toBe(
+      "(open: boolean) => { if (open) { this.open = open; } }",
+    );
+    // A bare (unparenthesized) single-parameter arrow shadows the same way.
+    expect(rewrite("open => open ? label : 'closed'")).toBe(
+      "open => open ? this.label : 'closed'",
+    );
+    // A default value is still read against the *outer* scope, matching how a
+    // `const` declarator's initializer is treated.
+    expect(rewrite("(open = !open) => open")).toBe(
+      "(open = !this.open) => open",
+    );
+    // Once the arrow's body ends, reads outside it resolve against the outer
+    // scope again — the shadow does not leak past the callback.
+    expect(rewrite("((open) => open)(true); open;")).toBe(
+      "((open) => open)(true); this.open;",
+    );
+    // A parameter name that does not collide with anything reactive is left
+    // exactly as it already was: untouched, with no special-casing applied.
+    expect(rewrite("(value: string) => value.trim()")).toBe(
+      "(value: string) => value.trim()",
+    );
   });
 
   it("expands the props parameter itself only where an object literal needs a key", () => {

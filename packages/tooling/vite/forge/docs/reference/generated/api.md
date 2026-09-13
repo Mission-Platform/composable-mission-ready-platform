@@ -626,6 +626,7 @@ consumers drive the very same per-framework singleton the components use.
 function discoverHelperExportsFromGraph(
   graph: ForgeFileGraph,
   componentFolders: ReadonlySet<string>,
+  discoveredComponents?: readonly DiscoveredComponent[],
 ): DiscoveredHelperExport[];
 ```
 
@@ -633,10 +634,11 @@ Project non-component public exports from the canonical graph.
 
 #### Parameters
 
-| Name             | Type                | Description |
-| ---------------- | ------------------- | ----------- |
-| graph            | ForgeFileGraph      |             |
-| componentFolders | ReadonlySet<string> |             |
+| Name                 | Type                           | Description |
+| -------------------- | ------------------------------ | ----------- |
+| graph                | ForgeFileGraph                 |             |
+| componentFolders     | ReadonlySet<string>            |             |
+| discoveredComponents | readonly DiscoveredComponent[] |             |
 
 ## `src/compiler/facts`
 

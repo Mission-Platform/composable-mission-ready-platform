@@ -68,7 +68,7 @@ Consumer-Resolver mit dem Matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`
 - Verwenden Sie ausschließlich die **Composition API**.
 - Bevorzugen `ref()` für die meisten Staaten, um die Konsistenz aufrechtzuerhalten.
 - Extrahieren Sie komplexe Zustandslogik in **Composables** (`useXxx`).
-– Stellen Sie sicher, dass alle Nebenwirkungen (Beobachter, Intervalle, Ereignis-Listener) ordnungsgemäß bereinigt werden `onUnmounted`.
+  – Stellen Sie sicher, dass alle Nebenwirkungen (Beobachter, Intervalle, Ereignis-Listener) ordnungsgemäß bereinigt werden `onUnmounted`.
 
 ## Monorepo-Workflow
 

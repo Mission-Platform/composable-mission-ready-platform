@@ -111,14 +111,14 @@ des cartes, y compris `mp:*` conditions et sous-chemins CMS, continuez à résou
 
 ### Tâches de package
 
-| Tâche | Descriptif |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       | Agrégez les sorties neutres, de cadre, de déclaration, de courrier électronique et de CMS configurées via le programme d'exécution Forge partagé. |
-| `build:forge` | Alias ​​de compatibilité de sortie Forge neutre ciblé.                                                      |
-| `build:react`, `build:vue`, `build:svelte` | Alias ​​de compatibilité de framework ciblés.                                      |
-| `build:solid`, `build:web-components` | Alias ​​de compatibilité de framework ciblés.                                         |
-| `build:check` | Valide les types pour un espace de travail sans publier la sortie.                                               |
-| `build:watch` | Démarre une génération incrémentielle en mode surveillance pour un espace de travail.                                               |
+| Tâche                                      | Descriptif                                                                                                                                        |
+| :----------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `build`                                    | Agrégez les sorties neutres, de cadre, de déclaration, de courrier électronique et de CMS configurées via le programme d'exécution Forge partagé. |
+| `build:forge`                              | Alias ​​de compatibilité de sortie Forge neutre ciblé.                                                                                            |
+| `build:react`, `build:vue`, `build:svelte` | Alias ​​de compatibilité de framework ciblés.                                                                                                     |
+| `build:solid`, `build:web-components`      | Alias ​​de compatibilité de framework ciblés.                                                                                                     |
+| `build:check`                              | Valide les types pour un espace de travail sans publier la sortie.                                                                                |
+| `build:watch`                              | Démarre une génération incrémentielle en mode surveillance pour un espace de travail.                                                             |
 
 Turbo hache les sélecteurs cibles (`FORGE_BUILD_TARGET` et les anciens sélecteurs Forge/CMS) ainsi que les
 sources de coureur et de mise en scène. Par conséquent, les builds agrégées et ciblées ne peuvent pas réutiliser les résultats mis en cache les uns des autres. Final
@@ -146,12 +146,12 @@ restauré à partir du cache.
 
 Les configurations de build sont centralisées dans le `packages/tooling/configs/` répertoire pour maintenir la cohérence dans le monorepo.
 
-| Forfait | Objectif |
-| :------------------------------------ | :----------------------------------------------------------- |
-| `@mission-platform/vite-config`       | Commun Vite logique pour les applications et Vue-versions spécifiques.          |
-| `@mission-platform/tsdown-config`     | Logique tsdown partagée pour les packages de bibliothèque.                    |
+| Forfait                               | Objectif                                                                                |
+| :------------------------------------ | :-------------------------------------------------------------------------------------- |
+| `@mission-platform/vite-config`       | Commun Vite logique pour les applications et Vue-versions spécifiques.                  |
+| `@mission-platform/tsdown-config`     | Logique tsdown partagée pour les packages de bibliothèque.                              |
 | `@mission-platform/typescript-config` | Base `tsconfig.json` préréglages pour les applications, les bibliothèques et les tests. |
-| `@mission-platform/postcss-config`    | Traitement CSS standardisé (Autoprefixer, etc.).            |
+| `@mission-platform/postcss-config`    | Traitement CSS standardisé (Autoprefixer, etc.).                                        |
 
 ## Développement local vs production
 

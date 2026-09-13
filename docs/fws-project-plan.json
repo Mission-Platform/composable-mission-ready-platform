@@ -116,7 +116,8 @@
       "track": "Memory & Runtime",
       "priority": "P1 - High",
       "complexity": "XL",
-      "initialStatus": "In Review"
+      "initialStatus": "Done",
+      "pullRequest": 74
     },
     {
       "issueNumber": 50,
@@ -124,7 +125,8 @@
       "track": "Memory & Runtime",
       "priority": "P2 - Medium",
       "complexity": "XL",
-      "initialStatus": "In Review"
+      "initialStatus": "Done",
+      "pullRequest": 74
     }
   ]
 }

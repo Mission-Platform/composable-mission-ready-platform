@@ -489,6 +489,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 
 Width step of the modal on tablet/desktop (`sm`+); mobile is always full-width.
 
+### ModalVariant
+
+**Kind:** type
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+Visual and semantic variant of the modal overlay primitive.
+
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
 ### ForgeToastContainer
@@ -721,3 +731,115 @@ export const warningToast: ReturnType<typeof withVariant>;
 ```
 
 Convenience: show a `warning` toast.
+
+## `src/utils/fallback-position`
+
+### applyFallbackPosition
+
+**Kind:** function
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+Applies fallback coordinates and styles to `panelElement` relative to `triggerElement`.
+
+#### Parameters
+
+| Name           | Type                              | Description |
+| -------------- | --------------------------------- | ----------- |
+| triggerElement | HTMLElement                       |             |
+| panelElement   | HTMLElement                       |             |
+| placement      | FallbackPlacement                 |             |
+| options        | FallbackPositionOptions \| number |             |
+
+### calculateFallbackPosition
+
+**Kind:** function
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+Calculates top, left, and transform CSS properties for a floating element
+based on the trigger element's bounding rect, desired placement, and offset.
+
+#### Parameters
+
+| Name        | Type                | Description |
+| ----------- | ------------------- | ----------- |
+| triggerRect | TriggerBoundingRect |             |
+| placement   | FallbackPlacement   |             |
+| offset      |                     |             |
+
+### FallbackPlacement
+
+**Kind:** type
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+Supported placement options for anchor positioning fallback.
+
+### FallbackPositionOptions
+
+**Kind:** interface
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+No description provided.
+
+### FallbackPositionResult
+
+**Kind:** interface
+
+```typescript
+export interface FallbackPositionResult
+```
+
+No description provided.
+
+### isAnchorPositioningSupported
+
+**Kind:** function
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+Dynamically check whether CSS Anchor Positioning is supported.
+Evaluated as a function so unit tests can mock or toggle `CSS.supports`.
+
+### supportsAnchorPositioning
+
+**Kind:** constant
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+Check whether CSS Anchor Positioning is supported in the current environment.

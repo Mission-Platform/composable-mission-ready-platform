@@ -26,12 +26,14 @@ Mission Platform は、Composition API および `<script setup>` 構文で Vue 
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
 ## ステップ 2: オプション API を構成 API に変換する
@@ -48,16 +50,16 @@ Vue 2 では、`data()` 関数で状態が定義されました。 Vue 3 では�
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3:**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
@@ -88,23 +90,23 @@ const increment = () => {
 
 ライフサイクル フックの名前が変更されたため、インポートする必要があります。
 
-| Vue 2 | Vue 3 |
-|:---------------------------|:------------------------------------------|
+| Vue 2                      | Vue 3                                       |
+| :------------------------- | :------------------------------------------ |
 | `beforeCreate` / `created` | `setup()` / `<script setup>` を直接使用する |
-| `beforeMount` | `onBeforeMount` |
-| `mounted` | `onMounted` |
-| `beforeUpdate` | `onBeforeUpdate` |
-| `updated` | `onUpdated` |
-| `beforeDestroy` | `onBeforeUnmount` |
-| `destroyed` | `onUnmounted` |
+| `beforeMount`              | `onBeforeMount`                             |
+| `mounted`                  | `onMounted`                                 |
+| `beforeUpdate`             | `onBeforeUpdate`                            |
+| `updated`                  | `onUpdated`                                 |
+| `beforeDestroy`            | `onBeforeUnmount`                           |
+| `destroyed`                | `onUnmounted`                               |
 
 例：
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
@@ -118,7 +120,7 @@ Mission Platform 内のすべての新規および移行されたコンポーネ
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
@@ -141,7 +143,7 @@ Vue 3 では、`v-model` のデフォルトのプロップ名は `modelValue` �
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 

@@ -332,12 +332,12 @@ export default defineVitestConfig({
 
 ### Zusammenfassung der Skripte
 
-| Skript | Befehl | Zweck |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
-| `test` | `pnpm exec turbo run test` | Führen Sie alle Arbeitsbereichstestaufgaben aus.          |
-| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Führen Sie Komponententests im Überwachungsmodus durch.    |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Erstellen Sie einen Bericht zur Komponentenabdeckung. |
-| Rost/WASM | `cargo test --workspace` | Führen Sie native Rust-Kistentests durch.           |
+| Skript          | Befehl                                                     | Zweck                                                   |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------------------------ |
+| `test`          | `pnpm exec turbo run test`                                 | Führen Sie alle Arbeitsbereichstestaufgaben aus.        |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Führen Sie Komponententests im Überwachungsmodus durch. |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Erstellen Sie einen Bericht zur Komponentenabdeckung.   |
+| Rost/WASM       | `cargo test --workspace`                                   | Führen Sie native Rust-Kistentests durch.               |
 
 Wasm-Wrapper-Pakete werden durch ihre eigenen Paketaufgaben getestet. Führen Sie beispielsweise das Scannerpaket und dessen Paket aus
 Wrapper zusammen, wenn das Scannerverhalten geändert wird:

@@ -15,11 +15,11 @@ Mission Platform コンポーネントは、`@mission-platform/forge-jsx` を使
 
 ### サポートされるフレームワーク条件
 
-|フレームワーク |輸出条件 |
-| :----------------- | :----------------- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
+| フレームワーク         | 輸出条件           |
+| :--------------------- | :----------------- |
+| **Vue 3**              | `mp:vue`           |
+| **React**              | `mp:react`         |
+| **Solid**              | `mp:solid`         |
 | **Web コンポーネント** | `mp:web-component` |
 
 ## プロジェクト構成

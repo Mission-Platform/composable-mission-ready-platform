@@ -13,13 +13,13 @@ Mission Platform은 **Atomic Design** 시스템을 사용하여 구성 요소를
 
 구성 요소는 범위와 책임에 따라 5가지 수준으로 분류됩니다.
 
-| 레벨 | 폴더 | 설명 |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **원자** | `src/components/atoms/`     | 가장 작은 UI 기본 요소(예: `ForgeButton`, `ForgeInput`, `ForgeBadge`). 이들은 일반적으로 목적을 잃지 않고서는 더 이상 분해할 수 없는 기능적 단위입니다. |
-| **분자** | `src/components/molecules/` | 단순한 원자 구성(예: `ForgeSearchInput`, `ForgeFieldSet`). 그들은 하나의 단위로 함께 기능합니다.                                                                    |
+| 레벨       | 폴더                        | 설명                                                                                                                                                    |
+| :--------- | :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **원자**   | `src/components/atoms/`     | 가장 작은 UI 기본 요소(예: `ForgeButton`, `ForgeInput`, `ForgeBadge`). 이들은 일반적으로 목적을 잃지 않고서는 더 이상 분해할 수 없는 기능적 단위입니다. |
+| **분자**   | `src/components/molecules/` | 단순한 원자 구성(예: `ForgeSearchInput`, `ForgeFieldSet`). 그들은 하나의 단위로 함께 기능합니다.                                                        |
 | **유기체** | `src/components/organisms/` | 원자, 분자 및 기타 유기체로 구성된 복잡한 UI 섹션(예: `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
-| **템플릿** | `src/components/templates/` | 콘텐츠 구조를 정의하는 페이지 수준 레이아웃(예: `ForgeHero`, `ForgeAppLayout`). 콘텐츠를 배치할 위치를 정의하기 위해 슬롯을 사용하는 경우가 많습니다.                     |
-| **페이지** | `src/components/pages/`     | 구체적인 콘텐츠와 데이터로 채워진 템플릿의 특정 인스턴스(예: `AccountSettingsPage`).                                                                        |
+| **템플릿** | `src/components/templates/` | 콘텐츠 구조를 정의하는 페이지 수준 레이아웃(예: `ForgeHero`, `ForgeAppLayout`). 콘텐츠를 배치할 위치를 정의하기 위해 슬롯을 사용하는 경우가 많습니다.   |
+| **페이지** | `src/components/pages/`     | 구체적인 콘텐츠와 데이터로 채워진 템플릿의 특정 인스턴스(예: `AccountSettingsPage`).                                                                    |
 
 ## 구성 요소 폴더 레이아웃
 
@@ -67,7 +67,7 @@ src/components/
 
 ```tsx
 const meta = {
-  title: 'Atoms/Display/ForgeButton',
+  title: "Atoms/Display/ForgeButton",
   component: Button,
   // ...
 };

@@ -13,29 +13,13 @@
  * - Coverage reporting with thresholds
  * - Environment variables support
  */
-import {plugin} from '@mission-platform/vitest-config';
+import { defineVitestConfig } from './vite-config/src/vitest';
 
-export default plugin({
-  // Test environment configuration
-  environment: 'jsdom',
-
-  // Coverage thresholds
-  coverage: {
-    provider: 'v8',
-    thresholds: {
-      lines: 80,
-      functions: 80,
-      branches: 80,
-      statements: 80,
+export default defineVitestConfig({
+  environment: 'node',
+  overrides: {
+    test: {
+      include: ['**/*.spec.ts', '**/*.test.ts'],
     },
-  },
-
-  // Global test setup
-  globals: true,
-
-  // Test file patterns
-  test: {
-    include: ['**/*.test.{js,ts,vue}'],
-    name: 'vitest',
   },
 });

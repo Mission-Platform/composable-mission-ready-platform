@@ -17,7 +17,8 @@ import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mi
 const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
 const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob

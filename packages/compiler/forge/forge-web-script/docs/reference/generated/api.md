@@ -1855,7 +1855,8 @@ function createForgeWebScriptGenericSpecialization(
 ): ForgeWebScriptSpecialization;
 ```
 
-No description provided.
+Build a manifest specialization descriptor using interned TypeAlgebra keys.
+Prefer `monomorphizeForgeWebScriptGeneric` when layout metadata is required.
 
 #### Parameters
 
@@ -1887,16 +1888,6 @@ No description provided.
 | nextFunction | string                  |             |
 | ownership    | ForgeWebScriptOwnership |             |
 
-### ForgeWebScriptGenericBoundary
-
-**Kind:** type
-
-```typescript
-export type ForgeWebScriptGenericBoundary = 'value' | 'interface' | 'iterator';
-```
-
-No description provided.
-
 ### forgeWebScriptGenericRepresentation
 
 **Kind:** function
@@ -1924,6 +1915,33 @@ export interface ForgeWebScriptGenericSpecializationRequest
 ```
 
 No description provided.
+
+### ForgeWebScriptMonomorphizeRequest
+
+**Kind:** interface
+
+```typescript
+export interface ForgeWebScriptMonomorphizeRequest extends ForgeWebScriptGenericSpecializationRequest
+```
+
+No description provided.
+
+### monomorphizeForgeWebScriptGeneric
+
+**Kind:** function
+
+```typescript
+function monomorphizeForgeWebScriptGeneric(request: ForgeWebScriptMonomorphizeRequest): MonomorphizedSpecialization;
+```
+
+Monomorphize a generic application through the layout-aware cache.
+Identical expanded layouts share a layout owner while keeping distinct specialization ids.
+
+#### Parameters
+
+| Name    | Type                              | Description |
+| ------- | --------------------------------- | ----------- |
+| request | ForgeWebScriptMonomorphizeRequest |             |
 
 ### sortForgeWebScriptSpecializations
 
@@ -2101,6 +2119,484 @@ No description provided.
 | Name     | Type   | Description |
 | -------- | ------ | ----------- |
 | fileName | string |             |
+
+## `src/interop/dts-generator`
+
+### DtsGenerator
+
+**Kind:** class
+
+```typescript
+export class DtsGenerator
+```
+
+No description provided.
+
+### generateTypeDeclarations
+
+**Kind:** function
+
+```typescript
+function generateTypeDeclarations(module: WebIdlModule, options?: DtsOptions): string;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type         | Description |
+| ------- | ------------ | ----------- |
+| module  | WebIdlModule |             |
+| options | DtsOptions   |             |
+
+## `src/interop/fws-generator`
+
+### FwsBindingGenerator
+
+**Kind:** class
+
+```typescript
+export class FwsBindingGenerator
+```
+
+No description provided.
+
+### generateFwsBindings
+
+**Kind:** function
+
+```typescript
+function generateFwsBindings(module: WebIdlModule, options?: FwsBindingOptions): string;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type              | Description |
+| ------- | ----------------- | ----------- |
+| module  | WebIdlModule      |             |
+| options | FwsBindingOptions |             |
+
+## `src/interop/host-shim-generator`
+
+### generateHostShims
+
+**Kind:** function
+
+```typescript
+function generateHostShims(module: WebIdlModule, options?: HostShimOptions): string;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type            | Description |
+| ------- | --------------- | ----------- |
+| module  | WebIdlModule    |             |
+| options | HostShimOptions |             |
+
+### HostShimGenerator
+
+**Kind:** class
+
+```typescript
+export class HostShimGenerator
+```
+
+No description provided.
+
+## `src/interop/index`
+
+### compileWebIdl
+
+**Kind:** function
+
+```typescript
+function compileWebIdl(source: string, options: WebIdlCompileOptions = {}): WebIdlCompileResult;
+```
+
+End-to-end compilation of a Web IDL source string into FWS headers, zero-copy host JS shims, and TypeScript .d.ts declarations.
+
+#### Parameters
+
+| Name    | Type                 | Description |
+| ------- | -------------------- | ----------- |
+| source  | string               |             |
+| options | WebIdlCompileOptions |             |
+
+## `src/interop/lexer`
+
+### lexWebIdl
+
+**Kind:** function
+
+```typescript
+function lexWebIdl(source: string): readonly WebIdlToken[];
+```
+
+No description provided.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| source | string |             |
+
+### WebIdlLexer
+
+**Kind:** class
+
+```typescript
+export class WebIdlLexer
+```
+
+No description provided.
+
+### WebIdlToken
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlToken
+```
+
+No description provided.
+
+### WebIdlTokenKind
+
+**Kind:** type
+
+```typescript
+export type WebIdlTokenKind = 'eof' | 'identifier' | 'number' | 'string' | 'symbol';
+```
+
+Web IDL lexer for tokenizer operations across standard IDL specifications.
+
+## `src/interop/parser`
+
+### parseWebIdl
+
+**Kind:** function
+
+```typescript
+function parseWebIdl(source: string): WebIdlModule;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| source | string |             |
+
+### WebIdlParseError
+
+**Kind:** class
+
+```typescript
+export class WebIdlParseError extends Error
+```
+
+No description provided.
+
+### WebIdlParser
+
+**Kind:** class
+
+```typescript
+export class WebIdlParser
+```
+
+No description provided.
+
+## `src/interop/types`
+
+### DtsOptions
+
+**Kind:** interface
+
+```typescript
+export interface DtsOptions
+```
+
+No description provided.
+
+### FwsBindingOptions
+
+**Kind:** interface
+
+```typescript
+export interface FwsBindingOptions
+```
+
+No description provided.
+
+### HostShimOptions
+
+**Kind:** interface
+
+```typescript
+export interface HostShimOptions
+```
+
+No description provided.
+
+### WebIdlArgument
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlArgument
+```
+
+No description provided.
+
+### WebIdlAttribute
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlAttribute
+```
+
+No description provided.
+
+### WebIdlBufferType
+
+**Kind:** type
+
+```typescript
+export type WebIdlBufferType =
+  | 'ArrayBuffer'
+  | 'ArrayBufferView'
+  | 'BufferSource'
+  | 'DataView'
+  | 'Float32Array'
+  | 'Float64Array'
+  | 'Int16Array'
+  | 'Int32Array'
+  | 'Int8Array'
+  | 'SharedArrayBuffer'
+  | 'Uint16Array'
+  | 'Uint32Array'
+  | 'Uint8Array'
+  | 'Uint8ClampedArray';
+```
+
+No description provided.
+
+### WebIdlCallback
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlCallback
+```
+
+No description provided.
+
+### WebIdlCompileOptions
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlCompileOptions
+```
+
+No description provided.
+
+### WebIdlCompileResult
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlCompileResult
+```
+
+No description provided.
+
+### WebIdlConstant
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlConstant
+```
+
+No description provided.
+
+### WebIdlConstructor
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlConstructor
+```
+
+No description provided.
+
+### WebIdlDefinition
+
+**Kind:** type
+
+```typescript
+export type WebIdlDefinition =
+  WebIdlCallback | WebIdlDictionary | WebIdlEnum | WebIdlInterface | WebIdlNamespace | WebIdlTypedef;
+```
+
+No description provided.
+
+### WebIdlDictionary
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlDictionary
+```
+
+No description provided.
+
+### WebIdlDictionaryMember
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlDictionaryMember
+```
+
+No description provided.
+
+### WebIdlEnum
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlEnum
+```
+
+No description provided.
+
+### WebIdlInterface
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlInterface
+```
+
+No description provided.
+
+### WebIdlMember
+
+**Kind:** type
+
+```typescript
+export type WebIdlMember = WebIdlAttribute | WebIdlConstant | WebIdlConstructor | WebIdlOperation;
+```
+
+No description provided.
+
+### WebIdlModule
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlModule
+```
+
+No description provided.
+
+### WebIdlNamespace
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlNamespace
+```
+
+No description provided.
+
+### WebIdlOperation
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlOperation
+```
+
+No description provided.
+
+### WebIdlPrimitiveType
+
+**Kind:** type
+
+```typescript
+export type WebIdlPrimitiveType =
+  | 'any'
+  | 'bigint'
+  | 'boolean'
+  | 'byte'
+  | 'double'
+  | 'float'
+  | 'long'
+  | 'long long'
+  | 'object'
+  | 'octet'
+  | 'short'
+  | 'undefined'
+  | 'unrestricted double'
+  | 'unrestricted float'
+  | 'unsigned long'
+  | 'unsigned long long'
+  | 'unsigned short'
+  | 'void';
+```
+
+Web IDL AST and configuration types for the Forge Web Script compiler interop layer.
+
+### WebIdlStringType
+
+**Kind:** type
+
+```typescript
+export type WebIdlStringType = 'ByteString' | 'CSSOMString' | 'DOMString' | 'USVString';
+```
+
+No description provided.
+
+### WebIdlType
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlType
+```
+
+No description provided.
+
+### WebIdlTypedef
+
+**Kind:** interface
+
+```typescript
+export interface WebIdlTypedef
+```
+
+No description provided.
+
+### WebIdlTypeKind
+
+**Kind:** type
+
+```typescript
+export type WebIdlTypeKind =
+  'buffer' | 'frozen-array' | 'named' | 'primitive' | 'promise' | 'record' | 'sequence' | 'string' | 'union';
+```
+
+No description provided.
 
 ## `src/ir`
 
@@ -4284,6 +4780,187 @@ export type ForgeWebScriptStringOperation =
 ```
 
 Compiler-owned deterministic string and byte operations.
+
+## `src/type-algebra`
+
+### AggregateLayoutDefinition
+
+**Kind:** interface
+
+```typescript
+export interface AggregateLayoutDefinition
+```
+
+No description provided.
+
+### createMonomorphizationCache
+
+**Kind:** function
+
+```typescript
+function createMonomorphizationCache(module?: Pick<ForgeWebScriptModule, 'structs'>): {
+  readonly algebra: TypeAlgebra;
+  readonly cache: MonomorphizationCache;
+};
+```
+
+No description provided.
+
+#### Parameters
+
+| Name   | Type                                  | Description |
+| ------ | ------------------------------------- | ----------- |
+| module | Pick<ForgeWebScriptModule, 'structs'> |             |
+
+### createTypeAlgebra
+
+**Kind:** function
+
+```typescript
+function createTypeAlgebra(module?: Pick<ForgeWebScriptModule, 'structs'>): TypeAlgebra;
+```
+
+Shared algebra instance helpers for call sites that do not need a private table.
+
+#### Parameters
+
+| Name   | Type                                  | Description |
+| ------ | ------------------------------------- | ----------- |
+| module | Pick<ForgeWebScriptModule, 'structs'> |             |
+
+### ForgeWebScriptGenericBoundary
+
+**Kind:** type
+
+```typescript
+export type ForgeWebScriptGenericBoundary = 'value' | 'interface' | 'iterator';
+```
+
+No description provided.
+
+### MonomorphizationCache
+
+**Kind:** class
+
+```typescript
+export class MonomorphizationCache
+```
+
+Monomorphization cache: concrete generic instantiations keyed by interned
+argument tuples, with layout-key deduplication across distinct nominal types.
+
+### MonomorphizedSpecialization
+
+**Kind:** interface
+
+```typescript
+export interface MonomorphizedSpecialization
+```
+
+No description provided.
+
+### MonomorphizeStructRequest
+
+**Kind:** interface
+
+```typescript
+export interface MonomorphizeStructRequest
+```
+
+No description provided.
+
+### ownershipFromType
+
+**Kind:** function
+
+```typescript
+function ownershipFromType(type: ForgeWebScriptTypeName): ForgeWebScriptOwnership | undefined;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type                   | Description |
+| ---- | ---------------------- | ----------- |
+| type | ForgeWebScriptTypeName |             |
+
+### primitiveLayout
+
+**Kind:** function
+
+```typescript
+function primitiveLayout(name: ForgeWebScriptPrimitiveType): Omit<TypeLayout, 'layoutKey'>;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type                        | Description |
+| ---- | --------------------------- | ----------- |
+| name | ForgeWebScriptPrimitiveType |             |
+
+### TypeAlgebra
+
+**Kind:** class
+
+```typescript
+export class TypeAlgebra
+```
+
+Hash-consing table and structural operations over interned types.
+
+### TypeId
+
+**Kind:** type
+
+```typescript
+export type TypeId = number &
+```
+
+Interned structural type algebra for Forge Web Script.
+
+Types are hash-consed into dense `TypeId` values so equality is pointer identity,
+generic substitution is structural, and monomorphization can cache concrete
+layouts by a stable layout key rather than by surface type name alone.
+
+### TypeLayout
+
+**Kind:** interface
+
+```typescript
+export interface TypeLayout
+```
+
+No description provided.
+
+### typeNameKeyFromAlgebra
+
+**Kind:** function
+
+```typescript
+function typeNameKeyFromAlgebra(type: ForgeWebScriptTypeName, algebra = createTypeAlgebra()): string;
+```
+
+No description provided.
+
+#### Parameters
+
+| Name    | Type                   | Description |
+| ------- | ---------------------- | ----------- |
+| type    | ForgeWebScriptTypeName |             |
+| algebra |                        |             |
+
+### TypeNode
+
+**Kind:** type
+
+```typescript
+export type TypeNode = |
+```
+
+No description provided.
 
 ## `src/type-checker`
 

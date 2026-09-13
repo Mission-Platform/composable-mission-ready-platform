@@ -61,7 +61,7 @@ de declaraties, externe waarden en uitvoerconventies van het doel.
 Een tweede, orthogonale as projecteert dezelfde neutrale componenten op **contentplatforms**.
 `@mission-platform/forge-cms-plugin-api` bezit een platformneutraal contentmodel, de `CmsOutputPlugin` overeenkomst, en een
 generiek stuurprogramma; de adapterpakketten `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
-En `forge-cms-webflow` elk een platform. Een CMS-doel *componeert* een framework-plug-in in plaats van er één te vervangen, dus
+En `forge-cms-webflow` elk een platform. Een CMS-doel _componeert_ een framework-plug-in in plaats van er één te vervangen, dus
 elk platform koppelt met elk raamwerk en de uitvoer komt terecht `dist/cms/<cms>/<framework>/**`.
 
 Zie voor de volledige pijplijn-, component- en hook-consumenten, CMS-projectie en uitbreidingsrichtlijnen

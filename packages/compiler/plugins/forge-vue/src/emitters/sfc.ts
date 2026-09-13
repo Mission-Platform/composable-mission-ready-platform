@@ -110,7 +110,6 @@ export function assembleSfc(
     parts.vueImports.add("useSlots");
   }
   const body = [
-    parts.carryOver.length > 0 ? `\n${parts.carryOver}\n` : "",
     `defineOptions({ name: '${parts.componentName}', inheritAttrs: false });`,
     buildPropsMacro(
       parts.propsParameterName,
@@ -125,13 +124,16 @@ export function assembleSfc(
   // A `vue` binding the lowered plan asked for is only imported when the
   // assembled body actually references it, so an optimizer that pruned the plan
   // (or a decision the emitter did not take) never leaves a dangling import.
+  const carryOver = parts.carryOver.trim();
   const bodyText = body.join("\n");
+  const referenceText =
+    carryOver.length > 0 ? `${carryOver}\n${bodyText}` : bodyText;
   for (const name of parts.plannedVueImports) {
-    if (isReferenced(bodyText, name)) {
+    if (isReferenced(referenceText, name)) {
       parts.vueImports.add(name);
     }
   }
-  const script = [
+  const importBlock = [
     buildImports(
       parts.vueImports,
       parts.neutralTypes,
@@ -142,7 +144,6 @@ export function assembleSfc(
       parts.vueAdapterValues,
     ),
     parts.externalImports.join("\n"),
-    bodyText,
   ]
     .filter((line) => line.length > 0)
     .join("\n");
@@ -163,7 +164,22 @@ export function assembleSfc(
   // `ref<T>()`, plain `h()` calls) is plain TypeScript, so use `lang="ts"`.
   // JSX-only tokens (`</`, `/>`, `<>`) never appear in TS generics or arrows,
   // so their presence in the script is a reliable JSX signal.
-  const scriptHasJsx = /<\/|\/>|<>/.test(script);
+  const scriptHasJsx = /<\/|\/>|<>/.test(
+    `${importBlock}\n${carryOver}\n${bodyText}`,
+  );
   const lang = scriptHasJsx ? "tsx" : "ts";
+  // `<script setup>` forbids ES module exports. Co-located helpers/types
+  // (`FormContext`, `useFormContext`, …) must live in a sibling normal
+  // `<script>` block so they remain named exports of the SFC module while
+  // still sharing module scope with setup/template.
+  if (carryOver.length > 0) {
+    const normalScript = [importBlock, carryOver]
+      .filter((line) => line.length > 0)
+      .join("\n");
+    return `<script lang="${lang}">\n${normalScript}\n</script>\n\n<script setup lang="${lang}">\n${bodyText}\n</script>${templateBlock}\n${styleBlock.length > 0 ? `\n${styleBlock}\n` : ""}`;
+  }
+  const script = [importBlock, bodyText]
+    .filter((line) => line.length > 0)
+    .join("\n");
   return `<script setup lang="${lang}">\n${script}\n</script>${templateBlock}\n${styleBlock.length > 0 ? `\n${styleBlock}\n` : ""}`;
 }

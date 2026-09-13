@@ -83,6 +83,22 @@ No description provided.
 | ------- | --------------------------------- | ----------- |
 | options | ForgeWebScriptAsyncRuntimeOptions |             |
 
+### createForgeWebScriptJspiSuspender
+
+**Kind:** function
+
+```typescript
+function createForgeWebScriptJspiSuspender(options?: ForgeWebScriptJspiOptions): ForgeWebScriptJspiSuspender;
+```
+
+Creates an instance of the Forge Web Script JSPI stack suspender.
+
+#### Parameters
+
+| Name    | Type                      | Description |
+| ------- | ------------------------- | ----------- |
+| options | ForgeWebScriptJspiOptions |             |
+
 ### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 
 **Kind:** constant
@@ -234,6 +250,28 @@ export interface ForgeWebScriptAsyncWorkerMessage
 ```
 
 No description provided.
+
+### ForgeWebScriptJspiOptions
+
+**Kind:** interface
+
+```typescript
+export interface ForgeWebScriptJspiOptions
+```
+
+No description provided.
+
+### ForgeWebScriptJspiSuspender
+
+**Kind:** class
+
+```typescript
+export class ForgeWebScriptJspiSuspender
+```
+
+WebAssembly JavaScript Promise Integration (JSPI) stack switching.
+Suspends and resumes WebAssembly stacks across asynchronous host promises
+natively without requiring compiler-driven Asyncify code transformations.
 
 ## `src/collections`
 
@@ -1884,6 +1922,22 @@ No description provided.
 | ------- | --------------------------- | ----------- |
 | options | ForgeWebScriptMemoryOptions |             |
 
+### createForgeWebScriptMultiMemory
+
+**Kind:** function
+
+```typescript
+function createForgeWebScriptMultiMemory(options?: ForgeWebScriptMultiMemoryOptions): ForgeWebScriptMultiMemory;
+```
+
+Creates an isolated multi-memory instance with dedicated guest heap, host interop, and static partitions.
+
+#### Parameters
+
+| Name    | Type                             | Description |
+| ------- | -------------------------------- | ----------- |
+| options | ForgeWebScriptMultiMemoryOptions |             |
+
 ### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
 
 **Kind:** constant
@@ -1920,6 +1974,38 @@ No description provided.
 
 ```typescript
 export interface ForgeWebScriptMemoryOptions
+```
+
+No description provided.
+
+### ForgeWebScriptMemoryPartitionName
+
+**Kind:** type
+
+```typescript
+export type ForgeWebScriptMemoryPartitionName = 'guestHeap' | 'hostInterop' | 'staticData';
+```
+
+No description provided.
+
+### ForgeWebScriptMultiMemory
+
+**Kind:** class
+
+```typescript
+export class ForgeWebScriptMultiMemory
+```
+
+WebAssembly multi-memory segregation coordinator.
+Isolates memory into dedicated spaces for guest execution (Memory 0),
+host interop buffer (Memory 1), and static constants/tables (Memory 2).
+
+### ForgeWebScriptMultiMemoryOptions
+
+**Kind:** interface
+
+```typescript
+export interface ForgeWebScriptMultiMemoryOptions
 ```
 
 No description provided.
@@ -2295,6 +2381,17 @@ export interface ForgeWebScriptRegionAllocation
 
 No description provided.
 
+### ForgeWebScriptRegionArena
+
+**Kind:** class
+
+```typescript
+export class ForgeWebScriptRegionArena
+```
+
+High-performance scoped arena bump allocator for transient tasks.
+Reclaims all allocated memory in an instant O(1) pointer reset.
+
 ### ForgeWebScriptSafeHeap
 
 **Kind:** class
@@ -2315,6 +2412,18 @@ export interface ForgeWebScriptSharedHandle
 ```
 
 No description provided.
+
+### ForgeWebScriptTlsfAllocator
+
+**Kind:** class
+
+```typescript
+export class ForgeWebScriptTlsfAllocator
+```
+
+Two-Level Segregated Fit (TLSF) memory allocator.
+Guarantees O(1) allocation and deallocation time with immediate physical coalescing
+and minimal fragmentation for embedded/real-time Wasm workloads.
 
 ## `src/self-hosted`
 
@@ -2388,6 +2497,40 @@ Execute only the bounded FWS-authored lex stage for compiler consumers.
 | options | ForgeWebScriptSelfHostedRunOptions                                                                       |             |
 
 ## `src/threading`
+
+### assertForgeWebScriptSend
+
+**Kind:** function
+
+```typescript
+function assertForgeWebScriptSend(value: T, context = 'value'): T;
+```
+
+Asserts that a value satisfies the 'Send' contract, throwing a trap if violated.
+
+#### Parameters
+
+| Name    | Type | Description |
+| ------- | ---- | ----------- |
+| value   | T    |             |
+| context |      |             |
+
+### assertForgeWebScriptSync
+
+**Kind:** function
+
+```typescript
+function assertForgeWebScriptSync(value: T, context = 'value'): T;
+```
+
+Asserts that a value satisfies the 'Sync' contract, throwing a trap if violated.
+
+#### Parameters
+
+| Name    | Type | Description |
+| ------- | ---- | ----------- |
+| value   | T    |             |
+| context |      |             |
 
 ### canUseForgeWebScriptWasmThreads
 
@@ -2527,6 +2670,16 @@ export interface ForgeWebScriptAtomicI32Options
 
 No description provided.
 
+### ForgeWebScriptThreadSafetyMarker
+
+**Kind:** interface
+
+```typescript
+export interface ForgeWebScriptThreadSafetyMarker
+```
+
+No description provided.
+
 ### ForgeWebScriptWasmThreadSchedulerOptions
 
 **Kind:** interface
@@ -2596,6 +2749,40 @@ export interface ForgeWebScriptWorkerSchedulerOptions
 ```
 
 No description provided.
+
+### isForgeWebScriptSend
+
+**Kind:** function
+
+```typescript
+function isForgeWebScriptSend(value: unknown, visited = new Set<unknown>()): boolean;
+```
+
+Validates whether a value satisfies the 'Send' contract (safe to transfer across thread boundaries).
+Recursively verifies plain objects, arrays, primitives, and typed buffers.
+
+#### Parameters
+
+| Name    | Type    | Description |
+| ------- | ------- | ----------- |
+| value   | unknown |             |
+| visited |         |             |
+
+### isForgeWebScriptSync
+
+**Kind:** function
+
+```typescript
+function isForgeWebScriptSync(value: unknown): boolean;
+```
+
+Validates whether a value satisfies the 'Sync' contract (safe to share concurrently across threads).
+
+#### Parameters
+
+| Name  | Type    | Description |
+| ----- | ------- | ----------- |
+| value | unknown |             |
 
 ## `src/trace`
 

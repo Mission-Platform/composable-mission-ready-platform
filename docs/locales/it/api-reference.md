@@ -24,15 +24,15 @@ pacchetto anziché questa pagina.
 
 La base dell'architettura "write-once", che fornisce un runtime JSX e hook indipendenti dal framework.
 
-| Esporta | Digitare | Descrizione |
-| :----------------- | :------- | :-------------------------------------------------------------------------------------- |
-| `h`, `Fragment` | Funzione | Factory JSX e frammento per la creazione di componenti.                                      |
-| `useState` | Gancio | Hook di stato neutrale rispetto al quadro normativo.                                                           |
-| `useEffect` | Gancio | Gancio effetto quadro neutro.                                                          |
-| `useMemo` | Gancio | Gancio di memorizzazione neutro dal framework.                                                     |
-| `useRef` | Gancio | Gancio di riferimento neutro rispetto al contesto.                                                       |
-| `useContext` | Gancio | Hook di contesto neutrale rispetto al contesto.                                                         |
-| `toVueComponent` | Adattatore | Converte un componente forgiato in un componente Vue 3 (da `@mission-platform/forge-adapters/vue`).   |
+| Esporta            | Digitare   | Descrizione                                                                                           |
+| :----------------- | :--------- | :---------------------------------------------------------------------------------------------------- |
+| `h`, `Fragment`    | Funzione   | Factory JSX e frammento per la creazione di componenti.                                               |
+| `useState`         | Gancio     | Hook di stato neutrale rispetto al quadro normativo.                                                  |
+| `useEffect`        | Gancio     | Gancio effetto quadro neutro.                                                                         |
+| `useMemo`          | Gancio     | Gancio di memorizzazione neutro dal framework.                                                        |
+| `useRef`           | Gancio     | Gancio di riferimento neutro rispetto al contesto.                                                    |
+| `useContext`       | Gancio     | Hook di contesto neutrale rispetto al contesto.                                                       |
+| `toVueComponent`   | Adattatore | Converte un componente forgiato in un componente Vue 3 (da `@mission-platform/forge-adapters/vue`).   |
 | `toReactComponent` | Adattatore | Converte un componente forgiato in un componente React (da `@mission-platform/forge-adapters/react`). |
 
 ### @mission-platform/vite-plugin-forge
@@ -42,14 +42,14 @@ non fornire un registro quadro. `defineViteForgeComponents` e
 `defineTsdownForgeComponents` (più gli helper hook e CMS) condividono un file in-process
 `ForgeCompilerService` per una sessione di compilazione o visualizzazione.
 
-| Capacità | Descrizione |
-| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Capacità                   | Descrizione                                                                                                                                                                                                                            |
+| :------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Ciclo di vita del servizio | Riutilizzare lo stato dell'origine, del grafico, dell'origine analizzata, dell'IR semantico e dell'artefatto di destinazione nelle build; smaltire i servizi one-shot dopo il completamento e i servizi di osservazione alla chiusura. |
-| Chiavi cache | Impronte digitali di origine/dipendenza/configurazione, opzioni del compilatore e del router, `tsconfig` `baseUrl`/`paths`, ID di destinazione, identità/versione del plug-in e condizioni pertinenti.      |
-| Guarda l'invalidazione | I file modificati invalidano i dipendenti del grafico inverso, inclusi i componenti transitivi e le voci di hook; gli snapshot di destinazione non correlati rimangono riutilizzabili.                     |
-| Diagnostica/rapporto | Riporta i tempi di fase, i conteggi di successi/mancati cache, file interessati, avvisi, errori e conteggi di artefatti emessi. Gli errori bloccano la promozione.                                 |
-| Manifesto dell'artefatto | Elenca voci, moduli, dichiarazioni, mappe di origine, risorse e checksum con ambito di destinazione prima della promozione atomica.                                                     |
-| Punto di estensione | Implementare e passare un `FrameworkOutputPlugin` da un pacchetto `forge-plugin-*` di proprietà del chiamante; non aggiungere rami di destinazione al driver neutro.                        |
+| Chiavi cache               | Impronte digitali di origine/dipendenza/configurazione, opzioni del compilatore e del router, `tsconfig` `baseUrl`/`paths`, ID di destinazione, identità/versione del plug-in e condizioni pertinenti.                                 |
+| Guarda l'invalidazione     | I file modificati invalidano i dipendenti del grafico inverso, inclusi i componenti transitivi e le voci di hook; gli snapshot di destinazione non correlati rimangono riutilizzabili.                                                 |
+| Diagnostica/rapporto       | Riporta i tempi di fase, i conteggi di successi/mancati cache, file interessati, avvisi, errori e conteggi di artefatti emessi. Gli errori bloccano la promozione.                                                                     |
+| Manifesto dell'artefatto   | Elenca voci, moduli, dichiarazioni, mappe di origine, risorse e checksum con ambito di destinazione prima della promozione atomica.                                                                                                    |
+| Punto di estensione        | Implementare e passare un `FrameworkOutputPlugin` da un pacchetto `forge-plugin-*` di proprietà del chiamante; non aggiungere rami di destinazione al driver neutro.                                                                   |
 
 Configurare gli alias tramite il progetto `tsconfig.json` (`baseUrl` e
 `paths`); Vite e la preparazione del grafico tsdown utilizzano gli stessi fatti di alias. Router
@@ -63,13 +63,13 @@ Contratti di percorso neutrali rispetto al contesto, aiutanti di corrispondenza 
 pacchetti condivisi. Le applicazioni possiedono record di percorso e istanze di router native; il
 La destinazione del router Forge selezionata dall'applicazione fornisce le funzionalità di runtime.
 
-| Esportazione/confezionamento | Digitare | Descrizione |
-| :----------------------------------------------------------------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
-| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | Tipi | Record di route, parametri, stato di query/hash, metadati e destinazioni di navigazione.                                                            |
-| `defineRoutes`, `matchRoutes`, `resolveLocation` | Funzioni | Definisci alberi di percorsi e risolvi percorsi senza DOM o runtime del framework.                                                              |
-| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | Tipi | Risultati/eventi di navigazione, protezioni, cronologia collegabile e contratti dell'adattatore.                                                         |
-| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Marcatori del compilatore | Funzionalità di collegamento neutro, stato del percorso, navigazione, risoluzione e outlet consumate dai pacchetti condivisi.                               |
-| `@mission-platform/forge-router-*` | Forgia obiettivi | Destinazioni router native selezionate in modo indipendente per Vue Router, React Router, SolidJS Router, SvelteKit, RedwoodSDK e Web Components. |
+| Esportazione/confezionamento                                             | Digitare                  | Descrizione                                                                                                                                       |
+| :----------------------------------------------------------------------- | :------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation`                    | Tipi                      | Record di route, parametri, stato di query/hash, metadati e destinazioni di navigazione.                                                          |
+| `defineRoutes`, `matchRoutes`, `resolveLocation`                         | Funzioni                  | Definisci alberi di percorsi e risolvi percorsi senza DOM o runtime del framework.                                                                |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter`     | Tipi                      | Risultati/eventi di navigazione, protezioni, cronologia collegabile e contratti dell'adattatore.                                                  |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Marcatori del compilatore | Funzionalità di collegamento neutro, stato del percorso, navigazione, risoluzione e outlet consumate dai pacchetti condivisi.                     |
+| `@mission-platform/forge-router-*`                                       | Forgia obiettivi          | Destinazioni router native selezionate in modo indipendente per Vue Router, React Router, SolidJS Router, SvelteKit, RedwoodSDK e Web Components. |
 
 I pacchetti runtime possiedono la cronologia e lo stato reattivo; il pacchetto neutro non importa mai un framework dell'interfaccia utente. Per i componenti Web,
 registra gli elementi una volta e passa obiettivi complessi attraverso le proprietà DOM anziché gli attributi serializzati:
@@ -134,20 +134,20 @@ fallimento.
 
 Token di progettazione centralizzati per colori, tipografia e spaziatura.
 
-| Esporta | Descrizione |
-| :------------ | :------------------------------------------------------------------------ |
-| `tokens` | Oggetto JS/TS contenente tutti i token di progettazione (ad esempio `tokens.color.primary`). |
-| `tokens.scss` | Variabili SCSS da utilizzare nei fogli di stile.                                    |
+| Esporta       | Descrizione                                                                                  |
+| :------------ | :------------------------------------------------------------------------------------------- |
+| `tokens`      | Oggetto JS/TS contenente tutti i token di progettazione (ad esempio `tokens.color.primary`). |
+| `tokens.scss` | Variabili SCSS da utilizzare nei fogli di stile.                                             |
 
 ### @mission-platform/breakpoints
 
 Utilità reattive e componenti di visibilità.
 
-| Esporta | Digitare | Descrizione |
-| :--------------- | :-------- | :--------------------------------------------------------- |
-| `useBreakpoints` | Gancio | Restituisce lo stato del punto di interruzione reattivo.                        |
-| `ShowIf` | Componente | Rende i figli solo quando corrisponde una condizione di punto di interruzione. |
-| `HideIf` | Componente | Nasconde i figli quando corrisponde una condizione del punto di interruzione.        |
+| Esporta          | Digitare   | Descrizione                                                                    |
+| :--------------- | :--------- | :----------------------------------------------------------------------------- |
+| `useBreakpoints` | Gancio     | Restituisce lo stato del punto di interruzione reattivo.                       |
+| `ShowIf`         | Componente | Rende i figli solo quando corrisponde una condizione di punto di interruzione. |
+| `HideIf`         | Componente | Nasconde i figli quando corrisponde una condizione del punto di interruzione.  |
 
 ### @mission-platform/components
 
@@ -166,34 +166,34 @@ Componenti dell'interfaccia utente condivisi creati una volta e disponibili per 
 
 Sistema di internazionalizzazione basato su i18next.
 
-| Esporta | Descrizione |
-| :---------------- | :-------------------------------------------------------- |
-| `createForgeI18N` | Inizializza l'istanza i18n con le impostazioni predefinite della piattaforma.     |
-| `useI18n` | Hook per traduzioni e cambio locale nei componenti. |
+| Esporta           | Descrizione                                                                   |
+| :---------------- | :---------------------------------------------------------------------------- |
+| `createForgeI18N` | Inizializza l'istanza i18n con le impostazioni predefinite della piattaforma. |
+| `useI18n`         | Hook per traduzioni e cambio locale nei componenti.                           |
 
 ### @mission-platform/seo
 
 Meta tag e gestione SEO.
 
-| Esporta | Descrizione |
-| :------- | :-------------------------------------------------------------------- |
+| Esporta  | Descrizione                                                                                     |
+| :------- | :---------------------------------------------------------------------------------------------- |
 | `useSeo` | Hook per impostare in modo dichiarativo il titolo della pagina, i meta tag e i dati Open Graph. |
 
 ### @mission-platform/map
 
 Wrapper reattivo per MapLibre GL.
 
-| Componente | Descrizione |
-| :-------------- | :---------------------------------------- |
-| `<MpMap>` | Componente contenitore della mappa principale.             |
+| Componente      | Descrizione                                         |
+| :-------------- | :-------------------------------------------------- |
+| `<MpMap>`       | Componente contenitore della mappa principale.      |
 | `<MpMapMarker>` | Componente per posizionare i marcatori sulla mappa. |
 
 ### @mission-platform/code-scanner
 
 Scansione di codici a barre e codici QR basata su fotocamera.
 
-| Componente | Descrizione |
-| :---------------- | :--------------------------------------------------------------- |
+| Componente        | Descrizione                                                                                  |
+| :---------------- | :------------------------------------------------------------------------------------------- |
 | `<MpCodeScanner>` | Componente che inizializza il flusso della telecamera ed emette i risultati della scansione. |
 
 ## Integrazioni
@@ -202,27 +202,27 @@ Scansione di codici a barre e codici QR basata su fotocamera.
 
 Collega gli osservabili RxJS allo stato del componente.
 
-| Gancio | Descrizione |
-| :-------------- | :-------------------------------------------------------------------------- |
+| Gancio          | Descrizione                                                                              |
+| :-------------- | :--------------------------------------------------------------------------------------- |
 | `useObservable` | Si iscrive a un osservabile e restituisce il suo valore più recente come stato reattivo. |
 
 ### @mission-platform/d3
 
 Integrazione D3.js indipendente dal framework.
 
-| Gancio | Descrizione |
-| :------ | :----------------------------------------------------------------- |
+| Gancio  | Descrizione                                                                             |
+| :------ | :-------------------------------------------------------------------------------------- |
 | `useD3` | Associa una selezione D3 a un riferimento componente con la gestione del ciclo di vita. |
 
 ### @mission-platform/hunspell
 
 Controllo ortografico basato su WebAssembly.
 
-| Esporta | Descrizione |
-| :------------- | :------------------------------------------------------ |
+| Esporta        | Descrizione                                               |
+| :------------- | :-------------------------------------------------------- |
 | `initHunspell` | Carica e crea un'istanza del modulo Hunspell WebAssembly. |
-| `spell` | Controlla se una parola è stata scritta correttamente.                  |
-| `suggest` | Fornisce suggerimenti per l'ortografia di una parola.               |
+| `spell`        | Controlla se una parola è stata scritta correttamente.    |
+| `suggest`      | Fornisce suggerimenti per l'ortografia di una parola.     |
 
 ## Monitoraggio del servizio
 
@@ -323,46 +323,46 @@ pacchetto in `packages/`, incluse le facciate WebAssembly tipizzate.
 
 ### Nucleo e interfaccia utente
 
-| Pacchetto | Scopo |
-| :----------------------------- | :------------------------------------------------------------ |
-| `@mission-platform/forge-jsx` | Runtime e adattatori JSX indipendenti dal framework.                   |
-| `@mission-platform/components` | Componenti dell'interfaccia utente scrivibili una sola volta.                                     |
-| `@mission-platform/icons` | Componenti dell'icona SVG scrivibili una sola volta.                               |
-| `@mission-platform/layouts` | Componenti dell'applicazione, del contenitore e del layout reattivo.     |
-| `@mission-platform/forms` | Moduli dello schema e componenti visivi per la creazione di moduli.              |
+| Pacchetto                      | Scopo                                                                              |
+| :----------------------------- | :--------------------------------------------------------------------------------- |
+| `@mission-platform/forge-jsx`  | Runtime e adattatori JSX indipendenti dal framework.                               |
+| `@mission-platform/components` | Componenti dell'interfaccia utente scrivibili una sola volta.                      |
+| `@mission-platform/icons`      | Componenti dell'icona SVG scrivibili una sola volta.                               |
+| `@mission-platform/layouts`    | Componenti dell'applicazione, del contenitore e del layout reattivo.               |
+| `@mission-platform/forms`      | Moduli dello schema e componenti visivi per la creazione di moduli.                |
 | `@mission-platform/forms-core` | Derivazione dello schema, convalida e logica del dominio del generatore di moduli. |
-| `@mission-platform/tokens` | Proprietà personalizzate CSS e token di progettazione SCSS.                 |
+| `@mission-platform/tokens`     | Proprietà personalizzate CSS e token di progettazione SCSS.                        |
 
 ### Componibili e integrazioni
 
-| Pacchetto | Scopo |
-| :---------------------------------------------- | :--------------------------------------------------------------- |
-| `@mission-platform/breakpoints` | Stato del punto di interruzione reattivo e aiutanti di visibilità.              |
-| `@mission-platform/d3` | D3 selezione del ciclo di vita componibile e utilità di margine.          |
-| `@mission-platform/i18n` | Aiutanti dell'integrazione statale e quadro i18next.                 |
-| `@mission-platform/map` | Componenti e componenti di mappe MapLibre.                         |
-| `@mission-platform/observers` | Componenti componibili di intersezione, mutazione e osservatore di prestazioni.    |
-| `@mission-platform/phone-number` | Analisi e formattazione del numero di telefono WebAssembly digitato.           |
-| `@mission-platform/router` | Contratti di percorso indipendenti dal contesto e funzionalità del compilatore.     |
-| `@mission-platform/forge-router-web-components` | Destinazione router Web Components e runtime senza framework.         |
-| `@mission-platform/rxjs` | Osservabile RxJS e componenti componibili in abbonamento.                    |
-| `@mission-platform/scheduler` | Interfaccia utente dello strumento di pianificazione, ricorrenza e logica del dominio del layout del calendario.      |
-| `@mission-platform/vcard` | Dati e componenti RFC 6350 vCard e RFC 5545 iCalendar.       |
-| `@mission-platform/content` | Contenuto AST, costruttori, Monaco, Markdown e componenti WYSIWYG. |
-| `@mission-platform/seo` | Metadati, Open Graph e componenti componibili con dati strutturati.           |
-| `@mission-platform/speech-audio` | Componenti componibili vocali, audio e Web MIDI.                         |
-| `@mission-platform/three` | Tre.js canvas e componenti componibili del ciclo di vita.                       |
+| Pacchetto                                       | Scopo                                                                                                            |
+| :---------------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
+| `@mission-platform/breakpoints`                 | Stato del punto di interruzione reattivo e aiutanti di visibilità.                                               |
+| `@mission-platform/d3`                          | D3 selezione del ciclo di vita componibile e utilità di margine.                                                 |
+| `@mission-platform/i18n`                        | Aiutanti dell'integrazione statale e quadro i18next.                                                             |
+| `@mission-platform/map`                         | Componenti e componenti di mappe MapLibre.                                                                       |
+| `@mission-platform/observers`                   | Componenti componibili di intersezione, mutazione e osservatore di prestazioni.                                  |
+| `@mission-platform/phone-number`                | Analisi e formattazione del numero di telefono WebAssembly digitato.                                             |
+| `@mission-platform/router`                      | Contratti di percorso indipendenti dal contesto e funzionalità del compilatore.                                  |
+| `@mission-platform/forge-router-web-components` | Destinazione router Web Components e runtime senza framework.                                                    |
+| `@mission-platform/rxjs`                        | Osservabile RxJS e componenti componibili in abbonamento.                                                        |
+| `@mission-platform/scheduler`                   | Interfaccia utente dello strumento di pianificazione, ricorrenza e logica del dominio del layout del calendario. |
+| `@mission-platform/vcard`                       | Dati e componenti RFC 6350 vCard e RFC 5545 iCalendar.                                                           |
+| `@mission-platform/content`                     | Contenuto AST, costruttori, Monaco, Markdown e componenti WYSIWYG.                                               |
+| `@mission-platform/seo`                         | Metadati, Open Graph e componenti componibili con dati strutturati.                                              |
+| `@mission-platform/speech-audio`                | Componenti componibili vocali, audio e Web MIDI.                                                                 |
+| `@mission-platform/three`                       | Tre.js canvas e componenti componibili del ciclo di vita.                                                        |
 
 ### Pacchetti di codice e WebAssembly
 
-| Pacchetto | Scopo |
-| :------------------------------- | :----------------------------------------------- |
-| `@mission-platform/barcode` | Codifica/decodifica di codici a barre 1D per facciate e componenti.   |
-| `@mission-platform/code-scanner` | Componente fotocamera e scansione del codice immagine.        |
-| `@mission-platform/matrix-code` | Data Matrix e Aztec codificano/decodificano la facciata.      |
-| `@mission-platform/qr-code` | Codifica/decodifica QR facciata e componente.           |
-| `@mission-platform/harper` | Grammatica Harper e integrazione stilistica per Monaco. |
-| `@mission-platform/hunspell` | Emscripten Hunspell wrapper per il controllo ortografico.      |
+| Pacchetto                        | Scopo                                                               |
+| :------------------------------- | :------------------------------------------------------------------ |
+| `@mission-platform/barcode`      | Codifica/decodifica di codici a barre 1D per facciate e componenti. |
+| `@mission-platform/code-scanner` | Componente fotocamera e scansione del codice immagine.              |
+| `@mission-platform/matrix-code`  | Data Matrix e Aztec codificano/decodificano la facciata.            |
+| `@mission-platform/qr-code`      | Codifica/decodifica QR facciata e componente.                       |
+| `@mission-platform/harper`       | Grammatica Harper e integrazione stilistica per Monaco.             |
+| `@mission-platform/hunspell`     | Emscripten Hunspell wrapper per il controllo ortografico.           |
 
 ### Obiettivi del compilatore Forge
 
@@ -370,30 +370,30 @@ Questi risiedono in `packages/compiler/plugins/` anziché in `packages/`. Un plu
 è abbassato a; un target **CMS** decide su quale piattaforma di contenuti viene proiettato. I due assi si compongono, quindi qualsiasi CMS
 target può essere associato a qualsiasi plugin del framework. Vedere la [Pipeline del compilatore Forge](../../../packages/tooling/vite/forge/docs/locales/it/reference/compiler.md).
 
-| Pacchetto | Scopo |
-| :---------------------------------------------- | :-------------------------------------------------------------------------------- |
-| `@mission-platform/forge-plugin-api` | Contratto `FrameworkOutputPlugin`, tipi IR semantici e tipi di adattatori di build.     |
-| `@mission-platform/forge-plugin-react` | React destinazione di output.                                                              |
-| `@mission-platform/forge-plugin-vue` | Vue 3 destinazioni di uscita.                                                              |
-| `@mission-platform/forge-plugin-solid` | Destinazione di output Solid.                                                              |
-| `@mission-platform/forge-plugin-svelte` | Svelte 5 destinazione di uscita.                                                           |
-| `@mission-platform/forge-plugin-web-components` | Destinazione di output dei componenti Web.                                                     |
-| `@mission-platform/forge-cms-plugin-api` | Contratto `CmsOutputPlugin`, modello di contenuto neutro, driver CMS e aiutanti di compilazione. |
-| `@mission-platform/forge-cms-storyblok` | Oggetti componenti Storyblok, wrapper blocchi e `components.json`.                |
-| `@mission-platform/forge-cms-astro` | Modelli statici `.astro` e isole quadro `client:load`.                    |
-| `@mission-platform/forge-cms-ghost` | Parziali di Ghost Handlebars e un frammento del tema `config.custom`.                   |
-| `@mission-platform/forge-cms-jekyll` | Jekyll Liquid include lo schema `_data` e un frammento `_config.yml`.             |
-| `@mission-platform/forge-cms-webflow` | Componenti del codice Webflow `declareComponent` e un frammento della libreria `webflow.json`. |
+| Pacchetto                                       | Scopo                                                                                            |
+| :---------------------------------------------- | :----------------------------------------------------------------------------------------------- |
+| `@mission-platform/forge-plugin-api`            | Contratto `FrameworkOutputPlugin`, tipi IR semantici e tipi di adattatori di build.              |
+| `@mission-platform/forge-plugin-react`          | React destinazione di output.                                                                    |
+| `@mission-platform/forge-plugin-vue`            | Vue 3 destinazioni di uscita.                                                                    |
+| `@mission-platform/forge-plugin-solid`          | Destinazione di output Solid.                                                                    |
+| `@mission-platform/forge-plugin-svelte`         | Svelte 5 destinazione di uscita.                                                                 |
+| `@mission-platform/forge-plugin-web-components` | Destinazione di output dei componenti Web.                                                       |
+| `@mission-platform/forge-cms-plugin-api`        | Contratto `CmsOutputPlugin`, modello di contenuto neutro, driver CMS e aiutanti di compilazione. |
+| `@mission-platform/forge-cms-storyblok`         | Oggetti componenti Storyblok, wrapper blocchi e `components.json`.                               |
+| `@mission-platform/forge-cms-astro`             | Modelli statici `.astro` e isole quadro `client:load`.                                           |
+| `@mission-platform/forge-cms-ghost`             | Parziali di Ghost Handlebars e un frammento del tema `config.custom`.                            |
+| `@mission-platform/forge-cms-jekyll`            | Jekyll Liquid include lo schema `_data` e un frammento `_config.yml`.                            |
+| `@mission-platform/forge-cms-webflow`           | Componenti del codice Webflow `declareComponent` e un frammento della libreria `webflow.json`.   |
 
 #### @mission-platform/forge-cms-plugin-api
 
-| Esporta | Digitare | Descrizione |
-| :------------------------ | :------- | :------------------------------------------------------------------------------ |
-| `analyzeContentComponent` | Funzione | Proietta gli oggetti di scena di un componente neutrale sul modello di contenuto neutrale rispetto alla piattaforma.   |
-| `ContentComponent` | Digitare | `ContentField` ordinati, slot e flag `interactive`.                     |
-| `ContentFieldKind` | Digitare | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
-| `CmsOutputPlugin` | Digitare | Il contratto target: un plugin framework vincolato più i quattro emettitori.           |
-| `defineForgeCmsPlugin` | Funzione | Convalida una destinazione CMS in fase di configurazione.                                   |
-| `generateCmsArtifacts` | Funzione | Il generico discover → IR → content model → emit → write driver.                |
-| `defineTsdownForgeCms` | Funzione | tsdown per una destinazione CMS, emettendo `dist/cms/<cms>/<framework>/**`.     |
-| `defineTsdownForgeCmsAll` | Funzione | tsdown per un elenco di destinazioni CMS.                                       |
+| Esporta                   | Digitare | Descrizione                                                                                                          |
+| :------------------------ | :------- | :------------------------------------------------------------------------------------------------------------------- |
+| `analyzeContentComponent` | Funzione | Proietta gli oggetti di scena di un componente neutrale sul modello di contenuto neutrale rispetto alla piattaforma. |
+| `ContentComponent`        | Digitare | `ContentField` ordinati, slot e flag `interactive`.                                                                  |
+| `ContentFieldKind`        | Digitare | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.                                      |
+| `CmsOutputPlugin`         | Digitare | Il contratto target: un plugin framework vincolato più i quattro emettitori.                                         |
+| `defineForgeCmsPlugin`    | Funzione | Convalida una destinazione CMS in fase di configurazione.                                                            |
+| `generateCmsArtifacts`    | Funzione | Il generico discover → IR → content model → emit → write driver.                                                     |
+| `defineTsdownForgeCms`    | Funzione | tsdown per una destinazione CMS, emettendo `dist/cms/<cms>/<framework>/**`.                                          |
+| `defineTsdownForgeCmsAll` | Funzione | tsdown per un elenco di destinazioni CMS.                                                                            |

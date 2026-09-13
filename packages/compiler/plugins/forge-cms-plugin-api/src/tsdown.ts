@@ -340,10 +340,12 @@ function createTsdownForgeCmsConfig(
     options.componentsModule,
   );
   const targetId = `${target.id}-${target.framework.id}`;
+  const attemptFinalOutDir = forgeArtifactAttemptDirectory(outDir, targetId);
   const attemptOutDir =
     outputRoot === undefined
-      ? forgeArtifactAttemptDirectory(outDir, targetId)
-      : stagedOutDir;
+      ? attemptFinalOutDir
+      : resolveTsdownOutputDirectory(rootDir, attemptFinalOutDir, outputRoot);
+  const publishedOutDir = outputRoot === undefined ? outDir : stagedOutDir;
   const session = options.session ?? createForgeBuildSession();
   let generated: ReturnType<typeof generateCmsArtifacts> | undefined;
   const targetPlan = {
@@ -383,7 +385,7 @@ function createTsdownForgeCmsConfig(
     entry: forgeVirtualEntry(targetId),
     dts: false,
     unbundle: true,
-    outDir: outputRoot === undefined ? attemptOutDir : outDir,
+    outDir: attemptFinalOutDir,
     outputRoot,
     clean: true,
     tsconfigPathsRoot: cacheDirectory,
@@ -422,7 +424,7 @@ function createTsdownForgeCmsConfig(
         ),
         cmsCleanupTsdownPlugin(cacheDirectory),
         forgeArtifactPublishPlugin({
-          publishedDirectory: outDir,
+          publishedDirectory: publishedOutDir,
           attemptDirectory: attemptOutDir,
           targetId,
         }) as unknown as TsdownPlugin,

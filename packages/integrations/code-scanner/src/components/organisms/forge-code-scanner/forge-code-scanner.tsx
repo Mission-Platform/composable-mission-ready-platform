@@ -10,21 +10,15 @@ import {
 import { ForgeIconCamera, ForgeIconClose, ForgeIconUpload } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
-import {
-  scanFile,
-  scanImageData,
-  type ScanFormat,
-  type ScanOptions,
-  type ScanResult,
-  setCodeScannerDebug,
-  videoFrameToImageData,
-} from '@mission-platform/code-scanner';
-
-import { scannerLog } from '../../../debug';
+import { scanFile, videoFrameToImageData } from '../../../capture';
+import { scannerLog, setCodeScannerDebug } from '../../../debug';
+import { scanImageData } from '../../../scanner';
 
 import styles from './forge-code-scanner.module.scss';
 
-export type { ScanFormat, ScanResult } from '@mission-platform/code-scanner';
+import type { ScanFormat, ScanOptions, ScanResult } from '../../../types';
+
+export type { ScanFormat, ScanResult } from '../../../types';
 
 /* ── Visual property overrides (generated) ───────────────────────────── */
 export interface CodeScannerStyleProperties {

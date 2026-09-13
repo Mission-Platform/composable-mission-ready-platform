@@ -11,13 +11,13 @@
 
 ## アプリケーションを選択してください
 
-|アプリケーション |地域開発 |ビルド |導入 |
-|:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` |ホスティング ワーカーを介してプレビューまたはデプロイする |
-| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
-| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
+| アプリケーション                    | 地域開発                                              | ビルド                                                  | 導入                                                             |
+| :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------- |
+| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | ホスティング ワーカーを介してプレビューまたはデプロイする        |
+| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`         |
+| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`   |
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` |設定された Storybook/Chromatic ワークフローを使用する |
+| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | 設定された Storybook/Chromatic ワークフローを使用する            |
 
 アプリケーション パッケージは、 Vite または Wrangler 構成。走らないでください `wrangler deploy` 再利用可能なワーカーから
 パッケージに独自のものがある場合を除き、パッケージ `wrangler.jsonc`.
@@ -30,13 +30,13 @@
 
 ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
-   ```
+```
 
 4. 影響を受けるワークスペースのテスト、lint、スタイル チェック、および書式設定を実行します。
 
 ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
-   ```
+```
 
 共有パッケージの変更の場合は、次のように置き換えます。 `<app>` パッケージ名を付けて使用します `...` 依存するワークスペースが必要な場合
 ビルドグラフに含まれます。

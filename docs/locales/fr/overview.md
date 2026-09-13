@@ -35,14 +35,14 @@ vitesse et qualité du code.
 
 ## Principales fonctionnalités
 
-| Fonctionnalité | Descriptif |
-|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| **Forge JSX Runtime** | Un dialecte JSX indépendant du framework : créez une seule fois et construisez pour Vue 3, React, Svelte, Solid et les composants Web sans aucune surcharge d'exécution. |
-| **Bibliothèque de composants** | Un ensemble complet de composants de mise en page, de typographie et interactifs créés une seule fois pour plusieurs frameworks.                           |
-| **Jetons de conception** | Un système de jetons conforme au DTCG qui génère des artefacts SCSS et TypeScript pour une thématique cohérente.                                     |
-| **Routage agnostique** | Un système de routage de type sécurisé qui fonctionne indépendamment du framework d'interface utilisateur.                                                               |
-| **Universel I18n** | Un wrapper d'internationalisation indépendant du framework basé sur i18next avec des adaptateurs Vue et React dédiés.                              |
-| **Utilitaires Wasm** | Utilitaires hautes performances pour la numérisation de codes-barres, la vérification orthographique et bien plus encore, optimisés par WebAssembly.                                     |
+| Fonctionnalité                 | Descriptif                                                                                                                                                               |
+| :----------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX Runtime**          | Un dialecte JSX indépendant du framework : créez une seule fois et construisez pour Vue 3, React, Svelte, Solid et les composants Web sans aucune surcharge d'exécution. |
+| **Bibliothèque de composants** | Un ensemble complet de composants de mise en page, de typographie et interactifs créés une seule fois pour plusieurs frameworks.                                         |
+| **Jetons de conception**       | Un système de jetons conforme au DTCG qui génère des artefacts SCSS et TypeScript pour une thématique cohérente.                                                         |
+| **Routage agnostique**         | Un système de routage de type sécurisé qui fonctionne indépendamment du framework d'interface utilisateur.                                                               |
+| **Universel I18n**             | Un wrapper d'internationalisation indépendant du framework basé sur i18next avec des adaptateurs Vue et React dédiés.                                                    |
+| **Utilitaires Wasm**           | Utilitaires hautes performances pour la numérisation de codes-barres, la vérification orthographique et bien plus encore, optimisés par WebAssembly.                     |
 
 ## Pile technologique
 
@@ -75,6 +75,6 @@ Le référentiel est organisé en plusieurs zones distinctes :
 Pour commencer à développer sur la plateforme Mission, veuillez vous référer aux guides suivants :
 
 - **[Configuration du développement](development-setup.md)** : préparez votre environnement et installez les dépendances.
--**[Architecture](architecture.md)** : plongée approfondie dans les principes de conception et le flux de dépendances de la plateforme.
--**[Structure de l'espace de travail](workspace-structure.md)** : Comprendre la disposition des répertoires et les conventions des packages.
--**[Essai](testing.md)** : découvrez nos stratégies et outils de test.
+  \-**[Architecture](architecture.md)** : plongée approfondie dans les principes de conception et le flux de dépendances de la plateforme.
+  \-**[Structure de l'espace de travail](workspace-structure.md)** : Comprendre la disposition des répertoires et les conventions des packages.
+  \-**[Essai](testing.md)** : découvrez nos stratégies et outils de test.

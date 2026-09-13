@@ -13,13 +13,13 @@ Konsistenz über mehrere Frameworks hinweg.
 
 Komponenten werden basierend auf ihrem Umfang und ihrer Verantwortung in fünf Ebenen eingeteilt.
 
-| Ebene | Ordner | Beschreibung |
-|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Atome** | `src/components/atoms/`     | Kleinste UI-Grundelemente (z. B. `ForgeButton`, `ForgeInput`, `ForgeBadge`). Typischerweise handelt es sich um Funktionseinheiten, die nicht weiter zerlegt werden können, ohne ihren Zweck zu verlieren. |
-| **Moleküle** | `src/components/molecules/` | Einfache Zusammensetzungen von Atomen (z. B. `ForgeSearchInput`, `ForgeFieldSet`). Sie funktionieren als Einheit zusammen.                                                                    |
-| **Organismen** | `src/components/organisms/` | Komplexe UI-Abschnitte bestehend aus Atomen, Molekülen und anderen Organismen (z. B. `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
-| **Vorlagen** | `src/components/templates/` | Layouts auf Seitenebene, die die Inhaltsstruktur definieren (z. B. `ForgeHero`, `ForgeAppLayout`). Sie verwenden häufig Slots, um zu definieren, wo Inhalte platziert werden sollen.                     |
-| **Seiten** | `src/components/pages/`     | Spezifische Instanzen von Vorlagen, die mit konkreten Inhalten und Daten gefüllt sind (z. B. `AccountSettingsPage`).                                                                        |
+| Ebene          | Ordner                      | Beschreibung                                                                                                                                                                                              |
+| :------------- | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atome**      | `src/components/atoms/`     | Kleinste UI-Grundelemente (z. B. `ForgeButton`, `ForgeInput`, `ForgeBadge`). Typischerweise handelt es sich um Funktionseinheiten, die nicht weiter zerlegt werden können, ohne ihren Zweck zu verlieren. |
+| **Moleküle**   | `src/components/molecules/` | Einfache Zusammensetzungen von Atomen (z. B. `ForgeSearchInput`, `ForgeFieldSet`). Sie funktionieren als Einheit zusammen.                                                                                |
+| **Organismen** | `src/components/organisms/` | Komplexe UI-Abschnitte bestehend aus Atomen, Molekülen und anderen Organismen (z. B. `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                                          |
+| **Vorlagen**   | `src/components/templates/` | Layouts auf Seitenebene, die die Inhaltsstruktur definieren (z. B. `ForgeHero`, `ForgeAppLayout`). Sie verwenden häufig Slots, um zu definieren, wo Inhalte platziert werden sollen.                      |
+| **Seiten**     | `src/components/pages/`     | Spezifische Instanzen von Vorlagen, die mit konkreten Inhalten und Daten gefüllt sind (z. B. `AccountSettingsPage`).                                                                                      |
 
 ## Komponentenordnerlayout
 
@@ -67,7 +67,7 @@ Der `title` Feld im Storybook `meta` Das Objekt muss diesem Muster folgen:
 
 ```tsx
 const meta = {
-  title: 'Atoms/Display/ForgeButton',
+  title: "Atoms/Display/ForgeButton",
   component: Button,
   // ...
 };

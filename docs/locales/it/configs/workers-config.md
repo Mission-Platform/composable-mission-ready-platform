@@ -18,12 +18,12 @@ ambienti.
 
 ## Mappa di distribuzione dell'applicazione
 
-| Applicazione | Gestore | Configurazione | Beni |
-| :---------- | :------ | :------------ | :----- |
-| Sito web | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, legato come `ASSETS` |
-| Le mie note di cura | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, legato come `ASSETS` |
-| Monitoraggio del servizio | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, legato come `ASSETS` |
-| Documenti | Asset statici | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| Applicazione              | Gestore                                         | Configurazione                        | Beni                                                 |
+| :------------------------ | :---------------------------------------------- | :------------------------------------ | :--------------------------------------------------- |
+| Sito web                  | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, legato come `ASSETS`           |
+| Le mie note di cura       | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, legato come `ASSETS`     |
+| Monitoraggio del servizio | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, legato come `ASSETS` |
+| Documenti                 | Asset statici                                   | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                    |
 
 Il sito Web e My Care Notes utilizzano il lavoratore condiviso Forge SPA. Monitoraggio del servizio
 possiede il punto di ingresso Worker e l'associazione di oggetti durevoli. Il sito dei documenti è a

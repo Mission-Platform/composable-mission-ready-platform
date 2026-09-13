@@ -69,10 +69,11 @@ rm -rf .turbo
 2. Stellen Sie sicher, dass die Version übereinstimmt (`workspace:*` wird empfohlen).
 3. Führen Sie `pnpm install` aus, um symbolische Links zu aktualisieren.
 4. Wenn die Probleme weiterhin bestehen, versuchen Sie es mit einer gründlichen Reinigung:
+
 ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-   ```
+```
 
 ### Geben Sie Fehler in CI ein, aber nicht in „Lokal“.
 
@@ -100,6 +101,7 @@ Dadurch wird sichergestellt, dass alle Paketgrenzen korrekt berücksichtigt werd
 **Lösungen**:
 
 – Stellen Sie sicher, dass Sie den absoluten Pfad zur node-Binärdatei und zum Skript in Ihrer Client-Konfiguration verwenden.
+
 - Überprüfen Sie die MCP-Serverprotokolle auf bestimmte Fehlermeldungen (z. B. fehlende Umgebungsvariablen).
 
 ## Häufige Fehlermuster
@@ -114,7 +116,7 @@ optionale Verkettung (`?.`) oder Standardwerte bereitstellen.
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
 ### „Unbehandelte Versprechensablehnung“

@@ -11,13 +11,13 @@
 
 ## 选择一个应用程序
 
-|应用 |本地发展|构建|部署|
-|:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` |通过其托管工作线程预览或部署 |
-| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
-| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
+| 应用                                | 本地发展                                              | 构建                                                    | 部署                                                             |
+| :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------- |
+| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | 通过其托管工作线程预览或部署                                     |
+| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`         |
+| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`   |
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` |使用配置的 Storybook/Chromatic 工作流程 |
+| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | 使用配置的 Storybook/Chromatic 工作流程                          |
 
 该应用程序包拥有其 Vite 或者 Wrangler 配置。不要跑 `wrangler deploy` 来自可重复使用的工人
 包，除非该包有自己的 `wrangler.jsonc`.
@@ -30,13 +30,13 @@
 
 ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
-   ```
+```
 
 4. 对受影响的工作区运行测试、lint、样式检查和格式化：
 
 ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
-   ```
+```
 
 对于共享包更改，请替换 `<app>` 以及包名和用途 `...` 当您需要依赖的工作空间时
 包含在构建图中。

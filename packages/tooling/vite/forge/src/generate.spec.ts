@@ -1095,6 +1095,155 @@ describe('generateFrameworkSources', () => {
       rmSync(packageDir, { recursive: true, force: true });
     }
   });
+
+  it('preserves co-located context helpers without recompiling the component as a composable', () => {
+    // Mirrors the forms package shape: a component module exports both a JSX
+    // component and neutral context/value helpers. Discovery must keep the
+    // helpers for entry re-export while compile+carry must emit the component
+    // exactly once (never as moduleKind: 'composable').
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-jsx-generate-mixed-exports-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const formDir = path.join(componentsDir, 'organisms', 'forge-form');
+    const outDir = path.join(packageDir, 'generated', 'vue');
+
+    try {
+      mkdirSync(formDir, { recursive: true });
+      writeFileSync(
+        path.join(componentsDir, 'index.ts'),
+        [
+          'export {',
+          '  ForgeForm,',
+          '  FormContext,',
+          '  defaultFormContext,',
+          '  useFormContext,',
+          '  type ForgeFormProperties,',
+          '  type FormContextValue,',
+          "} from './organisms/forge-form';",
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(
+        path.join(formDir, 'index.ts'),
+        [
+          'export {',
+          '  ForgeForm,',
+          '  FormContext,',
+          '  defaultFormContext,',
+          '  useFormContext,',
+          '  type ForgeFormProperties,',
+          '  type FormContextValue,',
+          "} from './forge-form';",
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(
+        path.join(formDir, 'forge-form.tsx'),
+        [
+          "import { createContext, useContext, type MpContext, type MpElement } from '@mission-platform/forge-jsx';",
+          '',
+          'export interface FormContextValue {',
+          '  values: Record<string, unknown>;',
+          '}',
+          '',
+          'export interface ForgeFormProperties {',
+          '  id?: string;',
+          '}',
+          '',
+          'export const defaultFormContext: FormContextValue = { values: {} };',
+          '',
+          'export const FormContext: MpContext<FormContextValue> = createContext<FormContextValue>(defaultFormContext);',
+          '',
+          'export function useFormContext(): FormContextValue {',
+          '  return useContext(FormContext) ?? defaultFormContext;',
+          '}',
+          '',
+          'export function ForgeForm(properties: ForgeFormProperties): MpElement {',
+          '  return <form id={properties.id} />;',
+          '}',
+          '',
+        ].join('\n'),
+      );
+
+      generateFrameworkSources({
+        plugin: forgeVueFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+
+      const componentDir = path.join(outDir, 'components', 'organisms', 'forge-form');
+      const emitted = readdirSync(componentDir);
+
+      // Component is emitted once as a Vue SFC — never also as a composable `.ts`.
+      expect(emitted.filter((name) => name.startsWith('forge-form.'))).toEqual(['forge-form.vue']);
+      expect(existsSync(path.join(componentDir, 'forge-form.ts'))).toBe(false);
+      expect(existsSync(path.join(componentDir, 'forge-form.tsx'))).toBe(false);
+
+      const vueSource = readFileSync(path.join(componentDir, 'forge-form.vue'), 'utf8');
+      expect(vueSource).toContain('<script');
+      // Co-located helpers survive in the component module (carry-over), not a second emit.
+      expect(vueSource).toMatch(/FormContext|defaultFormContext|useFormContext/);
+
+      const entry = readFileSync(path.join(outDir, 'index.ts'), 'utf8');
+      expect(entry).toContain("export { default as Form } from './components/organisms/forge-form/forge-form.vue';");
+      // Helper bindings are re-exported from the compiled component module.
+      expect(entry).toMatch(/FormContext/);
+      expect(entry).toMatch(/defaultFormContext/);
+      expect(entry).toMatch(/useFormContext/);
+      expect(entry).toMatch(/FormContextValue/);
+      expect(entry).toContain("from './components/organisms/forge-form/forge-form.vue'");
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('re-exports a co-located component alias from a Svelte default export', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-jsx-generate-svelte-alias-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const selectDir = path.join(componentsDir, 'forge-select');
+    const outDir = path.join(packageDir, 'generated', 'svelte');
+
+    try {
+      mkdirSync(selectDir, { recursive: true });
+      writeFileSync(
+        path.join(componentsDir, 'index.ts'),
+        ["export { ForgeSelect, ForgeCombobox, type SelectProperties } from './forge-select';", ''].join('\n'),
+      );
+      writeFileSync(
+        path.join(selectDir, 'index.ts'),
+        "export { ForgeSelect, ForgeCombobox, type SelectProperties } from './forge-select';\n",
+      );
+      writeFileSync(
+        path.join(selectDir, 'forge-select.tsx'),
+        [
+          "import type { MpElement } from '@mission-platform/forge-jsx';",
+          'export interface SelectProperties { value?: string; }',
+          'export function ForgeSelect(properties: SelectProperties): MpElement {',
+          '  return <select value={properties.value} />;',
+          '}',
+          'export const ForgeCombobox = ForgeSelect;',
+          '',
+        ].join('\n'),
+      );
+
+      const entryPath = generateFrameworkSources({
+        plugin: forgeSvelteFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+      const entry = readFileSync(entryPath, 'utf8');
+      const componentSource = readFileSync(
+        path.join(outDir, 'components', 'forge-select', 'forge-select.svelte'),
+        'utf8',
+      );
+
+      expect(entry).toContain(
+        "export { default as ForgeCombobox } from './components/forge-select/forge-select.svelte';",
+      );
+      expect(componentSource).not.toContain('export const ForgeCombobox = ForgeSelect');
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
 });
 
 describe('generateEntry', () => {

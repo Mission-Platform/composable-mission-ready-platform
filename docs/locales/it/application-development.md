@@ -11,13 +11,13 @@ copiato in un'app.
 
 ## Scegli un'applicazione
 
-| Applicazione | Sviluppo locale | Costruisci | Distribuzione |
-|:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | Anteprima o distribuzione tramite il relativo lavoratore di hosting |
-| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
-| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
-| `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` | Utilizza il flusso di lavoro configurato per Libro di fiabe/Cromatico |
+| Applicazione                        | Sviluppo locale                                       | Costruisci                                              | Distribuzione                                                         |
+| :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :-------------------------------------------------------------------- |
+| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | Anteprima o distribuzione tramite il relativo lavoratore di hosting   |
+| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`              |
+| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`        |
+| `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging`      |
+| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | Utilizza il flusso di lavoro configurato per Libro di fiabe/Cromatico |
 
 Il pacchetto dell'applicazione possiede il suo file Vite O Wrangler configurazione. Non correre `wrangler deploy` da un lavoratore riutilizzabile
 pacchetto a meno che quel pacchetto non abbia il proprio `wrangler.jsonc`.
@@ -30,13 +30,13 @@ pacchetto a meno che quel pacchetto non abbia il proprio `wrangler.jsonc`.
 
 ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
-   ```
+```
 
 4. Esegui test, lanugine, controlli di stile e formattazione per l'area di lavoro interessata:
 
 ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
-   ```
+```
 
 Per una modifica del pacchetto condiviso, sostituire `<app>` con il nome del pacchetto e l'uso `...` quando hai bisogno di spazi di lavoro dipendenti
 incluso nel grafico di costruzione.

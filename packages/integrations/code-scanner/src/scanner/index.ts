@@ -9,6 +9,8 @@ import { scannerLog } from '../debug';
 import { load as loadScanner, loadRaw, loadRawSync, loadSync as loadScannerSync } from '../fws/scanner.fws';
 import { imageDataToContrastStretchLuma } from '../image';
 
+import { parseResultEnvelope, resultEnvelopeLimits } from './result-envelope';
+
 import type {
   ForgeScannerExports,
   ForgeScannerImports,
@@ -167,28 +169,18 @@ function decodePayload(
 
 /** Convert the versioned FWS result envelope into the public scan result. */
 function resultFromWire(encoded: string): ScanResult | null {
-  if (encoded.length >= 12 && encoded[0] === 'R') {
-    const format = FORMAT_NAMES[Number(encoded.slice(2, 4))];
-    if (format === undefined || (encoded[1] !== '0' && encoded[1] !== '1')) return null;
-    if (encoded[1] === '0') return createScanResult(format, null, null, 0);
-    const payload = encoded.slice(12);
-    const decoded = decodePayload(payload, format);
-    const declaredBits = Number.parseInt(encoded.slice(4, 12), 10);
-    return createScanResult(
-      format,
-      decoded.text,
-      decoded.rawBytes,
-      Number.isFinite(declaredBits) && declaredBits > 0 ? declaredBits : (decoded.rawBytes?.byteLength ?? 0) * 8,
-    );
-  }
-
-  if (encoded.length < 3) return null;
-  const format = FORMAT_NAMES[Number(encoded.slice(1, 3))];
+  const envelope = parseResultEnvelope(encoded);
+  if (envelope === null) return null;
+  const format = FORMAT_NAMES[envelope.formatId];
   if (format === undefined) return null;
-  if (encoded[0] === 'L') return createScanResult(format, null, null, 0);
-  if (encoded[0] !== 'D') return null;
-  const decoded = decodePayload(encoded.slice(3), format);
-  return createScanResult(format, decoded.text, decoded.rawBytes, (decoded.rawBytes?.byteLength ?? 0) * 8);
+  if (!envelope.decoded) return createScanResult(format, null, null, envelope.numBits);
+  const decoded = decodePayload(envelope.payload, format);
+  return createScanResult(
+    format,
+    decoded.text,
+    decoded.rawBytes,
+    envelope.numBits > 0 ? envelope.numBits : (decoded.rawBytes?.byteLength ?? 0) * 8,
+  );
 }
 interface ScannerScratch {
   readonly modules: Int32Array;
@@ -251,7 +243,13 @@ function normalizeScanOptions(optionsOrRoi: ScanOptions | Roi | undefined): Scan
 
 function possibleFormatIds(options: ScanOptions): readonly number[] {
   if (options.formats === undefined || options.formats.length === 0) return [-1];
-  return [...new Set(options.formats.map((format) => FORMAT_IDS[format]))];
+  return [
+    ...new Set(
+      options.formats
+        .map((format) => FORMAT_IDS[format])
+        .filter((format): format is number => Number.isInteger(format)),
+    ),
+  ];
 }
 
 function logScanResult(result: ScanResult | null): ScanResult | null {
@@ -458,6 +456,9 @@ function decodeRawString(artifact: RawScannerExports, encoded: unknown): string 
   const buffer = artifact.memory.buffer;
   if (pointer > buffer.byteLength || length > buffer.byteLength - pointer) {
     throw new RangeError('The raw scanner result is outside linear memory.');
+  }
+  if (length > resultEnvelopeLimits.maxLength) {
+    throw new RangeError('The raw scanner result exceeds the supported envelope size.');
   }
   return textDecoder.decode(new Uint8Array(buffer, pointer, length));
 }

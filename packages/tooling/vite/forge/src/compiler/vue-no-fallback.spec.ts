@@ -37,7 +37,17 @@ const COMPONENTS_ROOT = path.resolve(
   '../../../../../ui/components/src/components',
 );
 
-/** Components that still take the Vue render-closure fallback (see file header). */
+/**
+ * Components that still take the Vue render-closure fallback (see file header).
+ *
+ * `ForgeTable` is intentionally allowlisted for now: its neutral implementation
+ * evaluates function-valued render props (`column.render`, `cell`, and
+ * `expandedRowRender`) inside `columns.map`/`rows.flatMap` closures. Those
+ * callbacks can return arbitrary Forge JSX, so lowering them to static Vue
+ * templates or scoped-slot declarations would change runtime semantics. Keep
+ * the fallback explicit until the Vue lowering pipeline supports dynamic
+ * render-prop closures without losing their scope or return shape.
+ */
 const KNOWN_FALLBACKS: ReadonlySet<string> = new Set([
   'forge-activity-feed',
   'forge-callout-block',
@@ -51,6 +61,7 @@ const KNOWN_FALLBACKS: ReadonlySet<string> = new Set([
   'forge-mention-input',
   'forge-metric-card',
   'forge-navbar',
+  'forge-table',
   'forge-testimonials-section',
   'forge-time-range-input',
 ]);

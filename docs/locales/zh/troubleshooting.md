@@ -69,10 +69,11 @@ rm -rf .turbo
 2. 确保版本匹配（建议使用`workspace:*`）。
 3. 运行 `pnpm install` 以刷新符号链接。
 4. 如果问题仍然存在，请尝试深度清洁：
+
 ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-   ```
+```
 
 ### CI 中存在类型错误，但本地不存在类型错误
 
@@ -114,7 +115,7 @@ pnpm exec turbo run build:check
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
 ### “未处理的承诺拒绝”

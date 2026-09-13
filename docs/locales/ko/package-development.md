@@ -115,7 +115,7 @@ packages/<name>/
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
@@ -217,12 +217,13 @@ export default {
 미션 플랫폼은 [변경 세트](https://github.com/changesets/changesets)을 사용하여 버전 관리 및 게시를 수행합니다.
 
 1. **변경 세트 추가**: 변경 후 다음을 실행합니다.
+
 ```bash
    pnpm changeset
-   ```
-   패키지와 변경 유형(패치, 마이너, 메이저)을 선택합니다.
-2. **변경 세트 커밋**: 생성된 `.changeset/*.md` 파일을 커밋합니다.
-3. **버전 및 게시**: CI/CD는 실제 게시를 처리하지만 다음을 사용하여 로컬에서 버전을 미리 볼 수 있습니다.
+```
+
+패키지와 변경 유형(패치, 마이너, 메이저)을 선택합니다. 2. **변경 세트 커밋**: 생성된 `.changeset/*.md` 파일을 커밋합니다. 3. **버전 및 게시**: CI/CD는 실제 게시를 처리하지만 다음을 사용하여 로컬에서 버전을 미리 볼 수 있습니다.
+
 ```bash
    pnpm changeset version
-   ```
+```

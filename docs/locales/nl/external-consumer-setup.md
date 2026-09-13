@@ -15,11 +15,11 @@ Om de juiste bundel te selecteren, moet u uw buildtool en TypeScript configurere
 
 ### Ondersteunde raamvoorwaarden
 
-| Kader | Exportvoorwaarde |
+| Kader              | Exportvoorwaarde   |
 | :----------------- | :----------------- |
-| **Vue 3** | `mp:vue` |
-| **React** | `mp:react` |
-| **Solid** | `mp:solid` |
+| **Vue 3**          | `mp:vue`           |
+| **React**          | `mp:react`         |
+| **Solid**          | `mp:solid`         |
 | **Webcomponenten** | `mp:web-component` |
 
 ## Projectconfiguratie

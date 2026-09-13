@@ -66,6 +66,7 @@ le résolveur du consommateur avec la correspondance `mp:vue`, `mp:react`, `mp:s
 ### Modèles de réactivité (Vue 3)
 
 - Utilisez exclusivement l'**API de composition**.
+
 - Préférer `ref()` pour la plupart des États de maintenir la cohérence.
 - Extraire une logique avec état complexe dans **Composables** (`useXxx`).
 - Assurez-vous que tous les effets secondaires (observateurs, intervalles, auditeurs d'événements) sont correctement nettoyés dans `onUnmounted`.

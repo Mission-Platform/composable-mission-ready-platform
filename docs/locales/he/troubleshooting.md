@@ -69,10 +69,11 @@ rm -rf .turbo
 2. ודא שהגרסה תואמת (מומלץ `workspace:*`).
 3. הפעל את `pnpm install` כדי לרענן סימלינקים.
 4. אם הבעיות נמשכות, נסה ניקוי עמוק:
+
 ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-   ```
+```
 
 ### הקלד שגיאות ב-CI אך לא מקומי
 
@@ -114,7 +115,7 @@ pnpm exec turbo run build:check
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
 ### "דחיית הבטחה ללא טיפול"

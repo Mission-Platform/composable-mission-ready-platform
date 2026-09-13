@@ -29,7 +29,7 @@ Decode an image `Blob`/`File` into an {@link ImageLike} (RGBA pixels). Uses
 **Kind:** function
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>;
+function scanFile(file: Blob, options?: ScanOptions): Promise<ScanResult | null>;
 ```
 
 Decode `file` and scan it for a code, synchronously running the WebAssembly
@@ -37,16 +37,17 @@ scanner (which self-initialises from its inlined binary in a production build).
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| file | Blob |             |
+| Name    | Type        | Description |
+| ------- | ----------- | ----------- |
+| file    | Blob        |             |
+| options | ScanOptions |             |
 
 ### scanFileAsync
 
 **Kind:** function
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>;
+function scanFileAsync(file: Blob, options?: ScanOptions): Promise<ScanResult | null>;
 ```
 
 Decode `file` and scan it for a code, initialising the scanner and decoders
@@ -54,9 +55,10 @@ asynchronously — safe in any environment (no inlined binary required).
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| file | Blob |             |
+| Name    | Type        | Description |
+| ------- | ----------- | ----------- |
+| file    | Blob        |             |
+| options | ScanOptions |             |
 
 ### videoFrameToImageData
 
@@ -203,7 +205,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
+function scanImageData(image: ImageLike, options?: ScanOptions | Roi): ScanResult | null;
 ```
 
 Locate and decode the first supported code in `image`, instantiating the
@@ -211,24 +213,24 @@ scanner graph synchronously on first use.
 
 #### Parameters
 
-| Name  | Type      | Description                                                        |
-| ----- | --------- | ------------------------------------------------------------------ |
-| image | ImageLike |                                                                    |
-| roi   | Roi       | optional region of interest (image pixels) to restrict the scan to |
+| Name    | Type               | Description |
+| ------- | ------------------ | ----------- |
+| image   | ImageLike          |             |
+| options | ScanOptions \| Roi |             |
 
 #### Contract
 
 - **@param:** optional region of interest (image pixels) to restrict the scan to
   — cropped before binarisation, so surrounding clutter is ignored.
 - **@returns:** the {@link ScanResult}, or `null` when no code is found. When a code
-  is located but its payload can't be decoded, `result.value` is `null`.
+  is located but its payload can't be decoded, `result.text` is `null`.
 
 ### scanImageDataAll
 
 **Kind:** function
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[];
+function scanImageDataAll(image: ImageLike, options?: ScanOptions): ScanResult[];
 ```
 
 Locate and decode _every_ distinct code in `image` (not just the first),
@@ -236,9 +238,10 @@ instantiating the scanner graph synchronously on first use.
 
 #### Parameters
 
-| Name  | Type      | Description |
-| ----- | --------- | ----------- |
-| image | ImageLike |             |
+| Name    | Type        | Description |
+| ------- | ----------- | ----------- |
+| image   | ImageLike   |             |
+| options | ScanOptions |             |
 
 #### Contract
 
@@ -250,7 +253,7 @@ instantiating the scanner graph synchronously on first use.
 **Kind:** function
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
+function scanImageDataAllAsync(image: ImageLike, options?: ScanOptions): Promise<ScanResult[]>;
 ```
 
 Locate and decode _every_ distinct code in `image`, loading the scanner graph
@@ -259,9 +262,10 @@ returned as Promise rejections.
 
 #### Parameters
 
-| Name  | Type      | Description |
-| ----- | --------- | ----------- |
-| image | ImageLike |             |
+| Name    | Type        | Description |
+| ------- | ----------- | ----------- |
+| image   | ImageLike   |             |
+| options | ScanOptions |             |
 
 #### Contract
 
@@ -272,7 +276,7 @@ returned as Promise rejections.
 **Kind:** function
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
+function scanImageDataAsync(image: ImageLike, options?: ScanOptions | Roi): Promise<ScanResult | null>;
 ```
 
 Locate and decode the first supported code in `image`, loading the scanner
@@ -281,10 +285,10 @@ failures are returned as Promise rejections.
 
 #### Parameters
 
-| Name  | Type      | Description                                              |
-| ----- | --------- | -------------------------------------------------------- |
-| image | ImageLike |                                                          |
-| roi   | Roi       | optional region of interest — see {@link scanImageData}. |
+| Name    | Type               | Description |
+| ------- | ------------------ | ----------- |
+| image   | ImageLike          |             |
+| options | ScanOptions \| Roi |             |
 
 #### Contract
 
@@ -334,10 +338,66 @@ nothing.
 **Kind:** type
 
 ```typescript
-export type ScanFormat = 'qr' | 'datamatrix' | 'barcode' | 'aztec' | 'pdf417' | 'databar' | 'maxicode';
+export type ScanFormat =
+  | 'AZTEC'
+  | 'CODABAR'
+  | 'CODE_39'
+  | 'CODE_93'
+  | 'CODE_128'
+  | 'DATA_MATRIX'
+  | 'EAN_8'
+  | 'EAN_13'
+  | 'ITF'
+  | 'MAXICODE'
+  | 'PDF_417'
+  | 'QR_CODE'
+  | 'RSS_14'
+  | 'RSS_EXPANDED'
+  | 'UPC_A'
+  | 'UPC_E';
 ```
 
-The code families the scanner can locate and decode.
+ZXing barcode formats exposed by the scanner graph.
+
+### ScanMetadata
+
+**Kind:** type
+
+```typescript
+export type ScanMetadata = Readonly<Record<string, ScanMetadataValue>>;
+```
+
+No description provided.
+
+### ScanMetadataValue
+
+**Kind:** type
+
+```typescript
+export type ScanMetadataValue = string | number | readonly number[];
+```
+
+No description provided.
+
+### ScanOptions
+
+**Kind:** interface
+
+```typescript
+export interface ScanOptions
+```
+
+No description provided.
+
+### ScanPoint
+
+**Kind:** interface
+
+```typescript
+export interface ScanPoint
+```
+
+No description provided.
 
 ### ScanResult
 
@@ -347,4 +407,4 @@ The code families the scanner can locate and decode.
 export interface ScanResult
 ```
 
-The outcome of a successful _detection_.
+Rich ZXing-style result returned by every scanner entry point.

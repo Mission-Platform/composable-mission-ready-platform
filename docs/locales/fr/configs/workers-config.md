@@ -18,12 +18,12 @@ environnements.
 
 ## Carte de déploiement d'applications
 
-| Demande | Gestionnaire | Configuration | Actifs |
-| :---------- | :------ | :------------ | :----- |
-| Site Web | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, lié comme `ASSETS` |
-| Mes notes de soins | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, lié comme `ASSETS` |
-| Moniteur de services | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, lié comme `ASSETS` |
-| Documents | Actifs statiques | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+| Demande              | Gestionnaire                                    | Configuration                         | Actifs                                             |
+| :------------------- | :---------------------------------------------- | :------------------------------------ | :------------------------------------------------- |
+| Site Web             | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, lié comme `ASSETS`           |
+| Mes notes de soins   | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, lié comme `ASSETS`     |
+| Moniteur de services | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, lié comme `ASSETS` |
+| Documents            | Actifs statiques                                | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                  |
 
 Le site Web et mes notes de soins consomment le travailleur Forge SPA partagé. Moniteur de services
 possède son point d’entrée Worker et sa liaison Durable Object. Le site de documentation est un

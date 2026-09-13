@@ -78,7 +78,7 @@ import {
   svelteClassValue,
   type SvelteScope,
 } from "./expression.js";
-import { readSafeBlockBody } from "./statements.js";
+import { readBranchingBlockBody, readSafeBlockBody } from "./statements.js";
 
 import type {
   GenericAttribute,
@@ -292,6 +292,14 @@ function templateYieldsMarkup(
       nodes,
       context,
       visited,
+    );
+  }
+  // An array literal (`[mainRow, detailRow]`, a branch's returned rows) yields
+  // markup when any element does — its elements are often bare reads of markup
+  // `{@const}`s that carry no nested render node of their own.
+  if (expression.startsWith("[") && expression.endsWith("]")) {
+    return splitList(expression.slice(1, -1), nodeTexts(nodes)).some(
+      (element) => templateYieldsMarkup(element, nodes, context, visited),
     );
   }
   if (isIdentifierText(expression)) {
@@ -748,6 +756,41 @@ function elseChain(
   return markup === "" ? "" : `{:else}${markup}`;
 }
 
+/**
+ * Lift a block body's leading `const`s to `{@const}` strings, routing any that
+ * hold markup into the returned template context's `jsxConstants` (so the
+ * template substitutes them) instead of emitting a `{@const}` that would leak
+ * raw JSX. The base context supplies the outer `jsxConstants`, so nested lifts
+ * (a branch's own consts over the shared ones) compose.
+ */
+function liftBlockConstants(
+  blockConstants: readonly { name: string; value: string }[],
+  baseContext: SvelteTemplateContext,
+  nodes: readonly GenericRenderNode[],
+): { constants: string[]; context: SvelteTemplateContext } {
+  const constants: string[] = [];
+  const markupConstants = new Map(baseContext.jsxConstants);
+  for (const constant of blockConstants) {
+    const containsMarkup =
+      nodesWithin(constant.value, nodes).length > 0 ||
+      /<\s*[A-Za-z][\w.-]*(?:\s|\/?>)/.test(constant.value);
+    if (containsMarkup) {
+      markupConstants.set(constant.name, {
+        text: constant.value,
+        nodes: nodesWithin(constant.value, nodes),
+      });
+    } else {
+      constants.push(
+        `{@const ${constant.name} = ${scopeExpression(constant.value, baseContext.scope)}}`,
+      );
+    }
+  }
+  return {
+    constants,
+    context: { ...baseContext, jsxConstants: markupConstants },
+  };
+}
+
 /** The `{#each … }` block an iteration callback lowers to, or `undefined` for an unsupported shape. */
 function eachBlock(
   list: string,
@@ -770,54 +813,100 @@ function eachBlock(
     callback.parameters[1] === undefined
       ? undefined
       : parameterName(callback.parameters[1]);
-  const constants: string[] = [];
-  let blockConstants: readonly { name: string; value: string }[] = [];
-  let returned = callback.body;
-  let templateContext = context;
-  if (callback.body.startsWith("{")) {
-    // A block-bodied callback lifts its leading `const`s to Svelte `{@const}`s
-    // inside the block; any other statement shape falls back to a plain hole.
-    const statements = blockBody(callback.body, fragments);
-    if (statements === undefined) {
-      return undefined;
-    }
-    blockConstants = statements.constants;
-    returned = statements.returned;
-    const markupConstants = new Map(context.jsxConstants);
-    for (const constant of statements.constants) {
-      const containsMarkup =
-        nodesWithin(constant.value, nodes).length > 0 ||
-        /<\s*[A-Za-z][\w.-]*(?:\s|\/?>)/.test(constant.value);
-      if (containsMarkup) {
-        markupConstants.set(constant.name, {
-          text: constant.value,
-          nodes: nodesWithin(constant.value, nodes),
-        });
-      } else {
-        constants.push(
-          `{@const ${constant.name} = ${scopeExpression(constant.value, context.scope)}}`,
-        );
-      }
-    }
-    templateContext = { ...context, jsxConstants: markupConstants };
-  }
-  if (
-    !templateYieldsMarkup(returned, nodes, templateContext, visited) &&
-    stripParentheses(returned) !== "null"
-  ) {
-    return undefined;
-  }
-  const key = listKey(list, returned, nodes, templateContext, blockConstants);
   const binding =
     indexName === undefined ? itemName : `${itemName}, ${indexName}`;
-  const suffix = key === undefined ? "" : ` (${key})`;
-  const markup = branch(returned, nodes, templateContext, visited);
   // An optional-chained iteration (`tokens?.map(…)`) renders nothing when the
   // list is absent; `{#each}` needs an array either way, so the nullish source
   // falls back to an empty one.
   const scoped = scopeExpression(list, context.scope);
   const iterated = optional ? `${scoped} ?? []` : scoped;
-  return `{#each ${iterated} as ${binding}${suffix}}${constants.join("")}${markup}{/each}`;
+
+  if (callback.body.startsWith("{")) {
+    // A block-bodied callback lifts its leading `const`s to Svelte `{@const}`s
+    // inside the block; any other statement shape falls back to a plain hole.
+    const statements = blockBody(callback.body, fragments);
+    if (statements !== undefined) {
+      const { constants, context: templateContext } = liftBlockConstants(
+        statements.constants,
+        context,
+        nodes,
+      );
+      const returned = statements.returned;
+      if (
+        !templateYieldsMarkup(returned, nodes, templateContext, visited) &&
+        stripParentheses(returned) !== "null"
+      ) {
+        return undefined;
+      }
+      const key = listKey(
+        list,
+        returned,
+        nodes,
+        templateContext,
+        statements.constants,
+      );
+      const suffix = key === undefined ? "" : ` (${key})`;
+      const markup = branch(returned, nodes, templateContext, visited);
+      return `{#each ${iterated} as ${binding}${suffix}}${constants.join("")}${markup}{/each}`;
+    }
+
+    // A body that ends in an early-returning `if` before a terminal return
+    // (`ForgeTable`'s `[mainRow, detailRow]` vs `[mainRow]`) lowers to an
+    // `{#each}` whose body is the shared `{@const}`s plus a nested
+    // `{#if cond}branch(consequent){:else}branch(alternate){/if}`.
+    const branching = readBranchingBlockBody(callback.body, fragments);
+    if (branching === undefined) {
+      return undefined;
+    }
+    const shared = liftBlockConstants(branching.constants, context, nodes);
+    const consequent = liftBlockConstants(
+      branching.consequent.constants,
+      shared.context,
+      nodes,
+    );
+    const consequentReturn = branching.consequent.returned;
+    const alternateReturn = branching.alternate;
+    if (
+      !templateYieldsMarkup(
+        consequentReturn,
+        nodes,
+        consequent.context,
+        visited,
+      ) &&
+      !templateYieldsMarkup(alternateReturn, nodes, shared.context, visited)
+    ) {
+      return undefined;
+    }
+    const key = listKey(
+      list,
+      alternateReturn,
+      nodes,
+      shared.context,
+      branching.constants,
+    );
+    const suffix = key === undefined ? "" : ` (${key})`;
+    const consequentMarkup = `${consequent.constants.join("")}${branch(consequentReturn, nodes, consequent.context, visited)}`;
+    const alternateMarkup = branch(
+      alternateReturn,
+      nodes,
+      shared.context,
+      visited,
+    );
+    const ifMarkup = `{#if ${templateExpression(branching.condition, shared.context)}}${consequentMarkup}{:else}${alternateMarkup}{/if}`;
+    return `{#each ${iterated} as ${binding}${suffix}}${shared.constants.join("")}${ifMarkup}{/each}`;
+  }
+
+  const returned = callback.body;
+  if (
+    !templateYieldsMarkup(returned, nodes, context, visited) &&
+    stripParentheses(returned) !== "null"
+  ) {
+    return undefined;
+  }
+  const key = listKey(list, returned, nodes, context, []);
+  const suffix = key === undefined ? "" : ` (${key})`;
+  const markup = branch(returned, nodes, context, visited);
+  return `{#each ${iterated} as ${binding}${suffix}}${markup}{/each}`;
 }
 
 /** The leading `const`s and returned expression of a callback block body. */
@@ -1038,6 +1127,9 @@ function branchMarkup(
   }
   if (expression.startsWith("[") && expression.endsWith("]")) {
     const elements = splitList(expression.slice(1, -1), fragments);
+    if (elements.length === 0) {
+      return "";
+    }
     if (
       elements.some((element) =>
         templateYieldsMarkup(element, nodes, context, visited),

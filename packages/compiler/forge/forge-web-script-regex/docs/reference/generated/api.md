@@ -138,7 +138,7 @@ Read a capture start without exposing the bytecode slot layout to callers.
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Whole-string match, anchored at position zero.
+Whole-string match, anchored at position zero (uses linear-time PikeVM by default).
 
 #### Parameters
 
@@ -146,6 +146,56 @@ Whole-string match, anchored at position zero.
 | ----- | ------------- | ----------- |
 | re    | CompiledRegex |             |
 | input | string        |             |
+
+### fullMatchBacktracking
+
+**Kind:** function
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Backtracking whole-string match reference oracle.
+
+#### Parameters
+
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
+
+### fullMatchLinear
+
+**Kind:** function
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Whole-string match using the linear-time PikeVM engine.
+Guarantees O(M * N) execution and immunity to ReDoS backtracking.
+
+#### Parameters
+
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
+
+### PikeRunner
+
+**Kind:** class
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+Linear-time non-backtracking PikeVM execution engine.
+Guarantees O(M * N) time complexity where M is instruction count and N is input length,
+completely immune to ReDoS (Regular Expression Denial of Service).
 
 ### prefixMatch
 
@@ -155,7 +205,7 @@ Whole-string match, anchored at position zero.
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Prefix match, anchored at position zero but not at the end.
+Prefix match, anchored at position zero but not at the end (uses linear-time PikeVM by default).
 
 #### Parameters
 
@@ -163,6 +213,54 @@ Prefix match, anchored at position zero but not at the end.
 | ----- | ------------- | ----------- |
 | re    | CompiledRegex |             |
 | input | string        |             |
+
+### prefixMatchBacktracking
+
+**Kind:** function
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Backtracking prefix match reference oracle.
+
+#### Parameters
+
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
+
+### prefixMatchLinear
+
+**Kind:** function
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Prefix match using the linear-time PikeVM engine.
+Guarantees O(M * N) execution and immunity to ReDoS backtracking.
+
+#### Parameters
+
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
+
+### Runner
+
+**Kind:** class
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+No description provided.
 
 ### search
 
@@ -172,7 +270,52 @@ Prefix match, anchored at position zero but not at the end.
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-Leftmost match at or after `start`.
+Leftmost match at or after `start` (uses linear-time PikeVM by default).
+
+#### Parameters
+
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
+| start |               |             |
+
+### searchBacktracking
+
+**Kind:** function
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Backtracking search reference oracle.
+
+#### Parameters
+
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
+| start |               |             |
+
+### searchLinear
+
+**Kind:** function
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Leftmost match at or after `start` using the linear-time PikeVM engine.
+Immune to catastrophic backtracking on unanchored search patterns.
 
 #### Parameters
 
@@ -190,7 +333,42 @@ Leftmost match at or after `start`.
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-Whole-string boolean match.
+Whole-string boolean match (uses linear-time PikeVM by default).
+
+#### Parameters
+
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
+
+### testBacktracking
+
+**Kind:** function
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+Backtracking boolean match reference oracle.
+
+#### Parameters
+
+| Name  | Type          | Description |
+| ----- | ------------- | ----------- |
+| re    | CompiledRegex |             |
+| input | string        |             |
+
+### testLinear
+
+**Kind:** function
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+Whole-string boolean match using the linear-time PikeVM engine.
+Immune to catastrophic backtracking on pathological regular expressions.
 
 #### Parameters
 

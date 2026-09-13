@@ -60,9 +60,10 @@ const roi: Roi = { x: 120, y: 80, width: 240, height: 240 };
 const options: ScanOptions = { roi, formats: ['DATA_MATRIX'] };
 const hit = scanImageData(imageData, options);
 
-// Decode every distinct code in one frame (deduplicated, in discovery order):
+// Use the all-results entry point. The current linked graph returns at most its
+// first validated result; multi-symbol discovery remains a conformance gap.
 const results = scanImageDataAll(imageData);
-// => [{ format: 'DATA_MATRIX', text: '…', ... }, { format: 'CODE_128', text: '…', ... }]
+// => [{ format: 'DATA_MATRIX', text: '…', ... }]
 ```
 
 ## Component

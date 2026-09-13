@@ -23,6 +23,36 @@ name in `names` (and any of their subpath imports, e.g. `pkg/sub`) as external.
 | ----- | ----------------- | ----------- |
 | names | readonly string[] |             |
 
+### cssBundlePlugin
+
+**Kind:** function
+
+```typescript
+function cssBundlePlugin(): TsdownPlugin;
+```
+
+Re-link each extracted CSS asset to the JS module that owns it.
+
+tsdown/Rolldown extracts co-located `*.module.scss` / `*.scss` imports into
+standalone `.css` assets — with the class-name hashing already applied and the
+resolved names baked into the sibling class maps — but, unlike Vite, does
+**not** re-inject the matching `import './x.css'` into the JS chunk (it leaves
+an `/* empty css *\/` placeholder instead) and writes those assets straight to
+disk rather than through the Rollup bundle. A consumer importing a component
+therefore gets its markup without its styles, and Rolldown exposes no
+`viteMetadata.importedCss` to reconstruct the per-chunk CSS graph.
+
+So, in `writeBundle` (after every asset is on disk), this plugin prepends a
+side-effect `import './x.css'` to each stylesheet's owning module (see
+{@link resolveCssOwner}) — the CSS-Module class map (or, for Vue, the component
+chunk) that consumers already import. Because the stylesheet is threaded into a
+module that is actually used (not a pure re-export barrel that a named import
+would tree-shake away), importing a single component reliably pulls in exactly
+that component's styles, and the whole library's styles when the barrel is
+imported — matching the historical Vite library build's automatic per-component
+CSS loading. The stylesheets are already hashed once, so downstream bundlers
+ship them verbatim.
+
 ### DEFAULT_LIBRARY_EXTERNALS
 
 **Kind:** constant
@@ -86,6 +116,34 @@ of its own bundle so consumers can dedupe and tree-shake them.
 | Name          | Type   | Description |
 | ------------- | ------ | ----------- |
 | rootDirectory | string |             |
+
+### resolveCssOwner
+
+**Kind:** function
+
+```typescript
+function resolveCssOwner(outputDirectory: string, cssRelative: string): string | undefined;
+```
+
+Resolve the JS module that "owns" an extracted stylesheet `cssRelative`, so a
+side-effect import can be threaded back into a module that consumers actually
+pull in.
+
+Every forge framework build (react/neutral/solid/svelte/web-components) emits
+a CSS-Module class map `X.module.js` next to its extracted `X.css`, and every
+component that uses those classes imports the class map — so the class map is
+the natural owner (`forge-accordion.css` → `forge-accordion.module.js`, shared
+`size.css` → `size.module.js`). Vue instead emits SFC-scoped stylesheets named
+`X.vue_vue_type_style_index_*.css` alongside a plain `X.js` component chunk, so
+that chunk is the owner. Returns the owner's path relative to the output dir,
+or `undefined` when no owning chunk exists on disk.
+
+#### Parameters
+
+| Name            | Type   | Description |
+| --------------- | ------ | ----------- |
+| outputDirectory | string |             |
+| cssRelative     | string |             |
 
 ### resolveTsdownOutputDirectory
 

@@ -332,12 +332,12 @@ export default defineVitestConfig({
 
 ### סיכום תסריטים
 
-| תסריט | פקודה | מטרה |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
-| `test` | `pnpm exec turbo run test` | הפעל את כל משימות בדיקת סביבת העבודה.          |
-| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | הפעל בדיקות רכיבים במצב שעון.    |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | הפק דוח כיסוי רכיבים. |
-| חלודה/WASM | `cargo test --workspace` | הפעל בדיקות מקוריות של ארגז חלודה.           |
+| תסריט           | פקודה                                                      | מטרה                                  |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------ |
+| `test`          | `pnpm exec turbo run test`                                 | הפעל את כל משימות בדיקת סביבת העבודה. |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | הפעל בדיקות רכיבים במצב שעון.         |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | הפק דוח כיסוי רכיבים.                 |
+| חלודה/WASM      | `cargo test --workspace`                                   | הפעל בדיקות מקוריות של ארגז חלודה.    |
 
 חבילות עטיפות Wasm נבדקות באמצעות משימות החבילה שבבעלותן. לדוגמה, הפעל את חבילת הסורק ושלה
 לעטוף יחד בעת שינוי התנהגות הסורק:
