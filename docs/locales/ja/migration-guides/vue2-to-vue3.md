@@ -1,46 +1,43 @@
-# Vue 2～ Vue 3 移行ガイド
+# Vue 2 to Vue 3 Migration Guide
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+This guide describes how to migrate existing Vue 2 codebases to Vue 3 within the Mission Platform monorepo.
 
-> 英語の原典: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
-> 言語: 日本語 (ja)
+## Overview
 
-このガイドでは、既存のファイルを移行する方法について説明します。 Vue 2つのコードベースへ Vue 3 Mission Platform モノレポ内。
+The Mission Platform uses Vue 3 with the Composition API and `<script setup>` syntax. Migration involves moving away
+from the Options API and updating component lifecycle and reactivity patterns.
 
-## 概要
+## Prerequisites
 
-ミッションプラットフォームが使用するのは、 Vue 3 コンポジション API を使用し、 `<script setup>` 構文。移住には引っ越しが伴います
-オプション API から取得し、コンポーネントのライフサイクルと反応性パターンを更新します。
+Before migrating, ensure your package follows the platform's dependency rules:
 
-## 前提条件
+- No imports from `apps/`.
+- All shared logic should reside in `packages/`.
+- Configuration should come from `packages/tooling/configs/`.
 
-移行する前に、パッケージがプラットフォームの依存関係ルールに従っていることを確認してください。
+## Step 1: Update Build Configuration
 
-- からの輸入はありません `apps/`。
-- すべての共有ロジックは次の場所に存在する必要があります。 `packages/`。
-- 構成は次のものから取得する必要があります `configs/`.
-
-## ステップ 1: ビルド構成を更新する
-
-あなたの `package.json` そして `vite.config.ts` ターゲットにしている Vue 3.
+Ensure your `package.json` and `vite.config.ts` are targeting Vue 3.
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
-## ステップ 2: オプション API を構成 API に変換する
+## Step 2: Convert Options API to Composition API
 
-交換してください Vue 2 オプション API (`data`, `methods`, `computed`) と Vue 3 合成 API。
+Replace the Vue 2 Options API (`data`, `methods`, `computed`) with the Vue 3 Composition API.
 
-### 参照へのデータ
+### Data to Refs
 
-で Vue 2、状態は `data()` 関数。で Vue 3、使用 `ref()` または `reactive()`.
+In Vue 2, state was defined in the `data()` function. In Vue 3, use `ref()` or `reactive()`.
 
 **Vue 2:**
 
@@ -48,23 +45,23 @@ export default defineConfig(defineAppConfig({
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3:**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
 
-### メソッドから関数へ
+### Methods to Functions
 
-メソッドは、 `<script setup>` ブロック。
+Methods become plain functions in the `<script setup>` block.
 
 **Vue 2:**
 
@@ -84,13 +81,13 @@ const increment = () => {
 };
 ```
 
-## ステップ 3: ライフサイクル フックを更新する
+## Step 3: Update Lifecycle Hooks
 
-ライフサイクル フックの名前が変更されたため、インポートする必要があります。
+Lifecycle hooks have been renamed and must be imported.
 
 | Vue 2                      | Vue 3                                     |
-|:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` |使用 `setup()` / `<script setup>` 直接 |
+| :------------------------- | :---------------------------------------- |
+| `beforeCreate` / `created` | Use `setup()` / `<script setup>` directly |
 | `beforeMount`              | `onBeforeMount`                           |
 | `mounted`                  | `onMounted`                               |
 | `beforeUpdate`             | `onBeforeUpdate`                          |
@@ -98,19 +95,19 @@ const increment = () => {
 | `beforeDestroy`            | `onBeforeUnmount`                         |
 | `destroyed`                | `onUnmounted`                             |
 
-例：
+Example:
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
-## ステップ 4: 導入する `<script setup>`
+## Step 4: Adopt `<script setup>`
 
-Mission Platform 内のすべての新規および移行されたコンポーネントは、 `<script setup>` を使用した構文 TypeScript.
+All new and migrated components in the Mission Platform should use the `<script setup>` syntax with TypeScript.
 
 ```vue
 <template>
@@ -118,22 +115,22 @@ Mission Platform 内のすべての新規および移行されたコンポーネ
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
 </script>
 ```
 
-## ステップ 5: 重大な変更を処理する
+## Step 5: Handle Breaking Changes
 
-### Vモデル
+### V-model
 
-で Vue 3、デフォルトのプロップ名 `v-model` は `modelValue` そしてイベントは `update:modelValue`.
+In Vue 3, the default prop name for `v-model` is `modelValue` and the event is `update:modelValue`.
 
-### 参照アクセス
+### Ref access
 
-`this.$refs` はもう使用されていません。と同じ名前の ref を定義します。 `ref` 要素の属性。
+`this.$refs` is no longer used. Define a ref with the same name as the `ref` attribute on the element.
 
 ```vue
 <template>
@@ -141,7 +138,7 @@ const increment = () => count.value++;
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 
@@ -151,9 +148,9 @@ onMounted(() => {
 </script>
 ```
 
-## ステップ 6: 検証
+## Step 6: Verification
 
-次のコマンドを実行して、移行が成功し、プラットフォーム標準に準拠していることを確認します。
+Run the following commands to ensure the migration is successful and adheres to platform standards:
 
 ```bash
 # Type-check the package
