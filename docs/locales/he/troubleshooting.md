@@ -1,55 +1,50 @@
-# מדריך לפתרון בעיות
+# Troubleshooting Guide
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+This guide provides solutions for common issues encountered during development, build, and deployment within the Mission
+Platform monorepo. It is structured as a **How-to guide** for diagnosing and resolving technical problems.
 
-> מקור באנגלית: [docs/troubleshooting.md](../../troubleshooting.md)
-> שפה: עברית (he)
+## Performance Issues
 
-מדריך זה מספק פתרונות לבעיות נפוצות שנתקלים במהלך הפיתוח, הבנייה והפריסה בתוך המשימה
-פלטפורמה מונורפו. הוא בנוי כ**מדריך הוראות** לאבחון ופתרון בעיות טכניות.
+### Slow LCP (Largest Contentful Paint)
 
-## בעיות ביצועים
+**Problem**: LCP is above the 2.5s threshold for a "Good" rating.
 
-### LCP איטי (צבע התוכן הגדול ביותר)
+**Diagnosis**:
 
-**בעיה**: LCP נמצא מעל סף 2.5 שניות לדירוג "טוב".
+1. Run a Lighthouse audit in Chrome DevTools.
+2. Identify the LCP element in the "Performance" panel.
+3. Check the "Network" tab for resource load delays.
 
-**אִבחוּן**:
+**Solutions**:
 
-1. הפעל ביקורת Lighthouse ב-Chrome DevTools.
-2. זהה את רכיב ה-LCP בחלונית "ביצועים".
-3. בדוק את הכרטיסייה "רשת" עבור עיכובים בטעינת משאבים.
+- **Inline Critical CSS**: Ensure styles required for above-the-fold content are inlined.
+- **Image Optimization**: Use WebP/AVIF formats and provide `srcset` for responsive images.
+- **Resource Preloading**: Use `<link rel="preload">` for the LCP image or critical fonts.
+- **Minimize Main Thread Work**: Defer non-essential JavaScript using `async` or `defer`.
 
-**פתרונות**:
+### Memory Leaks
 
-- **CSS קריטי מוטבע**: ודא שהסגנונות הנדרשים לתוכן בחלק העליון והקבוע מוטבעים.
-- **אופטימיזציה של תמונה**: השתמש בפורמטים של WebP/AVIF וספק `srcset` לתמונות רספונסיביות.
-- **טעינת משאבים מראש**: השתמש `<link rel="preload">` עבור תמונת LCP או גופנים קריטיים.
-- **צמצם את עבודת השרשור הראשי**: דחה שימוש ב-JavaScript לא חיוני `async` אוֹ `defer`.
+**Problem**: The application consumes increasing amounts of memory over time, eventually leading to crashes.
 
-### דליפות זיכרון
+**Diagnosis**:
 
-**בעיה**: האפליקציה צורכת כמויות הולכות וגדלות של זיכרון לאורך זמן, מה שמוביל בסופו של דבר לקריסות.
+1. Take multiple "Heap Snapshots" in the Chrome DevTools Memory tab.
+2. Compare snapshots to identify objects that are growing in number or size.
+3. Look for "Detached DOM Elements".
 
-**אִבחוּן**:
+**Solutions**:
 
-1. צלם מספר "תמונות Snapshots" בכרטיסייה Chrome DevTools Memory.
-2. השווה תצלומים כדי לזהות אובייקטים שגדלים במספרם או בגודלם.
-3. חפש "אלמנטים DOM מנותקים".
+- **Cleanup in Composables**: Always clear timers and remove event listeners in `onUnmounted`.
+- **Store Management**: Ensure reactive state in Pinia or other stores is cleared when no longer needed.
+- **Dispose of Observables**: If using RxJS, ensure all subscriptions are unsubscribed.
 
-**פתרונות**:
+## Build and Workspace Issues
 
-- **ניקוי ברכיבים קומפוזיציים**: נקה תמיד טיימרים והסר מאזיני אירועים פנימה `onUnmounted`.
-- **ניהול חנות**: ודא שהמצב התגובתי בפניה או בחנויות אחרות מנוקה כאשר אין צורך יותר.
-- **השליך את הנקודות הניתנות לצפייה**: אם אתה משתמש ב-RxJS, ודא שכל המנויים בוטלו.
+### Turborepo Caching Errors
 
-## בעיות בבנייה ובסביבת עבודה
+**Problem**: Changes are not being reflected in the build, or the build fails with stale artifacts.
 
-### שגיאות מטמון של Turborepo
-
-**בעיה**: השינויים אינם באים לידי ביטוי ב-build, או שה-build נכשל עם חפצים מיושנים.
-
-**פתרון**: כפה בנייה חדשה על ידי עקיפת המטמון או ניקוי ידני שלו.
+**Solution**: Force a fresh build by bypassing the cache or manually clearing it.
 
 ```bash
 # Force a build without cache
@@ -59,67 +54,67 @@ pnpm build:force
 rm -rf .turbo
 ```
 
-### לא נמצא מודול / רזולוציית סביבת עבודה
+### Module Not Found / Workspace Resolution
 
-**בְּעָיָה**: TypeScript אוֹ Vite לא יכול למצוא חבילה המוגדרת בסביבת העבודה.
+**Problem**: TypeScript or Vite cannot find a package that is defined in the workspace.
 
-**פתרונות**:
+**Solutions**:
 
-1. ודא שהחבילה רשומה בסביבת העבודה הצורכת `package.json`.
-2. ודא שהגרסה תואמת (`workspace:*` מומלץ).
-3. לרוץ `pnpm install` לרענון סימלינקים.
-4. אם הבעיות נמשכות, נסה ניקוי עמוק:
-```bash
+1. Verify the package is listed in the consuming workspace's `package.json`.
+2. Ensure the version matches (`workspace:*` is recommended).
+3. Run `pnpm install` to refresh symlinks.
+4. If issues persist, try a deep clean:
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
    ```
 
-### הקלד שגיאות ב-CI אך לא מקומי
+### Type Errors in CI but not Local
 
-**בעיה**: Build נכשל ב-CI עם TypeScript שגיאות שאינן מופיעות ב-IDE שלך.
+**Problem**: Build fails in CI with TypeScript errors that don't appear in your IDE.
 
-**פתרון**: הפעל את בודק הסוגים באופן מקומי על פני כל סביבת העבודה.
+**Solution**: Run the type checker locally across the entire workspace.
 
 ```bash
 pnpm exec turbo run build:check
 ```
 
-זה מבטיח שכל גבולות החבילה מכובדים בצורה נכונה ושהסוגים יתוקפו בצורה נקייה.
+This ensures that all package boundaries are correctly respected and that types validate cleanly.
 
-## פתרון בעיות בשרת MCP
+## MCP Server Troubleshooting
 
-### החיבור נכשל
+### Failed to Connect
 
-**בעיה**: לקוח AI או IDE שלך לא יכולים להתחבר לשרת Mission Platform MCP.
+**Problem**: Your AI client or IDE cannot connect to the Mission Platform MCP server.
 
-**אִבחוּן**:
+**Diagnosis**:
 
-1. ודא ששרת ה-MCP בנוי: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
-2. בדוק אם השרת מופעל באופן ידני: `node mcp/developer/dist/index.js`.
+1. Verify the MCP server is built: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
+2. Check if the server starts manually: `node mcp/developer/dist/index.js`.
 
-**פתרונות**:
+**Solutions**:
 
-- ודא שאתה משתמש בנתיב המוחלט אל node בינארי והסקריפט בתצורת הלקוח שלך.
-- בדוק ביומני שרת MCP עבור הודעות שגיאה ספציפיות (למשל, משתני סביבה חסרים).
+- Ensure you are using the absolute path to the node binary and the script in your client configuration.
+- Check the MCP server logs for specific error messages (e.g., missing environment variables).
 
-## דפוסי שגיאה נפוצים
+## Common Error Patterns
 
-### "לא יכול לקרוא את המאפיין של לא מוגדר"
+### "Cannot read property of undefined"
 
-**סיבה**: גישה למאפיינים באובייקט ריק או לא מוגדר, לעתים קרובות לפני שהנתונים הסתיימו לטעינת. **תיקון**: השתמש
-שרשור אופציונלי (`?.`) או לספק ערכי ברירת מחדל.
+**Cause**: Accessing properties on a null or undefined object, often before data has finished loading. **Fix**: Use
+optional chaining (`?.`) or provide default values.
 
 ```typescript
 // Instead of:
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
-### "דחיית הבטחה ללא טיפול"
+### "Unhandled Promise Rejection"
 
-**סיבה**: פונקציית אסינכרון גרמה שגיאה שלא נתפסה. **תיקון**: עטוף תמיד שיחות לא-סנכרון `try/catch` בלוקים.
+**Cause**: An async function threw an error that wasn't caught. **Fix**: Always wrap async calls in `try/catch` blocks.
 
 ```typescript
 try {
@@ -129,8 +124,8 @@ try {
 }
 ```
 
-## משאבים קשורים
+## Related Resources
 
-- [שיטות עבודה מומלצות](best-practices.md)
-- [הגדרת פיתוח](development-setup.md)
-- [מדריך בדיקות](testing.md)
+- [Best Practices](best-practices.md)
+- [Development Setup](development-setup.md)
+- [Testing Guide](testing.md)
