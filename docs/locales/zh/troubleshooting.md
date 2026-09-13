@@ -1,55 +1,50 @@
-# 故障排除指南
+# Troubleshooting Guide
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+This guide provides solutions for common issues encountered during development, build, and deployment within the Mission
+Platform monorepo. It is structured as a **How-to guide** for diagnosing and resolving technical problems.
 
-> 英文原文: [docs/troubleshooting.md](../../troubleshooting.md)
-> 语言: 简体中文 (zh)
+## Performance Issues
 
-本指南提供了任务内开发、构建和部署过程中遇到的常见问题的解决方案
-平台单一仓库。它的结构是诊断和解决技术问题的**操作指南**。
+### Slow LCP (Largest Contentful Paint)
 
-## 性能问题
+**Problem**: LCP is above the 2.5s threshold for a "Good" rating.
 
-### 慢速 LCP（最大内容油漆）
+**Diagnosis**:
 
-**问题**：LCP 高于“良好”评级的 2.5 秒阈值。
+1. Run a Lighthouse audit in Chrome DevTools.
+2. Identify the LCP element in the "Performance" panel.
+3. Check the "Network" tab for resource load delays.
 
-**诊断**：
+**Solutions**:
 
-1. 在 Chrome DevTools 中运行 Lighthouse 审核。
-2. 在“性能”面板中识别 LCP 元件。
-3. 检查“网络”选项卡的资源加载延迟。
+- **Inline Critical CSS**: Ensure styles required for above-the-fold content are inlined.
+- **Image Optimization**: Use WebP/AVIF formats and provide `srcset` for responsive images.
+- **Resource Preloading**: Use `<link rel="preload">` for the LCP image or critical fonts.
+- **Minimize Main Thread Work**: Defer non-essential JavaScript using `async` or `defer`.
 
-**解决方案**：
+### Memory Leaks
 
-- **内联关键 CSS**：确保首屏内容所需的样式是内联的。
-- **图像优化**：使用WebP/AVIF格式并提供 `srcset` 对于响应式图像。
-- **资源预加载**：使用 `<link rel="preload">` 对于 LCP 图像或关键字体。
-- **最小化主线程工作**：使用延迟非必要的 JavaScript `async` 或者 `defer`.
+**Problem**: The application consumes increasing amounts of memory over time, eventually leading to crashes.
 
-### 内存泄漏
+**Diagnosis**:
 
-**问题**：随着时间的推移，应用程序消耗的内存量不断增加，最终导致崩溃。
+1. Take multiple "Heap Snapshots" in the Chrome DevTools Memory tab.
+2. Compare snapshots to identify objects that are growing in number or size.
+3. Look for "Detached DOM Elements".
 
-**诊断**：
+**Solutions**:
 
-1. 在 Chrome DevTools Memory 选项卡中拍摄多个“堆快照”。
-2. 比较快照以识别数量或大小不断增长的对象。
-3. 查找“分离的 DOM 元素”。
+- **Cleanup in Composables**: Always clear timers and remove event listeners in `onUnmounted`.
+- **Store Management**: Ensure reactive state in Pinia or other stores is cleared when no longer needed.
+- **Dispose of Observables**: If using RxJS, ensure all subscriptions are unsubscribed.
 
-**解决方案**：
+## Build and Workspace Issues
 
-- **可组合项中的清理**：始终清除计时器并删除事件侦听器 `onUnmounted`。
-- **商店管理**：确保在不再需要时清除 Pinia 或其他商店中的反应状态。
-- **处置 Observables**：如果使用 RxJS，请确保取消订阅所有订阅。
+### Turborepo Caching Errors
 
-## 构建和工作空间问题
+**Problem**: Changes are not being reflected in the build, or the build fails with stale artifacts.
 
-### Turborepo 缓存错误
-
-**问题**：更改未反映在构建中，或者构建因过时的工件而失败。
-
-**解决方案**：通过绕过缓存或手动清除缓存来强制进行全新构建。
+**Solution**: Force a fresh build by bypassing the cache or manually clearing it.
 
 ```bash
 # Force a build without cache
@@ -59,67 +54,67 @@ pnpm build:force
 rm -rf .turbo
 ```
 
-### 找不到模块/工作区解析
+### Module Not Found / Workspace Resolution
 
-**问题**： TypeScript 或者 Vite 找不到工作区中定义的包。
+**Problem**: TypeScript or Vite cannot find a package that is defined in the workspace.
 
-**解决方案**：
+**Solutions**:
 
-1. 验证该包是否在使用工作区的列表中列出 `package.json`。
-2. 确保版本匹配（`workspace:*` 推荐）。
-3. 跑步 `pnpm install` 刷新符号链接。
-4. 如果问题仍然存在，请尝试深度清洁：
-```bash
+1. Verify the package is listed in the consuming workspace's `package.json`.
+2. Ensure the version matches (`workspace:*` is recommended).
+3. Run `pnpm install` to refresh symlinks.
+4. If issues persist, try a deep clean:
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
    ```
 
-### CI 中存在类型错误，但本地不存在类型错误
+### Type Errors in CI but not Local
 
-**问题**：在 CI 中构建失败 TypeScript IDE 中不会出现的错误。
+**Problem**: Build fails in CI with TypeScript errors that don't appear in your IDE.
 
-**解决方案**：在整个工作区本地运行类型检查器。
+**Solution**: Run the type checker locally across the entire workspace.
 
 ```bash
 pnpm exec turbo run build:check
 ```
 
-这确保了所有包边界都得到正确尊重，并且类型可以干净地验证。
+This ensures that all package boundaries are correctly respected and that types validate cleanly.
 
-## MCP 服务器故障排除
+## MCP Server Troubleshooting
 
-### 连接失败
+### Failed to Connect
 
-**问题**：您的 AI 客户端或 IDE 无法连接到 Mission Platform MCP 服务器。
+**Problem**: Your AI client or IDE cannot connect to the Mission Platform MCP server.
 
-**诊断**：
+**Diagnosis**:
 
-1. 验证MCP服务器是否已构建： `pnpm exec turbo run build --filter @mission-platform/mcp-*`。
-2. 检查服务器是否手动启动： `node mcp/developer/dist/index.js`.
+1. Verify the MCP server is built: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
+2. Check if the server starts manually: `node mcp/developer/dist/index.js`.
 
-**解决方案**：
+**Solutions**:
 
-- 确保您使用的是绝对路径 node 二进制文件和客户端配置中的脚本。
-- 检查 MCP 服务器日志中的特定错误消息（例如，缺少环境变量）。
+- Ensure you are using the absolute path to the node binary and the script in your client configuration.
+- Check the MCP server logs for specific error messages (e.g., missing environment variables).
 
-## 常见错误模式
+## Common Error Patterns
 
-### “无法读取未定义的属性”
+### "Cannot read property of undefined"
 
-**原因**：通常在数据加载完成之前访问 null 或未定义对象的属性。 **修复**：使用
-可选链接（`?.`) 或提供默认值。
+**Cause**: Accessing properties on a null or undefined object, often before data has finished loading. **Fix**: Use
+optional chaining (`?.`) or provide default values.
 
 ```typescript
 // Instead of:
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
-### “未处理的承诺拒绝”
+### "Unhandled Promise Rejection"
 
-**原因**：异步函数引发了未捕获的错误。 **修复**：始终将异步调用包装在 `try/catch` 块。
+**Cause**: An async function threw an error that wasn't caught. **Fix**: Always wrap async calls in `try/catch` blocks.
 
 ```typescript
 try {
@@ -129,8 +124,8 @@ try {
 }
 ```
 
-## 相关资源
+## Related Resources
 
-- [最佳实践](best-practices.md)
-- [开发设置](development-setup.md)
-- [测试指南](testing.md)
+- [Best Practices](best-practices.md)
+- [Development Setup](development-setup.md)
+- [Testing Guide](testing.md)
