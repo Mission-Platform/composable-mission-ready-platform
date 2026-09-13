@@ -54,7 +54,10 @@ Provides base `tsconfig` presets for different targets:
 Provides factory functions to create Vite configurations for both applications and libraries.
 
 ```ts
-import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-config';
+import {
+  defineAppConfig,
+  defineLibraryConfig,
+} from "@mission-platform/vite-config";
 ```
 
 - `defineAppConfig`: For top-level applications (SPA, workers).
@@ -75,7 +78,7 @@ To use a configuration in a workspace:
 
 ```js
 // Example: eslint.config.js
-import baseConfig from '@mission-platform/eslint-config';
+import baseConfig from "@mission-platform/eslint-config";
 
 export default [
   ...baseConfig,
@@ -87,7 +90,7 @@ For Stylelint, use the same ESM import/spread pattern in `stylelint.config.mjs`:
 
 ```js
 // stylelint.config.mjs
-import baseConfig from '@mission-platform/stylelint-config';
+import baseConfig from "@mission-platform/stylelint-config";
 
 export default { ...baseConfig };
 ```
