@@ -34,7 +34,7 @@ src/composables/
 Here is a typical write-once composable that manages an event listener.
 
 ```ts
-import { type MpRef, useEffect } from '@mission-platform/forge-jsx';
+import { type MpRef, useEffect } from "@mission-platform/forge-jsx";
 
 export function useEventListener(
   target: MpRef<EventTarget | null>,
@@ -48,7 +48,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
-    
+
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);
