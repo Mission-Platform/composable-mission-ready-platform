@@ -1,55 +1,50 @@
-# Guida alla risoluzione dei problemi
+# Troubleshooting Guide
 
-Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
+This guide provides solutions for common issues encountered during development, build, and deployment within the Mission
+Platform monorepo. It is structured as a **How-to guide** for diagnosing and resolving technical problems.
 
-> Fonte inglese: [docs/troubleshooting.md](../../troubleshooting.md)
-> Lingua: Italiano (it)
+## Performance Issues
 
-Questa guida fornisce soluzioni per problemi comuni riscontrati durante lo sviluppo, la creazione e la distribuzione all'interno della Missione
-Piattaforma monorepo. È strutturato come una **guida pratica** per la diagnosi e la risoluzione dei problemi tecnici.
+### Slow LCP (Largest Contentful Paint)
 
-## Problemi di prestazioni
+**Problem**: LCP is above the 2.5s threshold for a "Good" rating.
 
-### LCP lento (pittura con contenuto più grande)
+**Diagnosis**:
 
-**Problema**: LCP è superiore alla soglia di 2,5 s per una valutazione "Buona".
+1. Run a Lighthouse audit in Chrome DevTools.
+2. Identify the LCP element in the "Performance" panel.
+3. Check the "Network" tab for resource load delays.
 
-**Diagnosi**:
+**Solutions**:
 
-1. Esegui un controllo Lighthouse in Chrome DevTools.
-2. Identificare l'elemento LCP nel pannello "Prestazioni".
-3. Controlla la scheda "Rete" per i ritardi nel caricamento delle risorse.
+- **Inline Critical CSS**: Ensure styles required for above-the-fold content are inlined.
+- **Image Optimization**: Use WebP/AVIF formats and provide `srcset` for responsive images.
+- **Resource Preloading**: Use `<link rel="preload">` for the LCP image or critical fonts.
+- **Minimize Main Thread Work**: Defer non-essential JavaScript using `async` or `defer`.
 
-**Soluzioni**:
+### Memory Leaks
 
-- **CSS critici in linea**: assicurati che gli stili richiesti per i contenuti sopra la piega siano incorporati.
-- **Ottimizzazione immagine**: utilizza i formati WebP/AVIF e fornisci `srcset` per immagini reattive.
-- **Precaricamento risorse**: utilizzare `<link rel="preload">` per l'immagine LCP o i font critici.
-- **Riduci al minimo il lavoro del thread principale**: rinvia l'utilizzo di JavaScript non essenziale `async` O `defer`.
+**Problem**: The application consumes increasing amounts of memory over time, eventually leading to crashes.
 
-### Perdite di memoria
+**Diagnosis**:
 
-**Problema**: l'applicazione consuma quantità crescenti di memoria nel tempo, causando infine arresti anomali.
+1. Take multiple "Heap Snapshots" in the Chrome DevTools Memory tab.
+2. Compare snapshots to identify objects that are growing in number or size.
+3. Look for "Detached DOM Elements".
 
-**Diagnosi**:
+**Solutions**:
 
-1. Acquisisci più "istantanee heap" nella scheda Memoria di Chrome DevTools.
-2. Confronta le istantanee per identificare gli oggetti che stanno crescendo in numero o dimensione.
-3. Cerca "Elementi DOM distaccati".
+- **Cleanup in Composables**: Always clear timers and remove event listeners in `onUnmounted`.
+- **Store Management**: Ensure reactive state in Pinia or other stores is cleared when no longer needed.
+- **Dispose of Observables**: If using RxJS, ensure all subscriptions are unsubscribed.
 
-**Soluzioni**:
+## Build and Workspace Issues
 
-- **Pulizia nei componenti componibili**: cancella sempre i timer e rimuovi i listener di eventi in `onUnmounted`.
-- **Gestione negozio**: assicurati che lo stato reattivo in Pinia o in altri negozi venga cancellato quando non è più necessario.
-- **Elimina elementi osservabili**: se si utilizza RxJS, assicurarsi che tutte le iscrizioni siano annullate.
+### Turborepo Caching Errors
 
-## Problemi di costruzione e spazio di lavoro
+**Problem**: Changes are not being reflected in the build, or the build fails with stale artifacts.
 
-### Errori di memorizzazione nella cache Turborepo
-
-**Problema**: le modifiche non si riflettono nella build oppure la build fallisce con artefatti obsoleti.
-
-**Soluzione**: forza una nuova build ignorando la cache o svuotandola manualmente.
+**Solution**: Force a fresh build by bypassing the cache or manually clearing it.
 
 ```bash
 # Force a build without cache
@@ -59,67 +54,67 @@ pnpm build:force
 rm -rf .turbo
 ```
 
-### Modulo non trovato/Risoluzione dell'area di lavoro
+### Module Not Found / Workspace Resolution
 
-**Problema**: TypeScript O Vite impossibile trovare un pacchetto definito nell'area di lavoro.
+**Problem**: TypeScript or Vite cannot find a package that is defined in the workspace.
 
-**Soluzioni**:
+**Solutions**:
 
-1. Verificare che il pacchetto sia elencato nell'area di lavoro di consumo `package.json`.
-2. Assicurarsi che la versione corrisponda (`workspace:*` è consigliato).
-3. Corri `pnpm install` per aggiornare i collegamenti simbolici.
-4. Se i problemi persistono, prova una pulizia approfondita:
-```bash
+1. Verify the package is listed in the consuming workspace's `package.json`.
+2. Ensure the version matches (`workspace:*` is recommended).
+3. Run `pnpm install` to refresh symlinks.
+4. If issues persist, try a deep clean:
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
    ```
 
-### Digitare Errori in CI ma non Locale
+### Type Errors in CI but not Local
 
-**Problema**: la compilazione non riesce in CI con TypeScript errori che non vengono visualizzati nel tuo IDE.
+**Problem**: Build fails in CI with TypeScript errors that don't appear in your IDE.
 
-**Soluzione**: esegui il controllo del tipo localmente nell'intero spazio di lavoro.
+**Solution**: Run the type checker locally across the entire workspace.
 
 ```bash
 pnpm exec turbo run build:check
 ```
 
-Ciò garantisce che tutti i limiti del pacchetto siano rispettati correttamente e che i tipi vengano convalidati in modo pulito.
+This ensures that all package boundaries are correctly respected and that types validate cleanly.
 
-## Risoluzione dei problemi del server MCP
+## MCP Server Troubleshooting
 
-### Impossibile connettersi
+### Failed to Connect
 
-**Problema**: il tuo client AI o IDE non riesce a connettersi al server MCP di Mission Platform.
+**Problem**: Your AI client or IDE cannot connect to the Mission Platform MCP server.
 
-**Diagnosi**:
+**Diagnosis**:
 
-1. Verificare che il server MCP sia creato: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
-2. Controlla se il server si avvia manualmente: `node mcp/developer/dist/index.js`.
+1. Verify the MCP server is built: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
+2. Check if the server starts manually: `node mcp/developer/dist/index.js`.
 
-**Soluzioni**:
+**Solutions**:
 
-- Assicurati di utilizzare il percorso assoluto per il file node binario e lo script nella configurazione del client.
-- Controllare i registri del server MCP per messaggi di errore specifici (ad esempio, variabili di ambiente mancanti).
+- Ensure you are using the absolute path to the node binary and the script in your client configuration.
+- Check the MCP server logs for specific error messages (e.g., missing environment variables).
 
-## Modelli di errore comuni
+## Common Error Patterns
 
-### "Impossibile leggere la proprietà di undefinito"
+### "Cannot read property of undefined"
 
-**Causa**: accesso alle proprietà su un oggetto nullo o non definito, spesso prima che i dati abbiano terminato il caricamento. **Correzione**: utilizzare
-concatenamento opzionale (`?.`) o fornire valori predefiniti.
+**Cause**: Accessing properties on a null or undefined object, often before data has finished loading. **Fix**: Use
+optional chaining (`?.`) or provide default values.
 
 ```typescript
 // Instead of:
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
-### "Rifiuto di una promessa non gestita"
+### "Unhandled Promise Rejection"
 
-**Causa**: una funzione asincrona ha generato un errore che non è stato rilevato. **Correzione**: racchiude sempre le chiamate asincrone `try/catch` blocchi.
+**Cause**: An async function threw an error that wasn't caught. **Fix**: Always wrap async calls in `try/catch` blocks.
 
 ```typescript
 try {
@@ -129,8 +124,8 @@ try {
 }
 ```
 
-## Risorse correlate
+## Related Resources
 
-- [Migliori pratiche](best-practices.md)
-- [Configurazione dello sviluppo](development-setup.md)
-- [Guida al test](testing.md)
+- [Best Practices](best-practices.md)
+- [Development Setup](development-setup.md)
+- [Testing Guide](testing.md)
