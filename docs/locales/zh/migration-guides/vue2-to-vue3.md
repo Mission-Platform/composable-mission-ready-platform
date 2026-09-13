@@ -1,46 +1,43 @@
-# Vue 2 至 Vue 3 迁移指南
+# Vue 2 to Vue 3 Migration Guide
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+This guide describes how to migrate existing Vue 2 codebases to Vue 3 within the Mission Platform monorepo.
 
-> 英文原文: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
-> 语言: 简体中文 (zh)
+## Overview
 
-本指南介绍了如何迁移现有的 Vue 2 个代码库 Vue 3 在任务平台 monorepo 内。
+The Mission Platform uses Vue 3 with the Composition API and `<script setup>` syntax. Migration involves moving away
+from the Options API and updating component lifecycle and reactivity patterns.
 
-## 概述
+## Prerequisites
 
-任务平台使用 Vue 3 使用 Composition API 和 `<script setup>` 句法。移民涉及搬走
-来自选项 API 并更新组件生命周期和反应模式。
+Before migrating, ensure your package follows the platform's dependency rules:
 
-## 先决条件
+- No imports from `apps/`.
+- All shared logic should reside in `packages/`.
+- Configuration should come from `packages/tooling/configs/`.
 
-迁移之前，请确保您的包遵循平台的依赖关系规则：
+## Step 1: Update Build Configuration
 
-- 不从以下国家进口 `apps/`。
-- 所有共享逻辑应驻留在 `packages/`。
-- 配置应该来自 `configs/`.
-
-## 第 1 步：更新构建配置
-
-确保您的 `package.json` 和 `vite.config.ts` 正在瞄准 Vue 3.
+Ensure your `package.json` and `vite.config.ts` are targeting Vue 3.
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
-## 第 2 步：将选项 API 转换为组合 API
+## Step 2: Convert Options API to Composition API
 
-更换 Vue 2 选项 API (`data`, `methods`, `computed`) 与 Vue 3 组合 API。
+Replace the Vue 2 Options API (`data`, `methods`, `computed`) with the Vue 3 Composition API.
 
-### 数据到参考
+### Data to Refs
 
-在 Vue 2、状态定义在 `data()` 功能。在 Vue 3、使用 `ref()` 或者 `reactive()`.
+In Vue 2, state was defined in the `data()` function. In Vue 3, use `ref()` or `reactive()`.
 
 **Vue 2:**
 
@@ -48,23 +45,23 @@ export default defineConfig(defineAppConfig({
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3:**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
 
-### 方法到函数
+### Methods to Functions
 
-方法变成普通函数 `<script setup>` 堵塞。
+Methods become plain functions in the `<script setup>` block.
 
 **Vue 2:**
 
@@ -84,13 +81,13 @@ const increment = () => {
 };
 ```
 
-## 第 3 步：更新生命周期挂钩
+## Step 3: Update Lifecycle Hooks
 
-生命周期挂钩已重命名并且必须导入。
+Lifecycle hooks have been renamed and must be imported.
 
 | Vue 2                      | Vue 3                                     |
-|:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` |使用 `setup()` / `<script setup>` 直接|
+| :------------------------- | :---------------------------------------- |
+| `beforeCreate` / `created` | Use `setup()` / `<script setup>` directly |
 | `beforeMount`              | `onBeforeMount`                           |
 | `mounted`                  | `onMounted`                               |
 | `beforeUpdate`             | `onBeforeUpdate`                          |
@@ -98,19 +95,19 @@ const increment = () => {
 | `beforeDestroy`            | `onBeforeUnmount`                         |
 | `destroyed`                | `onUnmounted`                             |
 
-例子：
+Example:
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
-## 第四步：采用 `<script setup>`
+## Step 4: Adopt `<script setup>`
 
-任务平台中的所有新组件和迁移组件都应使用 `<script setup>` 语法与 TypeScript.
+All new and migrated components in the Mission Platform should use the `<script setup>` syntax with TypeScript.
 
 ```vue
 <template>
@@ -118,22 +115,22 @@ onMounted(() => {
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
 </script>
 ```
 
-## 第 5 步：处理重大变更
+## Step 5: Handle Breaking Changes
 
-### V型
+### V-model
 
-在 Vue 3、默认prop名称为 `v-model` 是 `modelValue` 事件是 `update:modelValue`.
+In Vue 3, the default prop name for `v-model` is `modelValue` and the event is `update:modelValue`.
 
-### 参考访问
+### Ref access
 
-`this.$refs` 不再使用。定义一个与 ref 同名的 ref `ref` 元素上的属性。
+`this.$refs` is no longer used. Define a ref with the same name as the `ref` attribute on the element.
 
 ```vue
 <template>
@@ -141,7 +138,7 @@ const increment = () => count.value++;
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 
@@ -151,9 +148,9 @@ onMounted(() => {
 </script>
 ```
 
-## 第6步：验证
+## Step 6: Verification
 
-运行以下命令以确保迁移成功并遵守平台标准：
+Run the following commands to ensure the migration is successful and adheres to platform standards:
 
 ```bash
 # Type-check the package
