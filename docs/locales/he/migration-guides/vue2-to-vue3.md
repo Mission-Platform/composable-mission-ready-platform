@@ -1,46 +1,43 @@
-# Vue 2 ל Vue 3 מדריך הגירה
+# Vue 2 to Vue 3 Migration Guide
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+This guide describes how to migrate existing Vue 2 codebases to Vue 3 within the Mission Platform monorepo.
 
-> מקור באנגלית: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
-> שפה: עברית (he)
+## Overview
 
-מדריך זה מתאר כיצד להעביר קיים Vue 2 בסיסי קוד ל Vue 3 בתוך פלטפורמת המשימה monorepo.
+The Mission Platform uses Vue 3 with the Composition API and `<script setup>` syntax. Migration involves moving away
+from the Options API and updating component lifecycle and reactivity patterns.
 
-## סקירה כללית
+## Prerequisites
 
-פלטפורמת המשימה משתמשת Vue 3 עם ה-Composition API ו `<script setup>` תַחבִּיר. הגירה כרוכה בהתרחקות
-מה-API של Options ועדכון דפוסי מחזור חיים ותגובתיות של רכיבים.
+Before migrating, ensure your package follows the platform's dependency rules:
 
-## דרישות מוקדמות
+- No imports from `apps/`.
+- All shared logic should reside in `packages/`.
+- Configuration should come from `packages/tooling/configs/`.
 
-לפני ההעברה, ודא שהחבילה שלך עומדת בכללי התלות של הפלטפורמה:
+## Step 1: Update Build Configuration
 
-- אין יבוא מ `apps/`.
-- כל ההיגיון המשותף צריך להתגורר בו `packages/`.
-- התצורה צריכה לבוא מ `configs/`.
-
-## שלב 1: עדכן את תצורת ה-Build
-
-ודא שלך `package.json` ו `vite.config.ts` מכוונים Vue 3.
+Ensure your `package.json` and `vite.config.ts` are targeting Vue 3.
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
-## שלב 2: המר את Options API ל-Composition API
+## Step 2: Convert Options API to Composition API
 
-החלף את Vue 2 אפשרויות API (`data`, `methods`, `computed`) עם ה Vue 3 קומפוזיציה API.
+Replace the Vue 2 Options API (`data`, `methods`, `computed`) with the Vue 3 Composition API.
 
-### נתונים ל-Refs
+### Data to Refs
 
-ב Vue 2, המדינה הוגדרה ב `data()` פוּנקצִיָה. ב Vue 3, השתמש `ref()` אוֹ `reactive()`.
+In Vue 2, state was defined in the `data()` function. In Vue 3, use `ref()` or `reactive()`.
 
 **Vue 2:**
 
@@ -48,23 +45,23 @@ export default defineConfig(defineAppConfig({
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3:**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
 
-### שיטות לפונקציות
+### Methods to Functions
 
-שיטות הופכות לפונקציות פשוטות ב- `<script setup>` לַחסוֹם.
+Methods become plain functions in the `<script setup>` block.
 
 **Vue 2:**
 
@@ -84,13 +81,13 @@ const increment = () => {
 };
 ```
 
-## שלב 3: עדכון הוקס של מחזור חיים
+## Step 3: Update Lifecycle Hooks
 
-שמו של ווי מחזור החיים שונה ויש לייבא אותם.
+Lifecycle hooks have been renamed and must be imported.
 
 | Vue 2                      | Vue 3                                     |
-|:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | לְהִשְׁתַמֵשׁ `setup()` / `<script setup>` ישירות |
+| :------------------------- | :---------------------------------------- |
+| `beforeCreate` / `created` | Use `setup()` / `<script setup>` directly |
 | `beforeMount`              | `onBeforeMount`                           |
 | `mounted`                  | `onMounted`                               |
 | `beforeUpdate`             | `onBeforeUpdate`                          |
@@ -98,19 +95,19 @@ const increment = () => {
 | `beforeDestroy`            | `onBeforeUnmount`                         |
 | `destroyed`                | `onUnmounted`                             |
 
-דוּגמָה:
+Example:
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
-## שלב 4: אמץ `<script setup>`
+## Step 4: Adopt `<script setup>`
 
-כל הרכיבים החדשים והמועברים בפלטפורמת המשימה צריכים להשתמש ב- `<script setup>` תחביר עם TypeScript.
+All new and migrated components in the Mission Platform should use the `<script setup>` syntax with TypeScript.
 
 ```vue
 <template>
@@ -118,22 +115,22 @@ onMounted(() => {
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
 </script>
 ```
 
-## שלב 5: טפל בשינויים שוברים
+## Step 5: Handle Breaking Changes
 
-### דגם V
+### V-model
 
-ב Vue 3, שם אבזר ברירת המחדל עבור `v-model` הוא `modelValue` והאירוע הוא `update:modelValue`.
+In Vue 3, the default prop name for `v-model` is `modelValue` and the event is `update:modelValue`.
 
-### גישה לשופט
+### Ref access
 
-`this.$refs` אינו בשימוש עוד. הגדר שופט עם אותו שם כמו ה- `ref` תכונה על האלמנט.
+`this.$refs` is no longer used. Define a ref with the same name as the `ref` attribute on the element.
 
 ```vue
 <template>
@@ -141,7 +138,7 @@ const increment = () => count.value++;
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 
@@ -151,9 +148,9 @@ onMounted(() => {
 </script>
 ```
 
-## שלב 6: אימות
+## Step 6: Verification
 
-הפעל את הפקודות הבאות כדי להבטיח שההעברה תהיה מוצלחת ותעמוד בתקני הפלטפורמה:
+Run the following commands to ensure the migration is successful and adheres to platform standards:
 
 ```bash
 # Type-check the package
