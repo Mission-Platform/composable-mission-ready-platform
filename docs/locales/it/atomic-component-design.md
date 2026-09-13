@@ -62,7 +62,7 @@ The `title` field in the Storybook `meta` object must follow this pattern:
 
 ```tsx
 const meta = {
-  title: 'Atoms/Display/ForgeButton',
+  title: "Atoms/Display/ForgeButton",
   component: Button,
   // ...
 };
