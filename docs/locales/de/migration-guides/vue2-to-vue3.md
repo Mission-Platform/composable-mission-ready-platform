@@ -1,46 +1,43 @@
-# Vue 2 bis Vue 3 Migrationsleitfaden
+# Vue 2 to Vue 3 Migration Guide
 
-Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
+This guide describes how to migrate existing Vue 2 codebases to Vue 3 within the Mission Platform monorepo.
 
-> Englische Quelle: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
-> Sprache: Deutsch (de)
+## Overview
 
-In dieser Anleitung wird beschrieben, wie Sie bestehende migrieren Vue 2 Codebasen zu Vue 3 innerhalb des Mission Platform Monorepo.
+The Mission Platform uses Vue 3 with the Composition API and `<script setup>` syntax. Migration involves moving away
+from the Options API and updating component lifecycle and reactivity patterns.
 
-## Überblick
+## Prerequisites
 
-Die Missionsplattform nutzt Vue 3 mit der Composition API und `<script setup>` Syntax. Migration bedeutet Wegziehen
-über die Options-API und Aktualisierung des Komponentenlebenszyklus und der Reaktivitätsmuster.
+Before migrating, ensure your package follows the platform's dependency rules:
 
-## Voraussetzungen
+- No imports from `apps/`.
+- All shared logic should reside in `packages/`.
+- Configuration should come from `packages/tooling/configs/`.
 
-Stellen Sie vor der Migration sicher, dass Ihr Paket den Abhängigkeitsregeln der Plattform entspricht:
+## Step 1: Update Build Configuration
 
-- Keine Importe aus `apps/`.
-- Die gesamte gemeinsame Logik sollte sich darin befinden `packages/`.
-- Die Konfiguration sollte von stammen `configs/`.
-
-## Schritt 1: Build-Konfiguration aktualisieren
-
-Stellen Sie sicher, dass Ihre `package.json` Und `vite.config.ts` zielen darauf ab Vue 3.
+Ensure your `package.json` and `vite.config.ts` are targeting Vue 3.
 
 ```ts
 // vite.config.ts
-import { defineAppConfig } from '@mission-platform/vite-config';
-import { defineConfig } from 'vite';
+import { defineAppConfig } from "@mission-platform/vite-config";
+import { defineConfig } from "vite";
 
-export default defineConfig(defineAppConfig({
-  // Vue 3 plugin is already included in defineAppConfig
-}));
+export default defineConfig(
+  defineAppConfig({
+    // Vue 3 plugin is already included in defineAppConfig
+  }),
+);
 ```
 
-## Schritt 2: Konvertieren Sie die Options-API in die Composition-API
+## Step 2: Convert Options API to Composition API
 
-Ersetzen Sie die Vue 2 Optionen API (`data`, `methods`, `computed`) mit dem Vue 3 Kompositions-API.
+Replace the Vue 2 Options API (`data`, `methods`, `computed`) with the Vue 3 Composition API.
 
-### Daten zu Refs
+### Data to Refs
 
-In Vue 2, Zustand wurde in der definiert `data()` Funktion. In Vue 3, verwenden `ref()` oder `reactive()`.
+In Vue 2, state was defined in the `data()` function. In Vue 3, use `ref()` or `reactive()`.
 
 **Vue 2:**
 
@@ -48,23 +45,23 @@ In Vue 2, Zustand wurde in der definiert `data()` Funktion. In Vue 3, verwenden 
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 ```
 
 **Vue 3:**
 
 ```ts
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 ```
 
-### Methoden zu Funktionen
+### Methods to Functions
 
-Methoden werden zu einfachen Funktionen im `<script setup>` Block.
+Methods become plain functions in the `<script setup>` block.
 
 **Vue 2:**
 
@@ -84,13 +81,13 @@ const increment = () => {
 };
 ```
 
-## Schritt 3: Lebenszyklus-Hooks aktualisieren
+## Step 3: Update Lifecycle Hooks
 
-Lifecycle-Hooks wurden umbenannt und müssen importiert werden.
+Lifecycle hooks have been renamed and must be imported.
 
 | Vue 2                      | Vue 3                                     |
-|:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | Verwenden `setup()` / `<script setup>` direkt |
+| :------------------------- | :---------------------------------------- |
+| `beforeCreate` / `created` | Use `setup()` / `<script setup>` directly |
 | `beforeMount`              | `onBeforeMount`                           |
 | `mounted`                  | `onMounted`                               |
 | `beforeUpdate`             | `onBeforeUpdate`                          |
@@ -98,19 +95,19 @@ Lifecycle-Hooks wurden umbenannt und müssen importiert werden.
 | `beforeDestroy`            | `onBeforeUnmount`                         |
 | `destroyed`                | `onUnmounted`                             |
 
-Beispiel:
+Example:
 
 ```ts
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
-  console.log('Component is mounted');
+  console.log("Component is mounted");
 });
 ```
 
-## Schritt 4: Adoptieren `<script setup>`
+## Step 4: Adopt `<script setup>`
 
-Alle neuen und migrierten Komponenten in der Mission Platform sollten das verwenden `<script setup>` Syntax mit TypeScript.
+All new and migrated components in the Mission Platform should use the `<script setup>` syntax with TypeScript.
 
 ```vue
 <template>
@@ -118,22 +115,22 @@ Alle neuen und migrierten Komponenten in der Mission Platform sollten das verwen
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const count = ref(0);
 const increment = () => count.value++;
 </script>
 ```
 
-## Schritt 5: Behandeln Sie wichtige Änderungen
+## Step 5: Handle Breaking Changes
 
-### V-Modell
+### V-model
 
-In Vue 3, der Standard-Requisitenname für `v-model` Ist `modelValue` und das Ereignis ist `update:modelValue`.
+In Vue 3, the default prop name for `v-model` is `modelValue` and the event is `update:modelValue`.
 
-### Ref-Zugriff
+### Ref access
 
-`this.$refs` wird nicht mehr verwendet. Definieren Sie eine Referenz mit demselben Namen wie die `ref` Attribut für das Element.
+`this.$refs` is no longer used. Define a ref with the same name as the `ref` attribute on the element.
 
 ```vue
 <template>
@@ -141,7 +138,7 @@ In Vue 3, der Standard-Requisitenname für `v-model` Ist `modelValue` und das Er
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const root = ref<HTMLElement | null>(null);
 
@@ -151,9 +148,9 @@ onMounted(() => {
 </script>
 ```
 
-## Schritt 6: Verifizierung
+## Step 6: Verification
 
-Führen Sie die folgenden Befehle aus, um sicherzustellen, dass die Migration erfolgreich ist und den Plattformstandards entspricht:
+Run the following commands to ensure the migration is successful and adheres to platform standards:
 
 ```bash
 # Type-check the package
