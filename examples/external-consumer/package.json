@@ -17,16 +17,16 @@
     "@mission-platform/forms": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "@mission-platform/typography": "workspace:*",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.5",
-    "@vitejs/plugin-react": "^4.7.0",
-    "typescript": "^5.9.3",
-    "vite": "^6.4.3"
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "typescript": "~7.0.2",
+    "vite": "^8.2.2"
   }
 }
