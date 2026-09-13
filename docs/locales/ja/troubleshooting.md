@@ -1,55 +1,50 @@
-# トラブルシューティングガイド
+# Troubleshooting Guide
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+This guide provides solutions for common issues encountered during development, build, and deployment within the Mission
+Platform monorepo. It is structured as a **How-to guide** for diagnosing and resolving technical problems.
 
-> 英語の原典: [docs/troubleshooting.md](../../troubleshooting.md)
-> 言語: 日本語 (ja)
+## Performance Issues
 
-このガイドでは、ミッション内の開発、構築、展開中に発生する一般的な問題の解決策を提供します。
-プラットフォームモノレポ。これは、技術的な問題を診断して解決するための **ハウツー ガイド** として構成されています。
+### Slow LCP (Largest Contentful Paint)
 
-## パフォーマンスの問題
+**Problem**: LCP is above the 2.5s threshold for a "Good" rating.
 
-### 遅い LCP (最大コンテンツフル ペイント)
+**Diagnosis**:
 
-**問題**: LCP が「良好」評価の 2.5 秒のしきい値を超えています。
+1. Run a Lighthouse audit in Chrome DevTools.
+2. Identify the LCP element in the "Performance" panel.
+3. Check the "Network" tab for resource load delays.
 
-**診断**：
+**Solutions**:
 
-1. Chrome DevTools で Lighthouse 監査を実行します。
-2. [パフォーマンス] パネルで LCP 要素を特定します。
-3. [ネットワーク] タブでリソースの読み込み遅延を確認します。
+- **Inline Critical CSS**: Ensure styles required for above-the-fold content are inlined.
+- **Image Optimization**: Use WebP/AVIF formats and provide `srcset` for responsive images.
+- **Resource Preloading**: Use `<link rel="preload">` for the LCP image or critical fonts.
+- **Minimize Main Thread Work**: Defer non-essential JavaScript using `async` or `defer`.
 
-**解決策**:
+### Memory Leaks
 
-- **インライン クリティカル CSS**: スクロールせずに見えるコンテンツに必要なスタイルがインライン化されていることを確認します。
-- **画像の最適化**: WebP/AVIF 形式を使用し、 `srcset` レスポンシブ画像の場合。
-- **リソースのプリロード**: 使用します `<link rel="preload">` LCP イメージまたは重要なフォントの場合。
-- **メインスレッドの作業を最小限に抑える**: を使用して、必須ではない JavaScript を延期します。 `async` または `defer`.
+**Problem**: The application consumes increasing amounts of memory over time, eventually leading to crashes.
 
-### メモリリーク
+**Diagnosis**:
 
-**問題**: アプリケーションは時間の経過とともにメモリ消費量が増加し、最終的にはクラッシュにつながります。
+1. Take multiple "Heap Snapshots" in the Chrome DevTools Memory tab.
+2. Compare snapshots to identify objects that are growing in number or size.
+3. Look for "Detached DOM Elements".
 
-**診断**：
+**Solutions**:
 
-1. Chrome DevTools の [メモリ] タブで複数の「ヒープ スナップショット」を取得します。
-2. スナップショットを比較して、数またはサイズが増加しているオブジェクトを特定します。
-3. 「分離された DOM 要素」を探します。
+- **Cleanup in Composables**: Always clear timers and remove event listeners in `onUnmounted`.
+- **Store Management**: Ensure reactive state in Pinia or other stores is cleared when no longer needed.
+- **Dispose of Observables**: If using RxJS, ensure all subscriptions are unsubscribed.
 
-**解決策**:
+## Build and Workspace Issues
 
-- **コンポーザブルのクリーンアップ**: 常にタイマーをクリアし、コンポーザブルのイベント リスナーを削除します。 `onUnmounted`。
-- **ストア管理**: 不要になった場合は、Pinia または他のストアの反応状態が確実にクリアされます。
-- **Observables の破棄**: RxJS を使用している場合は、すべてのサブスクリプションがサブスクリプション解除されていることを確認してください。
+### Turborepo Caching Errors
 
-## ビルドとワークスペースの問題
+**Problem**: Changes are not being reflected in the build, or the build fails with stale artifacts.
 
-### Turborepo キャッシュ エラー
-
-**問題**: 変更がビルドに反映されないか、古いアーティファクトでビルドが失敗します。
-
-**解決策**: キャッシュをバイパスするか手動でクリアして、強制的に新規ビルドを実行します。
+**Solution**: Force a fresh build by bypassing the cache or manually clearing it.
 
 ```bash
 # Force a build without cache
@@ -59,67 +54,67 @@ pnpm build:force
 rm -rf .turbo
 ```
 
-### モジュールが見つかりません/ワークスペースの解決
+### Module Not Found / Workspace Resolution
 
-**問題**： TypeScript または Vite ワークスペースで定義されているパッケージが見つかりません。
+**Problem**: TypeScript or Vite cannot find a package that is defined in the workspace.
 
-**解決策**:
+**Solutions**:
 
-1. パッケージが使用側のワークスペースにリストされていることを確認します。 `package.json`。
-2. バージョンが一致していることを確認します (`workspace:*` が推奨されます）。
-3. 走る `pnpm install` シンボリックリンクを更新します。
-4. 問題が解決しない場合は、徹底的なクリーンアップを試してください。
-```bash
+1. Verify the package is listed in the consuming workspace's `package.json`.
+2. Ensure the version matches (`workspace:*` is recommended).
+3. Run `pnpm install` to refresh symlinks.
+4. If issues persist, try a deep clean:
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
    ```
 
-### CI でタイプエラーが発生するがローカルでは発生しない
+### Type Errors in CI but not Local
 
-**問題**: CI でビルドが失敗する TypeScript IDE には表示されないエラー。
+**Problem**: Build fails in CI with TypeScript errors that don't appear in your IDE.
 
-**解決策**: ワークスペース全体でローカルに型チェッカーを実行します。
+**Solution**: Run the type checker locally across the entire workspace.
 
 ```bash
 pnpm exec turbo run build:check
 ```
 
-これにより、すべてのパッケージ境界が正しく尊重され、型が適切に検証されることが保証されます。
+This ensures that all package boundaries are correctly respected and that types validate cleanly.
 
-## MCP サーバーのトラブルシューティング
+## MCP Server Troubleshooting
 
-### 接続に失敗しました
+### Failed to Connect
 
-**問題**: AI クライアントまたは IDE が Mission Platform MCP サーバーに接続できません。
+**Problem**: Your AI client or IDE cannot connect to the Mission Platform MCP server.
 
-**診断**：
+**Diagnosis**:
 
-1. MCP サーバーが構築されていることを確認します。 `pnpm exec turbo run build --filter @mission-platform/mcp-*`。
-2. サーバーが手動で起動するかどうかを確認します。 `node mcp/developer/dist/index.js`.
+1. Verify the MCP server is built: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
+2. Check if the server starts manually: `node mcp/developer/dist/index.js`.
 
-**解決策**:
+**Solutions**:
 
-- への絶対パスを使用していることを確認してください。 node クライアント構成内のバイナリとスクリプト。
-- MCP サーバーのログで特定のエラー メッセージ (環境変数の欠落など) を確認します。
+- Ensure you are using the absolute path to the node binary and the script in your client configuration.
+- Check the MCP server logs for specific error messages (e.g., missing environment variables).
 
-## よくあるエラーパターン
+## Common Error Patterns
 
-### 「未定義のプロパティを読み取れません」
+### "Cannot read property of undefined"
 
-**原因**: 多くの場合、データのロードが完了する前に、null または未定義のオブジェクトのプロパティにアクセスします。 **修正**: 使用する
-オプションのチェーン (`?.`) またはデフォルト値を指定します。
+**Cause**: Accessing properties on a null or undefined object, often before data has finished loading. **Fix**: Use
+optional chaining (`?.`) or provide default values.
 
 ```typescript
 // Instead of:
 const name = user.profile.name;
 
 // Use:
-const name = user?.profile?.name ?? 'Guest';
+const name = user?.profile?.name ?? "Guest";
 ```
 
-### 「未処理の約束の拒否」
+### "Unhandled Promise Rejection"
 
-**原因**: 非同期関数がエラーをスローしましたが、キャッチされませんでした。 **修正**: 非同期呼び出しを常にラップする `try/catch` ブロック。
+**Cause**: An async function threw an error that wasn't caught. **Fix**: Always wrap async calls in `try/catch` blocks.
 
 ```typescript
 try {
@@ -129,8 +124,8 @@ try {
 }
 ```
 
-## 関連リソース
+## Related Resources
 
-- [ベストプラクティス](best-practices.md)
-- [開発セットアップ](development-setup.md)
-- [テストガイド](testing.md)
+- [Best Practices](best-practices.md)
+- [Development Setup](development-setup.md)
+- [Testing Guide](testing.md)
