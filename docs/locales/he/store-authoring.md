@@ -41,10 +41,10 @@ Package stores avoid framework-specific dependencies. Instead, they follow a sim
 
 ```ts
 export interface ThemeState {
-  theme: 'light' | 'dark' | 'auto';
+  theme: "light" | "dark" | "auto";
 }
 
-let state: ThemeState = { theme: 'auto' };
+let state: ThemeState = { theme: "auto" };
 const listeners = new Set<() => void>();
 
 export function getThemeSnapshot(): ThemeState {
@@ -56,7 +56,7 @@ export function subscribeTheme(listener: () => void): () => void {
   return () => listeners.delete(listener);
 }
 
-export function setTheme(theme: ThemeState['theme']): void {
+export function setTheme(theme: ThemeState["theme"]): void {
   state = { ...state, theme };
   listeners.forEach((listener) => listener());
 }
