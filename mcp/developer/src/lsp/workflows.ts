@@ -279,19 +279,19 @@ export function runBoundedWorkflowProcess(
     /**
      * Terminates the child process group or individual process with the given signal.
      */
-    const killProcessGroup = (signal: NodeJS.Signals): void => {
+    function killProcessGroup(signal: NodeJS.Signals): void {
       try {
         if (child.pid && process.platform !== 'win32') process.kill(-child.pid, signal);
         else child.kill(signal);
       } catch {
         child.kill(signal);
       }
-    };
+    }
 
     /**
      * Terminates the spawned workflow process group and schedules force-kill escalation.
      */
-    const terminate = (reason: 'timeout' | 'cancel'): void => {
+    function terminate(reason: 'timeout' | 'cancel'): void {
       if (terminating) return;
       terminating = true;
       if (reason === 'timeout') timedOut = true;
@@ -302,12 +302,15 @@ export function runBoundedWorkflowProcess(
         child.stdout.destroy();
         child.stderr.destroy();
       }, FORCE_KILL_DELAY_MS);
-    };
+    }
 
     /**
      * Handles cancellation abort signals from the caller.
      */
-    const onAbort = (): void => terminate('cancel');
+    function onAbort(): void {
+      terminate('cancel');
+    }
+
     if (options.signal?.aborted) {
       terminate('cancel');
     } else {
@@ -327,7 +330,7 @@ export function runBoundedWorkflowProcess(
     /**
      * Settles the workflow result promise once the process exits or closes.
      */
-    const finish = (code: number | null, signal: string | null): void => {
+    function finish(code: number | null, signal: string | null): void {
       if (settled) return;
       settled = true;
       if (timeoutTimer) clearTimeout(timeoutTimer);
@@ -346,7 +349,7 @@ export function runBoundedWorkflowProcess(
         durationMs: Date.now() - startedAt,
         message: resolveWorkflowMessage(status, spawnError, code, timeoutMs),
       });
-    };
+    }
 
     child.once('exit', (code, signal) => {
       if (timedOut || cancelled) {
