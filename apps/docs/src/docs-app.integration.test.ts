@@ -50,8 +50,7 @@ async function mountDocs(initialUrl: string): Promise<{
     ?.setRouter(router);
   mountedRouters.push(router);
   await router.ready;
-  await Promise.resolve();
-  await Promise.resolve();
+  await flushElementUpdates();
   return { router, shell };
 }
 
