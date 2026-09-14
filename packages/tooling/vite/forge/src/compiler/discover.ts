@@ -557,12 +557,21 @@ function graphTypeExports(
   return [...names];
 }
 
+const graphComponentCache = new WeakMap<ForgeFileGraph, DiscoveredComponent[]>();
+const graphHelperCache = new WeakMap<ForgeFileGraph, DiscoveredHelperExport[]>();
+
 /** Project public component exports from the canonical graph while retaining the legacy result shape. */
 export function discoverComponentsFromGraph(
   graph: ForgeFileGraph,
   stripPrefix = 'Forge',
   diagnostics?: CompilerDiagnostic[],
 ): DiscoveredComponent[] {
+  if (stripPrefix === 'Forge' && diagnostics === undefined) {
+    const cached = graphComponentCache.get(graph);
+    if (cached !== undefined) {
+      return cached;
+    }
+  }
   const entry = graph.nodes.get(graph.entry);
   if (entry === undefined) {
     return [];
@@ -673,6 +682,10 @@ export function discoverComponentsFromGraph(
     }
   }
 
+  if (stripPrefix === 'Forge' && diagnostics === undefined) {
+    graphComponentCache.set(graph, components);
+  }
+
   return components;
 }
 
@@ -682,6 +695,12 @@ export function discoverHelperExportsFromGraph(
   componentFolders: ReadonlySet<string>,
   discoveredComponents?: readonly DiscoveredComponent[],
 ): DiscoveredHelperExport[] {
+  if (discoveredComponents === undefined) {
+    const cached = graphHelperCache.get(graph);
+    if (cached !== undefined) {
+      return cached;
+    }
+  }
   const entry = graph.nodes.get(graph.entry);
   if (entry === undefined) {
     return [];
@@ -758,7 +777,11 @@ export function discoverHelperExportsFromGraph(
     }
     helpers.set(key, helper);
   }
-  return [...helpers.values()];
+  const result = [...helpers.values()];
+  if (discoveredComponents === undefined) {
+    graphHelperCache.set(graph, result);
+  }
+  return result;
 }
 
 /** Discover external re-exports through local barrels so generated entries preserve the package public API. */

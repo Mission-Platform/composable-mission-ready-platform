@@ -55,6 +55,18 @@ export function discoverSiblingComponents(options: DiscoverSiblingComponentsOpti
   const discoveredFolders = new Set(components.map((component) => component.folder));
   const discoveryQueue: DiscoveredComponent[] = [...components];
 
+  const edgesByFrom = new Map<string, (typeof graph.edges)[number][]>();
+  for (const edge of graph.edges) {
+    if (edge.resolved && edge.to !== undefined) {
+      let list = edgesByFrom.get(edge.from);
+      if (list === undefined) {
+        list = [];
+        edgesByFrom.set(edge.from, list);
+      }
+      list.push(edge);
+    }
+  }
+
   while (discoveryQueue.length > 0) {
     const current = discoveryQueue.shift() as DiscoveredComponent;
     const currentPath = componentSourcePath(current);
@@ -62,10 +74,7 @@ export function discoverSiblingComponents(options: DiscoverSiblingComponentsOpti
     if (currentNode === undefined) {
       continue;
     }
-    for (const edge of graph.edges.filter((candidate) => candidate.from === currentPath && candidate.resolved)) {
-      if (edge.to === undefined) {
-        continue;
-      }
+    for (const edge of edgesByFrom.get(currentPath) ?? []) {
       const childNode = graph.nodes.get(edge.to);
       const childFileName = path.basename(childNode?.id ?? '');
       const childFolder = childFileName.startsWith('index.')
