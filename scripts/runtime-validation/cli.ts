@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -32,6 +33,21 @@ function option(args: string[], name: string): string | undefined {
 
 function hasOption(args: string[], name: string): boolean {
   return args.includes(name);
+}
+
+function hasEgoBrowser(): boolean {
+  try {
+    const result = spawnSync(process.platform === 'win32' ? 'where' : 'which', ['ego-browser'], { stdio: 'ignore' });
+    return result.status === 0;
+  } catch {
+    return false;
+  }
+}
+
+function browserEnabled(args: string[]): boolean {
+  if (hasOption(args, '--no-browser')) return false;
+  if (hasOption(args, '--browser')) return true;
+  return hasEgoBrowser();
 }
 
 function selection(args: string[], command: string): ValidationSelection {
@@ -73,7 +89,7 @@ async function storybookManifest(
       packageName: option(args, '--package'),
       storyId: option(args, '--story'),
       port: option(args, '--port') ? Number(option(args, '--port')) + index : undefined,
-      browser: !hasOption(args, '--no-browser'),
+      browser: browserEnabled(args),
       build: !hasOption(args, '--no-build'),
       maxStories: option(args, '--max-stories') ? Number(option(args, '--max-stories')) : undefined,
       workers: option(args, '--workers') ? Number(option(args, '--workers')) : undefined,
@@ -92,7 +108,7 @@ async function storybookManifest(
       ...(await validateAppsForFullRun(root, inventory, {
         app: option(args, '--app'),
         port: port ? Number(port) + frameworks.length : undefined,
-        browser: !hasOption(args, '--no-browser'),
+        browser: browserEnabled(args),
         build: !hasOption(args, '--no-build'),
         timeoutMs: option(args, '--timeout-ms') ? Number(option(args, '--timeout-ms')) : undefined,
       })),
@@ -106,7 +122,7 @@ async function appManifest(root: string, inventory: RepositoryInventory, args: s
     app: option(args, '--app'),
     route: option(args, '--route'),
     port: option(args, '--port') ? Number(option(args, '--port')) : undefined,
-    browser: !hasOption(args, '--no-browser'),
+    browser: browserEnabled(args),
     build: !hasOption(args, '--no-build'),
     timeoutMs: option(args, '--timeout-ms') ? Number(option(args, '--timeout-ms')) : undefined,
   });
