@@ -88,6 +88,9 @@ export function oxcNodeText(source: string, node: OxcNode | undefined): string {
   return node === undefined ? '' : source.slice(node.start, node.end);
 }
 
+/**
+ * Computes the 1-based line number at a given character offset in the source.
+ */
 function lineNumberAt(source: string, offset: number): number {
   let line = 1;
   for (let index = 0; index < offset; index += 1) {
