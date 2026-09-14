@@ -103,11 +103,14 @@ export function forgeWebScriptPlugin(
 ): Plugin {
   const service =
     options.compilerService ??
+    options.graphCache?.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     });
-  const ownsService = options.compilerService === undefined;
+  const ownsService =
+    options.compilerService === undefined &&
+    options.graphCache?.compilerService === undefined;
   const compiled = new Map<string, ForgeWebScriptCompiledModule>();
   let config: ResolvedConfig | undefined;
 
