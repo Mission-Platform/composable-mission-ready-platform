@@ -390,6 +390,11 @@ export interface TsdownForgeComponentPluginsOptions {
   rejectFixturePlaceholder?: boolean;
 }
 
+/** Suppresses unhandled rejection during asynchronous session disposal. */
+function ignoreDisposalRejection(): void {
+  // Background fire-and-forget session disposal
+}
+
 /**
  * Reproduce one Archetype-C **component** framework build under tsdown:
  * Stage 1 (`generateFrameworkSources`) + Stage 2 plugins + css-import + dts plugins,
@@ -423,7 +428,7 @@ export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPlugins
         disposeSession: () => {
           activePlugins -= 1;
           if (activePlugins === 0 && options.session === undefined) {
-            session.dispose().catch(() => {});
+            session.dispose().catch(ignoreDisposalRejection);
           }
         },
       }),
@@ -463,7 +468,7 @@ export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPlug
       disposeSession: () => {
         activeConfigs -= 1;
         if (activeConfigs === 0 && options.session === undefined) {
-          session.dispose().catch(() => {});
+          session.dispose().catch(ignoreDisposalRejection);
         }
       },
     }),

@@ -187,6 +187,11 @@ export interface ForgeBuildLifecycleOptions {
   readonly disposeSession?: boolean | (() => void);
 }
 
+/** Suppresses unhandled rejection during asynchronous session disposal. */
+function ignoreDisposalRejection(): void {
+  // Background fire-and-forget session disposal
+}
+
 /**
  * Connect one target plan to either Vite or Rolldown/tsdown. Generation is
  * deliberately awaited from lifecycle hooks, never while a config is created.
@@ -207,7 +212,7 @@ export function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): 
     if (typeof options.disposeSession === 'function') {
       options.disposeSession();
     } else if (options.disposeSession === true) {
-      options.session.dispose().catch(() => {});
+      options.session.dispose().catch(ignoreDisposalRejection);
     }
   };
 

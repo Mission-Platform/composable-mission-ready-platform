@@ -220,6 +220,27 @@ function buildEmptyRouterIr(input: RouterCompilerInput): RouterCapabilityModule 
   };
 }
 
+/** Resolves router optimization options from the compiler input. */
+function resolveRouterOptimizeOptions(optimize: RouterCompilerInput['optimize']) {
+  return {
+    preserveSourceMap: optimize !== false,
+    custom: typeof optimize === 'object' ? { ...optimize } : undefined,
+  };
+}
+
+/** Aggregates diagnostics from router compilation phases into a unique list. */
+function mergeRouterDiagnostics(
+  capabilityDiagnostics: readonly CompilerDiagnostic[],
+  ...phases: (readonly CompilerDiagnostic[] | undefined)[]
+): CompilerDiagnostic[] | undefined {
+  const merged: CompilerDiagnostic[] = [...capabilityDiagnostics];
+  for (const phase of phases) {
+    if (phase) merged.push(...phase);
+  }
+  const unique = uniqueDiagnostics(merged);
+  return unique.length > 0 ? unique : undefined;
+}
+
 /** Executes lowering, optimization, and code generation through the selected router plugin. */
 function executeRouterPlugin(
   input: RouterCompilerInput,
@@ -238,24 +259,21 @@ function executeRouterPlugin(
   throwOnCompilerErrors(capabilityDiagnostics);
   const lowered = selected.lower(ir, context);
   throwOnCompilerErrors(lowered.diagnostics);
-  const optimized = selected.optimize(lowered, {
-    preserveSourceMap: input.optimize !== false,
-    custom: typeof input.optimize === 'object' ? { ...input.optimize } : undefined,
-  });
+  const optimized = selected.optimize(lowered, resolveRouterOptimizeOptions(input.optimize));
   throwOnCompilerErrors(optimized.diagnostics);
   const generated = selected.generate(optimized);
   throwOnCompilerErrors(generated.diagnostics);
-  const diagnostics = uniqueDiagnostics([
-    ...capabilityDiagnostics,
-    ...(lowered.diagnostics ?? []),
-    ...(optimized.diagnostics ?? []),
-    ...(generated.diagnostics ?? []),
-  ]);
+  const diagnostics = mergeRouterDiagnostics(
+    capabilityDiagnostics,
+    lowered.diagnostics,
+    optimized.diagnostics,
+    generated.diagnostics,
+  );
   return {
     ...generated,
     ir,
     routerTarget: selected.id,
-    diagnostics: diagnostics.length > 0 ? diagnostics : undefined,
+    diagnostics,
   };
 }
 

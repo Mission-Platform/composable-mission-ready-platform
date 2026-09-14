@@ -595,6 +595,22 @@ function extractHelperExportNames(sourceNode: ForgeFileNode, astCache: Map<strin
   return helperExportNames;
 }
 
+/** Validates whether an export fact represents an exported component node. */
+function findComponentSourceNode(resolvedExport: ResolvedGraphExport): ForgeFileNode | undefined {
+  const entryExport = resolvedExport.fact;
+  if (entryExport.typeOnly || !entryExport.exportedName) return undefined;
+  const sourceNode = resolvedExport.sourceNode;
+  if (!sourceNode || sourceNode.kind !== 'component') return undefined;
+  return sourceNode;
+}
+
+/** Formats a relative module specifier from the graph entry to a source file. */
+function deriveSourceSpecifier(graphEntry: string, sourcePath: string, specifier?: string): string {
+  if (specifier) return specifier;
+  const relative = path.relative(path.dirname(graphEntry), sourcePath).split(path.sep).join('/');
+  return `./${relative}`;
+}
+
 /** Resolves a single graph export into a DiscoveredComponent when it represents a component. */
 function resolveDiscoveredComponent(
   graph: ForgeFileGraph,
@@ -603,29 +619,23 @@ function resolveDiscoveredComponent(
   stripPrefix: string,
   astCache: Map<string, OxcParsedModule>,
 ): DiscoveredComponent | undefined {
+  const sourceNode = findComponentSourceNode(resolvedExport);
+  if (!sourceNode) return undefined;
+
   const entryExport = resolvedExport.fact;
-  if (entryExport.typeOnly || entryExport.exportedName === undefined) {
-    return undefined;
-  }
-  const sourceNode = resolvedExport.sourceNode;
-  if (sourceNode === undefined || sourceNode.kind !== 'component') {
-    return undefined;
-  }
   const neutralName = deriveNeutralName(sourceNode, entryExport);
-  if (!isComponentExport(sourceNode.id, neutralName, astCache)) {
-    return undefined;
-  }
+  if (!isComponentExport(sourceNode.id, neutralName, astCache)) return undefined;
 
   const publicName = derivePublicName(entryExport.exportedName, entryExport.localName, neutralName, stripPrefix);
   const helperExportNames = extractHelperExportNames(sourceNode, astCache);
   const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier, helperExportNames);
   const candidate = `${publicName}Properties`;
-  const relativePath = path.relative(path.dirname(graph.entry), sourceNode.id).split(path.sep).join('/');
-  const sourceSpecifier = entryExport.specifier ?? `./${relativePath}`;
+  const propertiesType = typeExports.includes(candidate) ? candidate : undefined;
+  const sourceSpecifier = deriveSourceSpecifier(graph.entry, sourceNode.id, entryExport.specifier);
   return {
     neutralName,
     publicName,
-    propertiesType: typeExports.includes(candidate) ? candidate : undefined,
+    propertiesType,
     typeExports,
     folder: sourceBase(sourceNode.id),
     sourceDir: relativeModulePath(graph.entry, sourceNode.id),
@@ -668,6 +678,30 @@ function disambiguateComponentFolders(components: readonly DiscoveredComponent[]
   }
 }
 
+/** Returns a stable path or specifier identifier for a discovered component. */
+function componentKey(component: DiscoveredComponent): string {
+  return component.sourcePath ?? component.sourceSpecifier;
+}
+
+/** Constructs a CompilerDiagnostic for a duplicate target folder collision. */
+function buildDuplicateTargetDiagnostic(
+  component: DiscoveredComponent,
+  existing: DiscoveredComponent,
+  entryPath: string,
+): CompilerDiagnostic {
+  const currentKey = componentKey(component);
+  const existingKey = componentKey(existing);
+  const relatedFiles = existing.sourcePath ? [existing.sourcePath] : undefined;
+  return createCompilerDiagnostic({
+    phase: 'generation',
+    severity: 'error',
+    code: DUPLICATE_COMPONENT_TARGET,
+    message: `Duplicate component target "${component.folder}" detected for "${component.neutralName}" (${currentKey}) and "${existing.neutralName}" (${existingKey}).`,
+    fileName: component.sourcePath ?? entryPath,
+    relatedFiles,
+  });
+}
+
 /** Records a diagnostic if two components produce conflicting target folders. */
 function recordDuplicateTargetDiagnostic(
   component: DiscoveredComponent,
@@ -675,17 +709,8 @@ function recordDuplicateTargetDiagnostic(
   entryPath: string,
   diagnostics?: CompilerDiagnostic[],
 ): void {
-  const existingKey = existing.sourcePath ?? existing.sourceSpecifier;
-  const currentKey = component.sourcePath ?? component.sourceSpecifier;
-  if (existingKey === currentKey) return;
-  const diagnostic = createCompilerDiagnostic({
-    phase: 'generation',
-    severity: 'error',
-    code: DUPLICATE_COMPONENT_TARGET,
-    message: `Duplicate component target "${component.folder}" detected for "${component.neutralName}" (${currentKey}) and "${existing.neutralName}" (${existingKey}).`,
-    fileName: component.sourcePath ?? entryPath,
-    relatedFiles: existing.sourcePath ? [existing.sourcePath] : undefined,
-  });
+  if (componentKey(existing) === componentKey(component)) return;
+  const diagnostic = buildDuplicateTargetDiagnostic(component, existing, entryPath);
   diagnostics?.push(diagnostic);
   throwOnCompilerErrors([diagnostic]);
 }
