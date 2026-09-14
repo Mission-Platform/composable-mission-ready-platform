@@ -42,6 +42,7 @@ jobs:
 
   changeset:
     name: Require a changeset for package changes
+    if: "!startsWith(github.head_ref, 'changeset-release/')"
     runs-on: ubuntu-latest
 
     steps:

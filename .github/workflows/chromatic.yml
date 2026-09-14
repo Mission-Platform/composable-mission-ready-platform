@@ -54,7 +54,21 @@ jobs:
       - name: Build Storybook
         run: pnpm exec turbo run build-storybook --filter @mission-platform/storybook
 
+      - name: Check Chromatic Token
+        id: chromatic-token
+        shell: bash
+        env:
+          TOKEN: ${{ matrix.framework == 'vue' && secrets.CHROMATIC_PROJECT_TOKEN_VUE || matrix.framework == 'react' && secrets.CHROMATIC_PROJECT_TOKEN_REACT || secrets.CHROMATIC_PROJECT_TOKEN }}
+        run: |
+          if [[ -n "$TOKEN" ]]; then
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Chromatic token not configured for ${{ matrix.framework }}; skipping visual diff."
+          fi
+
       - name: Publish Storybook to Chromatic
+        if: steps.chromatic-token.outputs.has_token == 'true'
         uses: chromaui/action@016b2b6bd92fef54e5764ea1f15ada32f65939ce # v11
         with:
           projectToken: ${{ matrix.framework == 'vue' && secrets.CHROMATIC_PROJECT_TOKEN_VUE || matrix.framework == 'react' && secrets.CHROMATIC_PROJECT_TOKEN_REACT || secrets.CHROMATIC_PROJECT_TOKEN }}
