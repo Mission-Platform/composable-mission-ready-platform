@@ -93,6 +93,27 @@ export async function formatGeneratedDocumentation(
   await runCommand(prettierPath, ['--write', outputPath], { cwd: repoRoot });
 }
 
+/** Run the generated-reference ESLint autofix followed by Prettier on multiple files. */
+export async function formatAllGeneratedDocumentation(
+  repoRoot: string,
+  outputPaths: readonly string[],
+  runCommand: FormatterCommand = execFile,
+): Promise<void> {
+  if (outputPaths.length === 0) return;
+  const binarySuffix = process.platform === 'win32' ? '.cmd' : '';
+  const eslintPath = resolve(repoRoot, 'scripts/node_modules/.bin', `eslint${binarySuffix}`);
+  const prettierPath = resolve(repoRoot, 'scripts/node_modules/.bin', `prettier${binarySuffix}`);
+  const eslintConfigPath = resolve(repoRoot, 'scripts/generated-docs-eslint.config.js');
+
+  try {
+    await runCommand(eslintPath, ['--config', eslintConfigPath, '--fix', ...outputPaths], { cwd: repoRoot });
+  } catch (error) {
+    if (!isGeneratedFenceParserFailure(error)) throw error;
+  }
+
+  await runCommand(prettierPath, ['--write', ...outputPaths], { cwd: repoRoot });
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
@@ -817,7 +838,11 @@ async function extractPackage(packageRoot: string, repoRoot: string): Promise<Pa
   return { packageName: manifest.name, packageRoot, symbols };
 }
 
-async function writePackageDocumentation(documentation: PackageDocumentation, repoRoot: string): Promise<void> {
+async function writePackageDocumentation(
+  documentation: PackageDocumentation,
+  repoRoot: string,
+  format = true,
+): Promise<void> {
   const outputDirectory = resolve(documentation.packageRoot, 'docs/reference/generated');
   const outputPath = resolve(outputDirectory, 'api.md');
   await mkdir(outputDirectory, { recursive: true });
@@ -825,12 +850,18 @@ async function writePackageDocumentation(documentation: PackageDocumentation, re
     if (entry.isFile() && extname(entry.name) === '.md') await rm(resolve(outputDirectory, entry.name));
   }
   await writeFile(outputPath, renderReferenceMarkdown(documentation), 'utf8');
-  await formatGeneratedDocumentation(repoRoot, outputPath);
+  if (format) {
+    await formatGeneratedDocumentation(repoRoot, outputPath);
+  }
 }
 
-export async function extractPackageDocs(repoRoot: string, packageRoot: string): Promise<PackageDocumentation> {
+export async function extractPackageDocs(
+  repoRoot: string,
+  packageRoot: string,
+  format = true,
+): Promise<PackageDocumentation> {
   const documentation = await extractPackage(packageRoot, repoRoot);
-  await writePackageDocumentation(documentation, repoRoot);
+  await writePackageDocumentation(documentation, repoRoot, format);
   return documentation;
 }
 
@@ -844,7 +875,12 @@ async function main(): Promise<void> {
     inlinePackageArgument ?? (packageFlagIndex === -1 ? undefined : process.argv[packageFlagIndex + 1]);
   if (packageArgument === undefined || process.argv.includes('--all')) {
     const packageRoots = await discoverPackageRoots(repoRoot);
-    await Promise.all(packageRoots.map((packageRoot) => extractPackageDocs(repoRoot, packageRoot)));
+    const outputPaths: string[] = [];
+    for (const packageRoot of packageRoots) {
+      await extractPackageDocs(repoRoot, packageRoot, false);
+      outputPaths.push(resolve(packageRoot, 'docs/reference/generated/api.md'));
+    }
+    await formatAllGeneratedDocumentation(repoRoot, outputPaths);
     return;
   }
   await extractPackageDocs(repoRoot, resolve(process.cwd(), packageArgument));

@@ -92,10 +92,12 @@ const CONSUMER_EXTENSIONS = new Set([
 ]);
 
 const SKIPPED_DIRECTORY_NAMES = new Set([
+  '.artifacts',
   '.git',
   '.junie',
   '.turbo',
   '.cache',
+  '.wrangler',
   '__snapshots__',
   'assets',
   'build',
@@ -111,6 +113,7 @@ const SKIPPED_DIRECTORY_NAMES = new Set([
   'storybook-static',
   'test',
   'tests',
+  'test-results',
   'target',
   '__fixtures__',
   '__tests__',
@@ -287,13 +290,15 @@ function dynamicBranchMatches(text: string, token: IndexedToken): boolean {
   let longestPath = '';
   for (let index = 1; index <= segments.length; index += 1) {
     const branch = segments.slice(0, index).join('.');
+    if (!text.includes(branch)) continue;
     const escapedBranch = escapeRegExp(branch);
     const branchAccess = new RegExp(
       String.raw`(?:keyof\s+typeof\s+|Object\.(?:keys|entries|values)\s*\(\s*)${escapedBranch}(?![A-Za-z0-9_.-])|${escapedBranch}\s*\[`,
     );
-    if (text.includes(branch) && branchAccess.test(text)) longestPath = branch;
+    if (branchAccess.test(text)) longestPath = branch;
   }
   if (longestPath) return qualifiedPath === longestPath || qualifiedPath.startsWith(`${longestPath}.`);
+  if (!text.includes('#{')) return false;
   const generatedName = token.generatedNames[0];
   const interpolatedNames = [...text.matchAll(SCSS_INTERPOLATED_NAME)];
   return interpolatedNames.some((match) => {
@@ -325,7 +330,9 @@ function shouldSkip(filePath: string, tokensDirectory: string, reportFile: strin
     normalized.startsWith(`${normalizedTokens}/`) ||
     /(?:^|[._-])(spec|test)\.[^.]+$/i.test(baseName) ||
     /^(?:spec|test)\.[^.]+$/i.test(baseName) ||
-    normalized.split('/').some((segment) => SKIPPED_DIRECTORY_NAMES.has(segment))
+    normalized
+      .split('/')
+      .some((segment) => SKIPPED_DIRECTORY_NAMES.has(segment) || segment.startsWith('storybook-static'))
   );
 }
 
@@ -336,6 +343,7 @@ function consumerFiles(root: string, tokensDirectory: string, reportFile: string
     for (const entry of readdirSync(directory, { withFileTypes: true }).toSorted((a, b) =>
       a.name.localeCompare(b.name),
     )) {
+      if (SKIPPED_DIRECTORY_NAMES.has(entry.name) || entry.name.startsWith('storybook-static')) continue;
       const filePath = path.join(directory, entry.name);
       if (entry.isDirectory()) {
         if (!shouldSkip(filePath, tokensDirectory, reportFile)) visit(filePath);

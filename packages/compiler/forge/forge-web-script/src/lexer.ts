@@ -62,6 +62,7 @@ const stringEscapes = new Set(['"', '\\', '/', 'b', 'f', 'n', 'r', 't']);
 interface LexerState {
   readonly source: string;
   readonly fileName: string;
+  readonly lineOffsets: readonly number[];
   readonly tokens: ForgeWebScriptToken[];
   readonly diagnostics: ForgeWebScriptDiagnostic[];
 }
@@ -109,7 +110,7 @@ function addToken(
   end: number,
   text = state.source.slice(start, end),
 ): void {
-  state.tokens.push({ kind, text, span: spanAt(state.source, start, end) });
+  state.tokens.push({ kind, text, span: spanAt(state.lineOffsets, start, end) });
 }
 
 function scanWhitespace(source: string, start: number): number {
@@ -143,7 +144,7 @@ function scanBlockComment(state: LexerState, start: number): number {
         'lex',
         'FWS-LEX-003',
         'Unterminated block comment.',
-        spanAt(state.source, start, offset),
+        spanAt(state.lineOffsets, start, offset),
         'error',
         'Close the comment with */.',
       ),
@@ -191,7 +192,7 @@ function scanString(state: LexerState, start: number): number {
               'lex',
               'FWS-LEX-005',
               'Raw line terminators are not allowed in string literals.',
-              spanAt(state.source, lineTerminatorStart, offset),
+              spanAt(state.lineOffsets, lineTerminatorStart, offset),
               'error',
               String.raw`Use the escaped newline sequence \n instead.`,
             ),
@@ -221,7 +222,7 @@ function scanString(state: LexerState, start: number): number {
           'lex',
           'FWS-LEX-004',
           'Invalid escape sequence in string literal.',
-          spanAt(state.source, escapeStart, offset),
+          spanAt(state.lineOffsets, escapeStart, offset),
           'error',
           'Use a JSON-compatible escape sequence.',
         ),
@@ -237,7 +238,7 @@ function scanString(state: LexerState, start: number): number {
             'lex',
             'FWS-LEX-005',
             'Raw line terminators are not allowed in string literals.',
-            spanAt(state.source, lineTerminatorStart, offset),
+            spanAt(state.lineOffsets, lineTerminatorStart, offset),
             'error',
             String.raw`Use the escaped newline sequence \n instead.`,
           ),
@@ -257,7 +258,7 @@ function scanString(state: LexerState, start: number): number {
         'lex',
         'FWS-LEX-001',
         'Unterminated string literal.',
-        spanAt(state.source, start, offset),
+        spanAt(state.lineOffsets, start, offset),
         'error',
         'Close the string with a double quote.',
       ),
@@ -284,21 +285,65 @@ function scanOperatorOrPunctuation(state: LexerState, start: number): number | u
   return undefined;
 }
 
-function spanAt(source: string, start: number, end: number): ForgeWebScriptSourceSpan {
-  const startLine = source.slice(0, start).split('\n');
-  const endLine = source.slice(0, end).split('\n');
+/**
+ * Precompute character start offsets for each line in the source string.
+ *
+ * @param source - The raw source text.
+ * @returns Array of 0-based character offsets where line N begins at index N-1.
+ */
+function computeLineOffsets(source: string): number[] {
+  const offsets = [0];
+  for (let index = 0; index < source.length; index += 1) {
+    if (source.charCodeAt(index) === 10) offsets.push(index + 1);
+  }
+  return offsets;
+}
+
+/**
+ * Locate the 1-based line index for a given character offset using binary search.
+ *
+ * @param lineOffsets - Array of line start offsets.
+ * @param offset - 0-based character offset.
+ * @returns 1-based line index.
+ */
+function findLineIndex(lineOffsets: readonly number[], offset: number): number {
+  let low = 0;
+  let high = lineOffsets.length - 1;
+  while (low <= high) {
+    const mid = (low + high) >> 1;
+    if (lineOffsets[mid] <= offset) low = mid + 1;
+    else high = mid - 1;
+  }
+  return low;
+}
+
+/**
+ * Compute the source span for a given range using precomputed line offsets.
+ *
+ * @param sourceOrOffsets - Precomputed line offsets array or raw source text.
+ * @param start - 0-based start character offset.
+ * @param end - 0-based end character offset.
+ * @returns The resolved source span with 1-based line and column coordinates.
+ */
+function spanAt(sourceOrOffsets: string | readonly number[], start: number, end: number): ForgeWebScriptSourceSpan {
+  const offsets = typeof sourceOrOffsets === 'string' ? computeLineOffsets(sourceOrOffsets) : sourceOrOffsets;
+  const startLine = findLineIndex(offsets, start);
+  const startColumn = start - offsets[startLine - 1] + 1;
+  const endLine = findLineIndex(offsets, end);
+  const endColumn = end - offsets[endLine - 1] + 1;
   return {
     start,
     end,
-    line: startLine.length,
-    column: (startLine.at(-1)?.length ?? 0) + 1,
-    endLine: endLine.length,
-    endColumn: (endLine.at(-1)?.length ?? 0) + 1,
+    line: startLine,
+    column: startColumn,
+    endLine,
+    endColumn,
   };
 }
 
 export function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult {
-  const state: LexerState = { source, fileName, tokens: [], diagnostics: [] };
+  const lineOffsets = computeLineOffsets(source);
+  const state: LexerState = { source, fileName, lineOffsets, tokens: [], diagnostics: [] };
   let offset = 0;
   while (offset < source.length) {
     const character = source[offset];
@@ -339,11 +384,11 @@ export function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWe
         'lex',
         'FWS-LEX-002',
         `Unexpected character '${character}'.`,
-        spanAt(source, start, offset),
+        spanAt(state.lineOffsets, start, offset),
       ),
     );
   }
-  const eofSpan = spanAt(source, source.length, source.length);
+  const eofSpan = spanAt(state.lineOffsets, source.length, source.length);
   state.tokens.push({ kind: 'eof', text: '', span: eofSpan });
   return { tokens: state.tokens, diagnostics: state.diagnostics };
 }

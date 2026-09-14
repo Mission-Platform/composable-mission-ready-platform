@@ -74,13 +74,25 @@ export interface ForgeWebScriptGraphCache {
   set(key: string, result: Promise<ForgeWebScriptGraphResult>): void;
   invalidate(files: readonly string[]): void;
   clear(): void;
+  /** Optional shared compiler service associated with this graph cache. */
+  compilerService?: ForgeWebScriptCompilerService;
 }
 
 /** Create a graph cache that deduplicates both sequential and concurrent graph resolution. */
-export function createForgeWebScriptGraphCache(): ForgeWebScriptGraphCache {
+export function createForgeWebScriptGraphCache(options?: {
+  readonly compilerService?: ForgeWebScriptCompilerService;
+  readonly selfHostedVmMode?: ForgeWebScriptVmExecutionMode;
+}): ForgeWebScriptGraphCache {
   const entries = new Map<string, Promise<ForgeWebScriptGraphResult>>();
+  const compilerService =
+    options?.compilerService ??
+    createForgeWebScriptCompilerService({
+      selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
+      selfHostedVmMode: options?.selfHostedVmMode ?? "aot",
+    });
 
   return {
+    compilerService,
     get(key): Promise<ForgeWebScriptGraphResult> | undefined {
       return entries.get(key);
     },
@@ -90,10 +102,11 @@ export function createForgeWebScriptGraphCache(): ForgeWebScriptGraphCache {
         if (entries.get(key) === result) entries.delete(key);
       });
     },
-    invalidate(_files): void {
+    invalidate(files): void {
       // A pending graph has no module list yet; clear synchronously to avoid
       // serving stale results during the next rebuild.
       entries.clear();
+      compilerService.invalidate(files);
     },
     clear(): void {
       entries.clear();
@@ -212,9 +225,10 @@ export function compileForgeWebScriptFile(
   fileName: string,
   options: ForgeWebScriptPluginOptions,
   service: ForgeWebScriptCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): ForgeWebScriptCompiledModule {
   const source = readFileSync(fileName, "utf8");
@@ -260,9 +274,10 @@ export async function compileForgeWebScriptGraph(
   options: ForgeWebScriptPluginOptions,
   resolver: ForgeWebScriptModuleResolver,
   service: ForgeWebScriptCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<ForgeWebScriptCompiledModule> {
   const resolveGraph = (): Promise<ForgeWebScriptGraphResult> =>

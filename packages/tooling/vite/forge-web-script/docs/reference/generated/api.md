@@ -15,9 +15,10 @@ function compileForgeWebScriptFile(
   fileName: string,
   options: ForgeWebScriptPluginOptions,
   service: ForgeWebScriptCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): ForgeWebScriptCompiledModule;
 ```
@@ -42,9 +43,10 @@ function compileForgeWebScriptGraph(
   options: ForgeWebScriptPluginOptions,
   resolver: ForgeWebScriptModuleResolver,
   service: ForgeWebScriptCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<ForgeWebScriptCompiledModule>;
 ```
@@ -65,10 +67,19 @@ Resolve, link, and compile an imported FWS module graph.
 **Kind:** function
 
 ```typescript
-function createForgeWebScriptGraphCache(): ForgeWebScriptGraphCache;
+function createForgeWebScriptGraphCache(options?: {
+  readonly compilerService?: ForgeWebScriptCompilerService;
+  readonly selfHostedVmMode?: ForgeWebScriptVmExecutionMode;
+}): ForgeWebScriptGraphCache;
 ```
 
 Create a graph cache that deduplicates both sequential and concurrent graph resolution.
+
+#### Parameters
+
+| Name    | Type                                                                                                                     | Description |
+| ------- | ------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| options | { readonly compilerService?: ForgeWebScriptCompilerService; readonly selfHostedVmMode?: ForgeWebScriptVmExecutionMode; } |             |
 
 ### ForgeWebScriptCompiledModule
 
