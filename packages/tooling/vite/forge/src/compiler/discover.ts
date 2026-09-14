@@ -890,20 +890,28 @@ function processGraphHelperExport(
   appendHelperBinding(helper, binding, isType);
 }
 
-/** Project non-component public exports from the canonical graph. */
-export function discoverHelperExportsFromGraph(
+/** Retrieves cached helper exports if explicit components were not provided. */
+function getCachedHelperExports(
   graph: ForgeFileGraph,
-  componentFolders: ReadonlySet<string>,
   discoveredComponents?: readonly DiscoveredComponent[],
-): DiscoveredHelperExport[] {
-  if (discoveredComponents === undefined) {
-    const cached = graphHelperCache.get(graph);
-    if (cached !== undefined) return cached;
-  }
-  const entry = graph.nodes.get(graph.entry);
-  if (entry === undefined) return [];
+): DiscoveredHelperExport[] | undefined {
+  return discoveredComponents === undefined ? graphHelperCache.get(graph) : undefined;
+}
 
-  const components = discoveredComponents ?? discoverComponentsFromGraph(graph);
+/** Resolves the discovered components, falling back to graph discovery if omitted. */
+function resolveDiscoveredComponents(
+  graph: ForgeFileGraph,
+  discoveredComponents?: readonly DiscoveredComponent[],
+): readonly DiscoveredComponent[] {
+  return discoveredComponents ?? discoverComponentsFromGraph(graph);
+}
+
+/** Collects non-component helper exports from the resolved graph exports. */
+function collectGraphHelperExports(
+  graph: ForgeFileGraph,
+  entry: ForgeFileNode,
+  components: readonly DiscoveredComponent[],
+): DiscoveredHelperExport[] {
   const { componentNames, componentTypes } = collectComponentTypesAndNames(components);
   const astCache = new Map<string, OxcParsedModule>();
   const helpers = new Map<string, DiscoveredHelperExport>();
@@ -912,7 +920,23 @@ export function discoverHelperExportsFromGraph(
   for (const resolvedExport of resolveGraphExports(graph, entry)) {
     processGraphHelperExport(resolvedExport, entry, entryDirectory, helpers, componentNames, componentTypes, astCache);
   }
-  const result = [...helpers.values()];
+  return [...helpers.values()];
+}
+
+/** Project non-component public exports from the canonical graph. */
+export function discoverHelperExportsFromGraph(
+  graph: ForgeFileGraph,
+  componentFolders: ReadonlySet<string>,
+  discoveredComponents?: readonly DiscoveredComponent[],
+): DiscoveredHelperExport[] {
+  const cached = getCachedHelperExports(graph, discoveredComponents);
+  if (cached !== undefined) return cached;
+
+  const entry = graph.nodes.get(graph.entry);
+  if (entry === undefined) return [];
+
+  const components = resolveDiscoveredComponents(graph, discoveredComponents);
+  const result = collectGraphHelperExports(graph, entry, components);
   if (discoveredComponents === undefined) {
     graphHelperCache.set(graph, result);
   }
