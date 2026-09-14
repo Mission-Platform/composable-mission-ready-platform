@@ -207,7 +207,7 @@ export function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): 
     if (typeof options.disposeSession === 'function') {
       options.disposeSession();
     } else if (options.disposeSession === true) {
-      void options.session.dispose();
+      options.session.dispose().catch(() => {});
     }
   };
 

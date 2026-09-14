@@ -560,6 +560,41 @@ function graphTypeExports(
 const graphComponentCache = new WeakMap<ForgeFileGraph, DiscoveredComponent[]>();
 const graphHelperCache = new WeakMap<ForgeFileGraph, DiscoveredHelperExport[]>();
 
+/** Derives the neutral export name of a component from its node and entry export fact. */
+function deriveNeutralName(sourceNode: ForgeFileNode, entryExport: ForgeExportFact): string {
+  const targetName = entryExport.localName ?? entryExport.exportedName;
+  const match = sourceNode.exports.find(
+    (sourceExport) => !sourceExport.typeOnly && sourceExport.exportedName === targetName,
+  );
+  return match?.exportedName ?? targetName ?? '';
+}
+
+/** Derives the public component name by removing the strip prefix. */
+function derivePublicName(
+  exportedName: string | undefined,
+  localName: string | undefined,
+  neutralName: string,
+  stripPrefix: string,
+): string {
+  const base = exportedName !== undefined && localName !== undefined ? exportedName : neutralName;
+  return base.startsWith(stripPrefix) ? base.slice(stripPrefix.length) : base;
+}
+
+/** Collects all non-component exported names from a source node. */
+function extractHelperExportNames(sourceNode: ForgeFileNode, astCache: Map<string, OxcParsedModule>): Set<string> {
+  const helperExportNames = new Set<string>();
+  for (const sourceExport of sourceNode.exports) {
+    if (
+      !sourceExport.typeOnly &&
+      sourceExport.exportedName !== undefined &&
+      !isComponentExport(sourceNode.id, sourceExport.exportedName, astCache)
+    ) {
+      helperExportNames.add(sourceExport.exportedName);
+    }
+  }
+  return helperExportNames;
+}
+
 /** Resolves a single graph export into a DiscoveredComponent when it represents a component. */
 function resolveDiscoveredComponent(
   graph: ForgeFileGraph,
@@ -576,40 +611,17 @@ function resolveDiscoveredComponent(
   if (sourceNode === undefined || sourceNode.kind !== 'component') {
     return undefined;
   }
-  const neutralName =
-    sourceNode.exports.find(
-      (sourceExport) =>
-        !sourceExport.typeOnly && sourceExport.exportedName === (entryExport.localName ?? entryExport.exportedName),
-    )?.exportedName ??
-    entryExport.localName ??
-    entryExport.exportedName;
-
+  const neutralName = deriveNeutralName(sourceNode, entryExport);
   if (!isComponentExport(sourceNode.id, neutralName, astCache)) {
     return undefined;
   }
 
-  const publicName =
-    entryExport.exportedName !== undefined && entryExport.localName !== undefined
-      ? entryExport.exportedName.startsWith(stripPrefix)
-        ? entryExport.exportedName.slice(stripPrefix.length)
-        : entryExport.exportedName
-      : neutralName.startsWith(stripPrefix)
-        ? neutralName.slice(stripPrefix.length)
-        : neutralName;
-  const helperExportNames = new Set(
-    sourceNode.exports
-      .filter(
-        (sourceExport) =>
-          !sourceExport.typeOnly &&
-          sourceExport.exportedName !== undefined &&
-          !isComponentExport(sourceNode.id, sourceExport.exportedName, astCache),
-      )
-      .map((sourceExport) => sourceExport.exportedName as string),
-  );
+  const publicName = derivePublicName(entryExport.exportedName, entryExport.localName, neutralName, stripPrefix);
+  const helperExportNames = extractHelperExportNames(sourceNode, astCache);
   const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier, helperExportNames);
   const candidate = `${publicName}Properties`;
-  const sourceSpecifier =
-    entryExport.specifier ?? `./${path.relative(path.dirname(graph.entry), sourceNode.id).split(path.sep).join('/')}`;
+  const relativePath = path.relative(path.dirname(graph.entry), sourceNode.id).split(path.sep).join('/');
+  const sourceSpecifier = entryExport.specifier ?? `./${relativePath}`;
   return {
     neutralName,
     publicName,
@@ -622,8 +634,8 @@ function resolveDiscoveredComponent(
   };
 }
 
-/** Disambiguates folder basenames when multiple components share the same folder name. */
-function disambiguateComponentFolders(components: readonly DiscoveredComponent[], entryPath: string): void {
+/** Groups discovered components by their folder basename. */
+function groupComponentsByFolder(components: readonly DiscoveredComponent[]): Map<string, DiscoveredComponent[]> {
   const componentsByFolder = new Map<string, DiscoveredComponent[]>();
   for (const component of components) {
     const list = componentsByFolder.get(component.folder);
@@ -633,19 +645,49 @@ function disambiguateComponentFolders(components: readonly DiscoveredComponent[]
       list.push(component);
     }
   }
+  return componentsByFolder;
+}
 
-  for (const [folder, group] of componentsByFolder) {
-    const uniqueSources = new Set(group.map((c) => c.sourcePath ?? c.sourceSpecifier));
-    if (uniqueSources.size <= 1) {
-      continue;
-    }
-    for (const component of group) {
-      component.folder =
-        component.sourcePath !== undefined
-          ? deriveDisambiguatedFolder(entryPath, component.sourcePath, folder)
-          : deriveDisambiguatedFolderFromDir(component.sourceDir, folder);
-    }
+/** Disambiguates folder names within a collision group. */
+function disambiguateFolderGroup(group: readonly DiscoveredComponent[], folder: string, entryPath: string): void {
+  const uniqueSources = new Set(group.map((c) => c.sourcePath ?? c.sourceSpecifier));
+  if (uniqueSources.size <= 1) return;
+  for (const component of group) {
+    component.folder =
+      component.sourcePath !== undefined
+        ? deriveDisambiguatedFolder(entryPath, component.sourcePath, folder)
+        : deriveDisambiguatedFolderFromDir(component.sourceDir, folder);
   }
+}
+
+/** Disambiguates folder basenames when multiple components share the same folder name. */
+function disambiguateComponentFolders(components: readonly DiscoveredComponent[], entryPath: string): void {
+  const componentsByFolder = groupComponentsByFolder(components);
+  for (const [folder, group] of componentsByFolder) {
+    disambiguateFolderGroup(group, folder, entryPath);
+  }
+}
+
+/** Records a diagnostic if two components produce conflicting target folders. */
+function recordDuplicateTargetDiagnostic(
+  component: DiscoveredComponent,
+  existing: DiscoveredComponent,
+  entryPath: string,
+  diagnostics?: CompilerDiagnostic[],
+): void {
+  const existingKey = existing.sourcePath ?? existing.sourceSpecifier;
+  const currentKey = component.sourcePath ?? component.sourceSpecifier;
+  if (existingKey === currentKey) return;
+  const diagnostic = createCompilerDiagnostic({
+    phase: 'generation',
+    severity: 'error',
+    code: DUPLICATE_COMPONENT_TARGET,
+    message: `Duplicate component target "${component.folder}" detected for "${component.neutralName}" (${currentKey}) and "${existing.neutralName}" (${existingKey}).`,
+    fileName: component.sourcePath ?? entryPath,
+    relatedFiles: existing.sourcePath ? [existing.sourcePath] : undefined,
+  });
+  diagnostics?.push(diagnostic);
+  throwOnCompilerErrors([diagnostic]);
 }
 
 /** Verifies that target folders are unique across distinct source components. */
@@ -658,38 +700,15 @@ function validateUniqueComponentFolders(
   for (const component of components) {
     const existing = targetFolders.get(component.folder);
     if (existing !== undefined) {
-      const existingKey = existing.sourcePath ?? existing.sourceSpecifier;
-      const currentKey = component.sourcePath ?? component.sourceSpecifier;
-      if (existingKey !== currentKey) {
-        const diagnostic = createCompilerDiagnostic({
-          phase: 'generation',
-          severity: 'error',
-          code: DUPLICATE_COMPONENT_TARGET,
-          message: `Duplicate component target "${component.folder}" detected for "${component.neutralName}" (${currentKey}) and "${existing.neutralName}" (${existingKey}).`,
-          fileName: component.sourcePath ?? entryPath,
-          relatedFiles: existing.sourcePath ? [existing.sourcePath] : undefined,
-        });
-        diagnostics?.push(diagnostic);
-        throwOnCompilerErrors([diagnostic]);
-      }
+      recordDuplicateTargetDiagnostic(component, existing, entryPath, diagnostics);
     } else {
       targetFolders.set(component.folder, component);
     }
   }
 }
 
-/** Project public component exports from the canonical graph while retaining the legacy result shape. */
-export function discoverComponentsFromGraph(
-  graph: ForgeFileGraph,
-  stripPrefix = 'Forge',
-  diagnostics?: CompilerDiagnostic[],
-): DiscoveredComponent[] {
-  if (stripPrefix === 'Forge' && diagnostics === undefined) {
-    const cached = graphComponentCache.get(graph);
-    if (cached !== undefined) {
-      return cached;
-    }
-  }
+/** Collects discovered component exports from the graph entry and ast cache. */
+function discoverGraphComponents(graph: ForgeFileGraph, stripPrefix: string): DiscoveredComponent[] {
   const entry = graph.nodes.get(graph.entry);
   if (entry === undefined) {
     return [];
@@ -703,11 +722,28 @@ export function discoverComponentsFromGraph(
       components.push(component);
     }
   }
+  return components;
+}
 
+/** Project public component exports from the canonical graph while retaining the legacy result shape. */
+export function discoverComponentsFromGraph(
+  graph: ForgeFileGraph,
+  stripPrefix = 'Forge',
+  diagnostics?: CompilerDiagnostic[],
+): DiscoveredComponent[] {
+  const useCache = stripPrefix === 'Forge' && diagnostics === undefined;
+  if (useCache) {
+    const cached = graphComponentCache.get(graph);
+    if (cached !== undefined) {
+      return cached;
+    }
+  }
+
+  const components = discoverGraphComponents(graph, stripPrefix);
   disambiguateComponentFolders(components, graph.entry);
   validateUniqueComponentFolders(components, graph.entry, diagnostics);
 
-  if (stripPrefix === 'Forge' && diagnostics === undefined) {
+  if (useCache) {
     graphComponentCache.set(graph, components);
   }
 

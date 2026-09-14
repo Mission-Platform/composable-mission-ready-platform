@@ -183,13 +183,15 @@ function facadeNeutralResolvePlugin(repoRoot: string, exists: (filePath: string)
     name: 'mission-platform:facade-neutral-resolve',
     enforce: 'pre',
     resolveId(source: string, importer: string | undefined) {
+      let resolved: string | undefined;
       if (importer && /[/\\]dist[/\\]/.test(importer)) {
         const match = FACADE_FIRST_PACKAGES.find((package_) => source === `@mission-platform/${package_}`);
         if (match) {
           const packageRoot = resolvePackageRoot(repoRoot, match, exists);
-          return `${packageRoot}/dist/index.js`;
+          resolved = `${packageRoot}/dist/index.js`;
         }
       }
+      return resolved;
     },
   };
 }
@@ -210,24 +212,22 @@ function frameworkPackageResolvePlugin(
     name: 'mission-platform:framework-package-resolve',
     enforce: 'pre',
     resolveId(source: string, importer: string | undefined) {
+      let resolved: string | undefined;
       const match = /^@mission-platform\/([^/]+)$/.exec(source);
-      if (!match) {
-        return;
+      if (match && !(FACADE_FIRST_PACKAGES.includes(match[1]) && importer && /[/\\]dist[/\\]/.test(importer))) {
+        const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
+        const frameworkEntry = `${packageRoot}/dist/${target}/index.js`;
+        const frameworkFile = `${packageRoot}/dist/${target}.js`;
+        const neutralEntry = `${packageRoot}/dist/index.js`;
+        if (exists(frameworkEntry)) {
+          resolved = frameworkEntry;
+        } else if (exists(frameworkFile)) {
+          resolved = frameworkFile;
+        } else if (exists(neutralEntry)) {
+          resolved = neutralEntry;
+        }
       }
-      if (FACADE_FIRST_PACKAGES.includes(match[1]) && importer && /[/\\]dist[/\\]/.test(importer)) {
-        return;
-      }
-      const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
-      const frameworkEntry = `${packageRoot}/dist/${target}/index.js`;
-      if (exists(frameworkEntry)) {
-        return frameworkEntry;
-      }
-      const frameworkFile = `${packageRoot}/dist/${target}.js`;
-      if (exists(frameworkFile)) {
-        return frameworkFile;
-      }
-      const neutralEntry = `${packageRoot}/dist/index.js`;
-      return exists(neutralEntry) ? neutralEntry : undefined;
+      return resolved;
     },
   };
 }
@@ -288,7 +288,6 @@ function webComponentStoryMetadataPlugin(): Plugin {
           componentMetadata,
           'component: __mpStoryComponentTag($1)',
         )}`,
-        map: undefined,
       };
     },
   };

@@ -208,42 +208,25 @@ function uniqueDiagnostics(diagnostics: readonly CompilerDiagnostic[]): Compiler
   });
 }
 
-/** Compile neutral router usage through a selected native target adapter. */
-export function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult {
-  if (!input.source.includes(MP_ROUTER_MODULE)) {
-    const ir: RouterCapabilityModule = {
-      kind: 'router-capability-module',
-      source: input.source,
-      fileName: input.fileName,
-      moduleKind: input.moduleKind,
-      imports: [],
-      uses: [],
-    };
-    return { code: input.source, lang: languageFor(input.fileName), ir };
-  }
-  const ir = analyzeRouterCapabilities(input);
-  if (ir.imports.length === 0) {
-    return { code: input.source, lang: languageFor(input.fileName), ir };
-  }
-  const selected = selectForgeRouterPlugin(input.router, input.routerPlugins);
-  const selectionDiagnostic =
-    typeof input.router === 'string' && selected === undefined
-      ? targetNotFoundDiagnostic(input.fileName, input.router)
-      : undefined;
-  const capabilityDiagnostics = unsupportedRouterCapabilities(ir, selected);
+/** Builds a no-op RouterCapabilityModule when router features are unused. */
+function buildEmptyRouterIr(input: RouterCompilerInput): RouterCapabilityModule {
+  return {
+    kind: 'router-capability-module',
+    source: input.source,
+    fileName: input.fileName,
+    moduleKind: input.moduleKind,
+    imports: [],
+    uses: [],
+  };
+}
 
-  if (selected === undefined) {
-    return {
-      code: input.source,
-      lang: languageFor(input.fileName),
-      ir,
-      diagnostics:
-        ir.uses.length > 0
-          ? [...(selectionDiagnostic ? [selectionDiagnostic] : []), ...capabilityDiagnostics]
-          : undefined,
-    };
-  }
-
+/** Executes lowering, optimization, and code generation through the selected router plugin. */
+function executeRouterPlugin(
+  input: RouterCompilerInput,
+  ir: RouterCapabilityModule,
+  selected: ForgeRouterPlugin,
+  capabilityDiagnostics: CompilerDiagnostic[],
+): RouterCompilationResult {
   const context = {
     routerTarget: selected.id,
     uiFramework: input.uiFramework,
@@ -274,6 +257,42 @@ export function compileRouterModule(input: RouterCompilerInput): RouterCompilati
     routerTarget: selected.id,
     diagnostics: diagnostics.length > 0 ? diagnostics : undefined,
   };
+}
+
+/** Builds the compilation result when no router plugin is selected or available. */
+function buildUnselectedRouterResult(
+  input: RouterCompilerInput,
+  ir: RouterCapabilityModule,
+  capabilityDiagnostics: CompilerDiagnostic[],
+): RouterCompilationResult {
+  const selectionDiagnostic =
+    typeof input.router === 'string' ? targetNotFoundDiagnostic(input.fileName, input.router) : undefined;
+  const diagnostics = [...(selectionDiagnostic ? [selectionDiagnostic] : []), ...capabilityDiagnostics];
+  return {
+    code: input.source,
+    lang: languageFor(input.fileName),
+    ir,
+    diagnostics: ir.uses.length > 0 && diagnostics.length > 0 ? diagnostics : undefined,
+  };
+}
+
+/** Compile neutral router usage through a selected native target adapter. */
+export function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult {
+  if (!input.source.includes(MP_ROUTER_MODULE)) {
+    return { code: input.source, lang: languageFor(input.fileName), ir: buildEmptyRouterIr(input) };
+  }
+  const ir = analyzeRouterCapabilities(input);
+  if (ir.imports.length === 0) {
+    return { code: input.source, lang: languageFor(input.fileName), ir };
+  }
+  const selected = selectForgeRouterPlugin(input.router, input.routerPlugins);
+  const capabilityDiagnostics = unsupportedRouterCapabilities(ir, selected);
+
+  if (selected === undefined) {
+    return buildUnselectedRouterResult(input, ir, capabilityDiagnostics);
+  }
+
+  return executeRouterPlugin(input, ir, selected, capabilityDiagnostics);
 }
 
 /** Dispatcher form used by the Forge compiler and by standalone target fixtures. */

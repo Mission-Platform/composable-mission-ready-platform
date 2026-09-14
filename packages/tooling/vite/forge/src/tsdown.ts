@@ -423,7 +423,7 @@ export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPlugins
         disposeSession: () => {
           activePlugins -= 1;
           if (activePlugins === 0 && options.session === undefined) {
-            void session.dispose();
+            session.dispose().catch(() => {});
           }
         },
       }),
@@ -463,7 +463,7 @@ export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPlug
       disposeSession: () => {
         activeConfigs -= 1;
         if (activeConfigs === 0 && options.session === undefined) {
-          void session.dispose();
+          session.dispose().catch(() => {});
         }
       },
     }),
