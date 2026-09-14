@@ -364,7 +364,7 @@ export async function validateApps(
     const selectedRoutes = routes.length > 0 ? routes : options.route ? [options.route] : ['/'];
     let buildLog = '';
     if (options.build ?? true) {
-      const build = await runProcess(repositoryRoot, appBuildArgs(app.name), 120_000);
+      const build = await runProcess(repositoryRoot, appBuildArgs(app.name), 300_000);
       buildLog = build.output;
       if (!build.ok) {
         const log = writeAppLog(repositoryRoot, app, 'build', `${build.error ?? 'Build failed'}\n${build.output}`);

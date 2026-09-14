@@ -117,10 +117,10 @@ async function runBuild(
         finish({
           ok: false,
           log: output,
-          error: `Storybook ${framework} build timed out after 120000ms`,
+          error: `Storybook ${framework} build timed out after 300000ms`,
         }),
       );
-    }, 120_000);
+    }, 300_000);
     const append = (chunk: Buffer): void => {
       output = appendBounded(output, chunk.toString());
     };
