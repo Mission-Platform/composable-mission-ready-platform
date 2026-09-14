@@ -56,91 +56,138 @@ export interface RouterCompilationResult extends GeneratedRouterModule {
   readonly routerTarget?: string;
 }
 
+/** Resolves the router capability corresponding to an imported symbol name. */
 function capabilityImportName(name: string): RouterCapability | undefined {
   return CAPABILITY_BY_IMPORT[name];
 }
 
+/** Parses a single import specifier into a RouterCapabilityImport if it matches a capability. */
+function parseSpecifierImport(
+  specifier: OxcNode,
+  statement: OxcNode,
+  source: string,
+): RouterCapabilityImport | undefined {
+  if (specifier.type !== 'ImportSpecifier') return undefined;
+  const importedName =
+    oxcIdentifierName(oxcObject(specifier, 'imported')) ?? oxcIdentifierName(oxcObject(specifier, 'local'));
+  if (!importedName || capabilityImportName(importedName) === undefined) return undefined;
+  return {
+    importedName,
+    localName: oxcIdentifierName(oxcObject(specifier, 'local')) ?? '',
+    typeOnly: specifier.importKind === 'type' || statement.importKind === 'type',
+    span: oxcSourceSpan(source, specifier),
+  };
+}
+
+/** Collects router capability imports from an import declaration statement. */
+function collectStatementImports(statement: OxcNode, source: string, imports: RouterCapabilityImport[]): void {
+  if (statement.type !== 'ImportDeclaration') return;
+  if (oxcLiteralValue(oxcObject(statement, 'source')) !== MP_ROUTER_MODULE) return;
+  for (const specifier of oxcArray(statement, 'specifiers')) {
+    const parsed = parseSpecifierImport(specifier, statement, source);
+    if (parsed !== undefined) {
+      imports.push(parsed);
+    }
+  }
+}
+
+/** Scans parsed module statements and extracts all router capability imports. */
 function routerImports(module: OxcParsedModule): RouterCapabilityImport[] {
   const imports: RouterCapabilityImport[] = [];
   for (const statement of oxcProgramBody(module.program)) {
-    if (statement.type !== 'ImportDeclaration' || typeof oxcLiteralValue(oxcObject(statement, 'source')) !== 'string')
-      continue;
-    if (oxcLiteralValue(oxcObject(statement, 'source')) !== MP_ROUTER_MODULE) continue;
-
-    const specifiers = oxcArray(statement, 'specifiers');
-    for (const specifier of specifiers) {
-      if (specifier.type !== 'ImportSpecifier') continue;
-      const importedName =
-        oxcIdentifierName(oxcObject(specifier, 'imported')) ?? oxcIdentifierName(oxcObject(specifier, 'local'));
-      if (!importedName || capabilityImportName(importedName) === undefined) continue;
-      imports.push({
-        importedName,
-        localName: oxcIdentifierName(oxcObject(specifier, 'local')) ?? '',
-        typeOnly: specifier.importKind === 'type' || statement.importKind === 'type',
-        span: oxcSourceSpan(module.source, specifier),
-      });
-    }
+    collectStatementImports(statement, module.source, imports);
   }
   return imports;
 }
 
+interface RouterUseRecorder {
+  record(node: OxcNode, localName: string, kind: RouterCapabilityUse['kind']): void;
+}
+
+/** Records a router capability usage if the local symbol corresponds to an active import. */
+function recordRouterUse(
+  node: OxcNode,
+  localName: string,
+  kind: RouterCapabilityUse['kind'],
+  byLocalName: ReadonlyMap<string, RouterCapabilityImport>,
+  seen: Set<string>,
+  uses: RouterCapabilityUse[],
+  source: string,
+): void {
+  const imported = byLocalName.get(localName);
+  if (imported === undefined) return;
+  const key = `${node.start}:${kind}`;
+  if (seen.has(key)) return;
+  seen.add(key);
+  uses.push({
+    capability: capabilityImportName(imported.importedName) as RouterCapability,
+    importedName: imported.importedName,
+    localName,
+    kind,
+    span: oxcSourceSpan(source, node),
+  });
+}
+
+/** Inspects JSX opening or self-closing elements for router component usages. */
+function inspectJsxRouterUse(node: OxcNode, recorder: RouterUseRecorder): void {
+  if (node.type !== 'JSXOpeningElement' && node.type !== 'JSXSelfClosingElement') return;
+  const nameNode = oxcObject(node, 'name');
+  if (nameNode?.type === 'JSXIdentifier') {
+    const localName = oxcIdentifierName(nameNode);
+    if (localName) recorder.record(nameNode, localName, 'jsx');
+  }
+}
+
+/** Inspects call expressions for router hook or utility invocations. */
+function inspectCallRouterUse(node: OxcNode, recorder: RouterUseRecorder): void {
+  if (node.type !== 'CallExpression') return;
+  const callee = oxcObject(node, 'callee');
+  if (callee?.type === 'Identifier') {
+    const localName = oxcIdentifierName(callee);
+    if (localName) recorder.record(callee, localName, 'call');
+  }
+}
+
+/** Checks whether an identifier node is a direct property, callee, or JSX tag reference. */
+function isSubsumedIdentifier(node: OxcNode, parent: OxcNode | undefined): boolean {
+  if (!parent) return false;
+  if (parent.type === 'CallExpression' && oxcObject(parent, 'callee') === node) return true;
+  if (parent.type === 'MemberExpression' && oxcObject(parent, 'property') === node) return true;
+  return (
+    (parent.type === 'JSXOpeningElement' ||
+      parent.type === 'JSXSelfClosingElement' ||
+      parent.type === 'JSXClosingElement') &&
+    oxcObject(parent, 'name') === node
+  );
+}
+
+/** Inspects standalone identifier references to router bindings. */
+function inspectIdentifierRouterUse(node: OxcNode, parent: OxcNode | undefined, recorder: RouterUseRecorder): void {
+  if (node.type !== 'Identifier' && node.type !== 'JSXIdentifier') return;
+  const localName = oxcIdentifierName(node);
+  if (localName && !isSubsumedIdentifier(node, parent)) {
+    recorder.record(node, localName, 'reference');
+  }
+}
+
+/** Traverses AST nodes to discover all router component and hook usages. */
 function routerUses(module: OxcParsedModule, imports: readonly RouterCapabilityImport[]): RouterCapabilityUse[] {
   const byLocalName = new Map(imports.filter((entry) => !entry.typeOnly).map((entry) => [entry.localName, entry]));
   const uses: RouterCapabilityUse[] = [];
   const seen = new Set<string>();
   const parentMap = buildOxcParentMap(module.program);
-  const add = (node: OxcNode, localName: string, kind: RouterCapabilityUse['kind']): void => {
-    const imported = byLocalName.get(localName);
-    if (imported === undefined) return;
-    const key = `${node.start}:${kind}`;
-    if (seen.has(key)) return;
-    seen.add(key);
-    uses.push({
-      capability: capabilityImportName(imported.importedName) as RouterCapability,
-      importedName: imported.importedName,
-      localName,
-      kind,
-      span: oxcSourceSpan(module.source, node),
-    });
+  const recorder: RouterUseRecorder = {
+    record(node, localName, kind) {
+      recordRouterUse(node, localName, kind, byLocalName, seen, uses, module.source);
+    },
   };
 
   visitOxc(module.program, (node) => {
-    const parent = parentMap.get(node);
-
-    // Skip import declarations and their children
     if (node.type === 'ImportDeclaration') return false;
-
-    // JSX usage
-    if (node.type === 'JSXOpeningElement' || node.type === 'JSXSelfClosingElement') {
-      const nameNode = oxcObject(node, 'name');
-      if (nameNode?.type === 'JSXIdentifier') {
-        const localName = oxcIdentifierName(nameNode);
-        if (localName) add(nameNode, localName, 'jsx');
-      }
-    }
-    // Call usage
-    if (node.type === 'CallExpression') {
-      const callee = oxcObject(node, 'callee');
-      if (callee?.type === 'Identifier') {
-        const localName = oxcIdentifierName(callee);
-        if (localName) add(callee, localName, 'call');
-      }
-    }
-    // Identifier reference
-    if (node.type === 'Identifier' || node.type === 'JSXIdentifier') {
-      const localName = oxcIdentifierName(node);
-      const isCall = parent?.type === 'CallExpression' && oxcObject(parent, 'callee') === node;
-      const isProperty = parent?.type === 'MemberExpression' && oxcObject(parent, 'property') === node;
-      const isJsx =
-        (parent?.type === 'JSXOpeningElement' ||
-          parent?.type === 'JSXSelfClosingElement' ||
-          parent?.type === 'JSXClosingElement') &&
-        oxcObject(parent, 'name') === node;
-
-      if (localName && !isCall && !isProperty && !isJsx) {
-        add(node, localName, 'reference');
-      }
-    }
+    const parent = parentMap.get(node);
+    inspectJsxRouterUse(node, recorder);
+    inspectCallRouterUse(node, recorder);
+    inspectIdentifierRouterUse(node, parent, recorder);
     return true;
   });
   return uses;
@@ -172,21 +219,24 @@ export function analyzeRouterCapabilities(
   };
 }
 
+/** Resolves the code block language identifier from the file extension. */
 function languageFor(fileName: string): GeneratedRouterModule['lang'] {
   const extension = fileName.split('.').pop();
   return extension === undefined ? 'ts' : extension;
 }
 
-function targetNotFoundDiagnostic(fileName: string, target: string) {
+/** Creates a compiler diagnostic when a requested router plugin is not registered. */
+function targetNotFoundDiagnostic(fileName: string, target: string): CompilerDiagnostic {
   return {
-    phase: 'generation' as const,
-    severity: 'error' as const,
+    phase: 'generation',
+    severity: 'error',
     code: 'MP_ROUTER_TARGET_NOT_FOUND',
     message: `No Forge router plugin is registered for target "${target}".`,
     fileName,
   };
 }
 
+/** Deduplicates compiler diagnostics by their phase, code, message, and location. */
 function uniqueDiagnostics(diagnostics: readonly CompilerDiagnostic[]): CompilerDiagnostic[] {
   const seen = new Set<string>();
   return diagnostics.filter((diagnostic) => {

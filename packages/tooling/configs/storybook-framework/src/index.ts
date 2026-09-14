@@ -274,21 +274,21 @@ function webComponentStoryMetadataPlugin(): Plugin {
     name: 'mission-platform:web-component-story-metadata',
     enforce: 'pre',
     transform(code, id) {
+      let transformed: { code: string } | undefined;
       const sourceId = id.split('?')[0];
-      if (!/\.stories\.[cm]?[jt]sx?$/.test(sourceId)) {
-        return;
+      if (/\.stories\.[cm]?[jt]sx?$/.test(sourceId)) {
+        const componentMetadata = /component:\s*([A-Za-z_$][\w$]*)/g;
+        if (componentMetadata.test(code)) {
+          componentMetadata.lastIndex = 0;
+          transformed = {
+            code: `import { customElementTag as __mpStoryComponentTag } from '@mission-platform/storybook-framework/slots';\n${code.replace(
+              componentMetadata,
+              'component: __mpStoryComponentTag($1)',
+            )}`,
+          };
+        }
       }
-      const componentMetadata = /component:\s*([A-Za-z_$][\w$]*)/g;
-      if (!componentMetadata.test(code)) {
-        return;
-      }
-      componentMetadata.lastIndex = 0;
-      return {
-        code: `import { customElementTag as __mpStoryComponentTag } from '@mission-platform/storybook-framework/slots';\n${code.replace(
-          componentMetadata,
-          'component: __mpStoryComponentTag($1)',
-        )}`,
-      };
+      return transformed;
     },
   };
 }

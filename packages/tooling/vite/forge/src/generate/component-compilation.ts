@@ -15,7 +15,7 @@ import { componentSourcePath } from './component-discovery.js';
 import { copyComponentOwnStyles } from './helper-carry.js';
 
 import type { ForgeGenerationContext } from '../compiler/generation-context.js';
-import type { ForgeFileGraph } from '../compiler/graph.js';
+import type { ForgeFileEdge, ForgeFileGraph } from '../compiler/graph.js';
 import type { FrameworkSourceTarget } from '../generate.js';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
@@ -102,29 +102,10 @@ export interface CompileComponentTreeOptions {
   readonly routerConditions?: readonly string[];
 }
 
-export function compileComponentTree(options: CompileComponentTreeOptions): void {
-  const {
-    allComponents,
-    context,
-    target,
-    graph,
-    sourceRoot,
-    componentFolders,
-    componentHosts,
-    componentOwnTypes,
-    mirrorDir,
-    mirrorHelperDir,
-    writeCompiledModule,
-    copyAsset,
-    carryHelperModule,
-    readExportedTypeNames,
-    router,
-    routerPlugins,
-    routerConditions,
-  } = options;
-
-  const edgesByFrom = new Map<string, (typeof graph.edges)[number][]>();
-  for (const edge of graph.edges) {
+/** Indexes resolved graph edges by their source module path. */
+function indexResolvedGraphEdges(edges: readonly ForgeFileEdge[]): Map<string, ForgeFileEdge[]> {
+  const edgesByFrom = new Map<string, ForgeFileEdge[]>();
+  for (const edge of edges) {
     if (edge.resolved && edge.to !== undefined) {
       let list = edgesByFrom.get(edge.from);
       if (list === undefined) {
@@ -134,56 +115,90 @@ export function compileComponentTree(options: CompileComponentTreeOptions): void
       list.push(edge);
     }
   }
+  return edgesByFrom;
+}
 
-  for (const component of allComponents) {
-    const sourcePath = componentSourcePath(component);
-    const source = readFileSync(sourcePath, 'utf8');
-    if (!componentOwnTypes.has(component.folder)) {
-      componentOwnTypes.set(component.folder, readExportedTypeNames(sourcePath, source));
-    }
-    const compiled = context.compile({
-      source,
-      moduleKind: 'component',
-      componentName: component.neutralName,
-      fileName: sourcePath,
-      componentFolders,
-      componentHosts,
-      router,
-      routerPlugins,
-      routerConditions,
-    });
-    writeCompiledModule(mirrorDir(sourcePath), sourceBase(sourcePath), compiled, sourcePath);
+/** Copies a Forge Web Script asset and its companion type declarations into the helper output directory. */
+function copyForgeWebScriptAsset(
+  helperId: string,
+  mirrorHelperDir: (sourcePath: string) => string,
+  copyAsset: (dir: string, name: string, sourcePath: string, identityKey?: string) => void,
+): void {
+  const targetDir = mirrorHelperDir(helperId);
+  copyAsset(targetDir, path.basename(helperId), helperId, helperId);
+  const declarationPath = `${helperId}.d.ts`;
+  if (existsSync(declarationPath)) {
+    copyAsset(targetDir, path.basename(declarationPath), declarationPath, declarationPath);
+  }
+}
 
-    // Carry each shared helper module the component imports into the flat tree
-    for (const edge of edgesByFrom.get(sourcePath) ?? []) {
-      const helperNode = graph.nodes.get(edge.to as string);
-      if (helperNode?.kind === 'asset' && path.extname(helperNode.id) === '.fws') {
-        copyAsset(mirrorHelperDir(helperNode.id), path.basename(helperNode.id), helperNode.id, helperNode.id);
-        const declarationPath = `${helperNode.id}.d.ts`;
-        if (existsSync(declarationPath)) {
-          copyAsset(mirrorHelperDir(helperNode.id), path.basename(declarationPath), declarationPath, declarationPath);
-        }
-        continue;
-      }
-      if (
-        helperNode === undefined ||
-        helperNode.kind === 'component' ||
-        helperNode.kind === 'style' ||
-        helperNode.kind === 'asset'
-      ) {
-        continue;
-      }
-      carryHelperModule(helperNode.id);
-    }
+/** Evaluates an import edge from a component and carries helper modules or assets into the flat build. */
+function carryImportedHelperEdge(
+  edge: ForgeFileEdge,
+  graph: ForgeFileGraph,
+  mirrorHelperDir: (sourcePath: string) => string,
+  copyAsset: (dir: string, name: string, sourcePath: string, identityKey?: string) => void,
+  carryHelperModule: (sourcePath: string) => void,
+): void {
+  const helperNode = graph.nodes.get(edge.to as string);
+  if (helperNode?.kind === 'asset' && path.extname(helperNode.id) === '.fws') {
+    copyForgeWebScriptAsset(helperNode.id, mirrorHelperDir, copyAsset);
+    return;
+  }
+  if (
+    helperNode === undefined ||
+    helperNode.kind === 'component' ||
+    helperNode.kind === 'style' ||
+    helperNode.kind === 'asset'
+  ) {
+    return;
+  }
+  carryHelperModule(helperNode.id);
+}
 
-    copyComponentOwnStyles({
-      graph,
-      source,
-      sourcePath,
-      sourceRoot,
-      targetId: target.id,
-      mirrorDir,
-      copyAsset,
-    });
+/** Compiles a single component, writes its generated output, and propagates imported helpers. */
+function compileSingleComponent(
+  component: DiscoveredComponent,
+  options: CompileComponentTreeOptions,
+  edgesByFrom: ReadonlyMap<string, ForgeFileEdge[]>,
+): void {
+  const sourcePath = componentSourcePath(component);
+  const source = readFileSync(sourcePath, 'utf8');
+  if (!options.componentOwnTypes.has(component.folder)) {
+    options.componentOwnTypes.set(component.folder, options.readExportedTypeNames(sourcePath, source));
+  }
+  const compiled = options.context.compile({
+    source,
+    moduleKind: 'component',
+    componentName: component.neutralName,
+    fileName: sourcePath,
+    componentFolders: options.componentFolders,
+    componentHosts: options.componentHosts,
+    router: options.router,
+    routerPlugins: options.routerPlugins,
+    routerConditions: options.routerConditions,
+  });
+  options.writeCompiledModule(options.mirrorDir(sourcePath), sourceBase(sourcePath), compiled, sourcePath);
+
+  for (const edge of edgesByFrom.get(sourcePath) ?? []) {
+    carryImportedHelperEdge(edge, options.graph, options.mirrorHelperDir, options.copyAsset, options.carryHelperModule);
+  }
+
+  copyComponentOwnStyles({
+    graph: options.graph,
+    source,
+    sourcePath,
+    sourceRoot: options.sourceRoot,
+    targetId: options.target.id,
+    mirrorDir: options.mirrorDir,
+    copyAsset: options.copyAsset,
+  });
+}
+
+/** Traverses discovered components, compiles their templates, and carries dependencies into the target tree. */
+export function compileComponentTree(options: CompileComponentTreeOptions): void {
+  const edgesByFrom = indexResolvedGraphEdges(options.graph.edges);
+  for (const component of options.allComponents) {
+    compileSingleComponent(component, options, edgesByFrom);
   }
 }

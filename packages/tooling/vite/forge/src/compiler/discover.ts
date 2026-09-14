@@ -775,6 +775,92 @@ export function discoverComponentsFromGraph(
   return components;
 }
 
+/** Derives a helper module's path relative to the graph entry directory. */
+function deriveHelperRelativePath(sourceRelativePath: string, entryDirectory: string): string {
+  const stripped = sourceRelativePath.replace(/\.(?:d\.ts|d\.mts|d\.cts|[cm]?[jt]sx?)$/, '').replace(/\/index$/, '');
+  return stripped.startsWith(`${entryDirectory}/`) ? stripped.slice(entryDirectory.length + 1) : stripped;
+}
+
+/** Determines if a candidate export is part of component exports or existing types. */
+function isHelperExportExcluded(
+  sourceNode: ForgeFileNode,
+  exportedName: string,
+  localName: string,
+  isType: boolean,
+  componentNames: ReadonlySet<string>,
+  componentTypes: ReadonlySet<string>,
+  astCache: Map<string, OxcParsedModule>,
+): boolean {
+  if (isType) {
+    return componentTypes.has(exportedName);
+  }
+  if (componentNames.has(exportedName) || componentNames.has(localName)) {
+    return true;
+  }
+  return sourceNode.kind === 'component' && isComponentExport(sourceNode.id, localName, astCache);
+}
+
+/** Appends a helper binding to the helper record if not already recorded. */
+function appendHelperBinding(helper: DiscoveredHelperExport, binding: DiscoveredHelperBinding, isType: boolean): void {
+  const targetList = isType ? helper.types : helper.values;
+  if (!targetList.some((existing) => existing.exportedName === binding.exportedName)) {
+    targetList.push(binding);
+  }
+}
+
+/** Collects or creates a DiscoveredHelperExport entry in the helper map. */
+function getOrCreateHelperEntry(
+  helpers: Map<string, DiscoveredHelperExport>,
+  sourceNode: ForgeFileNode,
+  entryDirectory: string,
+): DiscoveredHelperExport {
+  let helper = helpers.get(sourceNode.id);
+  if (helper === undefined) {
+    helper = {
+      base: sourceBase(sourceNode.id),
+      relativePath: deriveHelperRelativePath(sourceNode.sourceRelativePath, entryDirectory),
+      values: [],
+      types: [],
+      sourcePath: sourceNode.id,
+    };
+    helpers.set(sourceNode.id, helper);
+  }
+  return helper;
+}
+
+/** Processes a single resolved graph export and registers helper bindings. */
+function processGraphHelperExport(
+  resolvedExport: ResolvedGraphExport,
+  entry: ForgeFileNode,
+  entryDirectory: string,
+  helpers: Map<string, DiscoveredHelperExport>,
+  componentNames: ReadonlySet<string>,
+  componentTypes: ReadonlySet<string>,
+  astCache: Map<string, OxcParsedModule>,
+): void {
+  const entryExport = resolvedExport.fact;
+  if (entryExport.exportedName === undefined) return;
+  const sourceNode = resolvedExport.sourceNode;
+  if (sourceNode === undefined || sourceNode.id === entry.id) return;
+
+  const exportedName = entryExport.exportedName;
+  const localName = entryExport.localName ?? exportedName;
+  const isType =
+    entryExport.typeOnly || sourceNode.exports.find((e) => e.exportedName === localName)?.typeOnly === true;
+
+  if (isHelperExportExcluded(sourceNode, exportedName, localName, isType, componentNames, componentTypes, astCache)) {
+    return;
+  }
+
+  const helper = getOrCreateHelperEntry(helpers, sourceNode, entryDirectory);
+  const binding: DiscoveredHelperBinding = {
+    localName,
+    exportedName,
+    ...(isType ? {} : { componentAlias: componentAliasTarget(sourceNode.id, localName, astCache) }),
+  };
+  appendHelperBinding(helper, binding, isType);
+}
+
 /** Project non-component public exports from the canonical graph. */
 export function discoverHelperExportsFromGraph(
   graph: ForgeFileGraph,
@@ -803,65 +889,7 @@ export function discoverHelperExportsFromGraph(
   const helpers = new Map<string, DiscoveredHelperExport>();
   const entryDirectory = entry.sourceRelativePath.replace(/\/[^/]+$/, '');
   for (const resolvedExport of resolveGraphExports(graph, entry)) {
-    const entryExport = resolvedExport.fact;
-    if (entryExport.exportedName === undefined) {
-      continue;
-    }
-    const sourceNode = resolvedExport.sourceNode;
-    if (sourceNode === undefined || sourceNode.id === entry.id) {
-      continue;
-    }
-
-    const exportedName = entryExport.exportedName;
-    const localName = entryExport.localName ?? exportedName;
-    const isType =
-      entryExport.typeOnly || sourceNode.exports.find((e) => e.exportedName === localName)?.typeOnly === true;
-
-    if (isType) {
-      if (componentTypes.has(exportedName)) {
-        continue;
-      }
-    } else {
-      if (componentNames.has(exportedName) || componentNames.has(localName)) {
-        continue;
-      }
-      if (sourceNode.kind === 'component' && isComponentExport(sourceNode.id, localName, astCache)) {
-        continue;
-      }
-    }
-
-    const base = sourceBase(sourceNode.id);
-    const key = sourceNode.id;
-    const helper = helpers.get(key) ?? {
-      base,
-      relativePath: (() => {
-        const sourceRelative = sourceNode.sourceRelativePath
-          .replace(/\.(?:d\.ts|d\.mts|d\.cts|[cm]?[jt]sx?)$/, '')
-          .replace(/\/index$/, '');
-        const relativeToEntryDirectory = sourceRelative.startsWith(`${entryDirectory}/`)
-          ? sourceRelative.slice(entryDirectory.length + 1)
-          : sourceRelative;
-        return relativeToEntryDirectory;
-      })(),
-      values: [],
-      types: [],
-      sourcePath: sourceNode.id,
-    };
-    const binding: DiscoveredHelperBinding = {
-      localName,
-      exportedName,
-      ...(isType ? {} : { componentAlias: componentAliasTarget(sourceNode.id, localName, astCache) }),
-    };
-    if (isType) {
-      if (!helper.types.some((existing) => existing.exportedName === binding.exportedName)) {
-        helper.types.push(binding);
-      }
-    } else {
-      if (!helper.values.some((existing) => existing.exportedName === binding.exportedName)) {
-        helper.values.push(binding);
-      }
-    }
-    helpers.set(key, helper);
+    processGraphHelperExport(resolvedExport, entry, entryDirectory, helpers, componentNames, componentTypes, astCache);
   }
   const result = [...helpers.values()];
   if (discoveredComponents === undefined) {
