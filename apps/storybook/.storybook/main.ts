@@ -1,7 +1,5 @@
-import { createStorybookConfig } from '@mission-platform/storybook-framework';
+import { createStorybookConfig, type StorybookConfig } from '@mission-platform/storybook-framework';
 import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-import type { StorybookConfig } from '@storybook/vue3-vite';
 
 const visualParityCacheDirectory = process.env.STORYBOOK_VITE_CACHE_DIR;
 
