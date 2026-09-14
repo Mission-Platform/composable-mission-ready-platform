@@ -123,10 +123,24 @@ export function compileComponentTree(options: CompileComponentTreeOptions): void
     routerConditions,
   } = options;
 
+  const edgesByFrom = new Map<string, (typeof graph.edges)[number][]>();
+  for (const edge of graph.edges) {
+    if (edge.resolved && edge.to !== undefined) {
+      let list = edgesByFrom.get(edge.from);
+      if (list === undefined) {
+        list = [];
+        edgesByFrom.set(edge.from, list);
+      }
+      list.push(edge);
+    }
+  }
+
   for (const component of allComponents) {
     const sourcePath = componentSourcePath(component);
     const source = readFileSync(sourcePath, 'utf8');
-    componentOwnTypes.set(component.folder, readExportedTypeNames(sourcePath, source));
+    if (!componentOwnTypes.has(component.folder)) {
+      componentOwnTypes.set(component.folder, readExportedTypeNames(sourcePath, source));
+    }
     const compiled = context.compile({
       source,
       moduleKind: 'component',
@@ -141,9 +155,7 @@ export function compileComponentTree(options: CompileComponentTreeOptions): void
     writeCompiledModule(mirrorDir(sourcePath), sourceBase(sourcePath), compiled, sourcePath);
 
     // Carry each shared helper module the component imports into the flat tree
-    for (const edge of graph.edges.filter(
-      (candidate) => candidate.from === sourcePath && candidate.resolved && candidate.to !== undefined,
-    )) {
+    for (const edge of edgesByFrom.get(sourcePath) ?? []) {
       const helperNode = graph.nodes.get(edge.to as string);
       if (helperNode?.kind === 'asset' && path.extname(helperNode.id) === '.fws') {
         copyAsset(mirrorHelperDir(helperNode.id), path.basename(helperNode.id), helperNode.id, helperNode.id);
