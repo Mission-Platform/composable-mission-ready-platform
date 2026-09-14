@@ -828,6 +828,41 @@ function getOrCreateHelperEntry(
   return helper;
 }
 
+/** Collects public component names and type export names from discovered components. */
+function collectComponentTypesAndNames(components: readonly DiscoveredComponent[]) {
+  const componentNames = new Set(components.flatMap((c) => [c.neutralName, c.publicName]));
+  const componentTypes = new Set<string>();
+  for (const component of components) {
+    if (component.propertiesType) componentTypes.add(component.propertiesType);
+    for (const typeName of component.typeExports ?? []) componentTypes.add(typeName);
+  }
+  return { componentNames, componentTypes };
+}
+
+/** Determines if an export fact represents a type-only export. */
+function isTypeExport(entryExport: ForgeExportFact, sourceNode: ForgeFileNode, localName: string): boolean {
+  if (entryExport.typeOnly) return true;
+  const matched = sourceNode.exports.find((e) => e.exportedName === localName);
+  return matched?.typeOnly === true;
+}
+
+/** Constructs a helper binding with optional component alias target. */
+function buildHelperBinding(
+  localName: string,
+  exportedName: string,
+  isType: boolean,
+  sourceNodeId: string,
+  astCache: Map<string, OxcParsedModule>,
+): DiscoveredHelperBinding {
+  const componentAlias = isType ? undefined : componentAliasTarget(sourceNodeId, localName, astCache);
+  return { localName, exportedName, componentAlias };
+}
+
+/** Validates that a resolved export belongs to a valid non-entry source node. */
+function isValidHelperSourceNode(sourceNode: ForgeFileNode | undefined, entryId: string): sourceNode is ForgeFileNode {
+  return sourceNode !== undefined && sourceNode.id !== entryId;
+}
+
 /** Processes a single resolved graph export and registers helper bindings. */
 function processGraphHelperExport(
   resolvedExport: ResolvedGraphExport,
@@ -839,25 +874,19 @@ function processGraphHelperExport(
   astCache: Map<string, OxcParsedModule>,
 ): void {
   const entryExport = resolvedExport.fact;
-  if (entryExport.exportedName === undefined) return;
-  const sourceNode = resolvedExport.sourceNode;
-  if (sourceNode === undefined || sourceNode.id === entry.id) return;
-
   const exportedName = entryExport.exportedName;
-  const localName = entryExport.localName ?? exportedName;
-  const isType =
-    entryExport.typeOnly || sourceNode.exports.find((e) => e.exportedName === localName)?.typeOnly === true;
+  if (exportedName === undefined) return;
+  const sourceNode = resolvedExport.sourceNode;
+  if (!isValidHelperSourceNode(sourceNode, entry.id)) return;
 
+  const localName = entryExport.localName ?? exportedName;
+  const isType = isTypeExport(entryExport, sourceNode, localName);
   if (isHelperExportExcluded(sourceNode, exportedName, localName, isType, componentNames, componentTypes, astCache)) {
     return;
   }
 
   const helper = getOrCreateHelperEntry(helpers, sourceNode, entryDirectory);
-  const binding: DiscoveredHelperBinding = {
-    localName,
-    exportedName,
-    ...(isType ? {} : { componentAlias: componentAliasTarget(sourceNode.id, localName, astCache) }),
-  };
+  const binding = buildHelperBinding(localName, exportedName, isType, sourceNode.id, astCache);
   appendHelperBinding(helper, binding, isType);
 }
 
@@ -869,25 +898,17 @@ export function discoverHelperExportsFromGraph(
 ): DiscoveredHelperExport[] {
   if (discoveredComponents === undefined) {
     const cached = graphHelperCache.get(graph);
-    if (cached !== undefined) {
-      return cached;
-    }
+    if (cached !== undefined) return cached;
   }
   const entry = graph.nodes.get(graph.entry);
-  if (entry === undefined) {
-    return [];
-  }
-  const components = discoveredComponents ?? discoverComponentsFromGraph(graph);
-  const componentNames = new Set(components.flatMap((c) => [c.neutralName, c.publicName]));
-  const componentTypes = new Set(
-    components.flatMap((c) =>
-      c.propertiesType ? [c.propertiesType, ...(c.typeExports ?? [])] : (c.typeExports ?? []),
-    ),
-  );
-  const astCache = new Map<string, OxcParsedModule>();
+  if (entry === undefined) return [];
 
+  const components = discoveredComponents ?? discoverComponentsFromGraph(graph);
+  const { componentNames, componentTypes } = collectComponentTypesAndNames(components);
+  const astCache = new Map<string, OxcParsedModule>();
   const helpers = new Map<string, DiscoveredHelperExport>();
   const entryDirectory = entry.sourceRelativePath.replace(/\/[^/]+$/, '');
+
   for (const resolvedExport of resolveGraphExports(graph, entry)) {
     processGraphHelperExport(resolvedExport, entry, entryDirectory, helpers, componentNames, componentTypes, astCache);
   }

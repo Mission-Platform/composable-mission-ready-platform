@@ -15,7 +15,7 @@ import { componentSourcePath } from './component-discovery.js';
 import { copyComponentOwnStyles } from './helper-carry.js';
 
 import type { ForgeGenerationContext } from '../compiler/generation-context.js';
-import type { ForgeFileEdge, ForgeFileGraph } from '../compiler/graph.js';
+import type { ForgeFileEdge, ForgeFileGraph, ForgeFileNode } from '../compiler/graph.js';
 import type { FrameworkSourceTarget } from '../generate.js';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
@@ -132,6 +132,18 @@ function copyForgeWebScriptAsset(
   }
 }
 
+const NON_HELPER_NODE_KINDS = new Set(['component', 'style', 'asset']);
+
+/** Determines whether a graph node is a carryable helper module. */
+function isCarryableHelperNode(node: ForgeFileNode | undefined): node is ForgeFileNode {
+  return node !== undefined && !NON_HELPER_NODE_KINDS.has(node.kind);
+}
+
+/** Determines if a graph node is a Forge Web Script asset. */
+function isForgeWebScriptAsset(node: ForgeFileNode | undefined): node is ForgeFileNode {
+  return node?.kind === 'asset' && path.extname(node.id) === '.fws';
+}
+
 /** Evaluates an import edge from a component and carries helper modules or assets into the flat build. */
 function carryImportedHelperEdge(
   edge: ForgeFileEdge,
@@ -141,19 +153,13 @@ function carryImportedHelperEdge(
   carryHelperModule: (sourcePath: string) => void,
 ): void {
   const helperNode = graph.nodes.get(edge.to as string);
-  if (helperNode?.kind === 'asset' && path.extname(helperNode.id) === '.fws') {
+  if (isForgeWebScriptAsset(helperNode)) {
     copyForgeWebScriptAsset(helperNode.id, mirrorHelperDir, copyAsset);
     return;
   }
-  if (
-    helperNode === undefined ||
-    helperNode.kind === 'component' ||
-    helperNode.kind === 'style' ||
-    helperNode.kind === 'asset'
-  ) {
-    return;
+  if (isCarryableHelperNode(helperNode)) {
+    carryHelperModule(helperNode.id);
   }
-  carryHelperModule(helperNode.id);
 }
 
 /** Compiles a single component, writes its generated output, and propagates imported helpers. */

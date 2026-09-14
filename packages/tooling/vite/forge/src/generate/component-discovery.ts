@@ -67,6 +67,21 @@ function deriveChildFolder(nodeId: string): string {
     : childFileName.replace(/\.[^.]+$/, '');
 }
 
+/** Checks if a parent component imports PascalCase component symbols from a specifier. */
+function hasPascalCaseImport(currentNode: ForgeFileNode, edgeSpecifier: string): boolean {
+  for (const entryImport of currentNode.imports) {
+    if (entryImport.specifier === edgeSpecifier && entryImport.valueNames.some((name) => /^[A-Z]/.test(name))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** Validates that a node's framework directive matches the target framework. */
+function isFrameworkCompatible(directive: string | undefined, targetId: string): boolean {
+  return directive === undefined || directive === targetId;
+}
+
 /** Validates whether a child node is an eligible co-located sibling component. */
 function isEligibleSiblingNode(
   childNode: ForgeFileNode | undefined,
@@ -76,14 +91,10 @@ function isEligibleSiblingNode(
   discoveredFolders: ReadonlySet<string>,
   targetId: string,
 ): boolean {
-  if (childNode === undefined || childNode.kind !== 'component') return false;
+  if (!childNode || childNode.kind !== 'component') return false;
   if (discoveredFolders.has(childFolder)) return false;
-  if (childNode.frameworkDirective !== undefined && childNode.frameworkDirective !== targetId) return false;
-
-  const importedNames = currentNode.imports
-    .filter((entryImport) => entryImport.specifier === edgeSpecifier)
-    .flatMap((entryImport) => entryImport.valueNames);
-  return importedNames.some((name) => /^[A-Z]/.test(name));
+  if (!isFrameworkCompatible(childNode.frameworkDirective, targetId)) return false;
+  return hasPascalCaseImport(currentNode, edgeSpecifier);
 }
 
 /** Constructs a DiscoveredComponent descriptor for an eligible sibling component node. */

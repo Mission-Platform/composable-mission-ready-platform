@@ -61,6 +61,17 @@ function capabilityImportName(name: string): RouterCapability | undefined {
   return CAPABILITY_BY_IMPORT[name];
 }
 
+/** Resolves the imported symbol name from an import specifier. */
+function resolveImportedSpecifierName(specifier: OxcNode): string | undefined {
+  const imported = oxcIdentifierName(oxcObject(specifier, 'imported'));
+  return imported ?? oxcIdentifierName(oxcObject(specifier, 'local'));
+}
+
+/** Checks whether an import specifier or its parent declaration is type-only. */
+function isTypeOnlyImport(specifier: OxcNode, statement: OxcNode): boolean {
+  return specifier.importKind === 'type' || statement.importKind === 'type';
+}
+
 /** Parses a single import specifier into a RouterCapabilityImport if it matches a capability. */
 function parseSpecifierImport(
   specifier: OxcNode,
@@ -68,13 +79,16 @@ function parseSpecifierImport(
   source: string,
 ): RouterCapabilityImport | undefined {
   if (specifier.type !== 'ImportSpecifier') return undefined;
-  const importedName =
-    oxcIdentifierName(oxcObject(specifier, 'imported')) ?? oxcIdentifierName(oxcObject(specifier, 'local'));
-  if (!importedName || capabilityImportName(importedName) === undefined) return undefined;
+  const importedName = resolveImportedSpecifierName(specifier);
+  if (!importedName) return undefined;
+  if (capabilityImportName(importedName) === undefined) return undefined;
+
+  const localName = oxcIdentifierName(oxcObject(specifier, 'local')) ?? '';
+  const typeOnly = isTypeOnlyImport(specifier, statement);
   return {
     importedName,
-    localName: oxcIdentifierName(oxcObject(specifier, 'local')) ?? '',
-    typeOnly: specifier.importKind === 'type' || statement.importKind === 'type',
+    localName,
+    typeOnly,
     span: oxcSourceSpan(source, specifier),
   };
 }
@@ -148,17 +162,24 @@ function inspectCallRouterUse(node: OxcNode, recorder: RouterUseRecorder): void 
   }
 }
 
+const JSX_ELEMENT_TYPES = new Set(['JSXOpeningElement', 'JSXSelfClosingElement', 'JSXClosingElement']);
+
+/** Checks whether an identifier is the element tag name of a JSX element. */
+function isJsxTagName(node: OxcNode, parent: OxcNode): boolean {
+  return JSX_ELEMENT_TYPES.has(parent.type) && oxcObject(parent, 'name') === node;
+}
+
+/** Checks whether an identifier is the callee of a call or property of a member expression. */
+function isCalleeOrProperty(node: OxcNode, parent: OxcNode): boolean {
+  if (parent.type === 'CallExpression') return oxcObject(parent, 'callee') === node;
+  if (parent.type === 'MemberExpression') return oxcObject(parent, 'property') === node;
+  return false;
+}
+
 /** Checks whether an identifier node is a direct property, callee, or JSX tag reference. */
 function isSubsumedIdentifier(node: OxcNode, parent: OxcNode | undefined): boolean {
   if (!parent) return false;
-  if (parent.type === 'CallExpression' && oxcObject(parent, 'callee') === node) return true;
-  if (parent.type === 'MemberExpression' && oxcObject(parent, 'property') === node) return true;
-  return (
-    (parent.type === 'JSXOpeningElement' ||
-      parent.type === 'JSXSelfClosingElement' ||
-      parent.type === 'JSXClosingElement') &&
-    oxcObject(parent, 'name') === node
-  );
+  return isCalleeOrProperty(node, parent) || isJsxTagName(node, parent);
 }
 
 /** Inspects standalone identifier references to router bindings. */
