@@ -49,20 +49,6 @@ function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: st
   return {
     name: '@mission-platform/vite-plugin-forge:remove-generated-directory',
     closeBundle() {
-      // Only remove a directory carrying this target's complete Forge marker;
-      // never recursively clean an arbitrary package cache directory.
-      const manifestPath = path.join(generatedDirectory, '.forge-artifact-manifest.json');
-      try {
-        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
-          targetId?: string;
-          complete?: boolean;
-        };
-        if (manifest.targetId === targetId && manifest.complete === true) {
-          fs.rmSync(generatedDirectory, { recursive: true, force: true });
-        }
-      } catch {
-        // Failed attempts are cleaned by the scoped attempt cleanup below.
-      }
       cleanupForgeArtifactAttempts(generatedDirectory, targetId);
     },
   } as TsdownPlugin;

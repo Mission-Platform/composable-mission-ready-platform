@@ -88,14 +88,22 @@ function parseConfiguration(contents: string): readonly LspServerDefinition[] {
 export function readLspConfiguration(): LspConfigurationSnapshot {
   const root = findRepoRoot();
   const path = configPath();
-  if (!readFileIfPresent(path)) {
-    return { configPath: relative(root, join(root, CONFIG_FILE)), configPresent: false, servers: [] };
+  if (readFileIfPresent(path)) {
+    return {
+      configPath: relative(root, path),
+      configPresent: true,
+      servers: parseConfiguration(readFileSync(path, 'utf8')),
+    };
   }
-  return {
-    configPath: relative(root, path),
-    configPresent: true,
-    servers: parseConfiguration(readFileSync(path, 'utf8')),
-  };
+  const fallbackPath = resolveRepoPath('agent-lsp.example.json', 'LSP example configuration', { allowMissing: true });
+  if (readFileIfPresent(fallbackPath)) {
+    return {
+      configPath: relative(root, fallbackPath),
+      configPresent: true,
+      servers: parseConfiguration(readFileSync(fallbackPath, 'utf8')),
+    };
+  }
+  return { configPath: relative(root, join(root, CONFIG_FILE)), configPresent: false, servers: [] };
 }
 
 function readFileIfPresent(path: string): boolean {

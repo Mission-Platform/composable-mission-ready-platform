@@ -211,6 +211,7 @@ export function runBoundedWorkflowProcess(
       child = spawn(command.executable, [...command.args], {
         cwd,
         shell: false,
+        detached: process.platform !== 'win32',
         stdio: ['ignore', 'pipe', 'pipe'],
       });
     } catch (error) {
@@ -246,9 +247,23 @@ export function runBoundedWorkflowProcess(
       terminating = true;
       if (reason === 'timeout') timedOut = true;
       else cancelled = true;
-      child.kill('SIGTERM');
+      try {
+        if (child.pid && process.platform !== 'win32') process.kill(-child.pid, 'SIGTERM');
+        else child.kill('SIGTERM');
+      } catch {
+        child.kill('SIGTERM');
+      }
       killTimer = setTimeout(() => {
-        if (!settled) child.kill('SIGKILL');
+        if (!settled) {
+          try {
+            if (child.pid && process.platform !== 'win32') process.kill(-child.pid, 'SIGKILL');
+            else child.kill('SIGKILL');
+          } catch {
+            child.kill('SIGKILL');
+          }
+          child.stdout.destroy();
+          child.stderr.destroy();
+        }
       }, FORCE_KILL_DELAY_MS);
     };
     const onAbort = (): void => terminate('cancel');
@@ -267,7 +282,9 @@ export function runBoundedWorkflowProcess(
     child.once('error', (error) => {
       spawnError = error;
     });
-    child.once('close', (code, signal) => {
+
+    const finish = (code: number | null, signal: string | null): void => {
+      if (settled) return;
       settled = true;
       if (timeoutTimer) clearTimeout(timeoutTimer);
       if (killTimer) clearTimeout(killTimer);
@@ -301,6 +318,17 @@ export function runBoundedWorkflowProcess(
                 ? 'Workflow completed successfully.'
                 : `Workflow exited with code ${code ?? 'unknown'}.`),
       });
+    };
+
+    child.once('exit', (code, signal) => {
+      if (timedOut || cancelled) {
+        child.stdout.destroy();
+        child.stderr.destroy();
+        finish(code, signal);
+      }
+    });
+    child.once('close', (code, signal) => {
+      finish(code, signal);
     });
   });
 }
