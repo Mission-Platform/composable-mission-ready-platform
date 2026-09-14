@@ -119,6 +119,7 @@
     "@storybook/vue3-vite": "catalog:storybook",
     "@storybook/web-components-vite": "catalog:storybook",
     "@types/node": "catalog:typescript",
+    "@types/react": "catalog:react",
     "react": "catalog:react",
     "vue": "catalog:vue",
     "@vitejs/plugin-react": "catalog:react",

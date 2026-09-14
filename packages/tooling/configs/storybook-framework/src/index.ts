@@ -420,3 +420,4 @@ export function createStorybookConfig(options: CreateStorybookConfigOptions): St
 
 export * from './preview.js';
 export type { Meta, StoryObj } from './types.js';
+export type { StorybookConfig } from '@storybook/vue3-vite';
