@@ -124,7 +124,12 @@ export function storyGlobs(
   packages: readonly string[],
   packagesRoot: string,
 ): string[] {
-  return [...packages.flatMap((package_) => patternsFor(`${packagesRoot}/packages/${package_}/src`))];
+  return [
+    ...packages.flatMap((package_) => [
+      ...patternsFor(`${packagesRoot}/packages/${package_}/src`),
+      ...patternsFor(`${packagesRoot}/packages/*/${package_}/src`),
+    ]),
+  ];
 }
 
 /**
@@ -190,7 +195,16 @@ function frameworkPackageResolvePlugin(
       if (FACADE_FIRST_PACKAGES.includes(match[1]) && importer && /[/\\]dist[/\\]/.test(importer)) {
         return;
       }
-      const packageRoot = `${repoRoot}/packages/${match[1]}`;
+      let packageRoot = `${repoRoot}/packages/${match[1]}`;
+      if (!exists(`${packageRoot}/package.json`)) {
+        for (const sub of ['ui', 'compiler', 'core', 'tooling']) {
+          const candidate = `${repoRoot}/packages/${sub}/${match[1]}`;
+          if (exists(`${candidate}/package.json`)) {
+            packageRoot = candidate;
+            break;
+          }
+        }
+      }
       const frameworkEntry = `${packageRoot}/dist/${target}/index.js`;
       if (exists(frameworkEntry)) {
         return frameworkEntry;
