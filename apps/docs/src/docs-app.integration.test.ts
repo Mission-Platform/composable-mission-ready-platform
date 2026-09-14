@@ -64,6 +64,9 @@ function mountedStyles(element: Element | null, label: string): string[] {
   return links.map((link) => link.dataset.mpForgeStyle ?? link.href);
 }
 
+/**
+ * Flushes microtasks and next-tick work so element lifecycle updates settle.
+ */
 async function flushElementUpdates(): Promise<void> {
   await Promise.resolve();
   await new Promise((resolve) => setTimeout(resolve, 0));

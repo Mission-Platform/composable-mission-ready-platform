@@ -142,6 +142,33 @@ export function storyGlobs(
  */
 const FACADE_FIRST_PACKAGES: readonly string[] = ['code-scanner', 'barcode', 'qr-code', 'matrix-code'];
 
+const PACKAGE_SUBDIRECTORIES: readonly string[] = [
+  'ui',
+  'compiler',
+  'core',
+  'tooling',
+  'integrations',
+  'content',
+  'edge',
+];
+
+/**
+ * Resolves the directory for a workspace package, checking nested subdirectories if needed.
+ */
+function resolvePackageRoot(repoRoot: string, packageName: string, exists: (filePath: string) => boolean): string {
+  const direct = `${repoRoot}/packages/${packageName}`;
+  if (exists(`${direct}/package.json`)) {
+    return direct;
+  }
+  for (const sub of PACKAGE_SUBDIRECTORIES) {
+    const candidate = `${repoRoot}/packages/${sub}/${packageName}`;
+    if (exists(`${candidate}/package.json`)) {
+      return candidate;
+    }
+  }
+  return direct;
+}
+
 /**
  * Redirect a façade-first package's bare self-import to its neutral façade build
  * (`packages/<pkg>/dist/index.js`) — but ONLY when the importer is itself a built
@@ -151,11 +178,7 @@ const FACADE_FIRST_PACKAGES: readonly string[] = ['code-scanner', 'barcode', 'qr
  * `mp:<framework>` conditions. This keeps the unified Storybook working for the
  * wasm packages without touching any published package.
  */
-function facadeNeutralResolvePlugin(): Plugin {
-  // The unified Storybook always runs from `apps/storybook`, so the repo root is
-  // two segments up. POSIX string ops avoid a top-level `node:path` import, which
-  // would break this barrel's browser-safety (it is re-imported by `preview.ts`).
-  const repoRoot = process.cwd().split('/').slice(0, -2).join('/');
+function facadeNeutralResolvePlugin(repoRoot: string, exists: (filePath: string) => boolean): Plugin {
   return {
     name: 'mission-platform:facade-neutral-resolve',
     enforce: 'pre',
@@ -167,7 +190,8 @@ function facadeNeutralResolvePlugin(): Plugin {
       if (!match) {
         return;
       }
-      return `${repoRoot}/packages/${match}/dist/index.js`;
+      const packageRoot = resolvePackageRoot(repoRoot, match, exists);
+      return `${packageRoot}/dist/index.js`;
     },
   };
 }
@@ -195,16 +219,7 @@ function frameworkPackageResolvePlugin(
       if (FACADE_FIRST_PACKAGES.includes(match[1]) && importer && /[/\\]dist[/\\]/.test(importer)) {
         return;
       }
-      let packageRoot = `${repoRoot}/packages/${match[1]}`;
-      if (!exists(`${packageRoot}/package.json`)) {
-        for (const sub of ['ui', 'compiler', 'core', 'tooling']) {
-          const candidate = `${repoRoot}/packages/${sub}/${match[1]}`;
-          if (exists(`${candidate}/package.json`)) {
-            packageRoot = candidate;
-            break;
-          }
-        }
-      }
+      const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
       const frameworkEntry = `${packageRoot}/dist/${target}/index.js`;
       if (exists(frameworkEntry)) {
         return frameworkEntry;
@@ -310,9 +325,10 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
   // `src/locales`, which only holds the generated `.d.ts` shims). Point the
   // plugin at `locales` so those bundles actually load — otherwise
   // `virtual:i18n-resources` resolves to English defaults only.
+  const repoRoot = process.cwd().split('/').slice(0, -2).join('/');
   const plugins: Plugin[] = [
-    frameworkPackageResolvePlugin(framework, process.cwd().split('/').slice(0, -2).join('/'), existsSync),
-    facadeNeutralResolvePlugin(),
+    frameworkPackageResolvePlugin(framework, repoRoot, existsSync),
+    facadeNeutralResolvePlugin(repoRoot, existsSync),
     i18nPlugin({ defaultLocale: 'en', localesDir: 'locales' }) as Plugin,
   ];
 

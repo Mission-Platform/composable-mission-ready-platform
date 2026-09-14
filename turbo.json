@@ -340,6 +340,7 @@
     },
     "build-storybook": {
       "dependsOn": ["^build"],
+      "env": ["STORYBOOK_FRAMEWORK", "STORYBOOK_VITE_CACHE_DIR"],
       "outputs": ["storybook-static/**"]
     },
     "i18n:extract": {

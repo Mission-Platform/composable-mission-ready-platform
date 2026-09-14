@@ -34,11 +34,13 @@ function hasOption(args: string[], name: string): boolean {
   return args.includes(name);
 }
 
+/**
+ * Determines whether browser execution should be enabled based on arguments and environment.
+ */
 function browserEnabled(args: string[]): boolean {
   if (hasOption(args, '--no-browser')) return false;
   if (hasOption(args, '--browser')) return true;
-  if (process.env.CI) return false;
-  return true;
+  return !process.env.CI;
 }
 
 function selection(args: string[], command: string): ValidationSelection {
