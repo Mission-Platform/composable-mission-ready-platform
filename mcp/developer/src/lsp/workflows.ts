@@ -204,6 +204,11 @@ function resolveWorkflowStatus(
   return code === 0 ? 'passed' : 'failed';
 }
 
+const DEFAULT_STATUS_MESSAGES: Partial<Record<LspWorkflowStatus, string>> = {
+  cancelled: 'Workflow was cancelled.',
+  passed: 'Workflow completed successfully.',
+};
+
 /**
  * Builds the workflow summary message.
  */
@@ -214,20 +219,8 @@ function resolveWorkflowMessage(
   timeoutMs: number,
 ): string {
   if (spawnError) return spawnError.message;
-  switch (status) {
-    case 'timed-out': {
-      return `Workflow timed out after ${timeoutMs} ms.`;
-    }
-    case 'cancelled': {
-      return 'Workflow was cancelled.';
-    }
-    case 'passed': {
-      return 'Workflow completed successfully.';
-    }
-    default: {
-      return `Workflow exited with code ${code ?? 'unknown'}.`;
-    }
-  }
+  if (status === 'timed-out') return `Workflow timed out after ${timeoutMs} ms.`;
+  return DEFAULT_STATUS_MESSAGES[status] ?? `Workflow exited with code ${code ?? 'unknown'}.`;
 }
 
 /** Execute only a command resolved from a repository script, never an arbitrary shell string. */
@@ -283,6 +276,9 @@ export function runBoundedWorkflowProcess(
     let settled = false;
     let terminating = false;
 
+    /**
+     * Terminates the child process group or individual process with the given signal.
+     */
     const killProcessGroup = (signal: NodeJS.Signals): void => {
       try {
         if (child.pid && process.platform !== 'win32') process.kill(-child.pid, signal);

@@ -183,15 +183,13 @@ function facadeNeutralResolvePlugin(repoRoot: string, exists: (filePath: string)
     name: 'mission-platform:facade-neutral-resolve',
     enforce: 'pre',
     resolveId(source: string, importer: string | undefined) {
-      if (!importer || !/[/\\]dist[/\\]/.test(importer)) {
-        return;
+      if (importer && /[/\\]dist[/\\]/.test(importer)) {
+        const match = FACADE_FIRST_PACKAGES.find((package_) => source === `@mission-platform/${package_}`);
+        if (match) {
+          const packageRoot = resolvePackageRoot(repoRoot, match, exists);
+          return `${packageRoot}/dist/index.js`;
+        }
       }
-      const match = FACADE_FIRST_PACKAGES.find((package_) => source === `@mission-platform/${package_}`);
-      if (!match) {
-        return;
-      }
-      const packageRoot = resolvePackageRoot(repoRoot, match, exists);
-      return `${packageRoot}/dist/index.js`;
     },
   };
 }

@@ -412,14 +412,20 @@ export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPlugins
     throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
   }
   const session = options.session ?? createForgeBuildSession({ service: options.service });
-  return frameworks.map((plugin, index) =>
+  let activePlugins = frameworks.length;
+  return frameworks.map((plugin) =>
     tsdownConfigPlugin(
       createTsdownForgeComponentPlugin({
         ...options,
         plugin,
         session,
         service: options.service,
-        disposeService: index === frameworks.length - 1 && options.session === undefined,
+        disposeSession: () => {
+          activePlugins -= 1;
+          if (activePlugins === 0 && options.session === undefined) {
+            void session.dispose();
+          }
+        },
       }),
       plugin.id,
       options.rootDir,
@@ -447,13 +453,19 @@ export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPlug
   }
 
   const session = options.session ?? createForgeBuildSession({ service: options.service });
-  return frameworks.map((plugin, index) =>
+  let activeConfigs = frameworks.length;
+  return frameworks.map((plugin) =>
     createTsdownForgeComponentPlugin({
       ...options,
       plugin,
       session,
       service: options.service,
-      disposeService: index === frameworks.length - 1 && options.session === undefined,
+      disposeSession: () => {
+        activeConfigs -= 1;
+        if (activeConfigs === 0 && options.session === undefined) {
+          void session.dispose();
+        }
+      },
     }),
   );
 }
@@ -480,7 +492,7 @@ function createTsdownForgeComponentPlugin(
     Omit<TsdownForgeComponentPluginsOptions, 'frameworks'> & {
       plugin: FrameworkOutputPlugin;
       session: ForgeBuildSession;
-      disposeService?: boolean;
+      disposeSession?: boolean | (() => void);
     }
   >,
 ): UserConfig {
@@ -499,7 +511,7 @@ function createTsdownForgeComponentPlugin(
     rejectFixturePlaceholder = true,
     service,
     session,
-    disposeService,
+    disposeSession,
   } = options;
   const framework = plugin.id as JsxFramework;
   const watchMode = process.argv.some(
@@ -560,7 +572,7 @@ function createTsdownForgeComponentPlugin(
       plan: { rootDir, targets: [target] },
       target,
       adapter: 'tsdown',
-      disposeSession: disposeService ?? service === undefined,
+      disposeSession: disposeSession ?? service === undefined,
     }) as unknown as TsdownPlugin,
     ...stagePlugins,
     jsxComponentsCssImportPlugin() as TsdownPlugin,

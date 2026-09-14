@@ -184,7 +184,7 @@ export interface ForgeBuildLifecycleOptions {
   /** The adapter determines only the plugin type; lifecycle behavior is shared. */
   readonly adapter: 'vite' | 'tsdown';
   /** The config that created the session owns its eventual disposal. */
-  readonly disposeSession?: boolean;
+  readonly disposeSession?: boolean | (() => void);
 }
 
 /**
@@ -202,9 +202,13 @@ export function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): 
     return targetResult;
   };
   const dispose = (): void => {
-    if (disposed || !options.disposeSession) return;
+    if (disposed) return;
     disposed = true;
-    void options.session.dispose();
+    if (typeof options.disposeSession === 'function') {
+      options.disposeSession();
+    } else if (options.disposeSession === true) {
+      void options.session.dispose();
+    }
   };
 
   return {

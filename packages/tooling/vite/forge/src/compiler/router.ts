@@ -150,6 +150,16 @@ function routerUses(module: OxcParsedModule, imports: readonly RouterCapabilityI
 export function analyzeRouterCapabilities(
   input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>,
 ): RouterCapabilityModule {
+  if (!input.source.includes(MP_ROUTER_MODULE)) {
+    return {
+      kind: 'router-capability-module',
+      source: input.source,
+      fileName: input.fileName,
+      moduleKind: input.moduleKind,
+      imports: [],
+      uses: [],
+    };
+  }
   const module = parseOxcModule(input.fileName, input.source);
   const imports = routerImports(module);
   return {
@@ -200,6 +210,17 @@ function uniqueDiagnostics(diagnostics: readonly CompilerDiagnostic[]): Compiler
 
 /** Compile neutral router usage through a selected native target adapter. */
 export function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult {
+  if (!input.source.includes(MP_ROUTER_MODULE)) {
+    const ir: RouterCapabilityModule = {
+      kind: 'router-capability-module',
+      source: input.source,
+      fileName: input.fileName,
+      moduleKind: input.moduleKind,
+      imports: [],
+      uses: [],
+    };
+    return { code: input.source, lang: languageFor(input.fileName), ir };
+  }
   const ir = analyzeRouterCapabilities(input);
   if (ir.imports.length === 0) {
     return { code: input.source, lang: languageFor(input.fileName), ir };

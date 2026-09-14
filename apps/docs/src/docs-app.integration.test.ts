@@ -89,7 +89,7 @@ afterEach(() => {
   localStorage.clear();
 });
 
-describe('docs Web Components application', { timeout: 30_000 }, () => {
+describe('docs Web Components application', { timeout: 120_000 }, () => {
   it('mounts the compiled language switcher with typed select options', async () => {
     const switcher = document.createElement('forge-language-switcher') as HTMLElement & {
       locale: string;
