@@ -285,6 +285,12 @@ function scanOperatorOrPunctuation(state: LexerState, start: number): number | u
   return undefined;
 }
 
+/**
+ * Precompute character start offsets for each line in the source string.
+ *
+ * @param source - The raw source text.
+ * @returns Array of 0-based character offsets where line N begins at index N-1.
+ */
 function computeLineOffsets(source: string): number[] {
   const offsets = [0];
   for (let index = 0; index < source.length; index += 1) {
@@ -293,7 +299,14 @@ function computeLineOffsets(source: string): number[] {
   return offsets;
 }
 
-function locationAt(lineOffsets: readonly number[], offset: number): { line: number; column: number } {
+/**
+ * Locate the 1-based line index for a given character offset using binary search.
+ *
+ * @param lineOffsets - Array of line start offsets.
+ * @param offset - 0-based character offset.
+ * @returns 1-based line index.
+ */
+function findLineIndex(lineOffsets: readonly number[], offset: number): number {
   let low = 0;
   let high = lineOffsets.length - 1;
   while (low <= high) {
@@ -301,22 +314,30 @@ function locationAt(lineOffsets: readonly number[], offset: number): { line: num
     if (lineOffsets[mid] <= offset) low = mid + 1;
     else high = mid - 1;
   }
-  const line = low;
-  const column = offset - lineOffsets[line - 1] + 1;
-  return { line, column };
+  return low;
 }
 
+/**
+ * Compute the source span for a given range using precomputed line offsets.
+ *
+ * @param sourceOrOffsets - Precomputed line offsets array or raw source text.
+ * @param start - 0-based start character offset.
+ * @param end - 0-based end character offset.
+ * @returns The resolved source span with 1-based line and column coordinates.
+ */
 function spanAt(sourceOrOffsets: string | readonly number[], start: number, end: number): ForgeWebScriptSourceSpan {
   const offsets = typeof sourceOrOffsets === 'string' ? computeLineOffsets(sourceOrOffsets) : sourceOrOffsets;
-  const startLoc = locationAt(offsets, start);
-  const endLoc = locationAt(offsets, end);
+  const startLine = findLineIndex(offsets, start);
+  const startColumn = start - offsets[startLine - 1] + 1;
+  const endLine = findLineIndex(offsets, end);
+  const endColumn = end - offsets[endLine - 1] + 1;
   return {
     start,
     end,
-    line: startLoc.line,
-    column: startLoc.column,
-    endLine: endLoc.line,
-    endColumn: endLoc.column,
+    line: startLine,
+    column: startColumn,
+    endLine,
+    endColumn,
   };
 }
 

@@ -46,7 +46,11 @@ export function prepareComponentHostsList(options: PrepareComponentHostsOptions)
     diagnostics,
   } = options;
 
-  return plugin.prepareComponentHosts?.(
+  if (plugin.prepareComponentHosts === undefined) {
+    return undefined;
+  }
+
+  return plugin.prepareComponentHosts(
     allComponents.map((component) => {
       const sourcePath = componentSourcePath(component);
       const source = readFileSync(sourcePath, 'utf8');
