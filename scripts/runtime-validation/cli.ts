@@ -34,6 +34,13 @@ function hasOption(args: string[], name: string): boolean {
   return args.includes(name);
 }
 
+function browserEnabled(args: string[]): boolean {
+  if (hasOption(args, '--no-browser')) return false;
+  if (hasOption(args, '--browser')) return true;
+  if (process.env.CI) return false;
+  return true;
+}
+
 function selection(args: string[], command: string): ValidationSelection {
   const framework = option(args, '--framework');
   if (framework && !STORYBOOK_FRAMEWORKS.includes(framework as StorybookFramework))
@@ -73,7 +80,7 @@ async function storybookManifest(
       packageName: option(args, '--package'),
       storyId: option(args, '--story'),
       port: option(args, '--port') ? Number(option(args, '--port')) + index : undefined,
-      browser: !hasOption(args, '--no-browser'),
+      browser: browserEnabled(args),
       build: !hasOption(args, '--no-build'),
       maxStories: option(args, '--max-stories') ? Number(option(args, '--max-stories')) : undefined,
       workers: option(args, '--workers') ? Number(option(args, '--workers')) : undefined,
@@ -92,7 +99,7 @@ async function storybookManifest(
       ...(await validateAppsForFullRun(root, inventory, {
         app: option(args, '--app'),
         port: port ? Number(port) + frameworks.length : undefined,
-        browser: !hasOption(args, '--no-browser'),
+        browser: browserEnabled(args),
         build: !hasOption(args, '--no-build'),
         timeoutMs: option(args, '--timeout-ms') ? Number(option(args, '--timeout-ms')) : undefined,
       })),
@@ -106,7 +113,7 @@ async function appManifest(root: string, inventory: RepositoryInventory, args: s
     app: option(args, '--app'),
     route: option(args, '--route'),
     port: option(args, '--port') ? Number(option(args, '--port')) : undefined,
-    browser: !hasOption(args, '--no-browser'),
+    browser: browserEnabled(args),
     build: !hasOption(args, '--no-build'),
     timeoutMs: option(args, '--timeout-ms') ? Number(option(args, '--timeout-ms')) : undefined,
   });
