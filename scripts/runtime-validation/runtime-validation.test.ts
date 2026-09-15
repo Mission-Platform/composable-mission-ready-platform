@@ -22,7 +22,7 @@ import { buildStorybookDevSpawnArgs } from '../visual-parity/servers.ts';
 import { createRendererDefinitions, type VisualParityReport } from '../visual-parity/types.ts';
 
 import { appBuildArgs, appScript, validateAppsForFullRun, waitForHttp } from './app-sweep.ts';
-import { classifyFailure } from './classification.ts';
+import { classifyFailure, isFailureResult } from './classification.ts';
 import { createProcessRegistry, terminateProcessTree } from './cleanup.ts';
 import { discoverInventory } from './inventory.ts';
 import {
@@ -269,6 +269,16 @@ describe('manifest and index contracts', () => {
     expect(parseManifest(serializeManifest(manifest))).toEqual(manifest);
     expect(summarizeResults([result])).toBe('blocked=1');
     expect(summarizeFailureGroups([result])).toBe('app / @mission-platform/docs / app / blocked: 1');
+    const skippedResult: RuntimeResult = {
+      target: 'story',
+      packageOrApp: '@mission-platform/components',
+      idOrRoute: 'button--default',
+      status: 'blocked',
+      category: 'browser-not-requested',
+    };
+    expect(summarizeFailureGroups([skippedResult])).toBe('');
+    expect(isFailureResult(skippedResult)).toBe(false);
+    expect(isFailureResult(result)).toBe(true);
     expect(() =>
       parseManifest(
         serializeManifest({
@@ -669,6 +679,14 @@ describe('retry and failure classification', () => {
       status: 'blocked',
       category: 'environment',
     });
+    expect(isFailureResult({ status: 'pass', category: 'startup' })).toBe(false);
+    expect(isFailureResult({ status: 'excluded', category: 'framework-specific-story' })).toBe(false);
+    expect(isFailureResult({ status: 'blocked', category: 'browser-not-requested' })).toBe(false);
+    expect(isFailureResult({ status: 'blocked', category: 'environment' })).toBe(true);
+    expect(isFailureResult({ status: 'blocked', category: 'target-not-found' })).toBe(true);
+    expect(isFailureResult({ status: 'compile-failure', category: 'compile' })).toBe(true);
+    expect(isFailureResult({ status: 'runtime-failure', category: 'runtime' })).toBe(true);
+    expect(isFailureResult({ status: 'interaction-failure', category: 'interaction' })).toBe(true);
   });
 });
 

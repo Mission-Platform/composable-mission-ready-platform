@@ -1,4 +1,4 @@
-import type { RuntimeStatus } from './types.ts';
+import type { RuntimeResult, RuntimeStatus } from './types.ts';
 
 export type ValidationPhase = 'compile' | 'runtime' | 'interaction' | 'environment';
 
@@ -15,4 +15,10 @@ export function classifyFailure(phase: ValidationPhase, error: unknown): Failure
   if (/permission|browser executable|sandbox|not installed|missing dependency/i.test(message))
     return { status: 'blocked', category: 'environment' };
   return { status: 'runtime-failure', category: 'runtime' };
+}
+
+export function isFailureResult(result: Pick<RuntimeResult, 'status' | 'category'>): boolean {
+  if (['compile-failure', 'runtime-failure', 'interaction-failure'].includes(result.status)) return true;
+  if (result.status === 'blocked' && result.category !== 'browser-not-requested') return true;
+  return false;
 }

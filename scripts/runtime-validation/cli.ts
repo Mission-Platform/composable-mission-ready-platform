@@ -4,6 +4,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 import { validateApps, validateAppsForFullRun } from './app-sweep.ts';
+import { isFailureResult } from './classification.ts';
 import { discoverInventory } from './inventory.ts';
 import {
   writeManifest,
@@ -159,12 +160,7 @@ async function main(): Promise<void> {
     const failureGroups = summarizeFailureGroups(manifest.results);
     if (failureGroups) console.log(`Failure groups:\n${failureGroups}`);
   }
-  if (
-    manifest.results.some((result) =>
-      ['compile-failure', 'runtime-failure', 'interaction-failure', 'blocked'].includes(result.status),
-    )
-  )
-    process.exitCode = 1;
+  if (manifest.results.some((result) => isFailureResult(result))) process.exitCode = 1;
 }
 
 try {
