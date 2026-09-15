@@ -135,12 +135,23 @@ export function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions)
         writer.recordTree();
         return;
       }
-      for (let attempt = 0; attempt < 200 && !hasNativeJavaScript(writer.stageDirectory); attempt += 1) {
-        await new Promise((resolve) => setTimeout(resolve, 10));
+      for (let attempt = 0; attempt < 1500 && !hasNativeJavaScript(writer.stageDirectory); attempt += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      }
+      if (!hasNativeJavaScript(writer.stageDirectory)) {
+        throw new Error(
+          `Forge artifact target "${options.targetId}" produced no native JavaScript artifacts in ${writer.stageDirectory} after build completion.`,
+        );
       }
       normalizeNativePaths(writer.stageDirectory);
       const nativeEntryNames = existsSync(writer.stageDirectory) ? findNativeEntryNames(writer.stageDirectory) : [];
-      writer.recordTree(entryNames.length > 0 ? entryNames : nativeEntryNames);
+      const resolvedEntries = entryNames.length > 0 ? entryNames : nativeEntryNames;
+      if (resolvedEntries.length === 0) {
+        throw new Error(
+          `Forge artifact target "${options.targetId}" produced no entry points in ${writer.stageDirectory}.`,
+        );
+      }
+      writer.recordTree(resolvedEntries);
       writer.commit();
       finalized = true;
     } catch (error) {
@@ -168,11 +179,13 @@ export function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions)
         writer?.abort();
       }
     },
-    closeBundle() {
-      if (aborted) {
-        return;
-      }
-      return finalize();
+    async writeBundle() {
+      if (aborted) return;
+      await finalize();
+    },
+    async closeBundle() {
+      if (aborted) return;
+      await finalize();
     },
   };
 }
