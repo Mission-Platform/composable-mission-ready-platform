@@ -1,5 +1,18 @@
 # @mission-platform/forge-web-script-cli
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [e45b5f4]
+- Updated dependencies [7788642]
+- Updated dependencies [ff73b42]
+- Updated dependencies [0c3277d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [3d452d2]
+  - @mission-platform/forge-web-script@0.3.0
+  - @mission-platform/forge-web-script-runtime@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

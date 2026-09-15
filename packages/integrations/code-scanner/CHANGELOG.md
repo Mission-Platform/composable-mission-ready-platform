@@ -1,5 +1,31 @@
 # @mission-platform/code-scanner
 
+## 1.3.0
+
+### Minor Changes
+
+- 7e3cc9d: add pureBarcode option, format filtering, and conformance manifest
+
+### Patch Changes
+
+- 0e9305d: Export `ForgeCodeScanner` component from root entry, support Web Components context imports and component alias exports, and preserve shared CMS assets during framework builds.
+- 7e3cc9d: document the current ZXing conformance boundary and linked format coverage
+- edc494d: support result envelope parsing and 2D barcode rotation retries
+- 7788642: Normalize generated changelog formatting.
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [b7965b5]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/components@3.2.0
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/typography@1.1.1
+
 ## 1.2.0
 
 ### Minor Changes
@@ -89,7 +115,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc

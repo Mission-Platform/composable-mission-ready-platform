@@ -1,5 +1,24 @@
 # @mission-platform/forge-web-script-wasm
 
+## 1.0.0
+
+### Major Changes
+
+- 7788642: Use versioned SHA-256 identities for Forge Web Script WASM artifacts.
+
+  BREAKING CHANGE: Existing unversioned artifact hashes must be regenerated in the `sha256-v1:<hex>` format.
+
+### Minor Changes
+
+- 82d79b5: Implement WebAssembly v128 SIMD vectorization, bulk memory operations, query-based incremental caching, request cancellation debouncing, workspace symbol navigation, and quickfix code actions (#44, #42).
+
+### Patch Changes
+
+- edc494d: support WebAssembly SIMD and memory operations in WAT generator
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [3d452d2]
+  - @mission-platform/forge-web-script-regex@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

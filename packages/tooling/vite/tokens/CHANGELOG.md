@@ -1,5 +1,12 @@
 # @mission-platform/vite-plugin-tokens
 
+## 0.1.3
+
+### Patch Changes
+
+- e45b5f4: optimize token reachability scan performance and directory traversal
+- 7e3cc9d: Use `import.meta.dirname` in documented ESM configuration examples.
+
 ## 0.1.2
 
 ### Patch Changes

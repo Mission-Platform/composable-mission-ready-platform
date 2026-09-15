@@ -1,5 +1,40 @@
 # @mission-platform/forms
 
+## 2.2.0
+
+### Minor Changes
+
+- aa780e3: decouple schema validation into isolated sub-validators, replace dynamic property deletions with immutable destructuring, provide explicit default context handlers, and expand test coverage
+
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [b7965b5]
+- Updated dependencies [3a69fab]
+- Updated dependencies [e28d622]
+- Updated dependencies [c5e5923]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/components@3.2.0
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/layouts@2.1.1
+  - @mission-platform/float@1.2.0
+  - @mission-platform/select@1.2.0
+  - @mission-platform/content@1.2.0
+  - @mission-platform/typography@1.1.1
+  - @mission-platform/phone-number@0.3.3
+  - @mission-platform/forms-core@0.3.1
+  - @mission-platform/tokens@2.0.0
+
 ## 2.1.0
 
 ### Minor Changes
@@ -121,7 +156,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc

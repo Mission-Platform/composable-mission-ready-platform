@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/storybook-framework",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "BSD-4-Clause",
   "description": "Env-driven Storybook framework preset for the Mission Platform write-once ecosystem: one Storybook app renders neutral stories on any supported framework, selected by a STORYBOOK_FRAMEWORK env var.",
   "type": "module",

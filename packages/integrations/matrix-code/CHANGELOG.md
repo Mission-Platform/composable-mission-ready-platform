@@ -1,5 +1,34 @@
 # @mission-platform/matrix-code
 
+## 3.0.0
+
+### Major Changes
+
+- 7e3cc9d: remove the embedded matrix decoder API
+
+  BREAKING CHANGE: remove the matrix decoder APIs and decoder FWS artifacts; use `@mission-platform/code-scanner` for decoding.
+
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+- ca9c2aa: use relative import for encoder in forge-matrix-code component to avoid self-referential bundle resolution
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+- Updated dependencies [ff73b42]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [b7965b5]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/forge-web-script-runtime@0.3.0
+  - @mission-platform/components@3.2.0
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/typography@1.1.1
+
 ## 2.0.1
 
 ### Patch Changes
@@ -96,7 +125,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc
