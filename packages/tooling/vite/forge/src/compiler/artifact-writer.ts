@@ -202,6 +202,14 @@ export function forgeArtifactAttemptDirectory(outDir: string, targetId: string):
   );
 }
 
+function resolveFallbackEntries(records: ReadonlyMap<string, ForgeArtifactRecord>): readonly string[] {
+  if (records.has('index.js')) return ['index.js'];
+  const indexMatch = [...records.keys()].find((fileName) => /(?:^|\/)index\.js$/.test(fileName));
+  if (indexMatch !== undefined) return [indexMatch];
+  const jsMatch = [...records.keys()].find((fileName) => fileName.endsWith('.js'));
+  return jsMatch !== undefined ? [jsMatch] : [];
+}
+
 export function createForgeArtifactWriter(
   outDir: string,
   targetId: string,
@@ -284,7 +292,8 @@ export function createForgeArtifactWriter(
       };
       visit(stageDirectory);
       const availableEntries = [...recordedEntryNames].filter((entry) => records.has(entry));
-      const fallbackEntry = [...records.keys()].find((fileName) => fileName.endsWith('.js'));
+      const fallbackEntries = resolveFallbackEntries(records);
+      const fallbackEntry = fallbackEntries[0];
       const resolvedEntries =
         availableEntries.length > 0 ? availableEntries : fallbackEntry === undefined ? [] : [fallbackEntry];
       if (availableEntries.length === 0 && fallbackEntry !== undefined) {
@@ -306,8 +315,15 @@ export function createForgeArtifactWriter(
     validate(entries = entryNames) {
       if (aborted) throw new Error('Forge artifact attempt has been aborted.');
       if (committed) throw new Error('Forge artifact attempt has already been committed.');
-      const safeEntries = [...new Set(entries.map((entry) => validateForgeArtifactName(entry)))].sort();
       const manifest = createForgeArtifactManifest(targetId, [...records.values()], true);
+      let candidateEntries = entries;
+      if (candidateEntries.length === 0) {
+        candidateEntries = manifest.entries.length > 0 ? manifest.entries : resolveFallbackEntries(records);
+      }
+      const safeEntries = [...new Set(candidateEntries.map((entry) => validateForgeArtifactName(entry)))].sort();
+      if (safeEntries.length === 0) {
+        throw new Error(`Forge artifact target "${targetId}" produced no entry points in ${stageDirectory}.`);
+      }
       const artifacts = new Set(manifest.artifacts.map((artifact) => artifact.fileName));
       for (const entry of safeEntries) {
         if (!artifacts.has(entry)) throw new Error(`Forge artifact entry is not recorded: ${entry}`);

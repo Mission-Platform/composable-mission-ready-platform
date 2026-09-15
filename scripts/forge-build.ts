@@ -181,17 +181,26 @@ async function validateForgeArtifactManifests(stageRoot: string, target: ForgeBu
       entries?: readonly string[];
       artifacts?: readonly { fileName: string }[];
     };
-    if (manifest.complete === true && manifest.entries?.length === 0 && manifest.artifacts !== undefined) {
-      const inferredEntry =
-        manifest.artifacts.find((artifact) => /(?:^|\/)entry(?:[:_]).+\.js$/.test(artifact.fileName)) ??
-        manifest.artifacts.find((artifact) => artifact.fileName.endsWith('.js'));
-      if (inferredEntry !== undefined) {
-        await fs.writeFile(
-          manifestPath,
-          `${JSON.stringify({ ...manifest, entries: [inferredEntry.fileName] })}\n`,
-          'utf8',
-        );
-        manifest.entries = [inferredEntry.fileName];
+    if (manifest.complete === true && manifest.entries?.length === 0) {
+      const manifestDir = path.dirname(manifestPath);
+      const onDiskFiles = await fs.readdir(manifestDir).catch(() => []);
+      const onDiskEntry =
+        (ENTRY_NAMES.has('index.js') && onDiskFiles.includes('index.js') ? 'index.js' : undefined) ??
+        onDiskFiles.find((f) => ENTRY_NAMES.has(f) && f.endsWith('.js')) ??
+        manifest.artifacts?.find(
+          (artifact) => artifact.fileName === 'index.js' || artifact.fileName.endsWith('/index.js'),
+        )?.fileName ??
+        manifest.artifacts?.find((artifact) => /(?:^|\/)entry(?:[:_]).+\.js$/.test(artifact.fileName))?.fileName ??
+        manifest.artifacts?.find((artifact) => artifact.fileName.endsWith('.js'))?.fileName;
+      if (onDiskEntry !== undefined) {
+        const artifacts = await collectStageFiles(manifestDir);
+        const updatedManifest = {
+          ...manifest,
+          entries: [onDiskEntry],
+          artifacts: artifacts.length > 0 ? artifacts : (manifest.artifacts ?? []),
+        };
+        await fs.writeFile(manifestPath, `${JSON.stringify(updatedManifest, undefined, 2)}\n`, 'utf8');
+        manifest.entries = [onDiskEntry];
       }
     }
     const targetMatches =
