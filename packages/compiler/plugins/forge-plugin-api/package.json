@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-plugin-api",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "BSD-4-Clause",
   "description": "Public API contracts for Forge framework output plugins",
   "type": "module",

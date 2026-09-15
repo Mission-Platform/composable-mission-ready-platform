@@ -1,5 +1,21 @@
 # @mission-platform/forge-cms-astro
 
+## 0.2.2
+
+### Patch Changes
+
+- 7e3cc9d: add multi-component end-to-end integration tests and dotfile preservation verification
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [0e9305d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7788642]
+  - @mission-platform/forge-cms-plugin-api@1.0.0
+  - @mission-platform/forge-plugin-api@0.4.0
+
 ## 0.2.1
 
 ### Patch Changes

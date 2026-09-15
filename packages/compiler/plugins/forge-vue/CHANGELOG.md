@@ -1,5 +1,18 @@
 # @mission-platform/forge-plugin-vue
 
+## 0.3.0
+
+### Minor Changes
+
+- edc494d: support AST-aware component discovery, scoped slot lowering, and build error cancellation
+- 7e3cc9d: require lowered target plans before generation and add open FrameworkId extension point
+
+### Patch Changes
+
+- 7e3cc9d: correct generated Vue hook cleanup typing
+- Updated dependencies [7e3cc9d]
+  - @mission-platform/forge-plugin-api@0.4.0
+
 ## 0.2.0
 
 ### Minor Changes

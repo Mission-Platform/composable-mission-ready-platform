@@ -1,5 +1,20 @@
 # @mission-platform/benchmark
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [e45b5f4]
+- Updated dependencies [7788642]
+- Updated dependencies [ff73b42]
+- Updated dependencies [0c3277d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [3d452d2]
+- Updated dependencies [7e3cc9d]
+  - @mission-platform/forge-web-script@0.3.0
+  - @mission-platform/forge-web-script-runtime@0.3.0
+  - @mission-platform/vite-plugin-assemblyscript@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @mission-platform/postcss-config
 
+## 0.1.4
+
+### Patch Changes
+
+- 7788642: Disable legacy grid autoprefixing in the shared PostCSS configuration.
+
 ## 0.1.3
 
 ### Patch Changes

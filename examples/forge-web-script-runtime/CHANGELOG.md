@@ -1,5 +1,13 @@
 # forge-web-script-runtime-example
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [7788642]
+- Updated dependencies [ff73b42]
+  - @mission-platform/forge-web-script-runtime@0.3.0
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @mission-platform/storybook-framework
 
+## 0.3.2
+
+### Patch Changes
+
+- ca9c2aa: support nested package subdirectories in story globs and framework package resolution
+- 06445a1: re-export StorybookConfig and align React types
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+  - @mission-platform/vite-config@1.1.2
+  - @mission-platform/vite-plugin-i18n@0.1.4
+
 ## 0.3.1
 
 ### Patch Changes
