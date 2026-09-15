@@ -189,6 +189,40 @@ function appendOutput(
   return Buffer.concat([current, input]);
 }
 
+/**
+ * Determines the workflow terminal status from execution indicators.
+ */
+function resolveWorkflowStatus(
+  timedOut: boolean,
+  cancelled: boolean,
+  spawnError: Error | undefined,
+  code: number | null,
+): LspWorkflowStatus {
+  if (timedOut) return 'timed-out';
+  if (cancelled) return 'cancelled';
+  if (spawnError) return 'spawn-error';
+  return code === 0 ? 'passed' : 'failed';
+}
+
+const DEFAULT_STATUS_MESSAGES: Partial<Record<LspWorkflowStatus, string>> = {
+  cancelled: 'Workflow was cancelled.',
+  passed: 'Workflow completed successfully.',
+};
+
+/**
+ * Builds the workflow summary message.
+ */
+function resolveWorkflowMessage(
+  status: LspWorkflowStatus,
+  spawnError: Error | undefined,
+  code: number | null,
+  timeoutMs: number,
+): string {
+  if (spawnError) return spawnError.message;
+  if (status === 'timed-out') return `Workflow timed out after ${timeoutMs} ms.`;
+  return DEFAULT_STATUS_MESSAGES[status] ?? `Workflow exited with code ${code ?? 'unknown'}.`;
+}
+
 /** Execute only a command resolved from a repository script, never an arbitrary shell string. */
 export function runBoundedWorkflowProcess(
   command: WorkflowCommand,
@@ -211,6 +245,7 @@ export function runBoundedWorkflowProcess(
       child = spawn(command.executable, [...command.args], {
         cwd,
         shell: false,
+        detached: process.platform !== 'win32',
         stdio: ['ignore', 'pipe', 'pipe'],
       });
     } catch (error) {
@@ -241,17 +276,41 @@ export function runBoundedWorkflowProcess(
     let settled = false;
     let terminating = false;
 
-    const terminate = (reason: 'timeout' | 'cancel'): void => {
-      if (terminating || settled) return;
+    /**
+     * Terminates the child process group or individual process with the given signal.
+     */
+    function killProcessGroup(signal: NodeJS.Signals): void {
+      try {
+        if (child.pid && process.platform !== 'win32') process.kill(-child.pid, signal);
+        else child.kill(signal);
+      } catch {
+        child.kill(signal);
+      }
+    }
+
+    /**
+     * Terminates the spawned workflow process group and schedules force-kill escalation.
+     */
+    function terminate(reason: 'timeout' | 'cancel'): void {
+      if (terminating) return;
       terminating = true;
       if (reason === 'timeout') timedOut = true;
       else cancelled = true;
-      child.kill('SIGTERM');
+      killProcessGroup('SIGTERM');
       killTimer = setTimeout(() => {
-        if (!settled) child.kill('SIGKILL');
+        killProcessGroup('SIGKILL');
+        child.stdout.destroy();
+        child.stderr.destroy();
       }, FORCE_KILL_DELAY_MS);
-    };
-    const onAbort = (): void => terminate('cancel');
+    }
+
+    /**
+     * Handles cancellation abort signals from the caller.
+     */
+    function onAbort(): void {
+      terminate('cancel');
+    }
+
     if (options.signal?.aborted) {
       terminate('cancel');
     } else {
@@ -267,20 +326,17 @@ export function runBoundedWorkflowProcess(
     child.once('error', (error) => {
       spawnError = error;
     });
-    child.once('close', (code, signal) => {
+
+    /**
+     * Settles the workflow result promise once the process exits or closes.
+     */
+    function finish(code: number | null, signal: string | null): void {
+      if (settled) return;
       settled = true;
       if (timeoutTimer) clearTimeout(timeoutTimer);
-      if (killTimer) clearTimeout(killTimer);
+      if (!terminating && killTimer) clearTimeout(killTimer);
       options.signal?.removeEventListener('abort', onAbort);
-      const status: LspWorkflowStatus = timedOut
-        ? 'timed-out'
-        : cancelled
-          ? 'cancelled'
-          : spawnError
-            ? 'spawn-error'
-            : code === 0
-              ? 'passed'
-              : 'failed';
+      const status = resolveWorkflowStatus(timedOut, cancelled, spawnError, code);
       resolveResult({
         status,
         exitCode: code,
@@ -291,16 +347,19 @@ export function runBoundedWorkflowProcess(
         stderr: stderr.toString('utf8'),
         outputTruncated: outputTruncated.value,
         durationMs: Date.now() - startedAt,
-        message:
-          spawnError?.message ??
-          (status === 'timed-out'
-            ? `Workflow timed out after ${timeoutMs} ms.`
-            : status === 'cancelled'
-              ? 'Workflow was cancelled.'
-              : status === 'passed'
-                ? 'Workflow completed successfully.'
-                : `Workflow exited with code ${code ?? 'unknown'}.`),
+        message: resolveWorkflowMessage(status, spawnError, code, timeoutMs),
       });
+    }
+
+    child.once('exit', (code, signal) => {
+      if (timedOut || cancelled) {
+        child.stdout.destroy();
+        child.stderr.destroy();
+        finish(code, signal);
+      }
+    });
+    child.once('close', (code, signal) => {
+      finish(code, signal);
     });
   });
 }

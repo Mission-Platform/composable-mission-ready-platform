@@ -88,6 +88,17 @@ export function oxcNodeText(source: string, node: OxcNode | undefined): string {
   return node === undefined ? '' : source.slice(node.start, node.end);
 }
 
+/**
+ * Computes the 1-based line number at a given character offset in the source.
+ */
+function lineNumberAt(source: string, offset: number): number {
+  let line = 1;
+  for (let index = 0; index < offset; index += 1) {
+    if (source.codePointAt(index) === 10) line += 1;
+  }
+  return line;
+}
+
 export function oxcSourceSpan(source: string, node: OxcNode): SourceSpan {
   const start = Math.max(0, Math.min(node.start, source.length));
   const end = Math.max(start, Math.min(node.end, source.length));
@@ -95,7 +106,7 @@ export function oxcSourceSpan(source: string, node: OxcNode): SourceSpan {
   return {
     start,
     end,
-    line: source.slice(0, start).split('\n').length,
+    line: lineNumberAt(source, start),
     column: start - lineStart + 1,
   };
 }

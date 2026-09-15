@@ -334,8 +334,14 @@
       "cache": false
     },
     "deploy:staging": {
+      "dependsOn": ["build"],
       "env": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"],
       "cache": false
+    },
+    "build-storybook": {
+      "dependsOn": ["^build"],
+      "env": ["STORYBOOK_FRAMEWORK", "STORYBOOK_VITE_CACHE_DIR"],
+      "outputs": ["storybook-static/**"]
     },
     "i18n:extract": {
       "outputs": ["locales/**"]

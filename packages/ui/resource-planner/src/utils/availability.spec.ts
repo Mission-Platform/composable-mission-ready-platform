@@ -25,12 +25,14 @@ describe("expandAvailability", () => {
     );
 
     expect(intervals).toHaveLength(1);
-    expect(
-      DateTime.fromISO(intervals[0]!.start, { setZone: true }).toFormat("ZZ"),
-    ).toBe("-04:00");
-    expect(DateTime.fromISO(intervals[0]!.start, { setZone: true }).hour).toBe(
-      9,
-    );
+    const interval = intervals[0];
+    expect(interval).toBeDefined();
+    if (interval) {
+      expect(
+        DateTime.fromISO(interval.start, { setZone: true }).toFormat("ZZ"),
+      ).toBe("-04:00");
+      expect(DateTime.fromISO(interval.start, { setZone: true }).hour).toBe(9);
+    }
   });
 
   it("replaces dated availability with an exception, including an empty exception", () => {
@@ -63,16 +65,21 @@ describe("expandAvailability", () => {
       },
       {
         start: new Date("2026-03-09T00:00:00Z"),
-        end: new Date("2026-03-10T00:00:00Z"),
+        end: new Date("2026-03-11T00:00:00Z"),
       },
+      { zone: "UTC" },
     );
 
-    expect(intervals[0]!.start).toContain("22:00");
-    expect(
-      DateTime.fromISO(intervals[0]!.end).diff(
-        DateTime.fromISO(intervals[0]!.start),
-        "hours",
-      ).hours,
-    ).toBe(4);
+    const interval = intervals[0];
+    expect(interval).toBeDefined();
+    if (interval) {
+      expect(interval.start).toContain("22:00");
+      expect(
+        DateTime.fromISO(interval.end).diff(
+          DateTime.fromISO(interval.start),
+          "hours",
+        ).hours,
+      ).toBe(4);
+    }
   });
 });

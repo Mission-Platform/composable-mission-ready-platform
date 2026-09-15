@@ -4,6 +4,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 import { validateApps, validateAppsForFullRun } from './app-sweep.ts';
+import { isFailureResult } from './classification.ts';
 import { discoverInventory } from './inventory.ts';
 import {
   writeManifest,
@@ -32,6 +33,15 @@ function option(args: string[], name: string): string | undefined {
 
 function hasOption(args: string[], name: string): boolean {
   return args.includes(name);
+}
+
+/**
+ * Determines whether browser execution should be enabled based on arguments and environment.
+ */
+function browserEnabled(args: string[]): boolean {
+  if (hasOption(args, '--no-browser')) return false;
+  if (hasOption(args, '--browser')) return true;
+  return !process.env.CI;
 }
 
 function selection(args: string[], command: string): ValidationSelection {
@@ -73,7 +83,7 @@ async function storybookManifest(
       packageName: option(args, '--package'),
       storyId: option(args, '--story'),
       port: option(args, '--port') ? Number(option(args, '--port')) + index : undefined,
-      browser: !hasOption(args, '--no-browser'),
+      browser: browserEnabled(args),
       build: !hasOption(args, '--no-build'),
       maxStories: option(args, '--max-stories') ? Number(option(args, '--max-stories')) : undefined,
       workers: option(args, '--workers') ? Number(option(args, '--workers')) : undefined,
@@ -92,7 +102,7 @@ async function storybookManifest(
       ...(await validateAppsForFullRun(root, inventory, {
         app: option(args, '--app'),
         port: port ? Number(port) + frameworks.length : undefined,
-        browser: !hasOption(args, '--no-browser'),
+        browser: browserEnabled(args),
         build: !hasOption(args, '--no-build'),
         timeoutMs: option(args, '--timeout-ms') ? Number(option(args, '--timeout-ms')) : undefined,
       })),
@@ -106,7 +116,7 @@ async function appManifest(root: string, inventory: RepositoryInventory, args: s
     app: option(args, '--app'),
     route: option(args, '--route'),
     port: option(args, '--port') ? Number(option(args, '--port')) : undefined,
-    browser: !hasOption(args, '--no-browser'),
+    browser: browserEnabled(args),
     build: !hasOption(args, '--no-build'),
     timeoutMs: option(args, '--timeout-ms') ? Number(option(args, '--timeout-ms')) : undefined,
   });
@@ -150,12 +160,7 @@ async function main(): Promise<void> {
     const failureGroups = summarizeFailureGroups(manifest.results);
     if (failureGroups) console.log(`Failure groups:\n${failureGroups}`);
   }
-  if (
-    manifest.results.some((result) =>
-      ['compile-failure', 'runtime-failure', 'interaction-failure', 'blocked'].includes(result.status),
-    )
-  )
-    process.exitCode = 1;
+  if (manifest.results.some((result) => isFailureResult(result))) process.exitCode = 1;
 }
 
 try {

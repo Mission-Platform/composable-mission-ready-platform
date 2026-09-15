@@ -1,0 +1,141 @@
+{
+  "servers": [
+    {
+      "language_id": "typescript",
+      "extensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--lsp",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "forge-web-script",
+      "extensions": [
+        "fws"
+      ],
+      "command": [
+        "pnpm",
+        "--dir",
+        "packages/compiler/forge/forge-web-script-lsp",
+        "exec",
+        "./dist/main.js",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "yaml",
+      "extensions": [
+        "yaml"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "yaml-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "stylelint",
+      "extensions": [
+        "css",
+        "scss"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "stylelint-lsp",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "json",
+      "extensions": [
+        "json"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "vscode-json-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "css",
+      "extensions": [
+        "css",
+        "scss"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "vscode-css-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "html",
+      "extensions": [
+        "html"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "vscode-html-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "eslint",
+      "extensions": [
+        "js",
+        "jsx",
+        "ts",
+        "tsx",
+        "vue"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "vscode-eslint-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "markdown",
+      "extensions": [
+        "md"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "vscode-markdown-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "sonarlint",
+      "extensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "vue"
+      ],
+      "command": [
+        "pnpm",
+        "exec",
+        "node",
+        "--experimental-strip-types",
+        "scripts/sonarlint-language-server.ts"
+      ]
+    }
+  ]
+}

@@ -76,10 +76,8 @@ export function buildRustArtifact(): BuildArtifact {
   const output = path.resolve(BENCHMARK_ROOT, "generated/rust");
   const outputDirectory = path.relative(crateRoot, output);
   execFileSync(
-    "pnpm",
+    "wasm-pack",
     [
-      "exec",
-      "wasm-pack",
       "build",
       crateRoot,
       "--target",

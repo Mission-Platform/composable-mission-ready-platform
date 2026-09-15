@@ -49,20 +49,6 @@ function removeGeneratedDirectoryPlugin(generatedDirectory: string, targetId: st
   return {
     name: '@mission-platform/vite-plugin-forge:remove-generated-directory',
     closeBundle() {
-      // Only remove a directory carrying this target's complete Forge marker;
-      // never recursively clean an arbitrary package cache directory.
-      const manifestPath = path.join(generatedDirectory, '.forge-artifact-manifest.json');
-      try {
-        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
-          targetId?: string;
-          complete?: boolean;
-        };
-        if (manifest.targetId === targetId && manifest.complete === true) {
-          fs.rmSync(generatedDirectory, { recursive: true, force: true });
-        }
-      } catch {
-        // Failed attempts are cleaned by the scoped attempt cleanup below.
-      }
       cleanupForgeArtifactAttempts(generatedDirectory, targetId);
     },
   } as TsdownPlugin;
@@ -404,6 +390,11 @@ export interface TsdownForgeComponentPluginsOptions {
   rejectFixturePlaceholder?: boolean;
 }
 
+/** Suppresses unhandled rejection during asynchronous session disposal. */
+function ignoreDisposalRejection(): void {
+  // Background fire-and-forget session disposal
+}
+
 /**
  * Reproduce one Archetype-C **component** framework build under tsdown:
  * Stage 1 (`generateFrameworkSources`) + Stage 2 plugins + css-import + dts plugins,
@@ -426,14 +417,20 @@ export function tsdownForgeComponentPlugins(options: TsdownForgeComponentPlugins
     throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
   }
   const session = options.session ?? createForgeBuildSession({ service: options.service });
-  return frameworks.map((plugin, index) =>
+  let activePlugins = frameworks.length;
+  return frameworks.map((plugin) =>
     tsdownConfigPlugin(
       createTsdownForgeComponentPlugin({
         ...options,
         plugin,
         session,
         service: options.service,
-        disposeService: index === frameworks.length - 1 && options.session === undefined,
+        disposeSession: () => {
+          activePlugins -= 1;
+          if (activePlugins === 0 && options.session === undefined) {
+            session.dispose().catch(ignoreDisposalRejection);
+          }
+        },
       }),
       plugin.id,
       options.rootDir,
@@ -461,13 +458,19 @@ export function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPlug
   }
 
   const session = options.session ?? createForgeBuildSession({ service: options.service });
-  return frameworks.map((plugin, index) =>
+  let activeConfigs = frameworks.length;
+  return frameworks.map((plugin) =>
     createTsdownForgeComponentPlugin({
       ...options,
       plugin,
       session,
       service: options.service,
-      disposeService: index === frameworks.length - 1 && options.session === undefined,
+      disposeSession: () => {
+        activeConfigs -= 1;
+        if (activeConfigs === 0 && options.session === undefined) {
+          session.dispose().catch(ignoreDisposalRejection);
+        }
+      },
     }),
   );
 }
@@ -494,7 +497,7 @@ function createTsdownForgeComponentPlugin(
     Omit<TsdownForgeComponentPluginsOptions, 'frameworks'> & {
       plugin: FrameworkOutputPlugin;
       session: ForgeBuildSession;
-      disposeService?: boolean;
+      disposeSession?: boolean | (() => void);
     }
   >,
 ): UserConfig {
@@ -513,7 +516,7 @@ function createTsdownForgeComponentPlugin(
     rejectFixturePlaceholder = true,
     service,
     session,
-    disposeService,
+    disposeSession,
   } = options;
   const framework = plugin.id as JsxFramework;
   const watchMode = process.argv.some(
@@ -574,7 +577,7 @@ function createTsdownForgeComponentPlugin(
       plan: { rootDir, targets: [target] },
       target,
       adapter: 'tsdown',
-      disposeSession: disposeService ?? service === undefined,
+      disposeSession: disposeSession ?? service === undefined,
     }) as unknown as TsdownPlugin,
     ...stagePlugins,
     jsxComponentsCssImportPlugin() as TsdownPlugin,

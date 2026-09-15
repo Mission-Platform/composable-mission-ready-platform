@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { isFailureResult } from './classification.ts';
 import { DEFAULT_ARTIFACT_DIRECTORY, safeArtifactName } from './paths.ts';
 import {
   STORYBOOK_FRAMEWORKS,
@@ -156,10 +157,16 @@ export function summarizeResults(results: RuntimeResult[]): string {
   return summary.length > 0 ? summary.join(' ') : 'no results';
 }
 
+/**
+ * Summarizes failure groups and their counts across validation results.
+ *
+ * @param results - Array of runtime validation results.
+ * @returns Formatted summary string of failure counts grouped by framework, package, and status.
+ */
 export function summarizeFailureGroups(results: RuntimeResult[]): string {
   const groups = new Map<string, number>();
   for (const result of results) {
-    if (result.status === 'pass' || result.status === 'excluded') continue;
+    if (!isFailureResult(result)) continue;
     const framework = result.framework ?? 'app';
     const workstream = result.workstream ?? 'app';
     const key = `${framework} / ${result.packageOrApp} / ${workstream} / ${result.status}`;

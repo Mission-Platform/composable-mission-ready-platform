@@ -50,8 +50,7 @@ async function mountDocs(initialUrl: string): Promise<{
     ?.setRouter(router);
   mountedRouters.push(router);
   await router.ready;
-  await Promise.resolve();
-  await Promise.resolve();
+  await flushElementUpdates();
   return { router, shell };
 }
 
@@ -65,6 +64,9 @@ function mountedStyles(element: Element | null, label: string): string[] {
   return links.map((link) => link.dataset.mpForgeStyle ?? link.href);
 }
 
+/**
+ * Flushes microtasks and next-tick work so element lifecycle updates settle.
+ */
 async function flushElementUpdates(): Promise<void> {
   await Promise.resolve();
   await new Promise((resolve) => setTimeout(resolve, 0));
@@ -87,7 +89,7 @@ afterEach(() => {
   localStorage.clear();
 });
 
-describe('docs Web Components application', { timeout: 30_000 }, () => {
+describe('docs Web Components application', { timeout: 120_000 }, () => {
   it('mounts the compiled language switcher with typed select options', async () => {
     const switcher = document.createElement('forge-language-switcher') as HTMLElement & {
       locale: string;

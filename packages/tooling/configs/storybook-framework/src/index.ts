@@ -124,7 +124,12 @@ export function storyGlobs(
   packages: readonly string[],
   packagesRoot: string,
 ): string[] {
-  return [...packages.flatMap((package_) => patternsFor(`${packagesRoot}/packages/${package_}/src`))];
+  return [
+    ...packages.flatMap((package_) => [
+      ...patternsFor(`${packagesRoot}/packages/${package_}/src`),
+      ...patternsFor(`${packagesRoot}/packages/*/${package_}/src`),
+    ]),
+  ];
 }
 
 /**
@@ -137,6 +142,33 @@ export function storyGlobs(
  */
 const FACADE_FIRST_PACKAGES: readonly string[] = ['code-scanner', 'barcode', 'qr-code', 'matrix-code'];
 
+const PACKAGE_SUBDIRECTORIES: readonly string[] = [
+  'ui',
+  'compiler',
+  'core',
+  'tooling',
+  'integrations',
+  'content',
+  'edge',
+];
+
+/**
+ * Resolves the directory for a workspace package, checking nested subdirectories if needed.
+ */
+function resolvePackageRoot(repoRoot: string, packageName: string, exists: (filePath: string) => boolean): string {
+  const direct = `${repoRoot}/packages/${packageName}`;
+  if (exists(`${direct}/package.json`)) {
+    return direct;
+  }
+  for (const sub of PACKAGE_SUBDIRECTORIES) {
+    const candidate = `${repoRoot}/packages/${sub}/${packageName}`;
+    if (exists(`${candidate}/package.json`)) {
+      return candidate;
+    }
+  }
+  return direct;
+}
+
 /**
  * Redirect a façade-first package's bare self-import to its neutral façade build
  * (`packages/<pkg>/dist/index.js`) — but ONLY when the importer is itself a built
@@ -146,23 +178,20 @@ const FACADE_FIRST_PACKAGES: readonly string[] = ['code-scanner', 'barcode', 'qr
  * `mp:<framework>` conditions. This keeps the unified Storybook working for the
  * wasm packages without touching any published package.
  */
-function facadeNeutralResolvePlugin(): Plugin {
-  // The unified Storybook always runs from `apps/storybook`, so the repo root is
-  // two segments up. POSIX string ops avoid a top-level `node:path` import, which
-  // would break this barrel's browser-safety (it is re-imported by `preview.ts`).
-  const repoRoot = process.cwd().split('/').slice(0, -2).join('/');
+function facadeNeutralResolvePlugin(repoRoot: string, exists: (filePath: string) => boolean): Plugin {
   return {
     name: 'mission-platform:facade-neutral-resolve',
     enforce: 'pre',
     resolveId(source: string, importer: string | undefined) {
-      if (!importer || !/[/\\]dist[/\\]/.test(importer)) {
-        return;
+      let resolved: string | undefined;
+      if (importer && /[/\\]dist[/\\]/.test(importer)) {
+        const match = FACADE_FIRST_PACKAGES.find((package_) => source === `@mission-platform/${package_}`);
+        if (match) {
+          const packageRoot = resolvePackageRoot(repoRoot, match, exists);
+          resolved = `${packageRoot}/dist/index.js`;
+        }
       }
-      const match = FACADE_FIRST_PACKAGES.find((package_) => source === `@mission-platform/${package_}`);
-      if (!match) {
-        return;
-      }
-      return `${repoRoot}/packages/${match}/dist/index.js`;
+      return resolved;
     },
   };
 }
@@ -183,24 +212,22 @@ function frameworkPackageResolvePlugin(
     name: 'mission-platform:framework-package-resolve',
     enforce: 'pre',
     resolveId(source: string, importer: string | undefined) {
+      let resolved: string | undefined;
       const match = /^@mission-platform\/([^/]+)$/.exec(source);
-      if (!match) {
-        return;
+      if (match && !(FACADE_FIRST_PACKAGES.includes(match[1]) && importer && /[/\\]dist[/\\]/.test(importer))) {
+        const packageRoot = resolvePackageRoot(repoRoot, match[1], exists);
+        const frameworkEntry = `${packageRoot}/dist/${target}/index.js`;
+        const frameworkFile = `${packageRoot}/dist/${target}.js`;
+        const neutralEntry = `${packageRoot}/dist/index.js`;
+        if (exists(frameworkEntry)) {
+          resolved = frameworkEntry;
+        } else if (exists(frameworkFile)) {
+          resolved = frameworkFile;
+        } else if (exists(neutralEntry)) {
+          resolved = neutralEntry;
+        }
       }
-      if (FACADE_FIRST_PACKAGES.includes(match[1]) && importer && /[/\\]dist[/\\]/.test(importer)) {
-        return;
-      }
-      const packageRoot = `${repoRoot}/packages/${match[1]}`;
-      const frameworkEntry = `${packageRoot}/dist/${target}/index.js`;
-      if (exists(frameworkEntry)) {
-        return frameworkEntry;
-      }
-      const frameworkFile = `${packageRoot}/dist/${target}.js`;
-      if (exists(frameworkFile)) {
-        return frameworkFile;
-      }
-      const neutralEntry = `${packageRoot}/dist/index.js`;
-      return exists(neutralEntry) ? neutralEntry : undefined;
+      return resolved;
     },
   };
 }
@@ -247,22 +274,21 @@ function webComponentStoryMetadataPlugin(): Plugin {
     name: 'mission-platform:web-component-story-metadata',
     enforce: 'pre',
     transform(code, id) {
+      let transformed: { code: string } | undefined;
       const sourceId = id.split('?')[0];
-      if (!/\.stories\.[cm]?[jt]sx?$/.test(sourceId)) {
-        return;
+      if (/\.stories\.[cm]?[jt]sx?$/.test(sourceId)) {
+        const componentMetadata = /component:\s*([A-Za-z_$][\w$]*)/g;
+        if (componentMetadata.test(code)) {
+          componentMetadata.lastIndex = 0;
+          transformed = {
+            code: `import { customElementTag as __mpStoryComponentTag } from '@mission-platform/storybook-framework/slots';\n${code.replace(
+              componentMetadata,
+              'component: __mpStoryComponentTag($1)',
+            )}`,
+          };
+        }
       }
-      const componentMetadata = /component:\s*([A-Za-z_$][\w$]*)/g;
-      if (!componentMetadata.test(code)) {
-        return;
-      }
-      componentMetadata.lastIndex = 0;
-      return {
-        code: `import { customElementTag as __mpStoryComponentTag } from '@mission-platform/storybook-framework/slots';\n${code.replace(
-          componentMetadata,
-          'component: __mpStoryComponentTag($1)',
-        )}`,
-        map: undefined,
-      };
+      return transformed;
     },
   };
 }
@@ -296,9 +322,10 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
   // `src/locales`, which only holds the generated `.d.ts` shims). Point the
   // plugin at `locales` so those bundles actually load — otherwise
   // `virtual:i18n-resources` resolves to English defaults only.
+  const repoRoot = process.cwd().split('/').slice(0, -2).join('/');
   const plugins: Plugin[] = [
-    frameworkPackageResolvePlugin(framework, process.cwd().split('/').slice(0, -2).join('/'), existsSync),
-    facadeNeutralResolvePlugin(),
+    frameworkPackageResolvePlugin(framework, repoRoot, existsSync),
+    facadeNeutralResolvePlugin(repoRoot, existsSync),
     i18nPlugin({ defaultLocale: 'en', localesDir: 'locales' }) as Plugin,
   ];
 

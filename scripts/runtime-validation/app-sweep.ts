@@ -47,8 +47,14 @@ function appShortName(app: AppInventory): string {
   return app.name.replace(/^@mission-platform\//, '');
 }
 
+/**
+ * Returns the Turborepo build command arguments for the specified application.
+ *
+ * @param appName - Full workspace package name of the application.
+ * @returns Command arguments to execute via pnpm.
+ */
 export function appBuildArgs(appName: string): string[] {
-  return ['--filter', `${appName}...`, 'build'];
+  return ['exec', 'turbo', 'run', 'build', '--filter', `${appName}...`];
 }
 
 function writeAppLog(repositoryRoot: string, app: AppInventory, suffix: string, content: string): string {

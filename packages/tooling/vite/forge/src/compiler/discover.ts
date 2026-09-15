@@ -557,75 +557,95 @@ function graphTypeExports(
   return [...names];
 }
 
-/** Project public component exports from the canonical graph while retaining the legacy result shape. */
-export function discoverComponentsFromGraph(
+const graphComponentCache = new WeakMap<ForgeFileGraph, DiscoveredComponent[]>();
+const graphHelperCache = new WeakMap<ForgeFileGraph, DiscoveredHelperExport[]>();
+
+/** Derives the neutral export name of a component from its node and entry export fact. */
+function deriveNeutralName(sourceNode: ForgeFileNode, entryExport: ForgeExportFact): string {
+  const targetName = entryExport.localName ?? entryExport.exportedName;
+  const match = sourceNode.exports.find(
+    (sourceExport) => !sourceExport.typeOnly && sourceExport.exportedName === targetName,
+  );
+  return match?.exportedName ?? targetName ?? '';
+}
+
+/** Derives the public component name by removing the strip prefix. */
+function derivePublicName(
+  exportedName: string | undefined,
+  localName: string | undefined,
+  neutralName: string,
+  stripPrefix: string,
+): string {
+  const base = exportedName !== undefined && localName !== undefined ? exportedName : neutralName;
+  return base.startsWith(stripPrefix) ? base.slice(stripPrefix.length) : base;
+}
+
+/** Collects all non-component exported names from a source node. */
+function extractHelperExportNames(sourceNode: ForgeFileNode, astCache: Map<string, OxcParsedModule>): Set<string> {
+  const helperExportNames = new Set<string>();
+  for (const sourceExport of sourceNode.exports) {
+    if (
+      !sourceExport.typeOnly &&
+      sourceExport.exportedName !== undefined &&
+      !isComponentExport(sourceNode.id, sourceExport.exportedName, astCache)
+    ) {
+      helperExportNames.add(sourceExport.exportedName);
+    }
+  }
+  return helperExportNames;
+}
+
+/** Validates whether an export fact represents an exported component node. */
+function findComponentSourceNode(resolvedExport: ResolvedGraphExport): ForgeFileNode | undefined {
+  const entryExport = resolvedExport.fact;
+  if (entryExport.typeOnly || !entryExport.exportedName) return undefined;
+  const sourceNode = resolvedExport.sourceNode;
+  if (!sourceNode || sourceNode.kind !== 'component') return undefined;
+  return sourceNode;
+}
+
+/** Formats a relative module specifier from the graph entry to a source file. */
+function deriveSourceSpecifier(graphEntry: string, sourcePath: string, specifier?: string): string {
+  if (specifier) return specifier;
+  const relative = path.relative(path.dirname(graphEntry), sourcePath).split(path.sep).join('/');
+  return `./${relative}`;
+}
+
+/** Resolves a single graph export into a DiscoveredComponent when it represents a component. */
+function resolveDiscoveredComponent(
   graph: ForgeFileGraph,
-  stripPrefix = 'Forge',
-  diagnostics?: CompilerDiagnostic[],
-): DiscoveredComponent[] {
-  const entry = graph.nodes.get(graph.entry);
-  if (entry === undefined) {
-    return [];
-  }
-  const astCache = new Map<string, OxcParsedModule>();
-  const exports = resolveGraphExports(graph, entry);
-  const components: DiscoveredComponent[] = [];
-  for (const resolvedExport of exports) {
-    const entryExport = resolvedExport.fact;
-    if (entryExport.typeOnly || entryExport.exportedName === undefined) {
-      continue;
-    }
-    const sourceNode = resolvedExport.sourceNode;
-    if (sourceNode === undefined || sourceNode.kind !== 'component') {
-      continue;
-    }
-    const neutralName =
-      sourceNode.exports.find(
-        (sourceExport) =>
-          !sourceExport.typeOnly && sourceExport.exportedName === (entryExport.localName ?? entryExport.exportedName),
-      )?.exportedName ??
-      entryExport.localName ??
-      entryExport.exportedName;
+  entry: ForgeFileNode,
+  resolvedExport: ResolvedGraphExport,
+  stripPrefix: string,
+  astCache: Map<string, OxcParsedModule>,
+): DiscoveredComponent | undefined {
+  const sourceNode = findComponentSourceNode(resolvedExport);
+  if (!sourceNode) return undefined;
 
-    if (!isComponentExport(sourceNode.id, neutralName, astCache)) {
-      continue;
-    }
+  const entryExport = resolvedExport.fact;
+  const neutralName = deriveNeutralName(sourceNode, entryExport);
+  if (!isComponentExport(sourceNode.id, neutralName, astCache)) return undefined;
 
-    const publicName =
-      entryExport.exportedName !== undefined && entryExport.localName !== undefined
-        ? entryExport.exportedName.startsWith(stripPrefix)
-          ? entryExport.exportedName.slice(stripPrefix.length)
-          : entryExport.exportedName
-        : neutralName.startsWith(stripPrefix)
-          ? neutralName.slice(stripPrefix.length)
-          : neutralName;
-    const helperExportNames = new Set(
-      sourceNode.exports
-        .filter(
-          (sourceExport) =>
-            !sourceExport.typeOnly &&
-            sourceExport.exportedName !== undefined &&
-            !isComponentExport(sourceNode.id, sourceExport.exportedName, astCache),
-        )
-        .map((sourceExport) => sourceExport.exportedName as string),
-    );
-    const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier, helperExportNames);
-    const candidate = `${publicName}Properties`;
-    const sourceSpecifier =
-      entryExport.specifier ?? `./${path.relative(path.dirname(graph.entry), sourceNode.id).split(path.sep).join('/')}`;
-    components.push({
-      neutralName,
-      publicName,
-      propertiesType: typeExports.includes(candidate) ? candidate : undefined,
-      typeExports,
-      folder: sourceBase(sourceNode.id),
-      sourceDir: relativeModulePath(graph.entry, sourceNode.id),
-      sourceSpecifier,
-      sourcePath: sourceNode.id,
-    });
-  }
+  const publicName = derivePublicName(entryExport.exportedName, entryExport.localName, neutralName, stripPrefix);
+  const helperExportNames = extractHelperExportNames(sourceNode, astCache);
+  const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier, helperExportNames);
+  const candidate = `${publicName}Properties`;
+  const propertiesType = typeExports.includes(candidate) ? candidate : undefined;
+  const sourceSpecifier = deriveSourceSpecifier(graph.entry, sourceNode.id, entryExport.specifier);
+  return {
+    neutralName,
+    publicName,
+    propertiesType,
+    typeExports,
+    folder: sourceBase(sourceNode.id),
+    sourceDir: relativeModulePath(graph.entry, sourceNode.id),
+    sourceSpecifier,
+    sourcePath: sourceNode.id,
+  };
+}
 
-  // Check for collision among component `folder` basenames and disambiguate nested paths
+/** Groups discovered components by their folder basename. */
+function groupComponentsByFolder(components: readonly DiscoveredComponent[]): Map<string, DiscoveredComponent[]> {
   const componentsByFolder = new Map<string, DiscoveredComponent[]>();
   for (const component of components) {
     const list = componentsByFolder.get(component.folder);
@@ -635,45 +655,272 @@ export function discoverComponentsFromGraph(
       list.push(component);
     }
   }
+  return componentsByFolder;
+}
 
-  for (const [folder, group] of componentsByFolder) {
-    const uniqueSources = new Set(group.map((c) => c.sourcePath ?? c.sourceSpecifier));
-    if (uniqueSources.size <= 1) {
-      continue;
-    }
-    for (const component of group) {
-      component.folder =
-        component.sourcePath !== undefined
-          ? deriveDisambiguatedFolder(graph.entry, component.sourcePath, folder)
-          : deriveDisambiguatedFolderFromDir(component.sourceDir, folder);
-    }
+/** Disambiguates folder names within a collision group. */
+function disambiguateFolderGroup(group: readonly DiscoveredComponent[], folder: string, entryPath: string): void {
+  const uniqueSources = new Set(group.map((c) => c.sourcePath ?? c.sourceSpecifier));
+  if (uniqueSources.size <= 1) return;
+  for (const component of group) {
+    component.folder =
+      component.sourcePath !== undefined
+        ? deriveDisambiguatedFolder(entryPath, component.sourcePath, folder)
+        : deriveDisambiguatedFolderFromDir(component.sourceDir, folder);
   }
+}
 
-  // Verify that target folders are unique across distinct source components
+/** Disambiguates folder basenames when multiple components share the same folder name. */
+function disambiguateComponentFolders(components: readonly DiscoveredComponent[], entryPath: string): void {
+  const componentsByFolder = groupComponentsByFolder(components);
+  for (const [folder, group] of componentsByFolder) {
+    disambiguateFolderGroup(group, folder, entryPath);
+  }
+}
+
+/** Returns a stable path or specifier identifier for a discovered component. */
+function componentKey(component: DiscoveredComponent): string {
+  return component.sourcePath ?? component.sourceSpecifier;
+}
+
+/** Constructs a CompilerDiagnostic for a duplicate target folder collision. */
+function buildDuplicateTargetDiagnostic(
+  component: DiscoveredComponent,
+  existing: DiscoveredComponent,
+  entryPath: string,
+): CompilerDiagnostic {
+  const currentKey = componentKey(component);
+  const existingKey = componentKey(existing);
+  const relatedFiles = existing.sourcePath ? [existing.sourcePath] : undefined;
+  return createCompilerDiagnostic({
+    phase: 'generation',
+    severity: 'error',
+    code: DUPLICATE_COMPONENT_TARGET,
+    message: `Duplicate component target "${component.folder}" detected for "${component.neutralName}" (${currentKey}) and "${existing.neutralName}" (${existingKey}).`,
+    fileName: component.sourcePath ?? entryPath,
+    relatedFiles,
+  });
+}
+
+/** Records a diagnostic if two components produce conflicting target folders. */
+function recordDuplicateTargetDiagnostic(
+  component: DiscoveredComponent,
+  existing: DiscoveredComponent,
+  entryPath: string,
+  diagnostics?: CompilerDiagnostic[],
+): void {
+  if (componentKey(existing) === componentKey(component)) return;
+  const diagnostic = buildDuplicateTargetDiagnostic(component, existing, entryPath);
+  diagnostics?.push(diagnostic);
+  throwOnCompilerErrors([diagnostic]);
+}
+
+/** Verifies that target folders are unique across distinct source components. */
+function validateUniqueComponentFolders(
+  components: readonly DiscoveredComponent[],
+  entryPath: string,
+  diagnostics?: CompilerDiagnostic[],
+): void {
   const targetFolders = new Map<string, DiscoveredComponent>();
   for (const component of components) {
     const existing = targetFolders.get(component.folder);
     if (existing !== undefined) {
-      const existingKey = existing.sourcePath ?? existing.sourceSpecifier;
-      const currentKey = component.sourcePath ?? component.sourceSpecifier;
-      if (existingKey !== currentKey) {
-        const diagnostic = createCompilerDiagnostic({
-          phase: 'generation',
-          severity: 'error',
-          code: DUPLICATE_COMPONENT_TARGET,
-          message: `Duplicate component target "${component.folder}" detected for "${component.neutralName}" (${currentKey}) and "${existing.neutralName}" (${existingKey}).`,
-          fileName: component.sourcePath ?? graph.entry,
-          relatedFiles: existing.sourcePath ? [existing.sourcePath] : undefined,
-        });
-        diagnostics?.push(diagnostic);
-        throwOnCompilerErrors([diagnostic]);
-      }
+      recordDuplicateTargetDiagnostic(component, existing, entryPath, diagnostics);
     } else {
       targetFolders.set(component.folder, component);
     }
   }
+}
+
+/** Collects discovered component exports from the graph entry and ast cache. */
+function discoverGraphComponents(graph: ForgeFileGraph, stripPrefix: string): DiscoveredComponent[] {
+  const entry = graph.nodes.get(graph.entry);
+  if (entry === undefined) {
+    return [];
+  }
+  const astCache = new Map<string, OxcParsedModule>();
+  const exports = resolveGraphExports(graph, entry);
+  const components: DiscoveredComponent[] = [];
+  for (const resolvedExport of exports) {
+    const component = resolveDiscoveredComponent(graph, entry, resolvedExport, stripPrefix, astCache);
+    if (component !== undefined) {
+      components.push(component);
+    }
+  }
+  return components;
+}
+
+/** Project public component exports from the canonical graph while retaining the legacy result shape. */
+export function discoverComponentsFromGraph(
+  graph: ForgeFileGraph,
+  stripPrefix = 'Forge',
+  diagnostics?: CompilerDiagnostic[],
+): DiscoveredComponent[] {
+  const useCache = stripPrefix === 'Forge' && diagnostics === undefined;
+  if (useCache) {
+    const cached = graphComponentCache.get(graph);
+    if (cached !== undefined) {
+      return cached;
+    }
+  }
+
+  const components = discoverGraphComponents(graph, stripPrefix);
+  disambiguateComponentFolders(components, graph.entry);
+  validateUniqueComponentFolders(components, graph.entry, diagnostics);
+
+  if (useCache) {
+    graphComponentCache.set(graph, components);
+  }
 
   return components;
+}
+
+/** Derives a helper module's path relative to the graph entry directory. */
+function deriveHelperRelativePath(sourceRelativePath: string, entryDirectory: string): string {
+  const stripped = sourceRelativePath.replace(/\.(?:d\.ts|d\.mts|d\.cts|[cm]?[jt]sx?)$/, '').replace(/\/index$/, '');
+  return stripped.startsWith(`${entryDirectory}/`) ? stripped.slice(entryDirectory.length + 1) : stripped;
+}
+
+/** Determines if a candidate export is part of component exports or existing types. */
+function isHelperExportExcluded(
+  sourceNode: ForgeFileNode,
+  exportedName: string,
+  localName: string,
+  isType: boolean,
+  componentNames: ReadonlySet<string>,
+  componentTypes: ReadonlySet<string>,
+  astCache: Map<string, OxcParsedModule>,
+): boolean {
+  if (isType) {
+    return componentTypes.has(exportedName);
+  }
+  if (componentNames.has(exportedName) || componentNames.has(localName)) {
+    return true;
+  }
+  return sourceNode.kind === 'component' && isComponentExport(sourceNode.id, localName, astCache);
+}
+
+/** Appends a helper binding to the helper record if not already recorded. */
+function appendHelperBinding(helper: DiscoveredHelperExport, binding: DiscoveredHelperBinding, isType: boolean): void {
+  const targetList = isType ? helper.types : helper.values;
+  if (!targetList.some((existing) => existing.exportedName === binding.exportedName)) {
+    targetList.push(binding);
+  }
+}
+
+/** Collects or creates a DiscoveredHelperExport entry in the helper map. */
+function getOrCreateHelperEntry(
+  helpers: Map<string, DiscoveredHelperExport>,
+  sourceNode: ForgeFileNode,
+  entryDirectory: string,
+): DiscoveredHelperExport {
+  let helper = helpers.get(sourceNode.id);
+  if (helper === undefined) {
+    helper = {
+      base: sourceBase(sourceNode.id),
+      relativePath: deriveHelperRelativePath(sourceNode.sourceRelativePath, entryDirectory),
+      values: [],
+      types: [],
+      sourcePath: sourceNode.id,
+    };
+    helpers.set(sourceNode.id, helper);
+  }
+  return helper;
+}
+
+/** Collects public component names and type export names from discovered components. */
+function collectComponentTypesAndNames(components: readonly DiscoveredComponent[]) {
+  const componentNames = new Set(components.flatMap((c) => [c.neutralName, c.publicName]));
+  const componentTypes = new Set<string>();
+  for (const component of components) {
+    if (component.propertiesType) componentTypes.add(component.propertiesType);
+    for (const typeName of component.typeExports ?? []) componentTypes.add(typeName);
+  }
+  return { componentNames, componentTypes };
+}
+
+/** Determines if an export fact represents a type-only export. */
+function isTypeExport(entryExport: ForgeExportFact, sourceNode: ForgeFileNode, localName: string): boolean {
+  if (entryExport.typeOnly) return true;
+  const matched = sourceNode.exports.find((e) => e.exportedName === localName);
+  return matched?.typeOnly === true;
+}
+
+/** Constructs a helper binding with optional component alias target. */
+function buildHelperBinding(
+  localName: string,
+  exportedName: string,
+  isType: boolean,
+  sourceNodeId: string,
+  astCache: Map<string, OxcParsedModule>,
+): DiscoveredHelperBinding {
+  const componentAlias = isType ? undefined : componentAliasTarget(sourceNodeId, localName, astCache);
+  return { localName, exportedName, componentAlias };
+}
+
+/** Validates that a resolved export belongs to a valid non-entry source node. */
+function isValidHelperSourceNode(sourceNode: ForgeFileNode | undefined, entryId: string): sourceNode is ForgeFileNode {
+  return sourceNode !== undefined && sourceNode.id !== entryId;
+}
+
+/** Processes a single resolved graph export and registers helper bindings. */
+function processGraphHelperExport(
+  resolvedExport: ResolvedGraphExport,
+  entry: ForgeFileNode,
+  entryDirectory: string,
+  helpers: Map<string, DiscoveredHelperExport>,
+  componentNames: ReadonlySet<string>,
+  componentTypes: ReadonlySet<string>,
+  astCache: Map<string, OxcParsedModule>,
+): void {
+  const entryExport = resolvedExport.fact;
+  const exportedName = entryExport.exportedName;
+  if (exportedName === undefined) return;
+  const sourceNode = resolvedExport.sourceNode;
+  if (!isValidHelperSourceNode(sourceNode, entry.id)) return;
+
+  const localName = entryExport.localName ?? exportedName;
+  const isType = isTypeExport(entryExport, sourceNode, localName);
+  if (isHelperExportExcluded(sourceNode, exportedName, localName, isType, componentNames, componentTypes, astCache)) {
+    return;
+  }
+
+  const helper = getOrCreateHelperEntry(helpers, sourceNode, entryDirectory);
+  const binding = buildHelperBinding(localName, exportedName, isType, sourceNode.id, astCache);
+  appendHelperBinding(helper, binding, isType);
+}
+
+/** Retrieves cached helper exports if explicit components were not provided. */
+function getCachedHelperExports(
+  graph: ForgeFileGraph,
+  discoveredComponents?: readonly DiscoveredComponent[],
+): DiscoveredHelperExport[] | undefined {
+  return discoveredComponents === undefined ? graphHelperCache.get(graph) : undefined;
+}
+
+/** Resolves the discovered components, falling back to graph discovery if omitted. */
+function resolveDiscoveredComponents(
+  graph: ForgeFileGraph,
+  discoveredComponents?: readonly DiscoveredComponent[],
+): readonly DiscoveredComponent[] {
+  return discoveredComponents ?? discoverComponentsFromGraph(graph);
+}
+
+/** Collects non-component helper exports from the resolved graph exports. */
+function collectGraphHelperExports(
+  graph: ForgeFileGraph,
+  entry: ForgeFileNode,
+  components: readonly DiscoveredComponent[],
+): DiscoveredHelperExport[] {
+  const { componentNames, componentTypes } = collectComponentTypesAndNames(components);
+  const astCache = new Map<string, OxcParsedModule>();
+  const helpers = new Map<string, DiscoveredHelperExport>();
+  const entryDirectory = entry.sourceRelativePath.replace(/\/[^/]+$/, '');
+
+  for (const resolvedExport of resolveGraphExports(graph, entry)) {
+    processGraphHelperExport(resolvedExport, entry, entryDirectory, helpers, componentNames, componentTypes, astCache);
+  }
+  return [...helpers.values()];
 }
 
 /** Project non-component public exports from the canonical graph. */
@@ -682,83 +929,18 @@ export function discoverHelperExportsFromGraph(
   componentFolders: ReadonlySet<string>,
   discoveredComponents?: readonly DiscoveredComponent[],
 ): DiscoveredHelperExport[] {
+  const cached = getCachedHelperExports(graph, discoveredComponents);
+  if (cached !== undefined) return cached;
+
   const entry = graph.nodes.get(graph.entry);
-  if (entry === undefined) {
-    return [];
+  if (entry === undefined) return [];
+
+  const components = resolveDiscoveredComponents(graph, discoveredComponents);
+  const result = collectGraphHelperExports(graph, entry, components);
+  if (discoveredComponents === undefined) {
+    graphHelperCache.set(graph, result);
   }
-  const components = discoveredComponents ?? discoverComponentsFromGraph(graph);
-  const componentNames = new Set(components.flatMap((c) => [c.neutralName, c.publicName]));
-  const componentTypes = new Set(
-    components.flatMap((c) =>
-      c.propertiesType ? [c.propertiesType, ...(c.typeExports ?? [])] : (c.typeExports ?? []),
-    ),
-  );
-  const astCache = new Map<string, OxcParsedModule>();
-
-  const helpers = new Map<string, DiscoveredHelperExport>();
-  const entryDirectory = entry.sourceRelativePath.replace(/\/[^/]+$/, '');
-  for (const resolvedExport of resolveGraphExports(graph, entry)) {
-    const entryExport = resolvedExport.fact;
-    if (entryExport.exportedName === undefined) {
-      continue;
-    }
-    const sourceNode = resolvedExport.sourceNode;
-    if (sourceNode === undefined || sourceNode.id === entry.id) {
-      continue;
-    }
-
-    const exportedName = entryExport.exportedName;
-    const localName = entryExport.localName ?? exportedName;
-    const isType =
-      entryExport.typeOnly || sourceNode.exports.find((e) => e.exportedName === localName)?.typeOnly === true;
-
-    if (isType) {
-      if (componentTypes.has(exportedName)) {
-        continue;
-      }
-    } else {
-      if (componentNames.has(exportedName) || componentNames.has(localName)) {
-        continue;
-      }
-      if (sourceNode.kind === 'component' && isComponentExport(sourceNode.id, localName, astCache)) {
-        continue;
-      }
-    }
-
-    const base = sourceBase(sourceNode.id);
-    const key = sourceNode.id;
-    const helper = helpers.get(key) ?? {
-      base,
-      relativePath: (() => {
-        const sourceRelative = sourceNode.sourceRelativePath
-          .replace(/\.(?:d\.ts|d\.mts|d\.cts|[cm]?[jt]sx?)$/, '')
-          .replace(/\/index$/, '');
-        const relativeToEntryDirectory = sourceRelative.startsWith(`${entryDirectory}/`)
-          ? sourceRelative.slice(entryDirectory.length + 1)
-          : sourceRelative;
-        return relativeToEntryDirectory;
-      })(),
-      values: [],
-      types: [],
-      sourcePath: sourceNode.id,
-    };
-    const binding: DiscoveredHelperBinding = {
-      localName,
-      exportedName,
-      ...(isType ? {} : { componentAlias: componentAliasTarget(sourceNode.id, localName, astCache) }),
-    };
-    if (isType) {
-      if (!helper.types.some((existing) => existing.exportedName === binding.exportedName)) {
-        helper.types.push(binding);
-      }
-    } else {
-      if (!helper.values.some((existing) => existing.exportedName === binding.exportedName)) {
-        helper.values.push(binding);
-      }
-    }
-    helpers.set(key, helper);
-  }
-  return [...helpers.values()];
+  return result;
 }
 
 /** Discover external re-exports through local barrels so generated entries preserve the package public API. */

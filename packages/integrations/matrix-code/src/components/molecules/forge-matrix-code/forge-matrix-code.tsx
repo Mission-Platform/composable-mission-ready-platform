@@ -10,7 +10,7 @@ import {
   type CSSStyleProperties,
 } from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
-import { encodeMatrix, type MatrixSymbology } from '@mission-platform/matrix-code';
+import { encodeMatrix, type MatrixSymbology } from '../../../encoder';
 
 import styles from './forge-matrix-code.module.scss';
 
