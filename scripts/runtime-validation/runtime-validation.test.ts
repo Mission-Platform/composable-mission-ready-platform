@@ -148,7 +148,14 @@ describe('route discovery', () => {
 
 describe('application runtime sweep', () => {
   it('builds each app together with its workspace dependencies', () => {
-    expect(appBuildArgs('@mission-platform/website')).toEqual(['--filter', '@mission-platform/website...', 'build']);
+    expect(appBuildArgs('@mission-platform/website')).toEqual([
+      'exec',
+      'turbo',
+      'run',
+      'build',
+      '--filter',
+      '@mission-platform/website...',
+    ]);
   });
 
   it('generates route checks with app-root and documented contract assertions', () => {

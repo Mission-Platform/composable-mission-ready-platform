@@ -48,7 +48,7 @@ function appShortName(app: AppInventory): string {
 }
 
 export function appBuildArgs(appName: string): string[] {
-  return ['--filter', `${appName}...`, 'build'];
+  return ['exec', 'turbo', 'run', 'build', '--filter', `${appName}...`];
 }
 
 function writeAppLog(repositoryRoot: string, app: AppInventory, suffix: string, content: string): string {
