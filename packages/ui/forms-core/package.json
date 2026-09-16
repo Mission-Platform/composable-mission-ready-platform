@@ -31,7 +31,7 @@
   "dependencies": {
     "ajv": "catalog:forms",
     "ajv-formats": "catalog:forms",
-    "nanoid": "^5.1.16"
+    "nanoid": "^6.0.1"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

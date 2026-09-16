@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
 import type { Plugin } from "vite";
 
@@ -130,7 +130,7 @@ function discoverLocales(
 function readYamlObject(filePath: string): Record<string, unknown> {
   let parsed: unknown;
   try {
-    parsed = yaml.load(fs.readFileSync(filePath, "utf8"));
+    parsed = load(fs.readFileSync(filePath, "utf8"));
   } catch (error) {
     throw new Error(
       `Failed to parse i18n locale file ${filePath}: ${errorMessage(error)}`,

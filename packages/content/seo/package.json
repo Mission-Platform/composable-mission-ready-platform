@@ -50,8 +50,8 @@
     "format:write": "prettier --write ."
   },
   "peerDependencies": {
-    "@unhead/vue": "^2.1.0",
-    "vue": "^3.5.0"
+    "@unhead/vue": "catalog:vue",
+    "vue": "catalog:vue"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

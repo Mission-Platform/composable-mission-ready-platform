@@ -101,11 +101,11 @@ describe('accessibility audit', () => {
     await assert.rejects(() => runAccessibilityAudit({ url: 'file:///tmp/index.html' }), /http or https/);
     await assert.rejects(
       () => runAccessibilityAudit({ url: 'https://example.test', width: 0 }),
-      /greater than or equal to 1/,
+      /(?:greater than or equal to|>=)\s*1\b/,
     );
     await assert.rejects(
       () => runAccessibilityAudit({ url: 'https://example.test', timeout: 50 }),
-      /greater than or equal to 100/,
+      /(?:greater than or equal to|>=)\s*100\b/,
     );
   });
 

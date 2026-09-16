@@ -1,4 +1,4 @@
-import { useHead } from '@unhead/vue';
+import { useHead, type ReactiveHead } from '@unhead/vue';
 import { computed, toValue } from 'vue';
 
 import { buildOpenGraph } from '@/build-open-graph';
@@ -146,6 +146,6 @@ function toUnheadHead(metadata: SeoMetadata): UnheadShape {
  */
 export function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void {
   stripSsrJsonLdOnce();
-  const head = computed(() => toUnheadHead(toValue(metadata)));
+  const head = computed(() => toUnheadHead(toValue(metadata)) as unknown as ReactiveHead);
   useHead(head);
 }

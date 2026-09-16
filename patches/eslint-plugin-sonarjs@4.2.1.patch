@@ -1,0 +1,23 @@
+diff --git a/cjs/helpers/dependency-manifests/resolvers/package-json.js b/cjs/helpers/dependency-manifests/resolvers/package-json.js
+index 836465e8133c5ed384ba7ed7f48db46cbc26c281..b7fbb361cca0ec8d09764a721cc8acd1203f1a5a 100644
+--- a/cjs/helpers/dependency-manifests/resolvers/package-json.js
++++ b/cjs/helpers/dependency-manifests/resolvers/package-json.js
+@@ -37,10 +37,17 @@ exports.packageJsonManifestResolver = {
+         let parsedPackageJson = (0, parsed_dependency_files_js_1.parsePackageJson)(packageJson) ?? {};
+         // Captured before the pnpm injection below, which would otherwise fake a workspace root.
+         const declaresWorkspaces = !!parsedPackageJson.workspaces;
+-        const pnpmWorkspaceFile = closest_js_1.closestPatternCache
++        let pnpmWorkspaceFile = closest_js_1.closestPatternCache
+             .get(index_js_1.PNPM_WORKSPACE_YAML, fileSystem)
+             .get(topDir)
+             .get(dir);
++        if (!pnpmWorkspaceFile) {
++            const fsRoot = (0, files_js_1.getPathRoot)(dir);
++            pnpmWorkspaceFile = closest_js_1.closestPatternCache
++                .get(index_js_1.PNPM_WORKSPACE_YAML, fileSystem)
++                .get(fsRoot)
++                .get(dir);
++        }
+         const parsedPnpmWorkspace = pnpmWorkspaceFile
+             ? (0, parsed_dependency_files_js_1.parsePnpmWorkspace)(pnpmWorkspaceFile)
+             : undefined;
