@@ -7,6 +7,8 @@ import { buildPageMeta, type BuiltPageMeta } from '@/build-page-meta';
 import type { JsonLd, OpenGraphMetadata, SeoMetadata, SeoMetaTag } from '@/types';
 import type { MaybeRefOrGetter } from 'vue';
 
+let ssrJsonLdStripped = false;
+
 /**
  * Strip any JSON-LD `<script type="application/ld+json">` tags that were
  * baked into the HTML by the static-site generator (or any other SSR step)
@@ -22,7 +24,6 @@ import type { MaybeRefOrGetter } from 'vue';
  * leaves a single authoritative copy that unhead manages and updates
  * reactively on subsequent route changes.
  */
-let ssrJsonLdStripped = false;
 function stripSsrJsonLdOnce(): void {
   if (ssrJsonLdStripped) return;
   ssrJsonLdStripped = true;
@@ -42,10 +43,12 @@ interface UnheadShape {
   script: Array<Record<string, string>>;
 }
 
+/** Convert a single SEO meta tag to an unhead-compatible key-value record. */
 function metaTagToUnhead(tag: SeoMetaTag): Record<string, string> {
   return { [tag.key]: tag.attr, content: tag.content };
 }
 
+/** Map structured page metadata to the partial unhead shape. */
 function pageMetaToUnhead(built: BuiltPageMeta): Partial<UnheadShape> {
   const meta = built.metaTags.map((tag) => metaTagToUnhead(tag));
   const link = built.linkTags.map((tag) => {
@@ -61,6 +64,7 @@ function pageMetaToUnhead(built: BuiltPageMeta): Partial<UnheadShape> {
   return out;
 }
 
+/** Build Open Graph tags and map them to unhead-compatible records. */
 function openGraphToUnhead(metadata: OpenGraphMetadata): Array<Record<string, string>> {
   return buildOpenGraph(metadata).map((tag) => metaTagToUnhead(tag));
 }
@@ -102,6 +106,15 @@ function jsonLdToUnhead(blocks: JsonLd | JsonLd[]): Array<Record<string, string>
   ];
 }
 
+/** Apply page metadata fields to the unhead head payload. */
+function applyPageMeta(head: UnheadShape, pageMeta: BuiltPageMeta): void {
+  const pageHead = pageMetaToUnhead(pageMeta);
+  if (pageHead.title !== undefined) head.title = pageHead.title;
+  if (pageHead.htmlAttrs) head.htmlAttrs = pageHead.htmlAttrs;
+  if (pageHead.meta) head.meta.push(...pageHead.meta);
+  if (pageHead.link) head.link.push(...pageHead.link);
+}
+
 /**
  * Build the combined `@unhead/vue` head payload from the unified SEO bundle:
  * standard page meta, Open Graph + Twitter Card meta, and a single JSON-LD
@@ -114,11 +127,7 @@ function toUnheadHead(metadata: SeoMetadata): UnheadShape {
   const head: UnheadShape = { meta, link, script };
 
   if (metadata.page) {
-    const pageHead = pageMetaToUnhead(buildPageMeta(metadata.page));
-    if (pageHead.title !== undefined) head.title = pageHead.title;
-    if (pageHead.htmlAttrs) head.htmlAttrs = pageHead.htmlAttrs;
-    if (pageHead.meta) meta.push(...pageHead.meta);
-    if (pageHead.link) link.push(...pageHead.link);
+    applyPageMeta(head, buildPageMeta(metadata.page));
   }
 
   if (metadata.openGraph) {
