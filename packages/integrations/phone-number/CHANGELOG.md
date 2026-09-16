@@ -1,5 +1,12 @@
 # @mission-platform/phone-number
 
+## 0.3.3
+### Patch Changes
+
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [3d452d2]
+  - @mission-platform/forge-web-script-regex@0.3.0
+
 ## 0.3.2
 
 ### Patch Changes

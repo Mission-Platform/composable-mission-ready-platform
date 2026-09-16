@@ -1,5 +1,10 @@
 # @mission-platform/tsdown-config
 
+## 0.2.3
+### Patch Changes
+
+- edc494d: configure resilient 30s test timeouts, Sass modern compiler API, and CSS module re-linking
+
 ## 0.2.2
 
 ### Patch Changes

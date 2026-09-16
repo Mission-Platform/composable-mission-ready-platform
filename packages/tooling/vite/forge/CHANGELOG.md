@@ -1,5 +1,35 @@
 # @mission-platform/vite-plugin-forge
 
+## 2.0.0
+### Major Changes
+
+- 7e3cc9d: Publish the lazy, session-owned Forge build driver and native plugin adapters.
+  
+  BREAKING CHANGE: Replace eager and multi-config `defineTsdownForge*` helpers with
+  `tsdownForgeComponentPlugins`, `tsdownForgeHookPlugins`, and
+  `tsdownForgeCmsPlugins` added to one `defineTsdownLibrary` call. Target plugins
+  remain explicit and caller-owned; generation, declarations, and publication now
+  run from bundler lifecycle hooks with transactional rollback on failure.
+
+### Minor Changes
+
+- edc494d: support AST-aware component discovery, scoped slot lowering, and build error cancellation
+
+### Patch Changes
+
+- fd574e2: harden Forge artifact publication and manifest validation against timing races
+- ca9c2aa: optimize forge compiler component discovery, directive inspection, and source span calculations
+- e45b5f4: optimize compiler performance and reuse compiler service across builds
+- ca9c2aa: preserve intermediate generated directory cache across parallel tsdown target builds
+- 7788642: Reject unsafe Forge and CMS artifact paths before filesystem operations.
+- 7e3cc9d: prevent component naming collisions during discovery and entry synthesis
+- Updated dependencies [355f413]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7e3cc9d]
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/forge-plugin-api@0.4.0
+  - @mission-platform/forge-router-plugin-api@0.1.2
+
 ## 1.2.0
 
 ### Minor Changes

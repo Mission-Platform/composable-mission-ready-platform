@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.2
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+- Updated dependencies [355f413]
+  - @mission-platform/forge-jsx@2.0.0
+
 ## 2.0.1
 
 ### Patch Changes

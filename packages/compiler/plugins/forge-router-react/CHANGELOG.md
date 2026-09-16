@@ -1,5 +1,13 @@
 # @mission-platform/forge-router-react
 
+## 0.1.2
+### Patch Changes
+
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+  - @mission-platform/router@1.1.1
+  - @mission-platform/forge-router-plugin-api@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

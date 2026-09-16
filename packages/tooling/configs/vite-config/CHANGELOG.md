@@ -1,5 +1,13 @@
 # @mission-platform/vite-config
 
+## 1.1.2
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+- edc494d: configure resilient 30s test timeouts, Sass modern compiler API, and CSS module re-linking
+- Updated dependencies [7788642]
+  - @mission-platform/postcss-config@0.1.4
+
 ## 1.1.1
 
 ### Patch Changes

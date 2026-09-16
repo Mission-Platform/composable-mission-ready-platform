@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.0.2
+### Patch Changes
+
+- 7788642: Handle package self-import ordering in clean CI runs.
+- 7788642: Normalize generated changelog formatting.
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+
 ## 2.0.1
 
 ### Patch Changes

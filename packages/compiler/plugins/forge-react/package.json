@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-plugin-react",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "BSD-4-Clause",
   "description": "React output plugin and build adapter for the Forge component compiler",
   "type": "module",

@@ -1,5 +1,59 @@
 # @mission-platform/storybook
 
+## 0.0.15
+### Patch Changes
+
+- Updated dependencies [7788642]
+- Updated dependencies [0e9305d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [edc494d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [ca9c2aa]
+- Updated dependencies [ca9c2aa]
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [b7965b5]
+- Updated dependencies [3a69fab]
+- Updated dependencies [e28d622]
+- Updated dependencies [aa780e3]
+- Updated dependencies [c5e5923]
+  - @mission-platform/d3@2.0.2
+  - @mission-platform/three@2.0.2
+  - @mission-platform/code-scanner@1.3.0
+  - @mission-platform/barcode@3.0.0
+  - @mission-platform/matrix-code@3.0.0
+  - @mission-platform/qr-code@3.0.0
+  - @mission-platform/breakpoints@6.0.2
+  - @mission-platform/components@3.2.0
+  - @mission-platform/forms@2.2.0
+  - @mission-platform/i18n@2.1.2
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/layouts@2.1.1
+  - @mission-platform/map@2.0.2
+  - @mission-platform/rxjs@1.0.2
+  - @mission-platform/speech-audio@1.0.2
+  - @mission-platform/float@1.2.0
+  - @mission-platform/theme@1.1.1
+  - @mission-platform/resource-planner@1.2.1
+  - @mission-platform/select@1.2.0
+  - @mission-platform/content@1.2.0
+  - @mission-platform/scheduler@0.3.1
+  - @mission-platform/typography@1.1.1
+  - @mission-platform/email-components@1.1.1
+  - @mission-platform/vcard@0.2.2
+  - @mission-platform/harper@0.2.2
+  - @mission-platform/hunspell@0.4.2
+  - @mission-platform/tokens@2.0.0
+
 ## 0.0.14
 
 ### Patch Changes

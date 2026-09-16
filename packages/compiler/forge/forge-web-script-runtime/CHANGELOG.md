@@ -1,5 +1,19 @@
 # @mission-platform/forge-web-script-runtime
 
+## 0.3.0
+### Minor Changes
+
+- ff73b42: Implement WebAssembly multi-memory segregation, Two-Level Segregated Fit (TLSF) dynamic memory allocator, scoped region arena, JSPI async stack-switching, and Send/Sync thread-safety verification (#49, #50).
+
+### Patch Changes
+
+- 7788642: Reject re-entrant execution of reusable Forge Web Script VM instances.
+- Updated dependencies [e45b5f4]
+- Updated dependencies [0c3277d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [3d452d2]
+  - @mission-platform/forge-web-script@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,5 +1,23 @@
 # @mission-platform/forge-web-script
 
+## 0.3.0
+### Minor Changes
+
+- 0c3277d: Implement native Web IDL parser, type-safe FWS extern binding generator, and zero-copy host JavaScript/TypeScript shims.
+- 3d452d2: Add structural type algebra and layout-deduplicated generic monomorphization, plus linear-time PikeVM regex matching with ReDoS-resistant execution.
+
+### Patch Changes
+
+- e45b5f4: optimize compiler performance and reuse compiler service across builds
+- 7e3cc9d: ignore generated package files during formatting
+- Updated dependencies [7788642]
+- Updated dependencies [82d79b5]
+- Updated dependencies [edc494d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [3d452d2]
+  - @mission-platform/forge-web-script-wasm@1.0.0
+  - @mission-platform/forge-web-script-regex@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
