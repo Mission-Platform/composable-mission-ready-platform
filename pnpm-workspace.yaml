@@ -152,7 +152,7 @@ catalogs:
   map:
     "@types/geojson": ^7946.0.16
     "@turf/turf": ^7.4.0
-    maplibre-gl: ^5.24.0
+    maplibre-gl: ^6.10.0
 
   typescript:
     "@types/js-yaml": ^4.0.9
@@ -199,3 +199,7 @@ overrides:
 patchedDependencies:
   beasties@0.4.3: patches/beasties@0.4.3.patch
   "eslint-plugin-sonarjs@4.2.0": patches/eslint-plugin-sonarjs.patch
+
+minimumReleaseAgeExclude:
+  - '@maplibre/maplibre-gl-style-spec@26.4.4'
+  - maplibre-gl@6.10.0

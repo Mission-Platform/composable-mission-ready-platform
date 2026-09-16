@@ -58,7 +58,11 @@ function updateLayerInPlace(map: Map, spec: LayerSpecification, previousSpec: La
   const nextPaint = next.paint ?? {};
   for (const key of new Set([...Object.keys(previousPaint), ...Object.keys(nextPaint)])) {
     if (!specValuesEqual(previousPaint[key], nextPaint[key])) {
-      map.setPaintProperty(id, key, nextPaint[key]);
+      map.setPaintProperty(
+        id,
+        key as Parameters<Map['setPaintProperty']>[1],
+        nextPaint[key] as Parameters<Map['setPaintProperty']>[2],
+      );
     }
   }
 
@@ -66,7 +70,11 @@ function updateLayerInPlace(map: Map, spec: LayerSpecification, previousSpec: La
   const nextLayout = next.layout ?? {};
   for (const key of new Set([...Object.keys(previousLayout), ...Object.keys(nextLayout)])) {
     if (!specValuesEqual(previousLayout[key], nextLayout[key])) {
-      map.setLayoutProperty(id, key, nextLayout[key]);
+      map.setLayoutProperty(
+        id,
+        key as Parameters<Map['setLayoutProperty']>[1],
+        nextLayout[key] as Parameters<Map['setLayoutProperty']>[2],
+      );
     }
   }
 
