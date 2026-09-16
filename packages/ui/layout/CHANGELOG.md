@@ -1,5 +1,27 @@
 # @mission-platform/layouts
 
+## 2.1.1
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+- edc494d: standardize storybook story import ordering and formatting
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [edc494d]
+- Updated dependencies [b7965b5]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/components@3.2.0
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/phone-number@0.3.3
+  - @mission-platform/harper@0.2.2
+  - @mission-platform/hunspell@0.4.2
+  - @mission-platform/forms-core@0.3.1
+  - @mission-platform/tokens@2.0.0
+
 ## 2.1.0
 
 ### Minor Changes

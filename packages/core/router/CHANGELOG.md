@@ -1,5 +1,10 @@
 # @mission-platform/router
 
+## 1.1.1
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+
 ## 1.1.0
 
 ### Minor Changes

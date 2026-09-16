@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.2
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+- 7788642: Simplify browser audio control callbacks.
+- Updated dependencies [355f413]
+  - @mission-platform/forge-jsx@2.0.0
+
 ## 1.0.1
 
 ### Patch Changes

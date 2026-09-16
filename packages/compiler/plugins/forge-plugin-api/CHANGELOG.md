@@ -1,5 +1,10 @@
 # @mission-platform/forge-plugin-api
 
+## 0.4.0
+### Minor Changes
+
+- 7e3cc9d: require lowered target plans before generation and add open FrameworkId extension point
+
 ## 0.3.0
 
 ### Minor Changes

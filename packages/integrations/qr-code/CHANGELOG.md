@@ -1,5 +1,30 @@
 # @mission-platform/qr-code
 
+## 3.0.0
+### Major Changes
+
+- 7e3cc9d: remove the embedded QR decoder API
+  
+  BREAKING CHANGE: remove `decodeQr`, `decodeQrAsync`, and the decoder FWS artifact; use `@mission-platform/code-scanner` for decoding.
+
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [b7965b5]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/components@3.2.0
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/typography@1.1.1
+  - @mission-platform/vcard@0.2.2
+
 ## 2.1.0
 
 ### Minor Changes

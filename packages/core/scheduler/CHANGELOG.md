@@ -1,5 +1,28 @@
 # @mission-platform/scheduler
 
+## 0.3.1
+### Patch Changes
+
+- edc494d: standardize storybook story import ordering and formatting
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [b7965b5]
+- Updated dependencies [e28d622]
+- Updated dependencies [aa780e3]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/components@3.2.0
+  - @mission-platform/forms@2.2.0
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/float@1.2.0
+  - @mission-platform/typography@1.1.1
+  - @mission-platform/vcard@0.2.2
+
 ## 0.3.0
 
 ### Minor Changes

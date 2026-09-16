@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-adapters",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "BSD-4-Clause",
   "description": "Framework adapters for the Mission Platform Forge JSX runtime",
   "type": "module",

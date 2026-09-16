@@ -1,5 +1,42 @@
 # @mission-platform/content
 
+## 1.2.0
+### Minor Changes
+
+- 3a69fab: modernize rich-text command utilities, improve type safety, and fix inline formatting issues
+
+### Patch Changes
+
+- edc494d: standardize storybook story import ordering and formatting
+- Updated dependencies [0e9305d]
+- Updated dependencies [edc494d]
+- Updated dependencies [355f413]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [82d79b5]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [b7965b5]
+- Updated dependencies [e28d622]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-plugin-web-components@0.2.0
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-plugin-vue@0.3.0
+  - @mission-platform/forge-plugin-svelte@0.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/forge-plugin-react@0.2.0
+  - @mission-platform/forge-plugin-solid@0.2.0
+  - @mission-platform/forge-web-script-language-service@0.3.0
+  - @mission-platform/components@3.2.0
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/float@1.2.0
+  - @mission-platform/typography@1.1.1
+  - @mission-platform/harper@0.2.2
+  - @mission-platform/hunspell@0.4.2
+  - @mission-platform/tokens@2.0.0
+
 ## 1.1.0
 
 ### Minor Changes

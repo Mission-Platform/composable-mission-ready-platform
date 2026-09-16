@@ -1,5 +1,45 @@
 # @mission-platform/components
 
+## 3.2.0
+### Minor Changes
+
+- edc494d: support table sticky column pinning and row expansion, multiselect tag truncation, and modal prop fallbacks
+- b7965b5: ### ForgeTable
+  - Add row selection (`selectable`, `selectedRowKeys`, `onSelectionChange`, `onSelectRow`) with indeterminate select-all state.
+  - Add accordion row expansion (`expandable`, `expandedRowKeys`, `expandedRowRender`, `onExpansionChange`).
+  - Add sticky column pinning (`fixed: 'left' | 'right'`) with cumulative offset positioning.
+  - Add scoped `cell` slot rendering (`MpRenderProperty<TableCellScope>`) matching `ForgeVirtualTable` capabilities.
+  - Add keyboard sorting activation (Enter/Space) and focusability to sortable column headers.
+  
+  ### ForgeTabs
+  - Remove invalid `role="tab"` from tab close button to restore valid WAI-ARIA `tablist` semantics.
+  
+  ### ForgeSplitPane
+  - Add mouse and touch pointer drag resizing via `beginPointerDrag` alongside keyboard resizing support.
+  
+  ### ForgeTreeView
+  - Implement full WAI-ARIA Tree View keyboard navigation (`ArrowDown`, `ArrowUp`, `Home`, `End`) across visible nodes.
+  
+  ### ForgeMultiselect
+  - Add `maxTags` truncation with normalized integer count and collapsed `+N more` tag indicator.
+
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/icons@2.0.2
+  - @mission-platform/typography@1.1.1
+  - @mission-platform/phone-number@0.3.3
+  - @mission-platform/forms-core@0.3.1
+  - @mission-platform/tokens@2.0.0
+
 ## 3.1.0
 
 ### Minor Changes

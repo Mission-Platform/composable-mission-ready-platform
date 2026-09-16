@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-plugin-web-components",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "BSD-4-Clause",
   "description": "Web Components output plugin for the Forge component compiler",
   "type": "module",

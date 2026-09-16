@@ -1,5 +1,17 @@
 # @mission-platform/typography
 
+## 1.1.1
+### Patch Changes
+
+- 7788642: Remove the stale generated typography artifact.
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/tokens@2.0.0
+
 ## 1.1.0
 
 ### Minor Changes

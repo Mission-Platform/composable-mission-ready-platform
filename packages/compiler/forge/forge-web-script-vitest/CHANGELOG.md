@@ -1,5 +1,22 @@
 # @mission-platform/forge-web-script-vitest
 
+## 0.2.1
+### Patch Changes
+
+- 7e3cc9d: ignore generated package files during formatting
+- Updated dependencies [e45b5f4]
+- Updated dependencies [7788642]
+- Updated dependencies [ff73b42]
+- Updated dependencies [0c3277d]
+- Updated dependencies [7788642]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [3d452d2]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-web-script@0.3.0
+  - @mission-platform/vite-plugin-forge-web-script@0.1.2
+  - @mission-platform/forge-web-script-runtime@0.3.0
+  - @mission-platform/vite-config@1.1.2
+
 ## 0.2.0
 
 ### Minor Changes

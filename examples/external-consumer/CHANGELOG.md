@@ -1,5 +1,20 @@
 # external-consumer-example
 
+## 0.1.4
+### Patch Changes
+
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [b7965b5]
+- Updated dependencies [aa780e3]
+  - @mission-platform/components@3.2.0
+  - @mission-platform/forms@2.2.0
+  - @mission-platform/typography@1.1.1
+  - @mission-platform/email-components@1.1.1
+  - @mission-platform/email-renderer@0.1.3
+  - @mission-platform/tokens@2.0.0
+
 ## 0.1.3
 
 ### Patch Changes

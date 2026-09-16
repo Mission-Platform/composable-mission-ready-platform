@@ -1,5 +1,40 @@
 # @mission-platform/forge-cms-plugin-api
 
+## 1.0.0
+### Major Changes
+
+- 7e3cc9d: Publish the lazy, session-owned Forge build driver and native plugin adapters.
+  
+  BREAKING CHANGE: Replace eager and multi-config `defineTsdownForge*` helpers with
+  `tsdownForgeComponentPlugins`, `tsdownForgeHookPlugins`, and
+  `tsdownForgeCmsPlugins` added to one `defineTsdownLibrary` call. Target plugins
+  remain explicit and caller-owned; generation, declarations, and publication now
+  run from bundler lifecycle hooks with transactional rollback on failure.
+
+### Patch Changes
+
+- 7e3cc9d: stage CMS artifacts atomically with pre-commit diagnostics and prune obsolete build assets
+- 7e3cc9d: add multi-component end-to-end integration tests and dotfile preservation verification
+- 0e9305d: Export `ForgeCodeScanner` component from root entry, support Web Components context imports and component alias exports, and preserve shared CMS assets during framework builds.
+- 7788642: Honor the staged output root when resolving CMS cache directories.
+- edc494d: update generated API documentation reference
+- 7788642: Reject unsafe Forge and CMS artifact paths before filesystem operations.
+- Updated dependencies [edc494d]
+- Updated dependencies [fd574e2]
+- Updated dependencies [ca9c2aa]
+- Updated dependencies [e45b5f4]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [ca9c2aa]
+- Updated dependencies [7788642]
+- Updated dependencies [7788642]
+- Updated dependencies [edc494d]
+- Updated dependencies [7e3cc9d]
+  - @mission-platform/vite-plugin-forge@2.0.0
+  - @mission-platform/forge-plugin-api@0.4.0
+  - @mission-platform/vite-config@1.1.2
+  - @mission-platform/tsdown-config@0.2.3
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,10 @@
 # @mission-platform/i18n
 
+## 2.1.2
+### Patch Changes
+
+- 7788642: Normalize generated changelog formatting.
+
 ## 2.1.1
 
 ### Patch Changes

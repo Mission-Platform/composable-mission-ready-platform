@@ -1,5 +1,10 @@
 # @mission-platform/vite-plugin-assemblyscript
 
+## 0.1.2
+### Patch Changes
+
+- 7e3cc9d: Use `import.meta.dirname` in documented ESM configuration examples.
+
 ## 0.1.1
 
 ### Patch Changes

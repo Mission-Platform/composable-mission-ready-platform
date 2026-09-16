@@ -1,5 +1,20 @@
 # @mission-platform/resource-planner
 
+## 1.2.1
+### Patch Changes
+
+- ca9c2aa: fix timezone sensitivity in overnight working hours tests
+- edc494d: standardize storybook story import ordering and formatting
+- Updated dependencies [0e9305d]
+- Updated dependencies [355f413]
+- Updated dependencies [7e3cc9d]
+- Updated dependencies [edc494d]
+- Updated dependencies [edc494d]
+  - @mission-platform/forge-adapters@1.2.0
+  - @mission-platform/forge-jsx@2.0.0
+  - @mission-platform/scheduler@0.3.1
+  - @mission-platform/vcard@0.2.2
+
 ## 1.2.0
 
 ### Minor Changes

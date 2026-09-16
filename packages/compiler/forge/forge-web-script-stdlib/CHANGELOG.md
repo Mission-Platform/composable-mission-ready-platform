@@ -1,5 +1,13 @@
 # @mission-platform/forge-web-script-stdlib
 
+## 0.2.1
+### Patch Changes
+
+- 7e3cc9d: ignore generated package files during formatting
+- Updated dependencies [7788642]
+- Updated dependencies [ff73b42]
+  - @mission-platform/forge-web-script-runtime@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
