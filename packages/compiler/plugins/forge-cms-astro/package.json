@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-cms-astro",
   "version": "0.2.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Astro CMS target for Forge components, with co-generated framework islands",
   "type": "module",

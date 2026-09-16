@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-router-svelte",
   "version": "0.1.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Forge router target for Svelte and SvelteKit",
   "type": "module",
   "sideEffects": false,

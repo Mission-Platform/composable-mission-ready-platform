@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/vite-plugin-forge-web-script",
   "version": "0.1.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Vite integration for Forge Web Script modules",
   "type": "module",

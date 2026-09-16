@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/code-scanner",
   "version": "1.3.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Dependency-free image/camera code scanner backed by a Forge Web Script graph: locates and decodes Data Matrix, compact Aztec, 1D/RSS, PDF417 and MaxiCode symbols from images or live media streams; QR decoder sources are available as a standalone graph",
   "type": "module",

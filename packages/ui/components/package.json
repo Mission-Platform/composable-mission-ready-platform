@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/components",
   "version": "3.2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Sample write-once Mission Platform components authored with @mission-platform/forge-jsx and shipped as both Vue 3 and React components",
   "type": "module",

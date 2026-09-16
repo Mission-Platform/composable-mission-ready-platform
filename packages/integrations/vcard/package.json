@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/vcard",
   "version": "0.2.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "RFC 6350 vCard and RFC 5545 iCalendar data and Forge components for Mission Platform",
   "type": "module",
   "sideEffects": false,

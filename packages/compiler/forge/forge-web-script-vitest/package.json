@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-web-script-vitest",
   "version": "0.2.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Deterministic Vitest harness and shared fixtures for Forge Web Script modules",
   "type": "module",

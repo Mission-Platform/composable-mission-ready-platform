@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-cms-jekyll",
   "version": "0.2.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Jekyll CMS target for Forge components",
   "type": "module",

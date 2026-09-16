@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/qr-code",
   "version": "3.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Dependency-free QR Code encoder backed by a package-local Forge Web Script artifact, with a typed ES module wrapper and a write-once React/Vue component",
   "type": "module",

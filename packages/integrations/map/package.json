@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/map",
   "version": "2.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "MapLibre GL map components and composables authored with @mission-platform/forge-jsx and shipped as Vue, React, Svelte, Solid, and Web Component builds",
   "type": "module",

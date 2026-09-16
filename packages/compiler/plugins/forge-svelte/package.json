@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-plugin-svelte",
   "version": "0.2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Svelte output plugin and build adapter for the Forge component compiler",
   "type": "module",

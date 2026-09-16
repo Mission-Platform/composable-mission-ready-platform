@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-plugin-vue",
   "version": "0.3.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Vue output plugin and build adapter for the Forge component compiler",
   "type": "module",

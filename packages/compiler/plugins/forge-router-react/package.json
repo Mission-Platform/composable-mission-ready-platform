@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-router-react",
   "version": "0.1.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Forge router target for React Router",
   "type": "module",
   "sideEffects": false,

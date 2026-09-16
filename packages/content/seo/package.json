@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/seo",
   "version": "0.3.4",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Vue SEO composables for page metadata, Open Graph, and JSON-LD structured data",
   "type": "module",

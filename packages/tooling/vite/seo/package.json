@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/vite-plugin-seo",
   "version": "0.1.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "type": "module",
   "sideEffects": false,

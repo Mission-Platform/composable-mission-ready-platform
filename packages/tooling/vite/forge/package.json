@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/vite-plugin-forge",
   "version": "2.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "A Vite plugin that compiles framework-neutral @mission-platform/forge-jsx components to React, Astro, Vue 3, Solid, Svelte, or Web Components at build time",
   "type": "module",

@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-cms-plugin-api",
   "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Public API contracts, neutral content model, and build helpers for Forge CMS output plugins",
   "type": "module",
