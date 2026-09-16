@@ -3,8 +3,8 @@ name: Publish Packages
 on:
   push:
     branches:
-      - main      # production release
-      - develop   # staging / pre-release
+      - main # production release
+      - develop # staging / pre-release
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -23,9 +23,9 @@ jobs:
       url: https://github.com/${{ github.repository }}/pkgs/container
 
     permissions:
-      contents: write          # needed for Changesets to create/update the release PR
-      packages: write          # needed to publish to GitHub Packages
-      pull-requests: write     # needed for Changesets to open the version PR
+      contents: write # needed for Changesets to create/update the release PR
+      packages: write # needed to publish to GitHub Packages
+      pull-requests: write # needed for Changesets to open the version PR
     #      attestations: write      # persist the generated build provenance attestation
     #      artifact-metadata: write # create the artifact storage record for the attestation
 
@@ -81,6 +81,38 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ──────────────────────────────────────────────────────────────
+      # VS CODE EXTENSION — release VSIX to release tag
+      # fws-vscode is a private VS Code extension, not an npm package.
+      # Package it into a .vsix and attach it to the release tag on GitHub.
+      # ──────────────────────────────────────────────────────────────
+      - name: Release VS Code extension VSIX (fws-vscode)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          VERSION=$(node -p "require('./extensions/fws-vscode/package.json').version")
+          TAG="fws-vscode@${VERSION}"
+          VSIX="extensions/fws-vscode/fws-vscode-${VERSION}.vsix"
+
+          echo "Checking release status for ${TAG}..."
+          if gh release view "${TAG}" --json assets -q '.assets[].name' 2>/dev/null | grep -qx "fws-vscode-${VERSION}.vsix"; then
+            echo "VSIX asset is already published to release ${TAG}."
+          else
+            echo "Packaging VS Code extension..."
+            pnpm exec turbo run build --filter fws-vscode
+            pnpm --filter fws-vscode run package
+
+            if gh release view "${TAG}" >/dev/null 2>&1; then
+              echo "Uploading VSIX to existing release ${TAG}..."
+              gh release upload "${TAG}" "${VSIX}" --clobber
+            else
+              echo "Creating release ${TAG} with VSIX asset..."
+              gh release create "${TAG}" "${VSIX}" --title "${TAG}" --generate-notes --target "${{ github.sha }}"
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ──────────────────────────────────────────────────────────────
       # STAGING — develop branch
