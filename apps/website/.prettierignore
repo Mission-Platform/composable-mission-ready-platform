@@ -1,3 +1,4 @@
 node_modules
 dist
 src/locales/i18n-locales.d.ts
+CHANGELOG.md

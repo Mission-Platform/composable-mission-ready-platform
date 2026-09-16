@@ -1,3 +1,4 @@
 generated/**
 implementations/rust/target/**
 node_modules/**
+CHANGELOG.md

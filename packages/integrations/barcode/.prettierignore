@@ -1,3 +1,4 @@
 dist
 rust
 src/generated
+CHANGELOG.md
