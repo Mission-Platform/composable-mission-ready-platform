@@ -204,6 +204,38 @@ export const PROFILE_TOOLS: Record<Exclude<McpProfileName, 'full'>, readonly str
 };
 
 /**
+ * Extract normalized profile names from comma-separated string or array.
+ */
+function extractRequestedProfiles(options: McpProfileOptions): Set<string> {
+  const requested = new Set<string>();
+  const sources = [
+    ...(options.profile ? options.profile.split(',') : []),
+    ...(options.profiles ? options.profiles.flatMap((p) => p.split(',')) : []),
+  ];
+  for (const source of sources) {
+    const trimmed = source.trim().toLowerCase();
+    if (trimmed) requested.add(trimmed);
+  }
+  return requested;
+}
+
+/**
+ * Collect tool names allowed by the requested profile names.
+ */
+function collectAllowedTools(requestedProfiles: ReadonlySet<string>): Set<string> {
+  const allowed = new Set<string>();
+  for (const profile of requestedProfiles) {
+    const tools = PROFILE_TOOLS[profile as Exclude<McpProfileName, 'full'>];
+    if (tools) {
+      for (const tool of tools) {
+        allowed.add(tool);
+      }
+    }
+  }
+  return allowed;
+}
+
+/**
  * Resolves a comma-separated or array profile configuration into an active tool set filter.
  * Returns undefined when all tools should be registered ('full' or omitted).
  */
@@ -212,38 +244,11 @@ export function resolveToolFilter(options: McpProfileOptions = {}): Set<string> 
     return new Set(options.tools);
   }
 
-  const requestedProfiles = new Set<string>();
-
-  if (options.profile) {
-    for (const part of options.profile.split(',')) {
-      const trimmed = part.trim().toLowerCase();
-      if (trimmed) requestedProfiles.add(trimmed);
-    }
-  }
-
-  if (options.profiles) {
-    for (const item of options.profiles) {
-      for (const part of item.split(',')) {
-        const trimmed = part.trim().toLowerCase();
-        if (trimmed) requestedProfiles.add(trimmed);
-      }
-    }
-  }
-
+  const requestedProfiles = extractRequestedProfiles(options);
   if (requestedProfiles.size === 0 || requestedProfiles.has('full') || requestedProfiles.has('*')) {
     return undefined; // Register all tools
   }
 
-  const allowedTools = new Set<string>();
-  for (const profile of requestedProfiles) {
-    const tools = PROFILE_TOOLS[profile as Exclude<McpProfileName, 'full'>];
-    if (tools) {
-      for (const tool of tools) {
-        allowedTools.add(tool);
-      }
-    }
-  }
-
-  // If unknown profile provided that matched nothing, return undefined to avoid empty server
+  const allowedTools = collectAllowedTools(requestedProfiles);
   return allowedTools.size > 0 ? allowedTools : undefined;
 }

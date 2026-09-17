@@ -36,6 +36,9 @@ import { z } from 'zod';
 import { readGitBranches, readGitLsFiles, readGitRemotes, readGitTags, type GitCommandResult } from '../git/index.ts';
 import { validateName, writeIntoPackage, writeScaffold } from '../scaffold/writer.ts';
 
+/**
+ * Normalize unit or component identifier into kebab-case.
+ */
 function normalizeUnitName(raw: string): string {
   return raw
     .replaceAll(/([a-z0-9])([A-Z])/g, '$1-$2')
@@ -43,6 +46,9 @@ function normalizeUnitName(raw: string): string {
     .toLowerCase();
 }
 
+/**
+ * Validate and resolve the filesystem path for a package target.
+ */
 function resolvePackageTarget(packageName: string): { packageDir: string; relativePackageDir: string; folder: string } {
   const folder = packageName.replace(/^@mission-platform\//, '').trim();
   if (!folder) {
@@ -97,13 +103,14 @@ export const scaffoldInputSchema = {
 
 export type ScaffoldInput = z.infer<z.ZodObject<typeof scaffoldInputSchema>>;
 
-export function dispatchScaffold(args: ScaffoldInput): object {
-  const entityType = args.type;
-  const name = args.name?.trim();
-  if (!name) {
-    throw new Error('Provide a kebab-case "name".');
-  }
-
+/**
+ * Scaffold a top-level workspace member (package, app, worker, or crate).
+ */
+function scaffoldWorkspaceEntity(
+  entityType: 'package' | 'app' | 'worker' | 'crate',
+  name: string,
+  args: ScaffoldInput,
+): object {
   const apply = args.apply === true;
   const description = args.description?.trim() ?? '';
 
@@ -133,6 +140,23 @@ export function dispatchScaffold(args: ScaffoldInput): object {
       return writeScaffold({ group: 'crates', name, files, apply });
     }
 
+    default: {
+      throw new Error(`Unsupported workspace entity type: "${String(entityType)}".`);
+    }
+  }
+}
+
+/**
+ * Scaffold an internal unit inside an existing package (component, composable, store, or util).
+ */
+function scaffoldPackageUnit(
+  entityType: 'component' | 'composable' | 'store' | 'util',
+  name: string,
+  args: ScaffoldInput,
+): object {
+  const apply = args.apply === true;
+
+  switch (entityType) {
     case 'component': {
       const normalizedName = normalizeUnitName(name);
       const nameError = validateName(normalizedName);
@@ -224,6 +248,41 @@ export function dispatchScaffold(args: ScaffoldInput): object {
         functionName: scaffold.functionName,
       };
     }
+
+    default: {
+      throw new Error(`Unsupported package unit type: "${String(entityType)}".`);
+    }
+  }
+}
+
+/**
+ * Polymorphic scaffolding dispatcher for workspace members and internal package units.
+ */
+export function dispatchScaffold(args: ScaffoldInput): object {
+  const name = args.name?.trim();
+  if (!name) {
+    throw new Error('Provide a kebab-case "name".');
+  }
+
+  const entityType = args.type;
+  switch (entityType) {
+    case 'package':
+    case 'app':
+    case 'worker':
+    case 'crate': {
+      return scaffoldWorkspaceEntity(entityType, name, args);
+    }
+
+    case 'component':
+    case 'composable':
+    case 'store':
+    case 'util': {
+      return scaffoldPackageUnit(entityType, name, args);
+    }
+
+    default: {
+      throw new Error(`Unsupported entity type: "${String(entityType)}".`);
+    }
   }
 }
 
@@ -252,54 +311,64 @@ export const i18nInputSchema = {
 
 export type I18nInput = z.infer<z.ZodObject<typeof i18nInputSchema>>;
 
-export function dispatchI18n(args: I18nInput): object | string {
-  const action = args.action;
-  const group = (args.group as WorkspaceGroup | undefined) ?? 'apps';
-  const name = args.name?.trim();
+/**
+ * Require and resolve locales for a specific workspace member.
+ */
+function requireMemberLocales(group: WorkspaceGroup, name?: string) {
+  if (!name) throw new Error('Provide a workspace member folder "name".');
+  const resolved = resolveMemberLocales(group, name);
+  if (!resolved) {
+    throw new Error(`"${name}" in ${group}/ has no YAML locale files.`);
+  }
+  return resolved;
+}
+
+/**
+ * Handle read-only i18n operations (list and coverage).
+ */
+function handleI18nQuery(action: 'list' | 'coverage', group: WorkspaceGroup, name?: string): object {
+  if (action === 'list' && !name) {
+    return surveyLocales(group);
+  }
+  const resolved = requireMemberLocales(group, name);
+  const coverage = localeCoverage(resolved);
+
+  if (action === 'coverage') {
+    return {
+      member: name,
+      localesDir: resolved.relativeLocalesDir,
+      layout: resolved.layout,
+      defaultLocale: resolved.defaultLocale,
+      coverage,
+    };
+  }
+
+  return {
+    member: name,
+    localesDir: resolved.relativeLocalesDir,
+    layout: resolved.layout,
+    defaultLocale: resolved.defaultLocale,
+    namespaces: resolved.namespaces,
+    locales: resolved.locales,
+    coverage,
+  };
+}
+
+/**
+ * Handle mutating i18n operations (add, remove, update).
+ */
+function handleI18nMutation(
+  action: 'add' | 'remove' | 'update',
+  group: WorkspaceGroup,
+  name: string | undefined,
+  args: I18nInput,
+): object | string {
+  const resolved = requireMemberLocales(group, name);
+  const locale = args.locale?.trim();
 
   switch (action) {
-    case 'list': {
-      if (!name) {
-        return surveyLocales(group);
-      }
-      const resolved = resolveMemberLocales(group, name);
-      if (!resolved) {
-        throw new Error(`"${name}" in ${group}/ has no YAML locale files.`);
-      }
-      return {
-        member: name,
-        localesDir: resolved.relativeLocalesDir,
-        layout: resolved.layout,
-        defaultLocale: resolved.defaultLocale,
-        namespaces: resolved.namespaces,
-        locales: resolved.locales,
-        coverage: localeCoverage(resolved),
-      };
-    }
-
-    case 'coverage': {
-      if (!name) throw new Error('Provide a workspace member folder "name".');
-      const resolved = resolveMemberLocales(group, name);
-      if (!resolved) {
-        throw new Error(`"${name}" in ${group}/ has no YAML locale files.`);
-      }
-      return {
-        member: name,
-        localesDir: resolved.relativeLocalesDir,
-        layout: resolved.layout,
-        defaultLocale: resolved.defaultLocale,
-        coverage: localeCoverage(resolved),
-      };
-    }
-
     case 'add': {
-      if (!name) throw new Error('Provide a workspace member folder "name".');
-      const locale = args.locale?.trim();
       if (!locale) throw new Error('Provide a "locale" code to add.');
-      const resolved = resolveMemberLocales(group, name);
-      if (!resolved) {
-        throw new Error(`"${name}" in ${group}/ has no YAML locale files.`);
-      }
       return addLocale(resolved, locale, {
         fill: args.fill ?? 'empty',
         apply: args.apply === true,
@@ -307,27 +376,15 @@ export function dispatchI18n(args: I18nInput): object | string {
     }
 
     case 'remove': {
-      if (!name) throw new Error('Provide a workspace member folder "name".');
-      const locale = args.locale?.trim();
       if (!locale) throw new Error('Provide a "locale" code to remove.');
-      const resolved = resolveMemberLocales(group, name);
-      if (!resolved) {
-        throw new Error(`"${name}" in ${group}/ has no YAML locale files.`);
-      }
       return removeLocale(resolved, locale, args.apply === true);
     }
 
     case 'update': {
-      if (!name) throw new Error('Provide a workspace member folder "name".');
-      const locale = args.locale?.trim();
       if (!locale) throw new Error('Provide a "locale" code.');
       const key = args.key?.trim();
       if (!key) throw new Error('Provide a dot-notated "key" path.');
       if (args.value === undefined) throw new Error('Provide a "value" string.');
-      const resolved = resolveMemberLocales(group, name);
-      if (!resolved) {
-        throw new Error(`"${name}" in ${group}/ has no YAML locale files.`);
-      }
       return updateTranslation({
         resolved,
         code: locale,
@@ -335,6 +392,35 @@ export function dispatchI18n(args: I18nInput): object | string {
         namespace: args.namespace?.trim(),
         apply: args.apply === true,
       });
+    }
+
+    default: {
+      throw new Error(`Unsupported i18n mutation action: "${String(action)}".`);
+    }
+  }
+}
+
+/**
+ * Polymorphic localization dispatcher for inspecting and modifying YAML translation catalogues.
+ */
+export function dispatchI18n(args: I18nInput): object | string {
+  const group = (args.group as WorkspaceGroup | undefined) ?? 'apps';
+  const name = args.name?.trim();
+
+  switch (args.action) {
+    case 'list':
+    case 'coverage': {
+      return handleI18nQuery(args.action, group, name);
+    }
+
+    case 'add':
+    case 'remove':
+    case 'update': {
+      return handleI18nMutation(args.action, group, name, args);
+    }
+
+    default: {
+      throw new Error(`Unsupported i18n action: "${String(args.action)}".`);
     }
   }
 }
@@ -352,9 +438,11 @@ export const gitMetadataInputSchema = {
 
 export type GitMetadataInput = z.infer<z.ZodObject<typeof gitMetadataInputSchema>>;
 
+/**
+ * Polymorphic Git metadata inspection dispatcher. Query repository branches, tags, remotes, or ls-files.
+ */
 export function dispatchGitMetadata(args: GitMetadataInput): GitCommandResult {
-  const kind = args.kind;
-  switch (kind) {
+  switch (args.kind) {
     case 'branches': {
       return readGitBranches(args);
     }
@@ -366,6 +454,9 @@ export function dispatchGitMetadata(args: GitMetadataInput): GitCommandResult {
     }
     case 'files': {
       return readGitLsFiles(args);
+    }
+    default: {
+      throw new Error(`Unsupported git metadata kind: "${String(args.kind)}".`);
     }
   }
 }

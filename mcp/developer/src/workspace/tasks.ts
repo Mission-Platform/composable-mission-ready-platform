@@ -102,6 +102,9 @@ export interface ListStoriesResult {
   readonly message: string;
 }
 
+/**
+ * Bounded execution timeout helper ensuring timeoutMs is within 10ms to 180,000ms.
+ */
 function boundedTimeout(value: number | undefined): number {
   const timeout = Math.trunc(value ?? DEFAULT_TIMEOUT_MS);
   if (!Number.isInteger(timeout) || timeout < 10 || timeout > MAX_TIMEOUT_MS) {
@@ -110,6 +113,9 @@ function boundedTimeout(value: number | undefined): number {
   return timeout;
 }
 
+/**
+ * Bounded output buffer size helper ensuring maxOutputBytes is within 1 to 1MB.
+ */
 function boundedOutput(value: number | undefined): number {
   const output = Math.trunc(value ?? DEFAULT_OUTPUT_BYTES);
   if (!Number.isInteger(output) || output < 1 || output > MAX_OUTPUT_BYTES) {
@@ -118,6 +124,9 @@ function boundedOutput(value: number | undefined): number {
   return output;
 }
 
+/**
+ * Trim stdout/stderr string to a max byte length, returning whether it was truncated.
+ */
 function trimOutput(value: string, limit: number): { value: string; truncated: boolean } {
   if (Buffer.byteLength(value, 'utf8') <= limit) return { value, truncated: false };
   const bytes = Buffer.from(value, 'utf8').subarray(0, limit);
