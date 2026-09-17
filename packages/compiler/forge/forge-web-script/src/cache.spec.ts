@@ -5,6 +5,9 @@ import {
   forgeWebScriptWatCacheKey,
   persistForgeWebScriptSoN,
   persistForgeWebScriptWat,
+  pruneOrphanedForgeWebScriptCacheFiles,
+  pruneStaleForgeWebScriptCache,
+  readForgeWebScriptCacheIndex,
   readForgeWebScriptSoN,
   type ForgeWebScriptWatCache,
 } from './cache.ts';
@@ -129,5 +132,59 @@ describe('Forge Web Script WAT cache', () => {
     expect(readForgeWebScriptSoN(cache, 'bad')).toBeUndefined();
     values.set('/cache/stale.sonir.json', serializeForgeWebScriptSoN({ ...module, compilerVersion: 'old' }));
     expect(readForgeWebScriptSoN(cache, 'stale', { compilerVersion: '0.1.0' })).toBeUndefined();
+  });
+
+  it('prunes previous version artifacts and updates cache index on new version compilation', () => {
+    const files = new Map<string, string>();
+    const removed: string[] = [];
+    const cache: ForgeWebScriptWatCache = {
+      root: '/cache',
+      writeAtomic: (fileName, contents) => files.set(fileName, contents),
+      read: (fileName) => files.get(fileName),
+      remove: (fileName) => {
+        files.delete(fileName);
+        removed.push(fileName);
+      },
+    };
+
+    // First version write
+    pruneStaleForgeWebScriptCache(cache, 'module-a', 'key-v1', ['/cache/key-v1.wat', '/cache/key-v1.sonir.json']);
+    expect(readForgeWebScriptCacheIndex(cache)?.entries['module-a']?.key).toBe('key-v1');
+    expect(removed).toEqual([]);
+
+    // Second version write: should prune v1 artifacts
+    pruneStaleForgeWebScriptCache(cache, 'module-a', 'key-v2', ['/cache/key-v2.wat', '/cache/key-v2.sonir.json']);
+    expect(readForgeWebScriptCacheIndex(cache)?.entries['module-a']?.key).toBe('key-v2');
+    expect(removed).toEqual(['/cache/key-v1.wat', '/cache/key-v1.sonir.json']);
+  });
+
+  it('prunes orphaned temp files and unindexed cache artifacts', () => {
+    const files = new Map<string, string>([
+      [
+        '/cache/.fws-cache-index.json',
+        JSON.stringify({ version: 1, entries: { 'mod-a': { key: 'a1', files: ['/cache/a1.wat'] } } }),
+      ],
+      ['/cache/a1.wat', '(module)'],
+      ['/cache/orphaned.wat', '(module)'],
+      ['/cache/temp.tmp', 'in-flight'],
+    ]);
+    const removed: string[] = [];
+    const cache: ForgeWebScriptWatCache = {
+      root: '/cache',
+      writeAtomic: (fileName, contents) => files.set(fileName, contents),
+      read: (fileName) => files.get(fileName),
+      remove: (fileName) => {
+        files.delete(fileName);
+        removed.push(fileName);
+      },
+      listFiles: () => [...files.keys()],
+    };
+
+    const pruned = pruneOrphanedForgeWebScriptCacheFiles(cache);
+    expect(pruned).toContain('/cache/temp.tmp');
+    expect(pruned).toContain('/cache/orphaned.wat');
+    expect(files.has('/cache/a1.wat')).toBe(true);
+    expect(files.has('/cache/temp.tmp')).toBe(false);
+    expect(removed).toEqual(pruned);
   });
 });

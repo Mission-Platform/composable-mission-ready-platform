@@ -1,3 +1,13 @@
+import {
+  scanFile,
+  scannerLog,
+  scanImageData,
+  setCodeScannerDebug,
+  videoFrameToImageData,
+  type ScanFormat,
+  type ScanOptions,
+  type ScanResult,
+} from '@mission-platform/code-scanner-wasm';
 import { ForgeButton } from '@mission-platform/components';
 import {
   useEffect,
@@ -10,15 +20,9 @@ import {
 import { ForgeIconCamera, ForgeIconClose, ForgeIconUpload } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
-import { scanFile, videoFrameToImageData } from '../../../capture';
-import { scannerLog, setCodeScannerDebug } from '../../../debug';
-import { scanImageData } from '../../../scanner';
-
 import styles from './forge-code-scanner.module.scss';
 
-import type { ScanFormat, ScanOptions, ScanResult } from '../../../types';
-
-export type { ScanFormat, ScanResult } from '../../../types';
+export type { ScanFormat, ScanResult } from '@mission-platform/code-scanner-wasm';
 
 /* ── Visual property overrides (generated) ───────────────────────────── */
 export interface CodeScannerStyleProperties {

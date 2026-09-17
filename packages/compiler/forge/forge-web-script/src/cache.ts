@@ -11,6 +11,10 @@ export interface ForgeWebScriptWatCache {
   readonly writeBinaryAtomic?: (fileName: string, contents: Uint8Array) => void;
   /** Optional reader used by tooling; invalid or stale values are ignored. */
   readonly read?: (fileName: string) => string | undefined;
+  /** Optional removal hook to prune stale versions. */
+  readonly remove?: (fileName: string) => void;
+  /** Optional list files in root directory to support cleanup. */
+  readonly listFiles?: () => readonly string[];
   readonly logger?: ForgeWebScriptCacheLogger;
 }
 
@@ -208,4 +212,120 @@ export function persistForgeWebScriptDebugArtifacts(
   if (artifacts.optimizedWasm !== undefined) writeWasm('optimized', artifacts.optimizedWasm);
   if (artifacts.unoptimizedWasm !== undefined) writeWasm('unoptimized', artifacts.unoptimizedWasm);
   return paths;
+}
+
+export interface ForgeWebScriptCacheIndexEntry {
+  readonly key: string;
+  readonly files: readonly string[];
+  readonly timestamp: number;
+}
+
+export interface ForgeWebScriptCacheIndex {
+  readonly version: 1;
+  readonly entries: Readonly<Record<string, ForgeWebScriptCacheIndexEntry>>;
+}
+
+export function forgeWebScriptCacheIndexPath(cache: ForgeWebScriptWatCache): string {
+  return `${cache.root.replace(/[\\/]+$/, '')}/.fws-cache-index.json`;
+}
+
+export function readForgeWebScriptCacheIndex(
+  cache: ForgeWebScriptWatCache | undefined,
+): ForgeWebScriptCacheIndex | undefined {
+  if (cache?.read === undefined) return undefined;
+  try {
+    const content = cache.read(forgeWebScriptCacheIndexPath(cache));
+    if (content === undefined || content === '') return undefined;
+    const parsed = JSON.parse(content);
+    if (parsed !== null && typeof parsed === 'object' && parsed.version === 1 && typeof parsed.entries === 'object') {
+      return parsed as ForgeWebScriptCacheIndex;
+    }
+  } catch {
+    // Malformed index is ignored and rebuilt.
+  }
+  return undefined;
+}
+
+export function pruneStaleForgeWebScriptCache(
+  cache: ForgeWebScriptWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void {
+  if (
+    cache === undefined ||
+    cache.writeAtomic === undefined ||
+    (cache.read === undefined && cache.remove === undefined)
+  )
+    return;
+  const existing = readForgeWebScriptCacheIndex(cache) ?? { version: 1, entries: {} };
+  const previous = existing.entries[moduleIdOrPath];
+  if (previous !== undefined && previous.key !== currentKey && cache.remove !== undefined) {
+    for (const oldFile of previous.files) {
+      if (!newFiles.includes(oldFile)) {
+        try {
+          cache.remove(oldFile);
+          cache.logger?.log('debug', 'cache.prune', { path: oldFile, reason: 'stale-version' });
+        } catch {
+          // Failure to remove a single stale artifact must never break compilation.
+        }
+      }
+    }
+  }
+
+  const updatedEntries = {
+    ...existing.entries,
+    [moduleIdOrPath]: {
+      key: currentKey,
+      files: newFiles,
+      timestamp: Date.now(),
+    },
+  };
+  try {
+    cache.writeAtomic(
+      forgeWebScriptCacheIndexPath(cache),
+      JSON.stringify({ version: 1, entries: updatedEntries }, undefined, 2),
+    );
+  } catch {
+    // Stale index persistence failure must never break compilation.
+  }
+}
+
+export function pruneOrphanedForgeWebScriptCacheFiles(cache: ForgeWebScriptWatCache | undefined): readonly string[] {
+  if (cache?.listFiles === undefined || cache.remove === undefined) return [];
+  const removed: string[] = [];
+  const files = cache.listFiles();
+  const indexPath = forgeWebScriptCacheIndexPath(cache);
+  const index = readForgeWebScriptCacheIndex(cache);
+  const activeFiles = new Set<string>([indexPath]);
+  if (index !== undefined) {
+    for (const entry of Object.values(index.entries)) {
+      for (const file of entry.files) {
+        activeFiles.add(file);
+        activeFiles.add(file.slice(file.lastIndexOf('/') + 1));
+      }
+    }
+  }
+
+  for (const file of files) {
+    if (file.endsWith('.tmp')) {
+      try {
+        cache.remove(file);
+        removed.push(file);
+        cache.logger?.log('debug', 'cache.prune', { path: file, reason: 'orphaned-temp' });
+      } catch {}
+      continue;
+    }
+    if (index !== undefined && (file.endsWith('.wat') || file.endsWith('.sonir.json') || file.endsWith('.wasm'))) {
+      const baseName = file.slice(file.lastIndexOf('/') + 1);
+      if (!activeFiles.has(baseName) && !activeFiles.has(file)) {
+        try {
+          cache.remove(file);
+          removed.push(file);
+          cache.logger?.log('debug', 'cache.prune', { path: file, reason: 'orphaned-artifact' });
+        } catch {}
+      }
+    }
+  }
+  return removed;
 }

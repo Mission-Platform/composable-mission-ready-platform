@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import {
   createForgeWebScriptCompilerService,
+  pruneOrphanedForgeWebScriptCacheFiles,
   type ForgeWebScriptArtifact,
   type ForgeWebScriptDiagnostic,
   type ForgeWebScriptModuleGraph,
@@ -370,13 +371,38 @@ function watCacheFor(options: ForgeWebScriptTestHarnessOptions): ForgeWebScriptW
   if (options.persistWat === false) return undefined;
   const root =
     options.watCacheRoot ?? path.resolve(options.root ?? process.cwd(), 'node_modules/.cache/forge-web-script');
-  return {
+  const cache: ForgeWebScriptWatCache = {
     root,
     writeAtomic(fileName: string, contents: string): void {
       fs.mkdirSync(path.dirname(fileName), { recursive: true });
       fs.writeFileSync(fileName, contents, 'utf8');
     },
+    writeBinaryAtomic(fileName: string, contents: Uint8Array): void {
+      fs.mkdirSync(path.dirname(fileName), { recursive: true });
+      fs.writeFileSync(fileName, contents);
+    },
+    read(fileName: string): string | undefined {
+      try {
+        return fs.readFileSync(fileName, 'utf8');
+      } catch {
+        return undefined;
+      }
+    },
+    remove(fileName: string): void {
+      try {
+        fs.unlinkSync(fileName);
+      } catch {}
+    },
+    listFiles(): readonly string[] {
+      try {
+        return fs.readdirSync(root).map((entry) => path.resolve(root, entry));
+      } catch {
+        return [];
+      }
+    },
   };
+  pruneOrphanedForgeWebScriptCacheFiles(cache);
+  return cache;
 }
 
 function runForgeWebScriptSelfHostedCompilerStage(
