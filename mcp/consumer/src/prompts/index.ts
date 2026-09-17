@@ -8,6 +8,9 @@ import { z } from "zod";
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
+/**
+ * Register consumer workflow prompts for setup, component consumption, tokens, and routing.
+ */
 export function registerPrompts(server: McpServer): void {
   server.registerPrompt(
     "consumer-setup",
@@ -20,7 +23,7 @@ export function registerPrompts(server: McpServer): void {
           .describe("Target frontend framework."),
       },
     },
-    async (args) => {
+    (args) => {
       const framework = args.framework;
       const conditionMap: Record<string, string> = {
         vue: "mp:vue",
@@ -69,7 +72,7 @@ Please guide me through:
           .describe("Consumer frontend framework."),
       },
     },
-    async (args) => {
+    (args) => {
       return {
         messages: [
           {
@@ -104,7 +107,7 @@ Please:
           ),
       },
     },
-    async (args) => {
+    (args) => {
       return {
         messages: [
           {
@@ -136,7 +139,7 @@ Please:
           .describe("Target frontend framework."),
       },
     },
-    async (args) => {
+    (args) => {
       return {
         messages: [
           {

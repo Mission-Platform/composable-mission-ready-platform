@@ -61,6 +61,9 @@ function toolError(error: unknown) {
   };
 }
 
+/**
+ * Register all external consumer MCP tools for discovery, component consumption, tokens, and verification.
+ */
 export function registerTools(server: McpServer): void {
   // ---- Setup & Framework Guides --------------------------------------------
   server.registerTool(
@@ -70,7 +73,7 @@ export function registerTools(server: McpServer): void {
         "Get the guide for setting up an external project to consume Mission Platform packages.",
       inputSchema: {},
     },
-    async () => {
+    () => {
       const guide = getGuide("external-setup");
       return text(guide?.body ?? "Setup guide not found.");
     },
@@ -87,7 +90,7 @@ export function registerTools(server: McpServer): void {
           .describe("The target framework."),
       },
     },
-    async (args) => {
+    (args) => {
       const framework = args.framework;
       const guide = getGuide(`framework-${framework}`);
       return text(guide?.body ?? `Best practices for ${framework} not found.`);
@@ -105,7 +108,7 @@ export function registerTools(server: McpServer): void {
           .describe(`Guide area. One of: ${GUIDE_IDS.join(", ")}`),
       },
     },
-    async (args) => {
+    (args) => {
       const area = args.area?.trim();
       if (!area) {
         return text(`Provide an "area". One of: ${GUIDE_IDS.join(", ")}`);
@@ -135,7 +138,7 @@ export function registerTools(server: McpServer): void {
           .describe("Optional substring search query."),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const packages = listConsumerPackages({
           category: args.category as ConsumerPackageCategory | undefined,
@@ -167,7 +170,7 @@ export function registerTools(server: McpServer): void {
           ),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const info = getConsumerPackageInfo(args.packageName, args.framework);
         if (!info) {
@@ -193,7 +196,7 @@ export function registerTools(server: McpServer): void {
           .describe("Optional substring to filter component slugs or levels."),
       },
     },
-    async (args) => {
+    (args) => {
       const filter = args.filter?.trim().toLowerCase();
       const components = listComponents().filter(
         (component) =>
@@ -217,7 +220,7 @@ export function registerTools(server: McpServer): void {
           .describe('Component name or slug, e.g. "ForgeButton".'),
       },
     },
-    async (args) => {
+    (args) => {
       const component = args.component?.trim();
       if (!component) return text("Provide a component name.");
       const usage = getComponentUsage(component);
@@ -262,7 +265,7 @@ export function registerTools(server: McpServer): void {
           .describe('Component name or slug (e.g. "ForgeButton", "button").'),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const stories = getComponentStories(args.component);
         if (!stories) {
@@ -301,7 +304,7 @@ export function registerTools(server: McpServer): void {
           .describe("Max icons to return (default 100)."),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const result = listIcons({
           category: args.category,
@@ -332,7 +335,7 @@ export function registerTools(server: McpServer): void {
           .describe("Target framework for copy-paste code snippet."),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const usage = getIconUsage(args.icon, args.framework);
         if (!usage) {
@@ -363,7 +366,7 @@ export function registerTools(server: McpServer): void {
           ),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const guide = getRouterSetup(
           args.framework as SupportedRouterFramework,
@@ -400,7 +403,7 @@ export function registerTools(server: McpServer): void {
           .describe("Text contents of package.json."),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const report = validateConsumerSetup({
           framework: args.framework as ConsumerFramework,
@@ -430,7 +433,7 @@ export function registerTools(server: McpServer): void {
           ),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(readTokens(args.category));
       } catch (error) {
@@ -446,7 +449,7 @@ export function registerTools(server: McpServer): void {
         "Explains how to re-skin an app by overriding Mission Platform design tokens, using the recommended DTCG JSON -> generated SCSS workflow.",
       inputSchema: {},
     },
-    async () => {
+    () => {
       const guide = getGuide("design-token-overrides");
       return text(guide?.body ?? "Design token overrides guide not found.");
     },
@@ -466,7 +469,7 @@ export function registerTools(server: McpServer): void {
           ),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(listOverridableTokenVariables(args.category));
       } catch (error) {
@@ -482,7 +485,7 @@ export function registerTools(server: McpServer): void {
         "Returns the JSON Schema (Draft 2020-12) for DTCG design-token override documents. It enumerates every overridable token key defined by @mission-platform/tokens (colours, spacing, radius, shadow, typography, motion, …) so editors and agents can validate and autocomplete `*.tokens.json` override documents. Reference it from a document via a `$schema` key.",
       inputSchema: {},
     },
-    async () => {
+    () => {
       try {
         return json(readTokenOverrideSchema());
       } catch (error) {
@@ -508,7 +511,7 @@ export function registerTools(server: McpServer): void {
           .describe("Custom-property prefix (defaults to `mp`)."),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const document = JSON.parse(args.tokens) as OverrideGroup;
         const scss = buildTokenOverrideScss(document, { prefix: args.prefix });
