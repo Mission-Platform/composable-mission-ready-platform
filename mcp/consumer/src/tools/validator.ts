@@ -83,6 +83,28 @@ const FRAMEWORK_DEPENDENCY_REQUIREMENTS: Record<
 };
 
 /**
+ * Check for conflicting framework conditions in vite.config.ts.
+ */
+function checkConflictingViteConditions(
+  viteConfig: string,
+  framework: ConsumerFramework,
+  expectedCondition: string,
+  checks: ValidationCheck[],
+): void {
+  for (const [otherFw, otherCond] of Object.entries(FRAMEWORK_CONDITIONS)) {
+    if (otherFw !== framework && viteConfig.includes(otherCond)) {
+      checks.push({
+        name: `Conflicting condition (${otherCond})`,
+        category: "vite",
+        status: "fail",
+        message: `Found conflicting export condition "${otherCond}" when targeting "${framework}".`,
+        suggestion: `Remove "${otherCond}" from vite.config.ts resolve.conditions and keep only "${expectedCondition}".`,
+      });
+    }
+  }
+}
+
+/**
  * Validate Vite configuration for framework resolve conditions.
  */
 function validateViteConfig(
@@ -100,28 +122,48 @@ function validateViteConfig(
   ];
   const hasCondition = matchers.some((matcher) => viteConfig.includes(matcher));
 
-  checks.push({
-    name: "Vite resolve condition",
-    category: "vite",
-    status: hasCondition ? "pass" : "fail",
-    message: hasCondition
-      ? `Vite configuration specifies correct condition "${expectedCondition}".`
-      : `Vite configuration is missing resolve condition "${expectedCondition}".`,
-    suggestion: hasCondition
-      ? undefined
-      : `Update vite.config.ts:\nresolve: {\n  conditions: ['${expectedCondition}', 'import', 'module', 'browser', 'default'],\n}`,
-  });
+  if (hasCondition) {
+    checks.push({
+      name: "Vite resolve condition",
+      category: "vite",
+      status: "pass",
+      message: `Vite configuration specifies correct condition "${expectedCondition}".`,
+    });
+  } else {
+    checks.push({
+      name: "Vite resolve condition",
+      category: "vite",
+      status: "fail",
+      message: `Vite configuration is missing resolve condition "${expectedCondition}".`,
+      suggestion: `Update vite.config.ts:\nresolve: {\n  conditions: ['${expectedCondition}', 'import', 'module', 'browser', 'default'],\n}`,
+    });
+  }
 
-  for (const [otherFw, otherCond] of Object.entries(FRAMEWORK_CONDITIONS)) {
-    if (otherFw !== framework && viteConfig.includes(otherCond)) {
-      checks.push({
-        name: `Conflicting condition (${otherCond})`,
-        category: "vite",
-        status: "fail",
-        message: `Found conflicting export condition "${otherCond}" when targeting "${framework}".`,
-        suggestion: `Remove "${otherCond}" from vite.config.ts resolve.conditions and keep only "${expectedCondition}".`,
-      });
-    }
+  checkConflictingViteConditions(
+    viteConfig,
+    framework,
+    expectedCondition,
+    checks,
+  );
+}
+
+/**
+ * Check tsconfig.json for legacy module resolution.
+ */
+function checkTsconfigModuleResolution(
+  tsconfig: string,
+  checks: ValidationCheck[],
+): void {
+  if (/['"]moduleResolution['"]\s*:\s*['"]node['"]/.test(tsconfig)) {
+    checks.push({
+      name: "TypeScript moduleResolution",
+      category: "typescript",
+      status: "warn",
+      message:
+        'Legacy "node" module resolution does not support package exports conditions.',
+      suggestion:
+        'Set "compilerOptions": { "moduleResolution": "bundler" } in tsconfig.json.',
+    });
   }
 }
 
@@ -143,54 +185,79 @@ function validateTsconfig(
     tsconfig.includes(matcher),
   );
 
-  checks.push({
-    name: "TypeScript customConditions",
-    category: "typescript",
-    status: hasCustomConditions ? "pass" : "fail",
-    message: hasCustomConditions
-      ? `tsconfig.json specifies correct custom condition "${expectedCondition}".`
-      : `tsconfig.json is missing compilerOptions.customConditions with "${expectedCondition}".`,
-    suggestion: hasCustomConditions
-      ? undefined
-      : `Add to tsconfig.json:\n"compilerOptions": {\n  "customConditions": ["${expectedCondition}"]\n}`,
-  });
-
-  if (/['"]moduleResolution['"]\s*:\s*['"]node['"]/.test(tsconfig)) {
+  if (hasCustomConditions) {
     checks.push({
-      name: "TypeScript moduleResolution",
+      name: "TypeScript customConditions",
       category: "typescript",
-      status: "warn",
-      message:
-        'Legacy "node" module resolution does not support package exports conditions.',
-      suggestion:
-        'Set "compilerOptions": { "moduleResolution": "bundler" } in tsconfig.json.',
+      status: "pass",
+      message: `tsconfig.json specifies correct custom condition "${expectedCondition}".`,
     });
+  } else {
+    checks.push({
+      name: "TypeScript customConditions",
+      category: "typescript",
+      status: "fail",
+      message: `tsconfig.json is missing compilerOptions.customConditions with "${expectedCondition}".`,
+      suggestion: `Add to tsconfig.json:\n"compilerOptions": {\n  "customConditions": ["${expectedCondition}"]\n}`,
+    });
+  }
+
+  checkTsconfigModuleResolution(tsconfig, checks);
+}
+
+/**
+ * Check required framework runtime dependencies.
+ */
+function checkRequiredDependencies(
+  dependencies: Record<string, string>,
+  required: readonly string[],
+  checks: ValidationCheck[],
+): void {
+  for (const pkg of required) {
+    if (dependencies[pkg]) {
+      checks.push({
+        name: `Required dependency (${pkg})`,
+        category: "dependencies",
+        status: "pass",
+        message: `Required framework runtime "${pkg}" is installed.`,
+      });
+    } else {
+      checks.push({
+        name: `Required dependency (${pkg})`,
+        category: "dependencies",
+        status: "fail",
+        message: `Required framework dependency "${pkg}" is missing from package.json.`,
+        suggestion: `Run: pnpm add ${pkg}`,
+      });
+    }
   }
 }
 
 /**
- * Check a list of package dependencies against requirement rules.
+ * Check recommended framework packages.
  */
-function checkDependencyRules(
+function checkRecommendedDependencies(
   dependencies: Record<string, string>,
-  packageNames: readonly string[],
-  level: "required" | "recommended",
+  recommended: readonly string[],
   checks: ValidationCheck[],
 ): void {
-  const isRequired = level === "required";
-  for (const pkg of packageNames) {
-    const isPresent = Boolean(dependencies[pkg]);
-    checks.push({
-      name: `${isRequired ? "Required dependency" : "Recommended package"} (${pkg})`,
-      category: "dependencies",
-      status: isPresent ? "pass" : isRequired ? "fail" : "warn",
-      message: isPresent
-        ? `${isRequired ? "Required framework runtime" : "Package"} "${pkg}" is installed.`
-        : `${isRequired ? "Required framework dependency" : "Recommended package"} "${pkg}" is ${isRequired ? "missing from" : "not in"} package.json.`,
-      suggestion: isPresent
-        ? undefined
-        : `${isRequired ? "Run:" : "Consider adding:"} pnpm add ${pkg}`,
-    });
+  for (const pkg of recommended) {
+    if (dependencies[pkg]) {
+      checks.push({
+        name: `Recommended package (${pkg})`,
+        category: "dependencies",
+        status: "pass",
+        message: `Package "${pkg}" is installed.`,
+      });
+    } else {
+      checks.push({
+        name: `Recommended package (${pkg})`,
+        category: "dependencies",
+        status: "warn",
+        message: `Recommended package "${pkg}" is not in package.json.`,
+        suggestion: `Consider adding: pnpm add ${pkg}`,
+      });
+    }
   }
 }
 
@@ -221,8 +288,8 @@ function validatePackageDependencies(
   };
 
   const rules = FRAMEWORK_DEPENDENCY_REQUIREMENTS[framework];
-  checkDependencyRules(dependencies, rules.required, "required", checks);
-  checkDependencyRules(dependencies, rules.recommended, "recommended", checks);
+  checkRequiredDependencies(dependencies, rules.required, checks);
+  checkRecommendedDependencies(dependencies, rules.recommended, checks);
 }
 
 /**
@@ -242,6 +309,18 @@ function checkNoFilesSupplied(
         "Pass file contents in viteConfig, tsconfig, and/or packageJson parameters.",
     });
   }
+}
+
+/**
+ * Compute overall status enum from failure and warning counts.
+ */
+function computeOverallStatus(
+  failedCount: number,
+  warningCount: number,
+): "valid" | "warnings" | "errors" {
+  if (failedCount > 0) return "errors";
+  if (warningCount > 0) return "warnings";
+  return "valid";
 }
 
 /**
@@ -295,8 +374,7 @@ export function validateConsumerSetup(options: {
   const warningCount = checks.filter((c) => c.status === "warn").length;
   const passedCount = checks.filter((c) => c.status === "pass").length;
 
-  const overallStatus: "valid" | "warnings" | "errors" =
-    failedCount > 0 ? "errors" : warningCount > 0 ? "warnings" : "valid";
+  const overallStatus = computeOverallStatus(failedCount, warningCount);
 
   const summary = buildValidationSummary(
     framework,

@@ -48,7 +48,7 @@ describe('developer MCP security integration', () => {
       },
     });
 
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const content = result.content as { text: string }[];
     const parsed = JSON.parse(content[0]?.text ?? '{}') as {
       clean: boolean;
@@ -68,7 +68,7 @@ describe('developer MCP security integration', () => {
       },
     });
 
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const content = result.content as { text: string }[];
     const parsed = JSON.parse(content[0]?.text ?? '{}') as {
       clean: boolean;
@@ -87,7 +87,7 @@ describe('developer MCP security integration', () => {
       },
     });
 
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const content = result.content as { text: string }[];
     const parsed = JSON.parse(content[0]?.text ?? '{}') as {
       clean: boolean;
@@ -127,7 +127,7 @@ describe('developer MCP security integration', () => {
       arguments: {},
     });
 
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const content = result.content as { text: string }[];
     const parsed = JSON.parse(content[0]?.text ?? '{}') as {
       clean: boolean;
@@ -149,7 +149,7 @@ describe('developer MCP security integration', () => {
       },
     });
 
-    assert.equal(jsonResult.isError, undefined);
+    assert.ok(!jsonResult.isError);
     const jsonContent = jsonResult.content as { text: string }[];
     const parsedReport = JSON.parse(jsonContent[0]?.text ?? '{}') as {
       scorecard: { iso27001ComplianceScore: number };
@@ -169,7 +169,7 @@ describe('developer MCP security integration', () => {
         format: 'markdown',
       },
     });
-    assert.equal(mdResult.isError, undefined);
+    assert.ok(!mdResult.isError);
     const mdContent = mdResult.content as { text: string }[];
     assert.ok(mdContent[0]?.text.includes('# Security Compliance & Evidence Report'));
     assert.ok(mdContent[0]?.text.includes('ISO 27001 Compliance'));
@@ -184,7 +184,7 @@ describe('developer MCP security integration', () => {
         maxFiles: 5,
       },
     });
-    assert.equal(isoResult.isError, undefined);
+    assert.ok(!isoResult.isError);
     const isoContent = isoResult.content as { text: string }[];
     const isoParsed = JSON.parse(isoContent[0]?.text ?? '{}') as {
       scorecard: { complianceScore: number };
@@ -201,7 +201,7 @@ describe('developer MCP security integration', () => {
         maxFiles: 5,
       },
     });
-    assert.equal(owaspResult.isError, undefined);
+    assert.ok(!owaspResult.isError);
     const owaspContent = owaspResult.content as { text: string }[];
     const owaspParsed = JSON.parse(owaspContent[0]?.text ?? '{}') as {
       scorecard: unknown[];

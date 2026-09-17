@@ -135,6 +135,82 @@ export async function reviewLspStructure(request: LspReviewRequest) {
   };
 }
 
+/**
+ * Collect bounded LSP diagnostics for reviewable files when languageId is provided.
+ */
+async function collectReviewDiagnostics(
+  files: readonly { readonly path: string }[],
+  sessionId?: string,
+  languageId?: string,
+) {
+  if (!languageId) return [];
+  return Promise.all(
+    files.map(async (file) => ({
+      path: file.path,
+      diagnostics: await capture(() => getLspDiagnostics(file.path, sessionId, languageId)),
+    })),
+  );
+}
+
+/**
+ * Collect correlated test files for reviewable files when requested.
+ */
+async function collectReviewTests(
+  files: readonly { readonly path: string }[],
+  maxFiles: number,
+  sessionId?: string,
+  languageId?: string,
+  includeTests?: boolean,
+) {
+  if (!includeTests || !languageId) return [];
+  return Promise.all(
+    files.map(async (file) => ({
+      path: file.path,
+      tests: await capture(() =>
+        getLspTestsForFile({
+          filePath: file.path,
+          sessionId,
+          languageId,
+          limit: maxFiles,
+        }),
+      ),
+    })),
+  );
+}
+
+/**
+ * Run secret and code vulnerability scanning across reviewable changed files.
+ */
+function scanReviewSecurityFindings(files: readonly { readonly path: string }[]): SecurityFinding[] {
+  const securityFindings: SecurityFinding[] = [];
+  for (const file of files) {
+    try {
+      const secretResult = scanSecrets({ path: file.path });
+      const codeResult = analyzeCode({ path: file.path });
+      securityFindings.push(...secretResult.findings, ...codeResult.findings);
+    } catch {
+      // Ignored if file unreadable or deleted
+    }
+  }
+  return securityFindings;
+}
+
+/**
+ * Build a structured security scorecard summary for change review evidence.
+ */
+function buildSecurityReviewSummary(securityFindings: readonly SecurityFinding[]) {
+  return {
+    clean: securityFindings.length === 0,
+    findingsCount: securityFindings.length,
+    criticalCount: securityFindings.filter((f) => f.severity === 'critical').length,
+    highCount: securityFindings.filter((f) => f.severity === 'high').length,
+    owaspCategories: [...new Set(securityFindings.map((f) => f.owasp).filter(Boolean))],
+    cweWeaknesses: [...new Set(securityFindings.map((f) => f.cwe).filter(Boolean))],
+    isoControls: [...new Set(securityFindings.map((f) => f.isoControl).filter(Boolean))],
+    findings: securityFindings,
+  };
+}
+
 export async function reviewChanges(request: ReviewChangesRequest) {
   const maxFiles = Math.min(Math.max(Math.trunc(request.maxFiles ?? DEFAULT_REVIEW_FILES), 1), MAX_REVIEW_FILES);
   const changed = readGitChangedFiles({
@@ -153,40 +229,18 @@ export async function reviewChanges(request: ReviewChangesRequest) {
     maxOutputBytes: request.maxOutputBytes,
   });
   const files = reviewableFiles(changed.files, maxFiles);
-  const diagnostics = request.languageId
-    ? await Promise.all(
-        files.map(async (file) => ({
-          path: file.path,
-          diagnostics: await capture(() => getLspDiagnostics(file.path, request.sessionId, request.languageId)),
-        })),
-      )
-    : [];
-  const tests =
-    request.includeTests && request.languageId
-      ? await Promise.all(
-          files.map(async (file) => ({
-            path: file.path,
-            tests: await capture(() =>
-              getLspTestsForFile({
-                filePath: file.path,
-                sessionId: request.sessionId,
-                languageId: request.languageId,
-                limit: maxFiles,
-              }),
-            ),
-          })),
-        )
-      : [];
-  const securityFindings: SecurityFinding[] = [];
-  for (const file of files) {
-    try {
-      const secretResult = scanSecrets({ path: file.path });
-      const codeResult = analyzeCode({ path: file.path });
-      securityFindings.push(...secretResult.findings, ...codeResult.findings);
-    } catch {
-      // Ignored if file unreadable or deleted
-    }
-  }
+
+  const [diagnostics, tests] = await Promise.all([
+    collectReviewDiagnostics(files, request.sessionId, request.languageId),
+    collectReviewTests(files, maxFiles, request.sessionId, request.languageId, request.includeTests),
+  ]);
+
+  const securityFindings = scanReviewSecurityFindings(files);
+  const securitySummary = buildSecurityReviewSummary(securityFindings);
+
+  const message = request.languageId
+    ? 'Review includes bounded language-server evidence and security checks for reviewable changed files.'
+    : 'Git evidence and security scan are complete; provide languageId to include language-server diagnostics and test correlation.';
 
   return {
     operation: 'review_changes' as const,
@@ -196,18 +250,7 @@ export async function reviewChanges(request: ReviewChangesRequest) {
     truncated: changed.files.length > files.length,
     diagnostics,
     tests,
-    security: {
-      clean: securityFindings.length === 0,
-      findingsCount: securityFindings.length,
-      criticalCount: securityFindings.filter((f) => f.severity === 'critical').length,
-      highCount: securityFindings.filter((f) => f.severity === 'high').length,
-      owaspCategories: [...new Set(securityFindings.map((f) => f.owasp).filter(Boolean))],
-      cweWeaknesses: [...new Set(securityFindings.map((f) => f.cwe).filter(Boolean))],
-      isoControls: [...new Set(securityFindings.map((f) => f.isoControl).filter(Boolean))],
-      findings: securityFindings,
-    },
-    message: request.languageId
-      ? 'Review includes bounded language-server evidence and security checks for reviewable changed files.'
-      : 'Git evidence and security scan are complete; provide languageId to include language-server diagnostics and test correlation.',
+    security: securitySummary,
+    message,
   };
 }

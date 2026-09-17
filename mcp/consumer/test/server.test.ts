@@ -251,7 +251,7 @@ describe("consumer setup validator", () => {
   it("detects missing export conditions and missing peer dependencies", async () => {
     const result = await callTool("validate_consumer_setup", {
       framework: "vue",
-      viteConfig: `export default defineConfig({});`,
+      viteConfig: "export default defineConfig({});",
       tsconfig: JSON.stringify({
         compilerOptions: {
           moduleResolution: "bundler",

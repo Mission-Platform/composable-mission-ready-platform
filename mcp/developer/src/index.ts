@@ -19,8 +19,11 @@ import packageJson from '../package.json' with { type: 'json' };
 import { registerPrompts } from './prompts/index.ts';
 import { registerTools, type McpProfileOptions } from './tools/index.ts';
 
-export interface CreateServerOptions extends McpProfileOptions {}
+export type CreateServerOptions = McpProfileOptions;
 
+/**
+ * Parse CLI profile arguments from process.argv (--profile=<name> or --profile <name>).
+ */
 function parseCliProfiles(): { profile?: string } {
   for (let index = 2; index < process.argv.length; index++) {
     const arg = process.argv[index];
@@ -34,6 +37,9 @@ function parseCliProfiles(): { profile?: string } {
   return {};
 }
 
+/**
+ * Create and configure an McpServer instance with registered tools, resources, and prompts.
+ */
 export function createServer(options: CreateServerOptions = {}): McpServer {
   const cli = parseCliProfiles();
   const envProfile = process.env.MISSION_MCP_PROFILE;
@@ -50,6 +56,9 @@ export function createServer(options: CreateServerOptions = {}): McpServer {
   return server;
 }
 
+/**
+ * Main server startup function connecting the McpServer over stdio.
+ */
 export async function main(): Promise<void> {
   const cli = parseCliProfiles();
   const envProfile = process.env.MISSION_MCP_PROFILE;
@@ -61,6 +70,9 @@ export async function main(): Promise<void> {
   await server.connect(transport);
 }
 
+/**
+ * Check whether the current file is being executed directly via node CLI.
+ */
 function isDirectExecution(): boolean {
   if (!process.argv[1]) return false;
   try {
