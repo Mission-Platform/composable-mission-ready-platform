@@ -31,6 +31,17 @@ const typeScriptJsxParserOptions = {
   },
 };
 
+function isNodeExported(node) {
+  let current = node?.parent;
+  while (current) {
+    if (current.type === 'ExportNamedDeclaration' || current.type === 'ExportDefaultDeclaration') {
+      return true;
+    }
+    current = current.parent;
+  }
+  return false;
+}
+
 const missionTypeScriptPlugin = {
   rules: {
     'no-explicit-any': {
@@ -107,6 +118,100 @@ const missionTypeScriptPlugin = {
         };
       },
     },
+    'prefer-satisfies': {
+      meta: {
+        type: 'suggestion',
+        docs: {
+          description: 'Prefer `satisfies` operator over type assertion `as` to preserve narrow literal types.',
+        },
+        schema: [],
+        messages: {
+          preferSatisfies:
+            'Prefer "satisfies" over type assertion "as" to validate type conformance without widening literals or masking errors.',
+          noAsAny: 'Unexpected "as any" type assertion. Prohibit "any" and use concrete types or "satisfies".',
+        },
+      },
+      create(context) {
+        return {
+          TSAsExpression(node) {
+            if (node.typeAnnotation) {
+              if (node.typeAnnotation.type === 'TSAnyKeyword') {
+                context.report({ node, messageId: 'noAsAny' });
+                return;
+              }
+              // Allow `as const`
+              if (
+                node.typeAnnotation.type === 'TSTypeReference' &&
+                node.typeAnnotation.typeName &&
+                node.typeAnnotation.typeName.name === 'const'
+              ) {
+                return;
+              }
+            }
+            context.report({ node, messageId: 'preferSatisfies' });
+          },
+        };
+      },
+    },
+    'no-unconstrained-generics': {
+      meta: {
+        type: 'suggestion',
+        docs: {
+          description: 'Require generic type parameters to specify an `extends` constraint.',
+        },
+        schema: [],
+        messages: {
+          unconstrainedGeneric: 'Type parameter "{{name}}" must have an "extends" constraint to restrict open types.',
+        },
+      },
+      create(context) {
+        return {
+          TSTypeParameter(node) {
+            if (!node.constraint) {
+              const parameterName = typeof node.name === 'string' ? node.name : node.name?.name || 'T';
+              context.report({
+                node,
+                messageId: 'unconstrainedGeneric',
+                data: {
+                  name: parameterName,
+                },
+              });
+            }
+          },
+        };
+      },
+    },
+    'no-implicit-unknown': {
+      meta: {
+        type: 'suggestion',
+        docs: {
+          description: 'Disallow returning or leaking unvalidated `unknown` across exported functions and types.',
+        },
+        schema: [],
+        messages: {
+          noImplicitUnknown:
+            'Avoid exposing unvalidated "unknown" across exported API boundaries. Parse or validate into concrete types.',
+        },
+      },
+      create(context) {
+        return {
+          TSUnknownKeyword(node) {
+            const parent = node.parent;
+            if (
+              parent &&
+              parent.type === 'TSTypeAnnotation' &&
+              parent.parent &&
+              (parent.parent.type === 'FunctionDeclaration' ||
+                parent.parent.type === 'ArrowFunctionExpression' ||
+                parent.parent.type === 'MethodDefinition') &&
+              isNodeExported(parent.parent)
+            ) {
+              context.report({ node, messageId: 'noImplicitUnknown' });
+            }
+          },
+        };
+      },
+    },
   },
 };
 
@@ -166,6 +271,9 @@ const config = [
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+      '@typescript-eslint/prefer-satisfies': 'warn',
+      '@typescript-eslint/no-unconstrained-generics': 'warn',
+      '@typescript-eslint/no-implicit-unknown': 'warn',
       'import-x/order': [
         'error',
         {
@@ -200,6 +308,9 @@ const config = [
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+      '@typescript-eslint/prefer-satisfies': 'warn',
+      '@typescript-eslint/no-unconstrained-generics': 'warn',
+      '@typescript-eslint/no-implicit-unknown': 'warn',
       'import-x/order': [
         'error',
         {
@@ -247,6 +358,9 @@ const config = [
       'vue/singleline-html-element-content-newline': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+      '@typescript-eslint/prefer-satisfies': 'warn',
+      '@typescript-eslint/no-unconstrained-generics': 'warn',
+      '@typescript-eslint/no-implicit-unknown': 'warn',
       'import-x/order': [
         'error',
         {
