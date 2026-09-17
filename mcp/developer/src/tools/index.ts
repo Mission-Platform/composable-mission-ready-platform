@@ -53,6 +53,15 @@ import {
   readMemberDetails,
 } from '@mission-platform/mcp-shared/repo/scanner';
 import { readTokens } from '@mission-platform/mcp-shared/repo/tokens';
+import {
+  analyzeCode,
+  auditDependencies,
+  auditSupplyChain,
+  collectComplianceEvidence,
+  formatComplianceMarkdown,
+  scanSecrets,
+  type SecurityFindingSeverity,
+} from '@mission-platform/mcp-shared/security';
 import { z } from 'zod';
 
 import { accessibilityAuditInputSchema, runAccessibilityAudit } from '../accessibility/audit.ts';
@@ -116,6 +125,23 @@ import {
 import { getLspDebugContext, reviewChanges, reviewLspStructure } from '../lsp/reviews.ts';
 import { getLspTestsForFile, runLspBuild, runLspTests } from '../lsp/workflows.ts';
 import { validateName, writeIntoPackage, writeScaffold } from '../scaffold/writer.ts';
+import {
+  getAffectedPackages,
+  listStories,
+  primeUpstreamDependencies,
+  runTestFile,
+  runTurboTask,
+} from '../workspace/tasks.ts';
+
+import {
+  dispatchGitMetadata,
+  dispatchI18n,
+  dispatchScaffold,
+  gitMetadataInputSchema,
+  i18nInputSchema,
+  scaffoldInputSchema,
+} from './polymorphic.ts';
+import { resolveToolFilter } from './profiles.ts';
 
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
@@ -421,7 +447,20 @@ const artifactMetadataSchema = z
   })
   .optional();
 
-export function registerTools(server: McpServer): void {
+export type { McpProfileOptions } from './profiles.ts';
+
+export function registerTools(server: McpServer, options: McpProfileOptions = {}): void {
+  const toolFilter = resolveToolFilter(options);
+  const originalRegisterTool = server.registerTool.bind(server);
+
+  // Filter tool registration based on active profile or explicit tool allowlist
+  server.registerTool = ((name: string, ...rest: unknown[]) => {
+    if (toolFilter && !toolFilter.has(name)) {
+      return;
+    }
+    return Reflect.apply(originalRegisterTool, server, [name, ...rest]);
+  }) as typeof server.registerTool;
+
   const commitPlans = new Map<string, { readonly plan: CommitPlan; readonly createdAt: number }>();
   const commitPlanTtlMs = 30 * 60 * 1000;
   const maxCommitPlans = 128;
@@ -2505,6 +2544,432 @@ export function registerTools(server: McpServer): void {
           apply: args.apply === true,
         });
         return json(result);
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  // ---- Security Analysis Suite ----------------------------------------------
+  server.registerTool(
+    'security_scan_secrets',
+    {
+      description:
+        'Scan repository files, directories, or diffs for exposed credentials, API tokens, and private keys with automatic redaction.',
+      inputSchema: {
+        path: z
+          .string()
+          .min(1)
+          .max(4096)
+          .optional()
+          .describe('Repository-rooted path to scan. Scans entire repository if omitted.'),
+        staged: z.boolean().optional().describe('When true, scans staged git diff instead of filesystem files.'),
+        severityThreshold: z
+          .enum(['critical', 'high', 'medium', 'low', 'info'])
+          .optional()
+          .describe('Minimum severity threshold to report.'),
+        maxFiles: z
+          .number()
+          .int()
+          .min(1)
+          .max(500)
+          .optional()
+          .describe('Maximum number of files to inspect (default 100).'),
+      },
+    },
+    async (args) => {
+      try {
+        if (args.staged) {
+          const diffResult = readGitDiff({ staged: true, path: args.path });
+          return json(
+            scanSecrets({
+              content: diffResult.stdout,
+              filePath: args.path ? `${args.path} (staged diff)` : 'staged diff',
+              severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
+              maxFiles: args.maxFiles,
+            }),
+          );
+        }
+        return json(
+          scanSecrets({
+            path: args.path,
+            severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
+            maxFiles: args.maxFiles,
+          }),
+        );
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'security_analyze_code',
+    {
+      description:
+        'Analyze source code files or directories for static vulnerabilities: DOM XSS, unsafe execution, SSRF, and ReDoS.',
+      inputSchema: {
+        path: z.string().min(1).max(4096).optional().describe('Repository-rooted file or folder to analyze.'),
+        severityThreshold: z
+          .enum(['critical', 'high', 'medium', 'low', 'info'])
+          .optional()
+          .describe('Minimum severity threshold to report.'),
+        maxFiles: z
+          .number()
+          .int()
+          .min(1)
+          .max(500)
+          .optional()
+          .describe('Maximum number of files to inspect (default 100).'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(
+          analyzeCode({
+            path: args.path,
+            severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
+            maxFiles: args.maxFiles,
+          }),
+        );
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'security_audit_dependencies',
+    {
+      description:
+        'Audit workspace dependencies and manifests for known CVEs, unpinned versions, and insecure transmission protocols.',
+      inputSchema: {
+        path: z
+          .string()
+          .min(1)
+          .max(4096)
+          .optional()
+          .describe('Repository-rooted path, or entire workspace if omitted.'),
+        severityThreshold: z
+          .enum(['critical', 'high', 'medium', 'low', 'info'])
+          .optional()
+          .describe('Minimum severity threshold to report.'),
+        runPnpmAudit: z.boolean().optional().describe('Whether to run pnpm audit check (defaults to true).'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(
+          auditDependencies({
+            path: args.path,
+            severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
+            runPnpmAudit: args.runPnpmAudit,
+          }),
+        );
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'security_audit_supply_chain',
+    {
+      description:
+        'Audit workspace package manifests for supply chain security risks: dangerous lifecycle scripts (preinstall/postinstall), divergent package versions across packages, and unverified tarballs.',
+      inputSchema: {
+        path: z
+          .string()
+          .min(1)
+          .max(4096)
+          .optional()
+          .describe('Repository-rooted path, or entire workspace if omitted.'),
+        severityThreshold: z
+          .enum(['critical', 'high', 'medium', 'low', 'info'])
+          .optional()
+          .describe('Minimum severity threshold to report.'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(
+          auditSupplyChain({
+            path: args.path,
+            severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
+          }),
+        );
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'security_collect_compliance_evidence',
+    {
+      description:
+        'Collect auditable security evidence and generate a compliance report mapped to ISO/IEC 27001:2022 Annex A controls, OWASP Top 10 (2025), and CWE Top 25.',
+      inputSchema: {
+        path: z
+          .string()
+          .min(1)
+          .max(4096)
+          .optional()
+          .describe('Repository-rooted path, or entire workspace if omitted.'),
+        format: z.enum(['json', 'markdown']).optional().describe('Output format: "json" (default) or "markdown".'),
+        severityThreshold: z
+          .enum(['critical', 'high', 'medium', 'low', 'info'])
+          .optional()
+          .describe('Minimum severity threshold to report.'),
+        runPnpmAudit: z.boolean().optional().describe('Whether to run pnpm audit check (defaults to true).'),
+        maxFiles: z
+          .number()
+          .int()
+          .min(1)
+          .max(500)
+          .optional()
+          .describe('Maximum number of files to inspect (default 100).'),
+      },
+    },
+    async (args) => {
+      try {
+        const report = collectComplianceEvidence({
+          path: args.path,
+          severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
+          runPnpmAudit: args.runPnpmAudit,
+          maxFiles: args.maxFiles,
+        });
+        if (args.format === 'markdown') {
+          return text(formatComplianceMarkdown(report));
+        }
+        return json(report);
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'security_audit_compliance',
+    {
+      description:
+        'Audit repository compliance against ISO 27001, OWASP 2025, or CWE Top 25 standards, producing compliance scorecards and gap analyses.',
+      inputSchema: {
+        standard: z
+          .enum(['all', 'iso-27001', 'owasp-2025', 'cwe-top25'])
+          .optional()
+          .describe('Compliance standard to audit: "all" (default), "iso-27001", "owasp-2025", or "cwe-top25".'),
+        severityThreshold: z
+          .enum(['critical', 'high', 'medium', 'low', 'info'])
+          .optional()
+          .describe('Minimum severity threshold to report.'),
+        runPnpmAudit: z.boolean().optional().describe('Whether to run pnpm audit check (defaults to true).'),
+        maxFiles: z
+          .number()
+          .int()
+          .min(1)
+          .max(500)
+          .optional()
+          .describe('Maximum number of files to inspect (default 100).'),
+      },
+    },
+    async (args) => {
+      try {
+        const report = collectComplianceEvidence({
+          severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
+          runPnpmAudit: args.runPnpmAudit,
+          maxFiles: args.maxFiles,
+        });
+
+        const standard = args.standard ?? 'all';
+        if (standard === 'iso-27001') {
+          return json({
+            metadata: report.metadata,
+            scorecard: {
+              complianceScore: report.scorecard.iso27001ComplianceScore,
+              totalControls: report.scorecard.totalControlsEvaluated,
+              compliantControls: report.scorecard.compliantControlsCount,
+              nonCompliantControls: report.scorecard.nonCompliantControlsCount,
+            },
+            controls: report.isoControls,
+          });
+        }
+        if (standard === 'owasp-2025') {
+          return json({
+            metadata: report.metadata,
+            scorecard: report.owaspScorecard,
+            findings: report.findings.filter((f) => Boolean(f.owasp)),
+          });
+        }
+        if (standard === 'cwe-top25') {
+          return json({
+            metadata: report.metadata,
+            scorecard: report.cweScorecard,
+            findings: report.findings.filter((f) => Boolean(f.cwe)),
+          });
+        }
+        return json(report);
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  // ---- Polymorphic Dispatchers ---------------------------------------------
+  server.registerTool(
+    'scaffold',
+    {
+      description:
+        'Polymorphic scaffolding dispatcher for workspace members and package units. Supports entity types: component | composable | package | app | worker | crate | store | util. Dry-run unless apply=true.',
+      inputSchema: scaffoldInputSchema,
+    },
+    async (args) => {
+      try {
+        const result = dispatchScaffold(args);
+        return json(result);
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'i18n',
+    {
+      description:
+        'Polymorphic localization dispatcher. Inspect, add, remove, or update YAML translation catalogues. Actions: list | coverage | add | remove | update.',
+      inputSchema: i18nInputSchema,
+    },
+    async (args) => {
+      try {
+        const result = dispatchI18n(args);
+        return typeof result === 'string' ? text(result) : json(result);
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'git_metadata',
+    {
+      description:
+        'Polymorphic Git metadata inspection dispatcher. Query repository branches, tags, remotes, or ls-files.',
+      inputSchema: gitMetadataInputSchema,
+    },
+    async (args) => {
+      try {
+        return json(dispatchGitMetadata(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  // ---- Workspace Task Runners & Build Graph Intelligence --------------------
+  server.registerTool(
+    'repo_affected_packages',
+    {
+      description:
+        'Analyze git changes or a diff ref to find affected workspace packages and detect root configuration modifications that impact the entire monorepo.',
+      inputSchema: {
+        ref: z
+          .string()
+          .max(512)
+          .optional()
+          .describe('Git revision or range to compare against (e.g. "main", "HEAD~1").'),
+        path: z.string().min(1).max(4096).optional().describe('Filter changes to a specific subdirectory.'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(getAffectedPackages(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'repo_prime_dependencies',
+    {
+      description:
+        'Build upstream workspace dependencies for a target package using Turborepo (turbo run build --filter <pkg>^...). Essential for APFS-linked worktrees before running package tests.',
+      inputSchema: {
+        packageName: z.string().describe('Target package name, e.g. "@mission-platform/components" or "components".'),
+        timeoutMs: z.number().int().min(10).max(180_000).optional(),
+        maxOutputBytes: z.number().int().min(1).max(1_048_576).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(primeUpstreamDependencies(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'turbo_run',
+    {
+      description:
+        'Execute a Turborepo task (e.g. build:check, lint, test, build) across packages with bounded timeouts and structured output parsing.',
+      inputSchema: {
+        task: z.string().describe('Turborepo task name (e.g. "build:check", "lint", "test", "build").'),
+        filter: z
+          .string()
+          .optional()
+          .describe('Turborepo package filter (e.g. "@mission-platform/components", "...[HEAD^1]").'),
+        dry: z.boolean().optional().describe('Dry run task execution (adds --dry=json). Defaults to false.'),
+        timeoutMs: z.number().int().min(10).max(180_000).optional(),
+        maxOutputBytes: z.number().int().min(1).max(1_048_576).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(runTurboTask(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'run_test_file',
+    {
+      description:
+        'Run an individual test file (*.spec.ts, *.test.ts) using vitest or node:test with bounded execution and optional test name filtering.',
+      inputSchema: {
+        filePath: z.string().min(1).max(4096).describe('Repository-relative path to the test file.'),
+        testNamePattern: z.string().optional().describe('Optional test name filter (-t pattern in vitest).'),
+        timeoutMs: z.number().int().min(10).max(120_000).optional(),
+        maxOutputBytes: z.number().int().min(1).max(1_048_576).optional(),
+      },
+    },
+    async (args) => {
+      try {
+        return json(runTestFile(args));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'list_stories',
+    {
+      description:
+        'Discover and inspect Storybook stories (*.stories.tsx) across workspace packages or for a specific component.',
+      inputSchema: {
+        component: z.string().optional().describe('Filter by component name (e.g. "button", "modal").'),
+        package: z.string().optional().describe('Filter by package folder (e.g. "components", "email-components").'),
+        limit: z.number().int().min(1).max(500).optional().describe('Maximum story files to return (default 100).'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(listStories(args));
       } catch (error) {
         return toolError(error);
       }

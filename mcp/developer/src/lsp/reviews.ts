@@ -1,5 +1,7 @@
 import { extname } from 'node:path';
 
+import { analyzeCode, scanSecrets, type SecurityFinding } from '@mission-platform/mcp-shared/security';
+
 import { readGitChangedFiles, readGitDiff, type GitChangedFile } from '../git/index.ts';
 
 import { inspectLspSymbol, goToLspDefinition, listLspSymbols } from './navigation.ts';
@@ -175,6 +177,17 @@ export async function reviewChanges(request: ReviewChangesRequest) {
           })),
         )
       : [];
+  const securityFindings: SecurityFinding[] = [];
+  for (const file of files) {
+    try {
+      const secretResult = scanSecrets({ path: file.path });
+      const codeResult = analyzeCode({ path: file.path });
+      securityFindings.push(...secretResult.findings, ...codeResult.findings);
+    } catch {
+      // Ignored if file unreadable or deleted
+    }
+  }
+
   return {
     operation: 'review_changes' as const,
     changed,
@@ -183,8 +196,18 @@ export async function reviewChanges(request: ReviewChangesRequest) {
     truncated: changed.files.length > files.length,
     diagnostics,
     tests,
+    security: {
+      clean: securityFindings.length === 0,
+      findingsCount: securityFindings.length,
+      criticalCount: securityFindings.filter((f) => f.severity === 'critical').length,
+      highCount: securityFindings.filter((f) => f.severity === 'high').length,
+      owaspCategories: [...new Set(securityFindings.map((f) => f.owasp).filter(Boolean))],
+      cweWeaknesses: [...new Set(securityFindings.map((f) => f.cwe).filter(Boolean))],
+      isoControls: [...new Set(securityFindings.map((f) => f.isoControl).filter(Boolean))],
+      findings: securityFindings,
+    },
     message: request.languageId
-      ? 'Review includes bounded language-server evidence for reviewable changed files.'
-      : 'Git evidence is complete; provide languageId to include language-server diagnostics and test correlation.',
+      ? 'Review includes bounded language-server evidence and security checks for reviewable changed files.'
+      : 'Git evidence and security scan are complete; provide languageId to include language-server diagnostics and test correlation.',
   };
 }

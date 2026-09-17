@@ -127,6 +127,25 @@ export function registerPrompts(server: McpServer): void {
   );
 
   server.registerPrompt(
+    'security-audit',
+    {
+      description: 'Audit repository changes or specific paths for secrets, code vulnerabilities, and dependency CVEs.',
+      argsSchema: {
+        path: z.string().optional().describe('Repository-rooted path to scan, or entire workspace if omitted.'),
+        staged: z.boolean().optional().describe('Whether to check only staged git changes.'),
+        severityThreshold: z
+          .enum(['critical', 'high', 'medium', 'low', 'info'])
+          .optional()
+          .describe('Minimum severity threshold for findings.'),
+      },
+    },
+    (args) =>
+      userMessage(
+        `${guideBody('security-analysis' as GuideId)}\n\n---\nTask: Perform a comprehensive security audit${args.path ? ` under \`${args.path}\`` : ''}. Run security_scan_secrets, security_analyze_code, security_audit_dependencies, security_audit_supply_chain, and security_collect_compliance_evidence. Report all identified findings categorized by severity, with OWASP 2025 Top 10, CWE Top 25, and ISO 27001 mappings, code snippets, and remediation instructions. Do not bypass or downplay any critical or high findings.`,
+      ),
+  );
+
+  server.registerPrompt(
     'review-structure',
     {
       description: 'Guide structural review of a source file and its test coverage.',

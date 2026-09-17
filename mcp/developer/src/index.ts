@@ -17,20 +17,47 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import packageJson from '../package.json' with { type: 'json' };
 
 import { registerPrompts } from './prompts/index.ts';
-import { registerTools } from './tools/index.ts';
+import { registerTools, type McpProfileOptions } from './tools/index.ts';
 
-export function createServer(): McpServer {
+export interface CreateServerOptions extends McpProfileOptions {}
+
+function parseCliProfiles(): { profile?: string } {
+  for (let index = 2; index < process.argv.length; index++) {
+    const arg = process.argv[index];
+    if (arg?.startsWith('--profile=')) {
+      return { profile: arg.slice('--profile='.length) };
+    }
+    if (arg === '--profile' && index + 1 < process.argv.length) {
+      return { profile: process.argv[index + 1] };
+    }
+  }
+  return {};
+}
+
+export function createServer(options: CreateServerOptions = {}): McpServer {
+  const cli = parseCliProfiles();
+  const envProfile = process.env.MISSION_MCP_PROFILE;
+  const effectiveProfile = options.profile ?? cli.profile ?? envProfile;
+
   const server = new McpServer({ name: 'mission-platform-mcp', version: packageJson.version });
-  registerTools(server);
+  registerTools(server, {
+    profile: effectiveProfile,
+    profiles: options.profiles,
+    tools: options.tools,
+  });
   registerResources(server);
   registerPrompts(server);
   return server;
 }
 
 export async function main(): Promise<void> {
-  const server = createServer();
+  const cli = parseCliProfiles();
+  const envProfile = process.env.MISSION_MCP_PROFILE;
+  const effectiveProfile = cli.profile ?? envProfile ?? 'full';
+
+  const server = createServer({ profile: effectiveProfile });
   const transport = new StdioServerTransport();
-  process.stderr.write('[mission-mcp] Mission Platform MCP server ready (stdio).\n');
+  process.stderr.write(`[mission-mcp] Mission Platform MCP server ready (stdio) [profile: ${effectiveProfile}].\n`);
   await server.connect(transport);
 }
 

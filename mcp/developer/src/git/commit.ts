@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { existsSync } from 'node:fs';
+import { existsSync, lstatSync, readlinkSync } from 'node:fs';
 import { relative, resolve, isAbsolute } from 'node:path';
 
 import lint from '@commitlint/lint';
@@ -224,12 +224,21 @@ export function captureCommitSnapshot(
   ).sort();
   const paths = untrackedPaths(status).sort();
   const untrackedHashes = paths.map((path) => {
-    if (!existsSync(resolveRepoPath(path, 'Untracked path', { allowMissing: true }))) {
+    const resolved = resolveRepoPath(path, 'Untracked path', { allowMissing: true, allowSymlink: true });
+    if (!existsSync(resolved)) {
       return `${path}\0<missing>`;
+    }
+    try {
+      if (lstatSync(resolved).isSymbolicLink()) {
+        const target = readlinkSync(resolved);
+        return `${path}\0symlink:${target}`;
+      }
+    } catch {
+      // Ignored
     }
     const hash = runGit('commit-snapshot-untracked', ['hash-object', '--no-filters', '--', path], options);
     if (!hash.success) {
-      if (!existsSync(resolveRepoPath(path, 'Untracked path', { allowMissing: true }))) {
+      if (!existsSync(resolved)) {
         return `${path}\0<missing>`;
       }
       return requireGitSuccess(hash);
