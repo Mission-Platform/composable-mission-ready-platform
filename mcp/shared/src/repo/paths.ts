@@ -36,12 +36,36 @@ function isOutside(root: string, candidate: string): boolean {
   const path = relative(root, candidate);
   return (
     path === ".." ||
-    path.startsWith(`..${"/"}`) ||
-    path.startsWith(`..\\`) ||
+    path.startsWith("../") ||
+    path.startsWith("..\\") ||
     isAbsolute(path)
   );
 }
 
+/**
+ * Validate a path component against symlink traversal restrictions.
+ */
+function checkPathComponentSymlink(
+  path: string,
+  isLeaf: boolean,
+  allowSymlink: boolean,
+  label: string,
+): void {
+  try {
+    if (lstatSync(path).isSymbolicLink() && (!allowSymlink || !isLeaf)) {
+      throw new Error(`${label} must not traverse symlink "${path}".`);
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Verify that intermediate path components do not traverse symlinks.
+ */
 function rejectSymlinkComponents(
   root: string,
   candidate: string,
@@ -53,19 +77,7 @@ function rejectSymlinkComponents(
   for (let i = 0; i < segments.length; i += 1) {
     const isLeaf = i === segments.length - 1;
     current = join(current, segments[i]);
-    try {
-      if (lstatSync(current).isSymbolicLink()) {
-        if (allowSymlink && isLeaf) {
-          continue;
-        }
-        throw new Error(`${label} must not traverse symlink "${current}".`);
-      }
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-        return;
-      }
-      throw error;
-    }
+    checkPathComponentSymlink(current, isLeaf, allowSymlink, label);
   }
 }
 

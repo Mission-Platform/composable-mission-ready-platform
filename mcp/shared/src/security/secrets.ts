@@ -56,6 +56,9 @@ const IGNORED_FILES = new Set([
 const PLACEHOLDER_PATTERN =
   /(?:example|placeholder|dummy|fake|mock|fixture|todo|test[-_]token|your[-_]token|sample|change[-_]me|00000000|123456789012|xxxxxx)/i;
 
+/**
+ * Calculate the Shannon entropy of a string (in bits per character).
+ */
 export function calculateShannonEntropy(text: string): number {
   if (!text) {
     return 0;
@@ -65,14 +68,17 @@ export function calculateShannonEntropy(text: string): number {
     frequencies.set(char, (frequencies.get(char) ?? 0) + 1);
   }
   let entropy = 0;
-  const len = text.length;
+  const textLength = text.length;
   for (const count of frequencies.values()) {
-    const p = count / len;
-    entropy -= p * Math.log2(p);
+    const probability = count / textLength;
+    entropy -= probability * Math.log2(probability);
   }
   return entropy;
 }
 
+/**
+ * Redact sensitive portion of an identified secret token.
+ */
 export function redactSecret(secret: string): string {
   if (secret.length <= 8) {
     return "***REDACTED***";
@@ -221,6 +227,52 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
   },
 ];
 
+/**
+ * Match a specific secret rule against a line of text.
+ */
+function matchSecretRule(
+  rule: SecretPattern,
+  lineText: string,
+  lineIdx: number,
+  filePath: string,
+  findings: SecurityFinding[],
+): void {
+  rule.pattern.lastIndex = 0;
+  let match: RegExpExecArray | null = rule.pattern.exec(lineText);
+  while (match !== null) {
+    const rawSecret = match[1] ?? match[0];
+    const isValid = rule.isMatchValid
+      ? rule.isMatchValid(rawSecret, lineText)
+      : true;
+
+    if (isValid) {
+      const redacted = redactSecret(rawSecret);
+      const snippet = lineText.replace(rawSecret, redacted).trim();
+      findings.push({
+        id: rule.id,
+        category: "secret",
+        severity: rule.severity,
+        title: rule.title,
+        message: `${rule.title} in ${filePath}:${lineIdx + 1}`,
+        filePath,
+        line: lineIdx + 1,
+        column: match.index + 1,
+        snippet:
+          snippet.length > 140 ? `${snippet.slice(0, 140)}...` : snippet,
+        remediation: rule.remediation,
+        owasp: rule.owasp,
+        cwe: rule.cwe,
+        isoControl: rule.isoControl,
+      });
+    }
+
+    match = rule.pattern.exec(lineText);
+  }
+}
+
+/**
+ * Scan text lines against known secret patterns and collect findings.
+ */
 function scanTextLines(
   content: string,
   filePath: string,
@@ -236,40 +288,8 @@ function scanTextLines(
     }
 
     for (const rule of SECRET_PATTERNS) {
-      if (!isSeverityAtOrAbove(rule.severity, severityThreshold)) {
-        continue;
-      }
-
-      rule.pattern.lastIndex = 0;
-      let match: RegExpExecArray | null = rule.pattern.exec(lineText);
-      while (match !== null) {
-        const rawSecret = match[1] ?? match[0];
-        const isValid = rule.isMatchValid
-          ? rule.isMatchValid(rawSecret, lineText)
-          : true;
-
-        if (isValid) {
-          const redacted = redactSecret(rawSecret);
-          const snippet = lineText.replace(rawSecret, redacted).trim();
-          findings.push({
-            id: rule.id,
-            category: "secret",
-            severity: rule.severity,
-            title: rule.title,
-            message: `${rule.title} in ${filePath}:${lineIdx + 1}`,
-            filePath,
-            line: lineIdx + 1,
-            column: match.index + 1,
-            snippet:
-              snippet.length > 140 ? `${snippet.slice(0, 140)}...` : snippet,
-            remediation: rule.remediation,
-            owasp: rule.owasp,
-            cwe: rule.cwe,
-            isoControl: rule.isoControl,
-          });
-        }
-
-        match = rule.pattern.exec(lineText);
+      if (isSeverityAtOrAbove(rule.severity, severityThreshold)) {
+        matchSecretRule(rule, lineText, lineIdx, filePath, findings);
       }
     }
   }
@@ -277,6 +297,20 @@ function scanTextLines(
   return findings;
 }
 
+/**
+ * Check if a file name has an extension that should be scanned for secrets.
+ */
+function isScannableFile(name: string): boolean {
+  if (IGNORED_FILES.has(name)) return false;
+  const ext = name.includes(".")
+    ? `.${name.split(".").pop()?.toLowerCase()}`
+    : "";
+  return !IGNORED_EXTENSIONS.has(ext);
+}
+
+/**
+ * Collect scannable files below a directory recursively up to maxFiles.
+ */
 function collectFiles(
   startDir: string,
   maxFiles: number,
@@ -289,29 +323,15 @@ function collectFiles(
   try {
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
-      if (collected.length >= maxFiles) {
-        break;
-      }
-      if (entry.isSymbolicLink()) {
-        continue;
-      }
+      if (collected.length >= maxFiles) break;
+      if (entry.isSymbolicLink()) continue;
 
       const fullPath = join(startDir, entry.name);
       if (entry.isDirectory()) {
-        if (IGNORED_DIRS.has(entry.name)) {
-          continue;
+        if (!IGNORED_DIRS.has(entry.name)) {
+          collectFiles(fullPath, maxFiles, collected);
         }
-        collectFiles(fullPath, maxFiles, collected);
-      } else if (entry.isFile()) {
-        if (IGNORED_FILES.has(entry.name)) {
-          continue;
-        }
-        const ext = entry.name.includes(".")
-          ? `.${entry.name.split(".").pop()?.toLowerCase()}`
-          : "";
-        if (IGNORED_EXTENSIONS.has(ext)) {
-          continue;
-        }
+      } else if (entry.isFile() && isScannableFile(entry.name)) {
         collected.push(fullPath);
       }
     }
@@ -322,13 +342,34 @@ function collectFiles(
   return collected;
 }
 
+/**
+ * Scan a single file on disk if within size limits.
+ */
+function scanSingleFile(
+  filePath: string,
+  repoRoot: string,
+  severityThreshold?: SecurityFinding["severity"],
+): SecurityFinding[] {
+  try {
+    const stat = lstatSync(filePath);
+    if (stat.size > MAX_SCAN_BYTES) return [];
+    const content = readFileSync(filePath, "utf8");
+    const relativePath = relative(repoRoot, filePath).replaceAll("\\", "/");
+    return scanTextLines(content, relativePath, severityThreshold);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Scan workspace files or git diffs for hardcoded secrets, credentials, API keys, and private keys.
+ */
 export function scanSecrets(
   options: ScanSecretsOptions = {},
 ): SecurityScanResult {
   const startTime = Date.now();
   const repoRoot = findRepoRoot();
   const findings: SecurityFinding[] = [];
-  let scannedCount = 0;
 
   if (options.content !== undefined) {
     const logicalPath = options.filePath ?? "inline-content";
@@ -352,40 +393,26 @@ export function scanSecrets(
 
   const stat = lstatSync(targetPath);
   const maxFiles = options.maxFiles ?? DEFAULT_MAX_FILES;
+  let scannedCount = 0;
 
   if (stat.isFile()) {
-    if (stat.size <= MAX_SCAN_BYTES) {
-      try {
-        const content = readFileSync(targetPath, "utf8");
-        const relativePath = relative(repoRoot, targetPath).replaceAll(
-          "\\",
-          "/",
-        );
-        findings.push(
-          ...scanTextLines(content, relativePath, options.severityThreshold),
-        );
-        scannedCount = 1;
-      } catch {
-        // Ignored if non-UTF8 or unreadable
-      }
-    }
+    const fileFindings = scanSingleFile(
+      targetPath,
+      repoRoot,
+      options.severityThreshold,
+    );
+    findings.push(...fileFindings);
+    scannedCount = 1;
   } else if (stat.isDirectory()) {
     const files = collectFiles(targetPath, maxFiles);
     for (const file of files) {
-      try {
-        const fileStat = lstatSync(file);
-        if (fileStat.size > MAX_SCAN_BYTES) {
-          continue;
-        }
-        const content = readFileSync(file, "utf8");
-        const relativePath = relative(repoRoot, file).replaceAll("\\", "/");
-        findings.push(
-          ...scanTextLines(content, relativePath, options.severityThreshold),
-        );
-        scannedCount += 1;
-      } catch {
-        continue;
-      }
+      const fileFindings = scanSingleFile(
+        file,
+        repoRoot,
+        options.severityThreshold,
+      );
+      findings.push(...fileFindings);
+      scannedCount += 1;
     }
   }
 

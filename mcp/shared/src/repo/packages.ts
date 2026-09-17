@@ -84,29 +84,43 @@ const FRAMEWORK_PEER_DEPS: Record<string, readonly string[]> = {
 
 const QUICK_STARTS: Record<string, Record<string, string>> = {
   "@mission-platform/components": {
-    vue: `import { ForgeButton } from '@mission-platform/components';`,
-    react: `import { ForgeButton } from '@mission-platform/components';`,
-    solid: `import { ForgeButton } from '@mission-platform/components';`,
-    svelte: `import { ForgeButton } from '@mission-platform/components';`,
-    "web-components": `<forge-button variant="primary">Click</forge-button>`,
+    vue: "import { ForgeButton } from '@mission-platform/components';",
+    react: "import { ForgeButton } from '@mission-platform/components';",
+    solid: "import { ForgeButton } from '@mission-platform/components';",
+    svelte: "import { ForgeButton } from '@mission-platform/components';",
+    "web-components": '<forge-button variant="primary">Click</forge-button>',
   },
   "@mission-platform/tokens": {
-    default: `import '@mission-platform/tokens/css/tokens.css';`,
+    default: "import '@mission-platform/tokens/css/tokens.css';",
   },
   "@mission-platform/icons": {
-    vue: `import { ForgeIconBell } from '@mission-platform/icons';`,
-    react: `import { ForgeIconBell } from '@mission-platform/icons';`,
-    solid: `import { ForgeIconBell } from '@mission-platform/icons';`,
-    svelte: `import { ForgeIconBell } from '@mission-platform/icons';`,
-    "web-components": `<forge-icon-bell size="md"></forge-icon-bell>`,
+    vue: "import { ForgeIconBell } from '@mission-platform/icons';",
+    react: "import { ForgeIconBell } from '@mission-platform/icons';",
+    solid: "import { ForgeIconBell } from '@mission-platform/icons';",
+    svelte: "import { ForgeIconBell } from '@mission-platform/icons';",
+    "web-components": '<forge-icon-bell size="md"></forge-icon-bell>',
   },
   "@mission-platform/router": {
-    default: `import { MpBrowserHistory, createRouter } from '@mission-platform/router';`,
+    default: "import { MpBrowserHistory, createRouter } from '@mission-platform/router';",
   },
   "@mission-platform/i18n": {
-    default: `import { createI18n } from '@mission-platform/i18n';`,
+    default: "import { createI18n } from '@mission-platform/i18n';",
   },
 };
+
+/**
+ * Resolve an idiomatic code snippet for importing and starting with a package.
+ */
+function resolveQuickStartSnippet(name: string, framework?: string): string {
+  const quickStartMap = QUICK_STARTS[name];
+  if (!quickStartMap) {
+    return `import * as Platform from '${name}';`;
+  }
+  if (framework && quickStartMap[framework]) {
+    return quickStartMap[framework] as string;
+  }
+  return quickStartMap.default ?? Object.values(quickStartMap)[0] ?? `import '${name}';`;
+}
 
 /**
  * List all consumer packages with categorization and export condition support.
@@ -180,20 +194,7 @@ export function getConsumerPackageInfo(
     : [];
 
   const name = member.name;
-  const quickStartMap = QUICK_STARTS[name];
-  let quickStartSnippet = "";
-  if (quickStartMap) {
-    if (framework && quickStartMap[framework]) {
-      quickStartSnippet = quickStartMap[framework] as string;
-    } else {
-      quickStartSnippet =
-        quickStartMap.default ??
-        Object.values(quickStartMap)[0] ??
-        `import '${name}';`;
-    }
-  } else {
-    quickStartSnippet = `import * as Platform from '${name}';`;
-  }
+  const quickStartSnippet = resolveQuickStartSnippet(name, framework);
 
   return {
     name,

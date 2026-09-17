@@ -19,6 +19,9 @@ import {
   type SecurityFinding,
 } from "./types.ts";
 
+/**
+ * Query current git metadata (HEAD commit SHA, branch, working tree cleanliness).
+ */
 function getGitMetadata(repoRoot: string): {
   commitSha?: string;
   branch?: string;
@@ -56,6 +59,9 @@ function getGitMetadata(repoRoot: string): {
   }
 }
 
+/**
+ * Evaluate ISO 27001 control compliance status based on findings severity.
+ */
 function evaluateControlStatus(
   findings: readonly SecurityFinding[],
 ): ComplianceControlStatus {
@@ -74,63 +80,30 @@ function evaluateControlStatus(
   return "compliant";
 }
 
-export function collectComplianceEvidence(
-  options: CollectComplianceEvidenceOptions = {},
-): ComplianceEvidenceReport {
-  const startTime = Date.now();
-  const repoRoot = findRepoRoot();
-
-  // 1. Git metadata
-  const gitMeta = getGitMetadata(repoRoot);
-
-  // 2. Execute underlying scans
-  const secretsResult = scanSecrets({
-    path: options.path,
-    severityThreshold: options.severityThreshold,
-    maxFiles: options.maxFiles,
-  });
-
-  const codeResult = analyzeCode({
-    path: options.path,
-    severityThreshold: options.severityThreshold,
-    maxFiles: options.maxFiles,
-  });
-
-  const depResult = auditDependencies({
-    path: options.path,
-    runPnpmAudit: options.runPnpmAudit,
-    severityThreshold: options.severityThreshold,
-  });
-
-  const supplyChainResult = auditSupplyChain({
-    path: options.path,
-    severityThreshold: options.severityThreshold,
-  });
-
-  // Combine findings
-  const allFindings: SecurityFinding[] = [
-    ...secretsResult.findings,
-    ...codeResult.findings,
-    ...depResult.findings,
-    ...supplyChainResult.findings,
-  ];
-
-  // Group findings by ISO Control
+/**
+ * Build ISO 27001 control evidence items from findings and scan metrics.
+ */
+function buildIsoEvidenceList(
+  allFindings: readonly SecurityFinding[],
+  depScannedFiles: number,
+  secretsScannedFiles: number,
+  codeScannedFiles: number,
+  supplyStats: { lifecycleScriptsFound: number; duplicatePackagesFound: number },
+  gitMeta: { cleanTree?: boolean; branch?: string },
+): IsoControlEvidence[] {
   const controlFindingsMap = new Map<string, SecurityFinding[]>();
   for (const controlId of Object.keys(ISO_27001_CONTROLS)) {
     controlFindingsMap.set(controlId, []);
   }
 
   for (const finding of allFindings) {
-    if (finding.isoControl && controlFindingsMap.has(finding.isoControl)) {
-      controlFindingsMap.get(finding.isoControl)!.push(finding);
+    if (finding.isoControl) {
+      const list = controlFindingsMap.get(finding.isoControl);
+      if (list) list.push(finding);
     }
   }
 
-  // Build ISO control evidence list
-  const isoControls: IsoControlEvidence[] = Object.entries(
-    ISO_27001_CONTROLS,
-  ).map(([controlId, def]) => {
+  return Object.entries(ISO_27001_CONTROLS).map(([controlId, def]) => {
     const findings = controlFindingsMap.get(controlId) ?? [];
     const status = evaluateControlStatus(findings);
 
@@ -139,17 +112,15 @@ export function collectComplianceEvidence(
     };
 
     if (controlId === "A.8.8") {
-      metrics.scannedManifests = depResult.scannedFiles;
+      metrics.scannedManifests = depScannedFiles;
     } else if (controlId === "A.8.12") {
-      metrics.scannedFiles = secretsResult.scannedFiles;
+      metrics.scannedFiles = secretsScannedFiles;
     } else if (controlId === "A.8.28") {
-      metrics.scannedCodeFiles = codeResult.scannedFiles;
+      metrics.scannedCodeFiles = codeScannedFiles;
     } else if (controlId === "A.8.25") {
-      metrics.lifecycleScriptsFound =
-        supplyChainResult.stats.lifecycleScriptsFound;
+      metrics.lifecycleScriptsFound = supplyStats.lifecycleScriptsFound;
     } else if (controlId === "A.8.9") {
-      metrics.duplicatePackagesFound =
-        supplyChainResult.stats.duplicatePackagesFound;
+      metrics.duplicatePackagesFound = supplyStats.duplicatePackagesFound;
     } else if (controlId === "A.8.32") {
       metrics.workingTreeClean = gitMeta.cleanTree ?? true;
       metrics.currentBranch = gitMeta.branch ?? "unknown";
@@ -173,41 +144,44 @@ export function collectComplianceEvidence(
       notes,
     };
   });
+}
 
-  // Build OWASP 2025 Scorecard
-  const owaspScorecard: OwaspScorecardEntry[] = Object.values(
-    OWASP_2025_TOP_10,
-  ).map((cat) => {
-    const matchedFindings = allFindings.filter(
-      (f) => f.owasp && f.owasp.startsWith(cat.id),
+/**
+ * Build OWASP Top 10 (2025) scorecard entries from findings.
+ */
+function buildOwaspScorecard(
+  allFindings: readonly SecurityFinding[],
+): OwaspScorecardEntry[] {
+  return Object.values(OWASP_2025_TOP_10).map((cat) => {
+    const matchedFindings = allFindings.filter((f) =>
+      f.owasp?.startsWith(cat.id),
     );
     return {
       code: cat.code,
       title: cat.title,
       findingsCount: matchedFindings.length,
-      criticalCount: matchedFindings.filter((f) => f.severity === "critical")
-        .length,
+      criticalCount: matchedFindings.filter((f) => f.severity === "critical").length,
       highCount: matchedFindings.filter((f) => f.severity === "high").length,
-      mediumCount: matchedFindings.filter((f) => f.severity === "medium")
-        .length,
+      mediumCount: matchedFindings.filter((f) => f.severity === "medium").length,
       lowCount: matchedFindings.filter((f) => f.severity === "low").length,
     };
   });
+}
 
-  // Build CWE Top 25 Scorecard
+/**
+ * Build CWE Top 25 scorecard entries ranked by frequency.
+ */
+function buildCweScorecard(
+  allFindings: readonly SecurityFinding[],
+): CweScorecardEntry[] {
   const cweFindingCounts = new Map<string, number>();
   for (const finding of allFindings) {
     if (finding.cwe) {
-      cweFindingCounts.set(
-        finding.cwe,
-        (cweFindingCounts.get(finding.cwe) ?? 0) + 1,
-      );
+      cweFindingCounts.set(finding.cwe, (cweFindingCounts.get(finding.cwe) ?? 0) + 1);
     }
   }
 
-  const cweScorecard: CweScorecardEntry[] = Array.from(
-    cweFindingCounts.entries(),
-  )
+  return Array.from(cweFindingCounts.entries())
     .map(([cweId, count]) => {
       const def = CWE_TOP_25[cweId as keyof typeof CWE_TOP_25];
       return {
@@ -217,8 +191,61 @@ export function collectComplianceEvidence(
       };
     })
     .sort((a, b) => b.findingsCount - a.findingsCount);
+}
 
-  // Build Overall Scorecard
+/**
+ * Collect auditable compliance evidence across ISO 27001, OWASP 2025, and CWE Top 25.
+ */
+export function collectComplianceEvidence(
+  options: CollectComplianceEvidenceOptions = {},
+): ComplianceEvidenceReport {
+  const startTime = Date.now();
+  const repoRoot = findRepoRoot();
+
+  const gitMeta = getGitMetadata(repoRoot);
+
+  const secretsResult = scanSecrets({
+    path: options.path,
+    severityThreshold: options.severityThreshold,
+    maxFiles: options.maxFiles,
+  });
+
+  const codeResult = analyzeCode({
+    path: options.path,
+    severityThreshold: options.severityThreshold,
+    maxFiles: options.maxFiles,
+  });
+
+  const depResult = auditDependencies({
+    path: options.path,
+    runPnpmAudit: options.runPnpmAudit,
+    severityThreshold: options.severityThreshold,
+  });
+
+  const supplyChainResult = auditSupplyChain({
+    path: options.path,
+    severityThreshold: options.severityThreshold,
+  });
+
+  const allFindings: SecurityFinding[] = [
+    ...secretsResult.findings,
+    ...codeResult.findings,
+    ...depResult.findings,
+    ...supplyChainResult.findings,
+  ];
+
+  const isoControls = buildIsoEvidenceList(
+    allFindings,
+    depResult.scannedFiles,
+    secretsResult.scannedFiles,
+    codeResult.scannedFiles,
+    supplyChainResult.stats,
+    gitMeta,
+  );
+
+  const owaspScorecard = buildOwaspScorecard(allFindings);
+  const cweScorecard = buildCweScorecard(allFindings);
+
   const totalControls = isoControls.length;
   const compliantControls = isoControls.filter(
     (c) => c.status === "compliant",
@@ -237,11 +264,9 @@ export function collectComplianceEvidence(
     compliantControlsCount: compliantControls,
     nonCompliantControlsCount: nonCompliantControls,
     totalFindingsCount: allFindings.length,
-    criticalFindingsCount: allFindings.filter((f) => f.severity === "critical")
-      .length,
+    criticalFindingsCount: allFindings.filter((f) => f.severity === "critical").length,
     highFindingsCount: allFindings.filter((f) => f.severity === "high").length,
-    mediumFindingsCount: allFindings.filter((f) => f.severity === "medium")
-      .length,
+    mediumFindingsCount: allFindings.filter((f) => f.severity === "medium").length,
   };
 
   return {
@@ -261,26 +286,16 @@ export function collectComplianceEvidence(
   };
 }
 
-export function formatComplianceMarkdown(
-  report: ComplianceEvidenceReport,
-): string {
-  const { scorecard, metadata, isoControls, owaspScorecard, cweScorecard } =
-    report;
-
+/**
+ * Format ISO 27001 control table rows for markdown report.
+ */
+function formatIsoMarkdown(isoControls: readonly IsoControlEvidence[]): string[] {
   const lines: string[] = [
-    `# Security Compliance & Evidence Report`,
-    ``,
-    `**Generated**: ${metadata.timestamp} | **Branch**: \`${metadata.branch ?? "unknown"}\` | **Commit**: \`${metadata.commitSha?.slice(0, 8) ?? "unknown"}\` | **Clean Tree**: ${metadata.cleanTree ? "Yes" : "No"}`,
-    ``,
-    `### Executive Compliance Scorecard`,
-    `- **ISO 27001 Compliance**: ${scorecard.iso27001ComplianceScore}% (${scorecard.compliantControlsCount}/${scorecard.totalControlsEvaluated} controls compliant)`,
-    `- **Total Security Findings**: ${scorecard.totalFindingsCount} (${scorecard.criticalFindingsCount} critical, ${scorecard.highFindingsCount} high, ${scorecard.mediumFindingsCount} medium)`,
-    ``,
-    `### ISO/IEC 27001:2022 Control Evidence`,
-    `| Control ID | Control Name | Status | Findings | Notes |`,
-    `| :--- | :--- | :--- | :--- | :--- |`,
+    "",
+    "### ISO/IEC 27001:2022 Control Evidence",
+    "| Control ID | Control Name | Status | Findings | Notes |",
+    "| :--- | :--- | :--- | :--- | :--- |",
   ];
-
   for (const control of isoControls) {
     const statusLabel =
       control.status === "compliant"
@@ -292,54 +307,90 @@ export function formatComplianceMarkdown(
       `| **${control.controlId}** | ${control.name} | \`${statusLabel}\` | ${control.findings.length} | ${control.notes} |`,
     );
   }
+  return lines;
+}
 
-  lines.push(
-    ``,
-    `### OWASP Top 10 (2025) Risk Breakdown`,
-    `| OWASP Category | Risk Title | Total | Critical | High | Medium |`,
-    `| :--- | :--- | :--- | :--- | :--- | :--- |`,
-  );
-
+/**
+ * Format OWASP 2025 breakdown table for markdown report.
+ */
+function formatOwaspMarkdown(owaspScorecard: readonly OwaspScorecardEntry[]): string[] {
+  const lines: string[] = [
+    "",
+    "### OWASP Top 10 (2025) Risk Breakdown",
+    "| OWASP Category | Risk Title | Total | Critical | High | Medium |",
+    "| :--- | :--- | :--- | :--- | :--- | :--- |",
+  ];
   for (const entry of owaspScorecard) {
     lines.push(
       `| \`${entry.code.split("-")[0]}\` | ${entry.title} | ${entry.findingsCount} | ${entry.criticalCount} | ${entry.highCount} | ${entry.mediumCount} |`,
     );
   }
+  return lines;
+}
 
-  if (cweScorecard.length > 0) {
-    lines.push(
-      ``,
-      `### Top Identified Weaknesses (CWE Top 25)`,
-      `| CWE Identifier | Weakness Name | Count |`,
-      `| :--- | :--- | :--- |`,
-    );
-    for (const cwe of cweScorecard) {
-      lines.push(`| **${cwe.cweId}** | ${cwe.name} | ${cwe.findingsCount} |`);
-    }
+/**
+ * Format CWE Top 25 breakdown table for markdown report.
+ */
+function formatCweMarkdown(cweScorecard: readonly CweScorecardEntry[]): string[] {
+  if (cweScorecard.length === 0) return [];
+  const lines: string[] = [
+    "",
+    "### Top Identified Weaknesses (CWE Top 25)",
+    "| CWE Identifier | Weakness Name | Count |",
+    "| :--- | :--- | :--- |",
+  ];
+  for (const cwe of cweScorecard) {
+    lines.push(`| **${cwe.cweId}** | ${cwe.name} | ${cwe.findingsCount} |`);
   }
+  return lines;
+}
 
-  if (report.findings.length > 0) {
+/**
+ * Format remediation roadmap table for markdown report.
+ */
+function formatRemediationMarkdown(findings: readonly SecurityFinding[]): string[] {
+  const criticalAndHigh = findings.filter(
+    (f) => f.severity === "critical" || f.severity === "high",
+  );
+  if (criticalAndHigh.length === 0) return [];
+
+  const lines: string[] = [
+    "",
+    "### Critical & High Remediation Roadmap",
+    "| ID | Severity | File | OWASP / CWE | Remediation |",
+    "| :--- | :--- | :--- | :--- | :--- |",
+  ];
+  for (const f of criticalAndHigh) {
+    const location = f.line ? `\`${f.filePath}:${f.line}\`` : `\`${f.filePath}\``;
+    const standard = [f.owasp?.split("-")[0], f.cwe].filter(Boolean).join(" / ");
     lines.push(
-      ``,
-      `### Critical & High Remediation Roadmap`,
-      `| ID | Severity | File | OWASP / CWE | Remediation |`,
-      `| :--- | :--- | :--- | :--- | :--- |`,
+      `| **${f.id}** | \`${f.severity.toUpperCase()}\` | ${location} | ${standard} | ${f.remediation} |`,
     );
-    const criticalAndHigh = report.findings.filter(
-      (f) => f.severity === "critical" || f.severity === "high",
-    );
-    for (const f of criticalAndHigh) {
-      const location = f.line
-        ? `\`${f.filePath}:${f.line}\``
-        : `\`${f.filePath}\``;
-      const standard = [f.owasp?.split("-")[0], f.cwe]
-        .filter(Boolean)
-        .join(" / ");
-      lines.push(
-        `| **${f.id}** | \`${f.severity.toUpperCase()}\` | ${location} | ${standard} | ${f.remediation} |`,
-      );
-    }
   }
+  return lines;
+}
+
+/**
+ * Render a comprehensive markdown compliance evidence report.
+ */
+export function formatComplianceMarkdown(
+  report: ComplianceEvidenceReport,
+): string {
+  const { scorecard, metadata, isoControls, owaspScorecard, cweScorecard, findings } = report;
+
+  const lines: string[] = [
+    "# Security Compliance & Evidence Report",
+    "",
+    `**Generated**: ${metadata.timestamp} | **Branch**: \`${metadata.branch ?? "unknown"}\` | **Commit**: \`${metadata.commitSha?.slice(0, 8) ?? "unknown"}\` | **Clean Tree**: ${metadata.cleanTree ? "Yes" : "No"}`,
+    "",
+    "### Executive Compliance Scorecard",
+    `- **ISO 27001 Compliance**: ${scorecard.iso27001ComplianceScore}% (${scorecard.compliantControlsCount}/${scorecard.totalControlsEvaluated} controls compliant)`,
+    `- **Total Security Findings**: ${scorecard.totalFindingsCount} (${scorecard.criticalFindingsCount} critical, ${scorecard.highFindingsCount} high, ${scorecard.mediumFindingsCount} medium)`,
+    ...formatIsoMarkdown(isoControls),
+    ...formatOwaspMarkdown(owaspScorecard),
+    ...formatCweMarkdown(cweScorecard),
+    ...formatRemediationMarkdown(findings),
+  ];
 
   return lines.join("\n");
 }

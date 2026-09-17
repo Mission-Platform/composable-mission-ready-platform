@@ -39,6 +39,9 @@ export interface IconUsage extends IconSummary {
   readonly spriteSupport: boolean;
 }
 
+/**
+ * Convert a kebab-case slug to PascalCase.
+ */
 function toPascalCase(slug: string): string {
   return slug
     .split("-")
@@ -47,6 +50,9 @@ function toPascalCase(slug: string): string {
     .join("");
 }
 
+/**
+ * Convert a camelCase or PascalCase name to kebab-case.
+ */
 function toKebabCase(name: string): string {
   return name
     .replaceAll(/([a-z0-9])([A-Z])/g, "$1-$2")
@@ -54,6 +60,9 @@ function toKebabCase(name: string): string {
     .toLowerCase();
 }
 
+/**
+ * Check whether the icons components directory exists on disk.
+ */
 function iconsDirExists(): boolean {
   try {
     const resolved = resolveRepoPath(ICONS_DIR, "icons components dir");
@@ -61,6 +70,78 @@ function iconsDirExists(): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * Scan all subdirectories below icons components dir and extract icon summaries.
+ */
+function scanIconsDirectory(resolvedBase: string): {
+  icons: IconSummary[];
+  categories: string[];
+} {
+  const allIcons: IconSummary[] = [];
+  const categoriesSet = new Set<string>();
+
+  for (const catEntry of readdirSync(resolvedBase, { withFileTypes: true })) {
+    if (!catEntry.isDirectory()) continue;
+    const catDir = join(resolvedBase, catEntry.name);
+
+    for (const subEntry of readdirSync(catDir, { withFileTypes: true })) {
+      if (!subEntry.isDirectory()) continue;
+      const subDir = join(catDir, subEntry.name);
+      const fullCategory = `${catEntry.name}/${subEntry.name}`;
+      categoriesSet.add(fullCategory);
+
+      for (const iconEntry of readdirSync(subDir, { withFileTypes: true })) {
+        if (!iconEntry.isDirectory() || !iconEntry.name.startsWith("forge-icon-")) {
+          continue;
+        }
+        const iconName = iconEntry.name;
+        allIcons.push({
+          name: iconName,
+          componentName: toPascalCase(iconName),
+          category: catEntry.name,
+          subcategory: subEntry.name,
+          fullCategory,
+        });
+      }
+    }
+  }
+
+  allIcons.sort((a, b) => a.name.localeCompare(b.name));
+  return { icons: allIcons, categories: [...categoriesSet].sort() };
+}
+
+/**
+ * Filter icons by category and text search query.
+ */
+function filterIcons(
+  icons: readonly IconSummary[],
+  categoryFilter?: string,
+  searchFilter?: string,
+): IconSummary[] {
+  let result = icons as IconSummary[];
+
+  if (categoryFilter) {
+    const cat = categoryFilter.toLowerCase().trim();
+    result = result.filter(
+      (icon) =>
+        icon.fullCategory.toLowerCase() === cat ||
+        icon.category.toLowerCase() === cat ||
+        icon.subcategory.toLowerCase() === cat,
+    );
+  }
+
+  if (searchFilter) {
+    const text = searchFilter.toLowerCase().trim();
+    result = result.filter(
+      (icon) =>
+        icon.name.toLowerCase().includes(text) ||
+        icon.componentName.toLowerCase().includes(text),
+    );
+  }
+
+  return result;
 }
 
 /**
@@ -78,61 +159,8 @@ export function listIcons(
   }
 
   const resolvedBase = resolveRepoPath(ICONS_DIR, "icons base");
-  const allIcons: IconSummary[] = [];
-  const categoriesSet = new Set<string>();
-
-  for (const catEntry of readdirSync(resolvedBase, { withFileTypes: true })) {
-    if (!catEntry.isDirectory()) continue;
-    const catDir = join(resolvedBase, catEntry.name);
-
-    for (const subEntry of readdirSync(catDir, { withFileTypes: true })) {
-      if (!subEntry.isDirectory()) continue;
-      const subDir = join(catDir, subEntry.name);
-      const fullCategory = `${catEntry.name}/${subEntry.name}`;
-      categoriesSet.add(fullCategory);
-
-      for (const iconEntry of readdirSync(subDir, { withFileTypes: true })) {
-        if (
-          !iconEntry.isDirectory() ||
-          !iconEntry.name.startsWith("forge-icon-")
-        )
-          continue;
-        const iconName = iconEntry.name;
-        const componentName = toPascalCase(iconName);
-
-        allIcons.push({
-          name: iconName,
-          componentName,
-          category: catEntry.name,
-          subcategory: subEntry.name,
-          fullCategory,
-        });
-      }
-    }
-  }
-
-  allIcons.sort((a, b) => a.name.localeCompare(b.name));
-
-  let filtered = allIcons;
-
-  if (options.category) {
-    const catFilter = options.category.toLowerCase().trim();
-    filtered = filtered.filter(
-      (icon) =>
-        icon.fullCategory.toLowerCase() === catFilter ||
-        icon.category.toLowerCase() === catFilter ||
-        icon.subcategory.toLowerCase() === catFilter,
-    );
-  }
-
-  if (options.filter) {
-    const textFilter = options.filter.toLowerCase().trim();
-    filtered = filtered.filter(
-      (icon) =>
-        icon.name.toLowerCase().includes(textFilter) ||
-        icon.componentName.toLowerCase().includes(textFilter),
-    );
-  }
+  const { icons: allIcons, categories } = scanIconsDirectory(resolvedBase);
+  const filtered = filterIcons(allIcons, options.category, options.filter);
 
   const limit = options.limit ?? 100;
   const sliced = filtered.slice(0, limit);
@@ -140,7 +168,7 @@ export function listIcons(
   return {
     icons: sliced,
     total: filtered.length,
-    categories: [...categoriesSet].sort(),
+    categories,
   };
 }
 

@@ -138,7 +138,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     cwe: "CWE-78",
     isoControl: "A.8.28",
     pattern:
-      /\b(?:exec|execSync)\s*\(\s*(?:`[^`]*\$\{[^}]+\}[^`]*`|[a-zA-Z0-9_]+\s*\+\s*[^,\)]+)/g,
+      /\b(?:exec|execSync)\s*\(\s*(?:`[^`]*\$\{[^}]+\}[^`]*`|[a-zA-Z0-9_]+\s*\+\s*[^,)]+)/g,
     remediation:
       "Use execFile() or spawn() with argument arrays rather than concatenating user input into shell strings.",
     isMatchValid: (_match, lineText) =>
@@ -203,12 +203,12 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     cwe: "CWE-1333",
     isoControl: "A.8.28",
     pattern:
-      /(?:\/|RegExp\s*\(\s*['"`])(?:[^\n/]*\((?:[^\n()]*[\+\*]){1,}[^\n()]*\)(?:[\+\*]|\{\d+,?\d*\}))/g,
+      /(?:\/|RegExp\s*\(\s*['"`])(?:[^\n/]*\((?:[^\n()]*[+*]){1,}[^\n()]*\)(?:[+*]|\{\d+,?\d*\}))/g,
     remediation:
       "Refactor regular expressions to eliminate nested repetition operators that cause exponential backtracking.",
     isMatchValid: (match) => {
       const patternText = match[0];
-      return /\([^\)]*[\+\*]\)[\+\*]/.test(patternText);
+      return /\([^)]*[+*]\)[+*]/.test(patternText);
     },
   },
   {
@@ -276,6 +276,48 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
   },
 ];
 
+/**
+ * Match a static code vulnerability rule against a single line of text.
+ */
+function matchVulnerabilityRule(
+  rule: VulnerabilityRule,
+  lineText: string,
+  lineIdx: number,
+  content: string,
+  filePath: string,
+  findings: SecurityFinding[],
+): void {
+  rule.pattern.lastIndex = 0;
+  let match: RegExpExecArray | null = rule.pattern.exec(lineText);
+  while (match !== null) {
+    const isValid = rule.isMatchValid
+      ? rule.isMatchValid(match, lineText, content)
+      : true;
+    if (isValid) {
+      const snippet = lineText.trim();
+      findings.push({
+        id: rule.id,
+        category: "vulnerability",
+        severity: rule.severity,
+        title: rule.title,
+        message: `${rule.title} in ${filePath}:${lineIdx + 1}`,
+        filePath,
+        line: lineIdx + 1,
+        column: match.index + 1,
+        snippet: snippet.length > 140 ? `${snippet.slice(0, 140)}...` : snippet,
+        remediation: rule.remediation,
+        owasp: rule.owasp,
+        cwe: rule.cwe,
+        isoControl: rule.isoControl,
+      });
+    }
+    match = rule.pattern.exec(lineText);
+  }
+}
+
+/**
+ * Scan source code content against static vulnerability rules.
+ */
 function scanContent(
   content: string,
   filePath: string,
@@ -291,36 +333,8 @@ function scanContent(
     }
 
     for (const rule of VULNERABILITY_RULES) {
-      if (!isSeverityAtOrAbove(rule.severity, severityThreshold)) {
-        continue;
-      }
-
-      rule.pattern.lastIndex = 0;
-      let match: RegExpExecArray | null = rule.pattern.exec(lineText);
-      while (match !== null) {
-        const isValid = rule.isMatchValid
-          ? rule.isMatchValid(match, lineText, content)
-          : true;
-        if (isValid) {
-          const snippet = lineText.trim();
-          findings.push({
-            id: rule.id,
-            category: "vulnerability",
-            severity: rule.severity,
-            title: rule.title,
-            message: `${rule.title} in ${filePath}:${lineIdx + 1}`,
-            filePath,
-            line: lineIdx + 1,
-            column: match.index + 1,
-            snippet:
-              snippet.length > 140 ? `${snippet.slice(0, 140)}...` : snippet,
-            remediation: rule.remediation,
-            owasp: rule.owasp,
-            cwe: rule.cwe,
-            isoControl: rule.isoControl,
-          });
-        }
-        match = rule.pattern.exec(lineText);
+      if (isSeverityAtOrAbove(rule.severity, severityThreshold)) {
+        matchVulnerabilityRule(rule, lineText, lineIdx, content, filePath, findings);
       }
     }
   }
@@ -328,6 +342,19 @@ function scanContent(
   return findings;
 }
 
+/**
+ * Check if a file name has an analyzed code extension.
+ */
+function isCodeFile(name: string): boolean {
+  const ext = name.includes(".")
+    ? `.${name.split(".").pop()?.toLowerCase()}`
+    : "";
+  return CODE_EXTENSIONS.has(ext);
+}
+
+/**
+ * Collect scannable source code files recursively up to maxFiles.
+ */
 function collectCodeFiles(
   startDir: string,
   maxFiles: number,
@@ -340,26 +367,16 @@ function collectCodeFiles(
   try {
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
-      if (collected.length >= maxFiles) {
-        break;
-      }
-      if (entry.isSymbolicLink()) {
-        continue;
-      }
+      if (collected.length >= maxFiles) break;
+      if (entry.isSymbolicLink()) continue;
 
       const fullPath = join(startDir, entry.name);
       if (entry.isDirectory()) {
-        if (IGNORED_DIRS.has(entry.name)) {
-          continue;
+        if (!IGNORED_DIRS.has(entry.name)) {
+          collectCodeFiles(fullPath, maxFiles, collected);
         }
-        collectCodeFiles(fullPath, maxFiles, collected);
-      } else if (entry.isFile()) {
-        const ext = entry.name.includes(".")
-          ? `.${entry.name.split(".").pop()?.toLowerCase()}`
-          : "";
-        if (CODE_EXTENSIONS.has(ext)) {
-          collected.push(fullPath);
-        }
+      } else if (entry.isFile() && isCodeFile(entry.name)) {
+        collected.push(fullPath);
       }
     }
   } catch {
@@ -369,13 +386,34 @@ function collectCodeFiles(
   return collected;
 }
 
+/**
+ * Analyze a single source file for static vulnerability patterns.
+ */
+function analyzeSingleFile(
+  filePath: string,
+  repoRoot: string,
+  severityThreshold?: SecurityFinding["severity"],
+): SecurityFinding[] {
+  try {
+    const stat = lstatSync(filePath);
+    if (stat.size > MAX_SCAN_BYTES) return [];
+    const content = readFileSync(filePath, "utf8");
+    const relativePath = relative(repoRoot, filePath).replaceAll("\\", "/");
+    return scanContent(content, relativePath, severityThreshold);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Run static code vulnerability analysis across files, directories, or inline content.
+ */
 export function analyzeCode(
   options: AnalyzeCodeOptions = {},
 ): SecurityScanResult {
   const startTime = Date.now();
   const repoRoot = findRepoRoot();
   const findings: SecurityFinding[] = [];
-  let scannedCount = 0;
 
   if (options.content !== undefined) {
     const logicalPath = options.filePath ?? "inline-code.ts";
@@ -399,40 +437,26 @@ export function analyzeCode(
 
   const stat = lstatSync(targetPath);
   const maxFiles = options.maxFiles ?? DEFAULT_MAX_FILES;
+  let scannedCount = 0;
 
   if (stat.isFile()) {
-    if (stat.size <= MAX_SCAN_BYTES) {
-      try {
-        const content = readFileSync(targetPath, "utf8");
-        const relativePath = relative(repoRoot, targetPath).replaceAll(
-          "\\",
-          "/",
-        );
-        findings.push(
-          ...scanContent(content, relativePath, options.severityThreshold),
-        );
-        scannedCount = 1;
-      } catch {
-        // Ignored unreadable files
-      }
-    }
+    const fileFindings = analyzeSingleFile(
+      targetPath,
+      repoRoot,
+      options.severityThreshold,
+    );
+    findings.push(...fileFindings);
+    scannedCount = 1;
   } else if (stat.isDirectory()) {
     const files = collectCodeFiles(targetPath, maxFiles);
     for (const file of files) {
-      try {
-        const fileStat = lstatSync(file);
-        if (fileStat.size > MAX_SCAN_BYTES) {
-          continue;
-        }
-        const content = readFileSync(file, "utf8");
-        const relativePath = relative(repoRoot, file).replaceAll("\\", "/");
-        findings.push(
-          ...scanContent(content, relativePath, options.severityThreshold),
-        );
-        scannedCount += 1;
-      } catch {
-        continue;
-      }
+      const fileFindings = analyzeSingleFile(
+        file,
+        repoRoot,
+        options.severityThreshold,
+      );
+      findings.push(...fileFindings);
+      scannedCount += 1;
     }
   }
 

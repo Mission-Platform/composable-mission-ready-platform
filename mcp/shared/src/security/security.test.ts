@@ -29,7 +29,7 @@ test("security types and helpers calculate severity thresholds properly", () => 
   assert.equal(isSeverityAtOrAbove("high", "critical"), false);
   assert.equal(isSeverityAtOrAbove("medium", "medium"), true);
   assert.equal(isSeverityAtOrAbove("low", "high"), false);
-  assert.equal(isSeverityAtOrAbove("info", undefined), true);
+  assert.equal(isSeverityAtOrAbove("info"), true);
 
   assert.equal(normalizePnpmSeverity("moderate"), "medium");
   assert.equal(normalizePnpmSeverity("critical"), "critical");
@@ -67,7 +67,7 @@ test("secret scan identifies credentials and redacts them in inline content", ()
     `const githubPat = "${DUMMY_GH_PAT}";`,
     `const openAi = "${DUMMY_OPENAI_KEY}";`,
     `const slack = "${DUMMY_SLACK_TOKEN}";`,
-    `const privKey = "-----BEGIN RSA PRIVATE KEY-----\\nMIIE...";`,
+    'const privKey = "-----BEGIN RSA PRIVATE KEY-----\\nMIIE...";',
   ].join("\n");
 
   const result = scanSecrets({

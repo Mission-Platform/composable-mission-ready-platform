@@ -274,6 +274,27 @@ export interface ComponentStoriesDetail {
   readonly metaTitle?: string;
 }
 
+/** Extract exported story names from story source code. */
+function extractStoryNames(storySource: string): string[] {
+  const storyNames: string[] = [];
+  const exportStoryRegex = /export\s+const\s+([A-Z]\w*)\s*:\s*Story\b/g;
+  let match: RegExpExecArray | null = exportStoryRegex.exec(storySource);
+  while (match !== null) {
+    if (match[1]) storyNames.push(match[1]);
+    match = exportStoryRegex.exec(storySource);
+  }
+  return storyNames;
+}
+
+/** Extract enum option strings from storybook argTypes options block. */
+function extractArgTypeOptions(storySource: string, propName: string): string[] {
+  const blockRegex = new RegExp(`${propName}:\\s*\\{[^}]*options:\\s*\\[([^\\]]+)\\]`, "s");
+  const match = blockRegex.exec(storySource);
+  if (!match?.[1]) return [];
+  const optionMatches = match[1].match(/['"]([^'"]+)['"]/g) ?? [];
+  return optionMatches.map((opt) => opt.replaceAll(/['"]/g, ""));
+}
+
 /** Extract story details, variants, sizes, and exported story names for a component. */
 export function getComponentStories(
   nameOrSlug: string,
@@ -299,43 +320,12 @@ export function getComponentStories(
   const primaryStoryPath = join(dir, storyFiles[0] as string);
   const storySource = readFileSync(primaryStoryPath, "utf8");
 
-  // Extract meta title
   const titleMatch = /title:\s*['"]([^'"]+)['"]/.exec(storySource);
   const metaTitle = titleMatch?.[1];
 
-  // Extract exported story names: export const Xxx: Story = ...
-  const storyNames: string[] = [];
-  const exportStoryRegex = /export\s+const\s+([A-Z]\w*)\s*:\s*Story\b/g;
-  let match: RegExpExecArray | null;
-  while ((match = exportStoryRegex.exec(storySource)) !== null) {
-    if (match[1]) storyNames.push(match[1]);
-  }
-
-  // Extract variants from argTypes.variant.options: [...]
-  const variants: string[] = [];
-  const variantBlockMatch = /variant:\s*\{[^}]*options:\s*\[([^\]]+)\]/s.exec(
-    storySource,
-  );
-  if (variantBlockMatch?.[1]) {
-    const rawOptions = variantBlockMatch[1];
-    const optionMatches = rawOptions.match(/['"]([^'"]+)['"]/g) ?? [];
-    for (const opt of optionMatches) {
-      variants.push(opt.replaceAll(/['"]/g, ""));
-    }
-  }
-
-  // Extract sizes from argTypes.size.options: [...]
-  const sizes: string[] = [];
-  const sizeBlockMatch = /size:\s*\{[^}]*options:\s*\[([^\]]+)\]/s.exec(
-    storySource,
-  );
-  if (sizeBlockMatch?.[1]) {
-    const rawOptions = sizeBlockMatch[1];
-    const optionMatches = rawOptions.match(/['"]([^'"]+)['"]/g) ?? [];
-    for (const opt of optionMatches) {
-      sizes.push(opt.replaceAll(/['"]/g, ""));
-    }
-  }
+  const storyNames = extractStoryNames(storySource);
+  const variants = extractArgTypeOptions(storySource, "variant");
+  const sizes = extractArgTypeOptions(storySource, "size");
 
   return {
     componentName: summary.componentName,

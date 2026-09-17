@@ -97,14 +97,15 @@ test("locale discovery ignores symlinked locale entries and writes fail closed",
 
   const resolved = locales.resolveMemberLocales("apps", "website");
   assert.ok(resolved);
-  assert.deepEqual(resolved?.locales, ["en"]);
-  const created = locales.addLocale(resolved!, "de", {
+  if (!resolved) throw new Error("Expected resolved member locales.");
+  assert.deepEqual(resolved.locales, ["en"]);
+  const created = locales.addLocale(resolved, "de", {
     fill: "empty",
     apply: true,
   });
   assert.equal(created.applied, true);
   assert.equal(existsSync(join(member, "locales", "de", "common.yaml")), true);
-  const unsafeResolved = { ...resolved!, locales: ["en", "es"] };
+  const unsafeResolved = { ...resolved, locales: ["en", "es"] };
   assert.deepEqual(locales.readLocale(unsafeResolved, "es"), {});
   assert.throws(
     () =>

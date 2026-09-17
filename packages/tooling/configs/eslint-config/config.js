@@ -31,6 +31,9 @@ const typeScriptJsxParserOptions = {
   },
 };
 
+/**
+ * Check whether an AST node is exported directly or via an ancestor declaration.
+ */
 function isNodeExported(node) {
   let current = node?.parent;
   while (current) {
@@ -40,6 +43,41 @@ function isNodeExported(node) {
     current = current.parent;
   }
   return false;
+}
+
+/**
+ * Check whether all import specifiers in a declaration are inline type imports.
+ */
+function shouldConvertToTypeImport(node) {
+  if (node.importKind === 'type') {
+    return false;
+  }
+  const specifiers = Array.isArray(node.specifiers) ? node.specifiers : [];
+  if (specifiers.length === 0) {
+    return false;
+  }
+  return specifiers.every((specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type');
+}
+
+/**
+ * Check whether a type annotation node represents an `as const` assertion.
+ */
+function isConstAssertion(typeAnnotation) {
+  return typeAnnotation?.type === 'TSTypeReference' && typeAnnotation.typeName?.name === 'const';
+}
+
+/**
+ * Check whether a type node is a return or parameter annotation on an exported function.
+ */
+function isExportedFunctionAnnotation(node) {
+  const parent = node?.parent;
+  if (parent?.type !== 'TSTypeAnnotation') return false;
+  const functionNode = parent.parent;
+  const isFunction =
+    functionNode?.type === 'FunctionDeclaration' ||
+    functionNode?.type === 'ArrowFunctionExpression' ||
+    functionNode?.type === 'MethodDefinition';
+  return isFunction && isNodeExported(functionNode);
 }
 
 const missionTypeScriptPlugin = {
@@ -87,19 +125,10 @@ const missionTypeScriptPlugin = {
       create(context) {
         return {
           ImportDeclaration(node) {
-            if (node.importKind === 'type') {
+            if (!shouldConvertToTypeImport(node)) {
               return;
             }
             const specifiers = Array.isArray(node.specifiers) ? node.specifiers : [];
-            const hasInlineTypeSpecifier = specifiers.some(
-              (specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type',
-            );
-            const allSpecifiersAreInlineTypeImports =
-              specifiers.length > 0 &&
-              specifiers.every((specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type');
-            if (!hasInlineTypeSpecifier || !allSpecifiersAreInlineTypeImports) {
-              return;
-            }
             context.report({
               node,
               messageId: 'preferTopLevelTypeImport',
@@ -134,21 +163,13 @@ const missionTypeScriptPlugin = {
       create(context) {
         return {
           TSAsExpression(node) {
-            if (node.typeAnnotation) {
-              if (node.typeAnnotation.type === 'TSAnyKeyword') {
-                context.report({ node, messageId: 'noAsAny' });
-                return;
-              }
-              // Allow `as const`
-              if (
-                node.typeAnnotation.type === 'TSTypeReference' &&
-                node.typeAnnotation.typeName &&
-                node.typeAnnotation.typeName.name === 'const'
-              ) {
-                return;
-              }
+            if (node.typeAnnotation?.type === 'TSAnyKeyword') {
+              context.report({ node, messageId: 'noAsAny' });
+              return;
             }
-            context.report({ node, messageId: 'preferSatisfies' });
+            if (!isConstAssertion(node.typeAnnotation)) {
+              context.report({ node, messageId: 'preferSatisfies' });
+            }
           },
         };
       },
@@ -196,16 +217,7 @@ const missionTypeScriptPlugin = {
       create(context) {
         return {
           TSUnknownKeyword(node) {
-            const parent = node.parent;
-            if (
-              parent &&
-              parent.type === 'TSTypeAnnotation' &&
-              parent.parent &&
-              (parent.parent.type === 'FunctionDeclaration' ||
-                parent.parent.type === 'ArrowFunctionExpression' ||
-                parent.parent.type === 'MethodDefinition') &&
-              isNodeExported(parent.parent)
-            ) {
+            if (isExportedFunctionAnnotation(node)) {
               context.report({ node, messageId: 'noImplicitUnknown' });
             }
           },

@@ -387,6 +387,18 @@ export const SEVERITY_WEIGHTS: Record<SecurityFindingSeverity, number> = {
   critical: 4,
 } satisfies Record<SecurityFindingSeverity, number>;
 
+const PNPM_SEVERITY_MAP: Record<string, SecurityFindingSeverity> = {
+  moderate: "medium",
+  critical: "critical",
+  high: "high",
+  medium: "medium",
+  low: "low",
+  info: "info",
+};
+
+/**
+ * Determine if a finding severity meets or exceeds the required threshold.
+ */
 export function isSeverityAtOrAbove(
   findingSeverity: SecurityFindingSeverity,
   threshold?: SecurityFindingSeverity,
@@ -397,21 +409,12 @@ export function isSeverityAtOrAbove(
   return SEVERITY_WEIGHTS[findingSeverity] >= SEVERITY_WEIGHTS[threshold];
 }
 
+/**
+ * Normalize pnpm audit advisory severity string to a standard severity level.
+ */
 export function normalizePnpmSeverity(
   rawSeverity: string,
 ): SecurityFindingSeverity {
   const normalized = rawSeverity.toLowerCase().trim();
-  if (normalized === "moderate") {
-    return "medium";
-  }
-  if (
-    normalized === "critical" ||
-    normalized === "high" ||
-    normalized === "medium" ||
-    normalized === "low" ||
-    normalized === "info"
-  ) {
-    return normalized;
-  }
-  return "info";
+  return PNPM_SEVERITY_MAP[normalized] ?? "info";
 }
