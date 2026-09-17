@@ -1,17 +1,16 @@
 import { ForgeButton } from '@mission-platform/components';
-import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
 import {
+  createForgeStyle,
   useEffect,
   useMemo,
   useRef,
   useState,
-  createForgeStyle,
-  type MpElement,
   type CSSStyleProperties,
+  type MpElement,
 } from '@mission-platform/forge-jsx';
+import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
+import { encodeMicroQr, encodeQr, encodeRmqr, type QrErrorCorrection } from '@mission-platform/qr-code-wasm';
 import { ForgeTypography } from '@mission-platform/typography';
-import { encodeMicroQr, encodeQr, encodeRmqr } from '../../../encoder';
-import type { QrErrorCorrection } from '../../../types';
 
 import styles from './forge-qr-code.module.scss';
 

@@ -1,16 +1,16 @@
 import { ForgeButton } from '@mission-platform/components';
-import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
 import {
+  createForgeStyle,
   useEffect,
   useMemo,
   useRef,
   useState,
-  createForgeStyle,
-  type MpElement,
   type CSSStyleProperties,
+  type MpElement,
 } from '@mission-platform/forge-jsx';
+import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
+import { encodeMatrix, type MatrixSymbology } from '@mission-platform/matrix-code-wasm';
 import { ForgeTypography } from '@mission-platform/typography';
-import { encodeMatrix, type MatrixSymbology } from '../../../encoder';
 
 import styles from './forge-matrix-code.module.scss';
 

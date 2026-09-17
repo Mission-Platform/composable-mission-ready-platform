@@ -9,69 +9,68 @@ import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
+
+const rootDirectory = import.meta.dirname;
+const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
+
+const buildNeutral = process.env.FORGE_FRAMEWORK_TARGET === undefined || process.env.FORGE_FRAMEWORK_TARGET === 'none';
 
 /**
- * Legacy wrapper packages remain development-only parity oracles and are not
- * bundled into the published package; all public codec paths use FWS graphs.
- */
-const WASM_PACKAGES = [] as const;
-
-/**
- * Neutral self-contained encoder (`dist/index.js` + dts) plus the five
- * forge component framework builds (`dist/{vue,react,solid,web-components}/`).
+ * Re-exports the Wasm barcode engine from `@mission-platform/barcode-wasm`
+ * and compiles the multi-framework UI components (`dist/{vue,react,solid,web-components,svelte}/`)
+ * without duplicating the Wasm binary into each component library.
  */
 export default [
-  defineTsdownLibrary({
-    rootDir: import.meta.dirname,
-    entry: {
-      index: 'src/index.ts',
-    },
-    // Single self-contained ESM bundle (not preserve-modules).
-    unbundle: false,
-    clean: true,
-    overrides: {
-      // No legacy wrapper is needed at runtime; all public codec paths are
-      // embedded FWS artifacts.
-      deps: {
-        alwaysBundle: [...WASM_PACKAGES],
-      },
-      plugins: [forgeWebScriptPlugin({ rootDir: import.meta.dirname, requireExports: false })],
-    },
-  }),
-  ...defineTsdownForgeComponentsAll({
-    rootDir: import.meta.dirname,
-    frameworks: [
-      forgeVueFramework(),
-      forgeReactFramework(),
-      forgeSolidFramework(),
-      forgeSvelteFramework(),
-      forgeWebComponentsFramework(),
-    ],
-    componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
-    name: 'MissionPlatformBarcode',
-    // Encoder is consumed through the package's own `.` entry.
-    external: ['i18next'],
-    overrides: {
-      plugins: [forgeWebScriptPlugin({ rootDir: import.meta.dirname, requireExports: false })],
-    },
-  }),
-  defineTsdownLibrary({
-    rootDir: import.meta.dirname,
-    entry: path.resolve(import.meta.dirname, 'src/components/index.ts'),
-    plugins: tsdownForgeCmsPlugins({
-      rootDir: import.meta.dirname,
-      componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
-      targets: forgeStoryblokCmsTargets({
-        packageName: '@mission-platform/barcode',
+  ...(buildNeutral
+    ? [
+        defineTsdownLibrary({
+          rootDir: import.meta.dirname,
+          entry: {
+            index: 'src/index.ts',
+          },
+          unbundle: false,
+          clean: true,
+          external: ['@mission-platform/barcode-wasm'],
+        }),
+      ]
+    : []),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : defineTsdownForgeComponentsAll({
+        rootDir: rootDirectory,
         frameworks: [
           forgeReactFramework(),
-          forgeVueFramework(),
-          forgeSvelteFramework(),
           forgeSolidFramework(),
+          forgeSvelteFramework(),
           forgeWebComponentsFramework(),
+          forgeVueFramework(),
         ],
-      }),
-    }),
-  }),
+        componentsModule,
+        name: 'MissionPlatformBarcode',
+        external: ['i18next', '@mission-platform/barcode-wasm'],
+        declarationModule: '..',
+      })),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : [
+        defineTsdownLibrary({
+          rootDir: rootDirectory,
+          entry: componentsModule,
+          plugins: tsdownForgeCmsPlugins({
+            rootDir: rootDirectory,
+            componentsModule,
+            targets: forgeStoryblokCmsTargets({
+              packageName: '@mission-platform/barcode',
+              frameworks: [
+                forgeReactFramework(),
+                forgeVueFramework(),
+                forgeSvelteFramework(),
+                forgeSolidFramework(),
+                forgeWebComponentsFramework(),
+              ],
+            }),
+          }),
+          external: ['@mission-platform/barcode-wasm'],
+        }),
+      ]),
 ];

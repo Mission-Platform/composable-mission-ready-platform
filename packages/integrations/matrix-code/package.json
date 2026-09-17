@@ -74,8 +74,8 @@
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forge-adapters": "workspace:*",
     "@mission-platform/forge-jsx": "workspace:*",
-    "@mission-platform/forge-web-script-runtime": "workspace:*",
     "@mission-platform/icons": "workspace:*",
+    "@mission-platform/matrix-code-wasm": "workspace:*",
     "@mission-platform/typography": "workspace:*"
   },
   "peerDependencies": {
