@@ -13,6 +13,7 @@ import { registerResources } from "@mission-platform/mcp-shared/resources/index"
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
+import { registerPrompts } from "./prompts/index.ts";
 import { registerTools } from "./tools/index.ts";
 
 export function createServer(): McpServer {
@@ -22,7 +23,7 @@ export function createServer(): McpServer {
   });
   registerTools(server);
   registerResources(server);
-  // Consumer server might not need the same developer prompts, or we can add specific ones later.
+  registerPrompts(server);
   return server;
 }
 
