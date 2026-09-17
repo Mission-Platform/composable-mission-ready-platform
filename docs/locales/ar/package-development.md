@@ -41,6 +41,9 @@ scaffold_package(name="date-utils", description="Shared date manipulation utilit
 {
   "name": "@mission-platform/your-package-name",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "scripts": {
     "build": "pnpm exec turbo run build --filter @mission-platform/your-package-name",

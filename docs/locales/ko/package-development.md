@@ -41,6 +41,9 @@ MCP 도구를 사용하지 않는 경우 `package.json`이 사용하는지 확�
 {
   "name": "@mission-platform/your-package-name",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "scripts": {
     "build": "pnpm exec turbo run build --filter @mission-platform/your-package-name",

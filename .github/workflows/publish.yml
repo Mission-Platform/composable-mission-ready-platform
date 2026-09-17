@@ -167,8 +167,29 @@ jobs:
       # `turbo` builds the apps + forge-spa worker on demand via the per-app
       # `deploy` task (`wrangler deploy --env production`).
       # ──────────────────────────────────────────────────────────────
-      - name: Deploy to production
+      - name: Check production credentials
+        id: credentials
         if: github.ref == 'refs/heads/main' && steps.changesets.outputs.published == 'true'
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]]; then
+            VERIFY_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify" -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
+            if [[ "$VERIFY_STATUS" == "200" ]]; then
+              echo "configured=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "configured=false" >> "$GITHUB_OUTPUT"
+              echo "::notice::Production deployment skipped because Cloudflare API token is invalid or expired (HTTP $VERIFY_STATUS)."
+            fi
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Production deployment skipped because Cloudflare credentials are not configured."
+          fi
+
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main' && steps.changesets.outputs.published == 'true' && steps.credentials.outputs.configured == 'true'
         run: >-
           pnpm exec turbo run deploy
           --filter=@mission-platform/website

@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-cms-storyblok",
   "version": "0.2.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Storyblok CMS target for Forge components",
   "type": "module",
@@ -30,7 +33,7 @@
   "dependencies": {
     "@mission-platform/forge-cms-plugin-api": "workspace:*",
     "@mission-platform/forge-plugin-api": "workspace:*",
-    "@storyblok/js": "^5.1.10",
+    "@storyblok/js": "^6.3.2",
     "typescript": "catalog:typescript"
   },
   "peerDependencies": {
@@ -40,8 +43,8 @@
     "react": "^18.0.0 || ^19.0.0",
     "solid-js": "^1.9.0",
     "svelte": "^5.0.0",
-    "vue": "^3.5.0",
-    "vite": "^6.0.0 || ^7.0.0 || ^8.0.0"
+    "vite": "^6.0.0 || ^7.0.0 || ^8.0.0",
+    "vue": "^3.5.0"
   },
   "peerDependenciesMeta": {
     "react": {

@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-web-script-language-service",
   "version": "0.3.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Framework-neutral language service for Forge Web Script v1",
   "type": "module",
   "sideEffects": false,

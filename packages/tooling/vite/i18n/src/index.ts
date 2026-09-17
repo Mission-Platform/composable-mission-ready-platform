@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
 import type { Plugin } from "vite";
 
@@ -33,11 +33,11 @@ export interface I18nPluginOptions {
 const DEFAULT_LOCALE = "en";
 
 const VIRTUAL_MODULE_ID = "virtual:i18n-resources";
-const RESOLVED_VIRTUAL_MODULE_ID = "\0" + VIRTUAL_MODULE_ID;
+const RESOLVED_VIRTUAL_MODULE_ID = `\0${VIRTUAL_MODULE_ID}`;
 const VIRTUAL_LOCALES_ID = "virtual:i18n-locales";
-const RESOLVED_VIRTUAL_LOCALES_ID = "\0" + VIRTUAL_LOCALES_ID;
+const RESOLVED_VIRTUAL_LOCALES_ID = `\0${VIRTUAL_LOCALES_ID}`;
 const VIRTUAL_LOCALE_PREFIX = "virtual:i18n-locale-";
-const RESOLVED_VIRTUAL_LOCALE_PREFIX = "\0" + VIRTUAL_LOCALE_PREFIX;
+const RESOLVED_VIRTUAL_LOCALE_PREFIX = `\0${VIRTUAL_LOCALE_PREFIX}`;
 
 // A conservative BCP 47-compatible shape: a language subtag followed by
 // optional hyphen-separated alphanumeric subtags. Keeping the accepted form
@@ -52,10 +52,12 @@ const LOCALE_IDENTIFIER_PATTERN = /^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$/;
 // must recognise both variants.
 const ENCODED_NULL_BYTE = "__x00__";
 
+/** Extract an error message string from an unknown error instance. */
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+/** Strip Vite's leading null byte or encoded placeholder from a resolved virtual id. */
 function stripResolvedPrefix(id: string): string {
   if (id.startsWith("\0")) {
     return id.slice(1);
@@ -71,6 +73,7 @@ function isYamlFile(name: string): boolean {
   return name.endsWith(".yaml") || name.endsWith(".yml");
 }
 
+/** Assert that a locale code adheres to a conservative BCP 47-compatible pattern. */
 function validateLocaleIdentifier(locale: string, source: string): void {
   const match = locale.match(LOCALE_IDENTIFIER_PATTERN);
   if (match?.[0] !== locale) {
@@ -90,6 +93,26 @@ function resolveLocalesDirectory(
     : path.resolve(root, "src/locales");
 }
 
+/** Check whether a directory contains at least one YAML locale file. */
+function directoryHasYamlFile(directory: string): boolean {
+  return fs.readdirSync(directory).some((file) => isYamlFile(file));
+}
+
+/** Inspect a directory entry and return its locale code if it matches the flat or nested layout. */
+function extractLocaleCode(
+  entry: fs.Dirent,
+  localesDirectory: string,
+): string | undefined {
+  if (entry.isDirectory()) {
+    const localeDirectory = path.join(localesDirectory, entry.name);
+    return directoryHasYamlFile(localeDirectory) ? entry.name : undefined;
+  }
+  if (entry.isFile() && isYamlFile(entry.name)) {
+    return path.basename(entry.name, path.extname(entry.name));
+  }
+  return undefined;
+}
+
 /**
  * Discover every locale code available under `localesDirectory`, across both
  * the flat (`<code>.yaml`) and nested (`<code>/…`) layouts, and always
@@ -106,16 +129,9 @@ function discoverLocales(
     for (const entry of fs.readdirSync(localesDirectory, {
       withFileTypes: true,
     })) {
-      if (entry.isDirectory()) {
-        // Nested layout: a subdirectory named after the locale, holding one
-        // YAML file per namespace.
-        const localeDirectory = path.join(localesDirectory, entry.name);
-        if (fs.readdirSync(localeDirectory).some((file) => isYamlFile(file))) {
-          codes.add(entry.name);
-        }
-      } else if (entry.isFile() && isYamlFile(entry.name)) {
-        // Flat layout: `<code>.yaml`.
-        codes.add(path.basename(entry.name, path.extname(entry.name)));
+      const code = extractLocaleCode(entry, localesDirectory);
+      if (code !== undefined) {
+        codes.add(code);
       }
     }
   }
@@ -127,10 +143,11 @@ function discoverLocales(
   return locales;
 }
 
+/** Read and parse a YAML file into a record object. */
 function readYamlObject(filePath: string): Record<string, unknown> {
   let parsed: unknown;
   try {
-    parsed = yaml.load(fs.readFileSync(filePath, "utf8"));
+    parsed = load(fs.readFileSync(filePath, "utf8"));
   } catch (error) {
     throw new Error(
       `Failed to parse i18n locale file ${filePath}: ${errorMessage(error)}`,
@@ -143,6 +160,32 @@ function readYamlObject(filePath: string): Record<string, unknown> {
     );
   }
   return parsed as Record<string, unknown>;
+}
+
+/** Read resources from a nested locale directory where each YAML file is a namespace. */
+function readNestedLocaleResources(directory: string): Record<string, unknown> {
+  const resources: Record<string, unknown> = {};
+  for (const file of fs.readdirSync(directory)) {
+    if (isYamlFile(file)) {
+      const namespace = path.basename(file, path.extname(file));
+      resources[namespace] = readYamlObject(path.join(directory, file));
+    }
+  }
+  return resources;
+}
+
+/** Read resources from a flat locale file (`<locale>.yaml` or `<locale>.yml`). */
+function readFlatLocaleResources(
+  localesDirectory: string,
+  locale: string,
+): Record<string, unknown> | undefined {
+  for (const extension of [".yaml", ".yml"]) {
+    const flatPath = path.join(localesDirectory, `${locale}${extension}`);
+    if (fs.existsSync(flatPath)) {
+      return readYamlObject(flatPath);
+    }
+  }
+  return undefined;
 }
 
 /**
@@ -163,24 +206,10 @@ function readLocaleResources(
     fs.existsSync(nestedDirectory) &&
     fs.statSync(nestedDirectory).isDirectory()
   ) {
-    const resources: Record<string, unknown> = {};
-    for (const file of fs.readdirSync(nestedDirectory)) {
-      if (!isYamlFile(file)) {
-        continue;
-      }
-      const namespace = path.basename(file, path.extname(file));
-      resources[namespace] = readYamlObject(path.join(nestedDirectory, file));
-    }
-    return resources;
+    return readNestedLocaleResources(nestedDirectory);
   }
 
-  for (const extension of [".yaml", ".yml"]) {
-    const flatPath = path.join(localesDirectory, `${locale}${extension}`);
-    if (fs.existsSync(flatPath)) {
-      return readYamlObject(flatPath);
-    }
-  }
-  return {};
+  return readFlatLocaleResources(localesDirectory, locale) ?? {};
 }
 
 /**
@@ -237,6 +266,24 @@ export function readSupportedLocales(
   );
 }
 
+/** Generate the virtual module code exporting all discovered locale resources. */
+function generateResourcesModule(
+  localesDirectory: string,
+  defaultLocale: string,
+): string {
+  const resources: Record<string, unknown> = {};
+  for (const locale of discoverLocales(localesDirectory, defaultLocale)) {
+    const localeResources = readLocaleResources(localesDirectory, locale);
+    if (Object.keys(localeResources).length > 0) {
+      resources[locale] = localeResources;
+    }
+  }
+  return `export const resources = ${JSON.stringify(resources)};\nexport const defaultLocale = ${JSON.stringify(defaultLocale)};\nexport default resources;\n`;
+}
+
+/**
+ * Vite plugin for managing and resolving application i18n locale resources.
+ */
 export function i18nPlugin(options: I18nPluginOptions = {}): Plugin {
   let root = process.cwd();
   const defaultLocale = options.defaultLocale ?? DEFAULT_LOCALE;
@@ -273,22 +320,19 @@ export function i18nPlugin(options: I18nPluginOptions = {}): Plugin {
     },
     resolveId(id) {
       const bare = stripResolvedPrefix(id);
+      let resolved: string | undefined;
       if (bare === VIRTUAL_MODULE_ID) {
-        return RESOLVED_VIRTUAL_MODULE_ID;
+        resolved = RESOLVED_VIRTUAL_MODULE_ID;
+      } else if (bare === VIRTUAL_LOCALES_ID) {
+        resolved = RESOLVED_VIRTUAL_LOCALES_ID;
+      } else if (bare.startsWith(VIRTUAL_LOCALE_PREFIX)) {
+        resolved = `${RESOLVED_VIRTUAL_LOCALE_PREFIX}${bare.slice(VIRTUAL_LOCALE_PREFIX.length)}`;
       }
-      if (bare === VIRTUAL_LOCALES_ID) {
-        return RESOLVED_VIRTUAL_LOCALES_ID;
-      }
-      if (bare.startsWith(VIRTUAL_LOCALE_PREFIX)) {
-        return (
-          RESOLVED_VIRTUAL_LOCALE_PREFIX +
-          bare.slice(VIRTUAL_LOCALE_PREFIX.length)
-        );
-      }
-      return;
+      return resolved;
     },
     load(id) {
       const bare = stripResolvedPrefix(id);
+      let loaded: string | undefined;
 
       // The auto-derived supported-locale list (single source of truth shared
       // by every app), plus the default locale.
@@ -297,35 +341,24 @@ export function i18nPlugin(options: I18nPluginOptions = {}): Plugin {
           resolveLocalesDirectory(root, options),
           defaultLocale,
         );
-        return `export const supportedLocales = ${JSON.stringify(locales)};\nexport const defaultLocale = ${JSON.stringify(defaultLocale)};\nexport default supportedLocales;\n`;
-      }
-
-      // Every locale's resources, keyed by locale then namespace — used to seed
-      // the i18next instance at creation time.
-      if (bare === VIRTUAL_MODULE_ID) {
+        loaded = `export const supportedLocales = ${JSON.stringify(locales)};\nexport const defaultLocale = ${JSON.stringify(defaultLocale)};\nexport default supportedLocales;\n`;
+      } else if (bare === VIRTUAL_MODULE_ID) {
+        // Every locale's resources, keyed by locale then namespace — used to seed
+        // the i18next instance at creation time.
         const localesDirectory = resolveLocalesDirectory(root, options);
-        const resources: Record<string, unknown> = {};
-        for (const locale of discoverLocales(localesDirectory, defaultLocale)) {
-          const localeResources = readLocaleResources(localesDirectory, locale);
-          if (Object.keys(localeResources).length > 0) {
-            resources[locale] = localeResources;
-          }
-        }
-        return `export const resources = ${JSON.stringify(resources)};\nexport const defaultLocale = ${JSON.stringify(defaultLocale)};\nexport default resources;\n`;
-      }
-
-      // A single locale's resources, loaded lazily per route/on demand.
-      if (bare.startsWith(VIRTUAL_LOCALE_PREFIX)) {
+        loaded = generateResourcesModule(localesDirectory, defaultLocale);
+      } else if (bare.startsWith(VIRTUAL_LOCALE_PREFIX)) {
+        // A single locale's resources, loaded lazily per route/on demand.
         const locale = bare.slice(VIRTUAL_LOCALE_PREFIX.length);
         const localeData = readLocaleResources(
           resolveLocalesDirectory(root, options),
           locale,
         );
         const resources = { [locale]: localeData };
-        return `export const resources = ${JSON.stringify(resources)};\nexport default resources;\n`;
+        loaded = `export const resources = ${JSON.stringify(resources)};\nexport default resources;\n`;
       }
 
-      return;
+      return loaded;
     },
   };
 }

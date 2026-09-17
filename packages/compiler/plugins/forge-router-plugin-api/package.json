@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-router-plugin-api",
   "version": "0.1.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Public API contracts for Forge router output plugins",
   "type": "module",

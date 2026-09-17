@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/float",
   "version": "1.2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Mission Platform floating, overlay, and notification components authored with @mission-platform/forge-jsx",
   "type": "module",

@@ -137,6 +137,9 @@ export function packageFiles(options: PackageScaffoldOptions): Record<string, st
     name: scoped,
     version: '0.1.0',
     description,
+    publishConfig: {
+      access: 'public',
+    },
     type: 'module',
     sideEffects: vue ? ['**/*.css', '**/*.scss', '**/*.vue'] : false,
     exports: {

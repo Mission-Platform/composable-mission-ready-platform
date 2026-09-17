@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/phone-number",
   "version": "0.3.3",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Google libphonenumber core (parse, validate, format) reimplemented in Forge Web Script and compiled to WebAssembly, with a typed ES module wrapper",
   "type": "module",

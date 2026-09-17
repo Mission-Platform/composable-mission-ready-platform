@@ -52,7 +52,13 @@ jobs:
         shell: bash
         run: |
           if [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]]; then
-            echo "configured=true" >> "$GITHUB_OUTPUT"
+            VERIFY_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify" -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
+            if [[ "$VERIFY_STATUS" == "200" ]]; then
+              echo "configured=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "configured=false" >> "$GITHUB_OUTPUT"
+              echo "::notice::Staging deployment skipped because Cloudflare API token is invalid or expired (HTTP $VERIFY_STATUS)."
+            fi
           else
             echo "configured=false" >> "$GITHUB_OUTPUT"
             echo "::notice::Staging deployment skipped because Cloudflare credentials are not configured."

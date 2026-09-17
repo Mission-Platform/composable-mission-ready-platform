@@ -12,7 +12,7 @@
 import {lstatSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {basename, extname, join} from 'node:path';
 
-import yaml from 'js-yaml';
+import {dump, load} from 'js-yaml';
 
 import {groupDir, resolveRepoPath, type WorkspaceGroup} from './paths.ts';
 import {findMember} from './scanner.ts';
@@ -137,7 +137,7 @@ function readFlatFile(path: string): Record<string, unknown> | undefined {
     return undefined;
   }
   try {
-    const parsed = yaml.load(readFileSync(path, 'utf8'));
+    const parsed = load(readFileSync(path, 'utf8'));
     return parsed && typeof parsed === 'object' ? (parsed as Record<string, unknown>) : {};
   } catch {
     return undefined;
@@ -253,7 +253,7 @@ export function setKeyPath(target: Record<string, unknown>, path: string, value:
 
 /** Serialise a locale object to YAML matching the repo's conventions. */
 export function dumpLocaleYaml(value: unknown): string {
-  return yaml.dump(value, {
+  return dump(value, {
     sortKeys: true,
     indent: 2,
     lineWidth: -1,

@@ -41,6 +41,9 @@ gestión de dependencias y sigue la convención de nomenclatura de ámbito:
 {
   "name": "@mission-platform/your-package-name",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "scripts": {
     "build": "pnpm exec turbo run build --filter @mission-platform/your-package-name",

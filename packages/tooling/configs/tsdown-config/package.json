@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/tsdown-config",
   "version": "0.2.3",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-4-Clause",
   "description": "Shared tsdown configuration helpers for Mission Platform library packages",
   "type": "module",

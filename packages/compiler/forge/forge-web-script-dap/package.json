@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/forge-web-script-dap",
   "version": "0.2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Stdio Debug Adapter Protocol server for Forge Web Script v1",
   "type": "module",
   "bin": {

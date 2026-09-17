@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/vcard",
   "version": "0.2.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "RFC 6350 vCard and RFC 5545 iCalendar data and Forge components for Mission Platform",
   "type": "module",
   "sideEffects": false,
@@ -45,7 +48,7 @@
     "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/typography": "workspace:*",
     "luxon": "catalog:",
-    "nanoid": "^5.1.16"
+    "nanoid": "^6.0.1"
   },
   "peerDependencies": {
     "lit": "^3.0.0",
@@ -104,6 +107,8 @@
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/forge-cms-plugin-api": "workspace:*",
+    "@mission-platform/forge-cms-storyblok": "workspace:*",
     "@mission-platform/forge-plugin-react": "workspace:*",
     "@mission-platform/forge-plugin-solid": "workspace:*",
     "@mission-platform/forge-plugin-svelte": "workspace:*",
@@ -115,8 +120,6 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
-    "@mission-platform/forge-cms-plugin-api": "workspace:*",
-    "@mission-platform/forge-cms-storyblok": "workspace:*",
     "@types/luxon": "catalog:",
     "@types/node": "catalog:typescript",
     "@vitest/coverage-v8": "catalog:testing",

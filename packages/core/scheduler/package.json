@@ -1,6 +1,9 @@
 {
   "name": "@mission-platform/scheduler",
   "version": "0.3.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Framework-neutral scheduler UI component for Mission Platform",
   "type": "module",
   "sideEffects": [
@@ -69,14 +72,14 @@
   "dependencies": {
     "@mission-platform/components": "workspace:*",
     "@mission-platform/float": "workspace:*",
-    "@mission-platform/forms": "workspace:*",
     "@mission-platform/forge-adapters": "workspace:*",
     "@mission-platform/forge-jsx": "workspace:*",
+    "@mission-platform/forms": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/typography": "workspace:*",
     "@mission-platform/vcard": "workspace:*",
     "luxon": "catalog:",
-    "nanoid": "^5.1.16"
+    "nanoid": "^6.0.1"
   },
   "peerDependencies": {
     "lit": "^3.0.0",
@@ -108,6 +111,8 @@
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/forge-cms-plugin-api": "workspace:*",
+    "@mission-platform/forge-cms-storyblok": "workspace:*",
     "@mission-platform/forge-plugin-react": "workspace:*",
     "@mission-platform/forge-plugin-solid": "workspace:*",
     "@mission-platform/forge-plugin-svelte": "workspace:*",
@@ -120,12 +125,10 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
-    "@mission-platform/forge-cms-plugin-api": "workspace:*",
-    "@mission-platform/forge-cms-storyblok": "workspace:*",
-    "@types/luxon": "catalog:",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@tsdown/css": "catalog:build",
+    "@types/luxon": "catalog:",
     "@types/node": "catalog:typescript",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
@@ -138,11 +141,11 @@
     "react-dom": "catalog:react",
     "sass-embedded": "catalog:vite",
     "solid-js": "catalog:solid",
-    "svelte": "catalog:svelte",
     "storybook": "catalog:storybook",
     "stylelint": "catalog:stylelint",
     "stylelint-config-recommended-vue": "catalog:stylelint",
     "stylelint-config-standard-scss": "catalog:stylelint",
+    "svelte": "catalog:svelte",
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
