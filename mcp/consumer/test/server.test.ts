@@ -77,21 +77,21 @@ describe("consumer framework and setup guides", () => {
     const result = await callTool("get_framework_setup", {
       framework: "svelte",
     });
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     assert.match(result.body, /Svelte Best Practices/);
     assert.match(result.body, /mp:svelte/);
   });
 
   it("retrieves arbitrary curated guides via get_guide", async () => {
     const result = await callTool("get_guide", { area: "routing-setup" });
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     assert.match(result.body, /Framework-Neutral Routing/);
     assert.match(result.body, /forge-router-outlet/);
   });
 
   it("returns helpful error message for unknown guide area", async () => {
     const result = await callTool("get_guide", { area: "non-existent-area" });
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     assert.match(result.body, /Unknown area "non-existent-area"/);
   });
 });
@@ -99,7 +99,7 @@ describe("consumer framework and setup guides", () => {
 describe("package discovery and inspection", () => {
   it("lists consumer packages and supports category filtering", async () => {
     const all = await callTool("list_packages");
-    assert.equal(all.isError, undefined);
+    assert.ok(!all.isError);
     const parsedAll = JSON.parse(all.body) as Array<{
       name: string;
       category: string;
@@ -107,7 +107,7 @@ describe("package discovery and inspection", () => {
     assert.ok(parsedAll.length > 5);
 
     const uiOnly = await callTool("list_packages", { category: "ui" });
-    assert.equal(uiOnly.isError, undefined);
+    assert.ok(!uiOnly.isError);
     const parsedUi = JSON.parse(uiOnly.body) as Array<{
       name: string;
       category: string;
@@ -121,7 +121,7 @@ describe("package discovery and inspection", () => {
       packageName: "@mission-platform/components",
       framework: "vue",
     });
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const info = JSON.parse(result.body) as {
       name: string;
       installCommands: { pnpm: string };
@@ -143,7 +143,7 @@ describe("icon discovery and usage", () => {
     const result = await callTool("list_icons", {
       category: "status/feedback",
     });
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const parsed = JSON.parse(result.body) as {
       icons: Array<{ name: string; componentName: string }>;
       total: number;
@@ -157,7 +157,7 @@ describe("icon discovery and usage", () => {
       icon: "forge-icon-bell",
       framework: "react",
     });
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const usage = JSON.parse(result.body) as {
       componentName: string;
       importStatement: string;
@@ -174,7 +174,7 @@ describe("component stories exploration", () => {
     const result = await callTool("get_component_stories", {
       component: "ForgeButton",
     });
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const detail = JSON.parse(result.body) as {
       componentName: string;
       storyNames: string[];
@@ -194,7 +194,7 @@ describe("router setup assistance", () => {
       framework: "vue",
       history: "browser",
     });
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const guide = JSON.parse(result.body) as {
       framework: string;
       packages: string[];
@@ -237,7 +237,7 @@ describe("consumer setup validator", () => {
       }),
     });
 
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const report = JSON.parse(result.body) as {
       status: string;
       passedChecks: number;
@@ -262,7 +262,7 @@ describe("consumer setup validator", () => {
       }),
     });
 
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const report = JSON.parse(result.body) as {
       status: string;
       failedChecks: number;
@@ -285,7 +285,7 @@ describe("consumer setup validator", () => {
       `,
     });
 
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     const report = JSON.parse(result.body) as {
       status: string;
       failedChecks: number;
@@ -303,13 +303,13 @@ describe("consumer setup validator", () => {
 describe("consumer token tools", () => {
   it("returns tokens, variables, schema, and generated overrides successfully", async () => {
     const tokens = await callTool("get_tokens", { category: "radius" });
-    assert.equal(tokens.isError, undefined);
+    assert.ok(!tokens.isError);
     assert.equal(JSON.parse(tokens.body).radius.md.$value, "0.429rem");
 
     const variables = await callTool("list_token_variables", {
       category: "radius",
     });
-    assert.equal(variables.isError, undefined);
+    assert.ok(!variables.isError);
     assert.ok(
       JSON.parse(variables.body).some(
         (entry: { name: string }) => entry.name === "--mp-radius-md",
@@ -317,7 +317,7 @@ describe("consumer token tools", () => {
     );
 
     const schema = await callTool("get_token_override_schema");
-    assert.equal(schema.isError, undefined);
+    assert.ok(!schema.isError);
     assert.equal(
       JSON.parse(schema.body).$schema,
       "https://json-schema.org/draft/2020-12/schema",
@@ -326,7 +326,7 @@ describe("consumer token tools", () => {
     const generated = await callTool("generate_token_override", {
       tokens: JSON.stringify({ radius: { md: { $value: "2px" } } }),
     });
-    assert.equal(generated.isError, undefined);
+    assert.ok(!generated.isError);
     assert.match(generated.body, /--mp-radius-md: 2px;/);
   });
 
@@ -334,7 +334,7 @@ describe("consumer token tools", () => {
     const result = await callTool("get_component_usage", {
       component: "does-not-exist",
     });
-    assert.equal(result.isError, undefined);
+    assert.ok(!result.isError);
     assert.equal(result.body, 'Component "does-not-exist" not found.');
   });
 
