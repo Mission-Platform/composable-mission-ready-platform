@@ -168,7 +168,7 @@ const missionTypeScriptPlugin = {
         return {
           TSTypeParameter(node) {
             if (!node.constraint) {
-              const parameterName = typeof node.name === 'string' ? node.name : node.name?.name || 'T';
+              const parameterName = typeof node.name === 'string' ? node.name : (node.name?.name ?? 'T');
               context.report({
                 node,
                 messageId: 'unconstrainedGeneric',

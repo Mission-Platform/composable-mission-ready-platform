@@ -181,7 +181,7 @@ export function auditDependencies(
 
   // 2. Run pnpm audit --json if requested or default true
   if (options.runPnpmAudit !== false) {
-    let stdoutText = "";
+    let stdoutText: string;
     try {
       stdoutText = execFileSync("pnpm", ["audit", "--json"], {
         cwd: repoRoot,
@@ -190,15 +190,15 @@ export function auditDependencies(
         maxBuffer: 10 * 1024 * 1024,
         stdio: ["ignore", "pipe", "pipe"],
       });
-    } catch (err: unknown) {
+    } catch (error: unknown) {
       // pnpm audit exits with code 1 if advisories are present!
-      const execErr = err as { stdout?: string | Buffer };
-      if (execErr.stdout) {
-        stdoutText =
-          typeof execErr.stdout === "string"
+      const execErr = error as { stdout?: string | Buffer };
+      stdoutText =
+        execErr.stdout !== undefined
+          ? typeof execErr.stdout === "string"
             ? execErr.stdout
-            : execErr.stdout.toString("utf8");
-      }
+            : execErr.stdout.toString("utf8")
+          : "";
     }
 
     if (stdoutText.trim().length > 0) {

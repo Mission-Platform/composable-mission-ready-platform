@@ -134,14 +134,17 @@ export function auditSupplyChain(
 
         // Exclude workspace packages from version divergence tracking
         if (!trimmed.startsWith("workspace:")) {
-          if (!packageVersionMap.has(depName)) {
-            packageVersionMap.set(depName, new Map<string, string[]>());
+          let versionMap = packageVersionMap.get(depName);
+          if (!versionMap) {
+            versionMap = new Map<string, string[]>();
+            packageVersionMap.set(depName, versionMap);
           }
-          const versionMap = packageVersionMap.get(depName)!;
-          if (!versionMap.has(trimmed)) {
-            versionMap.set(trimmed, []);
+          let fileList = versionMap.get(trimmed);
+          if (!fileList) {
+            fileList = [];
+            versionMap.set(trimmed, fileList);
           }
-          versionMap.get(trimmed)!.push(relPath);
+          fileList.push(relPath);
         }
       }
     }

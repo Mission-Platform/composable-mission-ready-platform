@@ -286,39 +286,37 @@ function collectFiles(
     return collected;
   }
 
-  let entries;
   try {
-    entries = readdirSync(startDir, { withFileTypes: true });
+    const entries = readdirSync(startDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (collected.length >= maxFiles) {
+        break;
+      }
+      if (entry.isSymbolicLink()) {
+        continue;
+      }
+
+      const fullPath = join(startDir, entry.name);
+      if (entry.isDirectory()) {
+        if (IGNORED_DIRS.has(entry.name)) {
+          continue;
+        }
+        collectFiles(fullPath, maxFiles, collected);
+      } else if (entry.isFile()) {
+        if (IGNORED_FILES.has(entry.name)) {
+          continue;
+        }
+        const ext = entry.name.includes(".")
+          ? `.${entry.name.split(".").pop()?.toLowerCase()}`
+          : "";
+        if (IGNORED_EXTENSIONS.has(ext)) {
+          continue;
+        }
+        collected.push(fullPath);
+      }
+    }
   } catch {
     return collected;
-  }
-
-  for (const entry of entries) {
-    if (collected.length >= maxFiles) {
-      break;
-    }
-    if (entry.isSymbolicLink()) {
-      continue;
-    }
-
-    const fullPath = join(startDir, entry.name);
-    if (entry.isDirectory()) {
-      if (IGNORED_DIRS.has(entry.name)) {
-        continue;
-      }
-      collectFiles(fullPath, maxFiles, collected);
-    } else if (entry.isFile()) {
-      if (IGNORED_FILES.has(entry.name)) {
-        continue;
-      }
-      const ext = entry.name.includes(".")
-        ? `.${entry.name.split(".").pop()?.toLowerCase()}`
-        : "";
-      if (IGNORED_EXTENSIONS.has(ext)) {
-        continue;
-      }
-      collected.push(fullPath);
-    }
   }
 
   return collected;

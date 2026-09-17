@@ -144,13 +144,7 @@ export function getAffectedPackages(options: { ref?: string; path?: string } = {
       continue;
     }
 
-    let matchedMember: WorkspaceMember | undefined;
-    for (const member of members) {
-      if (file.startsWith(`${member.relativeDir}/`)) {
-        matchedMember = member;
-        break;
-      }
-    }
+    const matchedMember = members.find((member) => file.startsWith(`${member.relativeDir}/`));
 
     if (matchedMember) {
       const existing = packageFileMap.get(matchedMember.name) ?? [];
@@ -341,19 +335,13 @@ export function runTestFile(request: {
   const timeoutMs = boundedTimeout(request.timeoutMs);
   const maxOutputBytes = boundedOutput(request.maxOutputBytes);
 
-  let command: string;
-  let args: string[];
-
-  if (runner === 'node:test') {
-    command = 'node';
-    args = ['--test', relativePath];
-  } else {
-    command = 'pnpm';
-    args = ['exec', 'vitest', 'run', relativePath];
-    if (request.testNamePattern) {
-      args.push('-t', request.testNamePattern);
-    }
-  }
+  const command = runner === 'node:test' ? 'node' : 'pnpm';
+  const args =
+    runner === 'node:test'
+      ? ['--test', relativePath]
+      : request.testNamePattern
+        ? ['exec', 'vitest', 'run', relativePath, '-t', request.testNamePattern]
+        : ['exec', 'vitest', 'run', relativePath];
 
   const startedAt = Date.now();
   const result = spawnSync(command, args, {

@@ -76,12 +76,12 @@ Please guide me through:
             role: "user",
             content: {
               type: "text",
-              text: `I want to use the "${args.component}" component in my ${args.framework ? args.framework + " " : ""}application.
+              text: `I want to use the "${args.component}" component in my ${args.framework ? `${args.framework} ` : ""}application.
 
 Please:
 1. Query "get_component_usage" and "get_component_stories" for "${args.component}".
 2. Explain the available variants, sizes, and states (disabled, loading).
-3. Provide a complete, idiomatic code snippet for importing and rendering the component${args.framework ? " in " + args.framework : ""}.
+3. Provide a complete, idiomatic code snippet for importing and rendering the component${args.framework ? ` in ${args.framework}` : ""}.
 4. Explain how to customize its appearance using DTCG design tokens.`,
             },
           },
@@ -111,7 +111,7 @@ Please:
             role: "user",
             content: {
               type: "text",
-              text: `I want to customize Mission Platform design tokens${args.category ? ' for category "' + args.category + '"' : ""}.
+              text: `I want to customize Mission Platform design tokens${args.category ? ` for category "${args.category}"` : ""}.
 
 Please:
 1. Query "list_token_variables" and "get_tokens" to inspect the base tokens.

@@ -337,35 +337,33 @@ function collectCodeFiles(
     return collected;
   }
 
-  let entries;
   try {
-    entries = readdirSync(startDir, { withFileTypes: true });
-  } catch {
-    return collected;
-  }
-
-  for (const entry of entries) {
-    if (collected.length >= maxFiles) {
-      break;
-    }
-    if (entry.isSymbolicLink()) {
-      continue;
-    }
-
-    const fullPath = join(startDir, entry.name);
-    if (entry.isDirectory()) {
-      if (IGNORED_DIRS.has(entry.name)) {
+    const entries = readdirSync(startDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (collected.length >= maxFiles) {
+        break;
+      }
+      if (entry.isSymbolicLink()) {
         continue;
       }
-      collectCodeFiles(fullPath, maxFiles, collected);
-    } else if (entry.isFile()) {
-      const ext = entry.name.includes(".")
-        ? `.${entry.name.split(".").pop()?.toLowerCase()}`
-        : "";
-      if (CODE_EXTENSIONS.has(ext)) {
-        collected.push(fullPath);
+
+      const fullPath = join(startDir, entry.name);
+      if (entry.isDirectory()) {
+        if (IGNORED_DIRS.has(entry.name)) {
+          continue;
+        }
+        collectCodeFiles(fullPath, maxFiles, collected);
+      } else if (entry.isFile()) {
+        const ext = entry.name.includes(".")
+          ? `.${entry.name.split(".").pop()?.toLowerCase()}`
+          : "";
+        if (CODE_EXTENSIONS.has(ext)) {
+          collected.push(fullPath);
+        }
       }
     }
+  } catch {
+    return collected;
   }
 
   return collected;

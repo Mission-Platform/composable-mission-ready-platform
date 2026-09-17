@@ -176,10 +176,11 @@ export function validateConsumerSetup(options: {
 
   // 3. Package Dependencies Checks
   if (packageJson !== undefined) {
-    let parsed: Record<string, unknown> = {};
+    let parsed: Record<string, unknown>;
     try {
       parsed = JSON.parse(packageJson) as Record<string, unknown>;
     } catch {
+      parsed = {};
       checks.push({
         name: "package.json syntax",
         category: "dependencies",
@@ -254,18 +255,15 @@ export function validateConsumerSetup(options: {
   const warningCount = checks.filter((c) => c.status === "warn").length;
   const passedCount = checks.filter((c) => c.status === "pass").length;
 
-  let overallStatus: "valid" | "warnings" | "errors" = "valid";
-  if (failedCount > 0) overallStatus = "errors";
-  else if (warningCount > 0) overallStatus = "warnings";
+  const overallStatus: "valid" | "warnings" | "errors" =
+    failedCount > 0 ? "errors" : warningCount > 0 ? "warnings" : "valid";
 
-  let summary = "";
-  if (overallStatus === "valid") {
-    summary = `Setup verification for ${framework} passed (${passedCount} checks passed). Export conditions and dependencies are correctly configured.`;
-  } else if (overallStatus === "warnings") {
-    summary = `Setup verification for ${framework} passed with ${warningCount} warning(s). Recommended packages or settings can be improved.`;
-  } else {
-    summary = `Setup verification for ${framework} failed with ${failedCount} error(s). Missing export conditions or required peer dependencies will prevent components from resolving.`;
-  }
+  const summary =
+    overallStatus === "valid"
+      ? `Setup verification for ${framework} passed (${passedCount} checks passed). Export conditions and dependencies are correctly configured.`
+      : overallStatus === "warnings"
+        ? `Setup verification for ${framework} passed with ${warningCount} warning(s). Recommended packages or settings can be improved.`
+        : `Setup verification for ${framework} failed with ${failedCount} error(s). Missing export conditions or required peer dependencies will prevent components from resolving.`;
 
   return {
     framework,
