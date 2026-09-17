@@ -30,6 +30,25 @@ describe('missionTypeScriptPlugin rules via ESLint flat config', () => {
     assert.ok(noAsAny, 'Expected "as any" report');
   });
 
+  it('prefer-satisfies flags angle-bracket assertions with recommendation to use satisfies', async () => {
+    const code = 'const x = <Config>{ a: 1 };\n';
+    const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+    assert.ok(result);
+    const preferSatisfies = result.messages.find((m) => m.ruleId === '@typescript-eslint/prefer-satisfies');
+    assert.ok(preferSatisfies, 'Expected @typescript-eslint/prefer-satisfies warning');
+    assert.match(preferSatisfies.message, /Prefer "satisfies"/);
+  });
+
+  it('prefer-satisfies reports error on angle-bracket "<any>" assertion', async () => {
+    const code = 'const x = <any>val;\n';
+    const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+    assert.ok(result);
+    const noAsAny = result.messages.find(
+      (m) => m.ruleId === '@typescript-eslint/prefer-satisfies' && m.message.includes('"as any"'),
+    );
+    assert.ok(noAsAny, 'Expected "as any" report');
+  });
+
   it('prefer-satisfies passes "satisfies" and "as const"', async () => {
     const code = `
       interface Config { a: number }
@@ -87,5 +106,16 @@ describe('missionTypeScriptPlugin rules via ESLint flat config', () => {
     assert.ok(result);
     const unknownWarnings = result.messages.filter((m) => m.ruleId === '@typescript-eslint/no-implicit-unknown');
     assert.equal(unknownWarnings.length, 1, 'Expected only exported function return type to be reported');
+  });
+
+  it('no-implicit-unknown flags exported factories returning () => unknown', async () => {
+    const code = 'export function createWorker(): () => unknown { return () => "raw"; }\n';
+    const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+    assert.ok(result);
+    const unknownWarning = result.messages.find((m) => m.ruleId === '@typescript-eslint/no-implicit-unknown');
+    assert.ok(
+      unknownWarning,
+      'Expected @typescript-eslint/no-implicit-unknown warning on factory returning () => unknown',
+    );
   });
 });

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
@@ -9,10 +8,9 @@ const repoRoot = path.resolve(currentDirectory, '..');
 const serverScript = path.join(repoRoot, 'mcp/developer/dist/index.js');
 
 if (!existsSync(serverScript)) {
-  console.error(
+  throw new Error(
     `[mission-mcp] Error: Compiled MCP developer server not found at "${serverScript}".\nRun "pnpm exec turbo run build --filter @mission-platform/mcp-developer" before launching.`,
   );
-  process.exit(1);
 }
 
 const child = spawn(process.execPath, [serverScript, ...process.argv.slice(2)], {
@@ -28,5 +26,5 @@ child.on('exit', (code, signal) => {
   if (signal) {
     process.kill(process.pid, signal);
   }
-  process.exit(code ?? 0);
+  process.exitCode = code ?? 0;
 });

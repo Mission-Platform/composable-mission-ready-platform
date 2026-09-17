@@ -180,6 +180,37 @@ export function listConsumerPackages(
   return result.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+function normalizePackageName(packageName: string): string {
+  if (packageName.startsWith("@mission-platform/")) {
+    return packageName;
+  }
+  return `@mission-platform/${packageName}`;
+}
+
+function resolvePeerDependencyVersions(
+  declaredDependencies: readonly string[],
+  manifestPeerDeps?: Record<string, string>,
+): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const dep of declaredDependencies) {
+    result[dep] = manifestPeerDeps?.[dep] ?? "latest";
+  }
+  return result;
+}
+
+function buildInstallCommands(name: string): Record<string, string> {
+  return {
+    pnpm: `pnpm add ${name}`,
+    npm: `npm install ${name}`,
+    yarn: `yarn add ${name}`,
+    bun: `bun add ${name}`,
+  };
+}
+
+function resolveExportConditions(name: string): readonly string[] {
+  return MULTI_FRAMEWORK_PACKAGES.has(name) ? FRAMEWORK_CONDITIONS : [];
+}
+
 /**
  * Get comprehensive metadata, installation commands, peer dependencies, and quickstart
  * guidance for a specific consumer package.
@@ -188,24 +219,22 @@ export function getConsumerPackageInfo(
   packageName: string,
   framework?: string,
 ): ConsumerPackageInfo | undefined {
-  const normalized = packageName.startsWith("@mission-platform/")
-    ? packageName
-    : `@mission-platform/${packageName}`;
+  const normalized = normalizePackageName(packageName);
 
   const member = findMember("packages", normalized);
   if (!member || member.private) {
     return undefined;
   }
 
-  const category = PACKAGE_CATEGORIES[member.name] ?? "core";
-  const exportConditions = MULTI_FRAMEWORK_PACKAGES.has(member.name)
-    ? FRAMEWORK_CONDITIONS
-    : [];
-
   const name = member.name;
+  const category = PACKAGE_CATEGORIES[name] ?? "core";
+  const exportConditions = resolveExportConditions(name);
   const quickStartSnippet = resolveQuickStartSnippet(name, framework);
   const details = readMemberDetails(member);
-  const declaredPeerDeps = details.manifest.peerDependencies ?? {};
+  const peerDependencies = resolvePeerDependencyVersions(
+    member.peerDependencies,
+    details.manifest.peerDependencies,
+  );
 
   return {
     name,
@@ -214,19 +243,8 @@ export function getConsumerPackageInfo(
     category,
     exportConditions,
     publishable: !member.private,
-    installCommands: {
-      pnpm: `pnpm add ${name}`,
-      npm: `npm install ${name}`,
-      yarn: `yarn add ${name}`,
-      bun: `bun add ${name}`,
-    },
-    peerDependencies: member.peerDependencies.reduce<Record<string, string>>(
-      (acc, dep) => {
-        acc[dep] = declaredPeerDeps[dep] ?? "latest";
-        return acc;
-      },
-      {},
-    ),
+    installCommands: buildInstallCommands(name),
+    peerDependencies,
     frameworkPeerDependencies: FRAMEWORK_PEER_DEPS,
     quickStartSnippet,
   };

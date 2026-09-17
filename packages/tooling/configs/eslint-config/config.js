@@ -66,58 +66,85 @@ function isConstAssertion(typeAnnotation) {
   return typeAnnotation?.type === 'TSTypeReference' && typeAnnotation.typeName?.name === 'const';
 }
 
+const BOUNDARY_NODE_TYPES = new Set([
+  'FunctionDeclaration',
+  'ArrowFunctionExpression',
+  'FunctionExpression',
+  'MethodDefinition',
+  'VariableDeclaration',
+  'ClassDeclaration',
+]);
+
+const FUNCTION_NODE_TYPES = new Set([
+  'FunctionDeclaration',
+  'ArrowFunctionExpression',
+  'FunctionExpression',
+  'MethodDefinition',
+]);
+
+function isFunctionNode(node) {
+  return Boolean(node && FUNCTION_NODE_TYPES.has(node.type));
+}
+
 /**
  * Find the enclosing TSTypeAnnotation for a nested type node.
  */
 function findEnclosingTypeAnnotation(node) {
+  let target;
   let current = node?.parent;
   while (current) {
     if (current.type === 'TSTypeAnnotation') {
-      return current;
+      target = current;
+      break;
     }
-    if (
-      current.type === 'FunctionDeclaration' ||
-      current.type === 'ArrowFunctionExpression' ||
-      current.type === 'FunctionExpression' ||
-      current.type === 'MethodDefinition' ||
-      current.type === 'VariableDeclaration' ||
-      current.type === 'ClassDeclaration'
-    ) {
-      return;
+    if (BOUNDARY_NODE_TYPES.has(current.type)) {
+      break;
     }
     current = current.parent;
   }
-  return;
+  return target;
+}
+
+function isDirectExportedFunctionAnnotation(node) {
+  const parent = node?.parent;
+  if (parent?.type !== 'TSTypeAnnotation') {
+    return false;
+  }
+  const functionNode = parent.parent;
+  return isFunctionNode(functionNode) && isNodeExported(functionNode);
+}
+
+function isDirectFunctionReturn(enclosing) {
+  const functionNode = enclosing.parent;
+  return isFunctionNode(functionNode) && functionNode.returnType === enclosing && isNodeExported(functionNode);
+}
+
+function isFunctionTypeReturn(enclosing) {
+  const tsFunction = enclosing.parent;
+  if (tsFunction?.type !== 'TSFunctionType' || tsFunction.returnType !== enclosing) {
+    return false;
+  }
+  const annotation = tsFunction.parent;
+  if (annotation?.type !== 'TSTypeAnnotation') {
+    return false;
+  }
+  const functionNode = annotation.parent;
+  return isFunctionNode(functionNode) && functionNode.returnType === annotation && isNodeExported(functionNode);
+}
+
+function isNestedReturnTypeAnnotation(node) {
+  const enclosing = findEnclosingTypeAnnotation(node);
+  if (!enclosing) {
+    return false;
+  }
+  return isDirectFunctionReturn(enclosing) || isFunctionTypeReturn(enclosing);
 }
 
 /**
  * Check whether a type node is a return or parameter annotation on an exported function.
  */
 function isExportedFunctionAnnotation(node) {
-  const parent = node?.parent;
-  if (parent?.type === 'TSTypeAnnotation') {
-    const functionNode = parent.parent;
-    const isFunction =
-      functionNode?.type === 'FunctionDeclaration' ||
-      functionNode?.type === 'ArrowFunctionExpression' ||
-      functionNode?.type === 'FunctionExpression' ||
-      functionNode?.type === 'MethodDefinition';
-    return isFunction && isNodeExported(functionNode);
-  }
-
-  const enclosing = findEnclosingTypeAnnotation(node);
-  if (enclosing) {
-    const functionNode = enclosing.parent;
-    const isFunction =
-      functionNode?.type === 'FunctionDeclaration' ||
-      functionNode?.type === 'ArrowFunctionExpression' ||
-      functionNode?.type === 'FunctionExpression' ||
-      functionNode?.type === 'MethodDefinition';
-    const isReturnType = functionNode?.returnType === enclosing;
-    return isFunction && isReturnType && isNodeExported(functionNode);
-  }
-
-  return false;
+  return isDirectExportedFunctionAnnotation(node) || isNestedReturnTypeAnnotation(node);
 }
 
 /**
@@ -209,15 +236,22 @@ const missionTypeScriptPlugin = {
         },
       },
       create(context) {
+        function validateAssertion(node) {
+          if (node.typeAnnotation?.type === 'TSAnyKeyword') {
+            context.report({ node, messageId: 'noAsAny' });
+            return;
+          }
+          if (!isConstAssertion(node.typeAnnotation)) {
+            context.report({ node, messageId: 'preferSatisfies' });
+          }
+        }
+
         return {
           TSAsExpression(node) {
-            if (node.typeAnnotation?.type === 'TSAnyKeyword') {
-              context.report({ node, messageId: 'noAsAny' });
-              return;
-            }
-            if (!isConstAssertion(node.typeAnnotation)) {
-              context.report({ node, messageId: 'preferSatisfies' });
-            }
+            validateAssertion(node);
+          },
+          TSTypeAssertion(node) {
+            validateAssertion(node);
           },
         };
       },

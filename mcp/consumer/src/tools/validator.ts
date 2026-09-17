@@ -132,9 +132,16 @@ function checkConflictingViteConditions(
   framework: ConsumerFramework,
   expectedCondition: string,
   checks: ValidationCheck[],
+  stripped?: string,
 ): void {
   for (const [otherFw, otherCond] of Object.entries(FRAMEWORK_CONDITIONS)) {
-    if (otherFw !== framework && configuredConditions.has(otherCond)) {
+    const hasHelperConflict = stripped
+      ? hasFrameworkHelper(stripped, otherFw as ConsumerFramework)
+      : false;
+    if (
+      otherFw !== framework &&
+      (configuredConditions.has(otherCond) || hasHelperConflict)
+    ) {
       checks.push({
         name: `Conflicting condition (${otherCond})`,
         category: "vite",
@@ -183,6 +190,7 @@ function validateViteConfig(
     framework,
     expectedCondition,
     checks,
+    stripped,
   );
 }
 

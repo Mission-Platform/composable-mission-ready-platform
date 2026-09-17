@@ -1,5 +1,5 @@
 import { existsSync, lstatSync } from "node:fs";
-import { join, relative } from "node:path";
+import { isAbsolute, join, relative } from "node:path";
 
 import { findRepoRoot, resolveRepoPath } from "../repo/paths.ts";
 import { listAll, type PackageManifest, readJson } from "../repo/scanner.ts";
@@ -29,6 +29,56 @@ function tryReadManifest(
   }
 }
 
+function collectSingleFileManifest(
+  targetPath: string,
+  repoRoot: string,
+): Array<{ manifest: PackageManifest; relPath: string }> {
+  if (!targetPath.endsWith("package.json")) {
+    return [];
+  }
+  const relPath = relative(repoRoot, targetPath).replaceAll("\\", "/");
+  const single = tryReadManifest(targetPath, relPath);
+  return single ? [single] : [];
+}
+
+function isChildMemberDirectory(memberDir: string, targetPath: string): boolean {
+  const rel = relative(targetPath, memberDir);
+  return Boolean(rel && !rel.startsWith("..") && !isAbsolute(rel));
+}
+
+function collectWorkspaceMemberManifests(
+  targetPath: string,
+  repoRoot: string,
+): Array<{ manifest: PackageManifest; relPath: string }> {
+  const manifests: Array<{ manifest: PackageManifest; relPath: string }> = [];
+  try {
+    for (const member of listAll()) {
+      if (!isChildMemberDirectory(member.dir, targetPath)) continue;
+      const pkgPath = join(member.dir, "package.json");
+      const relPath = relative(repoRoot, pkgPath).replaceAll("\\", "/");
+      const memberManifest = tryReadManifest(pkgPath, relPath);
+      if (memberManifest) manifests.push(memberManifest);
+    }
+  } catch {
+    // Continue with whatever manifests were found
+  }
+  return manifests;
+}
+
+function collectDirectoryManifests(
+  targetPath: string,
+  repoRoot: string,
+): Array<{ manifest: PackageManifest; relPath: string }> {
+  const manifests: Array<{ manifest: PackageManifest; relPath: string }> = [];
+  const directManifestPath = join(targetPath, "package.json");
+  const directRelPath = relative(repoRoot, directManifestPath).replaceAll("\\", "/");
+  const direct = tryReadManifest(directManifestPath, directRelPath);
+  if (direct) manifests.push(direct);
+
+  manifests.push(...collectWorkspaceMemberManifests(targetPath, repoRoot));
+  return manifests;
+}
+
 /**
  * Collect root and workspace member package.json manifests within target scope.
  */
@@ -36,39 +86,14 @@ function collectManifests(
   targetPath: string,
   repoRoot: string,
 ): Array<{ manifest: PackageManifest; relPath: string }> {
-  const manifests: Array<{ manifest: PackageManifest; relPath: string }> = [];
-  if (!existsSync(targetPath)) return manifests;
+  if (!existsSync(targetPath)) return [];
 
   const stat = lstatSync(targetPath);
   if (stat.isFile()) {
-    if (targetPath.endsWith("package.json")) {
-      const relPath = relative(repoRoot, targetPath).replaceAll("\\", "/");
-      const single = tryReadManifest(targetPath, relPath);
-      if (single) manifests.push(single);
-    }
-    return manifests;
+    return collectSingleFileManifest(targetPath, repoRoot);
   }
 
-  const directManifestPath = join(targetPath, "package.json");
-  const directRelPath = relative(repoRoot, directManifestPath).replaceAll("\\", "/");
-  const direct = tryReadManifest(directManifestPath, directRelPath);
-  if (direct) manifests.push(direct);
-
-  try {
-    const members = listAll();
-    for (const member of members) {
-      if (member.dir.startsWith(targetPath) && member.dir !== targetPath) {
-        const pkgPath = join(member.dir, "package.json");
-        const relPath = relative(repoRoot, pkgPath).replaceAll("\\", "/");
-        const memberManifest = tryReadManifest(pkgPath, relPath);
-        if (memberManifest) manifests.push(memberManifest);
-      }
-    }
-  } catch {
-    // Continue with whatever manifests were found
-  }
-
-  return manifests;
+  return collectDirectoryManifests(targetPath, repoRoot);
 }
 
 /**
@@ -208,22 +233,48 @@ function auditLifecycleScripts(
   return inspectLifecycleHooks(scripts, relPath, severityThreshold);
 }
 
+const TARBALL_EXTENSIONS = [".tgz", ".tar.gz"] as const;
+const SENSITIVE_QUERY_PARAMS = ["token", "auth", "key", "secret", "sig", "signature"] as const;
+
+function isHttpProtocol(protocol: string): boolean {
+  return protocol === "http:" || protocol === "https:";
+}
+
+function isTarballPath(pathname: string): boolean {
+  const lower = pathname.toLowerCase();
+  return TARBALL_EXTENSIONS.some((ext) => lower.endsWith(ext));
+}
+
 /**
  * Parse dependency specifier as an external tarball URL if valid.
  */
 function parseTarballUrl(spec: string): URL | undefined {
   try {
     const url = new URL(spec);
-    if (url.protocol !== "http:" && url.protocol !== "https:") {
-      return undefined;
-    }
-    const pathname = url.pathname.toLowerCase();
-    if (pathname.endsWith(".tgz") || pathname.endsWith(".tar.gz")) {
-      return url;
-    }
-    return undefined;
+    if (!isHttpProtocol(url.protocol)) return undefined;
+    if (!isTarballPath(url.pathname)) return undefined;
+    return url;
   } catch {
     return undefined;
+  }
+}
+
+function sanitizeUrlCredentials(url: URL): void {
+  const hadPassword = Boolean(url.password);
+  if (hadPassword) {
+    url.password = "***";
+    return;
+  }
+  if (url.username) {
+    url.username = "***";
+  }
+}
+
+function sanitizeUrlQueryParams(url: URL): void {
+  for (const param of SENSITIVE_QUERY_PARAMS) {
+    if (url.searchParams.has(param)) {
+      url.searchParams.set(param, "***REDACTED***");
+    }
   }
 }
 
@@ -232,18 +283,8 @@ function parseTarballUrl(spec: string): URL | undefined {
  */
 function sanitizeTarballUrl(url: URL): string {
   const sanitized = new URL(url.toString());
-  if (sanitized.password) {
-    sanitized.password = "***";
-  }
-  if (sanitized.username && !sanitized.password) {
-    sanitized.username = "***";
-  }
-  const sensitiveParams = ["token", "auth", "key", "secret", "sig", "signature"];
-  for (const param of sensitiveParams) {
-    if (sanitized.searchParams.has(param)) {
-      sanitized.searchParams.set(param, "***REDACTED***");
-    }
-  }
+  sanitizeUrlCredentials(sanitized);
+  sanitizeUrlQueryParams(sanitized);
   return sanitized.toString();
 }
 

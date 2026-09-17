@@ -300,9 +300,18 @@ export function collectComplianceEvidence(
     ...supplyChainResult.findings,
   ];
 
+  const depIncomplete = depResult.incomplete === true || depResult.scannedFiles === 0;
+  const supplyChainIncomplete =
+    supplyChainResult.incomplete === true ||
+    supplyChainResult.stats.manifestsScanned === 0;
+  const manifestAuditIncomplete = depIncomplete || supplyChainIncomplete;
+
   const incompleteControls: Record<string, boolean> = {
-    "A.8.8": depResult.incomplete === true,
+    "A.8.8": manifestAuditIncomplete,
+    "A.8.9": manifestAuditIncomplete,
     "A.8.12": secretsResult.incomplete === true,
+    "A.8.20": manifestAuditIncomplete,
+    "A.8.25": manifestAuditIncomplete,
     "A.8.28": codeResult.incomplete === true,
     "A.8.32": gitMeta.cleanTree === undefined,
   };

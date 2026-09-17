@@ -488,6 +488,43 @@ function formatComplianceStandardReport(report: ComplianceEvidenceReport, standa
   }
 }
 
+function getStagedDiffForSecretScanning(path?: string): string {
+  const diffResult = readGitDiff({ staged: true, path });
+  if (!diffResult.success) {
+    throw new Error(diffResult.message ?? 'Git diff command failed.');
+  }
+  if (diffResult.outputTruncated) {
+    throw new Error(
+      'Staged git diff was truncated due to output buffer limits; unable to guarantee complete secret scanning.',
+    );
+  }
+  return diffResult.stdout;
+}
+
+function handleSecurityScanSecrets(args: {
+  path?: string;
+  staged?: boolean;
+  severityThreshold?: string;
+  maxFiles?: number;
+}) {
+  const severityThreshold = args.severityThreshold as SecurityFindingSeverity | undefined;
+  if (args.staged) {
+    const content = getStagedDiffForSecretScanning(args.path);
+    const filePath = args.path ? `${args.path} (staged diff)` : 'staged diff';
+    return scanSecrets({
+      content,
+      filePath,
+      severityThreshold,
+      maxFiles: args.maxFiles,
+    });
+  }
+  return scanSecrets({
+    path: args.path,
+    severityThreshold,
+    maxFiles: args.maxFiles,
+  });
+}
+
 /**
  * Register all developer tools on the MCP server, applying optional profile-based filtering.
  */
@@ -2621,32 +2658,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
     },
     (args) => {
       try {
-        if (args.staged) {
-          const diffResult = readGitDiff({ staged: true, path: args.path });
-          if (!diffResult.success) {
-            throw new Error(diffResult.message ?? 'Git diff command failed.');
-          }
-          if (diffResult.outputTruncated) {
-            throw new Error(
-              'Staged git diff was truncated due to output buffer limits; unable to guarantee complete secret scanning.',
-            );
-          }
-          return json(
-            scanSecrets({
-              content: diffResult.stdout,
-              filePath: args.path ? `${args.path} (staged diff)` : 'staged diff',
-              severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
-              maxFiles: args.maxFiles,
-            }),
-          );
-        }
-        return json(
-          scanSecrets({
-            path: args.path,
-            severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
-            maxFiles: args.maxFiles,
-          }),
-        );
+        return json(handleSecurityScanSecrets(args));
       } catch (error) {
         return toolError(error);
       }

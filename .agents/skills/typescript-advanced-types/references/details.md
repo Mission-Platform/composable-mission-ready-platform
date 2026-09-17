@@ -56,13 +56,20 @@ export class StrictEventEmitter<
   }
 
   public emit<TEventKey extends keyof TEvents>(
+    event: TEvents[TEventKey] extends void ? TEventKey : never,
+  ): void;
+  public emit<TEventKey extends keyof TEvents>(
     event: TEventKey,
     payload: TEvents[TEventKey],
+  ): void;
+  public emit<TEventKey extends keyof TEvents>(
+    event: TEventKey,
+    payload?: TEvents[TEventKey],
   ): void {
     const callbacks = this.listeners[event];
     if (callbacks) {
       for (const callback of callbacks) {
-        callback(payload);
+        callback(payload as TEvents[TEventKey]);
       }
     }
   }
@@ -180,6 +187,13 @@ export class TypedApiClient<
           }
         }
       }
+    }
+
+    const unresolvedMatch = /:[a-zA-Z0-9_]+/.exec(routePath);
+    if (unresolvedMatch) {
+      throw new Error(
+        `Unresolved route parameter "${unresolvedMatch[0]}" in path: ${routePath}`,
+      );
     }
 
     const url = new URL(routePath, this.baseUrl);

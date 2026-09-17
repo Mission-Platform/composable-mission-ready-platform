@@ -275,15 +275,24 @@ export interface ComponentStoriesDetail {
 }
 
 /** Extract exported story names from story source code. */
-function extractStoryNames(storySource: string): string[] {
-  const storyNames: string[] = [];
-  const exportStoryRegex = /export\s+const\s+([A-Z]\w*)\s*:\s*Story\b/g;
-  let match: RegExpExecArray | null = exportStoryRegex.exec(storySource);
+export function extractStoryNames(storySource: string): string[] {
+  const storyNames = new Set<string>();
+  const typedRegex = /export\s+const\s+([A-Z]\w*)\s*:\s*(?:Story|StoryObj)\b/g;
+  let match: RegExpExecArray | null = typedRegex.exec(storySource);
   while (match !== null) {
-    if (match[1]) storyNames.push(match[1]);
-    match = exportStoryRegex.exec(storySource);
+    if (match[1]) storyNames.add(match[1]);
+    match = typedRegex.exec(storySource);
   }
-  return storyNames;
+
+  const satisfiesRegex =
+    /export\s+const\s+([A-Z]\w*)\s*=\s*(?:(?!\bexport\s+const\b)[\s\S])*?\bsatisfies\s+(?:Story|StoryObj)\b/g;
+  match = satisfiesRegex.exec(storySource);
+  while (match !== null) {
+    if (match[1]) storyNames.add(match[1]);
+    match = satisfiesRegex.exec(storySource);
+  }
+
+  return [...storyNames];
 }
 
 /** Extract enum option strings from storybook argTypes options block. */
@@ -293,6 +302,34 @@ function extractArgTypeOptions(storySource: string, propName: string): string[] 
   if (!match?.[1]) return [];
   const optionMatches = match[1].match(/['"]([^'"]+)['"]/g) ?? [];
   return optionMatches.map((opt) => opt.replaceAll(/['"]/g, ""));
+}
+
+interface SingleStoryMetadata {
+  readonly metaTitle?: string;
+  readonly storyNames: readonly string[];
+  readonly variants: readonly string[];
+  readonly sizes: readonly string[];
+}
+
+function parseSingleStoryFile(fullPath: string): SingleStoryMetadata | undefined {
+  try {
+    const storySource = readFileSync(fullPath, "utf8");
+    const titleMatch = /title:\s*['"]([^'"]+)['"]/.exec(storySource);
+    return {
+      metaTitle: titleMatch?.[1],
+      storyNames: extractStoryNames(storySource),
+      variants: extractArgTypeOptions(storySource, "variant"),
+      sizes: extractArgTypeOptions(storySource, "size"),
+    };
+  } catch {
+    return undefined;
+  }
+}
+
+function addAllToSet<T>(target: Set<T>, items: readonly T[]): void {
+  for (const item of items) {
+    target.add(item);
+  }
 }
 
 /**
@@ -313,24 +350,12 @@ function aggregateStoriesMetadata(
   let metaTitle: string | undefined;
 
   for (const storyFile of storyFiles) {
-    try {
-      const fullPath = join(dir, storyFile);
-      const storySource = readFileSync(fullPath, "utf8");
-      if (!metaTitle) {
-        const titleMatch = /title:\s*['"]([^'"]+)['"]/.exec(storySource);
-        if (titleMatch?.[1]) metaTitle = titleMatch[1];
-      }
-      for (const name of extractStoryNames(storySource)) {
-        storyNamesSet.add(name);
-      }
-      for (const v of extractArgTypeOptions(storySource, "variant")) {
-        variantsSet.add(v);
-      }
-      for (const s of extractArgTypeOptions(storySource, "size")) {
-        sizesSet.add(s);
-      }
-    } catch {
-      // Ignored if file unreadable
+    const meta = parseSingleStoryFile(join(dir, storyFile));
+    if (meta) {
+      metaTitle = metaTitle ?? meta.metaTitle;
+      addAllToSet(storyNamesSet, meta.storyNames);
+      addAllToSet(variantsSet, meta.variants);
+      addAllToSet(sizesSet, meta.sizes);
     }
   }
 

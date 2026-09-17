@@ -932,6 +932,10 @@ describe('prompts', () => {
     assert.match(secText, /security_scan_secrets/);
     assert.match(secText, /security_analyze_code/);
     assert.match(secText, /packages\//);
+
+    const stagedAudit = await client.getPrompt({ name: 'security-audit', arguments: { staged: 'true' } });
+    const stagedText = (stagedAudit.messages as { content: { text: string } }[])[0]?.content.text ?? '';
+    assert.match(stagedText, /only security_scan_secrets is limited to staged changes/);
   });
 });
 

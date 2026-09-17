@@ -106,20 +106,20 @@ packages/  ─X─ NEVER IMPORTS FROM ─X─  apps/
 
 Code authored in the monorepo must strictly adhere to **ISO/IEC 27001:2022 Control A.8.28 (Secure Coding)** and eliminate vulnerabilities identified in the **OWASP Top 10 (2025)** and **CWE Top 25**:
 
-1. **Injection Prevention (OWASP A03 / CWE-79, CWE-78, CWE-89)**:
+1. **Injection Prevention (OWASP A05 / CWE-79, CWE-78, CWE-89)**:
    - DOM XSS: Never assign un-sanitized dynamic markup to `innerHTML`, `v-html`, or `dangerouslySetInnerHTML`. Always wrap with `DOMPurify.sanitize(...)`.
-   - Command Injection: Never interpolate variables into shell command strings (`exec(\`...\`)`). Use argument arrays with `execFile()` or `spawn()`.
+   - Command Injection: Never interpolate variables into shell command strings (``exec(`...`)``). Use argument arrays with `execFile()` or `spawn()`.
    - SQL Injection: Always use parameterized queries rather than string concatenation.
 2. **Access Control & Path Safety (OWASP A01 / CWE-22, CWE-601)**:
    - Path Traversal: Always resolve and validate paths using `resolveRepoPath(...)` or explicit allowlists before reading or writing files.
    - Safe Navigation: Reject `javascript:` and `data:` schemes in links and navigation targets.
-3. **Cryptographic Hygiene (OWASP A02 / CWE-327, CWE-330)**:
+3. **Cryptographic Hygiene (OWASP A04 / CWE-327, CWE-330)**:
    - Never use broken hash algorithms (`MD5`, `SHA1`) for security purposes. Use SHA-256 (`crypto.createHash('sha256')`) or modern key derivation (Argon2, bcrypt).
    - Never use `Math.random()` to generate tokens, passwords, nonces, or secrets. Always use `crypto.getRandomValues()` or `node:crypto randomBytes()`.
 4. **Data Leakage & Logging Prevention (ISO A.8.12 / CWE-532, CWE-798)**:
    - Never hardcode secrets, API keys, or private keys.
    - Never print credentials, tokens, or passwords to `console.log` or logging sinks.
-5. **Supply Chain Integrity (OWASP A08 / ISO A.8.20, A.8.25)**:
+5. **Supply Chain Integrity (OWASP A03 / ISO A.8.20, A.8.25)**:
    - Avoid adding unvetted lifecycle install scripts (`postinstall`, `preinstall`).
    - Reject unencrypted `http://` or `git://` dependency sources.
 6. **Automated Evidence Collection**:
@@ -136,4 +136,4 @@ Before submitting any implementation plan or code changes, verify:
 - [ ] Did I search `packages/` with `lsp_find_symbol` for existing helpers instead of writing duplicate utilities?
 - [ ] Are all UI text elements backed by `@mission-platform/i18n` locale keys?
 - [ ] Does my code respect strict one-way dependency direction (`packages/` does not import `apps/`)?
-- [ ] Does my code pass OWASP 2025 and ISO 27001 secure coding checks (`security_analyze_code` & `security_scan_secrets`)?
+- [ ] Does my code pass OWASP 2025 and ISO 27001 secure coding checks (`security_analyze_code`, `security_scan_secrets`, and `security_collect_compliance_evidence`)?

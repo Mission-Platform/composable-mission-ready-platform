@@ -471,12 +471,12 @@ function buildTestRunArgs(
   testNamePattern?: string,
 ): { command: string; args: string[] } {
   if (runner === 'node:test') {
-    const nodeArgs = ['--test'];
+    const nodeArguments = ['--test'];
     if (testNamePattern) {
-      nodeArgs.push(`--test-name-pattern=${testNamePattern}`);
+      nodeArguments.push(`--test-name-pattern=${testNamePattern}`);
     }
-    nodeArgs.push(relativePath);
-    return { command: 'node', args: nodeArgs };
+    nodeArguments.push(relativePath);
+    return { command: 'node', args: nodeArguments };
   }
   const vitestArgs = ['exec', 'vitest', 'run', relativePath];
   if (testNamePattern) {

@@ -143,7 +143,7 @@ Built on **vue-i18n v11** in composition (non-legacy) mode.
 
 Each package that contains translatable strings exports a **locale module** — a plain `MpLocaleModule` object keyed by locale code, backed by compiled YAML message catalogs:
 
-```
+```text
 src/locales/
 ├── en.yaml      # English strings in YAML format
 └── index.ts     # exports: { locales: MpLocaleModule }
@@ -192,7 +192,7 @@ app.use(
 
 Locale messages are stored in **YAML** (`*.yaml`) files, not TypeScript:
 
-```
+```text
 src/locales/
 ├── en.yaml      # English strings for this package
 └── index.ts     # exports: { locales: MpLocaleModule }

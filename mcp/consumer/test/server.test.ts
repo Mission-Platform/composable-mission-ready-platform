@@ -298,6 +298,36 @@ describe("consumer setup validator", () => {
       ),
     );
   });
+
+  it("flags conflicting export conditions from framework helper calls", async () => {
+    const result = await callTool("validate_consumer_setup", {
+      framework: "vue",
+      viteConfig: `
+        import { frameworkResolveConditions } from '@mission-platform/forge-plugin-api';
+        export default defineConfig({
+          resolve: {
+            conditions: [
+              ...frameworkResolveConditions('vue'),
+              ...frameworkResolveConditions('react'),
+            ]
+          }
+        });
+      `,
+    });
+
+    assert.ok(!result.isError);
+    const report = JSON.parse(result.body) as {
+      status: string;
+      failedChecks: number;
+      checks: Array<{ name: string; status: string }>;
+    };
+    assert.equal(report.status, "errors");
+    assert.ok(
+      report.checks.some(
+        (c) => c.status === "fail" && c.name.includes("Conflicting"),
+      ),
+    );
+  });
 });
 
 describe("consumer token tools", () => {

@@ -178,6 +178,50 @@ async function collectReviewTests(
   );
 }
 
+interface SecurityScanExecutionResult {
+  readonly findings: readonly SecurityFinding[];
+  readonly errors?: readonly string[];
+  readonly incomplete?: boolean;
+}
+
+function scanFileSecurity(
+  filePath: string,
+  scanFn: (options: { path: string }) => SecurityScanExecutionResult,
+  failureLabel: string,
+): { findings: readonly SecurityFinding[]; errors: readonly string[]; incomplete: boolean } {
+  try {
+    const result = scanFn({ path: filePath });
+    return {
+      findings: result.findings,
+      errors: result.errors ?? [],
+      incomplete: Boolean(result.incomplete),
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      findings: [],
+      errors: [`Failed to ${failureLabel} for "${filePath}": ${message}`],
+      incomplete: true,
+    };
+  }
+}
+
+function scanFileBatch(
+  files: readonly { readonly path: string }[],
+  scanFn: (options: { path: string }) => SecurityScanExecutionResult,
+  failureLabel: string,
+  target: { securityFindings: SecurityFinding[]; scanErrors: string[]; incomplete: boolean },
+): void {
+  for (const file of files) {
+    const outcome = scanFileSecurity(file.path, scanFn, failureLabel);
+    target.securityFindings.push(...outcome.findings);
+    target.scanErrors.push(...outcome.errors);
+    if (outcome.incomplete) {
+      target.incomplete = true;
+    }
+  }
+}
+
 /**
  * Run secret and code vulnerability scanning across reviewable changed files.
  */
@@ -185,47 +229,29 @@ function scanReviewSecurityFindings(
   codeFiles: readonly { readonly path: string }[],
   secretFiles: readonly { readonly path: string }[],
 ): { securityFindings: SecurityFinding[]; scanErrors: string[]; incomplete: boolean } {
-  const securityFindings: SecurityFinding[] = [];
-  const scanErrors: string[] = [];
-  let incomplete = false;
+  const result = {
+    securityFindings: [] as SecurityFinding[],
+    scanErrors: [] as string[],
+    incomplete: false,
+  };
+  scanFileBatch(secretFiles, scanSecrets, 'scan secrets', result);
+  scanFileBatch(codeFiles, analyzeCode, 'analyze code', result);
+  return result;
+}
 
-  for (const file of secretFiles) {
-    try {
-      const secretResult = scanSecrets({ path: file.path });
-      securityFindings.push(...secretResult.findings);
-      if (secretResult.incomplete) {
-        incomplete = true;
-      }
-      if (secretResult.errors) {
-        scanErrors.push(...secretResult.errors);
-      }
-    } catch (error) {
-      incomplete = true;
-      scanErrors.push(
-        `Failed to scan secrets for "${file.path}": ${error instanceof Error ? error.message : String(error)}`,
-      );
-    }
+function countBySeverity(findings: readonly SecurityFinding[], severity: 'critical' | 'high'): number {
+  return findings.filter((f) => f.severity === severity).length;
+}
+
+function extractUniqueCategories(findings: readonly SecurityFinding[], key: 'owasp' | 'cwe' | 'isoControl'): string[] {
+  return [...new Set(findings.map((f) => f[key]).filter(Boolean))];
+}
+
+function resolveReviewIncompleteStatus(incomplete: boolean, hasErrors: boolean): true | undefined {
+  if (incomplete || hasErrors) {
+    return true;
   }
-
-  for (const file of codeFiles) {
-    try {
-      const codeResult = analyzeCode({ path: file.path });
-      securityFindings.push(...codeResult.findings);
-      if (codeResult.incomplete) {
-        incomplete = true;
-      }
-      if (codeResult.errors) {
-        scanErrors.push(...codeResult.errors);
-      }
-    } catch (error) {
-      incomplete = true;
-      scanErrors.push(
-        `Failed to analyze code for "${file.path}": ${error instanceof Error ? error.message : String(error)}`,
-      );
-    }
-  }
-
-  return { securityFindings, scanErrors, incomplete };
+  return undefined;
 }
 
 /**
@@ -236,19 +262,35 @@ function buildSecurityReviewSummary(
   scanErrors: readonly string[] = [],
   incomplete = false,
 ) {
-  const isClean = securityFindings.length === 0 && !incomplete && scanErrors.length === 0;
+  const hasErrors = scanErrors.length > 0;
+  const isClean = securityFindings.length === 0 && !incomplete && !hasErrors;
   return {
     clean: isClean,
-    incomplete: incomplete || scanErrors.length > 0 ? true : undefined,
-    errors: scanErrors.length > 0 ? scanErrors : undefined,
+    incomplete: resolveReviewIncompleteStatus(incomplete, hasErrors),
+    errors: hasErrors ? scanErrors : undefined,
     findingsCount: securityFindings.length,
-    criticalCount: securityFindings.filter((f) => f.severity === 'critical').length,
-    highCount: securityFindings.filter((f) => f.severity === 'high').length,
-    owaspCategories: [...new Set(securityFindings.map((f) => f.owasp).filter(Boolean))],
-    cweWeaknesses: [...new Set(securityFindings.map((f) => f.cwe).filter(Boolean))],
-    isoControls: [...new Set(securityFindings.map((f) => f.isoControl).filter(Boolean))],
+    criticalCount: countBySeverity(securityFindings, 'critical'),
+    highCount: countBySeverity(securityFindings, 'high'),
+    owaspCategories: extractUniqueCategories(securityFindings, 'owasp'),
+    cweWeaknesses: extractUniqueCategories(securityFindings, 'cwe'),
+    isoControls: extractUniqueCategories(securityFindings, 'isoControl'),
     findings: securityFindings,
   };
+}
+
+function isGitInputIncomplete(
+  changed: {
+    readonly success: boolean;
+    readonly outputTruncated: boolean;
+    readonly timedOut: boolean;
+    readonly files: readonly unknown[];
+  },
+  maxFiles: number,
+): boolean {
+  if (!changed.success) return true;
+  if (changed.outputTruncated) return true;
+  if (changed.timedOut) return true;
+  return changed.files.length > maxFiles;
 }
 
 export async function reviewChanges(request: ReviewChangesRequest) {
@@ -277,7 +319,11 @@ export async function reviewChanges(request: ReviewChangesRequest) {
   ]);
 
   const { securityFindings, scanErrors, incomplete } = scanReviewSecurityFindings(files, allChangedFiles);
-  const securitySummary = buildSecurityReviewSummary(securityFindings, scanErrors, incomplete);
+  const gitIncomplete = isGitInputIncomplete(changed, maxFiles);
+  if (!changed.success && changed.message) {
+    scanErrors.push(changed.message);
+  }
+  const securitySummary = buildSecurityReviewSummary(securityFindings, scanErrors, incomplete || gitIncomplete);
 
   const message = request.languageId
     ? 'Review includes bounded language-server evidence and security checks for reviewable changed files.'

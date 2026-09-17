@@ -371,6 +371,39 @@ function isAnalyzableFile(entry: Dirent): boolean {
   return isCodeFile(entry.name);
 }
 
+interface CodeTraversalState {
+  skippedCount: number;
+  unreadableCount: number;
+  errors: string[];
+}
+
+function handleCodeDirectoryEntry(
+  name: string,
+  fullPath: string,
+  maxFiles: number,
+  collected: string[],
+  state: CodeTraversalState,
+): void {
+  if (!IGNORED_DIRS.has(name)) {
+    collectCodeFiles(fullPath, maxFiles, collected, state);
+  }
+}
+
+function handleCodeFileEntry(
+  entry: Dirent,
+  fullPath: string,
+  maxFiles: number,
+  collected: string[],
+  state: CodeTraversalState,
+): void {
+  if (!isAnalyzableFile(entry)) return;
+  if (collected.length < maxFiles) {
+    collected.push(fullPath);
+  } else {
+    state.skippedCount += 1;
+  }
+}
+
 /**
  * Process a directory entry for scannable source file collection.
  */
@@ -379,23 +412,15 @@ function processCodeDirectoryEntry(
   startDir: string,
   maxFiles: number,
   collected: string[],
-  state: { skippedCount: number },
+  state: CodeTraversalState,
 ): void {
   if (entry.isSymbolicLink()) return;
   const fullPath = join(startDir, entry.name);
   if (entry.isDirectory()) {
-    if (!IGNORED_DIRS.has(entry.name)) {
-      collectCodeFiles(fullPath, maxFiles, collected, state);
-    }
+    handleCodeDirectoryEntry(entry.name, fullPath, maxFiles, collected, state);
     return;
   }
-  if (isAnalyzableFile(entry)) {
-    if (collected.length < maxFiles) {
-      collected.push(fullPath);
-    } else {
-      state.skippedCount += 1;
-    }
-  }
+  handleCodeFileEntry(entry, fullPath, maxFiles, collected, state);
 }
 
 /**
@@ -405,18 +430,25 @@ function collectCodeFiles(
   startDir: string,
   maxFiles: number,
   collected: string[] = [],
-  state = { skippedCount: 0 },
-): { files: string[]; skippedCount: number } {
+  state: CodeTraversalState = { skippedCount: 0, unreadableCount: 0, errors: [] },
+): { files: string[]; skippedCount: number; unreadableCount: number; errors: string[] } {
   try {
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
       processCodeDirectoryEntry(entry, startDir, maxFiles, collected, state);
     }
-  } catch {
-    return { files: collected, skippedCount: state.skippedCount };
+  } catch (error) {
+    state.unreadableCount += 1;
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    state.errors.push(`Directory unreadable: ${startDir}: ${errorMsg}`);
   }
 
-  return { files: collected, skippedCount: state.skippedCount };
+  return {
+    files: collected,
+    skippedCount: state.skippedCount,
+    unreadableCount: state.unreadableCount,
+    errors: state.errors,
+  };
 }
 
 interface SingleFileAnalysisResult {
@@ -510,13 +542,13 @@ function scanDirectoryTargetPath(
   maxFiles: number,
   severityThreshold?: SecurityFinding["severity"],
 ) {
-  const { files, skippedCount } = collectCodeFiles(targetPath, maxFiles);
+  const { files, skippedCount, unreadableCount, errors } = collectCodeFiles(targetPath, maxFiles);
   const stats = {
     findings: [] as SecurityFinding[],
     scannedCount: 0,
     oversizedCount: 0,
-    unreadableCount: 0,
-    errors: [] as string[],
+    unreadableCount,
+    errors: [...errors],
   };
   for (const file of files) {
     const outcome = analyzeSingleFile(file, repoRoot, severityThreshold);
@@ -560,6 +592,51 @@ function scanTargetPath(
   return scanDirectoryTargetPath(targetPath, repoRoot, maxFiles, severityThreshold);
 }
 
+function isTargetScanIncomplete(stats: {
+  oversizedCount: number;
+  unreadableCount: number;
+  skippedCount: number;
+  errors: readonly string[];
+}): boolean {
+  if (stats.oversizedCount > 0) return true;
+  if (stats.unreadableCount > 0) return true;
+  if (stats.skippedCount > 0) return true;
+  return stats.errors.length > 0;
+}
+
+function positiveCountOrUndefined(count: number): number | undefined {
+  return count > 0 ? count : undefined;
+}
+
+function nonEmptyErrorsOrUndefined(errors: readonly string[]): readonly string[] | undefined {
+  return errors.length > 0 ? errors : undefined;
+}
+
+function resolveScanTargetPath(optionsPath: string | undefined, repoRoot: string): string {
+  if (optionsPath) {
+    return resolveRepoPath(optionsPath, "code analysis path");
+  }
+  return repoRoot;
+}
+
+function buildTargetScanResult(
+  targetResult: ReturnType<typeof scanTargetPath>,
+  startTime: number,
+): SecurityScanResult {
+  const incomplete = isTargetScanIncomplete(targetResult);
+  return {
+    findings: targetResult.findings,
+    scannedFiles: targetResult.scannedCount,
+    durationMs: Date.now() - startTime,
+    clean: targetResult.findings.length === 0 && !incomplete,
+    incomplete: incomplete ? true : undefined,
+    skippedFiles: positiveCountOrUndefined(targetResult.skippedCount),
+    oversizedFiles: positiveCountOrUndefined(targetResult.oversizedCount),
+    unreadableFiles: positiveCountOrUndefined(targetResult.unreadableCount),
+    errors: nonEmptyErrorsOrUndefined(targetResult.errors),
+  };
+}
+
 /**
  * Run static code vulnerability analysis across files, directories, or inline content.
  */
@@ -572,9 +649,7 @@ export function analyzeCode(
   }
 
   const repoRoot = findRepoRoot();
-  const targetPath = options.path
-    ? resolveRepoPath(options.path, "code analysis path")
-    : repoRoot;
+  const targetPath = resolveScanTargetPath(options.path, repoRoot);
   const maxFiles = options.maxFiles ?? DEFAULT_MAX_FILES;
   const targetResult = scanTargetPath(
     targetPath,
@@ -583,21 +658,5 @@ export function analyzeCode(
     options.severityThreshold,
   );
 
-  const incomplete =
-    targetResult.oversizedCount > 0 ||
-    targetResult.unreadableCount > 0 ||
-    targetResult.skippedCount > 0 ||
-    targetResult.errors.length > 0;
-
-  return {
-    findings: targetResult.findings,
-    scannedFiles: targetResult.scannedCount,
-    durationMs: Date.now() - startTime,
-    clean: targetResult.findings.length === 0 && !incomplete,
-    incomplete: incomplete ? true : undefined,
-    skippedFiles: targetResult.skippedCount > 0 ? targetResult.skippedCount : undefined,
-    oversizedFiles: targetResult.oversizedCount > 0 ? targetResult.oversizedCount : undefined,
-    unreadableFiles: targetResult.unreadableCount > 0 ? targetResult.unreadableCount : undefined,
-    errors: targetResult.errors.length > 0 ? targetResult.errors : undefined,
-  };
+  return buildTargetScanResult(targetResult, startTime);
 }

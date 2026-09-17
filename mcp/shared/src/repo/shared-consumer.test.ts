@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { getGuide } from "../knowledge/guides.ts";
-import { getComponentStories } from "./components.ts";
+import { extractStoryNames, getComponentStories } from "./components.ts";
 import { getIconUsage, listIcons } from "./icons.ts";
 import { getConsumerPackageInfo, listConsumerPackages } from "./packages.ts";
 import { getRouterSetup } from "./routing.ts";
@@ -118,5 +118,28 @@ describe("Shared Consumer Capabilities", () => {
     assert.ok(stories.variants.includes("primary"));
     assert.ok(stories.variants.includes("secondary"));
     assert.ok(stories.sizes.includes("md"));
+  });
+
+  it("extracts story names across CSF formats including StoryObj and satisfies Story", () => {
+    const sample = `
+      export const Primary: Story = { args: { variant: "primary" } };
+      export const Secondary: StoryObj<typeof meta> = { args: { variant: "secondary" } };
+      export const Outline = {
+        args: { variant: "outline" }
+      } satisfies Story;
+      export const Destructive = {
+        args: { variant: "destructive" }
+      } satisfies StoryObj<typeof meta>;
+      export const nonStoryHelper = () => ({});
+      export const ConfigValues = { timeout: 1000 };
+    `;
+
+    const names = extractStoryNames(sample);
+    assert.ok(names.includes("Primary"));
+    assert.ok(names.includes("Secondary"));
+    assert.ok(names.includes("Outline"));
+    assert.ok(names.includes("Destructive"));
+    assert.equal(names.includes("nonStoryHelper"), false);
+    assert.equal(names.includes("ConfigValues"), false);
   });
 });

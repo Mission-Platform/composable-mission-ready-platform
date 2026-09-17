@@ -233,6 +233,13 @@ function hashUntrackedPath(path: string, options: GitCommandInputOptions): strin
   if (!existsSync(resolved)) {
     return `${path}\0<missing>`;
   }
+  try {
+    if (lstatSync(resolved).isDirectory()) {
+      return `${path}\0directory`;
+    }
+  } catch {
+    return `${path}\0<missing>`;
+  }
   const hash = runGit('commit-snapshot-untracked', ['hash-object', '--no-filters', '--', path], options);
   if (hash.success) {
     return `${path}\0${hash.stdout.trim()}`;

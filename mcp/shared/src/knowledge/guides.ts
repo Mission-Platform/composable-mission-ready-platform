@@ -831,14 +831,14 @@ The Mission Platform provides a comprehensive suite of static security analysis,
 ## Key Security Tools
 - \`security_scan_secrets\`: Detects hardcoded secrets, private keys, cloud provider tokens (AWS, Cloudflare, OpenAI, GitHub PATs, Slack), and high-entropy assignments. Confined to repository bounds with automatic credential redaction (mapped to OWASP A07 / CWE-798 / ISO A.8.12).
 - \`security_analyze_code\`: Scans TypeScript, Vue SFCs, and JSX for static vulnerability patterns:
-  - Injection (OWASP A03 / CWE-79, CWE-78, CWE-89, CWE-94, CWE-95 / ISO A.8.28): DOM XSS (\`innerHTML\`, \`v-html\`, \`dangerouslySetInnerHTML\`), Command Injection (\`exec\`), SQL Injection (\`query\`), dynamic code evaluation (\`eval()\`, \`new Function()\`).
+  - Injection (OWASP A05 / CWE-79, CWE-78, CWE-89, CWE-94, CWE-95 / ISO A.8.28): DOM XSS (\`innerHTML\`, \`v-html\`, \`dangerouslySetInnerHTML\`), Command Injection (\`exec\`), SQL Injection (\`query\`), dynamic code evaluation (\`eval()\`, \`new Function()\`).
   - Broken Access Control (OWASP A01 / CWE-22, CWE-601 / ISO A.8.28): Path Traversal (\`readFile\`), Unsafe redirect pseudo-protocols (\`javascript:\`, \`data:\`).
-  - Cryptographic Failures (OWASP A02 / CWE-327, CWE-330 / ISO A.8.28): Broken hash functions (\`MD5\`, \`SHA1\`), insecure pseudo-randomness (\`Math.random()\`) for credentials/tokens.
-  - Insecure Design (OWASP A04 / CWE-1333 / ISO A.8.28): Catastrophic backtracking regular expressions (\`ReDoS\`).
-  - Security Misconfiguration (OWASP A05 / CWE-295, CWE-16 / ISO A.8.9): Disabled TLS certificate validation (\`rejectUnauthorized: false\`), permissive CORS with credentials.
+  - Cryptographic Failures (OWASP A04 / CWE-327, CWE-330 / ISO A.8.28): Broken hash functions (\`MD5\`, \`SHA1\`), insecure pseudo-randomness (\`Math.random()\`) for credentials/tokens.
+  - Insecure Design (OWASP A06 / CWE-1333 / ISO A.8.28): Catastrophic backtracking regular expressions (\`ReDoS\`).
+  - Security Misconfiguration (OWASP A02 / CWE-295, CWE-16 / ISO A.8.9): Disabled TLS certificate validation (\`rejectUnauthorized: false\`), permissive CORS with credentials.
   - Logging Failures (OWASP A09 / CWE-532 / ISO A.8.12): Logging passwords, secrets, or API keys to log stores.
   - Server-Side Request Forgery (OWASP A10 / CWE-918 / ISO A.8.28): Dynamic unvalidated URL concatenation in HTTP fetch/axios requests.
-- \`security_audit_dependencies\`: Inspects workspace package manifests and queries \`pnpm audit\` for known CVEs, unpinned versions, and insecure transmission protocols (OWASP A06, A08 / CWE-1104, CWE-319 / ISO A.8.8, A.8.20).
+- \`security_audit_dependencies\`: Inspects workspace package manifests and queries \`pnpm audit\` for known CVEs, unpinned versions, and insecure transmission protocols (OWASP A03 / CWE-1104, CWE-319 / ISO A.8.8, A.8.20).
 - \`security_audit_supply_chain\`: Audits workspace manifests for dangerous lifecycle install scripts (\`postinstall\`, \`preinstall\`), conflicting dependency version divergence across packages, and unverified direct tarball sources.
 - \`security_collect_compliance_evidence\`: Aggregates audit evidence into an auditable ISO/IEC 27001:2022 Annex A compliance report with OWASP 2025 and CWE Top 25 scorecards, exportable in JSON or Markdown.
 - \`security_audit_compliance\`: Evaluates monorepo compliance posture against specific frameworks (\`iso-27001\`, \`owasp-2025\`, \`cwe-top25\`, or \`all\`).

@@ -62,8 +62,8 @@ Before writing any new code, assistants must inspect existing monorepo assets us
 All code and configurations in the monorepo must adhere to **ISO/IEC 27001:2022 Control A.8.28 (Secure Coding)** and eliminate vulnerabilities cataloged in the **OWASP Top 10 (2025)** and **CWE Top 25**:
 
 1. **Zero Secret Leaks (ISO A.8.12 / CWE-798)**: Never commit credentials, private keys, or cloud tokens.
-2. **Injection Defense (OWASP A03 / CWE-79, CWE-78, CWE-89)**: Always sanitize HTML markup (`DOMPurify.sanitize`), parameterize queries, and use vector arguments (`execFile`) instead of string shell interpolation.
-3. **Cryptographic & Supply Chain Rigor (OWASP A02, A08 / ISO A.8.20, A.8.25)**: Use modern cryptography (SHA-256, `crypto.getRandomValues`), avoid `Math.random()` for security, avoid unvetted `postinstall` lifecycle scripts, and pin dependencies via catalog references.
+2. **Injection Defense (OWASP A05 / CWE-79, CWE-78, CWE-89)**: Always sanitize HTML markup (`DOMPurify.sanitize`), parameterize queries, and use vector arguments (`execFile`) instead of string shell interpolation.
+3. **Cryptographic & Supply Chain Rigor (OWASP A04, A03 / ISO A.8.20, A.8.25)**: Use modern cryptography (SHA-256, `crypto.getRandomValues`), avoid `Math.random()` for security, avoid unvetted `postinstall` lifecycle scripts, and pin dependencies via catalog references.
 4. **Automated Verification**: Run `security_scan_secrets`, `security_analyze_code`, `security_audit_dependencies`, and `security_collect_compliance_evidence` to verify zero security regressions before proposing PRs.
 
 ### Isolation of Concerns

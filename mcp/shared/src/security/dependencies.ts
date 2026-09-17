@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, lstatSync } from "node:fs";
-import { join, relative } from "node:path";
+import { isAbsolute, join, relative } from "node:path";
 
 import { findRepoRoot, resolveRepoPath } from "../repo/paths.ts";
 import { listAll, type PackageManifest, readJson } from "../repo/scanner.ts";
@@ -225,6 +225,68 @@ function scanSingleManifestPath(
   }
 }
 
+function scanSingleFileTarget(
+  targetPath: string,
+  repoRoot: string,
+  severityThreshold?: SecurityFinding["severity"],
+): { findings: SecurityFinding[]; scannedFiles: number } {
+  if (targetPath.endsWith("package.json")) {
+    return {
+      findings: scanSingleManifestPath(targetPath, repoRoot, severityThreshold),
+      scannedFiles: 1,
+    };
+  }
+  return { findings: [], scannedFiles: 0 };
+}
+
+function isChildMember(memberDir: string, targetPath: string): boolean {
+  const rel = relative(targetPath, memberDir);
+  return Boolean(rel && !rel.startsWith("..") && !isAbsolute(rel));
+}
+
+function scanWorkspaceMemberManifests(
+  targetPath: string,
+  repoRoot: string,
+  severityThreshold?: SecurityFinding["severity"],
+): { findings: SecurityFinding[]; scannedFiles: number } {
+  const findings: SecurityFinding[] = [];
+  let scannedFiles = 0;
+  try {
+    for (const member of listAll()) {
+      if (!isChildMember(member.dir, targetPath)) continue;
+      const memberPkg = join(member.dir, "package.json");
+      if (existsSync(memberPkg)) {
+        findings.push(...scanSingleManifestPath(memberPkg, repoRoot, severityThreshold));
+        scannedFiles += 1;
+      }
+    }
+  } catch {
+    // If workspace scanning fails, continue with collected
+  }
+  return { findings, scannedFiles };
+}
+
+function scanDirectoryManifests(
+  targetPath: string,
+  repoRoot: string,
+  severityThreshold?: SecurityFinding["severity"],
+): { findings: SecurityFinding[]; scannedFiles: number } {
+  const findings: SecurityFinding[] = [];
+  let scannedFiles = 0;
+
+  const directPkg = join(targetPath, "package.json");
+  if (existsSync(directPkg)) {
+    findings.push(...scanSingleManifestPath(directPkg, repoRoot, severityThreshold));
+    scannedFiles += 1;
+  }
+
+  const memberResult = scanWorkspaceMemberManifests(targetPath, repoRoot, severityThreshold);
+  findings.push(...memberResult.findings);
+  scannedFiles += memberResult.scannedFiles;
+
+  return { findings, scannedFiles };
+}
+
 /**
  * Scan workspace package.json manifests for security policy compliance within a scoped path.
  */
@@ -233,46 +295,37 @@ function scanScopedManifests(
   repoRoot: string,
   severityThreshold?: SecurityFinding["severity"],
 ): { findings: SecurityFinding[]; scannedFiles: number } {
-  const findings: SecurityFinding[] = [];
-  let scannedFiles = 0;
-  if (!existsSync(targetPath)) return { findings, scannedFiles };
+  if (!existsSync(targetPath)) {
+    return { findings: [], scannedFiles: 0 };
+  }
 
   const stat = lstatSync(targetPath);
   if (stat.isFile()) {
-    if (targetPath.endsWith("package.json")) {
-      findings.push(...scanSingleManifestPath(targetPath, repoRoot, severityThreshold));
-      scannedFiles = 1;
-    }
-    return { findings, scannedFiles };
+    return scanSingleFileTarget(targetPath, repoRoot, severityThreshold);
   }
 
-  const directPkg = join(targetPath, "package.json");
-  if (existsSync(directPkg)) {
-    findings.push(...scanSingleManifestPath(directPkg, repoRoot, severityThreshold));
-    scannedFiles += 1;
-  }
-
-  try {
-    const members = listAll();
-    for (const member of members) {
-      if (member.dir.startsWith(targetPath) && member.dir !== targetPath) {
-        const memberPkg = join(member.dir, "package.json");
-        if (existsSync(memberPkg)) {
-          findings.push(...scanSingleManifestPath(memberPkg, repoRoot, severityThreshold));
-          scannedFiles += 1;
-        }
-      }
-    }
-  } catch {
-    // If workspace scanning fails, continue with collected
-  }
-
-  return { findings, scannedFiles };
+  return scanDirectoryManifests(targetPath, repoRoot, severityThreshold);
 }
 
 interface PnpmAuditExecutionResult {
   readonly stdout: string;
   readonly error?: string;
+}
+
+function extractStdoutString(stdout: string | Buffer | undefined): string {
+  if (!stdout) return "";
+  if (typeof stdout === "string") return stdout;
+  return stdout.toString("utf8");
+}
+
+function handleAuditExecutionError(error: unknown): PnpmAuditExecutionResult {
+  const execErr = error as { stdout?: string | Buffer; message?: string };
+  const stdoutText = extractStdoutString(execErr.stdout);
+  if (stdoutText.trim().startsWith("{")) {
+    return { stdout: stdoutText };
+  }
+  const errMessage = execErr.message ?? String(error);
+  return { stdout: "", error: `pnpm audit execution failed: ${errMessage}` };
 }
 
 /**
@@ -289,15 +342,7 @@ function executePnpmAudit(repoRoot: string): PnpmAuditExecutionResult {
     });
     return { stdout };
   } catch (error: unknown) {
-    const execErr = error as { stdout?: string | Buffer; message?: string };
-    const stdoutText = execErr.stdout
-      ? (typeof execErr.stdout === "string" ? execErr.stdout : execErr.stdout.toString("utf8"))
-      : "";
-    if (stdoutText.trim().startsWith("{")) {
-      return { stdout: stdoutText };
-    }
-    const errMessage = execErr.message ?? String(error);
-    return { stdout: "", error: `pnpm audit execution failed: ${errMessage}` };
+    return handleAuditExecutionError(error);
   }
 }
 
@@ -375,6 +420,43 @@ function buildAdvisoryFinding(
   };
 }
 
+function isPathInScope(pkgRel: string, targetPrefix: string): boolean {
+  const rel = relative(targetPrefix, pkgRel);
+  return rel === "" || (!rel.startsWith("..") && !isAbsolute(rel));
+}
+
+function hasMatchingFindingPath(
+  finding: PnpmAdvisoryFinding,
+  targetPrefix: string,
+): boolean {
+  const paths = finding.paths ?? [];
+  for (const p of paths) {
+    const topSegment = p.split(">")[0] ?? "";
+    const pkgRel = topSegment.replaceAll("__", "/");
+    if (isPathInScope(pkgRel, targetPrefix)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isAdvisoryInPathScope(
+  advisory: PnpmAdvisory,
+  targetPath: string,
+  repoRoot: string,
+): boolean {
+  if (targetPath === repoRoot) return true;
+  const relTarget = relative(repoRoot, targetPath).replaceAll("\\", "/");
+  const targetPrefix = relTarget.endsWith("/package.json")
+    ? relTarget.slice(0, -"/package.json".length)
+    : relTarget.replace(/\/+$/, "");
+
+  if (!targetPrefix || targetPrefix === ".") return true;
+
+  const findings = advisory.findings ?? [];
+  return findings.some((f) => hasMatchingFindingPath(f, targetPrefix));
+}
+
 /**
  * Process a single advisory entry and return finding if above threshold.
  */
@@ -382,7 +464,12 @@ function processSingleAdvisory(
   advisoryId: string,
   advisory: PnpmAdvisory,
   severityThreshold?: SecurityFinding["severity"],
+  targetPath?: string,
+  repoRoot?: string,
 ): SecurityFinding | undefined {
+  if (targetPath && repoRoot && !isAdvisoryInPathScope(advisory, targetPath, repoRoot)) {
+    return undefined;
+  }
   const rawSeverity = advisory.severity ?? "moderate";
   const severity = normalizePnpmSeverity(rawSeverity);
   if (!isSeverityAtOrAbove(severity, severityThreshold)) {
@@ -417,10 +504,12 @@ function extractAuditAdvisories(
 function convertAdvisoriesToFindings(
   advisories: Record<string, PnpmAdvisory>,
   severityThreshold?: SecurityFinding["severity"],
+  targetPath?: string,
+  repoRoot?: string,
 ): SecurityFinding[] {
   const findings: SecurityFinding[] = [];
   for (const [id, advisory] of Object.entries(advisories)) {
-    const finding = processSingleAdvisory(id, advisory, severityThreshold);
+    const finding = processSingleAdvisory(id, advisory, severityThreshold, targetPath, repoRoot);
     if (finding) findings.push(finding);
   }
   return findings;
@@ -432,12 +521,14 @@ function convertAdvisoriesToFindings(
 function parseAuditAdvisories(
   stdoutText: string,
   severityThreshold?: SecurityFinding["severity"],
+  targetPath?: string,
+  repoRoot?: string,
 ): { findings: SecurityFinding[]; error?: string } {
   const result = extractAuditAdvisories(stdoutText);
   if (result.error) return { findings: [], error: result.error };
   const advisories = result.advisories ?? {};
   return {
-    findings: convertAdvisoriesToFindings(advisories, severityThreshold),
+    findings: convertAdvisoriesToFindings(advisories, severityThreshold, targetPath, repoRoot),
   };
 }
 
@@ -447,6 +538,7 @@ function parseAuditAdvisories(
 function runPnpmAuditCheck(
   repoRoot: string,
   severityThreshold?: SecurityFinding["severity"],
+  targetPath?: string,
 ): { findings: SecurityFinding[]; errors: string[] } {
   const auditExec = executePnpmAudit(repoRoot);
   const errors: string[] = [];
@@ -457,9 +549,33 @@ function runPnpmAuditCheck(
   if (!auditExec.stdout.trim()) {
     return { findings: [], errors };
   }
-  const parsed = parseAuditAdvisories(auditExec.stdout, severityThreshold);
+  const parsed = parseAuditAdvisories(auditExec.stdout, severityThreshold, targetPath, repoRoot);
   if (parsed.error) errors.push(parsed.error);
   return { findings: parsed.findings, errors };
+}
+
+function resolveAuditTargetPath(optionsPath: string | undefined, repoRoot: string): string {
+  if (optionsPath) {
+    return resolveRepoPath(optionsPath, "dependency audit path");
+  }
+  return repoRoot;
+}
+
+function buildAuditResult(
+  findings: SecurityFinding[],
+  scannedFiles: number,
+  errors: string[],
+  startTime: number,
+): SecurityScanResult {
+  const hasErrors = errors.length > 0;
+  return {
+    findings,
+    scannedFiles,
+    durationMs: Date.now() - startTime,
+    clean: findings.length === 0 && !hasErrors,
+    incomplete: hasErrors ? true : undefined,
+    errors: hasErrors ? errors : undefined,
+  };
 }
 
 /**
@@ -470,9 +586,7 @@ export function auditDependencies(
 ): SecurityScanResult {
   const startTime = Date.now();
   const repoRoot = findRepoRoot();
-  const targetPath = options.path
-    ? resolveRepoPath(options.path, "dependency audit path")
-    : repoRoot;
+  const targetPath = resolveAuditTargetPath(options.path, repoRoot);
   const findings: SecurityFinding[] = [];
   const errors: string[] = [];
 
@@ -487,19 +601,11 @@ export function auditDependencies(
     const auditResult = runPnpmAuditCheck(
       repoRoot,
       options.severityThreshold,
+      targetPath,
     );
     findings.push(...auditResult.findings);
     errors.push(...auditResult.errors);
   }
 
-  const incomplete = errors.length > 0;
-
-  return {
-    findings,
-    scannedFiles: manifestResult.scannedFiles,
-    durationMs: Date.now() - startTime,
-    clean: findings.length === 0 && !incomplete,
-    incomplete: incomplete ? true : undefined,
-    errors: errors.length > 0 ? errors : undefined,
-  };
+  return buildAuditResult(findings, manifestResult.scannedFiles, errors, startTime);
 }

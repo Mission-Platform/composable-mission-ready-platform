@@ -358,6 +358,39 @@ function isScannableDirent(entry: Dirent): boolean {
   return isScannableFile(entry.name);
 }
 
+interface SecretTraversalState {
+  skippedCount: number;
+  unreadableCount: number;
+  errors: string[];
+}
+
+function handleSecretDirectoryEntry(
+  name: string,
+  fullPath: string,
+  maxFiles: number,
+  collected: string[],
+  state: SecretTraversalState,
+): void {
+  if (!IGNORED_DIRS.has(name)) {
+    collectFiles(fullPath, maxFiles, collected, state);
+  }
+}
+
+function handleSecretFileEntry(
+  entry: Dirent,
+  fullPath: string,
+  maxFiles: number,
+  collected: string[],
+  state: SecretTraversalState,
+): void {
+  if (!isScannableDirent(entry)) return;
+  if (collected.length < maxFiles) {
+    collected.push(fullPath);
+  } else {
+    state.skippedCount += 1;
+  }
+}
+
 /**
  * Process a directory entry during secret file collection.
  */
@@ -366,23 +399,15 @@ function processSecretDirectoryEntry(
   startDir: string,
   maxFiles: number,
   collected: string[],
-  state: { skippedCount: number },
+  state: SecretTraversalState,
 ): void {
   if (entry.isSymbolicLink()) return;
   const fullPath = join(startDir, entry.name);
   if (entry.isDirectory()) {
-    if (!IGNORED_DIRS.has(entry.name)) {
-      collectFiles(fullPath, maxFiles, collected, state);
-    }
+    handleSecretDirectoryEntry(entry.name, fullPath, maxFiles, collected, state);
     return;
   }
-  if (isScannableDirent(entry)) {
-    if (collected.length < maxFiles) {
-      collected.push(fullPath);
-    } else {
-      state.skippedCount += 1;
-    }
-  }
+  handleSecretFileEntry(entry, fullPath, maxFiles, collected, state);
 }
 
 /**
@@ -392,18 +417,25 @@ function collectFiles(
   startDir: string,
   maxFiles: number,
   collected: string[] = [],
-  state = { skippedCount: 0 },
-): { files: string[]; skippedCount: number } {
+  state: SecretTraversalState = { skippedCount: 0, unreadableCount: 0, errors: [] },
+): { files: string[]; skippedCount: number; unreadableCount: number; errors: string[] } {
   try {
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
       processSecretDirectoryEntry(entry, startDir, maxFiles, collected, state);
     }
-  } catch {
-    return { files: collected, skippedCount: state.skippedCount };
+  } catch (error) {
+    state.unreadableCount += 1;
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    state.errors.push(`Directory unreadable: ${startDir}: ${errorMsg}`);
   }
 
-  return { files: collected, skippedCount: state.skippedCount };
+  return {
+    files: collected,
+    skippedCount: state.skippedCount,
+    unreadableCount: state.unreadableCount,
+    errors: state.errors,
+  };
 }
 
 interface SecretFileAnalysisResult {
@@ -497,13 +529,13 @@ function scanSecretDirectoryTargetPath(
   maxFiles: number,
   severityThreshold?: SecurityFinding["severity"],
 ) {
-  const { files, skippedCount } = collectFiles(targetPath, maxFiles);
+  const { files, skippedCount, unreadableCount, errors } = collectFiles(targetPath, maxFiles);
   const stats = {
     findings: [] as SecurityFinding[],
     scannedCount: 0,
     oversizedCount: 0,
-    unreadableCount: 0,
-    errors: [] as string[],
+    unreadableCount,
+    errors: [...errors],
   };
   for (const file of files) {
     const outcome = scanSingleFile(file, repoRoot, severityThreshold);
@@ -547,6 +579,51 @@ function scanSecretTargetPath(
   return scanSecretDirectoryTargetPath(targetPath, repoRoot, maxFiles, severityThreshold);
 }
 
+function isSecretScanIncomplete(stats: {
+  oversizedCount: number;
+  unreadableCount: number;
+  skippedCount: number;
+  errors: readonly string[];
+}): boolean {
+  if (stats.oversizedCount > 0) return true;
+  if (stats.unreadableCount > 0) return true;
+  if (stats.skippedCount > 0) return true;
+  return stats.errors.length > 0;
+}
+
+function positiveCountOrUndefined(count: number): number | undefined {
+  return count > 0 ? count : undefined;
+}
+
+function nonEmptyErrorsOrUndefined(errors: readonly string[]): readonly string[] | undefined {
+  return errors.length > 0 ? errors : undefined;
+}
+
+function resolveSecretTargetPath(optionsPath: string | undefined, repoRoot: string): string {
+  if (optionsPath) {
+    return resolveRepoPath(optionsPath, "secret scan path");
+  }
+  return repoRoot;
+}
+
+function buildSecretScanResult(
+  targetResult: ReturnType<typeof scanSecretTargetPath>,
+  startTime: number,
+): SecurityScanResult {
+  const incomplete = isSecretScanIncomplete(targetResult);
+  return {
+    findings: targetResult.findings,
+    scannedFiles: targetResult.scannedCount,
+    durationMs: Date.now() - startTime,
+    clean: targetResult.findings.length === 0 && !incomplete,
+    incomplete: incomplete ? true : undefined,
+    skippedFiles: positiveCountOrUndefined(targetResult.skippedCount),
+    oversizedFiles: positiveCountOrUndefined(targetResult.oversizedCount),
+    unreadableFiles: positiveCountOrUndefined(targetResult.unreadableCount),
+    errors: nonEmptyErrorsOrUndefined(targetResult.errors),
+  };
+}
+
 /**
  * Scan workspace files or git diffs for hardcoded secrets, credentials, API keys, and private keys.
  */
@@ -559,9 +636,7 @@ export function scanSecrets(
   }
 
   const repoRoot = findRepoRoot();
-  const targetPath = options.path
-    ? resolveRepoPath(options.path, "secret scan path")
-    : repoRoot;
+  const targetPath = resolveSecretTargetPath(options.path, repoRoot);
   const maxFiles = options.maxFiles ?? DEFAULT_MAX_FILES;
   const targetResult = scanSecretTargetPath(
     targetPath,
@@ -570,21 +645,5 @@ export function scanSecrets(
     options.severityThreshold,
   );
 
-  const incomplete =
-    targetResult.oversizedCount > 0 ||
-    targetResult.unreadableCount > 0 ||
-    targetResult.skippedCount > 0 ||
-    targetResult.errors.length > 0;
-
-  return {
-    findings: targetResult.findings,
-    scannedFiles: targetResult.scannedCount,
-    durationMs: Date.now() - startTime,
-    clean: targetResult.findings.length === 0 && !incomplete,
-    incomplete: incomplete ? true : undefined,
-    skippedFiles: targetResult.skippedCount > 0 ? targetResult.skippedCount : undefined,
-    oversizedFiles: targetResult.oversizedCount > 0 ? targetResult.oversizedCount : undefined,
-    unreadableFiles: targetResult.unreadableCount > 0 ? targetResult.unreadableCount : undefined,
-    errors: targetResult.errors.length > 0 ? targetResult.errors : undefined,
-  };
+  return buildSecretScanResult(targetResult, startTime);
 }
