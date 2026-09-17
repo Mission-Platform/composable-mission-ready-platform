@@ -36,8 +36,6 @@ const FRAMEWORK_CONDITIONS: Record<ConsumerFramework, string> = {
   "web-components": "mp:web-component",
 };
 
-const ALL_CONDITIONS = Object.values(FRAMEWORK_CONDITIONS);
-
 const FRAMEWORK_DEPENDENCY_REQUIREMENTS: Record<
   ConsumerFramework,
   { required: readonly string[]; recommended: readonly string[] }

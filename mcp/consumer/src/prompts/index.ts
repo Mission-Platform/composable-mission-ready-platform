@@ -14,7 +14,7 @@ export function registerPrompts(server: McpServer): void {
     {
       description:
         "Step-by-step guidance to configure an external application to consume Mission Platform packages.",
-      inputSchema: {
+      argsSchema: {
         framework: z
           .enum(["vue", "react", "solid", "svelte", "web-components"])
           .describe("Target frontend framework."),
@@ -57,7 +57,7 @@ Please guide me through:
     {
       description:
         "Select, import, configure, and render a Mission Platform component in a consumer application.",
-      inputSchema: {
+      argsSchema: {
         component: z
           .string()
           .describe(
@@ -95,7 +95,7 @@ Please:
     {
       description:
         "Walk through creating a Design Tokens Community Group (DTCG) override file and generating CSS variables.",
-      inputSchema: {
+      argsSchema: {
         category: z
           .string()
           .optional()
@@ -130,7 +130,7 @@ Please:
     {
       description:
         "Configure framework-neutral routing with native framework adapters and async loading fallbacks.",
-      inputSchema: {
+      argsSchema: {
         framework: z
           .enum(["vue", "react", "solid", "svelte", "web-components"])
           .describe("Target frontend framework."),

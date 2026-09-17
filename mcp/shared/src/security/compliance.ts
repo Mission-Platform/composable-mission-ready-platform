@@ -155,14 +155,12 @@ export function collectComplianceEvidence(
       metrics.currentBranch = gitMeta.branch ?? "unknown";
     }
 
-    let notes = `Evidence collected from automated security scanning.`;
-    if (status === "compliant") {
-      notes = `No security violations or vulnerabilities detected for ${controlId}. Control satisfies automated audit requirements.`;
-    } else if (status === "needs-review") {
-      notes = `${findings.length} moderate or low findings require verification or planned remediation.`;
-    } else {
-      notes = `${findings.length} critical or high severity vulnerabilities violate control ${controlId} and require immediate remediation.`;
-    }
+    const notes =
+      status === "compliant"
+        ? `No security violations or vulnerabilities detected for ${controlId}. Control satisfies automated audit requirements.`
+        : status === "needs-review"
+          ? `${findings.length} moderate or low findings require verification or planned remediation.`
+          : `${findings.length} critical or high severity vulnerabilities violate control ${controlId} and require immediate remediation.`;
 
     return {
       controlId,

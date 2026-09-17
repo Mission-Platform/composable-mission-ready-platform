@@ -33,7 +33,7 @@ import { resolveRepoPath, type WorkspaceGroup } from '@mission-platform/mcp-shar
 import { findMember } from '@mission-platform/mcp-shared/repo/scanner';
 import { z } from 'zod';
 
-import { readGitBranches, readGitLsFiles, readGitRemotes, readGitTags } from '../git/index.ts';
+import { readGitBranches, readGitLsFiles, readGitRemotes, readGitTags, type GitCommandResult } from '../git/index.ts';
 import { validateName, writeIntoPackage, writeScaffold } from '../scaffold/writer.ts';
 
 function normalizeUnitName(raw: string): string {
@@ -97,7 +97,7 @@ export const scaffoldInputSchema = {
 
 export type ScaffoldInput = z.infer<z.ZodObject<typeof scaffoldInputSchema>>;
 
-export function dispatchScaffold(args: ScaffoldInput): Record<string, unknown> {
+export function dispatchScaffold(args: ScaffoldInput): object {
   const entityType = args.type;
   const name = args.name?.trim();
   if (!name) {
@@ -115,22 +115,22 @@ export function dispatchScaffold(args: ScaffoldInput): Record<string, unknown> {
         vue: args.vue === true,
       });
       const group = (args.group as WorkspaceGroup | undefined) ?? 'packages';
-      return writeScaffold({ group, name, files, apply }) as unknown as Record<string, unknown>;
+      return writeScaffold({ group, name, files, apply });
     }
 
     case 'app': {
       const files = appFiles({ name, description });
-      return writeScaffold({ group: 'apps', name, files, apply }) as unknown as Record<string, unknown>;
+      return writeScaffold({ group: 'apps', name, files, apply });
     }
 
     case 'worker': {
       const files = workerFiles({ name, description });
-      return writeScaffold({ group: 'edge-workers', name, files, apply }) as unknown as Record<string, unknown>;
+      return writeScaffold({ group: 'edge-workers', name, files, apply });
     }
 
     case 'crate': {
       const files = crateFiles({ name, description });
-      return writeScaffold({ group: 'crates', name, files, apply }) as unknown as Record<string, unknown>;
+      return writeScaffold({ group: 'crates', name, files, apply });
     }
 
     case 'component': {
@@ -252,7 +252,7 @@ export const i18nInputSchema = {
 
 export type I18nInput = z.infer<z.ZodObject<typeof i18nInputSchema>>;
 
-export function dispatchI18n(args: I18nInput): Record<string, unknown> | readonly unknown[] | string {
+export function dispatchI18n(args: I18nInput): object | string {
   const action = args.action;
   const group = (args.group as WorkspaceGroup | undefined) ?? 'apps';
   const name = args.name?.trim();
@@ -352,7 +352,7 @@ export const gitMetadataInputSchema = {
 
 export type GitMetadataInput = z.infer<z.ZodObject<typeof gitMetadataInputSchema>>;
 
-export function dispatchGitMetadata(args: GitMetadataInput): Record<string, unknown> {
+export function dispatchGitMetadata(args: GitMetadataInput): GitCommandResult {
   const kind = args.kind;
   switch (kind) {
     case 'branches': {

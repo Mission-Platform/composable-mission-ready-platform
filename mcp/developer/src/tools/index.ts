@@ -141,7 +141,7 @@ import {
   i18nInputSchema,
   scaffoldInputSchema,
 } from './polymorphic.ts';
-import { resolveToolFilter } from './profiles.ts';
+import { resolveToolFilter, type McpProfileOptions } from './profiles.ts';
 
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
