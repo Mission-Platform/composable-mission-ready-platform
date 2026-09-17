@@ -43,6 +43,14 @@ function isOutside(root: string, candidate: string): boolean {
 }
 
 /**
+ * Check whether a symlink at the given position is disallowed.
+ */
+function isSymlinkDisallowed(isLeaf: boolean, allowSymlink: boolean): boolean {
+  if (!allowSymlink) return true;
+  return !isLeaf;
+}
+
+/**
  * Validate a path component against symlink traversal restrictions.
  */
 function checkPathComponentSymlink(
@@ -52,7 +60,8 @@ function checkPathComponentSymlink(
   label: string,
 ): void {
   try {
-    if (lstatSync(path).isSymbolicLink() && (!allowSymlink || !isLeaf)) {
+    const isSymlink = lstatSync(path).isSymbolicLink();
+    if (isSymlink && isSymlinkDisallowed(isLeaf, allowSymlink)) {
       throw new Error(`${label} must not traverse symlink "${path}".`);
     }
   } catch (error) {

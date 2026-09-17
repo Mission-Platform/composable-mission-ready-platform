@@ -73,6 +73,32 @@ function iconsDirExists(): boolean {
 }
 
 /**
+ * Extract icon summaries from a specific category and subcategory directory.
+ */
+function scanSubcategoryIcons(
+  subDir: string,
+  catName: string,
+  subName: string,
+  fullCategory: string,
+): IconSummary[] {
+  const icons: IconSummary[] = [];
+  for (const iconEntry of readdirSync(subDir, { withFileTypes: true })) {
+    if (!iconEntry.isDirectory()) continue;
+    if (!iconEntry.name.startsWith("forge-icon-")) continue;
+
+    const iconName = iconEntry.name;
+    icons.push({
+      name: iconName,
+      componentName: toPascalCase(iconName),
+      category: catName,
+      subcategory: subName,
+      fullCategory,
+    });
+  }
+  return icons;
+}
+
+/**
  * Scan all subdirectories below icons components dir and extract icon summaries.
  */
 function scanIconsDirectory(resolvedBase: string): {
@@ -92,19 +118,13 @@ function scanIconsDirectory(resolvedBase: string): {
       const fullCategory = `${catEntry.name}/${subEntry.name}`;
       categoriesSet.add(fullCategory);
 
-      for (const iconEntry of readdirSync(subDir, { withFileTypes: true })) {
-        if (!iconEntry.isDirectory() || !iconEntry.name.startsWith("forge-icon-")) {
-          continue;
-        }
-        const iconName = iconEntry.name;
-        allIcons.push({
-          name: iconName,
-          componentName: toPascalCase(iconName),
-          category: catEntry.name,
-          subcategory: subEntry.name,
-          fullCategory,
-        });
-      }
+      const subIcons = scanSubcategoryIcons(
+        subDir,
+        catEntry.name,
+        subEntry.name,
+        fullCategory,
+      );
+      allIcons.push(...subIcons);
     }
   }
 

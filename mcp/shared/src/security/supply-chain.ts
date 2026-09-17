@@ -14,6 +14,21 @@ const DANGEROUS_LIFECYCLE_CMD =
   /\b(?:curl|wget|bash|sh|powershell|cmd\.exe|eval|exec)\b/i;
 
 /**
+ * Read a package manifest safely if it exists on disk.
+ */
+function tryReadManifest(
+  pkgPath: string,
+  relPath: string,
+): { manifest: PackageManifest; relPath: string } | undefined {
+  if (!existsSync(pkgPath)) return undefined;
+  try {
+    return { manifest: readJson<PackageManifest>(pkgPath), relPath };
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Collect root and workspace member package.json manifests.
  */
 function collectManifests(
@@ -21,35 +36,67 @@ function collectManifests(
 ): Array<{ manifest: PackageManifest; relPath: string }> {
   const manifests: Array<{ manifest: PackageManifest; relPath: string }> = [];
 
-  const rootManifestPath = join(repoRoot, "package.json");
-  if (existsSync(rootManifestPath)) {
-    try {
-      const rootManifest = readJson<PackageManifest>(rootManifestPath);
-      manifests.push({ manifest: rootManifest, relPath: "package.json" });
-    } catch {
-      // Ignored
-    }
-  }
+  const rootManifest = tryReadManifest(
+    join(repoRoot, "package.json"),
+    "package.json",
+  );
+  if (rootManifest) manifests.push(rootManifest);
 
   try {
     const members = listAll();
     for (const member of members) {
-      const pkgPath = join(member.dir, "package.json");
-      if (existsSync(pkgPath)) {
-        try {
-          const manifest = readJson<PackageManifest>(pkgPath);
-          const relPath = relative(repoRoot, pkgPath).replaceAll("\\", "/");
-          manifests.push({ manifest, relPath });
-        } catch {
-          continue;
-        }
-      }
+      const relPath = relative(repoRoot, join(member.dir, "package.json")).replaceAll("\\", "/");
+      const memberManifest = tryReadManifest(
+        join(member.dir, "package.json"),
+        relPath,
+      );
+      if (memberManifest) manifests.push(memberManifest);
     }
   } catch {
     // Continue with whatever manifests were found
   }
 
   return manifests;
+}
+
+/**
+ * Check a single lifecycle hook declaration for risk.
+ */
+function checkSingleLifecycleHook(
+  hook: string,
+  scriptCmd: unknown,
+  relPath: string,
+  severityThreshold?: SecurityFinding["severity"],
+): { finding?: SecurityFinding; declared: boolean } {
+  if (typeof scriptCmd !== "string" || scriptCmd.trim().length === 0) {
+    return { declared: false };
+  }
+  const isDangerous = DANGEROUS_LIFECYCLE_CMD.test(scriptCmd);
+  const severity = isDangerous ? "high" : "medium";
+
+  if (!isSeverityAtOrAbove(severity, severityThreshold)) {
+    return { declared: true };
+  }
+
+  return {
+    declared: true,
+    finding: {
+      id: isDangerous
+        ? "SUPPLY_CHAIN_RISKY_LIFECYCLE_SCRIPT"
+        : "SUPPLY_CHAIN_LIFECYCLE_SCRIPT",
+      category: "supply-chain",
+      severity,
+      title: `Lifecycle script declared in ${hook}: ${scriptCmd.slice(0, 50)}`,
+      message: `Package manifest ${relPath} executes shell command during "${hook}": "${scriptCmd}".`,
+      filePath: relPath,
+      snippet: `"${hook}": "${scriptCmd}"`,
+      remediation:
+        "Avoid lifecycle install scripts in libraries. Use explicit build scripts or postinstall filters to prevent arbitrary code execution on developer machines.",
+      owasp: "A08:2025-Software and Data Integrity Failures",
+      cwe: "CWE-94",
+      isoControl: "A.8.25",
+    },
+  };
 }
 
 /**
@@ -69,31 +116,103 @@ function auditLifecycleScripts(
 
   const lifecycleHooks = ["preinstall", "postinstall", "install"] as const;
   for (const hook of lifecycleHooks) {
-    const scriptCmd = manifest.scripts[hook];
-    if (typeof scriptCmd === "string" && scriptCmd.trim().length > 0) {
-      count += 1;
-      const isDangerous = DANGEROUS_LIFECYCLE_CMD.test(scriptCmd);
-      const severity = isDangerous ? "high" : "medium";
+    const { finding, declared } = checkSingleLifecycleHook(
+      hook,
+      manifest.scripts[hook],
+      relPath,
+      severityThreshold,
+    );
+    if (declared) count += 1;
+    if (finding) findings.push(finding);
+  }
 
-      if (isSeverityAtOrAbove(severity, severityThreshold)) {
-        findings.push({
-          id: isDangerous
-            ? "SUPPLY_CHAIN_RISKY_LIFECYCLE_SCRIPT"
-            : "SUPPLY_CHAIN_LIFECYCLE_SCRIPT",
-          category: "supply-chain",
-          severity,
-          title: `Lifecycle script declared in ${hook}: ${scriptCmd.slice(0, 50)}`,
-          message: `Package manifest ${relPath} executes shell command during "${hook}": "${scriptCmd}".`,
-          filePath: relPath,
-          snippet: `"${hook}": "${scriptCmd}"`,
-          remediation:
-            "Avoid lifecycle install scripts in libraries. Use explicit build scripts or postinstall filters to prevent arbitrary code execution on developer machines.",
-          owasp: "A08:2025-Software and Data Integrity Failures",
-          cwe: "CWE-94",
-          isoControl: "A.8.25",
-        });
-      }
-    }
+  return { findings, count };
+}
+
+/**
+ * Check whether a dependency specifier points to an unverified external tarball.
+ */
+function isExternalTarball(spec: string): boolean {
+  if (!spec.startsWith("https://")) return false;
+  return spec.endsWith(".tgz") || spec.endsWith(".tar.gz");
+}
+
+/**
+ * Check if a dependency specifier is an unverified external tarball.
+ */
+function checkTarballDependency(
+  depName: string,
+  spec: string,
+  relPath: string,
+  severityThreshold?: SecurityFinding["severity"],
+): SecurityFinding | undefined {
+  if (!isExternalTarball(spec)) return undefined;
+  if (!isSeverityAtOrAbove("high", severityThreshold)) return undefined;
+
+  return {
+    id: "SUPPLY_CHAIN_UNVERIFIED_TARBALL",
+    category: "supply-chain",
+    severity: "high",
+    title: "Unverified external tarball dependency source",
+    message: `Dependency "${depName}" in ${relPath} points directly to an unverified tarball: ${spec}`,
+    filePath: relPath,
+    snippet: `"${depName}": "${spec}"`,
+    remediation:
+      "Install dependencies from authenticated registries with cryptographic checksums rather than direct HTTP tarball URLs.",
+    owasp: "A08:2025-Software and Data Integrity Failures",
+    cwe: "CWE-494",
+    isoControl: "A.8.20",
+  };
+}
+
+/**
+ * Record a dependency version for monorepo cross-package divergence auditing.
+ */
+function recordDependencyVersion(
+  packageVersionMap: Map<string, Map<string, string[]>>,
+  depName: string,
+  spec: string,
+  relPath: string,
+): void {
+  if (spec.startsWith("workspace:")) return;
+
+  let versionMap = packageVersionMap.get(depName);
+  if (!versionMap) {
+    versionMap = new Map<string, string[]>();
+    packageVersionMap.set(depName, versionMap);
+  }
+  let fileList = versionMap.get(spec);
+  if (!fileList) {
+    fileList = [];
+    versionMap.set(spec, fileList);
+  }
+  fileList.push(relPath);
+}
+
+/**
+ * Audit dependencies declared within a single manifest section.
+ */
+function auditSingleDependencySection(
+  deps: Record<string, string>,
+  relPath: string,
+  severityThreshold: SecurityFinding["severity"] | undefined,
+  packageVersionMap: Map<string, Map<string, string[]>>,
+): { findings: SecurityFinding[]; count: number } {
+  const findings: SecurityFinding[] = [];
+  let count = 0;
+
+  for (const [depName, spec] of Object.entries(deps)) {
+    if (typeof spec !== "string") continue;
+    count += 1;
+    const trimmed = spec.trim();
+    const tarballFinding = checkTarballDependency(
+      depName,
+      trimmed,
+      relPath,
+      severityThreshold,
+    );
+    if (tarballFinding) findings.push(tarballFinding);
+    recordDependencyVersion(packageVersionMap, depName, trimmed, relPath);
   }
 
   return { findings, count };
@@ -119,52 +238,15 @@ function auditManifestDependencies(
 
   for (const section of depSections) {
     const deps = manifest[section] as Record<string, string> | undefined;
-    if (!deps || typeof deps !== "object") {
-      continue;
-    }
-
-    for (const [depName, spec] of Object.entries(deps)) {
-      if (typeof spec !== "string") {
-        continue;
-      }
-      count += 1;
-      const trimmed = spec.trim();
-
-      if (
-        trimmed.startsWith("https://") &&
-        (trimmed.endsWith(".tgz") || trimmed.endsWith(".tar.gz"))
-      ) {
-        if (isSeverityAtOrAbove("high", severityThreshold)) {
-          findings.push({
-            id: "SUPPLY_CHAIN_UNVERIFIED_TARBALL",
-            category: "supply-chain",
-            severity: "high",
-            title: "Unverified external tarball dependency source",
-            message: `Dependency "${depName}" in ${relPath} points directly to an unverified tarball: ${trimmed}`,
-            filePath: relPath,
-            snippet: `"${depName}": "${spec}"`,
-            remediation:
-              "Install dependencies from authenticated registries with cryptographic checksums rather than direct HTTP tarball URLs.",
-            owasp: "A08:2025-Software and Data Integrity Failures",
-            cwe: "CWE-494",
-            isoControl: "A.8.20",
-          });
-        }
-      }
-
-      if (!trimmed.startsWith("workspace:")) {
-        let versionMap = packageVersionMap.get(depName);
-        if (!versionMap) {
-          versionMap = new Map<string, string[]>();
-          packageVersionMap.set(depName, versionMap);
-        }
-        let fileList = versionMap.get(trimmed);
-        if (!fileList) {
-          fileList = [];
-          versionMap.set(trimmed, fileList);
-        }
-        fileList.push(relPath);
-      }
+    if (deps && typeof deps === "object") {
+      const sectionResult = auditSingleDependencySection(
+        deps,
+        relPath,
+        severityThreshold,
+        packageVersionMap,
+      );
+      findings.push(...sectionResult.findings);
+      count += sectionResult.count;
     }
   }
 

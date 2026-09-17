@@ -1,4 +1,4 @@
-import { lstatSync, readdirSync, readFileSync } from "node:fs";
+import { lstatSync, readdirSync, readFileSync, type Dirent } from "node:fs";
 import { join, relative } from "node:path";
 
 import { findRepoRoot, resolveRepoPath } from "../repo/paths.ts";
@@ -228,6 +228,51 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
 ];
 
 /**
+ * Build finding for an identified secret occurrence.
+ */
+function buildSecretFinding(
+  rule: SecretPattern,
+  rawSecret: string,
+  lineText: string,
+  lineIdx: number,
+  colIdx: number,
+  filePath: string,
+): SecurityFinding {
+  const redacted = redactSecret(rawSecret);
+  const snippet = lineText.replace(rawSecret, redacted).trim();
+  const truncatedSnippet =
+    snippet.length > 140 ? `${snippet.slice(0, 140)}...` : snippet;
+
+  return {
+    id: rule.id,
+    category: "secret",
+    severity: rule.severity,
+    title: rule.title,
+    message: `${rule.title} in ${filePath}:${lineIdx + 1}`,
+    filePath,
+    line: lineIdx + 1,
+    column: colIdx + 1,
+    snippet: truncatedSnippet,
+    remediation: rule.remediation,
+    owasp: rule.owasp,
+    cwe: rule.cwe,
+    isoControl: rule.isoControl,
+  };
+}
+
+/**
+ * Check whether a candidate secret match passes the rule's custom validation.
+ */
+function isRuleMatchValid(
+  rule: SecretPattern,
+  rawSecret: string,
+  lineText: string,
+): boolean {
+  if (!rule.isMatchValid) return true;
+  return rule.isMatchValid(rawSecret, lineText);
+}
+
+/**
  * Match a specific secret rule against a line of text.
  */
 function matchSecretRule(
@@ -240,33 +285,37 @@ function matchSecretRule(
   rule.pattern.lastIndex = 0;
   let match: RegExpExecArray | null = rule.pattern.exec(lineText);
   while (match !== null) {
-    const rawSecret = match[1] ?? match[0];
-    const isValid = rule.isMatchValid
-      ? rule.isMatchValid(rawSecret, lineText)
-      : true;
-
-    if (isValid) {
-      const redacted = redactSecret(rawSecret);
-      const snippet = lineText.replace(rawSecret, redacted).trim();
-      findings.push({
-        id: rule.id,
-        category: "secret",
-        severity: rule.severity,
-        title: rule.title,
-        message: `${rule.title} in ${filePath}:${lineIdx + 1}`,
-        filePath,
-        line: lineIdx + 1,
-        column: match.index + 1,
-        snippet:
-          snippet.length > 140 ? `${snippet.slice(0, 140)}...` : snippet,
-        remediation: rule.remediation,
-        owasp: rule.owasp,
-        cwe: rule.cwe,
-        isoControl: rule.isoControl,
-      });
+    const rawSecret = match[1] || match[0];
+    if (isRuleMatchValid(rule, rawSecret, lineText)) {
+      findings.push(
+        buildSecretFinding(
+          rule,
+          rawSecret,
+          lineText,
+          lineIdx,
+          match.index,
+          filePath,
+        ),
+      );
     }
-
     match = rule.pattern.exec(lineText);
+  }
+}
+
+/**
+ * Scan a single non-empty line against all applicable secret detection patterns.
+ */
+function scanLineSecretRules(
+  lineText: string,
+  lineIdx: number,
+  filePath: string,
+  severityThreshold: SecurityFinding["severity"] | undefined,
+  findings: SecurityFinding[],
+): void {
+  for (const rule of SECRET_PATTERNS) {
+    if (isSeverityAtOrAbove(rule.severity, severityThreshold)) {
+      matchSecretRule(rule, lineText, lineIdx, filePath, findings);
+    }
   }
 }
 
@@ -282,16 +331,9 @@ function scanTextLines(
   const lines = content.split(/\r?\n/);
 
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx += 1) {
-    const lineText = lines[lineIdx];
-    if (!lineText || lineText.trim().length === 0) {
-      continue;
-    }
-
-    for (const rule of SECRET_PATTERNS) {
-      if (isSeverityAtOrAbove(rule.severity, severityThreshold)) {
-        matchSecretRule(rule, lineText, lineIdx, filePath, findings);
-      }
-    }
+    const rawLine = lines[lineIdx];
+    if (!rawLine || rawLine.trim().length === 0) continue;
+    scanLineSecretRules(rawLine, lineIdx, filePath, severityThreshold, findings);
   }
 
   return findings;
@@ -306,6 +348,34 @@ function isScannableFile(name: string): boolean {
     ? `.${name.split(".").pop()?.toLowerCase()}`
     : "";
   return !IGNORED_EXTENSIONS.has(ext);
+}
+
+/**
+ * Check whether a directory entry represents a scannable file for secret detection.
+ */
+function isScannableDirent(entry: Dirent): boolean {
+  if (!entry.isFile()) return false;
+  return isScannableFile(entry.name);
+}
+
+/**
+ * Process a directory entry during secret file collection.
+ */
+function processSecretDirectoryEntry(
+  entry: Dirent,
+  startDir: string,
+  maxFiles: number,
+  collected: string[],
+): void {
+  if (entry.isSymbolicLink()) return;
+  const fullPath = join(startDir, entry.name);
+  if (entry.isDirectory()) {
+    if (!IGNORED_DIRS.has(entry.name)) {
+      collectFiles(fullPath, maxFiles, collected);
+    }
+  } else if (isScannableDirent(entry)) {
+    collected.push(fullPath);
+  }
 }
 
 /**
@@ -324,16 +394,7 @@ function collectFiles(
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
       if (collected.length >= maxFiles) break;
-      if (entry.isSymbolicLink()) continue;
-
-      const fullPath = join(startDir, entry.name);
-      if (entry.isDirectory()) {
-        if (!IGNORED_DIRS.has(entry.name)) {
-          collectFiles(fullPath, maxFiles, collected);
-        }
-      } else if (entry.isFile() && isScannableFile(entry.name)) {
-        collected.push(fullPath);
-      }
+      processSecretDirectoryEntry(entry, startDir, maxFiles, collected);
     }
   } catch {
     return collected;
@@ -362,59 +423,73 @@ function scanSingleFile(
 }
 
 /**
+ * Scan inline content passed directly in options.
+ */
+function scanInlineContent(
+  options: ScanSecretsOptions,
+  startTime: number,
+): SecurityScanResult {
+  const logicalPath = options.filePath ?? "inline-content";
+  const findings = scanTextLines(
+    options.content ?? "",
+    logicalPath,
+    options.severityThreshold,
+  );
+  return {
+    findings,
+    scannedFiles: 1,
+    durationMs: Date.now() - startTime,
+    clean: findings.length === 0,
+  };
+}
+
+/**
+ * Scan target filesystem path (file or directory) for leaked secrets.
+ */
+function scanSecretTargetPath(
+  targetPath: string,
+  repoRoot: string,
+  maxFiles: number,
+  severityThreshold?: SecurityFinding["severity"],
+): { findings: SecurityFinding[]; scannedCount: number } {
+  const stat = lstatSync(targetPath);
+  if (stat.isFile()) {
+    const findings = scanSingleFile(targetPath, repoRoot, severityThreshold);
+    return { findings, scannedCount: 1 };
+  }
+  if (!stat.isDirectory()) {
+    return { findings: [], scannedCount: 0 };
+  }
+  const files = collectFiles(targetPath, maxFiles);
+  const findings: SecurityFinding[] = [];
+  for (const file of files) {
+    findings.push(...scanSingleFile(file, repoRoot, severityThreshold));
+  }
+  return { findings, scannedCount: files.length };
+}
+
+/**
  * Scan workspace files or git diffs for hardcoded secrets, credentials, API keys, and private keys.
  */
 export function scanSecrets(
   options: ScanSecretsOptions = {},
 ): SecurityScanResult {
   const startTime = Date.now();
-  const repoRoot = findRepoRoot();
-  const findings: SecurityFinding[] = [];
-
   if (options.content !== undefined) {
-    const logicalPath = options.filePath ?? "inline-content";
-    const contentFindings = scanTextLines(
-      options.content,
-      logicalPath,
-      options.severityThreshold,
-    );
-    findings.push(...contentFindings);
-    return {
-      findings,
-      scannedFiles: 1,
-      durationMs: Date.now() - startTime,
-      clean: findings.length === 0,
-    };
+    return scanInlineContent(options, startTime);
   }
 
+  const repoRoot = findRepoRoot();
   const targetPath = options.path
     ? resolveRepoPath(options.path, "secret scan path")
     : repoRoot;
-
-  const stat = lstatSync(targetPath);
   const maxFiles = options.maxFiles ?? DEFAULT_MAX_FILES;
-  let scannedCount = 0;
-
-  if (stat.isFile()) {
-    const fileFindings = scanSingleFile(
-      targetPath,
-      repoRoot,
-      options.severityThreshold,
-    );
-    findings.push(...fileFindings);
-    scannedCount = 1;
-  } else if (stat.isDirectory()) {
-    const files = collectFiles(targetPath, maxFiles);
-    for (const file of files) {
-      const fileFindings = scanSingleFile(
-        file,
-        repoRoot,
-        options.severityThreshold,
-      );
-      findings.push(...fileFindings);
-      scannedCount += 1;
-    }
-  }
+  const { findings, scannedCount } = scanSecretTargetPath(
+    targetPath,
+    repoRoot,
+    maxFiles,
+    options.severityThreshold,
+  );
 
   return {
     findings,

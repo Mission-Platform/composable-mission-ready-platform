@@ -236,19 +236,41 @@ function collectAllowedTools(requestedProfiles: ReadonlySet<string>): Set<string
 }
 
 /**
+ * Check whether profile options explicitly specify a custom tool list.
+ */
+function extractExplicitTools(options: McpProfileOptions): Set<string> | undefined {
+  if (!options.tools || options.tools.length === 0) {
+    return undefined;
+  }
+  return new Set(options.tools);
+}
+
+/**
+ * Determine if the requested profiles imply that all tools should be registered.
+ */
+function shouldRegisterAllTools(profiles: ReadonlySet<string>): boolean {
+  if (profiles.size === 0) return true;
+  return profiles.has('full') || profiles.has('*');
+}
+
+/**
  * Resolves a comma-separated or array profile configuration into an active tool set filter.
  * Returns undefined when all tools should be registered ('full' or omitted).
  */
 export function resolveToolFilter(options: McpProfileOptions = {}): Set<string> | undefined {
-  if (options.tools && options.tools.length > 0) {
-    return new Set(options.tools);
+  const explicit = extractExplicitTools(options);
+  if (explicit) {
+    return explicit;
   }
 
   const requestedProfiles = extractRequestedProfiles(options);
-  if (requestedProfiles.size === 0 || requestedProfiles.has('full') || requestedProfiles.has('*')) {
-    return undefined; // Register all tools
+  if (shouldRegisterAllTools(requestedProfiles)) {
+    return undefined;
   }
 
   const allowedTools = collectAllowedTools(requestedProfiles);
-  return allowedTools.size > 0 ? allowedTools : undefined;
+  if (allowedTools.size === 0) {
+    return undefined;
+  }
+  return allowedTools;
 }

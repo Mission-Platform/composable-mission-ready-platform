@@ -109,6 +109,14 @@ const QUICK_STARTS: Record<string, Record<string, string>> = {
 };
 
 /**
+ * Extract the default or first available quick start snippet from a quick start mapping.
+ */
+function getDefaultQuickStart(quickStartMap: Record<string, string>, name: string): string {
+  const fallback = quickStartMap.default || Object.values(quickStartMap)[0];
+  return fallback || `import '${name}';`;
+}
+
+/**
  * Resolve an idiomatic code snippet for importing and starting with a package.
  */
 function resolveQuickStartSnippet(name: string, framework?: string): string {
@@ -116,10 +124,11 @@ function resolveQuickStartSnippet(name: string, framework?: string): string {
   if (!quickStartMap) {
     return `import * as Platform from '${name}';`;
   }
-  if (framework && quickStartMap[framework]) {
-    return quickStartMap[framework] as string;
+  if (framework) {
+    const fwSnippet = quickStartMap[framework];
+    if (fwSnippet) return fwSnippet;
   }
-  return quickStartMap.default ?? Object.values(quickStartMap)[0] ?? `import '${name}';`;
+  return getDefaultQuickStart(quickStartMap, name);
 }
 
 /**

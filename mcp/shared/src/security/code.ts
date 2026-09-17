@@ -1,4 +1,4 @@
-import { lstatSync, readdirSync, readFileSync } from "node:fs";
+import { lstatSync, readdirSync, readFileSync, type Dirent } from "node:fs";
 import { join, relative } from "node:path";
 
 import { findRepoRoot, resolveRepoPath } from "../repo/paths.ts";
@@ -316,6 +316,24 @@ function matchVulnerabilityRule(
 }
 
 /**
+ * Scan a single non-empty line against applicable vulnerability rules.
+ */
+function scanLineRules(
+  lineText: string,
+  lineIdx: number,
+  content: string,
+  filePath: string,
+  severityThreshold: SecurityFinding["severity"] | undefined,
+  findings: SecurityFinding[],
+): void {
+  for (const rule of VULNERABILITY_RULES) {
+    if (isSeverityAtOrAbove(rule.severity, severityThreshold)) {
+      matchVulnerabilityRule(rule, lineText, lineIdx, content, filePath, findings);
+    }
+  }
+}
+
+/**
  * Scan source code content against static vulnerability rules.
  */
 function scanContent(
@@ -327,16 +345,9 @@ function scanContent(
   const lines = content.split(/\r?\n/);
 
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx += 1) {
-    const lineText = lines[lineIdx];
-    if (!lineText || lineText.trim().length === 0) {
-      continue;
-    }
-
-    for (const rule of VULNERABILITY_RULES) {
-      if (isSeverityAtOrAbove(rule.severity, severityThreshold)) {
-        matchVulnerabilityRule(rule, lineText, lineIdx, content, filePath, findings);
-      }
-    }
+    const rawLine = lines[lineIdx];
+    if (!rawLine || rawLine.trim().length === 0) continue;
+    scanLineRules(rawLine, lineIdx, content, filePath, severityThreshold, findings);
   }
 
   return findings;
@@ -350,6 +361,34 @@ function isCodeFile(name: string): boolean {
     ? `.${name.split(".").pop()?.toLowerCase()}`
     : "";
   return CODE_EXTENSIONS.has(ext);
+}
+
+/**
+ * Check whether a directory entry represents an analyzable source file.
+ */
+function isAnalyzableFile(entry: Dirent): boolean {
+  if (!entry.isFile()) return false;
+  return isCodeFile(entry.name);
+}
+
+/**
+ * Process a directory entry for scannable source file collection.
+ */
+function processCodeDirectoryEntry(
+  entry: Dirent,
+  startDir: string,
+  maxFiles: number,
+  collected: string[],
+): void {
+  if (entry.isSymbolicLink()) return;
+  const fullPath = join(startDir, entry.name);
+  if (entry.isDirectory()) {
+    if (!IGNORED_DIRS.has(entry.name)) {
+      collectCodeFiles(fullPath, maxFiles, collected);
+    }
+  } else if (isAnalyzableFile(entry)) {
+    collected.push(fullPath);
+  }
 }
 
 /**
@@ -368,16 +407,7 @@ function collectCodeFiles(
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
       if (collected.length >= maxFiles) break;
-      if (entry.isSymbolicLink()) continue;
-
-      const fullPath = join(startDir, entry.name);
-      if (entry.isDirectory()) {
-        if (!IGNORED_DIRS.has(entry.name)) {
-          collectCodeFiles(fullPath, maxFiles, collected);
-        }
-      } else if (entry.isFile() && isCodeFile(entry.name)) {
-        collected.push(fullPath);
-      }
+      processCodeDirectoryEntry(entry, startDir, maxFiles, collected);
     }
   } catch {
     return collected;
@@ -406,59 +436,73 @@ function analyzeSingleFile(
 }
 
 /**
+ * Analyze inline source code passed via options.
+ */
+function analyzeInlineCode(
+  options: AnalyzeCodeOptions,
+  startTime: number,
+): SecurityScanResult {
+  const logicalPath = options.filePath ?? "inline-code.ts";
+  const findings = scanContent(
+    options.content ?? "",
+    logicalPath,
+    options.severityThreshold,
+  );
+  return {
+    findings,
+    scannedFiles: 1,
+    durationMs: Date.now() - startTime,
+    clean: findings.length === 0,
+  };
+}
+
+/**
+ * Scan target filesystem path (file or directory) for static code vulnerabilities.
+ */
+function scanTargetPath(
+  targetPath: string,
+  repoRoot: string,
+  maxFiles: number,
+  severityThreshold?: SecurityFinding["severity"],
+): { findings: SecurityFinding[]; scannedCount: number } {
+  const stat = lstatSync(targetPath);
+  if (stat.isFile()) {
+    const findings = analyzeSingleFile(targetPath, repoRoot, severityThreshold);
+    return { findings, scannedCount: 1 };
+  }
+  if (!stat.isDirectory()) {
+    return { findings: [], scannedCount: 0 };
+  }
+  const files = collectCodeFiles(targetPath, maxFiles);
+  const findings: SecurityFinding[] = [];
+  for (const file of files) {
+    findings.push(...analyzeSingleFile(file, repoRoot, severityThreshold));
+  }
+  return { findings, scannedCount: files.length };
+}
+
+/**
  * Run static code vulnerability analysis across files, directories, or inline content.
  */
 export function analyzeCode(
   options: AnalyzeCodeOptions = {},
 ): SecurityScanResult {
   const startTime = Date.now();
-  const repoRoot = findRepoRoot();
-  const findings: SecurityFinding[] = [];
-
   if (options.content !== undefined) {
-    const logicalPath = options.filePath ?? "inline-code.ts";
-    const contentFindings = scanContent(
-      options.content,
-      logicalPath,
-      options.severityThreshold,
-    );
-    findings.push(...contentFindings);
-    return {
-      findings,
-      scannedFiles: 1,
-      durationMs: Date.now() - startTime,
-      clean: findings.length === 0,
-    };
+    return analyzeInlineCode(options, startTime);
   }
 
+  const repoRoot = findRepoRoot();
   const targetPath = options.path
     ? resolveRepoPath(options.path, "code analysis path")
     : repoRoot;
-
-  const stat = lstatSync(targetPath);
   const maxFiles = options.maxFiles ?? DEFAULT_MAX_FILES;
-  let scannedCount = 0;
-
-  if (stat.isFile()) {
-    const fileFindings = analyzeSingleFile(
-      targetPath,
-      repoRoot,
-      options.severityThreshold,
-    );
-    findings.push(...fileFindings);
-    scannedCount = 1;
-  } else if (stat.isDirectory()) {
-    const files = collectCodeFiles(targetPath, maxFiles);
-    for (const file of files) {
-      const fileFindings = analyzeSingleFile(
-        file,
-        repoRoot,
-        options.severityThreshold,
-      );
-      findings.push(...fileFindings);
-      scannedCount += 1;
-    }
-  }
+  const { findings, scannedCount } = scanTargetPath(
+    targetPath,
+    repoRoot,
+    maxFiles,
+    options.severityThreshold,
+  );
 
   return {
     findings,

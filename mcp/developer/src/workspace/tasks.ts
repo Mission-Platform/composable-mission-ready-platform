@@ -133,18 +133,85 @@ function trimOutput(value: string, limit: number): { value: string; truncated: b
   return { value: bytes.toString('utf8'), truncated: true };
 }
 
-/**
- * Maps changed repository files to affected workspace packages and detects root configuration modifications.
- */
-export function getAffectedPackages(options: { ref?: string; path?: string } = {}): AffectedPackagesResult {
-  const changedReport = readGitChangedFiles(options);
-  const changedFiles = changedReport.files.map((file) => file.path);
+interface ProcessExecutionOptions {
+  cwd: string;
+  command: string;
+  args: string[];
+  timeoutMs: number;
+  maxOutputBytes: number;
+}
 
+interface ProcessExecutionResult {
+  success: boolean;
+  exitCode: number | null;
+  durationMs: number;
+  stdout: string;
+  stderr: string;
+  outputTruncated: boolean;
+  timedOut: boolean;
+}
+
+/**
+ * Execute a child process synchronously with bounded buffer, timeout, and timing metrics.
+ */
+function executeBoundedProcess(options: ProcessExecutionOptions): ProcessExecutionResult {
+  const startedAt = Date.now();
+  const result = spawnSync(options.command, options.args, {
+    cwd: options.cwd,
+    encoding: 'utf8',
+    shell: false,
+    timeout: options.timeoutMs,
+    maxBuffer: options.maxOutputBytes,
+    stdio: ['pipe', 'pipe', 'pipe'],
+  });
+  const durationMs = Date.now() - startedAt;
+
+  const stdout = trimOutput(typeof result.stdout === 'string' ? result.stdout : '', options.maxOutputBytes);
+  const stderr = trimOutput(typeof result.stderr === 'string' ? result.stderr : '', options.maxOutputBytes);
+  const errorCode = (result.error as NodeJS.ErrnoException | undefined)?.code;
+  const timedOut = errorCode === 'ETIMEDOUT';
+  const bufferExceeded = stdout.truncated || stderr.truncated || errorCode === 'ENOBUFS';
+  const success = result.status === 0 && !result.error;
+
+  return {
+    success,
+    exitCode: result.status,
+    durationMs,
+    stdout: stdout.value,
+    stderr: stderr.value,
+    outputTruncated: bufferExceeded,
+    timedOut,
+  };
+}
+
+/**
+ * Format a task status message based on execution outcome.
+ */
+function formatTaskMessage(
+  entity: string,
+  result: ProcessExecutionResult,
+  timeoutMs: number,
+  successTemplate: (durationMs: number) => string,
+): string {
+  if (result.timedOut) {
+    return `"${entity}" timed out after ${timeoutMs} ms.`;
+  }
+  if (result.success) {
+    return successTemplate(result.durationMs);
+  }
+  return `"${entity}" failed with exit code ${result.exitCode ?? 'unknown'}.`;
+}
+
+/**
+ * Partition changed files into root configs and member-specific packages.
+ */
+function partitionChangedFiles(
+  changedFiles: readonly string[],
+  members: readonly WorkspaceMember[],
+): { rootFiles: string[]; packageFileMap: Map<string, string[]>; rootConfigChanged: boolean } {
   const rootFiles: string[] = [];
   const packageFileMap = new Map<string, string[]>();
   let rootConfigChanged = false;
-
-  const members: readonly WorkspaceMember[] = listAll();
 
   for (const file of changedFiles) {
     if (ROOT_CONFIG_FILES.has(file)) {
@@ -154,7 +221,6 @@ export function getAffectedPackages(options: { ref?: string; path?: string } = {
     }
 
     const matchedMember = members.find((member) => file.startsWith(`${member.relativeDir}/`));
-
     if (matchedMember) {
       const existing = packageFileMap.get(matchedMember.name) ?? [];
       existing.push(file);
@@ -164,6 +230,16 @@ export function getAffectedPackages(options: { ref?: string; path?: string } = {
     }
   }
 
+  return { rootFiles, packageFileMap, rootConfigChanged };
+}
+
+/**
+ * Build sorted affected package entries from package-to-files mapping.
+ */
+function buildAffectedPackageEntries(
+  packageFileMap: Map<string, string[]>,
+  members: readonly WorkspaceMember[],
+): AffectedPackageEntry[] {
   const affectedPackages: AffectedPackageEntry[] = [];
   for (const [name, files] of packageFileMap.entries()) {
     const member = members.find((m) => m.name === name);
@@ -174,15 +250,40 @@ export function getAffectedPackages(options: { ref?: string; path?: string } = {
       sampleFiles: files.slice(0, 5),
     });
   }
-
-  // Sort by changed file count descending
   affectedPackages.sort((a, b) => b.changedFileCount - a.changedFileCount);
+  return affectedPackages;
+}
 
-  const summary = rootConfigChanged
-    ? `Root configuration changed (${rootFiles.filter((f) => ROOT_CONFIG_FILES.has(f)).join(', ')}). All workspace packages may be affected. ${affectedPackages.length} packages directly modified.`
-    : affectedPackages.length === 0
-      ? 'No workspace packages affected by current changes.'
-      : `${affectedPackages.length} package(s) affected across ${changedFiles.length} changed files.`;
+/**
+ * Generate human-readable summary of affected workspace packages.
+ */
+function formatAffectedSummary(
+  rootConfigChanged: boolean,
+  rootFiles: readonly string[],
+  affectedCount: number,
+  totalChangedFiles: number,
+): string {
+  if (rootConfigChanged) {
+    const changedConfigs = rootFiles.filter((f) => ROOT_CONFIG_FILES.has(f)).join(', ');
+    return `Root configuration changed (${changedConfigs}). All workspace packages may be affected. ${affectedCount} packages directly modified.`;
+  }
+  if (affectedCount === 0) {
+    return 'No workspace packages affected by current changes.';
+  }
+  return `${affectedCount} package(s) affected across ${totalChangedFiles} changed files.`;
+}
+
+/**
+ * Maps changed repository files to affected workspace packages and detects root configuration modifications.
+ */
+export function getAffectedPackages(options: { ref?: string; path?: string } = {}): AffectedPackagesResult {
+  const changedReport = readGitChangedFiles(options);
+  const changedFiles = changedReport.files.map((file) => file.path);
+  const members = listAll();
+
+  const { rootFiles, packageFileMap, rootConfigChanged } = partitionChangedFiles(changedFiles, members);
+  const affectedPackages = buildAffectedPackageEntries(packageFileMap, members);
+  const summary = formatAffectedSummary(rootConfigChanged, rootFiles, affectedPackages.length, changedFiles.length);
 
   return {
     rootConfigChanged,
@@ -191,6 +292,17 @@ export function getAffectedPackages(options: { ref?: string; path?: string } = {
     rootFiles,
     summary,
   };
+}
+
+/**
+ * Resolve the canonical package name for upstream dependency priming.
+ */
+function resolvePrimingPackageName(rawName: string, members: readonly WorkspaceMember[]): string {
+  const member = members.find(
+    (m) => m.name === rawName || m.relativeDir === rawName || m.name === `@mission-platform/${rawName}`,
+  );
+  if (member) return member.name;
+  return rawName.startsWith('@') ? rawName : `@mission-platform/${rawName}`;
 }
 
 /**
@@ -209,47 +321,36 @@ export function primeUpstreamDependencies(request: {
 
   const repoRoot = findRepoRoot();
   const members = listAll();
-  const member = members.find(
-    (m) => m.name === rawName || m.relativeDir === rawName || m.name === `@mission-platform/${rawName}`,
-  );
-  const resolvedName = member ? member.name : rawName.startsWith('@') ? rawName : `@mission-platform/${rawName}`;
-
+  const resolvedName = resolvePrimingPackageName(rawName, members);
   const filter = `${resolvedName}^...`;
   const timeoutMs = boundedTimeout(request.timeoutMs);
   const maxOutputBytes = boundedOutput(request.maxOutputBytes);
 
-  const startedAt = Date.now();
-  const result = spawnSync('pnpm', ['exec', 'turbo', 'run', 'build', '--filter', filter], {
+  const execResult = executeBoundedProcess({
     cwd: repoRoot,
-    encoding: 'utf8',
-    shell: false,
-    timeout: timeoutMs,
-    maxBuffer: maxOutputBytes,
-    stdio: ['pipe', 'pipe', 'pipe'],
+    command: 'pnpm',
+    args: ['exec', 'turbo', 'run', 'build', '--filter', filter],
+    timeoutMs,
+    maxOutputBytes,
   });
-  const durationMs = Date.now() - startedAt;
 
-  const stdout = trimOutput(typeof result.stdout === 'string' ? result.stdout : '', maxOutputBytes);
-  const stderr = trimOutput(typeof result.stderr === 'string' ? result.stderr : '', maxOutputBytes);
-  const errorCode = (result.error as NodeJS.ErrnoException | undefined)?.code;
-  const timedOut = errorCode === 'ETIMEDOUT';
-  const outputTruncated = stdout.truncated || stderr.truncated || errorCode === 'ENOBUFS';
-  const success = result.status === 0 && !result.error;
+  const message = formatTaskMessage(
+    filter,
+    execResult,
+    timeoutMs,
+    (duration) => `Upstream dependencies for "${resolvedName}" built successfully in ${duration} ms.`,
+  );
 
   return {
     packageName: resolvedName,
     filter,
-    success,
-    exitCode: result.status,
-    durationMs,
-    stdout: stdout.value,
-    stderr: stderr.value,
-    outputTruncated,
-    message: timedOut
-      ? `Dependency priming for "${filter}" timed out after ${timeoutMs} ms.`
-      : success
-        ? `Upstream dependencies for "${resolvedName}" built successfully in ${durationMs} ms.`
-        : `Upstream dependency build for "${filter}" failed with exit code ${result.status ?? 'unknown'}.`,
+    success: execResult.success,
+    exitCode: execResult.exitCode,
+    durationMs: execResult.durationMs,
+    stdout: execResult.stdout,
+    stderr: execResult.stderr,
+    outputTruncated: execResult.outputTruncated,
+    message,
   };
 }
 
@@ -278,47 +379,54 @@ export function runTurboTask(request: {
   const maxOutputBytes = boundedOutput(request.maxOutputBytes);
 
   const args = ['exec', 'turbo', 'run', task];
-  if (filter) {
-    args.push('--filter', filter);
-  }
-  if (request.dry) {
-    args.push('--dry=json');
-  }
+  if (filter) args.push('--filter', filter);
+  if (request.dry) args.push('--dry=json');
 
-  const startedAt = Date.now();
-  const result = spawnSync('pnpm', args, {
+  const execResult = executeBoundedProcess({
     cwd: repoRoot,
-    encoding: 'utf8',
-    shell: false,
-    timeout: timeoutMs,
-    maxBuffer: maxOutputBytes,
-    stdio: ['pipe', 'pipe', 'pipe'],
+    command: 'pnpm',
+    args,
+    timeoutMs,
+    maxOutputBytes,
   });
-  const durationMs = Date.now() - startedAt;
 
-  const stdout = trimOutput(typeof result.stdout === 'string' ? result.stdout : '', maxOutputBytes);
-  const stderr = trimOutput(typeof result.stderr === 'string' ? result.stderr : '', maxOutputBytes);
-  const errorCode = (result.error as NodeJS.ErrnoException | undefined)?.code;
-  const timedOut = errorCode === 'ETIMEDOUT';
-  const outputTruncated = stdout.truncated || stderr.truncated || errorCode === 'ENOBUFS';
-  const success = result.status === 0 && !result.error;
+  const message = formatTaskMessage(
+    task,
+    execResult,
+    timeoutMs,
+    (duration) => `Turborepo task "${task}" completed successfully in ${duration} ms.`,
+  );
 
   return {
     task,
     filter,
     dry: request.dry === true,
-    success,
-    exitCode: result.status,
-    durationMs,
-    stdout: stdout.value,
-    stderr: stderr.value,
-    outputTruncated,
-    message: timedOut
-      ? `Turborepo task "${task}" timed out after ${timeoutMs} ms.`
-      : success
-        ? `Turborepo task "${task}" completed successfully in ${durationMs} ms.`
-        : `Turborepo task "${task}" failed with exit code ${result.status ?? 'unknown'}.`,
+    success: execResult.success,
+    exitCode: execResult.exitCode,
+    durationMs: execResult.durationMs,
+    stdout: execResult.stdout,
+    stderr: execResult.stderr,
+    outputTruncated: execResult.outputTruncated,
+    message,
   };
+}
+
+/**
+ * Build execution arguments for targeted test execution.
+ */
+function buildTestRunArgs(
+  runner: 'node:test' | 'vitest',
+  relativePath: string,
+  testNamePattern?: string,
+): { command: string; args: string[] } {
+  if (runner === 'node:test') {
+    return { command: 'node', args: ['--test', relativePath] };
+  }
+  const vitestArgs = ['exec', 'vitest', 'run', relativePath];
+  if (testNamePattern) {
+    vitestArgs.push('-t', testNamePattern);
+  }
+  return { command: 'pnpm', args: vitestArgs };
 }
 
 /**
@@ -338,53 +446,124 @@ export function runTestFile(request: {
   }
 
   const relativePath = relative(repoRoot, absolutePath);
-  const isNodeTest = relativePath.startsWith('mcp/');
-  const runner: 'node:test' | 'vitest' = isNodeTest ? 'node:test' : 'vitest';
-
+  const runner: 'node:test' | 'vitest' = relativePath.startsWith('mcp/') ? 'node:test' : 'vitest';
   const timeoutMs = boundedTimeout(request.timeoutMs);
   const maxOutputBytes = boundedOutput(request.maxOutputBytes);
 
-  const command = runner === 'node:test' ? 'node' : 'pnpm';
-  const args =
-    runner === 'node:test'
-      ? ['--test', relativePath]
-      : request.testNamePattern
-        ? ['exec', 'vitest', 'run', relativePath, '-t', request.testNamePattern]
-        : ['exec', 'vitest', 'run', relativePath];
-
-  const startedAt = Date.now();
-  const result = spawnSync(command, args, {
+  const { command, args } = buildTestRunArgs(runner, relativePath, request.testNamePattern);
+  const execResult = executeBoundedProcess({
     cwd: repoRoot,
-    encoding: 'utf8',
-    shell: false,
-    timeout: timeoutMs,
-    maxBuffer: maxOutputBytes,
-    stdio: ['pipe', 'pipe', 'pipe'],
+    command,
+    args,
+    timeoutMs,
+    maxOutputBytes,
   });
-  const durationMs = Date.now() - startedAt;
 
-  const stdout = trimOutput(typeof result.stdout === 'string' ? result.stdout : '', maxOutputBytes);
-  const stderr = trimOutput(typeof result.stderr === 'string' ? result.stderr : '', maxOutputBytes);
-  const errorCode = (result.error as NodeJS.ErrnoException | undefined)?.code;
-  const timedOut = errorCode === 'ETIMEDOUT';
-  const outputTruncated = stdout.truncated || stderr.truncated || errorCode === 'ENOBUFS';
-  const success = result.status === 0 && !result.error;
+  const message = formatTaskMessage(
+    relativePath,
+    execResult,
+    timeoutMs,
+    (duration) => `Test "${relativePath}" passed in ${duration} ms.`,
+  );
 
   return {
     filePath: relativePath,
     runner,
-    success,
-    exitCode: result.status,
-    durationMs,
-    stdout: stdout.value,
-    stderr: stderr.value,
-    outputTruncated,
-    message: timedOut
-      ? `Test execution for "${relativePath}" timed out after ${timeoutMs} ms.`
-      : success
-        ? `Test "${relativePath}" passed in ${durationMs} ms.`
-        : `Test "${relativePath}" failed with exit code ${result.status ?? 'unknown'}.`,
+    success: execResult.success,
+    exitCode: execResult.exitCode,
+    durationMs: execResult.durationMs,
+    stdout: execResult.stdout,
+    stderr: execResult.stderr,
+    outputTruncated: execResult.outputTruncated,
+    message,
   };
+}
+
+/**
+ * Check whether a directory entry should be skipped during story scanning.
+ */
+function isIgnoredScanEntry(entry: string): boolean {
+  return entry === 'node_modules' || entry === 'dist' || entry.startsWith('.');
+}
+
+/**
+ * Check whether a filename matches story naming conventions.
+ */
+function isStoryFileName(entry: string): boolean {
+  return entry.endsWith('.stories.tsx') || entry.endsWith('.stories.ts');
+}
+
+/**
+ * Extract StoryEntry metadata from a discovered story file path.
+ */
+function extractStoryEntry(
+  repoRoot: string,
+  fullPath: string,
+  entry: string,
+  filterPackage?: string,
+  filterComponent?: string,
+): StoryEntry | undefined {
+  const relativeFilePath = relative(repoRoot, fullPath);
+  const fileBase = entry.replace(/\.stories\.[jt]sx?$/, '');
+  const segments = relativeFilePath.split('/');
+  const atomicLevels = new Set(['atoms', 'molecules', 'organisms', 'templates', 'pages']);
+  const foundLevel = segments.find((s) => atomicLevels.has(s));
+  const packageName = segments.length > 1 ? segments[1] : undefined;
+
+  if (filterPackage && packageName && !packageName.toLowerCase().includes(filterPackage)) {
+    return undefined;
+  }
+  if (filterComponent && !fileBase.toLowerCase().includes(filterComponent)) {
+    return undefined;
+  }
+
+  return {
+    filePath: relativeFilePath,
+    componentName: fileBase,
+    level: foundLevel,
+    packageName,
+  };
+}
+
+/**
+ * Recursively scan a directory for Storybook story files up to maximum depth and limit.
+ */
+function scanStoriesDirectory(
+  dir: string,
+  repoRoot: string,
+  stories: StoryEntry[],
+  limit: number,
+  filterPackage?: string,
+  filterComponent?: string,
+  currentDepth = 0,
+): void {
+  if (currentDepth > 10 || stories.length >= limit) return;
+  let entries: string[];
+  try {
+    entries = readdirSync(dir);
+  } catch {
+    return;
+  }
+
+  for (const entry of entries) {
+    if (stories.length >= limit) break;
+    if (isIgnoredScanEntry(entry)) continue;
+
+    const fullPath = join(dir, entry);
+    let stat;
+    try {
+      stat = statSync(fullPath);
+    } catch {
+      continue;
+    }
+
+    if (stat.isDirectory()) {
+      scanStoriesDirectory(fullPath, repoRoot, stories, limit, filterPackage, filterComponent, currentDepth + 1);
+    } else if (isStoryFileName(entry)) {
+      const story = extractStoryEntry(repoRoot, fullPath, entry, filterPackage, filterComponent);
+      if (story) stories.push(story);
+    }
+  }
 }
 
 /**
@@ -405,61 +584,10 @@ export function listStories(
   const filterComponent = options.component?.toLowerCase().trim();
   const filterPackage = options.package?.toLowerCase().trim();
 
-  function scanDirectory(dir: string, currentDepth = 0): void {
-    if (currentDepth > 10 || stories.length >= limit) return;
-    let entries: string[];
-    try {
-      entries = readdirSync(dir);
-    } catch {
-      return;
-    }
-
-    for (const entry of entries) {
-      if (stories.length >= limit) break;
-      if (entry === 'node_modules' || entry === 'dist' || entry.startsWith('.')) continue;
-
-      const fullPath = join(dir, entry);
-      let stat;
-      try {
-        stat = statSync(fullPath);
-      } catch {
-        continue;
-      }
-
-      if (stat.isDirectory()) {
-        scanDirectory(fullPath, currentDepth + 1);
-      } else if (entry.endsWith('.stories.tsx') || entry.endsWith('.stories.ts')) {
-        const relativeFilePath = relative(repoRoot, fullPath);
-
-        // Derive component name and level
-        const fileBase = entry.replace(/\.stories\.[jt]sx?$/, '');
-        const segments = relativeFilePath.split('/');
-        const atomicLevels = new Set(['atoms', 'molecules', 'organisms', 'templates', 'pages']);
-        const foundLevel = segments.find((s) => atomicLevels.has(s));
-        const packageName = segments.length > 1 ? segments[1] : undefined;
-
-        if (filterPackage && packageName && !packageName.toLowerCase().includes(filterPackage)) {
-          continue;
-        }
-
-        if (filterComponent && !fileBase.toLowerCase().includes(filterComponent)) {
-          continue;
-        }
-
-        stories.push({
-          filePath: relativeFilePath,
-          componentName: fileBase,
-          level: foundLevel,
-          packageName,
-        });
-      }
-    }
-  }
-
   for (const base of candidateDirs) {
     const fullBase = join(repoRoot, base);
     if (existsSync(fullBase)) {
-      scanDirectory(fullBase);
+      scanStoriesDirectory(fullBase, repoRoot, stories, limit, filterPackage, filterComponent);
     }
   }
 

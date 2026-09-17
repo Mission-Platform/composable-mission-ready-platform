@@ -28,6 +28,7 @@ import {
   resolveMemberLocales,
   surveyLocales,
   updateTranslation,
+  type ResolvedLocales,
 } from '@mission-platform/mcp-shared/repo/locales';
 import { resolveRepoPath, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
 import { findMember } from '@mission-platform/mcp-shared/repo/scanner';
@@ -103,6 +104,31 @@ export const scaffoldInputSchema = {
 
 export type ScaffoldInput = z.infer<z.ZodObject<typeof scaffoldInputSchema>>;
 
+type WorkspaceEntityFactory = (
+  name: string,
+  description: string,
+  args: ScaffoldInput,
+) => { group: WorkspaceGroup; files: ScaffoldFile[] };
+
+const WORKSPACE_ENTITY_FACTORIES: Record<'package' | 'app' | 'worker' | 'crate', WorkspaceEntityFactory> = {
+  package: (name, description, args) => ({
+    group: (args.group as WorkspaceGroup | undefined) ?? 'packages',
+    files: packageFiles({ name, description, vue: args.vue === true }),
+  }),
+  app: (name, description) => ({
+    group: 'apps',
+    files: appFiles({ name, description }),
+  }),
+  worker: (name, description) => ({
+    group: 'edge-workers',
+    files: workerFiles({ name, description }),
+  }),
+  crate: (name, description) => ({
+    group: 'crates',
+    files: crateFiles({ name, description }),
+  }),
+};
+
 /**
  * Scaffold a top-level workspace member (package, app, worker, or crate).
  */
@@ -111,40 +137,128 @@ function scaffoldWorkspaceEntity(
   name: string,
   args: ScaffoldInput,
 ): object {
-  const apply = args.apply === true;
-  const description = args.description?.trim() ?? '';
-
-  switch (entityType) {
-    case 'package': {
-      const files = packageFiles({
-        name,
-        description,
-        vue: args.vue === true,
-      });
-      const group = (args.group as WorkspaceGroup | undefined) ?? 'packages';
-      return writeScaffold({ group, name, files, apply });
-    }
-
-    case 'app': {
-      const files = appFiles({ name, description });
-      return writeScaffold({ group: 'apps', name, files, apply });
-    }
-
-    case 'worker': {
-      const files = workerFiles({ name, description });
-      return writeScaffold({ group: 'edge-workers', name, files, apply });
-    }
-
-    case 'crate': {
-      const files = crateFiles({ name, description });
-      return writeScaffold({ group: 'crates', name, files, apply });
-    }
-
-    default: {
-      throw new Error(`Unsupported workspace entity type: "${String(entityType)}".`);
-    }
+  const factory = WORKSPACE_ENTITY_FACTORIES[entityType];
+  if (!factory) {
+    throw new Error(`Unsupported workspace entity type: "${String(entityType)}".`);
   }
+  const description = args.description?.trim() ?? '';
+  const { group, files } = factory(name, description, args);
+  return writeScaffold({ group, name, files, apply: args.apply === true });
 }
+
+/**
+ * Scaffold a component unit into a target package.
+ */
+function scaffoldComponentUnit(name: string, args: ScaffoldInput): object {
+  const normalizedName = normalizeUnitName(name);
+  const nameError = validateName(normalizedName);
+  if (nameError) throw new Error(nameError);
+  if (!args.level) {
+    throw new Error('Component scaffolding requires a "level" (atom, molecule, organism, template, page).');
+  }
+  const target = resolvePackageTarget(args.package?.trim() || 'components');
+  const scaffold = componentFiles({
+    name: normalizedName,
+    level: args.level as ScaffoldAtomicLevel,
+    area: args.area?.trim() || 'General',
+    description: args.description?.trim(),
+  });
+  const result = writeIntoPackage({
+    packageDir: target.packageDir,
+    relativePackageDir: target.relativePackageDir,
+    files: scaffold.files,
+    barrelUpdates: [{ relativePath: 'src/components/index.ts', exportLine: scaffold.barrelExport }],
+    apply: args.apply === true,
+  });
+  return {
+    ...result,
+    componentName: scaffold.componentName,
+    storyTitle: scaffold.storyTitle,
+    levelFolder: scaffold.levelFolder,
+  };
+}
+
+/**
+ * Scaffold a composable unit into a target package.
+ */
+function scaffoldComposableUnit(name: string, args: ScaffoldInput): object {
+  const normalized = normalizeComposableName(name);
+  const target = resolvePackageTarget(args.package?.trim() || 'components');
+  const scaffold = composableFiles({ name: normalized, description: args.description?.trim() });
+  const result = writeIntoPackage({
+    packageDir: target.packageDir,
+    relativePackageDir: target.relativePackageDir,
+    files: scaffold.files,
+    barrelUpdates: [{ relativePath: 'src/composables/index.ts', exportLine: scaffold.barrelExport }],
+    apply: args.apply === true,
+  });
+  return {
+    ...result,
+    name: scaffold.name,
+    functionName: scaffold.functionName,
+    camel: scaffold.functionName,
+  };
+}
+
+/**
+ * Scaffold a store unit into a target package.
+ */
+function scaffoldStoreUnit(name: string, args: ScaffoldInput): object {
+  const normalizedName = normalizeUnitName(name);
+  const packageName = args.package?.trim();
+  if (!packageName) throw new Error('Provide a target "package" folder under packages/.');
+  const nameError = validateName(normalizedName);
+  if (nameError) throw new Error(nameError);
+  const target = resolvePackageTarget(packageName);
+  const scaffold = storeFiles({ name: normalizedName, description: args.description?.trim() });
+  const result = writeIntoPackage({
+    packageDir: target.packageDir,
+    relativePackageDir: target.relativePackageDir,
+    files: scaffold.files,
+    barrelUpdates: [{ relativePath: 'src/stores/index.ts', exportLine: scaffold.barrelExport }],
+    apply: args.apply === true,
+  });
+  return {
+    ...result,
+    name: scaffold.name,
+    pascal: scaffold.pascal,
+  };
+}
+
+/**
+ * Scaffold a utility unit into a target package.
+ */
+function scaffoldUtilUnit(name: string, args: ScaffoldInput): object {
+  const normalizedName = normalizeUnitName(name);
+  const packageName = args.package?.trim();
+  if (!packageName) throw new Error('Provide a target "package" folder under packages/.');
+  const nameError = validateName(normalizedName);
+  if (nameError) throw new Error(nameError);
+  const target = resolvePackageTarget(packageName);
+  const scaffold = utilFiles({ name: normalizedName, description: args.description?.trim() });
+  const result = writeIntoPackage({
+    packageDir: target.packageDir,
+    relativePackageDir: target.relativePackageDir,
+    files: scaffold.files,
+    barrelUpdates: [{ relativePath: 'src/utils/index.ts', exportLine: scaffold.barrelExport }],
+    apply: args.apply === true,
+  });
+  return {
+    ...result,
+    name: scaffold.name,
+    functionName: scaffold.functionName,
+  };
+}
+
+const PACKAGE_UNIT_SCAFFOLDERS: Record<
+  'component' | 'composable' | 'store' | 'util',
+  (name: string, args: ScaffoldInput) => object
+> = {
+  component: scaffoldComponentUnit,
+  composable: scaffoldComposableUnit,
+  store: scaffoldStoreUnit,
+  util: scaffoldUtilUnit,
+};
 
 /**
  * Scaffold an internal unit inside an existing package (component, composable, store, or util).
@@ -154,105 +268,25 @@ function scaffoldPackageUnit(
   name: string,
   args: ScaffoldInput,
 ): object {
-  const apply = args.apply === true;
-
-  switch (entityType) {
-    case 'component': {
-      const normalizedName = normalizeUnitName(name);
-      const nameError = validateName(normalizedName);
-      if (nameError) throw new Error(nameError);
-      if (!args.level) {
-        throw new Error('Component scaffolding requires a "level" (atom, molecule, organism, template, page).');
-      }
-      const target = resolvePackageTarget(args.package?.trim() || 'components');
-      const scaffold = componentFiles({
-        name: normalizedName,
-        level: args.level as ScaffoldAtomicLevel,
-        area: args.area?.trim() || 'General',
-        description: args.description?.trim(),
-      });
-      const result = writeIntoPackage({
-        packageDir: target.packageDir,
-        relativePackageDir: target.relativePackageDir,
-        files: scaffold.files,
-        barrelUpdates: [{ relativePath: 'src/components/index.ts', exportLine: scaffold.barrelExport }],
-        apply,
-      });
-      return {
-        ...result,
-        componentName: scaffold.componentName,
-        storyTitle: scaffold.storyTitle,
-        levelFolder: scaffold.levelFolder,
-      };
-    }
-
-    case 'composable': {
-      const normalized = normalizeComposableName(name);
-      const target = resolvePackageTarget(args.package?.trim() || 'components');
-      const scaffold = composableFiles({ name: normalized, description: args.description?.trim() });
-      const result = writeIntoPackage({
-        packageDir: target.packageDir,
-        relativePackageDir: target.relativePackageDir,
-        files: scaffold.files,
-        barrelUpdates: [{ relativePath: 'src/composables/index.ts', exportLine: scaffold.barrelExport }],
-        apply,
-      });
-      return {
-        ...result,
-        name: scaffold.name,
-        functionName: scaffold.functionName,
-        camel: scaffold.functionName,
-      };
-    }
-
-    case 'store': {
-      const normalizedName = normalizeUnitName(name);
-      const packageName = args.package?.trim();
-      if (!packageName) throw new Error('Provide a target "package" folder under packages/.');
-      const nameError = validateName(normalizedName);
-      if (nameError) throw new Error(nameError);
-      const target = resolvePackageTarget(packageName);
-      const scaffold = storeFiles({ name: normalizedName, description: args.description?.trim() });
-      const result = writeIntoPackage({
-        packageDir: target.packageDir,
-        relativePackageDir: target.relativePackageDir,
-        files: scaffold.files,
-        barrelUpdates: [{ relativePath: 'src/stores/index.ts', exportLine: scaffold.barrelExport }],
-        apply,
-      });
-      return {
-        ...result,
-        name: scaffold.name,
-        pascal: scaffold.pascal,
-      };
-    }
-
-    case 'util': {
-      const normalizedName = normalizeUnitName(name);
-      const packageName = args.package?.trim();
-      if (!packageName) throw new Error('Provide a target "package" folder under packages/.');
-      const nameError = validateName(normalizedName);
-      if (nameError) throw new Error(nameError);
-      const target = resolvePackageTarget(packageName);
-      const scaffold = utilFiles({ name: normalizedName, description: args.description?.trim() });
-      const result = writeIntoPackage({
-        packageDir: target.packageDir,
-        relativePackageDir: target.relativePackageDir,
-        files: scaffold.files,
-        barrelUpdates: [{ relativePath: 'src/utils/index.ts', exportLine: scaffold.barrelExport }],
-        apply,
-      });
-      return {
-        ...result,
-        name: scaffold.name,
-        functionName: scaffold.functionName,
-      };
-    }
-
-    default: {
-      throw new Error(`Unsupported package unit type: "${String(entityType)}".`);
-    }
+  const scaffolder = PACKAGE_UNIT_SCAFFOLDERS[entityType];
+  if (!scaffolder) {
+    throw new Error(`Unsupported package unit type: "${String(entityType)}".`);
   }
+  return scaffolder(name, args);
+}
+
+/**
+ * Check whether an entity type represents a workspace member.
+ */
+function isWorkspaceEntityType(type: string): type is 'package' | 'app' | 'worker' | 'crate' {
+  return type === 'package' || type === 'app' || type === 'worker' || type === 'crate';
+}
+
+/**
+ * Check whether an entity type represents a package sub-unit.
+ */
+function isPackageUnitType(type: string): type is 'component' | 'composable' | 'store' | 'util' {
+  return type === 'component' || type === 'composable' || type === 'store' || type === 'util';
 }
 
 /**
@@ -265,25 +299,13 @@ export function dispatchScaffold(args: ScaffoldInput): object {
   }
 
   const entityType = args.type;
-  switch (entityType) {
-    case 'package':
-    case 'app':
-    case 'worker':
-    case 'crate': {
-      return scaffoldWorkspaceEntity(entityType, name, args);
-    }
-
-    case 'component':
-    case 'composable':
-    case 'store':
-    case 'util': {
-      return scaffoldPackageUnit(entityType, name, args);
-    }
-
-    default: {
-      throw new Error(`Unsupported entity type: "${String(entityType)}".`);
-    }
+  if (isWorkspaceEntityType(entityType)) {
+    return scaffoldWorkspaceEntity(entityType, name, args);
   }
+  if (isPackageUnitType(entityType)) {
+    return scaffoldPackageUnit(entityType, name, args);
+  }
+  throw new Error(`Unsupported entity type: "${String(entityType)}".`);
 }
 
 export const i18nInputSchema = {
@@ -355,6 +377,54 @@ function handleI18nQuery(action: 'list' | 'coverage', group: WorkspaceGroup, nam
 }
 
 /**
+ * Handle adding a new locale.
+ */
+function handleI18nAdd(resolved: ResolvedLocales, args: I18nInput): object {
+  const locale = args.locale?.trim();
+  if (!locale) throw new Error('Provide a "locale" code to add.');
+  return addLocale(resolved, locale, {
+    fill: args.fill ?? 'empty',
+    apply: args.apply === true,
+  });
+}
+
+/**
+ * Handle removing an existing locale.
+ */
+function handleI18nRemove(resolved: ResolvedLocales, args: I18nInput): object {
+  const locale = args.locale?.trim();
+  if (!locale) throw new Error('Provide a "locale" code to remove.');
+  return removeLocale(resolved, locale, args.apply === true);
+}
+
+/**
+ * Handle updating a translation entry.
+ */
+function handleI18nUpdate(resolved: ResolvedLocales, args: I18nInput): object {
+  const locale = args.locale?.trim();
+  if (!locale) throw new Error('Provide a "locale" code.');
+  const key = args.key?.trim();
+  if (!key) throw new Error('Provide a dot-notated "key" path.');
+  if (args.value === undefined) throw new Error('Provide a "value" string.');
+  return updateTranslation({
+    resolved,
+    code: locale,
+    entries: { [key]: args.value },
+    namespace: args.namespace?.trim(),
+    apply: args.apply === true,
+  });
+}
+
+const I18N_MUTATION_HANDLERS: Record<
+  'add' | 'remove' | 'update',
+  (resolved: ResolvedLocales, args: I18nInput) => object
+> = {
+  add: handleI18nAdd,
+  remove: handleI18nRemove,
+  update: handleI18nUpdate,
+};
+
+/**
  * Handle mutating i18n operations (add, remove, update).
  */
 function handleI18nMutation(
@@ -363,41 +433,19 @@ function handleI18nMutation(
   name: string | undefined,
   args: I18nInput,
 ): object | string {
-  const resolved = requireMemberLocales(group, name);
-  const locale = args.locale?.trim();
-
-  switch (action) {
-    case 'add': {
-      if (!locale) throw new Error('Provide a "locale" code to add.');
-      return addLocale(resolved, locale, {
-        fill: args.fill ?? 'empty',
-        apply: args.apply === true,
-      });
-    }
-
-    case 'remove': {
-      if (!locale) throw new Error('Provide a "locale" code to remove.');
-      return removeLocale(resolved, locale, args.apply === true);
-    }
-
-    case 'update': {
-      if (!locale) throw new Error('Provide a "locale" code.');
-      const key = args.key?.trim();
-      if (!key) throw new Error('Provide a dot-notated "key" path.');
-      if (args.value === undefined) throw new Error('Provide a "value" string.');
-      return updateTranslation({
-        resolved,
-        code: locale,
-        entries: { [key]: args.value },
-        namespace: args.namespace?.trim(),
-        apply: args.apply === true,
-      });
-    }
-
-    default: {
-      throw new Error(`Unsupported i18n mutation action: "${String(action)}".`);
-    }
+  const handler = I18N_MUTATION_HANDLERS[action];
+  if (!handler) {
+    throw new Error(`Unsupported i18n mutation action: "${String(action)}".`);
   }
+  const resolved = requireMemberLocales(group, name);
+  return handler(resolved, args);
+}
+
+/**
+ * Check whether an i18n action is a query (list or coverage).
+ */
+function isI18nQuery(action: string): action is 'list' | 'coverage' {
+  return action === 'list' || action === 'coverage';
 }
 
 /**
@@ -407,22 +455,10 @@ export function dispatchI18n(args: I18nInput): object | string {
   const group = (args.group as WorkspaceGroup | undefined) ?? 'apps';
   const name = args.name?.trim();
 
-  switch (args.action) {
-    case 'list':
-    case 'coverage': {
-      return handleI18nQuery(args.action, group, name);
-    }
-
-    case 'add':
-    case 'remove':
-    case 'update': {
-      return handleI18nMutation(args.action, group, name, args);
-    }
-
-    default: {
-      throw new Error(`Unsupported i18n action: "${String(args.action)}".`);
-    }
+  if (isI18nQuery(args.action)) {
+    return handleI18nQuery(args.action, group, name);
   }
+  return handleI18nMutation(args.action, group, name, args);
 }
 
 export const gitMetadataInputSchema = {

@@ -81,6 +81,88 @@ function evaluateControlStatus(
 }
 
 /**
+ * Compute specific auditing metrics for an ISO 27001 control.
+ */
+function computeControlMetrics(
+  controlId: string,
+  findingsCount: number,
+  depScannedFiles: number,
+  secretsScannedFiles: number,
+  codeScannedFiles: number,
+  supplyStats: { lifecycleScriptsFound: number; duplicatePackagesFound: number },
+  gitMeta: { cleanTree?: boolean; branch?: string },
+): Record<string, unknown> {
+  const baseMetrics: Record<string, unknown> = { findingsCount };
+  const specificMetrics: Record<string, Record<string, unknown>> = {
+    "A.8.8": { scannedManifests: depScannedFiles },
+    "A.8.12": { scannedFiles: secretsScannedFiles },
+    "A.8.28": { scannedCodeFiles: codeScannedFiles },
+    "A.8.25": { lifecycleScriptsFound: supplyStats.lifecycleScriptsFound },
+    "A.8.9": { duplicatePackagesFound: supplyStats.duplicatePackagesFound },
+    "A.8.32": {
+      workingTreeClean: gitMeta.cleanTree ?? true,
+      currentBranch: gitMeta.branch ?? "unknown",
+    },
+  };
+  const extra = specificMetrics[controlId];
+  return extra ? { ...baseMetrics, ...extra } : baseMetrics;
+}
+
+/**
+ * Build descriptive compliance status notes for an ISO control.
+ */
+function buildControlNotes(
+  controlId: string,
+  status: ComplianceControlStatus,
+  findingsCount: number,
+): string {
+  if (status === "compliant") {
+    return `No security violations or vulnerabilities detected for ${controlId}. Control satisfies automated audit requirements.`;
+  }
+  if (status === "needs-review") {
+    return `${findingsCount} moderate or low findings require verification or planned remediation.`;
+  }
+  return `${findingsCount} critical or high severity vulnerabilities violate control ${controlId} and require immediate remediation.`;
+}
+
+/**
+ * Build a single ISO control evidence record.
+ */
+function buildSingleIsoEvidence(
+  controlId: string,
+  def: { name: string; category: string; description: string },
+  findings: SecurityFinding[],
+  depScannedFiles: number,
+  secretsScannedFiles: number,
+  codeScannedFiles: number,
+  supplyStats: { lifecycleScriptsFound: number; duplicatePackagesFound: number },
+  gitMeta: { cleanTree?: boolean; branch?: string },
+): IsoControlEvidence {
+  const status = evaluateControlStatus(findings);
+  const metrics = computeControlMetrics(
+    controlId,
+    findings.length,
+    depScannedFiles,
+    secretsScannedFiles,
+    codeScannedFiles,
+    supplyStats,
+    gitMeta,
+  );
+  const notes = buildControlNotes(controlId, status, findings.length);
+
+  return {
+    controlId,
+    name: def.name,
+    category: def.category,
+    description: def.description,
+    status,
+    findings,
+    metrics,
+    notes,
+  };
+}
+
+/**
  * Build ISO 27001 control evidence items from findings and scan metrics.
  */
 function buildIsoEvidenceList(
@@ -105,44 +187,16 @@ function buildIsoEvidenceList(
 
   return Object.entries(ISO_27001_CONTROLS).map(([controlId, def]) => {
     const findings = controlFindingsMap.get(controlId) ?? [];
-    const status = evaluateControlStatus(findings);
-
-    const metrics: Record<string, unknown> = {
-      findingsCount: findings.length,
-    };
-
-    if (controlId === "A.8.8") {
-      metrics.scannedManifests = depScannedFiles;
-    } else if (controlId === "A.8.12") {
-      metrics.scannedFiles = secretsScannedFiles;
-    } else if (controlId === "A.8.28") {
-      metrics.scannedCodeFiles = codeScannedFiles;
-    } else if (controlId === "A.8.25") {
-      metrics.lifecycleScriptsFound = supplyStats.lifecycleScriptsFound;
-    } else if (controlId === "A.8.9") {
-      metrics.duplicatePackagesFound = supplyStats.duplicatePackagesFound;
-    } else if (controlId === "A.8.32") {
-      metrics.workingTreeClean = gitMeta.cleanTree ?? true;
-      metrics.currentBranch = gitMeta.branch ?? "unknown";
-    }
-
-    const notes =
-      status === "compliant"
-        ? `No security violations or vulnerabilities detected for ${controlId}. Control satisfies automated audit requirements.`
-        : status === "needs-review"
-          ? `${findings.length} moderate or low findings require verification or planned remediation.`
-          : `${findings.length} critical or high severity vulnerabilities violate control ${controlId} and require immediate remediation.`;
-
-    return {
+    return buildSingleIsoEvidence(
       controlId,
-      name: def.name,
-      category: def.category,
-      description: def.description,
-      status,
+      def,
       findings,
-      metrics,
-      notes,
-    };
+      depScannedFiles,
+      secretsScannedFiles,
+      codeScannedFiles,
+      supplyStats,
+      gitMeta,
+    );
   });
 }
 

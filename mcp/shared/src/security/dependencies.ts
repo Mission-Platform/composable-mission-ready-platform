@@ -64,6 +64,58 @@ function checkUnpinnedSpec(
 }
 
 /**
+ * Check whether a specifier starts with unencrypted http protocol.
+ */
+function isInsecureHttp(spec: string): boolean {
+  return spec.startsWith("http://");
+}
+
+/**
+ * Check whether a specifier starts with unencrypted git protocol.
+ */
+function isInsecureGit(spec: string): boolean {
+  return spec.startsWith("git://") || spec.startsWith("git+http://");
+}
+
+/**
+ * Build finding for insecure HTTP dependency URL.
+ */
+function buildInsecureHttpFinding(depName: string, spec: string, relativeFilePath: string): SecurityFinding {
+  return {
+    id: "DEPENDENCY_INSECURE_HTTP_URL",
+    category: "dependency",
+    severity: "high",
+    title: "Insecure HTTP dependency protocol",
+    message: `Dependency "${depName}" in ${relativeFilePath} uses unencrypted http:// URL: ${spec}.`,
+    filePath: relativeFilePath,
+    snippet: `"${depName}": "${spec}"`,
+    remediation: "Use secure HTTPS (https://) or official package registries instead of unencrypted HTTP.",
+    owasp: "A08:2025-Software and Data Integrity Failures",
+    cwe: "CWE-319",
+    isoControl: "A.8.20",
+  };
+}
+
+/**
+ * Build finding for insecure Git dependency URL.
+ */
+function buildInsecureGitFinding(depName: string, spec: string, relativeFilePath: string): SecurityFinding {
+  return {
+    id: "DEPENDENCY_INSECURE_GIT_URL",
+    category: "dependency",
+    severity: "high",
+    title: "Insecure Git dependency protocol",
+    message: `Dependency "${depName}" in ${relativeFilePath} uses unencrypted Git protocol: ${spec}.`,
+    filePath: relativeFilePath,
+    snippet: `"${depName}": "${spec}"`,
+    remediation: "Use Git over SSH (git@...) or Git over HTTPS (git+https://).",
+    owasp: "A08:2025-Software and Data Integrity Failures",
+    cwe: "CWE-319",
+    isoControl: "A.8.20",
+  };
+}
+
+/**
  * Check if a dependency version specifier uses an insecure unencrypted protocol.
  */
 function checkInsecureProtocol(
@@ -72,44 +124,37 @@ function checkInsecureProtocol(
   relativeFilePath: string,
   severityThreshold?: SecurityFinding["severity"],
 ): SecurityFinding | undefined {
-  if (spec.startsWith("http://") && isSeverityAtOrAbove("high", severityThreshold)) {
-    return {
-      id: "DEPENDENCY_INSECURE_HTTP_URL",
-      category: "dependency",
-      severity: "high",
-      title: "Insecure HTTP dependency protocol",
-      message: `Dependency "${depName}" in ${relativeFilePath} uses unencrypted http:// URL: ${spec}.`,
-      filePath: relativeFilePath,
-      snippet: `"${depName}": "${spec}"`,
-      remediation:
-        "Use secure HTTPS (https://) or official package registries instead of unencrypted HTTP.",
-      owasp: "A08:2025-Software and Data Integrity Failures",
-      cwe: "CWE-319",
-      isoControl: "A.8.20",
-    };
+  if (!isSeverityAtOrAbove("high", severityThreshold)) {
+    return undefined;
   }
-
-  if (
-    (spec.startsWith("git://") || spec.startsWith("git+http://")) &&
-    isSeverityAtOrAbove("high", severityThreshold)
-  ) {
-    return {
-      id: "DEPENDENCY_INSECURE_GIT_URL",
-      category: "dependency",
-      severity: "high",
-      title: "Insecure Git dependency protocol",
-      message: `Dependency "${depName}" in ${relativeFilePath} uses unencrypted Git protocol: ${spec}.`,
-      filePath: relativeFilePath,
-      snippet: `"${depName}": "${spec}"`,
-      remediation:
-        "Use Git over SSH (git@...) or Git over HTTPS (git+https://).",
-      owasp: "A08:2025-Software and Data Integrity Failures",
-      cwe: "CWE-319",
-      isoControl: "A.8.20",
-    };
+  if (isInsecureHttp(spec)) {
+    return buildInsecureHttpFinding(depName, spec, relativeFilePath);
   }
-
+  if (isInsecureGit(spec)) {
+    return buildInsecureGitFinding(depName, spec, relativeFilePath);
+  }
   return undefined;
+}
+
+/**
+ * Check dependency entries within a single dependencies block.
+ */
+function checkDependencyEntries(
+  deps: Record<string, string>,
+  relativeFilePath: string,
+  severityThreshold?: SecurityFinding["severity"],
+): SecurityFinding[] {
+  const findings: SecurityFinding[] = [];
+  for (const [depName, spec] of Object.entries(deps)) {
+    if (typeof spec !== "string") continue;
+    const trimmed = spec.trim();
+    const unpinned = checkUnpinnedSpec(depName, trimmed, relativeFilePath, severityThreshold);
+    if (unpinned) findings.push(unpinned);
+
+    const insecure = checkInsecureProtocol(depName, trimmed, relativeFilePath, severityThreshold);
+    if (insecure) findings.push(insecure);
+  }
+  return findings;
 }
 
 /**
@@ -129,24 +174,30 @@ function checkManifestDependencies(
 
   for (const section of depSections) {
     const deps = manifest[section] as Record<string, string> | undefined;
-    if (!deps || typeof deps !== "object") {
-      continue;
-    }
-
-    for (const [depName, spec] of Object.entries(deps)) {
-      if (typeof spec !== "string") {
-        continue;
-      }
-      const trimmed = spec.trim();
-      const unpinned = checkUnpinnedSpec(depName, trimmed, relativeFilePath, severityThreshold);
-      if (unpinned) findings.push(unpinned);
-
-      const insecure = checkInsecureProtocol(depName, trimmed, relativeFilePath, severityThreshold);
-      if (insecure) findings.push(insecure);
+    if (deps && typeof deps === "object") {
+      findings.push(...checkDependencyEntries(deps, relativeFilePath, severityThreshold));
     }
   }
 
   return findings;
+}
+
+/**
+ * Read and scan a single manifest path if it exists.
+ */
+function scanSingleManifestPath(
+  pkgPath: string,
+  repoRoot: string,
+  severityThreshold?: SecurityFinding["severity"],
+): SecurityFinding[] {
+  if (!existsSync(pkgPath)) return [];
+  try {
+    const manifest = readJson<PackageManifest>(pkgPath);
+    const relPath = relative(repoRoot, pkgPath).replaceAll("\\", "/");
+    return checkManifestDependencies(manifest, relPath, severityThreshold);
+  } catch {
+    return [];
+  }
 }
 
 /**
@@ -161,13 +212,8 @@ function scanWorkspaceManifests(
 
   const rootManifestPath = join(repoRoot, "package.json");
   if (existsSync(rootManifestPath)) {
-    try {
-      const rootManifest = readJson<PackageManifest>(rootManifestPath);
-      findings.push(...checkManifestDependencies(rootManifest, "package.json", severityThreshold));
-      scannedFiles += 1;
-    } catch {
-      // Ignored
-    }
+    findings.push(...scanSingleManifestPath(rootManifestPath, repoRoot, severityThreshold));
+    scannedFiles += 1;
   }
 
   try {
@@ -175,14 +221,8 @@ function scanWorkspaceManifests(
     for (const member of members) {
       const memberPkgPath = join(member.dir, "package.json");
       if (existsSync(memberPkgPath)) {
-        try {
-          const manifest = readJson<PackageManifest>(memberPkgPath);
-          const relPath = relative(repoRoot, memberPkgPath).replaceAll("\\", "/");
-          findings.push(...checkManifestDependencies(manifest, relPath, severityThreshold));
-          scannedFiles += 1;
-        } catch {
-          continue;
-        }
+        findings.push(...scanSingleManifestPath(memberPkgPath, repoRoot, severityThreshold));
+        scannedFiles += 1;
       }
     }
   } catch {
@@ -193,15 +233,11 @@ function scanWorkspaceManifests(
 }
 
 /**
- * Execute pnpm audit --json and parse reported vulnerabilities.
+ * Execute pnpm audit subprocess and capture stdout.
  */
-function runPnpmAuditCheck(
-  repoRoot: string,
-  severityThreshold?: SecurityFinding["severity"],
-): SecurityFinding[] {
-  let stdoutText: string;
+function executePnpmAudit(repoRoot: string): string {
   try {
-    stdoutText = execFileSync("pnpm", ["audit", "--json"], {
+    return execFileSync("pnpm", ["audit", "--json"], {
       cwd: repoRoot,
       encoding: "utf8",
       timeout: 30_000,
@@ -210,58 +246,93 @@ function runPnpmAuditCheck(
     });
   } catch (error: unknown) {
     const execErr = error as { stdout?: string | Buffer };
-    stdoutText =
-      execErr.stdout !== undefined
-        ? typeof execErr.stdout === "string"
-          ? execErr.stdout
-          : execErr.stdout.toString("utf8")
-        : "";
+    if (!execErr.stdout) return "";
+    return typeof execErr.stdout === "string"
+      ? execErr.stdout
+      : execErr.stdout.toString("utf8");
   }
+}
 
-  if (stdoutText.trim().length === 0) {
-    return [];
+/**
+ * Build finding from an individual pnpm audit advisory.
+ */
+function buildAdvisoryFinding(
+  advisoryId: string,
+  advisory: PnpmAdvisory,
+  severity: SecurityFinding["severity"],
+): SecurityFinding {
+  const cve = advisory.cves && advisory.cves.length > 0 ? advisory.cves[0] : `GHSA-${advisoryId}`;
+  const pkgName = advisory.module_name ?? "unknown-package";
+  const vulnRange = advisory.vulnerable_versions ? ` (${advisory.vulnerable_versions})` : "";
+  const title = advisory.title ?? `Vulnerable dependency: ${pkgName}`;
+  const patched = advisory.patched_versions ?? "none";
+  const vulnerable = advisory.vulnerable_versions ?? "unknown";
+
+  return {
+    id: cve ?? `CVE-${advisoryId}`,
+    category: "dependency",
+    severity,
+    title,
+    message: `${title} in package "${pkgName}"${vulnRange}. ${advisory.overview ?? ""}`.trim(),
+    filePath: "pnpm-lock.yaml",
+    snippet: `Package: ${pkgName}, vulnerable: ${vulnerable}, patched: ${patched}`,
+    remediation:
+      advisory.recommendation ?? `Upgrade ${pkgName} to ${patched}.`,
+    owasp: "A06:2025-Vulnerable and Outdated Components",
+    cwe: "CWE-1104",
+    isoControl: "A.8.8",
+  };
+}
+
+/**
+ * Process a single advisory entry and return finding if above threshold.
+ */
+function processSingleAdvisory(
+  advisoryId: string,
+  advisory: PnpmAdvisory,
+  severityThreshold?: SecurityFinding["severity"],
+): SecurityFinding | undefined {
+  const rawSeverity = advisory.severity ?? "moderate";
+  const severity = normalizePnpmSeverity(rawSeverity);
+  if (!isSeverityAtOrAbove(severity, severityThreshold)) {
+    return undefined;
   }
+  return buildAdvisoryFinding(advisoryId, advisory, severity);
+}
 
-  const findings: SecurityFinding[] = [];
+/**
+ * Parse pnpm audit JSON output and convert advisories into SecurityFindings.
+ */
+function parseAuditAdvisories(
+  stdoutText: string,
+  severityThreshold?: SecurityFinding["severity"],
+): SecurityFinding[] {
   try {
     const auditData = JSON.parse(stdoutText) as PnpmAuditOutput;
-    if (!auditData.advisories || typeof auditData.advisories !== "object") {
-      return [];
+    const advisories = auditData.advisories;
+    if (!advisories || typeof advisories !== "object") return [];
+
+    const findings: SecurityFinding[] = [];
+    for (const [id, advisory] of Object.entries(advisories)) {
+      const finding = processSingleAdvisory(id, advisory, severityThreshold);
+      if (finding) findings.push(finding);
     }
-
-    for (const [advisoryId, advisory] of Object.entries(auditData.advisories)) {
-      const rawSeverity = advisory.severity ?? "moderate";
-      const severity = normalizePnpmSeverity(rawSeverity);
-      if (!isSeverityAtOrAbove(severity, severityThreshold)) {
-        continue;
-      }
-
-      const cve = advisory.cves && advisory.cves.length > 0 ? advisory.cves[0] : `GHSA-${advisoryId}`;
-      const pkgName = advisory.module_name ?? "unknown-package";
-      const vulnRange = advisory.vulnerable_versions ? ` (${advisory.vulnerable_versions})` : "";
-      const title = advisory.title ?? `Vulnerable dependency: ${pkgName}`;
-
-      findings.push({
-        id: cve ?? `CVE-${advisoryId}`,
-        category: "dependency",
-        severity,
-        title,
-        message: `${title} in package "${pkgName}"${vulnRange}. ${advisory.overview ?? ""}`.trim(),
-        filePath: "pnpm-lock.yaml",
-        snippet: `Package: ${pkgName}, vulnerable: ${advisory.vulnerable_versions ?? "unknown"}, patched: ${advisory.patched_versions ?? "none"}`,
-        remediation:
-          advisory.recommendation ??
-          `Upgrade ${pkgName} to ${advisory.patched_versions ?? "a patched version"}.`,
-        owasp: "A06:2025-Vulnerable and Outdated Components",
-        cwe: "CWE-1104",
-        isoControl: "A.8.8",
-      });
-    }
+    return findings;
   } catch {
-    // Failed to parse JSON output, e.g. registry offline
+    return [];
   }
+}
 
-  return findings;
+/**
+ * Execute pnpm audit --json and parse reported vulnerabilities.
+ */
+function runPnpmAuditCheck(
+  repoRoot: string,
+  severityThreshold?: SecurityFinding["severity"],
+): SecurityFinding[] {
+  const stdoutText = executePnpmAudit(repoRoot);
+  if (!stdoutText.trim()) return [];
+  return parseAuditAdvisories(stdoutText, severityThreshold);
 }
 
 /**

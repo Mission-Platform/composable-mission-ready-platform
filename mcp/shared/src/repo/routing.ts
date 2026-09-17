@@ -315,6 +315,42 @@ document.querySelector('forge-router-outlet')?.setRouter(router);`,
   };
 }
 
+type RouterSetupBuilder = (
+  historyType: RouterHistoryType,
+  historyImport: string,
+  historyInit: string,
+) => RouterSetupGuide;
+
+const ROUTER_SETUP_BUILDERS: Record<
+  SupportedRouterFramework,
+  RouterSetupBuilder
+> = {
+  vue: getVueRouterSetup,
+  react: getReactRouterSetup,
+  solid: getSolidRouterSetup,
+  svelte: getSvelteRouterSetup,
+  "web-components": getWebComponentsRouterSetup,
+};
+
+/**
+ * Resolve the import name and initialization expression for router history.
+ */
+function resolveHistoryDetails(historyType: RouterHistoryType): {
+  historyImport: string;
+  historyInit: string;
+} {
+  if (historyType === "memory") {
+    return {
+      historyImport: "MpMemoryHistory",
+      historyInit: 'new MpMemoryHistory("/")',
+    };
+  }
+  return {
+    historyImport: "MpBrowserHistory",
+    historyInit: "new MpBrowserHistory()",
+  };
+}
+
 /**
  * Generate router setup guidance and code snippets for a supported framework.
  */
@@ -322,30 +358,10 @@ export function getRouterSetup(
   framework: SupportedRouterFramework,
   historyType: RouterHistoryType = "browser",
 ): RouterSetupGuide {
-  const isMemory = historyType === "memory";
-  const historyImport = isMemory ? "MpMemoryHistory" : "MpBrowserHistory";
-  const historyInit = isMemory
-    ? 'new MpMemoryHistory("/")'
-    : "new MpBrowserHistory()";
-
-  switch (framework) {
-    case "vue":
-      return getVueRouterSetup(historyType, historyImport, historyInit);
-    case "react":
-      return getReactRouterSetup(historyType, historyImport, historyInit);
-    case "solid":
-      return getSolidRouterSetup(historyType, historyImport, historyInit);
-    case "svelte":
-      return getSvelteRouterSetup(historyType, historyImport, historyInit);
-    case "web-components":
-      return getWebComponentsRouterSetup(
-        historyType,
-        historyImport,
-        historyInit,
-      );
-    default:
-      throw new Error(
-        `Unsupported router framework: "${String(framework)}".`,
-      );
+  const builder = ROUTER_SETUP_BUILDERS[framework];
+  if (!builder) {
+    throw new Error(`Unsupported router framework: "${String(framework)}".`);
   }
+  const { historyImport, historyInit } = resolveHistoryDetails(historyType);
+  return builder(historyType, historyImport, historyInit);
 }
