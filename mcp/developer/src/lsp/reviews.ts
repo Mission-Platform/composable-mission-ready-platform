@@ -144,7 +144,7 @@ async function collectReviewDiagnostics(
   languageId?: string,
 ) {
   if (!languageId) return [];
-  return Promise.all(
+  return await Promise.all(
     files.map(async (file) => ({
       path: file.path,
       diagnostics: await capture(() => getLspDiagnostics(file.path, sessionId, languageId)),
@@ -163,7 +163,7 @@ async function collectReviewTests(
   includeTests?: boolean,
 ) {
   if (!includeTests || !languageId) return [];
-  return Promise.all(
+  return await Promise.all(
     files.map(async (file) => ({
       path: file.path,
       tests: await capture(() =>

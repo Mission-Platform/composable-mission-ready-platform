@@ -449,6 +449,46 @@ const artifactMetadataSchema = z
 
 export type { McpProfileOptions } from './profiles.ts';
 
+/**
+ * Format standard-specific slice of a compliance evidence report.
+ */
+function formatComplianceStandardReport(report: ComplianceReport, standard: string) {
+  switch (standard) {
+    case 'iso-27001': {
+      return {
+        metadata: report.metadata,
+        scorecard: {
+          complianceScore: report.scorecard.iso27001ComplianceScore,
+          totalControls: report.scorecard.totalControlsEvaluated,
+          compliantControls: report.scorecard.compliantControlsCount,
+          nonCompliantControls: report.scorecard.nonCompliantControlsCount,
+        },
+        controls: report.isoControls,
+      };
+    }
+    case 'owasp-2025': {
+      return {
+        metadata: report.metadata,
+        scorecard: report.owaspScorecard,
+        findings: report.findings.filter((f) => Boolean(f.owasp)),
+      };
+    }
+    case 'cwe-top25': {
+      return {
+        metadata: report.metadata,
+        scorecard: report.cweScorecard,
+        findings: report.findings.filter((f) => Boolean(f.cwe)),
+      };
+    }
+    default: {
+      return report;
+    }
+  }
+}
+
+/**
+ * Register all developer tools on the MCP server, applying optional profile-based filtering.
+ */
 export function registerTools(server: McpServer, options: McpProfileOptions = {}): void {
   const toolFilter = resolveToolFilter(options);
   const originalRegisterTool = server.registerTool.bind(server);
@@ -458,7 +498,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
     if (toolFilter && !toolFilter.has(name)) {
       return;
     }
-    return Reflect.apply(originalRegisterTool, server, [name, ...rest]);
+    Reflect.apply(originalRegisterTool, server, [name, ...rest]);
   }) as typeof server.registerTool;
 
   const commitPlans = new Map<string, { readonly plan: CommitPlan; readonly createdAt: number }>();
@@ -2577,7 +2617,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
           .describe('Maximum number of files to inspect (default 100).'),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         if (args.staged) {
           const diffResult = readGitDiff({ staged: true, path: args.path });
@@ -2623,7 +2663,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
           .describe('Maximum number of files to inspect (default 100).'),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(
           analyzeCode({
@@ -2657,7 +2697,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
         runPnpmAudit: z.boolean().optional().describe('Whether to run pnpm audit check (defaults to true).'),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(
           auditDependencies({
@@ -2690,7 +2730,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
           .describe('Minimum severity threshold to report.'),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(
           auditSupplyChain({
@@ -2731,7 +2771,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
           .describe('Maximum number of files to inspect (default 100).'),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const report = collectComplianceEvidence({
           path: args.path,
@@ -2773,7 +2813,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
           .describe('Maximum number of files to inspect (default 100).'),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         const report = collectComplianceEvidence({
           severityThreshold: args.severityThreshold as SecurityFindingSeverity | undefined,
@@ -2781,34 +2821,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
           maxFiles: args.maxFiles,
         });
 
-        const standard = args.standard ?? 'all';
-        if (standard === 'iso-27001') {
-          return json({
-            metadata: report.metadata,
-            scorecard: {
-              complianceScore: report.scorecard.iso27001ComplianceScore,
-              totalControls: report.scorecard.totalControlsEvaluated,
-              compliantControls: report.scorecard.compliantControlsCount,
-              nonCompliantControls: report.scorecard.nonCompliantControlsCount,
-            },
-            controls: report.isoControls,
-          });
-        }
-        if (standard === 'owasp-2025') {
-          return json({
-            metadata: report.metadata,
-            scorecard: report.owaspScorecard,
-            findings: report.findings.filter((f) => Boolean(f.owasp)),
-          });
-        }
-        if (standard === 'cwe-top25') {
-          return json({
-            metadata: report.metadata,
-            scorecard: report.cweScorecard,
-            findings: report.findings.filter((f) => Boolean(f.cwe)),
-          });
-        }
-        return json(report);
+        return json(formatComplianceStandardReport(report, args.standard ?? 'all'));
       } catch (error) {
         return toolError(error);
       }
@@ -2823,7 +2836,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
         'Polymorphic scaffolding dispatcher for workspace members and package units. Supports entity types: component | composable | package | app | worker | crate | store | util. Dry-run unless apply=true.',
       inputSchema: scaffoldInputSchema,
     },
-    async (args) => {
+    (args) => {
       try {
         const result = dispatchScaffold(args);
         return json(result);
@@ -2840,7 +2853,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
         'Polymorphic localization dispatcher. Inspect, add, remove, or update YAML translation catalogues. Actions: list | coverage | add | remove | update.',
       inputSchema: i18nInputSchema,
     },
-    async (args) => {
+    (args) => {
       try {
         const result = dispatchI18n(args);
         return typeof result === 'string' ? text(result) : json(result);
@@ -2857,7 +2870,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
         'Polymorphic Git metadata inspection dispatcher. Query repository branches, tags, remotes, or ls-files.',
       inputSchema: gitMetadataInputSchema,
     },
-    async (args) => {
+    (args) => {
       try {
         return json(dispatchGitMetadata(args));
       } catch (error) {
@@ -2881,7 +2894,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
         path: z.string().min(1).max(4096).optional().describe('Filter changes to a specific subdirectory.'),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(getAffectedPackages(args));
       } catch (error) {
@@ -2901,7 +2914,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
         maxOutputBytes: z.number().int().min(1).max(1_048_576).optional(),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(primeUpstreamDependencies(args));
       } catch (error) {
@@ -2926,7 +2939,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
         maxOutputBytes: z.number().int().min(1).max(1_048_576).optional(),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(runTurboTask(args));
       } catch (error) {
@@ -2947,7 +2960,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
         maxOutputBytes: z.number().int().min(1).max(1_048_576).optional(),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(runTestFile(args));
       } catch (error) {
@@ -2967,7 +2980,7 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
         limit: z.number().int().min(1).max(500).optional().describe('Maximum story files to return (default 100).'),
       },
     },
-    async (args) => {
+    (args) => {
       try {
         return json(listStories(args));
       } catch (error) {
