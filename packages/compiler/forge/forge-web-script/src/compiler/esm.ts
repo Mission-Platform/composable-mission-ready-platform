@@ -4,21 +4,42 @@ import { createValueAdapterSource } from './esm-runtime.js';
 import type { ForgeWebScriptIteratorExport } from '../contracts.js';
 import type { ForgeWebScriptAbiManifest, ForgeWebScriptDynamicLinkMetadata } from '../manifest.js';
 
+/**
+ * Encodes a byte array into a standard Base64 string.
+ */
 export function bytesToBase64(bytes: Uint8Array): string {
   let binary = '';
   for (const byte of bytes) binary += String.fromCodePoint(byte);
   return btoa(binary);
 }
 
-export function createEsmSource(
-  wasm: Uint8Array,
-  manifest: ForgeWebScriptAbiManifest,
-  iteratorExports: readonly ForgeWebScriptIteratorExport[] = [],
-  dynamicMetadata?: ForgeWebScriptDynamicLinkMetadata,
-): string {
-  const base64 = bytesToBase64(wasm);
-  const byteArray = [...wasm].join(',');
-  const enumExports = manifest.enumDeclarations
+/**
+ * Checks whether a function signature contains value types (strings, bytes, arrays, or records).
+ */
+function hasValueTypes(
+  declaration: {
+    readonly parameters: readonly { readonly type: string; readonly reference?: string }[];
+    readonly result: string;
+    readonly resultReference?: string;
+  },
+  recordNames: ReadonlySet<string>,
+): boolean {
+  if (declaration.result === 'string' || declaration.result === 'bytes') return true;
+  if (declaration.resultReference !== undefined && recordNames.has(declaration.resultReference)) return true;
+  return declaration.parameters.some(
+    ({ type, reference }) =>
+      type === 'string' ||
+      type === 'bytes' ||
+      reference === 'Array' ||
+      (reference !== undefined && recordNames.has(reference)),
+  );
+}
+
+/**
+ * Renders exported enum declarations as frozen JavaScript objects.
+ */
+function renderEnumExports(manifest: ForgeWebScriptAbiManifest): string {
+  return manifest.enumDeclarations
     .filter(({ exported }) => exported)
     .map(
       (declaration) =>
@@ -27,6 +48,20 @@ export function createEsmSource(
           .join(', ')} });`,
     )
     .join('\n');
+}
+
+/**
+ * Generates an ESM loader module string containing embedded WebAssembly and runtime adapters.
+ */
+export function createEsmSource(
+  wasm: Uint8Array,
+  manifest: ForgeWebScriptAbiManifest,
+  iteratorExports: readonly ForgeWebScriptIteratorExport[] = [],
+  dynamicMetadata?: ForgeWebScriptDynamicLinkMetadata,
+): string {
+  const base64 = bytesToBase64(wasm);
+  const byteArray = [...wasm].join(',');
+  const enumExports = renderEnumExports(manifest);
   const recordLayouts = Object.fromEntries(
     manifest.aggregateLayouts
       .filter(({ kind, record }) => kind === 'struct' && record === true)
@@ -37,27 +72,11 @@ export function createEsmSource(
     ({ function: declaration }) =>
       declaration.parameters.some(({ type }) => type === 'string') || declaration.result === 'string',
   );
-  const valueImports = manifest.imports.filter(
-    ({ function: declaration }) =>
-      declaration.parameters.some(({ type }) => type === 'string' || type === 'bytes') ||
-      declaration.result === 'string' ||
-      declaration.result === 'bytes' ||
-      declaration.parameters.some(({ reference }) => reference !== undefined && recordNames.has(reference)) ||
-      (declaration.resultReference !== undefined && recordNames.has(declaration.resultReference)),
-  );
+  const valueImports = manifest.imports.filter(({ function: declaration }) => hasValueTypes(declaration, recordNames));
   const hasStringImports = stringImports.length > 0;
   const valueExports = Object.fromEntries(
     manifest.exports
-      .filter(
-        (declaration) =>
-          hasStringImports ||
-          declaration.parameters.some(
-            ({ type, reference }) => type === 'string' || type === 'bytes' || reference === 'Array',
-          ) ||
-          declaration.result === 'string' ||
-          declaration.parameters.some(({ reference }) => reference !== undefined && recordNames.has(reference)) ||
-          (declaration.resultReference !== undefined && recordNames.has(declaration.resultReference)),
-      )
+      .filter((declaration) => hasStringImports || hasValueTypes(declaration, recordNames))
       .map((declaration) => [
         declaration.name,
         {

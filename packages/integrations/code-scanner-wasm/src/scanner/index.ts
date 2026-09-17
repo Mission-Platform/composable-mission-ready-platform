@@ -44,6 +44,9 @@ function decodeTriplets(value: string): string {
   }
 }
 
+/**
+ * Decodes numeric triplet bytes into a UTF-8 string prefixed by status digit.
+ */
 function decodeUtf8(value: string): string {
   const decoded = decodeTriplets(value);
   return decoded.length > 0 ? `1${decoded}` : '';
@@ -97,6 +100,9 @@ function rawScannerImports(getArtifact: () => RawScannerExports | undefined): Fo
   return { 'qr.decode.utf8': { decode_utf8: decode, matrix_decode_utf8: decode } };
 }
 
+/**
+ * Loads the raw WebAssembly scanner artifact synchronously.
+ */
 function loadRawScannerSync(): RawScannerExports {
   let artifact: RawScannerExports | undefined;
   artifact = loadRawSync(rawScannerImports(() => artifact));
@@ -135,6 +141,9 @@ const FORMAT_NAMES: Readonly<Record<number, ScanFormat>> = {
 const EMPTY_POINTS: readonly ScanPoint[] = Object.freeze([]);
 const EMPTY_METADATA: ScanMetadata = Object.freeze({});
 
+/**
+ * Constructs an immutable ScanResult object with empty metadata and point arrays.
+ */
 function createScanResult(
   format: ScanFormat,
   text: string | null,
@@ -144,12 +153,12 @@ function createScanResult(
   return {
     format,
     text,
+    value: text,
     rawBytes,
     numBits,
     points: EMPTY_POINTS,
     metadata: EMPTY_METADATA,
     timestamp: Date.now(),
-    value: text,
   };
 }
 
@@ -189,6 +198,9 @@ interface ScannerScratch {
   readonly meta: Int32Array;
 }
 
+/**
+ * Allocates reusable scratch buffers for scanner locator and decoder passes.
+ */
 function createScratch(width: number, height: number): ScannerScratch {
   const capacity = Math.min(width * height, 1_048_576);
   return {
@@ -233,14 +245,25 @@ const FORMAT_IDS: Readonly<Record<ScanFormat, number>> = Object.freeze({
   UPC_E: 15,
 });
 
+/** Type guard checking if an object represents a region of interest. */
+function isRoi(value: unknown): value is Roi {
+  if (value === null || typeof value !== 'object') return false;
+  const candidate = value as Record<string, unknown>;
+  return 'x' in candidate && 'y' in candidate && 'width' in candidate && 'height' in candidate;
+}
+
+/**
+ * Normalizes user-supplied options or region-of-interest into a unified ScanOptions structure.
+ */
 function normalizeScanOptions(optionsOrRoi: ScanOptions | Roi | undefined): ScanOptions {
   if (optionsOrRoi === undefined) return {};
-  if ('x' in optionsOrRoi && 'y' in optionsOrRoi && 'width' in optionsOrRoi && 'height' in optionsOrRoi) {
-    return { roi: optionsOrRoi };
-  }
+  if (isRoi(optionsOrRoi)) return { roi: optionsOrRoi };
   return optionsOrRoi;
 }
 
+/**
+ * Extracts unique numeric format IDs requested in the scan options.
+ */
 function possibleFormatIds(options: ScanOptions): readonly number[] {
   if (options.formats === undefined || options.formats.length === 0) return [-1];
   return [
@@ -265,6 +288,9 @@ function logScanResult(result: ScanResult | null): ScanResult | null {
   return result;
 }
 
+/**
+ * Runs the single-symbol detection and decoding pipeline over an image using adapted arrays.
+ */
 function locateAndDecodeAdapted(
   image: ImageLike,
   optionsOrRoi: ScanOptions | Roi | undefined,
@@ -355,6 +381,9 @@ interface ScannerMemory {
   readonly scratchCapacity: number;
 }
 
+/**
+ * Allocates a 4-byte aligned integer array in WebAssembly linear memory.
+ */
 function allocateArray(artifact: RawScannerExports, length: number): number {
   const current = artifact.fws_alloc(0);
   const padding = (4 - (current % 4)) % 4;
@@ -463,6 +492,9 @@ function decodeRawString(artifact: RawScannerExports, encoded: unknown): string 
   return textDecoder.decode(new Uint8Array(buffer, pointer, length));
 }
 
+/**
+ * Parses a raw pointer-length result from WebAssembly linear memory into a ScanResult.
+ */
 function resultFromRaw(artifact: RawScannerExports, encoded: unknown): ScanResult | null {
   return resultFromWire(decodeRawString(artifact, encoded));
 }
@@ -568,6 +600,9 @@ function createRawPointerSession(artifact: RawScannerExports): ScannerRawPointer
   };
 }
 
+/**
+ * Creates a synchronous raw pointer session for low-level memory inspection.
+ */
 export function createScannerRawPointerSession(): ScannerRawPointerSession {
   return createRawPointerSession(loadRawScannerSync());
 }

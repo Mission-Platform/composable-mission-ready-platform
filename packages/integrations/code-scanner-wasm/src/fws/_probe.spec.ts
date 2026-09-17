@@ -62,7 +62,9 @@ describe('foundation scanner probes', () => {
       });
       const errors = artifact.diagnostics.filter(({ severity }) => severity === 'error');
       expect(errors, errors.map(({ message }) => message).join('\n')).toHaveLength(0);
-      const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {});
+      expect(artifact.wasm).toBeDefined();
+      if (artifact.wasm === undefined) throw new Error('Artifact wasm was not emitted');
+      const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm), {});
       api = instance.exports as unknown as Api;
     } finally {
       service.dispose();

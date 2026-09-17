@@ -1,5 +1,8 @@
 import type { ForgeWebScriptHostImport } from '../manifest.js';
 
+/**
+ * Synthesizes the runtime value marshaling JavaScript code for strings, arrays, and records.
+ */
 export function createValueAdapterSource(
   valueExports: Record<string, unknown>,
   recordLayouts: Record<string, unknown>,

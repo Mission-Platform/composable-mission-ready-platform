@@ -265,10 +265,10 @@ function code93Checksum(value: string, maxWeight: number): number {
 }
 
 function code93Modules(value: string): number[] {
-  const c = code93Checksum(value, 20);
-  const withC = `${value}${CODE93_ALPHABET[c]}`;
-  const k = code93Checksum(withC, 15);
-  const symbols = [47, ...[...value].map((symbol) => CODE93_ALPHABET.indexOf(symbol)), c, k, 47];
+  const checkC = code93Checksum(value, 20);
+  const withC = `${value}${CODE93_ALPHABET[checkC]}`;
+  const checkK = code93Checksum(withC, 15);
+  const symbols = [47, ...[...value].map((symbol) => CODE93_ALPHABET.indexOf(symbol)), checkC, checkK, 47];
   const bits = symbols
     .map((index) => (index === 47 ? 0x1_5e : CODE93_ENCODINGS[index]).toString(2).padStart(9, '0'))
     .join('');
@@ -412,20 +412,6 @@ function rss14CharacterValue(
   const vOdd = rssGroupValue(counts, 0, oddWidest, true);
   const vEven = rssGroupValue(counts, 1, 9 - oddWidest, false);
   return { value: vEven * RSS14_INSIDE_ODD_TOTAL[group] + vOdd + RSS14_INSIDE_GSUM[group], checksumPortion };
-}
-
-function rss14PairValue(
-  outsideOdd: readonly number[],
-  outsideEven: readonly number[],
-  insideOdd: readonly number[],
-  insideEven: readonly number[],
-) {
-  const outside = rss14CharacterValue(outsideOdd, outsideEven, true);
-  const inside = rss14CharacterValue(insideOdd, insideEven, false);
-  return {
-    value: 1597 * outside.value + inside.value,
-    checksumPortion: outside.checksumPortion + 4 * inside.checksumPortion,
-  };
 }
 
 function rss14ConstructResult(left: number, right: number): string {
@@ -613,11 +599,11 @@ const RSS_EXP_FINDER_A = [1, 8, 4, 1];
 // All length-4 tuples with each element in [1, max] summing to `total`.
 function tuplesSummingTo(total: number, max: number): number[][] {
   const results: number[][] = [];
-  for (let a = 1; a <= max; a += 1) {
-    for (let b = 1; b <= max; b += 1) {
-      for (let c = 1; c <= max; c += 1) {
-        const d = total - a - b - c;
-        if (d >= 1 && d <= max) results.push([a, b, c, d]);
+  for (let first = 1; first <= max; first += 1) {
+    for (let second = 1; second <= max; second += 1) {
+      for (let third = 1; third <= max; third += 1) {
+        const fourth = total - first - second - third;
+        if (fourth >= 1 && fourth <= max) results.push([first, second, third, fourth]);
       }
     }
   }
@@ -679,48 +665,50 @@ function rssExpCharacters(weightRow: number | null) {
   return candidates;
 }
 
+function findMatchingRssCandidate(
+  firstCandidates: ReturnType<typeof rssExpCharacters>,
+  secondLeftCandidates: ReturnType<typeof rssExpCharacters>,
+  secondRightCandidates: ReturnType<typeof rssExpCharacters>,
+  checkCharCandidates: ReturnType<typeof rssExpCharacters>,
+) {
+  for (const firstCandidate of firstCandidates) {
+    for (const secondLeft of secondLeftCandidates) {
+      for (const secondRight of secondRightCandidates) {
+        const expected = rssExpNumericText([firstCandidate.value, secondLeft.value, secondRight.value]);
+        if (!expected) continue;
+        for (const checkCandidate of checkCharCandidates) {
+          if (rssExpChecksumMatches(checkCandidate.value, firstCandidate, secondLeft, secondRight)) {
+            return {
+              checkOdd: checkCandidate.odd,
+              checkEven: checkCandidate.even,
+              firstOdd: firstCandidate.odd,
+              firstEven: firstCandidate.even,
+              secondLeftOdd: secondLeft.odd,
+              secondLeftEven: secondLeft.even,
+              secondRightOdd: secondRight.odd,
+              secondRightEven: secondRight.even,
+              expected,
+            };
+          }
+        }
+      }
+    }
+  }
+  return;
+}
+
 function buildRssExpandedFixture() {
   const firstCandidates = rssExpCharacters(0).filter(({ value }) => value === 8);
   const secondLeftCandidates = rssExpCharacters(1).filter(({ value }) => value === 258);
   const secondRightCandidates = rssExpCharacters(2).filter(({ value }) => value >= 64 && value <= 71);
   const checkCharCandidates = rssExpCharacters(null).filter(({ value }) => value <= 210);
 
-  let found:
-    | {
-        checkOdd: number[];
-        checkEven: number[];
-        firstOdd: number[];
-        firstEven: number[];
-        secondLeftOdd: number[];
-        secondLeftEven: number[];
-        secondRightOdd: number[];
-        secondRightEven: number[];
-        expected: string;
-      }
-    | undefined;
-  outer: for (const firstCandidate of firstCandidates) {
-    for (const secondLeft of secondLeftCandidates) {
-      for (const secondRight of secondRightCandidates) {
-        const expected = rssExpNumericText([firstCandidate.value, secondLeft.value, secondRight.value]);
-        if (!expected) continue;
-        for (const checkCandidate of checkCharCandidates) {
-          if (!rssExpChecksumMatches(checkCandidate.value, firstCandidate, secondLeft, secondRight)) continue;
-          found = {
-            checkOdd: checkCandidate.odd,
-            checkEven: checkCandidate.even,
-            firstOdd: firstCandidate.odd,
-            firstEven: firstCandidate.even,
-            secondLeftOdd: secondLeft.odd,
-            secondLeftEven: secondLeft.even,
-            secondRightOdd: secondRight.odd,
-            secondRightEven: secondRight.even,
-            expected,
-          };
-          break outer;
-        }
-      }
-    }
-  }
+  const found = findMatchingRssCandidate(
+    firstCandidates,
+    secondLeftCandidates,
+    secondRightCandidates,
+    checkCharCandidates,
+  );
   if (!found) throw new Error('failed to find a valid checksum-consistent RSS Expanded fixture');
   const {
     checkOdd,
@@ -898,7 +886,8 @@ describe('compiled scanner FWS foundation graph', () => {
       expect(artifact.wasm).toBeDefined();
       expect(artifact.manifest?.linkProfile).toBe('static');
       expect(artifact.manifest?.optimizationProfile).toBe('static-aggressive');
-      api = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!)).exports as unknown as ScannerExports;
+      if (artifact.wasm === undefined) throw new Error('Artifact wasm was not emitted');
+      api = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm)).exports as unknown as ScannerExports;
     } finally {
       service.dispose();
     }

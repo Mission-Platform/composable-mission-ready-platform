@@ -9,7 +9,9 @@ describe('scannerLog', () => {
   });
 
   it('does not call the console when debug logging is disabled', () => {
-    const debug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+    const debug = vi.spyOn(console, 'debug').mockImplementation(() => {
+      /* no-op */
+    });
 
     setCodeScannerDebug(false);
     scannerLog('ignored');
@@ -18,7 +20,9 @@ describe('scannerLog', () => {
   });
 
   it('forwards messages when debug logging is enabled', () => {
-    const debug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+    const debug = vi.spyOn(console, 'debug').mockImplementation(() => {
+      /* no-op */
+    });
 
     setCodeScannerDebug(true);
     scannerLog('visible', { value: 1 });

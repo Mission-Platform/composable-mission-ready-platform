@@ -391,7 +391,9 @@ function watCacheFor(options: ForgeWebScriptTestHarnessOptions): ForgeWebScriptW
     remove(fileName: string): void {
       try {
         fs.unlinkSync(fileName);
-      } catch {}
+      } catch {
+        // Silently ignore unlink errors during test harness cache removal.
+      }
     },
     listFiles(): readonly string[] {
       try {

@@ -80,9 +80,10 @@ describe('Forge Web Script WAT cache', () => {
     });
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.watPath).toMatch(/^\/cache\/[0-9a-f]+\.wat$/);
-    expect(writes).toHaveLength(3);
+    expect(writes).toHaveLength(4);
     expect(writes[0]).toMatch(/^\/cache\/[0-9a-f]+\.sonir\.json:/);
     expect(writes[2]).toContain('(module');
+    expect(writes[3]).toMatch(/^\/cache\/\.fws-cache-index\.json:/);
   });
 
   it('persists all four debug artifacts when the cache supplies an atomic binary writer', () => {
@@ -104,9 +105,10 @@ describe('Forge Web Script WAT cache', () => {
     expect(artifact.unoptimizedWatPath).toMatch(/^\/cache\/[0-9a-f]+\.unoptimized\.wat$/);
     expect(artifact.optimizedWasmPath).toMatch(/^\/cache\/[0-9a-f]+\.optimized\.wasm$/);
     expect(artifact.unoptimizedWasmPath).toMatch(/^\/cache\/[0-9a-f]+\.unoptimized\.wasm$/);
-    expect(writes).toHaveLength(4);
+    expect(writes).toHaveLength(5);
     expect(writes[0]).toMatch(/^\/cache\/[0-9a-f]+\.sonir\.json:/);
     expect(binaryWrites).toHaveLength(2);
+    expect(writes[4]).toMatch(/^\/cache\/\.fws-cache-index\.json:/);
   });
 
   it('round-trips deterministic SoN JSON and rejects malformed or stale cache data', () => {
@@ -116,7 +118,8 @@ describe('Forge Web Script WAT cache', () => {
       compilerVersion: '0.1.0',
       optimization: 'release',
     });
-    const module = frontend.sonIr!;
+    if (frontend.sonIr === undefined) throw new Error('frontend.sonIr is undefined');
+    const module = frontend.sonIr;
     const values = new Map<string, string>();
     const cache: ForgeWebScriptWatCache = {
       root: '/cache',

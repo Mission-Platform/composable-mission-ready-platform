@@ -70,7 +70,10 @@ type CaptureContext = CanvasRenderingContext2D | OffscreenCanvasRenderingContext
 
 let captureContext: CaptureContext | undefined;
 
-function createContext(width: number, height: number): CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D {
+/**
+ * Creates or resizes a 2D canvas drawing context for frame capture.
+ */
+function createContext(width: number, height: number): CaptureContext {
   if (captureContext === undefined) {
     const canvas =
       typeof OffscreenCanvas === 'function'
@@ -81,14 +84,10 @@ function createContext(width: number, height: number): CanvasRenderingContext2D 
       throw new Error('A 2D canvas context is unavailable in this environment.');
     }
     captureContext = context;
-  } else {
-    if (captureContext.canvas.width !== width) {
-      captureContext.canvas.width = width;
-    }
-    if (captureContext.canvas.height !== height) {
-      captureContext.canvas.height = height;
-    }
+    return captureContext;
   }
+  if (captureContext.canvas.width !== width) captureContext.canvas.width = width;
+  if (captureContext.canvas.height !== height) captureContext.canvas.height = height;
   return captureContext;
 }
 
@@ -113,7 +112,7 @@ function drawToImageData(source: CanvasImageSource, width: number, height: numbe
  * Decode an image `Blob`/`File` into an {@link ImageLike} (RGBA pixels). Uses
  * `createImageBitmap` so it works off the main thread where supported.
  */
-export async function blobToImageData(blob: Blob, roi: number = 1): Promise<ImageLike> {
+export async function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike> {
   const bitmap = await createImageBitmap(blob);
   try {
     return drawToImageData(bitmap, bitmap.width, bitmap.height, roi);
@@ -129,7 +128,7 @@ export async function blobToImageData(blob: Blob, roi: number = 1): Promise<Imag
  * full of clutter the ink-bounding-box locators can't tolerate, so passing the
  * reticle size the UI shows the user greatly raises the hit rate.
  */
-export function videoFrameToImageData(video: HTMLVideoElement, roi: number = DEFAULT_ROI): ImageLike {
+export function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike {
   const width = video.videoWidth;
   const height = video.videoHeight;
   if (width === 0 || height === 0) {

@@ -138,35 +138,40 @@ const BARCODE_DEGRADATION: Degradation = {
 type Point = readonly [number, number];
 
 /**
+ * Eliminates rows in an augmented matrix during Gaussian elimination.
+ */
+function eliminateRows(augmentedMatrix: number[][], size: number, col: number): void {
+  for (let row = 0; row < size; row += 1) {
+    if (row === col) continue;
+    const factor = augmentedMatrix[row][col];
+    for (let k = col; k <= size; k += 1) {
+      augmentedMatrix[row][k] -= factor * augmentedMatrix[col][k];
+    }
+  }
+}
+
+/**
  * Solve the dense linear system `matrix · x = rhs` by Gaussian elimination with
- * partial pivoting. `matrix` is `n × n` (row-major), `rhs` has length `n`.
+ * partial pivoting. `matrix` is `size × size` (row-major), `rhs` has length `size`.
  */
 function solveLinear(matrix: number[][], rhs: number[]): number[] {
-  const n = rhs.length;
-  const a = matrix.map((row, index) => [...row, rhs[index]]);
-  for (let col = 0; col < n; col += 1) {
+  const size = rhs.length;
+  const augmentedMatrix = matrix.map((row, index) => [...row, rhs[index]]);
+  for (let col = 0; col < size; col += 1) {
     let pivot = col;
-    for (let row = col + 1; row < n; row += 1) {
-      if (Math.abs(a[row][col]) > Math.abs(a[pivot][col])) {
+    for (let row = col + 1; row < size; row += 1) {
+      if (Math.abs(augmentedMatrix[row][col]) > Math.abs(augmentedMatrix[pivot][col])) {
         pivot = row;
       }
     }
-    [a[col], a[pivot]] = [a[pivot], a[col]];
-    const divisor = a[col][col];
-    for (let k = col; k <= n; k += 1) {
-      a[col][k] /= divisor;
+    [augmentedMatrix[col], augmentedMatrix[pivot]] = [augmentedMatrix[pivot], augmentedMatrix[col]];
+    const divisor = augmentedMatrix[col][col];
+    for (let k = col; k <= size; k += 1) {
+      augmentedMatrix[col][k] /= divisor;
     }
-    for (let row = 0; row < n; row += 1) {
-      if (row === col) {
-        continue;
-      }
-      const factor = a[row][col];
-      for (let k = col; k <= n; k += 1) {
-        a[row][k] -= factor * a[col][k];
-      }
-    }
+    eliminateRows(augmentedMatrix, size, col);
   }
-  return a.map((row) => row[n]);
+  return augmentedMatrix.map((row) => row[size]);
 }
 
 /**
@@ -232,6 +237,40 @@ function destinationCorners(sw: number, sh: number, profile: Degradation): Point
   });
 }
 
+/** Computes the axis-aligned bounding box covering a set of 2D points. */
+function computeBoundingBox(points: readonly Point[]): { minX: number; maxX: number; minY: number; maxY: number } {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const [x, y] of points) {
+    minX = Math.min(minX, x);
+    maxX = Math.max(maxX, x);
+    minY = Math.min(minY, y);
+    maxY = Math.max(maxY, y);
+  }
+  return { minX, maxX, minY, maxY };
+}
+
+/** Samples a single warped pixel from the source image via inverse homography. */
+function sampleWarpPixel(
+  sourceData: Uint8ClampedArray,
+  sw: number,
+  sh: number,
+  scx: number,
+  scy: number,
+  inverse: readonly number[],
+  rx: number,
+  ry: number,
+): readonly [number, number, number] | undefined {
+  const [mx, my] = applyHomography(inverse, rx, ry);
+  const sx = Math.round(mx + scx);
+  const sy = Math.round(my + scy);
+  if (sx < 0 || sx >= sw || sy < 0 || sy >= sh) return undefined;
+  const from = (sy * sw + sx) * 4;
+  return [sourceData[from], sourceData[from + 1], sourceData[from + 2]];
+}
+
 /**
  * Warp an RGBA {@link ImageLike} by the projective transform described by
  * `profile` (aspect scale + rotation + skew + per-corner x/y/z morph) about its
@@ -250,17 +289,7 @@ function warp(source: ImageLike, profile: Degradation): ImageLike {
     [-scx, scy],
   ];
   const destCorners = destinationCorners(sw, sh, profile);
-
-  let minX = Infinity;
-  let minY = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  for (const [x, y] of destCorners) {
-    minX = Math.min(minX, x);
-    maxX = Math.max(maxX, x);
-    minY = Math.min(minY, y);
-    maxY = Math.max(maxY, y);
-  }
+  const { minX, maxX, minY, maxY } = computeBoundingBox(destCorners);
 
   const margin = QUIET * SCALE;
   const dw = Math.ceil(maxX - minX) + 2 * margin;
@@ -274,17 +303,12 @@ function warp(source: ImageLike, profile: Degradation): ImageLike {
   const data = new Uint8ClampedArray(dw * dh * 4).fill(255);
   for (let dy = 0; dy < dh; dy += 1) {
     for (let dx = 0; dx < dw; dx += 1) {
-      const [mx, my] = applyHomography(inverse, dx - dcx, dy - dcy);
-      const sx = Math.round(mx + scx);
-      const sy = Math.round(my + scy);
-      if (sx < 0 || sx >= sw || sy < 0 || sy >= sh) {
-        continue;
-      }
-      const from = (sy * sw + sx) * 4;
+      const sampled = sampleWarpPixel(sdata, sw, sh, scx, scy, inverse, dx - dcx, dy - dcy);
+      if (sampled === undefined) continue;
       const to = (dy * dw + dx) * 4;
-      data[to] = sdata[from];
-      data[to + 1] = sdata[from + 1];
-      data[to + 2] = sdata[from + 2];
+      data[to] = sampled[0];
+      data[to + 1] = sampled[1];
+      data[to + 2] = sampled[2];
     }
   }
   return { width: dw, height: dh, data };
@@ -328,23 +352,25 @@ function seedFor(value: string): number {
   return hash >>> 0;
 }
 
+/** Paints a single dark module block onto the canvas. */
+function fillModulePixelBlock(data: Uint8ClampedArray, side: number, col: number, row: number): void {
+  for (let y = (row + QUIET) * SCALE; y < (row + QUIET + 1) * SCALE; y += 1) {
+    for (let x = (col + QUIET) * SCALE; x < (col + QUIET + 1) * SCALE; x += 1) {
+      const offset = (y * side + x) * 4;
+      data[offset] = 0;
+      data[offset + 1] = 0;
+      data[offset + 2] = 0;
+    }
+  }
+}
+
 /** Paint a `size`×`size` module predicate into an RGBA {@link ImageLike}. */
 function renderModules(size: number, isDark: (x: number, y: number) => boolean): ImageLike {
   const side = (size + 2 * QUIET) * SCALE;
   const data = new Uint8ClampedArray(side * side * 4).fill(255);
   for (let row = 0; row < size; row += 1) {
     for (let col = 0; col < size; col += 1) {
-      if (!isDark(col, row)) {
-        continue;
-      }
-      for (let y = (row + QUIET) * SCALE; y < (row + QUIET + 1) * SCALE; y += 1) {
-        for (let x = (col + QUIET) * SCALE; x < (col + QUIET + 1) * SCALE; x += 1) {
-          const offset = (y * side + x) * 4;
-          data[offset] = 0;
-          data[offset + 1] = 0;
-          data[offset + 2] = 0;
-        }
-      }
+      if (isDark(col, row)) fillModulePixelBlock(data, side, col, row);
     }
   }
   return { width: side, height: side, data };
@@ -413,6 +439,18 @@ function renderCleanQr(value: string): ImageLike {
   return renderModules(matrix.size, (x, y) => matrix.modules[y][x]);
 }
 
+/** Paints a single vertical bar into the barcode image buffer. */
+function fillBarcodeBar(data: Uint8ClampedArray, width: number, x0: number, barHeight: number): void {
+  for (let y = QUIET * SCALE; y < QUIET * SCALE + barHeight; y += 1) {
+    for (let x = x0; x < x0 + SCALE; x += 1) {
+      const offset = (y * width + x) * 4;
+      data[offset] = 0;
+      data[offset + 1] = 0;
+      data[offset + 2] = 0;
+    }
+  }
+}
+
 /**
  * Render a run of 1D barcode module bits (`1` = bar) into an RGBA
  * {@link ImageLike}: each module is `SCALE` px wide, bars run a tall block, with
@@ -429,17 +467,8 @@ function renderBarcodeImage(bits: readonly number[]): ImageLike {
   const height = barHeight + 2 * QUIET * SCALE;
   const data = new Uint8ClampedArray(width * height * 4).fill(255);
   for (const [index, bit] of bits.entries()) {
-    if (bit === 0) {
-      continue;
-    }
-    const x0 = (index + QUIET) * SCALE;
-    for (let y = QUIET * SCALE; y < QUIET * SCALE + barHeight; y += 1) {
-      for (let x = x0; x < x0 + SCALE; x += 1) {
-        const offset = (y * width + x) * 4;
-        data[offset] = 0;
-        data[offset + 1] = 0;
-        data[offset + 2] = 0;
-      }
+    if (bit === 1) {
+      fillBarcodeBar(data, width, (index + QUIET) * SCALE, barHeight);
     }
   }
   let seed = 0x81_1c_9d_c5;

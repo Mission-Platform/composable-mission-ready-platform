@@ -21,6 +21,76 @@ import type {
 } from '../contracts.js';
 import type { ForgeWebScriptDiagnostic } from '../diagnostics.js';
 
+/**
+ * Computes an in-memory compiler cache key for single-module compilation.
+ */
+function keyFor(input: ForgeWebScriptCompileInput, selfHostedVmMode: string): string {
+  const analysisPolicy = input.analysisPolicy ?? input.analysis?.policy;
+  const analysisRules = input.analysisRules ?? input.analysis?.rules;
+  return JSON.stringify({
+    ...input,
+    requestedCapabilities: [...(input.requestedCapabilities ?? [])].toSorted(),
+    standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
+    analysisPolicy,
+    analysisRuleIds: analysisRules?.map(({ id }) => id).toSorted(),
+    analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
+    selfHostedVmMode,
+  });
+}
+
+/**
+ * Computes an in-memory compiler cache key for module graph compilation.
+ */
+function graphKeyFor(input: ForgeWebScriptGraphCompileInput, selfHostedVmMode: string): string {
+  const analysisPolicy = input.analysisPolicy ?? input.analysis?.policy;
+  const analysisRules = input.analysisRules ?? input.analysis?.rules;
+  return JSON.stringify({
+    graphHash: hashForgeWebScriptModuleGraph(input.graph, input.linkConfiguration),
+    entryFileName: input.entryFileName,
+    compilerVersion: input.compilerVersion,
+    requireExports: input.requireExports ?? true,
+    optimization: input.optimization ?? 'debug',
+    loggerScope: input.logger?.scope,
+    requestedCapabilities: [...(input.requestedCapabilities ?? [])].toSorted(),
+    watCacheRoot: input.watCache?.root,
+    linkConfiguration: input.linkConfiguration,
+    standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
+    targetFeatures: input.targetFeatures,
+    compilerHints: input.compilerHints,
+    analysisPolicy,
+    analysisRuleIds: analysisRules?.map(({ id }) => id).toSorted(),
+    analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
+    selfHostedVmMode,
+  });
+}
+
+/**
+ * Merges service-level default analysis policy and rules into compilation inputs.
+ */
+function withServiceOptions<T extends { analysisPolicy?: unknown; analysisRules?: unknown }>(
+  input: T,
+  options: ForgeWebScriptCompilerServiceOptions,
+): T {
+  return {
+    ...input,
+    analysisPolicy: input.analysisPolicy ?? options.analysisPolicy,
+    analysisRules: input.analysisRules ?? options.analysisRules,
+  };
+}
+
+/**
+ * Checks whether a cached graph compilation entry references the invalidated file.
+ */
+function shouldInvalidateGraphEntry(entry: { readonly input: ForgeWebScriptGraphCompileInput }, file: string): boolean {
+  return (
+    entry.input.graph.modules.some(({ fileName }) => fileName === file) ||
+    entry.input.graph.edges.some(({ resolved }) => resolved === file)
+  );
+}
+
+/**
+ * Creates an in-memory caching compiler service for incremental compilation and graph builds.
+ */
 export function createForgeWebScriptCompilerService(
   options: ForgeWebScriptCompilerServiceOptions = {},
 ): ForgeWebScriptCompilerService {
@@ -41,38 +111,13 @@ export function createForgeWebScriptCompilerService(
   let analysis: ForgeWebScriptAnalysisReport | undefined;
   let selfHosted: ForgeWebScriptSelfHostedStageReport | undefined;
   let selfHostedStages: readonly ForgeWebScriptSelfHostedStageReport[] | undefined;
-  const keyFor = (input: ForgeWebScriptCompileInput): string =>
-    JSON.stringify({
-      ...input,
-      requestedCapabilities: [...(input.requestedCapabilities ?? [])].toSorted(),
-      standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
-      analysisPolicy: input.analysisPolicy ?? input.analysis?.policy,
-      analysisRuleIds: (input.analysisRules ?? input.analysis?.rules)?.map(({ id }) => id).toSorted(),
-      analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
-      selfHostedVmMode: options.selfHostedVmMode ?? 'interpret',
-    });
-  const graphKeyFor = (input: ForgeWebScriptGraphCompileInput): string =>
-    JSON.stringify({
-      graphHash: hashForgeWebScriptModuleGraph(input.graph, input.linkConfiguration),
-      entryFileName: input.entryFileName,
-      compilerVersion: input.compilerVersion,
-      requireExports: input.requireExports ?? true,
-      optimization: input.optimization ?? 'debug',
-      loggerScope: input.logger?.scope,
-      requestedCapabilities: [...(input.requestedCapabilities ?? [])].toSorted(),
-      watCacheRoot: input.watCache?.root,
-      linkConfiguration: input.linkConfiguration,
-      standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
-      targetFeatures: input.targetFeatures,
-      compilerHints: input.compilerHints,
-      analysisPolicy: input.analysisPolicy ?? input.analysis?.policy,
-      analysisRuleIds: (input.analysisRules ?? input.analysis?.rules)?.map(({ id }) => id).toSorted(),
-      analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
-      selfHostedVmMode: options.selfHostedVmMode ?? 'interpret',
-    });
+  const selfHostedVmMode = options.selfHostedVmMode ?? 'interpret';
+
+  /** Asserts that the compiler service has not been disposed. */
   const assertActive = (): void => {
     if (disposed) throw new Error('Forge Web Script compiler service has been disposed.');
   };
+
   return {
     prepare(input): void {
       assertActive();
@@ -80,16 +125,8 @@ export function createForgeWebScriptCompilerService(
     },
     compile(input): ForgeWebScriptArtifact {
       assertActive();
-      const effectiveInput: ForgeWebScriptCompileInput = {
-        ...input,
-        ...(input.analysisPolicy === undefined && options.analysisPolicy === undefined
-          ? {}
-          : { analysisPolicy: input.analysisPolicy ?? options.analysisPolicy }),
-        ...(input.analysisRules === undefined && options.analysisRules === undefined
-          ? {}
-          : { analysisRules: input.analysisRules ?? options.analysisRules }),
-      };
-      const key = keyFor(effectiveInput);
+      const effectiveInput = withServiceOptions(input, options);
+      const key = keyFor(effectiveInput, selfHostedVmMode);
       const cached = cache.get(key);
       if (cached !== undefined && !invalidated.has(effectiveInput.fileName)) {
         cacheHits += 1;
@@ -110,16 +147,8 @@ export function createForgeWebScriptCompilerService(
     },
     compileGraph(input): ForgeWebScriptArtifact {
       assertActive();
-      const effectiveInput: ForgeWebScriptGraphCompileInput = {
-        ...input,
-        ...(input.analysisPolicy === undefined && options.analysisPolicy === undefined
-          ? {}
-          : { analysisPolicy: input.analysisPolicy ?? options.analysisPolicy }),
-        ...(input.analysisRules === undefined && options.analysisRules === undefined
-          ? {}
-          : { analysisRules: input.analysisRules ?? options.analysisRules }),
-      };
-      const key = graphKeyFor(effectiveInput);
+      const effectiveInput = withServiceOptions(input, options);
+      const key = graphKeyFor(effectiveInput, selfHostedVmMode);
       const cached = graphCache.get(key);
       const invalidatedGraph = effectiveInput.graph.modules.some(({ fileName }) => invalidated.has(fileName));
       if (cached !== undefined && !invalidatedGraph) {
@@ -152,12 +181,11 @@ export function createForgeWebScriptCompilerService(
       assertActive();
       for (const file of files) {
         invalidated.add(file);
-        for (const [key, entry] of cache) if (entry.input.fileName === file) cache.delete(key);
+        for (const [key, entry] of cache) {
+          if (entry.input.fileName === file) cache.delete(key);
+        }
         for (const [key, entry] of graphCache) {
-          if (
-            entry.input.graph.modules.some(({ fileName }) => fileName === file) ||
-            entry.input.graph.edges.some(({ resolved }) => resolved === file)
-          ) {
+          if (shouldInvalidateGraphEntry(entry, file)) {
             graphCache.delete(key);
             invalidated.add(entry.input.entryFileName);
           }

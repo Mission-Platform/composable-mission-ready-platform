@@ -8,35 +8,69 @@ import {
 
 import type { ForgeWebScriptPrimitiveType } from '../ast.js';
 
+const PRIMITIVE_TYPE_MAP: Readonly<Record<string, string>> = Object.freeze({
+  unit: 'void',
+  string: 'string',
+  bytes: 'ForgeWebScriptBytes',
+  i64: 'bigint',
+  u64: 'bigint',
+});
+
+const RAW_TYPE_MAP: Readonly<Record<string, string>> = Object.freeze({
+  string: 'number',
+  bytes: 'number',
+  unit: 'void',
+  i64: 'bigint',
+  u64: 'bigint',
+});
+
+/**
+ * Resolves reference types (Arrays, enums, records) for an ABI parameter.
+ */
+function resolveReferenceType(
+  parameter: ForgeWebScriptAbiParameter,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string | undefined {
+  if (parameter.reference === 'Array' && parameter.arguments?.[0]?.name === 'i32') return 'ArrayLike<number>';
+  if (
+    parameter.reference !== undefined &&
+    (enumNames?.has(parameter.reference) || recordNames?.has(parameter.reference))
+  ) {
+    return parameter.reference;
+  }
+  return undefined;
+}
+
+/**
+ * Maps a Forge Web Script ABI parameter or type name to a TypeScript declaration type.
+ */
 export function declarationType(
   value: string | ForgeWebScriptAbiParameter,
   enumNames?: ReadonlySet<string>,
   recordNames?: ReadonlySet<string>,
 ): string {
   if (typeof value !== 'string') {
-    if (value.reference === 'Array' && value.arguments?.[0]?.name === 'i32') return 'ArrayLike<number>';
-    if (value.reference !== undefined && enumNames?.has(value.reference)) return value.reference;
-    if (value.reference !== undefined && recordNames?.has(value.reference)) return value.reference;
+    const reference = resolveReferenceType(value, enumNames, recordNames);
+    if (reference !== undefined) return reference;
     value = value.type;
   }
   if (value.startsWith('Array<')) return 'ArrayLike<number>';
-  if (value === 'unit') return 'void';
-  if (value === 'string') return 'string';
-  if (value === 'bytes') return 'ForgeWebScriptBytes';
-  if (value === 'i64' || value === 'u64') return 'bigint';
-  return 'number';
+  return PRIMITIVE_TYPE_MAP[value] ?? 'number';
 }
 
+/**
+ * Formats an identifier as a safe property name or JSON-quoted string.
+ */
 export function declarationProperty(name: string): string {
   return /^[$A-Z_a-z][$\w]*$/u.test(name) ? name : JSON.stringify(name);
 }
 
-export function declarationFunction(
-  declaration: ForgeWebScriptAbiFunction,
-  enumNames?: ReadonlySet<string>,
-  recordNames?: ReadonlySet<string>,
-): string {
-  const result = {
+/**
+ * Constructs an ABI parameter representing the return value of a function declaration.
+ */
+function buildResultParameter(declaration: ForgeWebScriptAbiFunction): ForgeWebScriptAbiParameter {
+  return {
     name: 'result',
     type: declaration.result,
     ...(declaration.resultReference === undefined ? {} : { reference: declaration.resultReference }),
@@ -46,18 +80,37 @@ export function declarationFunction(
     ...(declaration.resultPassing === undefined ? {} : { passing: declaration.resultPassing }),
     ...(declaration.resultReferenceMode === undefined ? {} : { referenceMode: declaration.resultReferenceMode }),
   } satisfies ForgeWebScriptAbiParameter;
-  return `(${declaration.parameters.map((parameter) => `${declarationProperty(parameter.name)}: ${declarationType(parameter, enumNames, recordNames)}`).join(', ')}) => ${declarationType(result, enumNames, recordNames)}`;
 }
 
+/**
+ * Generates the TypeScript function signature for an ABI function declaration.
+ */
+export function declarationFunction(
+  declaration: ForgeWebScriptAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string {
+  const result = buildResultParameter(declaration);
+  const parameters = declaration.parameters
+    .map((parameter) => `${declarationProperty(parameter.name)}: ${declarationType(parameter, enumNames, recordNames)}`)
+    .join(', ');
+  return `(${parameters}) => ${declarationType(result, enumNames, recordNames)}`;
+}
+
+/**
+ * Maps an ABI parameter or primitive type to its raw WebAssembly parameter type in TypeScript.
+ */
 export function rawDeclarationType(value: ForgeWebScriptPrimitiveType | ForgeWebScriptAbiParameter): string {
-  if (typeof value !== 'string' && value.reference === 'Array') return 'number';
-  if (typeof value !== 'string') value = value.type;
-  if (value === 'string' || value === 'bytes') return 'number';
-  if (value === 'unit') return 'void';
-  if (value === 'i64' || value === 'u64') return 'bigint';
-  return 'number';
+  if (typeof value !== 'string') {
+    if (value.reference === 'Array') return 'number';
+    value = value.type;
+  }
+  return RAW_TYPE_MAP[value] ?? 'number';
 }
 
+/**
+ * Generates the low-level raw function signature with pointer/length expansion for strings and bytes.
+ */
 export function rawDeclarationFunction(declaration: ForgeWebScriptAbiFunction): string {
   const parameters = declaration.parameters.flatMap((parameter) => {
     if (parameter.type === 'string' || parameter.type === 'bytes') {
@@ -75,6 +128,9 @@ export function rawDeclarationFunction(declaration: ForgeWebScriptAbiFunction): 
   return `(${parameters.join(', ')}) => ${result}`;
 }
 
+/**
+ * Emits TypeScript definitions for raw WebAssembly export records.
+ */
 export function rawDeclarationRecord(declarations: readonly ForgeWebScriptAbiFunction[]): string {
   return declarations
     .map(
@@ -83,6 +139,9 @@ export function rawDeclarationRecord(declarations: readonly ForgeWebScriptAbiFun
     .join('\n');
 }
 
+/**
+ * Emits TypeScript definitions for typed ABI export records.
+ */
 export function declarationRecord(
   declarations: readonly ForgeWebScriptAbiFunction[],
   enumNames?: ReadonlySet<string>,
@@ -96,6 +155,9 @@ export function declarationRecord(
     .join('\n');
 }
 
+/**
+ * Generates full TypeScript declaration file contents for a compiled Forge Web Script manifest.
+ */
 export function createDeclarations(manifest: ForgeWebScriptAbiManifest): string {
   const enumNames = new Set(manifest.enumDeclarations.filter(({ exported }) => exported).map(({ name }) => name));
   const recordLayouts = manifest.aggregateLayouts.filter(({ kind, record }) => kind === 'struct' && record === true);

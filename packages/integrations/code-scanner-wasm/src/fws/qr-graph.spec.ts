@@ -50,7 +50,8 @@ describe('QR decoder graph', () => {
       const errors = artifact.diagnostics.filter(({ severity }) => severity === 'error');
       expect(errors, errors.map((error) => JSON.stringify(error)).join('\n')).toHaveLength(0);
       expect(artifact.wasm).toBeDefined();
-      const wasmModule = new WebAssembly.Module(artifact.wasm!);
+      if (artifact.wasm === undefined) throw new Error('Artifact wasm was not emitted');
+      const wasmModule = new WebAssembly.Module(artifact.wasm);
       expect(WebAssembly.Module.exports(wasmModule)).toEqual(
         expect.arrayContaining([
           { name: 'decode_qr_modules', kind: 'function' },

@@ -49,7 +49,8 @@ describe('compiled ZXing foundation graph', () => {
     const errors = artifact.diagnostics.filter(({ severity }) => severity === 'error');
     expect(errors, errors.map((error) => JSON.stringify(error)).join('\n')).toHaveLength(0);
     expect(artifact.wasm).toBeDefined();
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!));
+    if (artifact.wasm === undefined) throw new Error('Artifact wasm was not emitted');
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm));
     const exports = instance.exports as unknown as {
       readonly foundation_probe_dimensions: (width: number, height: number, stride: number) => number;
       readonly foundation_probe_gf256: (left: number, right: number) => number;

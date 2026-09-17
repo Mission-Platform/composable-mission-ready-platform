@@ -26,6 +26,9 @@ export interface ForgeWebScriptBackendCompilationResult {
 
 export const encoder = new TextEncoder();
 
+/**
+ * Computes a 32-bit FNV-1a hash of the given byte array returned as a hex string.
+ */
 export function hashBytes(bytes: Uint8Array): string {
   let hash = 2_166_136_261;
   for (const byte of bytes) {
@@ -35,6 +38,9 @@ export function hashBytes(bytes: Uint8Array): string {
   return hash.toString(16).padStart(8, '0');
 }
 
+/**
+ * Computes a normalized source hash for an artifact from its non-comment token stream.
+ */
 export function sourceHashForArtifact(source: string, fileName: string): string {
   const tokens = lexForgeWebScript(source, fileName)
     .tokens.filter(({ kind }) => kind !== 'comment' && kind !== 'eof')
@@ -43,6 +49,9 @@ export function sourceHashForArtifact(source: string, fileName: string): string 
   return hashBytes(encoder.encode(tokens));
 }
 
+/**
+ * Computes dynamic link metadata for modules marked with dynamic link mode in the manifest.
+ */
 export function dynamicLinkMetadata(
   manifest: ForgeWebScriptAbiManifest,
   artifactId: string,
@@ -63,6 +72,9 @@ export function dynamicLinkMetadata(
   };
 }
 
+/**
+ * Converts a Wasm artifact verification diagnostic into a standard compiler diagnostic.
+ */
 export function artifactVerificationDiagnostic(
   diagnostic: ForgeWebScriptWasmArtifactVerificationDiagnostic,
 ): ForgeWebScriptDiagnostic {
@@ -82,6 +94,9 @@ export function artifactVerificationDiagnostic(
   );
 }
 
+/**
+ * Verifies backend WebAssembly artifacts against policy, target features, and manifest constraints.
+ */
 export function verifyBackendArtifact(input: {
   readonly wasm: Uint8Array;
   readonly unoptimizedWasm?: Uint8Array;
@@ -117,8 +132,8 @@ export function verifyBackendArtifact(input: {
       allowedCapabilities: input.allowedCapabilities,
     },
   });
-  const verificationDiagnostics = rawVerification.diagnostics.map((diagnostic) =>
-    artifactVerificationDiagnostic(diagnostic),
+  const verificationDiagnostics = rawVerification.diagnostics.map(
+    (diagnostic: ForgeWebScriptWasmArtifactVerificationDiagnostic) => artifactVerificationDiagnostic(diagnostic),
   );
   const artifactVerification: ForgeWebScriptArtifactVerificationReport = {
     verified: rawVerification.verified,
