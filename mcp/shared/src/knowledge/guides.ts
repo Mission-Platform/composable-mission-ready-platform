@@ -22,13 +22,16 @@ export type GuideId =
   | "framework-vue"
   | "framework-react"
   | "framework-solid"
+  | "framework-svelte"
   | "framework-web-components"
   | "external-setup"
   | "design-token-overrides"
+  | "routing-setup"
   | "fws-authoring"
   | "fws-security"
   | "fws-artifact-verification"
-  | "fws-forensics";
+  | "fws-forensics"
+  | "security-analysis";
 
 export interface Guide {
   id: GuideId;
@@ -781,6 +784,82 @@ const FRAMEWORK_WEB_COMPONENTS = `# Web Components (Lit) Best Practices
 3. **Lightweight Styles:** Use static \`styles\` property.
 4. **Attribute Reflection:** Reflect only when necessary.`;
 
+const FRAMEWORK_SVELTE = `# Svelte Best Practices
+
+## Patterns
+- **Runes (Svelte 5):** Use \`$state\`, \`$derived\`, and \`$effect\` for reactive state management.
+- **Snippets:** Use \`{#snippet}\` for composable slot-like template fragments.
+- **Cross-Framework Components:** Mission Platform components work directly in Svelte templates.
+
+## Performance
+1. **Fine-Grained Reactivity:** Use \`$state\` signals; avoid unnecessary global store subscriptions.
+2. **Derived Computations:** Wrap expensive calculations in \`$derived\` or \`$derived.by\`.
+3. **Keyed Each:** Always use keyed blocks: \`{#each items as item (item.id)}\`.
+4. **Scoped Styles:** Take advantage of Svelte's compile-time CSS scoping.
+5. **Export Conditions:** Configure \`mp:svelte\` in Vite \`resolve.conditions\` and TypeScript \`customConditions\`.`;
+
+const ROUTING_SETUP = `# Framework-Neutral Routing & Native Adapters
+
+Mission Platform routing is split into a **framework-neutral contract** (\`@mission-platform/router\`) and **framework-specific native adapters** (\`@mission-platform/forge-router-{vue,react,solid,svelte,web-components}\`).
+
+## Architecture
+- Reusable components and feature libraries import capabilities only from \`@mission-platform/router\` (e.g. \`useLocation\`, \`useRouteParams\`, navigation contracts).
+- Applications install the native router adapter for their chosen framework, define routes, configure history, and provide the router instance.
+
+## Native Adapters
+- **Vue 3:** \`@mission-platform/forge-router-vue\`
+- **React:** \`@mission-platform/forge-router-react\`
+- **Solid:** \`@mission-platform/forge-router-solid\`
+- **Svelte:** \`@mission-platform/forge-router-svelte\`
+- **Web Components:** \`@mission-platform/forge-router-web-components\`
+
+## History Options
+- **Browser History:** For standard client-side SPA navigation (\`new MpBrowserHistory()\`).
+- **Memory History:** For testing, prerendering, and SSR environments (\`new MpMemoryHistory("/")\`).
+
+## Outlets & Links
+- \`<ForgeRouterOutlet>\` (or \`<forge-router-outlet>\`): Mount point for matched route components.
+- \`<ForgeRouterLink to="/path">\` (or \`<forge-router-link>\`): Client-side navigation link that intercepts clicks while preserving standard modifier-key actions (Cmd/Ctrl + click).
+
+## Async Navigation with Loading Spinner
+When route components are loaded asynchronously via dynamic imports (\`() => import('./views/dashboard')\`), pass a \`loadingFallback\` callback to the router. The outlet preserves the current view while loading the next view in the background and mounts the loading overlay.`;
+
+const SECURITY_ANALYSIS = `# Security Analysis, Compliance & Auditing
+
+The Mission Platform provides a comprehensive suite of static security analysis, supply-chain auditing, and compliance evidence tools mapped to industry standards: **OWASP Top 10 (2025)**, **CWE Top 25**, and **ISO/IEC 27001:2022 Annex A**.
+
+## Key Security Tools
+- \`security_scan_secrets\`: Detects hardcoded secrets, private keys, cloud provider tokens (AWS, Cloudflare, OpenAI, GitHub PATs, Slack), and high-entropy assignments. Confined to repository bounds with automatic credential redaction (mapped to OWASP A07 / CWE-798 / ISO A.8.12).
+- \`security_analyze_code\`: Scans TypeScript, Vue SFCs, and JSX for static vulnerability patterns:
+  - Injection (OWASP A03 / CWE-79, CWE-78, CWE-89, CWE-94, CWE-95 / ISO A.8.28): DOM XSS (\`innerHTML\`, \`v-html\`, \`dangerouslySetInnerHTML\`), Command Injection (\`exec\`), SQL Injection (\`query\`), dynamic code evaluation (\`eval()\`, \`new Function()\`).
+  - Broken Access Control (OWASP A01 / CWE-22, CWE-601 / ISO A.8.28): Path Traversal (\`readFile\`), Unsafe redirect pseudo-protocols (\`javascript:\`, \`data:\`).
+  - Cryptographic Failures (OWASP A02 / CWE-327, CWE-330 / ISO A.8.28): Broken hash functions (\`MD5\`, \`SHA1\`), insecure pseudo-randomness (\`Math.random()\`) for credentials/tokens.
+  - Insecure Design (OWASP A04 / CWE-1333 / ISO A.8.28): Catastrophic backtracking regular expressions (\`ReDoS\`).
+  - Security Misconfiguration (OWASP A05 / CWE-295, CWE-16 / ISO A.8.9): Disabled TLS certificate validation (\`rejectUnauthorized: false\`), permissive CORS with credentials.
+  - Logging Failures (OWASP A09 / CWE-532 / ISO A.8.12): Logging passwords, secrets, or API keys to log stores.
+  - Server-Side Request Forgery (OWASP A10 / CWE-918 / ISO A.8.28): Dynamic unvalidated URL concatenation in HTTP fetch/axios requests.
+- \`security_audit_dependencies\`: Inspects workspace package manifests and queries \`pnpm audit\` for known CVEs, unpinned versions, and insecure transmission protocols (OWASP A06, A08 / CWE-1104, CWE-319 / ISO A.8.8, A.8.20).
+- \`security_audit_supply_chain\`: Audits workspace manifests for dangerous lifecycle install scripts (\`postinstall\`, \`preinstall\`), conflicting dependency version divergence across packages, and unverified direct tarball sources.
+- \`security_collect_compliance_evidence\`: Aggregates audit evidence into an auditable ISO/IEC 27001:2022 Annex A compliance report with OWASP 2025 and CWE Top 25 scorecards, exportable in JSON or Markdown.
+- \`security_audit_compliance\`: Evaluates monorepo compliance posture against specific frameworks (\`iso-27001\`, \`owasp-2025\`, \`cwe-top25\`, or \`all\`).
+- \`review_changes\`: Automatically executes secret and vulnerability passes on changed files during pull request and commit reviews.
+
+## ISO/IEC 27001:2022 Control Mappings
+- **A.8.8 Management of technical vulnerabilities**: Automated dependency vulnerability scanning and CVE remediation workflows.
+- **A.8.9 Configuration management**: ESLint AST configuration gates, TypeScript strict bounds, lockfile integrity, and supply chain consistency.
+- **A.8.12 Data leakage prevention**: Entropy-based secret scanning and sensitive logging detection preventing credential egress.
+- **A.8.20 Network security**: Enforcing encrypted transmission protocols (HTTPS/SSH) and rejecting plaintext \`http://\` and \`git://\` URLs.
+- **A.8.25 Secure development life cycle (SDLC)**: Automated pre-commit checks, review changes security passes, and lifecycle script auditing.
+- **A.8.28 Secure coding**: AST syntax rules, anti-invention reuse policy, strict typing without \`any\`, and static vulnerability detection.
+- **A.8.32 Change management**: Conventional Commits enforcement and review evidence reports.
+
+## Remediation Protocols
+1. **Secrets**: Never commit credentials to source control. Rotate exposed keys immediately and configure environment variables or secrets manager vaults.
+2. **DOM XSS & Injection**: Always sanitize dynamic HTML strings with \`DOMPurify.sanitize(...)\`. Use parameterized queries and argument vectors instead of shell string interpolation.
+3. **Dynamic Evaluation**: Replace \`eval()\` and \`new Function()\` with static typed dispatch tables or deterministic interpreters.
+4. **Supply Chain & Dependencies**: Pin versions with pnpm catalog entries (\`catalog:\`), eliminate duplicate versions, and avoid unvetted \`postinstall\` scripts.
+5. **Evidence Collection**: Before merging major features or releases, run \`security_collect_compliance_evidence\` to verify that all ISO 27001 controls remain compliant.`;
+
 const GUIDES: Record<GuideId, Guide> = {
   overview: { id: "overview", title: "Overview", body: OVERVIEW },
   conventions: {
@@ -863,6 +942,11 @@ const GUIDES: Record<GuideId, Guide> = {
     title: "Web Components (Lit) Best Practices",
     body: FRAMEWORK_WEB_COMPONENTS,
   },
+  "framework-svelte": {
+    id: "framework-svelte",
+    title: "Svelte Best Practices",
+    body: FRAMEWORK_SVELTE,
+  },
   "external-setup": {
     id: "external-setup",
     title: "External Consumer Setup",
@@ -872,6 +956,11 @@ const GUIDES: Record<GuideId, Guide> = {
     id: "design-token-overrides",
     title: "Design Token Overrides",
     body: DESIGN_TOKEN_OVERRIDES,
+  },
+  "routing-setup": {
+    id: "routing-setup",
+    title: "Framework-Neutral Routing Setup",
+    body: ROUTING_SETUP,
   },
   "fws-authoring": {
     id: "fws-authoring",
@@ -892,6 +981,11 @@ const GUIDES: Record<GuideId, Guide> = {
     id: "fws-forensics",
     title: "FWS Bounded Forensics",
     body: FWS_FORENSICS,
+  },
+  "security-analysis": {
+    id: "security-analysis",
+    title: "Security Analysis & Auditing",
+    body: SECURITY_ANALYSIS,
   },
 };
 

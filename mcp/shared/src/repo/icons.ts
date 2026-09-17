@@ -1,0 +1,222 @@
+/**
+ * Icon catalog discovery and usage inspection for `@mission-platform/icons`.
+ *
+ * Allows MCP clients and external consumers to discover available icons, filter by
+ * category or name, and inspect framework-agnostic import statements and properties.
+ */
+import { existsSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
+
+import { groupDir, resolveRepoPath } from "./paths.ts";
+
+const ICONS_DIR = join(
+  groupDir("packages"),
+  "ui",
+  "icons",
+  "src",
+  "components",
+);
+
+export interface IconSummary {
+  readonly name: string;
+  readonly componentName: string;
+  readonly category: string;
+  readonly subcategory: string;
+  readonly fullCategory: string;
+}
+
+export interface IconProperties {
+  readonly size: string;
+  readonly color: string;
+  readonly ariaLabel: string;
+}
+
+export interface IconUsage extends IconSummary {
+  readonly importStatement: string;
+  readonly deepImport: string;
+  readonly properties: IconProperties;
+  readonly examples: Record<string, string>;
+  readonly spriteSupport: boolean;
+}
+
+function toPascalCase(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+}
+
+function toKebabCase(name: string): string {
+  return name
+    .replaceAll(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replaceAll(/\s+/g, "-")
+    .toLowerCase();
+}
+
+function iconsDirExists(): boolean {
+  try {
+    const resolved = resolveRepoPath(ICONS_DIR, "icons components dir");
+    return existsSync(resolved) && statSync(resolved).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * List all available icons across categories and subcategories.
+ */
+export function listIcons(
+  options: { category?: string; filter?: string; limit?: number } = {},
+): {
+  readonly icons: readonly IconSummary[];
+  readonly total: number;
+  readonly categories: readonly string[];
+} {
+  if (!iconsDirExists()) {
+    return { icons: [], total: 0, categories: [] };
+  }
+
+  const resolvedBase = resolveRepoPath(ICONS_DIR, "icons base");
+  const allIcons: IconSummary[] = [];
+  const categoriesSet = new Set<string>();
+
+  for (const catEntry of readdirSync(resolvedBase, { withFileTypes: true })) {
+    if (!catEntry.isDirectory()) continue;
+    const catDir = join(resolvedBase, catEntry.name);
+
+    for (const subEntry of readdirSync(catDir, { withFileTypes: true })) {
+      if (!subEntry.isDirectory()) continue;
+      const subDir = join(catDir, subEntry.name);
+      const fullCategory = `${catEntry.name}/${subEntry.name}`;
+      categoriesSet.add(fullCategory);
+
+      for (const iconEntry of readdirSync(subDir, { withFileTypes: true })) {
+        if (
+          !iconEntry.isDirectory() ||
+          !iconEntry.name.startsWith("forge-icon-")
+        )
+          continue;
+        const iconName = iconEntry.name;
+        const componentName = toPascalCase(iconName);
+
+        allIcons.push({
+          name: iconName,
+          componentName,
+          category: catEntry.name,
+          subcategory: subEntry.name,
+          fullCategory,
+        });
+      }
+    }
+  }
+
+  allIcons.sort((a, b) => a.name.localeCompare(b.name));
+
+  let filtered = allIcons;
+
+  if (options.category) {
+    const catFilter = options.category.toLowerCase().trim();
+    filtered = filtered.filter(
+      (icon) =>
+        icon.fullCategory.toLowerCase() === catFilter ||
+        icon.category.toLowerCase() === catFilter ||
+        icon.subcategory.toLowerCase() === catFilter,
+    );
+  }
+
+  if (options.filter) {
+    const textFilter = options.filter.toLowerCase().trim();
+    filtered = filtered.filter(
+      (icon) =>
+        icon.name.toLowerCase().includes(textFilter) ||
+        icon.componentName.toLowerCase().includes(textFilter),
+    );
+  }
+
+  const limit = options.limit ?? 100;
+  const sliced = filtered.slice(0, limit);
+
+  return {
+    icons: sliced,
+    total: filtered.length,
+    categories: [...categoriesSet].sort(),
+  };
+}
+
+/**
+ * Get detailed usage instructions, import statements, and code examples for a specific icon.
+ */
+export function getIconUsage(
+  nameOrSlug: string,
+  framework?: string,
+): IconUsage | undefined {
+  const normalized = toKebabCase(nameOrSlug);
+  const targetName = normalized.startsWith("forge-icon-")
+    ? normalized
+    : `forge-icon-${normalized}`;
+
+  const { icons } = listIcons({ limit: 1000 });
+  const icon = icons.find(
+    (i) =>
+      i.name === targetName ||
+      i.componentName.toLowerCase() === nameOrSlug.toLowerCase(),
+  );
+
+  if (!icon) {
+    return undefined;
+  }
+
+  const comp = icon.componentName;
+  const kebab = icon.name;
+
+  const examples: Record<string, string> = {
+    vue: `<script setup lang="ts">
+import { ${comp} } from '@mission-platform/icons';
+</script>
+
+<template>
+  <${comp} size="md" color="currentColor" ariaLabel="${comp.replace("ForgeIcon", "")}" />
+</template>`,
+
+    react: `import { ${comp} } from '@mission-platform/icons';
+
+export function Example() {
+  return <${comp} size="md" color="currentColor" ariaLabel="${comp.replace("ForgeIcon", "")}" />;
+}`,
+
+    solid: `import { ${comp} } from '@mission-platform/icons';
+
+export function Example() {
+  return <${comp} size="md" color="currentColor" ariaLabel="${comp.replace("ForgeIcon", "")}" />;
+}`,
+
+    svelte: `<script lang="ts">
+  import { ${comp} } from '@mission-platform/icons';
+</script>
+
+<${comp} size="md" color="currentColor" ariaLabel="${comp.replace("ForgeIcon", "")}" />`,
+
+    "web-components": `<!-- Framework-agnostic custom element -->
+<${kebab} size="md" color="currentColor" aria-label="${comp.replace("ForgeIcon", "")}"></${kebab}>`,
+  };
+
+  const selectedExamples =
+    framework && examples[framework]
+      ? { [framework]: examples[framework] as string }
+      : examples;
+
+  return {
+    ...icon,
+    importStatement: `import { ${comp} } from '@mission-platform/icons';`,
+    deepImport: `import { ${comp} } from '@mission-platform/icons/${icon.category}/${icon.subcategory}/${kebab}';`,
+    properties: {
+      size: "'2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | number (default 'md' = 24px)",
+      color: "string (defaults to 'currentColor')",
+      ariaLabel:
+        "string (accessible label; omit for decorative icons to hide from assistive tech)",
+    },
+    examples: selectedExamples,
+    spriteSupport: true,
+  };
+}

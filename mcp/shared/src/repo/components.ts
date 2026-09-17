@@ -5,15 +5,27 @@
  * snippets. The snippets are framework-agnostic: a consumer picks the framework
  * build once through the `mp:<framework>` export condition.
  */
-import {existsSync, readdirSync, readFileSync, statSync} from 'node:fs';
-import {join} from 'node:path';
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 
-import {groupDir} from './paths.ts';
+import { groupDir } from "./paths.ts";
 
-const COMPONENTS_DIR = join(groupDir('packages'), 'ui', 'components', 'src', 'components');
+const COMPONENTS_DIR = join(
+  groupDir("packages"),
+  "ui",
+  "components",
+  "src",
+  "components",
+);
 
 /** Atomic-design level folders under `src/components/`. */
-export const ATOMIC_LEVELS = ['atoms', 'molecules', 'organisms', 'templates', 'pages'] as const;
+export const ATOMIC_LEVELS = [
+  "atoms",
+  "molecules",
+  "organisms",
+  "templates",
+  "pages",
+] as const;
 
 export type AtomicLevel = (typeof ATOMIC_LEVELS)[number];
 
@@ -27,7 +39,7 @@ export interface ComponentSummary {
    * `src/components/<level>/` (e.g. `atoms`). `unknown` when the component
    * lives outside the atomic hierarchy.
    */
-  level: AtomicLevel | 'unknown';
+  level: AtomicLevel | "unknown";
   /** Path relative to `src/components`, e.g. `atoms/forge-button`. */
   relativePath: string;
 }
@@ -59,8 +71,12 @@ function isDirectory(path: string): boolean {
   return existsSync(path) && statSync(path).isDirectory();
 }
 
-function readComponentFolder(level: AtomicLevel | 'unknown', slug: string, dir: string): ComponentSummary | undefined {
-  const indexPath = join(dir, 'index.ts');
+function readComponentFolder(
+  level: AtomicLevel | "unknown",
+  slug: string,
+  dir: string,
+): ComponentSummary | undefined {
+  const indexPath = join(dir, "index.ts");
   // Accept either a barrel or a primary source file so scaffolds without an
   // index yet (and legacy folders) still surface.
   const hasIndex = existsSync(indexPath);
@@ -72,9 +88,11 @@ function readComponentFolder(level: AtomicLevel | 'unknown', slug: string, dir: 
     return undefined;
   }
 
-  const exports = hasIndex ? extractExports(readFileSync(indexPath, 'utf8')) : [];
-  const relativePath = level === 'unknown' ? slug : `${level}/${slug}`;
-  return {slug, exports, level, relativePath};
+  const exports = hasIndex
+    ? extractExports(readFileSync(indexPath, "utf8"))
+    : [];
+  const relativePath = level === "unknown" ? slug : `${level}/${slug}`;
+  return { slug, exports, level, relativePath };
 }
 
 /** List every component folder alongside its exported symbols and atomic level. */
@@ -107,14 +125,17 @@ export function listComponents(): ComponentSummary[] {
 
   // Legacy flat folders directly under `src/components/` (non-atomic).
   for (const entry of readdirSync(COMPONENTS_DIR)) {
-    if ((ATOMIC_LEVELS as readonly string[]).includes(entry) || seen.has(entry)) {
+    if (
+      (ATOMIC_LEVELS as readonly string[]).includes(entry) ||
+      seen.has(entry)
+    ) {
       continue;
     }
     const dir = join(COMPONENTS_DIR, entry);
     if (!isDirectory(dir)) {
       continue;
     }
-    const summary = readComponentFolder('unknown', entry, dir);
+    const summary = readComponentFolder("unknown", entry, dir);
     if (summary) {
       summaries.push(summary);
     }
@@ -129,9 +150,9 @@ function extractExports(source: string): string[] {
   const exportBlock = /export\s*(?:type\s*)?\{([^}]*)\}/g;
   let match: RegExpExecArray | null;
   while ((match = exportBlock.exec(source)) !== null) {
-    const body = match[1] ?? '';
-    for (const raw of body.split(',')) {
-      const token = raw.trim().replace(/^type\s+/, '');
+    const body = match[1] ?? "";
+    for (const raw of body.split(",")) {
+      const token = raw.trim().replace(/^type\s+/, "");
       const name = (token.split(/\s+as\s+/)[1] ?? token).trim();
       if (name) {
         names.add(name);
@@ -144,21 +165,24 @@ function extractExports(source: string): string[] {
 /** Convert a kebab-case slug (`forge-button`) to PascalCase (`ForgeButton`). */
 function toPascalCase(slug: string): string {
   return slug
-    .split('-')
+    .split("-")
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join('');
+    .join("");
 }
 
 /** Extract the props interface source and preceding doc comment, if present. */
-function extractPropertiesInterface(source: string): { propsInterface?: string; docComment?: string } {
+function extractPropertiesInterface(source: string): {
+  propsInterface?: string;
+  docComment?: string;
+} {
   const interfaceStart = source.search(/export\s+interface\s+\w*Properties\b/);
   if (interfaceStart === -1) {
     return {};
   }
 
   // Capture the balanced `{ ... }` body of the interface.
-  const braceStart = source.indexOf('{', interfaceStart);
+  const braceStart = source.indexOf("{", interfaceStart);
   if (braceStart === -1) {
     return {};
   }
@@ -166,9 +190,9 @@ function extractPropertiesInterface(source: string): { propsInterface?: string; 
   let end = braceStart;
   for (let index = braceStart; index < source.length; index += 1) {
     const character = source[index];
-    if (character === '{') {
+    if (character === "{") {
       depth += 1;
-    } else if (character === '}') {
+    } else if (character === "}") {
       depth -= 1;
       if (depth === 0) {
         end = index + 1;
@@ -179,10 +203,14 @@ function extractPropertiesInterface(source: string): { propsInterface?: string; 
   const propertiesInterface = source.slice(interfaceStart, end).trim();
 
   // Grab the doc comment immediately preceding the exported function, if any.
-  const functionMatch = /\/\*\*[\s\S]*?\*\/\s*export\s+function\s+\w+/.exec(source);
-  const documentComment = functionMatch ? (/\/\*\*[\s\S]*?\*\//.exec(functionMatch[0])?.[0] ?? undefined) : undefined;
+  const functionMatch = /\/\*\*[\s\S]*?\*\/\s*export\s+function\s+\w+/.exec(
+    source,
+  );
+  const documentComment = functionMatch
+    ? (/\/\*\*[\s\S]*?\*\//.exec(functionMatch[0])?.[0] ?? undefined)
+    : undefined;
 
-  return {propsInterface: propertiesInterface, docComment: documentComment};
+  return { propsInterface: propertiesInterface, docComment: documentComment };
 }
 
 function resolveComponentDirectory(summary: ComponentSummary): string {
@@ -190,27 +218,40 @@ function resolveComponentDirectory(summary: ComponentSummary): string {
 }
 
 /** Build a full usage description for a single component. */
-export function getComponentUsage(nameOrSlug: string): ComponentUsage | undefined {
+export function getComponentUsage(
+  nameOrSlug: string,
+): ComponentUsage | undefined {
   const slug = nameOrSlug
-    .replaceAll(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replaceAll(/\s+/g, '-')
+    .replaceAll(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replaceAll(/\s+/g, "-")
     .toLowerCase();
 
   const summary = listComponents().find(
-    (candidate) => candidate.slug === slug || candidate.slug === nameOrSlug.toLowerCase(),
+    (candidate) =>
+      candidate.slug === slug || candidate.slug === nameOrSlug.toLowerCase(),
   );
   if (!summary) {
     return undefined;
   }
 
   const dir = resolveComponentDirectory(summary);
-  const sourceFile = [`${summary.slug}.tsx`, `${summary.slug}.vue`, `${summary.slug}.ts`]
+  const sourceFile = [
+    `${summary.slug}.tsx`,
+    `${summary.slug}.vue`,
+    `${summary.slug}.ts`,
+  ]
     .map((file) => join(dir, file))
     .find((file) => existsSync(file));
-  const {propsInterface, docComment} = sourceFile ? extractPropertiesInterface(readFileSync(sourceFile, 'utf8')) : {};
+  const { propsInterface, docComment } = sourceFile
+    ? extractPropertiesInterface(readFileSync(sourceFile, "utf8"))
+    : {};
 
-  const stories = existsSync(dir) ? readdirSync(dir).filter((file) => file.includes('.stories.')) : [];
-  const componentName = summary.exports.find((name) => name.startsWith('Forge')) ?? toPascalCase(summary.slug);
+  const stories = existsSync(dir)
+    ? readdirSync(dir).filter((file) => file.includes(".stories."))
+    : [];
+  const componentName =
+    summary.exports.find((name) => name.startsWith("Forge")) ??
+    toPascalCase(summary.slug);
 
   return {
     ...summary,
@@ -220,5 +261,89 @@ export function getComponentUsage(nameOrSlug: string): ComponentUsage | undefine
     stories,
     importStatement: `import { ${componentName} } from '@mission-platform/components';`,
     deepImport: `import { ${componentName} } from '@mission-platform/components/${summary.relativePath}/${summary.slug}';`,
+  };
+}
+
+export interface ComponentStoriesDetail {
+  readonly componentName: string;
+  readonly slug: string;
+  readonly storyFiles: readonly string[];
+  readonly storyNames: readonly string[];
+  readonly variants: readonly string[];
+  readonly sizes: readonly string[];
+  readonly metaTitle?: string;
+}
+
+/** Extract story details, variants, sizes, and exported story names for a component. */
+export function getComponentStories(
+  nameOrSlug: string,
+): ComponentStoriesDetail | undefined {
+  const summary = getComponentUsage(nameOrSlug);
+  if (!summary) return undefined;
+
+  const dir = resolveComponentDirectory(summary);
+  const storyFiles = existsSync(dir)
+    ? readdirSync(dir).filter((file) => file.includes(".stories."))
+    : [];
+  if (storyFiles.length === 0) {
+    return {
+      componentName: summary.componentName,
+      slug: summary.slug,
+      storyFiles: [],
+      storyNames: [],
+      variants: [],
+      sizes: [],
+    };
+  }
+
+  const primaryStoryPath = join(dir, storyFiles[0] as string);
+  const storySource = readFileSync(primaryStoryPath, "utf8");
+
+  // Extract meta title
+  const titleMatch = /title:\s*['"]([^'"]+)['"]/.exec(storySource);
+  const metaTitle = titleMatch?.[1];
+
+  // Extract exported story names: export const Xxx: Story = ...
+  const storyNames: string[] = [];
+  const exportStoryRegex = /export\s+const\s+([A-Z]\w*)\s*:\s*Story\b/g;
+  let match: RegExpExecArray | null;
+  while ((match = exportStoryRegex.exec(storySource)) !== null) {
+    if (match[1]) storyNames.push(match[1]);
+  }
+
+  // Extract variants from argTypes.variant.options: [...]
+  const variants: string[] = [];
+  const variantBlockMatch = /variant:\s*\{[^}]*options:\s*\[([^\]]+)\]/s.exec(
+    storySource,
+  );
+  if (variantBlockMatch?.[1]) {
+    const rawOptions = variantBlockMatch[1];
+    const optionMatches = rawOptions.match(/['"]([^'"]+)['"]/g) ?? [];
+    for (const opt of optionMatches) {
+      variants.push(opt.replaceAll(/['"]/g, ""));
+    }
+  }
+
+  // Extract sizes from argTypes.size.options: [...]
+  const sizes: string[] = [];
+  const sizeBlockMatch = /size:\s*\{[^}]*options:\s*\[([^\]]+)\]/s.exec(
+    storySource,
+  );
+  if (sizeBlockMatch?.[1]) {
+    const rawOptions = sizeBlockMatch[1];
+    const optionMatches = rawOptions.match(/['"]([^'"]+)['"]/g) ?? [];
+    for (const opt of optionMatches) {
+      sizes.push(opt.replaceAll(/['"]/g, ""));
+    }
+  }
+
+  return {
+    componentName: summary.componentName,
+    slug: summary.slug,
+    storyFiles,
+    storyNames,
+    variants,
+    sizes,
+    metaTitle,
   };
 }

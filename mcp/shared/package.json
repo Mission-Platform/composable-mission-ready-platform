@@ -6,7 +6,9 @@
   "exports": {
     "./repo/*": "./src/repo/*.ts",
     "./knowledge/*": "./src/knowledge/*.ts",
-    "./resources/*": "./src/resources/*.ts"
+    "./resources/*": "./src/resources/*.ts",
+    "./security/*": "./src/security/*.ts",
+    "./security": "./src/security/index.ts"
   },
   "dependencies": {
     "@mission-platform/vite-plugin-token-overrides": "workspace:*",
