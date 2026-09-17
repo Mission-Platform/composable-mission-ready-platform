@@ -14,7 +14,7 @@
     "index.js"
   ],
   "scripts": {
-    "test": "node --test config.test.js",
+    "test": "node --test config.test.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",

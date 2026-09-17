@@ -30,6 +30,11 @@ export interface SecurityScanResult {
   readonly scannedFiles: number;
   readonly durationMs: number;
   readonly clean: boolean;
+  readonly incomplete?: boolean;
+  readonly skippedFiles?: number;
+  readonly unreadableFiles?: number;
+  readonly oversizedFiles?: number;
+  readonly errors?: readonly string[];
 }
 
 export interface OwaspCategoryDefinition {
@@ -45,70 +50,70 @@ export const OWASP_2025_TOP_10 = {
     code: "A01:2025-Broken Access Control",
     title: "Broken Access Control",
     description:
-      "Failures in enforcing restrictions on authenticated users, path traversal, or insecure direct object references.",
+      "Failures in enforcing restrictions on authenticated users, path traversal, SSRF, or insecure direct object references.",
   },
   "A02:2025": {
     id: "A02:2025",
-    code: "A02:2025-Cryptographic Failures",
-    title: "Cryptographic Failures",
-    description:
-      "Exposure of sensitive data in transit or rest, weak cryptography, or insufficient entropy.",
-  },
-  "A03:2025": {
-    id: "A03:2025",
-    code: "A03:2025-Injection",
-    title: "Injection",
-    description:
-      "Untrusted user data interpreted as commands or queries (SQL, OS command, DOM XSS, code injection).",
-  },
-  "A04:2025": {
-    id: "A04:2025",
-    code: "A04:2025-Insecure Design",
-    title: "Insecure Design",
-    description:
-      "Flaws resulting from lack of threat modeling, architectural weaknesses, or unconstrained resource limits (ReDoS).",
-  },
-  "A05:2025": {
-    id: "A05:2025",
-    code: "A05:2025-Security Misconfiguration",
+    code: "A02:2025-Security Misconfiguration",
     title: "Security Misconfiguration",
     description:
       "Insecure defaults, overly permissive CORS, disabled TLS validation, or unhardened server headers.",
   },
+  "A03:2025": {
+    id: "A03:2025",
+    code: "A03:2025-Software Supply Chain Failures",
+    title: "Software Supply Chain Failures",
+    description:
+      "Vulnerabilities and risks arising from third-party dependencies, malicious packages, or compromised build and distribution pipelines.",
+  },
+  "A04:2025": {
+    id: "A04:2025",
+    code: "A04:2025-Cryptographic Failures",
+    title: "Cryptographic Failures",
+    description:
+      "Exposure of sensitive data in transit or rest, weak cryptography, or insufficient entropy.",
+  },
+  "A05:2025": {
+    id: "A05:2025",
+    code: "A05:2025-Injection",
+    title: "Injection",
+    description:
+      "Untrusted user data interpreted as commands or queries (SQL, OS command, DOM XSS, code injection).",
+  },
   "A06:2025": {
     id: "A06:2025",
-    code: "A06:2025-Vulnerable and Outdated Components",
-    title: "Vulnerable and Outdated Components",
+    code: "A06:2025-Insecure Design",
+    title: "Insecure Design",
     description:
-      "Use of third-party libraries or dependencies with known vulnerabilities or unmaintained versions.",
+      "Flaws resulting from lack of threat modeling, architectural weaknesses, or unconstrained resource limits.",
   },
   "A07:2025": {
     id: "A07:2025",
-    code: "A07:2025-Identification and Authentication Failures",
-    title: "Identification and Authentication Failures",
+    code: "A07:2025-Authentication Failures",
+    title: "Authentication Failures",
     description:
       "Hardcoded secrets, exposed credentials, session fixation, or weak credential verification.",
   },
   "A08:2025": {
     id: "A08:2025",
-    code: "A08:2025-Software and Data Integrity Failures",
-    title: "Software and Data Integrity Failures",
+    code: "A08:2025-Software or Data Integrity Failures",
+    title: "Software or Data Integrity Failures",
     description:
-      "Reliance on unverified plugins, insecure Git/HTTP protocols, or unverified deserialization.",
+      "Failure to maintain trust boundaries and verify integrity of software, code, and data artifacts.",
   },
   "A09:2025": {
     id: "A09:2025",
-    code: "A09:2025-Security Logging and Monitoring Failures",
-    title: "Security Logging and Monitoring Failures",
+    code: "A09:2025-Security Logging & Alerting Failures",
+    title: "Security Logging & Alerting Failures",
     description:
-      "Insufficient logging of security events or inadvertent logging of sensitive credentials and tokens.",
+      "Insufficient logging of security events, lack of alerting on critical events, or inadvertent logging of sensitive credentials.",
   },
   "A10:2025": {
     id: "A10:2025",
-    code: "A10:2025-Server-Side Request Forgery",
-    title: "Server-Side Request Forgery (SSRF)",
+    code: "A10:2025-Mishandling of Exceptional Conditions",
+    title: "Mishandling of Exceptional Conditions",
     description:
-      "Web applications fetching remote resources without validating user-supplied destination URLs.",
+      "Improper error handling, failing open, unhandled exceptions, or catastrophic backtracking (ReDoS).",
   },
 } as const satisfies Record<string, OwaspCategoryDefinition>;
 

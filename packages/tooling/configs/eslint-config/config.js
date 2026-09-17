@@ -67,17 +67,65 @@ function isConstAssertion(typeAnnotation) {
 }
 
 /**
+ * Find the enclosing TSTypeAnnotation for a nested type node.
+ */
+function findEnclosingTypeAnnotation(node) {
+  let current = node?.parent;
+  while (current) {
+    if (current.type === 'TSTypeAnnotation') {
+      return current;
+    }
+    if (
+      current.type === 'FunctionDeclaration' ||
+      current.type === 'ArrowFunctionExpression' ||
+      current.type === 'FunctionExpression' ||
+      current.type === 'MethodDefinition' ||
+      current.type === 'VariableDeclaration' ||
+      current.type === 'ClassDeclaration'
+    ) {
+      return;
+    }
+    current = current.parent;
+  }
+  return;
+}
+
+/**
  * Check whether a type node is a return or parameter annotation on an exported function.
  */
 function isExportedFunctionAnnotation(node) {
   const parent = node?.parent;
-  if (parent?.type !== 'TSTypeAnnotation') return false;
-  const functionNode = parent.parent;
-  const isFunction =
-    functionNode?.type === 'FunctionDeclaration' ||
-    functionNode?.type === 'ArrowFunctionExpression' ||
-    functionNode?.type === 'MethodDefinition';
-  return isFunction && isNodeExported(functionNode);
+  if (parent?.type === 'TSTypeAnnotation') {
+    const functionNode = parent.parent;
+    const isFunction =
+      functionNode?.type === 'FunctionDeclaration' ||
+      functionNode?.type === 'ArrowFunctionExpression' ||
+      functionNode?.type === 'FunctionExpression' ||
+      functionNode?.type === 'MethodDefinition';
+    return isFunction && isNodeExported(functionNode);
+  }
+
+  const enclosing = findEnclosingTypeAnnotation(node);
+  if (enclosing) {
+    const functionNode = enclosing.parent;
+    const isFunction =
+      functionNode?.type === 'FunctionDeclaration' ||
+      functionNode?.type === 'ArrowFunctionExpression' ||
+      functionNode?.type === 'FunctionExpression' ||
+      functionNode?.type === 'MethodDefinition';
+    const isReturnType = functionNode?.returnType === enclosing;
+    return isFunction && isReturnType && isNodeExported(functionNode);
+  }
+
+  return false;
+}
+
+/**
+ * Check whether a generic constraint is genuinely restrictive (not open unknown or any).
+ */
+function isRestrictiveConstraint(constraint) {
+  if (!constraint) return false;
+  return constraint.type !== 'TSUnknownKeyword' && constraint.type !== 'TSAnyKeyword';
 }
 
 const missionTypeScriptPlugin = {
@@ -188,7 +236,7 @@ const missionTypeScriptPlugin = {
       create(context) {
         return {
           TSTypeParameter(node) {
-            if (!node.constraint) {
+            if (!isRestrictiveConstraint(node.constraint)) {
               const parameterName = typeof node.name === 'string' ? node.name : (node.name?.name ?? 'T');
               context.report({
                 node,

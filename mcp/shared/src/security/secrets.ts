@@ -105,7 +105,7 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
     id: "SECRET_AWS_ACCESS_KEY",
     title: "AWS Access Key ID exposed",
     severity: "critical",
-    owasp: "A07:2025-Identification and Authentication Failures",
+    owasp: "A07:2025-Authentication Failures",
     cwe: "CWE-798",
     isoControl: "A.8.12",
     pattern:
@@ -119,7 +119,7 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
     id: "SECRET_AWS_SECRET_KEY",
     title: "AWS Secret Access Key exposed",
     severity: "critical",
-    owasp: "A07:2025-Identification and Authentication Failures",
+    owasp: "A07:2025-Authentication Failures",
     cwe: "CWE-798",
     isoControl: "A.8.12",
     pattern:
@@ -132,7 +132,7 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
     id: "SECRET_CLOUDFLARE_KEY",
     title: "Cloudflare API Token or Key exposed",
     severity: "critical",
-    owasp: "A07:2025-Identification and Authentication Failures",
+    owasp: "A07:2025-Authentication Failures",
     cwe: "CWE-798",
     isoControl: "A.8.12",
     pattern:
@@ -145,7 +145,7 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
     id: "SECRET_GITHUB_PAT",
     title: "GitHub Personal Access Token exposed",
     severity: "critical",
-    owasp: "A07:2025-Identification and Authentication Failures",
+    owasp: "A07:2025-Authentication Failures",
     cwe: "CWE-798",
     isoControl: "A.8.12",
     pattern:
@@ -158,7 +158,7 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
     id: "SECRET_OPENAI_API_KEY",
     title: "OpenAI API Key exposed",
     severity: "critical",
-    owasp: "A07:2025-Identification and Authentication Failures",
+    owasp: "A07:2025-Authentication Failures",
     cwe: "CWE-798",
     isoControl: "A.8.12",
     pattern: /\b(sk-(?:proj-)?[a-zA-Z0-9_-]{32,80})\b/g,
@@ -170,7 +170,7 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
     id: "SECRET_SLACK_TOKEN",
     title: "Slack API Token exposed",
     severity: "critical",
-    owasp: "A07:2025-Identification and Authentication Failures",
+    owasp: "A07:2025-Authentication Failures",
     cwe: "CWE-798",
     isoControl: "A.8.12",
     pattern: /\b(xox[baprs]-[0-9]{10,13}-[0-9]{10,13}[a-zA-Z0-9-]*)\b/g,
@@ -182,7 +182,7 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
     id: "SECRET_PRIVATE_KEY",
     title: "Private Encryption Key exposed",
     severity: "critical",
-    owasp: "A02:2025-Cryptographic Failures",
+    owasp: "A04:2025-Cryptographic Failures",
     cwe: "CWE-798",
     isoControl: "A.8.12",
     pattern: /-----BEGIN (?:[A-Z ]+)?PRIVATE KEY-----/g,
@@ -195,7 +195,7 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
     id: "SECRET_JWT_TOKEN",
     title: "Signed JSON Web Token (JWT) exposed",
     severity: "high",
-    owasp: "A07:2025-Identification and Authentication Failures",
+    owasp: "A07:2025-Authentication Failures",
     cwe: "CWE-798",
     isoControl: "A.8.12",
     pattern:
@@ -208,7 +208,7 @@ const SECRET_PATTERNS: readonly SecretPattern[] = [
     id: "SECRET_HIGH_ENTROPY",
     title: "High-entropy secret assignment detected",
     severity: "high",
-    owasp: "A07:2025-Identification and Authentication Failures",
+    owasp: "A07:2025-Authentication Failures",
     cwe: "CWE-798",
     isoControl: "A.8.12",
     pattern:
@@ -239,7 +239,7 @@ function buildSecretFinding(
   filePath: string,
 ): SecurityFinding {
   const redacted = redactSecret(rawSecret);
-  const snippet = lineText.replace(rawSecret, redacted).trim();
+  const snippet = lineText.replaceAll(rawSecret, redacted).trim();
   const truncatedSnippet =
     snippet.length > 140 ? `${snippet.slice(0, 140)}...` : snippet;
 
@@ -366,15 +366,22 @@ function processSecretDirectoryEntry(
   startDir: string,
   maxFiles: number,
   collected: string[],
+  state: { skippedCount: number },
 ): void {
   if (entry.isSymbolicLink()) return;
   const fullPath = join(startDir, entry.name);
   if (entry.isDirectory()) {
     if (!IGNORED_DIRS.has(entry.name)) {
-      collectFiles(fullPath, maxFiles, collected);
+      collectFiles(fullPath, maxFiles, collected, state);
     }
-  } else if (isScannableDirent(entry)) {
-    collected.push(fullPath);
+    return;
+  }
+  if (isScannableDirent(entry)) {
+    if (collected.length < maxFiles) {
+      collected.push(fullPath);
+    } else {
+      state.skippedCount += 1;
+    }
   }
 }
 
@@ -385,22 +392,24 @@ function collectFiles(
   startDir: string,
   maxFiles: number,
   collected: string[] = [],
-): string[] {
-  if (collected.length >= maxFiles) {
-    return collected;
-  }
-
+  state = { skippedCount: 0 },
+): { files: string[]; skippedCount: number } {
   try {
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
-      if (collected.length >= maxFiles) break;
-      processSecretDirectoryEntry(entry, startDir, maxFiles, collected);
+      processSecretDirectoryEntry(entry, startDir, maxFiles, collected, state);
     }
   } catch {
-    return collected;
+    return { files: collected, skippedCount: state.skippedCount };
   }
 
-  return collected;
+  return { files: collected, skippedCount: state.skippedCount };
+}
+
+interface SecretFileAnalysisResult {
+  readonly findings: SecurityFinding[];
+  readonly status: "scanned" | "oversized" | "unreadable";
+  readonly error?: string;
 }
 
 /**
@@ -410,15 +419,25 @@ function scanSingleFile(
   filePath: string,
   repoRoot: string,
   severityThreshold?: SecurityFinding["severity"],
-): SecurityFinding[] {
+): SecretFileAnalysisResult {
   try {
     const stat = lstatSync(filePath);
-    if (stat.size > MAX_SCAN_BYTES) return [];
+    if (stat.size > MAX_SCAN_BYTES) {
+      return { findings: [], status: "oversized" };
+    }
     const content = readFileSync(filePath, "utf8");
     const relativePath = relative(repoRoot, filePath).replaceAll("\\", "/");
-    return scanTextLines(content, relativePath, severityThreshold);
-  } catch {
-    return [];
+    return {
+      findings: scanTextLines(content, relativePath, severityThreshold),
+      status: "scanned",
+    };
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    return {
+      findings: [],
+      status: "unreadable",
+      error: `${relative(repoRoot, filePath)}: ${errorMsg}`,
+    };
   }
 }
 
@@ -444,6 +463,56 @@ function scanInlineContent(
 }
 
 /**
+ * Accumulate individual secret file outcome into stats.
+ */
+function accumulateSecretOutcome(
+  result: SecretFileAnalysisResult,
+  stats: {
+    findings: SecurityFinding[];
+    scannedCount: number;
+    oversizedCount: number;
+    unreadableCount: number;
+    errors: string[];
+  },
+): void {
+  stats.findings.push(...result.findings);
+  if (result.status === "scanned") {
+    stats.scannedCount += 1;
+    return;
+  }
+  if (result.status === "oversized") {
+    stats.oversizedCount += 1;
+    return;
+  }
+  stats.unreadableCount += 1;
+  if (result.error) stats.errors.push(result.error);
+}
+
+/**
+ * Scan a directory for leaked secrets.
+ */
+function scanSecretDirectoryTargetPath(
+  targetPath: string,
+  repoRoot: string,
+  maxFiles: number,
+  severityThreshold?: SecurityFinding["severity"],
+) {
+  const { files, skippedCount } = collectFiles(targetPath, maxFiles);
+  const stats = {
+    findings: [] as SecurityFinding[],
+    scannedCount: 0,
+    oversizedCount: 0,
+    unreadableCount: 0,
+    errors: [] as string[],
+  };
+  for (const file of files) {
+    const outcome = scanSingleFile(file, repoRoot, severityThreshold);
+    accumulateSecretOutcome(outcome, stats);
+  }
+  return { ...stats, skippedCount };
+}
+
+/**
  * Scan target filesystem path (file or directory) for leaked secrets.
  */
 function scanSecretTargetPath(
@@ -451,21 +520,31 @@ function scanSecretTargetPath(
   repoRoot: string,
   maxFiles: number,
   severityThreshold?: SecurityFinding["severity"],
-): { findings: SecurityFinding[]; scannedCount: number } {
+) {
   const stat = lstatSync(targetPath);
   if (stat.isFile()) {
-    const findings = scanSingleFile(targetPath, repoRoot, severityThreshold);
-    return { findings, scannedCount: 1 };
+    const outcome = scanSingleFile(targetPath, repoRoot, severityThreshold);
+    const stats = {
+      findings: [] as SecurityFinding[],
+      scannedCount: 0,
+      oversizedCount: 0,
+      unreadableCount: 0,
+      errors: [] as string[],
+    };
+    accumulateSecretOutcome(outcome, stats);
+    return { ...stats, skippedCount: 0 };
   }
   if (!stat.isDirectory()) {
-    return { findings: [], scannedCount: 0 };
+    return {
+      findings: [],
+      scannedCount: 0,
+      oversizedCount: 0,
+      unreadableCount: 0,
+      skippedCount: 0,
+      errors: [],
+    };
   }
-  const files = collectFiles(targetPath, maxFiles);
-  const findings: SecurityFinding[] = [];
-  for (const file of files) {
-    findings.push(...scanSingleFile(file, repoRoot, severityThreshold));
-  }
-  return { findings, scannedCount: files.length };
+  return scanSecretDirectoryTargetPath(targetPath, repoRoot, maxFiles, severityThreshold);
 }
 
 /**
@@ -484,17 +563,28 @@ export function scanSecrets(
     ? resolveRepoPath(options.path, "secret scan path")
     : repoRoot;
   const maxFiles = options.maxFiles ?? DEFAULT_MAX_FILES;
-  const { findings, scannedCount } = scanSecretTargetPath(
+  const targetResult = scanSecretTargetPath(
     targetPath,
     repoRoot,
     maxFiles,
     options.severityThreshold,
   );
 
+  const incomplete =
+    targetResult.oversizedCount > 0 ||
+    targetResult.unreadableCount > 0 ||
+    targetResult.skippedCount > 0 ||
+    targetResult.errors.length > 0;
+
   return {
-    findings,
-    scannedFiles: scannedCount,
+    findings: targetResult.findings,
+    scannedFiles: targetResult.scannedCount,
     durationMs: Date.now() - startTime,
-    clean: findings.length === 0,
+    clean: targetResult.findings.length === 0 && !incomplete,
+    incomplete: incomplete ? true : undefined,
+    skippedFiles: targetResult.skippedCount > 0 ? targetResult.skippedCount : undefined,
+    oversizedFiles: targetResult.oversizedCount > 0 ? targetResult.oversizedCount : undefined,
+    unreadableFiles: targetResult.unreadableCount > 0 ? targetResult.unreadableCount : undefined,
+    errors: targetResult.errors.length > 0 ? targetResult.errors : undefined,
   };
 }

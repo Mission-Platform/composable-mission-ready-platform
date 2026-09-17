@@ -11,11 +11,8 @@
       "type": "stdio",
       "command": "node",
       "args": [
-        "/Users/rogan/Developer/sources/composable_mission_ready_platform/mcp/developer/dist/index.js"
+        "scripts/launch-mcp.mjs"
       ],
-      "env": {
-        "MISSION_REPO_ROOT": "/Users/rogan/Developer/sources/composable_mission_ready_platform"
-      },
       "tools": [
         "*"
       ]
@@ -24,12 +21,9 @@
       "type": "stdio",
       "command": "node",
       "args": [
-        "/Users/rogan/Developer/sources/composable_mission_ready_platform/mcp/developer/dist/index.js",
+        "scripts/launch-mcp.mjs",
         "--profile=core"
       ],
-      "env": {
-        "MISSION_REPO_ROOT": "/Users/rogan/Developer/sources/composable_mission_ready_platform"
-      },
       "tools": [
         "review_changes",
         "list_components",
@@ -47,12 +41,9 @@
       "type": "stdio",
       "command": "node",
       "args": [
-        "/Users/rogan/Developer/sources/composable_mission_ready_platform/mcp/developer/dist/index.js",
+        "scripts/launch-mcp.mjs",
         "--profile=security"
       ],
-      "env": {
-        "MISSION_REPO_ROOT": "/Users/rogan/Developer/sources/composable_mission_ready_platform"
-      },
       "tools": [
         "security_scan_secrets",
         "security_analyze_code",
@@ -67,12 +58,9 @@
       "type": "stdio",
       "command": "node",
       "args": [
-        "/Users/rogan/Developer/sources/composable_mission_ready_platform/mcp/developer/dist/index.js",
+        "scripts/launch-mcp.mjs",
         "--profile=frontend"
       ],
-      "env": {
-        "MISSION_REPO_ROOT": "/Users/rogan/Developer/sources/composable_mission_ready_platform"
-      },
       "tools": [
         "list_components",
         "get_component_usage",
@@ -92,12 +80,9 @@
       "type": "stdio",
       "command": "node",
       "args": [
-        "/Users/rogan/Developer/sources/composable_mission_ready_platform/mcp/developer/dist/index.js",
+        "scripts/launch-mcp.mjs",
         "--profile=coding"
       ],
-      "env": {
-        "MISSION_REPO_ROOT": "/Users/rogan/Developer/sources/composable_mission_ready_platform"
-      },
       "tools": [
         "lsp_get_diagnostics",
         "lsp_inspect_symbol",
@@ -121,12 +106,9 @@
       "type": "stdio",
       "command": "node",
       "args": [
-        "/Users/rogan/Developer/sources/composable_mission_ready_platform/mcp/developer/dist/index.js",
+        "scripts/launch-mcp.mjs",
         "--profile=git"
       ],
-      "env": {
-        "MISSION_REPO_ROOT": "/Users/rogan/Developer/sources/composable_mission_ready_platform"
-      },
       "tools": [
         "git_status",
         "git_changed_files",
@@ -144,12 +126,9 @@
       "type": "stdio",
       "command": "node",
       "args": [
-        "/Users/rogan/Developer/sources/composable_mission_ready_platform/mcp/developer/dist/index.js",
+        "scripts/launch-mcp.mjs",
         "--profile=fws"
       ],
-      "env": {
-        "MISSION_REPO_ROOT": "/Users/rogan/Developer/sources/composable_mission_ready_platform"
-      },
       "tools": [
         "fws_analyze_source",
         "fws_analyze_workspace",

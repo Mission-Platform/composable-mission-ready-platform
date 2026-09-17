@@ -50,7 +50,7 @@ Code in `packages/` must never import from `apps/`. The dependency flow is stric
 
 ### Asset Discovery & Anti-Invention Policy
 
-Before writing any new code, assistants must inspect existing monorepo assets using MCP tools (`list_components`, `get_component_usage`, `find_symbol`, `list_symbols`) and filesystem inspection. Inventing duplicate components, custom color hexes/spacings, or redundant utility functions is strictly prohibited:
+Before writing any new code, assistants must inspect existing monorepo assets using MCP tools (`list_components`, `get_component_usage`, `lsp_find_symbol`, `lsp_list_symbols`) and filesystem inspection. Inventing duplicate components, custom color hexes/spacings, or redundant utility functions is strictly prohibited:
 
 1. **Zero Redundant Primitives**: Never invent custom buttons, modals, dropdowns, or tooltips; reuse `@mission-platform/components`.
 2. **Design Tokens First**: Never hardcode colors, spacing, radii, or shadows; always reference `--mp-*` CSS custom properties from `@mission-platform/tokens`.

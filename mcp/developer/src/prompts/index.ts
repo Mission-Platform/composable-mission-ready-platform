@@ -141,7 +141,7 @@ export function registerPrompts(server: McpServer): void {
     },
     (args) =>
       userMessage(
-        `${guideBody('security-analysis' as GuideId)}\n\n---\nTask: Perform a comprehensive security audit${args.path ? ` under \`${args.path}\`` : ''}. Run security_scan_secrets, security_analyze_code, security_audit_dependencies, security_audit_supply_chain, and security_collect_compliance_evidence. Report all identified findings categorized by severity, with OWASP 2025 Top 10, CWE Top 25, and ISO 27001 mappings, code snippets, and remediation instructions. Do not bypass or downplay any critical or high findings.`,
+        `${guideBody('security-analysis' as GuideId)}\n\n---\nTask: Perform a comprehensive security audit${args.path ? ` under \`${args.path}\`` : ''}${args.staged ? ' on staged git changes only' : ''}${args.severityThreshold ? ` filtered to minimum severity "${args.severityThreshold}"` : ''}. Run security_scan_secrets, security_analyze_code, security_audit_dependencies, security_audit_supply_chain, and security_collect_compliance_evidence. Report all identified findings categorized by severity, with OWASP 2025 Top 10, CWE Top 25, and ISO 27001 mappings, code snippets, and remediation instructions. Do not bypass or downplay any critical or high findings.`,
       ),
   );
 

@@ -42,13 +42,20 @@ describe('missionTypeScriptPlugin rules via ESLint flat config', () => {
     assert.equal(satisfiesWarning, undefined, 'Did not expect prefer-satisfies warning on satisfies or as const');
   });
 
-  it('no-unconstrained-generics flags unconstrained type parameters', async () => {
-    const code = 'function identity<T>(val: T): T { return val; }\n';
+  it('no-unconstrained-generics flags unconstrained type parameters including extends unknown and extends any', async () => {
+    const code = `
+      function f1<T>(val: T): T { return val; }
+      function f2<T extends unknown>(val: T): T { return val; }
+      function f3<T extends any>(val: T): T { return val; }
+    `;
     const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
     assert.ok(result);
-    const genericWarning = result.messages.find((m) => m.ruleId === '@typescript-eslint/no-unconstrained-generics');
-    assert.ok(genericWarning, 'Expected @typescript-eslint/no-unconstrained-generics warning');
-    assert.match(genericWarning.message, /must have an "extends" constraint/);
+    const genericWarnings = result.messages.filter((m) => m.ruleId === '@typescript-eslint/no-unconstrained-generics');
+    assert.equal(
+      genericWarnings.length,
+      3,
+      'Expected 3 unconstrained generic warnings for T, T extends unknown, and T extends any',
+    );
   });
 
   it('no-unconstrained-generics passes constrained generics', async () => {
@@ -68,5 +75,17 @@ describe('missionTypeScriptPlugin rules via ESLint flat config', () => {
     assert.ok(result);
     const unknownWarning = result.messages.find((m) => m.ruleId === '@typescript-eslint/no-implicit-unknown');
     assert.ok(unknownWarning, 'Expected @typescript-eslint/no-implicit-unknown warning');
+  });
+
+  it('no-implicit-unknown flags nested unknown in exported function return type such as Promise<unknown>', async () => {
+    const code = `
+      export async function fetchRaw(): Promise<unknown> { return "raw"; }
+      export function parseInput(x: Promise<unknown>): string { return "ok"; }
+      function internalHelper(): Promise<unknown> { return Promise.resolve(null); }
+    `;
+    const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+    assert.ok(result);
+    const unknownWarnings = result.messages.filter((m) => m.ruleId === '@typescript-eslint/no-implicit-unknown');
+    assert.equal(unknownWarnings.length, 1, 'Expected only exported function return type to be reported');
   });
 });

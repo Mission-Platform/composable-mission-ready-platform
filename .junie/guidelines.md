@@ -24,7 +24,7 @@ Package manager: **pnpm** with workspaces.
 
 Before authoring any new code, assistants must inspect existing monorepo assets to eliminate invented code and maximize reuse:
 
-1. **Inspect Before Authoring**: Query MCP tools (`list_components`, `get_component_usage`, `find_symbol`, `list_symbols`) and inspect `packages/` before creating new files or controls.
+1. **Inspect Before Authoring**: Query MCP tools (`list_components`, `get_component_usage`, `lsp_find_symbol`, `lsp_list_symbols`) and inspect `packages/` before creating new files or controls.
 2. **Zero Redundant Primitives**: Never invent custom buttons, modals, dropdowns, or tooltips; reuse `@mission-platform/components`.
 3. **Design Tokens First**: Never hardcode colors, spacing, radii, or shadows; always reference `--mp-*` CSS custom properties from `@mission-platform/tokens`.
 4. **Shared Utilities**: Search `packages/` before writing custom helper routines for data transformation, math, dates, or strings.
@@ -141,11 +141,11 @@ Built on **vue-i18n v11** in composition (non-legacy) mode.
 
 ### Package-level locale modules
 
-Each package that contains translatable strings exports a **locale module** — a plain `MpLocaleModule` object keyed by locale code:
+Each package that contains translatable strings exports a **locale module** — a plain `MpLocaleModule` object keyed by locale code, backed by compiled YAML message catalogs:
 
 ```
 src/locales/
-├── en.ts        # English strings
+├── en.yaml      # English strings in YAML format
 └── index.ts     # exports: { locales: MpLocaleModule }
 ```
 
@@ -154,7 +154,8 @@ The components package (`@mission-platform/components`) exports its module via t
 ```ts
 // packages/components/src/locales/index.ts
 import type { MpLocaleModule } from "@mission-platform/i18n";
-import { en } from "./en";
+import en from "./en.yaml";
+
 export const locales: MpLocaleModule = { en };
 ```
 
@@ -179,10 +180,10 @@ app.use(
 
 ### Adding a new locale to a package
 
-1. Create `src/locales/fr.ts` (or any locale code) with the translated strings.
+1. Create `src/locales/fr.yaml` (or any locale code) with the translated strings in YAML format.
 2. Import it in `src/locales/index.ts` and add it to the `locales` object:
    ```ts
-   import { fr } from "./fr";
+   import fr from "./fr.yaml";
    export const locales: MpLocaleModule = { en, fr };
    ```
 3. Consumers include the module in their `createMpI18n({ modules: [uiLocales] })` call — no other changes needed.

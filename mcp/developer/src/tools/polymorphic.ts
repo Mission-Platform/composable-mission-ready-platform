@@ -108,7 +108,7 @@ type WorkspaceEntityFactory = (
   name: string,
   description: string,
   args: ScaffoldInput,
-) => { group: WorkspaceGroup; files: ScaffoldFile[] };
+) => { group: WorkspaceGroup; files: Record<string, string> };
 
 const WORKSPACE_ENTITY_FACTORIES: Record<'package' | 'app' | 'worker' | 'crate', WorkspaceEntityFactory> = {
   package: (name, description, args) => ({

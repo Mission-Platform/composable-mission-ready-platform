@@ -60,6 +60,8 @@ import {
   collectComplianceEvidence,
   formatComplianceMarkdown,
   scanSecrets,
+  type ComplianceEvidenceReport,
+  type SecurityFinding,
   type SecurityFindingSeverity,
 } from '@mission-platform/mcp-shared/security';
 import { z } from 'zod';
@@ -452,7 +454,7 @@ export type { McpProfileOptions } from './profiles.ts';
 /**
  * Format standard-specific slice of a compliance evidence report.
  */
-function formatComplianceStandardReport(report: ComplianceReport, standard: string) {
+function formatComplianceStandardReport(report: ComplianceEvidenceReport, standard: string) {
   switch (standard) {
     case 'iso-27001': {
       return {
@@ -470,14 +472,14 @@ function formatComplianceStandardReport(report: ComplianceReport, standard: stri
       return {
         metadata: report.metadata,
         scorecard: report.owaspScorecard,
-        findings: report.findings.filter((f) => Boolean(f.owasp)),
+        findings: report.findings.filter((f: SecurityFinding) => Boolean(f.owasp)),
       };
     }
     case 'cwe-top25': {
       return {
         metadata: report.metadata,
         scorecard: report.cweScorecard,
-        findings: report.findings.filter((f) => Boolean(f.cwe)),
+        findings: report.findings.filter((f: SecurityFinding) => Boolean(f.cwe)),
       };
     }
     default: {
@@ -2621,6 +2623,14 @@ export function registerTools(server: McpServer, options: McpProfileOptions = {}
       try {
         if (args.staged) {
           const diffResult = readGitDiff({ staged: true, path: args.path });
+          if (!diffResult.success) {
+            throw new Error(diffResult.message ?? 'Git diff command failed.');
+          }
+          if (diffResult.outputTruncated) {
+            throw new Error(
+              'Staged git diff was truncated due to output buffer limits; unable to guarantee complete secret scanning.',
+            );
+          }
           return json(
             scanSecrets({
               content: diffResult.stdout,

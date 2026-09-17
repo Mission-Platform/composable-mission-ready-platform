@@ -56,7 +56,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "DOM_XSS_INNER_HTML",
     title: "DOM XSS: Direct HTML assignment without sanitization",
     severity: "high",
-    owasp: "A03:2025-Injection",
+    owasp: "A05:2025-Injection",
     cwe: "CWE-79",
     isoControl: "A.8.28",
     pattern:
@@ -70,7 +70,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "DOM_XSS_DANGEROUSLY_SET",
     title: "DOM XSS: dangerouslySetInnerHTML without sanitization",
     severity: "high",
-    owasp: "A03:2025-Injection",
+    owasp: "A05:2025-Injection",
     cwe: "CWE-79",
     isoControl: "A.8.28",
     pattern:
@@ -85,7 +85,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "DOM_XSS_V_HTML",
     title: "DOM XSS: v-html directive without sanitization",
     severity: "high",
-    owasp: "A03:2025-Injection",
+    owasp: "A05:2025-Injection",
     cwe: "CWE-79",
     isoControl: "A.8.28",
     pattern: /v-html=["'](?!.*(?:DOMPurify\.sanitize|sanitize\())([^"']+)["']/g,
@@ -99,7 +99,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "UNSAFE_EVAL",
     title: "Unsafe Execution: Use of eval()",
     severity: "critical",
-    owasp: "A03:2025-Injection",
+    owasp: "A05:2025-Injection",
     cwe: "CWE-95",
     isoControl: "A.8.28",
     pattern:
@@ -111,7 +111,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "UNSAFE_FUNCTION_CONSTRUCTOR",
     title: "Unsafe Execution: Dynamic Function constructor",
     severity: "high",
-    owasp: "A03:2025-Injection",
+    owasp: "A05:2025-Injection",
     cwe: "CWE-94",
     isoControl: "A.8.28",
     pattern: /\bnew\s+Function\s*\(/g,
@@ -122,7 +122,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "UNSAFE_TIMER_STRING",
     title: "Unsafe Timer: String argument passed to setTimeout or setInterval",
     severity: "medium",
-    owasp: "A03:2025-Injection",
+    owasp: "A05:2025-Injection",
     cwe: "CWE-94",
     isoControl: "A.8.28",
     pattern: /\b(?:setTimeout|setInterval)\s*\(\s*["'`][^"'`]+["'`]/g,
@@ -134,7 +134,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     title:
       "Command Injection: Dynamic OS command execution with template literals or concatenation",
     severity: "critical",
-    owasp: "A03:2025-Injection",
+    owasp: "A05:2025-Injection",
     cwe: "CWE-78",
     isoControl: "A.8.28",
     pattern:
@@ -148,7 +148,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "SQL_INJECTION",
     title: "SQL Injection: Dynamic query string concatenation",
     severity: "critical",
-    owasp: "A03:2025-Injection",
+    owasp: "A05:2025-Injection",
     cwe: "CWE-89",
     isoControl: "A.8.28",
     pattern:
@@ -186,7 +186,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "SSRF_UNVALIDATED_FETCH",
     title: "SSRF Risk: Dynamic unvalidated URL concatenation in HTTP request",
     severity: "medium",
-    owasp: "A10:2025-Server-Side Request Forgery",
+    owasp: "A01:2025-Broken Access Control",
     cwe: "CWE-918",
     isoControl: "A.8.28",
     pattern:
@@ -199,7 +199,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     title:
       "ReDoS: Nested quantifier in regular expression causing catastrophic backtracking",
     severity: "medium",
-    owasp: "A04:2025-Insecure Design",
+    owasp: "A10:2025-Mishandling of Exceptional Conditions",
     cwe: "CWE-1333",
     isoControl: "A.8.28",
     pattern:
@@ -216,7 +216,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     title:
       "Insecure Randomness: Math.random() used in security or cryptographic context",
     severity: "medium",
-    owasp: "A02:2025-Cryptographic Failures",
+    owasp: "A04:2025-Cryptographic Failures",
     cwe: "CWE-330",
     isoControl: "A.8.28",
     pattern:
@@ -228,7 +228,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "INSECURE_CRYPTO_HASH",
     title: "Insecure Cryptography: Broken hash algorithm (MD5 or SHA1)",
     severity: "high",
-    owasp: "A02:2025-Cryptographic Failures",
+    owasp: "A04:2025-Cryptographic Failures",
     cwe: "CWE-327",
     isoControl: "A.8.28",
     pattern: /\bcrypto\.createHash\s*\(\s*["'](?:md5|sha1)["']\s*\)/gi,
@@ -239,7 +239,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "SENSITIVE_DATA_LOGGING",
     title: "Sensitive Data Exposure: Logging credentials or secrets",
     severity: "medium",
-    owasp: "A09:2025-Security Logging and Monitoring Failures",
+    owasp: "A09:2025-Security Logging & Alerting Failures",
     cwe: "CWE-532",
     isoControl: "A.8.12",
     pattern:
@@ -255,7 +255,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "INSECURE_TLS_CONFIG",
     title: "Security Misconfiguration: Disabled TLS certificate validation",
     severity: "critical",
-    owasp: "A05:2025-Security Misconfiguration",
+    owasp: "A02:2025-Security Misconfiguration",
     cwe: "CWE-295",
     isoControl: "A.8.9",
     pattern: /\brejectUnauthorized\s*:\s*false\b/g,
@@ -266,7 +266,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
     id: "OVERLY_PERMISSIVE_CORS",
     title: "Security Misconfiguration: Wildcard CORS origin with credentials",
     severity: "medium",
-    owasp: "A05:2025-Security Misconfiguration",
+    owasp: "A02:2025-Security Misconfiguration",
     cwe: "CWE-16",
     isoControl: "A.8.9",
     pattern:
@@ -280,7 +280,7 @@ const VULNERABILITY_RULES: readonly CodeVulnerabilityRule[] = [
  * Match a static code vulnerability rule against a single line of text.
  */
 function matchVulnerabilityRule(
-  rule: VulnerabilityRule,
+  rule: CodeVulnerabilityRule,
   lineText: string,
   lineIdx: number,
   content: string,
@@ -379,15 +379,22 @@ function processCodeDirectoryEntry(
   startDir: string,
   maxFiles: number,
   collected: string[],
+  state: { skippedCount: number },
 ): void {
   if (entry.isSymbolicLink()) return;
   const fullPath = join(startDir, entry.name);
   if (entry.isDirectory()) {
     if (!IGNORED_DIRS.has(entry.name)) {
-      collectCodeFiles(fullPath, maxFiles, collected);
+      collectCodeFiles(fullPath, maxFiles, collected, state);
     }
-  } else if (isAnalyzableFile(entry)) {
-    collected.push(fullPath);
+    return;
+  }
+  if (isAnalyzableFile(entry)) {
+    if (collected.length < maxFiles) {
+      collected.push(fullPath);
+    } else {
+      state.skippedCount += 1;
+    }
   }
 }
 
@@ -398,22 +405,24 @@ function collectCodeFiles(
   startDir: string,
   maxFiles: number,
   collected: string[] = [],
-): string[] {
-  if (collected.length >= maxFiles) {
-    return collected;
-  }
-
+  state = { skippedCount: 0 },
+): { files: string[]; skippedCount: number } {
   try {
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
-      if (collected.length >= maxFiles) break;
-      processCodeDirectoryEntry(entry, startDir, maxFiles, collected);
+      processCodeDirectoryEntry(entry, startDir, maxFiles, collected, state);
     }
   } catch {
-    return collected;
+    return { files: collected, skippedCount: state.skippedCount };
   }
 
-  return collected;
+  return { files: collected, skippedCount: state.skippedCount };
+}
+
+interface SingleFileAnalysisResult {
+  readonly findings: SecurityFinding[];
+  readonly status: "scanned" | "oversized" | "unreadable";
+  readonly error?: string;
 }
 
 /**
@@ -423,15 +432,25 @@ function analyzeSingleFile(
   filePath: string,
   repoRoot: string,
   severityThreshold?: SecurityFinding["severity"],
-): SecurityFinding[] {
+): SingleFileAnalysisResult {
   try {
     const stat = lstatSync(filePath);
-    if (stat.size > MAX_SCAN_BYTES) return [];
+    if (stat.size > MAX_SCAN_BYTES) {
+      return { findings: [], status: "oversized" };
+    }
     const content = readFileSync(filePath, "utf8");
     const relativePath = relative(repoRoot, filePath).replaceAll("\\", "/");
-    return scanContent(content, relativePath, severityThreshold);
-  } catch {
-    return [];
+    return {
+      findings: scanContent(content, relativePath, severityThreshold),
+      status: "scanned",
+    };
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    return {
+      findings: [],
+      status: "unreadable",
+      error: `${relative(repoRoot, filePath)}: ${errorMsg}`,
+    };
   }
 }
 
@@ -457,6 +476,56 @@ function analyzeInlineCode(
 }
 
 /**
+ * Accumulate individual file analysis outcome into scanning statistics.
+ */
+function accumulateAnalysisOutcome(
+  result: SingleFileAnalysisResult,
+  stats: {
+    findings: SecurityFinding[];
+    scannedCount: number;
+    oversizedCount: number;
+    unreadableCount: number;
+    errors: string[];
+  },
+): void {
+  stats.findings.push(...result.findings);
+  if (result.status === "scanned") {
+    stats.scannedCount += 1;
+    return;
+  }
+  if (result.status === "oversized") {
+    stats.oversizedCount += 1;
+    return;
+  }
+  stats.unreadableCount += 1;
+  if (result.error) stats.errors.push(result.error);
+}
+
+/**
+ * Scan directory target path for static code vulnerabilities.
+ */
+function scanDirectoryTargetPath(
+  targetPath: string,
+  repoRoot: string,
+  maxFiles: number,
+  severityThreshold?: SecurityFinding["severity"],
+) {
+  const { files, skippedCount } = collectCodeFiles(targetPath, maxFiles);
+  const stats = {
+    findings: [] as SecurityFinding[],
+    scannedCount: 0,
+    oversizedCount: 0,
+    unreadableCount: 0,
+    errors: [] as string[],
+  };
+  for (const file of files) {
+    const outcome = analyzeSingleFile(file, repoRoot, severityThreshold);
+    accumulateAnalysisOutcome(outcome, stats);
+  }
+  return { ...stats, skippedCount };
+}
+
+/**
  * Scan target filesystem path (file or directory) for static code vulnerabilities.
  */
 function scanTargetPath(
@@ -464,21 +533,31 @@ function scanTargetPath(
   repoRoot: string,
   maxFiles: number,
   severityThreshold?: SecurityFinding["severity"],
-): { findings: SecurityFinding[]; scannedCount: number } {
+) {
   const stat = lstatSync(targetPath);
   if (stat.isFile()) {
-    const findings = analyzeSingleFile(targetPath, repoRoot, severityThreshold);
-    return { findings, scannedCount: 1 };
+    const result = analyzeSingleFile(targetPath, repoRoot, severityThreshold);
+    const stats = {
+      findings: [] as SecurityFinding[],
+      scannedCount: 0,
+      oversizedCount: 0,
+      unreadableCount: 0,
+      errors: [] as string[],
+    };
+    accumulateAnalysisOutcome(result, stats);
+    return { ...stats, skippedCount: 0 };
   }
   if (!stat.isDirectory()) {
-    return { findings: [], scannedCount: 0 };
+    return {
+      findings: [],
+      scannedCount: 0,
+      oversizedCount: 0,
+      unreadableCount: 0,
+      skippedCount: 0,
+      errors: [],
+    };
   }
-  const files = collectCodeFiles(targetPath, maxFiles);
-  const findings: SecurityFinding[] = [];
-  for (const file of files) {
-    findings.push(...analyzeSingleFile(file, repoRoot, severityThreshold));
-  }
-  return { findings, scannedCount: files.length };
+  return scanDirectoryTargetPath(targetPath, repoRoot, maxFiles, severityThreshold);
 }
 
 /**
@@ -497,17 +576,28 @@ export function analyzeCode(
     ? resolveRepoPath(options.path, "code analysis path")
     : repoRoot;
   const maxFiles = options.maxFiles ?? DEFAULT_MAX_FILES;
-  const { findings, scannedCount } = scanTargetPath(
+  const targetResult = scanTargetPath(
     targetPath,
     repoRoot,
     maxFiles,
     options.severityThreshold,
   );
 
+  const incomplete =
+    targetResult.oversizedCount > 0 ||
+    targetResult.unreadableCount > 0 ||
+    targetResult.skippedCount > 0 ||
+    targetResult.errors.length > 0;
+
   return {
-    findings,
-    scannedFiles: scannedCount,
+    findings: targetResult.findings,
+    scannedFiles: targetResult.scannedCount,
     durationMs: Date.now() - startTime,
-    clean: findings.length === 0,
+    clean: targetResult.findings.length === 0 && !incomplete,
+    incomplete: incomplete ? true : undefined,
+    skippedFiles: targetResult.skippedCount > 0 ? targetResult.skippedCount : undefined,
+    oversizedFiles: targetResult.oversizedCount > 0 ? targetResult.oversizedCount : undefined,
+    unreadableFiles: targetResult.unreadableCount > 0 ? targetResult.unreadableCount : undefined,
+    errors: targetResult.errors.length > 0 ? targetResult.errors : undefined,
   };
 }

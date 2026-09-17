@@ -4,7 +4,7 @@
  * Allows consumers to discover publishable packages, learn which export conditions
  * and peer dependencies are required for their framework, and generate install commands.
  */
-import { findMember, listGroup, type WorkspaceMember } from "./scanner.ts";
+import { findMember, listGroup, readMemberDetails, type WorkspaceMember } from "./scanner.ts";
 
 export type ConsumerPackageCategory =
   "all" | "ui" | "core" | "integrations" | "content" | "tooling";
@@ -193,7 +193,7 @@ export function getConsumerPackageInfo(
     : `@mission-platform/${packageName}`;
 
   const member = findMember("packages", normalized);
-  if (!member) {
+  if (!member || member.private) {
     return undefined;
   }
 
@@ -204,6 +204,8 @@ export function getConsumerPackageInfo(
 
   const name = member.name;
   const quickStartSnippet = resolveQuickStartSnippet(name, framework);
+  const details = readMemberDetails(member);
+  const declaredPeerDeps = details.manifest.peerDependencies ?? {};
 
   return {
     name,
@@ -220,7 +222,7 @@ export function getConsumerPackageInfo(
     },
     peerDependencies: member.peerDependencies.reduce<Record<string, string>>(
       (acc, dep) => {
-        acc[dep] = "latest";
+        acc[dep] = declaredPeerDeps[dep] ?? "latest";
         return acc;
       },
       {},

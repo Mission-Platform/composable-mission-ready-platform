@@ -10,7 +10,7 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, lstatSync, readdirSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 import { findRepoRoot, resolveRepoPath } from '@mission-platform/mcp-shared/repo/paths';
@@ -308,6 +308,14 @@ function formatAffectedSummary(
  */
 export function getAffectedPackages(options: { ref?: string; path?: string } = {}): AffectedPackagesResult {
   const changedReport = readGitChangedFiles(options);
+  if (!changedReport.success) {
+    throw new Error(changedReport.message ?? 'Failed to read git changed files.');
+  }
+  if (changedReport.outputTruncated) {
+    throw new Error(
+      'Git changed files list was truncated due to buffer limits; unable to reliably determine affected packages.',
+    );
+  }
   const changedFiles = changedReport.files.map((file) => file.path);
   const members = listAll();
 
@@ -463,7 +471,12 @@ function buildTestRunArgs(
   testNamePattern?: string,
 ): { command: string; args: string[] } {
   if (runner === 'node:test') {
-    return { command: 'node', args: ['--test', relativePath] };
+    const nodeArgs = ['--test'];
+    if (testNamePattern) {
+      nodeArgs.push(`--test-name-pattern=${testNamePattern}`);
+    }
+    nodeArgs.push(relativePath);
+    return { command: 'node', args: nodeArgs };
   }
   const vitestArgs = ['exec', 'vitest', 'run', relativePath];
   if (testNamePattern) {
@@ -597,11 +610,11 @@ function tryReadDir(dir: string): string[] {
 }
 
 /**
- * Safely stat path, returning undefined on error.
+ * Safely stat path using lstatSync to detect symbolic links, returning undefined on error.
  */
-function tryStat(fullPath: string): ReturnType<typeof statSync> | undefined {
+function tryStat(fullPath: string): ReturnType<typeof lstatSync> | undefined {
   try {
-    return statSync(fullPath);
+    return lstatSync(fullPath);
   } catch {
     return undefined;
   }
@@ -626,7 +639,7 @@ function handleStoryFileEntry(
  * Dispatch scan for a directory or story file.
  */
 function dispatchScanStat(
-  stat: ReturnType<typeof statSync>,
+  stat: ReturnType<typeof lstatSync> | undefined,
   fullPath: string,
   entry: string,
   repoRoot: string,
@@ -636,6 +649,7 @@ function dispatchScanStat(
   filterComponent?: string,
   currentDepth = 0,
 ): void {
+  if (!stat || stat.isSymbolicLink()) return;
   if (stat.isDirectory()) {
     scanStoriesDirectory(fullPath, repoRoot, stories, limit, filterPackage, filterComponent, currentDepth + 1);
     return;

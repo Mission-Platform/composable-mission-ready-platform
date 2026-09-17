@@ -60,16 +60,20 @@ function getGitMetadata(repoRoot: string): {
 }
 
 /**
- * Evaluate ISO 27001 control compliance status based on findings severity.
+ * Evaluate ISO 27001 control compliance status based on findings severity and evidence completeness.
  */
 function evaluateControlStatus(
   findings: readonly SecurityFinding[],
+  isIncomplete = false,
 ): ComplianceControlStatus {
   const hasCriticalOrHigh = findings.some(
     (f) => f.severity === "critical" || f.severity === "high",
   );
   if (hasCriticalOrHigh) {
     return "non-compliant";
+  }
+  if (isIncomplete) {
+    return "needs-review";
   }
   const hasMediumOrLow = findings.some(
     (f) => f.severity === "medium" || f.severity === "low",
@@ -100,7 +104,7 @@ function computeControlMetrics(
     "A.8.25": { lifecycleScriptsFound: supplyStats.lifecycleScriptsFound },
     "A.8.9": { duplicatePackagesFound: supplyStats.duplicatePackagesFound },
     "A.8.32": {
-      workingTreeClean: gitMeta.cleanTree ?? true,
+      workingTreeClean: gitMeta.cleanTree,
       currentBranch: gitMeta.branch ?? "unknown",
     },
   };
@@ -115,11 +119,15 @@ function buildControlNotes(
   controlId: string,
   status: ComplianceControlStatus,
   findingsCount: number,
+  isIncomplete = false,
 ): string {
   if (status === "compliant") {
     return `No security violations or vulnerabilities detected for ${controlId}. Control satisfies automated audit requirements.`;
   }
   if (status === "needs-review") {
+    if (isIncomplete && findingsCount === 0) {
+      return `Audit evidence for ${controlId} is incomplete due to unreadable files, execution errors, or unknown git state. Verification required.`;
+    }
     return `${findingsCount} moderate or low findings require verification or planned remediation.`;
   }
   return `${findingsCount} critical or high severity vulnerabilities violate control ${controlId} and require immediate remediation.`;
@@ -137,8 +145,9 @@ function buildSingleIsoEvidence(
   codeScannedFiles: number,
   supplyStats: { lifecycleScriptsFound: number; duplicatePackagesFound: number },
   gitMeta: { cleanTree?: boolean; branch?: string },
+  isIncomplete = false,
 ): IsoControlEvidence {
-  const status = evaluateControlStatus(findings);
+  const status = evaluateControlStatus(findings, isIncomplete);
   const metrics = computeControlMetrics(
     controlId,
     findings.length,
@@ -148,7 +157,7 @@ function buildSingleIsoEvidence(
     supplyStats,
     gitMeta,
   );
-  const notes = buildControlNotes(controlId, status, findings.length);
+  const notes = buildControlNotes(controlId, status, findings.length, isIncomplete);
 
   return {
     controlId,
@@ -172,6 +181,7 @@ function buildIsoEvidenceList(
   codeScannedFiles: number,
   supplyStats: { lifecycleScriptsFound: number; duplicatePackagesFound: number },
   gitMeta: { cleanTree?: boolean; branch?: string },
+  incompleteControls: Record<string, boolean> = {},
 ): IsoControlEvidence[] {
   const controlFindingsMap = new Map<string, SecurityFinding[]>();
   for (const controlId of Object.keys(ISO_27001_CONTROLS)) {
@@ -187,6 +197,7 @@ function buildIsoEvidenceList(
 
   return Object.entries(ISO_27001_CONTROLS).map(([controlId, def]) => {
     const findings = controlFindingsMap.get(controlId) ?? [];
+    const isIncomplete = incompleteControls[controlId] === true;
     return buildSingleIsoEvidence(
       controlId,
       def,
@@ -196,6 +207,7 @@ function buildIsoEvidenceList(
       codeScannedFiles,
       supplyStats,
       gitMeta,
+      isIncomplete,
     );
   });
 }
@@ -288,6 +300,13 @@ export function collectComplianceEvidence(
     ...supplyChainResult.findings,
   ];
 
+  const incompleteControls: Record<string, boolean> = {
+    "A.8.8": depResult.incomplete === true,
+    "A.8.12": secretsResult.incomplete === true,
+    "A.8.28": codeResult.incomplete === true,
+    "A.8.32": gitMeta.cleanTree === undefined,
+  };
+
   const isoControls = buildIsoEvidenceList(
     allFindings,
     depResult.scannedFiles,
@@ -295,6 +314,7 @@ export function collectComplianceEvidence(
     codeResult.scannedFiles,
     supplyChainResult.stats,
     gitMeta,
+    incompleteControls,
   );
 
   const owaspScorecard = buildOwaspScorecard(allFindings);
@@ -435,7 +455,7 @@ export function formatComplianceMarkdown(
   const lines: string[] = [
     "# Security Compliance & Evidence Report",
     "",
-    `**Generated**: ${metadata.timestamp} | **Branch**: \`${metadata.branch ?? "unknown"}\` | **Commit**: \`${metadata.commitSha?.slice(0, 8) ?? "unknown"}\` | **Clean Tree**: ${metadata.cleanTree ? "Yes" : "No"}`,
+    `**Generated**: ${metadata.timestamp} | **Branch**: \`${metadata.branch ?? "unknown"}\` | **Commit**: \`${metadata.commitSha?.slice(0, 8) ?? "unknown"}\` | **Clean Tree**: ${metadata.cleanTree !== undefined ? (metadata.cleanTree ? "Yes" : "No") : "Unknown"}`,
     "",
     "### Executive Compliance Scorecard",
     `- **ISO 27001 Compliance**: ${scorecard.iso27001ComplianceScore}% (${scorecard.compliantControlsCount}/${scorecard.totalControlsEvaluated} controls compliant)`,

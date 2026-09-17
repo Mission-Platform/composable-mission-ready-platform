@@ -1,8 +1,8 @@
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, lstatSync } from "node:fs";
 import { join, relative } from "node:path";
 
-import { findRepoRoot } from "../repo/paths.ts";
+import { findRepoRoot, resolveRepoPath } from "../repo/paths.ts";
 import { listAll, type PackageManifest, readJson } from "../repo/scanner.ts";
 
 import {
@@ -59,7 +59,7 @@ function checkUnpinnedSpec(
       snippet: `"${depName}": "${spec}"`,
       remediation:
         "Pin to a specific version, semver range (e.g. ^1.2.3), or catalog reference.",
-      owasp: "A06:2025-Vulnerable and Outdated Components",
+      owasp: "A03:2025-Software Supply Chain Failures",
       cwe: "CWE-1104",
       isoControl: "A.8.8",
     };
@@ -99,7 +99,7 @@ function buildInsecureHttpFinding(
     snippet: `"${depName}": "${spec}"`,
     remediation:
       "Use secure HTTPS (https://) or official package registries instead of unencrypted HTTP.",
-    owasp: "A08:2025-Software and Data Integrity Failures",
+    owasp: "A03:2025-Software Supply Chain Failures",
     cwe: "CWE-319",
     isoControl: "A.8.20",
   };
@@ -122,7 +122,7 @@ function buildInsecureGitFinding(
     filePath: relativeFilePath,
     snippet: `"${depName}": "${spec}"`,
     remediation: "Use Git over SSH (git@...) or Git over HTTPS (git+https://).",
-    owasp: "A08:2025-Software and Data Integrity Failures",
+    owasp: "A03:2025-Software Supply Chain Failures",
     cwe: "CWE-319",
     isoControl: "A.8.20",
   };
@@ -226,59 +226,78 @@ function scanSingleManifestPath(
 }
 
 /**
- * Scan workspace package.json manifests for security policy compliance.
+ * Scan workspace package.json manifests for security policy compliance within a scoped path.
  */
-function scanWorkspaceManifests(
+function scanScopedManifests(
+  targetPath: string,
   repoRoot: string,
   severityThreshold?: SecurityFinding["severity"],
 ): { findings: SecurityFinding[]; scannedFiles: number } {
   const findings: SecurityFinding[] = [];
   let scannedFiles = 0;
+  if (!existsSync(targetPath)) return { findings, scannedFiles };
 
-  const rootManifestPath = join(repoRoot, "package.json");
-  if (existsSync(rootManifestPath)) {
-    findings.push(
-      ...scanSingleManifestPath(rootManifestPath, repoRoot, severityThreshold),
-    );
+  const stat = lstatSync(targetPath);
+  if (stat.isFile()) {
+    if (targetPath.endsWith("package.json")) {
+      findings.push(...scanSingleManifestPath(targetPath, repoRoot, severityThreshold));
+      scannedFiles = 1;
+    }
+    return { findings, scannedFiles };
+  }
+
+  const directPkg = join(targetPath, "package.json");
+  if (existsSync(directPkg)) {
+    findings.push(...scanSingleManifestPath(directPkg, repoRoot, severityThreshold));
     scannedFiles += 1;
   }
 
   try {
     const members = listAll();
     for (const member of members) {
-      const memberPkgPath = join(member.dir, "package.json");
-      if (existsSync(memberPkgPath)) {
-        findings.push(
-          ...scanSingleManifestPath(memberPkgPath, repoRoot, severityThreshold),
-        );
-        scannedFiles += 1;
+      if (member.dir.startsWith(targetPath) && member.dir !== targetPath) {
+        const memberPkg = join(member.dir, "package.json");
+        if (existsSync(memberPkg)) {
+          findings.push(...scanSingleManifestPath(memberPkg, repoRoot, severityThreshold));
+          scannedFiles += 1;
+        }
       }
     }
   } catch {
-    // If workspace scanning fails, continue with root
+    // If workspace scanning fails, continue with collected
   }
 
   return { findings, scannedFiles };
 }
 
+interface PnpmAuditExecutionResult {
+  readonly stdout: string;
+  readonly error?: string;
+}
+
 /**
  * Execute pnpm audit subprocess and capture stdout.
  */
-function executePnpmAudit(repoRoot: string): string {
+function executePnpmAudit(repoRoot: string): PnpmAuditExecutionResult {
   try {
-    return execFileSync("pnpm", ["audit", "--json"], {
+    const stdout = execFileSync("pnpm", ["audit", "--json"], {
       cwd: repoRoot,
       encoding: "utf8",
       timeout: 30_000,
       maxBuffer: 10 * 1024 * 1024,
       stdio: ["ignore", "pipe", "pipe"],
     });
+    return { stdout };
   } catch (error: unknown) {
-    const execErr = error as { stdout?: string | Buffer };
-    if (!execErr.stdout) return "";
-    return typeof execErr.stdout === "string"
-      ? execErr.stdout
-      : execErr.stdout.toString("utf8");
+    const execErr = error as { stdout?: string | Buffer; message?: string };
+    const stdoutText = execErr.stdout
+      ? (typeof execErr.stdout === "string" ? execErr.stdout : execErr.stdout.toString("utf8"))
+      : "";
+    if (stdoutText.trim().startsWith("{")) {
+      return { stdout: stdoutText };
+    }
+    const errMessage = execErr.message ?? String(error);
+    return { stdout: "", error: `pnpm audit execution failed: ${errMessage}` };
   }
 }
 
@@ -350,7 +369,7 @@ function buildAdvisoryFinding(
     filePath: "pnpm-lock.yaml",
     snippet,
     remediation,
-    owasp: "A06:2025-Vulnerable and Outdated Components",
+    owasp: "A03:2025-Software Supply Chain Failures",
     cwe: "CWE-1104",
     isoControl: "A.8.8",
   };
@@ -377,17 +396,19 @@ function processSingleAdvisory(
  */
 function extractAuditAdvisories(
   stdoutText: string,
-): Record<string, PnpmAdvisory> | undefined {
+): { advisories?: Record<string, PnpmAdvisory>; error?: string } {
   try {
     const auditData = JSON.parse(stdoutText) as PnpmAuditOutput;
     const advisories = auditData?.advisories;
     if (advisories && typeof advisories === "object") {
-      return advisories;
+      return { advisories };
     }
-  } catch {
-    return undefined;
+    return { advisories: {} };
+  } catch (err) {
+    return {
+      error: `Failed to parse pnpm audit JSON: ${err instanceof Error ? err.message : String(err)}`,
+    };
   }
-  return undefined;
 }
 
 /**
@@ -411,10 +432,13 @@ function convertAdvisoriesToFindings(
 function parseAuditAdvisories(
   stdoutText: string,
   severityThreshold?: SecurityFinding["severity"],
-): SecurityFinding[] {
-  const advisories = extractAuditAdvisories(stdoutText);
-  if (!advisories) return [];
-  return convertAdvisoriesToFindings(advisories, severityThreshold);
+): { findings: SecurityFinding[]; error?: string } {
+  const result = extractAuditAdvisories(stdoutText);
+  if (result.error) return { findings: [], error: result.error };
+  const advisories = result.advisories ?? {};
+  return {
+    findings: convertAdvisoriesToFindings(advisories, severityThreshold),
+  };
 }
 
 /**
@@ -423,10 +447,19 @@ function parseAuditAdvisories(
 function runPnpmAuditCheck(
   repoRoot: string,
   severityThreshold?: SecurityFinding["severity"],
-): SecurityFinding[] {
-  const stdoutText = executePnpmAudit(repoRoot);
-  if (!stdoutText.trim()) return [];
-  return parseAuditAdvisories(stdoutText, severityThreshold);
+): { findings: SecurityFinding[]; errors: string[] } {
+  const auditExec = executePnpmAudit(repoRoot);
+  const errors: string[] = [];
+  if (auditExec.error) {
+    errors.push(auditExec.error);
+    return { findings: [], errors };
+  }
+  if (!auditExec.stdout.trim()) {
+    return { findings: [], errors };
+  }
+  const parsed = parseAuditAdvisories(auditExec.stdout, severityThreshold);
+  if (parsed.error) errors.push(parsed.error);
+  return { findings: parsed.findings, errors };
 }
 
 /**
@@ -437,26 +470,36 @@ export function auditDependencies(
 ): SecurityScanResult {
   const startTime = Date.now();
   const repoRoot = findRepoRoot();
+  const targetPath = options.path
+    ? resolveRepoPath(options.path, "dependency audit path")
+    : repoRoot;
   const findings: SecurityFinding[] = [];
+  const errors: string[] = [];
 
-  const manifestResult = scanWorkspaceManifests(
+  const manifestResult = scanScopedManifests(
+    targetPath,
     repoRoot,
     options.severityThreshold,
   );
   findings.push(...manifestResult.findings);
 
   if (options.runPnpmAudit !== false) {
-    const auditFindings = runPnpmAuditCheck(
+    const auditResult = runPnpmAuditCheck(
       repoRoot,
       options.severityThreshold,
     );
-    findings.push(...auditFindings);
+    findings.push(...auditResult.findings);
+    errors.push(...auditResult.errors);
   }
+
+  const incomplete = errors.length > 0;
 
   return {
     findings,
     scannedFiles: manifestResult.scannedFiles,
     durationMs: Date.now() - startTime,
-    clean: findings.length === 0,
+    clean: findings.length === 0 && !incomplete,
+    incomplete: incomplete ? true : undefined,
+    errors: errors.length > 0 ? errors : undefined,
   };
 }

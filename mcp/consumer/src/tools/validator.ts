@@ -83,16 +83,58 @@ const FRAMEWORK_DEPENDENCY_REQUIREMENTS: Record<
 };
 
 /**
+ * Strip single-line and multi-line comments from JavaScript/TypeScript source.
+ */
+function stripJsComments(source: string): string {
+  return source
+    .replaceAll(/\/\/[^\n]*$/gm, "")
+    .replaceAll(/\/\*[\s\S]*?\*\//g, "");
+}
+
+/**
+ * Extract conditions and customConditions array entries from stripped Vite configuration.
+ */
+function extractConfiguredConditions(viteConfig: string): Set<string> {
+  const stripped = stripJsComments(viteConfig);
+  const conditions = new Set<string>();
+  const conditionArrayRegex =
+    /\b(?:conditions|customConditions)\s*:\s*\[([^\]]*)\]/g;
+  let match: RegExpExecArray | null = conditionArrayRegex.exec(stripped);
+  while (match !== null) {
+    const arrayContent = match[1] || "";
+    const stringLiterals = arrayContent.match(/['"]([^'"]+)['"]/g) ?? [];
+    for (const lit of stringLiterals) {
+      conditions.add(lit.slice(1, -1));
+    }
+    match = conditionArrayRegex.exec(stripped);
+  }
+  return conditions;
+}
+
+/**
+ * Check whether a framework helper call is present in Vite configuration.
+ */
+function hasFrameworkHelper(
+  stripped: string,
+  framework: ConsumerFramework,
+): boolean {
+  const helperRegex = new RegExp(
+    String.raw`\b(?:frameworkResolveConditions|forgeResolveConditions)\s*\(\s*['"]${framework}['"]\s*\)`,
+  );
+  return helperRegex.test(stripped);
+}
+
+/**
  * Check for conflicting framework conditions in vite.config.ts.
  */
 function checkConflictingViteConditions(
-  viteConfig: string,
+  configuredConditions: ReadonlySet<string>,
   framework: ConsumerFramework,
   expectedCondition: string,
   checks: ValidationCheck[],
 ): void {
   for (const [otherFw, otherCond] of Object.entries(FRAMEWORK_CONDITIONS)) {
-    if (otherFw !== framework && viteConfig.includes(otherCond)) {
+    if (otherFw !== framework && configuredConditions.has(otherCond)) {
       checks.push({
         name: `Conflicting condition (${otherCond})`,
         category: "vite",
@@ -113,16 +155,13 @@ function validateViteConfig(
   expectedCondition: string,
   checks: ValidationCheck[],
 ): void {
-  const matchers = [
-    expectedCondition,
-    `frameworkResolveConditions("${framework}")`,
-    `frameworkResolveConditions('${framework}')`,
-    `framework: "${framework}"`,
-    `framework: '${framework}'`,
-  ];
-  const hasCondition = matchers.some((matcher) => viteConfig.includes(matcher));
+  const stripped = stripJsComments(viteConfig);
+  const configuredConditions = extractConfiguredConditions(viteConfig);
+  const hasExpectedCondition =
+    configuredConditions.has(expectedCondition) ||
+    hasFrameworkHelper(stripped, framework);
 
-  if (hasCondition) {
+  if (hasExpectedCondition) {
     checks.push({
       name: "Vite resolve condition",
       category: "vite",
@@ -140,7 +179,7 @@ function validateViteConfig(
   }
 
   checkConflictingViteConditions(
-    viteConfig,
+    configuredConditions,
     framework,
     expectedCondition,
     checks,

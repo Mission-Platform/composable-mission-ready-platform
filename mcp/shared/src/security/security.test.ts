@@ -222,13 +222,13 @@ test("code vulnerability scanner detects OWASP 2025 and CWE Top 25 injection, tr
   const commandInj = result.findings.find((f) => f.id === "COMMAND_INJECTION");
   assert.ok(commandInj);
   assert.equal(commandInj.cwe, "CWE-78");
-  assert.equal(commandInj.owasp, "A03:2025-Injection");
+  assert.equal(commandInj.owasp, "A05:2025-Injection");
   assert.equal(commandInj.isoControl, "A.8.28");
 
   const sqlInj = result.findings.find((f) => f.id === "SQL_INJECTION");
   assert.ok(sqlInj);
   assert.equal(sqlInj.cwe, "CWE-89");
-  assert.equal(sqlInj.owasp, "A03:2025-Injection");
+  assert.equal(sqlInj.owasp, "A05:2025-Injection");
 
   const pathTrav = result.findings.find((f) => f.id === "PATH_TRAVERSAL");
   assert.ok(pathTrav);
@@ -240,7 +240,7 @@ test("code vulnerability scanner detects OWASP 2025 and CWE Top 25 injection, tr
   );
   assert.ok(insecureCrypto);
   assert.equal(insecureCrypto.cwe, "CWE-327");
-  assert.equal(insecureCrypto.owasp, "A02:2025-Cryptographic Failures");
+  assert.equal(insecureCrypto.owasp, "A04:2025-Cryptographic Failures");
 
   const sensitiveLog = result.findings.find(
     (f) => f.id === "SENSITIVE_DATA_LOGGING",
@@ -249,7 +249,7 @@ test("code vulnerability scanner detects OWASP 2025 and CWE Top 25 injection, tr
   assert.equal(sensitiveLog.cwe, "CWE-532");
   assert.equal(
     sensitiveLog.owasp,
-    "A09:2025-Security Logging and Monitoring Failures",
+    "A09:2025-Security Logging & Alerting Failures",
   );
 
   const insecureTls = result.findings.find(
@@ -257,14 +257,14 @@ test("code vulnerability scanner detects OWASP 2025 and CWE Top 25 injection, tr
   );
   assert.ok(insecureTls);
   assert.equal(insecureTls.cwe, "CWE-295");
-  assert.equal(insecureTls.owasp, "A05:2025-Security Misconfiguration");
+  assert.equal(insecureTls.owasp, "A02:2025-Security Misconfiguration");
 
   const corsMisconfig = result.findings.find(
     (f) => f.id === "OVERLY_PERMISSIVE_CORS",
   );
   assert.ok(corsMisconfig);
   assert.equal(corsMisconfig.cwe, "CWE-16");
-  assert.equal(corsMisconfig.owasp, "A05:2025-Security Misconfiguration");
+  assert.equal(corsMisconfig.owasp, "A02:2025-Security Misconfiguration");
 });
 
 test("secret findings include OWASP 2025, CWE Top 25, and ISO 27001 metadata", () => {
@@ -275,7 +275,7 @@ test("secret findings include OWASP 2025, CWE Top 25, and ISO 27001 metadata", (
   assert.equal(finding?.cwe, "CWE-798");
   assert.equal(
     finding?.owasp,
-    "A07:2025-Identification and Authentication Failures",
+    "A07:2025-Authentication Failures",
   );
   assert.equal(finding?.isoControl, "A.8.12");
 });

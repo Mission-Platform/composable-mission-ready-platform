@@ -203,6 +203,30 @@ export const PROFILE_TOOLS: Record<Exclude<McpProfileName, 'full'>, readonly str
   ],
 };
 
+const KNOWN_PROFILES = new Set<string>([
+  'full',
+  'minimal',
+  'core',
+  'frontend',
+  'coding',
+  'lsp',
+  'security',
+  'git',
+  'fws',
+  '*',
+]);
+
+/**
+ * Validate requested profile names against known catalog.
+ */
+function validateRequestedProfiles(requestedProfiles: ReadonlySet<string>): void {
+  for (const profile of requestedProfiles) {
+    if (!KNOWN_PROFILES.has(profile)) {
+      throw new Error(`Unknown MCP profile: "${profile}". Valid profiles are: ${[...KNOWN_PROFILES].join(', ')}.`);
+    }
+  }
+}
+
 /**
  * Extract normalized profile names from comma-separated string or array.
  */
@@ -223,6 +247,7 @@ function extractRequestedProfiles(options: McpProfileOptions): Set<string> {
  * Collect tool names allowed by the requested profile names.
  */
 function collectAllowedTools(requestedProfiles: ReadonlySet<string>): Set<string> {
+  validateRequestedProfiles(requestedProfiles);
   const allowed = new Set<string>();
   for (const profile of requestedProfiles) {
     const tools = PROFILE_TOOLS[profile as Exclude<McpProfileName, 'full'>];
@@ -269,8 +294,5 @@ export function resolveToolFilter(options: McpProfileOptions = {}): Set<string> 
   }
 
   const allowedTools = collectAllowedTools(requestedProfiles);
-  if (allowedTools.size === 0) {
-    return undefined;
-  }
   return allowedTools;
 }

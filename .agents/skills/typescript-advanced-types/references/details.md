@@ -32,7 +32,7 @@ export interface AppEventMap {
 }
 
 export class StrictEventEmitter<
-  TEvents extends Record<string, Record<string, unknown>>,
+  TEvents extends { [K in keyof TEvents]: object | void },
 > {
   private readonly listeners: {
     [K in keyof TEvents]?: Array<(payload: TEvents[K]) => void>;
@@ -105,6 +105,7 @@ export interface EndpointDefinition<TParams, TBody, TResponse> {
   readonly params?: TParams;
   readonly body?: TBody;
   readonly response: TResponse;
+  readonly parseResponse?: (data: unknown) => TResponse;
 }
 
 export interface ApiEndpoints {
@@ -122,7 +123,7 @@ export interface ApiEndpoints {
   };
   readonly "/api/users/:id": {
     readonly GET: EndpointDefinition<
-      { readonly id: string },
+      { readonly id: string; readonly format?: string },
       undefined,
       UserResource
     >;
@@ -135,15 +136,18 @@ export interface ApiEndpoints {
 }
 
 export class TypedApiClient<
-  TRoutes extends Record<
-    string,
-    Record<string, EndpointDefinition<unknown, unknown, unknown>>
-  >,
+  TRoutes extends {
+    [K in keyof TRoutes]: {
+      [M in keyof TRoutes[K]]: EndpointDefinition<unknown, unknown, unknown>;
+    };
+  },
 > {
   private readonly baseUrl: string;
+  private readonly routes?: TRoutes;
 
-  public constructor(baseUrl: string) {
+  public constructor(baseUrl: string, routes?: TRoutes) {
     this.baseUrl = baseUrl;
+    this.routes = routes;
   }
 
   public async request<
@@ -155,9 +159,34 @@ export class TypedApiClient<
     options: {
       readonly params?: TRoutes[TRoute][TMethod]["params"];
       readonly body?: TRoutes[TRoute][TMethod]["body"];
+      readonly parseResponse?: (data: unknown) => TRoutes[TRoute][TMethod]["response"];
     },
   ): Promise<TRoutes[TRoute][TMethod]["response"]> {
-    const url = new URL(String(route), this.baseUrl);
+    let routePath = String(route);
+    const queryEntries: Array<[string, string]> = [];
+
+    if (options.params && typeof options.params === "object") {
+      const paramsRecord = options.params as Record<string, unknown>;
+      for (const [key, value] of Object.entries(paramsRecord)) {
+        if (value !== undefined) {
+          const placeholder = `:${key}`;
+          if (routePath.includes(placeholder)) {
+            routePath = routePath.replaceAll(
+              placeholder,
+              encodeURIComponent(String(value)),
+            );
+          } else {
+            queryEntries.push([key, String(value)]);
+          }
+        }
+      }
+    }
+
+    const url = new URL(routePath, this.baseUrl);
+    for (const [key, value] of queryEntries) {
+      url.searchParams.append(key, value);
+    }
+
     const response = await fetch(url.toString(), {
       method: String(method),
       headers: { "Content-Type": "application/json" },
@@ -168,9 +197,42 @@ export class TypedApiClient<
       throw new Error(`API error: ${response.statusText}`);
     }
 
-    const data: unknown = await response.json();
-    return data as TRoutes[TRoute][TMethod]["response"];
+    const rawData: unknown = await response.json();
+    const validate =
+      options.parseResponse ?? this.routes?.[route]?.[method]?.parseResponse;
+    if (validate) {
+      return validate(rawData);
+    }
+    throw new Error(
+      `Response validation failed: no configured parser or schema provided for ${String(method)} ${String(route)}.`,
+    );
   }
+}
+
+// Runtime validator functions for boundary data
+export function isUserResource(data: unknown): data is UserResource {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    typeof (data as Record<string, unknown>).id === "string" &&
+    typeof (data as Record<string, unknown>).name === "string" &&
+    ((data as Record<string, unknown>).role === "admin" ||
+      (data as Record<string, unknown>).role === "member")
+  );
+}
+
+export function parseUserList(data: unknown): readonly UserResource[] {
+  if (Array.isArray(data) && data.every(isUserResource)) {
+    return data;
+  }
+  throw new Error("Invalid UserResource list response payload.");
+}
+
+export function parseUserResource(data: unknown): UserResource {
+  if (isUserResource(data)) {
+    return data;
+  }
+  throw new Error("Invalid UserResource response payload.");
 }
 
 // Client instantiation verified with satisfies
@@ -182,6 +244,13 @@ export const clientConfig = {
 export const api = new TypedApiClient<ApiEndpoints>(
   "https://api.mission-platform.local",
 );
+
+// Call site with parameter replacement and schema parser validation:
+const user = await api.request("/api/users/:id", "GET", {
+  params: { id: "user_42" },
+  parseResponse: parseUserResource,
+});
+console.log(user.id, user.name, user.role);
 ```
 
 ---

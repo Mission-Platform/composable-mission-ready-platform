@@ -295,6 +295,53 @@ function extractArgTypeOptions(storySource: string, propName: string): string[] 
   return optionMatches.map((opt) => opt.replaceAll(/['"]/g, ""));
 }
 
+/**
+ * Read and extract aggregated story metadata across all story files.
+ */
+function aggregateStoriesMetadata(
+  dir: string,
+  storyFiles: readonly string[],
+): {
+  storyNames: string[];
+  variants: string[];
+  sizes: string[];
+  metaTitle?: string;
+} {
+  const storyNamesSet = new Set<string>();
+  const variantsSet = new Set<string>();
+  const sizesSet = new Set<string>();
+  let metaTitle: string | undefined;
+
+  for (const storyFile of storyFiles) {
+    try {
+      const fullPath = join(dir, storyFile);
+      const storySource = readFileSync(fullPath, "utf8");
+      if (!metaTitle) {
+        const titleMatch = /title:\s*['"]([^'"]+)['"]/.exec(storySource);
+        if (titleMatch?.[1]) metaTitle = titleMatch[1];
+      }
+      for (const name of extractStoryNames(storySource)) {
+        storyNamesSet.add(name);
+      }
+      for (const v of extractArgTypeOptions(storySource, "variant")) {
+        variantsSet.add(v);
+      }
+      for (const s of extractArgTypeOptions(storySource, "size")) {
+        sizesSet.add(s);
+      }
+    } catch {
+      // Ignored if file unreadable
+    }
+  }
+
+  return {
+    storyNames: [...storyNamesSet],
+    variants: [...variantsSet],
+    sizes: [...sizesSet],
+    metaTitle,
+  };
+}
+
 /** Extract story details, variants, sizes, and exported story names for a component. */
 export function getComponentStories(
   nameOrSlug: string,
@@ -317,23 +364,15 @@ export function getComponentStories(
     };
   }
 
-  const primaryStoryPath = join(dir, storyFiles[0] as string);
-  const storySource = readFileSync(primaryStoryPath, "utf8");
-
-  const titleMatch = /title:\s*['"]([^'"]+)['"]/.exec(storySource);
-  const metaTitle = titleMatch?.[1];
-
-  const storyNames = extractStoryNames(storySource);
-  const variants = extractArgTypeOptions(storySource, "variant");
-  const sizes = extractArgTypeOptions(storySource, "size");
+  const aggregated = aggregateStoriesMetadata(dir, storyFiles);
 
   return {
     componentName: summary.componentName,
     slug: summary.slug,
     storyFiles,
-    storyNames,
-    variants,
-    sizes,
-    metaTitle,
+    storyNames: aggregated.storyNames,
+    variants: aggregated.variants,
+    sizes: aggregated.sizes,
+    metaTitle: aggregated.metaTitle,
   };
 }

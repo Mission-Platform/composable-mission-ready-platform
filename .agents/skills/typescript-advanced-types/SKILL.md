@@ -115,12 +115,15 @@ export function useNavigation(theme: NavigationTheme): {
 
 ---
 
-### 4. Mandate `satisfies` over `as` Everywhere
+### 4. Mandate `satisfies` for Declaration Contracts; Limit `as` to Validated Narrowing
 
-- **Rule**: Prohibit type assertions (`value as Type`). Mandate `value satisfies Type`.
+- **Rule**:
+  - **Declaration-Site Validation**: Always use `value satisfies Type` instead of `value as Type` when declaring constants, configuration objects, maps, or records. Never use `as Type` to satisfy a contract at declaration site.
+  - **Use-Site Narrowing**: Narrow `as` assertions (`value as NarrowType`) are permitted **only at use sites after runtime validation** (e.g. Zod schema validation, explicit type guards, or external boundary parsing) has already proven that the value conforms to the asserted shape. Unnecessary, unvalidated, or widening assertions (`as any`, `as unknown`, unchecked casts) remain strictly prohibited.
 - **Why**:
-  - `as Type` lies to the compiler. If a property is missing or misspelled, `as` silences the error and allows runtime crashes.
-  - `satisfies Type` validates that the expression matches the contract **without widening the type**, preserving exact literal types, exact keys, and full autocompletion.
+  - `as Type` at declaration site blinds the compiler. If a property is missing, extra, or misspelled, `as` silences the error and allows runtime crashes.
+  - `satisfies Type` at declaration site validates that the expression matches the contract **without widening the type**, preserving exact literal types, exact keys, and full autocompletion.
+  - Distinguishing use-site narrowing (backed by runtime validation evidence) from declaration-site validation ensures compile-time contracts are verified without sacrificing type safety when interacting with untyped DOM APIs or external boundaries.
 
 ```typescript
 interface RouteConfig {

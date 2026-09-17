@@ -181,26 +181,66 @@ async function collectReviewTests(
 /**
  * Run secret and code vulnerability scanning across reviewable changed files.
  */
-function scanReviewSecurityFindings(files: readonly { readonly path: string }[]): SecurityFinding[] {
+function scanReviewSecurityFindings(
+  codeFiles: readonly { readonly path: string }[],
+  secretFiles: readonly { readonly path: string }[],
+): { securityFindings: SecurityFinding[]; scanErrors: string[]; incomplete: boolean } {
   const securityFindings: SecurityFinding[] = [];
-  for (const file of files) {
+  const scanErrors: string[] = [];
+  let incomplete = false;
+
+  for (const file of secretFiles) {
     try {
       const secretResult = scanSecrets({ path: file.path });
-      const codeResult = analyzeCode({ path: file.path });
-      securityFindings.push(...secretResult.findings, ...codeResult.findings);
-    } catch {
-      // Ignored if file unreadable or deleted
+      securityFindings.push(...secretResult.findings);
+      if (secretResult.incomplete) {
+        incomplete = true;
+      }
+      if (secretResult.errors) {
+        scanErrors.push(...secretResult.errors);
+      }
+    } catch (error) {
+      incomplete = true;
+      scanErrors.push(
+        `Failed to scan secrets for "${file.path}": ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
-  return securityFindings;
+
+  for (const file of codeFiles) {
+    try {
+      const codeResult = analyzeCode({ path: file.path });
+      securityFindings.push(...codeResult.findings);
+      if (codeResult.incomplete) {
+        incomplete = true;
+      }
+      if (codeResult.errors) {
+        scanErrors.push(...codeResult.errors);
+      }
+    } catch (error) {
+      incomplete = true;
+      scanErrors.push(
+        `Failed to analyze code for "${file.path}": ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  return { securityFindings, scanErrors, incomplete };
 }
 
 /**
  * Build a structured security scorecard summary for change review evidence.
  */
-function buildSecurityReviewSummary(securityFindings: readonly SecurityFinding[]) {
+function buildSecurityReviewSummary(
+  securityFindings: readonly SecurityFinding[],
+  scanErrors: readonly string[] = [],
+  incomplete = false,
+) {
+  const isClean = securityFindings.length === 0 && !incomplete && scanErrors.length === 0;
   return {
-    clean: securityFindings.length === 0,
+    clean: isClean,
+    incomplete: incomplete || scanErrors.length > 0 ? true : undefined,
+    errors: scanErrors.length > 0 ? scanErrors : undefined,
     findingsCount: securityFindings.length,
     criticalCount: securityFindings.filter((f) => f.severity === 'critical').length,
     highCount: securityFindings.filter((f) => f.severity === 'high').length,
@@ -229,14 +269,15 @@ export async function reviewChanges(request: ReviewChangesRequest) {
     maxOutputBytes: request.maxOutputBytes,
   });
   const files = reviewableFiles(changed.files, maxFiles);
+  const allChangedFiles = changed.files.slice(0, maxFiles);
 
   const [diagnostics, tests] = await Promise.all([
     collectReviewDiagnostics(files, request.sessionId, request.languageId),
     collectReviewTests(files, maxFiles, request.sessionId, request.languageId, request.includeTests),
   ]);
 
-  const securityFindings = scanReviewSecurityFindings(files);
-  const securitySummary = buildSecurityReviewSummary(securityFindings);
+  const { securityFindings, scanErrors, incomplete } = scanReviewSecurityFindings(files, allChangedFiles);
+  const securitySummary = buildSecurityReviewSummary(securityFindings, scanErrors, incomplete);
 
   const message = request.languageId
     ? 'Review includes bounded language-server evidence and security checks for reviewable changed files.'

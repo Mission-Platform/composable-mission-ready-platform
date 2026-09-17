@@ -1,7 +1,7 @@
-import { existsSync } from "node:fs";
+import { existsSync, lstatSync } from "node:fs";
 import { join, relative } from "node:path";
 
-import { findRepoRoot } from "../repo/paths.ts";
+import { findRepoRoot, resolveRepoPath } from "../repo/paths.ts";
 import { listAll, type PackageManifest, readJson } from "../repo/scanner.ts";
 
 import {
@@ -30,37 +30,57 @@ function tryReadManifest(
 }
 
 /**
- * Collect root and workspace member package.json manifests.
+ * Collect root and workspace member package.json manifests within target scope.
  */
 function collectManifests(
+  targetPath: string,
   repoRoot: string,
 ): Array<{ manifest: PackageManifest; relPath: string }> {
   const manifests: Array<{ manifest: PackageManifest; relPath: string }> = [];
+  if (!existsSync(targetPath)) return manifests;
 
-  const rootManifest = tryReadManifest(
-    join(repoRoot, "package.json"),
-    "package.json",
-  );
-  if (rootManifest) manifests.push(rootManifest);
+  const stat = lstatSync(targetPath);
+  if (stat.isFile()) {
+    if (targetPath.endsWith("package.json")) {
+      const relPath = relative(repoRoot, targetPath).replaceAll("\\", "/");
+      const single = tryReadManifest(targetPath, relPath);
+      if (single) manifests.push(single);
+    }
+    return manifests;
+  }
+
+  const directManifestPath = join(targetPath, "package.json");
+  const directRelPath = relative(repoRoot, directManifestPath).replaceAll("\\", "/");
+  const direct = tryReadManifest(directManifestPath, directRelPath);
+  if (direct) manifests.push(direct);
 
   try {
     const members = listAll();
     for (const member of members) {
-      const relPath = relative(
-        repoRoot,
-        join(member.dir, "package.json"),
-      ).replaceAll("\\", "/");
-      const memberManifest = tryReadManifest(
-        join(member.dir, "package.json"),
-        relPath,
-      );
-      if (memberManifest) manifests.push(memberManifest);
+      if (member.dir.startsWith(targetPath) && member.dir !== targetPath) {
+        const pkgPath = join(member.dir, "package.json");
+        const relPath = relative(repoRoot, pkgPath).replaceAll("\\", "/");
+        const memberManifest = tryReadManifest(pkgPath, relPath);
+        if (memberManifest) manifests.push(memberManifest);
+      }
     }
   } catch {
     // Continue with whatever manifests were found
   }
 
   return manifests;
+}
+
+/**
+ * Sanitize shell command line by redacting credentials, tokens, and basic auth.
+ */
+function sanitizeCommandLine(cmd: string): string {
+  return cmd
+    .replaceAll(/(:\/\/)([^:]+):([^@]+)@/g, "$1$2:***@")
+    .replaceAll(
+      /(?:bearer|token|password|secret|key|access_token|npm_token|auth_token)\s*[:=]\s*["']?([A-Za-z0-9_.-]{12,})["']?/gi,
+      (match, secret) => match.replace(secret, "***REDACTED***"),
+    );
 }
 
 /**
@@ -85,18 +105,20 @@ function buildLifecycleFinding(
   const findingId = isDangerous
     ? "SUPPLY_CHAIN_RISKY_LIFECYCLE_SCRIPT"
     : "SUPPLY_CHAIN_LIFECYCLE_SCRIPT";
+  const safeCmd = sanitizeCommandLine(scriptCmd);
+  const titleCmd = safeCmd.length > 50 ? `${safeCmd.slice(0, 50)}...` : safeCmd;
 
   return {
     id: findingId,
     category: "supply-chain",
     severity,
-    title: `Lifecycle script declared in ${hook}: ${scriptCmd.slice(0, 50)}`,
-    message: `Package manifest ${relPath} executes shell command during "${hook}": "${scriptCmd}".`,
+    title: `Lifecycle script declared in ${hook}: ${titleCmd}`,
+    message: `Package manifest ${relPath} executes shell command during "${hook}": "${safeCmd}".`,
     filePath: relPath,
-    snippet: `"${hook}": "${scriptCmd}"`,
+    snippet: `"${hook}": "${safeCmd}"`,
     remediation:
       "Avoid lifecycle install scripts in libraries. Use explicit build scripts or postinstall filters to prevent arbitrary code execution on developer machines.",
-    owasp: "A08:2025-Software and Data Integrity Failures",
+    owasp: "A03:2025-Software Supply Chain Failures",
     cwe: "CWE-94",
     isoControl: "A.8.25",
   };
@@ -187,11 +209,42 @@ function auditLifecycleScripts(
 }
 
 /**
- * Check whether a dependency specifier points to an unverified external tarball.
+ * Parse dependency specifier as an external tarball URL if valid.
  */
-function isExternalTarball(spec: string): boolean {
-  if (!spec.startsWith("https://")) return false;
-  return spec.endsWith(".tgz") || spec.endsWith(".tar.gz");
+function parseTarballUrl(spec: string): URL | undefined {
+  try {
+    const url = new URL(spec);
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return undefined;
+    }
+    const pathname = url.pathname.toLowerCase();
+    if (pathname.endsWith(".tgz") || pathname.endsWith(".tar.gz")) {
+      return url;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Sanitize credentials and sensitive query parameters from a tarball URL.
+ */
+function sanitizeTarballUrl(url: URL): string {
+  const sanitized = new URL(url.toString());
+  if (sanitized.password) {
+    sanitized.password = "***";
+  }
+  if (sanitized.username && !sanitized.password) {
+    sanitized.username = "***";
+  }
+  const sensitiveParams = ["token", "auth", "key", "secret", "sig", "signature"];
+  for (const param of sensitiveParams) {
+    if (sanitized.searchParams.has(param)) {
+      sanitized.searchParams.set(param, "***REDACTED***");
+    }
+  }
+  return sanitized.toString();
 }
 
 /**
@@ -203,20 +256,23 @@ function checkTarballDependency(
   relPath: string,
   severityThreshold?: SecurityFinding["severity"],
 ): SecurityFinding | undefined {
-  if (!isExternalTarball(spec)) return undefined;
+  const url = parseTarballUrl(spec);
+  if (!url) return undefined;
   if (!isSeverityAtOrAbove("high", severityThreshold)) return undefined;
+
+  const safeUrl = sanitizeTarballUrl(url);
 
   return {
     id: "SUPPLY_CHAIN_UNVERIFIED_TARBALL",
     category: "supply-chain",
     severity: "high",
     title: "Unverified external tarball dependency source",
-    message: `Dependency "${depName}" in ${relPath} points directly to an unverified tarball: ${spec}`,
+    message: `Dependency "${depName}" in ${relPath} points directly to an unverified tarball: ${safeUrl}`,
     filePath: relPath,
-    snippet: `"${depName}": "${spec}"`,
+    snippet: `"${depName}": "${safeUrl}"`,
     remediation:
       "Install dependencies from authenticated registries with cryptographic checksums rather than direct HTTP tarball URLs.",
-    owasp: "A08:2025-Software and Data Integrity Failures",
+    owasp: "A03:2025-Software Supply Chain Failures",
     cwe: "CWE-494",
     isoControl: "A.8.20",
   };
@@ -333,7 +389,7 @@ function buildDivergenceFinding(
     snippet: `Dependency: "${depName}", versions: ${versionKeys}`,
     remediation:
       "Align dependency versions across monorepo packages or leverage pnpm catalog definitions to prevent version drift.",
-    owasp: "A06:2025-Vulnerable and Outdated Components",
+    owasp: "A03:2025-Software Supply Chain Failures",
     cwe: "CWE-1104",
     isoControl: "A.8.9",
   };
@@ -370,7 +426,10 @@ export function auditSupplyChain(
 ): SupplyChainScanResult {
   const startTime = Date.now();
   const repoRoot = findRepoRoot();
-  const manifests = collectManifests(repoRoot);
+  const targetPath = options.path
+    ? resolveRepoPath(options.path, "supply chain path")
+    : repoRoot;
+  const manifests = collectManifests(targetPath, repoRoot);
 
   const findings: SecurityFinding[] = [];
   let totalDependencies = 0;

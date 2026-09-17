@@ -32,13 +32,13 @@ The configuration includes the following plugins and rule sets:
 
 The custom `missionTypeScriptPlugin` provides fast AST syntax checks enforcing Mission Platform strict typing standards:
 
-| Rule                                           | Severity | Purpose                                                                                                 |
-| :--------------------------------------------- | :------- | :------------------------------------------------------------------------------------------------------ |
-| `@typescript-eslint/no-explicit-any`           | `error`  | Unconditionally prohibits the `any` keyword across all TypeScript code.                                 |
-| `@typescript-eslint/prefer-satisfies`          | `warn`   | Recommends `satisfies` over `as` assertions to preserve narrow literals, and strictly forbids `as any`. |
-| `@typescript-eslint/no-unconstrained-generics` | `warn`   | Requires all generic type parameters to declare an `extends` constraint.                                |
-| `@typescript-eslint/no-implicit-unknown`       | `warn`   | Disallows leaking unvalidated `unknown` across exported API boundaries.                                 |
-| `@typescript-eslint/consistent-type-imports`   | `error`  | Mandates top-level `import type` declarations for type-only imports.                                    |
+| Rule                                           | Severity                        | Purpose                                                                                                  |
+| :--------------------------------------------- | :------------------------------ | :------------------------------------------------------------------------------------------------------- |
+| `@typescript-eslint/no-explicit-any`           | `error` (`warn` for `**/*.vue`) | Prohibits the `any` keyword across TypeScript code (`error`), with `warn` applied for Vue SFC templates. |
+| `@typescript-eslint/prefer-satisfies`          | `warn`                          | Recommends `satisfies` over `as` assertions to preserve narrow literals, and strictly forbids `as any`.  |
+| `@typescript-eslint/no-unconstrained-generics` | `warn`                          | Requires all generic type parameters to declare an `extends` constraint.                                 |
+| `@typescript-eslint/no-implicit-unknown`       | `warn`                          | Disallows leaking unvalidated `unknown` across exported API boundaries.                                  |
+| `@typescript-eslint/consistent-type-imports`   | `error`                         | Mandates top-level `import type` declarations for type-only imports.                                     |
 
 ## Usage
 

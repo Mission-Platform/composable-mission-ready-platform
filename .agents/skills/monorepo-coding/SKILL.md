@@ -27,7 +27,7 @@ Whenever a task requires user interface, styling, helper logic, or localized tex
 └───────────┬─────────────┘
             ▼
 ┌─────────────────────────┐
-│ 3. Search Utilities     │ ──> find_symbol, list_symbols, packages/* barrels
+│ 3. Search Utilities     │ ──> lsp_find_symbol, lsp_list_symbols, packages/* barrels
 └───────────┬─────────────┘
             ▼
 ┌─────────────────────────┐
@@ -57,7 +57,7 @@ Whenever a task requires user interface, styling, helper logic, or localized tex
 ### Step 3: Discover Utilities & Shared Barrels
 
 - **Action**: Search existing packages and shared libraries before writing data transformations, formatting routines, date helpers, or validation checks.
-- **MCP Tools**: Use `find_symbol`, `list_symbols`, and `get_lsp_definition` across `packages/`.
+- **MCP Tools**: Use `lsp_find_symbol`, `lsp_list_symbols`, and `lsp_go_to_definition` across `packages/`.
 - **Key Packages**:
   - `@mission-platform/tokens`: Token definitions and theme utilities.
   - `@mission-platform/i18n`: Internationalization helpers, formatting, and message loaders.
@@ -108,7 +108,7 @@ Code authored in the monorepo must strictly adhere to **ISO/IEC 27001:2022 Contr
 
 1. **Injection Prevention (OWASP A03 / CWE-79, CWE-78, CWE-89)**:
    - DOM XSS: Never assign un-sanitized dynamic markup to `innerHTML`, `v-html`, or `dangerouslySetInnerHTML`. Always wrap with `DOMPurify.sanitize(...)`.
-   - Command Injection: Never interpolate variables into shell command strings (`exec(\`...\`)`). Use argument arrays with `execFile()`or`spawn()`.
+   - Command Injection: Never interpolate variables into shell command strings (`exec(\`...\`)`). Use argument arrays with `execFile()` or `spawn()`.
    - SQL Injection: Always use parameterized queries rather than string concatenation.
 2. **Access Control & Path Safety (OWASP A01 / CWE-22, CWE-601)**:
    - Path Traversal: Always resolve and validate paths using `resolveRepoPath(...)` or explicit allowlists before reading or writing files.
@@ -133,7 +133,7 @@ Before submitting any implementation plan or code changes, verify:
 
 - [ ] Did I run `list_components` to see if a matching component already exists?
 - [ ] Are all colors, margins, paddings, and font sizes bound to `--mp-*` CSS custom properties?
-- [ ] Did I search `packages/` with `find_symbol` for existing helpers instead of writing duplicate utilities?
+- [ ] Did I search `packages/` with `lsp_find_symbol` for existing helpers instead of writing duplicate utilities?
 - [ ] Are all UI text elements backed by `@mission-platform/i18n` locale keys?
 - [ ] Does my code respect strict one-way dependency direction (`packages/` does not import `apps/`)?
 - [ ] Does my code pass OWASP 2025 and ISO 27001 secure coding checks (`security_analyze_code` & `security_scan_secrets`)?

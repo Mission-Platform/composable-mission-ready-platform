@@ -226,12 +226,12 @@ function readSymlinkTarget(resolved: string): string | undefined {
  */
 function hashUntrackedPath(path: string, options: GitCommandInputOptions): string {
   const resolved = resolveRepoPath(path, 'Untracked path', { allowMissing: true, allowSymlink: true });
-  if (!existsSync(resolved)) {
-    return `${path}\0<missing>`;
-  }
   const symlinkTarget = readSymlinkTarget(resolved);
   if (symlinkTarget !== undefined) {
     return `${path}\0symlink:${symlinkTarget}`;
+  }
+  if (!existsSync(resolved)) {
+    return `${path}\0<missing>`;
   }
   const hash = runGit('commit-snapshot-untracked', ['hash-object', '--no-filters', '--', path], options);
   if (hash.success) {
