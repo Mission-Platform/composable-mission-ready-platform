@@ -4,6 +4,7 @@ import { join, relative } from "node:path";
 
 import { findRepoRoot } from "../repo/paths.ts";
 import { listAll, type PackageManifest, readJson } from "../repo/scanner.ts";
+
 import {
   type AuditDependenciesOptions,
   isSeverityAtOrAbove,
@@ -44,7 +45,10 @@ function checkUnpinnedSpec(
   relativeFilePath: string,
   severityThreshold?: SecurityFinding["severity"],
 ): SecurityFinding | undefined {
-  if ((spec === "*" || spec === "latest") && isSeverityAtOrAbove("low", severityThreshold)) {
+  if (
+    (spec === "*" || spec === "latest") &&
+    isSeverityAtOrAbove("low", severityThreshold)
+  ) {
     return {
       id: "DEPENDENCY_UNPINNED_VERSION",
       category: "dependency",
@@ -80,7 +84,11 @@ function isInsecureGit(spec: string): boolean {
 /**
  * Build finding for insecure HTTP dependency URL.
  */
-function buildInsecureHttpFinding(depName: string, spec: string, relativeFilePath: string): SecurityFinding {
+function buildInsecureHttpFinding(
+  depName: string,
+  spec: string,
+  relativeFilePath: string,
+): SecurityFinding {
   return {
     id: "DEPENDENCY_INSECURE_HTTP_URL",
     category: "dependency",
@@ -89,7 +97,8 @@ function buildInsecureHttpFinding(depName: string, spec: string, relativeFilePat
     message: `Dependency "${depName}" in ${relativeFilePath} uses unencrypted http:// URL: ${spec}.`,
     filePath: relativeFilePath,
     snippet: `"${depName}": "${spec}"`,
-    remediation: "Use secure HTTPS (https://) or official package registries instead of unencrypted HTTP.",
+    remediation:
+      "Use secure HTTPS (https://) or official package registries instead of unencrypted HTTP.",
     owasp: "A08:2025-Software and Data Integrity Failures",
     cwe: "CWE-319",
     isoControl: "A.8.20",
@@ -99,7 +108,11 @@ function buildInsecureHttpFinding(depName: string, spec: string, relativeFilePat
 /**
  * Build finding for insecure Git dependency URL.
  */
-function buildInsecureGitFinding(depName: string, spec: string, relativeFilePath: string): SecurityFinding {
+function buildInsecureGitFinding(
+  depName: string,
+  spec: string,
+  relativeFilePath: string,
+): SecurityFinding {
   return {
     id: "DEPENDENCY_INSECURE_GIT_URL",
     category: "dependency",
@@ -148,10 +161,20 @@ function checkDependencyEntries(
   for (const [depName, spec] of Object.entries(deps)) {
     if (typeof spec !== "string") continue;
     const trimmed = spec.trim();
-    const unpinned = checkUnpinnedSpec(depName, trimmed, relativeFilePath, severityThreshold);
+    const unpinned = checkUnpinnedSpec(
+      depName,
+      trimmed,
+      relativeFilePath,
+      severityThreshold,
+    );
     if (unpinned) findings.push(unpinned);
 
-    const insecure = checkInsecureProtocol(depName, trimmed, relativeFilePath, severityThreshold);
+    const insecure = checkInsecureProtocol(
+      depName,
+      trimmed,
+      relativeFilePath,
+      severityThreshold,
+    );
     if (insecure) findings.push(insecure);
   }
   return findings;
@@ -175,7 +198,9 @@ function checkManifestDependencies(
   for (const section of depSections) {
     const deps = manifest[section] as Record<string, string> | undefined;
     if (deps && typeof deps === "object") {
-      findings.push(...checkDependencyEntries(deps, relativeFilePath, severityThreshold));
+      findings.push(
+        ...checkDependencyEntries(deps, relativeFilePath, severityThreshold),
+      );
     }
   }
 
@@ -212,7 +237,9 @@ function scanWorkspaceManifests(
 
   const rootManifestPath = join(repoRoot, "package.json");
   if (existsSync(rootManifestPath)) {
-    findings.push(...scanSingleManifestPath(rootManifestPath, repoRoot, severityThreshold));
+    findings.push(
+      ...scanSingleManifestPath(rootManifestPath, repoRoot, severityThreshold),
+    );
     scannedFiles += 1;
   }
 
@@ -221,7 +248,9 @@ function scanWorkspaceManifests(
     for (const member of members) {
       const memberPkgPath = join(member.dir, "package.json");
       if (existsSync(memberPkgPath)) {
-        findings.push(...scanSingleManifestPath(memberPkgPath, repoRoot, severityThreshold));
+        findings.push(
+          ...scanSingleManifestPath(memberPkgPath, repoRoot, severityThreshold),
+        );
         scannedFiles += 1;
       }
     }
@@ -254,6 +283,49 @@ function executePnpmAudit(repoRoot: string): string {
 }
 
 /**
+ * Resolve the CVE or GHSA identifier from an advisory.
+ */
+function resolveAdvisoryId(advisoryId: string, advisory: PnpmAdvisory): string {
+  const cves = advisory.cves;
+  if (Array.isArray(cves) && cves.length > 0 && cves[0]) {
+    return cves[0];
+  }
+  return `GHSA-${advisoryId}`;
+}
+
+/**
+ * Format the descriptive title and summary message for an advisory.
+ */
+function resolveAdvisoryMessage(
+  advisory: PnpmAdvisory,
+  pkgName: string,
+): { title: string; message: string } {
+  const title = advisory.title || `Vulnerable dependency: ${pkgName}`;
+  const range = advisory.vulnerable_versions
+    ? ` (${advisory.vulnerable_versions})`
+    : "";
+  const overview = advisory.overview || "";
+  const message =
+    `${title} in package "${pkgName}"${range}. ${overview}`.trim();
+  return { title, message };
+}
+
+/**
+ * Format snippet and remediation guidance for a vulnerable package advisory.
+ */
+function resolveAdvisoryRemediation(
+  advisory: PnpmAdvisory,
+  pkgName: string,
+): { snippet: string; remediation: string } {
+  const vulnerable = advisory.vulnerable_versions || "unknown";
+  const patched = advisory.patched_versions || "none";
+  const snippet = `Package: ${pkgName}, vulnerable: ${vulnerable}, patched: ${patched}`;
+  const remediation =
+    advisory.recommendation || `Upgrade ${pkgName} to ${patched}.`;
+  return { snippet, remediation };
+}
+
+/**
  * Build finding from an individual pnpm audit advisory.
  */
 function buildAdvisoryFinding(
@@ -261,23 +333,23 @@ function buildAdvisoryFinding(
   advisory: PnpmAdvisory,
   severity: SecurityFinding["severity"],
 ): SecurityFinding {
-  const cve = advisory.cves && advisory.cves.length > 0 ? advisory.cves[0] : `GHSA-${advisoryId}`;
-  const pkgName = advisory.module_name ?? "unknown-package";
-  const vulnRange = advisory.vulnerable_versions ? ` (${advisory.vulnerable_versions})` : "";
-  const title = advisory.title ?? `Vulnerable dependency: ${pkgName}`;
-  const patched = advisory.patched_versions ?? "none";
-  const vulnerable = advisory.vulnerable_versions ?? "unknown";
+  const findingId = resolveAdvisoryId(advisoryId, advisory);
+  const pkgName = advisory.module_name || "unknown-package";
+  const { title, message } = resolveAdvisoryMessage(advisory, pkgName);
+  const { snippet, remediation } = resolveAdvisoryRemediation(
+    advisory,
+    pkgName,
+  );
 
   return {
-    id: cve ?? `CVE-${advisoryId}`,
+    id: findingId,
     category: "dependency",
     severity,
     title,
-    message: `${title} in package "${pkgName}"${vulnRange}. ${advisory.overview ?? ""}`.trim(),
+    message,
     filePath: "pnpm-lock.yaml",
-    snippet: `Package: ${pkgName}, vulnerable: ${vulnerable}, patched: ${patched}`,
-    remediation:
-      advisory.recommendation ?? `Upgrade ${pkgName} to ${patched}.`,
+    snippet,
+    remediation,
     owasp: "A06:2025-Vulnerable and Outdated Components",
     cwe: "CWE-1104",
     isoControl: "A.8.8",
@@ -301,26 +373,48 @@ function processSingleAdvisory(
 }
 
 /**
+ * Safely parse JSON and extract advisories object from pnpm audit output.
+ */
+function extractAuditAdvisories(
+  stdoutText: string,
+): Record<string, PnpmAdvisory> | undefined {
+  try {
+    const auditData = JSON.parse(stdoutText) as PnpmAuditOutput;
+    const advisories = auditData?.advisories;
+    if (advisories && typeof advisories === "object") {
+      return advisories;
+    }
+  } catch {
+    return undefined;
+  }
+  return undefined;
+}
+
+/**
+ * Convert parsed advisory entries into normalized security findings.
+ */
+function convertAdvisoriesToFindings(
+  advisories: Record<string, PnpmAdvisory>,
+  severityThreshold?: SecurityFinding["severity"],
+): SecurityFinding[] {
+  const findings: SecurityFinding[] = [];
+  for (const [id, advisory] of Object.entries(advisories)) {
+    const finding = processSingleAdvisory(id, advisory, severityThreshold);
+    if (finding) findings.push(finding);
+  }
+  return findings;
+}
+
+/**
  * Parse pnpm audit JSON output and convert advisories into SecurityFindings.
  */
 function parseAuditAdvisories(
   stdoutText: string,
   severityThreshold?: SecurityFinding["severity"],
 ): SecurityFinding[] {
-  try {
-    const auditData = JSON.parse(stdoutText) as PnpmAuditOutput;
-    const advisories = auditData.advisories;
-    if (!advisories || typeof advisories !== "object") return [];
-
-    const findings: SecurityFinding[] = [];
-    for (const [id, advisory] of Object.entries(advisories)) {
-      const finding = processSingleAdvisory(id, advisory, severityThreshold);
-      if (finding) findings.push(finding);
-    }
-    return findings;
-  } catch {
-    return [];
-  }
+  const advisories = extractAuditAdvisories(stdoutText);
+  if (!advisories) return [];
+  return convertAdvisoriesToFindings(advisories, severityThreshold);
 }
 
 /**
@@ -345,11 +439,17 @@ export function auditDependencies(
   const repoRoot = findRepoRoot();
   const findings: SecurityFinding[] = [];
 
-  const manifestResult = scanWorkspaceManifests(repoRoot, options.severityThreshold);
+  const manifestResult = scanWorkspaceManifests(
+    repoRoot,
+    options.severityThreshold,
+  );
   findings.push(...manifestResult.findings);
 
   if (options.runPnpmAudit !== false) {
-    const auditFindings = runPnpmAuditCheck(repoRoot, options.severityThreshold);
+    const auditFindings = runPnpmAuditCheck(
+      repoRoot,
+      options.severityThreshold,
+    );
     findings.push(...auditFindings);
   }
 

@@ -623,6 +623,29 @@ function handleStoryFileEntry(
 }
 
 /**
+ * Dispatch scan for a directory or story file.
+ */
+function dispatchScanStat(
+  stat: ReturnType<typeof statSync>,
+  fullPath: string,
+  entry: string,
+  repoRoot: string,
+  stories: StoryEntry[],
+  limit: number,
+  filterPackage?: string,
+  filterComponent?: string,
+  currentDepth = 0,
+): void {
+  if (stat.isDirectory()) {
+    scanStoriesDirectory(fullPath, repoRoot, stories, limit, filterPackage, filterComponent, currentDepth + 1);
+    return;
+  }
+  if (isStoryFileName(entry)) {
+    handleStoryFileEntry(repoRoot, fullPath, entry, stories, filterPackage, filterComponent);
+  }
+}
+
+/**
  * Process a single entry within a story directory scan.
  */
 function processStoryScanEntry(
@@ -638,12 +661,8 @@ function processStoryScanEntry(
   if (isIgnoredScanEntry(entry)) return;
   const fullPath = join(dir, entry);
   const stat = tryStat(fullPath);
-  if (!stat) return;
-
-  if (stat.isDirectory()) {
-    scanStoriesDirectory(fullPath, repoRoot, stories, limit, filterPackage, filterComponent, currentDepth + 1);
-  } else if (isStoryFileName(entry)) {
-    handleStoryFileEntry(repoRoot, fullPath, entry, stories, filterPackage, filterComponent);
+  if (stat) {
+    dispatchScanStat(stat, fullPath, entry, repoRoot, stories, limit, filterPackage, filterComponent, currentDepth);
   }
 }
 
@@ -659,12 +678,32 @@ function scanStoriesDirectory(
   filterComponent?: string,
   currentDepth = 0,
 ): void {
-  if (currentDepth > 10 || stories.length >= limit) return;
+  if (currentDepth > 10) return;
+  if (stories.length >= limit) return;
   const entries = tryReadDir(dir);
 
   for (const entry of entries) {
     if (stories.length >= limit) break;
     processStoryScanEntry(dir, entry, repoRoot, stories, limit, filterPackage, filterComponent, currentDepth);
+  }
+}
+
+/**
+ * Scan configured candidate base directories for Storybook stories.
+ */
+function scanCandidateBases(
+  repoRoot: string,
+  stories: StoryEntry[],
+  limit: number,
+  filterPackage?: string,
+  filterComponent?: string,
+): void {
+  const candidateDirs = ['packages', 'apps'];
+  for (const base of candidateDirs) {
+    const fullBase = join(repoRoot, base);
+    if (existsSync(fullBase)) {
+      scanStoriesDirectory(fullBase, repoRoot, stories, limit, filterPackage, filterComponent);
+    }
   }
 }
 
@@ -679,19 +718,14 @@ export function listStories(
   } = {},
 ): ListStoriesResult {
   const repoRoot = findRepoRoot();
-  const limit = Math.min(Math.max(options.limit ?? 100, 1), 500);
+  const rawLimit = options.limit ?? 100;
+  const limit = Math.min(Math.max(rawLimit, 1), 500);
   const stories: StoryEntry[] = [];
 
-  const candidateDirs = ['packages', 'apps'];
   const filterComponent = options.component?.toLowerCase().trim();
   const filterPackage = options.package?.toLowerCase().trim();
 
-  for (const base of candidateDirs) {
-    const fullBase = join(repoRoot, base);
-    if (existsSync(fullBase)) {
-      scanStoriesDirectory(fullBase, repoRoot, stories, limit, filterPackage, filterComponent);
-    }
-  }
+  scanCandidateBases(repoRoot, stories, limit, filterPackage, filterComponent);
 
   return {
     totalStories: stories.length,

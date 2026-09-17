@@ -3,6 +3,7 @@ import { join, relative } from "node:path";
 
 import { findRepoRoot } from "../repo/paths.ts";
 import { listAll, type PackageManifest, readJson } from "../repo/scanner.ts";
+
 import {
   isSeverityAtOrAbove,
   type SecurityFinding,
@@ -45,7 +46,10 @@ function collectManifests(
   try {
     const members = listAll();
     for (const member of members) {
-      const relPath = relative(repoRoot, join(member.dir, "package.json")).replaceAll("\\", "/");
+      const relPath = relative(
+        repoRoot,
+        join(member.dir, "package.json"),
+      ).replaceAll("\\", "/");
       const memberManifest = tryReadManifest(
         join(member.dir, "package.json"),
         relPath,
@@ -60,6 +64,45 @@ function collectManifests(
 }
 
 /**
+ * Safely extract and trim a script command string.
+ */
+function extractLifecycleCommand(scriptCmd: unknown): string | undefined {
+  if (typeof scriptCmd !== "string") return undefined;
+  const trimmed = scriptCmd.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+/**
+ * Build finding metadata for a detected lifecycle hook execution.
+ */
+function buildLifecycleFinding(
+  hook: string,
+  scriptCmd: string,
+  relPath: string,
+  isDangerous: boolean,
+  severity: SecurityFinding["severity"],
+): SecurityFinding {
+  const findingId = isDangerous
+    ? "SUPPLY_CHAIN_RISKY_LIFECYCLE_SCRIPT"
+    : "SUPPLY_CHAIN_LIFECYCLE_SCRIPT";
+
+  return {
+    id: findingId,
+    category: "supply-chain",
+    severity,
+    title: `Lifecycle script declared in ${hook}: ${scriptCmd.slice(0, 50)}`,
+    message: `Package manifest ${relPath} executes shell command during "${hook}": "${scriptCmd}".`,
+    filePath: relPath,
+    snippet: `"${hook}": "${scriptCmd}"`,
+    remediation:
+      "Avoid lifecycle install scripts in libraries. Use explicit build scripts or postinstall filters to prevent arbitrary code execution on developer machines.",
+    owasp: "A08:2025-Software and Data Integrity Failures",
+    cwe: "CWE-94",
+    isoControl: "A.8.25",
+  };
+}
+
+/**
  * Check a single lifecycle hook declaration for risk.
  */
 function checkSingleLifecycleHook(
@@ -68,11 +111,12 @@ function checkSingleLifecycleHook(
   relPath: string,
   severityThreshold?: SecurityFinding["severity"],
 ): { finding?: SecurityFinding; declared: boolean } {
-  if (typeof scriptCmd !== "string" || scriptCmd.trim().length === 0) {
+  const command = extractLifecycleCommand(scriptCmd);
+  if (!command) {
     return { declared: false };
   }
-  const isDangerous = DANGEROUS_LIFECYCLE_CMD.test(scriptCmd);
-  const severity = isDangerous ? "high" : "medium";
+  const isDangerous = DANGEROUS_LIFECYCLE_CMD.test(command);
+  const severity: SecurityFinding["severity"] = isDangerous ? "high" : "medium";
 
   if (!isSeverityAtOrAbove(severity, severityThreshold)) {
     return { declared: true };
@@ -80,23 +124,51 @@ function checkSingleLifecycleHook(
 
   return {
     declared: true,
-    finding: {
-      id: isDangerous
-        ? "SUPPLY_CHAIN_RISKY_LIFECYCLE_SCRIPT"
-        : "SUPPLY_CHAIN_LIFECYCLE_SCRIPT",
-      category: "supply-chain",
+    finding: buildLifecycleFinding(
+      hook,
+      command,
+      relPath,
+      isDangerous,
       severity,
-      title: `Lifecycle script declared in ${hook}: ${scriptCmd.slice(0, 50)}`,
-      message: `Package manifest ${relPath} executes shell command during "${hook}": "${scriptCmd}".`,
-      filePath: relPath,
-      snippet: `"${hook}": "${scriptCmd}"`,
-      remediation:
-        "Avoid lifecycle install scripts in libraries. Use explicit build scripts or postinstall filters to prevent arbitrary code execution on developer machines.",
-      owasp: "A08:2025-Software and Data Integrity Failures",
-      cwe: "CWE-94",
-      isoControl: "A.8.25",
-    },
+    ),
   };
+}
+
+/**
+ * Safely extract the scripts dictionary from a package manifest.
+ */
+function extractManifestScripts(
+  manifest: PackageManifest,
+): Record<string, unknown> | undefined {
+  const scripts = manifest.scripts;
+  if (!scripts || typeof scripts !== "object") return undefined;
+  return scripts as Record<string, unknown>;
+}
+
+/**
+ * Inspect standard lifecycle hook scripts across a scripts map.
+ */
+function inspectLifecycleHooks(
+  scripts: Record<string, unknown>,
+  relPath: string,
+  severityThreshold?: SecurityFinding["severity"],
+): { findings: SecurityFinding[]; count: number } {
+  const findings: SecurityFinding[] = [];
+  let count = 0;
+  const lifecycleHooks = ["preinstall", "postinstall", "install"] as const;
+
+  for (const hook of lifecycleHooks) {
+    const result = checkSingleLifecycleHook(
+      hook,
+      scripts[hook],
+      relPath,
+      severityThreshold,
+    );
+    if (result.declared) count += 1;
+    if (result.finding) findings.push(result.finding);
+  }
+
+  return { findings, count };
 }
 
 /**
@@ -107,26 +179,11 @@ function auditLifecycleScripts(
   relPath: string,
   severityThreshold?: SecurityFinding["severity"],
 ): { findings: SecurityFinding[]; count: number } {
-  const findings: SecurityFinding[] = [];
-  let count = 0;
-
-  if (!manifest.scripts || typeof manifest.scripts !== "object") {
-    return { findings, count };
+  const scripts = extractManifestScripts(manifest);
+  if (!scripts) {
+    return { findings: [], count: 0 };
   }
-
-  const lifecycleHooks = ["preinstall", "postinstall", "install"] as const;
-  for (const hook of lifecycleHooks) {
-    const { finding, declared } = checkSingleLifecycleHook(
-      hook,
-      manifest.scripts[hook],
-      relPath,
-      severityThreshold,
-    );
-    if (declared) count += 1;
-    if (finding) findings.push(finding);
-  }
-
-  return { findings, count };
+  return inspectLifecycleHooks(scripts, relPath, severityThreshold);
 }
 
 /**
@@ -254,6 +311,35 @@ function auditManifestDependencies(
 }
 
 /**
+ * Format divergence finding for a package with conflicting version declarations.
+ */
+function buildDivergenceFinding(
+  depName: string,
+  versionMap: Map<string, string[]>,
+): SecurityFinding {
+  const versions = [...versionMap.entries()]
+    .map(([ver, files]) => `${ver} (${files.join(", ")})`)
+    .join(" vs ");
+  const firstFile = [...versionMap.values()][0]?.[0] || "package.json";
+  const versionKeys = [...versionMap.keys()].join(", ");
+
+  return {
+    id: "SUPPLY_CHAIN_VERSION_DIVERGENCE",
+    category: "supply-chain",
+    severity: "low",
+    title: `Conflicting versions for external dependency "${depName}"`,
+    message: `Package "${depName}" is declared with ${versionMap.size} different version specs across workspace manifests: ${versions}.`,
+    filePath: firstFile,
+    snippet: `Dependency: "${depName}", versions: ${versionKeys}`,
+    remediation:
+      "Align dependency versions across monorepo packages or leverage pnpm catalog definitions to prevent version drift.",
+    owasp: "A06:2025-Vulnerable and Outdated Components",
+    cwe: "CWE-1104",
+    isoControl: "A.8.9",
+  };
+}
+
+/**
  * Detect package version divergences across workspace members.
  */
 function detectVersionDivergence(
@@ -262,30 +348,13 @@ function detectVersionDivergence(
 ): { findings: SecurityFinding[]; count: number } {
   const findings: SecurityFinding[] = [];
   let count = 0;
+  const isLowOrAbove = isSeverityAtOrAbove("low", severityThreshold);
 
   for (const [depName, versionMap] of packageVersionMap.entries()) {
-    if (versionMap.size > 1) {
-      count += 1;
-      if (isSeverityAtOrAbove("low", severityThreshold)) {
-        const versions = Array.from(versionMap.entries())
-          .map(([ver, files]) => `${ver} (${files.join(", ")})`)
-          .join(" vs ");
-
-        findings.push({
-          id: "SUPPLY_CHAIN_VERSION_DIVERGENCE",
-          category: "supply-chain",
-          severity: "low",
-          title: `Conflicting versions for external dependency "${depName}"`,
-          message: `Package "${depName}" is declared with ${versionMap.size} different version specs across workspace manifests: ${versions}.`,
-          filePath: Array.from(versionMap.values())[0]?.[0] ?? "package.json",
-          snippet: `Dependency: "${depName}", versions: ${Array.from(versionMap.keys()).join(", ")}`,
-          remediation:
-            "Align dependency versions across monorepo packages or leverage pnpm catalog definitions to prevent version drift.",
-          owasp: "A06:2025-Vulnerable and Outdated Components",
-          cwe: "CWE-1104",
-          isoControl: "A.8.9",
-        });
-      }
+    if (versionMap.size <= 1) continue;
+    count += 1;
+    if (isLowOrAbove) {
+      findings.push(buildDivergenceFinding(depName, versionMap));
     }
   }
 

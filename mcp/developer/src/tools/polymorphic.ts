@@ -147,16 +147,30 @@ function scaffoldWorkspaceEntity(
 }
 
 /**
- * Scaffold a component unit into a target package.
+ * Resolve target directory and options for component scaffolding.
  */
-function scaffoldComponentUnit(name: string, args: ScaffoldInput): object {
+function resolveComponentTarget(
+  name: string,
+  rawPackage?: string,
+): {
+  normalizedName: string;
+  target: { packageDir: string; relativePackageDir: string };
+} {
   const normalizedName = normalizeUnitName(name);
   const nameError = validateName(normalizedName);
   if (nameError) throw new Error(nameError);
+  const target = resolvePackageTarget(rawPackage?.trim() || 'components');
+  return { normalizedName, target };
+}
+
+/**
+ * Scaffold a component unit into a target package.
+ */
+function scaffoldComponentUnit(name: string, args: ScaffoldInput): object {
   if (!args.level) {
     throw new Error('Component scaffolding requires a "level" (atom, molecule, organism, template, page).');
   }
-  const target = resolvePackageTarget(args.package?.trim() || 'components');
+  const { normalizedName, target } = resolveComponentTarget(name, args.package);
   const scaffold = componentFiles({
     name: normalizedName,
     level: args.level as ScaffoldAtomicLevel,
@@ -377,11 +391,20 @@ function handleI18nQuery(action: 'list' | 'coverage', group: WorkspaceGroup, nam
 }
 
 /**
+ * Require a non-empty string argument.
+ */
+function requireStringArg(value: string | undefined, message: string): string {
+  if (!value) throw new Error(message);
+  const trimmed = value.trim();
+  if (!trimmed) throw new Error(message);
+  return trimmed;
+}
+
+/**
  * Handle adding a new locale.
  */
 function handleI18nAdd(resolved: ResolvedLocales, args: I18nInput): object {
-  const locale = args.locale?.trim();
-  if (!locale) throw new Error('Provide a "locale" code to add.');
+  const locale = requireStringArg(args.locale, 'Provide a "locale" code to add.');
   return addLocale(resolved, locale, {
     fill: args.fill ?? 'empty',
     apply: args.apply === true,
@@ -392,24 +415,29 @@ function handleI18nAdd(resolved: ResolvedLocales, args: I18nInput): object {
  * Handle removing an existing locale.
  */
 function handleI18nRemove(resolved: ResolvedLocales, args: I18nInput): object {
-  const locale = args.locale?.trim();
-  if (!locale) throw new Error('Provide a "locale" code to remove.');
+  const locale = requireStringArg(args.locale, 'Provide a "locale" code to remove.');
   return removeLocale(resolved, locale, args.apply === true);
+}
+
+/**
+ * Validate input arguments required for updating a translation entry.
+ */
+function validateI18nUpdateArgs(args: I18nInput): { locale: string; key: string; value: string } {
+  const locale = requireStringArg(args.locale, 'Provide a "locale" code.');
+  const key = requireStringArg(args.key, 'Provide a dot-notated "key" path.');
+  if (args.value === undefined) throw new Error('Provide a "value" string.');
+  return { locale, key, value: args.value };
 }
 
 /**
  * Handle updating a translation entry.
  */
 function handleI18nUpdate(resolved: ResolvedLocales, args: I18nInput): object {
-  const locale = args.locale?.trim();
-  if (!locale) throw new Error('Provide a "locale" code.');
-  const key = args.key?.trim();
-  if (!key) throw new Error('Provide a dot-notated "key" path.');
-  if (args.value === undefined) throw new Error('Provide a "value" string.');
+  const { locale, key, value } = validateI18nUpdateArgs(args);
   return updateTranslation({
     resolved,
     code: locale,
-    entries: { [key]: args.value },
+    entries: { [key]: value },
     namespace: args.namespace?.trim(),
     apply: args.apply === true,
   });
