@@ -152,6 +152,37 @@ interface ProcessExecutionResult {
 }
 
 /**
+ * Safely extract stdout and stderr string buffers from child process result.
+ */
+function extractOutputBuffers(
+  result: ReturnType<typeof spawnSync>,
+  maxBytes: number,
+): { stdout: { value: string; truncated: boolean }; stderr: { value: string; truncated: boolean } } {
+  const rawOut = typeof result.stdout === 'string' ? result.stdout : '';
+  const rawErr = typeof result.stderr === 'string' ? result.stderr : '';
+  return {
+    stdout: trimOutput(rawOut, maxBytes),
+    stderr: trimOutput(rawErr, maxBytes),
+  };
+}
+
+/**
+ * Check whether child process execution exceeded buffers or failed.
+ */
+function isBufferExceeded(stdoutTruncated: boolean, stderrTruncated: boolean, errorCode?: string): boolean {
+  if (stdoutTruncated || stderrTruncated) return true;
+  return errorCode === 'ENOBUFS';
+}
+
+/**
+ * Check whether child process exited successfully without system error.
+ */
+function isProcessSuccess(result: ReturnType<typeof spawnSync>): boolean {
+  if (result.status !== 0) return false;
+  return !result.error;
+}
+
+/**
  * Execute a child process synchronously with bounded buffer, timeout, and timing metrics.
  */
 function executeBoundedProcess(options: ProcessExecutionOptions): ProcessExecutionResult {
@@ -166,12 +197,11 @@ function executeBoundedProcess(options: ProcessExecutionOptions): ProcessExecuti
   });
   const durationMs = Date.now() - startedAt;
 
-  const stdout = trimOutput(typeof result.stdout === 'string' ? result.stdout : '', options.maxOutputBytes);
-  const stderr = trimOutput(typeof result.stderr === 'string' ? result.stderr : '', options.maxOutputBytes);
+  const { stdout, stderr } = extractOutputBuffers(result, options.maxOutputBytes);
   const errorCode = (result.error as NodeJS.ErrnoException | undefined)?.code;
   const timedOut = errorCode === 'ETIMEDOUT';
-  const bufferExceeded = stdout.truncated || stderr.truncated || errorCode === 'ENOBUFS';
-  const success = result.status === 0 && !result.error;
+  const bufferExceeded = isBufferExceeded(stdout.truncated, stderr.truncated, errorCode);
+  const success = isProcessSuccess(result);
 
   return {
     success,
@@ -355,6 +385,28 @@ export function primeUpstreamDependencies(request: {
 }
 
 /**
+ * Validate task name and filter pattern for TurboTaskRequest.
+ */
+function validateTurboTaskInput(task: string, filter?: string): void {
+  if (!SAFE_TASK_PATTERN.test(task)) {
+    throw new Error(`Invalid task name "${task}". Use alphanumeric names like "build:check", "lint", "test".`);
+  }
+  if (filter && !SAFE_FILTER_PATTERN.test(filter)) {
+    throw new Error(`Invalid filter pattern "${filter}".`);
+  }
+}
+
+/**
+ * Build CLI arguments array for Turborepo invocation.
+ */
+function buildTurboArgs(task: string, filter?: string, dry?: boolean): string[] {
+  const args = ['exec', 'turbo', 'run', task];
+  if (filter) args.push('--filter', filter);
+  if (dry) args.push('--dry=json');
+  return args;
+}
+
+/**
  * Runs a Turborepo task across packages with strict parameter bounds and timeout.
  */
 export function runTurboTask(request: {
@@ -365,22 +417,13 @@ export function runTurboTask(request: {
   readonly maxOutputBytes?: number;
 }): TurboTaskResult {
   const task = request.task.trim();
-  if (!SAFE_TASK_PATTERN.test(task)) {
-    throw new Error(`Invalid task name "${task}". Use alphanumeric names like "build:check", "lint", "test".`);
-  }
-
   const filter = request.filter?.trim();
-  if (filter && !SAFE_FILTER_PATTERN.test(filter)) {
-    throw new Error(`Invalid filter pattern "${filter}".`);
-  }
+  validateTurboTaskInput(task, filter);
 
   const repoRoot = findRepoRoot();
   const timeoutMs = boundedTimeout(request.timeoutMs);
   const maxOutputBytes = boundedOutput(request.maxOutputBytes);
-
-  const args = ['exec', 'turbo', 'run', task];
-  if (filter) args.push('--filter', filter);
-  if (request.dry) args.push('--dry=json');
+  const args = buildTurboArgs(task, filter, request.dry);
 
   const execResult = executeBoundedProcess({
     cwd: repoRoot,
@@ -494,6 +537,23 @@ function isStoryFileName(entry: string): boolean {
 }
 
 /**
+ * Check whether package name matches the optional filter.
+ */
+function matchesPackageFilter(packageName: string | undefined, filter?: string): boolean {
+  if (!filter) return true;
+  if (!packageName) return false;
+  return packageName.toLowerCase().includes(filter);
+}
+
+/**
+ * Check whether component name matches the optional filter.
+ */
+function matchesComponentFilter(componentName: string, filter?: string): boolean {
+  if (!filter) return true;
+  return componentName.toLowerCase().includes(filter);
+}
+
+/**
  * Extract StoryEntry metadata from a discovered story file path.
  */
 function extractStoryEntry(
@@ -510,10 +570,10 @@ function extractStoryEntry(
   const foundLevel = segments.find((s) => atomicLevels.has(s));
   const packageName = segments.length > 1 ? segments[1] : undefined;
 
-  if (filterPackage && packageName && !packageName.toLowerCase().includes(filterPackage)) {
+  if (!matchesPackageFilter(packageName, filterPackage)) {
     return undefined;
   }
-  if (filterComponent && !fileBase.toLowerCase().includes(filterComponent)) {
+  if (!matchesComponentFilter(fileBase, filterComponent)) {
     return undefined;
   }
 
@@ -523,6 +583,68 @@ function extractStoryEntry(
     level: foundLevel,
     packageName,
   };
+}
+
+/**
+ * Safely read directory entries, returning empty array on error.
+ */
+function tryReadDir(dir: string): string[] {
+  try {
+    return readdirSync(dir);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Safely stat path, returning undefined on error.
+ */
+function tryStat(fullPath: string): ReturnType<typeof statSync> | undefined {
+  try {
+    return statSync(fullPath);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Handle a discovered story file entry.
+ */
+function handleStoryFileEntry(
+  repoRoot: string,
+  fullPath: string,
+  entry: string,
+  stories: StoryEntry[],
+  filterPackage?: string,
+  filterComponent?: string,
+): void {
+  const story = extractStoryEntry(repoRoot, fullPath, entry, filterPackage, filterComponent);
+  if (story) stories.push(story);
+}
+
+/**
+ * Process a single entry within a story directory scan.
+ */
+function processStoryScanEntry(
+  dir: string,
+  entry: string,
+  repoRoot: string,
+  stories: StoryEntry[],
+  limit: number,
+  filterPackage?: string,
+  filterComponent?: string,
+  currentDepth = 0,
+): void {
+  if (isIgnoredScanEntry(entry)) return;
+  const fullPath = join(dir, entry);
+  const stat = tryStat(fullPath);
+  if (!stat) return;
+
+  if (stat.isDirectory()) {
+    scanStoriesDirectory(fullPath, repoRoot, stories, limit, filterPackage, filterComponent, currentDepth + 1);
+  } else if (isStoryFileName(entry)) {
+    handleStoryFileEntry(repoRoot, fullPath, entry, stories, filterPackage, filterComponent);
+  }
 }
 
 /**
@@ -538,31 +660,11 @@ function scanStoriesDirectory(
   currentDepth = 0,
 ): void {
   if (currentDepth > 10 || stories.length >= limit) return;
-  let entries: string[];
-  try {
-    entries = readdirSync(dir);
-  } catch {
-    return;
-  }
+  const entries = tryReadDir(dir);
 
   for (const entry of entries) {
     if (stories.length >= limit) break;
-    if (isIgnoredScanEntry(entry)) continue;
-
-    const fullPath = join(dir, entry);
-    let stat;
-    try {
-      stat = statSync(fullPath);
-    } catch {
-      continue;
-    }
-
-    if (stat.isDirectory()) {
-      scanStoriesDirectory(fullPath, repoRoot, stories, limit, filterPackage, filterComponent, currentDepth + 1);
-    } else if (isStoryFileName(entry)) {
-      const story = extractStoryEntry(repoRoot, fullPath, entry, filterPackage, filterComponent);
-      if (story) stories.push(story);
-    }
+    processStoryScanEntry(dir, entry, repoRoot, stories, limit, filterPackage, filterComponent, currentDepth);
   }
 }
 
