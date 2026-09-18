@@ -255,19 +255,20 @@ export async function startStorybookServers(
   const definitions = createRendererDefinitions(options);
   const running: Partial<Record<VisualParityRendererDefinition['framework'], StorybookRendererServer>> = {};
   try {
-    const servers: StorybookRendererServer[] = [];
-    for (const definition of definitions) {
-      const server = await launchServer(
-        repositoryRoot,
-        definition,
-        certificateResult,
-        timeoutMs,
-        cleanupGraceMs,
-        registry,
-      );
-      running[definition.framework] = server;
-      servers.push(server);
-    }
+    const servers: StorybookRendererServer[] = await Promise.all(
+      definitions.map(async (definition) => {
+        const server = await launchServer(
+          repositoryRoot,
+          definition,
+          certificateResult,
+          timeoutMs,
+          cleanupGraceMs,
+          registry,
+        );
+        running[definition.framework] = server;
+        return server;
+      }),
+    );
     const byFramework = Object.fromEntries(
       servers.map((server) => [server.definition.framework, server]),
     ) as StorybookRendererServers['servers'];

@@ -4,12 +4,18 @@ import path from 'node:path';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 
+import type { VisualParityCandidate } from './types.ts';
+
 export interface PngDiffOptions {
   baselinePath: string;
   candidatePath: string;
   diffPath: string;
   pixelThreshold?: number;
   maxMismatchRatio?: number;
+}
+
+export interface CandidateDiffOptions extends PngDiffOptions {
+  candidate: VisualParityCandidate;
 }
 
 export type PngDiffStatus = 'pass' | 'visual-mismatch' | 'dimension-mismatch';
@@ -67,4 +73,9 @@ export function comparePngFiles(options: PngDiffOptions): PngDiffResult {
     mismatchRatio,
     ...(status === 'visual-mismatch' ? { diffPath: options.diffPath } : {}),
   };
+}
+
+/** Compare a candidate framework PNG against the baseline PNG. */
+export function compareCandidatePngFiles(options: CandidateDiffOptions): PngDiffResult {
+  return comparePngFiles(options);
 }

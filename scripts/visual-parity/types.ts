@@ -1,12 +1,17 @@
 import type { StorybookIndex } from '../runtime-validation/types.ts';
 
-export const VISUAL_PARITY_RENDERERS = ['web-component', 'react', 'vue'] as const;
+export const VISUAL_PARITY_RENDERERS = ['web-component', 'react', 'vue', 'solid', 'svelte'] as const;
 export type VisualParityRenderer = (typeof VISUAL_PARITY_RENDERERS)[number];
+
+export const VISUAL_PARITY_CANDIDATES = ['react', 'vue', 'solid', 'svelte'] as const;
+export type VisualParityCandidate = (typeof VISUAL_PARITY_CANDIDATES)[number];
 
 export const DEFAULT_VISUAL_PARITY_PORTS: Record<VisualParityRenderer, number> = {
   'web-component': 6200,
   react: 6201,
   vue: 6202,
+  solid: 6203,
+  svelte: 6204,
 };
 
 export interface VisualParityRendererDefinition {
@@ -115,8 +120,8 @@ export interface VisualParityCaptureRun {
 export type VisualParityComparisonStatus = 'pass' | 'visual-mismatch' | 'runtime-failure' | 'missing-pair' | 'blocked';
 
 export interface VisualParityComparison {
-  baseline: 'web-component';
-  candidate: 'react' | 'vue';
+  readonly baseline: 'web-component';
+  readonly candidate: VisualParityCandidate;
   status: VisualParityComparisonStatus;
   baselineUrl?: string;
   candidateUrl?: string;
@@ -146,6 +151,7 @@ export interface VisualParityCliOptions extends VisualParityDiffOptions {
   storyId?: string;
   maxStories?: number;
   ports: Partial<Record<VisualParityRenderer, number>>;
+  targets?: readonly VisualParityCandidate[];
   viewport: VisualParityViewport;
   theme: 'light';
   workers: number;
