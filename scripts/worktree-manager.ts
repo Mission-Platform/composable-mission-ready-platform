@@ -169,7 +169,23 @@ export async function setupWorktree(targetPathInput?: string): Promise<void> {
     console.log(`[worktree-manager] pnpm dependencies successfully installed.`);
   }
 
-  // 4. Verification check
+  // 4. Prime upstream dependencies and verify build readiness
+  console.log(`[worktree-manager] Priming upstream build dependencies...`);
+  try {
+    await execFile(
+      'pnpm',
+      ['exec', 'turbo', 'run', 'build', '--filter', '@mission-platform/forge-web-script-regex^...'],
+      {
+        cwd: targetPath,
+        stdio: 'inherit',
+      },
+    );
+    console.log(`[worktree-manager] Upstream build dependencies successfully primed.`);
+  } catch (error) {
+    console.error(`[worktree-manager] Failed to prime upstream build dependencies: ${String(error)}`);
+    throw error;
+  }
+
   console.log(`[worktree-manager] Validating worktree build readiness...`);
   try {
     await execFile('pnpm', ['--filter', '@mission-platform/forge-web-script-regex', 'test'], {
