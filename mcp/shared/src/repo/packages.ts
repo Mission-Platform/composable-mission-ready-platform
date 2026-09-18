@@ -4,7 +4,12 @@
  * Allows consumers to discover publishable packages, learn which export conditions
  * and peer dependencies are required for their framework, and generate install commands.
  */
-import { findMember, listGroup, readMemberDetails, type WorkspaceMember } from "./scanner.ts";
+import {
+  findMember,
+  listGroup,
+  readMemberDetails,
+  type WorkspaceMember,
+} from "./scanner.ts";
 
 export type ConsumerPackageCategory =
   "all" | "ui" | "core" | "integrations" | "content" | "tooling";
@@ -101,7 +106,8 @@ const QUICK_STARTS: Record<string, Record<string, string>> = {
     "web-components": '<forge-icon-bell size="md"></forge-icon-bell>',
   },
   "@mission-platform/router": {
-    default: "import { MpBrowserHistory, createRouter } from '@mission-platform/router';",
+    default:
+      "import { MpBrowserHistory, createRouter } from '@mission-platform/router';",
   },
   "@mission-platform/i18n": {
     default: "import { createI18n } from '@mission-platform/i18n';",
@@ -111,7 +117,10 @@ const QUICK_STARTS: Record<string, Record<string, string>> = {
 /**
  * Extract the default or first available quick start snippet from a quick start mapping.
  */
-function getDefaultQuickStart(quickStartMap: Record<string, string>, name: string): string {
+function getDefaultQuickStart(
+  quickStartMap: Record<string, string>,
+  name: string,
+): string {
   const fallback = quickStartMap.default || Object.values(quickStartMap)[0];
   return fallback || `import '${name}';`;
 }
@@ -180,6 +189,9 @@ export function listConsumerPackages(
   return result.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+/**
+ * Normalize package name with the monorepo scope prefix.
+ */
 function normalizePackageName(packageName: string): string {
   if (packageName.startsWith("@mission-platform/")) {
     return packageName;
@@ -187,6 +199,9 @@ function normalizePackageName(packageName: string): string {
   return `@mission-platform/${packageName}`;
 }
 
+/**
+ * Resolve declared peer dependency names to version ranges from package manifest.
+ */
 function resolvePeerDependencyVersions(
   declaredDependencies: readonly string[],
   manifestPeerDeps?: Record<string, string>,
@@ -198,6 +213,9 @@ function resolvePeerDependencyVersions(
   return result;
 }
 
+/**
+ * Build package installation command map across popular package managers.
+ */
 function buildInstallCommands(name: string): Record<string, string> {
   return {
     pnpm: `pnpm add ${name}`,
@@ -207,6 +225,9 @@ function buildInstallCommands(name: string): Record<string, string> {
   };
 }
 
+/**
+ * Resolve export conditions applicable to a consumer package.
+ */
 function resolveExportConditions(name: string): readonly string[] {
   return MULTI_FRAMEWORK_PACKAGES.has(name) ? FRAMEWORK_CONDITIONS : [];
 }

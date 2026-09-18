@@ -328,7 +328,14 @@ function scanLineRules(
 ): void {
   for (const rule of VULNERABILITY_RULES) {
     if (isSeverityAtOrAbove(rule.severity, severityThreshold)) {
-      matchVulnerabilityRule(rule, lineText, lineIdx, content, filePath, findings);
+      matchVulnerabilityRule(
+        rule,
+        lineText,
+        lineIdx,
+        content,
+        filePath,
+        findings,
+      );
     }
   }
 }
@@ -347,7 +354,14 @@ function scanContent(
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx += 1) {
     const rawLine = lines[lineIdx];
     if (!rawLine || rawLine.trim().length === 0) continue;
-    scanLineRules(rawLine, lineIdx, content, filePath, severityThreshold, findings);
+    scanLineRules(
+      rawLine,
+      lineIdx,
+      content,
+      filePath,
+      severityThreshold,
+      findings,
+    );
   }
 
   return findings;
@@ -377,6 +391,9 @@ interface CodeTraversalState {
   errors: string[];
 }
 
+/**
+ * Handle a directory entry during code file collection if not ignored.
+ */
 function handleCodeDirectoryEntry(
   name: string,
   fullPath: string,
@@ -389,6 +406,9 @@ function handleCodeDirectoryEntry(
   }
 }
 
+/**
+ * Handle a file entry during code collection, respecting maxFiles limits.
+ */
 function handleCodeFileEntry(
   entry: Dirent,
   fullPath: string,
@@ -430,8 +450,17 @@ function collectCodeFiles(
   startDir: string,
   maxFiles: number,
   collected: string[] = [],
-  state: CodeTraversalState = { skippedCount: 0, unreadableCount: 0, errors: [] },
-): { files: string[]; skippedCount: number; unreadableCount: number; errors: string[] } {
+  state: CodeTraversalState = {
+    skippedCount: 0,
+    unreadableCount: 0,
+    errors: [],
+  },
+): {
+  files: string[];
+  skippedCount: number;
+  unreadableCount: number;
+  errors: string[];
+} {
   try {
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
@@ -542,7 +571,10 @@ function scanDirectoryTargetPath(
   maxFiles: number,
   severityThreshold?: SecurityFinding["severity"],
 ) {
-  const { files, skippedCount, unreadableCount, errors } = collectCodeFiles(targetPath, maxFiles);
+  const { files, skippedCount, unreadableCount, errors } = collectCodeFiles(
+    targetPath,
+    maxFiles,
+  );
   const stats = {
     findings: [] as SecurityFinding[],
     scannedCount: 0,
@@ -589,9 +621,17 @@ function scanTargetPath(
       errors: [],
     };
   }
-  return scanDirectoryTargetPath(targetPath, repoRoot, maxFiles, severityThreshold);
+  return scanDirectoryTargetPath(
+    targetPath,
+    repoRoot,
+    maxFiles,
+    severityThreshold,
+  );
 }
 
+/**
+ * Determine whether a target code scan is incomplete due to skips, errors, or limits.
+ */
 function isTargetScanIncomplete(stats: {
   oversizedCount: number;
   unreadableCount: number;
@@ -604,21 +644,38 @@ function isTargetScanIncomplete(stats: {
   return stats.errors.length > 0;
 }
 
+/**
+ * Return positive count or undefined for cleaner JSON output.
+ */
 function positiveCountOrUndefined(count: number): number | undefined {
   return count > 0 ? count : undefined;
 }
 
-function nonEmptyErrorsOrUndefined(errors: readonly string[]): readonly string[] | undefined {
+/**
+ * Return non-empty errors array or undefined for cleaner JSON output.
+ */
+function nonEmptyErrorsOrUndefined(
+  errors: readonly string[],
+): readonly string[] | undefined {
   return errors.length > 0 ? errors : undefined;
 }
 
-function resolveScanTargetPath(optionsPath: string | undefined, repoRoot: string): string {
+/**
+ * Resolve target path for code scanning against repository root.
+ */
+function resolveScanTargetPath(
+  optionsPath: string | undefined,
+  repoRoot: string,
+): string {
   if (optionsPath) {
     return resolveRepoPath(optionsPath, "code analysis path");
   }
   return repoRoot;
 }
 
+/**
+ * Build structured security scan result from target scan statistics.
+ */
 function buildTargetScanResult(
   targetResult: ReturnType<typeof scanTargetPath>,
   startTime: number,

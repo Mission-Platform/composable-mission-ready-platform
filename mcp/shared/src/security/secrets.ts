@@ -333,7 +333,13 @@ function scanTextLines(
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx += 1) {
     const rawLine = lines[lineIdx];
     if (!rawLine || rawLine.trim().length === 0) continue;
-    scanLineSecretRules(rawLine, lineIdx, filePath, severityThreshold, findings);
+    scanLineSecretRules(
+      rawLine,
+      lineIdx,
+      filePath,
+      severityThreshold,
+      findings,
+    );
   }
 
   return findings;
@@ -364,6 +370,9 @@ interface SecretTraversalState {
   errors: string[];
 }
 
+/**
+ * Handle a directory entry during secret file collection if not ignored.
+ */
 function handleSecretDirectoryEntry(
   name: string,
   fullPath: string,
@@ -376,6 +385,9 @@ function handleSecretDirectoryEntry(
   }
 }
 
+/**
+ * Handle a file entry during secret file collection, respecting maxFiles limits.
+ */
 function handleSecretFileEntry(
   entry: Dirent,
   fullPath: string,
@@ -404,7 +416,13 @@ function processSecretDirectoryEntry(
   if (entry.isSymbolicLink()) return;
   const fullPath = join(startDir, entry.name);
   if (entry.isDirectory()) {
-    handleSecretDirectoryEntry(entry.name, fullPath, maxFiles, collected, state);
+    handleSecretDirectoryEntry(
+      entry.name,
+      fullPath,
+      maxFiles,
+      collected,
+      state,
+    );
     return;
   }
   handleSecretFileEntry(entry, fullPath, maxFiles, collected, state);
@@ -417,8 +435,17 @@ function collectFiles(
   startDir: string,
   maxFiles: number,
   collected: string[] = [],
-  state: SecretTraversalState = { skippedCount: 0, unreadableCount: 0, errors: [] },
-): { files: string[]; skippedCount: number; unreadableCount: number; errors: string[] } {
+  state: SecretTraversalState = {
+    skippedCount: 0,
+    unreadableCount: 0,
+    errors: [],
+  },
+): {
+  files: string[];
+  skippedCount: number;
+  unreadableCount: number;
+  errors: string[];
+} {
   try {
     const entries = readdirSync(startDir, { withFileTypes: true });
     for (const entry of entries) {
@@ -529,7 +556,10 @@ function scanSecretDirectoryTargetPath(
   maxFiles: number,
   severityThreshold?: SecurityFinding["severity"],
 ) {
-  const { files, skippedCount, unreadableCount, errors } = collectFiles(targetPath, maxFiles);
+  const { files, skippedCount, unreadableCount, errors } = collectFiles(
+    targetPath,
+    maxFiles,
+  );
   const stats = {
     findings: [] as SecurityFinding[],
     scannedCount: 0,
@@ -576,9 +606,17 @@ function scanSecretTargetPath(
       errors: [],
     };
   }
-  return scanSecretDirectoryTargetPath(targetPath, repoRoot, maxFiles, severityThreshold);
+  return scanSecretDirectoryTargetPath(
+    targetPath,
+    repoRoot,
+    maxFiles,
+    severityThreshold,
+  );
 }
 
+/**
+ * Determine whether a secret scan is incomplete due to skips, errors, or limits.
+ */
 function isSecretScanIncomplete(stats: {
   oversizedCount: number;
   unreadableCount: number;
@@ -591,21 +629,38 @@ function isSecretScanIncomplete(stats: {
   return stats.errors.length > 0;
 }
 
+/**
+ * Return positive count or undefined for cleaner JSON output.
+ */
 function positiveCountOrUndefined(count: number): number | undefined {
   return count > 0 ? count : undefined;
 }
 
-function nonEmptyErrorsOrUndefined(errors: readonly string[]): readonly string[] | undefined {
+/**
+ * Return non-empty errors array or undefined for cleaner JSON output.
+ */
+function nonEmptyErrorsOrUndefined(
+  errors: readonly string[],
+): readonly string[] | undefined {
   return errors.length > 0 ? errors : undefined;
 }
 
-function resolveSecretTargetPath(optionsPath: string | undefined, repoRoot: string): string {
+/**
+ * Resolve target filesystem path for secret scanning against repository root.
+ */
+function resolveSecretTargetPath(
+  optionsPath: string | undefined,
+  repoRoot: string,
+): string {
   if (optionsPath) {
     return resolveRepoPath(optionsPath, "secret scan path");
   }
   return repoRoot;
 }
 
+/**
+ * Build structured secret security scan result from target scan statistics.
+ */
 function buildSecretScanResult(
   targetResult: ReturnType<typeof scanSecretTargetPath>,
   startTime: number,

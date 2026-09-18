@@ -225,6 +225,9 @@ function scanSingleManifestPath(
   }
 }
 
+/**
+ * Scan a single target file if it is a package.json manifest.
+ */
 function scanSingleFileTarget(
   targetPath: string,
   repoRoot: string,
@@ -239,11 +242,17 @@ function scanSingleFileTarget(
   return { findings: [], scannedFiles: 0 };
 }
 
+/**
+ * Check whether a workspace member directory is contained inside the target path.
+ */
 function isChildMember(memberDir: string, targetPath: string): boolean {
   const rel = relative(targetPath, memberDir);
   return Boolean(rel && !rel.startsWith("..") && !isAbsolute(rel));
 }
 
+/**
+ * Scan package.json manifests of all child workspace members within the target path.
+ */
 function scanWorkspaceMemberManifests(
   targetPath: string,
   repoRoot: string,
@@ -256,7 +265,9 @@ function scanWorkspaceMemberManifests(
       if (!isChildMember(member.dir, targetPath)) continue;
       const memberPkg = join(member.dir, "package.json");
       if (existsSync(memberPkg)) {
-        findings.push(...scanSingleManifestPath(memberPkg, repoRoot, severityThreshold));
+        findings.push(
+          ...scanSingleManifestPath(memberPkg, repoRoot, severityThreshold),
+        );
         scannedFiles += 1;
       }
     }
@@ -266,6 +277,9 @@ function scanWorkspaceMemberManifests(
   return { findings, scannedFiles };
 }
 
+/**
+ * Scan direct and child member package.json manifests within a target directory.
+ */
 function scanDirectoryManifests(
   targetPath: string,
   repoRoot: string,
@@ -276,11 +290,17 @@ function scanDirectoryManifests(
 
   const directPkg = join(targetPath, "package.json");
   if (existsSync(directPkg)) {
-    findings.push(...scanSingleManifestPath(directPkg, repoRoot, severityThreshold));
+    findings.push(
+      ...scanSingleManifestPath(directPkg, repoRoot, severityThreshold),
+    );
     scannedFiles += 1;
   }
 
-  const memberResult = scanWorkspaceMemberManifests(targetPath, repoRoot, severityThreshold);
+  const memberResult = scanWorkspaceMemberManifests(
+    targetPath,
+    repoRoot,
+    severityThreshold,
+  );
   findings.push(...memberResult.findings);
   scannedFiles += memberResult.scannedFiles;
 
@@ -312,12 +332,18 @@ interface PnpmAuditExecutionResult {
   readonly error?: string;
 }
 
+/**
+ * Extract utf8 string from subprocess stdout buffer or string.
+ */
 function extractStdoutString(stdout: string | Buffer | undefined): string {
   if (!stdout) return "";
   if (typeof stdout === "string") return stdout;
   return stdout.toString("utf8");
 }
 
+/**
+ * Handle errors thrown by pnpm audit execution, preserving JSON stdout if present.
+ */
 function handleAuditExecutionError(error: unknown): PnpmAuditExecutionResult {
   const execErr = error as { stdout?: string | Buffer; message?: string };
   const stdoutText = extractStdoutString(execErr.stdout);
@@ -420,11 +446,17 @@ function buildAdvisoryFinding(
   };
 }
 
+/**
+ * Check whether a package relative path is contained inside target prefix.
+ */
 function isPathInScope(pkgRel: string, targetPrefix: string): boolean {
   const rel = relative(targetPrefix, pkgRel);
   return rel === "" || (!rel.startsWith("..") && !isAbsolute(rel));
 }
 
+/**
+ * Check whether any dependency path in an advisory finding matches the target prefix.
+ */
 function hasMatchingFindingPath(
   finding: PnpmAdvisoryFinding,
   targetPrefix: string,
@@ -440,21 +472,55 @@ function hasMatchingFindingPath(
   return false;
 }
 
+/**
+ * Extract normalized relative target prefix for advisory path matching.
+ */
+function resolveAdvisoryTargetPrefix(
+  targetPath: string,
+  repoRoot: string,
+): string {
+  const relTarget = relative(repoRoot, targetPath).replaceAll("\\", "/");
+  if (relTarget.endsWith("/package.json")) {
+    return relTarget.slice(0, -"/package.json".length);
+  }
+  return relTarget.replace(/\/+$/, "");
+}
+
+/**
+ * Check whether a target prefix encompasses the entire repository.
+ */
+function isWholeRepoTarget(targetPrefix: string): boolean {
+  return !targetPrefix || targetPrefix === ".";
+}
+
+/**
+ * Check whether a pnpm advisory impacts dependencies within the targeted path scope.
+ */
 function isAdvisoryInPathScope(
   advisory: PnpmAdvisory,
   targetPath: string,
   repoRoot: string,
 ): boolean {
   if (targetPath === repoRoot) return true;
-  const relTarget = relative(repoRoot, targetPath).replaceAll("\\", "/");
-  const targetPrefix = relTarget.endsWith("/package.json")
-    ? relTarget.slice(0, -"/package.json".length)
-    : relTarget.replace(/\/+$/, "");
-
-  if (!targetPrefix || targetPrefix === ".") return true;
+  const targetPrefix = resolveAdvisoryTargetPrefix(targetPath, repoRoot);
+  if (isWholeRepoTarget(targetPrefix)) return true;
 
   const findings = advisory.findings ?? [];
   return findings.some((f) => hasMatchingFindingPath(f, targetPrefix));
+}
+
+/**
+ * Check whether an advisory is excluded by the scoped target path.
+ */
+function isAdvisoryExcludedByScope(
+  advisory: PnpmAdvisory,
+  targetPath?: string,
+  repoRoot?: string,
+): boolean {
+  if (!targetPath || !repoRoot) {
+    return false;
+  }
+  return !isAdvisoryInPathScope(advisory, targetPath, repoRoot);
 }
 
 /**
@@ -467,7 +533,7 @@ function processSingleAdvisory(
   targetPath?: string,
   repoRoot?: string,
 ): SecurityFinding | undefined {
-  if (targetPath && repoRoot && !isAdvisoryInPathScope(advisory, targetPath, repoRoot)) {
+  if (isAdvisoryExcludedByScope(advisory, targetPath, repoRoot)) {
     return undefined;
   }
   const rawSeverity = advisory.severity ?? "moderate";
@@ -481,9 +547,10 @@ function processSingleAdvisory(
 /**
  * Safely parse JSON and extract advisories object from pnpm audit output.
  */
-function extractAuditAdvisories(
-  stdoutText: string,
-): { advisories?: Record<string, PnpmAdvisory>; error?: string } {
+function extractAuditAdvisories(stdoutText: string): {
+  advisories?: Record<string, PnpmAdvisory>;
+  error?: string;
+} {
   try {
     const auditData = JSON.parse(stdoutText) as PnpmAuditOutput;
     const advisories = auditData?.advisories;
@@ -509,7 +576,13 @@ function convertAdvisoriesToFindings(
 ): SecurityFinding[] {
   const findings: SecurityFinding[] = [];
   for (const [id, advisory] of Object.entries(advisories)) {
-    const finding = processSingleAdvisory(id, advisory, severityThreshold, targetPath, repoRoot);
+    const finding = processSingleAdvisory(
+      id,
+      advisory,
+      severityThreshold,
+      targetPath,
+      repoRoot,
+    );
     if (finding) findings.push(finding);
   }
   return findings;
@@ -528,7 +601,12 @@ function parseAuditAdvisories(
   if (result.error) return { findings: [], error: result.error };
   const advisories = result.advisories ?? {};
   return {
-    findings: convertAdvisoriesToFindings(advisories, severityThreshold, targetPath, repoRoot),
+    findings: convertAdvisoriesToFindings(
+      advisories,
+      severityThreshold,
+      targetPath,
+      repoRoot,
+    ),
   };
 }
 
@@ -549,18 +627,32 @@ function runPnpmAuditCheck(
   if (!auditExec.stdout.trim()) {
     return { findings: [], errors };
   }
-  const parsed = parseAuditAdvisories(auditExec.stdout, severityThreshold, targetPath, repoRoot);
+  const parsed = parseAuditAdvisories(
+    auditExec.stdout,
+    severityThreshold,
+    targetPath,
+    repoRoot,
+  );
   if (parsed.error) errors.push(parsed.error);
   return { findings: parsed.findings, errors };
 }
 
-function resolveAuditTargetPath(optionsPath: string | undefined, repoRoot: string): string {
+/**
+ * Resolve target filesystem path for dependency auditing against repository root.
+ */
+function resolveAuditTargetPath(
+  optionsPath: string | undefined,
+  repoRoot: string,
+): string {
   if (optionsPath) {
     return resolveRepoPath(optionsPath, "dependency audit path");
   }
   return repoRoot;
 }
 
+/**
+ * Build structured dependency security scan result from findings and errors.
+ */
 function buildAuditResult(
   findings: SecurityFinding[],
   scannedFiles: number,
@@ -607,5 +699,10 @@ export function auditDependencies(
     errors.push(...auditResult.errors);
   }
 
-  return buildAuditResult(findings, manifestResult.scannedFiles, errors, startTime);
+  return buildAuditResult(
+    findings,
+    manifestResult.scannedFiles,
+    errors,
+    startTime,
+  );
 }

@@ -488,6 +488,9 @@ function formatComplianceStandardReport(report: ComplianceEvidenceReport, standa
   }
 }
 
+/**
+ * Read staged git diff output for secret scanning and verify it was not truncated.
+ */
 function getStagedDiffForSecretScanning(path?: string): string {
   const diffResult = readGitDiff({ staged: true, path });
   if (!diffResult.success) {
@@ -501,6 +504,9 @@ function getStagedDiffForSecretScanning(path?: string): string {
   return diffResult.stdout;
 }
 
+/**
+ * Handle secret scanning execution for staged diffs or filesystem paths.
+ */
 function handleSecurityScanSecrets(args: {
   path?: string;
   staged?: boolean;
