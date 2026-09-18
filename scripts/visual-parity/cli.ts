@@ -8,7 +8,6 @@ import {
   pairStorybookIndexes,
   type StorybookIndexMissingPair,
   type StorybookIndexPair,
-  type StorybookParityFramework,
 } from '../runtime-validation/storybook-index.ts';
 
 import { comparePngFiles } from './diff.ts';
@@ -25,14 +24,16 @@ import { startStorybookServers } from './servers.ts';
 import {
   createRendererDefinitions,
   DEFAULT_VISUAL_PARITY_VIEWPORT,
+  VISUAL_PARITY_CANDIDATES,
   VISUAL_PARITY_RENDERERS,
+  type StorybookRendererServers,
+  type VisualParityCandidate,
   type VisualParityCaptureResult,
   type VisualParityCliOptions,
   type VisualParityComparison,
   type VisualParityRenderer,
   type VisualParityReport,
   type VisualParityResult,
-  type StorybookRendererServers,
 } from './types.ts';
 
 const DEFAULT_TIMEOUT_MS = 120_000;
@@ -78,8 +79,8 @@ function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number
   const base = option(args, '--port');
   if (base !== undefined) {
     const value = Number(base);
-    if (!Number.isInteger(value) || value < 1 || value > 65_533)
-      throw new Error('--port must allow three valid consecutive TCP ports.');
+    if (!Number.isInteger(value) || value < 1 || value > 65_531)
+      throw new Error('--port must allow five valid consecutive TCP ports.');
     for (const [index, renderer] of VISUAL_PARITY_RENDERERS.entries()) ports[renderer] = value + index;
   }
   for (const renderer of VISUAL_PARITY_RENDERERS) {
@@ -105,6 +106,25 @@ function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number
   return ports;
 }
 
+function parseTargets(args: string[]): readonly VisualParityCandidate[] | undefined {
+  const raw =
+    option(args, '--targets') ??
+    option(args, '--target') ??
+    option(args, '--candidates') ??
+    option(args, '--candidate');
+  if (raw === undefined) return undefined;
+  if (raw === 'all') return VISUAL_PARITY_CANDIDATES;
+  const list = raw.split(',').map((item) => item.trim());
+  const candidates: VisualParityCandidate[] = [];
+  for (const item of list) {
+    const matched = VISUAL_PARITY_CANDIDATES.find((candidate) => candidate === item);
+    if (!matched)
+      throw new Error(`Unknown target candidate: ${item}. Expected one of: ${VISUAL_PARITY_CANDIDATES.join(', ')}.`);
+    candidates.push(matched);
+  }
+  return candidates;
+}
+
 export function parseVisualParityArgs(args: string[], root = repositoryRoot()): VisualParityCliOptions {
   const viewport = option(args, '--viewport') ?? 'md';
   const theme = option(args, '--theme') ?? 'light';
@@ -117,6 +137,7 @@ export function parseVisualParityArgs(args: string[], root = repositoryRoot()): 
     maxStories:
       option(args, '--max-stories') === undefined ? undefined : positiveIntegerOption(args, '--max-stories', 1),
     ports: parsePorts(args),
+    targets: parseTargets(args),
     viewport: DEFAULT_VISUAL_PARITY_VIEWPORT,
     theme: 'light',
     workers: positiveIntegerOption(args, '--workers', DEFAULT_WORKERS),
@@ -197,7 +218,7 @@ type VisualParityComparisonStatus = VisualParityComparison['status'];
 
 function compareRenderer(
   storyId: string,
-  candidate: 'react' | 'vue',
+  candidate: VisualParityCandidate,
   captures: Map<string, VisualParityCaptureResult>,
   outputDirectory: string,
   options: VisualParityCliOptions,
@@ -249,12 +270,16 @@ function compareRenderer(
   return comparison;
 }
 
-function missingResult(pair: StorybookIndexMissingPair, packageName: string): VisualParityResult {
+function missingResult(
+  pair: StorybookIndexMissingPair,
+  packageName: string,
+  candidates: readonly VisualParityCandidate[] = VISUAL_PARITY_CANDIDATES,
+): VisualParityResult {
   return {
     storyId: pair.storyId,
     packageName,
     sourceImport: pair.sourceImport,
-    comparisons: (['react', 'vue'] as const).map((candidate) => ({
+    comparisons: candidates.map((candidate) => ({
       baseline: 'web-component' as const,
       candidate,
       status: 'missing-pair' as const,
@@ -280,6 +305,8 @@ export async function runVisualParity(options: VisualParityCliOptions): Promise<
       'web-component': running.servers['web-component'].index,
       react: running.servers.react.index,
       vue: running.servers.vue.index,
+      solid: running.servers.solid.index,
+      svelte: running.servers.svelte.index,
     });
     const pairs = selectedPairs(pairing.pairs, inventory, options);
     const missingFromEntries = selectedMissing(pairing.missing, inventory, {
@@ -295,7 +322,7 @@ export async function runVisualParity(options: VisualParityCliOptions): Promise<
       .map((story) => ({
         storyId: story.id,
         sourceImport: story.filePath,
-        missingFrameworks: ['web-component', 'react', 'vue'] as StorybookParityFramework[],
+        missingFrameworks: [...VISUAL_PARITY_RENDERERS],
         entries: {},
       }));
     const missing = [
@@ -319,9 +346,10 @@ export async function runVisualParity(options: VisualParityCliOptions): Promise<
         entries: pair.entries,
       });
     }
+    const targetCandidates = options.targets ?? VISUAL_PARITY_CANDIDATES;
     for (const pair of missing) {
       const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
-      results.push(missingResult(pair, story?.packageName ?? 'unknown'));
+      results.push(missingResult(pair, story?.packageName ?? 'unknown', targetCandidates));
       writeStoryMetadata(options.outputDirectory, pair.storyId, {
         storyId: pair.storyId,
         packageName: story?.packageName ?? 'unknown',
@@ -360,10 +388,9 @@ export async function runVisualParity(options: VisualParityCliOptions): Promise<
         storyId: pair.storyId,
         packageName: story.packageName,
         sourceImport: pair.sourceImport,
-        comparisons: [
-          compareRenderer(pair.storyId, 'react', byKey, options.outputDirectory, options),
-          compareRenderer(pair.storyId, 'vue', byKey, options.outputDirectory, options),
-        ],
+        comparisons: targetCandidates.map((candidate) =>
+          compareRenderer(pair.storyId, candidate, byKey, options.outputDirectory, options),
+        ),
       };
       results.push(result);
       for (const comparison of result.comparisons)
@@ -405,6 +432,7 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {
     console.log('Usage: pnpm visual:parity -- [--package <name>] [--story <id>] [--max-stories <n>] [--port <base>]');
+    console.log('       [--solid-port <port>] [--svelte-port <port>] [--targets <react,vue,solid,svelte>]');
     console.log(
       '       [--viewport md] [--theme light] [--workers <n>] [--timeout-ms <ms>] [--pixel-threshold <0..1>] [--diff-threshold <0..1>]',
     );

@@ -17,7 +17,7 @@ export interface StorybookIndexComparison {
   matched: StoryFile[];
 }
 
-export const STORYBOOK_PARITY_FRAMEWORKS = ['web-component', 'react', 'vue'] as const;
+export const STORYBOOK_PARITY_FRAMEWORKS = ['web-component', 'react', 'vue', 'solid', 'svelte'] as const;
 export type StorybookParityFramework = (typeof STORYBOOK_PARITY_FRAMEWORKS)[number];
 
 export interface StorybookIndexPair {
@@ -88,17 +88,25 @@ function parityEntries(
 export function pairStorybookIndexes(
   repositoryRoot: string,
   inventory: RepositoryInventory,
-  indexes: Record<StorybookParityFramework, StorybookIndex>,
+  indexes: Partial<Record<StorybookParityFramework, StorybookIndex>> | Record<string, StorybookIndex>,
+  targetFrameworks?: readonly StorybookParityFramework[],
 ): StorybookIndexPairing {
-  const byFramework = Object.fromEntries(
-    STORYBOOK_PARITY_FRAMEWORKS.map((framework) => [
-      framework,
-      parityEntries(repositoryRoot, inventory, indexes[framework]),
-    ]),
-  ) as Record<StorybookParityFramework, Map<string, { entry: StorybookIndexEntry; sourceImport: string }>>;
+  const detectedFrameworks = STORYBOOK_PARITY_FRAMEWORKS.filter((framework) => indexes[framework] !== undefined);
+  const activeFrameworks =
+    targetFrameworks ?? (detectedFrameworks.length > 0 ? detectedFrameworks : STORYBOOK_PARITY_FRAMEWORKS);
+  const byFramework: Partial<
+    Record<StorybookParityFramework, Map<string, { entry: StorybookIndexEntry; sourceImport: string }>>
+  > = {};
+  for (const framework of activeFrameworks) {
+    const index = indexes[framework];
+    byFramework[framework] = index ? parityEntries(repositoryRoot, inventory, index) : new Map();
+  }
   const keys = new Set<string>();
-  for (const framework of STORYBOOK_PARITY_FRAMEWORKS) {
-    for (const key of byFramework[framework].keys()) keys.add(key);
+  for (const framework of activeFrameworks) {
+    const frameworkMap = byFramework[framework];
+    if (frameworkMap) {
+      for (const key of frameworkMap.keys()) keys.add(key);
+    }
   }
 
   const pairs: StorybookIndexPair[] = [];
@@ -107,20 +115,20 @@ export function pairStorybookIndexes(
     const separator = key.indexOf('\u0000');
     const storyId = key.slice(0, separator);
     const sourceImport = key.slice(separator + 1);
-    const entries = Object.fromEntries(
-      STORYBOOK_PARITY_FRAMEWORKS.flatMap((framework) => {
-        const value = byFramework[framework].get(key)?.entry;
-        return value ? [[framework, value]] : [];
-      }),
-    ) as Partial<Record<StorybookParityFramework, StorybookIndexEntry>>;
-    const missingFrameworks = STORYBOOK_PARITY_FRAMEWORKS.filter((framework) => !entries[framework]);
+    const entries: Partial<Record<StorybookParityFramework, StorybookIndexEntry>> = {};
+    for (const framework of activeFrameworks) {
+      const value = byFramework[framework]?.get(key)?.entry;
+      if (value) entries[framework] = value;
+    }
+    const missingFrameworks = activeFrameworks.filter((framework) => !entries[framework]);
     if (missingFrameworks.length > 0) missing.push({ storyId, sourceImport, missingFrameworks, entries });
     else pairs.push({ storyId, sourceImport, entries });
   }
 
   const missingStories = neutralStories(inventory).filter((story) =>
-    STORYBOOK_PARITY_FRAMEWORKS.some(
-      (framework) => ![...byFramework[framework].values()].some((value) => value.sourceImport === story.filePath),
+    activeFrameworks.some(
+      (framework) =>
+        ![...(byFramework[framework]?.values() ?? [])].some((value) => value.sourceImport === story.filePath),
     ),
   );
   return { pairs, missing, missingStories };

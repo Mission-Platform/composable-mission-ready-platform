@@ -43,8 +43,11 @@ export function writeComparisonDiagnostics(
 
 export function writeVisualParityReport(outputDirectory: string, report: VisualParityReport): string {
   const target = path.join(outputDirectory, 'summary.json');
+  const reportTarget = path.join(outputDirectory, 'report.json');
   fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, `${JSON.stringify(report, undefined, 2)}\n`);
+  const content = `${JSON.stringify(report, undefined, 2)}\n`;
+  fs.writeFileSync(target, content);
+  fs.writeFileSync(reportTarget, content);
   return target;
 }
 
