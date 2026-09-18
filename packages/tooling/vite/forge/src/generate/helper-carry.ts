@@ -66,7 +66,7 @@ export function createHelperModuleCarrier(input: {
     }
 
     const source = readFileSync(sourcePath, 'utf8');
-    const importPattern = /\bimport\s+["'](\.{1,2}\/[^"']+\.fws)["']/g;
+    const importPattern = /\bimport\s+["'](\.{1,2}\/[^"']+\.(?:flint|flt|fws))["']/g;
     for (const match of source.matchAll(importPattern)) {
       const nestedPath = path.resolve(path.dirname(sourcePath), match[1] as string);
       if (existsSync(nestedPath)) {
@@ -105,7 +105,8 @@ export function createHelperModuleCarrier(input: {
         (candidate) => candidate.from === sourcePath && candidate.resolved && candidate.to !== undefined,
       )) {
         const nestedNode = graph?.nodes.get(edge.to as string);
-        if (nestedNode?.kind === 'asset' && path.extname(nestedNode.id) === '.fws') {
+        const nestedExt = path.extname(nestedNode?.id ?? '');
+        if (nestedNode?.kind === 'asset' && (nestedExt === '.flint' || nestedExt === '.flt' || nestedExt === '.fws')) {
           carryForgeWebScriptAsset(nestedNode.id);
           continue;
         }
@@ -156,7 +157,8 @@ export function createHelperModuleCarrier(input: {
       (candidate) => candidate.from === sourcePath && candidate.resolved && candidate.to !== undefined,
     )) {
       const nestedNode = graph?.nodes.get(edge.to as string);
-      if (nestedNode?.kind === 'asset' && path.extname(nestedNode.id) === '.fws') {
+      const nestedExt = path.extname(nestedNode?.id ?? '');
+      if (nestedNode?.kind === 'asset' && (nestedExt === '.flint' || nestedExt === '.flt' || nestedExt === '.fws')) {
         carryForgeWebScriptAsset(nestedNode.id);
         continue;
       }

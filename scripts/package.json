@@ -30,7 +30,7 @@
     "@mission-platform/forge-plugin-svelte": "workspace:*",
     "@mission-platform/forge-plugin-vue": "workspace:*",
     "@mission-platform/forge-plugin-web-components": "workspace:*",
-    "@mission-platform/forge-web-script": "workspace:*",
+    "@mission-platform/flint": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
     "@types/node": "catalog:typescript",

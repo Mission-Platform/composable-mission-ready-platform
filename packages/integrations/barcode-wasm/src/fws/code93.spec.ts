@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { encodeBarcode } from '../encoder';
 
-import { load as loadCode93, loadSync as loadCode93Sync } from './code93.fws';
+import { load as loadCode93, loadSync as loadCode93Sync } from './code93.flint';
 
-describe('native Code 93 FWS encoder', () => {
+describe('native Code 93 Flint encoder', () => {
   it('matches standard Code 93 output and validation behavior', () => {
     const code93 = loadCode93Sync();
 

@@ -109,7 +109,7 @@ Mission Platform は、実際の DOM 環境またはクロスブラウザを必�
 
 ### Web スクリプト テストの作成
 
-決定論的コンパイラ、アーティファクト、Wasm、およびセルフホスト パリティには `@mission-platform/forge-web-script-vitest` を使用します
+決定論的コンパイラ、アーティファクト、Wasm、およびセルフホスト パリティには `@mission-platform/flint-vitest` を使用します
 小切手。これは、本番環境で使用される同じコンパイラ サービスと Vite プラグインにコンパイルを委任します。それは作成しません
 2番目のモジュールシステム。
 
@@ -117,11 +117,11 @@ Mission Platform は、実際の DOM 環境またはクロスブラウザを必�
 
 ```typescript
 // vitest.config.ts
-import { defineForgeWebScriptVitestConfig } from "@mission-platform/forge-web-script-vitest";
+import { defineFlintVitestConfig } from "@mission-platform/flint-vitest";
 
-export default defineForgeWebScriptVitestConfig({
+export default defineFlintVitestConfig({
   environment: "node",
-  forgeWebScript: {
+  flint: {
     root: import.meta.dirname,
     requestedCapabilities: ["clock.now"],
     selfHostedVmMode: "interpret",
@@ -138,32 +138,32 @@ export default defineForgeWebScriptVitestConfig({
 ```typescript
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  assertForgeWebScriptDiagnostic,
-  assertForgeWebScriptNoDiagnostics,
-  createForgeWebScriptTestHarness,
-} from "@mission-platform/forge-web-script-vitest";
+  assertFlintDiagnostic,
+  assertFlintNoDiagnostics,
+  createFlintTestHarness,
+} from "@mission-platform/flint-vitest";
 
 describe("FWS fixture", () => {
-  const harness = createForgeWebScriptTestHarness({
+  const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
 
   afterEach(() => harness.dispose());
 
   it("checks artifacts, Wasm exports, and explicit capabilities", async () => {
-    const result = await harness.compile("valid/scalar.fws");
-    assertForgeWebScriptNoDiagnostics(result.diagnostics);
+    const result = await harness.compile("valid/scalar.flint");
+    assertFlintNoDiagnostics(result.diagnostics);
     expect(result.artifact.manifest?.exports.map(({ name }) => name)).toEqual([
       "answer",
     ]);
     expect(
       (
-        await harness.load<{ answer: () => number }>("valid/scalar.fws")
+        await harness.load<{ answer: () => number }>("valid/scalar.flint")
       ).answer(),
     ).toBe(42);
 
     const clock = await harness.load<{ current: () => bigint }>(
-      "capabilities/clock-now.fws",
+      "capabilities/clock-now.flint",
       {
         "clock.now": { now: () => 123n },
       },
@@ -172,9 +172,9 @@ describe("FWS fixture", () => {
   });
 
   it("keeps diagnostic code, phase, and span structured", async () => {
-    const result = await harness.inspect("diagnostics/invalid-type.fws");
-    assertForgeWebScriptDiagnostic(result.diagnostics, {
-      code: "FWS-TYPE-005",
+    const result = await harness.inspect("diagnostics/invalid-type.flint");
+    assertFlintDiagnostic(result.diagnostics, {
+      code: "FLINT-TYPE-005",
       phase: "type-check",
       line: 2,
     });
@@ -194,7 +194,7 @@ import {
   load,
   loadSync,
   manifest,
-} from "./fixtures/valid/scalar.fws";
+} from "./fixtures/valid/scalar.flint";
 
 expect(abiManifest).toEqual(manifest);
 expect((await load<{ answer: () => number }>()).answer()).toBe(42);
@@ -210,7 +210,7 @@ const artifact = harness.compileSource(
   `
   export fn echo(value: string) -> string { return value; }
 `,
-  "strings.fws",
+  "strings.flint",
 ).artifact;
 
 const generated = await importFromEsmSource(artifact.esmSource);
@@ -264,8 +264,8 @@ Unicode の小さい文字列の場合、平均初期化時間は raw と比較�
 マシン間のパフォーマンスは保証されません。レポートのケースごとのサンプルを使用する
 比較用に。
 
-このプラグインは、`?forge-web-script-manifest`、`?forge-web-script-declarations`、
-`?forge-web-script-wasm`、`?forge-web-script-source-map`。これらのアンビエント モジュールを TypeScript で検出できるようにするには、
+このプラグインは、`?flint-manifest`、`?flint-declarations`、
+`?flint-wasm`、`?flint-source-map`。これらのアンビエント モジュールを TypeScript で検出できるようにするには、
 出荷された宣言のサブパスをテスト プロジェクトのタイプに追加します。
 
 ```json
@@ -273,16 +273,16 @@ Unicode の小さい文字列の場合、平均初期化時間は raw と比較�
   "compilerOptions": {
     "types": [
       "node",
-      "@mission-platform/forge-web-script-vitest/forge-web-script"
+      "@mission-platform/flint-vitest/flint"
     ]
   }
 }
 ```
 
-あるいは、`/// <reference types="@mission-platform/forge-web-script-vitest/forge-web-script" />` をテスト専用に追加します
+あるいは、`/// <reference types="@mission-platform/flint-vitest/flint" />` をテスト専用に追加します
 プロジェクトに含まれるエントリポイントを入力します。宣言のサブパスは型のみであり、実行時インポートは追加されません。
 
-クロスパッケージ言語と ABI 準拠のために、`packages/forge-web-script-vitest/fixtures/` の共有フィクスチャを使用します。
+クロスパッケージ言語と ABI 準拠のために、`packages/flint/vitest/fixtures/` の共有フィクスチャを使用します。
 `valid/`、`diagnostics/`、`capabilities/`、`graphs/`、および `self-hosted/` は意図的に安定しています。備品を横に置いておく
 コンパイラ、ランタイム、またはプラグインの仕様がプライベート実装の詳細をカバーする場合。小さなパーサーにはインラインソースを使用するか、
 VMユニットケース。これにより、ハーネスを介した低レベルのテストを強制することなく、フィクスチャ名とクリーンアップが確定的に保たれます。
@@ -294,10 +294,10 @@ lex 段階のパリティ契約。 `parity`、フィンガープリント、ス�
 通常のワークスペース タスクを使用して、フォーカスされた FWS マトリックスを実行します。
 
 ```bash
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-vitest
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-runtime
-pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-forge-web-script
+pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
+pnpm exec turbo run test build:check --filter @mission-platform/flint
+pnpm exec turbo run test build:check --filter @mission-platform/flint-runtime
+pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-flint
 ```
 
 ## 技術リファレンス

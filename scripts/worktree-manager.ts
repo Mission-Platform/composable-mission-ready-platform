@@ -172,11 +172,11 @@ export async function setupWorktree(targetPathInput?: string): Promise<void> {
   // 4. Verification check
   console.log(`[worktree-manager] Validating worktree build readiness...`);
   try {
-    await execFile('pnpm', ['--filter', '@mission-platform/forge-web-script-regex', 'test'], {
+    await execFile('pnpm', ['--filter', '@mission-platform/flint-regex', 'test'], {
       cwd: targetPath,
       stdio: 'pipe',
     });
-    console.log(`[worktree-manager] Verification passed: @mission-platform/forge-web-script-regex tests green.`);
+    console.log(`[worktree-manager] Verification passed: @mission-platform/flint-regex tests green.`);
   } catch (error) {
     console.error(
       `[worktree-manager] Worktree is not ready: verification check encountered an issue: ${String(error)}`,

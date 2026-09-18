@@ -1,6 +1,6 @@
 # @mission-platform/qr-code
 
-A dependency-free **QR Code encoder** backed by a package-local Forge Web Script
+A dependency-free **QR Code encoder** backed by a package-local Flint
 artifact and exposed through a small, fully typed ES module wrapper.
 
 The **encoder** supports byte mode (which can represent any text/URL), automatic version selection and lowest-penalty
@@ -18,7 +18,7 @@ const matrix = encodeQr('https://mission-platform.dev', 'M');
 // matrix.modules -> boolean[][]; modules[y][x] === true when dark
 ```
 
-`encodeQr` loads its package-local FWS graph **synchronously** on first use, so it
+`encodeQr` loads its package-local Flint graph **synchronously** on first use, so it
 is safe to call from render paths. The async variant, `encodeQrAsync`, is also
 exported and uses the asynchronous graph loader.
 
@@ -49,13 +49,13 @@ encodeQr(formats.iCalEvent({ title: 'Launch', start: new Date('2026-07-14T09:00:
 ```
 
 Available builders: `url`, `wifi`, `email`, `sms`, `phone`, `geo`, `vCard`,
-`meCard`, and `iCalEvent`. Each returns a plain `string` and touches no FWS
+`meCard`, and `iCalEvent`. Each returns a plain `string` and touches no Flint
 graph, so they are cheap and synchronous.
 
 ## Architecture
 
-- `src/fws/qr-encoder.fws` — the standard QR byte-mode encoder graph.
-- `src/fws/qr-compact-encoder.fws` — the Micro QR and rMQR encoder graph.
+- `src/fws/qr-encoder.flint` — the standard QR byte-mode encoder graph.
+- `src/fws/qr-compact-encoder.flint` — the Micro QR and rMQR encoder graph.
 - `src/encoder` — the typed façade that loads the encoder graphs lazily through
   `loadSync()` or `load()` and normalizes their compact packed ABI.
 - `crates/qr-code-*` — retained Rust algorithm crates used by `code-scan` and
@@ -63,7 +63,7 @@ graph, so they are cheap and synchronous.
 
 ## Building
 
-The FWS graphs are compiled by the package build through the Forge Web Script
+The Flint graphs are compiled by the package build through the Flint
 Vite plugin:
 
 ```sh

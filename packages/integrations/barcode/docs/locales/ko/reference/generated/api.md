@@ -54,7 +54,7 @@ export type BarcodeSymbology =
 function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
-패키지-로컬 FWS 그래프를 사용하여 `data`을 선형 바코드로 인코딩합니다.
+패키지-로컬 Flint 그래프를 사용하여 `data`을 선형 바코드로 인코딩합니다.
 
 #### 매개변수
 
@@ -75,7 +75,7 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
-패키지-로컬 FWS 그래프를 사용하여 `data`을 비동기적으로 인코딩합니다.
+패키지-로컬 Flint 그래프를 사용하여 `data`을 비동기적으로 인코딩합니다.
 
 #### 매개변수
 
@@ -182,7 +182,7 @@ FWS 로더를 사용하여 7자리 EAN-8 페이로드를 비동기식으로 인�
 function encodeUpcaFws(value: string): string;
 ```
 
-접두사가 0인 EAN-13 FWS 그래프를 통해 UPC-A 페이로드를 인코딩합니다.
+접두사가 0인 EAN-13 Flint 그래프를 통해 UPC-A 페이로드를 인코딩합니다.
 
 #### 매개변수
 
@@ -214,7 +214,7 @@ FWS를 통해 UPC-A 페이로드를 비동기식으로 인코딩합니다.
 function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
-사용 가능한 경우 기본 FWS 그래프를 통해 지원되는 가변 길이 바코드를 인코딩합니다.
+사용 가능한 경우 기본 Flint 그래프를 통해 지원되는 가변 길이 바코드를 인코딩합니다.
 
 #### 매개변수
 
@@ -248,7 +248,7 @@ FWS를 통해 지원되는 가변 길이 바코드를 비동기식으로 인코�
 function validateGs1DataBarValue(value: string): boolean;
 ```
 
-패키지-로컬 FWS 그래프에서 GS1 DataBar/RSS-14 GTIN-14 값을 검증합니다.
+패키지-로컬 Flint 그래프에서 GS1 DataBar/RSS-14 GTIN-14 값을 검증합니다.
 
 #### 매개변수
 
@@ -293,4 +293,4 @@ export type VariableBarcodeSymbology = Extract<
 >;
 ```
 
-직접 바코드 FWS 어댑터가 지원하는 가변 길이 기호입니다.
+직접 바코드 Flint 어댑터가 지원하는 가변 길이 기호입니다.

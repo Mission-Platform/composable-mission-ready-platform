@@ -2,11 +2,11 @@
 //
 // This is the bridge between a raw image (a decoded file upload or a live camera
 // frame) and the scanner's decoded result. The entire pipeline — binarise,
-// locate, sample, and decode — runs in the linked Forge Web Script scanner graph.
+// locate, sample, and decode — runs in the linked Flint scanner graph.
 // The adapter owns the graph instance and converts its versioned result envelope
-// into the public {@link ScanResult} without exposing the FWS ABI to consumers.
+// into the public {@link ScanResult} without exposing the Flint ABI to consumers.
 import { scannerLog } from '../debug';
-import { load as loadScanner, loadRaw, loadRawSync, loadSync as loadScannerSync } from '../fws/scanner.fws';
+import { load as loadScanner, loadRaw, loadRawSync, loadSync as loadScannerSync } from '../fws/scanner.flint';
 import { imageDataToContrastStretchLuma } from '../image';
 
 import { parseResultEnvelope, resultEnvelopeLimits } from './result-envelope';
@@ -17,7 +17,7 @@ import type {
   ForgeScannerRawBytes,
   ForgeScannerRawExports,
   ForgeScannerRawImports,
-} from '../fws/scanner.fws';
+} from '../fws/scanner.flint';
 import type { ImageLike, Roi, ScanFormat, ScanMetadata, ScanOptions, ScanPoint, ScanResult } from '../types';
 
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
@@ -148,7 +148,7 @@ async function loadRawScanner(): Promise<RawScannerExports> {
 }
 
 /**
- * Format tags emitted by the FWS `scan_and_decode` entry point, mapped to their
+ * Format tags emitted by the Flint `scan_and_decode` entry point, mapped to their
  * {@link ScanFormat} name.
  */
 const FORMAT_NAMES: Readonly<Record<number, ScanFormat>> = {
@@ -230,7 +230,7 @@ function resolveResultNumBits(envelopeNumBits: number, rawBytes: Uint8Array | nu
   return rawBytes === null ? 0 : rawBytes.byteLength * 8;
 }
 
-/** Convert the versioned FWS result envelope into the public scan result. */
+/** Convert the versioned Flint result envelope into the public scan result. */
 function resultFromWire(encoded: string): ScanResult | null {
   const envelope = parseResultEnvelope(encoded);
   if (envelope === null) return null;
@@ -702,7 +702,7 @@ function locateAndDecode(
 }
 
 /**
- * Locate and decode *every* distinct code in `image` (see the FWS
+ * Locate and decode *every* distinct code in `image` (see the Flint
  * `scan_and_decode_all`), returning them in discovery order with duplicates
  * removed. Only successfully decoded symbols are returned.
  */

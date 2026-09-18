@@ -4,7 +4,7 @@
 **Repository:** `Mission-Platform/composable-mission-ready-platform`  
 **Milestones:**
 
-- Milestone #1: FWS Architecture & Runtime Enhancements
+- Milestone #1: Flint Architecture & Runtime Enhancements
 - Milestone #2: UI Component Platform Improvements & Polish
 
 ---
@@ -35,7 +35,7 @@ In a high-throughput, multi-framework TypeScript monorepo with extensive compile
 | `composable_mission_ready_platform_forms`      | `feat/ui-forms-context`           | Forms: Context-driven `ForgeForm` container with Zod/Valibot schema validation (#58)     | `LINKED` |
 | `composable_mission_ready_platform_select`     | `feat/ui-select-combobox`         | Select: Async search combobox, debounce, and loading states (#59)                        | `LINKED` |
 | `composable_mission_ready_platform_content`    | `feat/ui-content-editor`          | Content: Modernizing `ForgeWysiwygEditor` to eliminate deprecated `execCommand` (#62)    | `LINKED` |
-| `composable_mission_ready_platform_fws`        | `feat/fws-architecture`           | FWS Compiler & Runtime: Swiss table, SIMD, SonIR, Linear regex (#43–#45, #48)            | `LINKED` |
+| `composable_mission_ready_platform_flint`      | `feat/flint-architecture`         | Flint Compiler & Runtime: Swiss table, SIMD, SonIR, Linear regex (#43–#45, #48)          | `LINKED` |
 
 ---
 
@@ -94,22 +94,22 @@ All issues are assigned directly to `@Cethric` on GitHub.
 
 ---
 
-## 5. Milestone 1: Forge Web Script Architecture & Modernization
+## 5. Milestone 1: Flint Architecture & Modernization
 
 Milestone 1 issues (#41 through #50) track the compiler core, SonIR 2.0, standard library, and runtime systems:
 
-| Issue   | Title                                                                               | Track                | Priority      | Complexity | Board Stage   |
-| :------ | :---------------------------------------------------------------------------------- | :------------------- | :------------ | :--------- | :------------ |
-| **#41** | `feat(fws-types): Structural Type Algebra & Generic Monomorphization`               | Compiler Core        | P0 - Critical | XL         | `Ready`       |
-| **#42** | `feat(fws-lsp): Incremental LSP Architecture, Query Caching & Request Cancellation` | Tooling & LSP        | P0 - Critical | L          | `Ready`       |
-| **#43** | `feat(fws-stdlib): Swiss Table Hash Map & Set with SIMD Acceleration`               | Standard Library     | P1 - High     | L          | `In Progress` |
-| **#44** | `feat(fws-wasm): WebAssembly v128 SIMD Vectorization & Bulk Memory Operations`      | Wasm & SIMD          | P1 - High     | L          | `Ready`       |
-| **#45** | `feat(fws-sonir): Formal Sea-of-Nodes Schema, Memory SSA, GVN & SCCP`               | SonIR & Optimization | P2 - Medium   | XL         | `In Progress` |
-| **#46** | `feat(fws-interop): Native Web IDL Parser & Zero-Copy Host Binding Generator`       | Compiler Core        | P2 - Medium   | L          | `Backlog`     |
-| **#47** | `docs(fws): Formal EBNF Language Specification, SonIR Manual & Interactive Docs`    | Documentation        | P3 - Low      | M          | `In Review`   |
-| **#48** | `feat(fws-regex): Linear-Time PikeVM/DFA Regex Engine & Polyhedral Bounds Analysis` | Security & Bounds    | P0 - Critical | L          | `In Review`   |
-| **#49** | `feat(fws-runtime): Multi-Memory Segregation & O(1) TLSF Dynamic Allocator`         | Memory & Runtime     | P1 - High     | XL         | `Backlog`     |
-| **#50** | `feat(fws-concurrency): JSPI Async Stack-Switching & Wasm Threads with Send/Sync`   | Memory & Runtime     | P2 - Medium   | XL         | `Backlog`     |
+| Issue   | Title                                                                                 | Track                | Priority      | Complexity | Board Stage   |
+| :------ | :------------------------------------------------------------------------------------ | :------------------- | :------------ | :--------- | :------------ |
+| **#41** | `feat(flint-types): Structural Type Algebra & Generic Monomorphization`               | Compiler Core        | P0 - Critical | XL         | `Ready`       |
+| **#42** | `feat(flint-lsp): Incremental LSP Architecture, Query Caching & Request Cancellation` | Tooling & LSP        | P0 - Critical | L          | `Ready`       |
+| **#43** | `feat(flint-stdlib): Swiss Table Hash Map & Set with SIMD Acceleration`               | Standard Library     | P1 - High     | L          | `In Progress` |
+| **#44** | `feat(flint-wasm): WebAssembly v128 SIMD Vectorization & Bulk Memory Operations`      | Wasm & SIMD          | P1 - High     | L          | `Ready`       |
+| **#45** | `feat(flint-sonir): Formal Sea-of-Nodes Schema, Memory SSA, GVN & SCCP`               | SonIR & Optimization | P2 - Medium   | XL         | `In Progress` |
+| **#46** | `feat(flint-interop): Native Web IDL Parser & Zero-Copy Host Binding Generator`       | Compiler Core        | P2 - Medium   | L          | `Backlog`     |
+| **#47** | `docs(flint): Formal EBNF Language Specification, SonIR Manual & Interactive Docs`    | Documentation        | P3 - Low      | M          | `In Review`   |
+| **#48** | `feat(flint-regex): Linear-Time PikeVM/DFA Regex Engine & Polyhedral Bounds Analysis` | Security & Bounds    | P0 - Critical | L          | `In Review`   |
+| **#49** | `feat(flint-runtime): Multi-Memory Segregation & O(1) TLSF Dynamic Allocator`         | Memory & Runtime     | P1 - High     | XL         | `Backlog`     |
+| **#50** | `feat(flint-concurrency): JSPI Async Stack-Switching & Wasm Threads with Send/Sync`   | Memory & Runtime     | P2 - Medium   | XL         | `Backlog`     |
 
 ---
 
@@ -119,16 +119,16 @@ Project management is coordinated via `scripts/github-project-manager.ts` and ro
 
 ```bash
 # 1. View current project status and board stage mapping
-pnpm project:status [components|fws|all]
+pnpm project:status [components|flint|all]
 
-# 2. Export deterministic project plans (docs/ui-components-project-plan.json & docs/fws-project-plan.json)
+# 2. Export deterministic project plans (docs/ui-components-project-plan.json & docs/flint-project-plan.json)
 pnpm project:plan
 
 # 3. Synchronize items and column transitions on "The Board"
 pnpm project:board "The Board"
 
 # 4. Provision or configure GitHub Project v2 via GraphQL
-pnpm project:setup [components|fws]
+pnpm project:setup [components|flint]
 ```
 
 ### 6.1 GitHub Authentication Scope Setup

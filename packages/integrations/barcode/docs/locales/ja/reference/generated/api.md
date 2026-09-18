@@ -54,7 +54,7 @@ export type BarcodeSymbology =
 function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
-パッケージローカル FWS グラフを使用して、`data` を線形バーコードにエンコードします。
+パッケージローカル Flint グラフを使用して、`data` を線形バーコードにエンコードします。
 
 #### パラメータ
 
@@ -75,7 +75,7 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
-パッケージローカル FWS グラフを使用して、`data` を非同期的にエンコードします。
+パッケージローカル Flint グラフを使用して、`data` を非同期的にエンコードします。
 
 #### パラメータ
 
@@ -182,7 +182,7 @@ FWS ローダーを使用して 7 桁の EAN-8 ペイロードを非同期的に
 function encodeUpcaFws(value: string): string;
 ```
 
-ゼロ接頭辞の EAN-13 FWS グラフを通じて UPC-A ペイロードをエンコードします。
+ゼロ接頭辞の EAN-13 Flint グラフを通じて UPC-A ペイロードをエンコードします。
 
 #### パラメータ
 
@@ -214,7 +214,7 @@ FWS を通じて UPC-A ペイロードを非同期的にエンコードします
 function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
-サポートされている可変長バーコードを、利用可能な場合はネイティブ FWS グラフを通じてエンコードします。
+サポートされている可変長バーコードを、利用可能な場合はネイティブ Flint グラフを通じてエンコードします。
 
 #### パラメータ
 
@@ -248,7 +248,7 @@ FWS を介して、サポートされている可変長バーコードを非同�
 function validateGs1DataBarValue(value: string): boolean;
 ```
 
-パッケージローカル FWS グラフ内の GS1 DataBar/RSS-14 GTIN-14 値を検証します。
+パッケージローカル Flint グラフ内の GS1 DataBar/RSS-14 GTIN-14 値を検証します。
 
 #### パラメータ
 
@@ -293,4 +293,4 @@ export type VariableBarcodeSymbology = Extract<
 >;
 ```
 
-可変長シンボルは、ダイレクト バーコード FWS アダプターによってサポートされます。
+可変長シンボルは、ダイレクト バーコード Flint アダプターによってサポートされます。

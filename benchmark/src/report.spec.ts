@@ -75,9 +75,9 @@ function correctnessFor(
     workload: measurementValue.workload,
     inputSize: measurementValue.inputSize,
     implementation: measurementValue.implementation,
-    ...(measurementValue.fwsMode === undefined
+    ...(measurementValue.flintMode === undefined
       ? {}
-      : { fwsMode: measurementValue.fwsMode }),
+      : { flintMode: measurementValue.flintMode }),
     hostRuntime: measurementValue.hostRuntime,
     status,
     expected: 1,
@@ -87,8 +87,8 @@ function correctnessFor(
 describe("durable benchmark reports", () => {
   it("records the five pipeline evidence metrics and renders them", () => {
     const checked = measurement("metric-case", 4, {
-      implementation: "fws",
-      fwsMode: "wasm",
+      implementation: "flint",
+      flintMode: "wasm",
       statistics: {
         count: 1,
         meanMs: 4,
@@ -101,8 +101,8 @@ describe("durable benchmark reports", () => {
       },
     });
     const excluded = measurement("metric-case", 3, {
-      implementation: "fws",
-      fwsMode: "wasm-excluded-bounds",
+      implementation: "flint",
+      flintMode: "wasm-excluded-bounds",
       statistics: {
         count: 1,
         meanMs: 3,
@@ -119,13 +119,13 @@ describe("durable benchmark reports", () => {
         hostRuntime: "node",
         artifacts: [
           {
-            id: "fws-wasm",
-            implementation: "fws",
-            fwsMode: "wasm",
+            id: "flint-wasm",
+            implementation: "flint",
+            flintMode: "wasm",
             artifactKind: "wasm",
             sizeBytes: 128,
-            fwsPipeline: {
-              pipeline: "fws-son-wasm-two-stage",
+            flintPipeline: {
+              pipeline: "flint-son-wasm-two-stage",
               frontend: "son-ir",
               wasmStage: "wasm-ir-optimizer",
               optimization: "release",
@@ -136,8 +136,8 @@ describe("durable benchmark reports", () => {
         correctness: [],
         measurements: [
           measurement("metric-case", 2, {
-            implementation: "fws",
-            fwsMode: "wasm",
+            implementation: "flint",
+            flintMode: "wasm",
             phase: "build",
           }),
           checked,
@@ -177,8 +177,8 @@ describe("durable benchmark reports", () => {
         implementation: "assemblyscript-wasm",
       }),
       measurement("comparison-case", 6, {
-        implementation: "fws",
-        fwsMode: "wasm",
+        implementation: "flint",
+        flintMode: "wasm",
       }),
     ];
     const current = createBenchmarkReport({
@@ -240,7 +240,7 @@ describe("durable benchmark reports", () => {
       expect(markdown).toContain("-50.00%");
       expect(markdown).toContain("2.00x");
       expect(markdown).toContain("100.00%");
-      expect(markdown).toContain("## FWS Performance Comparisons");
+      expect(markdown).toContain("## Flint Performance Comparisons");
       expect(markdown).toContain("Reference median (ms)");
       expect(markdown).toContain("assemblyscript-wasm");
       const html = await readFile(paths.html, "utf8");
@@ -251,7 +251,7 @@ describe("durable benchmark reports", () => {
       expect(html).toContain("rust-wasm");
       expect(html).toContain("0.50x");
       expect(html).toContain("100.00%");
-      expect(html).toContain("FWS Performance Comparisons");
+      expect(html).toContain("Flint Performance Comparisons");
       expect(html).toContain("Reference median (ms)");
       expect(html).toContain("assemblyscript-wasm");
       expect(html).toContain("Performance Gates");
@@ -329,14 +329,14 @@ describe("durable benchmark reports", () => {
     expect(comparisons[0]?.explanation).toMatch(/Environment differs/);
   });
 
-  it("gates correct FWS execute rows against the matching Node JavaScript median", () => {
+  it("gates correct Flint execute rows against the matching Node JavaScript median", () => {
     const javascriptSmall = measurement("small", 0.01, {
       workload: "arithmetic",
       inputSize: "small",
     });
     const fwsSmall = measurement("small", 0.04, {
-      implementation: "fws",
-      fwsMode: "jit",
+      implementation: "flint",
+      flintMode: "jit",
       workload: "arithmetic",
       inputSize: "small",
     });
@@ -345,8 +345,8 @@ describe("durable benchmark reports", () => {
       inputSize: "medium",
     });
     const fwsMedium = measurement("medium", 25, {
-      implementation: "fws",
-      fwsMode: "aot",
+      implementation: "flint",
+      flintMode: "aot",
       workload: "arithmetic",
       inputSize: "medium",
     });
@@ -367,14 +367,14 @@ describe("durable benchmark reports", () => {
     expect(gates).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          key: expect.objectContaining({ caseId: "small", fwsMode: "jit" }),
+          key: expect.objectContaining({ caseId: "small", flintMode: "jit" }),
           status: "passed",
           ratio: 4,
           referenceMedianMs: 0.01,
           timingFloorMs: 0.05,
         }),
         expect.objectContaining({
-          key: expect.objectContaining({ caseId: "medium", fwsMode: "aot" }),
+          key: expect.objectContaining({ caseId: "medium", flintMode: "aot" }),
           status: "failed",
           ratio: 2.5,
         }),
@@ -384,16 +384,16 @@ describe("durable benchmark reports", () => {
 
   it("surfaces failed correctness, missing baselines, and browser diagnostics", () => {
     const fwsFailed = measurement("failed", 3, {
-      implementation: "fws",
-      fwsMode: "interpret",
+      implementation: "flint",
+      flintMode: "interpret",
     });
     const fwsMissing = measurement("missing", 3, {
-      implementation: "fws",
-      fwsMode: "wasm",
+      implementation: "flint",
+      flintMode: "wasm",
     });
     const fwsBrowser = measurement("browser", 3, {
-      implementation: "fws",
-      fwsMode: "wasm-generated",
+      implementation: "flint",
+      flintMode: "wasm-generated",
       hostRuntime: "chromium",
     });
     const current = {
@@ -425,7 +425,7 @@ describe("durable benchmark reports", () => {
     );
   });
 
-  it("compares every implementation and FWS mode with a host-local JavaScript row", () => {
+  it("compares every implementation and Flint mode with a host-local JavaScript row", () => {
     const javascriptNode = measurement("comparison", 10, {
       statistics: {
         count: 1,
@@ -462,10 +462,10 @@ describe("durable benchmark reports", () => {
       },
     });
     const fwsRows = ["interpret", "jit", "aot", "wasm", "wasm-generated"].map(
-      (fwsMode) =>
+      (flintMode) =>
         measurement("comparison", 15, {
-          implementation: "fws",
-          fwsMode: fwsMode as
+          implementation: "flint",
+          flintMode: flintMode as
             "interpret" | "jit" | "aot" | "wasm" | "wasm-generated",
         }),
     );
@@ -563,8 +563,8 @@ describe("durable benchmark reports", () => {
         }),
         expect.objectContaining({
           candidateKey: expect.objectContaining({
-            implementation: "fws",
-            fwsMode: "wasm",
+            implementation: "flint",
+            flintMode: "wasm",
           }),
           referenceKey: expect.objectContaining({
             implementation: "assemblyscript-wasm",
@@ -577,8 +577,8 @@ describe("durable benchmark reports", () => {
         }),
         expect.objectContaining({
           candidateKey: expect.objectContaining({
-            implementation: "fws",
-            fwsMode: "wasm",
+            implementation: "flint",
+            flintMode: "wasm",
           }),
           referenceKey: expect.objectContaining({
             implementation: "rust-wasm",
@@ -607,10 +607,10 @@ describe("durable benchmark reports", () => {
       current.performanceComparisons
         ?.filter(
           (comparison) =>
-            comparison.candidateKey.implementation === "fws" &&
+            comparison.candidateKey.implementation === "flint" &&
             comparison.referenceKey.implementation === "javascript",
         )
-        .map((comparison) => comparison.candidateKey.fwsMode),
+        .map((comparison) => comparison.candidateKey.flintMode),
     ).toEqual(["aot", "interpret", "jit", "wasm-generated", "wasm"]);
   });
 
@@ -633,24 +633,24 @@ describe("durable benchmark reports", () => {
     const failedCorrectnessBaseline = measurement("failed-correctness", 10);
     const zeroReference = measurement("zero-reference", 0);
     const zeroReferenceCandidate = measurement("zero-reference", 20, {
-      implementation: "fws",
-      fwsMode: "jit",
+      implementation: "flint",
+      flintMode: "jit",
     });
     const missingThroughputReference = measurement("missing-throughput", 10, {
       statistics: { ...javascript.statistics!, throughputPerSecond: 0 },
     });
     const missingThroughputCandidate = measurement("missing-throughput", 20, {
-      implementation: "fws",
-      fwsMode: "aot",
+      implementation: "flint",
+      flintMode: "aot",
     });
     const browserCandidate = measurement("node-only", 20, {
-      implementation: "fws",
-      fwsMode: "wasm",
+      implementation: "flint",
+      flintMode: "wasm",
       hostRuntime: "chromium",
     });
     const invalidGenericCandidate = measurement("invalid-generic", 20, {
-      implementation: "fws",
-      fwsMode: "wasm",
+      implementation: "flint",
+      flintMode: "wasm",
     });
     const invalidAssemblyScriptReference = measurement("invalid-generic", 0, {
       implementation: "assemblyscript-wasm",

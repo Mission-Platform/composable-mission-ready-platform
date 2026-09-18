@@ -109,7 +109,7 @@ Mission Platform은 실제 DOM 환경이나 크로스 브라우저가 필요한 
 
 ### Forge 웹 스크립트 테스트
 
-결정론적 컴파일러, 아티팩트, Wasm 및 자체 호스팅 패리티에 `@mission-platform/forge-web-script-vitest`을 사용합니다.
+결정론적 컴파일러, 아티팩트, Wasm 및 자체 호스팅 패리티에 `@mission-platform/flint-vitest`을 사용합니다.
 수표. 프로덕션에서 사용되는 것과 동일한 컴파일러 서비스 및 Vite 플러그인에 컴파일을 위임합니다. 그것은 생성하지 않습니다
 두 번째 모듈 시스템.
 
@@ -117,11 +117,11 @@ Mission Platform은 실제 DOM 환경이나 크로스 브라우저가 필요한 
 
 ```typescript
 // vitest.config.ts
-import { defineForgeWebScriptVitestConfig } from "@mission-platform/forge-web-script-vitest";
+import { defineFlintVitestConfig } from "@mission-platform/flint-vitest";
 
-export default defineForgeWebScriptVitestConfig({
+export default defineFlintVitestConfig({
   environment: "node",
-  forgeWebScript: {
+  flint: {
     root: import.meta.dirname,
     requestedCapabilities: ["clock.now"],
     selfHostedVmMode: "interpret",
@@ -138,32 +138,32 @@ export default defineForgeWebScriptVitestConfig({
 ```typescript
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  assertForgeWebScriptDiagnostic,
-  assertForgeWebScriptNoDiagnostics,
-  createForgeWebScriptTestHarness,
-} from "@mission-platform/forge-web-script-vitest";
+  assertFlintDiagnostic,
+  assertFlintNoDiagnostics,
+  createFlintTestHarness,
+} from "@mission-platform/flint-vitest";
 
 describe("FWS fixture", () => {
-  const harness = createForgeWebScriptTestHarness({
+  const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
 
   afterEach(() => harness.dispose());
 
   it("checks artifacts, Wasm exports, and explicit capabilities", async () => {
-    const result = await harness.compile("valid/scalar.fws");
-    assertForgeWebScriptNoDiagnostics(result.diagnostics);
+    const result = await harness.compile("valid/scalar.flint");
+    assertFlintNoDiagnostics(result.diagnostics);
     expect(result.artifact.manifest?.exports.map(({ name }) => name)).toEqual([
       "answer",
     ]);
     expect(
       (
-        await harness.load<{ answer: () => number }>("valid/scalar.fws")
+        await harness.load<{ answer: () => number }>("valid/scalar.flint")
       ).answer(),
     ).toBe(42);
 
     const clock = await harness.load<{ current: () => bigint }>(
-      "capabilities/clock-now.fws",
+      "capabilities/clock-now.flint",
       {
         "clock.now": { now: () => 123n },
       },
@@ -172,9 +172,9 @@ describe("FWS fixture", () => {
   });
 
   it("keeps diagnostic code, phase, and span structured", async () => {
-    const result = await harness.inspect("diagnostics/invalid-type.fws");
-    assertForgeWebScriptDiagnostic(result.diagnostics, {
-      code: "FWS-TYPE-005",
+    const result = await harness.inspect("diagnostics/invalid-type.flint");
+    assertFlintDiagnostic(result.diagnostics, {
+      code: "FLINT-TYPE-005",
       phase: "type-check",
       line: 2,
     });
@@ -194,7 +194,7 @@ import {
   load,
   loadSync,
   manifest,
-} from "./fixtures/valid/scalar.fws";
+} from "./fixtures/valid/scalar.flint";
 
 expect(abiManifest).toEqual(manifest);
 expect((await load<{ answer: () => number }>()).answer()).toBe(42);
@@ -210,7 +210,7 @@ const artifact = harness.compileSource(
   `
   export fn echo(value: string) -> string { return value; }
 `,
-  "strings.fws",
+  "strings.flint",
 ).artifact;
 
 const generated = await importFromEsmSource(artifact.esmSource);
@@ -264,8 +264,8 @@ FWS 원시 `wasm` 행은 새로운 인스턴스와 3개의 문자열 입력 할�
 기계 간 성능을 보장하지 않습니다. 보고서의 사례별 샘플을 사용하세요.
 비교를 위해.
 
-플러그인은 또한 `?forge-web-script-manifest`, `?forge-web-script-declarations`,
-`?forge-web-script-wasm` 및 `?forge-web-script-source-map`. TypeScript에서 해당 주변 모듈을 검색할 수 있도록 하려면,
+플러그인은 또한 `?flint-manifest`, `?flint-declarations`,
+`?flint-wasm` 및 `?flint-source-map`. TypeScript에서 해당 주변 모듈을 검색할 수 있도록 하려면,
 테스트 프로젝트 유형에 제공된 선언 하위 경로를 추가합니다.
 
 ```json
@@ -273,16 +273,16 @@ FWS 원시 `wasm` 행은 새로운 인스턴스와 3개의 문자열 입력 할�
   "compilerOptions": {
     "types": [
       "node",
-      "@mission-platform/forge-web-script-vitest/forge-web-script"
+      "@mission-platform/flint-vitest/flint"
     ]
   }
 }
 ```
 
-또는 테스트 전용에 `/// <reference types="@mission-platform/forge-web-script-vitest/forge-web-script" />`을 추가하세요.
+또는 테스트 전용에 `/// <reference types="@mission-platform/flint-vitest/flint" />`을 추가하세요.
 프로젝트에 포함된 진입점을 입력하세요. 선언 하위 경로는 유형 전용이며 런타임 가져오기를 추가하지 않습니다.
 
-패키지 간 언어 및 ABI 준수를 위해 `packages/forge-web-script-vitest/fixtures/`의 공유 픽스처를 사용합니다.
+패키지 간 언어 및 ABI 준수를 위해 `packages/flint/vitest/fixtures/`의 공유 픽스처를 사용합니다.
 `valid/`, `diagnostics/`, `capabilities/`, `graphs/` 및 `self-hosted/`는 의도적으로 안정적입니다. 옆에 고정 장치를 두십시오
 개인 구현 세부 사항을 다루는 경우 컴파일러, 런타임 또는 플러그인 사양 작은 파서에는 인라인 소스를 사용하거나
 VM 유닛 케이스. 이는 하네스를 통해 낮은 수준의 테스트를 강제하지 않고도 고정 장치 이름과 정리 결정성을 유지합니다.
@@ -294,10 +294,10 @@ lex 단계 패리티 계약. `parity`, 지문, 단계 및 AOT 재현성 메타�
 일반적인 작업 공간 작업으로 집중된 FWS 매트릭스를 실행합니다.
 
 ```bash
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-vitest
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-runtime
-pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-forge-web-script
+pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
+pnpm exec turbo run test build:check --filter @mission-platform/flint
+pnpm exec turbo run test build:check --filter @mission-platform/flint-runtime
+pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-flint
 ```
 
 ## 기술 참조

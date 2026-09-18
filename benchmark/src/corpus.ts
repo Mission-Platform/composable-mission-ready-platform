@@ -49,7 +49,7 @@ const DATASET_COUNTS: Readonly<Record<BenchmarkSize, number>> = {
   large: 16_384,
 };
 
-const TEXT_SEEDS = ["Forge Web Script", "Δοκιμή", "日本語", "emoji 🚀"];
+const TEXT_SEEDS = ["Flint language", "Δοκιμή", "日本語", "emoji 🚀"];
 
 export function stableStringify(value: unknown): string {
   if (value === null || typeof value !== "object") {

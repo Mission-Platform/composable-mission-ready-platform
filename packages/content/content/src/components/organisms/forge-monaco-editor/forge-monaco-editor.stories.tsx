@@ -2,10 +2,10 @@ import { useArgs } from 'storybook/preview-api';
 
 import { ForgeMonacoEditor } from '@mission-platform/content';
 
-import type { ForgeWebScriptWorkspaceHost } from '@mission-platform/forge-web-script-language-service';
+import type { FlintWorkspaceHost } from '@mission-platform/flint-language-service';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
-const capabilityWorkspace: ForgeWebScriptWorkspaceHost = {
+const capabilityWorkspace: FlintWorkspaceHost = {
   readFile: async () => '',
   listFiles: async () => [],
   getOptions: async () => ({
@@ -38,7 +38,7 @@ const meta = {
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     language: {
       control: 'select',
-      options: ['typescript', 'javascript', 'json', 'markdown', 'python', 'fws', 'plaintext'],
+      options: ['typescript', 'javascript', 'json', 'markdown', 'python', 'flint', 'plaintext'],
     },
     theme: { control: 'inline-radio', options: ['vs', 'vs-dark', 'hc-black', 'hc-light'] },
     readonly: { control: 'boolean' },
@@ -86,24 +86,24 @@ export const Json: Story = { args: { language: 'json', modelValue: '{\n  "ok": t
 
 export const ReadonlyWithMinimap: Story = { args: { readonly: true, minimap: true } };
 
-export const ForgeWebScriptValid: Story = {
+export const FlintValid: Story = {
   args: {
-    language: 'fws',
+    language: 'flint',
     modelValue: ['export fn add(value: i32) -> i32 {', '  return value + 1;', '}'].join('\n'),
   },
 };
 
-export const ForgeWebScriptInvalid: Story = {
+export const FlintInvalid: Story = {
   args: {
-    language: 'fws',
+    language: 'flint',
     modelValue: 'fn hidden() -> i32 { return 1; }',
   },
 };
 
-export const ForgeWebScriptCapabilities: Story = {
+export const FlintCapabilities: Story = {
   args: {
-    language: 'fws',
-    forgeWebScript: { workspaceHost: capabilityWorkspace },
+    language: 'flint',
+    flint: { workspaceHost: capabilityWorkspace },
     modelValue: [
       'import capability "clock.now" as now() -> i64;',
       'export fn current() -> i64 {',

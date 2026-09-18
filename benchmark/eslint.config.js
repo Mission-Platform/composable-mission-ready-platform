@@ -10,7 +10,7 @@ export default [
     ],
   },
   {
-    files: ["src/adapters/fws-vm.ts"],
+    files: ["src/adapters/flint-vm.ts"],
     rules: {
       // Hand-lowered bytecode uses short register names intentionally.
       "unicorn/prevent-abbreviations": "off",

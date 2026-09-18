@@ -7,7 +7,7 @@ import {
   encodeUtf8,
 } from "../src/abi.ts";
 import { createAssemblyScriptAdapter } from "../src/adapters/assemblyscript-wasm.ts";
-import { createFwsVmAdapter } from "../src/adapters/fws-vm.ts";
+import { createFlintVmAdapter } from "../src/adapters/flint-vm.ts";
 import { createJavaScriptAdapter } from "../src/adapters/javascript.ts";
 import { createRustWasmAdapter } from "../src/adapters/rust-wasm.ts";
 import { measureExecution, measureInitialization } from "../src/measure.ts";
@@ -36,7 +36,7 @@ export interface BrowserBenchmarkResult {
   readonly browserVersion: string;
 }
 
-interface BrowserFwsExports {
+interface BrowserFlintExports {
   readonly arithmetic_reduce: (
     n: number,
     multiplier: number,
@@ -68,8 +68,8 @@ interface BrowserFwsExports {
   readonly fws_reset: () => void;
 }
 
-interface BrowserGeneratedFwsExports {
-  readonly arithmetic_reduce: BrowserFwsExports["arithmetic_reduce"];
+interface BrowserGeneratedFlintExports {
+  readonly arithmetic_reduce: BrowserFlintExports["arithmetic_reduce"];
   readonly string_transform: (
     value: string,
     prefix: string,
@@ -81,9 +81,9 @@ interface BrowserGeneratedFwsExports {
     threshold: number,
   ) => number;
   readonly memory: WebAssembly.Memory;
-  readonly fws_alloc: BrowserFwsExports["fws_alloc"];
+  readonly fws_alloc: BrowserFlintExports["fws_alloc"];
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: BrowserFwsExports["fws_realloc"];
+  readonly fws_realloc: BrowserFlintExports["fws_realloc"];
   readonly fws_reset: () => void;
 }
 
@@ -122,7 +122,7 @@ function key(
     workload: benchmarkCase.category,
     inputSize: benchmarkCase.size,
     implementation: adapter.implementation,
-    ...(adapter.mode === undefined ? {} : { fwsMode: adapter.mode }),
+    ...(adapter.mode === undefined ? {} : { flintMode: adapter.mode }),
     hostRuntime: "chromium" as const,
     phase,
   };
@@ -142,15 +142,15 @@ function failed(
   };
 }
 
-function fwsWasmAdapter(
+function flintWasmAdapter(
   artifact: BuildArtifact,
   mode: "wasm" | "wasm-excluded-bounds" = "wasm",
 ): RuntimeAdapter {
   let module: WebAssembly.Module | undefined;
   return {
-    implementation: "fws",
+    implementation: "flint",
     mode,
-    adapterId: `fws-${mode}-browser`,
+    adapterId: `flint-${mode}-browser`,
     async build(): Promise<BuildArtifact> {
       return artifact;
     },
@@ -160,27 +160,27 @@ function fwsWasmAdapter(
         typeof received.metadata?.wasmUrl !== "string"
       ) {
         throw new Error(
-          "FWS browser adapter received an incompatible artifact URL.",
+          "Flint browser adapter received an incompatible artifact URL.",
         );
       }
       if (module === undefined) {
         const response = await fetch(received.metadata.wasmUrl);
         if (!response.ok)
-          throw new Error(`Unable to fetch FWS WASM (${response.status}).`);
+          throw new Error(`Unable to fetch Flint WASM (${response.status}).`);
         module = await WebAssembly.compile(await response.arrayBuffer());
       }
       const prepared = new WebAssembly.Instance(module, {})
-        .exports as unknown as BrowserFwsExports;
+        .exports as unknown as BrowserFlintExports;
       if (
         typeof prepared.fws_reset !== "function" ||
         typeof prepared.fws_dealloc !== "function" ||
         typeof prepared.fws_realloc !== "function"
       )
         throw new Error(
-          "FWS browser WASM module is missing required memory ABI exports.",
+          "Flint browser WASM module is missing required memory ABI exports.",
         );
       return {
-        adapterId: `fws-${mode}-browser`,
+        adapterId: `flint-${mode}-browser`,
         preparation: {
           moduleCompiled: true,
           instancePolicy: "reusable-with-reset",
@@ -257,12 +257,12 @@ function fwsWasmAdapter(
   };
 }
 
-function fwsGeneratedWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
-  let exports: BrowserGeneratedFwsExports | undefined;
+function flintGeneratedWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
+  let exports: BrowserGeneratedFlintExports | undefined;
   return {
-    implementation: "fws",
+    implementation: "flint",
     mode: "wasm-generated",
-    adapterId: "fws-wasm-generated-browser",
+    adapterId: "flint-wasm-generated-browser",
     async build(): Promise<BuildArtifact> {
       return artifact;
     },
@@ -272,17 +272,19 @@ function fwsGeneratedWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
         typeof received.metadata?.moduleUrl !== "string"
       ) {
         throw new Error(
-          "FWS generated browser adapter received an incompatible module URL.",
+          "Flint generated browser adapter received an incompatible module URL.",
         );
       }
       const loaded = (await import(received.metadata.moduleUrl)) as {
-        loadSync?: () => BrowserGeneratedFwsExports;
+        loadSync?: () => BrowserGeneratedFlintExports;
       };
       if (typeof loaded.loadSync !== "function")
-        throw new Error("Generated FWS browser module has no loadSync loader.");
+        throw new Error(
+          "Generated Flint browser module has no loadSync loader.",
+        );
       exports = loaded.loadSync();
       return {
-        adapterId: "fws-wasm-generated-browser",
+        adapterId: "flint-wasm-generated-browser",
         preparation: {
           moduleLoaded: true,
           instancePolicy: "reusable-with-reset",
@@ -290,7 +292,7 @@ function fwsGeneratedWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
           stringInputAllocations: 1,
         },
         execute: (input) => {
-          const instance = exports as BrowserGeneratedFwsExports;
+          const instance = exports as BrowserGeneratedFlintExports;
           return withReset(instance, () => {
             if ("multiplier" in input)
               return normalizeBenchmarkOutput(
@@ -356,12 +358,12 @@ function adapterFor(artifact: BuildArtifact): RuntimeAdapter {
     return createRustWasmAdapter(rustLoader);
   if (artifact.implementation === "assemblyscript-wasm")
     return createAssemblyScriptAdapter(assemblyScriptLoader);
-  if (artifact.fwsMode === "wasm-generated")
-    return fwsGeneratedWasmAdapter(artifact);
-  if (artifact.fwsMode === "wasm") return fwsWasmAdapter(artifact);
-  if (artifact.fwsMode === "wasm-excluded-bounds")
-    return fwsWasmAdapter(artifact, "wasm-excluded-bounds");
-  return createFwsVmAdapter(artifact.fwsMode ?? "interpret");
+  if (artifact.flintMode === "wasm-generated")
+    return flintGeneratedWasmAdapter(artifact);
+  if (artifact.flintMode === "wasm") return flintWasmAdapter(artifact);
+  if (artifact.flintMode === "wasm-excluded-bounds")
+    return flintWasmAdapter(artifact, "wasm-excluded-bounds");
+  return createFlintVmAdapter(artifact.flintMode ?? "interpret");
 }
 
 export async function runBrowserRequest(
@@ -402,7 +404,7 @@ export async function runBrowserRequest(
           measurements.push(failed(benchmarkCase, adapter, "execute", reason));
           failures.push({
             implementation: adapter.implementation,
-            ...(adapter.mode === undefined ? {} : { fwsMode: adapter.mode }),
+            ...(adapter.mode === undefined ? {} : { flintMode: adapter.mode }),
             phase: "execute",
             category: "runtime",
             message: reason,
@@ -421,7 +423,7 @@ export async function runBrowserRequest(
           measurements.push(failed(benchmarkCase, adapter, "execute", reason));
           failures.push({
             implementation: adapter.implementation,
-            ...(adapter.mode === undefined ? {} : { fwsMode: adapter.mode }),
+            ...(adapter.mode === undefined ? {} : { flintMode: adapter.mode }),
             phase: "execute",
             category: "correctness",
             message: reason,
@@ -460,7 +462,7 @@ export async function runBrowserRequest(
         });
         failures.push({
           implementation: adapter.implementation,
-          ...(adapter.mode === undefined ? {} : { fwsMode: adapter.mode }),
+          ...(adapter.mode === undefined ? {} : { flintMode: adapter.mode }),
           phase: "initialize",
           category: "runtime",
           message: reason,

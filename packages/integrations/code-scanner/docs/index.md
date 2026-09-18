@@ -1,7 +1,7 @@
 # @mission-platform/code-scanner
 
 A dependency-free **image / camera code scanner** compiled from a statically linked
-Forge Web Script graph to WebAssembly. The linked artifact currently decodes Data
+Flint graph to WebAssembly. The linked artifact currently decodes Data
 Matrix, compact Aztec, 1D/RSS readers, PDF417, and MaxiCode from image files or
 live camera streams. The QR graph emits independently but remains outside the
 combined artifact while the Forge emitter limitation is investigated.

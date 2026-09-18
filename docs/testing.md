@@ -102,21 +102,21 @@ verification.
 2. Ensure the package `vitest.config.ts` enables browser mode (see Reference below).
 3. Run with `pnpm test`.
 
-### Forge Web Script Tests
+### Flint Tests
 
-Use `@mission-platform/forge-web-script-vitest` for deterministic compiler, artifact, Wasm, and self-hosted parity
+Use `@mission-platform/flint-vitest` for deterministic compiler, artifact, Wasm, and self-hosted parity
 checks. It delegates compilation to the same compiler service and Vite plugin used by production; it does not create a
 second module system.
 
-Install the package in a workspace that tests `.fws` modules, then compose its adapter with the standard Vitest config:
+Install the package in a workspace that tests `.flint` modules, then compose its adapter with the standard Vitest config:
 
 ```typescript
 // vitest.config.ts
-import { defineForgeWebScriptVitestConfig } from "@mission-platform/forge-web-script-vitest";
+import { defineFlintVitestConfig } from "@mission-platform/flint-vitest";
 
-export default defineForgeWebScriptVitestConfig({
+export default defineFlintVitestConfig({
   environment: "node",
-  forgeWebScript: {
+  flint: {
     root: import.meta.dirname,
     requestedCapabilities: ["clock.now"],
     selfHostedVmMode: "interpret",
@@ -133,32 +133,32 @@ For direct compiler and runtime assertions, create one harness per suite or test
 ```typescript
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  assertForgeWebScriptDiagnostic,
-  assertForgeWebScriptNoDiagnostics,
-  createForgeWebScriptTestHarness,
-} from "@mission-platform/forge-web-script-vitest";
+  assertFlintDiagnostic,
+  assertFlintNoDiagnostics,
+  createFlintTestHarness,
+} from "@mission-platform/flint-vitest";
 
-describe("FWS fixture", () => {
-  const harness = createForgeWebScriptTestHarness({
+describe("Flint fixture", () => {
+  const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
 
   afterEach(() => harness.dispose());
 
   it("checks artifacts, Wasm exports, and explicit capabilities", async () => {
-    const result = await harness.compile("valid/scalar.fws");
-    assertForgeWebScriptNoDiagnostics(result.diagnostics);
+    const result = await harness.compile("valid/scalar.flint");
+    assertFlintNoDiagnostics(result.diagnostics);
     expect(result.artifact.manifest?.exports.map(({ name }) => name)).toEqual([
       "answer",
     ]);
     expect(
       (
-        await harness.load<{ answer: () => number }>("valid/scalar.fws")
+        await harness.load<{ answer: () => number }>("valid/scalar.flint")
       ).answer(),
     ).toBe(42);
 
     const clock = await harness.load<{ current: () => bigint }>(
-      "capabilities/clock-now.fws",
+      "capabilities/clock-now.flint",
       {
         "clock.now": { now: () => 123n },
       },
@@ -167,9 +167,9 @@ describe("FWS fixture", () => {
   });
 
   it("keeps diagnostic code, phase, and span structured", async () => {
-    const result = await harness.inspect("diagnostics/invalid-type.fws");
-    assertForgeWebScriptDiagnostic(result.diagnostics, {
-      code: "FWS-TYPE-005",
+    const result = await harness.inspect("diagnostics/invalid-type.flint");
+    assertFlintDiagnostic(result.diagnostics, {
+      code: "FLINT-TYPE-005",
       phase: "type-check",
       line: 2,
     });
@@ -189,14 +189,14 @@ import {
   load,
   loadSync,
   manifest,
-} from "./fixtures/valid/scalar.fws";
+} from "./fixtures/valid/scalar.flint";
 
 expect(abiManifest).toEqual(manifest);
 expect((await load<{ answer: () => number }>()).answer()).toBe(42);
 expect(loadSync<{ answer: () => number }>().answer()).toBe(42);
 ```
 
-For FWS values, test both layers explicitly. Raw WASM tests should assert the
+For Flint values, test both layers explicitly. Raw WASM tests should assert the
 pointer-length ABI and ownership calls; generated ESM tests should assert the
 JavaScript projection:
 
@@ -205,7 +205,7 @@ const artifact = harness.compileSource(
   `
   export fn echo(value: string) -> string { return value; }
 `,
-  "strings.fws",
+  "strings.flint",
 ).artifact;
 
 const generated = await importFromEsmSource(artifact.esmSource);
@@ -229,16 +229,16 @@ must continue to pass a `[pointer, length]` tuple rather than expecting an
 automatic `Uint8Array` conversion.
 
 The benchmark workspace compares the raw pointer-length adapter with the
-generated ESM adapter as separate FWS modes:
+generated ESM adapter as separate Flint modes:
 
 ```bash
 pnpm --filter @mission-platform/benchmark run bench -- \
   --node-only --warmup 3 --samples 10 \
-  --output benchmark/results/fws-generated-boundary
+  --output benchmark/results/flint-generated-boundary
 ```
 
 Reports include build, initialization, and steady-state execution phases. The
-FWS raw `wasm` row uses fresh instances and three string input allocations for
+Flint raw `wasm` row uses fresh instances and three string input allocations for
 the benchmark kernel; `wasm-generated` uses the generated `loadSync` contract
 and one packed string input allocation. Because the current guest deallocator
 validates ranges without recycling bump-allocator space, generated string/bytes
@@ -250,7 +250,7 @@ and the static allocation counts used by the comparison. Compare rows only
 when the corpus hash, host runtime, and benchmark schema match.
 
 For example, the Node-only run above produced 336 measured phase results with
-zero failures and corpus hash `ad092f7c552cc914`. Both FWS rows had raw Wasm
+zero failures and corpus hash `ad092f7c552cc914`. Both Flint rows had raw Wasm
 hash `0ac58f11`, raw Wasm size 1,625 bytes, and generated ESM source size 18,490
 bytes; raw and generated string input allocation counts were 3 and 1. On the
 Unicode-small string case, mean initialization was 0.00024 ms raw versus
@@ -259,8 +259,8 @@ generated on the recorded Node run. These figures are representative evidence,
 not cross-machine performance guarantees; use the report's per-case samples
 for comparisons.
 
-The plugin also exposes explicit virtual queries for `?forge-web-script-manifest`, `?forge-web-script-declarations`,
-`?forge-web-script-wasm`, and `?forge-web-script-source-map`. To make those ambient modules discoverable to TypeScript,
+The plugin also exposes explicit virtual queries for `?flint-manifest`, `?flint-declarations`,
+`?flint-wasm`, and `?flint-source-map`. To make those ambient modules discoverable to TypeScript,
 add the shipped declaration subpath to the test project's types:
 
 ```json
@@ -268,31 +268,31 @@ add the shipped declaration subpath to the test project's types:
   "compilerOptions": {
     "types": [
       "node",
-      "@mission-platform/forge-web-script-vitest/forge-web-script"
+      "@mission-platform/flint-vitest/flint"
     ]
   }
 }
 ```
 
-Alternatively, add `/// <reference types="@mission-platform/forge-web-script-vitest/forge-web-script" />` to a test-only
+Alternatively, add `/// <reference types="@mission-platform/flint-vitest/flint" />` to a test-only
 type entrypoint included by the project. The declaration subpath is type-only and does not add a runtime import.
 
-Use shared fixtures in `packages/forge-web-script-vitest/fixtures/` for cross-package language and ABI conformance:
+Use shared fixtures in `packages/flint/vitest/fixtures/` for cross-package language and ABI conformance:
 `valid/`, `diagnostics/`, `capabilities/`, `graphs/`, and `self-hosted/` are intentionally stable. Keep a fixture beside
 a compiler, runtime, or plugin spec when it covers a private implementation detail; use inline source for small parser or
 VM unit cases. This keeps fixture names and cleanup deterministic without forcing low-level tests through the harness.
 
 `checkVmParity(file, mode)` supports `interpret`, `jit`, and `aot`, but its report is the existing bounded self-hosted
 lex-stage parity contract. Assert `parity`, fingerprints, steps, and AOT reproducibility metadata; do not treat the report
-as arbitrary compiled-FWS VM execution or as a replacement for Wasm behavior tests.
+as arbitrary compiled-Flint VM execution or as a replacement for Wasm behavior tests.
 
-Run the focused FWS matrix with the normal workspace tasks:
+Run the focused Flint matrix with the normal workspace tasks:
 
 ```bash
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-vitest
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script
-pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-runtime
-pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-forge-web-script
+pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
+pnpm exec turbo run test build:check --filter @mission-platform/flint
+pnpm exec turbo run test build:check --filter @mission-platform/flint-runtime
+pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-flint
 ```
 
 ## Technical Reference

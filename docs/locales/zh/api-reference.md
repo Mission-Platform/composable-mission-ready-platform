@@ -302,9 +302,9 @@ Forge Web 脚本工件使用格式为 `sha256-v1:<hex>` 的版本化 SHA-256 内
 #### 验证工作流程
 
 1. **从可信来源（例如签名清单、CI 构建日志或安全配置）获取预期哈希**。
-2. **使用验证器计算工件哈希**：`fws_verify_artifact(artifact)` 返回 `contentHash`。
+2. **使用验证器计算工件哈希**：`flint_verify_artifact(artifact)` 返回 `contentHash`。
 3. **比较哈希值**：如果它们匹配，则自记录预期值以来，工件未被意外或恶意更改。
-4. **验证清单**：使用 `fws_inspect_manifest` 独立检查能力导入、导出、元数据和策略合规性。
+4. **验证清单**：使用 `flint_inspect_manifest` 独立检查能力导入、导出、元数据和策略合规性。
 
 #### 版本控制
 

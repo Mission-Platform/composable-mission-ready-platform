@@ -20,7 +20,7 @@
 
 - 7e3cc9d: remove the embedded matrix decoder API
   
-  BREAKING CHANGE: remove the matrix decoder APIs and decoder FWS artifacts; use `@mission-platform/code-scanner` for decoding.
+  BREAKING CHANGE: remove the matrix decoder APIs and decoder Flint artifacts; use `@mission-platform/code-scanner` for decoding.
 
 ### Patch Changes
 
@@ -47,10 +47,10 @@
 
 ### Patch Changes
 
-- 140f802: move barcode and phone-number implementations onto the Forge Web Script runtime
+- 140f802: move barcode and phone-number implementations onto the Flint runtime
 - c32bb83: centralize package documentation generation in the repository build
-- 93ddb34: align generated Forge Web Script codecs with the updated compiler
-- 839f672: correct Forge Web Script matrix decoder edge cases
+- 93ddb34: align generated Flint codecs with the updated compiler
+- 839f672: correct Flint matrix decoder edge cases
 - 8a15dbc: add generated package API references and build-time documentation extraction
 - 46fe17a: scope Forge build environment variables to package build tasks
 - 31ed685: Run i18n extraction from each configured workspace through the root Turbo task
@@ -203,9 +203,9 @@
   `vite.config.ts`), stories, and documentation. Formatting-only; no runtime or API changes.
 
 - ffa5129: relicense the project from MIT to BSD-4-Clause
-- d920693: move matrix codec execution to package-local Forge Web Script artifacts
+- d920693: move matrix codec execution to package-local Flint artifacts
 
-  Matrix encoding and decoding now load bounded package-local FWS graphs through generated synchronous and asynchronous loaders. The public package no longer depends on generated matrix WebAssembly wrapper packages.
+  Matrix encoding and decoding now load bounded package-local Flint graphs through generated synchronous and asynchronous loaders. The public package no longer depends on generated matrix WebAssembly wrapper packages.
 
 - f67e304: migrate library builds to tsdown
 
@@ -263,7 +263,7 @@
 ### Minor Changes
 
 - 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder backed by package-local
-  Forge Web Script artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
+  Flint artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
   single-data-region square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of
   module bits. The artifact loader is synchronous and works during SSR and in tests.
 
@@ -378,7 +378,7 @@
 ### Minor Changes
 
 - 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder backed by package-local
-  Forge Web Script artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
+  Flint artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
   single-data-region square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of
   module bits. The artifact loader is synchronous and works during SSR and in tests.
 
@@ -493,7 +493,7 @@
 ### Minor Changes
 
 - 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder backed by package-local
-  Forge Web Script artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
+  Flint artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
   single-data-region square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of
   module bits. The artifact loader is synchronous and works during SSR and in tests.
 
@@ -608,7 +608,7 @@
 ### Minor Changes
 
 - 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder backed by package-local
-  Forge Web Script artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
+  Flint artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
   single-data-region square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of
   module bits. The artifact loader is synchronous and works during SSR and in tests.
 

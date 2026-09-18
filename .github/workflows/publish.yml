@@ -84,23 +84,23 @@ jobs:
 
       # ──────────────────────────────────────────────────────────────
       # VS CODE EXTENSION — release VSIX to release tag
-      # fws-vscode is a private VS Code extension, not an npm package.
+      # flint-vscode is a private VS Code extension, not an npm package.
       # Package it into a .vsix and attach it to the release tag on GitHub.
       # ──────────────────────────────────────────────────────────────
-      - name: Release VS Code extension VSIX (fws-vscode)
+      - name: Release VS Code extension VSIX (flint-vscode)
         if: github.ref == 'refs/heads/main'
         run: |
-          VERSION=$(node -p "require('./extensions/fws-vscode/package.json').version")
-          TAG="fws-vscode@${VERSION}"
-          VSIX="extensions/fws-vscode/fws-vscode-${VERSION}.vsix"
+          VERSION=$(node -p "require('./extensions/flint-vscode/package.json').version")
+          TAG="flint-vscode@${VERSION}"
+          VSIX="extensions/flint-vscode/flint-vscode-${VERSION}.vsix"
 
           echo "Checking release status for ${TAG}..."
-          if gh release view "${TAG}" --json assets -q '.assets[].name' 2>/dev/null | grep -qx "fws-vscode-${VERSION}.vsix"; then
+          if gh release view "${TAG}" --json assets -q '.assets[].name' 2>/dev/null | grep -qx "flint-vscode-${VERSION}.vsix"; then
             echo "VSIX asset is already published to release ${TAG}."
           else
             echo "Packaging VS Code extension..."
-            pnpm exec turbo run build --filter fws-vscode
-            pnpm --filter fws-vscode run package
+            pnpm exec turbo run build --filter flint-vscode
+            pnpm --filter flint-vscode run package
 
             if gh release view "${TAG}" >/dev/null 2>&1; then
               echo "Uploading VSIX to existing release ${TAG}..."

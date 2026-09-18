@@ -61,8 +61,8 @@ current linked 2D readers are deliberately reduced implementations, so claiming
 full ZXing parity would require a new Tier-A decoder and detector pass rather
 than more documentation or fixture work.
 
-The next highest-value investigation is the Forge Web Script QR emitter failure:
+The next highest-value investigation is the Flint QR emitter failure:
 the standalone QR graph is valid, but linking its decoder into the scanner
-graph fails `FWS-EMIT-001` before runtime. Until that compiler boundary is
+graph fails `FLINT-WASM-001` before runtime. Until that compiler boundary is
 resolved, Tier-C fixture and API work must keep QR as an explicit standalone
 case and must not convert reduced local fixtures into parity claims.

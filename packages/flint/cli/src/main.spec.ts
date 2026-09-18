@@ -1,0 +1,303 @@
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
+import { afterEach, describe, expect, it } from 'vitest';
+
+import { runFlintCli } from './main.js';
+
+const temporaryDirectories: string[] = [];
+
+afterEach(async () => {
+  await Promise.all(temporaryDirectories.splice(0).map((directory) => rm(directory, { recursive: true, force: true })));
+});
+
+async function project(source: string): Promise<{ readonly root: string; readonly entry: string }> {
+  const root = await mkdtemp(path.join(tmpdir(), 'flint-cli-'));
+  temporaryDirectories.push(root);
+  const entry = path.join(root, 'main.flint');
+  await writeFile(entry, source, 'utf8');
+  return { root, entry };
+}
+
+async function readDirectoryIfPresent(directory: string): Promise<string[] | undefined> {
+  try {
+    return await readdir(directory);
+  } catch {
+    return undefined;
+  }
+}
+
+function ioCapture(): {
+  readonly io: { readonly stdout: (message: string) => void; readonly stderr: (message: string) => void };
+  readonly stdout: string[];
+  readonly stderr: string[];
+} {
+  const stdout: string[] = [];
+  const stderr: string[] = [];
+  return {
+    io: { stdout: (message) => stdout.push(message), stderr: (message) => stderr.push(message) },
+    stdout,
+    stderr,
+  };
+}
+
+describe('flint CLI', () => {
+  it('checks a source graph without creating artifacts', async () => {
+    const { root, entry } = await project('export fn answer() -> i32 { return 42; }');
+    const capture = ioCapture();
+
+    await expect(runFlintCli(['check', entry, '--project-root', root], capture.io, root)).resolves.toBe(0);
+    expect(capture.stdout).toEqual([`Checked ${entry}.`]);
+    expect(capture.stderr).toEqual([]);
+    const outputFiles = await readDirectoryIfPresent(path.join(root, 'dist'));
+    expect(outputFiles).toBeUndefined();
+  });
+
+  it('writes exactly the deterministic six-file artifact set after compilation', async () => {
+    const { root, entry } = await project('export fn answer() -> i32 { return 42; }');
+    const outputDirectory = path.join(root, 'artifacts');
+    const capture = ioCapture();
+
+    await expect(
+      runFlintCli(['compile', entry, '--project-root', root, '--out-dir', outputDirectory], capture.io, root),
+    ).resolves.toBe(0);
+    expect(capture.stderr).toEqual([]);
+    const outputFiles = await readdir(outputDirectory);
+    expect(outputFiles.toSorted()).toEqual([
+      'main.abi.json',
+      'main.d.ts',
+      'main.js',
+      'main.map',
+      'main.wasm',
+      'main.wat',
+    ]);
+    expect(WebAssembly.validate(await readFile(path.join(outputDirectory, 'main.wasm')))).toBe(true);
+    const wasm = await readFile(path.join(outputDirectory, 'main.wasm'));
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(wasm), {});
+    expect((instance.exports.answer as () => number)()).toBe(42);
+    const manifest = JSON.parse(await readFile(path.join(outputDirectory, 'main.abi.json'), 'utf8')) as unknown;
+    expect(manifest).toMatchObject({
+      languageVersion: '1.0',
+      abiVersion: '1.2',
+      exports: [{ name: 'answer', result: 'i32' }],
+    });
+  });
+
+  it.each(['interpret', 'jit', 'aot'] as const)('keeps the Wasm artifact on the %s FWS VM path', async (vmMode) => {
+    const { root, entry } = await project('export fn answer() -> i32 { return 42; }');
+    const outputDirectory = path.join(root, vmMode);
+    const capture = ioCapture();
+
+    await expect(
+      runFlintCli(['compile', entry, '--out-dir', outputDirectory, '--vm-mode', vmMode], capture.io, root),
+    ).resolves.toBe(0);
+    expect(capture.stderr).toEqual([]);
+    expect(WebAssembly.validate(await readFile(path.join(outputDirectory, 'main.wasm')))).toBe(true);
+  });
+
+  it('produces byte-for-byte identical artifacts across repeated CLI compiles', async () => {
+    const { root, entry } = await project('export fn answer() -> i32 { return 42; }');
+    const firstDirectory = path.join(root, 'first');
+    const secondDirectory = path.join(root, 'second');
+
+    await expect(runFlintCli(['compile', entry, '--out-dir', firstDirectory], ioCapture().io, root)).resolves.toBe(0);
+    await expect(runFlintCli(['compile', entry, '--out-dir', secondDirectory], ioCapture().io, root)).resolves.toBe(0);
+
+    for (const fileName of await readdir(firstDirectory)) {
+      expect(await readFile(path.join(firstDirectory, fileName))).toEqual(
+        await readFile(path.join(secondDirectory, fileName)),
+      );
+    }
+  });
+
+  it('returns a stable failure and writes no artifacts for invalid source', async () => {
+    const { root, entry } = await project('export fn broken() -> i32 { return ; }');
+    const outputDirectory = path.join(root, 'artifacts');
+    const capture = ioCapture();
+
+    await expect(runFlintCli(['compile', entry, '--out-dir', outputDirectory], capture.io, root)).resolves.toBe(1);
+    expect(capture.stderr.join('\n')).toContain('[FLINT-');
+    const outputFiles = await readDirectoryIfPresent(outputDirectory);
+    expect(outputFiles).toBeUndefined();
+  });
+
+  it('resolves relative source-module imports and compiles their reachable static exports', async () => {
+    const { root, entry } = await project('import "./helper.flint" as helper; export fn main() -> i32 { return 1; }');
+    await writeFile(path.join(root, 'helper.flint'), 'export fn helper() -> i32 { return 2; }', 'utf8');
+    const outputDirectory = path.join(root, 'artifacts');
+    const capture = ioCapture();
+
+    const status = await runFlintCli(
+      [
+        'compile',
+        entry,
+        '--project-root',
+        root,
+        '--link-mode',
+        'static',
+        '--optimization',
+        'release',
+        '-o',
+        outputDirectory,
+      ],
+      capture.io,
+      root,
+    );
+    expect(status, capture.stderr.join('\n')).toBe(0);
+    const wasm = await readFile(path.join(outputDirectory, 'main.wasm'));
+    expect(WebAssembly.Module.exports(new WebAssembly.Module(wasm)).map(({ name }) => name)).toContain('helper');
+  });
+
+  it('inspects a .sonir.json artifact and returns a valid summary', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+
+    // Create a minimal valid .sonir.json artifact for testing
+    const sonirPath = path.join(root, 'test.sonir.json');
+    const sonirContent = JSON.stringify({
+      schemaVersion: '1.0',
+      compilerVersion: '1.0.0',
+      languageVersion: '1.0',
+      abiVersion: '1.2',
+      sourceHash: 'abc123',
+      graphHash: 'a4cf12d2',
+      optimization: 'debug',
+      boundsChecks: 'runtime',
+      memoryModel: 'region-arc-checked-linear',
+      functions: [{ name: 'answer', entry: 1, exported: true }],
+      nodes: [
+        {
+          id: 1,
+          kind: 'constant',
+          functionName: 'answer',
+          type: 'i32',
+          value: 42,
+          inputs: [],
+          effects: ['pure'],
+          alias: 'none',
+          ownership: 'value',
+        },
+        {
+          id: 2,
+          kind: 'return',
+          functionName: 'answer',
+          inputs: [1],
+          effects: ['control'],
+          alias: 'none',
+          ownership: 'value',
+        },
+      ],
+      regions: [],
+      sourceMap: [],
+    });
+    await writeFile(sonirPath, sonirContent, 'utf8');
+
+    const inspectCapture = ioCapture();
+
+    // Inspect the artifact in JSON format
+    const status = await runFlintCli(['inspect-sonir', sonirPath, '--format', 'json'], inspectCapture.io, root);
+    expect(status).toBe(0);
+    expect(inspectCapture.stderr).toEqual([]);
+    expect(inspectCapture.stdout.length).toBe(1);
+
+    const summary = JSON.parse(inspectCapture.stdout[0]) as Record<string, unknown>;
+    expect(summary).toMatchObject({
+      schemaVersion: '1.0',
+      compilerVersion: '1.0.0',
+      sourceHash: 'abc123',
+      graphHash: 'a4cf12d2',
+      optimization: 'debug',
+      boundsChecks: 'runtime',
+      memoryModel: 'region-arc-checked-linear',
+      functions: 1,
+      nodes: 2,
+      regions: 0,
+    });
+  });
+
+  it('inspects a .sonir.json artifact in text format', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+
+    // Create a minimal valid .sonir.json artifact for testing
+    const sonirPath = path.join(root, 'test.sonir.json');
+    const sonirContent = JSON.stringify({
+      schemaVersion: '1.0',
+      compilerVersion: '1.0.0',
+      languageVersion: '1.0',
+      abiVersion: '1.2',
+      sourceHash: 'def789',
+      graphHash: 'bedad28b',
+      optimization: 'release',
+      boundsChecks: 'proven-safe',
+      memoryModel: 'region-arc-checked-linear',
+      functions: [{ name: 'answer', entry: 1, exported: true }],
+      nodes: [
+        {
+          id: 1,
+          kind: 'constant',
+          functionName: 'answer',
+          type: 'i32',
+          value: 42,
+          inputs: [],
+          effects: ['pure'],
+          alias: 'none',
+          ownership: 'value',
+        },
+        {
+          id: 2,
+          kind: 'return',
+          functionName: 'answer',
+          inputs: [1],
+          effects: ['control'],
+          alias: 'none',
+          ownership: 'value',
+        },
+      ],
+      regions: [],
+      sourceMap: [],
+    });
+    await writeFile(sonirPath, sonirContent, 'utf8');
+
+    const inspectCapture = ioCapture();
+
+    // Inspect the artifact in text format
+    const status = await runFlintCli(['inspect-sonir', sonirPath, '--format', 'text'], inspectCapture.io, root);
+    expect(status).toBe(0);
+    expect(inspectCapture.stderr).toEqual([]);
+    expect(inspectCapture.stdout.length).toBe(1);
+
+    const text = inspectCapture.stdout[0];
+    expect(text).toMatch(
+      /^SoN bedad28b: 2 nodes, 1 functions, 0 regions; release optimization; bounds checks proven-safe\./,
+    );
+  });
+
+  it('rejects path traversal in inspect-sonir', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+    const capture = ioCapture();
+
+    const status = await runFlintCli(['inspect-sonir', '../outside.sonir.json'], capture.io, root);
+    expect(status).toBe(1);
+    expect(capture.stderr.join('\n')).toContain('must remain under the current working directory');
+  });
+
+  it('rejects malformed .sonir.json in inspect-sonir', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+    const malformedPath = path.join(root, 'malformed.sonir.json');
+    await writeFile(malformedPath, 'not valid json', 'utf8');
+    const capture = ioCapture();
+
+    const status = await runFlintCli(['inspect-sonir', malformedPath], capture.io, root);
+    expect(status).toBe(1);
+    expect(capture.stderr.join('\n')).toContain('Unable to inspect SoN artifact');
+  });
+
+  it('rejects nonexistent .sonir.json in inspect-sonir', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+    const capture = ioCapture();
+
+    const status = await runFlintCli(['inspect-sonir', path.join(root, 'nonexistent.sonir.json')], capture.io, root);
+    expect(status).toBe(1);
+    expect(capture.stderr.join('\n')).toContain('Unable to inspect SoN artifact');
+  });
+});

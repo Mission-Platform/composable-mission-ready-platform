@@ -6,10 +6,10 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > Sprache: Deutsch (de)
 
 Ein Plan zur Erhöhung der Leserate von `@mission-platform/code-scanner` bei realen Aufnahmen (Uploads und Live-Kamera).
-Frames) und um die Scan-Pipeline innerhalb eines statisch verknüpften Forge Web Script/WebAssembly-Artefakts zu halten.
+Frames) und um die Scan-Pipeline innerhalb eines statisch verknüpften Flint/WebAssembly-Artefakts zu halten.
 
 > **Aktuelle Implementierung:** Der Scanner wird statisch verknüpft ausgeliefert
-> Forge Web Script-Diagramm unter `src/fws`, mit einem dynamischen Quellmodulprofil
+> Flint-Diagramm unter `src/fws`, mit einem dynamischen Quellmodulprofil
 > verfügbar für unabhängig zwischenspeicherbare Decodermodule. Der Rost und die Kiste
 > Die unten aufgeführten Referenzen beziehen sich ausschließlich auf historische Migrationsherkunft. Sie sind
 > keine Paketlaufzeitabhängigkeiten oder Build-Eingaben.
@@ -29,7 +29,7 @@ hat einen **getaggten Puffer** `[format, ...payload]` zurückgegeben – er wurd
 
 - **Decode** lief in JavaScript und rief separate Decodermodule auf.
 
-Phase 1 ersetzte dies durch einen einzelnen FWS `scan_and_decode`-Aufruf (siehe §1); die
+Phase 1 ersetzte dies durch einen einzelnen Flint `scan_and_decode`-Aufruf (siehe §1); die
 Die nachstehende historische Motivation wird als Begründung beibehalten, während die aktuelle Quelle von
 Die Wahrheit ist der FWS-Graph und seine Vitest-Konformitätssuite.
 
@@ -41,7 +41,7 @@ Vor Phase 1 war ein einzelner Scan:
 image (JS)
   → wasm code-scan.scan()            [Rust: binarise + locate + sample]
   → tagged module buffer (JS)        [cross back into JS]
-  → scanner-owned FWS decoder graph   [decode inside the scanner artifact]
+  → scanner-owned Flint decoder graph   [decode inside the scanner artifact]
   → payload string (JS)
 ```
 
@@ -69,11 +69,11 @@ Der Locator und der Decoder können nicht zusammenarbeiten:
 
 ```
 image (JS)
-  → FWS scanner.scan_and_decode()      [binarise + locate + sample + decode]
+  → Flint scanner.scan_and_decode()      [binarise + locate + sample + decode]
   → ScanOutcome { format, value } (JS)
 ```
 
-`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` führt die gesamte Pipeline innerhalb von `src/fws/scanner.fws` und aus
+`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` führt die gesamte Pipeline innerhalb von `src/fws/scanner.flint` und aus
 gibt die **dekodierte Nutzlast** direkt zurück (`value` ist leer, wenn ein Symbol gefunden, aber nicht dekodierbar ist). Die JS-Fassade
 (`scanner/index.ts`) ist eine dünne Marshalling-Schicht, die die QR-, Matrix- und Barcode-FWS-Quellen zur Erstellungszeit verknüpft.
 Diese Pakete bleiben unabhängig voneinander veröffentlichbar.
@@ -395,7 +395,7 @@ Original vier Formate. Dieser Schritt zeigt die neuen Symbologien zur Laufzeit a
   `5 → 'databar'`, `6 → 'maxicode'` und die `ScanFormat`-Union in `src/types.ts`
   erhält die gleichen drei Namen – also `scanImageData` / `scanImageDataAsync` (und die
   `*All` / ROI-Varianten) geben sie wie jedes andere Format zurück.
-- **Das Scanner-FWS-Artefakt wird aus `src/fws/scanner.fws` durch das Forge Web Script Vite-Plugin erstellt**. Das statische Profil
+- **Das Scanner-FWS-Artefakt wird aus `src/fws/scanner.flint` durch das Flint Vite-Plugin erstellt**. Das statische Profil
   Verknüpft die Decoder-Graphen zu einem eigenständigen Artefakt, aktiviert WebAssembly SIMD und wendet eine aggressive Linkzeit an
   Optimierung; Das dynamische Profil behält explizite Decodermodulgrenzen bei und speichert den Exportversand zwischen.
 - **Die FWS-Grafik- und Fassaden-Suiten** (`src/fws/scanner-graph.spec.ts` und

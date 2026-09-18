@@ -124,12 +124,12 @@ describe('tools', () => {
       'add_locale',
       'remove_locale',
       'update_translation',
-      'fws_analyze_source',
-      'fws_analyze_workspace',
-      'fws_inspect_manifest',
-      'fws_inspect_sonir',
-      'fws_verify_artifact',
-      'fws_run_trace',
+      'flint_analyze_source',
+      'flint_analyze_workspace',
+      'flint_inspect_manifest',
+      'flint_inspect_sonir',
+      'flint_verify_artifact',
+      'flint_run_trace',
       'security_scan_secrets',
       'security_analyze_code',
       'security_audit_dependencies',
@@ -331,22 +331,22 @@ describe('tools', () => {
     assert.match(body, /Atoms\/Forms\/ForgeInput/);
   });
 
-  it('returns authoritative FWS guidance with the terminology correction', async () => {
-    const body = await callTool('get_guide', { area: 'fws-authoring' });
-    assert.match(body, /Forge Web Script \(FWS\)/);
+  it('returns authoritative Flint guidance with the terminology correction', async () => {
+    const body = await callTool('get_guide', { area: 'flint-authoring' });
+    assert.match(body, /Flint/);
     assert.match(body, /borrowed/);
-    assert.match(body, /FMS.*FWS/);
-    const security = await callTool('get_guide', { area: 'fws-security' });
+    assert.match(body, /ownership-safe|borrowed|capabilities/);
+    const security = await callTool('get_guide', { area: 'flint-security' });
     assert.match(security, /deny-by-default/);
     assert.match(security, /OWASP/);
-    const artifact = await callTool('get_guide', { area: 'fws-artifact-verification' });
+    const artifact = await callTool('get_guide', { area: 'flint-artifact-verification' });
     assert.match(artifact, /WebAssembly\.validate/);
-    const forensics = await callTool('get_guide', { area: 'fws-forensics' });
+    const forensics = await callTool('get_guide', { area: 'flint-forensics' });
     assert.match(forensics, /capability-denied/);
   });
 
-  it('analyzes bounded source through the canonical FWS report', async () => {
-    const body = await callTool('fws_analyze_source', {
+  it('analyzes bounded source through the canonical Flint report', async () => {
+    const body = await callTool('flint_analyze_source', {
       source: 'export fn answer() -> i32 { return 42; }',
       policy: { profile: 'strict', allowedCapabilities: [] },
     });
@@ -355,9 +355,9 @@ describe('tools', () => {
     assert.equal(result.analysis.policy.profile, 'strict');
   });
 
-  it('preserves FWS analysis defaults while accepting partial policy limits and target features', async () => {
+  it('preserves Flint analysis defaults while accepting partial policy limits and target features', async () => {
     const omitted = JSON.parse(
-      await callTool('fws_analyze_source', { source: 'export fn answer() -> i32 { return 42; }' }),
+      await callTool('flint_analyze_source', { source: 'export fn answer() -> i32 { return 42; }' }),
     ) as {
       analysis: {
         policy: {
@@ -384,7 +384,7 @@ describe('tools', () => {
     });
 
     const populated = JSON.parse(
-      await callTool('fws_analyze_source', {
+      await callTool('flint_analyze_source', {
         source: 'export fn answer() -> i32 { return 42; }',
         policy: {
           profile: 'development',
@@ -424,31 +424,31 @@ describe('tools', () => {
 
   it('rejects traversal, oversized limits, malformed inputs, and arbitrary trace requests', async () => {
     const traversal = await client.callTool({
-      name: 'fws_analyze_source',
-      arguments: { sourcePath: '../outside.fws' },
+      name: 'flint_analyze_source',
+      arguments: { sourcePath: '../outside.flint' },
     });
     assert.equal(traversal.isError, true);
 
     const oversized = await client.callTool({
-      name: 'fws_analyze_source',
+      name: 'flint_analyze_source',
       arguments: { source: 'x'.repeat(256 * 1024 + 1) },
     });
     assert.equal(oversized.isError, true);
 
     const malformed = await client.callTool({
-      name: 'fws_inspect_manifest',
+      name: 'flint_inspect_manifest',
       arguments: { manifestPath: 'package.json' },
     });
     assert.equal(malformed.isError, true);
 
     const arbitrary = await client.callTool({
-      name: 'fws_run_trace',
+      name: 'flint_run_trace',
       arguments: { artifactPath: 'package.json', maxSteps: 0 },
     });
     assert.equal(arbitrary.isError, true);
 
     const multibyteOversized = await client.callTool({
-      name: 'fws_run_trace',
+      name: 'flint_run_trace',
       arguments: {
         source: `/** ${'é'.repeat(131_073)} */ export fn answer() -> i32 { return 42; }`,
       },
@@ -461,14 +461,14 @@ describe('tools', () => {
     const atByteLimit = `${tracePrefix}${'é'.repeat(Math.floor(traceBudget / 2))}${traceBudget % 2 ? ' ' : ''}${traceSuffix}`;
     assert.equal(new TextEncoder().encode(atByteLimit).byteLength, 256 * 1024);
     const multibyteAtLimit = await client.callTool({
-      name: 'fws_run_trace',
+      name: 'flint_run_trace',
       arguments: { source: atByteLimit },
     });
     assert.notEqual(multibyteAtLimit.isError, true);
   });
 
-  it('captures only a capped, capability-denied FWS trace', async () => {
-    const body = await callTool('fws_run_trace', {
+  it('captures only a capped, capability-denied Flint trace', async () => {
+    const body = await callTool('flint_run_trace', {
       source: 'export fn answer() -> i32 { return 42; }',
       mode: 'interpret',
       maxSteps: 1_000_000,
@@ -489,8 +489,8 @@ describe('tools', () => {
   });
 
   it('inspects a .sonir.json artifact and returns a valid summary', async () => {
-    const body = await callTool('fws_inspect_sonir', {
-      sonIrPath: 'packages/compiler/forge/forge-web-script/src/fixtures/test.sonir.json',
+    const body = await callTool('flint_inspect_sonir', {
+      sonIrPath: 'packages/flint/core/src/fixtures/test.sonir.json',
       maxNodes: 10,
       maxFunctions: 10,
     });
@@ -521,21 +521,21 @@ describe('tools', () => {
     assert.ok(result.regionCount >= 0);
   });
 
-  it('rejects path traversal and malformed .sonir.json in fws_inspect_sonir', async () => {
+  it('rejects path traversal and malformed .sonir.json in flint_inspect_sonir', async () => {
     const traversal = await client.callTool({
-      name: 'fws_inspect_sonir',
+      name: 'flint_inspect_sonir',
       arguments: { sonIrPath: '../outside.sonir.json' },
     });
     assert.equal(traversal.isError, true);
 
     const malformed = await client.callTool({
-      name: 'fws_inspect_sonir',
+      name: 'flint_inspect_sonir',
       arguments: { sonIrPath: 'package.json' },
     });
     assert.equal(malformed.isError, true);
 
     const nonexistent = await client.callTool({
-      name: 'fws_inspect_sonir',
+      name: 'flint_inspect_sonir',
       arguments: { sonIrPath: 'nonexistent.sonir.json' },
     });
     assert.equal(nonexistent.isError, true);
@@ -867,11 +867,11 @@ describe('resources', () => {
     assert.match(typed[0]?.text ?? '', /Conventions/);
   });
 
-  it('publishes FWS guides as shared resources', async () => {
+  it('publishes Flint guides as shared resources', async () => {
     const { resources } = await client.listResources();
     const uris = new Set(resources.map((resource) => resource.uri));
-    for (const id of ['fws-authoring', 'fws-security', 'fws-artifact-verification', 'fws-forensics'])
-      assert.ok(uris.has(`mission://guide/${id}`), `missing FWS guide resource ${id}`);
+    for (const id of ['flint-authoring', 'flint-security', 'flint-artifact-verification', 'flint-forensics'])
+      assert.ok(uris.has(`mission://guide/${id}`), `missing Flint guide resource ${id}`);
   });
 });
 
@@ -880,10 +880,10 @@ describe('prompts', () => {
     const { prompts } = await client.listPrompts();
     const names = new Set(prompts.map((prompt) => prompt.name));
     for (const expected of [
-      'fws-authoring',
-      'fws-secure-review',
-      'fws-compile-verify',
-      'fws-forensic-debug',
+      'flint-authoring',
+      'flint-secure-review',
+      'flint-compile-verify',
+      'flint-forensic-debug',
       'debug-code',
       'review-changes',
       'review-structure',
@@ -898,14 +898,14 @@ describe('prompts', () => {
     }
   });
 
-  it('builds a secure FWS compile/verify prompt', async () => {
+  it('builds a secure Flint compile/verify prompt', async () => {
     const result = await client.getPrompt({
-      name: 'fws-compile-verify',
-      arguments: { sourcePath: 'examples/demo.fws', profile: 'strict' },
+      name: 'flint-compile-verify',
+      arguments: { sourcePath: 'examples/demo.flint', profile: 'strict' },
     });
     const messages = result.messages as { content: { text: string } }[];
     assert.match(messages[0]?.content.text ?? '', /analysis.*compile/i);
-    assert.match(messages[0]?.content.text ?? '', /WebAssembly\.validate|fws_verify_artifact/);
+    assert.match(messages[0]?.content.text ?? '', /WebAssembly\.validate|flint_verify_artifact/);
   });
 
   it('builds a create-package prompt with the name substituted', async () => {

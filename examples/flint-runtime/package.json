@@ -1,0 +1,23 @@
+{
+  "name": "flint-runtime-example",
+  "private": true,
+  "version": "0.1.3",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mission-platform/flint-runtime": "workspace:*"
+  },
+  "devDependencies": {
+    "@mission-platform/flint": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-plugin-flint": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite"
+  }
+}
