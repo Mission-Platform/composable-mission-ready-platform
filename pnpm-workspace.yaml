@@ -19,6 +19,7 @@ catalogs:
     "@changesets/cli": ^3.0.3
     "@commitlint/cli": ^21.2.2
     "@commitlint/config-conventional": ^21.2.2
+    "@turbo/gen": ^2.10.13
     turbo: ^2.10.13
     assemblyscript: ^0.28.20
     husky: ^9.1.7
@@ -199,6 +200,7 @@ overrides:
 patchedDependencies:
   beasties@0.4.3: patches/beasties@0.4.3.patch
   eslint-plugin-sonarjs@4.2.1: patches/eslint-plugin-sonarjs@4.2.1.patch
+  turbo@2.10.13: patches/turbo@2.10.13.patch
 
 minimumReleaseAgeExclude:
   - '@maplibre/maplibre-gl-style-spec@26.4.4'
