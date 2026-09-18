@@ -11,7 +11,8 @@
  * Usage (from repo root):
  *   node --experimental-strip-types scripts/validate-doc-locales.ts
  */
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -20,6 +21,7 @@ import {
   assessTranslationQuality,
   protectedTechnicalTokens,
   withoutFences,
+  type DocumentationLocale,
 } from './doc-locales-lib.ts';
 import { discoverDocumentationRoots, rootForPath, type DocumentationSourceRoot } from './documentation-sources.ts';
 
@@ -103,12 +105,122 @@ export function assertTranslated(
   }
 }
 
+interface ValidationCliArgs {
+  readonly locale?: string;
+  readonly slug?: string;
+  readonly package?: string;
+  readonly baselinePath: string;
+  readonly noBaseline: boolean;
+  readonly updateBaseline: boolean;
+  readonly strict: boolean;
+}
+
+function parseCliArgs(argv: readonly string[]): ValidationCliArgs {
+  const args = argv.slice(2);
+  let locale: string | undefined;
+  let slug: string | undefined;
+  let pkg: string | undefined;
+  let baselinePath = join(root, 'scripts', 'doc-locales-backlog.json');
+  let noBaseline = false;
+  let updateBaseline = false;
+  let strict = false;
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    switch (arg) {
+      case '--update-baseline': {
+        updateBaseline = true;
+        break;
+      }
+      case '--no-baseline': {
+        noBaseline = true;
+        break;
+      }
+      case '--strict': {
+        strict = true;
+        break;
+      }
+      case '--baseline': {
+        const nextArg = args[index + 1];
+        if (nextArg && !nextArg.startsWith('-')) {
+          baselinePath = resolve(process.cwd(), nextArg);
+          index += 1;
+        }
+        break;
+      }
+      case '--locale': {
+        const nextArg = args[index + 1];
+        if (nextArg && !nextArg.startsWith('-')) {
+          locale = nextArg;
+          index += 1;
+        }
+        break;
+      }
+      case '--slug': {
+        const nextArg = args[index + 1];
+        if (nextArg && !nextArg.startsWith('-')) {
+          slug = nextArg;
+          index += 1;
+        }
+        break;
+      }
+      case '--package': {
+        const nextArg = args[index + 1];
+        if (nextArg && !nextArg.startsWith('-')) {
+          pkg = nextArg;
+          index += 1;
+        }
+        break;
+      }
+      default: {
+        if (arg?.startsWith('--baseline=')) {
+          baselinePath = resolve(process.cwd(), arg.slice('--baseline='.length));
+        } else if (arg?.startsWith('--locale=')) {
+          locale = arg.slice('--locale='.length);
+        } else if (arg?.startsWith('--slug=')) {
+          slug = arg.slice('--slug='.length);
+        } else if (arg?.startsWith('--package=')) {
+          pkg = arg.slice('--package='.length);
+        }
+        break;
+      }
+    }
+  }
+
+  return {
+    locale,
+    slug,
+    package: pkg,
+    baselinePath,
+    noBaseline,
+    updateBaseline,
+    strict,
+  };
+}
+
 async function main(): Promise<void> {
-  const documentationRoots = discoverDocumentationRoots(root);
-  const pages = await canonicalPages(documentationRoots);
+  const options = parseCliArgs(process.argv);
+  let documentationRoots = discoverDocumentationRoots(root);
+  if (options.package) {
+    documentationRoots = documentationRoots.filter(
+      (sourceRoot) => sourceRoot.packageName === options.package || sourceRoot.routePrefix === options.package,
+    );
+  }
+
+  let pages = await canonicalPages(documentationRoots);
+  if (options.slug) {
+    pages = pages.filter(
+      (page) => page.pageSlug === options.slug || `${page.sourceRoot.routePrefix}/${page.pageSlug}` === options.slug,
+    );
+  }
+
+  const targetLocales = options.locale
+    ? (locales.filter((localeItem) => localeItem === options.locale) satisfies readonly DocumentationLocale[])
+    : locales;
+
   const failures: string[] = [];
 
-  for (const locale of locales) {
+  for (const locale of targetLocales) {
     for (const sourceRoot of documentationRoots) {
       const canonicalRoot = sourceRoot.rootDirectory;
       const localeRoot = join(canonicalRoot, 'locales', locale);
@@ -119,8 +231,12 @@ async function main(): Promise<void> {
       const missing = canonicalSlugs.filter((value) => !localizedSlugs.includes(value));
       const extra = localizedSlugs.filter((value) => !canonicalSlugs.includes(value));
       const rootLabel = sourceRoot.routePrefix || 'docs';
-      if (missing.length > 0) failures.push(`${locale}/${rootLabel}: missing ${missing.join(', ')}`);
-      if (extra.length > 0) failures.push(`${locale}/${rootLabel}: extra ${extra.join(', ')}`);
+      for (const item of missing) {
+        failures.push(`${locale}/${rootLabel}: missing ${item}`);
+      }
+      for (const item of extra) {
+        failures.push(`${locale}/${rootLabel}: extra ${item}`);
+      }
 
       for (const page of rootPages) {
         const canonicalFile = page.sourcePath;
@@ -168,11 +284,13 @@ async function main(): Promise<void> {
           const target = resolve(dirname(localizedFile), pathPart);
           const targetRoot = target.endsWith('.md') ? rootForPath(target, documentationRoots) : undefined;
           if (targetRoot !== undefined) {
-            const localeRoot = join(targetRoot.rootDirectory, 'locales');
+            const candidateLocaleRoot = join(targetRoot.rootDirectory, 'locales');
             const underLocaleTree =
-              target === localeRoot || target.startsWith(`${localeRoot}/`) || target.startsWith(`${localeRoot}\\`);
+              target === candidateLocaleRoot ||
+              target.startsWith(`${candidateLocaleRoot}/`) ||
+              target.startsWith(`${candidateLocaleRoot}\\`);
             if (underLocaleTree) {
-              const expectedLocaleRoot = join(localeRoot, locale);
+              const expectedLocaleRoot = join(candidateLocaleRoot, locale);
               if (
                 !target.startsWith(`${expectedLocaleRoot}/`) &&
                 target !== expectedLocaleRoot &&
@@ -197,12 +315,69 @@ async function main(): Promise<void> {
     }
   }
 
-  if (failures.length > 0) {
-    throw new Error(`Localized documentation validation failed:\n${failures.join('\n')}`);
+  const uniqueFailures = [...new Set(failures)].sort();
+
+  if (options.updateBaseline) {
+    const backlogData = {
+      version: '1.0',
+      description:
+        'Baseline technical debt for documentation locale validation. New errors outside this set will fail CI.',
+      generatedAt: new Date().toISOString(),
+      count: uniqueFailures.length,
+      issues: uniqueFailures,
+    };
+    await writeFile(options.baselinePath, `${JSON.stringify(backlogData, undefined, 2)}\n`, 'utf8');
+    console.log(
+      `✓ Updated baseline backlog at ${relative(root, options.baselinePath)} with ${uniqueFailures.length} issues.`,
+    );
+    return;
   }
-  console.log(
-    `Validated ${pages.length} canonical pages across ${documentationRoots.length} roots and ${locales.length} locales.`,
-  );
+
+  let knownIssues = new Set<string>();
+  if (!options.noBaseline && !options.strict && existsSync(options.baselinePath)) {
+    try {
+      const rawContent = await readFile(options.baselinePath, 'utf8');
+      const parsed = JSON.parse(rawContent) satisfies { issues?: string[] } | string[];
+      const issuesList = Array.isArray(parsed) ? parsed : (parsed.issues ?? []);
+      knownIssues = new Set(issuesList);
+    } catch (error) {
+      console.warn(
+        `[validate-doc-locales] Warning: Failed to parse baseline backlog from ${options.baselinePath}: ${String(error)}`,
+      );
+    }
+  }
+
+  const newFailures = uniqueFailures.filter((failure) => !knownIssues.has(failure));
+  const suppressedCount = uniqueFailures.length - newFailures.length;
+
+  if (newFailures.length > 0) {
+    console.error(`\n❌ Localized documentation validation failed with ${newFailures.length} new regression(s):`);
+    for (const failure of newFailures) {
+      console.error(`  - ${failure}`);
+    }
+    if (suppressedCount > 0) {
+      console.error(`\n(${suppressedCount} pre-existing issues were suppressed via baseline backlog)`);
+    }
+    throw new Error(
+      `Localized documentation validation failed with ${newFailures.length} new regression(s):\n${newFailures.join('\n')}`,
+    );
+  }
+
+  if (suppressedCount > 0) {
+    console.log(
+      `✓ Localized documentation validated successfully (${suppressedCount} pre-existing debt issues suppressed via baseline backlog).`,
+    );
+    if (knownIssues.size > suppressedCount && !options.locale && !options.slug && !options.package) {
+      const resolvedCount = knownIssues.size - suppressedCount;
+      console.log(
+        `ℹ Ratchet notice: ${resolvedCount} issue(s) in baseline backlog have been resolved! Run 'pnpm run validate:locales -- --update-baseline' to update the ratchet.`,
+      );
+    }
+  } else {
+    console.log(
+      `✓ Validated ${pages.length} canonical pages across ${documentationRoots.length} roots and ${targetLocales.length} locales with 0 issues.`,
+    );
+  }
 }
 
 function pathSeparator(): string {
