@@ -11,31 +11,53 @@ import type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from '../types';
 /** Ordinal for each error-correction level, matching the FWS encoder contract. */
 const ECC_ORDINAL: Record<QrErrorCorrection, number> = { L: 0, M: 1, Q: 2, H: 3 };
 
-/** Read the FWS encoder's fixed-layout record and its module words. */
-function unpack(encoded: { version: number; size: number; modules: readonly number[] }): QrMatrix {
+/** Validates that the encoder result has non-zero version, size, and word list. */
+function assertValidQrDimensions(encoded: { version: number; size: number; modules: readonly number[] }): void {
   if (encoded.version === 0 || encoded.size === 0 || encoded.modules.length === 0) {
     throw new RangeError('Data too long for a QR Code at the chosen error-correction level');
   }
-  const { version, size, modules: moduleWords } = encoded;
-  if (!Number.isInteger(version) || !Number.isInteger(size) || size <= 0 || !Array.isArray(moduleWords)) {
+  if (
+    !Number.isInteger(encoded.version) ||
+    !Number.isInteger(encoded.size) ||
+    encoded.size <= 0 ||
+    !Array.isArray(encoded.modules)
+  ) {
     throw new RangeError('Malformed QR Code encoder result');
   }
+}
+
+/** Validates that module words match expected array length and unsigned 32-bit integer ranges. */
+function assertValidModuleWords(size: number, moduleWords: readonly number[]): void {
   const words = Math.ceil((size * size) / 32);
   if (
     moduleWords.length !== words ||
     moduleWords.some((word) => !Number.isInteger(word) || word < 0 || word > 0xffffffff)
-  )
+  ) {
     throw new RangeError('Malformed QR Code encoder result');
+  }
+}
+
+/** Unpacks 32-bit module words into a 2D boolean grid. */
+function unpackModuleGrid(size: number, moduleWords: readonly number[]): boolean[][] {
   const modules: boolean[][] = [];
   for (let y = 0; y < size; y++) {
     const row: boolean[] = new Array<boolean>(size);
     for (let x = 0; x < size; x++) {
       const index = y * size + x;
-      row[x] = ((moduleWords[Math.floor(index / 32)]! >>> (index % 32)) & 1) === 1;
+      const word = moduleWords[Math.floor(index / 32)] ?? 0;
+      row[x] = ((word >>> (index % 32)) & 1) === 1;
     }
     modules.push(row);
   }
-  return { size, modules, version };
+  return modules;
+}
+
+/** Read the FWS encoder's fixed-layout record and its module words. */
+function unpack(encoded: { version: number; size: number; modules: readonly number[] }): QrMatrix {
+  assertValidQrDimensions(encoded);
+  const { version, size, modules: moduleWords } = encoded;
+  assertValidModuleWords(size, moduleWords);
+  return { size, modules: unpackModuleGrid(size, moduleWords), version };
 }
 
 /**
@@ -62,14 +84,8 @@ export async function encodeQrAsync(text: string, errorCorrection: QrErrorCorrec
   return unpack(encoder.encode_qr(ECC_ORDINAL[errorCorrection], text));
 }
 
-/**
- * Unpack a compact FWS encoder result (`width,height,row-major-bits`) into a
- * {@link CompactQrMatrix}.
- */
-function unpackCompact(packed: string, kind: string): CompactQrMatrix {
-  if (packed.length === 0) {
-    throw new RangeError(`Data too long for a ${kind} at the chosen error-correction level`);
-  }
+/** Parses and validates the header and bit string of a compact encoder result. */
+function parseCompactHeader(packed: string, kind: string): { width: number; height: number; bits: string } {
   const firstSeparator = packed.indexOf(',');
   const secondSeparator = packed.indexOf(',', firstSeparator + 1);
   const width = Number.parseInt(packed.slice(0, firstSeparator), 10);
@@ -86,6 +102,11 @@ function unpackCompact(packed: string, kind: string): CompactQrMatrix {
   ) {
     throw new RangeError(`Malformed ${kind} encoder result`);
   }
+  return { width, height, bits };
+}
+
+/** Unpacks a row-major bit string into a 2D boolean grid. */
+function unpackCompactGrid(width: number, height: number, bits: string): boolean[][] {
   const modules: boolean[][] = [];
   let offset = 0;
   for (let y = 0; y < height; y++) {
@@ -95,7 +116,19 @@ function unpackCompact(packed: string, kind: string): CompactQrMatrix {
     }
     modules.push(row);
   }
-  return { width, height, modules };
+  return modules;
+}
+
+/**
+ * Unpack a compact FWS encoder result (`width,height,row-major-bits`) into a
+ * {@link CompactQrMatrix}.
+ */
+function unpackCompact(packed: string, kind: string): CompactQrMatrix {
+  if (packed.length === 0) {
+    throw new RangeError(`Data too long for a ${kind} at the chosen error-correction level`);
+  }
+  const { width, height, bits } = parseCompactHeader(packed, kind);
+  return { width, height, modules: unpackCompactGrid(width, height, bits) };
 }
 
 /**

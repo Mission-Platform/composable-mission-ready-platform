@@ -44,6 +44,9 @@ type NativeVariableBarcodeSymbology = Extract<
   | 'pharmacode'
 >;
 
+/**
+ * Asserts that the encoder returned a non-empty module-bit string.
+ */
 function assertEncoded(value: string, symbology: NativeVariableBarcodeSymbology): string {
   if (value.length === 0) {
     throw new RangeError(`Unable to encode ${symbology} barcode.`);
@@ -51,100 +54,69 @@ function assertEncoded(value: string, symbology: NativeVariableBarcodeSymbology)
   return value;
 }
 
-function encodeNativeVariableBarcode(symbology: NativeVariableBarcodeSymbology, value: string): string {
-  switch (symbology) {
-    case 'code128': {
-      return assertEncoded(loadCode128Sync().encode_code128(value), symbology);
-    }
-    case 'gs1-128': {
-      return assertEncoded(loadCode128Sync().encode_gs1_128(value), symbology);
-    }
-    case 'code39': {
-      return assertEncoded(loadCode39Sync().encode_code39(value), symbology);
-    }
-    case 'code39ext': {
-      return assertEncoded(loadCode39Sync().encode_code39_extended(value), symbology);
-    }
-    case 'code93': {
-      return assertEncoded(loadCode93Sync().encode_code93(value), symbology);
-    }
-    case 'code93ext': {
-      return assertEncoded(loadCode93Sync().encode_code93_extended(value), symbology);
-    }
-    case 'codabar': {
-      return assertEncoded(loadCodabarSync().encode_codabar(value), symbology);
-    }
-    case 'itf': {
-      return assertEncoded(loadItfSync().encode_itf(value), symbology);
-    }
-    case 'itf14': {
-      return assertEncoded(loadItfSync().encode_itf14(value), symbology);
-    }
-    case 'msi': {
-      return assertEncoded(loadMsiSync().encode_msi(value), symbology);
-    }
-    case 'pharmacode': {
-      return assertEncoded(loadPharmacodeSync().encode_pharmacode(value), symbology);
-    }
-  }
+const NATIVE_VARIABLE_ENCODERS: Record<NativeVariableBarcodeSymbology, (value: string) => string> = {
+  code128: (value) => loadCode128Sync().encode_code128(value),
+  'gs1-128': (value) => loadCode128Sync().encode_gs1_128(value),
+  code39: (value) => loadCode39Sync().encode_code39(value),
+  code39ext: (value) => loadCode39Sync().encode_code39_extended(value),
+  code93: (value) => loadCode93Sync().encode_code93(value),
+  code93ext: (value) => loadCode93Sync().encode_code93_extended(value),
+  codabar: (value) => loadCodabarSync().encode_codabar(value),
+  itf: (value) => loadItfSync().encode_itf(value),
+  itf14: (value) => loadItfSync().encode_itf14(value),
+  msi: (value) => loadMsiSync().encode_msi(value),
+  pharmacode: (value) => loadPharmacodeSync().encode_pharmacode(value),
+};
+
+const NATIVE_VARIABLE_ASYNC_ENCODERS: Record<NativeVariableBarcodeSymbology, (value: string) => Promise<string>> = {
+  code128: async (value) => (await loadCode128()).encode_code128(value),
+  'gs1-128': async (value) => (await loadCode128()).encode_gs1_128(value),
+  code39: async (value) => (await loadCode39()).encode_code39(value),
+  code39ext: async (value) => (await loadCode39()).encode_code39_extended(value),
+  code93: async (value) => (await loadCode93()).encode_code93(value),
+  code93ext: async (value) => (await loadCode93()).encode_code93_extended(value),
+  codabar: async (value) => (await loadCodabar()).encode_codabar(value),
+  itf: async (value) => (await loadItf()).encode_itf(value),
+  itf14: async (value) => (await loadItf()).encode_itf14(value),
+  msi: async (value) => (await loadMsi()).encode_msi(value),
+  pharmacode: async (value) => (await loadPharmacode()).encode_pharmacode(value),
+};
+
+/**
+ * Checks whether the given symbology is natively supported by dedicated FWS graphs.
+ */
+function isNativeVariableBarcode(symbology: VariableBarcodeSymbology): symbology is NativeVariableBarcodeSymbology {
+  return symbology in NATIVE_VARIABLE_ENCODERS;
 }
 
+/**
+ * Synchronously encodes a variable barcode using its dedicated native FWS graph.
+ */
+function encodeNativeVariableBarcode(symbology: NativeVariableBarcodeSymbology, value: string): string {
+  const encoder = NATIVE_VARIABLE_ENCODERS[symbology];
+  if (encoder === undefined) {
+    throw new RangeError(`Unable to encode ${symbology} barcode.`);
+  }
+  return assertEncoded(encoder(value), symbology);
+}
+
+/**
+ * Asynchronously encodes a variable barcode using its dedicated native FWS graph.
+ */
 async function encodeNativeVariableBarcodeAsync(
   symbology: NativeVariableBarcodeSymbology,
   value: string,
 ): Promise<string> {
-  switch (symbology) {
-    case 'code128': {
-      return assertEncoded((await loadCode128()).encode_code128(value), symbology);
-    }
-    case 'gs1-128': {
-      return assertEncoded((await loadCode128()).encode_gs1_128(value), symbology);
-    }
-    case 'code39': {
-      return assertEncoded((await loadCode39()).encode_code39(value), symbology);
-    }
-    case 'code39ext': {
-      return assertEncoded((await loadCode39()).encode_code39_extended(value), symbology);
-    }
-    case 'code93': {
-      return assertEncoded((await loadCode93()).encode_code93(value), symbology);
-    }
-    case 'code93ext': {
-      return assertEncoded((await loadCode93()).encode_code93_extended(value), symbology);
-    }
-    case 'codabar': {
-      return assertEncoded((await loadCodabar()).encode_codabar(value), symbology);
-    }
-    case 'itf': {
-      return assertEncoded((await loadItf()).encode_itf(value), symbology);
-    }
-    case 'itf14': {
-      return assertEncoded((await loadItf()).encode_itf14(value), symbology);
-    }
-    case 'msi': {
-      return assertEncoded((await loadMsi()).encode_msi(value), symbology);
-    }
-    case 'pharmacode': {
-      return assertEncoded((await loadPharmacode()).encode_pharmacode(value), symbology);
-    }
+  const encoder = NATIVE_VARIABLE_ASYNC_ENCODERS[symbology];
+  if (encoder === undefined) {
+    throw new RangeError(`Unable to encode ${symbology} barcode.`);
   }
+  return assertEncoded(await encoder(value), symbology);
 }
 
 /** Encodes a supported variable-length barcode through its native FWS graph when available. */
 export function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string {
-  if (
-    symbology === 'code128' ||
-    symbology === 'gs1-128' ||
-    symbology === 'code39' ||
-    symbology === 'code39ext' ||
-    symbology === 'code93' ||
-    symbology === 'code93ext' ||
-    symbology === 'codabar' ||
-    symbology === 'itf' ||
-    symbology === 'itf14' ||
-    symbology === 'msi' ||
-    symbology === 'pharmacode'
-  ) {
+  if (isNativeVariableBarcode(symbology)) {
     return encodeNativeVariableBarcode(symbology, value);
   }
   return encodeBarcode(symbology, value).modules.join('');
@@ -155,36 +127,28 @@ export async function encodeVariableBarcodeFwsAsync(
   symbology: VariableBarcodeSymbology,
   value: string,
 ): Promise<string> {
-  if (
-    symbology === 'code128' ||
-    symbology === 'gs1-128' ||
-    symbology === 'code39' ||
-    symbology === 'code39ext' ||
-    symbology === 'code93' ||
-    symbology === 'code93ext' ||
-    symbology === 'codabar' ||
-    symbology === 'itf' ||
-    symbology === 'itf14' ||
-    symbology === 'msi' ||
-    symbology === 'pharmacode'
-  ) {
+  if (isNativeVariableBarcode(symbology)) {
     return encodeNativeVariableBarcodeAsync(symbology, value);
   }
   return (await encodeBarcodeAsync(symbology, value)).modules.join('');
 }
 
+/** Encodes an EAN-8 payload through WebAssembly exports. */
 function encodeEan8With(wasm: ForgeBarcodeExports, value: string): string {
   return wasm.encode_ean8(value);
 }
 
+/** Encodes an EAN-13 payload through WebAssembly exports. */
 function encodeEan13With(wasm: ForgeBarcodeExports, value: string): string {
   return wasm.encode_ean13(value);
 }
 
+/** Encodes a UPC-A payload through WebAssembly exports. */
 function encodeUpcaWith(wasm: ForgeBarcodeExports, value: string): string {
   return wasm.encode_upca(value);
 }
 
+/** Validates a GS1 DataBar payload through WebAssembly exports. */
 function validateDataBarWith(wasm: ForgeDataBarExports, value: string): boolean {
   return Boolean(wasm.validate_databar_gtin(value));
 }
