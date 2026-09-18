@@ -1,3 +1,4 @@
+import { applySecurityHeaders, withSecurityHeaders } from '@mission-platform/edge-security';
 import { assertCompatibleEmailHtml } from '@mission-platform/email-components';
 
 import { sendSmtpMessage, type SmtpMessage } from './smtp';
@@ -38,7 +39,7 @@ type WorkerEnvironment = SmtpEnvironment & EmailPolicyEnvironment;
 export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 
 function jsonResponse(body: Record<string, unknown>, status = 200): Response {
-  return Response.json(body, { status, headers: { 'cache-control': 'no-store' } });
+  return applySecurityHeaders(Response.json(body, { status, headers: { 'cache-control': 'no-store' } }));
 }
 
 function errorResponse(error: string, status: number): Response {
@@ -245,8 +246,8 @@ export async function handleRequest(
   }
 }
 
-export default {
-  fetch(request: Request, environment: Env): Promise<Response> {
+export default withSecurityHeaders({
+  fetch(request: Request, environment: WorkerEnvironment): Promise<Response> {
     return handleRequest(request, environment);
   },
-} satisfies ExportedHandler<Env>;
+}) satisfies ExportedHandler<WorkerEnvironment>;

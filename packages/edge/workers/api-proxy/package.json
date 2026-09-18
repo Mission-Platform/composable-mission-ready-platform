@@ -23,6 +23,9 @@
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
+  "dependencies": {
+    "@mission-platform/edge-security": "workspace:*"
+  },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:cloudflare",
     "@mission-platform/tsdown-config": "workspace:*",

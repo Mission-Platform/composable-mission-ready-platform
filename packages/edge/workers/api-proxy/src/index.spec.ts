@@ -25,6 +25,11 @@ describe('@mission-platform/api-proxy', () => {
     const result = await worker.fetch(request, {}, executionContext);
 
     expect(result).toBe(upstream);
+    expect(result.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(result.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(result.headers.get('x-frame-options')).toBe('DENY');
+    expect(result.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
+    expect(result.headers.get('strict-transport-security')).toBe('max-age=31536000; includeSubDomains; preload');
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
     const forwarded = fetchMock.mock.calls[0]?.[0] as Request;
@@ -51,7 +56,13 @@ describe('@mission-platform/api-proxy', () => {
     const disallowedPath = await worker.fetch(new Request('https://origin.test/admin'), {}, executionContext);
 
     expect(disallowedMethod.status).toBe(404);
+    expect(disallowedMethod.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(disallowedMethod.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(disallowedMethod.headers.get('x-frame-options')).toBe('DENY');
     expect(disallowedPath.status).toBe(404);
+    expect(disallowedPath.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(disallowedPath.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(disallowedPath.headers.get('x-frame-options')).toBe('DENY');
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -118,5 +129,8 @@ describe('@mission-platform/api-proxy', () => {
 
     expect(result.status).toBe(502);
     expect(await result.text()).toBe('Bad gateway');
+    expect(result.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(result.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(result.headers.get('x-frame-options')).toBe('DENY');
   });
 });

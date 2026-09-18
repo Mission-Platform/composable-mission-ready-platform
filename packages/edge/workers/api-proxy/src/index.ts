@@ -1,3 +1,5 @@
+import { withSecurityHeaders } from '@mission-platform/edge-security';
+
 /**
  * @mission-platform/api-proxy
  *
@@ -102,7 +104,7 @@ async function fetchUpstream(request: Request): Promise<Response> {
   return new Response('Bad gateway', { status: 502 });
 }
 
-export default {
+export default withSecurityHeaders({
   async fetch(request: Request, _environment: unknown, _context: ExecutionContext): Promise<Response> {
     if (!isAllowedProxyRequest(request)) {
       return new Response('Not found', { status: 404 });
@@ -115,4 +117,4 @@ export default {
       return new Response('Bad gateway', { status: 502 });
     }
   },
-} satisfies ExportedHandler;
+}) satisfies ExportedHandler;
