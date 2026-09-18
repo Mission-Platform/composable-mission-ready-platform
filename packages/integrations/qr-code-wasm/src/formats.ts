@@ -110,8 +110,8 @@ function escapeICal(value: string): string {
   return value.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
 }
 
-/** Normalise a `string | string[]` into an array, dropping empty entries. */
-function toList(value: string | string[] | undefined): string[] {
+/** Normalise a `string | readonly string[]` into an array, dropping empty entries. */
+function toList(value: string | readonly string[] | undefined): string[] {
   if (value === undefined) return [];
   return (Array.isArray(value) ? value : [value]).filter((entry) => entry.length > 0);
 }
@@ -124,6 +124,24 @@ export function url(value: string): string {
   return value;
 }
 
+/** Resolves the Wi-Fi authentication tag. */
+function wifiAuthType(encryption?: string): string {
+  if (encryption === 'nopass') return 'nopass';
+  return encryption ?? 'WPA';
+}
+
+/** Builds password and visibility parameters for Wi-Fi config. */
+function wifiSecurityParts(auth: string, options: WifiOptions): string[] {
+  const parts: string[] = [];
+  if (auth !== 'nopass' && options.password) {
+    parts.push(`P:${escapeSpecial(options.password)}`);
+  }
+  if (options.hidden) {
+    parts.push('H:true');
+  }
+  return parts;
+}
+
 /**
  * A `WIFI:` payload that lets a scanner join a wireless network.
  *
@@ -132,15 +150,8 @@ export function url(value: string): string {
  * // => 'WIFI:T:WPA;S:Cafe;P:latte123;;'
  */
 export function wifi(options: WifiOptions): string {
-  const encryption = options.encryption ?? 'WPA';
-  const isOpen = encryption === 'nopass';
-  const parts = [`T:${isOpen ? 'nopass' : encryption}`, `S:${escapeSpecial(options.ssid)}`];
-  if (!isOpen && options.password) {
-    parts.push(`P:${escapeSpecial(options.password)}`);
-  }
-  if (options.hidden) {
-    parts.push('H:true');
-  }
+  const auth = wifiAuthType(options.encryption);
+  const parts = [`T:${auth}`, `S:${escapeSpecial(options.ssid)}`, ...wifiSecurityParts(auth, options)];
   return `WIFI:${parts.join(';')};;`;
 }
 
@@ -178,23 +189,42 @@ export function geo(options: GeoOptions): string {
   return options.altitude === undefined ? base : `${base},${options.altitude}`;
 }
 
+/** Formats name field for MeCard. */
+function meCardName(first?: string, last?: string): string | undefined {
+  if (!first && !last) return undefined;
+  return `N:${escapeSpecial(last ?? '')},${escapeSpecial(first ?? '')}`;
+}
+
+/** Formats repetitive multi-value contact fields. */
+function meCardContactFields(phones?: string | readonly string[], emails?: string | readonly string[]): string[] {
+  const parts: string[] = [];
+  for (const number of toList(phones)) parts.push(`TEL:${escapeSpecial(number)}`);
+  for (const address of toList(emails)) parts.push(`EMAIL:${escapeSpecial(address)}`);
+  return parts;
+}
+
+/** Formats optional metadata fields for MeCard. */
+function meCardMetaFields(options: Pick<MeCardOptions, 'url' | 'address' | 'birthday' | 'note'>): string[] {
+  const parts: string[] = [];
+  if (options.url) parts.push(`URL:${escapeSpecial(options.url)}`);
+  if (options.address) parts.push(`ADR:${escapeSpecial(options.address)}`);
+  if (options.birthday) parts.push(`BDAY:${escapeSpecial(options.birthday)}`);
+  if (options.note) parts.push(`NOTE:${escapeSpecial(options.note)}`);
+  return parts;
+}
+
 /**
  * A `MECARD:` payload — the compact contact format understood by most cameras.
  * Multiple phone numbers / emails are emitted as repeated `TEL:` / `EMAIL:`
  * fields.
  */
 export function meCard(options: MeCardOptions): string {
-  const first = options.firstName ?? '';
-  const last = options.lastName ?? '';
-
-  const parts: string[] = [];
-  if (first || last) parts.push(`N:${escapeSpecial(last)},${escapeSpecial(first)}`);
-  for (const number of toList(options.phone)) parts.push(`TEL:${escapeSpecial(number)}`);
-  for (const address of toList(options.email)) parts.push(`EMAIL:${escapeSpecial(address)}`);
-  if (options.url) parts.push(`URL:${escapeSpecial(options.url)}`);
-  if (options.address) parts.push(`ADR:${escapeSpecial(options.address)}`);
-  if (options.birthday) parts.push(`BDAY:${escapeSpecial(options.birthday)}`);
-  if (options.note) parts.push(`NOTE:${escapeSpecial(options.note)}`);
+  const name = meCardName(options.firstName, options.lastName);
+  const parts: string[] = [
+    ...(name === undefined ? [] : [name]),
+    ...meCardContactFields(options.phone, options.email),
+    ...meCardMetaFields(options),
+  ];
 
   return `MECARD:${parts.map((part) => `${part};`).join('')};`;
 }
@@ -209,6 +239,26 @@ function formatICalDate(date: Date): string {
   return date.toISOString().slice(0, 10).replace(/-/g, '');
 }
 
+/** Formats iCalendar event start and end timestamp lines. */
+function formatICalDates(start: Date, end?: Date, allDay?: boolean): string[] {
+  if (allDay) {
+    const lines = [`DTSTART;VALUE=DATE:${formatICalDate(start)}`];
+    if (end) lines.push(`DTEND;VALUE=DATE:${formatICalDate(end)}`);
+    return lines;
+  }
+  const lines = [`DTSTART:${formatICalUtc(start)}`];
+  if (end) lines.push(`DTEND:${formatICalUtc(end)}`);
+  return lines;
+}
+
+/** Formats optional location and description lines. */
+function formatICalMeta(location?: string, description?: string): string[] {
+  const lines: string[] = [];
+  if (location) lines.push(`LOCATION:${escapeICal(location)}`);
+  if (description) lines.push(`DESCRIPTION:${escapeICal(description)}`);
+  return lines;
+}
+
 /**
  * A minimal iCalendar (`VCALENDAR` → `VEVENT`) payload for a single event that
  * scanners offer to add to the calendar.
@@ -217,20 +267,16 @@ function formatICalDate(date: Date): string {
  * date-only stamps.
  */
 export function iCalEvent(options: ICalEventOptions): string {
-  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT'];
-  lines.push(`SUMMARY:${escapeICal(options.title)}`);
-
-  if (options.allDay) {
-    lines.push(`DTSTART;VALUE=DATE:${formatICalDate(options.start)}`);
-    if (options.end) lines.push(`DTEND;VALUE=DATE:${formatICalDate(options.end)}`);
-  } else {
-    lines.push(`DTSTART:${formatICalUtc(options.start)}`);
-    if (options.end) lines.push(`DTEND:${formatICalUtc(options.end)}`);
-  }
-
-  if (options.location) lines.push(`LOCATION:${escapeICal(options.location)}`);
-  if (options.description) lines.push(`DESCRIPTION:${escapeICal(options.description)}`);
-  lines.push('END:VEVENT', 'END:VCALENDAR');
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'BEGIN:VEVENT',
+    `SUMMARY:${escapeICal(options.title)}`,
+    ...formatICalDates(options.start, options.end, options.allDay),
+    ...formatICalMeta(options.location, options.description),
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ];
 
   return lines.join('\n');
 }

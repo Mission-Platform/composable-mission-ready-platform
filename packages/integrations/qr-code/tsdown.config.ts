@@ -9,67 +9,68 @@ import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
+
+const rootDirectory = import.meta.dirname;
+const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
+
+const buildNeutral = process.env.FORGE_FRAMEWORK_TARGET === undefined || process.env.FORGE_FRAMEWORK_TARGET === 'none';
 
 /**
- * No legacy wrapper package is bundled: the QR encoder uses a package-local
- * Forge Web Script artifact.
- */
-const WASM_PACKAGES = [] as const;
-
-/**
- * Neutral self-contained encoder (`dist/index.js` + dts) plus the five
- * forge component framework builds (`dist/{vue,react,solid,svelte,web-components}/`).
+ * Re-exports the Wasm QR encoder engine from `@mission-platform/qr-code-wasm`
+ * and compiles the multi-framework UI components (`dist/{vue,react,solid,web-components,svelte}/`)
+ * without duplicating the Wasm binary into each component library.
  */
 export default [
-  defineTsdownLibrary({
-    rootDir: import.meta.dirname,
-    entry: {
-      index: 'src/index.ts',
-    },
-    // Single self-contained ESM bundle (not preserve-modules).
-    unbundle: false,
-    clean: true,
-    overrides: {
-      deps: {
-        alwaysBundle: [...WASM_PACKAGES],
-      },
-      plugins: [forgeWebScriptPlugin({ rootDir: import.meta.dirname, requireExports: false })],
-    },
-  }),
-  ...defineTsdownForgeComponentsAll({
-    rootDir: import.meta.dirname,
-    frameworks: [
-      forgeVueFramework(),
-      forgeReactFramework(),
-      forgeSolidFramework(),
-      forgeSvelteFramework(),
-      forgeWebComponentsFramework(),
-    ],
-    componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
-    name: 'MissionPlatformQrCode',
-    // Encoder is consumed through the package's own `.` entry.
-    external: ['i18next'],
-    overrides: {
-      plugins: [forgeWebScriptPlugin({ rootDir: import.meta.dirname, requireExports: false })],
-    },
-  }),
-  defineTsdownLibrary({
-    rootDir: import.meta.dirname,
-    entry: path.resolve(import.meta.dirname, 'src/components/index.ts'),
-    plugins: tsdownForgeCmsPlugins({
-      rootDir: import.meta.dirname,
-      componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
-      targets: forgeStoryblokCmsTargets({
-        packageName: '@mission-platform/qr-code',
+  ...(buildNeutral
+    ? [
+        defineTsdownLibrary({
+          rootDir: import.meta.dirname,
+          entry: {
+            index: 'src/index.ts',
+          },
+          unbundle: false,
+          clean: true,
+          external: ['@mission-platform/qr-code-wasm'],
+        }),
+      ]
+    : []),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : defineTsdownForgeComponentsAll({
+        rootDir: rootDirectory,
         frameworks: [
           forgeReactFramework(),
-          forgeVueFramework(),
-          forgeSvelteFramework(),
           forgeSolidFramework(),
+          forgeSvelteFramework(),
           forgeWebComponentsFramework(),
+          forgeVueFramework(),
         ],
-      }),
-    }),
-  }),
+        componentsModule,
+        name: 'MissionPlatformQrCode',
+        external: ['i18next', '@mission-platform/qr-code-wasm'],
+        declarationModule: '..',
+      })),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : [
+        defineTsdownLibrary({
+          rootDir: rootDirectory,
+          entry: componentsModule,
+          plugins: tsdownForgeCmsPlugins({
+            rootDir: rootDirectory,
+            componentsModule,
+            targets: forgeStoryblokCmsTargets({
+              packageName: '@mission-platform/qr-code',
+              frameworks: [
+                forgeReactFramework(),
+                forgeVueFramework(),
+                forgeSvelteFramework(),
+                forgeSolidFramework(),
+                forgeWebComponentsFramework(),
+              ],
+            }),
+          }),
+          external: ['@mission-platform/qr-code-wasm'],
+        }),
+      ]),
 ];

@@ -29,10 +29,12 @@ function toFwsBarcode(symbology: BarcodeSymbology, modules: string): Barcode {
   };
 }
 
+/** Synchronously encodes data using the package-local native barcode WebAssembly graph. */
 function encodeNative(symbology: BarcodeSymbology, data: string): string {
   return loadBarcodeNativeSync().encode_native(FWS_SYMBOLOGY[symbology], data);
 }
 
+/** Asynchronously encodes data using the package-local native barcode WebAssembly graph. */
 async function encodeNativeAsync(symbology: BarcodeSymbology, data: string): Promise<string> {
   return (await loadBarcodeNative()).encode_native(FWS_SYMBOLOGY[symbology], data);
 }

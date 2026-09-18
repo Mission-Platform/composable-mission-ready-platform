@@ -7,4 +7,4 @@
 // package's `./react` and `./vue` subpath exports).
 export { ForgeBarcode, type BarcodeActions, type BarcodeProperties } from './molecules/forge-barcode';
 
-export type { BarcodeSymbology } from '../encoder';
+export type { BarcodeSymbology } from '@mission-platform/barcode-wasm';

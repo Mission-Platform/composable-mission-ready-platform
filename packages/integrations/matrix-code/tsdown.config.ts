@@ -9,62 +9,68 @@ import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
-import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 
 const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
+const buildNeutral = process.env.FORGE_FRAMEWORK_TARGET === undefined || process.env.FORGE_FRAMEWORK_TARGET === 'none';
+
 /**
- * Neutral self-contained encoder (`dist/index.js` + dts) plus the five
- * forge component framework builds (`dist/{vue,react,solid,svelte,web-components}/`).
- * Encoding executes through package-local FWS artifacts only.
+ * Re-exports the Wasm matrix encoder engine from `@mission-platform/matrix-code-wasm`
+ * and compiles the multi-framework UI components (`dist/{vue,react,solid,web-components,svelte}/`)
+ * without duplicating the Wasm binary into each component library.
  */
 export default [
-  defineTsdownLibrary({
-    rootDir: import.meta.dirname,
-    entry: {
-      index: 'src/index.ts',
-    },
-    // Single self-contained ESM bundle (not preserve-modules).
-    unbundle: false,
-    clean: true,
-    overrides: {
-      plugins: [forgeWebScriptPlugin({ rootDir: rootDirectory, requireExports: false, selfHostedVmMode: 'aot' })],
-    },
-  }),
-  ...defineTsdownForgeComponentsAll({
-    rootDir: rootDirectory,
-    frameworks: [
-      forgeReactFramework(),
-      forgeSolidFramework(),
-      forgeSvelteFramework(),
-      forgeWebComponentsFramework(),
-      forgeVueFramework(),
-    ],
-    componentsModule,
-    name: 'MissionPlatformMatrixCode',
-    external: ['i18next', '@mission-platform/matrix-code'],
-    declarationModule: '..',
-    overrides: {
-      plugins: [forgeWebScriptPlugin({ rootDir: rootDirectory, requireExports: false, selfHostedVmMode: 'aot' })],
-    },
-  }),
-  defineTsdownLibrary({
-    rootDir: rootDirectory,
-    entry: componentsModule,
-    plugins: tsdownForgeCmsPlugins({
-      rootDir: rootDirectory,
-      componentsModule,
-      targets: forgeStoryblokCmsTargets({
-        packageName: '@mission-platform/matrix-code',
+  ...(buildNeutral
+    ? [
+        defineTsdownLibrary({
+          rootDir: import.meta.dirname,
+          entry: {
+            index: 'src/index.ts',
+          },
+          unbundle: false,
+          clean: true,
+          external: ['@mission-platform/matrix-code-wasm'],
+        }),
+      ]
+    : []),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : defineTsdownForgeComponentsAll({
+        rootDir: rootDirectory,
         frameworks: [
           forgeReactFramework(),
-          forgeVueFramework(),
-          forgeSvelteFramework(),
           forgeSolidFramework(),
+          forgeSvelteFramework(),
           forgeWebComponentsFramework(),
+          forgeVueFramework(),
         ],
-      }),
-    }),
-  }),
+        componentsModule,
+        name: 'MissionPlatformMatrixCode',
+        external: ['i18next', '@mission-platform/matrix-code-wasm'],
+        declarationModule: '..',
+      })),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : [
+        defineTsdownLibrary({
+          rootDir: rootDirectory,
+          entry: componentsModule,
+          plugins: tsdownForgeCmsPlugins({
+            rootDir: rootDirectory,
+            componentsModule,
+            targets: forgeStoryblokCmsTargets({
+              packageName: '@mission-platform/matrix-code',
+              frameworks: [
+                forgeReactFramework(),
+                forgeVueFramework(),
+                forgeSvelteFramework(),
+                forgeSolidFramework(),
+                forgeWebComponentsFramework(),
+              ],
+            }),
+          }),
+          external: ['@mission-platform/matrix-code-wasm'],
+        }),
+      ]),
 ];

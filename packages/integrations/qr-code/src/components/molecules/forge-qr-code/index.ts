@@ -8,4 +8,4 @@ export {
   type QrVariant,
 } from './forge-qr-code';
 // The component consumes the encoder's shared error-correction type.
-export { type QrErrorCorrection } from '../../../types';
+export { type QrErrorCorrection } from '@mission-platform/qr-code-wasm';

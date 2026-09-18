@@ -79,6 +79,7 @@
     "@mission-platform/forge-adapters": "workspace:*",
     "@mission-platform/forge-jsx": "workspace:*",
     "@mission-platform/icons": "workspace:*",
+    "@mission-platform/qr-code-wasm": "workspace:*",
     "@mission-platform/typography": "workspace:*",
     "@mission-platform/vcard": "workspace:*"
   },

@@ -14,6 +14,9 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outPath = join(root, 'src/fws/matrix-encoder.fws');
 
+/**
+ * Generates Galois field exponent and log lookup tables for Reed-Solomon encoding.
+ */
 function makeFieldTables(primitive, size) {
   const order = size - 1;
   const exp = new Array(order * 2).fill(0);
@@ -29,6 +32,9 @@ function makeFieldTables(primitive, size) {
   return { exp, log };
 }
 
+/**
+ * Encodes an array of numeric byte values into a zero-padded three-digit decimal string.
+ */
 function decimalBytes(values) {
   return values.map((value) => value.toString().padStart(3, '0')).join('');
 }
@@ -47,125 +53,264 @@ const DATA_MATRIX_RECTANGULAR_INTERNAL_REGIONS = [
   [14, 44],
 ];
 
-function createDataMatrixPlacementMap(rows, cols) {
-  const filled = new Array(rows * cols).fill(false);
-  const map = new Array(rows * cols).fill(999);
-  const hasBit = (column, row) => filled[row * cols + column];
-  const module = (rawRow, rawColumn, position, bit) => {
+/**
+ * Represents the placement grid and tracking state for Data Matrix module mapping.
+ */
+class DataMatrixPlacementGrid {
+  /**
+   * Initializes a placement grid of the specified dimensions.
+   */
+  constructor(rows, cols) {
+    this.rows = rows;
+    this.cols = cols;
+    this.filled = new Array(rows * cols).fill(false);
+    this.map = new Array(rows * cols).fill(999);
+  }
+
+  /**
+   * Checks whether a module bit has already been set at the given coordinates.
+   */
+  hasBit(column, row) {
+    return this.filled[row * this.cols + column];
+  }
+
+  /**
+   * Sets a bit in the placement map, handling wraparound coordinates according to the Data Matrix spec.
+   */
+  setModule(rawRow, rawColumn, position, bit) {
     let row = rawRow;
     let column = rawColumn;
     if (row < 0) {
-      row += rows;
-      column += 4 - ((rows + 4) % 8);
+      row += this.rows;
+      column += 4 - ((this.rows + 4) % 8);
     }
     if (column < 0) {
-      column += cols;
-      row += 4 - ((cols + 4) % 8);
+      column += this.cols;
+      row += 4 - ((this.cols + 4) % 8);
     }
-    filled[row * cols + column] = true;
-    map[row * cols + column] = position * 8 + (bit - 1);
-  };
-  const utah = (row, column, position) => {
-    module(row - 2, column - 2, position, 1);
-    module(row - 2, column - 1, position, 2);
-    module(row - 1, column - 2, position, 3);
-    module(row - 1, column - 1, position, 4);
-    module(row - 1, column, position, 5);
-    module(row, column - 2, position, 6);
-    module(row, column - 1, position, 7);
-    module(row, column, position, 8);
-  };
-  const corner = (kind, position) => {
-    if (kind === 1) {
-      module(rows - 1, 0, position, 1);
-      module(rows - 1, 1, position, 2);
-      module(rows - 1, 2, position, 3);
-      module(0, cols - 2, position, 4);
-      module(0, cols - 1, position, 5);
-      module(1, cols - 1, position, 6);
-      module(2, cols - 1, position, 7);
-      module(3, cols - 1, position, 8);
-      return;
-    }
-    if (kind === 2) {
-      module(rows - 3, 0, position, 1);
-      module(rows - 2, 0, position, 2);
-      module(rows - 1, 0, position, 3);
-      module(0, cols - 4, position, 4);
-      module(0, cols - 3, position, 5);
-      module(0, cols - 2, position, 6);
-      module(0, cols - 1, position, 7);
-      module(1, cols - 1, position, 8);
-      return;
-    }
-    if (kind === 3) {
-      module(rows - 3, 0, position, 1);
-      module(rows - 2, 0, position, 2);
-      module(rows - 1, 0, position, 3);
-      module(0, cols - 2, position, 4);
-      module(0, cols - 1, position, 5);
-      module(1, cols - 1, position, 6);
-      module(2, cols - 1, position, 7);
-      module(3, cols - 1, position, 8);
-      return;
-    }
-    module(rows - 1, 0, position, 1);
-    module(rows - 1, cols - 1, position, 2);
-    module(0, cols - 3, position, 3);
-    module(0, cols - 2, position, 4);
-    module(0, cols - 1, position, 5);
-    module(1, cols - 3, position, 6);
-    module(1, cols - 2, position, 7);
-    module(1, cols - 1, position, 8);
-  };
+    this.filled[row * this.cols + column] = true;
+    this.map[row * this.cols + column] = position * 8 + (bit - 1);
+  }
+}
 
+/**
+ * Places an 8-bit Utah shape at the specified row and column offset.
+ */
+function placeUtah(grid, row, column, position) {
+  grid.setModule(row - 2, column - 2, position, 1);
+  grid.setModule(row - 2, column - 1, position, 2);
+  grid.setModule(row - 1, column - 2, position, 3);
+  grid.setModule(row - 1, column - 1, position, 4);
+  grid.setModule(row - 1, column, position, 5);
+  grid.setModule(row, column - 2, position, 6);
+  grid.setModule(row, column - 1, position, 7);
+  grid.setModule(row, column, position, 8);
+}
+
+/**
+ * Places corner pattern 1 modules.
+ */
+function placeCorner1(grid, position) {
+  const { rows, cols } = grid;
+  grid.setModule(rows - 1, 0, position, 1);
+  grid.setModule(rows - 1, 1, position, 2);
+  grid.setModule(rows - 1, 2, position, 3);
+  grid.setModule(0, cols - 2, position, 4);
+  grid.setModule(0, cols - 1, position, 5);
+  grid.setModule(1, cols - 1, position, 6);
+  grid.setModule(2, cols - 1, position, 7);
+  grid.setModule(3, cols - 1, position, 8);
+}
+
+/**
+ * Places corner pattern 2 modules.
+ */
+function placeCorner2(grid, position) {
+  const { rows, cols } = grid;
+  grid.setModule(rows - 3, 0, position, 1);
+  grid.setModule(rows - 2, 0, position, 2);
+  grid.setModule(rows - 1, 0, position, 3);
+  grid.setModule(0, cols - 4, position, 4);
+  grid.setModule(0, cols - 3, position, 5);
+  grid.setModule(0, cols - 2, position, 6);
+  grid.setModule(0, cols - 1, position, 7);
+  grid.setModule(1, cols - 1, position, 8);
+}
+
+/**
+ * Places corner pattern 3 modules.
+ */
+function placeCorner3(grid, position) {
+  const { rows, cols } = grid;
+  grid.setModule(rows - 3, 0, position, 1);
+  grid.setModule(rows - 2, 0, position, 2);
+  grid.setModule(rows - 1, 0, position, 3);
+  grid.setModule(0, cols - 2, position, 4);
+  grid.setModule(0, cols - 1, position, 5);
+  grid.setModule(1, cols - 1, position, 6);
+  grid.setModule(2, cols - 1, position, 7);
+  grid.setModule(3, cols - 1, position, 8);
+}
+
+/**
+ * Places corner pattern 4 modules.
+ */
+function placeCorner4(grid, position) {
+  const { rows, cols } = grid;
+  grid.setModule(rows - 1, 0, position, 1);
+  grid.setModule(rows - 1, cols - 1, position, 2);
+  grid.setModule(0, cols - 3, position, 3);
+  grid.setModule(0, cols - 2, position, 4);
+  grid.setModule(0, cols - 1, position, 5);
+  grid.setModule(1, cols - 3, position, 6);
+  grid.setModule(1, cols - 2, position, 7);
+  grid.setModule(1, cols - 1, position, 8);
+}
+
+/**
+ * Applies corner pattern 1 if the grid position matches corner 1 conditions.
+ */
+function applyCorner1(grid, row, column, position) {
+  if (row === grid.rows && column === 0) {
+    placeCorner1(grid, position);
+    return position + 1;
+  }
+  return position;
+}
+
+/**
+ * Applies corner pattern 2 if the grid position matches corner 2 conditions.
+ */
+function applyCorner2(grid, row, column, position) {
+  if (row === grid.rows - 2 && column === 0 && grid.cols % 4 !== 0) {
+    placeCorner2(grid, position);
+    return position + 1;
+  }
+  return position;
+}
+
+/**
+ * Applies corner pattern 3 if the grid position matches corner 3 conditions.
+ */
+function applyCorner3(grid, row, column, position) {
+  if (row === grid.rows - 2 && column === 0 && grid.cols % 8 === 4) {
+    placeCorner3(grid, position);
+    return position + 1;
+  }
+  return position;
+}
+
+/**
+ * Applies corner pattern 4 if the grid position matches corner 4 conditions.
+ */
+function applyCorner4(grid, row, column, position) {
+  if (row === grid.rows + 4 && column === 2 && grid.cols % 8 === 0) {
+    placeCorner4(grid, position);
+    return position + 1;
+  }
+  return position;
+}
+
+/**
+ * Evaluates special corner placement conditions at the start of a diagonal pass.
+ */
+function checkCornerConditions(grid, row, column, position) {
+  let next = applyCorner1(grid, row, column, position);
+  next = applyCorner2(grid, row, column, next);
+  next = applyCorner3(grid, row, column, next);
+  return applyCorner4(grid, row, column, next);
+}
+
+/**
+ * Places a Utah shape for an unallocated module at the upward sweep position.
+ */
+function tryPlaceUtahUpward(grid, row, column, position) {
+  if (row >= grid.rows || column < 0) return position;
+  if (grid.hasBit(column, row)) return position;
+  placeUtah(grid, row, column, position);
+  return position + 1;
+}
+
+/**
+ * Checks whether the upward diagonal sweep has reached the grid boundary.
+ */
+function isUpwardSweepTerminated(grid, row, column) {
+  return row < 0 || column >= grid.cols;
+}
+
+/**
+ * Sweeps diagonally upward and places Utah shapes for unallocated modules.
+ */
+function sweepUpward(grid, startRow, startColumn, startPosition) {
+  let row = startRow;
+  let column = startColumn;
+  let position = startPosition;
+  while (true) {
+    position = tryPlaceUtahUpward(grid, row, column, position);
+    row -= 2;
+    column += 2;
+    if (isUpwardSweepTerminated(grid, row, column)) break;
+  }
+  return { row: row + 1, column: column + 3, position };
+}
+
+/**
+ * Places a Utah shape for an unallocated module at the downward sweep position.
+ */
+function tryPlaceUtahDownward(grid, row, column, position) {
+  if (row < 0 || column >= grid.cols) return position;
+  if (grid.hasBit(column, row)) return position;
+  placeUtah(grid, row, column, position);
+  return position + 1;
+}
+
+/**
+ * Checks whether the downward diagonal sweep has reached the grid boundary.
+ */
+function isDownwardSweepTerminated(grid, row, column) {
+  return row >= grid.rows || column < 0;
+}
+
+/**
+ * Sweeps diagonally downward and places Utah shapes for unallocated modules.
+ */
+function sweepDownward(grid, startRow, startColumn, startPosition) {
+  let row = startRow;
+  let column = startColumn;
+  let position = startPosition;
+  while (true) {
+    position = tryPlaceUtahDownward(grid, row, column, position);
+    row += 2;
+    column -= 2;
+    if (isDownwardSweepTerminated(grid, row, column)) break;
+  }
+  return { row: row + 3, column: column + 1, position };
+}
+
+/**
+ * Computes the precomputed Data Matrix codeword placement map for the given dimensions.
+ */
+function createDataMatrixPlacementMap(rows, cols) {
+  const grid = new DataMatrixPlacementGrid(rows, cols);
   let position = 0;
   let row = 4;
   let column = 0;
   while (true) {
-    if (row === rows && column === 0) {
-      corner(1, position);
-      position += 1;
-    }
-    if (row === rows - 2 && column === 0 && cols % 4 !== 0) {
-      corner(2, position);
-      position += 1;
-    }
-    if (row === rows - 2 && column === 0 && cols % 8 === 4) {
-      corner(3, position);
-      position += 1;
-    }
-    if (row === rows + 4 && column === 2 && cols % 8 === 0) {
-      corner(4, position);
-      position += 1;
-    }
-    while (true) {
-      if (row < rows && column >= 0 && !hasBit(column, row)) {
-        utah(row, column, position);
-        position += 1;
-      }
-      row -= 2;
-      column += 2;
-      if (row < 0 || column >= cols) break;
-    }
-    row += 1;
-    column += 3;
-    while (true) {
-      if (row >= 0 && column < cols && !hasBit(column, row)) {
-        utah(row, column, position);
-        position += 1;
-      }
-      row += 2;
-      column -= 2;
-      if (row >= rows || column < 0) break;
-    }
-    row += 3;
-    column += 1;
+    position = checkCornerConditions(grid, row, column, position);
+    const up = sweepUpward(grid, row, column, position);
+    position = up.position;
+    const down = sweepDownward(grid, up.row, up.column, position);
+    row = down.row;
+    column = down.column;
+    position = down.position;
     if (row >= rows && column >= cols) break;
   }
-  return map;
+  return grid.map;
 }
 
+/**
+ * Emits FWS function definitions for precomputed Data Matrix placement maps across all supported dimensions.
+ */
 function emitDataMatrixPlacementMaps() {
   const maps = [
     ...DATA_MATRIX_INTERNAL_REGIONS.map((region) => ({ rows: region, cols: region })),

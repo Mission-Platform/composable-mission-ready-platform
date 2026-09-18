@@ -1,21 +1,18 @@
+import { encodeBarcode, type BarcodeSymbology } from '@mission-platform/barcode-wasm';
 import { ForgeButton } from '@mission-platform/components';
 import {
+  createForgeStyle,
   useEffect,
   useMemo,
   useRef,
   useState,
-  createForgeStyle,
-  type MpElement,
   type CSSStyleProperties,
+  type MpElement,
 } from '@mission-platform/forge-jsx';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
-import { encodeBarcode } from '../../../encoder';
-
 import styles from './forge-barcode.module.scss';
-
-import type { BarcodeSymbology } from '../../../encoder';
 
 /** Which action buttons the toolbar shows. `true` enables all of them. */
 export interface BarcodeActions {

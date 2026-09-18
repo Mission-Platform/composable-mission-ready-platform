@@ -42,9 +42,9 @@ describe('encodeQr (WebAssembly)', () => {
   });
 
   it('is deterministic for the same input', () => {
-    const a = encodeQr('https://mission-platform.dev', 'H');
-    const b = encodeQr('https://mission-platform.dev', 'H');
-    expect(b.modules).toEqual(a.modules);
+    const firstResult = encodeQr('https://mission-platform.dev', 'H');
+    const secondResult = encodeQr('https://mission-platform.dev', 'H');
+    expect(secondResult.modules).toEqual(firstResult.modules);
   });
 
   it('throws a RangeError when the payload is too long to encode', () => {

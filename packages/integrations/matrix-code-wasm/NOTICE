@@ -1,0 +1,11 @@
+This product includes portions of ZXing (https://github.com/zxing/zxing),
+Copyright 2006–2024 ZXing authors, licensed under the Apache License, Version 2.0.
+
+The ZXing-derived scanner foundation in src/fws/foundation.fws is a source-level
+adaptation of the core luminance, binarization, bit-container, perspective
+sampling, and Reed–Solomon/Galois-field contracts. It is modified for Forge Web
+Script's bounded POD records, caller-owned linear memory, and status-code ABI;
+it is not a verbatim Java port. Format readers and browser adapters are outside
+this attribution boundary until their respective migration steps are completed.
+
+Apache License text: LICENSE-APACHE-2.0

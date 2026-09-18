@@ -11,31 +11,63 @@ import type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from '../types';
 /** Ordinal for each error-correction level, matching the FWS encoder contract. */
 const ECC_ORDINAL: Record<QrErrorCorrection, number> = { L: 0, M: 1, Q: 2, H: 3 };
 
-/** Read the FWS encoder's fixed-layout record and its module words. */
-function unpack(encoded: { version: number; size: number; modules: readonly number[] }): QrMatrix {
-  if (encoded.version === 0 || encoded.size === 0 || encoded.modules.length === 0) {
+/** Validates that the encoder produced non-empty QR code output. */
+function assertFitsQrLimits(version: number, size: number, moduleCount: number): void {
+  if (version === 0 || size === 0 || moduleCount === 0) {
     throw new RangeError('Data too long for a QR Code at the chosen error-correction level');
   }
-  const { version, size, modules: moduleWords } = encoded;
-  if (!Number.isInteger(version) || !Number.isInteger(size) || size <= 0 || !Array.isArray(moduleWords)) {
+}
+
+/** Validates that the QR Code metadata fields contain positive integers. */
+function assertValidQrMetrics(version: number, size: number): void {
+  if (!Number.isInteger(version) || !Number.isInteger(size) || size <= 0) {
     throw new RangeError('Malformed QR Code encoder result');
   }
-  const words = Math.ceil((size * size) / 32);
-  if (
-    moduleWords.length !== words ||
-    moduleWords.some((word) => !Number.isInteger(word) || word < 0 || word > 0xffffffff)
-  )
+}
+
+/** Validates that the encoder result has non-zero version, size, and word list. */
+function assertValidQrDimensions(encoded: { version: number; size: number; modules: readonly number[] }): void {
+  assertFitsQrLimits(encoded.version, encoded.size, encoded.modules.length);
+  assertValidQrMetrics(encoded.version, encoded.size);
+  if (!Array.isArray(encoded.modules)) {
     throw new RangeError('Malformed QR Code encoder result');
+  }
+}
+
+/** Checks whether a word is a valid unsigned 32-bit integer. */
+function isValidWord32(word: number): boolean {
+  return Number.isInteger(word) && word >= 0 && word <= 0xffffffff;
+}
+
+/** Validates that module words match expected array length and unsigned 32-bit integer ranges. */
+function assertValidModuleWords(size: number, moduleWords: readonly number[]): void {
+  const words = Math.ceil((size * size) / 32);
+  if (moduleWords.length !== words || moduleWords.some((word) => !isValidWord32(word))) {
+    throw new RangeError('Malformed QR Code encoder result');
+  }
+}
+
+/** Unpacks 32-bit module words into a 2D boolean grid. */
+function unpackModuleGrid(size: number, moduleWords: readonly number[]): boolean[][] {
   const modules: boolean[][] = [];
   for (let y = 0; y < size; y++) {
     const row: boolean[] = new Array<boolean>(size);
     for (let x = 0; x < size; x++) {
       const index = y * size + x;
-      row[x] = ((moduleWords[Math.floor(index / 32)]! >>> (index % 32)) & 1) === 1;
+      const word = moduleWords[Math.floor(index / 32)] ?? 0;
+      row[x] = ((word >>> (index % 32)) & 1) === 1;
     }
     modules.push(row);
   }
-  return { size, modules, version };
+  return modules;
+}
+
+/** Read the FWS encoder's fixed-layout record and its module words. */
+function unpack(encoded: { version: number; size: number; modules: readonly number[] }): QrMatrix {
+  assertValidQrDimensions(encoded);
+  const { version, size, modules: moduleWords } = encoded;
+  assertValidModuleWords(size, moduleWords);
+  return { size, modules: unpackModuleGrid(size, moduleWords), version };
 }
 
 /**
@@ -62,30 +94,54 @@ export async function encodeQrAsync(text: string, errorCorrection: QrErrorCorrec
   return unpack(encoder.encode_qr(ECC_ORDINAL[errorCorrection], text));
 }
 
-/**
- * Unpack a compact FWS encoder result (`width,height,row-major-bits`) into a
- * {@link CompactQrMatrix}.
- */
-function unpackCompact(packed: string, kind: string): CompactQrMatrix {
-  if (packed.length === 0) {
-    throw new RangeError(`Data too long for a ${kind} at the chosen error-correction level`);
-  }
-  const firstSeparator = packed.indexOf(',');
-  const secondSeparator = packed.indexOf(',', firstSeparator + 1);
-  const width = Number.parseInt(packed.slice(0, firstSeparator), 10);
-  const height = Number.parseInt(packed.slice(firstSeparator + 1, secondSeparator), 10);
-  const bits = packed.slice(secondSeparator + 1);
-  if (
-    firstSeparator <= 0 ||
-    secondSeparator <= firstSeparator ||
-    !Number.isInteger(width) ||
-    !Number.isInteger(height) ||
-    width <= 0 ||
-    height <= 0 ||
-    bits.length !== width * height
-  ) {
+/** Locates comma delimiters separating width, height, and module bits. */
+function findCompactSeparators(packed: string, kind: string): { first: number; second: number } {
+  const first = packed.indexOf(',');
+  const second = packed.indexOf(',', first + 1);
+  if (first <= 0 || second <= first) {
     throw new RangeError(`Malformed ${kind} encoder result`);
   }
+  return { first, second };
+}
+
+/** Validates that a parsed dimension is a positive integer. */
+function isPositiveDimension(dimension: number): boolean {
+  return Number.isInteger(dimension) && dimension > 0;
+}
+
+/** Parses and validates the numeric width and height dimensions of a compact result. */
+function parseCompactDimensions(
+  packed: string,
+  first: number,
+  second: number,
+  kind: string,
+): { width: number; height: number } {
+  const width = Number.parseInt(packed.slice(0, first), 10);
+  const height = Number.parseInt(packed.slice(first + 1, second), 10);
+  if (!isPositiveDimension(width) || !isPositiveDimension(height)) {
+    throw new RangeError(`Malformed ${kind} encoder result`);
+  }
+  return { width, height };
+}
+
+/** Asserts that the module bit stream length matches the expected width * height area. */
+function assertCompactBitLength(bits: string, width: number, height: number, kind: string): void {
+  if (bits.length !== width * height) {
+    throw new RangeError(`Malformed ${kind} encoder result`);
+  }
+}
+
+/** Parses and validates the header and bit string of a compact encoder result. */
+function parseCompactHeader(packed: string, kind: string): { width: number; height: number; bits: string } {
+  const { first, second } = findCompactSeparators(packed, kind);
+  const { width, height } = parseCompactDimensions(packed, first, second, kind);
+  const bits = packed.slice(second + 1);
+  assertCompactBitLength(bits, width, height, kind);
+  return { width, height, bits };
+}
+
+/** Unpacks a row-major bit string into a 2D boolean grid. */
+function unpackCompactGrid(width: number, height: number, bits: string): boolean[][] {
   const modules: boolean[][] = [];
   let offset = 0;
   for (let y = 0; y < height; y++) {
@@ -95,7 +151,19 @@ function unpackCompact(packed: string, kind: string): CompactQrMatrix {
     }
     modules.push(row);
   }
-  return { width, height, modules };
+  return modules;
+}
+
+/**
+ * Unpack a compact FWS encoder result (`width,height,row-major-bits`) into a
+ * {@link CompactQrMatrix}.
+ */
+function unpackCompact(packed: string, kind: string): CompactQrMatrix {
+  if (packed.length === 0) {
+    throw new RangeError(`Data too long for a ${kind} at the chosen error-correction level`);
+  }
+  const { width, height, bits } = parseCompactHeader(packed, kind);
+  return { width, height, modules: unpackCompactGrid(width, height, bits) };
 }
 
 /**
