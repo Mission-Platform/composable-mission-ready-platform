@@ -106,23 +106,26 @@ function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number
   return ports;
 }
 
+/**
+ * Parses target framework candidates from command line arguments.
+ *
+ * @param args - Command line argument array.
+ * @returns Array of validated target candidates or undefined if unconstrained.
+ */
 function parseTargets(args: string[]): readonly VisualParityCandidate[] | undefined {
-  const raw =
-    option(args, '--targets') ??
-    option(args, '--target') ??
-    option(args, '--candidates') ??
-    option(args, '--candidate');
+  const flag = firstOptionName(args, ['--targets', '--target', '--candidates', '--candidate']);
+  const raw = flag ? option(args, flag) : undefined;
   if (raw === undefined) return undefined;
   if (raw === 'all') return VISUAL_PARITY_CANDIDATES;
-  const list = raw.split(',').map((item) => item.trim());
-  const candidates: VisualParityCandidate[] = [];
-  for (const item of list) {
-    const matched = VISUAL_PARITY_CANDIDATES.find((candidate) => candidate === item);
-    if (!matched)
-      throw new Error(`Unknown target candidate: ${item}. Expected one of: ${VISUAL_PARITY_CANDIDATES.join(', ')}.`);
-    candidates.push(matched);
-  }
-  return candidates;
+
+  return raw.split(',').map((item) => {
+    const trimmed = item.trim();
+    const matched = VISUAL_PARITY_CANDIDATES.find((candidate) => candidate === trimmed);
+    if (!matched) {
+      throw new Error(`Unknown target candidate: ${trimmed}. Expected one of: ${VISUAL_PARITY_CANDIDATES.join(', ')}.`);
+    }
+    return matched;
+  });
 }
 
 export function parseVisualParityArgs(args: string[], root = repositoryRoot()): VisualParityCliOptions {
@@ -288,6 +291,142 @@ function missingResult(
   };
 }
 
+/**
+ * Computes paired and missing story entries across running Storybook framework servers.
+ *
+ * @param inventory - Discovered component stories inventory.
+ * @param running - Active Storybook server instances.
+ * @param options - Visual parity execution options.
+ * @returns Filtered matched pairs and missing pair records.
+ */
+function computeParityPairs(
+  inventory: ReturnType<typeof discoverInventory>,
+  running: StorybookRendererServers,
+  options: VisualParityCliOptions,
+) {
+  const pairing = pairStorybookIndexes(options.repositoryRoot, inventory, {
+    'web-component': running.servers['web-component'].index,
+    react: running.servers.react.index,
+    vue: running.servers.vue.index,
+    solid: running.servers.solid.index,
+    svelte: running.servers.svelte.index,
+  });
+  const pairs = selectedPairs(pairing.pairs, inventory, options);
+  const missingFromEntries = selectedMissing(pairing.missing, inventory, {
+    ...options,
+    maxStories: options.maxStories === undefined ? undefined : Math.max(options.maxStories - pairs.length, 0),
+  });
+  const missingStories = pairing.missingStories
+    .filter(
+      (story) =>
+        (!options.packageName || story.packageName === options.packageName) &&
+        matchesStorySelector(story.id, options.storyId),
+    )
+    .map((story) => ({
+      storyId: story.id,
+      sourceImport: story.filePath,
+      missingFrameworks: [...VISUAL_PARITY_RENDERERS],
+      entries: {},
+    }));
+  const missing = [
+    ...missingFromEntries,
+    ...missingStories.slice(
+      0,
+      options.maxStories === undefined
+        ? undefined
+        : Math.max(options.maxStories - pairs.length - missingFromEntries.length, 0),
+    ),
+  ];
+  return { pairs, missing };
+}
+
+/**
+ * Persists story metadata artifacts and constructs placeholder result entries for missing pairs.
+ *
+ * @param inventory - Discovered component stories inventory.
+ * @param outputDirectory - Artifacts output directory.
+ * @param pairs - Discovered story pairs.
+ * @param missing - Stories missing one or more framework targets.
+ * @param targetCandidates - Candidates being evaluated.
+ * @returns Array of VisualParityResult records for missing stories.
+ */
+function recordMetadataAndMissingResults(
+  inventory: ReturnType<typeof discoverInventory>,
+  outputDirectory: string,
+  pairs: StorybookIndexPair[],
+  missing: StorybookIndexMissingPair[],
+  targetCandidates: readonly VisualParityCandidate[],
+): VisualParityResult[] {
+  for (const pair of pairs) {
+    const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
+    if (!story) continue;
+    writeStoryMetadata(outputDirectory, pair.storyId, {
+      storyId: pair.storyId,
+      packageName: story.packageName,
+      sourceImport: pair.sourceImport,
+      entries: pair.entries,
+    });
+  }
+  const results: VisualParityResult[] = [];
+  for (const pair of missing) {
+    const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
+    results.push(missingResult(pair, story?.packageName ?? 'unknown', targetCandidates));
+    writeStoryMetadata(outputDirectory, pair.storyId, {
+      storyId: pair.storyId,
+      packageName: story?.packageName ?? 'unknown',
+      sourceImport: pair.sourceImport,
+      entries: pair.entries,
+      missingFrameworks: pair.missingFrameworks,
+    });
+  }
+  return results;
+}
+
+/**
+ * Evaluates visual differences for captured stories and saves comparison diagnostics.
+ *
+ * @param pairs - List of paired stories.
+ * @param inventory - Component stories inventory.
+ * @param byKey - Lookup map of captured screenshots.
+ * @param targetCandidates - Framework candidates to compare.
+ * @param outputDirectory - Artifacts output directory.
+ * @param options - Visual parity execution options.
+ * @returns Array of comparison results.
+ */
+function processCapturedComparisons(
+  pairs: StorybookIndexPair[],
+  inventory: ReturnType<typeof discoverInventory>,
+  byKey: Map<string, VisualParityCaptureResult>,
+  targetCandidates: readonly VisualParityCandidate[],
+  outputDirectory: string,
+  options: VisualParityCliOptions,
+): VisualParityResult[] {
+  const results: VisualParityResult[] = [];
+  for (const pair of pairs) {
+    const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
+    if (!story) continue;
+    const result: VisualParityResult = {
+      storyId: pair.storyId,
+      packageName: story.packageName,
+      sourceImport: pair.sourceImport,
+      comparisons: targetCandidates.map((candidate) =>
+        compareRenderer(pair.storyId, candidate, byKey, outputDirectory, options),
+      ),
+    };
+    results.push(result);
+    for (const comparison of result.comparisons) {
+      writeComparisonDiagnostics(outputDirectory, pair.storyId, comparison);
+    }
+  }
+  return results;
+}
+
+/**
+ * Runs the end-to-end visual parity verification pipeline across all framework targets.
+ *
+ * @param options - Execution and threshold options.
+ * @returns Complete visual parity report.
+ */
 export async function runVisualParity(options: VisualParityCliOptions): Promise<VisualParityReport> {
   const inventory = discoverInventory(options.repositoryRoot);
   const definitions = createRendererDefinitions({ ports: options.ports });
@@ -301,63 +440,15 @@ export async function runVisualParity(options: VisualParityCliOptions): Promise<
       ports: options.ports,
       timeoutMs: options.timeoutMs,
     });
-    const pairing = pairStorybookIndexes(options.repositoryRoot, inventory, {
-      'web-component': running.servers['web-component'].index,
-      react: running.servers.react.index,
-      vue: running.servers.vue.index,
-      solid: running.servers.solid.index,
-      svelte: running.servers.svelte.index,
-    });
-    const pairs = selectedPairs(pairing.pairs, inventory, options);
-    const missingFromEntries = selectedMissing(pairing.missing, inventory, {
-      ...options,
-      maxStories: options.maxStories === undefined ? undefined : Math.max(options.maxStories - pairs.length, 0),
-    });
-    const missingStories = pairing.missingStories
-      .filter(
-        (story) =>
-          (!options.packageName || story.packageName === options.packageName) &&
-          matchesStorySelector(story.id, options.storyId),
-      )
-      .map((story) => ({
-        storyId: story.id,
-        sourceImport: story.filePath,
-        missingFrameworks: [...VISUAL_PARITY_RENDERERS],
-        entries: {},
-      }));
-    const missing = [
-      ...missingFromEntries,
-      ...missingStories.slice(
-        0,
-        options.maxStories === undefined
-          ? undefined
-          : Math.max(options.maxStories - pairs.length - missingFromEntries.length, 0),
-      ),
-    ];
-    if (pairs.length === 0 && missing.length === 0)
+    const { pairs, missing } = computeParityPairs(inventory, running, options);
+    if (pairs.length === 0 && missing.length === 0) {
       diagnostics.push('No neutral Storybook stories matched the requested selectors.');
-    for (const pair of pairs) {
-      const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
-      if (!story) continue;
-      writeStoryMetadata(options.outputDirectory, pair.storyId, {
-        storyId: pair.storyId,
-        packageName: story.packageName,
-        sourceImport: pair.sourceImport,
-        entries: pair.entries,
-      });
     }
     const targetCandidates = options.targets ?? VISUAL_PARITY_CANDIDATES;
-    for (const pair of missing) {
-      const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
-      results.push(missingResult(pair, story?.packageName ?? 'unknown', targetCandidates));
-      writeStoryMetadata(options.outputDirectory, pair.storyId, {
-        storyId: pair.storyId,
-        packageName: story?.packageName ?? 'unknown',
-        sourceImport: pair.sourceImport,
-        entries: pair.entries,
-        missingFrameworks: pair.missingFrameworks,
-      });
-    }
+    results.push(
+      ...recordMetadataAndMissingResults(inventory, options.outputDirectory, pairs, missing, targetCandidates),
+    );
+
     const requests = pairs.flatMap((pair) =>
       VISUAL_PARITY_RENDERERS.map((renderer) => ({
         storyId: pair.storyId,
@@ -381,21 +472,9 @@ export async function runVisualParity(options: VisualParityCliOptions): Promise<
     cleanupErrors.push(...captureRun.cleanupErrors);
     for (const capture of captures) writeCaptureDiagnostics(options.outputDirectory, capture);
     const byKey = captureByKey(captures);
-    for (const pair of pairs) {
-      const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
-      if (!story) continue;
-      const result: VisualParityResult = {
-        storyId: pair.storyId,
-        packageName: story.packageName,
-        sourceImport: pair.sourceImport,
-        comparisons: targetCandidates.map((candidate) =>
-          compareRenderer(pair.storyId, candidate, byKey, options.outputDirectory, options),
-        ),
-      };
-      results.push(result);
-      for (const comparison of result.comparisons)
-        writeComparisonDiagnostics(options.outputDirectory, pair.storyId, comparison);
-    }
+    results.push(
+      ...processCapturedComparisons(pairs, inventory, byKey, targetCandidates, options.outputDirectory, options),
+    );
   } catch (error) {
     diagnostics.push(error instanceof Error ? (error.stack ?? error.message) : String(error));
   } finally {

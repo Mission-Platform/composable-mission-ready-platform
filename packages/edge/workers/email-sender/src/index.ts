@@ -38,14 +38,65 @@ type WorkerEnvironment = SmtpEnvironment & EmailPolicyEnvironment;
 
 export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 
+/**
+ * Checks whether a string contains ASCII control characters (0x00-0x1F, 0x7F).
+ *
+ * @param text - The string to check.
+ * @returns True if control characters are present.
+ */
+function hasControlCharacters(text: string): boolean {
+  for (let index = 0; index < text.length; index += 1) {
+    const code = text.codePointAt(index) ?? 0;
+    if ((code >= 0 && code <= 31) || code === 127) return true;
+  }
+  return false;
+}
+
+/**
+ * Creates a JSON HTTP Response decorated with standard security headers and no-store caching.
+ *
+ * @param body - Serialized response payload.
+ * @param status - HTTP response status code.
+ * @returns Secured Response object.
+ */
 function jsonResponse(body: Record<string, unknown>, status = 200): Response {
   return applySecurityHeaders(Response.json(body, { status, headers: { 'cache-control': 'no-store' } }));
 }
 
+/**
+ * Creates an error JSON response with { ok: false, error }.
+ *
+ * @param error - Error explanation message.
+ * @param status - HTTP status code.
+ * @returns Secured Response object.
+ */
 function errorResponse(error: string, status: number): Response {
   return jsonResponse({ ok: false, error }, status);
 }
 
+/**
+ * Concatenates an array of byte chunks into a single Uint8Array.
+ *
+ * @param chunks - Array of byte buffers.
+ * @param total - Total byte length.
+ * @returns Consolidated byte array.
+ */
+function concatChunks(chunks: readonly Uint8Array[], total: number): Uint8Array {
+  const body = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return body;
+}
+
+/**
+ * Reads the request stream into a UTF-8 string, capping execution if maximum body size is exceeded.
+ *
+ * @param request - Incoming HTTP request.
+ * @returns Decoded UTF-8 string.
+ */
 async function readBody(request: Request): Promise<string> {
   if (!request.body) throw new Error('Request body is required');
   const reader = request.body.getReader();
@@ -62,51 +113,88 @@ async function readBody(request: Request): Promise<string> {
   } finally {
     reader.releaseLock();
   }
-  const body = new Uint8Array(total);
-  let offset = 0;
-  for (const chunk of chunks) {
-    body.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  return new TextDecoder().decode(body);
+  return new TextDecoder().decode(concatChunks(chunks, total));
 }
 
-function parseEmailRequest(value: unknown): EmailRequest {
-  if (!value || typeof value !== 'object') throw new Error('Request must be a JSON object');
-  const input = value as Record<string, unknown>;
-  if (typeof input.to !== 'string' || !EMAIL_PATTERN.test(input.to) || input.to.length > 254) {
+/**
+ * Validates recipient email address and recipient name fields.
+ *
+ * @param to - Recipient email string.
+ * @param recipientName - Recipient display name string.
+ * @returns Cleaned recipient payload.
+ */
+function validateRecipient(to: unknown, recipientName: unknown): { to: string; recipientName: string } {
+  if (typeof to !== 'string' || !EMAIL_PATTERN.test(to) || to.length > 254) {
     throw new Error('A valid recipient email address is required');
   }
-  if (
-    typeof input.recipientName !== 'string' ||
-    input.recipientName.trim().length === 0 ||
-    input.recipientName.length > 100
-  ) {
+  if (typeof recipientName !== 'string' || recipientName.trim().length === 0 || recipientName.length > 100) {
     throw new Error('A recipient name between 1 and 100 characters is required');
   }
-  if (typeof input.html !== 'string' || input.html.trim().length === 0) {
-    throw new Error('Completed email HTML is required');
-  }
-  if (new TextEncoder().encode(input.html).byteLength > MAX_HTML_BYTES) {
-    throw new Error('Completed email HTML is too large');
-  }
-  if (/[\r\n]/.test(input.to) || /[\u0000-\u001F\u007F]/.test(input.recipientName)) {
+  if (/[\r\n]/u.test(to) || hasControlCharacters(recipientName)) {
     throw new Error('Recipient fields contain unsupported characters');
   }
+  return { to, recipientName: recipientName.trim() };
+}
+
+/**
+ * Validates the email HTML markup content.
+ *
+ * @param html - Raw HTML markup string.
+ * @returns Validated HTML string.
+ */
+function validateHtml(html: unknown): string {
+  if (typeof html !== 'string' || html.trim().length === 0) {
+    throw new Error('Completed email HTML is required');
+  }
+  if (new TextEncoder().encode(html).byteLength > MAX_HTML_BYTES) {
+    throw new Error('Completed email HTML is too large');
+  }
   try {
-    assertCompatibleEmailHtml(input.html);
+    assertCompatibleEmailHtml(html);
   } catch {
     throw new Error('Completed email HTML is not compatible with the email output policy');
   }
-  return { html: input.html, recipientName: input.recipientName.trim(), to: input.to };
+  return html;
 }
 
-async function parseRequest(request: Request): Promise<EmailRequest> {
+/**
+ * Parses and validates raw JSON input against the email request contract.
+ *
+ * @param value - Unvalidated parsed JSON value.
+ * @returns Strongly typed EmailRequest.
+ */
+function parseEmailRequest(value: unknown): EmailRequest {
+  if (!value || typeof value !== 'object') throw new Error('Request must be a JSON object');
+  const input = value as Record<string, unknown>;
+  const { to, recipientName } = validateRecipient(input.to, input.recipientName);
+  const html = validateHtml(input.html);
+  return { html, recipientName, to };
+}
+
+/**
+ * Verifies that the request Content-Type is application/json and body length is within limits.
+ *
+ * @param request - Incoming HTTP request.
+ */
+function validateJsonContentType(request: Request): void {
   const contentType = request.headers.get('content-type') ?? '';
-  if (!contentType.toLowerCase().startsWith('application/json'))
+  if (!contentType.toLowerCase().startsWith('application/json')) {
     throw new Error('Content-Type must be application/json');
+  }
   const length = request.headers.get('content-length');
-  if (length && Number(length) > MAX_BODY_BYTES) throw new Error('Request body is too large');
+  if (length && Number(length) > MAX_BODY_BYTES) {
+    throw new Error('Request body is too large');
+  }
+}
+
+/**
+ * Parses the incoming HTTP request body into a validated EmailRequest.
+ *
+ * @param request - Incoming HTTP request.
+ * @returns Validated EmailRequest object.
+ */
+async function parseRequest(request: Request): Promise<EmailRequest> {
+  validateJsonContentType(request);
   let value: unknown;
   try {
     value = JSON.parse(await readBody(request));
@@ -117,11 +205,23 @@ async function parseRequest(request: Request): Promise<EmailRequest> {
   return parseEmailRequest(value);
 }
 
+/**
+ * Checks whether an incoming request originates from a local loopback hostname.
+ *
+ * @param request - Incoming HTTP request.
+ * @returns True if request protocol is http: and host is loopback.
+ */
 function isLocalRequest(request: Request): boolean {
   const { hostname, protocol } = new URL(request.url);
   return protocol === 'http:' && isLoopbackHostname(hostname);
 }
 
+/**
+ * Parses a comma-separated list of policy tokens into a normalized Set of lowercase strings.
+ *
+ * @param value - Raw policy environment string.
+ * @returns Set of lowercase allowed values.
+ */
 function parsePolicyList(value: string | undefined): Set<string> {
   return new Set(
     (value ?? '')
@@ -131,6 +231,13 @@ function parsePolicyList(value: string | undefined): Set<string> {
   );
 }
 
+/**
+ * Compares two strings in constant time to prevent side-channel timing attacks.
+ *
+ * @param left - First string.
+ * @param right - Second string.
+ * @returns True if both strings are identical.
+ */
 function constantTimeEqual(left: string, right: string): boolean {
   const encoder = new TextEncoder();
   const leftBytes = encoder.encode(left);
@@ -143,14 +250,40 @@ function constantTimeEqual(left: string, right: string): boolean {
   return difference === 0;
 }
 
+/**
+ * Extracts a Bearer token from the Authorization header value.
+ *
+ * @param authorization - Raw Authorization header string or null.
+ * @returns Extracted token or empty string.
+ */
+function extractBearerToken(authorization: string | null): string {
+  if (!authorization || !authorization.startsWith('Bearer ')) return '';
+  return authorization.slice('Bearer '.length).trim();
+}
+
+/**
+ * Verifies deployment token authentication for non-local requests.
+ *
+ * @param request - Incoming HTTP request.
+ * @param environment - Worker environment bindings.
+ * @param localRequest - True if the request originates from localhost.
+ * @returns True if deployment authorization is satisfied.
+ */
 function isAuthorizedDeployment(request: Request, environment: WorkerEnvironment, localRequest: boolean): boolean {
   if (localRequest) return true;
   const expectedToken = environment.EMAIL_DEPLOYMENT_TOKEN;
-  const authorization = request.headers.get('authorization') ?? '';
-  const token = authorization.startsWith('Bearer ') ? authorization.slice('Bearer '.length).trim() : '';
+  const token = extractBearerToken(request.headers.get('authorization'));
   return Boolean(expectedToken) && Boolean(token) && constantTimeEqual(token, expectedToken ?? '');
 }
 
+/**
+ * Validates whether the request Origin header matches allowed origins policy.
+ *
+ * @param request - Incoming HTTP request.
+ * @param environment - Worker environment bindings.
+ * @param localRequest - True if local loopback request.
+ * @returns True if the origin is permitted.
+ */
 function isAllowedOrigin(request: Request, environment: WorkerEnvironment, localRequest: boolean): boolean {
   const origin = request.headers.get('origin');
   if (!origin) return localRequest;
@@ -162,6 +295,14 @@ function isAllowedOrigin(request: Request, environment: WorkerEnvironment, local
     : allowedOrigins.has(origin.toLowerCase());
 }
 
+/**
+ * Validates whether the recipient email is permitted by policy.
+ *
+ * @param input - Validated email request.
+ * @param environment - Worker environment bindings.
+ * @param localRequest - True if local loopback request.
+ * @returns True if recipient is permitted.
+ */
 function isAllowedRecipient(input: EmailRequest, environment: WorkerEnvironment, localRequest: boolean): boolean {
   const allowedRecipients = parsePolicyList(environment.EMAIL_ALLOWED_RECIPIENTS);
   return localRequest
@@ -169,6 +310,13 @@ function isAllowedRecipient(input: EmailRequest, environment: WorkerEnvironment,
     : allowedRecipients.has(input.to.toLowerCase());
 }
 
+/**
+ * Enforces rate limiting against the client IP address.
+ *
+ * @param request - Incoming HTTP request.
+ * @param environment - Worker environment bindings.
+ * @returns 'allowed', 'limited', or 'unconfigured'.
+ */
 async function enforceRateLimit(
   request: Request,
   environment: WorkerEnvironment,
@@ -184,24 +332,73 @@ async function enforceRateLimit(
   }
 }
 
+/**
+ * Checks whether a hostname matches loopback network addresses.
+ *
+ * @param hostname - Hostname to evaluate.
+ * @returns True if loopback address.
+ */
 function isLoopbackHostname(hostname: string): boolean {
   return LOCAL_HOSTNAMES.has(hostname.toLowerCase());
 }
 
+/**
+ * Validates that the MailPit port is a valid positive integer in the valid range.
+ *
+ * @param port - Numerical port value.
+ * @returns True if port is within 1..65535.
+ */
+function isValidMailPitPort(port: number): boolean {
+  return Number.isInteger(port) && port > 0 && port <= 65_535;
+}
+
+/**
+ * Default delivery implementation forwarding messages to local MailPit instance via SMTP.
+ *
+ * @param environment - Worker environment containing host and port.
+ * @param message - Prepared SMTP message.
+ */
 const defaultDelivery: Delivery = async (environment, message) => {
   const port = Number.parseInt(environment.MAILPIT_PORT, 10);
-  if (
-    !environment.MAILPIT_HOST ||
-    !isLoopbackHostname(environment.MAILPIT_HOST) ||
-    !Number.isInteger(port) ||
-    port <= 0 ||
-    port > 65_535
-  ) {
+  if (!environment.MAILPIT_HOST || !isLoopbackHostname(environment.MAILPIT_HOST) || !isValidMailPitPort(port)) {
     throw new Error('MailPit SMTP configuration is invalid');
   }
   await sendSmtpMessage({ host: environment.MAILPIT_HOST, port }, message);
 };
 
+/**
+ * Validates authorization, origin, and rate limiting policies for an incoming email request.
+ *
+ * @param request - Incoming HTTP request.
+ * @param environment - Worker environment.
+ * @param localRequest - True if local loopback request.
+ * @returns Error Response if policy check fails, or undefined if permitted.
+ */
+async function validateRequestPolicy(
+  request: Request,
+  environment: WorkerEnvironment,
+  localRequest: boolean,
+): Promise<Response | undefined> {
+  if (!isAuthorizedDeployment(request, environment, localRequest)) {
+    return errorResponse('Email delivery is not authorized for this deployment', 401);
+  }
+  if (!isAllowedOrigin(request, environment, localRequest)) {
+    return errorResponse('Email delivery origin is not allowed', 403);
+  }
+  const rateLimit = await enforceRateLimit(request, environment);
+  if (rateLimit === 'unconfigured') return errorResponse('Email delivery rate limiting is not configured', 503);
+  if (rateLimit === 'limited') return errorResponse('Email delivery rate limit exceeded', 429);
+  return undefined;
+}
+
+/**
+ * Handles incoming email delivery requests, validating input and delivering to SMTP service.
+ *
+ * @param request - Incoming HTTP request.
+ * @param environment - Worker environment bindings.
+ * @param delivery - Delivery function handling message transmission.
+ * @returns HTTP Response.
+ */
 export async function handleRequest(
   request: Request,
   environment: WorkerEnvironment,
@@ -212,15 +409,8 @@ export async function handleRequest(
   if (request.method !== 'POST') return errorResponse('Only POST is supported', 405);
 
   const localRequest = isLocalRequest(request);
-  if (!isAuthorizedDeployment(request, environment, localRequest)) {
-    return errorResponse('Email delivery is not authorized for this deployment', 401);
-  }
-  if (!isAllowedOrigin(request, environment, localRequest)) {
-    return errorResponse('Email delivery origin is not allowed', 403);
-  }
-  const rateLimit = await enforceRateLimit(request, environment);
-  if (rateLimit === 'unconfigured') return errorResponse('Email delivery rate limiting is not configured', 503);
-  if (rateLimit === 'limited') return errorResponse('Email delivery rate limit exceeded', 429);
+  const policyError = await validateRequestPolicy(request, environment, localRequest);
+  if (policyError) return policyError;
 
   let input: EmailRequest;
   try {

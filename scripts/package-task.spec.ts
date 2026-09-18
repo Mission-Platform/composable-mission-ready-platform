@@ -44,4 +44,13 @@ describe('package-task argument parsing', () => {
     expect(result.packageName).toBe('@mission-platform/components');
     expect(result.extraArgs).toEqual(['--force', '--', '--run']);
   });
+
+  it('throws an error when action is invalid or missing', () => {
+    expect(() => parsePackageTaskArgs([])).toThrow('Action must be either "test" or "build"');
+    expect(() => parsePackageTaskArgs(['lint'])).toThrow('Action must be either "test" or "build"');
+  });
+
+  it('throws an error when target package name is missing', () => {
+    expect(() => parsePackageTaskArgs(['test'])).toThrow('A target package name is required');
+  });
 });

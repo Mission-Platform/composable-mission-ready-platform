@@ -11,7 +11,7 @@ afterEach(() => {
 describe('@mission-platform/api-proxy', () => {
   it('forwards an allowed route with sanitized headers and query string', async () => {
     const upstream = new Response('upstream-body', { status: 200 });
-    const fetchMock = vi.fn(async (_request: Request) => upstream);
+    const fetchMock = vi.fn((_request: Request) => Promise.resolve(upstream));
     vi.stubGlobal('fetch', fetchMock);
 
     const request = new Request('https://origin.test/users/123?q=1', {
@@ -92,8 +92,8 @@ describe('@mission-platform/api-proxy', () => {
   });
 
   it('rejects redirects to another origin without following them', async () => {
-    const fetchMock = vi.fn(
-      async () => new Response(undefined, { status: 302, headers: { Location: 'https://evil.test/' } }),
+    const fetchMock = vi.fn(() =>
+      Promise.resolve(new Response(undefined, { status: 302, headers: { Location: 'https://evil.test/' } })),
     );
     vi.stubGlobal('fetch', fetchMock);
 
@@ -105,8 +105,8 @@ describe('@mission-platform/api-proxy', () => {
   });
 
   it('rejects same-origin redirects to a route outside the allowlist', async () => {
-    const fetchMock = vi.fn(
-      async () => new Response(undefined, { status: 302, headers: { Location: '/admin/secrets' } }),
+    const fetchMock = vi.fn(() =>
+      Promise.resolve(new Response(undefined, { status: 302, headers: { Location: '/admin/secrets' } })),
     );
     vi.stubGlobal('fetch', fetchMock);
 

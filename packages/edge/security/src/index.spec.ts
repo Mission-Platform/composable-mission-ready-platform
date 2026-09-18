@@ -10,23 +10,23 @@ import {
 } from '.';
 
 const mockExecutionContext = {
-  waitUntil: () => {},
-  passThroughOnException: () => {},
+  waitUntil: vi.fn(),
+  passThroughOnException: vi.fn(),
 } satisfies ExecutionContext;
 
-async function okHandler(): Promise<Response> {
+function okHandler(): Response {
   return new Response('ok');
 }
 
-async function forbiddenHandler(): Promise<Response> {
+function forbiddenHandler(): Response {
   return new Response('Forbidden', { status: 403 });
 }
 
-async function crashHandler(): Promise<Response> {
+function crashHandler(): Response {
   throw new Error('Unexpected crash');
 }
 
-async function propagateHandler(): Promise<Response> {
+function propagateHandler(): Response {
   throw new Error('Propagate me');
 }
 
@@ -212,7 +212,7 @@ describe('@mission-platform/edge-security', () => {
 
   describe('withSecurityHeaders', () => {
     it('wraps a fetch function and decorates response with security headers', async () => {
-      const handler = vi.fn(async (_request: Request) => new Response('data', { status: 200 }));
+      const handler = vi.fn((_request: Request) => new Response('data', { status: 200 }));
       const wrapped = withSecurityHeaders(handler);
 
       const request = new Request('https://example.test/api');
@@ -229,7 +229,7 @@ describe('@mission-platform/edge-security', () => {
     it('wraps an ExportedHandler object and preserves additional properties', async () => {
       const worker = {
         customProp: 'platform-value',
-        async fetch(_request: Request) {
+        fetch(_request: Request) {
           return new Response('object-response');
         },
       };

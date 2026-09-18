@@ -244,12 +244,39 @@ async function launchServer(
   }
 }
 
+function createServersCloser(
+  servers: readonly StorybookRendererServer[],
+  registry: ReturnType<typeof createProcessRegistry>,
+): () => Promise<void> {
+  let closed = false;
+  return async (): Promise<void> => {
+    if (closed) return;
+    closed = true;
+    const results = await Promise.allSettled(servers.map((server) => server.close()));
+    await registry.cleanup();
+    const failure = results.find((result): result is PromiseRejectedResult => result.status === 'rejected');
+    if (failure) throw failure.reason;
+  };
+}
+
+async function handleStartupFailure(
+  registry: ReturnType<typeof createProcessRegistry>,
+  running: Partial<Record<VisualParityRendererDefinition['framework'], StorybookRendererServer>>,
+): Promise<void> {
+  try {
+    await registry.cleanup();
+  } finally {
+    for (const server of Object.values(running)) {
+      if (server) writeLog(server.logPath, server.getOutput());
+    }
+  }
+}
+
 export async function startStorybookServers(
   repositoryRoot: string,
   options: VisualParityServerOptions = {},
 ): Promise<StorybookRendererServers> {
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  const cleanupGraceMs = options.cleanupGraceMs ?? DEFAULT_CLEANUP_GRACE_MS;
+  const { timeoutMs = DEFAULT_TIMEOUT_MS, cleanupGraceMs = DEFAULT_CLEANUP_GRACE_MS } = options;
   const certificateResult = await generateSharedStorybookCertificate(repositoryRoot, timeoutMs);
   const registry = createProcessRegistry({ graceMs: cleanupGraceMs });
   const definitions = createRendererDefinitions(options);
@@ -272,24 +299,10 @@ export async function startStorybookServers(
     const byFramework = Object.fromEntries(
       servers.map((server) => [server.definition.framework, server]),
     ) as StorybookRendererServers['servers'];
-    let closed = false;
-    const close = async (): Promise<void> => {
-      if (closed) return;
-      closed = true;
-      const results = await Promise.allSettled(servers.map((server) => server.close()));
-      await registry.cleanup();
-      const failure = results.find((result): result is PromiseRejectedResult => result.status === 'rejected');
-      if (failure) throw failure.reason;
-    };
+    const close = createServersCloser(servers, registry);
     return { certificateOutput: certificateResult.output, servers: byFramework, close };
   } catch (error) {
-    try {
-      await registry.cleanup();
-    } finally {
-      for (const server of Object.values(running)) {
-        if (server) writeLog(server.logPath, server.getOutput());
-      }
-    }
+    await handleStartupFailure(registry, running);
     throw error;
   }
 }

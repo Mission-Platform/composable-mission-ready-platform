@@ -6,7 +6,7 @@ export interface Env {
 }
 
 export default withSecurityHeaders({
-  async fetch(request: Request, environment: Env): Promise<Response> {
+  fetch(request: Request, environment: Env): Promise<Response> {
     return environment.ASSETS.fetch(request);
   },
 }) satisfies ExportedHandler<Env>;

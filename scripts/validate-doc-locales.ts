@@ -115,6 +115,34 @@ interface ValidationCliArgs {
   readonly strict: boolean;
 }
 
+/**
+ * Extracts a flag argument value either as `--flag=value` or `--flag value`.
+ *
+ * @param arg - Current CLI argument.
+ * @param nextArg - Subsequent CLI argument if available.
+ * @param flag - Target flag name.
+ * @returns Object with parsed value and consumed indicator.
+ */
+function extractArgValue(
+  arg: string,
+  nextArg: string | undefined,
+  flag: string,
+): { value?: string; consumed: boolean } {
+  if (arg === flag && nextArg && !nextArg.startsWith('-')) {
+    return { value: nextArg, consumed: true };
+  }
+  if (arg.startsWith(`${flag}=`)) {
+    return { value: arg.slice(flag.length + 1), consumed: false };
+  }
+  return { consumed: false };
+}
+
+/**
+ * Parses and normalizes command-line arguments for documentation locale validation.
+ *
+ * @param argv - Argument array from process.argv.
+ * @returns Structured validation configuration.
+ */
 function parseCliArgs(argv: readonly string[]): ValidationCliArgs {
   const args = argv.slice(2);
   let locale: string | undefined;
@@ -126,64 +154,42 @@ function parseCliArgs(argv: readonly string[]): ValidationCliArgs {
   let strict = false;
 
   for (let index = 0; index < args.length; index += 1) {
-    const arg = args[index];
-    switch (arg) {
-      case '--update-baseline': {
-        updateBaseline = true;
-        break;
-      }
-      case '--no-baseline': {
-        noBaseline = true;
-        break;
-      }
-      case '--strict': {
-        strict = true;
-        break;
-      }
-      case '--baseline': {
-        const nextArg = args[index + 1];
-        if (nextArg && !nextArg.startsWith('-')) {
-          baselinePath = resolve(process.cwd(), nextArg);
-          index += 1;
-        }
-        break;
-      }
-      case '--locale': {
-        const nextArg = args[index + 1];
-        if (nextArg && !nextArg.startsWith('-')) {
-          locale = nextArg;
-          index += 1;
-        }
-        break;
-      }
-      case '--slug': {
-        const nextArg = args[index + 1];
-        if (nextArg && !nextArg.startsWith('-')) {
-          slug = nextArg;
-          index += 1;
-        }
-        break;
-      }
-      case '--package': {
-        const nextArg = args[index + 1];
-        if (nextArg && !nextArg.startsWith('-')) {
-          pkg = nextArg;
-          index += 1;
-        }
-        break;
-      }
-      default: {
-        if (arg?.startsWith('--baseline=')) {
-          baselinePath = resolve(process.cwd(), arg.slice('--baseline='.length));
-        } else if (arg?.startsWith('--locale=')) {
-          locale = arg.slice('--locale='.length);
-        } else if (arg?.startsWith('--slug=')) {
-          slug = arg.slice('--slug='.length);
-        } else if (arg?.startsWith('--package=')) {
-          pkg = arg.slice('--package='.length);
-        }
-        break;
-      }
+    const arg = args[index]!;
+    if (arg === '--update-baseline') {
+      updateBaseline = true;
+      continue;
+    }
+    if (arg === '--no-baseline') {
+      noBaseline = true;
+      continue;
+    }
+    if (arg === '--strict') {
+      strict = true;
+      continue;
+    }
+
+    const baseline = extractArgValue(arg, args[index + 1], '--baseline');
+    if (baseline.value) {
+      baselinePath = resolve(process.cwd(), baseline.value);
+      if (baseline.consumed) index += 1;
+      continue;
+    }
+    const loc = extractArgValue(arg, args[index + 1], '--locale');
+    if (loc.value) {
+      locale = loc.value;
+      if (loc.consumed) index += 1;
+      continue;
+    }
+    const sl = extractArgValue(arg, args[index + 1], '--slug');
+    if (sl.value) {
+      slug = sl.value;
+      if (sl.consumed) index += 1;
+      continue;
+    }
+    const p = extractArgValue(arg, args[index + 1], '--package');
+    if (p.value) {
+      pkg = p.value;
+      if (p.consumed) index += 1;
     }
   }
 
@@ -198,155 +204,206 @@ function parseCliArgs(argv: readonly string[]): ValidationCliArgs {
   };
 }
 
-async function main(): Promise<void> {
-  const options = parseCliArgs(process.argv);
-  let documentationRoots = discoverDocumentationRoots(root);
-  if (options.package) {
-    documentationRoots = documentationRoots.filter(
-      (sourceRoot) => sourceRoot.packageName === options.package || sourceRoot.routePrefix === options.package,
-    );
+/**
+ * Validates that all canonical slugs in a documentation source root exist in localized directories.
+ *
+ * @param locale - Target locale code.
+ * @param sourceRoot - Documentation source root.
+ * @param pages - Canonical pages list.
+ * @param localeRoot - Localized root path.
+ * @param failures - Failures array to append to.
+ */
+async function validateRootSlugs(
+  locale: string,
+  sourceRoot: DocumentationSourceRoot,
+  pages: CanonicalPage[],
+  localeRoot: string,
+  failures: string[],
+): Promise<void> {
+  const canonicalRoot = sourceRoot.rootDirectory;
+  const rootPages = pages.filter((page) => page.sourceRoot.rootDirectory === canonicalRoot);
+  const canonicalSlugs = rootPages.map((page) => page.pageSlug);
+  const localizedFiles = await allMarkdownFiles(localeRoot);
+  const localizedSlugs = localizedFiles.map((file) => slug(file, localeRoot));
+  const missing = canonicalSlugs.filter((value) => !localizedSlugs.includes(value));
+  const extra = localizedSlugs.filter((value) => !canonicalSlugs.includes(value));
+  const rootLabel = sourceRoot.routePrefix || 'docs';
+  for (const item of missing) {
+    failures.push(`${locale}/${rootLabel}: missing ${item}`);
   }
-
-  let pages = await canonicalPages(documentationRoots);
-  if (options.slug) {
-    pages = pages.filter(
-      (page) => page.pageSlug === options.slug || `${page.sourceRoot.routePrefix}/${page.pageSlug}` === options.slug,
-    );
+  for (const item of extra) {
+    failures.push(`${locale}/${rootLabel}: extra ${item}`);
   }
+}
 
-  const targetLocales = options.locale
-    ? (locales.filter((localeItem) => localeItem === options.locale) satisfies readonly DocumentationLocale[])
-    : locales;
-
-  const failures: string[] = [];
-
-  for (const locale of targetLocales) {
-    for (const sourceRoot of documentationRoots) {
-      const canonicalRoot = sourceRoot.rootDirectory;
-      const localeRoot = join(canonicalRoot, 'locales', locale);
-      const rootPages = pages.filter((page) => page.sourceRoot.rootDirectory === canonicalRoot);
-      const canonicalSlugs = rootPages.map((page) => page.pageSlug);
-      const localizedFiles = await allMarkdownFiles(localeRoot);
-      const localizedSlugs = localizedFiles.map((file) => slug(file, localeRoot));
-      const missing = canonicalSlugs.filter((value) => !localizedSlugs.includes(value));
-      const extra = localizedSlugs.filter((value) => !canonicalSlugs.includes(value));
-      const rootLabel = sourceRoot.routePrefix || 'docs';
-      for (const item of missing) {
-        failures.push(`${locale}/${rootLabel}: missing ${item}`);
-      }
-      for (const item of extra) {
-        failures.push(`${locale}/${rootLabel}: extra ${item}`);
-      }
-
-      for (const page of rootPages) {
-        const canonicalFile = page.sourcePath;
-        const pageSlug = page.pageSlug;
-        const localizedFile = join(localeRoot, `${pageSlug}.md`);
-        let canonical: string;
-        let localized: string;
-        try {
-          [canonical, localized] = await Promise.all([
-            readFile(canonicalFile, 'utf8'),
-            readFile(localizedFile, 'utf8'),
-          ]);
-        } catch {
-          continue;
+/**
+ * Validates relative links within localized documentation to verify target resolution and locale boundaries.
+ *
+ * @param locale - Target locale code.
+ * @param pageSlug - Slug of the validating page.
+ * @param localized - Raw markdown content.
+ * @param localizedFile - Path to the localized markdown file.
+ * @param documentationRoots - Discovered documentation source roots.
+ * @param failures - Failures array to append to.
+ */
+async function validateRelativeLinks(
+  locale: string,
+  pageSlug: string,
+  localized: string,
+  localizedFile: string,
+  documentationRoots: DocumentationSourceRoot[],
+  failures: string[],
+): Promise<void> {
+  for (const match of withoutFences(localized).matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
+    const href = match[1] ?? '';
+    if (!href || /^(https?:|mailto:|#)/.test(href)) continue;
+    const pathPart = href.split('#')[0] ?? '';
+    if (!pathPart) continue;
+    const target = resolve(dirname(localizedFile), pathPart);
+    const targetRoot = target.endsWith('.md') ? rootForPath(target, documentationRoots) : undefined;
+    if (targetRoot !== undefined) {
+      const candidateLocaleRoot = join(targetRoot.rootDirectory, 'locales');
+      const underLocaleTree =
+        target === candidateLocaleRoot ||
+        target.startsWith(`${candidateLocaleRoot}/`) ||
+        target.startsWith(`${candidateLocaleRoot}\\`);
+      if (underLocaleTree) {
+        const expectedLocaleRoot = join(candidateLocaleRoot, locale);
+        if (
+          !target.startsWith(`${expectedLocaleRoot}/`) &&
+          target !== expectedLocaleRoot &&
+          !target.startsWith(`${expectedLocaleRoot}\\`)
+        ) {
+          failures.push(`${locale}/${pageSlug}: cross-root link points to a different locale: ${href}`);
         }
-
-        const canonicalFences = fences(canonical);
-        const localizedFences = fences(localized);
-        if (JSON.stringify(canonicalFences) !== JSON.stringify(localizedFences)) {
-          failures.push(`${locale}/${pageSlug}: fenced code blocks differ from canonical source`);
-        }
-
-        if (canonicalFile.includes(`${join('reference', 'generated')}${pathSeparator()}`)) {
-          const generatedMarker = '<!-- Generated by scripts/extract-package-docs.ts.';
-          if (!canonical.includes(generatedMarker)) {
-            failures.push(`${locale}/${pageSlug}: generated reference is missing its generated-file marker`);
-          }
-          if (!localized.includes(generatedMarker)) {
-            failures.push(`${locale}/${pageSlug}: localized generated reference is missing its generated-file marker`);
-          }
-        }
-
-        const sourceLink = localized.match(/\]\(([^)]+)\)/u)?.[1];
-        if (!sourceLink) failures.push(`${locale}/${pageSlug}: missing canonical source link`);
-        else if (resolve(dirname(localizedFile), sourceLink) !== canonicalFile) {
-          failures.push(`${locale}/${pageSlug}: canonical source link does not resolve to ${pageSlug}.md`);
-        }
-
-        // Relative markdown/repo links must resolve from the locale file location.
-        for (const match of withoutFences(localized).matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
-          const href = match[1] ?? '';
-          if (!href || /^(https?:|mailto:|#)/.test(href)) continue;
-          const pathPart = href.split('#')[0] ?? '';
-          if (!pathPart) continue;
-          const target = resolve(dirname(localizedFile), pathPart);
-          const targetRoot = target.endsWith('.md') ? rootForPath(target, documentationRoots) : undefined;
-          if (targetRoot !== undefined) {
-            const candidateLocaleRoot = join(targetRoot.rootDirectory, 'locales');
-            const underLocaleTree =
-              target === candidateLocaleRoot ||
-              target.startsWith(`${candidateLocaleRoot}/`) ||
-              target.startsWith(`${candidateLocaleRoot}\\`);
-            if (underLocaleTree) {
-              const expectedLocaleRoot = join(candidateLocaleRoot, locale);
-              if (
-                !target.startsWith(`${expectedLocaleRoot}/`) &&
-                target !== expectedLocaleRoot &&
-                !target.startsWith(`${expectedLocaleRoot}\\`)
-              ) {
-                failures.push(`${locale}/${pageSlug}: cross-root link points to a different locale: ${href}`);
-              }
-            }
-          }
-          try {
-            const targetStats = await stat(target);
-            if (!targetStats.isFile() && !targetStats.isDirectory()) throw new Error('unsupported link target');
-          } catch {
-            failures.push(`${locale}/${pageSlug}: unresolved relative link ${href}`);
-          }
-        }
-
-        const generatedReference = canonicalFile.includes(`${join('reference', 'generated')}${pathSeparator()}`);
-        const reportSlug = sourceRoot.routePrefix ? `${sourceRoot.routePrefix}/${pageSlug}` : pageSlug;
-        assertTranslated(locale, reportSlug, canonical, localized, failures, !generatedReference);
       }
     }
+    try {
+      const targetStats = await stat(target);
+      if (!targetStats.isFile() && !targetStats.isDirectory()) throw new Error('unsupported link target');
+    } catch {
+      failures.push(`${locale}/${pageSlug}: unresolved relative link ${href}`);
+    }
   }
+}
 
-  const uniqueFailures = [...new Set(failures)].sort();
-
-  if (options.updateBaseline) {
-    const backlogData = {
-      version: '1.0',
-      description:
-        'Baseline technical debt for documentation locale validation. New errors outside this set will fail CI.',
-      generatedAt: new Date().toISOString(),
-      count: uniqueFailures.length,
-      issues: uniqueFailures,
-    };
-    await writeFile(options.baselinePath, `${JSON.stringify(backlogData, undefined, 2)}\n`, 'utf8');
-    console.log(
-      `✓ Updated baseline backlog at ${relative(root, options.baselinePath)} with ${uniqueFailures.length} issues.`,
-    );
+/**
+ * Validates an individual localized markdown file for fences, markers, links, and translation quality.
+ *
+ * @param locale - Target locale code.
+ * @param page - Canonical page record.
+ * @param localeRoot - Localized root directory.
+ * @param documentationRoots - Documentation source roots.
+ * @param failures - Failures array to append to.
+ */
+async function validatePageFile(
+  locale: string,
+  page: CanonicalPage,
+  localeRoot: string,
+  documentationRoots: DocumentationSourceRoot[],
+  failures: string[],
+): Promise<void> {
+  const canonicalFile = page.sourcePath;
+  const pageSlug = page.pageSlug;
+  const localizedFile = join(localeRoot, `${pageSlug}.md`);
+  let canonical: string;
+  let localized: string;
+  try {
+    [canonical, localized] = await Promise.all([readFile(canonicalFile, 'utf8'), readFile(localizedFile, 'utf8')]);
+  } catch {
     return;
   }
 
-  let knownIssues = new Set<string>();
-  if (!options.noBaseline && !options.strict && existsSync(options.baselinePath)) {
-    try {
-      const rawContent = await readFile(options.baselinePath, 'utf8');
-      const parsed = JSON.parse(rawContent) satisfies { issues?: string[] } | string[];
-      const issuesList = Array.isArray(parsed) ? parsed : (parsed.issues ?? []);
-      knownIssues = new Set(issuesList);
-    } catch (error) {
-      console.warn(
-        `[validate-doc-locales] Warning: Failed to parse baseline backlog from ${options.baselinePath}: ${String(error)}`,
-      );
+  const canonicalFences = fences(canonical);
+  const localizedFences = fences(localized);
+  if (JSON.stringify(canonicalFences) !== JSON.stringify(localizedFences)) {
+    failures.push(`${locale}/${pageSlug}: fenced code blocks differ from canonical source`);
+  }
+
+  if (canonicalFile.includes(`${join('reference', 'generated')}${pathSeparator()}`)) {
+    const generatedMarker = '<!-- Generated by scripts/extract-package-docs.ts.';
+    if (!canonical.includes(generatedMarker)) {
+      failures.push(`${locale}/${pageSlug}: generated reference is missing its generated-file marker`);
+    }
+    if (!localized.includes(generatedMarker)) {
+      failures.push(`${locale}/${pageSlug}: localized generated reference is missing its generated-file marker`);
     }
   }
 
+  const sourceLink = localized.match(/\]\(([^)]+)\)/u)?.[1];
+  if (!sourceLink) {
+    failures.push(`${locale}/${pageSlug}: missing canonical source link`);
+  } else if (resolve(dirname(localizedFile), sourceLink) !== canonicalFile) {
+    failures.push(`${locale}/${pageSlug}: canonical source link does not resolve to ${pageSlug}.md`);
+  }
+
+  await validateRelativeLinks(locale, pageSlug, localized, localizedFile, documentationRoots, failures);
+
+  const generatedReference = canonicalFile.includes(`${join('reference', 'generated')}${pathSeparator()}`);
+  const reportSlug = page.sourceRoot.routePrefix ? `${page.sourceRoot.routePrefix}/${pageSlug}` : pageSlug;
+  assertTranslated(locale, reportSlug, canonical, localized, failures, !generatedReference);
+}
+
+/**
+ * Loads suppressed technical debt issues from the baseline backlog JSON file.
+ *
+ * @param options - Parsed CLI options.
+ * @returns Set of known baseline issue keys.
+ */
+async function loadKnownIssues(options: ValidationCliArgs): Promise<Set<string>> {
+  if (options.noBaseline || options.strict || !existsSync(options.baselinePath)) {
+    return new Set();
+  }
+  try {
+    const rawContent = await readFile(options.baselinePath, 'utf8');
+    const parsed = JSON.parse(rawContent) satisfies { issues?: string[] } | string[];
+    const issuesList = Array.isArray(parsed) ? parsed : (parsed.issues ?? []);
+    return new Set(issuesList);
+  } catch (error) {
+    console.warn(
+      `[validate-doc-locales] Warning: Failed to parse baseline backlog from ${options.baselinePath}: ${String(error)}`,
+    );
+    return new Set();
+  }
+}
+
+/**
+ * Updates the baseline backlog JSON file with current unique validation issues.
+ *
+ * @param baselinePath - File path to save baseline to.
+ * @param uniqueFailures - Sorted list of unique issue keys.
+ */
+async function saveBaselineBacklog(baselinePath: string, uniqueFailures: readonly string[]): Promise<void> {
+  const backlogData = {
+    version: '1.0',
+    description:
+      'Baseline technical debt for documentation locale validation. New errors outside this set will fail CI.',
+    generatedAt: new Date().toISOString(),
+    count: uniqueFailures.length,
+    issues: uniqueFailures,
+  };
+  await writeFile(baselinePath, `${JSON.stringify(backlogData, undefined, 2)}\n`, 'utf8');
+  console.log(`✓ Updated baseline backlog at ${relative(root, baselinePath)} with ${uniqueFailures.length} issues.`);
+}
+
+/**
+ * Compares detected issues against baseline backlog and reports pass/fail diagnostics.
+ *
+ * @param uniqueFailures - Detected unique validation issues.
+ * @param knownIssues - Baseline backlog known issues.
+ * @param options - CLI validation options.
+ * @param pagesCount - Total canonical pages evaluated.
+ * @param rootsCount - Total documentation roots evaluated.
+ * @param localesCount - Total locales evaluated.
+ */
+function reportResults(
+  uniqueFailures: readonly string[],
+  knownIssues: Set<string>,
+  options: ValidationCliArgs,
+  pagesCount: number,
+  rootsCount: number,
+  localesCount: number,
+): void {
   const newFailures = uniqueFailures.filter((failure) => !knownIssues.has(failure));
   const suppressedCount = uniqueFailures.length - newFailures.length;
 
@@ -375,11 +432,63 @@ async function main(): Promise<void> {
     }
   } else {
     console.log(
-      `✓ Validated ${pages.length} canonical pages across ${documentationRoots.length} roots and ${targetLocales.length} locales with 0 issues.`,
+      `✓ Validated ${pagesCount} canonical pages across ${rootsCount} roots and ${localesCount} locales with 0 issues.`,
     );
   }
 }
 
+/**
+ * Main execution entry point for documentation locale validation.
+ */
+async function main(): Promise<void> {
+  const options = parseCliArgs(process.argv);
+  let documentationRoots = discoverDocumentationRoots(root);
+  if (options.package) {
+    documentationRoots = documentationRoots.filter(
+      (sourceRoot) => sourceRoot.packageName === options.package || sourceRoot.routePrefix === options.package,
+    );
+  }
+
+  let pages = await canonicalPages(documentationRoots);
+  if (options.slug) {
+    pages = pages.filter(
+      (page) => page.pageSlug === options.slug || `${page.sourceRoot.routePrefix}/${page.pageSlug}` === options.slug,
+    );
+  }
+
+  const targetLocales = options.locale
+    ? (locales.filter((localeItem) => localeItem === options.locale) satisfies readonly DocumentationLocale[])
+    : locales;
+
+  const failures: string[] = [];
+
+  for (const locale of targetLocales) {
+    for (const sourceRoot of documentationRoots) {
+      const localeRoot = join(sourceRoot.rootDirectory, 'locales', locale);
+      await validateRootSlugs(locale, sourceRoot, pages, localeRoot, failures);
+      const rootPages = pages.filter((page) => page.sourceRoot.rootDirectory === sourceRoot.rootDirectory);
+      for (const page of rootPages) {
+        await validatePageFile(locale, page, localeRoot, documentationRoots, failures);
+      }
+    }
+  }
+
+  const uniqueFailures = [...new Set(failures)].sort();
+
+  if (options.updateBaseline) {
+    await saveBaselineBacklog(options.baselinePath, uniqueFailures);
+    return;
+  }
+
+  const knownIssues = await loadKnownIssues(options);
+  reportResults(uniqueFailures, knownIssues, options, pages.length, documentationRoots.length, targetLocales.length);
+}
+
+/**
+ * Returns the OS-specific path separator.
+ *
+ * @returns Windows backslash or POSIX forward slash.
+ */
 function pathSeparator(): string {
   return process.platform === 'win32' ? '\\' : '/';
 }

@@ -17,6 +17,13 @@ export interface ExportedHandlerLike<Env extends unknown = unknown> {
 export type SecurityOptionsProvider<Env extends unknown = unknown> =
   SecurityHeaderOptions | ((request: Request, env: Env) => SecurityHeaderOptions | Promise<SecurityHeaderOptions>);
 
+/**
+ * Wraps a fetch handler or an ExportedHandler object with automatic security header injection.
+ *
+ * @param handlerOrObject - A fetch handler function or a Cloudflare Worker exported handler object.
+ * @param optionsOrProvider - Static security options or a dynamic options provider function.
+ * @returns The wrapped fetch handler or exported handler object.
+ */
 export function withSecurityHeaders<Env extends unknown = unknown>(
   handlerOrObject: FetchHandler<Env>,
   optionsOrProvider?: SecurityOptionsProvider<Env>,

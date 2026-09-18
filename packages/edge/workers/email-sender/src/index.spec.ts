@@ -39,13 +39,11 @@ function request(path: string, body: unknown, init: RequestInit = {}, baseUrl = 
 }
 
 function successfulDelivery() {
-  return vi.fn<Delivery>(async () => {});
+  return vi.fn<Delivery>().mockResolvedValue();
 }
 
 function failingDelivery() {
-  return vi.fn<Delivery>(async () => {
-    throw new Error('connection refused');
-  });
+  return vi.fn<Delivery>().mockRejectedValue(new Error('connection refused'));
 }
 
 describe('email sender Worker', () => {

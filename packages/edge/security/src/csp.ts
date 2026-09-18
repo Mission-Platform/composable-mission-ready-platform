@@ -31,26 +31,35 @@ const DIRECTIVE_MAP: readonly (readonly [keyof CspDirectives, string])[] = [
   ['blockAllMixedContent', 'block-all-mixed-content'],
 ] as const;
 
+/**
+ * Formats an individual CSP directive name and value.
+ *
+ * @param directive - The CSP directive header token (e.g. `default-src`).
+ * @param value - Boolean flag or array of allowed source expressions.
+ * @returns Formatted directive string or undefined if omitted.
+ */
+function formatCspDirective(directive: string, value: CspDirectives[keyof CspDirectives]): string | undefined {
+  if (value === undefined || value === false) {
+    return undefined;
+  }
+  if (value === true) {
+    return directive;
+  }
+  return value.length > 0 ? `${directive} ${value.join(' ')}` : undefined;
+}
+
+/**
+ * Serializes Content Security Policy directives into a standard header value string.
+ *
+ * @param customDirectives - Optional directives to merge with baseline defaults.
+ * @returns Serialized Content-Security-Policy header string.
+ */
 export function createCspPolicy(customDirectives?: CspDirectives): string {
   const merged: CspDirectives = customDirectives
     ? { ...DEFAULT_CSP_DIRECTIVES, ...customDirectives }
     : DEFAULT_CSP_DIRECTIVES;
 
-  const parts: string[] = [];
-
-  for (const [key, directive] of DIRECTIVE_MAP) {
-    const value = merged[key];
-    if (value === undefined || value === false) {
-      continue;
-    }
-    if (value === true) {
-      parts.push(directive);
-      continue;
-    }
-    if (Array.isArray(value) && value.length > 0) {
-      parts.push(`${directive} ${value.join(' ')}`);
-    }
-  }
-
-  return parts.join('; ');
+  return DIRECTIVE_MAP.map(([, directive], index) => formatCspDirective(directive, merged[DIRECTIVE_MAP[index]![0]]))
+    .filter((part): part is string => part !== undefined)
+    .join('; ');
 }
