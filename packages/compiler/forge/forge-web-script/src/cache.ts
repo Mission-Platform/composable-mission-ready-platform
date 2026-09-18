@@ -11,6 +11,10 @@ export interface ForgeWebScriptWatCache {
   readonly writeBinaryAtomic?: (fileName: string, contents: Uint8Array) => void;
   /** Optional reader used by tooling; invalid or stale values are ignored. */
   readonly read?: (fileName: string) => string | undefined;
+  /** Optional removal hook to prune stale versions. */
+  readonly remove?: (fileName: string) => void;
+  /** Optional list files in root directory to support cleanup. */
+  readonly listFiles?: () => readonly string[];
   readonly logger?: ForgeWebScriptCacheLogger;
 }
 
@@ -66,6 +70,9 @@ function hash(value: string): string {
   return result.toString(16).padStart(8, '0');
 }
 
+/**
+ * Computes a deterministic cache key for a compilation request.
+ */
 export function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string {
   const normalized = {
     ...input,
@@ -76,10 +83,16 @@ export function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput)
   return hash(JSON.stringify(stableValue(normalized)));
 }
 
+/**
+ * Returns the path to the WAT file for a given cache key.
+ */
 export function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string {
   return `${cache.root.replace(/[\\/]+$/, '')}/${key}.wat`;
 }
 
+/**
+ * Returns the path to the SonIR JSON artifact for a given cache key and variant.
+ */
 export function forgeWebScriptSoNPath(
   cache: ForgeWebScriptWatCache,
   key: string,
@@ -88,6 +101,9 @@ export function forgeWebScriptSoNPath(
   return `${cache.root.replace(/[\\/]+$/, '')}/${key}${variant === 'optimized' ? '' : '.unoptimized'}.sonir.json`;
 }
 
+/**
+ * Persists a SonIR module to disk in the cache directory.
+ */
 export function persistForgeWebScriptSoN(
   cache: ForgeWebScriptWatCache | undefined,
   key: string,
@@ -106,6 +122,9 @@ export function persistForgeWebScriptSoN(
   }
 }
 
+/**
+ * Reads and deserializes a SonIR module from disk.
+ */
 export function readForgeWebScriptSoN(
   cache: ForgeWebScriptWatCache | undefined,
   key: string,
@@ -137,6 +156,9 @@ export interface ForgeWebScriptDebugArtifactPaths {
   readonly unoptimizedWasmPath?: string;
 }
 
+/**
+ * Returns the debug artifact path for a given variant and format.
+ */
 function forgeWebScriptDebugArtifactPath(
   cache: ForgeWebScriptWatCache,
   key: string,
@@ -146,6 +168,9 @@ function forgeWebScriptDebugArtifactPath(
   return `${cache.root.replace(/[\\/]+$/, '')}/${key}.${variant}.${format}`;
 }
 
+/**
+ * Persists a WAT string to disk in the cache directory.
+ */
 export function persistForgeWebScriptWat(
   cache: ForgeWebScriptWatCache | undefined,
   key: string,
@@ -164,6 +189,9 @@ export function persistForgeWebScriptWat(
   }
 }
 
+/**
+ * Persists debug artifacts (WAT and Wasm, both optimized and unoptimized) to disk.
+ */
 export function persistForgeWebScriptDebugArtifacts(
   cache: ForgeWebScriptWatCache | undefined,
   key: string,
@@ -208,4 +236,211 @@ export function persistForgeWebScriptDebugArtifacts(
   if (artifacts.optimizedWasm !== undefined) writeWasm('optimized', artifacts.optimizedWasm);
   if (artifacts.unoptimizedWasm !== undefined) writeWasm('unoptimized', artifacts.unoptimizedWasm);
   return paths;
+}
+
+export interface ForgeWebScriptCacheIndexEntry {
+  readonly key: string;
+  readonly files: readonly string[];
+  readonly timestamp: number;
+}
+
+export interface ForgeWebScriptCacheIndex {
+  readonly version: 1;
+  readonly entries: Readonly<Record<string, ForgeWebScriptCacheIndexEntry>>;
+}
+
+/**
+ * Returns the path to the cache index file `.fws-cache-index.json`.
+ */
+export function forgeWebScriptCacheIndexPath(cache: ForgeWebScriptWatCache): string {
+  return `${cache.root.replace(/[\\/]+$/, '')}/.fws-cache-index.json`;
+}
+
+/**
+ * Validates whether a parsed JSON object matches the cache index structure.
+ */
+function isValidCacheIndex(parsed: unknown): parsed is ForgeWebScriptCacheIndex {
+  if (parsed === null || typeof parsed !== 'object') return false;
+  const candidate = parsed as Record<string, unknown>;
+  return candidate.version === 1 && typeof candidate.entries === 'object' && candidate.entries !== null;
+}
+
+/**
+ * Safely parses string content into a validated cache index.
+ */
+function parseCacheIndexContent(content: string | undefined): ForgeWebScriptCacheIndex | undefined {
+  if (!content) return undefined;
+  try {
+    const parsed = JSON.parse(content);
+    return isValidCacheIndex(parsed) ? parsed : undefined;
+  } catch {
+    // Malformed index is ignored and rebuilt.
+    return undefined;
+  }
+}
+
+/**
+ * Reads and parses the cache index from disk, returning undefined if missing or malformed.
+ */
+export function readForgeWebScriptCacheIndex(
+  cache: ForgeWebScriptWatCache | undefined,
+): ForgeWebScriptCacheIndex | undefined {
+  if (cache === undefined || cache.read === undefined) return undefined;
+  return parseCacheIndexContent(cache.read(forgeWebScriptCacheIndexPath(cache)));
+}
+
+/**
+ * Removes files that belonged to a previous compilation key but are not present in the new set.
+ */
+function removeStaleFiles(
+  cache: ForgeWebScriptWatCache,
+  previousFiles: readonly string[],
+  newFiles: readonly string[],
+): void {
+  if (cache.remove === undefined) return;
+  for (const oldFile of previousFiles) {
+    if (!newFiles.includes(oldFile)) {
+      try {
+        cache.remove(oldFile);
+        cache.logger?.log('debug', 'cache.prune', { path: oldFile, reason: 'stale-version' });
+      } catch {
+        // Failure to remove a single stale artifact must never break compilation.
+      }
+    }
+  }
+}
+
+/**
+ * Updates cache index entries with the current module's file list.
+ */
+function updateCacheIndexEntries(
+  existingEntries: Readonly<Record<string, ForgeWebScriptCacheIndexEntry>>,
+  moduleIdOrPath: string,
+  currentKey: string,
+  files: readonly string[],
+): Record<string, ForgeWebScriptCacheIndexEntry> {
+  return {
+    ...existingEntries,
+    [moduleIdOrPath]: {
+      key: currentKey,
+      files,
+      timestamp: Date.now(),
+    },
+  };
+}
+
+/**
+ * Checks and prunes previous files if the cache key has changed.
+ */
+function pruneIfStale(
+  cache: ForgeWebScriptWatCache,
+  previous: ForgeWebScriptCacheIndexEntry | undefined,
+  currentKey: string,
+  newFiles: readonly string[],
+): void {
+  if (previous === undefined || previous.key === currentKey) return;
+  removeStaleFiles(cache, previous.files, newFiles);
+}
+
+/**
+ * Persists the cache index to disk atomically.
+ */
+function writeCacheIndex(cache: ForgeWebScriptWatCache, entries: Record<string, ForgeWebScriptCacheIndexEntry>): void {
+  if (cache.writeAtomic === undefined) return;
+  try {
+    cache.writeAtomic(forgeWebScriptCacheIndexPath(cache), JSON.stringify({ version: 1, entries }, undefined, 2));
+  } catch {
+    // Stale index persistence failure must never break compilation.
+  }
+}
+
+/**
+ * Prunes stale cached artifacts for a given module ID when its cache key has changed.
+ */
+export function pruneStaleForgeWebScriptCache(
+  cache: ForgeWebScriptWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void {
+  if (cache === undefined) return;
+  const existing = readForgeWebScriptCacheIndex(cache);
+  const entries = existing === undefined ? {} : existing.entries;
+  pruneIfStale(cache, entries[moduleIdOrPath], currentKey, newFiles);
+  writeCacheIndex(cache, updateCacheIndexEntries(entries, moduleIdOrPath, currentKey, newFiles));
+}
+
+/**
+ * Safely removes a file from the cache, logging the event.
+ */
+function removeCacheFileSilently(cache: ForgeWebScriptWatCache, file: string, reason: string): boolean {
+  if (cache.remove === undefined) return false;
+  try {
+    cache.remove(file);
+    cache.logger?.log('debug', 'cache.prune', { path: file, reason });
+    return true;
+  } catch {
+    // Ignore removal errors to prevent blocking compiler execution.
+    return false;
+  }
+}
+
+/**
+ * Determines whether a file is an orphaned compilation artifact.
+ */
+function isOrphanedArtifact(file: string, activeFiles: ReadonlySet<string>): boolean {
+  if (!file.endsWith('.wat') && !file.endsWith('.sonir.json') && !file.endsWith('.wasm')) return false;
+  const baseName = file.slice(file.lastIndexOf('/') + 1);
+  return !activeFiles.has(baseName) && !activeFiles.has(file);
+}
+
+/**
+ * Collects all active file paths and basenames from the cache index.
+ */
+function collectActiveFiles(indexPath: string, index: ForgeWebScriptCacheIndex | undefined): Set<string> {
+  const activeFiles = new Set<string>([indexPath]);
+  if (index === undefined) return activeFiles;
+  for (const entry of Object.values(index.entries)) {
+    for (const file of entry.files) {
+      activeFiles.add(file);
+      activeFiles.add(file.slice(file.lastIndexOf('/') + 1));
+    }
+  }
+  return activeFiles;
+}
+
+/**
+ * Attempts to prune an individual orphaned or temporary file.
+ */
+function tryPruneFile(
+  cache: ForgeWebScriptWatCache,
+  file: string,
+  hasIndex: boolean,
+  activeFiles: ReadonlySet<string>,
+): boolean {
+  if (file.endsWith('.tmp')) {
+    return removeCacheFileSilently(cache, file, 'orphaned-temp');
+  }
+  if (!hasIndex) return false;
+  if (!isOrphanedArtifact(file, activeFiles)) return false;
+  return removeCacheFileSilently(cache, file, 'orphaned-artifact');
+}
+
+/**
+ * Prunes orphaned temporary and unindexed cache files from the cache directory.
+ */
+export function pruneOrphanedForgeWebScriptCacheFiles(cache: ForgeWebScriptWatCache | undefined): readonly string[] {
+  if (cache === undefined || cache.listFiles === undefined) return [];
+  const files = cache.listFiles();
+  const index = readForgeWebScriptCacheIndex(cache);
+  const activeFiles = collectActiveFiles(forgeWebScriptCacheIndexPath(cache), index);
+  const hasIndex = index !== undefined;
+  const removed: string[] = [];
+
+  for (const file of files) {
+    if (tryPruneFile(cache, file, hasIndex, activeFiles)) {
+      removed.push(file);
+    }
+  }
+  return removed;
 }

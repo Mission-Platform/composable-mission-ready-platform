@@ -71,6 +71,7 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
+    "@mission-platform/code-scanner-wasm": "workspace:*",
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forge-adapters": "workspace:*",
     "@mission-platform/forge-jsx": "workspace:*",

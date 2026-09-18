@@ -1,6 +1,7 @@
 import {
   mkdirSync,
   readFileSync,
+  readdirSync,
   renameSync,
   unlinkSync,
   writeFileSync,
@@ -9,6 +10,7 @@ import { dirname, isAbsolute, resolve } from "node:path";
 
 import {
   createForgeWebScriptCompilerService,
+  pruneOrphanedForgeWebScriptCacheFiles,
   resolveForgeWebScriptModuleGraph,
   type ForgeWebScriptGraphResult,
   type ForgeWebScriptLinkConfiguration,
@@ -162,7 +164,7 @@ function watCacheFor(
       options.root ?? process.cwd(),
       "node_modules/.cache/forge-web-script",
     );
-  return {
+  const cache: ForgeWebScriptWatCache = {
     root,
     writeAtomic(fileName, contents): void {
       mkdirSync(dirname(fileName), { recursive: true });
@@ -179,7 +181,45 @@ function watCacheFor(
         throw error;
       }
     },
+    writeBinaryAtomic(fileName, contents): void {
+      mkdirSync(dirname(fileName), { recursive: true });
+      const temporary = `${fileName}.${process.pid}.${watTemporaryFile++}.tmp`;
+      writeFileSync(temporary, contents);
+      try {
+        renameSync(temporary, fileName);
+      } catch (error) {
+        try {
+          unlinkSync(temporary);
+        } catch {
+          // Preserve the original atomic-write failure when cleanup is unavailable.
+        }
+        throw error;
+      }
+    },
+    read(fileName): string | undefined {
+      try {
+        return readFileSync(fileName, "utf8");
+      } catch {
+        return undefined;
+      }
+    },
+    remove(fileName): void {
+      try {
+        unlinkSync(fileName);
+      } catch {
+        // Silently ignore removal errors for missing or locked cache files.
+      }
+    },
+    listFiles(): readonly string[] {
+      try {
+        return readdirSync(root).map((entry) => resolve(root, entry));
+      } catch {
+        return [];
+      }
+    },
   };
+  pruneOrphanedForgeWebScriptCacheFiles(cache);
+  return cache;
 }
 
 const graphResolverIds = new WeakMap<

@@ -4515,6 +4515,9 @@ importers:
 
   packages/integrations/code-scanner:
     dependencies:
+      '@mission-platform/code-scanner-wasm':
+        specifier: workspace:*
+        version: link:../code-scanner-wasm
       '@mission-platform/components':
         specifier: workspace:*
         version: link:../../ui/components
@@ -4678,6 +4681,58 @@ importers:
       vue:
         specifier: catalog:vue
         version: 3.5.42(typescript@7.0.2)
+
+  packages/integrations/code-scanner-wasm:
+    dependencies:
+      '@mission-platform/forge-web-script-runtime':
+        specifier: workspace:*
+        version: link:../../compiler/forge/forge-web-script-runtime
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/eslint-config
+      '@mission-platform/forge-web-script-vitest':
+        specifier: workspace:*
+        version: link:../../compiler/forge/forge-web-script-vitest
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/prettier-config
+      '@mission-platform/tsdown-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/tsdown-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../tooling/configs/vite-config
+      '@mission-platform/vite-plugin-forge-web-script':
+        specifier: workspace:*
+        version: link:../../tooling/vite/forge-web-script
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.4
+      eslint:
+        specifier: catalog:eslint
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      jsdom:
+        specifier: catalog:testing
+        version: 30.0.1
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.6
+      tsdown:
+        specifier: catalog:build
+        version: 0.23.0(@tsdown/css@0.23.0)(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.21.2)(typescript@7.0.2)(vue-tsc@3.3.11(typescript@7.0.2))
+      typescript:
+        specifier: catalog:typescript
+        version: 7.0.2
+      vite:
+        specifier: catalog:vite
+        version: 8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.0.1(@types/node@24.13.4)(@vitest/browser-playwright@5.0.1)(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(happy-dom@20.14.5)(jsdom@30.0.1)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
   packages/integrations/d3:
     dependencies:
@@ -12144,9 +12199,6 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@22.20.2':
-    resolution: {integrity: sha512-xlvWf4Vs9n1PEVYwP1n4vvG07M6y8WgvJ2t0vbrWTmijsIHp1cS+uJ2kMIRdY3nHZK0nCYKrPeD171+SzF4/zw==}
-
   '@types/node@24.13.4':
     resolution: {integrity: sha512-YJ7EqCstVTzIr0fMr7qul/977en+pQHrfmuKIo6Zr9i75Be21dr3MovcfvGtyvi2HAUrRerWps5sMO9I7WaxDw==}
 
@@ -17780,9 +17832,6 @@ packages:
   underscore@1.13.8:
     resolution: {integrity: sha512-DXtD3ZtEQzc7M8m4cXotyHR+FAS18C64asBYY5vqZexfYryNNnDc02W4hKg3rdQuqOYas1jkseX0+nZXjTXnvQ==}
 
-  undici-types@6.21.0:
-    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
-
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
 
@@ -19956,8 +20005,7 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@esbuild/aix-ppc64@0.24.2':
-    optional: true
+  '@esbuild/aix-ppc64@0.24.2': {}
 
   '@esbuild/aix-ppc64@0.28.1':
     optional: true
@@ -19965,8 +20013,7 @@ snapshots:
   '@esbuild/aix-ppc64@0.28.2':
     optional: true
 
-  '@esbuild/android-arm64@0.24.2':
-    optional: true
+  '@esbuild/android-arm64@0.24.2': {}
 
   '@esbuild/android-arm64@0.28.1':
     optional: true
@@ -19974,8 +20021,7 @@ snapshots:
   '@esbuild/android-arm64@0.28.2':
     optional: true
 
-  '@esbuild/android-arm@0.24.2':
-    optional: true
+  '@esbuild/android-arm@0.24.2': {}
 
   '@esbuild/android-arm@0.28.1':
     optional: true
@@ -19983,8 +20029,7 @@ snapshots:
   '@esbuild/android-arm@0.28.2':
     optional: true
 
-  '@esbuild/android-x64@0.24.2':
-    optional: true
+  '@esbuild/android-x64@0.24.2': {}
 
   '@esbuild/android-x64@0.28.1':
     optional: true
@@ -19992,8 +20037,7 @@ snapshots:
   '@esbuild/android-x64@0.28.2':
     optional: true
 
-  '@esbuild/darwin-arm64@0.24.2':
-    optional: true
+  '@esbuild/darwin-arm64@0.24.2': {}
 
   '@esbuild/darwin-arm64@0.28.1':
     optional: true
@@ -20001,8 +20045,7 @@ snapshots:
   '@esbuild/darwin-arm64@0.28.2':
     optional: true
 
-  '@esbuild/darwin-x64@0.24.2':
-    optional: true
+  '@esbuild/darwin-x64@0.24.2': {}
 
   '@esbuild/darwin-x64@0.28.1':
     optional: true
@@ -20010,8 +20053,7 @@ snapshots:
   '@esbuild/darwin-x64@0.28.2':
     optional: true
 
-  '@esbuild/freebsd-arm64@0.24.2':
-    optional: true
+  '@esbuild/freebsd-arm64@0.24.2': {}
 
   '@esbuild/freebsd-arm64@0.28.1':
     optional: true
@@ -20019,8 +20061,7 @@ snapshots:
   '@esbuild/freebsd-arm64@0.28.2':
     optional: true
 
-  '@esbuild/freebsd-x64@0.24.2':
-    optional: true
+  '@esbuild/freebsd-x64@0.24.2': {}
 
   '@esbuild/freebsd-x64@0.28.1':
     optional: true
@@ -20028,8 +20069,7 @@ snapshots:
   '@esbuild/freebsd-x64@0.28.2':
     optional: true
 
-  '@esbuild/linux-arm64@0.24.2':
-    optional: true
+  '@esbuild/linux-arm64@0.24.2': {}
 
   '@esbuild/linux-arm64@0.28.1':
     optional: true
@@ -20037,8 +20077,7 @@ snapshots:
   '@esbuild/linux-arm64@0.28.2':
     optional: true
 
-  '@esbuild/linux-arm@0.24.2':
-    optional: true
+  '@esbuild/linux-arm@0.24.2': {}
 
   '@esbuild/linux-arm@0.28.1':
     optional: true
@@ -20046,8 +20085,7 @@ snapshots:
   '@esbuild/linux-arm@0.28.2':
     optional: true
 
-  '@esbuild/linux-ia32@0.24.2':
-    optional: true
+  '@esbuild/linux-ia32@0.24.2': {}
 
   '@esbuild/linux-ia32@0.28.1':
     optional: true
@@ -20055,8 +20093,7 @@ snapshots:
   '@esbuild/linux-ia32@0.28.2':
     optional: true
 
-  '@esbuild/linux-loong64@0.24.2':
-    optional: true
+  '@esbuild/linux-loong64@0.24.2': {}
 
   '@esbuild/linux-loong64@0.28.1':
     optional: true
@@ -20064,8 +20101,7 @@ snapshots:
   '@esbuild/linux-loong64@0.28.2':
     optional: true
 
-  '@esbuild/linux-mips64el@0.24.2':
-    optional: true
+  '@esbuild/linux-mips64el@0.24.2': {}
 
   '@esbuild/linux-mips64el@0.28.1':
     optional: true
@@ -20073,8 +20109,7 @@ snapshots:
   '@esbuild/linux-mips64el@0.28.2':
     optional: true
 
-  '@esbuild/linux-ppc64@0.24.2':
-    optional: true
+  '@esbuild/linux-ppc64@0.24.2': {}
 
   '@esbuild/linux-ppc64@0.28.1':
     optional: true
@@ -20082,8 +20117,7 @@ snapshots:
   '@esbuild/linux-ppc64@0.28.2':
     optional: true
 
-  '@esbuild/linux-riscv64@0.24.2':
-    optional: true
+  '@esbuild/linux-riscv64@0.24.2': {}
 
   '@esbuild/linux-riscv64@0.28.1':
     optional: true
@@ -20091,8 +20125,7 @@ snapshots:
   '@esbuild/linux-riscv64@0.28.2':
     optional: true
 
-  '@esbuild/linux-s390x@0.24.2':
-    optional: true
+  '@esbuild/linux-s390x@0.24.2': {}
 
   '@esbuild/linux-s390x@0.28.1':
     optional: true
@@ -20100,8 +20133,7 @@ snapshots:
   '@esbuild/linux-s390x@0.28.2':
     optional: true
 
-  '@esbuild/linux-x64@0.24.2':
-    optional: true
+  '@esbuild/linux-x64@0.24.2': {}
 
   '@esbuild/linux-x64@0.28.1':
     optional: true
@@ -20109,8 +20141,7 @@ snapshots:
   '@esbuild/linux-x64@0.28.2':
     optional: true
 
-  '@esbuild/netbsd-arm64@0.24.2':
-    optional: true
+  '@esbuild/netbsd-arm64@0.24.2': {}
 
   '@esbuild/netbsd-arm64@0.28.1':
     optional: true
@@ -20118,8 +20149,7 @@ snapshots:
   '@esbuild/netbsd-arm64@0.28.2':
     optional: true
 
-  '@esbuild/netbsd-x64@0.24.2':
-    optional: true
+  '@esbuild/netbsd-x64@0.24.2': {}
 
   '@esbuild/netbsd-x64@0.28.1':
     optional: true
@@ -20127,8 +20157,7 @@ snapshots:
   '@esbuild/netbsd-x64@0.28.2':
     optional: true
 
-  '@esbuild/openbsd-arm64@0.24.2':
-    optional: true
+  '@esbuild/openbsd-arm64@0.24.2': {}
 
   '@esbuild/openbsd-arm64@0.28.1':
     optional: true
@@ -20136,8 +20165,7 @@ snapshots:
   '@esbuild/openbsd-arm64@0.28.2':
     optional: true
 
-  '@esbuild/openbsd-x64@0.24.2':
-    optional: true
+  '@esbuild/openbsd-x64@0.24.2': {}
 
   '@esbuild/openbsd-x64@0.28.1':
     optional: true
@@ -20151,8 +20179,7 @@ snapshots:
   '@esbuild/openharmony-arm64@0.28.2':
     optional: true
 
-  '@esbuild/sunos-x64@0.24.2':
-    optional: true
+  '@esbuild/sunos-x64@0.24.2': {}
 
   '@esbuild/sunos-x64@0.28.1':
     optional: true
@@ -20160,8 +20187,7 @@ snapshots:
   '@esbuild/sunos-x64@0.28.2':
     optional: true
 
-  '@esbuild/win32-arm64@0.24.2':
-    optional: true
+  '@esbuild/win32-arm64@0.24.2': {}
 
   '@esbuild/win32-arm64@0.28.1':
     optional: true
@@ -20169,8 +20195,7 @@ snapshots:
   '@esbuild/win32-arm64@0.28.2':
     optional: true
 
-  '@esbuild/win32-ia32@0.24.2':
-    optional: true
+  '@esbuild/win32-ia32@0.24.2': {}
 
   '@esbuild/win32-ia32@0.28.1':
     optional: true
@@ -20178,8 +20203,7 @@ snapshots:
   '@esbuild/win32-ia32@0.28.2':
     optional: true
 
-  '@esbuild/win32-x64@0.24.2':
-    optional: true
+  '@esbuild/win32-x64@0.24.2': {}
 
   '@esbuild/win32-x64@0.28.1':
     optional: true
@@ -23351,10 +23375,6 @@ snapshots:
   '@types/minimist@1.2.5': {}
 
   '@types/ms@2.1.0': {}
-
-  '@types/node@22.20.2':
-    dependencies:
-      undici-types: 6.21.0
 
   '@types/node@24.13.4':
     dependencies:
@@ -26734,7 +26754,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.20.2
+      '@types/node': 24.13.4
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -30037,8 +30057,6 @@ snapshots:
       quansync: 1.0.0
 
   underscore@1.13.8: {}
-
-  undici-types@6.21.0: {}
 
   undici-types@7.18.2: {}
 

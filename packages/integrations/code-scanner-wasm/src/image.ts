@@ -63,6 +63,17 @@ function percentileValue(histogram: Uint32Array, total: number, percentile: numb
   return last;
 }
 
+/**
+ * Scales an individual luma value into the clamped [0, 255] byte range.
+ */
+function scaleLumaValue(value: number, low: number, scale: number): number {
+  const scaled = (value - low) * scale;
+  return Math.min(255, Math.max(0, Math.round(scaled)));
+}
+
+/**
+ * Scales luma buffer values in place to fit the dynamic range between the low and high percentiles.
+ */
 function stretchLumaInPlace(width: number, height: number, data: Uint8Array, histogram: Uint32Array): LumaImage {
   const pixels = data.length;
   const low = percentileValue(histogram, pixels, DEFAULT_LOW_PERCENTILE);
@@ -71,8 +82,7 @@ function stretchLumaInPlace(width: number, height: number, data: Uint8Array, his
 
   const scale = 255 / (high - low);
   for (let index = 0; index < pixels; index += 1) {
-    const scaled = (data[index] - low) * scale;
-    data[index] = scaled <= 0 ? 0 : scaled >= 255 ? 255 : Math.round(scaled);
+    data[index] = scaleLumaValue(data[index], low, scale);
   }
   return { width, height, data };
 }
@@ -95,8 +105,8 @@ function stretchLumaInPlace(width: number, height: number, data: Uint8Array, his
  */
 export function contrastStretchLuma(
   luma: LumaImage,
-  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
-  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+  lowPercentile = DEFAULT_LOW_PERCENTILE,
+  highPercentile = DEFAULT_HIGH_PERCENTILE,
 ): LumaImage {
   const { width, height, data } = luma;
   const pixels = data.length;
@@ -116,8 +126,7 @@ export function contrastStretchLuma(
   const scale = 255 / (high - low);
   const stretched = new Uint8Array(pixels);
   for (let index = 0; index < pixels; index += 1) {
-    const scaled = (data[index] - low) * scale;
-    stretched[index] = scaled <= 0 ? 0 : scaled >= 255 ? 255 : Math.round(scaled);
+    stretched[index] = scaleLumaValue(data[index], low, scale);
   }
   return { width, height, data: stretched };
 }
