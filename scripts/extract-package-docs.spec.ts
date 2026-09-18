@@ -86,7 +86,7 @@ describe('package API documentation extraction', () => {
 
   it('extracts public exports from an entrypoint and excludes implementation helpers', async () => {
     const symbols = await extractTypeScriptSymbols(
-      fileURLToPath(new URL('../packages/integrations/barcode', import.meta.url)),
+      fileURLToPath(new URL('../packages/integrations/barcode-wasm', import.meta.url)),
       {
         exports: { '.': { types: './dist/index.d.ts' } },
       },
@@ -94,7 +94,7 @@ describe('package API documentation extraction', () => {
 
     expect(symbols.some(({ name }) => name === 'encodeBarcode')).toBe(true);
     expect(symbols.some(({ name }) => name === 'encodeBarcodeAsync')).toBe(true);
-    expect(symbols.every(({ name }) => name !== 'encodeRawBarcode')).toBe(true);
+    expect(symbols.every(({ name }) => name !== 'encodeNative')).toBe(true);
   });
 
   it('renders constant signatures without duplicating the binding name', async () => {
