@@ -1,5 +1,19 @@
 # @mission-platform/components
 
+## 3.2.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-adapters@1.2.1
+  - @mission-platform/forge-jsx@2.0.1
+  - @mission-platform/forms-core@0.3.2
+  - @mission-platform/icons@2.0.3
+  - @mission-platform/phone-number@0.3.4
+  - @mission-platform/tokens@2.0.1
+  - @mission-platform/typography@1.1.2
+
 ## 3.2.0
 ### Minor Changes
 

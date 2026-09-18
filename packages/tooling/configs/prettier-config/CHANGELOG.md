@@ -1,5 +1,11 @@
 # @mission-platform/prettier-config
 
+## 0.1.8
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.1.7
 
 ### Patch Changes

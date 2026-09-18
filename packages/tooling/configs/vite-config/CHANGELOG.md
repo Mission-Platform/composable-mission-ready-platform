@@ -1,5 +1,13 @@
 # @mission-platform/vite-config
 
+## 1.1.3
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/postcss-config@0.1.5
+
 ## 1.1.2
 ### Patch Changes
 

@@ -1,5 +1,11 @@
 # @mission-platform/vite-plugin-assemblyscript
 
+## 0.1.3
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.1.2
 ### Patch Changes
 

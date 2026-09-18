@@ -1,5 +1,16 @@
 # @mission-platform/forge-cms-plugin-api
 
+## 1.0.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-plugin-api@0.4.1
+  - @mission-platform/tsdown-config@0.2.4
+  - @mission-platform/vite-config@1.1.3
+  - @mission-platform/vite-plugin-forge@2.0.1
+
 ## 1.0.0
 ### Major Changes
 

@@ -1,5 +1,11 @@
 # @mission-platform/tsdown-config
 
+## 0.2.4
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.2.3
 ### Patch Changes
 

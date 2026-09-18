@@ -1,5 +1,11 @@
 # @mission-platform/typescript-config
 
+## 0.4.2
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.4.1
 
 ### Patch Changes

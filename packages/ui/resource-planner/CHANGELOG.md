@@ -1,5 +1,16 @@
 # @mission-platform/resource-planner
 
+## 1.2.2
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-adapters@1.2.1
+  - @mission-platform/forge-jsx@2.0.1
+  - @mission-platform/scheduler@0.3.2
+  - @mission-platform/vcard@0.2.3
+
 ## 1.2.1
 ### Patch Changes
 

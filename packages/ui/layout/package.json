@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/layouts",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "publishConfig": {
     "access": "public"
   },

@@ -1,5 +1,15 @@
 # @mission-platform/vite-plugin-forge
 
+## 2.0.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-jsx@2.0.1
+  - @mission-platform/forge-plugin-api@0.4.1
+  - @mission-platform/forge-router-plugin-api@0.1.3
+
 ## 2.0.0
 ### Major Changes
 

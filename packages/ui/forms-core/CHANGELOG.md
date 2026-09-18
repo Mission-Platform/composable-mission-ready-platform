@@ -1,5 +1,11 @@
 # @mission-platform/forms-core
 
+## 0.3.2
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.3.1
 
 ### Patch Changes

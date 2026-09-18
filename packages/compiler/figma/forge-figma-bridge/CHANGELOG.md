@@ -1,5 +1,13 @@
 # @mission-platform/forge-figma-bridge
 
+## 0.1.2
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-figma@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

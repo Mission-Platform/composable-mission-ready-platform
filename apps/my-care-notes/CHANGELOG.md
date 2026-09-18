@@ -1,5 +1,26 @@
 # @mission-platform/my-care-notes
 
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [cb5f5ca]
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/seo@0.3.5
+  - @mission-platform/breakpoints@6.0.3
+  - @mission-platform/components@3.2.1
+  - @mission-platform/content@1.2.1
+  - @mission-platform/float@1.2.1
+  - @mission-platform/forms@2.2.1
+  - @mission-platform/harper@0.2.3
+  - @mission-platform/hunspell@0.4.3
+  - @mission-platform/i18n@2.1.3
+  - @mission-platform/icons@2.0.3
+  - @mission-platform/layouts@2.1.2
+  - @mission-platform/select@1.2.1
+  - @mission-platform/theme@1.1.2
+  - @mission-platform/tokens@2.0.1
+
 ## 0.0.16
 ### Patch Changes
 

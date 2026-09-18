@@ -1,5 +1,11 @@
 # @mission-platform/forge-jsx
 
+## 2.0.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 2.0.0
 ### Major Changes
 

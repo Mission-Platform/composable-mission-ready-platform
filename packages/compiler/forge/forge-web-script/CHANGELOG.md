@@ -1,5 +1,15 @@
 # @mission-platform/forge-web-script
 
+## 0.3.1
+
+### Patch Changes
+
+- 8f103a6: refactor(compiler): prune cache growth, lift scanner wasm package, and modularize compiler
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-web-script-regex@0.3.1
+  - @mission-platform/forge-web-script-wasm@1.0.1
+
 ## 0.3.0
 ### Minor Changes
 

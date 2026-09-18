@@ -1,5 +1,11 @@
 # @mission-platform/router
 
+## 1.1.2
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 1.1.1
 ### Patch Changes
 
