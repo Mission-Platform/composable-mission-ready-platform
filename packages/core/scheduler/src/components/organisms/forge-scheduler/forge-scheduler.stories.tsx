@@ -1,5 +1,6 @@
-import { ForgeScheduler } from '@mission-platform/scheduler';
 import { useArgs } from 'storybook/preview-api';
+
+import { ForgeScheduler } from '@mission-platform/scheduler';
 
 import type { VEvent } from './forge-scheduler';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

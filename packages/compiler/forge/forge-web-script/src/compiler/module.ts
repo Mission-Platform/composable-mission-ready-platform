@@ -7,6 +7,8 @@ import {
   persistForgeWebScriptSoN,
   persistForgeWebScriptWat,
   pruneStaleForgeWebScriptCache,
+  type ForgeWebScriptDebugArtifactPaths,
+  type ForgeWebScriptWatCache,
 } from '../cache.js';
 import { createDiagnostic, type ForgeWebScriptDiagnostic } from '../diagnostics.js';
 import { prepareForgeWebScriptFrontend, prepareForgeWebScriptGraphFrontend } from '../frontend.js';
@@ -23,7 +25,7 @@ import {
 import { createDeclarations } from './declarations.js';
 import { createEsmSource } from './esm.js';
 
-import type { ForgeWebScriptAnalysisOptions } from '../analysis/contracts.js';
+import type { ForgeWebScriptAnalysisOptions, ForgeWebScriptAnalysisReport } from '../analysis/contracts.js';
 import type {
   ForgeWebScriptArtifact,
   ForgeWebScriptCompileInput,
@@ -35,23 +37,29 @@ import type {
 } from '../contracts.js';
 
 /**
+ * Resolves the analysis policy merged with any requested capabilities.
+ */
+function resolveAnalysisPolicy(input: ForgeWebScriptCompileInput): ForgeWebScriptAnalysisOptions['policy'] {
+  const nested = input.analysis ?? {};
+  const basePolicy = nested.policy ?? input.analysisPolicy;
+  if (basePolicy === undefined) return undefined;
+  if (input.requestedCapabilities !== undefined && basePolicy.allowedCapabilities === undefined) {
+    return { ...basePolicy, allowedCapabilities: input.requestedCapabilities };
+  }
+  return basePolicy;
+}
+
+/**
  * Resolves static analysis options from compilation input and policy settings.
  */
 export function analysisOptions(input: ForgeWebScriptCompileInput): ForgeWebScriptAnalysisOptions {
-  const nested = input.analysis ?? {};
-  const basePolicy = nested.policy ?? input.analysisPolicy;
-  const policy =
-    input.requestedCapabilities !== undefined && basePolicy?.allowedCapabilities === undefined
-      ? { ...basePolicy, allowedCapabilities: input.requestedCapabilities }
-      : basePolicy;
-
-  return {
-    ...nested,
-    ...(input.targetFeatures === undefined ? {} : { targetFeatures: input.targetFeatures }),
-    ...(policy === undefined ? {} : { policy }),
-    ...(input.analysisRules === undefined ? {} : { rules: input.analysisRules }),
-    ...(input.analysisSourceMap === undefined ? {} : { sourceMap: input.analysisSourceMap }),
-  };
+  const policy = resolveAnalysisPolicy(input);
+  const overrides: Record<string, unknown> = {};
+  if (policy !== undefined) overrides.policy = policy;
+  if (input.targetFeatures !== undefined) overrides.targetFeatures = input.targetFeatures;
+  if (input.analysisRules !== undefined) overrides.rules = input.analysisRules;
+  if (input.analysisSourceMap !== undefined) overrides.sourceMap = input.analysisSourceMap;
+  return Object.assign({}, input.analysis, overrides);
 }
 
 /**
@@ -73,6 +81,63 @@ function formatEnumDeclarations(
 }
 
 /**
+ * Prepares the WAT cache options including the attached compiler logger.
+ */
+function buildWatCache(input: ForgeWebScriptCompileInput): ForgeWebScriptWatCache | undefined {
+  if (input.watCache === undefined) return undefined;
+  if (input.logger === undefined) return input.watCache;
+  return { ...input.watCache, logger: input.logger };
+}
+
+/**
+ * Persists frontend SonIR graphs to cache if enabled.
+ */
+function persistSonIrArtifacts(
+  cache: ForgeWebScriptWatCache | undefined,
+  cacheKey: string,
+  frontend: ForgeWebScriptFrontendResult,
+  isDebug: boolean,
+) {
+  let sonIrPath: string | undefined;
+  let unoptimizedSonIrPath: string | undefined;
+  if (frontend.sonIr !== undefined) {
+    sonIrPath = persistForgeWebScriptSoN(cache, cacheKey, frontend.sonIr);
+  }
+  if (isDebug && frontend.unoptimizedSonIr !== undefined) {
+    unoptimizedSonIrPath = persistForgeWebScriptSoN(cache, cacheKey, frontend.unoptimizedSonIr, 'unoptimized');
+  }
+  return { sonIrPath, unoptimizedSonIrPath };
+}
+
+/**
+ * Persists backend debug artifacts (WAT, WASM) to cache if debug optimization is selected.
+ */
+function persistDebugArtifacts(
+  cache: ForgeWebScriptWatCache | undefined,
+  cacheKey: string,
+  backend: ForgeWebScriptBackendCompilationResult,
+  isDebug: boolean,
+): {
+  readonly debugPaths: Partial<ForgeWebScriptDebugArtifactPaths>;
+  readonly watPath: string | undefined;
+  readonly debugArtifacts: unknown;
+} {
+  if (!isDebug || cache === undefined || cache.writeBinaryAtomic === undefined) {
+    const watPath = persistForgeWebScriptWat(cache, cacheKey, backend.wat ?? '');
+    return { debugPaths: {}, watPath, debugArtifacts: undefined };
+  }
+  const debugArtifacts = {
+    optimizedWat: backend.wat,
+    unoptimizedWat: backend.unoptimizedWat,
+    optimizedWasm: backend.wasm,
+    unoptimizedWasm: backend.unoptimizedWasm,
+  };
+  const debugPaths = persistForgeWebScriptDebugArtifacts(cache, cacheKey, debugArtifacts);
+  const watPath = debugPaths.optimizedWatPath ?? persistForgeWebScriptWat(cache, cacheKey, backend.wat ?? '');
+  return { debugPaths, watPath, debugArtifacts };
+}
+
+/**
  * Persists compiled SonIR, WAT, and Wasm debug artifacts to cache and prunes stale artifacts.
  */
 function persistModuleCache(
@@ -82,33 +147,10 @@ function persistModuleCache(
   backend: ForgeWebScriptBackendCompilationResult,
   optimization: 'debug' | 'release',
 ) {
-  const cache =
-    input.watCache === undefined
-      ? undefined
-      : { ...input.watCache, ...(input.logger === undefined ? {} : { logger: input.logger }) };
-
-  const sonIrPath =
-    frontend.sonIr === undefined ? undefined : persistForgeWebScriptSoN(cache, cacheKey, frontend.sonIr);
-  const unoptimizedSonIrPath =
-    optimization === 'debug' && frontend.unoptimizedSonIr !== undefined
-      ? persistForgeWebScriptSoN(cache, cacheKey, frontend.unoptimizedSonIr, 'unoptimized')
-      : undefined;
-
-  const debugArtifacts =
-    optimization === 'debug'
-      ? {
-          optimizedWat: backend.wat,
-          unoptimizedWat: backend.unoptimizedWat,
-          optimizedWasm: backend.wasm,
-          unoptimizedWasm: backend.unoptimizedWasm,
-        }
-      : undefined;
-
-  const debugPaths =
-    cache?.writeBinaryAtomic === undefined
-      ? {}
-      : persistForgeWebScriptDebugArtifacts(cache, cacheKey, debugArtifacts ?? {});
-  const watPath = debugPaths.optimizedWatPath ?? persistForgeWebScriptWat(cache, cacheKey, backend.wat ?? '');
+  const cache = buildWatCache(input);
+  const isDebug = optimization === 'debug';
+  const { sonIrPath, unoptimizedSonIrPath } = persistSonIrArtifacts(cache, cacheKey, frontend, isDebug);
+  const { debugPaths, watPath, debugArtifacts } = persistDebugArtifacts(cache, cacheKey, backend, isDebug);
 
   const writtenFiles = [
     sonIrPath,
@@ -123,6 +165,122 @@ function persistModuleCache(
   pruneStaleForgeWebScriptCache(cache, input.fileName, cacheKey, writtenFiles);
 
   return { sonIrPath, unoptimizedSonIrPath, debugPaths, watPath, debugArtifacts };
+}
+
+/**
+ * Checks whether any mandatory frontend compiler structures are missing.
+ */
+function isFrontendIncomplete(frontend: ForgeWebScriptFrontendResult): boolean {
+  return [frontend.optimizedModule, frontend.abi, frontend.ir, frontend.optimizedIr].includes(undefined);
+}
+
+/**
+ * Determines whether compilation should abort early due to frontend diagnostics or missing IR.
+ */
+function hasFrontendErrors(frontend: ForgeWebScriptFrontendResult, analysis: ForgeWebScriptAnalysisReport): boolean {
+  if (frontend.diagnostics.length > 0 || analysis.blockingFindings.length > 0) return true;
+  return isFrontendIncomplete(frontend);
+}
+
+/**
+ * Builds the backend compiler configuration from frontend artifacts and options.
+ */
+function buildBackendCompileInput(
+  input: ForgeWebScriptCompileInput,
+  frontend: ForgeWebScriptFrontendResult,
+  sourceFiles: readonly string[],
+  graphHash: string | undefined,
+  optimization: 'debug' | 'release',
+) {
+  const ir = frontend.ir as NonNullable<typeof frontend.ir>;
+  const optimizedIr = frontend.optimizedIr as NonNullable<typeof frontend.optimizedIr>;
+  const manifest = frontend.abi as NonNullable<typeof frontend.abi>;
+
+  const metadata: Record<string, unknown> = {
+    compilerVersion: input.compilerVersion,
+    optimization,
+    sourceFiles,
+    sourceHash: sourceHashForArtifact(input.source, input.fileName),
+    memoryModel: 'region-arc-checked-linear' as const,
+    boundsChecks: input.boundsChecks ?? 'runtime',
+  };
+  if (graphHash !== undefined) metadata.graphHash = graphHash;
+  if (input.targetFeatures !== undefined) metadata.targetFeatures = input.targetFeatures;
+  if (input.compilerHints !== undefined) metadata.compilerHints = input.compilerHints;
+  if (frontend.sonIr !== undefined) {
+    metadata.sonSchemaVersion = frontend.sonIr.schemaVersion;
+    metadata.sonGraphHash = frontend.sonIr.graphHash;
+    metadata.sonOptimizationPasses = frontend.sonIr.optimizationReport?.passes.map(({ name }) => name);
+  }
+  if (input.logger !== undefined) metadata.loggerScope = input.logger.scope;
+
+  return {
+    ir: {
+      ...ir,
+      memoryModel: 'region-arc-checked-linear' as const,
+      enumDeclarations: formatEnumDeclarations(ir.enums),
+      aggregateLayouts: manifest.aggregateLayouts,
+    } as unknown as Parameters<typeof compileForgeWebScriptWasm>[0]['ir'],
+    optimizedIr: {
+      ...optimizedIr,
+      memoryModel: 'region-arc-checked-linear' as const,
+      enumDeclarations: formatEnumDeclarations(optimizedIr.enums),
+      aggregateLayouts: manifest.aggregateLayouts,
+    } as unknown as Parameters<typeof compileForgeWebScriptWasm>[0]['optimizedIr'],
+    abi: manifest,
+    links: frontend.links,
+    metadata: metadata as unknown as Parameters<typeof compileForgeWebScriptWasm>[0]['metadata'],
+    logger: input.logger,
+  };
+}
+
+/**
+ * Computes deterministic disk cache key for a compiled module.
+ */
+function computeModuleCacheKey(
+  input: ForgeWebScriptCompileInput,
+  frontend: ForgeWebScriptFrontendResult,
+  moduleName: string,
+  sourceFiles: readonly string[],
+  graphHash: string | undefined,
+  optimization: 'debug' | 'release',
+  analysis: ForgeWebScriptAnalysisReport,
+): string {
+  const options = analysisOptions(input);
+  return forgeWebScriptWatCacheKey({
+    compilerVersion: input.compilerVersion,
+    optimization,
+    graphHash,
+    sourceGraph: sourceFiles.map((fileName) => ({
+      fileName,
+      moduleId: moduleName,
+      contentHash: hashBytes(encoder.encode(input.source)),
+    })),
+    linkConfiguration: input.linkConfiguration,
+    standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
+    targetFeatures: input.targetFeatures,
+    compilerHints: input.compilerHints,
+    loggerScope: input.logger?.scope,
+    analysisPolicy: analysis.policy,
+    analysisRuleIds: options.rules?.map(({ id }) => id).toSorted(),
+    analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
+    sonSchemaVersion: frontend.sonIr?.schemaVersion,
+    sonGraphHash: frontend.sonIr?.graphHash,
+    memoryModel: 'region-arc-checked-linear',
+    boundsChecks: input.boundsChecks ?? 'runtime',
+  });
+}
+
+/**
+ * Copies non-undefined fields from source into target.
+ */
+function copyDefinedProperties<T extends object>(target: T, source: Record<string, unknown>): T {
+  for (const [key, value] of Object.entries(source)) {
+    if (value !== undefined) {
+      (target as Record<string, unknown>)[key] = value;
+    }
+  }
+  return target;
 }
 
 /**
@@ -146,59 +304,22 @@ export function compileForgeWebScriptModule(
       `${input.fileName}\0${input.source}\0${input.compilerVersion}\0${input.requireExports ?? true}\0${graphMetadata.graphHash ?? ''}\0${input.logger?.scope ?? ''}\0${JSON.stringify(forgeWebScriptStandardLibraryIdentity(input.standardLibrary))}`,
     ),
   );
-  if (
-    frontend.diagnostics.length > 0 ||
-    analysis.blockingFindings.length > 0 ||
-    frontend.optimizedModule === undefined ||
-    frontend.abi === undefined ||
-    frontend.ir === undefined ||
-    frontend.optimizedIr === undefined
-  ) {
+  if (hasFrontendErrors(frontend, analysis)) {
     return { esmSource: '', declarations: '', contentHash: emptyHash, diagnostics, analysis, ...graphMetadata };
   }
   const optimization = input.optimization ?? (frontend.links.linkProfile === undefined ? 'debug' : 'release');
-  const module = frontend.optimizedModule;
-  const manifest = frontend.abi;
-  const ir = frontend.ir;
-  const optimizedIr = frontend.optimizedIr;
+  const module = frontend.optimizedModule as NonNullable<typeof frontend.optimizedModule>;
+  const manifest = frontend.abi as NonNullable<typeof frontend.abi>;
 
+  const backendCompileInput = buildBackendCompileInput(
+    input,
+    frontend,
+    sourceFiles,
+    graphMetadata.graphHash,
+    optimization,
+  );
   const backend = compileForgeWebScriptWasm(
-    {
-      ir: {
-        ...ir,
-        memoryModel: 'region-arc-checked-linear' as const,
-        enumDeclarations: formatEnumDeclarations(ir.enums),
-        aggregateLayouts: manifest.aggregateLayouts,
-      } as unknown as Parameters<typeof compileForgeWebScriptWasm>[0]['ir'],
-      optimizedIr: {
-        ...optimizedIr,
-        memoryModel: 'region-arc-checked-linear' as const,
-        enumDeclarations: formatEnumDeclarations(optimizedIr.enums),
-        aggregateLayouts: manifest.aggregateLayouts,
-      } as unknown as Parameters<typeof compileForgeWebScriptWasm>[0]['optimizedIr'],
-      abi: manifest,
-      links: frontend.links,
-      metadata: {
-        compilerVersion: input.compilerVersion,
-        optimization,
-        sourceFiles,
-        sourceHash: sourceHashForArtifact(input.source, input.fileName),
-        memoryModel: 'region-arc-checked-linear' as const,
-        ...(graphMetadata.graphHash === undefined ? {} : { graphHash: graphMetadata.graphHash }),
-        ...(input.targetFeatures === undefined ? {} : { targetFeatures: input.targetFeatures }),
-        ...(input.compilerHints === undefined ? {} : { compilerHints: input.compilerHints }),
-        boundsChecks: input.boundsChecks ?? 'runtime',
-        ...(frontend.sonIr === undefined
-          ? {}
-          : {
-              sonSchemaVersion: frontend.sonIr.schemaVersion,
-              sonGraphHash: frontend.sonIr.graphHash,
-              sonOptimizationPasses: frontend.sonIr.optimizationReport?.passes.map(({ name }) => name),
-            }),
-        ...(input.logger === undefined ? {} : { loggerScope: input.logger.scope }),
-      },
-      logger: input.logger,
-    },
+    backendCompileInput,
     input.fileName,
   ) as unknown as ForgeWebScriptBackendCompilationResult;
   const backendDiagnostics = backend.diagnostics as readonly ForgeWebScriptDiagnostic[];
@@ -214,7 +335,6 @@ export function compileForgeWebScriptModule(
   }
   const wasm = backend.wasm;
   const wat = backend.wat ?? '';
-  const sourceMap = backend.sourceMap;
   const contentHash = hashBytes(wasm);
   const dynamicMetadata = dynamicLinkMetadata(manifest, contentHash);
   const esmSource = createEsmSource(wasm, manifest, backend.iteratorExports ?? [], dynamicMetadata);
@@ -251,30 +371,15 @@ export function compileForgeWebScriptModule(
       ...graphMetadata,
     };
   }
-  const cacheKey = forgeWebScriptWatCacheKey({
-    compilerVersion: input.compilerVersion,
+  const cacheKey = computeModuleCacheKey(
+    input,
+    frontend,
+    module.name,
+    sourceFiles,
+    graphMetadata.graphHash,
     optimization,
-    graphHash: graphMetadata.graphHash,
-    sourceGraph: sourceFiles.map((fileName) => ({
-      fileName,
-      moduleId: module.name,
-      contentHash: hashBytes(encoder.encode(input.source)),
-    })),
-    linkConfiguration: input.linkConfiguration,
-    standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
-    targetFeatures: input.targetFeatures,
-    compilerHints: input.compilerHints,
-    loggerScope: input.logger?.scope,
-    analysisPolicy: analysis.policy,
-    analysisRuleIds: analysisOptions(input)
-      .rules?.map(({ id }) => id)
-      .toSorted(),
-    analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
-    sonSchemaVersion: frontend.sonIr?.schemaVersion,
-    sonGraphHash: frontend.sonIr?.graphHash,
-    memoryModel: 'region-arc-checked-linear',
-    boundsChecks: input.boundsChecks ?? 'runtime',
-  });
+    analysis,
+  );
 
   const { sonIrPath, unoptimizedSonIrPath, debugPaths, watPath, debugArtifacts } = persistModuleCache(
     input,
@@ -284,34 +389,36 @@ export function compileForgeWebScriptModule(
     optimization,
   );
 
-  input.logger?.log('info', 'compile.complete', { fileName: input.fileName, contentHash: hashBytes(wasm) });
-  return {
+  input.logger?.log('info', 'compile.complete', { fileName: input.fileName, contentHash });
+  const artifact: ForgeWebScriptArtifact = {
     wasm,
     esmSource,
     declarations: createDeclarations(manifest),
     manifest,
-    ...(sourceMap === undefined ? {} : { sourceMap }),
     contentHash,
     wat,
-    ...(watPath === undefined ? {} : { watPath }),
-    ...(sonIrPath === undefined ? {} : { sonIrPath }),
-    ...(unoptimizedSonIrPath === undefined ? {} : { unoptimizedSonIrPath }),
-    ...(debugPaths.unoptimizedWatPath === undefined ? {} : { unoptimizedWatPath: debugPaths.unoptimizedWatPath }),
-    ...(debugPaths.optimizedWasmPath === undefined ? {} : { optimizedWasmPath: debugPaths.optimizedWasmPath }),
-    ...(debugPaths.unoptimizedWasmPath === undefined ? {} : { unoptimizedWasmPath: debugPaths.unoptimizedWasmPath }),
-    ...(debugArtifacts === undefined ? {} : { debugArtifacts }),
-    ...(backend.iteratorExports === undefined ? {} : { iteratorExports: backend.iteratorExports }),
-    ...(input.targetFeatures === undefined ? {} : { targetFeatures: input.targetFeatures }),
-    ...(input.compilerHints === undefined ? {} : { compilerHints: input.compilerHints }),
     optimizationReport: frontend.optimizationReport,
     sonIr: frontend.sonIr,
     sonOptimizationReport: frontend.sonOptimizationReport,
-    ...(dynamicMetadata === undefined ? {} : { dynamicLinkMetadata: dynamicMetadata }),
     diagnostics: [...analysis.diagnostics, ...verificationDiagnostics],
     analysis,
     artifactVerification,
     ...graphMetadata,
   };
+  return copyDefinedProperties(artifact, {
+    sourceMap: backend.sourceMap,
+    watPath,
+    sonIrPath,
+    unoptimizedSonIrPath,
+    unoptimizedWatPath: debugPaths.unoptimizedWatPath,
+    optimizedWasmPath: debugPaths.optimizedWasmPath,
+    unoptimizedWasmPath: debugPaths.unoptimizedWasmPath,
+    debugArtifacts,
+    iteratorExports: backend.iteratorExports,
+    targetFeatures: input.targetFeatures,
+    compilerHints: input.compilerHints,
+    dynamicLinkMetadata: dynamicMetadata,
+  });
 }
 
 /**
@@ -404,6 +511,52 @@ export function selfHostedDiagnostic(
 }
 
 /**
+ * Formats a diagnostic for parity check failures in self-hosted execution.
+ */
+function formatSelfHostedFailureDiagnostic(
+  input: Pick<ForgeWebScriptCompileInput, 'fileName'>,
+  failed: ForgeWebScriptSelfHostedStageReport,
+  mode: string,
+): ForgeWebScriptDiagnostic {
+  const expected = failed.expectedOutputHash ?? failed.expectedLexFingerprint;
+  const received = failed.outputHash ?? failed.lexFingerprint;
+  const stageName = failed.stage ?? 'lex';
+  return selfHostedDiagnostic(
+    input,
+    `FWS VM ${stageName} stage parity failed in ${mode} mode: expected ${expected}, received ${received}.`,
+    failed.stage,
+  );
+}
+
+/**
+ * Formats caught exceptions from self-hosted execution into an error string.
+ */
+function formatBootstrapError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+/**
+ * Executes the self-hosted compiler stage runner and inspects parity reports.
+ */
+function executeSelfHostedStage(
+  runner: NonNullable<ForgeWebScriptCompilerServiceOptions['selfHostedRunner']>,
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: 'interpret' | 'jit' | 'aot',
+) {
+  const report = runner(input, mode);
+  const stageReports = report.stageReports ? [report, ...report.stageReports] : [report];
+  const failed = stageReports.find(({ parity }) => !parity);
+  if (failed !== undefined) {
+    return {
+      report,
+      stageReports,
+      diagnostic: formatSelfHostedFailureDiagnostic(input, failed, mode),
+    };
+  }
+  return { report, stageReports };
+}
+
+/**
  * Executes a self-hosted compiler stage and validates parity reports against expected fingerprints.
  */
 export function runSelfHostedStage(
@@ -417,27 +570,13 @@ export function runSelfHostedStage(
   if (options.selfHostedRunner === undefined) return {};
   const mode = options.selfHostedVmMode ?? 'interpret';
   try {
-    const report = options.selfHostedRunner(input, mode);
-    const stageReports = [report, ...(report.stageReports ?? [])];
-    const failed = stageReports.find(({ parity }) => !parity);
-    if (failed === undefined) return { report, stageReports };
-
-    const expected = failed.expectedOutputHash ?? failed.expectedLexFingerprint;
-    const received = failed.outputHash ?? failed.lexFingerprint;
-    const stageName = failed.stage ?? 'lex';
+    return executeSelfHostedStage(options.selfHostedRunner, input, mode);
+  } catch (error: unknown) {
     return {
-      report,
-      stageReports,
       diagnostic: selfHostedDiagnostic(
         input,
-        `FWS VM ${stageName} stage parity failed in ${mode} mode: expected ${expected}, received ${received}.`,
-        failed.stage,
+        `FWS VM bootstrap failed in ${mode} mode: ${formatBootstrapError(error)}`,
       ),
-    };
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    return {
-      diagnostic: selfHostedDiagnostic(input, `FWS VM bootstrap failed in ${mode} mode: ${message}`),
     };
   }
 }

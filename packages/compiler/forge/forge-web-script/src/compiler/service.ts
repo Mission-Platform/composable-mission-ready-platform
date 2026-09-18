@@ -39,27 +39,53 @@ function keyFor(input: ForgeWebScriptCompileInput, selfHostedVmMode: string): st
 }
 
 /**
+ * Resolves analysis policy, rules, and source-map configurations for graph compilation.
+ */
+function resolveGraphAnalysisSettings(input: ForgeWebScriptGraphCompileInput) {
+  const analysis = input.analysis;
+  return {
+    policy: input.analysisPolicy ?? analysis?.policy,
+    rules: input.analysisRules ?? analysis?.rules,
+    sourceMap: input.analysisSourceMap ?? analysis?.sourceMap,
+  };
+}
+
+/**
+ * Extracts optional compiler settings and cache metadata for graph compilation.
+ */
+function resolveGraphKeyMetadata(input: ForgeWebScriptGraphCompileInput) {
+  const capabilities = input.requestedCapabilities ? [...input.requestedCapabilities].toSorted() : [];
+  return {
+    capabilities,
+    requireExports: input.requireExports ?? true,
+    optimization: input.optimization ?? 'debug',
+    loggerScope: input.logger ? input.logger.scope : undefined,
+    watCacheRoot: input.watCache ? input.watCache.root : undefined,
+  };
+}
+
+/**
  * Computes an in-memory compiler cache key for module graph compilation.
  */
 function graphKeyFor(input: ForgeWebScriptGraphCompileInput, selfHostedVmMode: string): string {
-  const analysisPolicy = input.analysisPolicy ?? input.analysis?.policy;
-  const analysisRules = input.analysisRules ?? input.analysis?.rules;
+  const analysis = resolveGraphAnalysisSettings(input);
+  const metadata = resolveGraphKeyMetadata(input);
   return JSON.stringify({
     graphHash: hashForgeWebScriptModuleGraph(input.graph, input.linkConfiguration),
     entryFileName: input.entryFileName,
     compilerVersion: input.compilerVersion,
-    requireExports: input.requireExports ?? true,
-    optimization: input.optimization ?? 'debug',
-    loggerScope: input.logger?.scope,
-    requestedCapabilities: [...(input.requestedCapabilities ?? [])].toSorted(),
-    watCacheRoot: input.watCache?.root,
+    requireExports: metadata.requireExports,
+    optimization: metadata.optimization,
+    loggerScope: metadata.loggerScope,
+    requestedCapabilities: metadata.capabilities,
+    watCacheRoot: metadata.watCacheRoot,
     linkConfiguration: input.linkConfiguration,
     standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
     targetFeatures: input.targetFeatures,
     compilerHints: input.compilerHints,
-    analysisPolicy,
-    analysisRuleIds: analysisRules?.map(({ id }) => id).toSorted(),
-    analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
+    analysisPolicy: analysis.policy,
+    analysisRuleIds: analysis.rules ? analysis.rules.map(({ id }) => id).toSorted() : undefined,
+    analysisSourceMap: analysis.sourceMap,
     selfHostedVmMode,
   });
 }
@@ -86,6 +112,37 @@ function shouldInvalidateGraphEntry(entry: { readonly input: ForgeWebScriptGraph
     entry.input.graph.modules.some(({ fileName }) => fileName === file) ||
     entry.input.graph.edges.some(({ resolved }) => resolved === file)
   );
+}
+
+/**
+ * Removes cached compilation entries for an invalidated file.
+ */
+function invalidateFileCache(
+  cache: Map<string, { readonly input: ForgeWebScriptCompileInput; readonly artifact: ForgeWebScriptArtifact }>,
+  file: string,
+): void {
+  for (const [key, entry] of cache) {
+    if (entry.input.fileName === file) cache.delete(key);
+  }
+}
+
+/**
+ * Removes cached graph compilation entries that depend on an invalidated file.
+ */
+function invalidateGraphCache(
+  graphCache: Map<
+    string,
+    { readonly input: ForgeWebScriptGraphCompileInput; readonly artifact: ForgeWebScriptArtifact }
+  >,
+  invalidated: Set<string>,
+  file: string,
+): void {
+  for (const [key, entry] of graphCache) {
+    if (shouldInvalidateGraphEntry(entry, file)) {
+      graphCache.delete(key);
+      invalidated.add(entry.input.entryFileName);
+    }
+  }
 }
 
 /**
@@ -181,15 +238,8 @@ export function createForgeWebScriptCompilerService(
       assertActive();
       for (const file of files) {
         invalidated.add(file);
-        for (const [key, entry] of cache) {
-          if (entry.input.fileName === file) cache.delete(key);
-        }
-        for (const [key, entry] of graphCache) {
-          if (shouldInvalidateGraphEntry(entry, file)) {
-            graphCache.delete(key);
-            invalidated.add(entry.input.entryFileName);
-          }
-        }
+        invalidateFileCache(cache, file);
+        invalidateGraphCache(graphCache, invalidated, file);
       }
     },
     report(): ForgeWebScriptCompilerReport {

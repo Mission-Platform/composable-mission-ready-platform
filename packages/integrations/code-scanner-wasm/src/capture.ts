@@ -71,23 +71,30 @@ type CaptureContext = CanvasRenderingContext2D | OffscreenCanvasRenderingContext
 let captureContext: CaptureContext | undefined;
 
 /**
+ * Instantiates a new 2D canvas drawing context for frame capture.
+ */
+function initCaptureContext(width: number, height: number): CaptureContext {
+  const canvas =
+    typeof OffscreenCanvas === 'function'
+      ? new OffscreenCanvas(width, height)
+      : Object.assign(document.createElement('canvas'), { width, height });
+  const context = canvas.getContext('2d', { willReadFrequently: true }) as CaptureContext | null;
+  if (context === null) {
+    throw new Error('A 2D canvas context is unavailable in this environment.');
+  }
+  return context;
+}
+
+/**
  * Creates or resizes a 2D canvas drawing context for frame capture.
  */
 function createContext(width: number, height: number): CaptureContext {
   if (captureContext === undefined) {
-    const canvas =
-      typeof OffscreenCanvas === 'function'
-        ? new OffscreenCanvas(width, height)
-        : Object.assign(document.createElement('canvas'), { width, height });
-    const context = canvas.getContext('2d', { willReadFrequently: true }) as CaptureContext | null;
-    if (context === null) {
-      throw new Error('A 2D canvas context is unavailable in this environment.');
-    }
-    captureContext = context;
+    captureContext = initCaptureContext(width, height);
     return captureContext;
   }
-  if (captureContext.canvas.width !== width) captureContext.canvas.width = width;
-  if (captureContext.canvas.height !== height) captureContext.canvas.height = height;
+  captureContext.canvas.width = width;
+  captureContext.canvas.height = height;
   return captureContext;
 }
 

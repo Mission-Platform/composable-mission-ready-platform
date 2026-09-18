@@ -1,5 +1,6 @@
-import { ForgeWysiwygToolbarButton } from '@mission-platform/content';
 import { ForgeIconBold } from '@mission-platform/icons';
+
+import { ForgeWysiwygToolbarButton } from '@mission-platform/content';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

@@ -1,5 +1,6 @@
-import { ForgeSchemaFormDialog } from '@mission-platform/forms';
 import { useArgs } from 'storybook/preview-api';
+
+import { ForgeSchemaFormDialog } from '@mission-platform/forms';
 
 import type { SchemaFormDefinition } from '../forge-schema-form';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

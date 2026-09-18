@@ -307,14 +307,7 @@ function code128Modules(value: string): number[] {
 // `narrowMask` bit trick ZXing implements with real bitwise AND) so that
 // fixtures built here are independently, verifiably consistent with the FWS
 // port rather than hand-picked "expected" strings.
-function rssCombins(n: number, r: number): number {
-  if (r < 0 || n < 0 || r > n) return 0;
-  let minDenom = r;
-  let maxDenom = n - r;
-  if (n - r <= r) {
-    minDenom = n - r;
-    maxDenom = r;
-  }
+function computeCombinsProduct(n: number, maxDenom: number, minDenom: number): number {
   let value = 1;
   let denominator = 1;
   let numerator = n;
@@ -333,6 +326,43 @@ function rssCombins(n: number, r: number): number {
   return value;
 }
 
+function rssCombins(n: number, r: number): number {
+  if (r < 0 || n < r) return 0;
+  const minDenom = Math.min(r, n - r);
+  const maxDenom = Math.max(r, n - r);
+  return computeCombinsProduct(n, maxDenom, minDenom);
+}
+
+function computeLessValue(remaining: number, elementWidth: number, bar: number, elementsLeft: number, maxWidth: number): number {
+  let lessValue = 0;
+  let widest = remaining - elementWidth - 2 + bar;
+  while (widest > maxWidth) {
+    lessValue += rssCombins(remaining - elementWidth - widest - 1, elementsLeft - 2);
+    widest -= 1;
+  }
+  return lessValue * (3 - bar);
+}
+
+function computeElementSubValue(
+  remaining: number,
+  elementWidth: number,
+  elementsLeft: number,
+  bar: number,
+  maxWidth: number,
+  noNarrow: boolean,
+  stuckCount: number,
+): number {
+  let subValue = rssCombins(remaining - elementWidth - 1, elementsLeft - 1);
+  const applyNoNarrow =
+    noNarrow && elementWidth > 1 && stuckCount === 0 && remaining - elementWidth - elementsLeft >= elementsLeft;
+  if (applyNoNarrow) subValue -= rssCombins(remaining - elementWidth - 4 + bar, elementsLeft - 1);
+  if (elementsLeft > 1) {
+    subValue -= computeLessValue(remaining, elementWidth, bar, elementsLeft, maxWidth);
+  }
+  if (elementsLeft <= 1 && remaining - elementWidth > maxWidth) subValue -= 1;
+  return subValue;
+}
+
 function rssGroupValue(counts: readonly number[], parityOffset: number, maxWidth: number, noNarrow: boolean): number {
   let remaining = 0;
   for (let index = 0; index < 4; index += 1) remaining += counts[index * 2 + parityOffset];
@@ -340,23 +370,9 @@ function rssGroupValue(counts: readonly number[], parityOffset: number, maxWidth
   let stuckCount = 0;
   for (let bar = 0; bar < 3; bar += 1) {
     const width = counts[bar * 2 + parityOffset];
-    const elementsLeft = 4 - bar - 1;
+    const elementsLeft = 3 - bar;
     for (let elementWidth = 1; elementWidth < width; elementWidth += 1) {
-      let subValue = rssCombins(remaining - elementWidth - 1, elementsLeft - 1);
-      const applyNoNarrow =
-        noNarrow && elementWidth > 1 && stuckCount === 0 && remaining - elementWidth - elementsLeft >= elementsLeft;
-      if (applyNoNarrow) subValue -= rssCombins(remaining - elementWidth - 4 + bar, elementsLeft - 1);
-      if (elementsLeft > 1) {
-        let lessValue = 0;
-        let widest = remaining - elementWidth - 2 + bar;
-        while (widest > maxWidth) {
-          lessValue += rssCombins(remaining - elementWidth - widest - 1, elementsLeft - 2);
-          widest -= 1;
-        }
-        subValue -= lessValue * (3 - bar);
-      }
-      if (elementsLeft <= 1 && remaining - elementWidth > maxWidth) subValue -= 1;
-      value += subValue;
+      value += computeElementSubValue(remaining, elementWidth, elementsLeft, bar, maxWidth, noNarrow, stuckCount);
     }
     if (width === 1) stuckCount += 1;
     remaining -= width;
@@ -486,16 +502,47 @@ function rss14Row(
   return [...quiet, ...leftBits, ...guard, ...mid, ...guard, ...rightBits, ...quiet];
 }
 
+function calculateFinderTarget(leftFinder: number, rightFinder: number): number {
+  let target = 9 * leftFinder + rightFinder;
+  if (target > 72) target -= 1;
+  if (target > 8) target -= 1;
+  return target;
+}
+
 function rss14TryFinderPair(checkValue: number): [number, number] | undefined {
   for (let leftFinder = 0; leftFinder <= 8; leftFinder += 1) {
     for (let rightFinder = 0; rightFinder <= 8; rightFinder += 1) {
-      let target = 9 * leftFinder + rightFinder;
-      if (target > 72) target -= 1;
-      if (target > 8) target -= 1;
-      if (target === checkValue) return [leftFinder, rightFinder];
+      if (calculateFinderTarget(leftFinder, rightFinder) === checkValue) {
+        return [leftFinder, rightFinder];
+      }
     }
   }
   return undefined;
+}
+
+function searchInsideCandidate(
+  outside: ReturnType<typeof rss14CharacterValue>,
+  outsideOdd: readonly number[],
+  outsideEven: readonly number[],
+) {
+  for (const evenSum of [4, 6, 8, 10]) {
+    for (const insideEven of tuplesSummingTo(evenSum, 8)) {
+      for (const insideOdd of tuplesSummingTo(15 - evenSum, 8)) {
+        const inside = rss14CharacterValue(insideOdd, insideEven, false);
+        const pairValue = 1597 * outside.value + inside.value;
+        if (pairValue <= 0 || pairValue > 2_203_851) continue;
+        const checksumPortion = outside.checksumPortion + 4 * inside.checksumPortion;
+        const checkValue = (17 * checksumPortion) % 79;
+        const finder = rss14TryFinderPair(checkValue);
+        if (finder === undefined) continue;
+        return {
+          modules: rss14Row(outsideOdd, outsideEven, insideOdd, insideEven, finder[0], finder[1]),
+          expected: rss14ConstructResult(pairValue, pairValue),
+        };
+      }
+    }
+  }
+  return;
 }
 
 // Search for a valid, in-range RSS-14 symbol. The left and right pairs share
@@ -503,29 +550,13 @@ function rss14TryFinderPair(checkValue: number): [number, number] | undefined {
 // 4537078 * pair, which must stay within 13 digits for the (spec-bounded)
 // integer result builder, so only pair values <= 2_203_851 are usable.
 function buildRss14Fixture() {
-  const outsideOddSums = [12, 10, 8, 6, 4];
-  const insideEvenSums = [4, 6, 8, 10];
-  for (const oddSum of outsideOddSums) {
+  for (const oddSum of [12, 10, 8, 6, 4]) {
     for (const outsideOdd of tuplesSummingTo(oddSum, 8)) {
       for (const outsideEven of tuplesSummingTo(16 - oddSum, 8)) {
         const outside = rss14CharacterValue(outsideOdd, outsideEven, true);
         if (outside.value < 0 || 1597 * outside.value > 2_203_851) continue;
-        for (const evenSum of insideEvenSums) {
-          for (const insideEven of tuplesSummingTo(evenSum, 8)) {
-            for (const insideOdd of tuplesSummingTo(15 - evenSum, 8)) {
-              const inside = rss14CharacterValue(insideOdd, insideEven, false);
-              const pairValue = 1597 * outside.value + inside.value;
-              if (pairValue <= 0 || pairValue > 2_203_851) continue;
-              const checksumPortion = outside.checksumPortion + 4 * inside.checksumPortion;
-              const checkValue = (17 * checksumPortion) % 79;
-              const finder = rss14TryFinderPair(checkValue);
-              if (!finder) continue;
-              const modules = rss14Row(outsideOdd, outsideEven, insideOdd, insideEven, finder[0], finder[1]);
-              const expected = rss14ConstructResult(pairValue, pairValue);
-              return { modules, expected };
-            }
-          }
-        }
+        const fixture = searchInsideCandidate(outside, outsideOdd, outsideEven);
+        if (fixture !== undefined) return fixture;
       }
     }
   }
@@ -596,16 +627,20 @@ function rssExpPairRuns(
 
 const RSS_EXP_FINDER_A = [1, 8, 4, 1];
 
+function collectTuplesForFirst(results: number[][], first: number, total: number, max: number): void {
+  for (let second = 1; second <= max; second += 1) {
+    for (let third = 1; third <= max; third += 1) {
+      const fourth = total - first - second - third;
+      if (fourth >= 1 && fourth <= max) results.push([first, second, third, fourth]);
+    }
+  }
+}
+
 // All length-4 tuples with each element in [1, max] summing to `total`.
 function tuplesSummingTo(total: number, max: number): number[][] {
   const results: number[][] = [];
   for (let first = 1; first <= max; first += 1) {
-    for (let second = 1; second <= max; second += 1) {
-      for (let third = 1; third <= max; third += 1) {
-        const fourth = total - first - second - third;
-        if (fourth >= 1 && fourth <= max) results.push([first, second, third, fourth]);
-      }
-    }
+    collectTuplesForFirst(results, first, total, max);
   }
   return results;
 }
@@ -620,31 +655,38 @@ function rssExpChecksumMatches(
   return checksum === checkCharValue;
 }
 
+function extract7Bits(values: readonly number[], position: number): number {
+  let numeric = 0;
+  for (let index = 0; index < 7; index += 1) {
+    const pos = position + index;
+    const charIndex = Math.trunc(pos / 12);
+    const bitIndex = pos - charIndex * 12;
+    const bit = (values[charIndex] >> (11 - bitIndex)) & 1;
+    numeric = numeric * 2 + bit;
+  }
+  return numeric;
+}
+
+function decodeNumericDigits(numeric: number): { readonly digit1: number; readonly digit2: number } | undefined {
+  if (numeric < 8) return undefined;
+  const digit1 = Math.trunc((numeric - 8) / 11);
+  const digit2 = numeric - 8 - digit1 * 11;
+  if (digit1 > 10 || digit2 > 10) return undefined;
+  return { digit1, digit2 };
+}
+
 function rssExpNumericText(values: readonly number[]): string | undefined {
   if ((values[0] & 0x6_00) !== 0) return undefined;
-  const totalBits = 36;
-  const bitValue = (pos: number): number => {
-    const charIndex = Math.trunc(pos / 12);
-    if (charIndex < 0 || charIndex > 2) return 0;
-    const bitIndex = pos - charIndex * 12;
-    return (values[charIndex] >> (11 - bitIndex)) & 1;
-  };
-  let position = 5;
   let text = '';
-  while (position + 7 <= totalBits) {
-    let numeric = 0;
-    for (let index = 0; index < 7; index += 1) numeric = numeric * 2 + bitValue(position + index);
-    if (numeric < 8) return undefined;
-    const digit1 = Math.trunc((numeric - 8) / 11);
-    const digit2 = numeric - 8 - digit1 * 11;
-    if (digit1 > 10 || digit2 > 10) return undefined;
-    position += 7;
-    if (digit1 === 10) return text || undefined;
-    text += String(digit1);
-    if (digit2 === 10) return text;
-    text += String(digit2);
+  for (let position = 5; position + 7 <= 36; position += 7) {
+    const pair = decodeNumericDigits(extract7Bits(values, position));
+    if (pair === undefined) return undefined;
+    if (pair.digit1 === 10) return text.length > 0 ? text : undefined;
+    text += String(pair.digit1);
+    if (pair.digit2 === 10) return text;
+    text += String(pair.digit2);
   }
-  return text || undefined;
+  return text.length > 0 ? text : undefined;
 }
 
 function rssExpCharacters(weightRow: number | null) {
@@ -665,6 +707,48 @@ function rssExpCharacters(weightRow: number | null) {
   return candidates;
 }
 
+function matchCheckCandidate(
+  firstCandidate: ReturnType<typeof rssExpCharacters>[number],
+  secondLeft: ReturnType<typeof rssExpCharacters>[number],
+  secondRight: ReturnType<typeof rssExpCharacters>[number],
+  expected: string,
+  checkCharCandidates: ReturnType<typeof rssExpCharacters>,
+) {
+  for (const checkCandidate of checkCharCandidates) {
+    if (rssExpChecksumMatches(checkCandidate.value, firstCandidate, secondLeft, secondRight)) {
+      return {
+        checkOdd: checkCandidate.odd,
+        checkEven: checkCandidate.even,
+        firstOdd: firstCandidate.odd,
+        firstEven: firstCandidate.even,
+        secondLeftOdd: secondLeft.odd,
+        secondLeftEven: secondLeft.even,
+        secondRightOdd: secondRight.odd,
+        secondRightEven: secondRight.even,
+        expected,
+      };
+    }
+  }
+  return;
+}
+
+function tryMatchCandidatePair(
+  firstCandidate: ReturnType<typeof rssExpCharacters>[number],
+  secondLeftCandidates: ReturnType<typeof rssExpCharacters>,
+  secondRightCandidates: ReturnType<typeof rssExpCharacters>,
+  checkCharCandidates: ReturnType<typeof rssExpCharacters>,
+) {
+  for (const secondLeft of secondLeftCandidates) {
+    for (const secondRight of secondRightCandidates) {
+      const expected = rssExpNumericText([firstCandidate.value, secondLeft.value, secondRight.value]);
+      if (!expected) continue;
+      const matched = matchCheckCandidate(firstCandidate, secondLeft, secondRight, expected, checkCharCandidates);
+      if (matched !== undefined) return matched;
+    }
+  }
+  return;
+}
+
 function findMatchingRssCandidate(
   firstCandidates: ReturnType<typeof rssExpCharacters>,
   secondLeftCandidates: ReturnType<typeof rssExpCharacters>,
@@ -672,29 +756,10 @@ function findMatchingRssCandidate(
   checkCharCandidates: ReturnType<typeof rssExpCharacters>,
 ) {
   for (const firstCandidate of firstCandidates) {
-    for (const secondLeft of secondLeftCandidates) {
-      for (const secondRight of secondRightCandidates) {
-        const expected = rssExpNumericText([firstCandidate.value, secondLeft.value, secondRight.value]);
-        if (!expected) continue;
-        for (const checkCandidate of checkCharCandidates) {
-          if (rssExpChecksumMatches(checkCandidate.value, firstCandidate, secondLeft, secondRight)) {
-            return {
-              checkOdd: checkCandidate.odd,
-              checkEven: checkCandidate.even,
-              firstOdd: firstCandidate.odd,
-              firstEven: firstCandidate.even,
-              secondLeftOdd: secondLeft.odd,
-              secondLeftEven: secondLeft.even,
-              secondRightOdd: secondRight.odd,
-              secondRightEven: secondRight.even,
-              expected,
-            };
-          }
-        }
-      }
-    }
+    const matched = tryMatchCandidatePair(firstCandidate, secondLeftCandidates, secondRightCandidates, checkCharCandidates);
+    if (matched !== undefined) return matched;
   }
-  return;
+  throw new Error('failed to find a valid checksum-consistent RSS Expanded fixture');
 }
 
 function buildRssExpandedFixture() {
@@ -709,7 +774,6 @@ function buildRssExpandedFixture() {
     secondRightCandidates,
     checkCharCandidates,
   );
-  if (!found) throw new Error('failed to find a valid checksum-consistent RSS Expanded fixture');
   const {
     checkOdd,
     checkEven,
@@ -748,6 +812,20 @@ function buildRssExpandedFixture() {
   const modules = [...quiet, ...runsToBits(pair0Runs), 1, ...gap, ...runsToBits(pair1Runs), 1, ...quiet];
   return { modules, expected };
 }
+function paintLumaPixelBlock(
+  luma: number[],
+  stride: number,
+  startX: number,
+  startY: number,
+  scale: number,
+): void {
+  for (let py = 0; py < scale; py += 1) {
+    for (let px = 0; px < scale; px += 1) {
+      luma[(startY + py) * stride + startX + px] = 0;
+    }
+  }
+}
+
 function renderMatrixLuma(
   width: number,
   modules: readonly number[],
@@ -758,11 +836,8 @@ function renderMatrixLuma(
   const luma = new Array(side * side).fill(255);
   for (let y = 0; y < width; y += 1) {
     for (let x = 0; x < width; x += 1) {
-      if (modules[y * width + x] !== 1) continue;
-      for (let py = 0; py < scale; py += 1) {
-        for (let px = 0; px < scale; px += 1) {
-          luma[(quiet * scale + y * scale + py) * side + quiet * scale + x * scale + px] = 0;
-        }
+      if (modules[y * width + x] === 1) {
+        paintLumaPixelBlock(luma, side, (quiet + x) * scale, (quiet + y) * scale, scale);
       }
     }
   }
@@ -815,11 +890,8 @@ function renderRectangularLuma(
   const luma = new Array(imageWidth * imageHeight).fill(255);
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
-      if (modules[y * width + x] !== 1) continue;
-      for (let py = 0; py < scale; py += 1) {
-        for (let px = 0; px < scale; px += 1) {
-          luma[(quiet * scale + y * scale + py) * imageWidth + quiet * scale + x * scale + px] = 0;
-        }
+      if (modules[y * width + x] === 1) {
+        paintLumaPixelBlock(luma, imageWidth, (quiet + x) * scale, (quiet + y) * scale, scale);
       }
     }
   }
@@ -837,13 +909,10 @@ function renderMaxicodeLuma(
   const height = (moduleHeight + quiet * 2) * scale;
   const luma = new Array(width * height).fill(255);
   for (let y = 0; y < moduleHeight; y += 1) {
-    const shift = y % 2 === 1 ? Math.floor(scale / 2) : 0;
+    const shift = (y % 2) * Math.floor(scale / 2);
     for (let x = 0; x < moduleWidth; x += 1) {
-      if (modules[y * moduleWidth + x] !== 1) continue;
-      for (let py = 0; py < scale; py += 1) {
-        for (let px = 0; px < scale; px += 1) {
-          luma[(quiet * scale + y * scale + py) * width + quiet * scale + x * scale + shift + px] = 0;
-        }
+      if (modules[y * moduleWidth + x] === 1) {
+        paintLumaPixelBlock(luma, width, (quiet + x) * scale + shift, (quiet + y) * scale, scale);
       }
     }
   }

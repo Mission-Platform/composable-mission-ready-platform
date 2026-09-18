@@ -25,6 +25,24 @@ const RAW_TYPE_MAP: Readonly<Record<string, string>> = Object.freeze({
 });
 
 /**
+ * Checks whether an ABI parameter is an i32 Array reference.
+ */
+function isI32Array(parameter: ForgeWebScriptAbiParameter): boolean {
+  return parameter.reference === 'Array' && parameter.arguments?.[0]?.name === 'i32';
+}
+
+/**
+ * Checks whether a reference name matches any known enum or record declaration.
+ */
+function isKnownReference(
+  reference: string,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): boolean {
+  return Boolean(enumNames?.has(reference) || recordNames?.has(reference));
+}
+
+/**
  * Resolves reference types (Arrays, enums, records) for an ABI parameter.
  */
 function resolveReferenceType(
@@ -32,12 +50,10 @@ function resolveReferenceType(
   enumNames?: ReadonlySet<string>,
   recordNames?: ReadonlySet<string>,
 ): string | undefined {
-  if (parameter.reference === 'Array' && parameter.arguments?.[0]?.name === 'i32') return 'ArrayLike<number>';
-  if (
-    parameter.reference !== undefined &&
-    (enumNames?.has(parameter.reference) || recordNames?.has(parameter.reference))
-  ) {
-    return parameter.reference;
+  if (isI32Array(parameter)) return 'ArrayLike<number>';
+  const reference = parameter.reference;
+  if (reference !== undefined && isKnownReference(reference, enumNames, recordNames)) {
+    return reference;
   }
   return undefined;
 }
@@ -73,13 +89,13 @@ function buildResultParameter(declaration: ForgeWebScriptAbiFunction): ForgeWebS
   return {
     name: 'result',
     type: declaration.result,
-    ...(declaration.resultReference === undefined ? {} : { reference: declaration.resultReference }),
-    ...(declaration.resultArguments === undefined ? {} : { arguments: declaration.resultArguments }),
-    ...(declaration.resultLength === undefined ? {} : { length: declaration.resultLength }),
-    ...(declaration.resultOwnership === undefined ? {} : { ownership: declaration.resultOwnership }),
-    ...(declaration.resultPassing === undefined ? {} : { passing: declaration.resultPassing }),
-    ...(declaration.resultReferenceMode === undefined ? {} : { referenceMode: declaration.resultReferenceMode }),
-  } satisfies ForgeWebScriptAbiParameter;
+    reference: declaration.resultReference,
+    arguments: declaration.resultArguments,
+    length: declaration.resultLength,
+    ownership: declaration.resultOwnership,
+    passing: declaration.resultPassing,
+    referenceMode: declaration.resultReferenceMode,
+  } as ForgeWebScriptAbiParameter;
 }
 
 /**

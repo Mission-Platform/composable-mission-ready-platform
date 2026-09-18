@@ -23,17 +23,32 @@ import type { ImageLike, Roi, ScanFormat, ScanMetadata, ScanOptions, ScanPoint, 
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
 const textEncoder = new TextEncoder();
 
+/**
+ * Validates and extracts a single byte from a 3-character decimal slice.
+ */
+function parseTripletByte(value: string, index: number): number | null {
+  const byte = Number.parseInt(value.slice(index * 3, index * 3 + 3), 10);
+  if (!Number.isInteger(byte) || byte < 0 || byte > 255) return null;
+  return byte;
+}
+
+/**
+ * Decodes a 3-character decimal formatted byte string into a Uint8Array.
+ */
 function decodeTripletBytes(value: string): Uint8Array | null {
   if (value.length === 0 || value.length % 3 !== 0) return null;
   const bytes = new Uint8Array(value.length / 3);
   for (let index = 0; index < bytes.length; index += 1) {
-    const byte = Number.parseInt(value.slice(index * 3, index * 3 + 3), 10);
-    if (!Number.isInteger(byte) || byte < 0 || byte > 255) return null;
+    const byte = parseTripletByte(value, index);
+    if (byte === null) return null;
     bytes[index] = byte;
   }
   return bytes;
 }
 
+/**
+ * Decodes a 3-character decimal formatted byte string into a UTF-8 string.
+ */
 function decodeTriplets(value: string): string {
   const bytes = decodeTripletBytes(value);
   if (bytes === null) return '';
@@ -61,11 +76,17 @@ let scannerPromise: Promise<ForgeScannerExports> | undefined;
 
 type ResettableScannerExports = ForgeScannerExports & { readonly fws_reset?: () => void };
 
+/**
+ * Resets the allocator state of a WebAssembly scanner instance if supported.
+ */
 function resetScannerAllocator(artifact: ForgeScannerExports): void {
   const reset = (artifact as ResettableScannerExports).fws_reset;
   reset?.();
 }
 
+/**
+ * Loads the WebAssembly scanner instance synchronously, caching the instance.
+ */
 function loadScannerSyncCached(): ForgeScannerExports {
   scanner ??= loadScannerSync(scannerImports);
   return scanner;
@@ -84,6 +105,9 @@ function loadScannerCached(): Promise<ForgeScannerExports> {
 type RawScannerExports = ForgeScannerRawExports;
 type RawString = ForgeScannerRawBytes;
 
+/**
+ * Decodes a UTF-8 string from WebAssembly linear memory and re-encodes it into new allocation.
+ */
 function rawDecodeUtf8(artifact: RawScannerExports | undefined, pointer: number, length: number): RawString {
   if (artifact === undefined) throw new Error('The raw scanner loader was not initialized.');
   const encoded = textDecoder.decode(new Uint8Array(artifact.memory.buffer, pointer, length));
@@ -95,6 +119,9 @@ function rawDecodeUtf8(artifact: RawScannerExports | undefined, pointer: number,
   return [resultPointer, bytes.byteLength];
 }
 
+/**
+ * Builds raw WebAssembly host import bindings for UTF-8 decoding functions.
+ */
 function rawScannerImports(getArtifact: () => RawScannerExports | undefined): ForgeScannerRawImports {
   const decode = (pointer: number, length: number): RawString => rawDecodeUtf8(getArtifact(), pointer, length);
   return { 'qr.decode.utf8': { decode_utf8: decode, matrix_decode_utf8: decode } };
@@ -104,14 +131,19 @@ function rawScannerImports(getArtifact: () => RawScannerExports | undefined): Fo
  * Loads the raw WebAssembly scanner artifact synchronously.
  */
 function loadRawScannerSync(): RawScannerExports {
-  let artifact: RawScannerExports | undefined;
-  artifact = loadRawSync(rawScannerImports(() => artifact));
+  const holder: { current?: RawScannerExports } = {};
+  const artifact = loadRawSync(rawScannerImports(() => holder.current));
+  holder.current = artifact;
   return artifact;
 }
 
+/**
+ * Loads the raw WebAssembly scanner artifact asynchronously.
+ */
 async function loadRawScanner(): Promise<RawScannerExports> {
-  let artifact: RawScannerExports | undefined;
-  artifact = await loadRaw(rawScannerImports(() => artifact));
+  const holder: { current?: RawScannerExports } = {};
+  const artifact = await loadRaw(rawScannerImports(() => holder.current));
+  holder.current = artifact;
   return artifact;
 }
 
@@ -162,18 +194,40 @@ function createScanResult(
   };
 }
 
+const TRIPLET_FORMATS = new Set<ScanFormat>(['DATA_MATRIX', 'AZTEC', 'QR_CODE']);
+
+/**
+ * Extracts payload byte array based on format encoding characteristics.
+ */
+function extractPayloadBytes(payload: string, format: ScanFormat): Uint8Array {
+  if (TRIPLET_FORMATS.has(format)) {
+    const decoded = decodeTripletBytes(payload);
+    if (decoded !== null) return decoded;
+  }
+  return textEncoder.encode(payload);
+}
+
+/**
+ * Decodes the raw envelope payload into text and binary representations.
+ */
 function decodePayload(
   payload: string,
   format: ScanFormat,
 ): { readonly text: string | null; readonly rawBytes: Uint8Array | null } {
-  const tripletBytes =
-    format === 'DATA_MATRIX' || format === 'AZTEC' || format === 'QR_CODE' ? decodeTripletBytes(payload) : null;
-  const rawBytes = tripletBytes ?? textEncoder.encode(payload);
+  const rawBytes = extractPayloadBytes(payload, format);
   try {
     return { text: textDecoder.decode(rawBytes), rawBytes };
   } catch {
     return { text: null, rawBytes };
   }
+}
+
+/**
+ * Calculates the effective number of bits decoded in the payload.
+ */
+function resolveResultNumBits(envelopeNumBits: number, rawBytes: Uint8Array | null): number {
+  if (envelopeNumBits > 0) return envelopeNumBits;
+  return rawBytes === null ? 0 : rawBytes.byteLength * 8;
 }
 
 /** Convert the versioned FWS result envelope into the public scan result. */
@@ -184,13 +238,10 @@ function resultFromWire(encoded: string): ScanResult | null {
   if (format === undefined) return null;
   if (!envelope.decoded) return createScanResult(format, null, null, envelope.numBits);
   const decoded = decodePayload(envelope.payload, format);
-  return createScanResult(
-    format,
-    decoded.text,
-    decoded.rawBytes,
-    envelope.numBits > 0 ? envelope.numBits : (decoded.rawBytes?.byteLength ?? 0) * 8,
-  );
+  const numBits = resolveResultNumBits(envelope.numBits, decoded.rawBytes);
+  return createScanResult(format, decoded.text, decoded.rawBytes, numBits);
 }
+
 interface ScannerScratch {
   readonly modules: Int32Array;
   readonly erasures: Int32Array;
@@ -211,6 +262,9 @@ function createScratch(width: number, height: number): ScannerScratch {
   };
 }
 
+/**
+ * Prepares image arguments and allocations for adapted scanner invocation.
+ */
 function adaptedScanArguments(image: ImageLike): {
   readonly luma: Int32Array;
   readonly scratch: ScannerScratch;
@@ -245,11 +299,13 @@ const FORMAT_IDS: Readonly<Record<ScanFormat, number>> = Object.freeze({
   UPC_E: 15,
 });
 
+const ROI_KEYS: readonly (keyof Roi)[] = ['x', 'y', 'width', 'height'];
+
 /** Type guard checking if an object represents a region of interest. */
 function isRoi(value: unknown): value is Roi {
-  if (value === null || typeof value !== 'object') return false;
+  if (typeof value !== 'object' || value === null) return false;
   const candidate = value as Record<string, unknown>;
-  return 'x' in candidate && 'y' in candidate && 'width' in candidate && 'height' in candidate;
+  return ROI_KEYS.every((key) => key in candidate);
 }
 
 /**
@@ -275,6 +331,9 @@ function possibleFormatIds(options: ScanOptions): readonly number[] {
   ];
 }
 
+/**
+ * Emits diagnostic logs for detected scan results.
+ */
 function logScanResult(result: ScanResult | null): ScanResult | null {
   if (result === null) {
     scannerLog('scan: no code located in this frame');
@@ -288,6 +347,71 @@ function logScanResult(result: ScanResult | null): ScanResult | null {
   return result;
 }
 
+interface ScanFlagOptions {
+  readonly tryHarder?: boolean;
+  readonly alsoInverted?: boolean;
+  readonly pureBarcode?: boolean;
+}
+
+/**
+ * Normalizes boolean scan options into integer flag arguments.
+ */
+function resolveScanFlags(options: ScanFlagOptions) {
+  return {
+    tryHarder: options.tryHarder === false ? 0 : 1,
+    alsoInverted: options.alsoInverted === false ? 0 : 1,
+    pureBarcode: options.pureBarcode === true ? 1 : 0,
+  };
+}
+
+/**
+ * Executes a single scan attempt with adapted typed arrays.
+ */
+function executeAdaptedScan(
+  artifact: ForgeScannerExports,
+  width: number,
+  height: number,
+  luma: Int32Array,
+  scratch: ScannerScratch,
+  roi: Roi | undefined,
+  possibleFormat: number,
+  options: ScanOptions,
+): string {
+  const flags = resolveScanFlags(options);
+  if (roi !== undefined) {
+    return artifact.scan_and_decode_roi_with_options(
+      width,
+      height,
+      luma,
+      Math.max(0, Math.round(roi.x)),
+      Math.max(0, Math.round(roi.y)),
+      Math.max(0, Math.round(roi.width)),
+      Math.max(0, Math.round(roi.height)),
+      scratch.modules,
+      scratch.erasures,
+      scratch.packed,
+      scratch.meta,
+      possibleFormat,
+      flags.tryHarder,
+      flags.alsoInverted,
+      flags.pureBarcode,
+    );
+  }
+  return artifact.scan_and_decode_with_options(
+    width,
+    height,
+    luma,
+    scratch.modules,
+    scratch.erasures,
+    scratch.packed,
+    scratch.meta,
+    possibleFormat,
+    flags.tryHarder,
+    flags.alsoInverted,
+    flags.pureBarcode,
+  );
+}
+
 /**
  * Runs the single-symbol detection and decoding pipeline over an image using adapted arrays.
  */
@@ -299,52 +423,36 @@ function locateAndDecodeAdapted(
   resetScannerAllocator(artifact);
   const { luma, scratch, width, height } = adaptedScanArguments(image);
   const options = normalizeScanOptions(optionsOrRoi);
-  const roi = options.roi;
-  scannerLog('scan: locating and decoding luma image', { width, height, roi, formats: options.formats });
+  scannerLog('scan: locating and decoding luma image', { width, height, roi: options.roi, formats: options.formats });
   for (const possibleFormat of possibleFormatIds(options)) {
-    const encoded = roi
-      ? artifact.scan_and_decode_roi_with_options(
-          width,
-          height,
-          luma,
-          Math.max(0, Math.round(roi.x)),
-          Math.max(0, Math.round(roi.y)),
-          Math.max(0, Math.round(roi.width)),
-          Math.max(0, Math.round(roi.height)),
-          scratch.modules,
-          scratch.erasures,
-          scratch.packed,
-          scratch.meta,
-          possibleFormat,
-          options.tryHarder === false ? 0 : 1,
-          options.alsoInverted === false ? 0 : 1,
-          options.pureBarcode === true ? 1 : 0,
-        )
-      : artifact.scan_and_decode_with_options(
-          width,
-          height,
-          luma,
-          scratch.modules,
-          scratch.erasures,
-          scratch.packed,
-          scratch.meta,
-          possibleFormat,
-          options.tryHarder === false ? 0 : 1,
-          options.alsoInverted === false ? 0 : 1,
-          options.pureBarcode === true ? 1 : 0,
-        );
+    const encoded = executeAdaptedScan(
+      artifact,
+      width,
+      height,
+      luma,
+      scratch,
+      options.roi,
+      possibleFormat,
+      options,
+    );
     const result = resultFromWire(encoded);
     if (result !== null) return logScanResult(result);
   }
   return logScanResult(null);
 }
 
+/**
+ * Filters decoded scan results according to requested format options.
+ */
 function filterResults(results: ScanResult[], options: ScanOptions | undefined): ScanResult[] {
   if (options?.formats === undefined || options.formats.length === 0) return results;
   const formats = new Set(options.formats);
   return results.filter((result) => formats.has(result.format));
 }
 
+/**
+ * Runs multi-symbol detection and decoding over an image using adapted arrays.
+ */
 function locateAndDecodeAllAdapted(
   image: ImageLike,
   artifact: ForgeScannerExports,
@@ -391,6 +499,9 @@ function allocateArray(artifact: RawScannerExports, length: number): number {
   return artifact.fws_alloc((length + 1) * 4);
 }
 
+/**
+ * Writes an array of 32-bit integers into WebAssembly linear memory preceded by length.
+ */
 function writeArray(artifact: RawScannerExports, pointer: number, length: number, values?: ArrayLike<number>): void {
   const view = new Int32Array(artifact.memory.buffer, pointer, length + 1);
   view.fill(0);
@@ -400,6 +511,9 @@ function writeArray(artifact: RawScannerExports, pointer: number, length: number
   }
 }
 
+/**
+ * Allocates fresh scratch and luma buffers in raw WebAssembly linear memory.
+ */
 function allocateScanMemory(
   artifact: RawScannerExports,
   width: number,
@@ -424,10 +538,16 @@ function allocateScanMemory(
   return memory;
 }
 
+/**
+ * Copies raw luma image bytes directly into WebAssembly linear memory.
+ */
 function writeRawLuma(artifact: RawScannerExports, pointer: number, luma: Uint8Array): void {
   new Uint8Array(artifact.memory.buffer, pointer, luma.length).set(luma);
 }
 
+/**
+ * Reuses or allocates WebAssembly memory buffers for scanning a frame.
+ */
 function prepareScanMemory(
   artifact: RawScannerExports,
   width: number,
@@ -451,6 +571,9 @@ function prepareScanMemory(
   return memory;
 }
 
+/**
+ * Extracts contrast-stretched luma byte data and dimensions from an image.
+ */
 function scanArguments(image: ImageLike): {
   readonly luma: Uint8Array;
   readonly width: number;
@@ -465,31 +588,42 @@ function scanArguments(image: ImageLike): {
 }
 
 /**
- * Run the FWS locate-and-decode over a luma image, returning the decoded
- * {@link ScanResult}, or `null` when no code is located.
- *
- * The luma is contrast-stretched first: the scanner binariser uses a single global
- * Otsu threshold, which separates clean uploads well but struggles with the
- * glare and uneven lighting of live camera frames. Stretching the dynamic range
- * up front gives that threshold a clean, bimodal histogram to work with.
+ * Validates that the input is a valid pointer-length pair.
  */
-function decodeRawString(artifact: RawScannerExports, encoded: unknown): string {
+function validateRawPointerPair(encoded: unknown): readonly [number, number] {
   if (!Array.isArray(encoded) || encoded.length < 2) {
     throw new TypeError('The raw scanner result is not a pointer-length pair.');
   }
   const pointer = encoded[0];
   const length = encoded[1];
-  if (!Number.isSafeInteger(pointer) || pointer < 0 || !Number.isSafeInteger(length) || length < 0) {
+  const validPointer = Number.isSafeInteger(pointer) && pointer >= 0;
+  const validLength = Number.isSafeInteger(length) && length >= 0;
+  if (!validPointer || !validLength) {
     throw new RangeError('The raw scanner result is not a valid pointer-length pair.');
   }
-  const buffer = artifact.memory.buffer;
-  if (pointer > buffer.byteLength || length > buffer.byteLength - pointer) {
+  return [pointer, length];
+}
+
+/**
+ * Validates that pointer and length stay within linear memory bounds and envelope limits.
+ */
+function validateRawBufferBounds(bufferByteLength: number, pointer: number, length: number): void {
+  const inBounds = pointer <= bufferByteLength && length <= bufferByteLength - pointer;
+  if (!inBounds) {
     throw new RangeError('The raw scanner result is outside linear memory.');
   }
   if (length > resultEnvelopeLimits.maxLength) {
     throw new RangeError('The raw scanner result exceeds the supported envelope size.');
   }
-  return textDecoder.decode(new Uint8Array(buffer, pointer, length));
+}
+
+/**
+ * Decodes a raw pointer-length string from WebAssembly linear memory.
+ */
+function decodeRawString(artifact: RawScannerExports, encoded: unknown): string {
+  const [pointer, length] = validateRawPointerPair(encoded);
+  validateRawBufferBounds(artifact.memory.buffer.byteLength, pointer, length);
+  return textDecoder.decode(new Uint8Array(artifact.memory.buffer, pointer, length));
 }
 
 /**
@@ -499,6 +633,56 @@ function resultFromRaw(artifact: RawScannerExports, encoded: unknown): ScanResul
   return resultFromWire(decodeRawString(artifact, encoded));
 }
 
+/**
+ * Executes a single raw scan attempt using linear memory pointers.
+ */
+function executeRawScan(
+  artifact: RawScannerExports,
+  width: number,
+  height: number,
+  memory: ScannerMemory,
+  roi: Roi | undefined,
+  possibleFormat: number,
+  options: ScanOptions,
+): unknown {
+  const flags = resolveScanFlags(options);
+  if (roi !== undefined) {
+    return artifact.scan_and_decode_roi_with_options(
+      width,
+      height,
+      memory.luma,
+      Math.max(0, Math.round(roi.x)),
+      Math.max(0, Math.round(roi.y)),
+      Math.max(0, Math.round(roi.width)),
+      Math.max(0, Math.round(roi.height)),
+      memory.modules,
+      memory.erasures,
+      memory.packed,
+      memory.meta,
+      possibleFormat,
+      flags.tryHarder,
+      flags.alsoInverted,
+      flags.pureBarcode,
+    );
+  }
+  return artifact.scan_and_decode_with_options(
+    width,
+    height,
+    memory.luma,
+    memory.modules,
+    memory.erasures,
+    memory.packed,
+    memory.meta,
+    possibleFormat,
+    flags.tryHarder,
+    flags.alsoInverted,
+    flags.pureBarcode,
+  );
+}
+
+/**
+ * Runs single-symbol detection and decoding over linear memory.
+ */
 function locateAndDecode(
   image: ImageLike,
   optionsOrRoi: ScanOptions | Roi | undefined,
@@ -508,40 +692,9 @@ function locateAndDecode(
   const { luma, width, height } = scanArguments(image);
   const memory = prepareScanMemory(artifact, width, height, luma, cached);
   const options = normalizeScanOptions(optionsOrRoi);
-  const roi = options.roi;
-  scannerLog('scan: locating and decoding luma image', { width, height, roi, formats: options.formats });
+  scannerLog('scan: locating and decoding luma image', { width, height, roi: options.roi, formats: options.formats });
   for (const possibleFormat of possibleFormatIds(options)) {
-    const encoded = roi
-      ? artifact.scan_and_decode_roi_with_options(
-          width,
-          height,
-          memory.luma,
-          Math.max(0, Math.round(roi.x)),
-          Math.max(0, Math.round(roi.y)),
-          Math.max(0, Math.round(roi.width)),
-          Math.max(0, Math.round(roi.height)),
-          memory.modules,
-          memory.erasures,
-          memory.packed,
-          memory.meta,
-          possibleFormat,
-          options.tryHarder === false ? 0 : 1,
-          options.alsoInverted === false ? 0 : 1,
-          options.pureBarcode === true ? 1 : 0,
-        )
-      : artifact.scan_and_decode_with_options(
-          width,
-          height,
-          memory.luma,
-          memory.modules,
-          memory.erasures,
-          memory.packed,
-          memory.meta,
-          possibleFormat,
-          options.tryHarder === false ? 0 : 1,
-          options.alsoInverted === false ? 0 : 1,
-          options.pureBarcode === true ? 1 : 0,
-        );
+    const encoded = executeRawScan(artifact, width, height, memory, options.roi, possibleFormat, options);
     const result = resultFromRaw(artifact, encoded);
     if (result !== null) return logScanResult(result);
   }
@@ -587,6 +740,9 @@ export interface ScannerRawPointerSession {
   readonly scanAll: (image: ImageLike, options?: ScanOptions) => ScanResult[];
 }
 
+/**
+ * Wraps a raw WebAssembly scanner instance into an interactive session.
+ */
 function createRawPointerSession(artifact: RawScannerExports): ScannerRawPointerSession {
   const cached: { memory?: ScannerMemory } = {};
   return {
@@ -607,6 +763,9 @@ export function createScannerRawPointerSession(): ScannerRawPointerSession {
   return createRawPointerSession(loadRawScannerSync());
 }
 
+/**
+ * Creates an asynchronous raw pointer session for low-level memory inspection.
+ */
 export async function createScannerRawPointerSessionAsync(): Promise<ScannerRawPointerSession> {
   return createRawPointerSession(await loadRawScanner());
 }

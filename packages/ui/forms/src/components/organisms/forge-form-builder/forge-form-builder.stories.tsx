@@ -1,5 +1,6 @@
-import { ForgeFormBuilder } from '@mission-platform/forms';
 import { useArgs } from 'storybook/preview-api';
+
+import { ForgeFormBuilder } from '@mission-platform/forms';
 
 import type { SchemaFormDefinition } from './forge-form-builder';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

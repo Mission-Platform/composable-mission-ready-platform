@@ -8,6 +8,9 @@ const rootDirectory = import.meta.dirname;
 const scannerProjectRoots = [path.resolve(rootDirectory, 'src/fws')];
 const scannerForgeWebScriptGraphCache = createForgeWebScriptGraphCache();
 
+/**
+ * Resolves imported Forge Web Script modules across relative paths and project roots.
+ */
 function resolveScannerForgeWebScriptModule(source: string, importer: string): string | undefined {
   const relative = path.resolve(path.dirname(importer), source);
   if (existsSync(relative)) return relative;

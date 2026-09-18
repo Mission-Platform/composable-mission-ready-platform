@@ -2,7 +2,12 @@ import { declarationProperty } from './declarations.js';
 import { createValueAdapterSource } from './esm-runtime.js';
 
 import type { ForgeWebScriptIteratorExport } from '../contracts.js';
-import type { ForgeWebScriptAbiManifest, ForgeWebScriptDynamicLinkMetadata } from '../manifest.js';
+import type {
+  ForgeWebScriptAbiManifest,
+  ForgeWebScriptAbiParameter,
+  ForgeWebScriptDynamicLinkMetadata,
+  ForgeWebScriptHostImport,
+} from '../manifest.js';
 
 /**
  * Encodes a byte array into a standard Base64 string.
@@ -51,6 +56,107 @@ function renderEnumExports(manifest: ForgeWebScriptAbiManifest): string {
 }
 
 /**
+ * Collects aggregate struct layouts for record marshaling.
+ */
+function collectRecordLayouts(manifest: ForgeWebScriptAbiManifest): Record<string, unknown> {
+  return Object.fromEntries(
+    manifest.aggregateLayouts
+      .filter(({ kind, record }) => kind === 'struct' && record === true)
+      .map((layout) => [layout.name, layout]),
+  );
+}
+
+/**
+ * Serializes parameters for value export descriptors.
+ */
+function serializeExportParameters(parameters: readonly ForgeWebScriptAbiParameter[]): Record<string, unknown>[] {
+  return parameters.map((parameter) => {
+    const entry: Record<string, unknown> = { type: parameter.type };
+    if (parameter.reference !== undefined) entry.reference = parameter.reference;
+    if (parameter.arguments !== undefined) entry.arguments = parameter.arguments;
+    if (parameter.length !== undefined) entry.length = parameter.length;
+    if (parameter.ownership !== undefined) entry.ownership = parameter.ownership;
+    return entry;
+  });
+}
+
+/**
+ * Collects and formats value exports for runtime adapters.
+ */
+function collectValueExports(
+  manifest: ForgeWebScriptAbiManifest,
+  recordNames: ReadonlySet<string>,
+  hasStringImports: boolean,
+): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const declaration of manifest.exports) {
+    if (!hasStringImports && !hasValueTypes(declaration, recordNames)) continue;
+    const entry: Record<string, unknown> = {
+      parameters: serializeExportParameters(declaration.parameters),
+      result: declaration.result,
+    };
+    if (declaration.resultReference !== undefined) entry.resultReference = declaration.resultReference;
+    result[declaration.name] = entry;
+  }
+  return result;
+}
+
+/**
+ * Gathers all exported WebAssembly function and lifecycle symbols.
+ */
+function collectExportFunctionNames(
+  manifest: ForgeWebScriptAbiManifest,
+  iteratorExports: readonly ForgeWebScriptIteratorExport[],
+): readonly string[] {
+  return [
+    ...new Set([
+      ...manifest.exports.map(({ name }) => name),
+      ...iteratorExports.flatMap(({ name, nextFunction }) => [name, nextFunction]),
+      manifest.memory.allocatorExport,
+      manifest.memory.deallocatorExport,
+      manifest.memory.reallocatorExport,
+      'fws_reset',
+    ]),
+  ];
+}
+
+/**
+ * Checks whether any exports or imports declare string parameters or returns.
+ */
+function hasStringTypes(manifest: ForgeWebScriptAbiManifest): boolean {
+  const inExports = manifest.exports.some(
+    (decl) => decl.parameters.some(({ type }) => type === 'string') || decl.result === 'string',
+  );
+  const inImports = manifest.imports.some(
+    ({ function: decl }) => decl.parameters.some(({ type }) => type === 'string') || decl.result === 'string',
+  );
+  return inExports || inImports;
+}
+
+/**
+ * Checks whether any value adapters are configured for imports or exports.
+ */
+function hasValueAdaptersConfigured(valueExports: Record<string, unknown>, valueImports: readonly unknown[]): boolean {
+  return Object.keys(valueExports).length > 0 || valueImports.length > 0;
+}
+
+/**
+ * Resolves the marshaling value adapter code or an identity passthrough function.
+ */
+function resolveValueAdapter(
+  valueExports: Record<string, unknown>,
+  recordLayouts: Record<string, unknown>,
+  valueImports: readonly ForgeWebScriptHostImport[],
+  hasStringValues: boolean,
+  hasValueAdapters: boolean,
+): string {
+  if (!hasValueAdapters) {
+    return `function adaptValueExports(wasmExports) {\n  return wasmExports;\n}`;
+  }
+  return createValueAdapterSource(valueExports, recordLayouts, valueImports, hasStringValues);
+}
+
+/**
  * Generates an ESM loader module string containing embedded WebAssembly and runtime adapters.
  */
 export function createEsmSource(
@@ -62,61 +168,24 @@ export function createEsmSource(
   const base64 = bytesToBase64(wasm);
   const byteArray = [...wasm].join(',');
   const enumExports = renderEnumExports(manifest);
-  const recordLayouts = Object.fromEntries(
-    manifest.aggregateLayouts
-      .filter(({ kind, record }) => kind === 'struct' && record === true)
-      .map((layout) => [layout.name, layout]),
-  );
+  const recordLayouts = collectRecordLayouts(manifest);
   const recordNames = new Set(Object.keys(recordLayouts));
-  const stringImports = manifest.imports.filter(
-    ({ function: declaration }) =>
-      declaration.parameters.some(({ type }) => type === 'string') || declaration.result === 'string',
+  const hasStringImports = manifest.imports.some(
+    ({ function: decl }) => decl.parameters.some(({ type }) => type === 'string') || decl.result === 'string',
   );
-  const valueImports = manifest.imports.filter(({ function: declaration }) => hasValueTypes(declaration, recordNames));
-  const hasStringImports = stringImports.length > 0;
-  const valueExports = Object.fromEntries(
-    manifest.exports
-      .filter((declaration) => hasStringImports || hasValueTypes(declaration, recordNames))
-      .map((declaration) => [
-        declaration.name,
-        {
-          parameters: declaration.parameters.map(
-            ({ type, reference, arguments: typeArguments, length, ownership }) => ({
-              type,
-              ...(reference === undefined ? {} : { reference }),
-              ...(typeArguments === undefined ? {} : { arguments: typeArguments }),
-              ...(length === undefined ? {} : { length }),
-              ...(ownership === undefined ? {} : { ownership }),
-            }),
-          ),
-          result: declaration.result,
-          ...(declaration.resultReference === undefined ? {} : { resultReference: declaration.resultReference }),
-        },
-      ]),
+  const valueImports = manifest.imports.filter(({ function: decl }) => hasValueTypes(decl, recordNames));
+  const valueExports = collectValueExports(manifest, recordNames, hasStringImports);
+  const functionNames = collectExportFunctionNames(manifest, iteratorExports);
+  const hasValueAdapters = hasValueAdaptersConfigured(valueExports, valueImports);
+  const valueAdapter = resolveValueAdapter(
+    valueExports,
+    recordLayouts,
+    valueImports,
+    hasStringTypes(manifest),
+    hasValueAdapters,
   );
-  const hasValueExports = Object.keys(valueExports).length > 0;
-  const hasValueImports = valueImports.length > 0;
-  const hasValueAdapters = hasValueExports || hasValueImports;
-  const hasStringExports = manifest.exports.some(
-    (declaration) => declaration.parameters.some(({ type }) => type === 'string') || declaration.result === 'string',
-  );
-  const functionNames = [
-    ...new Set([
-      ...manifest.exports.map(({ name }) => name),
-      ...iteratorExports.flatMap(({ name, nextFunction }) => [name, nextFunction]),
-      manifest.memory.allocatorExport,
-      manifest.memory.deallocatorExport,
-      manifest.memory.reallocatorExport,
-      'fws_reset',
-    ]),
-  ];
-  const hasStringValues = hasStringExports || hasStringImports;
-  const valueAdapter = hasValueAdapters
-    ? createValueAdapterSource(valueExports, recordLayouts, valueImports, hasStringValues)
-    : `function adaptValueExports(wasmExports) {
-  return wasmExports;
-}`;
-  return `${enumExports}${enumExports.length === 0 ? '' : '\n'}const wasm = Uint8Array.from([${byteArray}]);
+  const enumPrefix = enumExports.length > 0 ? `${enumExports}\n` : '';
+  return `${enumPrefix}const wasm = Uint8Array.from([${byteArray}]);
 const wasmBase64 = '${base64}';
 export const manifest = ${JSON.stringify(manifest)};
 export const dynamicLinkMetadata = ${JSON.stringify(dynamicMetadata)};

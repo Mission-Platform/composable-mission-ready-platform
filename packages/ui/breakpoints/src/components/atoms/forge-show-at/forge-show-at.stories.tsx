@@ -1,5 +1,6 @@
-import { ForgeShowAt } from '@mission-platform/breakpoints';
 import { expect, waitFor } from 'storybook/test';
+
+import { ForgeShowAt } from '@mission-platform/breakpoints';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

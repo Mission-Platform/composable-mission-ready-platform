@@ -266,21 +266,27 @@ function isValidCacheIndex(parsed: unknown): parsed is ForgeWebScriptCacheIndex 
 }
 
 /**
- * Reads and parses the cache index from disk, returning undefined if missing or malformed.
+ * Safely parses string content into a validated cache index.
  */
-export function readForgeWebScriptCacheIndex(
-  cache: ForgeWebScriptWatCache | undefined,
-): ForgeWebScriptCacheIndex | undefined {
-  if (cache?.read === undefined) return undefined;
+function parseCacheIndexContent(content: string | undefined): ForgeWebScriptCacheIndex | undefined {
+  if (!content) return undefined;
   try {
-    const content = cache.read(forgeWebScriptCacheIndexPath(cache));
-    if (content === undefined || content === '') return undefined;
     const parsed = JSON.parse(content);
     return isValidCacheIndex(parsed) ? parsed : undefined;
   } catch {
     // Malformed index is ignored and rebuilt.
     return undefined;
   }
+}
+
+/**
+ * Reads and parses the cache index from disk, returning undefined if missing or malformed.
+ */
+export function readForgeWebScriptCacheIndex(
+  cache: ForgeWebScriptWatCache | undefined,
+): ForgeWebScriptCacheIndex | undefined {
+  if (cache === undefined || cache.read === undefined) return undefined;
+  return parseCacheIndexContent(cache.read(forgeWebScriptCacheIndexPath(cache)));
 }
 
 /**
@@ -305,6 +311,50 @@ function removeStaleFiles(
 }
 
 /**
+ * Updates cache index entries with the current module's file list.
+ */
+function updateCacheIndexEntries(
+  existingEntries: Readonly<Record<string, ForgeWebScriptCacheIndexEntry>>,
+  moduleIdOrPath: string,
+  currentKey: string,
+  files: readonly string[],
+): Record<string, ForgeWebScriptCacheIndexEntry> {
+  return {
+    ...existingEntries,
+    [moduleIdOrPath]: {
+      key: currentKey,
+      files,
+      timestamp: Date.now(),
+    },
+  };
+}
+
+/**
+ * Checks and prunes previous files if the cache key has changed.
+ */
+function pruneIfStale(
+  cache: ForgeWebScriptWatCache,
+  previous: ForgeWebScriptCacheIndexEntry | undefined,
+  currentKey: string,
+  newFiles: readonly string[],
+): void {
+  if (previous === undefined || previous.key === currentKey) return;
+  removeStaleFiles(cache, previous.files, newFiles);
+}
+
+/**
+ * Persists the cache index to disk atomically.
+ */
+function writeCacheIndex(cache: ForgeWebScriptWatCache, entries: Record<string, ForgeWebScriptCacheIndexEntry>): void {
+  if (cache.writeAtomic === undefined) return;
+  try {
+    cache.writeAtomic(forgeWebScriptCacheIndexPath(cache), JSON.stringify({ version: 1, entries }, undefined, 2));
+  } catch {
+    // Stale index persistence failure must never break compilation.
+  }
+}
+
+/**
  * Prunes stale cached artifacts for a given module ID when its cache key has changed.
  */
 export function pruneStaleForgeWebScriptCache(
@@ -313,29 +363,11 @@ export function pruneStaleForgeWebScriptCache(
   currentKey: string,
   newFiles: readonly string[],
 ): void {
-  if (cache === undefined || cache.writeAtomic === undefined) return;
-  const existing = readForgeWebScriptCacheIndex(cache) ?? { version: 1, entries: {} };
-  const previous = existing.entries[moduleIdOrPath];
-  if (previous !== undefined && previous.key !== currentKey) {
-    removeStaleFiles(cache, previous.files, newFiles);
-  }
-
-  const updatedEntries = {
-    ...existing.entries,
-    [moduleIdOrPath]: {
-      key: currentKey,
-      files: newFiles,
-      timestamp: Date.now(),
-    },
-  };
-  try {
-    cache.writeAtomic(
-      forgeWebScriptCacheIndexPath(cache),
-      JSON.stringify({ version: 1, entries: updatedEntries }, undefined, 2),
-    );
-  } catch {
-    // Stale index persistence failure must never break compilation.
-  }
+  if (cache === undefined) return;
+  const existing = readForgeWebScriptCacheIndex(cache);
+  const entries = existing === undefined ? {} : existing.entries;
+  pruneIfStale(cache, entries[moduleIdOrPath], currentKey, newFiles);
+  writeCacheIndex(cache, updateCacheIndexEntries(entries, moduleIdOrPath, currentKey, newFiles));
 }
 
 /**
@@ -378,27 +410,35 @@ function collectActiveFiles(indexPath: string, index: ForgeWebScriptCacheIndex |
 }
 
 /**
+ * Attempts to prune an individual orphaned or temporary file.
+ */
+function tryPruneFile(
+  cache: ForgeWebScriptWatCache,
+  file: string,
+  hasIndex: boolean,
+  activeFiles: ReadonlySet<string>,
+): boolean {
+  if (file.endsWith('.tmp')) {
+    return removeCacheFileSilently(cache, file, 'orphaned-temp');
+  }
+  if (!hasIndex) return false;
+  if (!isOrphanedArtifact(file, activeFiles)) return false;
+  return removeCacheFileSilently(cache, file, 'orphaned-artifact');
+}
+
+/**
  * Prunes orphaned temporary and unindexed cache files from the cache directory.
  */
 export function pruneOrphanedForgeWebScriptCacheFiles(cache: ForgeWebScriptWatCache | undefined): readonly string[] {
-  if (cache?.listFiles === undefined || cache.remove === undefined) return [];
-  const removed: string[] = [];
+  if (cache === undefined || cache.listFiles === undefined) return [];
   const files = cache.listFiles();
   const index = readForgeWebScriptCacheIndex(cache);
   const activeFiles = collectActiveFiles(forgeWebScriptCacheIndexPath(cache), index);
+  const hasIndex = index !== undefined;
+  const removed: string[] = [];
 
   for (const file of files) {
-    if (file.endsWith('.tmp')) {
-      if (removeCacheFileSilently(cache, file, 'orphaned-temp')) {
-        removed.push(file);
-      }
-      continue;
-    }
-    if (
-      index !== undefined &&
-      isOrphanedArtifact(file, activeFiles) &&
-      removeCacheFileSilently(cache, file, 'orphaned-artifact')
-    ) {
+    if (tryPruneFile(cache, file, hasIndex, activeFiles)) {
       removed.push(file);
     }
   }

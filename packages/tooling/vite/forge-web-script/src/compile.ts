@@ -206,7 +206,9 @@ function watCacheFor(
     remove(fileName): void {
       try {
         unlinkSync(fileName);
-      } catch {}
+      } catch {
+        // Silently ignore removal errors for missing or locked cache files.
+      }
     },
     listFiles(): readonly string[] {
       try {
