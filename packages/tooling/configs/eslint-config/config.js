@@ -82,6 +82,9 @@ const FUNCTION_NODE_TYPES = new Set([
   'MethodDefinition',
 ]);
 
+/**
+ * Check whether an AST node is a supported function declaration or expression.
+ */
 function isFunctionNode(node) {
   return Boolean(node && FUNCTION_NODE_TYPES.has(node.type));
 }
@@ -90,21 +93,22 @@ function isFunctionNode(node) {
  * Find the enclosing TSTypeAnnotation for a nested type node.
  */
 function findEnclosingTypeAnnotation(node) {
-  let target;
-  let current = node?.parent;
-  while (current) {
+  let matched;
+  for (let current = node?.parent; current; current = current.parent) {
     if (current.type === 'TSTypeAnnotation') {
-      target = current;
+      matched = current;
       break;
     }
     if (BOUNDARY_NODE_TYPES.has(current.type)) {
       break;
     }
-    current = current.parent;
   }
-  return target;
+  return matched;
 }
 
+/**
+ * Check whether a type node is a direct type annotation on an exported function.
+ */
 function isDirectExportedFunctionAnnotation(node) {
   const parent = node?.parent;
   if (parent?.type !== 'TSTypeAnnotation') {
@@ -114,24 +118,39 @@ function isDirectExportedFunctionAnnotation(node) {
   return isFunctionNode(functionNode) && isNodeExported(functionNode);
 }
 
+/**
+ * Check whether an enclosing annotation is the direct return type of an exported function.
+ */
 function isDirectFunctionReturn(enclosing) {
   const functionNode = enclosing.parent;
   return isFunctionNode(functionNode) && functionNode.returnType === enclosing && isNodeExported(functionNode);
 }
 
+/**
+ * Check whether a node is a TSFunctionType returning the specified enclosing annotation.
+ */
+function isMatchingFunctionType(node, enclosing) {
+  return Boolean(node?.type === 'TSFunctionType' && node.returnType === enclosing);
+}
+
+/**
+ * Check whether an enclosing annotation is a function type return on an exported function.
+ */
 function isFunctionTypeReturn(enclosing) {
   const tsFunction = enclosing.parent;
-  if (tsFunction?.type !== 'TSFunctionType' || tsFunction.returnType !== enclosing) {
+  if (!isMatchingFunctionType(tsFunction, enclosing)) {
     return false;
   }
   const annotation = tsFunction.parent;
   if (annotation?.type !== 'TSTypeAnnotation') {
     return false;
   }
-  const functionNode = annotation.parent;
-  return isFunctionNode(functionNode) && functionNode.returnType === annotation && isNodeExported(functionNode);
+  return isDirectFunctionReturn(annotation);
 }
 
+/**
+ * Check whether a nested type node is part of an exported function return annotation.
+ */
 function isNestedReturnTypeAnnotation(node) {
   const enclosing = findEnclosingTypeAnnotation(node);
   if (!enclosing) {
@@ -236,6 +255,9 @@ const missionTypeScriptPlugin = {
         },
       },
       create(context) {
+        /**
+         * Validate a type assertion node for prefer-satisfies and no-as-any rules.
+         */
         function validateAssertion(node) {
           if (node.typeAnnotation?.type === 'TSAnyKeyword') {
             context.report({ node, messageId: 'noAsAny' });

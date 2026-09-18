@@ -125,6 +125,23 @@ function hasFrameworkHelper(
 }
 
 /**
+ * Check whether a framework condition or helper conflicts with the target framework.
+ */
+function isFrameworkConflicting(
+  otherFw: string,
+  otherCond: string,
+  configuredConditions: ReadonlySet<string>,
+  stripped?: string,
+): boolean {
+  if (configuredConditions.has(otherCond)) {
+    return true;
+  }
+  return stripped
+    ? hasFrameworkHelper(stripped, otherFw as ConsumerFramework)
+    : false;
+}
+
+/**
  * Check for conflicting framework conditions in vite.config.ts.
  */
 function checkConflictingViteConditions(
@@ -135,12 +152,11 @@ function checkConflictingViteConditions(
   stripped?: string,
 ): void {
   for (const [otherFw, otherCond] of Object.entries(FRAMEWORK_CONDITIONS)) {
-    const hasHelperConflict = stripped
-      ? hasFrameworkHelper(stripped, otherFw as ConsumerFramework)
-      : false;
+    if (otherFw === framework) {
+      continue;
+    }
     if (
-      otherFw !== framework &&
-      (configuredConditions.has(otherCond) || hasHelperConflict)
+      isFrameworkConflicting(otherFw, otherCond, configuredConditions, stripped)
     ) {
       checks.push({
         name: `Conflicting condition (${otherCond})`,

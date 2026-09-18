@@ -222,10 +222,20 @@ function readSymlinkTarget(resolved: string): string | undefined {
 }
 
 /**
- * Hash an untracked repository path for the commit snapshot.
+ * Check whether a resolved path is a directory.
  */
-function hashUntrackedPath(path: string, options: GitCommandInputOptions): string {
-  const resolved = resolveRepoPath(path, 'Untracked path', { allowMissing: true, allowSymlink: true });
+function isDirectoryPath(resolved: string): boolean {
+  try {
+    return lstatSync(resolved).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Describe non-regular file state for an untracked path.
+ */
+function describeUntrackedPathState(path: string, resolved: string): string | undefined {
   const symlinkTarget = readSymlinkTarget(resolved);
   if (symlinkTarget !== undefined) {
     return `${path}\0symlink:${symlinkTarget}`;
@@ -233,18 +243,36 @@ function hashUntrackedPath(path: string, options: GitCommandInputOptions): strin
   if (!existsSync(resolved)) {
     return `${path}\0<missing>`;
   }
-  try {
-    if (lstatSync(resolved).isDirectory()) {
-      return `${path}\0directory`;
-    }
-  } catch {
-    return `${path}\0<missing>`;
+  if (isDirectoryPath(resolved)) {
+    return `${path}\0directory`;
   }
+  return undefined;
+}
+
+/**
+ * Hash regular untracked file object via Git.
+ */
+function hashUntrackedFile(path: string, resolved: string, options: GitCommandInputOptions): string {
   const hash = runGit('commit-snapshot-untracked', ['hash-object', '--no-filters', '--', path], options);
   if (hash.success) {
     return `${path}\0${hash.stdout.trim()}`;
   }
-  return existsSync(resolved) ? requireGitSuccess(hash) : `${path}\0<missing>`;
+  if (!existsSync(resolved)) {
+    return `${path}\0<missing>`;
+  }
+  return requireGitSuccess(hash);
+}
+
+/**
+ * Hash an untracked repository path for the commit snapshot.
+ */
+function hashUntrackedPath(path: string, options: GitCommandInputOptions): string {
+  const resolved = resolveRepoPath(path, 'Untracked path', { allowMissing: true, allowSymlink: true });
+  const specialState = describeUntrackedPathState(path, resolved);
+  if (specialState !== undefined) {
+    return specialState;
+  }
+  return hashUntrackedFile(path, resolved, options);
 }
 
 export function captureCommitSnapshot(

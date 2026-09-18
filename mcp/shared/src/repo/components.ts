@@ -296,8 +296,14 @@ export function extractStoryNames(storySource: string): string[] {
 }
 
 /** Extract enum option strings from storybook argTypes options block. */
-function extractArgTypeOptions(storySource: string, propName: string): string[] {
-  const blockRegex = new RegExp(`${propName}:\\s*\\{[^}]*options:\\s*\\[([^\\]]+)\\]`, "s");
+function extractArgTypeOptions(
+  storySource: string,
+  propName: string,
+): string[] {
+  const blockRegex = new RegExp(
+    `${propName}:\\s*\\{[^}]*options:\\s*\\[([^\\]]+)\\]`,
+    "s",
+  );
   const match = blockRegex.exec(storySource);
   if (!match?.[1]) return [];
   const optionMatches = match[1].match(/['"]([^'"]+)['"]/g) ?? [];
@@ -311,7 +317,12 @@ interface SingleStoryMetadata {
   readonly sizes: readonly string[];
 }
 
-function parseSingleStoryFile(fullPath: string): SingleStoryMetadata | undefined {
+/**
+ * Read and parse metadata, stories, variants, and sizes from a single story file.
+ */
+function parseSingleStoryFile(
+  fullPath: string,
+): SingleStoryMetadata | undefined {
   try {
     const storySource = readFileSync(fullPath, "utf8");
     const titleMatch = /title:\s*['"]([^'"]+)['"]/.exec(storySource);
@@ -326,6 +337,9 @@ function parseSingleStoryFile(fullPath: string): SingleStoryMetadata | undefined
   }
 }
 
+/**
+ * Add all items from a collection into a target set.
+ */
 function addAllToSet<T>(target: Set<T>, items: readonly T[]): void {
   for (const item of items) {
     target.add(item);

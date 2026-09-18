@@ -29,6 +29,9 @@ function tryReadManifest(
   }
 }
 
+/**
+ * Collect single manifest file if target path points to package.json.
+ */
 function collectSingleFileManifest(
   targetPath: string,
   repoRoot: string,
@@ -41,11 +44,20 @@ function collectSingleFileManifest(
   return single ? [single] : [];
 }
 
-function isChildMemberDirectory(memberDir: string, targetPath: string): boolean {
+/**
+ * Check whether a workspace member directory is inside the scoped target path.
+ */
+function isChildMemberDirectory(
+  memberDir: string,
+  targetPath: string,
+): boolean {
   const rel = relative(targetPath, memberDir);
   return Boolean(rel && !rel.startsWith("..") && !isAbsolute(rel));
 }
 
+/**
+ * Collect manifests for all child workspace members within the target path scope.
+ */
 function collectWorkspaceMemberManifests(
   targetPath: string,
   repoRoot: string,
@@ -65,13 +77,19 @@ function collectWorkspaceMemberManifests(
   return manifests;
 }
 
+/**
+ * Collect direct and child member package manifests within a target directory.
+ */
 function collectDirectoryManifests(
   targetPath: string,
   repoRoot: string,
 ): Array<{ manifest: PackageManifest; relPath: string }> {
   const manifests: Array<{ manifest: PackageManifest; relPath: string }> = [];
   const directManifestPath = join(targetPath, "package.json");
-  const directRelPath = relative(repoRoot, directManifestPath).replaceAll("\\", "/");
+  const directRelPath = relative(repoRoot, directManifestPath).replaceAll(
+    "\\",
+    "/",
+  );
   const direct = tryReadManifest(directManifestPath, directRelPath);
   if (direct) manifests.push(direct);
 
@@ -234,12 +252,25 @@ function auditLifecycleScripts(
 }
 
 const TARBALL_EXTENSIONS = [".tgz", ".tar.gz"] as const;
-const SENSITIVE_QUERY_PARAMS = ["token", "auth", "key", "secret", "sig", "signature"] as const;
+const SENSITIVE_QUERY_PARAMS = [
+  "token",
+  "auth",
+  "key",
+  "secret",
+  "sig",
+  "signature",
+] as const;
 
+/**
+ * Check whether a URL protocol matches http or https.
+ */
 function isHttpProtocol(protocol: string): boolean {
   return protocol === "http:" || protocol === "https:";
 }
 
+/**
+ * Check whether a URL pathname points to a tarball archive extension.
+ */
 function isTarballPath(pathname: string): boolean {
   const lower = pathname.toLowerCase();
   return TARBALL_EXTENSIONS.some((ext) => lower.endsWith(ext));
@@ -259,6 +290,9 @@ function parseTarballUrl(spec: string): URL | undefined {
   }
 }
 
+/**
+ * Sanitize username and password credentials on a URL instance.
+ */
 function sanitizeUrlCredentials(url: URL): void {
   const hadPassword = Boolean(url.password);
   if (hadPassword) {
@@ -270,6 +304,9 @@ function sanitizeUrlCredentials(url: URL): void {
   }
 }
 
+/**
+ * Redact sensitive query parameters on a URL instance.
+ */
 function sanitizeUrlQueryParams(url: URL): void {
   for (const param of SENSITIVE_QUERY_PARAMS) {
     if (url.searchParams.has(param)) {

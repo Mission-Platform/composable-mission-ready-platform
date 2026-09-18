@@ -184,6 +184,9 @@ interface SecurityScanExecutionResult {
   readonly incomplete?: boolean;
 }
 
+/**
+ * Scan a single file using the provided scanner function and capture errors.
+ */
 function scanFileSecurity(
   filePath: string,
   scanFn: (options: { path: string }) => SecurityScanExecutionResult,
@@ -206,6 +209,9 @@ function scanFileSecurity(
   }
 }
 
+/**
+ * Execute security scanning across a batch of files and accumulate findings and errors.
+ */
 function scanFileBatch(
   files: readonly { readonly path: string }[],
   scanFn: (options: { path: string }) => SecurityScanExecutionResult,
@@ -239,14 +245,23 @@ function scanReviewSecurityFindings(
   return result;
 }
 
+/**
+ * Count security findings matching a specific severity level.
+ */
 function countBySeverity(findings: readonly SecurityFinding[], severity: 'critical' | 'high'): number {
   return findings.filter((f) => f.severity === severity).length;
 }
 
+/**
+ * Extract unique security standard categories from findings.
+ */
 function extractUniqueCategories(findings: readonly SecurityFinding[], key: 'owasp' | 'cwe' | 'isoControl'): string[] {
   return [...new Set(findings.map((f) => f[key]).filter(Boolean))];
 }
 
+/**
+ * Resolve incomplete boolean flag for security review report.
+ */
 function resolveReviewIncompleteStatus(incomplete: boolean, hasErrors: boolean): true | undefined {
   if (incomplete || hasErrors) {
     return true;
@@ -278,6 +293,9 @@ function buildSecurityReviewSummary(
   };
 }
 
+/**
+ * Determine whether git diff changed-files input is incomplete or truncated.
+ */
 function isGitInputIncomplete(
   changed: {
     readonly success: boolean;
