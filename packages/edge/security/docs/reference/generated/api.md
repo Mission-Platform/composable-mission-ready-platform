@@ -14,13 +14,18 @@ Generated from public source declarations in `@mission-platform/edge-security`.
 function createCspPolicy(customDirectives?: CspDirectives): string;
 ```
 
-No description provided.
+Serializes Content Security Policy directives into a standard header value string.
 
 #### Parameters
 
-| Name             | Type          | Description |
-| ---------------- | ------------- | ----------- |
-| customDirectives | CspDirectives |             |
+| Name             | Type          | Description                                            |
+| ---------------- | ------------- | ------------------------------------------------------ |
+| customDirectives | CspDirectives | - Optional directives to merge with baseline defaults. |
+
+#### Contract
+
+- **@param:** - Optional directives to merge with baseline defaults.
+- **@returns:** Serialized Content-Security-Policy header string.
 
 ### DEFAULT_CSP_DIRECTIVES
 
@@ -42,14 +47,20 @@ No description provided.
 function applySecurityHeaders(response: Response, options?: SecurityHeaderOptions): Response;
 ```
 
-No description provided.
+Applies security headers to an HTTP Response, attempting in-place mutation first.
 
 #### Parameters
 
-| Name     | Type                  | Description |
-| -------- | --------------------- | ----------- |
-| response | Response              |             |
-| options  | SecurityHeaderOptions |             |
+| Name     | Type                  | Description                                               |
+| -------- | --------------------- | --------------------------------------------------------- |
+| response | Response              | - The outgoing HTTP Response object.                      |
+| options  | SecurityHeaderOptions | - Configuration options for the applied security headers. |
+
+#### Contract
+
+- **@param:** - The outgoing HTTP Response object.
+- **@param:** - Configuration options for the applied security headers.
+- **@returns:** The response decorated with security headers.
 
 ### createSecurityHeaders
 
@@ -59,13 +70,18 @@ No description provided.
 function createSecurityHeaders(options?: SecurityHeaderOptions): Headers;
 ```
 
-No description provided.
+Constructs a Headers collection populated with hardened defense-in-depth security headers.
 
 #### Parameters
 
-| Name    | Type                  | Description |
-| ------- | --------------------- | ----------- |
-| options | SecurityHeaderOptions |             |
+| Name    | Type                  | Description                                              |
+| ------- | --------------------- | -------------------------------------------------------- |
+| options | SecurityHeaderOptions | - Configuration options for individual security headers. |
+
+#### Contract
+
+- **@param:** - Configuration options for individual security headers.
+- **@returns:** A Headers instance containing the configured security headers.
 
 ### DEFAULT_HSTS_OPTIONS
 
@@ -85,13 +101,18 @@ No description provided.
 function formatHsts(options: HstsOptions = DEFAULT_HSTS_OPTIONS): string;
 ```
 
-No description provided.
+Formats Strict-Transport-Security header options into a standard HSTS header value.
 
 #### Parameters
 
-| Name    | Type        | Description |
-| ------- | ----------- | ----------- |
-| options | HstsOptions |             |
+| Name    | Type        | Description                                  |
+| ------- | ----------- | -------------------------------------------- |
+| options | HstsOptions | - Configuration options for HSTS directives. |
+
+#### Contract
+
+- **@param:** - Configuration options for HSTS directives.
+- **@returns:** The serialized Strict-Transport-Security header value.
 
 ### formatPermissionsPolicy
 
@@ -101,13 +122,18 @@ No description provided.
 function formatPermissionsPolicy(directives: PermissionsPolicyDirectives): string;
 ```
 
-No description provided.
+Serializes Permissions Policy directives into a standard header string.
 
 #### Parameters
 
-| Name       | Type                        | Description |
-| ---------- | --------------------------- | ----------- |
-| directives | PermissionsPolicyDirectives |             |
+| Name       | Type                        | Description                                              |
+| ---------- | --------------------------- | -------------------------------------------------------- |
+| directives | PermissionsPolicyDirectives | - Dictionary mapping feature names to origin allowlists. |
+
+#### Contract
+
+- **@param:** - Dictionary mapping feature names to origin allowlists.
+- **@returns:** The serialized Permissions-Policy header value.
 
 ## `src/middleware`
 

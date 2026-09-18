@@ -59,7 +59,7 @@ export function createCspPolicy(customDirectives?: CspDirectives): string {
     ? { ...DEFAULT_CSP_DIRECTIVES, ...customDirectives }
     : DEFAULT_CSP_DIRECTIVES;
 
-  return DIRECTIVE_MAP.map(([, directive], index) => formatCspDirective(directive, merged[DIRECTIVE_MAP[index]![0]]))
+  return DIRECTIVE_MAP.map(([key, directive]) => formatCspDirective(directive, merged[key]))
     .filter((part): part is string => part !== undefined)
     .join('; ');
 }

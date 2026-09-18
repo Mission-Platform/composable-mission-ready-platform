@@ -82,12 +82,12 @@ function applyHstsHeader(headers: Headers, hsts: SecurityHeaderOptions['hsts']):
 }
 
 /**
- * Injects standard defense-in-depth headers into the target Headers collection.
+ * Injects browser protection headers (nosniff, frame protection, referrer policy, XSS).
  *
  * @param headers - Target Headers instance.
  * @param options - Security header configuration options.
  */
-function applyStandardHeaders(headers: Headers, options?: SecurityHeaderOptions): void {
+function applyProtectionHeaders(headers: Headers, options?: SecurityHeaderOptions): void {
   if (options?.contentTypeOptions !== false) {
     headers.set('X-Content-Type-Options', 'nosniff');
   }
@@ -100,6 +100,15 @@ function applyStandardHeaders(headers: Headers, options?: SecurityHeaderOptions)
   if (options?.xssProtection !== false) {
     headers.set('X-XSS-Protection', typeof options?.xssProtection === 'string' ? options.xssProtection : '0');
   }
+}
+
+/**
+ * Injects origin policy headers (Permissions-Policy, COOP, CORP).
+ *
+ * @param headers - Target Headers instance.
+ * @param options - Security header configuration options.
+ */
+function applyPolicyHeaders(headers: Headers, options?: SecurityHeaderOptions): void {
   if (options?.permissionsPolicy && typeof options.permissionsPolicy === 'object') {
     headers.set('Permissions-Policy', formatPermissionsPolicy(options.permissionsPolicy));
   }
@@ -109,6 +118,17 @@ function applyStandardHeaders(headers: Headers, options?: SecurityHeaderOptions)
   if (options?.crossOriginResourcePolicy) {
     headers.set('Cross-Origin-Resource-Policy', options.crossOriginResourcePolicy);
   }
+}
+
+/**
+ * Injects standard defense-in-depth headers into the target Headers collection.
+ *
+ * @param headers - Target Headers instance.
+ * @param options - Security header configuration options.
+ */
+function applyStandardHeaders(headers: Headers, options?: SecurityHeaderOptions): void {
+  applyProtectionHeaders(headers, options);
+  applyPolicyHeaders(headers, options);
 }
 
 /**
