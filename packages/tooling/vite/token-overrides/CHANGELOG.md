@@ -1,5 +1,11 @@
 # @mission-platform/vite-plugin-token-overrides
 
+## 0.2.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.2.0
 
 ### Minor Changes

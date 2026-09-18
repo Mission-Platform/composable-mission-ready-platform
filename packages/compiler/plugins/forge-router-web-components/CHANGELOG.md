@@ -1,5 +1,14 @@
 # @mission-platform/forge-router-web-components
 
+## 0.2.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-router-plugin-api@0.1.3
+  - @mission-platform/router@1.1.2
+
 ## 0.2.0
 ### Minor Changes
 

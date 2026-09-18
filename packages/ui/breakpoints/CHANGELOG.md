@@ -1,5 +1,15 @@
 # @mission-platform/breakpoints
 
+## 6.0.3
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-adapters@1.2.1
+  - @mission-platform/forge-jsx@2.0.1
+  - @mission-platform/i18n@2.1.3
+
 ## 6.0.2
 ### Patch Changes
 

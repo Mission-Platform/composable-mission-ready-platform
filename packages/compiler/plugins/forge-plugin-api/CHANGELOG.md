@@ -1,5 +1,11 @@
 # @mission-platform/forge-plugin-api
 
+## 0.4.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.4.0
 ### Minor Changes
 

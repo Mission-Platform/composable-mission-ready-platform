@@ -1,5 +1,13 @@
 # @mission-platform/figma-forge-plugin
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-figma@0.1.2
+  - @mission-platform/forge-figma-bridge@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

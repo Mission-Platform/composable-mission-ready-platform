@@ -1,5 +1,15 @@
 # @mission-platform/forge-web-script-cli
 
+## 0.2.2
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [8f103a6]
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-web-script@0.3.1
+  - @mission-platform/forge-web-script-runtime@0.3.1
+
 ## 0.2.1
 ### Patch Changes
 

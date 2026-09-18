@@ -1,5 +1,13 @@
 # @mission-platform/forge-web-script-lsp
 
+## 0.3.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-web-script-language-service@0.3.1
+
 ## 0.3.0
 ### Minor Changes
 

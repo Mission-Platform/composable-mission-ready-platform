@@ -1,5 +1,21 @@
 # @mission-platform/layouts
 
+## 2.1.2
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/components@3.2.1
+  - @mission-platform/forge-adapters@1.2.1
+  - @mission-platform/forge-jsx@2.0.1
+  - @mission-platform/forms-core@0.3.2
+  - @mission-platform/harper@0.2.3
+  - @mission-platform/hunspell@0.4.3
+  - @mission-platform/icons@2.0.3
+  - @mission-platform/phone-number@0.3.4
+  - @mission-platform/tokens@2.0.1
+
 ## 2.1.1
 ### Patch Changes
 

@@ -1,5 +1,21 @@
 # @mission-platform/qr-code
 
+## 3.0.1
+
+### Patch Changes
+
+- daa6ae4: refactor(codecs): extract barcode, qr-code, and matrix-code Wasm cores into dedicated packages
+- cb5f5ca: configure packages for public access
+- Updated dependencies [daa6ae4]
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/qr-code-wasm@3.1.0
+  - @mission-platform/components@3.2.1
+  - @mission-platform/forge-adapters@1.2.1
+  - @mission-platform/forge-jsx@2.0.1
+  - @mission-platform/icons@2.0.3
+  - @mission-platform/typography@1.1.2
+  - @mission-platform/vcard@0.2.3
+
 ## 3.0.0
 ### Major Changes
 

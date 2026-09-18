@@ -1,5 +1,15 @@
 # @mission-platform/storybook-framework
 
+## 0.3.3
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/vite-plugin-i18n@0.1.5
+  - @mission-platform/vite-config@1.1.3
+
 ## 0.3.2
 ### Patch Changes
 

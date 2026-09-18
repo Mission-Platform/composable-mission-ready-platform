@@ -1,5 +1,14 @@
 # @mission-platform/forge-cms-astro
 
+## 0.2.3
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-cms-plugin-api@1.0.1
+  - @mission-platform/forge-plugin-api@0.4.1
+
 ## 0.2.2
 ### Patch Changes
 

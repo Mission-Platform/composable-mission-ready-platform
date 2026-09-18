@@ -1,5 +1,16 @@
 # @mission-platform/email-components
 
+## 1.1.2
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/email-renderer@0.1.4
+  - @mission-platform/forge-adapters@1.2.1
+  - @mission-platform/forge-jsx@2.0.1
+  - @mission-platform/tokens@2.0.1
+
 ## 1.1.1
 ### Patch Changes
 

@@ -1,5 +1,13 @@
 # @mission-platform/phone-number
 
+## 0.3.4
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-web-script-regex@0.3.1
+
 ## 0.3.3
 ### Patch Changes
 

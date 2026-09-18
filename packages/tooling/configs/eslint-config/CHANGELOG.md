@@ -1,5 +1,17 @@
 # @mission-platform/eslint-config
 
+## 1.1.0
+
+### Minor Changes
+
+- 274c674: add AST syntax rules for satisfies, unconstrained generics, and implicit unknown
+
+### Patch Changes
+
+- cb5f5ca: update dependencies, peer dependency catalogs, and sonarjs patch
+- 0e71e3e: decompose AST helpers for type rules
+- cb5f5ca: configure packages for public access
+
 ## 1.0.2
 
 ### Patch Changes

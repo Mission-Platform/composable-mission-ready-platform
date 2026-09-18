@@ -1,5 +1,11 @@
 # @mission-platform/forge-web-script-regex
 
+## 0.3.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.3.0
 ### Minor Changes
 

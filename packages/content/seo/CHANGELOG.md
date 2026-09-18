@@ -1,5 +1,12 @@
 # @mission-platform/seo
 
+## 0.3.5
+
+### Patch Changes
+
+- cb5f5ca: update dependencies, peer dependency catalogs, and sonarjs patch
+- cb5f5ca: configure packages for public access
+
 ## 0.3.4
 
 ### Patch Changes

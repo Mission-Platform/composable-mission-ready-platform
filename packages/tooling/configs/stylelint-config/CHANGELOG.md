@@ -1,5 +1,11 @@
 # @mission-platform/stylelint-config
 
+## 0.1.5
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.1.4
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @mission-platform/forge-web-script-stdlib
 
+## 0.2.2
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-web-script-runtime@0.3.1
+
 ## 0.2.1
 ### Patch Changes
 

@@ -1,5 +1,11 @@
 # @mission-platform/i18n
 
+## 2.1.3
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 2.1.2
 ### Patch Changes
 

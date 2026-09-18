@@ -1,5 +1,12 @@
 # @mission-platform/email-sender
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/email-components@1.1.2
+
 ## 0.0.3
 ### Patch Changes
 

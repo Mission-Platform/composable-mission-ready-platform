@@ -1,5 +1,13 @@
 # @mission-platform/forge-web-script-wasm
 
+## 1.0.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-web-script-regex@0.3.1
+
 ## 1.0.0
 ### Major Changes
 

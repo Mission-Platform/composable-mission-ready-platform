@@ -1,5 +1,11 @@
 # @mission-platform/hunspell
 
+## 0.4.3
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+
 ## 0.4.2
 
 ### Patch Changes

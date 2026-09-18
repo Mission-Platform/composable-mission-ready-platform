@@ -1,5 +1,13 @@
 # @mission-platform/forge-plugin-solid
 
+## 0.2.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-plugin-api@0.4.1
+
 ## 0.2.0
 ### Minor Changes
 

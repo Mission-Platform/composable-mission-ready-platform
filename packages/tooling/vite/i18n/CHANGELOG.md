@@ -1,5 +1,14 @@
 # @mission-platform/vite-plugin-i18n
 
+## 0.1.5
+
+### Patch Changes
+
+- cb5f5ca: update dependencies, peer dependency catalogs, and sonarjs patch
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/i18n@2.1.3
+
 ## 0.1.4
 ### Patch Changes
 

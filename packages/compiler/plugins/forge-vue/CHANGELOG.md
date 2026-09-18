@@ -1,5 +1,13 @@
 # @mission-platform/forge-plugin-vue
 
+## 0.3.1
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/forge-plugin-api@0.4.1
+
 ## 0.3.0
 ### Minor Changes
 

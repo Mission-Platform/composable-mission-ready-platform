@@ -1,5 +1,20 @@
 # @mission-platform/code-scanner
 
+## 1.3.1
+
+### Patch Changes
+
+- 8f103a6: refactor(compiler): prune cache growth, lift scanner wasm package, and modularize compiler
+- cb5f5ca: configure packages for public access
+- Updated dependencies [8f103a6]
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/code-scanner-wasm@1.4.0
+  - @mission-platform/components@3.2.1
+  - @mission-platform/forge-adapters@1.2.1
+  - @mission-platform/forge-jsx@2.0.1
+  - @mission-platform/icons@2.0.3
+  - @mission-platform/typography@1.1.2
+
 ## 1.3.0
 ### Minor Changes
 

@@ -1,5 +1,14 @@
 # @mission-platform/vite-plugin-seo
 
+## 0.1.3
+
+### Patch Changes
+
+- cb5f5ca: configure packages for public access
+- Updated dependencies [cb5f5ca]
+- Updated dependencies [cb5f5ca]
+  - @mission-platform/seo@0.3.5
+
 ## 0.1.2
 
 ### Patch Changes
