@@ -1,9 +1,8 @@
 {
-  "name": "@mission-platform/forge-spa",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@mission-platform/edge-security",
+  "version": "0.0.1",
   "license": "BSD-4-Clause",
-  "description": "Cloudflare SPA asset worker that delegates requests to the ASSETS binding",
+  "description": "Hardened HTTP security headers, CSP builders, and Cloudflare Worker middleware for the Mission Platform",
   "type": "module",
   "exports": {
     ".": {
@@ -23,14 +22,11 @@
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
-  "dependencies": {
-    "@mission-platform/edge-security": "workspace:*"
-  },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:cloudflare",
-    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",

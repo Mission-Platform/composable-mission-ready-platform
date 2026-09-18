@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { handleRequest, type Delivery } from '.';
+import worker, { handleRequest, type Delivery } from '.';
 
 vi.mock('cloudflare:sockets', () => ({
   connect: vi.fn(),
@@ -62,6 +62,11 @@ describe('email sender Worker', () => {
     expect(result).toEqual({ ok: true, message: 'Email delivered to MailPit.' });
     expect(delivery).toHaveBeenCalledOnce();
     expect(delivery.mock.calls[0]?.[1].html).toBe(completedHtml);
+    expect(response.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(response.headers.get('x-frame-options')).toBe('DENY');
+    expect(response.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
+    expect(response.headers.get('strict-transport-security')).toBe('max-age=31536000; includeSubDomains; preload');
   });
 
   it('rejects invalid methods, paths, payloads, and content types without delivery', async () => {
@@ -85,9 +90,17 @@ describe('email sender Worker', () => {
     );
 
     expect(methodResponse.status).toBe(405);
+    expect(methodResponse.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(methodResponse.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(methodResponse.headers.get('x-frame-options')).toBe('DENY');
     expect(pathResponse.status).toBe(404);
+    expect(pathResponse.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(pathResponse.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(pathResponse.headers.get('x-frame-options')).toBe('DENY');
     expect(payloadResponse.status).toBe(400);
+    expect(payloadResponse.headers.get('x-content-type-options')).toBe('nosniff');
     expect(contentTypeResponse.status).toBe(400);
+    expect(contentTypeResponse.headers.get('x-content-type-options')).toBe('nosniff');
     expect(delivery).not.toHaveBeenCalled();
   });
 
@@ -120,6 +133,9 @@ describe('email sender Worker', () => {
     expect(response.status).toBe(502);
     const result = await response.json();
     expect(result).toEqual({ ok: false, error: 'MailPit delivery failed. Is the local SMTP service running?' });
+    expect(response.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(response.headers.get('x-frame-options')).toBe('DENY');
   });
 
   it('requires deployment authorization for non-local requests', async () => {
@@ -232,5 +248,39 @@ describe('email sender Worker', () => {
 
     expect(response.status).toBe(429);
     expect(delivery).not.toHaveBeenCalled();
+  });
+
+  describe('worker fetch entrypoint', () => {
+    it('emits security headers on 405 method rejection through worker.fetch', async () => {
+      const response = await worker.fetch(
+        new Request('http://localhost/api/email/send', { method: 'GET' }),
+        environment,
+      );
+      expect(response.status).toBe(405);
+      expect(response.headers.get('content-security-policy')).toContain("default-src 'self'");
+      expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+      expect(response.headers.get('x-frame-options')).toBe('DENY');
+      expect(response.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
+      expect(response.headers.get('strict-transport-security')).toBe('max-age=31536000; includeSubDomains; preload');
+    });
+
+    it('emits security headers on 404 error responses through worker.fetch', async () => {
+      const response = await worker.fetch(new Request('http://localhost/api/unknown'), environment);
+      expect(response.status).toBe(404);
+      expect(response.headers.get('content-security-policy')).toContain("default-src 'self'");
+      expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+      expect(response.headers.get('x-frame-options')).toBe('DENY');
+    });
+
+    it('emits security headers on 400 error responses through worker.fetch', async () => {
+      const response = await worker.fetch(
+        request('/api/email/send', { html: completedHtml, to: 'bad-email', recipientName: 'Ada' }),
+        environment,
+      );
+      expect(response.status).toBe(400);
+      expect(response.headers.get('content-security-policy')).toContain("default-src 'self'");
+      expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+      expect(response.headers.get('x-frame-options')).toBe('DENY');
+    });
   });
 });
