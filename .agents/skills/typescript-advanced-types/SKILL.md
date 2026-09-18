@@ -1,318 +1,258 @@
 ---
 name: typescript-advanced-types
-description: Master TypeScript's advanced type system including generics, conditional types, mapped types, template literals, and utility types for building type-safe applications. Use when implementing complex type logic, creating reusable type utilities, or ensuring compile-time type safety in TypeScript projects.
+description: Master Mission Platform TypeScript strict typing standards, explicit interfaces over implicit types, satisfies over type assertions (as), constrained generics, and eradication of any and unvalidated unknown. Use when authoring TypeScript models, composables, utility types, generic functions, and API contracts.
 ---
 
-# TypeScript Advanced Types
+# TypeScript Advanced Types & Strict Typing Standards
 
-Comprehensive guidance for mastering TypeScript's advanced type system including generics, conditional types, mapped types, template literal types, and utility types for building robust, type-safe applications.
+Comprehensive standards and patterns for the Mission Platform TypeScript type system. These guidelines ensure compile-time correctness, eliminate type-system bypasses, and maximize type inference across applications and packages.
 
-## When to Use This Skill
+---
 
-- Building type-safe libraries or frameworks
-- Creating reusable generic components
-- Implementing complex type inference logic
-- Designing type-safe API clients
-- Building form validation systems
-- Creating strongly-typed configuration objects
-- Implementing type-safe state management
-- Migrating JavaScript codebases to TypeScript
+## The Five Core Directives
 
-## Core Concepts
+### 1. Absolute Prohibition of `any`
 
-### 1. Generics
-
-**Purpose:** Create reusable, type-flexible components while maintaining type safety.
-
-**Basic Generic Function:**
+- **Rule**: The `any` keyword is unconditionally banned across all source code, tests, composables, and type definitions.
+- **Why**: `any` disables TypeScript's type checker, propagates silently across call chains, hides broken contracts, and prevents auto-refactoring.
+- **Resolution**:
+  - For polymorphic collections: use bounded generics (`<T extends BaseItem>`).
+  - For variable message shapes: use discriminated unions with an explicit `type` or `kind` tag.
+  - For untyped external inputs: use `unknown` accompanied by immediate runtime parsing.
 
 ```typescript
-function identity<T>(value: T): T {
-  return value;
+// ❌ PROHIBITED
+function processData(payload: any): any {
+  return payload.data;
 }
 
-const num = identity<number>(42); // Type: number
-const str = identity<string>("hello"); // Type: string
-const auto = identity(true); // Type inferred: boolean
-```
-
-**Generic Constraints:**
-
-```typescript
-interface HasLength {
-  length: number;
+// ✅ MANDATED: Discriminated union or concrete interface
+interface ApiResponse<TData extends Record<string, unknown>> {
+  readonly status: "success";
+  readonly data: TData;
 }
 
-function logLength<T extends HasLength>(item: T): T {
-  console.log(item.length);
-  return item;
+interface ApiError {
+  readonly status: "error";
+  readonly message: string;
 }
 
-logLength("hello"); // OK: string has length
-logLength([1, 2, 3]); // OK: array has length
-logLength({ length: 10 }); // OK: object has length
-// logLength(42);             // Error: number has no length
+type NetworkResult<TData extends Record<string, unknown>> =
+  ApiResponse<TData> | ApiError;
+
+function processResult<TData extends Record<string, unknown>>(
+  result: NetworkResult<TData>,
+): TData | undefined {
+  if (result.status === "success") {
+    return result.data;
+  }
+  return undefined;
+}
 ```
 
-**Multiple Type Parameters:**
+---
+
+### 2. Strict Boundaries on `unknown`
+
+- **Rule**: `unknown` must never propagate across internal interfaces, domain models, or exported function return types.
+- **Boundary Validation**: When untrusted or unvalidated data arrives from outside the process (HTTP requests, URL params, local storage, tool arguments), it enters as `unknown` and **must be validated immediately** via Zod schemas or type guards before passing to domain functions.
 
 ```typescript
-function merge<T, U>(obj1: T, obj2: U): T & U {
-  return { ...obj1, ...obj2 };
+import { z } from "zod";
+
+// ❌ PROHIBITED: Leaking unknown into domain logic
+export function handleUserData(input: unknown): string {
+  // @ts-expect-error input is unknown
+  return input.name;
 }
 
-const merged = merge({ name: "John" }, { age: 30 });
-// Type: { name: string } & { age: number }
+// ✅ MANDATED: Immediate boundary validation with Zod
+export const UserProfileSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1),
+  email: z.string().email(),
+});
+
+export type UserProfile = z.infer<typeof UserProfileSchema>;
+
+export function parseAndHandleUser(rawInput: unknown): UserProfile {
+  const user = UserProfileSchema.parse(rawInput);
+  return user; // Concrete, fully-typed UserProfile
+}
 ```
 
-### 2. Conditional Types
+---
 
-**Purpose:** Create types that depend on conditions, enabling sophisticated type logic.
+### 3. Explicit Types & Interfaces over Implicit Types
 
-**Basic Conditional Type:**
-
-```typescript
-type IsString<T> = T extends string ? true : false;
-
-type A = IsString<string>; // true
-type B = IsString<number>; // false
-```
-
-**Extracting Return Types:**
+- **Rule**: Provide explicit type annotations on all exported function signatures, composables, API handlers, and component props.
+- **`interface` vs `type`**:
+  - Use `interface` for: object shapes, component props, state contracts, and extensible domain models.
+  - Use `type` for: union types, intersection types, tuples, template literals, and utility transformations.
 
 ```typescript
-type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
-
-function getUser() {
-  return { id: 1, name: "John" };
+// ✅ Explicit interface for domain object
+export interface NavigationItem {
+  readonly id: string;
+  readonly label: string;
+  readonly href: string;
+  readonly icon?: string;
 }
 
-type User = ReturnType<typeof getUser>;
-// Type: { id: number; name: string; }
+// ✅ Explicit type for union / template literal
+export type NavigationTheme = "light" | "dark" | "contrast";
+export type ElementRoute = `/${string}`;
+
+// ✅ Explicit signature annotation on composable
+export function useNavigation(theme: NavigationTheme): {
+  readonly items: readonly NavigationItem[];
+  readonly activeId: string | undefined;
+  readonly setActive: (id: string) => void;
+} {
+  // implementation
+}
 ```
 
-**Distributive Conditional Types:**
+---
+
+### 4. Mandate `satisfies` for Declaration Contracts; Limit `as` to Validated Narrowing
+
+- **Rule**:
+  - **Declaration-Site Validation**: Always use `value satisfies Type` instead of `value as Type` when declaring constants, configuration objects, maps, or records. Never use `as Type` to satisfy a contract at declaration site.
+  - **Use-Site Narrowing**: Narrow `as` assertions (`value as NarrowType`) are permitted **only at use sites after runtime validation** (e.g. Zod schema validation, explicit type guards, or external boundary parsing) has already proven that the value conforms to the asserted shape. Unnecessary, unvalidated, or widening assertions (`as any`, `as unknown`, unchecked casts) remain strictly prohibited.
+- **Why**:
+  - `as Type` at declaration site blinds the compiler. If a property is missing, extra, or misspelled, `as` silences the error and allows runtime crashes.
+  - `satisfies Type` at declaration site validates that the expression matches the contract **without widening the type**, preserving exact literal types, exact keys, and full autocompletion.
+  - Distinguishing use-site narrowing (backed by runtime validation evidence) from declaration-site validation ensures compile-time contracts are verified without sacrificing type safety when interacting with untyped DOM APIs or external boundaries.
 
 ```typescript
-type ToArray<T> = T extends any ? T[] : never;
-
-type StrOrNumArray = ToArray<string | number>;
-// Type: string[] | number[]
-```
-
-**Nested Conditions:**
-
-```typescript
-type TypeName<T> = T extends string
-  ? "string"
-  : T extends number
-    ? "number"
-    : T extends boolean
-      ? "boolean"
-      : T extends undefined
-        ? "undefined"
-        : T extends Function
-          ? "function"
-          : "object";
-
-type T1 = TypeName<string>; // "string"
-type T2 = TypeName<() => void>; // "function"
-```
-
-### 3. Mapped Types
-
-**Purpose:** Transform existing types by iterating over their properties.
-
-**Basic Mapped Type:**
-
-```typescript
-type Readonly<T> = {
-  readonly [P in keyof T]: T[P];
-};
-
-interface User {
-  id: number;
-  name: string;
+interface RouteConfig {
+  readonly path: string;
+  readonly access: "public" | "authenticated" | "admin";
 }
 
-type ReadonlyUser = Readonly<User>;
-// Type: { readonly id: number; readonly name: string; }
+// ❌ DANGEROUS: 'as' masks missing or misspelled properties
+const badRoutes = {
+  home: { path: "/", access: "public" },
+  dashboard: { path: "/dashboard" }, // Missing access! 'as' allows this bug:
+} as Record<string, RouteConfig>;
+
+// ✅ MANDATED: 'satisfies' enforces contract AND preserves exact keys
+const routes = {
+  home: { path: "/", access: "public" },
+  dashboard: { path: "/dashboard", access: "authenticated" },
+} satisfies Record<string, RouteConfig>;
+
+// Exact keys preserved:
+routes.home.path; // string
+routes.dashboard.path; // string
+// routes.unknown;     // TypeScript Error: Property 'unknown' does not exist!
 ```
 
-**Optional Properties:**
+#### Exhaustive Union Checking via `satisfies never`
 
 ```typescript
-type Partial<T> = {
-  [P in keyof T]?: T[P];
-};
+type NotificationType = "email" | "sms" | "push";
 
-type PartialUser = Partial<User>;
-// Type: { id?: number; name?: string; }
+function formatNotification(type: NotificationType): string {
+  switch (type) {
+    case "email":
+      return "Sending Email";
+    case "sms":
+      return "Sending SMS";
+    case "push":
+      return "Sending Push Notification";
+    default:
+      // Compile error if any union member is unhandled:
+      return type satisfies never;
+  }
+}
 ```
 
-**Key Remapping:**
+---
+
+### 5. Constrained Generics and Call-Site Inference
+
+- **Rule**: Unconstrained open generics (`<T>`) are prohibited. Every generic type parameter must declare a meaningful upper bound: `<T extends ExpectedContract>`.
+- **Forbid Open Record Bounds**: Never write `<T extends Record<string, any>>`. Use concrete value types: `<T extends Record<string, string>>` or `<T extends Record<string, unknown>>`.
+- **Call-Site Inference**: Structure function parameters so that TypeScript naturally infers type arguments from the provided arguments without requiring callers to specify generic parameters manually.
+- **`const` Type Parameters**: Use `const` type parameters (`<const T extends readonly string[]>`) to infer literal array and object shapes at call sites without requiring `as const`.
 
 ```typescript
-type Getters<T> = {
-  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];
-};
-
-interface Person {
-  name: string;
-  age: number;
+// ❌ PROHIBITED: Open unconstrained generic
+function getProperty<T>(obj: T, key: string) {
+  // @ts-expect-error no guarantee key exists on T
+  return obj[key];
 }
 
-type PersonGetters = Getters<Person>;
-// Type: { getName: () => string; getAge: () => number; }
-```
-
-**Filtering Properties:**
-
-```typescript
-type PickByType<T, U> = {
-  [K in keyof T as T[K] extends U ? K : never]: T[K];
-};
-
-interface Mixed {
-  id: number;
-  name: string;
-  age: number;
-  active: boolean;
+// ✅ MANDATED: Bounded constraint and inferred key
+function getProperty<
+  TEntity extends Record<PropertyKey, unknown>,
+  TKey extends keyof TEntity,
+>(entity: TEntity, key: TKey): TEntity[TKey] {
+  return entity[key];
 }
 
-type OnlyNumbers = PickByType<Mixed, number>;
-// Type: { id: number; age: number; }
-```
+// ✅ Call-site inference: callers never manually pass <Entity, Key>
+const user = { id: "usr-1", name: "Alice", active: true };
+const userName = getProperty(user, "name"); // Type: string (inferred)
+const isActive = getProperty(user, "active"); // Type: boolean (inferred)
 
-### 4. Template Literal Types
-
-**Purpose:** Create string-based types with pattern matching and transformation.
-
-**Basic Template Literal:**
-
-```typescript
-type EventName = "click" | "focus" | "blur";
-type EventHandler = `on${Capitalize<EventName>}`;
-// Type: "onClick" | "onFocus" | "onBlur"
-```
-
-**String Manipulation:**
-
-```typescript
-type UppercaseGreeting = Uppercase<"hello">; // "HELLO"
-type LowercaseGreeting = Lowercase<"HELLO">; // "hello"
-type CapitalizedName = Capitalize<"john">; // "John"
-type UncapitalizedName = Uncapitalize<"John">; // "john"
-```
-
-**Path Building:**
-
-```typescript
-type Path<T> = T extends object
-  ? {
-      [K in keyof T]: K extends string ? `${K}` | `${K}.${Path<T[K]>}` : never;
-    }[keyof T]
-  : never;
-
-interface Config {
-  server: {
-    host: string;
-    port: number;
-  };
-  database: {
-    url: string;
-  };
+// ✅ const type parameters for literal inference
+function defineTuple<const TItems extends readonly string[]>(
+  items: TItems,
+): TItems {
+  return items;
 }
 
-type ConfigPath = Path<Config>;
-// Type: "server" | "database" | "server.host" | "server.port" | "database.url"
+const statusList = defineTuple(["draft", "pending", "published"]);
+// Type: readonly ['draft', 'pending', 'published'] (not string[])
 ```
 
-### 5. Utility Types
+---
 
-**Built-in Utility Types:**
+## Advanced Type Utility Patterns
+
+### Constrained Conditional Types
 
 ```typescript
-// Partial<T> - Make all properties optional
-type PartialUser = Partial<User>;
+export interface Identifiable {
+  readonly id: string;
+}
 
-// Required<T> - Make all properties required
-type RequiredUser = Required<PartialUser>;
+// Type parameter bounded to Identifiable
+export type EntityId<TEntity extends Identifiable> = TEntity["id"];
 
-// Readonly<T> - Make all properties readonly
-type ReadonlyUser = Readonly<User>;
-
-// Pick<T, K> - Select specific properties
-type UserName = Pick<User, "name" | "email">;
-
-// Omit<T, K> - Remove specific properties
-type UserWithoutPassword = Omit<User, "password">;
-
-// Exclude<T, U> - Exclude types from union
-type T1 = Exclude<"a" | "b" | "c", "a">; // "b" | "c"
-
-// Extract<T, U> - Extract types from union
-type T2 = Extract<"a" | "b" | "c", "a" | "b">; // "a" | "b"
-
-// NonNullable<T> - Exclude null and undefined
-type T3 = NonNullable<string | null | undefined>; // string
-
-// Record<K, T> - Create object type with keys K and values T
-type PageInfo = Record<"home" | "about", { title: string }>;
+// Constrained infer
+export type UnpackPromise<TPromise extends Promise<unknown>> =
+  TPromise extends Promise<infer TResult extends Record<string, unknown>>
+    ? TResult
+    : never;
 ```
 
-## Detailed worked examples and patterns
-
-Detailed sections (starting with `## Advanced Patterns`) live in `references/details.md`. Read that file when the navigation summary above is insufficient.
-
-## Best Practices
-
-1. **Use `unknown` over `any`**: Enforce type checking
-2. **Prefer `interface` for object shapes**: Better error messages
-3. **Use `type` for unions and complex types**: More flexible
-4. **Leverage type inference**: Let TypeScript infer when possible
-5. **Create helper types**: Build reusable type utilities
-6. **Use const assertions**: Preserve literal types
-7. **Avoid type assertions**: Use type guards instead
-8. **Document complex types**: Add JSDoc comments
-9. **Use strict mode**: Enable all strict compiler options
-10. **Test your types**: Use type tests to verify type behavior
-
-## Type Testing
+### Strongly Typed Event Emitter Contract
 
 ```typescript
-// Type assertion tests
-type AssertEqual<T, U> = [T] extends [U]
-  ? [U] extends [T]
-    ? true
-    : false
-  : false;
+export type EventPayloadMap = Record<
+  string,
+  Record<string, unknown> | undefined
+>;
 
-type Test1 = AssertEqual<string, string>; // true
-type Test2 = AssertEqual<string, number>; // false
-type Test3 = AssertEqual<string | number, string>; // false
-
-// Expect error helper
-type ExpectError<T extends never> = T;
-
-// Example usage
-type ShouldError = ExpectError<AssertEqual<string, number>>;
+export interface TypedEmitter<TEvents extends EventPayloadMap> {
+  on<TEventName extends keyof TEvents>(
+    event: TEventName,
+    handler: (payload: TEvents[TEventName]) => void,
+  ): void;
+  emit<TEventName extends keyof TEvents>(
+    event: TEventName,
+    payload: TEvents[TEventName],
+  ): void;
+}
 ```
 
-## Common Pitfalls
+---
 
-1. **Over-using `any`**: Defeats the purpose of TypeScript
-2. **Ignoring strict null checks**: Can lead to runtime errors
-3. **Too complex types**: Can slow down compilation
-4. **Not using discriminated unions**: Misses type narrowing opportunities
-5. **Forgetting readonly modifiers**: Allows unintended mutations
-6. **Circular type references**: Can cause compiler errors
-7. **Not handling edge cases**: Like empty arrays or null values
+## Detailed Reference
 
-## Performance Considerations
-
-- Avoid deeply nested conditional types
-- Use simple types when possible
-- Cache complex type computations
-- Limit recursion depth in recursive types
-- Use build tools to skip type checking in production
+For complete worked examples without `any`, `unknown` leakage, or unsafe type casts, see:
+[Worked Examples & Patterns](references/details.md)

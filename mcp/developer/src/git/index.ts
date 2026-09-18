@@ -9,6 +9,7 @@ const MAX_REF_LIMIT = 500;
 const MAX_BLAME_LINE = 1_000_000;
 const MAX_BLAME_LINE_RANGE = 10_000;
 
+export type { GitCommandOptions, GitCommandResult } from './runner.ts';
 export type GitReadOptions = GitCommandOptions;
 export type GitReadResult = GitCommandResult;
 

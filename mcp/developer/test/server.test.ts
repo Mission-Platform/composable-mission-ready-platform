@@ -130,6 +130,17 @@ describe('tools', () => {
       'fws_inspect_sonir',
       'fws_verify_artifact',
       'fws_run_trace',
+      'security_scan_secrets',
+      'security_analyze_code',
+      'security_audit_dependencies',
+      'scaffold',
+      'i18n',
+      'git_metadata',
+      'repo_affected_packages',
+      'repo_prime_dependencies',
+      'turbo_run',
+      'run_test_file',
+      'list_stories',
     ]) {
       assert.ok(names.has(expected), `missing tool ${expected}`);
     }
@@ -798,6 +809,11 @@ describe('tools', () => {
       selectedFiles: string[];
       diagnostics: unknown[];
       tests: unknown[];
+      security?: {
+        clean: boolean;
+        findingsCount: number;
+        findings: unknown[];
+      };
     };
     assert.equal(report.operation, 'review_changes');
     assert.equal(report.changed.operation, 'changed-files');
@@ -805,6 +821,34 @@ describe('tools', () => {
     assert.ok(report.changed.files.length >= report.selectedFiles.length);
     assert.deepEqual(report.diagnostics, []);
     assert.deepEqual(report.tests, []);
+    assert.ok(report.security);
+    assert.equal(typeof report.security.clean, 'boolean');
+  });
+
+  it('invokes security analysis tools via MCP tool protocol', async () => {
+    const secretsOutput = JSON.parse(await callTool('security_scan_secrets', { path: 'packages/' })) as {
+      clean: boolean;
+      findings: unknown[];
+      scannedFiles: number;
+    };
+    assert.equal(typeof secretsOutput.clean, 'boolean');
+    assert.ok(Array.isArray(secretsOutput.findings));
+
+    const codeOutput = JSON.parse(await callTool('security_analyze_code', { path: 'packages/' })) as {
+      clean: boolean;
+      findings: unknown[];
+      scannedFiles: number;
+    };
+    assert.equal(typeof codeOutput.clean, 'boolean');
+    assert.ok(Array.isArray(codeOutput.findings));
+
+    const depsOutput = JSON.parse(await callTool('security_audit_dependencies', { runPnpmAudit: false })) as {
+      clean: boolean;
+      findings: unknown[];
+      scannedFiles: number;
+    };
+    assert.equal(typeof depsOutput.clean, 'boolean');
+    assert.ok(Array.isArray(depsOutput.findings));
   });
 });
 
@@ -848,6 +892,7 @@ describe('prompts', () => {
       'develop-package',
       'create-app',
       'create-worker',
+      'security-audit',
     ]) {
       assert.ok(names.has(expected), `missing prompt ${expected}`);
     }
@@ -881,6 +926,16 @@ describe('prompts', () => {
     const reviewText = (review.messages as { content: { text: string } }[])[0]?.content.text ?? '';
     assert.match(reviewText, /review_changes/);
     assert.match(reviewText, /severity/);
+
+    const secAudit = await client.getPrompt({ name: 'security-audit', arguments: { path: 'packages/' } });
+    const secText = (secAudit.messages as { content: { text: string } }[])[0]?.content.text ?? '';
+    assert.match(secText, /security_scan_secrets/);
+    assert.match(secText, /security_analyze_code/);
+    assert.match(secText, /packages\//);
+
+    const stagedAudit = await client.getPrompt({ name: 'security-audit', arguments: { staged: 'true' } });
+    const stagedText = (stagedAudit.messages as { content: { text: string } }[])[0]?.content.text ?? '';
+    assert.match(stagedText, /only security_scan_secrets is limited to staged changes/);
   });
 });
 

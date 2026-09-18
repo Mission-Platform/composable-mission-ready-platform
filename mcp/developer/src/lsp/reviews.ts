@@ -1,5 +1,7 @@
 import { extname } from 'node:path';
 
+import { analyzeCode, scanSecrets, type SecurityFinding } from '@mission-platform/mcp-shared/security';
+
 import { readGitChangedFiles, readGitDiff, type GitChangedFile } from '../git/index.ts';
 
 import { inspectLspSymbol, goToLspDefinition, listLspSymbols } from './navigation.ts';
@@ -133,6 +135,164 @@ export async function reviewLspStructure(request: LspReviewRequest) {
   };
 }
 
+/**
+ * Collect bounded LSP diagnostics for reviewable files when languageId is provided.
+ */
+async function collectReviewDiagnostics(
+  files: readonly { readonly path: string }[],
+  sessionId?: string,
+  languageId?: string,
+) {
+  if (!languageId) return [];
+  return await Promise.all(
+    files.map(async (file) => ({
+      path: file.path,
+      diagnostics: await capture(() => getLspDiagnostics(file.path, sessionId, languageId)),
+    })),
+  );
+}
+
+/**
+ * Collect correlated test files for reviewable files when requested.
+ */
+async function collectReviewTests(
+  files: readonly { readonly path: string }[],
+  maxFiles: number,
+  sessionId?: string,
+  languageId?: string,
+  includeTests?: boolean,
+) {
+  if (!includeTests || !languageId) return [];
+  return await Promise.all(
+    files.map(async (file) => ({
+      path: file.path,
+      tests: await capture(() =>
+        getLspTestsForFile({
+          filePath: file.path,
+          sessionId,
+          languageId,
+          limit: maxFiles,
+        }),
+      ),
+    })),
+  );
+}
+
+interface SecurityScanExecutionResult {
+  readonly findings: readonly SecurityFinding[];
+  readonly errors?: readonly string[];
+  readonly incomplete?: boolean;
+}
+
+function scanFileSecurity(
+  filePath: string,
+  scanFn: (options: { path: string }) => SecurityScanExecutionResult,
+  failureLabel: string,
+): { findings: readonly SecurityFinding[]; errors: readonly string[]; incomplete: boolean } {
+  try {
+    const result = scanFn({ path: filePath });
+    return {
+      findings: result.findings,
+      errors: result.errors ?? [],
+      incomplete: Boolean(result.incomplete),
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      findings: [],
+      errors: [`Failed to ${failureLabel} for "${filePath}": ${message}`],
+      incomplete: true,
+    };
+  }
+}
+
+function scanFileBatch(
+  files: readonly { readonly path: string }[],
+  scanFn: (options: { path: string }) => SecurityScanExecutionResult,
+  failureLabel: string,
+  target: { securityFindings: SecurityFinding[]; scanErrors: string[]; incomplete: boolean },
+): void {
+  for (const file of files) {
+    const outcome = scanFileSecurity(file.path, scanFn, failureLabel);
+    target.securityFindings.push(...outcome.findings);
+    target.scanErrors.push(...outcome.errors);
+    if (outcome.incomplete) {
+      target.incomplete = true;
+    }
+  }
+}
+
+/**
+ * Run secret and code vulnerability scanning across reviewable changed files.
+ */
+function scanReviewSecurityFindings(
+  codeFiles: readonly { readonly path: string }[],
+  secretFiles: readonly { readonly path: string }[],
+): { securityFindings: SecurityFinding[]; scanErrors: string[]; incomplete: boolean } {
+  const result = {
+    securityFindings: [] as SecurityFinding[],
+    scanErrors: [] as string[],
+    incomplete: false,
+  };
+  scanFileBatch(secretFiles, scanSecrets, 'scan secrets', result);
+  scanFileBatch(codeFiles, analyzeCode, 'analyze code', result);
+  return result;
+}
+
+function countBySeverity(findings: readonly SecurityFinding[], severity: 'critical' | 'high'): number {
+  return findings.filter((f) => f.severity === severity).length;
+}
+
+function extractUniqueCategories(findings: readonly SecurityFinding[], key: 'owasp' | 'cwe' | 'isoControl'): string[] {
+  return [...new Set(findings.map((f) => f[key]).filter(Boolean))];
+}
+
+function resolveReviewIncompleteStatus(incomplete: boolean, hasErrors: boolean): true | undefined {
+  if (incomplete || hasErrors) {
+    return true;
+  }
+  return undefined;
+}
+
+/**
+ * Build a structured security scorecard summary for change review evidence.
+ */
+function buildSecurityReviewSummary(
+  securityFindings: readonly SecurityFinding[],
+  scanErrors: readonly string[] = [],
+  incomplete = false,
+) {
+  const hasErrors = scanErrors.length > 0;
+  const isClean = securityFindings.length === 0 && !incomplete && !hasErrors;
+  return {
+    clean: isClean,
+    incomplete: resolveReviewIncompleteStatus(incomplete, hasErrors),
+    errors: hasErrors ? scanErrors : undefined,
+    findingsCount: securityFindings.length,
+    criticalCount: countBySeverity(securityFindings, 'critical'),
+    highCount: countBySeverity(securityFindings, 'high'),
+    owaspCategories: extractUniqueCategories(securityFindings, 'owasp'),
+    cweWeaknesses: extractUniqueCategories(securityFindings, 'cwe'),
+    isoControls: extractUniqueCategories(securityFindings, 'isoControl'),
+    findings: securityFindings,
+  };
+}
+
+function isGitInputIncomplete(
+  changed: {
+    readonly success: boolean;
+    readonly outputTruncated: boolean;
+    readonly timedOut: boolean;
+    readonly files: readonly unknown[];
+  },
+  maxFiles: number,
+): boolean {
+  if (!changed.success) return true;
+  if (changed.outputTruncated) return true;
+  if (changed.timedOut) return true;
+  return changed.files.length > maxFiles;
+}
+
 export async function reviewChanges(request: ReviewChangesRequest) {
   const maxFiles = Math.min(Math.max(Math.trunc(request.maxFiles ?? DEFAULT_REVIEW_FILES), 1), MAX_REVIEW_FILES);
   const changed = readGitChangedFiles({
@@ -151,30 +311,24 @@ export async function reviewChanges(request: ReviewChangesRequest) {
     maxOutputBytes: request.maxOutputBytes,
   });
   const files = reviewableFiles(changed.files, maxFiles);
-  const diagnostics = request.languageId
-    ? await Promise.all(
-        files.map(async (file) => ({
-          path: file.path,
-          diagnostics: await capture(() => getLspDiagnostics(file.path, request.sessionId, request.languageId)),
-        })),
-      )
-    : [];
-  const tests =
-    request.includeTests && request.languageId
-      ? await Promise.all(
-          files.map(async (file) => ({
-            path: file.path,
-            tests: await capture(() =>
-              getLspTestsForFile({
-                filePath: file.path,
-                sessionId: request.sessionId,
-                languageId: request.languageId,
-                limit: maxFiles,
-              }),
-            ),
-          })),
-        )
-      : [];
+  const allChangedFiles = changed.files.slice(0, maxFiles);
+
+  const [diagnostics, tests] = await Promise.all([
+    collectReviewDiagnostics(files, request.sessionId, request.languageId),
+    collectReviewTests(files, maxFiles, request.sessionId, request.languageId, request.includeTests),
+  ]);
+
+  const { securityFindings, scanErrors, incomplete } = scanReviewSecurityFindings(files, allChangedFiles);
+  const gitIncomplete = isGitInputIncomplete(changed, maxFiles);
+  if (!changed.success && changed.message) {
+    scanErrors.push(changed.message);
+  }
+  const securitySummary = buildSecurityReviewSummary(securityFindings, scanErrors, incomplete || gitIncomplete);
+
+  const message = request.languageId
+    ? 'Review includes bounded language-server evidence and security checks for reviewable changed files.'
+    : 'Git evidence and security scan are complete; provide languageId to include language-server diagnostics and test correlation.';
+
   return {
     operation: 'review_changes' as const,
     changed,
@@ -183,8 +337,7 @@ export async function reviewChanges(request: ReviewChangesRequest) {
     truncated: changed.files.length > files.length,
     diagnostics,
     tests,
-    message: request.languageId
-      ? 'Review includes bounded language-server evidence for reviewable changed files.'
-      : 'Git evidence is complete; provide languageId to include language-server diagnostics and test correlation.',
+    security: securitySummary,
+    message,
   };
 }

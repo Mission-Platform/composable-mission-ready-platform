@@ -1,404 +1,448 @@
-# typescript-advanced-types — detailed worked examples
+# TypeScript Advanced Types — Detailed Worked Examples
 
-## Advanced Patterns
+This reference documents production-grade TypeScript patterns adhering strictly to Mission Platform typing standards:
 
-### Pattern 1: Type-Safe Event Emitter
+- **Zero occurrences of `any`**
+- **Strictly bounded `unknown` with validation**
+- **`satisfies` over `as` assertions**
+- **Constrained generics with natural call-site inference**
+
+---
+
+## Pattern 1: Type-Safe Event Emitter
+
+This event emitter strictly avoids `any` and `Record<string, any>`. Event payloads are constrained to object structures or `void`.
 
 ```typescript
-type EventMap = {
-  "user:created": { id: string; name: string };
-  "user:updated": { id: string };
-  "user:deleted": { id: string };
-};
+export interface UserCreatedPayload {
+  readonly id: string;
+  readonly name: string;
+  readonly email: string;
+}
 
-class TypedEventEmitter<T extends Record<string, any>> {
-  private listeners: {
-    [K in keyof T]?: Array<(data: T[K]) => void>;
+export interface UserDeletedPayload {
+  readonly id: string;
+  readonly reason?: string;
+}
+
+export interface AppEventMap {
+  readonly "user:created": UserCreatedPayload;
+  readonly "user:deleted": UserDeletedPayload;
+  readonly "app:reset": Record<string, never>;
+}
+
+export class StrictEventEmitter<
+  TEvents extends { [K in keyof TEvents]: object | void },
+> {
+  private readonly listeners: {
+    [K in keyof TEvents]?: Array<(payload: TEvents[K]) => void>;
   } = {};
 
-  on<K extends keyof T>(event: K, callback: (data: T[K]) => void): void {
-    if (!this.listeners[event]) {
-      this.listeners[event] = [];
-    }
-    this.listeners[event]!.push(callback);
+  public on<TEventKey extends keyof TEvents>(
+    event: TEventKey,
+    callback: (payload: TEvents[TEventKey]) => void,
+  ): () => void {
+    const list = this.listeners[event] ?? [];
+    list.push(callback);
+    this.listeners[event] = list;
+
+    // Return unbind handler
+    return () => {
+      const current = this.listeners[event];
+      if (current) {
+        this.listeners[event] = current.filter((fn) => fn !== callback);
+      }
+    };
   }
 
-  emit<K extends keyof T>(event: K, data: T[K]): void {
+  public emit<TEventKey extends keyof TEvents>(
+    event: TEvents[TEventKey] extends void ? TEventKey : never,
+  ): void;
+  public emit<TEventKey extends keyof TEvents>(
+    event: TEventKey,
+    payload: TEvents[TEventKey],
+  ): void;
+  public emit<TEventKey extends keyof TEvents>(
+    event: TEventKey,
+    payload?: TEvents[TEventKey],
+  ): void {
     const callbacks = this.listeners[event];
     if (callbacks) {
-      callbacks.forEach((callback) => callback(data));
+      for (const callback of callbacks) {
+        callback(payload as TEvents[TEventKey]);
+      }
     }
   }
 }
 
-const emitter = new TypedEventEmitter<EventMap>();
+// Usage Example
+const emitter = new StrictEventEmitter<AppEventMap>();
 
-emitter.on("user:created", (data) => {
-  console.log(data.id, data.name); // Type-safe!
+emitter.on("user:created", (user) => {
+  console.log(user.id, user.name, user.email);
 });
 
-emitter.emit("user:created", { id: "1", name: "John" });
-// emitter.emit("user:created", { id: "1" });  // Error: missing 'name'
+// Full compile-time validation:
+emitter.emit("user:created", {
+  id: "usr-123",
+  name: "Taylor",
+  email: "taylor@example.com",
+});
 ```
 
-### Pattern 2: Type-Safe API Client
+---
+
+## Pattern 2: Strongly Typed API Client with `satisfies`
+
+Endpoints define strict schemas for query params, request bodies, and responses. The client infers exact types without type assertions.
 
 ```typescript
-type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE";
+export interface UserResource {
+  readonly id: string;
+  readonly name: string;
+  readonly role: "admin" | "member";
+}
 
-type EndpointConfig = {
-  "/users": {
-    GET: { response: User[] };
-    POST: { body: { name: string; email: string }; response: User };
+export interface CreateUserDto {
+  readonly name: string;
+  readonly role: "admin" | "member";
+}
+
+export interface EndpointDefinition<TParams, TBody, TResponse> {
+  readonly params?: TParams;
+  readonly body?: TBody;
+  readonly response: TResponse;
+  readonly parseResponse?: (data: unknown) => TResponse;
+}
+
+export interface ApiEndpoints {
+  readonly "/api/users": {
+    readonly GET: EndpointDefinition<
+      Record<string, never>,
+      undefined,
+      readonly UserResource[]
+    >;
+    readonly POST: EndpointDefinition<
+      Record<string, never>,
+      CreateUserDto,
+      UserResource
+    >;
   };
-  "/users/:id": {
-    GET: { params: { id: string }; response: User };
-    PUT: { params: { id: string }; body: Partial<User>; response: User };
-    DELETE: { params: { id: string }; response: void };
+  readonly "/api/users/:id": {
+    readonly GET: EndpointDefinition<
+      { readonly id: string; readonly format?: string },
+      undefined,
+      UserResource
+    >;
+    readonly DELETE: EndpointDefinition<
+      { readonly id: string },
+      undefined,
+      { readonly success: boolean }
+    >;
   };
-};
-
-type ExtractParams<T> = T extends { params: infer P } ? P : never;
-type ExtractBody<T> = T extends { body: infer B } ? B : never;
-type ExtractResponse<T> = T extends { response: infer R } ? R : never;
-
-class APIClient<Config extends Record<string, Record<HTTPMethod, any>>> {
-  async request<Path extends keyof Config, Method extends keyof Config[Path]>(
-    path: Path,
-    method: Method,
-    ...[options]: ExtractParams<Config[Path][Method]> extends never
-      ? ExtractBody<Config[Path][Method]> extends never
-        ? []
-        : [{ body: ExtractBody<Config[Path][Method]> }]
-      : [
-          {
-            params: ExtractParams<Config[Path][Method]>;
-            body?: ExtractBody<Config[Path][Method]>;
-          },
-        ]
-  ): Promise<ExtractResponse<Config[Path][Method]>> {
-    // Implementation here
-    return {} as any;
-  }
 }
 
-const api = new APIClient<EndpointConfig>();
-
-// Type-safe API calls
-const users = await api.request("/users", "GET");
-// Type: User[]
-
-const newUser = await api.request("/users", "POST", {
-  body: { name: "John", email: "john@example.com" },
-});
-// Type: User
-
-const user = await api.request("/users/:id", "GET", {
-  params: { id: "123" },
-});
-// Type: User
-```
-
-### Pattern 3: Builder Pattern with Type Safety
-
-```typescript
-type BuilderState<T> = {
-  [K in keyof T]: T[K] | undefined;
-};
-
-type RequiredKeys<T> = {
-  [K in keyof T]-?: {} extends Pick<T, K> ? never : K;
-}[keyof T];
-
-type OptionalKeys<T> = {
-  [K in keyof T]-?: {} extends Pick<T, K> ? K : never;
-}[keyof T];
-
-type IsComplete<T, S> =
-  RequiredKeys<T> extends keyof S
-    ? S[RequiredKeys<T>] extends undefined
-      ? false
-      : true
-    : false;
-
-class Builder<T, S extends BuilderState<T> = {}> {
-  private state: S = {} as S;
-
-  set<K extends keyof T>(key: K, value: T[K]): Builder<T, S & Record<K, T[K]>> {
-    this.state[key] = value;
-    return this as any;
-  }
-
-  build(this: IsComplete<T, S> extends true ? this : never): T {
-    return this.state as T;
-  }
-}
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  age?: number;
-}
-
-const builder = new Builder<User>();
-
-const user = builder
-  .set("id", "1")
-  .set("name", "John")
-  .set("email", "john@example.com")
-  .build(); // OK: all required fields set
-
-// const incomplete = builder
-//   .set("id", "1")
-//   .build();  // Error: missing required fields
-```
-
-### Pattern 4: Deep Readonly/Partial
-
-```typescript
-type DeepReadonly<T> = {
-  readonly [P in keyof T]: T[P] extends object
-    ? T[P] extends Function
-      ? T[P]
-      : DeepReadonly<T[P]>
-    : T[P];
-};
-
-type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends object
-    ? T[P] extends Array<infer U>
-      ? Array<DeepPartial<U>>
-      : DeepPartial<T[P]>
-    : T[P];
-};
-
-interface Config {
-  server: {
-    host: string;
-    port: number;
-    ssl: {
-      enabled: boolean;
-      cert: string;
+export class TypedApiClient<
+  TRoutes extends {
+    [K in keyof TRoutes]: {
+      [M in keyof TRoutes[K]]: EndpointDefinition<unknown, unknown, unknown>;
     };
-  };
-  database: {
-    url: string;
-    pool: {
-      min: number;
-      max: number;
-    };
-  };
-}
+  },
+> {
+  private readonly baseUrl: string;
+  private readonly routes?: TRoutes;
 
-type ReadonlyConfig = DeepReadonly<Config>;
-// All nested properties are readonly
+  public constructor(baseUrl: string, routes?: TRoutes) {
+    this.baseUrl = baseUrl;
+    this.routes = routes;
+  }
 
-type PartialConfig = DeepPartial<Config>;
-// All nested properties are optional
-```
+  public async request<
+    TRoute extends keyof TRoutes,
+    TMethod extends keyof TRoutes[TRoute],
+  >(
+    route: TRoute,
+    method: TMethod,
+    options: {
+      readonly params?: TRoutes[TRoute][TMethod]["params"];
+      readonly body?: TRoutes[TRoute][TMethod]["body"];
+      readonly parseResponse?: (data: unknown) => TRoutes[TRoute][TMethod]["response"];
+    },
+  ): Promise<TRoutes[TRoute][TMethod]["response"]> {
+    let routePath = String(route);
+    const queryEntries: Array<[string, string]> = [];
 
-### Pattern 5: Type-Safe Form Validation
-
-```typescript
-type ValidationRule<T> = {
-  validate: (value: T) => boolean;
-  message: string;
-};
-
-type FieldValidation<T> = {
-  [K in keyof T]?: ValidationRule<T[K]>[];
-};
-
-type ValidationErrors<T> = {
-  [K in keyof T]?: string[];
-};
-
-class FormValidator<T extends Record<string, any>> {
-  constructor(private rules: FieldValidation<T>) {}
-
-  validate(data: T): ValidationErrors<T> | null {
-    const errors: ValidationErrors<T> = {};
-    let hasErrors = false;
-
-    for (const key in this.rules) {
-      const fieldRules = this.rules[key];
-      const value = data[key];
-
-      if (fieldRules) {
-        const fieldErrors: string[] = [];
-
-        for (const rule of fieldRules) {
-          if (!rule.validate(value)) {
-            fieldErrors.push(rule.message);
+    if (options.params && typeof options.params === "object") {
+      const paramsRecord = options.params as Record<string, unknown>;
+      for (const [key, value] of Object.entries(paramsRecord)) {
+        if (value !== undefined) {
+          const placeholder = `:${key}`;
+          if (routePath.includes(placeholder)) {
+            routePath = routePath.replaceAll(
+              placeholder,
+              encodeURIComponent(String(value)),
+            );
+          } else {
+            queryEntries.push([key, String(value)]);
           }
         }
-
-        if (fieldErrors.length > 0) {
-          errors[key] = fieldErrors;
-          hasErrors = true;
-        }
       }
     }
 
-    return hasErrors ? errors : null;
+    const unresolvedMatch = /:[a-zA-Z0-9_]+/.exec(routePath);
+    if (unresolvedMatch) {
+      throw new Error(
+        `Unresolved route parameter "${unresolvedMatch[0]}" in path: ${routePath}`,
+      );
+    }
+
+    const url = new URL(routePath, this.baseUrl);
+    for (const [key, value] of queryEntries) {
+      url.searchParams.append(key, value);
+    }
+
+    const response = await fetch(url.toString(), {
+      method: String(method),
+      headers: { "Content-Type": "application/json" },
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.statusText}`);
+    }
+
+    const rawData: unknown = await response.json();
+    const validate =
+      options.parseResponse ?? this.routes?.[route]?.[method]?.parseResponse;
+    if (validate) {
+      return validate(rawData);
+    }
+    throw new Error(
+      `Response validation failed: no configured parser or schema provided for ${String(method)} ${String(route)}.`,
+    );
   }
 }
 
-interface LoginForm {
-  email: string;
-  password: string;
+// Runtime validator functions for boundary data
+export function isUserResource(data: unknown): data is UserResource {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    typeof (data as Record<string, unknown>).id === "string" &&
+    typeof (data as Record<string, unknown>).name === "string" &&
+    ((data as Record<string, unknown>).role === "admin" ||
+      (data as Record<string, unknown>).role === "member")
+  );
 }
 
-const validator = new FormValidator<LoginForm>({
-  email: [
-    {
-      validate: (v) => v.includes("@"),
-      message: "Email must contain @",
-    },
-    {
-      validate: (v) => v.length > 0,
-      message: "Email is required",
-    },
-  ],
-  password: [
-    {
-      validate: (v) => v.length >= 8,
-      message: "Password must be at least 8 characters",
-    },
-  ],
-});
+export function parseUserList(data: unknown): readonly UserResource[] {
+  if (Array.isArray(data) && data.every(isUserResource)) {
+    return data;
+  }
+  throw new Error("Invalid UserResource list response payload.");
+}
 
-const errors = validator.validate({
-  email: "invalid",
-  password: "short",
+export function parseUserResource(data: unknown): UserResource {
+  if (isUserResource(data)) {
+    return data;
+  }
+  throw new Error("Invalid UserResource response payload.");
+}
+
+// Client instantiation verified with satisfies
+export const clientConfig = {
+  timeoutMs: 5000,
+  retries: 3,
+} satisfies { readonly timeoutMs: number; readonly retries: number };
+
+export const api = new TypedApiClient<ApiEndpoints>(
+  "https://api.mission-platform.local",
+);
+
+// Call site with parameter replacement and schema parser validation:
+const user = await api.request("/api/users/:id", "GET", {
+  params: { id: "user_42" },
+  parseResponse: parseUserResource,
 });
-// Type: { email?: string[]; password?: string[]; } | null
+console.log(user.id, user.name, user.role);
 ```
 
-### Pattern 6: Discriminated Unions
+---
+
+## Pattern 3: Type-Safe Builder Pattern with Narrow State Transitions
+
+A builder pattern where the compile-time state tracks which fields have been set, ensuring that `.build()` cannot be called until all required fields are populated — without runtime `any`.
 
 ```typescript
-type Success<T> = {
-  status: "success";
-  data: T;
-};
+export interface ServiceConfig {
+  readonly serviceName: string;
+  readonly port: number;
+  readonly host: string;
+  readonly secure: boolean;
+}
 
-type Error = {
-  status: "error";
-  error: string;
-};
+// State tracking interface
+interface BuilderState {
+  readonly hasName: boolean;
+  readonly hasPort: boolean;
+  readonly hasHost: boolean;
+}
 
-type Loading = {
-  status: "loading";
-};
+export class ServiceConfigBuilder<TState extends BuilderState> {
+  private readonly config: Partial<ServiceConfig>;
 
-type AsyncState<T> = Success<T> | Error | Loading;
+  private constructor(config: Partial<ServiceConfig>) {
+    this.config = config;
+  }
 
-function handleState<T>(state: AsyncState<T>): void {
+  public static create(): ServiceConfigBuilder<{
+    readonly hasName: false;
+    readonly hasPort: false;
+    readonly hasHost: false;
+  }> {
+    return new ServiceConfigBuilder({ secure: true });
+  }
+
+  public setServiceName(
+    name: string,
+  ): ServiceConfigBuilder<
+    Omit<TState, "hasName"> & { readonly hasName: true }
+  > {
+    return new ServiceConfigBuilder({ ...this.config, serviceName: name });
+  }
+
+  public setPort(
+    port: number,
+  ): ServiceConfigBuilder<
+    Omit<TState, "hasPort"> & { readonly hasPort: true }
+  > {
+    return new ServiceConfigBuilder({ ...this.config, port });
+  }
+
+  public setHost(
+    host: string,
+  ): ServiceConfigBuilder<
+    Omit<TState, "hasHost"> & { readonly hasHost: true }
+  > {
+    return new ServiceConfigBuilder({ ...this.config, host });
+  }
+
+  public setSecure(secure: boolean): ServiceConfigBuilder<TState> {
+    return new ServiceConfigBuilder({ ...this.config, secure });
+  }
+
+  // build() is ONLY callable when hasName, hasPort, and hasHost are true!
+  public build(
+    this: ServiceConfigBuilder<{
+      readonly hasName: true;
+      readonly hasPort: true;
+      readonly hasHost: true;
+    }>,
+  ): ServiceConfig {
+    return {
+      serviceName: this.config.serviceName ?? "default-service",
+      port: this.config.port ?? 8080,
+      host: this.config.host ?? "localhost",
+      secure: this.config.secure ?? true,
+    } satisfies ServiceConfig;
+  }
+}
+
+// Valid invocation:
+const service = ServiceConfigBuilder.create()
+  .setServiceName("identity-worker")
+  .setPort(443)
+  .setHost("identity.internal")
+  .build(); // OK!
+
+// Calling .build() prematurely causes a clear compile-time error:
+// ServiceConfigBuilder.create().setServiceName('only-name').build();
+// ❌ Error: The 'this' context of type ... is not assignable to method's 'this' of type ...
+```
+
+---
+
+## Pattern 4: Discriminated Unions with Exhaustive `satisfies never`
+
+Discriminated unions ensure type safety when processing state machines or event workflows. Adding a new union member produces an immediate compile error at unhandled match sites.
+
+```typescript
+export interface LoadingState {
+  readonly status: "loading";
+}
+
+export interface SuccessState<TData extends Record<string, unknown>> {
+  readonly status: "success";
+  readonly data: TData;
+  readonly timestamp: number;
+}
+
+export interface ErrorState {
+  readonly status: "error";
+  readonly error: Error;
+}
+
+export type ViewState<TData extends Record<string, unknown>> =
+  LoadingState | SuccessState<TData> | ErrorState;
+
+export function renderViewState<TData extends Record<string, unknown>>(
+  state: ViewState<TData>,
+): string {
   switch (state.status) {
-    case "success":
-      console.log(state.data); // Type: T
-      break;
-    case "error":
-      console.log(state.error); // Type: string
-      break;
     case "loading":
-      console.log("Loading...");
-      break;
-  }
-}
-
-// Type-safe state machine
-type State =
-  | { type: "idle" }
-  | { type: "fetching"; requestId: string }
-  | { type: "success"; data: any }
-  | { type: "error"; error: Error };
-
-type Event =
-  | { type: "FETCH"; requestId: string }
-  | { type: "SUCCESS"; data: any }
-  | { type: "ERROR"; error: Error }
-  | { type: "RESET" };
-
-function reducer(state: State, event: Event): State {
-  switch (state.type) {
-    case "idle":
-      return event.type === "FETCH"
-        ? { type: "fetching", requestId: event.requestId }
-        : state;
-    case "fetching":
-      if (event.type === "SUCCESS") {
-        return { type: "success", data: event.data };
-      }
-      if (event.type === "ERROR") {
-        return { type: "error", error: event.error };
-      }
-      return state;
+      return "Loading content...";
     case "success":
+      return `Loaded successfully with ${Object.keys(state.data).length} items.`;
     case "error":
-      return event.type === "RESET" ? { type: "idle" } : state;
+      return `Error occurred: ${state.error.message}`;
+    default:
+      // If a new status ('idle') is added to ViewState, TypeScript produces an error here:
+      return state satisfies never;
   }
 }
 ```
 
-## Type Inference Techniques
+---
 
-### 1. Infer Keyword
+## Pattern 5: Generic Table Component Props with Row Inferences
 
-```typescript
-// Extract array element type
-type ElementType<T> = T extends (infer U)[] ? U : never;
-
-type NumArray = number[];
-type Num = ElementType<NumArray>; // number
-
-// Extract promise type
-type PromiseType<T> = T extends Promise<infer U> ? U : never;
-
-type AsyncNum = PromiseType<Promise<number>>; // number
-
-// Extract function parameters
-type Parameters<T> = T extends (...args: infer P) => any ? P : never;
-
-function foo(a: string, b: number) {}
-type FooParams = Parameters<typeof foo>; // [string, number]
-```
-
-### 2. Type Guards
+Demonstrates generic prop inference for UI components without `any`.
 
 ```typescript
-function isString(value: unknown): value is string {
-  return typeof value === "string";
+export interface TableColumn<TRow extends Record<string, unknown>> {
+  readonly key: keyof TRow;
+  readonly header: string;
+  readonly render?: (value: TRow[keyof TRow], row: TRow) => string;
 }
 
-function isArrayOf<T>(
-  value: unknown,
-  guard: (item: unknown) => item is T,
-): value is T[] {
-  return Array.isArray(value) && value.every(guard);
+export interface TableProps<TRow extends Record<string, unknown>> {
+  readonly data: readonly TRow[];
+  readonly columns: readonly TableColumn<TRow>[];
+  readonly keyField: keyof TRow;
 }
 
-const data: unknown = ["a", "b", "c"];
-
-if (isArrayOf(data, isString)) {
-  data.forEach((s) => s.toUpperCase()); // Type: string[]
-}
-```
-
-### 3. Assertion Functions
-
-```typescript
-function assertIsString(value: unknown): asserts value is string {
-  if (typeof value !== "string") {
-    throw new Error("Not a string");
-  }
+export function defineTable<TRow extends Record<string, unknown>>(
+  props: TableProps<TRow>,
+): TableProps<TRow> {
+  return props;
 }
 
-function processValue(value: unknown) {
-  assertIsString(value);
-  // value is now typed as string
-  console.log(value.toUpperCase());
+interface UserRow extends Record<string, unknown> {
+  readonly id: string;
+  readonly username: string;
+  readonly age: number;
 }
+
+// Inferred without manual generic parameter:
+export const userTable = defineTable({
+  data: [
+    { id: "1", username: "alex", age: 32 },
+    { id: "2", username: "sam", age: 28 },
+  ] as const satisfies readonly UserRow[],
+  columns: [
+    { key: "username", header: "User Name" },
+    { key: "age", header: "Age", render: (val) => `${val} yrs` },
+  ],
+  keyField: "id",
+});
 ```

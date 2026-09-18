@@ -25,12 +25,6 @@
       "skillPath": "skills/turborepo/SKILL.md",
       "computedHash": "4289866858fc5314e10ca21584d00c48ddb7e6bc353e262283958f8e4b9bec87"
     },
-    "typescript-advanced-types": {
-      "source": "wshobson/agents",
-      "sourceType": "github",
-      "skillPath": "plugins/javascript-typescript/skills/typescript-advanced-types/SKILL.md",
-      "computedHash": "8cbf2bf600f392d7260e476e3202932a876e2281cda3b15a8b6a5a43f383252d"
-    },
     "wrangler": {
       "source": "cloudflare/skills",
       "sourceType": "github",

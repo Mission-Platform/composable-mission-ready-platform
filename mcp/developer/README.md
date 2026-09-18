@@ -13,13 +13,60 @@ on **Node.js 24+**.
 # From the repo root — build via Turborepo
 pnpm exec turbo run build --filter @mission-platform/mcp-developer
 
-# Run the compiled server
+# Run the compiled server (full profile by default)
 node mcp/developer/dist/index.js
+
+# Run with a specific profile to reduce context token consumption
+node mcp/developer/dist/index.js --profile=core
+node mcp/developer/dist/index.js --profile=frontend
+node mcp/developer/dist/index.js --profile=security
+node mcp/developer/dist/index.js --profile=coding
+
+# Combine multiple profiles
+node mcp/developer/dist/index.js --profile=frontend,security
+
+# Or via environment variable
+MISSION_MCP_PROFILE=security node mcp/developer/dist/index.js
+
 # or, from mcp/developer/
 pnpm build          # → tsdown
 pnpm start          # → node dist/index.js
 pnpm test           # → node --test
 ```
+
+## Profiles & Tool Surface Area Scoping
+
+To conserve context tokens and prevent model distraction, `@mission-platform/mcp-developer` supports **profiles** that restrict the registered tool catalog to only the tools relevant to the active workflow:
+
+| Profile            | Purpose & Included Capabilities                                                                                                                                                                                                     |
+| :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `core` / `minimal` | ~10 daily essential tools: `review_changes`, `list_components`, `get_component_usage`, `security_scan_secrets`, `lsp_get_diagnostics`, `git_status`, `git_changed_files`, `git_diff`, `get_guide`, `repo_affected_packages`.        |
+| `frontend`         | UI development & design tokens: components, `get_tokens`, polymorphic `scaffold`, `test_accessibility`, polymorphic `i18n`, `list_stories`, guides, docs, affected packages.                                                        |
+| `coding` / `lsp`   | Full LSP code intelligence: diagnostics, symbols, definitions, callers, references, edits, formatting, plus `run_test_file`, `turbo_run`, `repo_prime_dependencies`, and `review_changes`.                                          |
+| `security`         | Auditing & compliance suite: `security_scan_secrets`, `security_analyze_code`, `security_audit_dependencies`, `security_audit_supply_chain`, `security_collect_compliance_evidence`, `security_audit_compliance`, `review_changes`. |
+| `git`              | Version control & commits: `git_status`, `git_changed_files`, `git_diff`, `git_log`, `git_show`, `git_blame`, `git_grep`, `git_metadata`, `git_commit_plan`, `git_commit_apply`.                                                    |
+| `fws`              | Forge Web Script compiler & runtime: `fws_analyze_source`, `fws_analyze_workspace`, `fws_inspect_manifest`, `fws_inspect_sonir`, `fws_verify_artifact`, `fws_run_trace`.                                                            |
+| `full`             | Complete catalog of all 100+ registered tools (default when no profile is specified).                                                                                                                                               |
+
+Task-specific server configurations are pre-registered in `.ai/mcp/mcp.json` (`mission-core`, `mission-security`, `mission-frontend`, `mission-coding`, `mission-git`, `mission-fws`), allowing assistants to activate only the required tool profile.
+
+## Polymorphic Dispatchers
+
+To drastically reduce schema token bloat, repetitive single-entity tools are consolidated into polymorphic action tools:
+
+- **`scaffold`**: Dispatches scaffolding across entity types: `component`, `composable`, `package`, `app`, `worker`, `crate`, `store`, `util`.
+- **`i18n`**: Dispatches localization operations: `list`, `coverage`, `add`, `remove`, `update`.
+- **`git_metadata`**: Dispatches read-only Git queries: `branches`, `tags`, `remotes`, `files`.
+
+Individual legacy tools (e.g. `scaffold_component`, `list_locales`, `git_branches`) remain fully available under the `full` profile for backwards compatibility.
+
+## Workspace Task & Build Graph Tools
+
+- **`repo_affected_packages`**: Analyzes git changes or diff revisions to determine which workspace packages are affected and detects root configuration changes (e.g. `turbo.json`, `package.json`) that impact the entire monorepo.
+- **`repo_prime_dependencies`**: Builds upstream workspace dependencies for a target package (`turbo run build --filter <pkg>^...`), essential in APFS-linked worktrees before running package tests.
+- **`turbo_run`**: Executes Turborepo tasks (`build:check`, `lint`, `test`, `build`) with bounded execution times and structured JSON/output capture.
+- **`run_test_file`**: Executes a single test file using `vitest` or `node:test` with optional test title filtering (`-t`).
+- **`list_stories`**: Discovers and inspects Storybook story files (`*.stories.tsx`) across packages.
 
 > During development you can run the raw TypeScript source with `pnpm dev`
 > (`node --watch src/index.ts`), which relies on Node's native type-stripping.

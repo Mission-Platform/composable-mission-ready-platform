@@ -48,6 +48,24 @@ The `apps/` workspace currently contains:
 
 Code in `packages/` must never import from `apps/`. The dependency flow is strictly one-way: `apps/` consume reusable members from `packages/`, while domain packages may depend on lower-level `core`, `tooling`, and compiler contracts without importing applications.
 
+### Asset Discovery & Anti-Invention Policy
+
+Before writing any new code, assistants must inspect existing monorepo assets using MCP tools (`list_components`, `get_component_usage`, `lsp_find_symbol`, `lsp_list_symbols`) and filesystem inspection. Inventing duplicate components, custom color hexes/spacings, or redundant utility functions is strictly prohibited:
+
+1. **Zero Redundant Primitives**: Never invent custom buttons, modals, dropdowns, or tooltips; reuse `@mission-platform/components`.
+2. **Design Tokens First**: Never hardcode colors, spacing, radii, or shadows; always reference `--mp-*` CSS custom properties from `@mission-platform/tokens`.
+3. **Shared Utilities**: Search `packages/` before writing custom helper routines for data transformation, math, dates, or strings.
+4. **Localization**: Never hardcode user-facing strings; declare them in YAML message catalogs and use `@mission-platform/i18n`.
+
+### Secure Coding & Compliance (OWASP 2025, CWE Top 25 & ISO 27001)
+
+All code and configurations in the monorepo must adhere to **ISO/IEC 27001:2022 Control A.8.28 (Secure Coding)** and eliminate vulnerabilities cataloged in the **OWASP Top 10 (2025)** and **CWE Top 25**:
+
+1. **Zero Secret Leaks (ISO A.8.12 / CWE-798)**: Never commit credentials, private keys, or cloud tokens.
+2. **Injection Defense (OWASP A05 / CWE-79, CWE-78, CWE-89)**: Always sanitize HTML markup (`DOMPurify.sanitize`), parameterize queries, and use vector arguments (`execFile`) instead of string shell interpolation.
+3. **Cryptographic & Supply Chain Rigor (OWASP A04, A03 / ISO A.8.20, A.8.25)**: Use modern cryptography (SHA-256, `crypto.getRandomValues`), avoid `Math.random()` for security, avoid unvetted `postinstall` lifecycle scripts, and pin dependencies via catalog references.
+4. **Automated Verification**: Run `security_scan_secrets`, `security_analyze_code`, `security_audit_dependencies`, and `security_collect_compliance_evidence` to verify zero security regressions before proposing PRs.
+
 ### Isolation of Concerns
 
 New UI components, composables, utilities, or design tokens belong in `packages/`, not embedded inside an app. New shared lint/format/build tooling belongs in `packages/tooling/configs/`.

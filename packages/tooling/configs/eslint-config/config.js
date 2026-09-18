@@ -31,6 +31,130 @@ const typeScriptJsxParserOptions = {
   },
 };
 
+/**
+ * Check whether an AST node is exported directly or via an ancestor declaration.
+ */
+function isNodeExported(node) {
+  let current = node?.parent;
+  while (current) {
+    if (current.type === 'ExportNamedDeclaration' || current.type === 'ExportDefaultDeclaration') {
+      return true;
+    }
+    current = current.parent;
+  }
+  return false;
+}
+
+/**
+ * Check whether all import specifiers in a declaration are inline type imports.
+ */
+function shouldConvertToTypeImport(node) {
+  if (node.importKind === 'type') {
+    return false;
+  }
+  const specifiers = Array.isArray(node.specifiers) ? node.specifiers : [];
+  if (specifiers.length === 0) {
+    return false;
+  }
+  return specifiers.every((specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type');
+}
+
+/**
+ * Check whether a type annotation node represents an `as const` assertion.
+ */
+function isConstAssertion(typeAnnotation) {
+  return typeAnnotation?.type === 'TSTypeReference' && typeAnnotation.typeName?.name === 'const';
+}
+
+const BOUNDARY_NODE_TYPES = new Set([
+  'FunctionDeclaration',
+  'ArrowFunctionExpression',
+  'FunctionExpression',
+  'MethodDefinition',
+  'VariableDeclaration',
+  'ClassDeclaration',
+]);
+
+const FUNCTION_NODE_TYPES = new Set([
+  'FunctionDeclaration',
+  'ArrowFunctionExpression',
+  'FunctionExpression',
+  'MethodDefinition',
+]);
+
+function isFunctionNode(node) {
+  return Boolean(node && FUNCTION_NODE_TYPES.has(node.type));
+}
+
+/**
+ * Find the enclosing TSTypeAnnotation for a nested type node.
+ */
+function findEnclosingTypeAnnotation(node) {
+  let target;
+  let current = node?.parent;
+  while (current) {
+    if (current.type === 'TSTypeAnnotation') {
+      target = current;
+      break;
+    }
+    if (BOUNDARY_NODE_TYPES.has(current.type)) {
+      break;
+    }
+    current = current.parent;
+  }
+  return target;
+}
+
+function isDirectExportedFunctionAnnotation(node) {
+  const parent = node?.parent;
+  if (parent?.type !== 'TSTypeAnnotation') {
+    return false;
+  }
+  const functionNode = parent.parent;
+  return isFunctionNode(functionNode) && isNodeExported(functionNode);
+}
+
+function isDirectFunctionReturn(enclosing) {
+  const functionNode = enclosing.parent;
+  return isFunctionNode(functionNode) && functionNode.returnType === enclosing && isNodeExported(functionNode);
+}
+
+function isFunctionTypeReturn(enclosing) {
+  const tsFunction = enclosing.parent;
+  if (tsFunction?.type !== 'TSFunctionType' || tsFunction.returnType !== enclosing) {
+    return false;
+  }
+  const annotation = tsFunction.parent;
+  if (annotation?.type !== 'TSTypeAnnotation') {
+    return false;
+  }
+  const functionNode = annotation.parent;
+  return isFunctionNode(functionNode) && functionNode.returnType === annotation && isNodeExported(functionNode);
+}
+
+function isNestedReturnTypeAnnotation(node) {
+  const enclosing = findEnclosingTypeAnnotation(node);
+  if (!enclosing) {
+    return false;
+  }
+  return isDirectFunctionReturn(enclosing) || isFunctionTypeReturn(enclosing);
+}
+
+/**
+ * Check whether a type node is a return or parameter annotation on an exported function.
+ */
+function isExportedFunctionAnnotation(node) {
+  return isDirectExportedFunctionAnnotation(node) || isNestedReturnTypeAnnotation(node);
+}
+
+/**
+ * Check whether a generic constraint is genuinely restrictive (not open unknown or any).
+ */
+function isRestrictiveConstraint(constraint) {
+  if (!constraint) return false;
+  return constraint.type !== 'TSUnknownKeyword' && constraint.type !== 'TSAnyKeyword';
+}
+
 const missionTypeScriptPlugin = {
   rules: {
     'no-explicit-any': {
@@ -76,19 +200,10 @@ const missionTypeScriptPlugin = {
       create(context) {
         return {
           ImportDeclaration(node) {
-            if (node.importKind === 'type') {
+            if (!shouldConvertToTypeImport(node)) {
               return;
             }
             const specifiers = Array.isArray(node.specifiers) ? node.specifiers : [];
-            const hasInlineTypeSpecifier = specifiers.some(
-              (specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type',
-            );
-            const allSpecifiersAreInlineTypeImports =
-              specifiers.length > 0 &&
-              specifiers.every((specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type');
-            if (!hasInlineTypeSpecifier || !allSpecifiersAreInlineTypeImports) {
-              return;
-            }
             context.report({
               node,
               messageId: 'preferTopLevelTypeImport',
@@ -103,6 +218,90 @@ const missionTypeScriptPlugin = {
                 );
               },
             });
+          },
+        };
+      },
+    },
+    'prefer-satisfies': {
+      meta: {
+        type: 'suggestion',
+        docs: {
+          description: 'Prefer `satisfies` operator over type assertion `as` to preserve narrow literal types.',
+        },
+        schema: [],
+        messages: {
+          preferSatisfies:
+            'Prefer "satisfies" over type assertion "as" to validate type conformance without widening literals or masking errors.',
+          noAsAny: 'Unexpected "as any" type assertion. Prohibit "any" and use concrete types or "satisfies".',
+        },
+      },
+      create(context) {
+        function validateAssertion(node) {
+          if (node.typeAnnotation?.type === 'TSAnyKeyword') {
+            context.report({ node, messageId: 'noAsAny' });
+            return;
+          }
+          if (!isConstAssertion(node.typeAnnotation)) {
+            context.report({ node, messageId: 'preferSatisfies' });
+          }
+        }
+
+        return {
+          TSAsExpression(node) {
+            validateAssertion(node);
+          },
+          TSTypeAssertion(node) {
+            validateAssertion(node);
+          },
+        };
+      },
+    },
+    'no-unconstrained-generics': {
+      meta: {
+        type: 'suggestion',
+        docs: {
+          description: 'Require generic type parameters to specify an `extends` constraint.',
+        },
+        schema: [],
+        messages: {
+          unconstrainedGeneric: 'Type parameter "{{name}}" must have an "extends" constraint to restrict open types.',
+        },
+      },
+      create(context) {
+        return {
+          TSTypeParameter(node) {
+            if (!isRestrictiveConstraint(node.constraint)) {
+              const parameterName = typeof node.name === 'string' ? node.name : (node.name?.name ?? 'T');
+              context.report({
+                node,
+                messageId: 'unconstrainedGeneric',
+                data: {
+                  name: parameterName,
+                },
+              });
+            }
+          },
+        };
+      },
+    },
+    'no-implicit-unknown': {
+      meta: {
+        type: 'suggestion',
+        docs: {
+          description: 'Disallow returning or leaking unvalidated `unknown` across exported functions and types.',
+        },
+        schema: [],
+        messages: {
+          noImplicitUnknown:
+            'Avoid exposing unvalidated "unknown" across exported API boundaries. Parse or validate into concrete types.',
+        },
+      },
+      create(context) {
+        return {
+          TSUnknownKeyword(node) {
+            if (isExportedFunctionAnnotation(node)) {
+              context.report({ node, messageId: 'noImplicitUnknown' });
+            }
           },
         };
       },
@@ -166,6 +365,9 @@ const config = [
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+      '@typescript-eslint/prefer-satisfies': 'warn',
+      '@typescript-eslint/no-unconstrained-generics': 'warn',
+      '@typescript-eslint/no-implicit-unknown': 'warn',
       'import-x/order': [
         'error',
         {
@@ -200,6 +402,9 @@ const config = [
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+      '@typescript-eslint/prefer-satisfies': 'warn',
+      '@typescript-eslint/no-unconstrained-generics': 'warn',
+      '@typescript-eslint/no-implicit-unknown': 'warn',
       'import-x/order': [
         'error',
         {
@@ -247,6 +452,9 @@ const config = [
       'vue/singleline-html-element-content-newline': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+      '@typescript-eslint/prefer-satisfies': 'warn',
+      '@typescript-eslint/no-unconstrained-generics': 'warn',
+      '@typescript-eslint/no-implicit-unknown': 'warn',
       'import-x/order': [
         'error',
         {

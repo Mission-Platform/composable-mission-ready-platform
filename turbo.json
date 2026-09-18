@@ -10,6 +10,7 @@
     "CI",
     "NODE_OPTIONS",
     "MISSION_REPO_ROOT",
+    "MISSION_MCP_PROFILE",
     "SSR",
     "STORYBOOK_FRAMEWORK",
     "AUDIT_PORT",

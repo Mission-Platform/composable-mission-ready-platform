@@ -11,13 +11,131 @@
       "type": "stdio",
       "command": "node",
       "args": [
-        "/Users/rogan/Developer/sources/composable_mission_ready_platform/mcp/developer/dist/index.js"
+        "scripts/launch-mcp.mjs"
       ],
-      "env": {
-        "MISSION_REPO_ROOT": "/Users/rogan/Developer/sources/composable_mission_ready_platform"
-      },
       "tools": [
         "*"
+      ]
+    },
+    "mission-core": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=core"
+      ],
+      "tools": [
+        "review_changes",
+        "list_components",
+        "get_component_usage",
+        "security_scan_secrets",
+        "lsp_get_diagnostics",
+        "git_status",
+        "git_changed_files",
+        "git_diff",
+        "get_guide",
+        "repo_affected_packages"
+      ]
+    },
+    "mission-security": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=security"
+      ],
+      "tools": [
+        "security_scan_secrets",
+        "security_analyze_code",
+        "security_audit_dependencies",
+        "security_audit_supply_chain",
+        "security_collect_compliance_evidence",
+        "security_audit_compliance",
+        "review_changes"
+      ]
+    },
+    "mission-frontend": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=frontend"
+      ],
+      "tools": [
+        "list_components",
+        "get_component_usage",
+        "get_tokens",
+        "scaffold",
+        "test_accessibility",
+        "i18n",
+        "list_stories",
+        "get_guide",
+        "read_doc",
+        "list_docs",
+        "repo_affected_packages",
+        "repo_prime_dependencies"
+      ]
+    },
+    "mission-coding": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=coding"
+      ],
+      "tools": [
+        "lsp_get_diagnostics",
+        "lsp_inspect_symbol",
+        "lsp_go_to_definition",
+        "lsp_find_references",
+        "lsp_find_callers",
+        "lsp_preview_edit",
+        "lsp_apply_edit",
+        "lsp_suggest_fixes",
+        "lsp_format_document",
+        "lsp_run_build",
+        "lsp_run_tests",
+        "run_test_file",
+        "turbo_run",
+        "repo_affected_packages",
+        "repo_prime_dependencies",
+        "review_changes"
+      ]
+    },
+    "mission-git": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=git"
+      ],
+      "tools": [
+        "git_status",
+        "git_changed_files",
+        "git_diff",
+        "git_log",
+        "git_show",
+        "git_blame",
+        "git_grep",
+        "git_metadata",
+        "git_commit_plan",
+        "git_commit_apply"
+      ]
+    },
+    "mission-fws": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "scripts/launch-mcp.mjs",
+        "--profile=fws"
+      ],
+      "tools": [
+        "fws_analyze_source",
+        "fws_analyze_workspace",
+        "fws_inspect_manifest",
+        "fws_inspect_sonir",
+        "fws_verify_artifact",
+        "fws_run_trace"
       ]
     },
     "DeepWiki": {

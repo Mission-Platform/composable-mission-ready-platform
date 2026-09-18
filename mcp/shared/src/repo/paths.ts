@@ -4,17 +4,23 @@
  * `MISSION_REPO_ROOT` environment variable; otherwise it is discovered by
  * walking up from this file until a `pnpm-workspace.yaml` is found.
  */
-import {existsSync, lstatSync, realpathSync} from 'node:fs';
-import {dirname, isAbsolute, join, relative, resolve} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import { existsSync, lstatSync, realpathSync } from "node:fs";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 /** The workspace groups understood by the tooling. */
-export type WorkspaceGroup = 'packages' | 'apps' | 'edge-workers' | 'tooling-vite' | 'tooling-configs' | 'crates';
+export type WorkspaceGroup =
+  | "packages"
+  | "apps"
+  | "edge-workers"
+  | "tooling-vite"
+  | "tooling-configs"
+  | "crates";
 
 export const WORKSPACE_GROUPS: readonly WorkspaceGroup[] = [
-  'packages',
-  'apps',
-  'crates',
+  "packages",
+  "apps",
+  "crates",
 ];
 
 let cachedRoot: string | undefined;
@@ -22,28 +28,65 @@ let cachedRoot: string | undefined;
 export interface RepoPathOptions {
   /** Permit a path that does not exist yet, after validating its parent. */
   allowMissing?: boolean;
+  /** Permit the leaf of the path to be a symlink as long as its target stays within root. */
+  allowSymlink?: boolean;
 }
 
 function isOutside(root: string, candidate: string): boolean {
   const path = relative(root, candidate);
-  return path === '..' || path.startsWith(`..${'/'}`) || path.startsWith(`..\\`) || isAbsolute(path);
+  return (
+    path === ".." ||
+    path.startsWith("../") ||
+    path.startsWith("..\\") ||
+    isAbsolute(path)
+  );
 }
 
-function rejectSymlinkComponents(root: string, candidate: string, label: string): void {
+/**
+ * Check whether a symlink at the given position is disallowed.
+ */
+function isSymlinkDisallowed(isLeaf: boolean, allowSymlink: boolean): boolean {
+  if (!allowSymlink) return true;
+  return !isLeaf;
+}
+
+/**
+ * Validate a path component against symlink traversal restrictions.
+ */
+function checkPathComponentSymlink(
+  path: string,
+  isLeaf: boolean,
+  allowSymlink: boolean,
+  label: string,
+): void {
+  try {
+    const isSymlink = lstatSync(path).isSymbolicLink();
+    if (isSymlink && isSymlinkDisallowed(isLeaf, allowSymlink)) {
+      throw new Error(`${label} must not traverse symlink "${path}".`);
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Verify that intermediate path components do not traverse symlinks.
+ */
+function rejectSymlinkComponents(
+  root: string,
+  candidate: string,
+  label: string,
+  allowSymlink = false,
+): void {
   const segments = relative(root, candidate).split(/[\\/]/).filter(Boolean);
   let current = root;
-  for (const segment of segments) {
-    current = join(current, segment);
-    try {
-      if (lstatSync(current).isSymbolicLink()) {
-        throw new Error(`${label} must not traverse symlink "${current}".`);
-      }
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-        return;
-      }
-      throw error;
-    }
+  for (let i = 0; i < segments.length; i += 1) {
+    const isLeaf = i === segments.length - 1;
+    current = join(current, segments[i]);
+    checkPathComponentSymlink(current, isLeaf, allowSymlink, label);
   }
 }
 
@@ -55,14 +98,18 @@ function rejectSymlinkComponents(root: string, candidate: string, label: string)
  * symlink cannot be used as a repository member, source, or write target. For
  * new paths, all existing parent components receive the same checks.
  */
-export function resolveRepoPath(path: string, label: string, options: RepoPathOptions = {}): string {
+export function resolveRepoPath(
+  path: string,
+  label: string,
+  options: RepoPathOptions = {},
+): string {
   const root = realpathSync(findRepoRoot());
   const candidate = isAbsolute(path) ? resolve(path) : resolve(root, path);
   if (isOutside(root, candidate)) {
     throw new Error(`${label} must remain within the repository root.`);
   }
 
-  rejectSymlinkComponents(root, candidate, label);
+  rejectSymlinkComponents(root, candidate, label, options.allowSymlink);
   try {
     const realCandidate = realpathSync(candidate);
     if (isOutside(root, realCandidate)) {
@@ -70,7 +117,7 @@ export function resolveRepoPath(path: string, label: string, options: RepoPathOp
     }
     return candidate;
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
       throw error;
     }
     if (!options.allowMissing) {
@@ -81,8 +128,8 @@ export function resolveRepoPath(path: string, label: string, options: RepoPathOp
 }
 
 export function findRepoRoot(): string {
-  const override = process.env['MISSION_REPO_ROOT'];
-  if (override && existsSync(join(override, 'pnpm-workspace.yaml'))) {
+  const override = process.env["MISSION_REPO_ROOT"];
+  if (override && existsSync(join(override, "pnpm-workspace.yaml"))) {
     return realpathSync(resolve(override));
   }
 
@@ -93,7 +140,7 @@ export function findRepoRoot(): string {
   let current = dirname(fileURLToPath(import.meta.url));
   // Walk up towards the filesystem root looking for the workspace manifest.
   for (let depth = 0; depth < 12; depth += 1) {
-    if (existsSync(join(current, 'pnpm-workspace.yaml'))) {
+    if (existsSync(join(current, "pnpm-workspace.yaml"))) {
       cachedRoot = realpathSync(current);
       return cachedRoot;
     }
@@ -105,22 +152,24 @@ export function findRepoRoot(): string {
   }
 
   // Fall back to two levels above `mcp/src/repo` (i.e. the repo root layout).
-  cachedRoot = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), '..', '..', '..'));
+  cachedRoot = realpathSync(
+    resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", ".."),
+  );
   return cachedRoot;
 }
 
 export function groupDir(group: WorkspaceGroup): string {
   const relativeGroup = {
-    packages: 'packages',
-    apps: 'apps',
-    'edge-workers': 'packages/edge/workers',
-    'tooling-vite': 'packages/tooling/vite',
-    'tooling-configs': 'packages/tooling/configs',
-    crates: 'crates',
+    packages: "packages",
+    apps: "apps",
+    "edge-workers": "packages/edge/workers",
+    "tooling-vite": "packages/tooling/vite",
+    "tooling-configs": "packages/tooling/configs",
+    crates: "crates",
   }[group];
   return join(findRepoRoot(), relativeGroup);
 }
 
 export function docsDir(): string {
-  return join(findRepoRoot(), 'docs');
+  return join(findRepoRoot(), "docs");
 }

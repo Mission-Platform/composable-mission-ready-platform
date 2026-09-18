@@ -14,7 +14,7 @@ Generated from public source declarations in `@mission-platform/vite-plugin-i18n
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-No description provided.
+Vite plugin for managing and resolving application i18n locale resources.
 
 #### Parameters
 
@@ -30,7 +30,7 @@ No description provided.
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-No description provided.
+Vite plugin for managing and resolving application i18n locale resources.
 
 #### Parameters
 

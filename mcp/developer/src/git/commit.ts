@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { existsSync } from 'node:fs';
+import { existsSync, lstatSync, readlinkSync } from 'node:fs';
 import { relative, resolve, isAbsolute } from 'node:path';
 
 import lint from '@commitlint/lint';
@@ -207,6 +207,46 @@ function captureSelectedWorktreeHashes(paths: readonly string[], options: GitCom
   });
 }
 
+/**
+ * Resolve symlink target for a repository path if applicable.
+ */
+function readSymlinkTarget(resolved: string): string | undefined {
+  try {
+    if (lstatSync(resolved).isSymbolicLink()) {
+      return readlinkSync(resolved);
+    }
+  } catch {
+    // Ignored
+  }
+  return undefined;
+}
+
+/**
+ * Hash an untracked repository path for the commit snapshot.
+ */
+function hashUntrackedPath(path: string, options: GitCommandInputOptions): string {
+  const resolved = resolveRepoPath(path, 'Untracked path', { allowMissing: true, allowSymlink: true });
+  const symlinkTarget = readSymlinkTarget(resolved);
+  if (symlinkTarget !== undefined) {
+    return `${path}\0symlink:${symlinkTarget}`;
+  }
+  if (!existsSync(resolved)) {
+    return `${path}\0<missing>`;
+  }
+  try {
+    if (lstatSync(resolved).isDirectory()) {
+      return `${path}\0directory`;
+    }
+  } catch {
+    return `${path}\0<missing>`;
+  }
+  const hash = runGit('commit-snapshot-untracked', ['hash-object', '--no-filters', '--', path], options);
+  if (hash.success) {
+    return `${path}\0${hash.stdout.trim()}`;
+  }
+  return existsSync(resolved) ? requireGitSuccess(hash) : `${path}\0<missing>`;
+}
+
 export function captureCommitSnapshot(
   message: string,
   mode: CommitMode,
@@ -223,19 +263,7 @@ export function captureCommitSnapshot(
     requireGitSuccess(runGit('commit-snapshot-files', ['diff', '--cached', '--name-only', '-z', '--'], options)),
   ).sort();
   const paths = untrackedPaths(status).sort();
-  const untrackedHashes = paths.map((path) => {
-    if (!existsSync(resolveRepoPath(path, 'Untracked path', { allowMissing: true }))) {
-      return `${path}\0<missing>`;
-    }
-    const hash = runGit('commit-snapshot-untracked', ['hash-object', '--no-filters', '--', path], options);
-    if (!hash.success) {
-      if (!existsSync(resolveRepoPath(path, 'Untracked path', { allowMissing: true }))) {
-        return `${path}\0<missing>`;
-      }
-      return requireGitSuccess(hash);
-    }
-    return `${path}\0${hash.stdout.trim()}`;
-  });
+  const untrackedHashes = paths.map((path) => hashUntrackedPath(path, options));
   const selectedWorktreeHashes =
     normalizedMode.kind === 'paths' ? captureSelectedWorktreeHashes(normalizedMode.paths, options) : [];
   const files = normalizedMode.kind === 'staged-only' ? stagedFiles : [...normalizedMode.paths];
