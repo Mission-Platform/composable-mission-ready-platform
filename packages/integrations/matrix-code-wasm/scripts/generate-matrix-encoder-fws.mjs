@@ -168,28 +168,74 @@ function placeCorner4(grid, position) {
 }
 
 /**
+ * Applies corner pattern 1 if the grid position matches corner 1 conditions.
+ */
+function applyCorner1(grid, row, column, position) {
+  if (row === grid.rows && column === 0) {
+    placeCorner1(grid, position);
+    return position + 1;
+  }
+  return position;
+}
+
+/**
+ * Applies corner pattern 2 if the grid position matches corner 2 conditions.
+ */
+function applyCorner2(grid, row, column, position) {
+  if (row === grid.rows - 2 && column === 0 && grid.cols % 4 !== 0) {
+    placeCorner2(grid, position);
+    return position + 1;
+  }
+  return position;
+}
+
+/**
+ * Applies corner pattern 3 if the grid position matches corner 3 conditions.
+ */
+function applyCorner3(grid, row, column, position) {
+  if (row === grid.rows - 2 && column === 0 && grid.cols % 8 === 4) {
+    placeCorner3(grid, position);
+    return position + 1;
+  }
+  return position;
+}
+
+/**
+ * Applies corner pattern 4 if the grid position matches corner 4 conditions.
+ */
+function applyCorner4(grid, row, column, position) {
+  if (row === grid.rows + 4 && column === 2 && grid.cols % 8 === 0) {
+    placeCorner4(grid, position);
+    return position + 1;
+  }
+  return position;
+}
+
+/**
  * Evaluates special corner placement conditions at the start of a diagonal pass.
  */
 function checkCornerConditions(grid, row, column, position) {
-  let nextPosition = position;
-  const { rows, cols } = grid;
-  if (row === rows && column === 0) {
-    placeCorner1(grid, nextPosition);
-    nextPosition += 1;
-  }
-  if (row === rows - 2 && column === 0 && cols % 4 !== 0) {
-    placeCorner2(grid, nextPosition);
-    nextPosition += 1;
-  }
-  if (row === rows - 2 && column === 0 && cols % 8 === 4) {
-    placeCorner3(grid, nextPosition);
-    nextPosition += 1;
-  }
-  if (row === rows + 4 && column === 2 && cols % 8 === 0) {
-    placeCorner4(grid, nextPosition);
-    nextPosition += 1;
-  }
-  return nextPosition;
+  let next = applyCorner1(grid, row, column, position);
+  next = applyCorner2(grid, row, column, next);
+  next = applyCorner3(grid, row, column, next);
+  return applyCorner4(grid, row, column, next);
+}
+
+/**
+ * Places a Utah shape for an unallocated module at the upward sweep position.
+ */
+function tryPlaceUtahUpward(grid, row, column, position) {
+  if (row >= grid.rows || column < 0) return position;
+  if (grid.hasBit(column, row)) return position;
+  placeUtah(grid, row, column, position);
+  return position + 1;
+}
+
+/**
+ * Checks whether the upward diagonal sweep has reached the grid boundary.
+ */
+function isUpwardSweepTerminated(grid, row, column) {
+  return row < 0 || column >= grid.cols;
 }
 
 /**
@@ -200,15 +246,29 @@ function sweepUpward(grid, startRow, startColumn, startPosition) {
   let column = startColumn;
   let position = startPosition;
   while (true) {
-    if (row < grid.rows && column >= 0 && !grid.hasBit(column, row)) {
-      placeUtah(grid, row, column, position);
-      position += 1;
-    }
+    position = tryPlaceUtahUpward(grid, row, column, position);
     row -= 2;
     column += 2;
-    if (row < 0 || column >= grid.cols) break;
+    if (isUpwardSweepTerminated(grid, row, column)) break;
   }
   return { row: row + 1, column: column + 3, position };
+}
+
+/**
+ * Places a Utah shape for an unallocated module at the downward sweep position.
+ */
+function tryPlaceUtahDownward(grid, row, column, position) {
+  if (row < 0 || column >= grid.cols) return position;
+  if (grid.hasBit(column, row)) return position;
+  placeUtah(grid, row, column, position);
+  return position + 1;
+}
+
+/**
+ * Checks whether the downward diagonal sweep has reached the grid boundary.
+ */
+function isDownwardSweepTerminated(grid, row, column) {
+  return row >= grid.rows || column < 0;
 }
 
 /**
@@ -219,13 +279,10 @@ function sweepDownward(grid, startRow, startColumn, startPosition) {
   let column = startColumn;
   let position = startPosition;
   while (true) {
-    if (row >= 0 && column < grid.cols && !grid.hasBit(column, row)) {
-      placeUtah(grid, row, column, position);
-      position += 1;
-    }
+    position = tryPlaceUtahDownward(grid, row, column, position);
     row += 2;
     column -= 2;
-    if (row >= grid.rows || column < 0) break;
+    if (isDownwardSweepTerminated(grid, row, column)) break;
   }
   return { row: row + 3, column: column + 1, position };
 }
