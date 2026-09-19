@@ -1,5 +1,11 @@
 # @mission-platform/forge-router-vue
 
+## 0.1.4
+
+### Patch Changes
+
+- @mission-platform/forge-router-plugin-api@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes

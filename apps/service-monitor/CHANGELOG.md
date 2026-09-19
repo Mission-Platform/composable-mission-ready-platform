@@ -1,5 +1,21 @@
 # @mission-platform/service-monitor
 
+## 0.0.7
+
+### Patch Changes
+
+- @mission-platform/d3@2.0.3
+  - @mission-platform/breakpoints@6.0.3
+  - @mission-platform/components@3.2.1
+  - @mission-platform/float@1.2.1
+  - @mission-platform/forms@2.2.2
+  - @mission-platform/icons@2.0.3
+  - @mission-platform/layouts@2.1.2
+  - @mission-platform/select@1.2.1
+  - @mission-platform/theme@1.1.2
+  - @mission-platform/rxjs@1.0.3
+  - @mission-platform/typography@1.1.2
+
 ## 0.0.6
 
 ### Patch Changes

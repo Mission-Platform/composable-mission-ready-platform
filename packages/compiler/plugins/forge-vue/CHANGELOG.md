@@ -1,5 +1,12 @@
 # @mission-platform/forge-plugin-vue
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [0878d97]
+  - @mission-platform/forge-plugin-api@0.4.2
+
 ## 0.3.1
 
 ### Patch Changes

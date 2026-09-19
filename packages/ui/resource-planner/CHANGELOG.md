@@ -1,5 +1,12 @@
 # @mission-platform/resource-planner
 
+## 1.2.3
+
+### Patch Changes
+
+- @mission-platform/scheduler@0.3.3
+  - @mission-platform/vcard@0.2.3
+
 ## 1.2.2
 
 ### Patch Changes

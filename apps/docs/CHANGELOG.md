@@ -1,5 +1,17 @@
 # @mission-platform/docs
 
+## 0.0.6
+
+### Patch Changes
+
+- @mission-platform/content@1.2.2
+  - @mission-platform/components@3.2.1
+  - @mission-platform/forms@2.2.2
+  - @mission-platform/layouts@2.1.2
+  - @mission-platform/select@1.2.1
+  - @mission-platform/theme@1.1.2
+  - @mission-platform/forge-router-web-components@0.2.2
+
 ## 0.0.5
 
 ### Patch Changes

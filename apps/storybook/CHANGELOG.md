@@ -1,5 +1,33 @@
 # @mission-platform/storybook
 
+## 0.0.18
+
+### Patch Changes
+
+- @mission-platform/content@1.2.2
+  - @mission-platform/email-components@1.1.2
+  - @mission-platform/scheduler@0.3.3
+  - @mission-platform/barcode@3.0.1
+  - @mission-platform/code-scanner@1.3.1
+  - @mission-platform/d3@2.0.3
+  - @mission-platform/map@2.1.1
+  - @mission-platform/matrix-code@3.0.1
+  - @mission-platform/qr-code@3.0.1
+  - @mission-platform/three@2.0.3
+  - @mission-platform/vcard@0.2.3
+  - @mission-platform/breakpoints@6.0.3
+  - @mission-platform/components@3.2.1
+  - @mission-platform/float@1.2.1
+  - @mission-platform/forms@2.2.2
+  - @mission-platform/icons@2.0.3
+  - @mission-platform/layouts@2.1.2
+  - @mission-platform/resource-planner@1.2.3
+  - @mission-platform/select@1.2.1
+  - @mission-platform/theme@1.1.2
+  - @mission-platform/rxjs@1.0.3
+  - @mission-platform/speech-audio@1.0.3
+  - @mission-platform/typography@1.1.2
+
 ## 0.0.17
 
 ### Patch Changes

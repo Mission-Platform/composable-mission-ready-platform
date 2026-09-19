@@ -1,5 +1,11 @@
 # @mission-platform/forge-router-web-components
 
+## 0.2.2
+
+### Patch Changes
+
+- @mission-platform/forge-router-plugin-api@0.1.4
+
 ## 0.2.1
 
 ### Patch Changes
