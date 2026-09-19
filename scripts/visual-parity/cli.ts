@@ -8,7 +8,6 @@ import {
   pairStorybookIndexes,
   type StorybookIndexMissingPair,
   type StorybookIndexPair,
-  type StorybookParityFramework,
 } from '../runtime-validation/storybook-index.ts';
 
 import { comparePngFiles } from './diff.ts';
@@ -25,14 +24,16 @@ import { startStorybookServers } from './servers.ts';
 import {
   createRendererDefinitions,
   DEFAULT_VISUAL_PARITY_VIEWPORT,
+  VISUAL_PARITY_CANDIDATES,
   VISUAL_PARITY_RENDERERS,
+  type StorybookRendererServers,
+  type VisualParityCandidate,
   type VisualParityCaptureResult,
   type VisualParityCliOptions,
   type VisualParityComparison,
   type VisualParityRenderer,
   type VisualParityReport,
   type VisualParityResult,
-  type StorybookRendererServers,
 } from './types.ts';
 
 const DEFAULT_TIMEOUT_MS = 120_000;
@@ -78,8 +79,8 @@ function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number
   const base = option(args, '--port');
   if (base !== undefined) {
     const value = Number(base);
-    if (!Number.isInteger(value) || value < 1 || value > 65_533)
-      throw new Error('--port must allow three valid consecutive TCP ports.');
+    if (!Number.isInteger(value) || value < 1 || value > 65_531)
+      throw new Error('--port must allow five valid consecutive TCP ports.');
     for (const [index, renderer] of VISUAL_PARITY_RENDERERS.entries()) ports[renderer] = value + index;
   }
   for (const renderer of VISUAL_PARITY_RENDERERS) {
@@ -105,6 +106,28 @@ function parsePorts(args: string[]): Partial<Record<VisualParityRenderer, number
   return ports;
 }
 
+/**
+ * Parses target framework candidates from command line arguments.
+ *
+ * @param args - Command line argument array.
+ * @returns Array of validated target candidates or undefined if unconstrained.
+ */
+function parseTargets(args: string[]): readonly VisualParityCandidate[] | undefined {
+  const flag = firstOptionName(args, ['--targets', '--target', '--candidates', '--candidate']);
+  const raw = flag ? option(args, flag) : undefined;
+  if (raw === undefined) return undefined;
+  if (raw === 'all') return VISUAL_PARITY_CANDIDATES;
+
+  return raw.split(',').map((item) => {
+    const trimmed = item.trim();
+    const matched = VISUAL_PARITY_CANDIDATES.find((candidate) => candidate === trimmed);
+    if (!matched) {
+      throw new Error(`Unknown target candidate: ${trimmed}. Expected one of: ${VISUAL_PARITY_CANDIDATES.join(', ')}.`);
+    }
+    return matched;
+  });
+}
+
 export function parseVisualParityArgs(args: string[], root = repositoryRoot()): VisualParityCliOptions {
   const viewport = option(args, '--viewport') ?? 'md';
   const theme = option(args, '--theme') ?? 'light';
@@ -117,6 +140,7 @@ export function parseVisualParityArgs(args: string[], root = repositoryRoot()): 
     maxStories:
       option(args, '--max-stories') === undefined ? undefined : positiveIntegerOption(args, '--max-stories', 1),
     ports: parsePorts(args),
+    targets: parseTargets(args),
     viewport: DEFAULT_VISUAL_PARITY_VIEWPORT,
     theme: 'light',
     workers: positiveIntegerOption(args, '--workers', DEFAULT_WORKERS),
@@ -197,7 +221,7 @@ type VisualParityComparisonStatus = VisualParityComparison['status'];
 
 function compareRenderer(
   storyId: string,
-  candidate: 'react' | 'vue',
+  candidate: VisualParityCandidate,
   captures: Map<string, VisualParityCaptureResult>,
   outputDirectory: string,
   options: VisualParityCliOptions,
@@ -249,12 +273,16 @@ function compareRenderer(
   return comparison;
 }
 
-function missingResult(pair: StorybookIndexMissingPair, packageName: string): VisualParityResult {
+function missingResult(
+  pair: StorybookIndexMissingPair,
+  packageName: string,
+  candidates: readonly VisualParityCandidate[] = VISUAL_PARITY_CANDIDATES,
+): VisualParityResult {
   return {
     storyId: pair.storyId,
     packageName,
     sourceImport: pair.sourceImport,
-    comparisons: (['react', 'vue'] as const).map((candidate) => ({
+    comparisons: candidates.map((candidate) => ({
       baseline: 'web-component' as const,
       candidate,
       status: 'missing-pair' as const,
@@ -263,123 +291,277 @@ function missingResult(pair: StorybookIndexMissingPair, packageName: string): Vi
   };
 }
 
-export async function runVisualParity(options: VisualParityCliOptions): Promise<VisualParityReport> {
-  const inventory = discoverInventory(options.repositoryRoot);
-  const definitions = createRendererDefinitions({ ports: options.ports });
-  let running: StorybookRendererServers | undefined;
-  const captures: VisualParityCaptureResult[] = [];
+/**
+ * Computes paired and missing story entries across running Storybook framework servers.
+ *
+ * @param inventory - Discovered component stories inventory.
+ * @param running - Active Storybook server instances.
+ * @param options - Visual parity execution options.
+ * @returns Filtered matched pairs and missing pair records.
+ */
+function computeParityPairs(
+  inventory: ReturnType<typeof discoverInventory>,
+  running: StorybookRendererServers,
+  options: VisualParityCliOptions,
+) {
+  const pairing = pairStorybookIndexes(options.repositoryRoot, inventory, {
+    'web-component': running.servers['web-component'].index,
+    react: running.servers.react.index,
+    vue: running.servers.vue.index,
+    solid: running.servers.solid.index,
+    svelte: running.servers.svelte.index,
+  });
+  const pairs = selectedPairs(pairing.pairs, inventory, options);
+  const missingFromEntries = selectedMissing(pairing.missing, inventory, {
+    ...options,
+    maxStories: options.maxStories === undefined ? undefined : Math.max(options.maxStories - pairs.length, 0),
+  });
+  const missingStories = pairing.missingStories
+    .filter(
+      (story) =>
+        (!options.packageName || story.packageName === options.packageName) &&
+        matchesStorySelector(story.id, options.storyId),
+    )
+    .map((story) => ({
+      storyId: story.id,
+      sourceImport: story.filePath,
+      missingFrameworks: [...VISUAL_PARITY_RENDERERS],
+      entries: {},
+    }));
+  const missing = [
+    ...missingFromEntries,
+    ...missingStories.slice(
+      0,
+      options.maxStories === undefined
+        ? undefined
+        : Math.max(options.maxStories - pairs.length - missingFromEntries.length, 0),
+    ),
+  ];
+  return { pairs, missing };
+}
+
+/**
+ * Persists story metadata artifacts for valid pairs.
+ *
+ * @param inventory - Component stories inventory.
+ * @param outputDirectory - Artifacts output directory.
+ * @param pairs - Discovered story pairs.
+ */
+function recordPairsMetadata(
+  inventory: ReturnType<typeof discoverInventory>,
+  outputDirectory: string,
+  pairs: StorybookIndexPair[],
+): void {
+  for (const pair of pairs) {
+    const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
+    if (!story) continue;
+    writeStoryMetadata(outputDirectory, pair.storyId, {
+      storyId: pair.storyId,
+      packageName: story.packageName,
+      sourceImport: pair.sourceImport,
+      entries: pair.entries,
+    });
+  }
+}
+
+/**
+ * Persists story metadata artifacts and constructs placeholder result entries for missing pairs.
+ *
+ * @param inventory - Component stories inventory.
+ * @param outputDirectory - Artifacts output directory.
+ * @param missing - Stories missing one or more framework targets.
+ * @param targetCandidates - Candidates being evaluated.
+ * @returns Array of VisualParityResult records for missing stories.
+ */
+function recordMissingResults(
+  inventory: ReturnType<typeof discoverInventory>,
+  outputDirectory: string,
+  missing: StorybookIndexMissingPair[],
+  targetCandidates: readonly VisualParityCandidate[],
+): VisualParityResult[] {
   const results: VisualParityResult[] = [];
-  const diagnostics: string[] = [];
-  const cleanupErrors: string[] = [];
-  try {
-    running = await startStorybookServers(options.repositoryRoot, {
-      ports: options.ports,
-      timeoutMs: options.timeoutMs,
+  for (const pair of missing) {
+    const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
+    const packageName = story ? story.packageName : 'unknown';
+    results.push(missingResult(pair, packageName, targetCandidates));
+    writeStoryMetadata(outputDirectory, pair.storyId, {
+      storyId: pair.storyId,
+      packageName,
+      sourceImport: pair.sourceImport,
+      entries: pair.entries,
+      missingFrameworks: pair.missingFrameworks,
     });
-    const pairing = pairStorybookIndexes(options.repositoryRoot, inventory, {
-      'web-component': running.servers['web-component'].index,
-      react: running.servers.react.index,
-      vue: running.servers.vue.index,
-    });
-    const pairs = selectedPairs(pairing.pairs, inventory, options);
-    const missingFromEntries = selectedMissing(pairing.missing, inventory, {
-      ...options,
-      maxStories: options.maxStories === undefined ? undefined : Math.max(options.maxStories - pairs.length, 0),
-    });
-    const missingStories = pairing.missingStories
-      .filter(
-        (story) =>
-          (!options.packageName || story.packageName === options.packageName) &&
-          matchesStorySelector(story.id, options.storyId),
-      )
-      .map((story) => ({
-        storyId: story.id,
-        sourceImport: story.filePath,
-        missingFrameworks: ['web-component', 'react', 'vue'] as StorybookParityFramework[],
-        entries: {},
-      }));
-    const missing = [
-      ...missingFromEntries,
-      ...missingStories.slice(
-        0,
-        options.maxStories === undefined
-          ? undefined
-          : Math.max(options.maxStories - pairs.length - missingFromEntries.length, 0),
+  }
+  return results;
+}
+
+/**
+ * Persists story metadata artifacts and constructs placeholder result entries for missing pairs.
+ *
+ * @param inventory - Discovered component stories inventory.
+ * @param outputDirectory - Artifacts output directory.
+ * @param pairs - Discovered story pairs.
+ * @param missing - Stories missing one or more framework targets.
+ * @param targetCandidates - Candidates being evaluated.
+ * @returns Array of VisualParityResult records for missing stories.
+ */
+function recordMetadataAndMissingResults(
+  inventory: ReturnType<typeof discoverInventory>,
+  outputDirectory: string,
+  pairs: StorybookIndexPair[],
+  missing: StorybookIndexMissingPair[],
+  targetCandidates: readonly VisualParityCandidate[],
+): VisualParityResult[] {
+  recordPairsMetadata(inventory, outputDirectory, pairs);
+  return recordMissingResults(inventory, outputDirectory, missing, targetCandidates);
+}
+
+/**
+ * Evaluates visual differences for captured stories and saves comparison diagnostics.
+ *
+ * @param pairs - List of paired stories.
+ * @param inventory - Component stories inventory.
+ * @param byKey - Lookup map of captured screenshots.
+ * @param targetCandidates - Framework candidates to compare.
+ * @param outputDirectory - Artifacts output directory.
+ * @param options - Visual parity execution options.
+ * @returns Array of comparison results.
+ */
+function processCapturedComparisons(
+  pairs: StorybookIndexPair[],
+  inventory: ReturnType<typeof discoverInventory>,
+  byKey: Map<string, VisualParityCaptureResult>,
+  targetCandidates: readonly VisualParityCandidate[],
+  outputDirectory: string,
+  options: VisualParityCliOptions,
+): VisualParityResult[] {
+  const results: VisualParityResult[] = [];
+  for (const pair of pairs) {
+    const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
+    if (!story) continue;
+    const result: VisualParityResult = {
+      storyId: pair.storyId,
+      packageName: story.packageName,
+      sourceImport: pair.sourceImport,
+      comparisons: targetCandidates.map((candidate) =>
+        compareRenderer(pair.storyId, candidate, byKey, outputDirectory, options),
       ),
-    ];
-    if (pairs.length === 0 && missing.length === 0)
-      diagnostics.push('No neutral Storybook stories matched the requested selectors.');
-    for (const pair of pairs) {
-      const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
-      if (!story) continue;
-      writeStoryMetadata(options.outputDirectory, pair.storyId, {
-        storyId: pair.storyId,
-        packageName: story.packageName,
-        sourceImport: pair.sourceImport,
-        entries: pair.entries,
-      });
-    }
-    for (const pair of missing) {
-      const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
-      results.push(missingResult(pair, story?.packageName ?? 'unknown'));
-      writeStoryMetadata(options.outputDirectory, pair.storyId, {
-        storyId: pair.storyId,
-        packageName: story?.packageName ?? 'unknown',
-        sourceImport: pair.sourceImport,
-        entries: pair.entries,
-        missingFrameworks: pair.missingFrameworks,
-      });
-    }
-    const requests = pairs.flatMap((pair) =>
-      VISUAL_PARITY_RENDERERS.map((renderer) => ({
-        storyId: pair.storyId,
-        renderer,
-        baseUrl: running?.servers[renderer].definition.url as string,
-      })),
-    );
-    const captureRun = await runVisualParityCapture({
-      repositoryRoot: options.repositoryRoot,
-      artifactDirectory: options.outputDirectory,
-      captures: requests,
-      viewport: options.viewport,
-      theme: options.theme,
-      timeoutMs: options.timeoutMs,
-      retries: 2,
-      workers: options.workers,
-      taskName: 'visual parity capture',
-    });
-    captures.push(...captureRun.results);
-    diagnostics.push(...captureRun.diagnostics);
-    cleanupErrors.push(...captureRun.cleanupErrors);
-    for (const capture of captures) writeCaptureDiagnostics(options.outputDirectory, capture);
-    const byKey = captureByKey(captures);
-    for (const pair of pairs) {
-      const story = inventory.stories.find((item) => item.filePath === pair.sourceImport);
-      if (!story) continue;
-      const result: VisualParityResult = {
-        storyId: pair.storyId,
-        packageName: story.packageName,
-        sourceImport: pair.sourceImport,
-        comparisons: [
-          compareRenderer(pair.storyId, 'react', byKey, options.outputDirectory, options),
-          compareRenderer(pair.storyId, 'vue', byKey, options.outputDirectory, options),
-        ],
-      };
-      results.push(result);
-      for (const comparison of result.comparisons)
-        writeComparisonDiagnostics(options.outputDirectory, pair.storyId, comparison);
-    }
-  } catch (error) {
-    diagnostics.push(error instanceof Error ? (error.stack ?? error.message) : String(error));
-  } finally {
-    if (running) {
-      try {
-        await running.close();
-      } catch (error) {
-        cleanupErrors.push(error instanceof Error ? error.message : String(error));
-      }
+    };
+    results.push(result);
+    for (const comparison of result.comparisons) {
+      writeComparisonDiagnostics(outputDirectory, pair.storyId, comparison);
     }
   }
+  return results;
+}
+
+/**
+ * Context passed to visual parity execution pipeline.
+ */
+interface ParityExecutionContext {
+  readonly inventory: ReturnType<typeof discoverInventory>;
+  readonly running: StorybookRendererServers;
+  readonly options: VisualParityCliOptions;
+  readonly captures: VisualParityCaptureResult[];
+  readonly results: VisualParityResult[];
+  readonly diagnostics: string[];
+  readonly cleanupErrors: string[];
+}
+
+/**
+ * Builds capture request specifications across all renderers.
+ *
+ * @param pairs - Paired Storybook stories.
+ * @param running - Active Storybook servers.
+ * @returns List of capture requests.
+ */
+function buildCaptureRequests(pairs: StorybookIndexPair[], running: StorybookRendererServers) {
+  return pairs.flatMap((pair) =>
+    VISUAL_PARITY_RENDERERS.map((renderer) => ({
+      storyId: pair.storyId,
+      renderer,
+      baseUrl: running.servers[renderer].definition.url,
+    })),
+  );
+}
+
+/**
+ * Executes the visual parity capture and image diffing pipeline.
+ *
+ * @param context - Execution context with options and accumulators.
+ */
+async function executeParityPipeline(context: ParityExecutionContext): Promise<void> {
+  const { inventory, running, options, captures, results, diagnostics, cleanupErrors } = context;
+  const { pairs, missing } = computeParityPairs(inventory, running, options);
+  if (pairs.length === 0 && missing.length === 0) {
+    diagnostics.push('No neutral Storybook stories matched the requested selectors.');
+  }
+  const targetCandidates = options.targets ?? VISUAL_PARITY_CANDIDATES;
+  results.push(
+    ...recordMetadataAndMissingResults(inventory, options.outputDirectory, pairs, missing, targetCandidates),
+  );
+
+  const requests = buildCaptureRequests(pairs, running);
+  const captureRun = await runVisualParityCapture({
+    repositoryRoot: options.repositoryRoot,
+    artifactDirectory: options.outputDirectory,
+    captures: requests,
+    viewport: options.viewport,
+    theme: options.theme,
+    timeoutMs: options.timeoutMs,
+    retries: 2,
+    workers: options.workers,
+    taskName: 'visual parity capture',
+  });
+
+  captures.push(...captureRun.results);
+  diagnostics.push(...captureRun.diagnostics);
+  cleanupErrors.push(...captureRun.cleanupErrors);
+
+  for (const capture of captures) writeCaptureDiagnostics(options.outputDirectory, capture);
+  const byKey = captureByKey(captures);
+  results.push(
+    ...processCapturedComparisons(pairs, inventory, byKey, targetCandidates, options.outputDirectory, options),
+  );
+}
+
+/**
+ * Safely shuts down running Storybook server instances and records cleanup failures.
+ *
+ * @param running - Optional running servers container.
+ * @param cleanupErrors - Errors array to record shutdown failures.
+ */
+async function safelyCloseServers(
+  running: StorybookRendererServers | undefined,
+  cleanupErrors: string[],
+): Promise<void> {
+  if (!running) return;
+  try {
+    await running.close();
+  } catch (error) {
+    cleanupErrors.push(error instanceof Error ? error.message : String(error));
+  }
+}
+
+/**
+ * Constructs and writes the final visual parity verification report.
+ *
+ * @param options - CLI options.
+ * @param definitions - Renderer definitions.
+ * @param results - Comparison results.
+ * @param captures - Screenshot capture results.
+ * @param diagnostics - Collected diagnostic messages.
+ * @param cleanupErrors - Collected cleanup errors.
+ * @returns Serialized VisualParityReport object.
+ */
+function buildVisualParityReport(
+  options: VisualParityCliOptions,
+  definitions: ReturnType<typeof createRendererDefinitions>,
+  results: VisualParityResult[],
+  captures: VisualParityCaptureResult[],
+  diagnostics: string[],
+  cleanupErrors: string[],
+): VisualParityReport {
   const report: VisualParityReport = {
     schemaVersion: 1,
     generatedAt: new Date().toISOString(),
@@ -401,10 +583,42 @@ export async function runVisualParity(options: VisualParityCliOptions): Promise<
   return report;
 }
 
+/**
+ * Runs the end-to-end visual parity verification pipeline across all framework targets.
+ *
+ * @param options - Execution and threshold options.
+ * @returns Complete visual parity report.
+ */
+export async function runVisualParity(options: VisualParityCliOptions): Promise<VisualParityReport> {
+  const inventory = discoverInventory(options.repositoryRoot);
+  const definitions = createRendererDefinitions({ ports: options.ports });
+  let running: StorybookRendererServers | undefined;
+  const captures: VisualParityCaptureResult[] = [];
+  const results: VisualParityResult[] = [];
+  const diagnostics: string[] = [];
+  const cleanupErrors: string[] = [];
+
+  try {
+    running = await startStorybookServers(options.repositoryRoot, {
+      ports: options.ports,
+      timeoutMs: options.timeoutMs,
+    });
+    await executeParityPipeline({ inventory, running, options, captures, results, diagnostics, cleanupErrors });
+  } catch (error) {
+    const errorDetails = error instanceof Error ? (error.stack ?? error.message) : String(error);
+    diagnostics.push(errorDetails);
+  } finally {
+    await safelyCloseServers(running, cleanupErrors);
+  }
+
+  return buildVisualParityReport(options, definitions, results, captures, diagnostics, cleanupErrors);
+}
+
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {
     console.log('Usage: pnpm visual:parity -- [--package <name>] [--story <id>] [--max-stories <n>] [--port <base>]');
+    console.log('       [--solid-port <port>] [--svelte-port <port>] [--targets <react,vue,solid,svelte>]');
     console.log(
       '       [--viewport md] [--theme light] [--workers <n>] [--timeout-ms <ms>] [--pixel-threshold <0..1>] [--diff-threshold <0..1>]',
     );

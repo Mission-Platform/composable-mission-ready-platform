@@ -533,6 +533,8 @@ describe('visual parity renderer definitions', () => {
       expect.objectContaining({ framework: 'web-component', port: 6200, host: '127.0.0.1' }),
       expect.objectContaining({ framework: 'react', port: 6201, host: '127.0.0.1' }),
       expect.objectContaining({ framework: 'vue', port: 6202, host: '127.0.0.1' }),
+      expect.objectContaining({ framework: 'solid', port: 6203, host: '127.0.0.1' }),
+      expect.objectContaining({ framework: 'svelte', port: 6204, host: '127.0.0.1' }),
     ]);
     expect(createRendererDefinitions({ ports: { react: 7101 } })[1]).toMatchObject({ port: 7101 });
   });
@@ -829,7 +831,13 @@ describe('visual parity diffing and CLI options', () => {
       packageName: '@mission-platform/components',
       storyId: 'forge-button--focus-visible',
       maxStories: 2,
-      ports: { 'web-component': 6300, react: 6301, vue: 6302 },
+      ports: {
+        'web-component': 6300,
+        react: 6301,
+        vue: 6302,
+        solid: 6303,
+        svelte: 6304,
+      },
       workers: 2,
       timeoutMs: 90_000,
       pixelThreshold: 0.2,
@@ -837,6 +845,16 @@ describe('visual parity diffing and CLI options', () => {
       theme: 'light',
       viewport: { name: 'md', deviceScaleFactor: 1 },
     });
+  });
+
+  it('parses custom solid, svelte, and candidate target CLI options', () => {
+    const options = parseVisualParityArgs(
+      ['--solid-port', '7203', '--svelte-port', '7204', '--targets', 'solid,svelte'],
+      repositoryRoot,
+    );
+    expect(options.ports.solid).toBe(7203);
+    expect(options.ports.svelte).toBe(7204);
+    expect(options.targets).toEqual(['solid', 'svelte']);
   });
 
   it('matches exact and compact Storybook story selectors used by the CLI', () => {

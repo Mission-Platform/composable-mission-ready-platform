@@ -103,6 +103,146 @@ export async function listWorktrees(): Promise<readonly WorktreeEntry[]> {
   return entries;
 }
 
+/**
+ * Ensures a directory exists, creating it recursively if absent.
+ *
+ * @param dirPath - Directory path.
+ * @param logMessage - Optional message to log on creation.
+ */
+async function ensureDirectoryExists(dirPath: string, logMessage?: string): Promise<void> {
+  if (existsSync(dirPath)) return;
+  await mkdir(dirPath, { recursive: true });
+  if (logMessage) console.log(logMessage);
+}
+
+/**
+ * Links target worktree Turbo cache directory to the main repository cache.
+ *
+ * @param mainTurboCache - Main repository cache path.
+ * @param targetTurboCache - Target worktree cache path.
+ * @param isDifferentRepo - True if worktree directory differs from main repository.
+ */
+async function linkTurboCacheDirectory(
+  mainTurboCache: string,
+  targetTurboCache: string,
+  isDifferentRepo: boolean,
+): Promise<void> {
+  if (!isDifferentRepo || existsSync(targetTurboCache)) return;
+  const symlinkType = process.platform === 'win32' ? 'junction' : 'dir';
+  try {
+    await symlink(mainTurboCache, targetTurboCache, symlinkType);
+    console.log('[worktree-manager] Linked worktree Turbo cache to main repository.');
+  } catch (symlinkError) {
+    console.warn(`[worktree-manager] Could not link Turbo cache: ${String(symlinkError)}`);
+  }
+}
+
+/**
+ * Configures Turborepo shared cache directory linking between the main repo and worktree.
+ *
+ * @param mainRoot - Root path of the primary repository.
+ * @param targetPath - Path to the target worktree directory.
+ */
+async function setupTurboCache(mainRoot: string, targetPath: string): Promise<void> {
+  const mainTurboCache = resolve(mainRoot, '.turbo', 'cache');
+  await ensureDirectoryExists(
+    mainTurboCache,
+    `[worktree-manager] Initialized main Turbo cache directory: ${mainTurboCache}`,
+  );
+
+  const targetTurbo = resolve(targetPath, '.turbo');
+  const targetTurboCache = resolve(targetTurbo, 'cache');
+  await ensureDirectoryExists(targetTurbo, '[worktree-manager] Created worktree .turbo directory.');
+
+  const isDifferentRepo = resolve(targetPath) !== resolve(mainRoot);
+  await linkTurboCacheDirectory(mainTurboCache, targetTurboCache, isDifferentRepo);
+}
+
+/**
+ * Synchronizes the portable agent-lsp.json configuration from the main repository.
+ *
+ * @param mainRoot - Root path of the primary repository.
+ * @param targetPath - Path to the target worktree directory.
+ */
+async function syncLspConfig(mainRoot: string, targetPath: string): Promise<void> {
+  const mainLspConfig = resolve(mainRoot, 'agent-lsp.json');
+  const targetLspConfig = resolve(targetPath, 'agent-lsp.json');
+
+  if (existsSync(mainLspConfig) && resolve(targetPath) !== resolve(mainRoot)) {
+    await copyFile(mainLspConfig, targetLspConfig);
+    console.log('[worktree-manager] Synchronized agent-lsp.json from main repository.');
+  }
+}
+
+/**
+ * Clones or installs node_modules dependencies into the target worktree.
+ *
+ * @param mainRoot - Root path of the primary repository.
+ * @param targetPath - Path to the target worktree directory.
+ */
+async function ensureNodeModules(mainRoot: string, targetPath: string): Promise<void> {
+  const targetNodeModules = resolve(targetPath, 'node_modules');
+  if (existsSync(targetNodeModules)) {
+    console.log('[worktree-manager] node_modules directory confirmed.');
+    return;
+  }
+
+  const mainNodeModules = resolve(mainRoot, 'node_modules');
+  if (existsSync(mainNodeModules) && process.platform === 'darwin') {
+    try {
+      console.log('[worktree-manager] Fast APFS copy-on-write clone of node_modules...');
+      await execFile('cp', ['-cR', mainNodeModules, targetNodeModules]);
+      console.log('[worktree-manager] APFS clone complete.');
+    } catch (cloneError) {
+      console.warn(`[worktree-manager] Fast clone fallback: ${String(cloneError)}`);
+    }
+  }
+  console.log("[worktree-manager] Executing 'pnpm install --frozen-lockfile'...");
+  await execFile('pnpm', ['install', '--frozen-lockfile'], {
+    cwd: targetPath,
+    stdio: 'inherit',
+  });
+  console.log('[worktree-manager] pnpm dependencies successfully installed.');
+}
+
+/**
+ * Primes upstream build dependencies and verifies test suite execution in the target worktree.
+ *
+ * @param targetPath - Path to the target worktree directory.
+ */
+async function primeAndValidateWorktree(targetPath: string): Promise<void> {
+  console.log('[worktree-manager] Priming upstream build dependencies...');
+  try {
+    await execFile('pnpm', ['exec', 'turbo', 'run', 'build', '--filter', '@mission-platform/flint-regex^...'], {
+      cwd: targetPath,
+      stdio: 'inherit',
+    });
+    console.log('[worktree-manager] Upstream build dependencies successfully primed.');
+  } catch (error) {
+    console.error(`[worktree-manager] Failed to prime upstream build dependencies: ${String(error)}`);
+    throw error;
+  }
+
+  console.log('[worktree-manager] Validating worktree build readiness...');
+  try {
+    await execFile('pnpm', ['--filter', '@mission-platform/flint-regex', 'test'], {
+      cwd: targetPath,
+      stdio: 'pipe',
+    });
+    console.log('[worktree-manager] Verification passed: @mission-platform/flint-regex tests green.');
+  } catch (error) {
+    console.error(
+      `[worktree-manager] Worktree is not ready: verification check encountered an issue: ${String(error)}`,
+    );
+    throw error;
+  }
+}
+
+/**
+ * Configures and primes an existing worktree directory for development.
+ *
+ * @param targetPathInput - Optional explicit path to worktree directory. Defaults to current working directory.
+ */
 export async function setupWorktree(targetPathInput?: string): Promise<void> {
   const targetPath = targetPathInput ? resolve(targetPathInput) : process.cwd();
   console.log(`[worktree-manager] Setting up worktree at: ${targetPath}`);
@@ -114,75 +254,10 @@ export async function setupWorktree(targetPathInput?: string): Promise<void> {
   const mainRoot = await getMainRepoRoot();
   console.log(`[worktree-manager] Main repository detected at: ${mainRoot}`);
 
-  // 1. Ensure Turbo cache folder exists in main repository so Turbo worktree cache-sharing functions seamlessly
-  const mainTurboCache = resolve(mainRoot, '.turbo', 'cache');
-  if (!existsSync(mainTurboCache)) {
-    await mkdir(mainTurboCache, { recursive: true });
-    console.log(`[worktree-manager] Initialized main Turbo cache directory: ${mainTurboCache}`);
-  }
-
-  // Also ensure target worktree has .turbo directory and link its cache to main repository
-  const targetTurbo = resolve(targetPath, '.turbo');
-  const targetTurboCache = resolve(targetTurbo, 'cache');
-  if (!existsSync(targetTurbo)) {
-    await mkdir(targetTurbo, { recursive: true });
-    console.log(`[worktree-manager] Created worktree .turbo directory.`);
-  }
-  if (!existsSync(targetTurboCache) && resolve(targetPath) !== resolve(mainRoot)) {
-    try {
-      await symlink(mainTurboCache, targetTurboCache, process.platform === 'win32' ? 'junction' : 'dir');
-      console.log(`[worktree-manager] Linked worktree Turbo cache to main repository.`);
-    } catch (symlinkError) {
-      console.warn(`[worktree-manager] Could not link Turbo cache: ${String(symlinkError)}`);
-    }
-  }
-
-  // 2. Synchronize agent-lsp.json from main repository
-  const mainLspConfig = resolve(mainRoot, 'agent-lsp.json');
-  const targetLspConfig = resolve(targetPath, 'agent-lsp.json');
-
-  if (existsSync(mainLspConfig) && resolve(targetPath) !== resolve(mainRoot)) {
-    await copyFile(mainLspConfig, targetLspConfig);
-    console.log(`[worktree-manager] Synchronized agent-lsp.json from main repository.`);
-  }
-
-  // 3. Verify node_modules / pnpm dependencies
-  const targetNodeModules = resolve(targetPath, 'node_modules');
-  if (existsSync(targetNodeModules)) {
-    console.log(`[worktree-manager] node_modules directory confirmed.`);
-  } else {
-    const mainNodeModules = resolve(mainRoot, 'node_modules');
-    if (existsSync(mainNodeModules) && process.platform === 'darwin') {
-      try {
-        console.log(`[worktree-manager] Fast APFS copy-on-write clone of node_modules...`);
-        await execFile('cp', ['-cR', mainNodeModules, targetNodeModules]);
-        console.log(`[worktree-manager] APFS clone complete.`);
-      } catch (cloneError) {
-        console.warn(`[worktree-manager] Fast clone fallback: ${String(cloneError)}`);
-      }
-    }
-    console.log(`[worktree-manager] Executing 'pnpm install --frozen-lockfile'...`);
-    await execFile('pnpm', ['install', '--frozen-lockfile'], {
-      cwd: targetPath,
-      stdio: 'inherit',
-    });
-    console.log(`[worktree-manager] pnpm dependencies successfully installed.`);
-  }
-
-  // 4. Verification check
-  console.log(`[worktree-manager] Validating worktree build readiness...`);
-  try {
-    await execFile('pnpm', ['--filter', '@mission-platform/flint-regex', 'test'], {
-      cwd: targetPath,
-      stdio: 'pipe',
-    });
-    console.log(`[worktree-manager] Verification passed: @mission-platform/flint-regex tests green.`);
-  } catch (error) {
-    console.error(
-      `[worktree-manager] Worktree is not ready: verification check encountered an issue: ${String(error)}`,
-    );
-    throw error;
-  }
+  await setupTurboCache(mainRoot, targetPath);
+  await syncLspConfig(mainRoot, targetPath);
+  await ensureNodeModules(mainRoot, targetPath);
+  await primeAndValidateWorktree(targetPath);
 
   console.log(`[worktree-manager] Worktree setup complete and ready for development: ${targetPath}`);
 }

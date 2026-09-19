@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "docs:generate": "node --experimental-strip-types extract-package-docs.ts --all",
+    "validate:locales": "node --experimental-strip-types validate-doc-locales.ts",
     "validate:exports": "node validate-package-exports.mjs",
     "validate:component-properties": "node --experimental-strip-types validate-component-property-declarations.ts",
     "validate:inventory": "node --experimental-strip-types runtime-validation/cli.ts inventory",
@@ -16,7 +17,7 @@
     "visual:parity": "node --experimental-strip-types visual-parity/cli.ts",
     "test:runtime-validation": "pnpm --filter @mission-platform/components exec vitest run --config ../../../scripts/runtime-validation/vitest.config.ts",
     "test": "vitest run --test-timeout 60000",
-    "lint": "eslint .",
+    "lint": "eslint . && node --experimental-strip-types validate-doc-locales.ts",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
     "format:write": "prettier --write ."

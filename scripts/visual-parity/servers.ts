@@ -244,51 +244,78 @@ async function launchServer(
   }
 }
 
+/**
+ * Creates an idempotent shutdown callback for active Storybook server instances.
+ *
+ * @param servers - Array of active StorybookRendererServer instances to terminate.
+ * @param registry - Process registry managing child processes.
+ * @returns Asynchronous shutdown function.
+ */
+function createServersCloser(
+  servers: readonly StorybookRendererServer[],
+  registry: ReturnType<typeof createProcessRegistry>,
+): () => Promise<void> {
+  let closed = false;
+  return async (): Promise<void> => {
+    if (closed) return;
+    closed = true;
+    const results = await Promise.allSettled(servers.map((server) => server.close()));
+    await registry.cleanup();
+    const failure = results.find((result): result is PromiseRejectedResult => result.status === 'rejected');
+    if (failure) throw failure.reason;
+  };
+}
+
+/**
+ * Handles server startup failure by terminating spawned processes and writing server logs.
+ *
+ * @param registry - Process registry managing child processes.
+ * @param running - Dictionary of servers successfully launched prior to failure.
+ */
+async function handleStartupFailure(
+  registry: ReturnType<typeof createProcessRegistry>,
+  running: Partial<Record<VisualParityRendererDefinition['framework'], StorybookRendererServer>>,
+): Promise<void> {
+  try {
+    await registry.cleanup();
+  } finally {
+    for (const server of Object.values(running)) {
+      if (server) writeLog(server.logPath, server.getOutput());
+    }
+  }
+}
+
 export async function startStorybookServers(
   repositoryRoot: string,
   options: VisualParityServerOptions = {},
 ): Promise<StorybookRendererServers> {
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  const cleanupGraceMs = options.cleanupGraceMs ?? DEFAULT_CLEANUP_GRACE_MS;
+  const { timeoutMs = DEFAULT_TIMEOUT_MS, cleanupGraceMs = DEFAULT_CLEANUP_GRACE_MS } = options;
   const certificateResult = await generateSharedStorybookCertificate(repositoryRoot, timeoutMs);
   const registry = createProcessRegistry({ graceMs: cleanupGraceMs });
   const definitions = createRendererDefinitions(options);
   const running: Partial<Record<VisualParityRendererDefinition['framework'], StorybookRendererServer>> = {};
   try {
-    const servers: StorybookRendererServer[] = [];
-    for (const definition of definitions) {
-      const server = await launchServer(
-        repositoryRoot,
-        definition,
-        certificateResult,
-        timeoutMs,
-        cleanupGraceMs,
-        registry,
-      );
-      running[definition.framework] = server;
-      servers.push(server);
-    }
+    const servers: StorybookRendererServer[] = await Promise.all(
+      definitions.map(async (definition) => {
+        const server = await launchServer(
+          repositoryRoot,
+          definition,
+          certificateResult,
+          timeoutMs,
+          cleanupGraceMs,
+          registry,
+        );
+        running[definition.framework] = server;
+        return server;
+      }),
+    );
     const byFramework = Object.fromEntries(
       servers.map((server) => [server.definition.framework, server]),
     ) as StorybookRendererServers['servers'];
-    let closed = false;
-    const close = async (): Promise<void> => {
-      if (closed) return;
-      closed = true;
-      const results = await Promise.allSettled(servers.map((server) => server.close()));
-      await registry.cleanup();
-      const failure = results.find((result): result is PromiseRejectedResult => result.status === 'rejected');
-      if (failure) throw failure.reason;
-    };
+    const close = createServersCloser(servers, registry);
     return { certificateOutput: certificateResult.output, servers: byFramework, close };
   } catch (error) {
-    try {
-      await registry.cleanup();
-    } finally {
-      for (const server of Object.values(running)) {
-        if (server) writeLog(server.logPath, server.getOutput());
-      }
-    }
+    await handleStartupFailure(registry, running);
     throw error;
   }
 }

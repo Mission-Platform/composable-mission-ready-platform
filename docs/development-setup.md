@@ -80,7 +80,7 @@ Run a smoke test to ensure the build system and environment are correctly config
 pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
-The `...` also builds the Forge dependencies required by the package. The
+The `...` filter also builds the Forge dependencies required by the package. The
 neutral code scanner is compiled from its Flint graph; it does not
 require a Rust or `wasm-pack` build step.
 

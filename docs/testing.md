@@ -26,11 +26,31 @@ pnpm test
 
 ### Run Tests for a Specific Workspace
 
-To run tests for a single package or application:
+To run tests for a single package or application while automatically priming upstream dependencies:
+
+```bash
+pnpm test:package @mission-platform/<name>
+```
+
+Alternatively, invoke Turborepo directly:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
+
+### Upstream Dependency Priming
+
+Packages across the monorepo often consume compiled artifacts (`dist/`) from upstream workspace dependencies. In freshly provisioned worktrees or clean environments, these artifacts may not yet exist.
+
+To resolve this seamlessly:
+
+- **Automatic Turborepo Resolution:** The `test` and `build:check` task graphs in `turbo.json` enforce `"dependsOn": ["^build"]`. Turborepo automatically builds all upstream dependencies before running tests in the target package.
+- **Dedicated Package Helper:** Running `pnpm test:package <package-name>` explicitly primes upstream builds (`build --filter <package-name>^...`) before executing package tests. This warm-up is intentional even though the `test` task also declares `^build`: it keeps the helper's priming behavior explicit and consistent, and is a cached no-op when Turbo has already resolved those dependencies.
+- **Package Build Helper:** Running `pnpm build:package <package-name>` uses the same explicit upstream warm-up before building the target package.
+- **Manual Upstream Build:** If running a test runner directly (e.g., `vitest` in a single package directory), prime its dependencies first:
+  ```bash
+  pnpm exec turbo run build --filter @mission-platform/<name>^...
+  ```
 
 ### Run Affected Tests (CI-style)
 

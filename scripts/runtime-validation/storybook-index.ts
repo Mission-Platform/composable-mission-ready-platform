@@ -17,7 +17,7 @@ export interface StorybookIndexComparison {
   matched: StoryFile[];
 }
 
-export const STORYBOOK_PARITY_FRAMEWORKS = ['web-component', 'react', 'vue'] as const;
+export const STORYBOOK_PARITY_FRAMEWORKS = ['web-component', 'react', 'vue', 'solid', 'svelte'] as const;
 export type StorybookParityFramework = (typeof STORYBOOK_PARITY_FRAMEWORKS)[number];
 
 export interface StorybookIndexPair {
@@ -85,42 +85,107 @@ function parityEntries(
   return entries;
 }
 
+/**
+ * Resolves the active frameworks to evaluate, prioritizing explicit target frameworks.
+ *
+ * @param indexes - Map of framework to parsed Storybook index.
+ * @param targetFrameworks - Optional explicit framework array.
+ * @returns Array of active frameworks to pair.
+ */
+function resolveActiveFrameworks(
+  indexes: Partial<Record<StorybookParityFramework, StorybookIndex>> | Record<string, StorybookIndex>,
+  targetFrameworks?: readonly StorybookParityFramework[],
+): readonly StorybookParityFramework[] {
+  if (targetFrameworks && targetFrameworks.length > 0) return targetFrameworks;
+  const detected = STORYBOOK_PARITY_FRAMEWORKS.filter((framework) => indexes[framework] !== undefined);
+  return detected.length > 0 ? detected : STORYBOOK_PARITY_FRAMEWORKS;
+}
+
+/**
+ * Builds entry maps for all active frameworks from the discovered stories inventory.
+ *
+ * @param repositoryRoot - Absolute repository root directory.
+ * @param inventory - Discovered stories inventory.
+ * @param indexes - Map of framework to parsed Storybook index.
+ * @param activeFrameworks - Frameworks to evaluate.
+ * @returns Map of framework to story entry records.
+ */
+function buildFrameworkEntriesMap(
+  repositoryRoot: string,
+  inventory: RepositoryInventory,
+  indexes: Partial<Record<StorybookParityFramework, StorybookIndex>> | Record<string, StorybookIndex>,
+  activeFrameworks: readonly StorybookParityFramework[],
+) {
+  const byFramework: Partial<
+    Record<StorybookParityFramework, Map<string, { entry: StorybookIndexEntry; sourceImport: string }>>
+  > = {};
+  for (const framework of activeFrameworks) {
+    const index = indexes[framework];
+    byFramework[framework] = index ? parityEntries(repositoryRoot, inventory, index) : new Map();
+  }
+  return byFramework;
+}
+
+/**
+ * Collects and sorts all unique story entry keys across active framework maps.
+ *
+ * @param byFramework - Map of framework to story entry records.
+ * @param activeFrameworks - Frameworks to evaluate.
+ * @returns Sorted array of unique entry keys.
+ */
+function collectKeys(
+  byFramework: Partial<Record<StorybookParityFramework, Map<string, unknown>>>,
+  activeFrameworks: readonly StorybookParityFramework[],
+): string[] {
+  const keys = new Set<string>();
+  for (const framework of activeFrameworks) {
+    const map = byFramework[framework];
+    if (map) {
+      for (const key of map.keys()) keys.add(key);
+    }
+  }
+  return [...keys].sort();
+}
+
+/**
+ * Pairs story entries across framework Storybook indexes to identify complete pairs and missing framework implementations.
+ *
+ * @param repositoryRoot - Absolute repository root directory.
+ * @param inventory - Discovered stories inventory.
+ * @param indexes - Map of framework to parsed Storybook index.
+ * @param targetFrameworks - Optional subset of frameworks to compare against.
+ * @returns Categorized pairs, missing framework pairings, and unindexed stories.
+ */
 export function pairStorybookIndexes(
   repositoryRoot: string,
   inventory: RepositoryInventory,
-  indexes: Record<StorybookParityFramework, StorybookIndex>,
+  indexes: Partial<Record<StorybookParityFramework, StorybookIndex>> | Record<string, StorybookIndex>,
+  targetFrameworks?: readonly StorybookParityFramework[],
 ): StorybookIndexPairing {
-  const byFramework = Object.fromEntries(
-    STORYBOOK_PARITY_FRAMEWORKS.map((framework) => [
-      framework,
-      parityEntries(repositoryRoot, inventory, indexes[framework]),
-    ]),
-  ) as Record<StorybookParityFramework, Map<string, { entry: StorybookIndexEntry; sourceImport: string }>>;
-  const keys = new Set<string>();
-  for (const framework of STORYBOOK_PARITY_FRAMEWORKS) {
-    for (const key of byFramework[framework].keys()) keys.add(key);
-  }
+  const activeFrameworks = resolveActiveFrameworks(indexes, targetFrameworks);
+  const byFramework = buildFrameworkEntriesMap(repositoryRoot, inventory, indexes, activeFrameworks);
+  const keys = collectKeys(byFramework, activeFrameworks);
 
   const pairs: StorybookIndexPair[] = [];
   const missing: StorybookIndexMissingPair[] = [];
-  for (const key of [...keys].sort()) {
+  for (const key of keys) {
     const separator = key.indexOf('\u0000');
     const storyId = key.slice(0, separator);
     const sourceImport = key.slice(separator + 1);
-    const entries = Object.fromEntries(
-      STORYBOOK_PARITY_FRAMEWORKS.flatMap((framework) => {
-        const value = byFramework[framework].get(key)?.entry;
-        return value ? [[framework, value]] : [];
-      }),
-    ) as Partial<Record<StorybookParityFramework, StorybookIndexEntry>>;
-    const missingFrameworks = STORYBOOK_PARITY_FRAMEWORKS.filter((framework) => !entries[framework]);
+    const entries: Partial<Record<StorybookParityFramework, StorybookIndexEntry>> = {};
+    for (const framework of activeFrameworks) {
+      const value = byFramework[framework]?.get(key)?.entry;
+      if (value) entries[framework] = value;
+    }
+    const missingFrameworks = activeFrameworks.filter((framework) => !entries[framework]);
     if (missingFrameworks.length > 0) missing.push({ storyId, sourceImport, missingFrameworks, entries });
     else pairs.push({ storyId, sourceImport, entries });
   }
 
   const missingStories = neutralStories(inventory).filter((story) =>
-    STORYBOOK_PARITY_FRAMEWORKS.some(
-      (framework) => ![...byFramework[framework].values()].some((value) => value.sourceImport === story.filePath),
+    activeFrameworks.some(
+      (framework) =>
+        ![...(byFramework[framework]?.values() ?? [])].some((value) => value.sourceImport === story.filePath),
     ),
   );
   return { pairs, missing, missingStories };

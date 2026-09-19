@@ -1,0 +1,10 @@
+{
+  "extends": "@mission-platform/typescript-config/library",
+  "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] },
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    "noEmit": true,
+    "types": ["@cloudflare/workers-types", "vitest/globals"]
+  },
+  "include": ["src/**/*.ts"]
+}
