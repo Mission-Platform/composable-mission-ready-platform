@@ -991,10 +991,21 @@ const GUIDES: Record<GuideId, Guide> = {
 
 export const GUIDE_IDS = Object.keys(GUIDES) as GuideId[];
 
+/**
+ * Retrieves a developer guide by its unique identifier.
+ *
+ * @param id Guide identifier string.
+ * @returns Matching Guide object, or undefined if not found.
+ */
 export function getGuide(id: string): Guide | undefined {
   return GUIDES[id as GuideId];
 }
 
+/**
+ * Retrieves all registered developer guides.
+ *
+ * @returns Array containing all Guide objects.
+ */
 export function allGuides(): Guide[] {
   return GUIDE_IDS.map((id) => GUIDES[id]);
 }

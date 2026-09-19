@@ -16,6 +16,8 @@ import {
 } from "../abi.ts";
 
 import type {
+  BenchmarkInput,
+  BenchmarkOutput,
   BuildArtifact,
   FlintMode,
   InitializedAdapter,
@@ -36,6 +38,11 @@ const REQUIRED_EXPORTS = [
   "fws_reset",
 ] as const;
 
+/**
+ * Reads and returns the source code of the Flint benchmark kernels.
+ *
+ * @returns UTF-8 source string of kernels.flint.
+ */
 function resolveSource(): string {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const filePath = path.resolve(
@@ -101,25 +108,41 @@ interface GeneratedFlintModule {
   readonly loadSync: () => GeneratedFlintExports;
 }
 
+const NATIVE_ABI_FUNCTIONS = [
+  "arithmetic_reduce",
+  "string_transform",
+  "dataset_scan",
+  "fws_alloc",
+  "fws_dealloc",
+  "fws_realloc",
+  "fws_reset",
+] as const;
+
+/**
+ * Validates and casts raw WebAssembly exports to the typed FlintExports interface.
+ *
+ * @param value Raw WebAssembly exports object.
+ * @returns Typed and validated FlintExports instance.
+ */
 function asExports(value: WebAssembly.Exports): FlintExports {
-  const exports = value as unknown as Partial<FlintExports>;
-  if (
-    typeof exports.arithmetic_reduce !== "function" ||
-    typeof exports.string_transform !== "function" ||
-    typeof exports.dataset_scan !== "function" ||
-    !(exports.memory instanceof WebAssembly.Memory) ||
-    typeof exports.fws_alloc !== "function" ||
-    typeof exports.fws_dealloc !== "function" ||
-    typeof exports.fws_realloc !== "function" ||
-    typeof exports.fws_reset !== "function"
-  ) {
+  const exports = value as unknown as Record<string, unknown>;
+  const hasFunctions = NATIVE_ABI_FUNCTIONS.every(
+    (name) => typeof exports[name] === "function",
+  );
+  if (!hasFunctions || !(exports.memory instanceof WebAssembly.Memory)) {
     throw new TypeError(
       "Flint WASM module does not satisfy the native benchmark ABI.",
     );
   }
-  return exports as FlintExports;
+  return exports as unknown as FlintExports;
 }
 
+/**
+ * Validates the completeness and export parity of a compiled Flint artifact.
+ *
+ * @param artifact Compiled Flint artifact to validate.
+ * @returns Array of validated WebAssembly export names.
+ */
 export function validateFlintWasmArtifact(
   artifact: FlintArtifact,
 ): readonly string[] {
@@ -143,6 +166,12 @@ export function validateFlintWasmArtifact(
 
 type FlintWasmLoader = "raw" | "generated";
 
+/**
+ * Deallocates a list of guest memory byte ranges, skipping duplicates and undefined ranges.
+ *
+ * @param exports Object exporting the fws_dealloc lifecycle function.
+ * @param ranges Array of pointer and length records to free.
+ */
 function releaseRanges(
   exports: Pick<FlintExports, "fws_dealloc">,
   ranges: readonly ({ pointer: number; length: number } | undefined)[],
@@ -157,6 +186,13 @@ function releaseRanges(
   }
 }
 
+/**
+ * Executes an operation ensuring fws_reset is invoked before and after execution.
+ *
+ * @param exports Object exporting the fws_reset function.
+ * @param operation Callback executing the guest workload.
+ * @returns Result of the operation.
+ */
 function withReset<T>(
   exports: Pick<FlintExports, "fws_reset">,
   operation: () => T,
@@ -169,6 +205,202 @@ function withReset<T>(
   }
 }
 
+/**
+ * Compiles Flint benchmark kernel source and asserts zero compilation diagnostics.
+ *
+ * @param source Flint kernel source code.
+ * @param boundsChecks Bounds checking compilation mode.
+ * @returns Validated Flint artifact.
+ */
+function compileKernels(
+  source: string,
+  boundsChecks: "runtime" | "excluded-by-profile",
+): FlintArtifact {
+  const artifact = compileFlint({
+    source,
+    fileName: SOURCE_FILE,
+    compilerVersion: COMPILER_VERSION,
+    optimization: "release",
+    boundsChecks,
+  });
+  if (
+    artifact.diagnostics.length > 0 ||
+    artifact.wasm === undefined ||
+    artifact.manifest === undefined
+  ) {
+    const details = artifact.diagnostics
+      .map(
+        (diagnostic: { code?: string; message: string }) =>
+          `${diagnostic.code}: ${diagnostic.message}`,
+      )
+      .join("; ");
+    throw new Error(
+      `Native Flint WASM kernels failed to compile${details ? `: ${details}` : "."}`,
+    );
+  }
+  validateFlintWasmArtifact(artifact);
+  return artifact;
+}
+
+/**
+ * Persists compiled WebAssembly and generated ESM module files to disk.
+ *
+ * @param artifact Compiled Flint artifact.
+ * @returns Object with generated file paths and URLs.
+ */
+function persistGeneratedArtifacts(artifact: FlintArtifact) {
+  const generatedSource = encodeUtf8(artifact.esmSource);
+  const generatedPath = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "../../generated/flint/kernels.wasm",
+  );
+  const generatedModulePath = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "../../generated/flint/kernels.generated.mjs",
+  );
+  mkdirSync(path.dirname(generatedPath), { recursive: true });
+  writeFileSync(generatedPath, artifact.wasm as unknown as Uint8Array);
+  writeFileSync(generatedModulePath, artifact.esmSource);
+  return {
+    generatedSource,
+    generatedPath,
+    generatedModulePath,
+    wasmUrl: new URL(`file://${generatedPath}`).href,
+    moduleUrl: pathToFileURL(generatedModulePath).href,
+  };
+}
+
+/**
+ * Dispatches a benchmark input workload to generated ESM Flint exports.
+ *
+ * @param exports Generated Flint module exports.
+ * @param input Benchmark workload input.
+ * @returns Normalized benchmark output.
+ */
+function dispatchGeneratedExecution(
+  exports: GeneratedFlintExports,
+  input: BenchmarkInput,
+): BenchmarkOutput {
+  return withReset(exports, () => {
+    if ("multiplier" in input) {
+      return normalizeBenchmarkOutput(
+        exports.arithmetic_reduce(
+          input.n,
+          input.multiplier,
+          input.offset,
+          input.seed,
+        ),
+      );
+    }
+    if ("suffix" in input) {
+      return normalizeBenchmarkOutput(
+        exports.string_transform(
+          input.value,
+          input.prefix,
+          input.suffix,
+          input.repeat,
+        ),
+      );
+    }
+    const payload = writeGuestBytes(
+      exports.memory,
+      exports.fws_alloc,
+      Uint8Array.from(input.bytes),
+    );
+    try {
+      return normalizeBenchmarkOutput(
+        exports.dataset_scan(
+          [payload.pointer, payload.length],
+          input.threshold,
+        ),
+      );
+    } finally {
+      exports.fws_dealloc(payload.pointer, payload.length);
+    }
+  });
+}
+
+/**
+ * Dispatches a benchmark input workload to raw pointer-length Flint exports.
+ *
+ * @param exports Raw Flint WASM exports.
+ * @param input Benchmark workload input.
+ * @returns Normalized benchmark output.
+ */
+function dispatchRawExecution(
+  exports: FlintExports,
+  input: BenchmarkInput,
+): BenchmarkOutput {
+  return withReset(exports, () => {
+    if ("multiplier" in input) {
+      return normalizeBenchmarkOutput(
+        exports.arithmetic_reduce(
+          input.n,
+          input.multiplier,
+          input.offset,
+          input.seed,
+        ),
+      );
+    }
+    if ("suffix" in input) {
+      const value = writeGuestBytes(
+        exports.memory,
+        exports.fws_alloc,
+        encodeUtf8(input.value),
+      );
+      const prefix = writeGuestBytes(
+        exports.memory,
+        exports.fws_alloc,
+        encodeUtf8(input.prefix),
+      );
+      const suffix = writeGuestBytes(
+        exports.memory,
+        exports.fws_alloc,
+        encodeUtf8(input.suffix),
+      );
+      let output: { pointer: number; length: number } | undefined;
+      try {
+        const [pointer, length] = exports.string_transform(
+          value.pointer,
+          value.length,
+          prefix.pointer,
+          prefix.length,
+          suffix.pointer,
+          suffix.length,
+          input.repeat,
+        );
+        output = { pointer, length };
+        return normalizeBenchmarkOutput(
+          decodeUtf8(readGuestBytes(exports.memory, pointer, length)),
+        );
+      } finally {
+        releaseRanges(exports, [output, value, prefix, suffix]);
+      }
+    }
+    const payload = writeGuestBytes(
+      exports.memory,
+      exports.fws_alloc,
+      Uint8Array.from(input.bytes),
+    );
+    try {
+      return normalizeBenchmarkOutput(
+        exports.dataset_scan(payload.pointer, payload.length, input.threshold),
+      );
+    } finally {
+      exports.fws_dealloc(payload.pointer, payload.length);
+    }
+  });
+}
+
+/**
+ * Creates an internal runtime adapter instance for either raw or generated Flint WASM kernels.
+ *
+ * @param source Flint kernels source code.
+ * @param loader Loader variant ('raw' or 'generated').
+ * @param boundsChecks Bounds checking mode.
+ * @param modeOverride Optional FlintMode identifier override.
+ * @returns Configured RuntimeAdapter instance.
+ */
 function createFlintWasmAdapterInternal(
   source: string,
   loader: FlintWasmLoader,
@@ -196,55 +428,22 @@ function createFlintWasmAdapterInternal(
     implementation: "flint",
     mode: flintMode,
     adapterId: artifactId,
-    async build(): Promise<BuildArtifact> {
-      const artifact = compileFlint({
-        source,
-        fileName: SOURCE_FILE,
-        compilerVersion: COMPILER_VERSION,
-        optimization: "release",
-        boundsChecks,
-      });
-      if (
-        artifact.diagnostics.length > 0 ||
-        artifact.wasm === undefined ||
-        artifact.manifest === undefined
-      ) {
-        const details = artifact.diagnostics
-          .map(
-            (diagnostic: { code?: string; message: string }) =>
-              `${diagnostic.code}: ${diagnostic.message}`,
-          )
-          .join("; ");
-        throw new Error(
-          `Native Flint WASM kernels failed to compile${details ? `: ${details}` : "."}`,
-        );
-      }
-      validateFlintWasmArtifact(artifact);
-      const generatedSource = encodeUtf8(artifact.esmSource);
-      const generatedPath = path.resolve(
-        path.dirname(fileURLToPath(import.meta.url)),
-        "../../generated/flint/kernels.wasm",
-      );
-      const generatedModulePath = path.resolve(
-        path.dirname(fileURLToPath(import.meta.url)),
-        "../../generated/flint/kernels.generated.mjs",
-      );
-      mkdirSync(path.dirname(generatedPath), { recursive: true });
-      writeFileSync(generatedPath, artifact.wasm);
-      writeFileSync(generatedModulePath, artifact.esmSource);
+    build(): Promise<BuildArtifact> {
+      const artifact = compileKernels(source, boundsChecks);
+      const persisted = persistGeneratedArtifacts(artifact);
       compiled = {
         artifact,
         module: new WebAssembly.Module(
           artifact.wasm as unknown as BufferSource,
         ),
-        generatedModuleUrl: pathToFileURL(generatedModulePath).href,
+        generatedModuleUrl: pathToFileURL(persisted.generatedModulePath).href,
       };
-      return {
+      return Promise.resolve({
         id: artifactId,
         implementation: "flint",
         flintMode,
         artifactKind: "wasm",
-        sizeBytes: artifact.wasm.byteLength,
+        sizeBytes: artifact.wasm?.byteLength ?? 0,
         hash: artifact.contentHash,
         exports: [...REQUIRED_EXPORTS],
         flintPipeline: {
@@ -268,7 +467,7 @@ function createFlintWasmAdapterInternal(
           nativeKernels: true,
           instancePolicy: "reusable-with-reset",
           resetAbi: "fws_reset-v1",
-          rawWasmBytes: artifact.wasm.byteLength,
+          rawWasmBytes: artifact.wasm?.byteLength ?? 0,
           pipeline: "flint-son-wasm-two-stage",
           frontend: "son-ir",
           wasmStage: "wasm-ir-optimizer",
@@ -279,16 +478,20 @@ function createFlintWasmAdapterInternal(
           sonGraphHash: artifact.sonIr?.graphHash ?? "",
           sonNodeCount: artifact.sonIr?.nodes.length ?? 0,
           sonPassCount: artifact.sonOptimizationReport?.passes.length ?? 0,
-          generatedSourceBytes: generatedSource.byteLength,
+          generatedSourceBytes: persisted.generatedSource.byteLength,
           ...(generated
-            ? { generatedSourceHash: hashArtifactBytes(generatedSource) }
+            ? {
+                generatedSourceHash: hashArtifactBytes(
+                  persisted.generatedSource,
+                ),
+              }
             : {}),
           stringInputAllocations: generated ? 1 : 3,
           stringOutputAllocations: 1,
-          wasmUrl: new URL(`file://${generatedPath}`).href,
-          moduleUrl: pathToFileURL(generatedModulePath).href,
+          wasmUrl: persisted.wasmUrl,
+          moduleUrl: persisted.moduleUrl,
         },
-      };
+      });
     },
     async initialize(artifact: BuildArtifact): Promise<InitializedAdapter> {
       if (
@@ -350,122 +553,33 @@ function createFlintWasmAdapterInternal(
             if (generatedExports === undefined) {
               throw new Error("Generated Flint exports are undefined.");
             }
-            const exports = generatedExports;
-            return withReset(exports, () => {
-              if ("multiplier" in input) {
-                return normalizeBenchmarkOutput(
-                  exports.arithmetic_reduce(
-                    input.n,
-                    input.multiplier,
-                    input.offset,
-                    input.seed,
-                  ),
-                );
-              }
-              if ("suffix" in input) {
-                return normalizeBenchmarkOutput(
-                  exports.string_transform(
-                    input.value,
-                    input.prefix,
-                    input.suffix,
-                    input.repeat,
-                  ),
-                );
-              }
-              const payload = writeGuestBytes(
-                exports.memory,
-                exports.fws_alloc,
-                Uint8Array.from(input.bytes),
-              );
-              try {
-                return normalizeBenchmarkOutput(
-                  exports.dataset_scan(
-                    [payload.pointer, payload.length],
-                    input.threshold,
-                  ),
-                );
-              } finally {
-                exports.fws_dealloc(payload.pointer, payload.length);
-              }
-            });
+            return dispatchGeneratedExecution(generatedExports, input);
           }
-
-          const exports = preparedExports;
-          return withReset(preparedExports, () => {
-            if ("multiplier" in input) {
-              return normalizeBenchmarkOutput(
-                exports.arithmetic_reduce(
-                  input.n,
-                  input.multiplier,
-                  input.offset,
-                  input.seed,
-                ),
-              );
-            }
-            if ("suffix" in input) {
-              const value = writeGuestBytes(
-                exports.memory,
-                exports.fws_alloc,
-                encodeUtf8(input.value),
-              );
-              const prefix = writeGuestBytes(
-                exports.memory,
-                exports.fws_alloc,
-                encodeUtf8(input.prefix),
-              );
-              const suffix = writeGuestBytes(
-                exports.memory,
-                exports.fws_alloc,
-                encodeUtf8(input.suffix),
-              );
-              let output: { pointer: number; length: number } | undefined;
-              try {
-                const [pointer, length] = exports.string_transform(
-                  value.pointer,
-                  value.length,
-                  prefix.pointer,
-                  prefix.length,
-                  suffix.pointer,
-                  suffix.length,
-                  input.repeat,
-                );
-                output = { pointer, length };
-                return normalizeBenchmarkOutput(
-                  decodeUtf8(readGuestBytes(exports.memory, pointer, length)),
-                );
-              } finally {
-                releaseRanges(exports, [output, value, prefix, suffix]);
-              }
-            }
-            const payload = writeGuestBytes(
-              exports.memory,
-              exports.fws_alloc,
-              Uint8Array.from(input.bytes),
-            );
-            try {
-              return normalizeBenchmarkOutput(
-                exports.dataset_scan(
-                  payload.pointer,
-                  payload.length,
-                  input.threshold,
-                ),
-              );
-            } finally {
-              exports.fws_dealloc(payload.pointer, payload.length);
-            }
-          });
+          return dispatchRawExecution(preparedExports, input);
         },
       };
     },
   };
 }
 
+/**
+ * Creates a runtime adapter for raw pointer-length Flint WebAssembly kernels.
+ *
+ * @param source Optional kernel source string override.
+ * @returns Configured runtime adapter instance.
+ */
 export function createFlintWasmAdapter(
   source: string = resolveSource(),
 ): RuntimeAdapter {
   return createFlintWasmAdapterInternal(source, "raw");
 }
 
+/**
+ * Creates a runtime adapter for generated ESM Flint WebAssembly module kernels.
+ *
+ * @param source Optional kernel source string override.
+ * @returns Configured runtime adapter instance.
+ */
 export function createFlintGeneratedWasmAdapter(
   source: string = resolveSource(),
 ): RuntimeAdapter {

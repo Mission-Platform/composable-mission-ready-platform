@@ -40,6 +40,12 @@ const defaultDebugSettings: FlintDebugSettings = {
   runtimeArgs: [],
 };
 
+/**
+ * Reads debugger settings from the given workspace configuration reader.
+ *
+ * @param configuration Configuration reader instance.
+ * @returns Parsed Flint debug settings.
+ */
 export function readDebugSettings(configuration: ConfigurationReader): FlintDebugSettings {
   const languageSettings = readConfiguration(configuration);
   const dapPath = configuration.get('dapPath', defaultDebugSettings.dapPath);
@@ -52,6 +58,14 @@ export function readDebugSettings(configuration: ConfigurationReader): FlintDebu
   };
 }
 
+/**
+ * Resolves the entrypoint path for the Flint debug adapter.
+ *
+ * @param context Extension context with base extensionPath.
+ * @param settings Debug settings containing dapPath.
+ * @param workspaceFolder Optional active workspace folder.
+ * @returns Absolute path to the debug adapter entrypoint.
+ */
 export function resolveDebugAdapterPath(
   context: Pick<vscode.ExtensionContext, 'extensionPath'>,
   settings: Pick<FlintDebugSettings, 'dapPath'>,
@@ -62,6 +76,11 @@ export function resolveDebugAdapterPath(
   return path.resolve(workspaceFolder?.uri.fsPath ?? context.extensionPath, settings.dapPath);
 }
 
+/**
+ * Asserts that the debug adapter entrypoint exists and is accessible.
+ *
+ * @param adapterPath Path to debug adapter file.
+ */
 export async function assertDebugAdapterAvailable(adapterPath: string): Promise<void> {
   try {
     await access(adapterPath);
@@ -73,6 +92,36 @@ export async function assertDebugAdapterAvailable(adapterPath: string): Promise<
   }
 }
 
+/**
+ * Validates workspace trust security bounds on configured debug settings.
+ *
+ * @param settings Debug settings.
+ * @param runtimePath Configured runtime path.
+ * @param cwd Configured working directory.
+ * @param isTrusted Whether the workspace is trusted.
+ */
+function validateDebugTrust(
+  settings: FlintDebugSettings,
+  runtimePath: unknown,
+  cwd: unknown,
+  isTrusted: boolean,
+): void {
+  assertWorkspaceRelativeOverrideAllowed(`${configurationSection}.dapPath`, settings.dapPath, isTrusted);
+  assertWorkspaceRelativeExecutableAllowed(`${configurationSection}.nodePath`, settings.nodePath, isTrusted);
+  assertWorkspaceRelativeExecutableAllowed(
+    `${configurationSection}.runtimePath`,
+    (typeof runtimePath === 'string' && runtimePath) || settings.runtimePath,
+    isTrusted,
+  );
+  assertWorkingDirectoryAllowed(`${configurationSection}.cwd`, cwd, isTrusted);
+}
+
+/**
+ * Creates the Flint launch configuration provider.
+ *
+ * @param context Extension context.
+ * @returns DebugConfigurationProvider implementation.
+ */
 export function createDebugConfigurationProvider(
   context: Pick<vscode.ExtensionContext, 'extensionPath'>,
 ): vscode.DebugConfigurationProvider {
@@ -82,22 +131,7 @@ export function createDebugConfigurationProvider(
       configuration: vscode.DebugConfiguration,
     ): Promise<vscode.DebugConfiguration> => {
       const settings = readDebugSettings(vscode.workspace.getConfiguration(configurationSection, folder?.uri));
-      assertWorkspaceRelativeOverrideAllowed(
-        `${configurationSection}.dapPath`,
-        settings.dapPath,
-        vscode.workspace.isTrusted,
-      );
-      assertWorkspaceRelativeExecutableAllowed(
-        `${configurationSection}.nodePath`,
-        settings.nodePath,
-        vscode.workspace.isTrusted,
-      );
-      assertWorkspaceRelativeExecutableAllowed(
-        `${configurationSection}.runtimePath`,
-        configuration.runtimePath || settings.runtimePath,
-        vscode.workspace.isTrusted,
-      );
-      assertWorkingDirectoryAllowed(`${configurationSection}.cwd`, configuration.cwd, vscode.workspace.isTrusted);
+      validateDebugTrust(settings, configuration.runtimePath, configuration.cwd, vscode.workspace.isTrusted);
       const adapterPath = resolveDebugAdapterPath(context, settings, folder);
       await assertNodeRuntime(settings.nodePath);
       await assertDebugAdapterAvailable(adapterPath);
@@ -118,6 +152,12 @@ export function createDebugConfigurationProvider(
   };
 }
 
+/**
+ * Creates the Flint debug adapter descriptor factory.
+ *
+ * @param context Extension context.
+ * @returns DebugAdapterDescriptorFactory implementation.
+ */
 export function createDebugAdapterDescriptorFactory(
   context: Pick<vscode.ExtensionContext, 'extensionPath'>,
 ): vscode.DebugAdapterDescriptorFactory {
@@ -128,23 +168,9 @@ export function createDebugAdapterDescriptorFactory(
     ): vscode.DebugAdapterDescriptor {
       const folder = session.workspaceFolder;
       const settings = readDebugSettings(vscode.workspace.getConfiguration(configurationSection, folder?.uri));
-      assertWorkspaceRelativeOverrideAllowed(
-        `${configurationSection}.dapPath`,
-        settings.dapPath,
-        vscode.workspace.isTrusted,
-      );
-      assertWorkspaceRelativeExecutableAllowed(
-        `${configurationSection}.nodePath`,
-        settings.nodePath,
-        vscode.workspace.isTrusted,
-      );
-      assertWorkspaceRelativeExecutableAllowed(
-        `${configurationSection}.runtimePath`,
-        session.configuration.runtimePath || settings.runtimePath,
-        vscode.workspace.isTrusted,
-      );
-      assertWorkingDirectoryAllowed(
-        `${configurationSection}.cwd`,
+      validateDebugTrust(
+        settings,
+        session.configuration.runtimePath,
         session.configuration.cwd,
         vscode.workspace.isTrusted,
       );
@@ -155,6 +181,11 @@ export function createDebugAdapterDescriptorFactory(
   };
 }
 
+/**
+ * Registers debug configuration and adapter providers with VS Code.
+ *
+ * @param context Extension context containing extensionPath and subscriptions.
+ */
 export function registerDebugSupport(context: Pick<vscode.ExtensionContext, 'extensionPath' | 'subscriptions'>): void {
   context.subscriptions.push(
     vscode.debug.registerDebugConfigurationProvider('flint', createDebugConfigurationProvider(context)),
@@ -162,23 +193,43 @@ export function registerDebugSupport(context: Pick<vscode.ExtensionContext, 'ext
   );
 }
 
+/**
+ * Coerces an unknown configuration value to a string array.
+ *
+ * @param value Raw configuration value.
+ * @returns Readonly string array.
+ */
 function readStringArray(value: unknown): readonly string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
 }
 
+/**
+ * Checks if a path value is empty or the workspaceFolder substitution variable.
+ *
+ * @param configuredPath Configured path string or unknown value.
+ * @returns True if path is a workspace root placeholder.
+ */
+function isWorkspacePlaceholder(configuredPath: unknown): boolean {
+  return (
+    typeof configuredPath !== 'string' || configuredPath.length === 0 || configuredPath === '${workspaceFolder}' // skipcq: JS-0038
+  );
+}
+
+/**
+ * Resolves working directory path against workspace folder or extension directory.
+ *
+ * @param configuredPath User-configured working directory.
+ * @param workspaceFolder Active workspace folder.
+ * @param extensionPath Extension installation root directory.
+ * @returns Resolved absolute working directory path.
+ */
 function resolveWorkingDirectory(
   configuredPath: unknown,
   workspaceFolder: vscode.WorkspaceFolder | undefined,
   extensionPath: string,
 ): string {
-  const workspacePath = workspaceFolder?.uri.fsPath;
-  if (
-    typeof configuredPath !== 'string' ||
-    configuredPath.length === 0 ||
-    configuredPath === '${workspaceFolder}' // skipcq: JS-0038
-  ) {
-    return workspacePath ?? extensionPath;
-  }
-  if (path.isAbsolute(configuredPath)) return configuredPath;
-  return path.resolve(workspacePath ?? extensionPath, configuredPath);
+  const workspacePath = workspaceFolder?.uri.fsPath ?? extensionPath;
+  if (isWorkspacePlaceholder(configuredPath)) return workspacePath;
+  if (path.isAbsolute(configuredPath as string)) return configuredPath as string;
+  return path.resolve(workspacePath, configuredPath as string);
 }

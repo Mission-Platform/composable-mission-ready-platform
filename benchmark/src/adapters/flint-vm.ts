@@ -6,6 +6,8 @@ import {
 import { decodeUtf8, encodeUtf8, normalizeBenchmarkOutput } from "../abi.ts";
 
 import type {
+  BenchmarkInput,
+  BenchmarkOutput,
   BuildArtifact,
   FlintMode,
   InitializedAdapter,
@@ -23,12 +25,25 @@ const COMPILER_VERSION = "benchmark-flint-v1";
 const SOURCE_HASH = "benchmark-flint-vm-wasm-v1";
 const MAX_STEPS = 50_000_000;
 
+/**
+ * Wraps a number into a 32-bit integer Flint VM value.
+ *
+ * @param value Number value to box.
+ * @returns 32-bit integer Flint VM value.
+ */
 const numberValue = (value: number): FlintVmValue => ({
   kind: "number",
   type: "i32",
   value,
 });
 
+/**
+ * Wraps a byte buffer into an aggregate Flint VM value.
+ *
+ * @param bytes Byte payload.
+ * @param layout Aggregate layout identifier.
+ * @returns Borrowed aggregate Flint VM value.
+ */
 const aggregateValue = (bytes: Uint8Array, layout: string): FlintVmValue => ({
   kind: "aggregate",
   layout,
@@ -56,6 +71,34 @@ function createNativeVmModule(): FlintVmModule {
   return buildModuleWithLabels(constants);
 }
 
+interface FunctionBuilder {
+  code: FlintVmInstruction[];
+  alloc: () => number;
+  label: (name: string) => void;
+  num: (dest: number, constant: number) => void;
+  move: (dest: number, source: number) => void;
+  binary: (op: string, dest: number, left: number, right: number) => void;
+  len: (dest: number, source: number) => void;
+  byteAt: (dest: number, source: number, index: number) => void;
+  call: (dest: number | undefined, fn: string, args: readonly number[]) => void;
+  capability: (
+    dest: number | undefined,
+    name: string,
+    args: readonly number[],
+  ) => void;
+  branch: (cond: number, ifTrue: string, ifFalse: string) => void;
+  jump: (label: string) => void;
+  ret: (source?: number) => void;
+  finish: () => FlintVmInstruction[];
+  registers: () => number;
+}
+
+/**
+ * Builds the hand-lowered benchmark module with local labels and patches.
+ *
+ * @param constants Array of constant values embedded into the module.
+ * @returns Fully assembled Flint VM module.
+ */
 function buildModuleWithLabels(constants: FlintVmValue[]): FlintVmModule {
   type Patch = {
     index: number;
@@ -63,35 +106,13 @@ function buildModuleWithLabels(constants: FlintVmValue[]): FlintVmModule {
     label: string;
   };
 
-  // We'll build each function separately with its own label space.
+  /**
+   * Helper constructing an individual function with a dedicated local label space.
+   */
   function buildFunction(
     name: string,
     parameterCount: number,
-    build: (b: {
-      code: FlintVmInstruction[];
-      alloc: () => number;
-      label: (name: string) => void;
-      num: (dest: number, constant: number) => void;
-      move: (dest: number, source: number) => void;
-      binary: (op: string, dest: number, left: number, right: number) => void;
-      len: (dest: number, source: number) => void;
-      byteAt: (dest: number, source: number, index: number) => void;
-      call: (
-        dest: number | undefined,
-        fn: string,
-        args: readonly number[],
-      ) => void;
-      capability: (
-        dest: number | undefined,
-        name: string,
-        args: readonly number[],
-      ) => void;
-      branch: (cond: number, ifTrue: string, ifFalse: string) => void;
-      jump: (label: string) => void;
-      ret: (source?: number) => void;
-      finish: () => FlintVmInstruction[];
-      registers: () => number;
-    }) => void,
+    build: (builder: FunctionBuilder) => void,
   ): {
     name: string;
     parameters: string[];
@@ -104,7 +125,7 @@ function buildModuleWithLabels(constants: FlintVmValue[]): FlintVmModule {
     const code: FlintVmInstruction[] = [];
     const localLabels = new Map<string, number>();
     const localPatches: Patch[] = [];
-    const b = {
+    const builder: FunctionBuilder = {
       code,
       alloc: () => {
         const register = next;
@@ -203,267 +224,267 @@ function buildModuleWithLabels(constants: FlintVmValue[]): FlintVmModule {
       },
       registers: () => next,
     };
-    build(b);
-    const finished = b.finish();
+    build(builder);
+    const finished = builder.finish();
     return {
       name,
       parameters: [],
       result: "i32",
-      registers: b.registers(),
+      registers: builder.registers(),
       code: finished,
       debugSpans: [],
     };
   }
 
-  const rangeSum = buildFunction("range_sum", 4, (b) => {
+  const rangeSum = buildFunction("range_sum", 4, (builder) => {
     // args: lo=0, hi=1, mult=2, seed=3
-    const condition = b.alloc(); // 4
-    const sum = b.alloc(); // 5
-    const idx = b.alloc(); // 6
-    const raw = b.alloc(); // 7
-    const left = b.alloc(); // 8
-    const right = b.alloc(); // 9
-    const half = b.alloc(); // 10
-    const one = b.alloc();
-    const two = b.alloc();
-    const cMul = b.alloc();
-    const cAdd = b.alloc();
-    const cMod = b.alloc();
-    const cSub = b.alloc();
-    const zero = b.alloc();
+    const condition = builder.alloc(); // 4
+    const sum = builder.alloc(); // 5
+    const idx = builder.alloc(); // 6
+    const raw = builder.alloc(); // 7
+    const left = builder.alloc(); // 8
+    const right = builder.alloc(); // 9
+    const half = builder.alloc(); // 10
+    const one = builder.alloc();
+    const two = builder.alloc();
+    const cMul = builder.alloc();
+    const cAdd = builder.alloc();
+    const cMod = builder.alloc();
+    const cSub = builder.alloc();
+    const zero = builder.alloc();
 
-    b.num(one, 1);
-    b.num(two, 2);
-    b.num(cMul, 3);
-    b.num(cAdd, 4);
-    b.num(cMod, 5);
-    b.num(cSub, 6);
-    b.num(zero, 0);
+    builder.num(one, 1);
+    builder.num(two, 2);
+    builder.num(cMul, 3);
+    builder.num(cAdd, 4);
+    builder.num(cMod, 5);
+    builder.num(cSub, 6);
+    builder.num(zero, 0);
 
-    b.binary(">=", condition, 0, 1);
-    b.branch(condition, "empty", "check_leaf");
-    b.label("empty");
-    b.ret(zero);
+    builder.binary(">=", condition, 0, 1);
+    builder.branch(condition, "empty", "check_leaf");
+    builder.label("empty");
+    builder.ret(zero);
 
-    b.label("check_leaf");
-    b.binary("+", idx, 0, one);
-    b.binary("==", condition, idx, 1);
-    b.branch(condition, "leaf", "branch");
+    builder.label("check_leaf");
+    builder.binary("+", idx, 0, one);
+    builder.binary("==", condition, idx, 1);
+    builder.branch(condition, "leaf", "branch");
 
-    b.label("leaf");
-    b.binary("*", raw, idx, cMul);
-    b.binary("+", raw, raw, 3);
-    b.binary("+", raw, raw, cAdd);
-    b.binary("%", raw, raw, cMod);
-    b.binary("-", raw, raw, cSub);
-    b.binary("*", raw, raw, 2);
-    b.ret(raw);
+    builder.label("leaf");
+    builder.binary("*", raw, idx, cMul);
+    builder.binary("+", raw, raw, 3);
+    builder.binary("+", raw, raw, cAdd);
+    builder.binary("%", raw, raw, cMod);
+    builder.binary("-", raw, raw, cSub);
+    builder.binary("*", raw, raw, 2);
+    builder.ret(raw);
 
-    b.label("branch");
-    b.binary("+", half, 0, 1);
-    b.binary("/", half, half, two);
-    b.call(left, "range_sum", [0, half, 2, 3]);
-    b.call(right, "range_sum", [half, 1, 2, 3]);
-    b.binary("+", sum, left, right);
-    b.ret(sum);
+    builder.label("branch");
+    builder.binary("+", half, 0, 1);
+    builder.binary("/", half, half, two);
+    builder.call(left, "range_sum", [0, half, 2, 3]);
+    builder.call(right, "range_sum", [half, 1, 2, 3]);
+    builder.binary("+", sum, left, right);
+    builder.ret(sum);
   });
   rangeSum.parameters = ["i32", "i32", "i32", "i32"];
   rangeSum.result = "i32";
 
-  const arithmeticReduce = buildFunction("arithmetic_reduce", 4, (b) => {
+  const arithmeticReduce = buildFunction("arithmetic_reduce", 4, (builder) => {
     // n=0, mult=1, offset=2, seed=3
-    const zero = b.alloc();
-    const sum = b.alloc();
-    b.num(zero, 0);
-    b.call(sum, "range_sum", [zero, 0, 1, 3]);
-    b.binary("+", sum, 2, sum);
-    b.ret(sum);
+    const zero = builder.alloc();
+    const sum = builder.alloc();
+    builder.num(zero, 0);
+    builder.call(sum, "range_sum", [zero, 0, 1, 3]);
+    builder.binary("+", sum, 2, sum);
+    builder.ret(sum);
   });
   arithmeticReduce.parameters = ["i32", "i32", "i32", "i32"];
   arithmeticReduce.result = "i32";
 
-  const scanBytes = buildFunction("scan_bytes", 4, (b) => {
+  const scanBytes = buildFunction("scan_bytes", 4, (builder) => {
     // data=0, lo=1, hi=2, threshold=3
-    const condition = b.alloc();
-    const sum = b.alloc();
-    const idx = b.alloc();
-    const byte = b.alloc();
-    const left = b.alloc();
-    const right = b.alloc();
-    const half = b.alloc();
-    const one = b.alloc();
-    const two = b.alloc();
-    const zero = b.alloc();
+    const condition = builder.alloc();
+    const sum = builder.alloc();
+    const idx = builder.alloc();
+    const byte = builder.alloc();
+    const left = builder.alloc();
+    const right = builder.alloc();
+    const half = builder.alloc();
+    const one = builder.alloc();
+    const two = builder.alloc();
+    const zero = builder.alloc();
 
-    b.num(one, 1);
-    b.num(two, 2);
-    b.num(zero, 0);
+    builder.num(one, 1);
+    builder.num(two, 2);
+    builder.num(zero, 0);
 
-    b.binary(">=", condition, 1, 2);
-    b.branch(condition, "empty", "check_leaf");
-    b.label("empty");
-    b.ret(zero);
+    builder.binary(">=", condition, 1, 2);
+    builder.branch(condition, "empty", "check_leaf");
+    builder.label("empty");
+    builder.ret(zero);
 
-    b.label("check_leaf");
-    b.binary("+", idx, 1, one);
-    b.binary("==", condition, idx, 2);
-    b.branch(condition, "leaf", "branch");
+    builder.label("check_leaf");
+    builder.binary("+", idx, 1, one);
+    builder.binary("==", condition, idx, 2);
+    builder.branch(condition, "leaf", "branch");
 
-    b.label("leaf");
-    b.byteAt(byte, 0, 1);
-    b.binary(">=", condition, byte, 3);
-    b.branch(condition, "hit", "miss");
-    b.label("hit");
-    b.binary("+", byte, byte, one);
-    b.ret(byte);
-    b.label("miss");
-    b.ret(zero);
+    builder.label("leaf");
+    builder.byteAt(byte, 0, 1);
+    builder.binary(">=", condition, byte, 3);
+    builder.branch(condition, "hit", "miss");
+    builder.label("hit");
+    builder.binary("+", byte, byte, one);
+    builder.ret(byte);
+    builder.label("miss");
+    builder.ret(zero);
 
-    b.label("branch");
-    b.binary("+", half, 1, 2);
-    b.binary("/", half, half, two);
-    b.call(left, "scan_bytes", [0, 1, half, 3]);
-    b.call(right, "scan_bytes", [0, half, 2, 3]);
-    b.binary("+", sum, left, right);
-    b.ret(sum);
+    builder.label("branch");
+    builder.binary("+", half, 1, 2);
+    builder.binary("/", half, half, two);
+    builder.call(left, "scan_bytes", [0, 1, half, 3]);
+    builder.call(right, "scan_bytes", [0, half, 2, 3]);
+    builder.binary("+", sum, left, right);
+    builder.ret(sum);
   });
   scanBytes.parameters = ["BenchmarkBytes", "i32", "i32", "i32"];
   scanBytes.result = "i32";
 
-  const datasetScan = buildFunction("dataset_scan", 2, (b) => {
+  const datasetScan = buildFunction("dataset_scan", 2, (builder) => {
     // data=0, threshold=1
-    const zero = b.alloc();
-    const length = b.alloc();
-    const result = b.alloc();
-    b.num(zero, 0);
-    b.len(length, 0);
-    b.call(result, "scan_bytes", [0, zero, length, 1]);
-    b.ret(result);
+    const zero = builder.alloc();
+    const length = builder.alloc();
+    const result = builder.alloc();
+    builder.num(zero, 0);
+    builder.len(length, 0);
+    builder.call(result, "scan_bytes", [0, zero, length, 1]);
+    builder.ret(result);
   });
   datasetScan.parameters = ["BenchmarkBytes", "i32"];
   datasetScan.result = "i32";
 
-  const startsWithAt = buildFunction("starts_with_at", 4, (b) => {
+  const startsWithAt = buildFunction("starts_with_at", 4, (builder) => {
     // value=0, prefix=1, i=2, plen=3
-    const tmp = b.alloc();
-    const vb = b.alloc();
-    const pb = b.alloc();
-    const next = b.alloc();
-    const one = b.alloc();
-    const trueValue = b.alloc();
-    const falseValue = b.alloc();
-    b.num(one, 1);
+    const tmp = builder.alloc();
+    const vb = builder.alloc();
+    const pb = builder.alloc();
+    const next = builder.alloc();
+    const one = builder.alloc();
+    const trueValue = builder.alloc();
+    const falseValue = builder.alloc();
+    builder.num(one, 1);
     // true/false via comparisons
-    b.num(trueValue, 1);
-    b.num(falseValue, 0);
-    b.binary(">=", tmp, 2, 3);
-    b.branch(tmp, "done_true", "compare");
-    b.label("done_true");
-    b.binary("==", tmp, trueValue, trueValue);
-    b.ret(tmp);
-    b.label("compare");
-    b.byteAt(vb, 0, 2);
-    b.byteAt(pb, 1, 2);
-    b.binary("==", tmp, vb, pb);
-    b.branch(tmp, "advance", "done_false");
-    b.label("done_false");
-    b.binary("==", tmp, trueValue, falseValue);
-    b.ret(tmp);
-    b.label("advance");
-    b.binary("+", next, 2, one);
-    b.call(tmp, "starts_with_at", [0, 1, next, 3]);
-    b.ret(tmp);
+    builder.num(trueValue, 1);
+    builder.num(falseValue, 0);
+    builder.binary(">=", tmp, 2, 3);
+    builder.branch(tmp, "done_true", "compare");
+    builder.label("done_true");
+    builder.binary("==", tmp, trueValue, trueValue);
+    builder.ret(tmp);
+    builder.label("compare");
+    builder.byteAt(vb, 0, 2);
+    builder.byteAt(pb, 1, 2);
+    builder.binary("==", tmp, vb, pb);
+    builder.branch(tmp, "advance", "done_false");
+    builder.label("done_false");
+    builder.binary("==", tmp, trueValue, falseValue);
+    builder.ret(tmp);
+    builder.label("advance");
+    builder.binary("+", next, 2, one);
+    builder.call(tmp, "starts_with_at", [0, 1, next, 3]);
+    builder.ret(tmp);
   });
   startsWithAt.parameters = ["BenchmarkBytes", "BenchmarkBytes", "i32", "i32"];
   startsWithAt.result = "bool";
 
-  const startsWith = buildFunction("starts_with", 2, (b) => {
+  const startsWith = buildFunction("starts_with", 2, (builder) => {
     // value=0, prefix=1
-    const vlen = b.alloc();
-    const plen = b.alloc();
-    const tmp = b.alloc();
-    const zero = b.alloc();
-    const trueValue = b.alloc();
-    const falseValue = b.alloc();
-    b.num(zero, 0);
-    b.num(trueValue, 1);
-    b.num(falseValue, 0);
-    b.len(vlen, 0);
-    b.len(plen, 1);
-    b.binary(">", tmp, plen, vlen);
-    b.branch(tmp, "no", "yes");
-    b.label("no");
-    b.binary("==", tmp, trueValue, falseValue);
-    b.ret(tmp);
-    b.label("yes");
-    b.call(tmp, "starts_with_at", [0, 1, zero, plen]);
-    b.ret(tmp);
+    const vlen = builder.alloc();
+    const plen = builder.alloc();
+    const tmp = builder.alloc();
+    const zero = builder.alloc();
+    const trueValue = builder.alloc();
+    const falseValue = builder.alloc();
+    builder.num(zero, 0);
+    builder.num(trueValue, 1);
+    builder.num(falseValue, 0);
+    builder.len(vlen, 0);
+    builder.len(plen, 1);
+    builder.binary(">", tmp, plen, vlen);
+    builder.branch(tmp, "no", "yes");
+    builder.label("no");
+    builder.binary("==", tmp, trueValue, falseValue);
+    builder.ret(tmp);
+    builder.label("yes");
+    builder.call(tmp, "starts_with_at", [0, 1, zero, plen]);
+    builder.ret(tmp);
   });
   startsWith.parameters = ["BenchmarkBytes", "BenchmarkBytes"];
   startsWith.result = "bool";
 
-  const repeatStr = buildFunction("repeat_str", 2, (b) => {
+  const repeatStr = buildFunction("repeat_str", 2, (builder) => {
     // piece=0, n=1
-    const condition = b.alloc();
-    const remainder = b.alloc();
-    const even = b.alloc();
-    const odd = b.alloc();
-    const halfn = b.alloc();
-    const half = b.alloc();
-    const doubled = b.alloc();
-    const one = b.alloc();
-    const two = b.alloc();
-    const zero = b.alloc();
-    const empty = b.alloc();
-    b.num(one, 1);
-    b.num(two, 2);
-    b.num(zero, 0);
+    const condition = builder.alloc();
+    const remainder = builder.alloc();
+    const even = builder.alloc();
+    const odd = builder.alloc();
+    const halfn = builder.alloc();
+    const half = builder.alloc();
+    const doubled = builder.alloc();
+    const one = builder.alloc();
+    const two = builder.alloc();
+    const zero = builder.alloc();
+    const empty = builder.alloc();
+    builder.num(one, 1);
+    builder.num(two, 2);
+    builder.num(zero, 0);
     // empty aggregate via capability empty_string
-    b.capability(empty, "empty_string", []);
+    builder.capability(empty, "empty_string", []);
 
-    b.binary("<=", condition, 1, zero);
-    b.branch(condition, "ret_empty", "check_one");
-    b.label("ret_empty");
-    b.ret(empty);
+    builder.binary("<=", condition, 1, zero);
+    builder.branch(condition, "ret_empty", "check_one");
+    builder.label("ret_empty");
+    builder.ret(empty);
 
-    b.label("check_one");
-    b.binary("==", condition, 1, one);
-    b.branch(condition, "ret_piece", "split");
-    b.label("ret_piece");
-    b.ret(0);
+    builder.label("check_one");
+    builder.binary("==", condition, 1, one);
+    builder.branch(condition, "ret_piece", "split");
+    builder.label("ret_piece");
+    builder.ret(0);
 
-    b.label("split");
-    b.binary("/", halfn, 1, two);
-    b.call(half, "repeat_str", [0, halfn]);
-    b.capability(doubled, "concat", [half, half]);
-    b.binary("%", remainder, 1, two);
-    b.binary("==", even, remainder, zero);
-    b.branch(even, "ret_doubled", "ret_odd");
-    b.label("ret_doubled");
-    b.ret(doubled);
-    b.label("ret_odd");
-    b.capability(odd, "concat", [doubled, 0]);
-    b.ret(odd);
+    builder.label("split");
+    builder.binary("/", halfn, 1, two);
+    builder.call(half, "repeat_str", [0, halfn]);
+    builder.capability(doubled, "concat", [half, half]);
+    builder.binary("%", remainder, 1, two);
+    builder.binary("==", even, remainder, zero);
+    builder.branch(even, "ret_doubled", "ret_odd");
+    builder.label("ret_doubled");
+    builder.ret(doubled);
+    builder.label("ret_odd");
+    builder.capability(odd, "concat", [doubled, 0]);
+    builder.ret(odd);
   });
   repeatStr.parameters = ["BenchmarkBytes", "i32"];
   repeatStr.result = "BenchmarkBytes";
 
-  const stringTransform = buildFunction("string_transform", 4, (b) => {
+  const stringTransform = buildFunction("string_transform", 4, (builder) => {
     // value=0, prefix=1, suffix=2, repeat=3
-    const starts = b.alloc();
-    const repeated = b.alloc();
-    const head = b.alloc();
-    const result = b.alloc();
-    b.call(starts, "starts_with", [0, 1]);
-    b.call(repeated, "repeat_str", [2, 3]);
-    b.branch(starts, "with_prefix", "without_prefix");
-    b.label("with_prefix");
-    b.capability(result, "concat", [0, repeated]);
-    b.ret(result);
-    b.label("without_prefix");
-    b.capability(head, "concat", [0, 1]);
-    b.capability(result, "concat", [head, repeated]);
-    b.ret(result);
+    const starts = builder.alloc();
+    const repeated = builder.alloc();
+    const head = builder.alloc();
+    const result = builder.alloc();
+    builder.call(starts, "starts_with", [0, 1]);
+    builder.call(repeated, "repeat_str", [2, 3]);
+    builder.branch(starts, "with_prefix", "without_prefix");
+    builder.label("with_prefix");
+    builder.capability(result, "concat", [0, repeated]);
+    builder.ret(result);
+    builder.label("without_prefix");
+    builder.capability(head, "concat", [0, 1]);
+    builder.capability(result, "concat", [head, repeated]);
+    builder.ret(result);
   });
   stringTransform.parameters = [
     "BenchmarkBytes",
@@ -532,6 +553,11 @@ function buildModuleWithLabels(constants: FlintVmValue[]): FlintVmModule {
   };
 }
 
+/**
+ * Creates built-in string capability handlers for the Flint VM benchmark harness.
+ *
+ * @returns Map of capability names to implementation functions.
+ */
 function stringCapabilities(): Readonly<
   Record<string, (...args: readonly FlintVmValue[]) => FlintVmValue>
 > {
@@ -549,6 +575,18 @@ function stringCapabilities(): Readonly<
   };
 }
 
+/**
+ * Executes a native Flint VM function via interpreted, JIT, or AOT execution mode.
+ *
+ * @param mode Execution mode variant.
+ * @param module Flint VM bytecode module.
+ * @param functionName Name of the function to execute.
+ * @param args Arguments to pass to the function.
+ * @param executor Root VM executor instance.
+ * @param prepared Prepared executor for JIT/AOT modes, if initialized.
+ * @param capabilities Capability handlers map.
+ * @returns VM execution result containing the return value and step counter.
+ */
 function executeNative(
   mode: Exclude<FlintMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
   module: FlintVmModule,
@@ -570,6 +608,147 @@ function executeNative(
   });
 }
 
+/**
+ * Validates that an artifact is compatible with the requested Flint VM mode.
+ *
+ * @param artifact Build artifact to check.
+ * @param mode Expected execution mode.
+ */
+function validateVmArtifact(artifact: BuildArtifact, mode: FlintMode): void {
+  if (
+    artifact.id !== `flint-vm-${mode}` ||
+    artifact.flintMode !== mode ||
+    artifact.artifactKind !== "flint-vm"
+  ) {
+    throw new Error(
+      `Flint ${mode} adapter received an incompatible build artifact.`,
+    );
+  }
+}
+
+/**
+ * Dispatches an input workload to the corresponding native Flint VM kernel function.
+ *
+ * @param mode VM execution mode.
+ * @param module Flint VM bytecode module.
+ * @param input Benchmark input workload.
+ * @param executor Root VM executor instance.
+ * @param prepared Prepared executor for JIT/AOT modes, if initialized.
+ * @param capabilities Capability handlers map.
+ * @returns Normalized benchmark output value.
+ */
+function dispatchVmExecution(
+  mode: Exclude<FlintMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
+  module: FlintVmModule,
+  input: BenchmarkInput,
+  executor: ReturnType<typeof createFlintVmExecutor>,
+  prepared: FlintVmPreparedExecutor | undefined,
+  capabilities: ReturnType<typeof stringCapabilities>,
+): BenchmarkOutput {
+  if ("multiplier" in input) {
+    const result = executeNative(
+      mode,
+      module,
+      "arithmetic_reduce",
+      [
+        numberValue(input.n),
+        numberValue(input.multiplier),
+        numberValue(input.offset),
+        numberValue(input.seed),
+      ],
+      executor,
+      prepared,
+      capabilities,
+    );
+    if (result.value.kind !== "number")
+      throw new Error("Flint VM arithmetic returned a non-number.");
+    return normalizeBenchmarkOutput(Number(result.value.value));
+  }
+  if ("suffix" in input) {
+    const result = executeNative(
+      mode,
+      module,
+      "string_transform",
+      [
+        aggregateValue(encodeUtf8(input.value), "BenchmarkBytes"),
+        aggregateValue(encodeUtf8(input.prefix), "BenchmarkBytes"),
+        aggregateValue(encodeUtf8(input.suffix), "BenchmarkBytes"),
+        numberValue(input.repeat),
+      ],
+      executor,
+      prepared,
+      capabilities,
+    );
+    if (result.value.kind !== "aggregate")
+      throw new Error("Flint VM string transform returned a non-aggregate.");
+    return normalizeBenchmarkOutput(decodeUtf8(result.value.bytes));
+  }
+  const result = executeNative(
+    mode,
+    module,
+    "dataset_scan",
+    [
+      aggregateValue(Uint8Array.from(input.bytes), "BenchmarkBytes"),
+      numberValue(input.threshold),
+    ],
+    executor,
+    prepared,
+    capabilities,
+  );
+  if (result.value.kind !== "number")
+    throw new Error("Flint VM dataset scan returned a non-number.");
+  return normalizeBenchmarkOutput(Number(result.value.value));
+}
+
+/**
+ * Prepares the VM executor and builds preparation metadata for the initialized adapter.
+ *
+ * @param mode VM execution mode.
+ * @param module VM module.
+ * @param executor VM executor.
+ * @param aot Optional AOT artifact.
+ * @param capabilities Capability handlers.
+ * @returns Prepared executor instance and metadata.
+ */
+function prepareVmBackend(
+  mode: Exclude<FlintMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
+  module: FlintVmModule,
+  executor: ReturnType<typeof createFlintVmExecutor>,
+  aot: ReturnType<typeof createFlintVmAotArtifact> | undefined,
+  capabilities: ReturnType<typeof stringCapabilities>,
+) {
+  const prepared =
+    mode === "interpret"
+      ? undefined
+      : executor.prepare(module, mode, {
+          capabilities,
+          aotArtifact: mode === "aot" ? aot : undefined,
+        });
+  const jitEntries = Object.keys(executor.getJitCache?.().entries ?? {}).length;
+  if (prepared !== undefined && prepared.mode !== mode)
+    throw new Error(`Flint ${mode} preparation returned an unexpected mode.`);
+  return {
+    prepared,
+    preparation: {
+      compilerVersion: COMPILER_VERSION,
+      jitCacheEntries: jitEntries,
+      backend: prepared?.metadata.backend ?? "interpreter",
+      instancePolicy: prepared?.metadata.instancePolicy ?? "fresh-per-execute",
+      loweringVersion: prepared?.metadata.loweringVersion ?? "none",
+      preparedArtifactHash: prepared?.artifact.reproducibilityHash ?? "",
+      preparedArtifactSize: prepared?.artifact.wasm.byteLength ?? 0,
+      aotArtifactCreated: aot !== undefined,
+      nativeKernels: true,
+    },
+  };
+}
+
+/**
+ * Creates a runtime adapter for executing hand-lowered Flint VM bytecode kernels.
+ *
+ * @param mode Execution mode variant (interpret, jit, or aot).
+ * @returns Configured runtime adapter instance.
+ */
 export function createFlintVmAdapter(
   mode: Exclude<FlintMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
 ): RuntimeAdapter {
@@ -582,8 +761,8 @@ export function createFlintVmAdapter(
     implementation: "flint",
     mode,
     adapterId: `flint-vm-${mode}`,
-    async build(): Promise<BuildArtifact> {
-      return {
+    build(): Promise<BuildArtifact> {
+      return Promise.resolve({
         id: `flint-vm-${mode}`,
         implementation: "flint",
         flintMode: mode,
@@ -607,109 +786,35 @@ export function createFlintVmAdapter(
                 : "none",
           aotReproducibilityHash: aot?.reproducibilityHash ?? "",
         },
-      };
+      });
     },
-    async initialize(artifact: BuildArtifact): Promise<InitializedAdapter> {
-      if (
-        artifact.id !== `flint-vm-${mode}` ||
-        artifact.flintMode !== mode ||
-        artifact.artifactKind !== "flint-vm"
-      ) {
-        throw new Error(
-          `Flint ${mode} adapter received an incompatible build artifact.`,
-        );
-      }
+    initialize(artifact: BuildArtifact): Promise<InitializedAdapter> {
+      validateVmArtifact(artifact, mode);
       const executor = createFlintVmExecutor({
         compilerVersion: COMPILER_VERSION,
         jitThreshold: 1,
       });
       const capabilities = stringCapabilities();
-      const prepared =
-        mode === "interpret"
-          ? undefined
-          : executor.prepare(module, mode, {
-              capabilities,
-              aotArtifact: mode === "aot" ? aot : undefined,
-            });
-      const jitEntries = Object.keys(
-        executor.getJitCache?.().entries ?? {},
-      ).length;
-      if (prepared !== undefined && prepared.mode !== mode)
-        throw new Error(
-          `Flint ${mode} preparation returned an unexpected mode.`,
-        );
-      return {
+      const { prepared, preparation } = prepareVmBackend(
+        mode,
+        module,
+        executor,
+        aot,
+        capabilities,
+      );
+      return Promise.resolve({
         adapterId: `flint-vm-${mode}`,
-        preparation: {
-          compilerVersion: COMPILER_VERSION,
-          jitCacheEntries: jitEntries,
-          backend: prepared?.metadata.backend ?? "interpreter",
-          instancePolicy:
-            prepared?.metadata.instancePolicy ?? "fresh-per-execute",
-          loweringVersion: prepared?.metadata.loweringVersion ?? "none",
-          preparedArtifactHash: prepared?.artifact.reproducibilityHash ?? "",
-          preparedArtifactSize: prepared?.artifact.wasm.byteLength ?? 0,
-          aotArtifactCreated: aot !== undefined,
-          nativeKernels: true,
-        },
-        execute: (input) => {
-          if ("multiplier" in input) {
-            const result = executeNative(
-              mode,
-              module,
-              "arithmetic_reduce",
-              [
-                numberValue(input.n),
-                numberValue(input.multiplier),
-                numberValue(input.offset),
-                numberValue(input.seed),
-              ],
-              executor,
-              prepared,
-              capabilities,
-            );
-            if (result.value.kind !== "number")
-              throw new Error("Flint VM arithmetic returned a non-number.");
-            return normalizeBenchmarkOutput(Number(result.value.value));
-          }
-          if ("suffix" in input) {
-            const result = executeNative(
-              mode,
-              module,
-              "string_transform",
-              [
-                aggregateValue(encodeUtf8(input.value), "BenchmarkBytes"),
-                aggregateValue(encodeUtf8(input.prefix), "BenchmarkBytes"),
-                aggregateValue(encodeUtf8(input.suffix), "BenchmarkBytes"),
-                numberValue(input.repeat),
-              ],
-              executor,
-              prepared,
-              capabilities,
-            );
-            if (result.value.kind !== "aggregate")
-              throw new Error(
-                "Flint VM string transform returned a non-aggregate.",
-              );
-            return normalizeBenchmarkOutput(decodeUtf8(result.value.bytes));
-          }
-          const result = executeNative(
+        preparation,
+        execute: (input) =>
+          dispatchVmExecution(
             mode,
             module,
-            "dataset_scan",
-            [
-              aggregateValue(Uint8Array.from(input.bytes), "BenchmarkBytes"),
-              numberValue(input.threshold),
-            ],
+            input,
             executor,
             prepared,
             capabilities,
-          );
-          if (result.value.kind !== "number")
-            throw new Error("Flint VM dataset scan returned a non-number.");
-          return normalizeBenchmarkOutput(Number(result.value.value));
-        },
-      };
+          ),
+      });
     },
   };
 }

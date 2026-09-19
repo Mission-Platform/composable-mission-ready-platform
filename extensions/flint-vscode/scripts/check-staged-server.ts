@@ -22,6 +22,9 @@ interface RpcMessage {
   };
 }
 
+/**
+ * Main verification entrypoint that tests staged Flint LSP and DAP servers.
+ */
 async function main(): Promise<void> {
   await access(serverPath);
   const manifest = JSON.parse(await readFile(path.join(serverRoot, 'package.json'), 'utf8')) as {
@@ -131,6 +134,12 @@ async function main(): Promise<void> {
   );
 }
 
+/**
+ * Collects stderr output and tracks the LSP readiness event.
+ *
+ * @param child Spawned server child process.
+ * @returns Object providing accumulated stderr text and a ready Promise.
+ */
 function collectStderr(child: ReturnType<typeof spawn>): {
   readonly text: () => string;
   readonly ready: Promise<void>;
@@ -150,6 +159,11 @@ function collectStderr(child: ReturnType<typeof spawn>): {
   return { text: () => value, ready };
 }
 
+/**
+ * Awaits server readiness or rejects after a timeout.
+ *
+ * @param stderr Stderr collector handle.
+ */
 async function waitForReady(stderr: { readonly text: () => string; readonly ready: Promise<void> }): Promise<void> {
   await Promise.race([
     stderr.ready,
@@ -159,49 +173,95 @@ async function waitForReady(stderr: { readonly text: () => string; readonly read
   ]);
 }
 
+/**
+ * Serializes and transmits a JSON-RPC message over the process stdin stream.
+ *
+ * @param child Target child process.
+ * @param message JSON-RPC message payload.
+ */
 function send(child: ReturnType<typeof spawn>, message: Record<string, unknown>): void {
   if (child.stdin === null) throw new Error('The staged server process did not expose stdin.');
   const body = JSON.stringify(message);
   child.stdin.write(`Content-Length: ${Buffer.byteLength(body)}\r\n\r\n${body}`);
 }
 
+/**
+ * Asserts a truthy condition or throws an Error.
+ *
+ * @param condition Condition to verify.
+ * @param message Error message if condition is false.
+ */
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
+/**
+ * Buffer-based JSON-RPC message reader handling stream framing.
+ */
 class RpcReader {
   private buffer = '';
   private readonly queue: RpcMessage[] = [];
   private readonly waiters: Array<(message: RpcMessage) => void> = [];
 
+  /**
+   * Initializes the reader by subscribing to the readable stream.
+   *
+   * @param stream Readable input stream.
+   */
   public constructor(stream: NodeJS.ReadableStream) {
     stream.setEncoding('utf8');
     stream.on('data', (chunk: string) => this.push(chunk));
   }
 
+  /**
+   * Retrieves the next available message or returns a waiter Promise.
+   *
+   * @returns Promise resolving to the next parsed message.
+   */
   public next(): Promise<RpcMessage> {
     const message = this.queue.shift();
     if (message !== undefined) return Promise.resolve(message);
     return new Promise((resolve) => this.waiters.push(resolve));
   }
 
+  /**
+   * Continuously awaits messages until matching a predicate condition.
+   *
+   * @param predicate Filter predicate.
+   * @returns Promise resolving to the matching message.
+   */
   public async until(predicate: (message: RpcMessage) => boolean): Promise<RpcMessage> {
     let message = await this.next();
     while (!predicate(message)) message = await this.next();
     return message;
   }
 
+  /**
+   * Attempts to parse a single JSON-RPC message from the buffer.
+   *
+   * @returns Parsed message if framed, or undefined if incomplete.
+   */
+  private tryReadMessage(): RpcMessage | undefined {
+    const headerEnd = this.buffer.indexOf('\r\n\r\n');
+    if (headerEnd === -1) return undefined;
+    const length = Number(/Content-Length: (\d+)/iu.exec(this.buffer.slice(0, headerEnd))?.[1]);
+    const bodyStart = headerEnd + 4;
+    if (!Number.isInteger(length) || Buffer.byteLength(this.buffer.slice(bodyStart)) < length) return undefined;
+    const body = this.buffer.slice(bodyStart, bodyStart + length);
+    this.buffer = this.buffer.slice(bodyStart + length);
+    return JSON.parse(body) as RpcMessage;
+  }
+
+  /**
+   * Appends an incoming chunk and processes all complete framed messages.
+   *
+   * @param chunk Data chunk string.
+   */
   private push(chunk: string): void {
     this.buffer += chunk;
     while (true) {
-      const headerEnd = this.buffer.indexOf('\r\n\r\n');
-      if (headerEnd === -1) return;
-      const length = Number(/Content-Length: (\d+)/iu.exec(this.buffer.slice(0, headerEnd))?.[1]);
-      const bodyStart = headerEnd + 4;
-      if (!Number.isInteger(length) || Buffer.byteLength(this.buffer.slice(bodyStart)) < length) return;
-      const body = this.buffer.slice(bodyStart, bodyStart + length);
-      this.buffer = this.buffer.slice(bodyStart + length);
-      const message = JSON.parse(body) as RpcMessage;
+      const message = this.tryReadMessage();
+      if (message === undefined) return;
       const waiter = this.waiters.shift();
       if (waiter === undefined) this.queue.push(message);
       else waiter(message);

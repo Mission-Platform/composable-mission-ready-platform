@@ -87,6 +87,13 @@ interface BrowserGeneratedFlintExports {
   readonly fws_reset: () => void;
 }
 
+/**
+ * Executes an operation with a reset of the guest instance before and after execution.
+ *
+ * @param exports Object exporting the fws_reset lifecycle function.
+ * @param operation Callback executing guest operations.
+ * @returns Result of the operation.
+ */
 function withReset<T>(
   exports: { readonly fws_reset: () => void },
   operation: () => T,
@@ -107,11 +114,25 @@ function withReset<T>(
   }
 }
 
+/**
+ * Normalizes an unknown error to a bounded message string.
+ *
+ * @param error Caught error value.
+ * @returns Bounded string representation of the error.
+ */
 function message(error: unknown): string {
   const value = error instanceof Error ? error.message : String(error);
   return value.length > 500 ? `${value.slice(0, 497)}...` : value;
 }
 
+/**
+ * Constructs a unique measurement key for a benchmark execution phase.
+ *
+ * @param benchmarkCase Benchmark scenario specification.
+ * @param adapter Runtime adapter being measured.
+ * @param phase Phase of the benchmark run.
+ * @returns Metadata object uniquely identifying the measurement.
+ */
 function key(
   benchmarkCase: BenchmarkCase,
   adapter: RuntimeAdapter,
@@ -128,6 +149,15 @@ function key(
   };
 }
 
+/**
+ * Creates a failed phase measurement record.
+ *
+ * @param benchmarkCase Benchmark scenario specification.
+ * @param adapter Runtime adapter being measured.
+ * @param phase Phase during which failure occurred.
+ * @param error Failure error message.
+ * @returns Failed phase measurement object.
+ */
 function failed(
   benchmarkCase: BenchmarkCase,
   adapter: RuntimeAdapter,
@@ -142,6 +172,13 @@ function failed(
   };
 }
 
+/**
+ * Creates a browser runtime adapter for raw Flint WebAssembly artifacts.
+ *
+ * @param artifact Compiled build artifact containing the WASM URL.
+ * @param mode Flint execution mode variant.
+ * @returns Runtime adapter for in-browser execution.
+ */
 function flintWasmAdapter(
   artifact: BuildArtifact,
   mode: "wasm" | "wasm-excluded-bounds" = "wasm",
@@ -257,6 +294,12 @@ function flintWasmAdapter(
   };
 }
 
+/**
+ * Creates a browser runtime adapter for generated Flint WebAssembly ESM modules.
+ *
+ * @param artifact Compiled build artifact containing the module URL.
+ * @returns Runtime adapter for in-browser execution with generated loader bindings.
+ */
 function flintGeneratedWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
   let exports: BrowserGeneratedFlintExports | undefined;
   return {
@@ -334,11 +377,23 @@ function flintGeneratedWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
   };
 }
 
+/**
+ * Dynamically loads and binds Rust WebAssembly exports for the browser harness.
+ *
+ * @param moduleUrl URL of the Rust WebAssembly module.
+ * @returns Promise resolving to Rust WebAssembly exports.
+ */
 async function rustLoader(moduleUrl: string): Promise<RustWasmExports> {
   // The bundler entry imports benchmark_bg.wasm and initializes its glue.
   return (await import(moduleUrl)) as RustWasmExports;
 }
 
+/**
+ * Dynamically loads AssemblyScript WebAssembly module exports.
+ *
+ * @param moduleUrl URL of the AssemblyScript module.
+ * @returns Promise resolving to AssemblyScript exports.
+ */
 async function assemblyScriptLoader(moduleUrl: string): Promise<never> {
   const loaded = (await import(moduleUrl)) as {
     loadModuleSync?: () => Record<string, unknown>;
@@ -351,6 +406,12 @@ async function assemblyScriptLoader(moduleUrl: string): Promise<never> {
   throw new Error("AssemblyScript generated module has no loadModule loader.");
 }
 
+/**
+ * Selects and instantiates the appropriate runtime adapter for a given build artifact.
+ *
+ * @param artifact Compiled benchmark build artifact.
+ * @returns Configured runtime adapter instance.
+ */
 function adapterFor(artifact: BuildArtifact): RuntimeAdapter {
   if (artifact.implementation === "javascript")
     return createJavaScriptAdapter();
@@ -366,6 +427,12 @@ function adapterFor(artifact: BuildArtifact): RuntimeAdapter {
   return createFlintVmAdapter(artifact.flintMode ?? "interpret");
 }
 
+/**
+ * Executes a browser benchmark request across requested artifacts and cases.
+ *
+ * @param request Complete browser benchmark request specification.
+ * @returns Promise resolving to full benchmark measurements and results.
+ */
 export async function runBrowserRequest(
   request: BrowserBenchmarkRequest,
 ): Promise<BrowserBenchmarkResult> {

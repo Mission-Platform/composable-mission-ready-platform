@@ -17,29 +17,51 @@ const dapRoot = path.join(repositoryRoot, 'packages/flint/dap');
 const outputRoot = path.join(extensionRoot, 'server');
 const outputNodeModules = path.join(outputRoot, 'node_modules');
 
+/**
+ * Reads and parses a package.json manifest.
+ *
+ * @param filePath Path to the package.json file.
+ * @returns Parsed PackageManifest.
+ */
 async function readManifest(filePath: string): Promise<PackageManifest> {
   return JSON.parse(await readFile(filePath, 'utf8')) as PackageManifest;
 }
 
 /**
+ * Checks if a candidate directory in node_modules satisfies the requested package name.
+ *
+ * @param current Current search directory.
+ * @param packageName Target package name.
+ * @returns Real path to package root, or undefined if not matching.
+ */
+function tryGetPackageRoot(current: string, packageName: string): string | undefined {
+  const candidate = path.join(current, 'node_modules', ...packageName.split('/'));
+  const manifestPath = path.join(candidate, 'package.json');
+  if (!existsSync(manifestPath)) return undefined;
+  try {
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as PackageManifest;
+    if (manifest.name === packageName) {
+      return realpathSync(candidate);
+    }
+  } catch {
+    // Ignore unreadable candidates and keep walking.
+  }
+  return undefined;
+}
+
+/**
  * Resolve a dependency package root the same way Node walks node_modules,
  * following pnpm workspace/package symlinks to their real locations.
+ *
+ * @param packageName Name of the package to locate.
+ * @param fromDirectory Directory from which resolution originates.
+ * @returns Real path to resolved package root.
  */
 function resolvePackageRoot(packageName: string, fromDirectory: string): string {
   let current = fromDirectory;
   while (true) {
-    const candidate = path.join(current, 'node_modules', ...packageName.split('/'));
-    const manifestPath = path.join(candidate, 'package.json');
-    if (existsSync(manifestPath)) {
-      try {
-        const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as PackageManifest;
-        if (manifest.name === packageName) {
-          return realpathSync(candidate);
-        }
-      } catch {
-        // Ignore unreadable candidates and keep walking.
-      }
-    }
+    const found = tryGetPackageRoot(current, packageName);
+    if (found !== undefined) return found;
 
     const parent = path.dirname(current);
     if (parent === current) {
@@ -53,6 +75,12 @@ function resolvePackageRoot(packageName: string, fromDirectory: string): string 
   );
 }
 
+/**
+ * Determines whether a package root resides in the monorepo workspace.
+ *
+ * @param packageRoot Path to candidate package root.
+ * @returns True if package is a local workspace member.
+ */
 function isWorkspacePackage(packageRoot: string): boolean {
   const relative = path.relative(repositoryRoot, packageRoot);
   if (relative === '' || relative.startsWith('..') || path.isAbsolute(relative)) {
@@ -61,6 +89,13 @@ function isWorkspacePackage(packageRoot: string): boolean {
   return !relative.split(path.sep).includes('node_modules');
 }
 
+/**
+ * Stages a monorepo workspace package and its distribution output.
+ *
+ * @param packageRoot Source package root.
+ * @param destination Target destination directory.
+ * @param manifest Package manifest.
+ */
 async function stageWorkspacePackage(
   packageRoot: string,
   destination: string,
@@ -86,6 +121,13 @@ async function stageWorkspacePackage(
   }
 }
 
+/**
+ * Recursively stages a package and its dependencies into the output directory.
+ *
+ * @param packageName Target package name.
+ * @param requireFrom Resolution root directory.
+ * @param visited Set of already visited package names.
+ */
 async function stagePackage(packageName: string, requireFrom: string, visited: Set<string>): Promise<void> {
   if (visited.has(packageName)) {
     return;
@@ -112,20 +154,34 @@ async function stagePackage(packageName: string, requireFrom: string, visited: S
   }
 }
 
+/**
+ * Asserts that a server entrypoint and manifest are built and accessible.
+ *
+ * @param name Component name (LSP or DAP).
+ * @param root Component root directory.
+ * @param entrypoint Compiled main entrypoint file.
+ */
+async function assertServerBuilt(name: string, root: string, entrypoint: string): Promise<void> {
+  try {
+    await readFile(entrypoint);
+  } catch {
+    throw new Error(
+      `The shared ${name} has not been built. Run ` +
+        '`pnpm exec turbo run build --filter flint-vscode` from the repository root.',
+    );
+  }
+  await readFile(path.join(root, 'package.json'));
+}
+
+/**
+ * Main staging execution entrypoint.
+ */
 async function main(): Promise<void> {
   for (const [name, root, entrypoint] of [
     ['LSP', lspRoot, path.join(lspRoot, 'dist/main.js')],
     ['DAP', dapRoot, path.join(dapRoot, 'dist/main.js')],
   ] as const) {
-    try {
-      await readFile(entrypoint);
-    } catch {
-      throw new Error(
-        `The shared ${name} has not been built. Run ` +
-          '`pnpm exec turbo run build --filter flint-vscode` from the repository root.',
-      );
-    }
-    await readFile(path.join(root, 'package.json'));
+    await assertServerBuilt(name, root, entrypoint);
   }
 
   await rm(outputRoot, { recursive: true, force: true });

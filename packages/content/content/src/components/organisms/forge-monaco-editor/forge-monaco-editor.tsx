@@ -145,9 +145,15 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   // Disposers for the lazily-attached spell/grammar checkers.
   const hunspellDisposeReference = useRef<(() => void) | undefined>(undefined);
   const harperDisposeReference = useRef<(() => void) | undefined>(undefined);
-  const flintDisposeReference = useRef<(() => void) | undefined>(undefined); // skipcq: JS-W1042
+  const flintDisposeReference = useRef<(() => void) | undefined>(undefined);
   const flintAttachGenerationReference = useRef(0);
 
+  const shouldAttachFlint = (editor?: monaco.editor.IStandaloneCodeEditor, runtime?: MonacoRuntime): boolean =>
+    Boolean(editor && runtime && language === 'flint' && properties.flint !== false);
+
+  /**
+   * Lazily loads and attaches the Flint language service to the active Monaco editor.
+   */
   const applyFlint = (): void => {
     flintAttachGenerationReference.current += 1;
     const generation = flintAttachGenerationReference.current;
@@ -155,16 +161,14 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
     flintDisposeReference.current = undefined;
     const editor = editorReference.current;
     const runtime = monacoReference.current;
-    if (!editor || !runtime || language !== 'flint' || properties.flint === false) return;
+    if (!shouldAttachFlint(editor, runtime) || properties.flint === false) return;
+    const flintOptions = typeof properties.flint === 'object' && properties.flint !== null ? properties.flint : {};
     void import('../../../monaco/flint').then(({ attachFlintMonaco }) => {
-      if (
+      const isCurrent =
         flintAttachGenerationReference.current === generation &&
-        editorReference.current === editor &&
-        monacoReference.current === runtime &&
-        language === 'flint' &&
-        properties.flint !== false
-      ) {
-        flintDisposeReference.current = attachFlintMonaco(editor, runtime, properties.flint ?? {}).dispose;
+        shouldAttachFlint(editorReference.current, monacoReference.current);
+      if (isCurrent && editor && runtime) {
+        flintDisposeReference.current = attachFlintMonaco(editor, runtime, flintOptions).dispose;
       }
     });
   };

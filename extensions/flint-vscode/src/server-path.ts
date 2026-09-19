@@ -27,6 +27,12 @@ export const defaultConfiguration: FlintConfiguration = {
   traceServer: 'off',
 };
 
+/**
+ * Reads Flint language server configuration from the provided workspace reader.
+ *
+ * @param configuration Configuration reader handle.
+ * @returns Parsed FlintConfiguration object.
+ */
 export function readConfiguration(configuration: ConfigurationReader): FlintConfiguration {
   const traceServer = configuration.get<string>('trace.server', defaultConfiguration.traceServer);
   return {
@@ -39,6 +45,14 @@ export function readConfiguration(configuration: ConfigurationReader): FlintConf
   };
 }
 
+/**
+ * Resolves the absolute path to the Flint language server entrypoint.
+ *
+ * @param context Extension context providing extensionPath.
+ * @param configuration Configuration providing serverPath.
+ * @param workspaceFolder Active workspace folder, if present.
+ * @returns Absolute path to the server main.js file.
+ */
 export function resolveServerPath(
   context: Pick<ExtensionContext, 'extensionPath'>,
   configuration: Pick<FlintConfiguration, 'serverPath'>,
@@ -49,6 +63,13 @@ export function resolveServerPath(
   return path.resolve(workspaceFolder?.uri.fsPath ?? context.extensionPath, configuration.serverPath);
 }
 
+/**
+ * Asserts that a configured relative path is only allowed in trusted workspaces.
+ *
+ * @param settingName Name of the configuration setting.
+ * @param configuredPath Configured path string.
+ * @param workspaceTrusted Whether workspace is trusted.
+ */
 export function assertWorkspaceRelativeOverrideAllowed(
   settingName: string,
   configuredPath: string,
@@ -60,6 +81,13 @@ export function assertWorkspaceRelativeOverrideAllowed(
   throw new Error(`${settingName} cannot use a configured path in an untrusted workspace.`);
 }
 
+/**
+ * Asserts that a configured working directory is allowed by workspace trust settings.
+ *
+ * @param settingName Name of the configuration setting.
+ * @param configuredPath Configured working directory path.
+ * @param workspaceTrusted Whether workspace is trusted.
+ */
 export function assertWorkingDirectoryAllowed(
   settingName: string,
   configuredPath: unknown,
@@ -76,6 +104,13 @@ export function assertWorkingDirectoryAllowed(
   throw new Error(`${settingName} cannot use a configured path in an untrusted workspace.`);
 }
 
+/**
+ * Asserts that an executable path with relative directories is only allowed in trusted workspaces.
+ *
+ * @param settingName Name of the configuration setting.
+ * @param configuredPath Configured executable path.
+ * @param workspaceTrusted Whether workspace is trusted.
+ */
 export function assertWorkspaceRelativeExecutableAllowed(
   settingName: string,
   configuredPath: string,
@@ -85,6 +120,14 @@ export function assertWorkspaceRelativeExecutableAllowed(
   assertWorkspaceRelativeOverrideAllowed(settingName, configuredPath, workspaceTrusted);
 }
 
+/**
+ * Creates ServerOptions for launching the Flint LSP process.
+ *
+ * @param context Extension context.
+ * @param configuration Flint configuration.
+ * @param workspaceFolder Active workspace folder.
+ * @returns Executable server options.
+ */
 export function createServerOptions(
   context: Pick<ExtensionContext, 'extensionPath'>,
   configuration: FlintConfiguration,
@@ -101,6 +144,11 @@ export function createServerOptions(
   return executable;
 }
 
+/**
+ * Asserts that the language server entrypoint file exists and is accessible.
+ *
+ * @param serverPath Path to server main file.
+ */
 export async function assertServerAvailable(serverPath: string): Promise<void> {
   try {
     await access(serverPath);
@@ -112,6 +160,11 @@ export async function assertServerAvailable(serverPath: string): Promise<void> {
   }
 }
 
+/**
+ * Validates that the configured Node.js runtime meets the minimum version requirement (v24+).
+ *
+ * @param nodePath Executable path to Node.js.
+ */
 export async function assertNodeRuntime(nodePath: string): Promise<void> {
   const version = await readNodeVersion(nodePath);
   const match = /^v(\d+)(?:\.\d+){0,2}$/u.exec(version.trim());
@@ -121,6 +174,12 @@ export async function assertNodeRuntime(nodePath: string): Promise<void> {
   }
 }
 
+/**
+ * Probes the Node.js executable to obtain its version string.
+ *
+ * @param nodePath Path to Node.js binary.
+ * @returns Promise resolving to the reported version string.
+ */
 function readNodeVersion(nodePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     let child: ReturnType<typeof spawn>;

@@ -75,6 +75,12 @@ export function attachFlintMonaco(
 
   const modelFileName = (model: monaco.editor.ITextModel): string =>
     options.fileName ?? model.uri.path ?? modelUri(model);
+
+  /**
+   * Retrieves the current editor model if one is attached.
+   *
+   * @returns Active text model or undefined.
+   */
   const currentModel = (): monaco.editor.ITextModel | undefined => {
     const model = editor.getModel();
     if (!model) return undefined;
@@ -184,26 +190,35 @@ export function attachFlintMonaco(
 
   syncModel(currentModel(), true);
 
+  const disposeAll = (): void => {
+    modelListener?.dispose();
+    modelChangeListener.dispose();
+    for (const disposable of providerDisposables) disposable.dispose();
+    languageRegistration.dispose();
+    if (currentUri !== undefined) {
+      const model = currentModel();
+      if (model !== undefined) monacoRuntime.editor.setModelMarkers(model, 'flint', []);
+      service.closeDocument(currentUri);
+    }
+    if (ownsService) service.dispose();
+  };
+
   return {
     refresh,
     dispose: () => {
       if (disposed) return;
       disposed = true;
       refreshGeneration += 1;
-      modelListener?.dispose();
-      modelChangeListener.dispose();
-      for (const disposable of providerDisposables) disposable.dispose();
-      languageRegistration.dispose();
-      if (currentUri !== undefined) {
-        const model = currentModel();
-        if (model !== undefined) monacoRuntime.editor.setModelMarkers(model, 'flint', []);
-        service.closeDocument(currentUri);
-      }
-      if (ownsService) service.dispose();
+      disposeAll();
     },
   };
 }
 
+/**
+ * Creates an empty Monaco tokenization state object.
+ *
+ * @returns Fresh IState instance.
+ */
 function createTokenState(): monaco.languages.IState {
   let state: monaco.languages.IState;
   state = {
@@ -213,13 +228,26 @@ function createTokenState(): monaco.languages.IState {
   return state;
 }
 
+/**
+ * Resolves a text model from the Monaco editor registry by URI.
+ *
+ * @param monacoRuntime Active Monaco runtime.
+ * @param uri Model URI.
+ * @returns Text model if present, or undefined.
+ */
 function modelForUri(monacoRuntime: MonacoRuntime, uri: monaco.Uri | null): monaco.editor.ITextModel | undefined {
-  if (!uri) return;
+  if (!uri) return undefined;
   const model = monacoRuntime.editor.getModel(uri);
-  if (!model) return;
+  if (!model) return undefined;
   return model;
 }
 
+/**
+ * Tokenizes a single line of Flint source code into Monaco tokens.
+ *
+ * @param line Line text.
+ * @returns Array of Monaco token descriptors.
+ */
 function tokenizeFlintLine(line: string): monaco.languages.IToken[] {
   // The core tokenizer uses UTF-16 offsets, which are also Monaco token offsets.
   // Map Flint token kinds to standard Monaco token names that built-in themes color.
@@ -229,6 +257,12 @@ function tokenizeFlintLine(line: string): monaco.languages.IToken[] {
   }));
 }
 
+/**
+ * Maps Flint token kinds to standard Monaco token scopes.
+ *
+ * @param kind Token kind string.
+ * @returns Standard scope name recognized by editor themes.
+ */
 function tokenKindToMonacoScope(kind: string): string {
   // Map Flint token kinds to standard Monaco token scopes.
   // Built-in themes (vs, vs-dark, hc-*) define rules for these base names.
@@ -267,12 +301,26 @@ function tokenKindToMonacoScope(kind: string): string {
   }
 }
 
+/**
+ * Maps a diagnostic severity to a Monaco MarkerSeverity.
+ *
+ * @param monacoRuntime Active Monaco runtime.
+ * @param severity Diagnostic severity string.
+ * @returns Monaco MarkerSeverity enum value.
+ */
 function markerSeverity(monacoRuntime: MonacoRuntime, severity: 'error' | 'warning' | 'info'): monaco.MarkerSeverity {
   if (severity === 'error') return monacoRuntime.MarkerSeverity.Error;
   if (severity === 'warning') return monacoRuntime.MarkerSeverity.Warning;
   return monacoRuntime.MarkerSeverity.Info;
 }
 
+/**
+ * Maps a language service completion kind to a Monaco CompletionItemKind.
+ *
+ * @param monacoRuntime Active Monaco runtime.
+ * @param kind Language service completion kind.
+ * @returns Monaco CompletionItemKind enum value.
+ */
 function completionKind(
   monacoRuntime: MonacoRuntime,
   kind: 'keyword' | 'type' | 'declaration' | 'value' | 'function' | 'capability',
@@ -284,10 +332,23 @@ function completionKind(
   return monacoRuntime.languages.CompletionItemKind.Variable;
 }
 
+/**
+ * Translates a 1-based Monaco position to a 0-based FlintPosition.
+ *
+ * @param position 1-based Monaco position.
+ * @returns 0-based FlintPosition.
+ */
 function toFlintPosition(position: monaco.Position): FlintPosition {
   return { line: position.lineNumber - 1, character: position.column - 1 };
 }
 
+/**
+ * Translates a 0-based Flint range to a 1-based Monaco Range.
+ *
+ * @param monacoRuntime Active Monaco runtime.
+ * @param range 0-based start and end FlintPositions.
+ * @returns 1-based Monaco Range instance.
+ */
 function toMonacoRange(
   monacoRuntime: MonacoRuntime,
   range: { start: FlintPosition; end: FlintPosition },
