@@ -117,6 +117,18 @@ function validateDebugTrust(
 }
 
 /**
+ * Resolves configured runtime path with fallback.
+ *
+ * @param configured User-provided runtime path.
+ * @param fallback Settings fallback.
+ * @returns Resolved path string or undefined.
+ */
+function resolveRuntimePath(configured: unknown, fallback: string | undefined): string | undefined {
+  if (typeof configured === 'string' && configured.length > 0) return configured;
+  return fallback || undefined;
+}
+
+/**
  * Assembles a fully resolved launch configuration combining user inputs with extension defaults.
  *
  * @param configuration User-supplied debug configuration.
@@ -134,7 +146,7 @@ function buildResolvedLaunchConfiguration(
     name: configuration.name ?? 'Launch Flint',
     program: configuration.program ?? '${file}', // skipcq: JS-0038
     cwd: configuration.cwd ?? '${workspaceFolder}', // skipcq: JS-0038
-    runtimePath: configuration.runtimePath || settings.runtimePath || undefined,
+    runtimePath: resolveRuntimePath(configuration.runtimePath, settings.runtimePath),
     runtimeArgs: configuration.runtimeArgs ?? settings.runtimeArgs,
     args: configuration.args ?? [],
   };

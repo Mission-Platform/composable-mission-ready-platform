@@ -222,6 +222,31 @@ async function executeInspectSonIrCommand(options: FlintCliOptions, io: FlintCli
 }
 
 /**
+ * Formats and prints compilation results in JSON format.
+ *
+ * @param options Parsed CLI options.
+ * @param result Compiled options result.
+ * @param io CLI I/O interface.
+ */
+function emitJsonResult(
+  options: FlintCliOptions,
+  result: Awaited<ReturnType<typeof compileOptions>>,
+  io: FlintCliIo,
+): void {
+  const payload: Record<string, unknown> = {
+    entryFileName: result.entryFileName,
+    diagnostics: result.diagnostics,
+    verification: result.artifact.artifactVerification,
+    verified: result.artifact.artifactVerification?.verified === true,
+    wasmEmitted: result.artifact.wasm !== undefined,
+    boundsChecks: result.artifact.manifest?.boundsChecks ?? options.boundsChecks,
+  };
+  if (options.showOptimizerReport) payload.optimizerReport = result.artifact.optimizationReport;
+  if (options.command === 'trace') payload.trace = result.trace;
+  io.stdout(JSON.stringify(payload));
+}
+
+/**
  * Formats and prints compilation diagnostics and summary information.
  *
  * @param options Parsed CLI options.
@@ -234,18 +259,7 @@ function emitCompilationResult(
   io: FlintCliIo,
 ): void {
   if (options.format === 'json') {
-    io.stdout(
-      JSON.stringify({
-        entryFileName: result.entryFileName,
-        diagnostics: result.diagnostics,
-        verification: result.artifact.artifactVerification,
-        verified: result.artifact.artifactVerification?.verified === true,
-        wasmEmitted: result.artifact.wasm !== undefined,
-        boundsChecks: result.artifact.manifest?.boundsChecks ?? options.boundsChecks,
-        ...(options.showOptimizerReport ? { optimizerReport: result.artifact.optimizationReport } : {}),
-        ...(options.command === 'trace' ? { trace: result.trace } : {}),
-      }),
-    );
+    emitJsonResult(options, result, io);
   } else if (result.diagnostics.length > 0) {
     io.stderr(formatFlintDiagnostics(result.diagnostics));
   }
@@ -264,12 +278,11 @@ function handleCheckCommand(
   result: Awaited<ReturnType<typeof compileOptions>>,
   io: FlintCliIo,
 ): number {
-  if (options.format !== 'json') {
-    io.stdout(`Checked ${result.entryFileName}.`);
-    if (options.showOptimizerReport || options.boundsChecks !== 'runtime')
-      io.stdout(`Bounds checks: ${options.boundsChecks}.`);
-    if (options.showOptimizerReport) io.stdout(JSON.stringify(result.artifact.optimizationReport ?? {}));
-  }
+  if (options.format === 'json') return 0;
+  io.stdout(`Checked ${result.entryFileName}.`);
+  if (options.showOptimizerReport || options.boundsChecks !== 'runtime')
+    io.stdout(`Bounds checks: ${options.boundsChecks}.`);
+  if (options.showOptimizerReport) io.stdout(JSON.stringify(result.artifact.optimizationReport ?? {}));
   return 0;
 }
 
@@ -334,6 +347,30 @@ async function handleCompileCommand(
 }
 
 /**
+ * Dispatches the post-compilation command handler based on selected CLI command.
+ *
+ * @param options Parsed CLI options.
+ * @param result Compiled options result.
+ * @param io CLI I/O interface.
+ * @param cwd Current working directory.
+ * @returns Numeric exit code or promise resolving to exit code.
+ */
+function dispatchCompiledCommand(
+  options: FlintCliOptions,
+  result: Awaited<ReturnType<typeof compileOptions>>,
+  io: FlintCliIo,
+  cwd: string,
+): Promise<number> | number {
+  if (options.command === 'check') {
+    return handleCheckCommand(options, result, io);
+  }
+  if (options.command === 'trace') {
+    return handleTraceCommand(options, result, io);
+  }
+  return handleCompileCommand(options, result, io, cwd);
+}
+
+/**
  * Executes the Flint CLI with given argument vector.
  *
  * @param argv Command-line arguments slice.
@@ -383,13 +420,7 @@ export async function runFlintCli(
   if (hasErrors || result.artifact.wasm === undefined || result.artifact.manifest === undefined)
     return FLINT_CLI_COMPILATION_EXIT_CODE;
 
-  if (options.command === 'check') {
-    return handleCheckCommand(options, result, io);
-  }
-  if (options.command === 'trace') {
-    return handleTraceCommand(options, result, io);
-  }
-  return handleCompileCommand(options, result, io, cwd);
+  return dispatchCompiledCommand(options, result, io, cwd);
 }
 
 /**

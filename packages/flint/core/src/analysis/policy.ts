@@ -28,6 +28,12 @@ export const FLINT_DEVELOPMENT_ANALYSIS_POLICY: FlintAnalysisPolicy = {
   profile: 'development',
 };
 
+/**
+ * Creates an effective analysis policy by merging user configuration with profile defaults.
+ *
+ * @param policy Partial policy options.
+ * @returns Fully populated FlintAnalysisPolicy.
+ */
 export function createFlintAnalysisPolicy(policy: FlintAnalysisOptionsLike = {}): FlintAnalysisPolicy {
   const base = policy.profile === 'development' ? FLINT_DEVELOPMENT_ANALYSIS_POLICY : FLINT_STRICT_ANALYSIS_POLICY;
   return {
@@ -44,6 +50,13 @@ export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limit
   readonly limits?: Partial<FlintAnalysisLimits>;
 };
 
+/**
+ * Determines whether an analysis finding should block compilation under the given policy.
+ *
+ * @param finding Finding under evaluation.
+ * @param policy Active analysis policy.
+ * @returns True if the finding is considered blocking.
+ */
 export function isFlintAnalysisFindingBlocking(finding: FlintAnalysisFinding, policy: FlintAnalysisPolicy): boolean {
   if (policy.profile !== 'strict') return false;
   if (finding.blocking !== undefined) return finding.blocking;

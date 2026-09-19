@@ -788,6 +788,20 @@ function dispatchVmExecution(
 }
 
 /**
+ * Counts the active entries in the VM JIT cache.
+ *
+ * @param executor VM executor instance.
+ * @returns Number of compiled JIT function entries.
+ */
+function countJitEntries(
+  executor: ReturnType<typeof createFlintVmExecutor>,
+): number {
+  const jitCache = executor.getJitCache?.();
+  if (jitCache === undefined) return 0;
+  return Object.keys(jitCache.entries).length;
+}
+
+/**
  * Prepares the VM executor and builds preparation metadata for the initialized adapter.
  *
  * @param mode VM execution mode.
@@ -804,37 +818,29 @@ function prepareVmBackend(
   aot: ReturnType<typeof createFlintVmAotArtifact> | undefined,
   capabilities: ReturnType<typeof stringCapabilities>,
 ) {
-  const prepared =
-    mode === "interpret"
-      ? undefined
-      : executor.prepare(module, mode, {
-          capabilities,
-          aotArtifact: mode === "aot" ? aot : undefined,
-        });
-  const jitCache = executor.getJitCache?.();
-  const jitEntries = jitCache ? Object.keys(jitCache.entries).length : 0;
+  let prepared: ReturnType<typeof executor.prepare> | undefined;
+  if (mode !== "interpret") {
+    prepared = executor.prepare(module, mode, {
+      capabilities,
+      aotArtifact: mode === "aot" ? aot : undefined,
+    });
+  }
   if (prepared !== undefined && prepared.mode !== mode)
     throw new Error(`Flint ${mode} preparation returned an unexpected mode.`);
 
   const preparation = {
     compilerVersion: COMPILER_VERSION,
-    jitCacheEntries: jitEntries,
-    backend: "interpreter",
-    instancePolicy: "fresh-per-execute",
-    loweringVersion: "none",
-    preparedArtifactHash: "",
-    preparedArtifactSize: 0,
+    jitCacheEntries: countJitEntries(executor),
+    backend: prepared ? prepared.metadata.backend : "interpreter",
+    instancePolicy: prepared
+      ? prepared.metadata.instancePolicy
+      : "fresh-per-execute",
+    loweringVersion: prepared ? prepared.metadata.loweringVersion : "none",
+    preparedArtifactHash: prepared ? prepared.artifact.reproducibilityHash : "",
+    preparedArtifactSize: prepared ? prepared.artifact.wasm.byteLength : 0,
     aotArtifactCreated: aot !== undefined,
     nativeKernels: true,
   };
-
-  if (prepared) {
-    preparation.backend = prepared.metadata.backend;
-    preparation.instancePolicy = prepared.metadata.instancePolicy;
-    preparation.loweringVersion = prepared.metadata.loweringVersion;
-    preparation.preparedArtifactHash = prepared.artifact.reproducibilityHash;
-    preparation.preparedArtifactSize = prepared.artifact.wasm.byteLength;
-  }
 
   return {
     prepared,

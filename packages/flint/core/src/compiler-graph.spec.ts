@@ -21,7 +21,7 @@ function resolver(files: Readonly<Record<string, string>>) {
   };
 }
 
-async function graphFor(
+function graphFor(
   files: Readonly<Record<string, string>>,
   configuration: Parameters<typeof resolveFlintModuleGraph>[2],
 ) {
@@ -46,7 +46,9 @@ describe('Forge Web Script graph compiler service', () => {
 
     expect(result.diagnostics).toEqual([]);
     expect(artifact.diagnostics).toEqual([]);
-    expect(WebAssembly.Module.exports(new WebAssembly.Module(artifact.wasm!)).map(({ name }) => name)).toEqual([
+    expect(artifact.wasm).toBeDefined();
+    const wasmBytes = artifact.wasm as Uint8Array;
+    expect(WebAssembly.Module.exports(new WebAssembly.Module(wasmBytes)).map(({ name }) => name)).toEqual([
       'main',
       'helper',
       'memory',
@@ -116,7 +118,9 @@ describe('Forge Web Script graph compiler service', () => {
     expect(artifact.manifest?.exports).toEqual(
       expect.arrayContaining([expect.objectContaining({ name: 'main', parameters: [], result: 'i32' })]),
     );
-    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!));
+    expect(artifact.wasm).toBeDefined();
+    const wasmBytes = artifact.wasm as Uint8Array;
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(wasmBytes));
     expect((instance.exports.main as () => number)()).toBe(42);
     service.dispose();
   });

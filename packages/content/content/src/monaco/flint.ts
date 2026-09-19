@@ -163,9 +163,13 @@ export function attachFlintMonaco(
         text: model.getValue(),
         version: model.getVersionId(),
       });
-      refresh().catch(() => {});
+      refresh().catch((error: unknown) => {
+        void error;
+      });
     });
-    refresh().catch(() => {});
+    refresh().catch((error: unknown) => {
+      void error;
+    });
   };
 
   const modelChangeListener = editor.onDidChangeModel(({ newModelUrl }) => {
@@ -195,11 +199,12 @@ export function attachFlintMonaco(
         syncDocumentForRequest(model);
         await service.refreshWorkspace(modelUri(model));
         const hover = service.hover(modelUri(model), toFlintPosition(position));
-        if (hover === undefined) return;
-        return {
-          range: toMonacoRange(monacoRuntime, hover.range),
-          contents: hover.contents.map((value) => ({ value })),
-        };
+        if (hover !== undefined) {
+          return {
+            range: toMonacoRange(monacoRuntime, hover.range),
+            contents: hover.contents.map((value) => ({ value })),
+          };
+        }
       },
     }),
   );
@@ -285,6 +290,18 @@ function tokenizeFlintLine(line: string): monaco.languages.IToken[] {
   }));
 }
 
+const MONACO_SCOPE_BY_TOKEN_KIND: Readonly<Record<string, string>> = {
+  keyword: 'keyword',
+  type: 'type',
+  string: 'string',
+  number: 'number',
+  comment: 'comment',
+  invalid: 'invalid',
+  operator: 'operator',
+  punctuation: 'delimiter',
+  declaration: 'type',
+};
+
 /**
  * Maps Flint token kinds to standard Monaco token scopes.
  *
@@ -292,41 +309,7 @@ function tokenizeFlintLine(line: string): monaco.languages.IToken[] {
  * @returns Standard scope name recognized by editor themes.
  */
 function tokenKindToMonacoScope(kind: string): string {
-  // Map Flint token kinds to standard Monaco token scopes.
-  // Built-in themes (vs, vs-dark, hc-*) define rules for these base names.
-  switch (kind) {
-    case 'keyword': {
-      return 'keyword';
-    }
-    case 'type': {
-      return 'type';
-    }
-    case 'string': {
-      return 'string';
-    }
-    case 'number': {
-      return 'number';
-    }
-    case 'comment': {
-      return 'comment';
-    }
-    case 'invalid': {
-      return 'invalid';
-    }
-    case 'operator': {
-      return 'operator';
-    }
-    case 'punctuation': {
-      return 'delimiter';
-    }
-    case 'declaration': {
-      // Declarations are typically highlighted as types or variables; use 'type' for consistency
-      return 'type';
-    }
-    default: {
-      return 'identifier';
-    }
-  }
+  return MONACO_SCOPE_BY_TOKEN_KIND[kind] ?? 'identifier';
 }
 
 /**

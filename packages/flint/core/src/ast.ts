@@ -35,15 +35,23 @@ export interface FlintTypeName {
   readonly span: FlintSourceSpan;
 }
 
+/**
+ * Serializes a FlintTypeName descriptor to its canonical source code representation.
+ *
+ * @param type Flint type name structure.
+ * @returns Serialized type string (e.g. `i32`, `&mut String`, `[i32; 4]`).
+ */
 export function flintTypeNameToString(type: FlintTypeName): string {
   const name = type.reference ?? type.name;
-  const generic =
-    type.arguments === undefined || type.arguments.length === 0
-      ? name
-      : `${name}<${type.arguments.map((argument) => flintTypeNameToString(argument)).join(', ')}>`;
-  const qualified =
-    type.referenceMode === undefined ? generic : `&${type.referenceMode === 'mut-ref' ? 'mut ' : ''}${generic}`;
-  return type.length === undefined ? qualified : `${qualified}[${type.length}]`;
+  let text = name;
+  if (type.arguments !== undefined && type.arguments.length > 0) {
+    const renderedArguments = type.arguments.map((argument) => flintTypeNameToString(argument)).join(', ');
+    text = `${name}<${renderedArguments}>`;
+  }
+  if (type.referenceMode === 'mut-ref') text = `&mut ${text}`;
+  else if (type.referenceMode === 'ref') text = `&${text}`;
+  if (type.length !== undefined) text = `${text}[${type.length}]`;
+  return text;
 }
 
 const podPrimitives = new Set<FlintPrimitiveType>(['bool', 'f32', 'f64', 'i32', 'i64', 'u32', 'u64', 'unit']);
@@ -86,6 +94,13 @@ export function isFlintPodType(
   );
 }
 
+/**
+ * Computes the default argument passing mode (value, ref, or mut-ref) for a given type.
+ *
+ * @param type Flint type name.
+ * @param module Optional module providing struct and enum definitions.
+ * @returns Default passing mode convention.
+ */
 export function flintDefaultPassingMode(
   type: FlintTypeName,
   module?: Pick<FlintModule, 'structs' | 'enums'>,

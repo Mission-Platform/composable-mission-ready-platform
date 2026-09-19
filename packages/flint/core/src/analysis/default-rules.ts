@@ -239,6 +239,15 @@ function visitExpression(expression: FlintIrExpression, visit: (expression: Flin
 }
 
 /**
+ * No-op expression visitor callback.
+ *
+ * @param _expression Ignored expression.
+ */
+function noopExpressionVisitor(_expression: FlintIrExpression): void {
+  // Intentional no-op visitor
+}
+
+/**
  * Traverses a statement list recursively and invokes a visitor callback on each statement.
  *
  * @param statements Array of IR statements.
@@ -249,9 +258,7 @@ function visitStatements(statements: readonly FlintIrStatement[], visit: (statem
     visit(statement);
     switch (statement.kind) {
       case 'if': {
-        visitExpression(statement.condition, (expression) => {
-          void expression;
-        });
+        visitExpression(statement.condition, noopExpressionVisitor);
         visitStatements(statement.consequent, visit);
         if (statement.alternate !== undefined) visitStatements(statement.alternate, visit);
         break;
@@ -443,7 +450,6 @@ const rangeRule: FlintAnalysisRule = {
     const findings: FlintAnalysisFinding[] = [];
     for (const declaration of ir.functions) {
       const initialEnvironment: Environment = new Map();
-      for (const parameter of declaration.parameters) initialEnvironment.set(parameter.name, undefined);
       // Each recursive call owns a state snapshot. Only facts equal on every reachable
       // branch are retained at a control-flow join.
       const visit = (statements: readonly FlintIrStatement[], input: ReadonlyMap<string, Constant>): RangeFlow => {

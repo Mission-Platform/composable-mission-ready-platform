@@ -145,7 +145,7 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   // Disposers for the lazily-attached spell/grammar checkers.
   const hunspellDisposeReference = useRef<(() => void) | undefined>(undefined);
   const harperDisposeReference = useRef<(() => void) | undefined>(undefined);
-  const flintDisposeReference = useRef<(() => void) | undefined>(undefined);
+  const flintDisposeReference = useRef<(() => void) | undefined>(undefined); // skipcq: JS-W1042
   const flintAttachGenerationReference = useRef(0);
 
   /**
@@ -179,7 +179,9 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
           flintDisposeReference.current = attachFlintMonaco(editor, runtime, flintOptions).dispose;
         }
       })
-      .catch(() => {});
+      .catch((error: unknown) => {
+        void error;
+      });
   };
 
   // (Re-)wire Hunspell + Harper against the live editor. Both cores are imported

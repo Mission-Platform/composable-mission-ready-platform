@@ -161,10 +161,6 @@ export function formatFlintSoNSummary(module: FlintSoNModule): {
  * @param outputDirectory Explicit or default output directory path.
  * @returns Resolved output directory string.
  */
-export function outputDirectoryFor(
-  entryFileName: string,
-  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
-): string {
-  void entryFileName;
-  return outputDirectory;
+export function outputDirectoryFor(entryFileName: string, outputDirectory?: string): string {
+  return outputDirectory ?? path.join(path.dirname(entryFileName), 'dist');
 }

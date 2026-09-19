@@ -62,7 +62,7 @@ const mocks = vi.hoisted(() => {
     }
 
     protected fillInitializeParams(_parameters: unknown): void {
-      void this;
+      if (this.constructorArguments.length === 0) return;
       // The real client supplies rootUri and protocol defaults before the extension adds workspace folders.
     }
   }

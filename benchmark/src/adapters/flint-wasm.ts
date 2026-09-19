@@ -418,6 +418,18 @@ function createFlintSonPipelineMetadata(
   };
 }
 
+const GENERATED_METADATA = {
+  abi: "generated-esm-over-pointer-length-v1",
+  loader: "generated-esm",
+  stringInputAllocations: 1,
+} as const;
+
+const RAW_METADATA = {
+  abi: "pointer-length-native-v1",
+  loader: "raw-pointer-length",
+  stringInputAllocations: 3,
+} as const;
+
 /**
  * Creates artifact metadata describing ABI, size, and layout properties.
  *
@@ -435,12 +447,10 @@ function createFlintArtifactMetadata(
 ) {
   const pipeline = createFlintSonPipelineMetadata(artifact, boundsChecks);
   const rawWasmBytes = artifact.wasm ? artifact.wasm.byteLength : 0;
+  const modeMetadata = generated ? GENERATED_METADATA : RAW_METADATA;
   return {
-    abi: generated
-      ? "generated-esm-over-pointer-length-v1"
-      : "pointer-length-native-v1",
+    ...modeMetadata,
     compilerVersion: COMPILER_VERSION,
-    loader: generated ? "generated-esm" : "raw-pointer-length",
     nativeKernels: true,
     instancePolicy: "reusable-with-reset",
     resetAbi: "fws_reset-v1",
@@ -450,7 +460,6 @@ function createFlintArtifactMetadata(
     ...(generated
       ? { generatedSourceHash: hashArtifactBytes(persisted.generatedSource) }
       : {}),
-    stringInputAllocations: generated ? 1 : 3,
     stringOutputAllocations: 1,
     wasmUrl: persisted.wasmUrl,
     moduleUrl: persisted.moduleUrl,
@@ -482,6 +491,69 @@ async function resolveGeneratedExports(
   }
   const generatedModule = loaded as GeneratedFlintModule;
   return { generatedModule, exports: generatedModule.loadSync() };
+}
+
+/**
+ * Validates that a build artifact matches the expected adapter identity and kind.
+ *
+ * @param artifact Build artifact under test.
+ * @param artifactId Expected adapter identifier.
+ * @param flintMode Expected execution mode.
+ */
+function assertMatchingBuildArtifact(
+  artifact: BuildArtifact,
+  artifactId: string,
+  flintMode: FlintMode,
+): void {
+  if (
+    artifact.id !== artifactId ||
+    artifact.flintMode !== flintMode ||
+    artifact.artifactKind !== "wasm"
+  ) {
+    throw new Error(
+      "Flint WASM adapter received an incompatible build artifact.",
+    );
+  }
+}
+
+/**
+ * Resolves or reuses generated ESM exports for an initialized Wasm adapter.
+ *
+ * @param generated Whether generated ESM mode is active.
+ * @param cachedGeneratedModule Previously cached module instance, if available.
+ * @param compiledModule Compiled module descriptors and generated URL.
+ * @param artifactHash Optional artifact content hash.
+ * @returns Cached module and bound exports.
+ */
+async function resolveAdapterExports(
+  generated: boolean,
+  cachedGeneratedModule: GeneratedFlintModule | undefined,
+  compiledModule: { module: WebAssembly.Module; generatedModuleUrl: string },
+  artifactHash?: string,
+): Promise<{
+  readonly cachedModule?: GeneratedFlintModule;
+  readonly exports?: GeneratedFlintExports;
+}> {
+  if (!generated) return {};
+  if (cachedGeneratedModule) {
+    const exports = cachedGeneratedModule.loadSync();
+    if (typeof exports.fws_reset !== "function") {
+      throw new TypeError(
+        "Generated Flint module is missing the fws_reset ABI export.",
+      );
+    }
+    return { cachedModule: cachedGeneratedModule, exports };
+  }
+  const resolved = await resolveGeneratedExports(
+    compiledModule.generatedModuleUrl,
+    artifactHash,
+  );
+  if (typeof resolved.exports.fws_reset !== "function") {
+    throw new TypeError(
+      "Generated Flint module is missing the fws_reset ABI export.",
+    );
+  }
+  return { cachedModule: resolved.generatedModule, exports: resolved.exports };
 }
 
 /**
@@ -550,55 +622,39 @@ function createFlintWasmAdapterInternal(
       });
     },
     async initialize(artifact: BuildArtifact): Promise<InitializedAdapter> {
-      if (
-        artifact.id !== artifactId ||
-        artifact.flintMode !== flintMode ||
-        artifact.artifactKind !== "wasm"
-      ) {
-        throw new Error(
-          "Flint WASM adapter received an incompatible build artifact.",
-        );
-      }
-      const compiledModule = compiled;
-      if (compiledModule === undefined) {
+      assertMatchingBuildArtifact(artifact, artifactId, flintMode);
+      if (compiled === undefined) {
         throw new Error(
           "Flint WASM adapter must be built before initialization.",
         );
       }
-      const module = compiledModule.module;
-      let generatedExports: GeneratedFlintExports | undefined;
-      if (generated) {
-        if (cachedGeneratedModule) {
-          generatedExports = cachedGeneratedModule.loadSync();
-        } else {
-          const resolved = await resolveGeneratedExports(
-            compiledModule.generatedModuleUrl,
-            artifact.hash,
-          );
-          cachedGeneratedModule = resolved.generatedModule;
-          generatedExports = resolved.exports;
-        }
-      }
-      if (generated && typeof generatedExports?.fws_reset !== "function")
-        throw new Error(
-          "Generated Flint module is missing the fws_reset ABI export.",
+      const compiledModule = compiled;
+      const { cachedModule, exports: generatedExports } =
+        await resolveAdapterExports(
+          generated,
+          cachedGeneratedModule,
+          compiledModule,
+          artifact.hash,
         );
+      if (cachedModule) cachedGeneratedModule = cachedModule;
+
       const preparedExports = asExports(
-        new WebAssembly.Instance(module, {}).exports,
+        new WebAssembly.Instance(compiledModule.module, {}).exports,
       );
+      const preparation = {
+        modulesCompiled: 1,
+        abi: generated
+          ? "generated-esm-over-pointer-length-v1"
+          : "pointer-length-native-v1",
+        nativeKernels: true,
+        instancePolicy: "reusable-with-reset",
+        resetAbi: "fws_reset-v1",
+        stringInputAllocations: generated ? 1 : 3,
+        stringOutputAllocations: 1,
+      };
       return {
         adapterId: artifactId,
-        preparation: {
-          modulesCompiled: 1,
-          abi: generated
-            ? "generated-esm-over-pointer-length-v1"
-            : "pointer-length-native-v1",
-          nativeKernels: true,
-          instancePolicy: "reusable-with-reset",
-          resetAbi: "fws_reset-v1",
-          stringInputAllocations: generated ? 1 : 3,
-          stringOutputAllocations: 1,
-        },
+        preparation,
         execute: (input) => {
           if (generated) {
             if (generatedExports === undefined) {

@@ -198,7 +198,7 @@ console.log(JSON.stringify({ result, head: head.stdout.trim() }));`,
 
   it('keeps Git execution bounded and reports truncation', () => {
     assert.throws(() => runGit('status', ['status'], { timeoutMs: 9 }), /timeoutMs must be an integer/);
-    const result = runGit('status', ['status', '--short', '--branch', '--untracked-files=all'], { maxOutputBytes: 32 });
+    const result = runGit('log', ['log', '-n', '5'], { maxOutputBytes: 32 });
     assert.ok(Buffer.byteLength(result.stdout, 'utf8') <= 32);
     assert.ok(result.outputTruncated);
   });

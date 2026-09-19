@@ -155,6 +155,15 @@ function absolutePaths(values: readonly string[], cwd: string): readonly string[
 
 const COMMAND_SET: ReadonlySet<string> = new Set(['check', 'compile', 'trace', 'inspect-sonir']);
 
+/**
+ * Handles project root path options.
+ *
+ * @param argv Command-line arguments.
+ * @param index Current argument index.
+ * @param state CLI parsing accumulator.
+ * @param option Flag name.
+ * @returns Next argument index.
+ */
 function handleProjectRoot(argv: readonly string[], index: number, state: ParseState, option: string): number {
   const [value, nextIndex] = valueFor(argv, index, option);
   state.projectRoots.push(
@@ -166,6 +175,15 @@ function handleProjectRoot(argv: readonly string[], index: number, state: ParseS
   return nextIndex;
 }
 
+/**
+ * Handles module link mode options.
+ *
+ * @param argv Command-line arguments.
+ * @param index Current argument index.
+ * @param state CLI parsing accumulator.
+ * @param option Flag name.
+ * @returns Next argument index.
+ */
 function handleLinkMode(argv: readonly string[], index: number, state: ParseState, option: string): number {
   const [value, nextIndex] = valueFor(argv, index, option);
   if (value !== 'static' && value !== 'dynamic') throw new FlintCliUsageError(`Invalid link mode '${value}'.`);
@@ -173,6 +191,16 @@ function handleLinkMode(argv: readonly string[], index: number, state: ParseStat
   return nextIndex;
 }
 
+/**
+ * Handles output directory path options.
+ *
+ * @param argv Command-line arguments.
+ * @param index Current argument index.
+ * @param state CLI parsing accumulator.
+ * @param cwd Current working directory.
+ * @param option Flag name.
+ * @returns Next argument index.
+ */
 function handleOutputDir(
   argv: readonly string[],
   index: number,
@@ -185,28 +213,30 @@ function handleOutputDir(
   return nextIndex;
 }
 
+const TRACE_FIELD_MAP: Readonly<Record<string, 'maxTraceEvents' | 'maxTraceBytes' | 'maxSnapshotBytes'>> = {
+  '--max-trace-events': 'maxTraceEvents',
+  '--max-trace-bytes': 'maxTraceBytes',
+  '--max-snapshot-bytes': 'maxSnapshotBytes',
+};
+
+/**
+ * Handles trace event and byte limit options.
+ *
+ * @param argv Command-line arguments.
+ * @param index Current argument index.
+ * @param state CLI parsing accumulator.
+ * @param option Flag name.
+ * @returns Next argument index.
+ */
 function handleTraceCount(argv: readonly string[], index: number, state: ParseState, option: string): number {
   state.traceRequested = true;
   const [value, nextIndex] = valueFor(argv, index, option);
   const parsed = Number(value);
   if (!Number.isSafeInteger(parsed) || parsed < 0)
     throw new FlintCliUsageError(`${option} must be a non-negative integer.`);
-  switch (option) {
-    case '--max-trace-events': {
-      state.maxTraceEvents = parsed;
-      break;
-    }
-    case '--max-trace-bytes': {
-      state.maxTraceBytes = parsed;
-      break;
-    }
-    case '--max-snapshot-bytes': {
-      state.maxSnapshotBytes = parsed;
-      break;
-    }
-    default: {
-      break;
-    }
+  const field = TRACE_FIELD_MAP[option];
+  if (field !== undefined) {
+    state[field] = parsed;
   }
   return nextIndex;
 }
@@ -294,6 +324,53 @@ const FLAG_HANDLERS: Readonly<Record<string, FlagHandler>> = {
 };
 
 /**
+ * Validates invariant requirements on the parsed CLI state accumulator.
+ *
+ * @param state Intermediate parsing state.
+ */
+function validateParsedState(state: ParseState): void {
+  if (state.command === undefined)
+    throw new FlintCliUsageError('Missing command; expected check, compile, trace, or inspect-sonir.');
+  if (state.entries.length === 0) throw new FlintCliUsageError('Missing entry file.');
+  if (state.entries.length > 1) throw new FlintCliUsageError('Exactly one entry file is supported.');
+  if (state.compilerVersion.length === 0) throw new FlintCliUsageError('Compiler version must not be empty.');
+}
+
+/**
+ * Assembles the final immutable FlintCliOptions from validated parse state.
+ *
+ * @param state Intermediate parsing state.
+ * @param cwd Current working directory.
+ * @returns Fully populated options structure.
+ */
+function buildCliOptions(state: ParseState, cwd: string): FlintCliOptions {
+  const options: FlintCliOptions = {
+    command: state.command as FlintCliCommand,
+    entries: absolutePaths(state.entries, cwd),
+    roots: absolutePaths(state.roots, cwd),
+    projectRoots: absolutePaths(state.projectRoots, cwd),
+    capabilities: splitValues(state.capabilities),
+    optimization: state.optimization,
+    compilerVersion: state.compilerVersion,
+    vmMode: state.vmMode,
+    boundsChecks: state.boundsChecks,
+    showOptimizerReport: state.showOptimizerReport,
+  };
+  if (state.linkMode !== undefined) options.linkMode = state.linkMode;
+  if (state.outputDirectory !== undefined) options.outputDirectory = state.outputDirectory;
+  if (state.format !== undefined) options.format = state.format;
+  if (state.command === 'trace' || state.traceRequested) {
+    options.trace = {
+      capture: state.traceCapture,
+      maxEvents: state.maxTraceEvents,
+      maxTraceBytes: state.maxTraceBytes,
+      maxSnapshotBytes: state.maxSnapshotBytes,
+    };
+  }
+  return options;
+}
+
+/**
  * Parses and validates raw command-line arguments for the Flint CLI.
  *
  * @param argv Command-line arguments slice.
@@ -335,35 +412,6 @@ export function parseFlintCliArgs(argv: readonly string[], cwd = process.cwd()):
     state.entries.push(argument);
   }
 
-  if (state.command === undefined)
-    throw new FlintCliUsageError('Missing command; expected check, compile, trace, or inspect-sonir.');
-  if (state.entries.length === 0) throw new FlintCliUsageError('Missing entry file.');
-  if (state.entries.length > 1) throw new FlintCliUsageError('Exactly one entry file is supported.');
-  if (state.compilerVersion.length === 0) throw new FlintCliUsageError('Compiler version must not be empty.');
-
-  return {
-    command: state.command,
-    entries: absolutePaths(state.entries, cwd),
-    roots: absolutePaths(state.roots, cwd),
-    projectRoots: absolutePaths(state.projectRoots, cwd),
-    ...(state.linkMode === undefined ? {} : { linkMode: state.linkMode }),
-    capabilities: splitValues(state.capabilities),
-    optimization: state.optimization,
-    ...(state.outputDirectory === undefined ? {} : { outputDirectory: state.outputDirectory }),
-    compilerVersion: state.compilerVersion,
-    vmMode: state.vmMode,
-    ...(state.format === undefined ? {} : { format: state.format }),
-    boundsChecks: state.boundsChecks,
-    showOptimizerReport: state.showOptimizerReport,
-    ...(state.command === 'trace' || state.traceRequested
-      ? {
-          trace: {
-            capture: state.traceCapture,
-            maxEvents: state.maxTraceEvents,
-            maxTraceBytes: state.maxTraceBytes,
-            maxSnapshotBytes: state.maxSnapshotBytes,
-          },
-        }
-      : {}),
-  };
+  validateParsedState(state);
+  return buildCliOptions(state, cwd);
 }

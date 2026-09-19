@@ -49,6 +49,12 @@ export interface FlintWatCacheKeyInput {
   readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
 }
 
+/**
+ * Recursively normalizes objects and arrays with sorted keys for deterministic serialization.
+ *
+ * @param value Arbitrary input value.
+ * @returns Structurally canonicalized value.
+ */
 function stableValue(value: unknown): unknown {
   if (Array.isArray(value)) return value.map((entry) => stableValue(entry));
   if (value !== null && typeof value === 'object') {
@@ -61,6 +67,12 @@ function stableValue(value: unknown): unknown {
   return value;
 }
 
+/**
+ * Computes an 8-character FNV-1a hex hash for a given string.
+ *
+ * @param value String payload.
+ * @returns 8-character hex hash.
+ */
 function hash(value: string): string {
   let result = 2_166_136_261;
   for (const character of value) {
@@ -205,6 +217,12 @@ export function persistFlintDebugArtifacts(
     optimizedWasmPath?: string;
     unoptimizedWasmPath?: string;
   } = {};
+  /**
+   * Writes a WebAssembly text format (WAT) artifact variant to the cache.
+   *
+   * @param variant Optimization variant.
+   * @param contents Text content to write.
+   */
   const writeWat = (variant: FlintDebugArtifactVariant, contents: string): void => {
     const path = flintDebugArtifactPath(cache, key, variant, 'wat');
     try {
@@ -215,6 +233,13 @@ export function persistFlintDebugArtifacts(
       // Debug inspection must never make compilation fail.
     }
   };
+
+  /**
+   * Writes a compiled WebAssembly binary artifact variant to the cache.
+   *
+   * @param variant Optimization variant.
+   * @param contents Binary bytes to write.
+   */
   const writeWasm = (variant: FlintDebugArtifactVariant, contents: Uint8Array): void => {
     if (cache.writeBinaryAtomic === undefined) return;
     const path = flintDebugArtifactPath(cache, key, variant, 'wasm');
