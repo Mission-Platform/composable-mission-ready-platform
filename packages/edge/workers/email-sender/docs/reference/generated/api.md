@@ -38,12 +38,19 @@ function handleRequest(
 ): Promise<Response>;
 ```
 
-No description provided.
+Handles incoming email delivery requests, validating input and delivering to SMTP service.
 
 #### Parameters
 
-| Name        | Type              | Description |
-| ----------- | ----------------- | ----------- |
-| request     | Request           |             |
-| environment | WorkerEnvironment |             |
-| delivery    | Delivery          |             |
+| Name        | Type              | Description                                        |
+| ----------- | ----------------- | -------------------------------------------------- |
+| request     | Request           | - Incoming HTTP request.                           |
+| environment | WorkerEnvironment | - Worker environment bindings.                     |
+| delivery    | Delivery          | - Delivery function handling message transmission. |
+
+#### Contract
+
+- **@param:** - Incoming HTTP request.
+- **@param:** - Worker environment bindings.
+- **@param:** - Delivery function handling message transmission.
+- **@returns:** HTTP Response.

@@ -4,403 +4,71 @@
 
 Generated from public source declarations in `@mission-platform/qr-code`.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-qr-code/forge-qr-code`
 
-### encodeMicroQr
-
-**Kind:** function
-
-```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-Encode `text` into a **Micro QR Code** matrix (ISO/IEC 18004), instantiating
-the WebAssembly encoder synchronously on first use.
-
-The smallest fitting version (M1–M4, 11×11 to 17×17) is chosen automatically.
-Micro QR supports only error-correction levels `L`, `M` and `Q`; requesting
-`H` always throws (no Micro QR version provides it).
-
-#### Parameters
-
-| Name            | Type              | Description |
-| --------------- | ----------------- | ----------- |
-| text            | string            |             |
-| errorCorrection | QrErrorCorrection |             |
-
-#### Contract
-
-- **@throws:** if the text is too long for any Micro QR version at the
-  chosen level (including any request for level `H`).
-
-### encodeMicroQrAsync
+### ForgeQrCode
 
 **Kind:** function
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
+function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement;
 ```
 
-Encode `text` into a **Micro QR Code** matrix, instantiating the WebAssembly
-encoder asynchronously on first use. See {@link encodeMicroQr}.
+`ForgeQrCode` — renders a scannable QR Code, authored once in the neutral JSX
+dialect and compiled straight to React or Vue by
+`@mission-platform/vite-plugin-forge`.
+
+The payload (`value`) is encoded entirely on the client by the
+`@mission-platform/qr-code` encoders — dependency-free encoders written in
+Rust and compiled to WebAssembly (automatic version selection, lowest-penalty
+data mask) — and drawn as a crisp, resolution-independent SVG. The `variant`
+prop chooses the symbology: a standard square QR Code ({@link encodeQr},
+`'qr'`, the default), a compact square Micro QR Code
+({@link encodeMicroQr}, `'micro'`), or a wide Rectangular Micro QR / rMQR Code
+({@link encodeRmqr}, `'rmqr'`). A single `<path>` is emitted for all dark
+modules, so the markup stays compact even for large codes. For reliable
+scanning the dark / light colours default to solid black on white rather than
+theme tokens, but both are overridable via `color` / `background`.
+
+Modules and finder (eye) patterns can be drawn as squares, rounded squares,
+or dots (`moduleShape` / `finderShape`); the dark fill accepts a two-stop
+linear or radial `gradient`; and an optional centre `logo` is overlaid on a
+backing plate (pair it with `errorCorrection: 'H'` so the code still scans).
+
+An optional action toolbar (enabled via `showActions` — `true` for every
+button, or a {@link QrCodeActions} object to pick them individually) lets
+users **save the code as a PNG image**, **copy the image to the clipboard**,
+and **copy the encoded value to the clipboard**. The PNG is rasterised on the
+client by drawing the rendered SVG onto a canvas.
+
+Substitutions from the original Vue SFC: the `computed` render becomes the
+neutral {@link useMemo}; the `error` emit becomes the `onError` callback prop
+(invoked when encoding fails, mirroring the original's emit from inside the
+computed). It owns its styling through the co-located CSS Module
+`forge-qr-code.module.scss`.
 
 #### Parameters
 
-| Name            | Type              | Description |
-| --------------- | ----------------- | ----------- |
-| text            | string            |             |
-| errorCorrection | QrErrorCorrection |             |
+| Name       | Type                       | Description |
+| ---------- | -------------------------- | ----------- |
+| properties | Readonly<QrCodeProperties> |             |
 
-#### Contract
-
-- **@throws:** if the text is too long for any Micro QR version at the
-  chosen level (including any request for level `H`).
-
-### encodeQr
-
-**Kind:** function
-
-```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
-```
-
-Encode `text` into a QR Code matrix at the given error-correction level,
-instantiating the WebAssembly encoder synchronously on first use.
-
-#### Parameters
-
-| Name            | Type              | Description |
-| --------------- | ----------------- | ----------- |
-| text            | string            |             |
-| errorCorrection | QrErrorCorrection |             |
-
-#### Contract
-
-- **@throws:** if the text is too long to fit in the largest (version
-
-40. QR Code at the chosen error-correction level.
-
-### encodeQrAsync
-
-**Kind:** function
-
-```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
-```
-
-Encode `text` into a QR Code matrix at the given error-correction level,
-instantiating the WebAssembly encoder asynchronously on first use.
-
-#### Parameters
-
-| Name            | Type              | Description |
-| --------------- | ----------------- | ----------- |
-| text            | string            |             |
-| errorCorrection | QrErrorCorrection |             |
-
-#### Contract
-
-- **@throws:** if the text is too long to fit in the largest (version
-
-40. QR Code at the chosen error-correction level.
-
-### encodeRmqr
-
-**Kind:** function
-
-```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-Encode `text` into a **Rectangular Micro QR (rMQR) Code** matrix
-(ISO/IEC 23941), instantiating the WebAssembly encoder synchronously on first
-use.
-
-The smallest fitting version (of the 32 sizes from R7×43 to R17×139) is chosen
-automatically. rMQR supports only error-correction levels `M` and `H`, so
-`L`/`M` map to `M` and `Q`/`H` map to `H`.
-
-#### Parameters
-
-| Name            | Type              | Description |
-| --------------- | ----------------- | ----------- |
-| text            | string            |             |
-| errorCorrection | QrErrorCorrection |             |
-
-#### Contract
-
-- **@throws:** if the text is too long for any rMQR version at the
-  chosen level.
-
-### encodeRmqrAsync
-
-**Kind:** function
-
-```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
-```
-
-Encode `text` into a **Rectangular Micro QR (rMQR) Code** matrix,
-instantiating the WebAssembly encoder asynchronously on first use. See
-{@link encodeRmqr}.
-
-#### Parameters
-
-| Name            | Type              | Description |
-| --------------- | ----------------- | ----------- |
-| text            | string            |             |
-| errorCorrection | QrErrorCorrection |             |
-
-#### Contract
-
-- **@throws:** if the text is too long for any rMQR version at the
-  chosen level.
-
-## `src/formats`
-
-### email
-
-**Kind:** function
-
-```typescript
-function email(options: EmailOptions): string;
-```
-
-A `mailto:` payload that opens a pre-composed email. Subject and body are
-percent-encoded as query parameters.
-
-#### Parameters
-
-| Name    | Type         | Description |
-| ------- | ------------ | ----------- |
-| options | EmailOptions |             |
-
-### EmailOptions
+### QrCodeActions
 
 **Kind:** interface
 
 ```typescript
-export interface EmailOptions
+export interface QrCodeActions
 ```
 
-Options for {@link email}.
+Which action buttons the toolbar shows. `true` enables all of them.
 
-### geo
-
-**Kind:** function
-
-```typescript
-function geo(options: GeoOptions): string;
-```
-
-A `geo:` payload (RFC 5870) that opens a set of map coordinates, optionally
-including altitude.
-
-#### Parameters
-
-| Name    | Type       | Description |
-| ------- | ---------- | ----------- |
-| options | GeoOptions |             |
-
-### GeoOptions
+### QrCodeProperties
 
 **Kind:** interface
 
 ```typescript
-export interface GeoOptions
+export interface QrCodeProperties
 ```
 
-Options for {@link geo}.
-
-### iCalEvent
-
-**Kind:** function
-
-```typescript
-function iCalEvent(options: ICalEventOptions): string;
-```
-
-A minimal iCalendar (`VCALENDAR` → `VEVENT`) payload for a single event that
-scanners offer to add to the calendar.
-
-Timed events use UTC `DTSTART` / `DTEND`; all-day events use `VALUE=DATE`
-date-only stamps.
-
-#### Parameters
-
-| Name    | Type             | Description |
-| ------- | ---------------- | ----------- |
-| options | ICalEventOptions |             |
-
-### ICalEventOptions
-
-**Kind:** interface
-
-```typescript
-export interface ICalEventOptions
-```
-
-Options for {@link iCalEvent} — a single `VEVENT` calendar entry.
-
-### meCard
-
-**Kind:** function
-
-```typescript
-function meCard(options: MeCardOptions): string;
-```
-
-A `MECARD:` payload — the compact contact format understood by most cameras.
-Multiple phone numbers / emails are emitted as repeated `TEL:` / `EMAIL:`
-fields.
-
-#### Parameters
-
-| Name    | Type          | Description |
-| ------- | ------------- | ----------- |
-| options | MeCardOptions |             |
-
-### MeCardOptions
-
-**Kind:** interface
-
-```typescript
-export interface MeCardOptions
-```
-
-Options for {@link meCard} — the compact contact format used by many phones.
-
-### phone
-
-**Kind:** function
-
-```typescript
-function phone(number: string): string;
-```
-
-A `tel:` payload that dials a phone number.
-
-#### Parameters
-
-| Name   | Type   | Description |
-| ------ | ------ | ----------- |
-| number | string |             |
-
-### sms
-
-**Kind:** function
-
-```typescript
-function sms(options: SmsOptions): string;
-```
-
-An `SMSTO:` payload that opens a pre-composed text message. This scheme is
-the most widely recognised across scanner apps.
-
-#### Parameters
-
-| Name    | Type       | Description |
-| ------- | ---------- | ----------- |
-| options | SmsOptions |             |
-
-### SmsOptions
-
-**Kind:** interface
-
-```typescript
-export interface SmsOptions
-```
-
-Options for {@link sms}.
-
-### url
-
-**Kind:** function
-
-```typescript
-function url(value: string): string;
-```
-
-The payload for a URL / plain text code. URLs are returned verbatim; this
-builder exists mostly for symmetry and intent at the call site.
-
-#### Parameters
-
-| Name  | Type   | Description |
-| ----- | ------ | ----------- |
-| value | string |             |
-
-### wifi
-
-**Kind:** function
-
-```typescript
-function wifi(options: WifiOptions): string;
-```
-
-A `WIFI:` payload that lets a scanner join a wireless network.
-
-#### Parameters
-
-| Name    | Type        | Description |
-| ------- | ----------- | ----------- |
-| options | WifiOptions |             |
-
-#### Contract
-
-- **@example:** wifi({ ssid: 'Cafe', password: 'latte123', encryption: 'WPA' })
-  // => 'WIFI:T:WPA;S:Cafe;P:latte123;;'
-
-### WifiEncryption
-
-**Kind:** type
-
-```typescript
-export type WifiEncryption = 'WPA' | 'WEP' | 'nopass';
-```
-
-Wi-Fi authentication type understood by the `WIFI:` payload scheme.
-
-### WifiOptions
-
-**Kind:** interface
-
-```typescript
-export interface WifiOptions
-```
-
-Options for {@link wifi}.
-
-## `src/types`
-
-### CompactQrMatrix
-
-**Kind:** interface
-
-```typescript
-export interface CompactQrMatrix
-```
-
-An encoded compact QR variant — a Micro QR or Rectangular Micro QR (rMQR)
-Code. Unlike {@link QrMatrix} these may be rectangular, so the grid is
-described by explicit `width`/`height` rather than a single `size`.
-
-### QrErrorCorrection
-
-**Kind:** type
-
-```typescript
-export type QrErrorCorrection = 'L' | 'M' | 'Q' | 'H';
-```
-
-Error-correction level: higher levels tolerate more damage but hold less data.
-
-### QrMatrix
-
-**Kind:** interface
-
-```typescript
-export interface QrMatrix
-```
-
-An encoded QR Code: a square grid of dark (`true`) modules.
+No description provided.

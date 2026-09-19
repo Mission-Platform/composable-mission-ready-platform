@@ -1094,6 +1094,42 @@ unresolved generic/cyclic values as non-POD.
 
 ## `src/cache`
 
+### ForgeWebScriptCacheIndex
+
+**Kind:** interface
+
+```typescript
+export interface ForgeWebScriptCacheIndex
+```
+
+No description provided.
+
+### ForgeWebScriptCacheIndexEntry
+
+**Kind:** interface
+
+```typescript
+export interface ForgeWebScriptCacheIndexEntry
+```
+
+No description provided.
+
+### forgeWebScriptCacheIndexPath
+
+**Kind:** function
+
+```typescript
+function forgeWebScriptCacheIndexPath(cache: ForgeWebScriptWatCache): string;
+```
+
+Returns the path to the cache index file `.fws-cache-index.json`.
+
+#### Parameters
+
+| Name  | Type                   | Description |
+| ----- | ---------------------- | ----------- |
+| cache | ForgeWebScriptWatCache |             |
+
 ### ForgeWebScriptCacheLogger
 
 **Kind:** interface
@@ -1136,7 +1172,7 @@ function forgeWebScriptSoNPath(
 ): string;
 ```
 
-No description provided.
+Returns the path to the SonIR JSON artifact for a given cache key and variant.
 
 #### Parameters
 
@@ -1164,7 +1200,7 @@ No description provided.
 function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string;
 ```
 
-No description provided.
+Computes a deterministic cache key for a compilation request.
 
 #### Parameters
 
@@ -1190,7 +1226,7 @@ No description provided.
 function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string;
 ```
 
-No description provided.
+Returns the path to the WAT file for a given cache key.
 
 #### Parameters
 
@@ -1216,7 +1252,7 @@ function persistForgeWebScriptDebugArtifacts(
 ): ForgeWebScriptDebugArtifactPaths;
 ```
 
-No description provided.
+Persists debug artifacts (WAT and Wasm, both optimized and unoptimized) to disk.
 
 #### Parameters
 
@@ -1239,7 +1275,7 @@ function persistForgeWebScriptSoN(
 ): string | undefined;
 ```
 
-No description provided.
+Persists a SonIR module to disk in the cache directory.
 
 #### Parameters
 
@@ -1262,7 +1298,7 @@ function persistForgeWebScriptWat(
 ): string | undefined;
 ```
 
-No description provided.
+Persists a WAT string to disk in the cache directory.
 
 #### Parameters
 
@@ -1271,6 +1307,62 @@ No description provided.
 | cache | ForgeWebScriptWatCache \| undefined |             |
 | key   | string                              |             |
 | wat   | string                              |             |
+
+### pruneOrphanedForgeWebScriptCacheFiles
+
+**Kind:** function
+
+```typescript
+function pruneOrphanedForgeWebScriptCacheFiles(cache: ForgeWebScriptWatCache | undefined): readonly string[];
+```
+
+Prunes orphaned temporary and unindexed cache files from the cache directory.
+
+#### Parameters
+
+| Name  | Type                                | Description |
+| ----- | ----------------------------------- | ----------- |
+| cache | ForgeWebScriptWatCache \| undefined |             |
+
+### pruneStaleForgeWebScriptCache
+
+**Kind:** function
+
+```typescript
+function pruneStaleForgeWebScriptCache(
+  cache: ForgeWebScriptWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void;
+```
+
+Prunes stale cached artifacts for a given module ID when its cache key has changed.
+
+#### Parameters
+
+| Name           | Type                                | Description |
+| -------------- | ----------------------------------- | ----------- |
+| cache          | ForgeWebScriptWatCache \| undefined |             |
+| moduleIdOrPath | string                              |             |
+| currentKey     | string                              |             |
+| newFiles       | readonly string[]                   |             |
+
+### readForgeWebScriptCacheIndex
+
+**Kind:** function
+
+```typescript
+function readForgeWebScriptCacheIndex(cache: ForgeWebScriptWatCache | undefined): ForgeWebScriptCacheIndex | undefined;
+```
+
+Reads and parses the cache index from disk, returning undefined if missing or malformed.
+
+#### Parameters
+
+| Name  | Type                                | Description |
+| ----- | ----------------------------------- | ----------- |
+| cache | ForgeWebScriptWatCache \| undefined |             |
 
 ### readForgeWebScriptSoN
 
@@ -1293,7 +1385,7 @@ function readForgeWebScriptSoN(
 ): ForgeWebScriptSoNModule | undefined;
 ```
 
-No description provided.
+Reads and deserializes a SonIR module from disk.
 
 #### Parameters
 
@@ -1303,7 +1395,339 @@ No description provided.
 | key      | string                                                                                                                                                                                                                                                                                                                                            |             |
 | expected | { readonly compilerVersion?: string; readonly languageVersion?: string; readonly abiVersion?: string; readonly sourceHash?: string; readonly graphHash?: string; readonly optimization?: 'debug' \| 'release'; readonly boundsChecks?: 'runtime' \| 'proven-safe' \| 'excluded-by-profile'; readonly memoryModel?: 'region-arc-checked-linear'; } |             |
 
-## `src/compiler`
+## `src/compiler/backend`
+
+### artifactVerificationDiagnostic
+
+**Kind:** function
+
+```typescript
+function artifactVerificationDiagnostic(
+  diagnostic: ForgeWebScriptWasmArtifactVerificationDiagnostic,
+): ForgeWebScriptDiagnostic;
+```
+
+Converts a Wasm artifact verification diagnostic into a standard compiler diagnostic.
+
+#### Parameters
+
+| Name       | Type                                             | Description |
+| ---------- | ------------------------------------------------ | ----------- |
+| diagnostic | ForgeWebScriptWasmArtifactVerificationDiagnostic |             |
+
+### dynamicLinkMetadata
+
+**Kind:** function
+
+```typescript
+function dynamicLinkMetadata(
+  manifest: ForgeWebScriptAbiManifest,
+  artifactId: string,
+): ForgeWebScriptDynamicLinkMetadata | undefined;
+```
+
+Computes dynamic link metadata for modules marked with dynamic link mode in the manifest.
+
+#### Parameters
+
+| Name       | Type                      | Description |
+| ---------- | ------------------------- | ----------- |
+| manifest   | ForgeWebScriptAbiManifest |             |
+| artifactId | string                    |             |
+
+### encoder
+
+**Kind:** constant
+
+```typescript
+export const encoder;
+```
+
+No description provided.
+
+### ForgeWebScriptBackendCompilationResult
+
+**Kind:** interface
+
+```typescript
+export interface ForgeWebScriptBackendCompilationResult
+```
+
+No description provided.
+
+### hashBytes
+
+**Kind:** function
+
+```typescript
+function hashBytes(bytes: Uint8Array): string;
+```
+
+Computes a 32-bit FNV-1a hash of the given byte array returned as a hex string.
+
+#### Parameters
+
+| Name  | Type       | Description |
+| ----- | ---------- | ----------- |
+| bytes | Uint8Array |             |
+
+### sourceHashForArtifact
+
+**Kind:** function
+
+```typescript
+function sourceHashForArtifact(source: string, fileName: string): string;
+```
+
+Computes a normalized source hash for an artifact from its non-comment token stream.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| source   | string |             |
+| fileName | string |             |
+
+### verifyBackendArtifact
+
+**Kind:** function
+
+```typescript
+function verifyBackendArtifact(input: {
+  readonly wasm: Uint8Array;
+  readonly unoptimizedWasm?: Uint8Array;
+  readonly fileName: string;
+  readonly manifest: ForgeWebScriptAbiManifest;
+  readonly metadata: Parameters<typeof compileForgeWebScriptWasm>[0]['metadata'];
+  readonly targetFeatures?: Parameters<typeof verifyForgeWebScriptWasmArtifact>[0]['targetFeatures'];
+  readonly featureRequirements?: ForgeWebScriptWasmFeatureRequirements;
+  readonly iteratorExports?: readonly ForgeWebScriptIteratorExport[];
+  readonly expectedContentHash: string;
+  readonly expectedSourceHash: string;
+  readonly esmSource: string;
+  readonly profile: 'strict' | 'development';
+  readonly allowedCapabilities?: readonly string[];
+}): {
+  readonly verificationDiagnostics: readonly ForgeWebScriptDiagnostic[];
+  readonly artifactVerification: ForgeWebScriptArtifactVerificationReport;
+};
+```
+
+Verifies backend WebAssembly artifacts against policy, target features, and manifest constraints.
+
+#### Parameters
+
+| Name  | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Description |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| input | { readonly wasm: Uint8Array; readonly unoptimizedWasm?: Uint8Array; readonly fileName: string; readonly manifest: ForgeWebScriptAbiManifest; readonly metadata: Parameters<typeof compileForgeWebScriptWasm>[0]['metadata']; readonly targetFeatures?: Parameters<typeof verifyForgeWebScriptWasmArtifact>[0]['targetFeatures']; readonly featureRequirements?: ForgeWebScriptWasmFeatureRequirements; readonly iteratorExports?: readonly ForgeWebScriptIteratorExport[]; readonly expectedContentHash: string; readonly expectedSourceHash: string; readonly esmSource: string; readonly profile: 'strict' \| 'development'; readonly allowedCapabilities?: readonly string[]; } |             |
+
+## `src/compiler/declarations`
+
+### createDeclarations
+
+**Kind:** function
+
+```typescript
+function createDeclarations(manifest: ForgeWebScriptAbiManifest): string;
+```
+
+Generates full TypeScript declaration file contents for a compiled Forge Web Script manifest.
+
+#### Parameters
+
+| Name     | Type                      | Description |
+| -------- | ------------------------- | ----------- |
+| manifest | ForgeWebScriptAbiManifest |             |
+
+### declarationFunction
+
+**Kind:** function
+
+```typescript
+function declarationFunction(
+  declaration: ForgeWebScriptAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Generates the TypeScript function signature for an ABI function declaration.
+
+#### Parameters
+
+| Name        | Type                      | Description |
+| ----------- | ------------------------- | ----------- |
+| declaration | ForgeWebScriptAbiFunction |             |
+| enumNames   | ReadonlySet<string>       |             |
+| recordNames | ReadonlySet<string>       |             |
+
+### declarationProperty
+
+**Kind:** function
+
+```typescript
+function declarationProperty(name: string): string;
+```
+
+Formats an identifier as a safe property name or JSON-quoted string.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
+
+### declarationRecord
+
+**Kind:** function
+
+```typescript
+function declarationRecord(
+  declarations: readonly ForgeWebScriptAbiFunction[],
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Emits TypeScript definitions for typed ABI export records.
+
+#### Parameters
+
+| Name         | Type                                 | Description |
+| ------------ | ------------------------------------ | ----------- |
+| declarations | readonly ForgeWebScriptAbiFunction[] |             |
+| enumNames    | ReadonlySet<string>                  |             |
+| recordNames  | ReadonlySet<string>                  |             |
+
+### declarationType
+
+**Kind:** function
+
+```typescript
+function declarationType(
+  value: string | ForgeWebScriptAbiParameter,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Maps a Forge Web Script ABI parameter or type name to a TypeScript declaration type.
+
+#### Parameters
+
+| Name        | Type                                 | Description |
+| ----------- | ------------------------------------ | ----------- |
+| value       | string \| ForgeWebScriptAbiParameter |             |
+| enumNames   | ReadonlySet<string>                  |             |
+| recordNames | ReadonlySet<string>                  |             |
+
+### rawDeclarationFunction
+
+**Kind:** function
+
+```typescript
+function rawDeclarationFunction(declaration: ForgeWebScriptAbiFunction): string;
+```
+
+Generates the low-level raw function signature with pointer/length expansion for strings and bytes.
+
+#### Parameters
+
+| Name        | Type                      | Description |
+| ----------- | ------------------------- | ----------- |
+| declaration | ForgeWebScriptAbiFunction |             |
+
+### rawDeclarationRecord
+
+**Kind:** function
+
+```typescript
+function rawDeclarationRecord(declarations: readonly ForgeWebScriptAbiFunction[]): string;
+```
+
+Emits TypeScript definitions for raw WebAssembly export records.
+
+#### Parameters
+
+| Name         | Type                                 | Description |
+| ------------ | ------------------------------------ | ----------- |
+| declarations | readonly ForgeWebScriptAbiFunction[] |             |
+
+### rawDeclarationType
+
+**Kind:** function
+
+```typescript
+function rawDeclarationType(value: ForgeWebScriptPrimitiveType | ForgeWebScriptAbiParameter): string;
+```
+
+Maps an ABI parameter or primitive type to its raw WebAssembly parameter type in TypeScript.
+
+#### Parameters
+
+| Name  | Type                                                      | Description |
+| ----- | --------------------------------------------------------- | ----------- |
+| value | ForgeWebScriptPrimitiveType \| ForgeWebScriptAbiParameter |             |
+
+## `src/compiler/esm`
+
+### bytesToBase64
+
+**Kind:** function
+
+```typescript
+function bytesToBase64(bytes: Uint8Array): string;
+```
+
+Encodes a byte array into a standard Base64 string.
+
+#### Parameters
+
+| Name  | Type       | Description |
+| ----- | ---------- | ----------- |
+| bytes | Uint8Array |             |
+
+### createEsmSource
+
+**Kind:** function
+
+```typescript
+function createEsmSource(
+  wasm: Uint8Array,
+  manifest: ForgeWebScriptAbiManifest,
+  iteratorExports: readonly ForgeWebScriptIteratorExport[] = [],
+  dynamicMetadata?: ForgeWebScriptDynamicLinkMetadata,
+): string;
+```
+
+Generates an ESM loader module string containing embedded WebAssembly and runtime adapters.
+
+#### Parameters
+
+| Name            | Type                                    | Description |
+| --------------- | --------------------------------------- | ----------- |
+| wasm            | Uint8Array                              |             |
+| manifest        | ForgeWebScriptAbiManifest               |             |
+| iteratorExports | readonly ForgeWebScriptIteratorExport[] |             |
+| dynamicMetadata | ForgeWebScriptDynamicLinkMetadata       |             |
+
+## `src/compiler/module`
+
+### analysisOptions
+
+**Kind:** function
+
+```typescript
+function analysisOptions(input: ForgeWebScriptCompileInput): ForgeWebScriptAnalysisOptions;
+```
+
+Resolves static analysis options from compilation input and policy settings.
+
+#### Parameters
+
+| Name  | Type                       | Description |
+| ----- | -------------------------- | ----------- |
+| input | ForgeWebScriptCompileInput |             |
 
 ### compileForgeWebScript
 
@@ -1313,13 +1737,56 @@ No description provided.
 function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
-No description provided.
+Compiles a Forge Web Script source string to WebAssembly and runtime artifacts.
 
 #### Parameters
 
 | Name  | Type                       | Description |
 | ----- | -------------------------- | ----------- |
 | input | ForgeWebScriptCompileInput |             |
+
+### compileForgeWebScriptGraph
+
+**Kind:** function
+
+```typescript
+function compileForgeWebScriptGraph(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptArtifact;
+```
+
+Compiles a multi-module Forge Web Script module graph into a unified WebAssembly artifact.
+
+#### Parameters
+
+| Name  | Type                            | Description |
+| ----- | ------------------------------- | ----------- |
+| input | ForgeWebScriptGraphCompileInput |             |
+
+### compileForgeWebScriptModule
+
+**Kind:** function
+
+```typescript
+function compileForgeWebScriptModule(
+  input: ForgeWebScriptCompileInput,
+  frontend: ForgeWebScriptFrontendResult,
+  graphMetadata: Pick<
+    ForgeWebScriptArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  > = {},
+  sourceFiles: readonly string[] = frontend.sourceFiles,
+): ForgeWebScriptArtifact;
+```
+
+Compiles a single analyzed Forge Web Script module to WebAssembly and synthesizes ESM loader artifacts.
+
+#### Parameters
+
+| Name          | Type                                                                                                                   | Description |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------- |
+| input         | ForgeWebScriptCompileInput                                                                                             |             |
+| frontend      | ForgeWebScriptFrontendResult                                                                                           |             |
+| graphMetadata | Pick< ForgeWebScriptArtifact, 'graphHash' \| 'linkMode' \| 'linkedModules' \| 'linkProfile' \| 'optimizationProfile' > |             |
+| sourceFiles   | readonly string[]                                                                                                      |             |
 
 ### compileForgeWebScriptSeed
 
@@ -1329,8 +1796,7 @@ No description provided.
 function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
-The bounded TypeScript seed used by the self-hosted bootstrap until fixed-
-point parity promotes the FWS compiler to the normal frontend owner.
+Compiles a Forge Web Script seed input by preparing frontend ASTs and compiling the resulting module.
 
 #### Parameters
 
@@ -1346,7 +1812,75 @@ point parity promotes the FWS compiler to the normal frontend owner.
 function createForgeWebScriptCompiler(): ForgeWebScriptCompiler;
 ```
 
-No description provided.
+Creates an instance of the Forge Web Script compiler.
+
+### runSelfHostedStage
+
+**Kind:** function
+
+```typescript
+function runSelfHostedStage(
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  options: ForgeWebScriptCompilerServiceOptions,
+): {
+  readonly report?: ForgeWebScriptSelfHostedStageReport;
+  readonly stageReports?: readonly ForgeWebScriptSelfHostedStageReport[];
+  readonly diagnostic?: ForgeWebScriptDiagnostic;
+};
+```
+
+Executes a self-hosted compiler stage and validates parity reports against expected fingerprints.
+
+#### Parameters
+
+| Name    | Type                                                                                                     | Description |
+| ------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+| input   | Pick<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| options | ForgeWebScriptCompilerServiceOptions                                                                     |             |
+
+### selfHostedDiagnostic
+
+**Kind:** function
+
+```typescript
+function selfHostedDiagnostic(
+  input: Pick<ForgeWebScriptCompileInput, 'fileName'>,
+  message: string,
+  stage: ForgeWebScriptSelfHostedStageReport['stage'] = 'lex',
+): ForgeWebScriptDiagnostic;
+```
+
+Creates a diagnostic for self-hosted bootstrap or parity verification issues.
+
+#### Parameters
+
+| Name    | Type                                         | Description |
+| ------- | -------------------------------------------- | ----------- |
+| input   | Pick<ForgeWebScriptCompileInput, 'fileName'> |             |
+| message | string                                       |             |
+| stage   | ForgeWebScriptSelfHostedStageReport['stage'] |             |
+
+### withSelfHostedResult
+
+**Kind:** function
+
+```typescript
+function withSelfHostedResult(
+  artifact: ForgeWebScriptArtifact,
+  result: ReturnType<typeof runSelfHostedStage>,
+): ForgeWebScriptArtifact;
+```
+
+Merges self-hosted runner stage verification results into the final compilation artifact.
+
+#### Parameters
+
+| Name     | Type                                  | Description |
+| -------- | ------------------------------------- | ----------- |
+| artifact | ForgeWebScriptArtifact                |             |
+| result   | ReturnType<typeof runSelfHostedStage> |             |
+
+## `src/compiler/service`
 
 ### createForgeWebScriptCompilerService
 
@@ -1358,7 +1892,7 @@ function createForgeWebScriptCompilerService(
 ): ForgeWebScriptCompilerService;
 ```
 
-No description provided.
+Creates an in-memory caching compiler service for incremental compilation and graph builds.
 
 #### Parameters
 

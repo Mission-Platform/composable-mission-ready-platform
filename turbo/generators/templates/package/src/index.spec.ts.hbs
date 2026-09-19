@@ -1,0 +1,13 @@
+import { describe, expect, it } from 'vitest';
+
+import { create{{ pascalCase name }} } from '.';
+
+describe('create{{ pascalCase name }}', () => {
+  it('creates default instance with enabled status', () => {
+    expect(create{{ pascalCase name }}()).toBe('{{ dashCase name }}:enabled');
+  });
+
+  it('honors enabled option', () => {
+    expect(create{{ pascalCase name }}({ enabled: false })).toBe('{{ dashCase name }}:disabled');
+  });
+});

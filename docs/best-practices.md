@@ -80,6 +80,43 @@ Consistent code style is enforced via ESLint and Prettier.
 - Run `pnpm format:write` to automatically fix formatting issues.
 - Commit messages must follow the **Conventional Commits** specification.
 
+### Upstream Dependency Priming & Package Testing
+
+In a modular monorepo, downstream packages frequently import build outputs (`dist/`) from upstream packages. To eliminate clean-state test failures and avoid manually tracking multi-package build order:
+
+1. **Automated Upstream Build Priming (`^build`)**:
+   `turbo.json` task graphs define `test`, `build:check`, and verification tasks with `"dependsOn": ["^build"]`. Running any test or typecheck task via Turborepo automatically builds all upstream workspace dependencies first.
+
+2. **Package-Scoped Execution**:
+   To test or build an individual package without manually compiling prerequisites:
+   - Run tests with priming:
+     ```bash
+     pnpm test:package <package-name>
+     ```
+     or directly via Turborepo:
+     ```bash
+     pnpm exec turbo run test --filter <package-name>
+     ```
+   - Build a package with its dependencies:
+     ```bash
+     pnpm build:package <package-name>
+     ```
+     or directly via Turborepo:
+     ```bash
+     pnpm exec turbo run build --filter <package-name>
+     ```
+
+   In Turbo filters, `<package-name>...` selects the package AND its upstream
+   dependencies, `...<package-name>` selects the package AND its downstream
+   dependents, and `<package-name>^...` selects only the package's upstream
+   dependencies (excluding the package itself). The package helpers explicitly run
+   the upstream form (`<package-name>^...`) first so direct package workflows
+   have a predictable, cacheable warm-up; the task graph's `^build` dependency
+   remains the safety net for direct Turborepo invocations.
+
+3. **Worktree Provisioning**:
+   When new Git worktrees are provisioned via `pnpm worktree:create` or initialized via `pnpm worktree:setup`, upstream dependencies are automatically primed before running validation checks, ensuring newly created worktrees are immediately operational.
+
 ## Performance Optimization
 
 - **Code Splitting**: Use dynamic `import()` for non-critical features and large libraries.

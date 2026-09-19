@@ -11,7 +11,7 @@ afterEach(() => {
 describe('@mission-platform/api-proxy', () => {
   it('forwards an allowed route with sanitized headers and query string', async () => {
     const upstream = new Response('upstream-body', { status: 200 });
-    const fetchMock = vi.fn(async (_request: Request) => upstream);
+    const fetchMock = vi.fn((_request: Request) => Promise.resolve(upstream));
     vi.stubGlobal('fetch', fetchMock);
 
     const request = new Request('https://origin.test/users/123?q=1', {
@@ -25,6 +25,11 @@ describe('@mission-platform/api-proxy', () => {
     const result = await worker.fetch(request, {}, executionContext);
 
     expect(result).toBe(upstream);
+    expect(result.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(result.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(result.headers.get('x-frame-options')).toBe('DENY');
+    expect(result.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
+    expect(result.headers.get('strict-transport-security')).toBe('max-age=31536000; includeSubDomains; preload');
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
     const forwarded = fetchMock.mock.calls[0]?.[0] as Request;
@@ -51,7 +56,13 @@ describe('@mission-platform/api-proxy', () => {
     const disallowedPath = await worker.fetch(new Request('https://origin.test/admin'), {}, executionContext);
 
     expect(disallowedMethod.status).toBe(404);
+    expect(disallowedMethod.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(disallowedMethod.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(disallowedMethod.headers.get('x-frame-options')).toBe('DENY');
     expect(disallowedPath.status).toBe(404);
+    expect(disallowedPath.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(disallowedPath.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(disallowedPath.headers.get('x-frame-options')).toBe('DENY');
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -81,8 +92,8 @@ describe('@mission-platform/api-proxy', () => {
   });
 
   it('rejects redirects to another origin without following them', async () => {
-    const fetchMock = vi.fn(
-      async () => new Response(undefined, { status: 302, headers: { Location: 'https://evil.test/' } }),
+    const fetchMock = vi.fn(() =>
+      Promise.resolve(new Response(undefined, { status: 302, headers: { Location: 'https://evil.test/' } })),
     );
     vi.stubGlobal('fetch', fetchMock);
 
@@ -94,8 +105,8 @@ describe('@mission-platform/api-proxy', () => {
   });
 
   it('rejects same-origin redirects to a route outside the allowlist', async () => {
-    const fetchMock = vi.fn(
-      async () => new Response(undefined, { status: 302, headers: { Location: '/admin/secrets' } }),
+    const fetchMock = vi.fn(() =>
+      Promise.resolve(new Response(undefined, { status: 302, headers: { Location: '/admin/secrets' } })),
     );
     vi.stubGlobal('fetch', fetchMock);
 
@@ -118,5 +129,8 @@ describe('@mission-platform/api-proxy', () => {
 
     expect(result.status).toBe(502);
     expect(await result.text()).toBe('Bad gateway');
+    expect(result.headers.get('content-security-policy')).toContain("default-src 'self'");
+    expect(result.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(result.headers.get('x-frame-options')).toBe('DENY');
   });
 });

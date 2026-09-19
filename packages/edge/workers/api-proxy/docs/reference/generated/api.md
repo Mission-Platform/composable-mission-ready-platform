@@ -34,10 +34,15 @@ No description provided.
 function isAllowedProxyRequest(request: Request): boolean;
 ```
 
-No description provided.
+Determines whether an incoming client request is permitted by proxy policy.
 
 #### Parameters
 
-| Name    | Type    | Description |
-| ------- | ------- | ----------- |
-| request | Request |             |
+| Name    | Type    | Description              |
+| ------- | ------- | ------------------------ |
+| request | Request | - Incoming HTTP Request. |
+
+#### Contract
+
+- **@param:** - Incoming HTTP Request.
+- **@returns:** True if method and path are within the proxy allowlist.

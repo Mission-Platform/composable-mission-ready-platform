@@ -27,6 +27,7 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
+    "@mission-platform/edge-security": "workspace:*",
     "@mission-platform/email-components": "workspace:*"
   },
   "devDependencies": {
