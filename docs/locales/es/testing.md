@@ -1,158 +1,368 @@
-# Pruebas en Mission Platform
+# Testing in Mission Platform
 
-Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
+This document describes the testing strategy and tooling for the Mission Platform monorepo. It serves as both a **How-to
+guide** for common testing tasks and a **Technical reference** for the underlying configuration.
 
-> Fuente en inglés: [docs/testing.md](../../testing.md)
-> Idioma: Español (es)
+## Testing Stack
 
-Este documento describe la estrategia de prueba y las herramientas para el monorepo de Mission Platform. Sirve como **Instrucciones
-guía** para tareas de prueba comunes y una **referencia técnica** para la configuración subyacente.
+Mission Platform uses a modern, unified testing stack based on Vitest:
 
-## Pila de pruebas
+- **Vitest**: The primary test runner for unit, component, and browser-based testing.
+- **@vue/test-utils**: Standard library for testing Vue components.
+- **Vitest Browser Mode (Playwright)**: Real-browser execution for interaction and visual testing where configured.
+- **Storybook Test Runner**: Integration between Storybook stories and Vitest for automated interaction testing.
 
-Mission Platform utiliza una pila de pruebas moderna y unificada basada en Vitest:
+## How-to: Run Tests
 
-- **Vitest**: El ejecutor de pruebas principal para pruebas unitarias, de componentes y basadas en navegador.
-- **@vue/test-utils**: biblioteca estándar para pruebas Vue componentes.
-- **Vitest Modo de navegador (Dramaturgo)**: ejecución en navegador real para interacción y pruebas visuales cuando esté configurado.
-- **Storybook Test Runner**: integración entre historias de Storybook y Vitest para pruebas de interacción automatizadas.
+Tests are executed via Turborepo to leverage caching and workspace-aware execution.
 
-## Cómo hacerlo: ejecutar pruebas
+### Run All Tests
 
-Las pruebas se ejecutan a través de Turborepo para aprovechar el almacenamiento en caché y la ejecución consciente del espacio de trabajo.
-
-### Ejecutar todas las pruebas
-
-Para ejecutar todas las pruebas de unidades y componentes en todo el monorepo:
+To run all unit and component tests across the entire monorepo:
 
 ```bash
 pnpm test
 ```
 
-### Ejecutar pruebas para un espacio de trabajo específico
+### Run Tests for a Specific Workspace
 
-Para ejecutar pruebas para un único paquete o aplicación:
+To run tests for a single package or application while automatically priming upstream dependencies:
+
+```bash
+pnpm test:package @mission-platform/<name>
+```
+
+Alternatively, invoke Turborepo directly:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
 
-### Ejecutar pruebas afectadas (estilo CI)
-Para obtener comentarios locales más rápidos que coincidan con el CI `--affected` comportamiento:
+### Upstream Dependency Priming
+
+Packages across the monorepo often consume compiled artifacts (`dist/`) from upstream workspace dependencies. In freshly provisioned worktrees or clean environments, these artifacts may not yet exist.
+
+To resolve this seamlessly:
+
+- **Automatic Turborepo Resolution:** The `test` and `build:check` task graphs in `turbo.json` enforce `"dependsOn": ["^build"]`. Turborepo automatically builds all upstream dependencies before running tests in the target package.
+- **Dedicated Package Helper:** Running `pnpm test:package <package-name>` explicitly primes upstream builds (`build --filter <package-name>^...`) before executing package tests. This warm-up is intentional even though the `test` task also declares `^build`: it keeps the helper's priming behavior explicit and consistent, and is a cached no-op when Turbo has already resolved those dependencies.
+- **Package Build Helper:** Running `pnpm build:package <package-name>` uses the same explicit upstream warm-up before building the target package.
+- **Manual Upstream Build:** If running a test runner directly (e.g., `vitest` in a single package directory), prime its dependencies first:
+  ```bash
+  pnpm exec turbo run build --filter @mission-platform/<name>^...
+  ```
+
+### Run Affected Tests (CI-style)
+
+For faster local feedback that matches the CI `--affected` behavior:
 
 ```bash
 pnpm exec turbo run test --affected
 ```
 
-`--affected` selecciona tareas de prueba para espacios de trabajo modificados en relación con la revisión base del repositorio. Omitirlo para ejecutar cada
-tarea de prueba del espacio de trabajo. La cobertura es específica del paquete; por ejemplo, el paquete de componentes proporciona:
+`--affected` selects test tasks for workspaces changed relative to the repository's base revision. Omit it to run every
+workspace test task. Coverage is package-specific; for example, the components package provides:
 
 ```bash
 pnpm --filter @mission-platform/components test:coverage
 ```
 
-### Modo de vigilancia
-Para el desarrollo, utilice el modo de vigilancia para volver a ejecutar pruebas sobre cambios de archivos:
+### Watch Mode
+
+For development, use watch mode to re-run tests on file changes:
 
 ```bash
 pnpm --filter @mission-platform/components test:watch
 ```
 
-### Informes de cobertura
+### Coverage Reports
 
-Para generar un informe de cobertura utilizando el `v8` proveedor:
+To generate a coverage report using the `v8` provider:
 
 ```bash
 pnpm --filter @mission-platform/components test:coverage
 ```
 
-Los informes se envían al `coverage/` directorio dentro de cada espacio de trabajo.
+Reports are output to the `coverage/` directory within each workspace.
 
-## Cómo hacerlo: escribir pruebas
+## How-to: Write Tests
 
-### Pruebas unitarias y de componentes
+### Unit and Component Tests
 
-Las pruebas se colocan junto con el código fuente y utilizan el `.spec.ts` (o `.spec.tsx`) extensión.
+Tests are colocated with the source code and use the `.spec.ts` (or `.spec.tsx`) extension.
 
 ```typescript
-import { mount } from '@vue/test-utils';
-import { describe, it, expect } from 'vitest';
-import ForgeButton from './ForgeButton.vue';
+import { mount } from "@vue/test-utils";
+import { describe, it, expect } from "vitest";
+import ForgeButton from "./ForgeButton.vue";
 
-describe('ForgeButton.vue', () => {
-  it('renders props.label when passed', () => {
-    const label = 'Click Me';
+describe("ForgeButton.vue", () => {
+  it("renders props.label when passed", () => {
+    const label = "Click Me";
     const wrapper = mount(ForgeButton, {
-      props: { label }
+      props: { label },
     });
     expect(wrapper.text()).toMatch(label);
   });
 
-  it('emits click event when clicked', async () => {
+  it("emits click event when clicked", async () => {
     const wrapper = mount(ForgeButton);
-    await wrapper.trigger('click');
-    expect(wrapper.emitted()).toHaveProperty('click');
+    await wrapper.trigger("click");
+    expect(wrapper.emitted()).toHaveProperty("click");
   });
 });
 ```
 
-### Pruebas del navegador
+### Browser Testing
 
-La plataforma Mission utiliza VitestModo de navegador para pruebas que requieren un entorno DOM real o entre navegadores
-verificación.
+Mission Platform utilizes Vitest's Browser Mode for tests that require a real DOM environment or cross-browser
+verification.
 
-1. Cree su archivo de prueba como de costumbre.
-2. Asegurar el paquete `vitest.config.ts` habilita el modo navegador (consulte la referencia a continuación).
-3. Corre con `pnpm test`.
+1. Author your test file as usual.
+2. Ensure the package `vitest.config.ts` enables browser mode (see Reference below).
+3. Run with `pnpm test`.
 
-## Referencia técnica
+### Forge Web Script Tests
 
-### Configuración compartida
+Use `@mission-platform/forge-web-script-vitest` for deterministic compiler, artifact, Wasm, and self-hosted parity
+checks. It delegates compilation to the same compiler service and Vite plugin used by production; it does not create a
+second module system.
 
-La mayoría de los espacios de trabajo utilizan el `defineVitestConfig` utilidad de `@mission-platform/vite-config`. Esto proporciona una estandarización
-ambiente:
-
-- **Ambiente**: `jsdom` por defecto.
-- **Globales**: habilitado (no es necesario importar `describe`, `it`, `expect` a menos que se desee).
-- **Complementos**: Incluye `@vitejs/plugin-vue` y bloque i18n ignorando.
-- **Cobertura**: Preconfigurada `v8` proveedor.
-
-**Ejemplo `vitest.config.ts`:**
+Install the package in a workspace that tests `.fws` modules, then compose its adapter with the standard Vitest config:
 
 ```typescript
-import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
+// vitest.config.ts
+import { defineForgeWebScriptVitestConfig } from "@mission-platform/forge-web-script-vitest";
+
+export default defineForgeWebScriptVitestConfig({
+  environment: "node",
+  forgeWebScript: {
+    root: import.meta.dirname,
+    requestedCapabilities: ["clock.now"],
+    selfHostedVmMode: "interpret",
+  },
+  overrides: {
+    // Consumer plugins, aliases, and other Vite/Vitest settings remain active.
+    resolve: { alias: { "@fixtures": "./fixtures" } },
+  },
+});
+```
+
+For direct compiler and runtime assertions, create one harness per suite or test and dispose it in `afterEach`:
+
+```typescript
+import { afterEach, describe, expect, it } from "vitest";
+import {
+  assertForgeWebScriptDiagnostic,
+  assertForgeWebScriptNoDiagnostics,
+  createForgeWebScriptTestHarness,
+} from "@mission-platform/forge-web-script-vitest";
+
+describe("FWS fixture", () => {
+  const harness = createForgeWebScriptTestHarness({
+    requestedCapabilities: ["clock.now"],
+  });
+
+  afterEach(() => harness.dispose());
+
+  it("checks artifacts, Wasm exports, and explicit capabilities", async () => {
+    const result = await harness.compile("valid/scalar.fws");
+    assertForgeWebScriptNoDiagnostics(result.diagnostics);
+    expect(result.artifact.manifest?.exports.map(({ name }) => name)).toEqual([
+      "answer",
+    ]);
+    expect(
+      (
+        await harness.load<{ answer: () => number }>("valid/scalar.fws")
+      ).answer(),
+    ).toBe(42);
+
+    const clock = await harness.load<{ current: () => bigint }>(
+      "capabilities/clock-now.fws",
+      {
+        "clock.now": { now: () => 123n },
+      },
+    );
+    expect(clock.current()).toBe(123n);
+  });
+
+  it("keeps diagnostic code, phase, and span structured", async () => {
+    const result = await harness.inspect("diagnostics/invalid-type.fws");
+    assertForgeWebScriptDiagnostic(result.diagnostics, {
+      code: "FWS-TYPE-005",
+      phase: "type-check",
+      line: 2,
+    });
+  });
+});
+```
+
+`load` and `loadSync` accept only the capability imports supplied by the test. Missing declared imports and supplied
+undeclared imports fail explicitly; no browser or Node APIs are injected implicitly. Use `compileGraph` for source-import
+graphs and compare `graphHash`, linked modules, declarations, and content hashes when testing link configuration.
+
+The adapter path tests the generated ESM contract as Vitest sees it:
+
+```typescript
+import {
+  abiManifest,
+  load,
+  loadSync,
+  manifest,
+} from "./fixtures/valid/scalar.fws";
+
+expect(abiManifest).toEqual(manifest);
+expect((await load<{ answer: () => number }>()).answer()).toBe(42);
+expect(loadSync<{ answer: () => number }>().answer()).toBe(42);
+```
+
+For FWS values, test both layers explicitly. Raw WASM tests should assert the
+pointer-length ABI and ownership calls; generated ESM tests should assert the
+JavaScript projection:
+
+```typescript
+const artifact = harness.compileSource(
+  `
+  export fn echo(value: string) -> string { return value; }
+`,
+  "strings.fws",
+).artifact;
+
+const generated = await importFromEsmSource(artifact.esmSource);
+expect(generated.loadSync().echo("Δοκιμή 🚀")).toBe("Δοκιμή 🚀");
+expect((await generated.load()).echo("")).toBe("");
+```
+
+Generated-loader boundary tests should cover ASCII, empty, multi-byte UTF-8,
+returned concatenations, string capability imports, raw `bytes` tuples, and
+the exposed `memory`. Use fatal UTF-8 fixtures and assert that temporary
+`fws_dealloc` calls occur on successful returns, guest traps, host exceptions,
+and decode failures. Instrument the generated `artifact.esmSource` before
+importing it; patching exports after loading does not observe wrappers that
+close over the original allocator and deallocator.
+
+The generated adapter packs all string arguments for one invocation into one
+guest allocation. Keep an allocation-count assertion for functions with
+multiple string parameters, and retain a scalar-only test to verify that no
+string marshalling work is generated for numeric-only functions. A bytes test
+must continue to pass a `[pointer, length]` tuple rather than expecting an
+automatic `Uint8Array` conversion.
+
+The benchmark workspace compares the raw pointer-length adapter with the
+generated ESM adapter as separate FWS modes:
+
+```bash
+pnpm --filter @mission-platform/benchmark run bench -- \
+  --node-only --warmup 3 --samples 10 \
+  --output benchmark/results/fws-generated-boundary
+```
+
+Reports include build, initialization, and steady-state execution phases. The
+FWS raw `wasm` row uses fresh instances and three string input allocations for
+the benchmark kernel; `wasm-generated` uses the generated `loadSync` contract
+and one packed string input allocation. Because the current guest deallocator
+validates ranges without recycling bump-allocator space, generated string/bytes
+samples use a fresh loader instance per call; scalar samples reuse the loaded
+instance. This isolates each allocation-heavy sample and is intentionally
+reported as loader-boundary overhead rather than a persistent-instance claim.
+Each artifact reports raw Wasm bytes, generated ESM source bytes, content hash,
+and the static allocation counts used by the comparison. Compare rows only
+when the corpus hash, host runtime, and benchmark schema match.
+
+For example, the Node-only run above produced 336 measured phase results with
+zero failures and corpus hash `ad092f7c552cc914`. Both FWS rows had raw Wasm
+hash `0ac58f11`, raw Wasm size 1,625 bytes, and generated ESM source size 18,490
+bytes; raw and generated string input allocation counts were 3 and 1. On the
+Unicode-small string case, mean initialization was 0.00024 ms raw versus
+0.00188 ms generated, and mean execution was 0.0236 ms raw versus 0.1070 ms
+generated on the recorded Node run. These figures are representative evidence,
+not cross-machine performance guarantees; use the report's per-case samples
+for comparisons.
+
+The plugin also exposes explicit virtual queries for `?forge-web-script-manifest`, `?forge-web-script-declarations`,
+`?forge-web-script-wasm`, and `?forge-web-script-source-map`. To make those ambient modules discoverable to TypeScript,
+add the shipped declaration subpath to the test project's types:
+
+```json
+{
+  "compilerOptions": {
+    "types": [
+      "node",
+      "@mission-platform/forge-web-script-vitest/forge-web-script"
+    ]
+  }
+}
+```
+
+Alternatively, add `/// <reference types="@mission-platform/forge-web-script-vitest/forge-web-script" />` to a test-only
+type entrypoint included by the project. The declaration subpath is type-only and does not add a runtime import.
+
+Use shared fixtures in `packages/forge-web-script-vitest/fixtures/` for cross-package language and ABI conformance:
+`valid/`, `diagnostics/`, `capabilities/`, `graphs/`, and `self-hosted/` are intentionally stable. Keep a fixture beside
+a compiler, runtime, or plugin spec when it covers a private implementation detail; use inline source for small parser or
+VM unit cases. This keeps fixture names and cleanup deterministic without forcing low-level tests through the harness.
+
+`checkVmParity(file, mode)` supports `interpret`, `jit`, and `aot`, but its report is the existing bounded self-hosted
+lex-stage parity contract. Assert `parity`, fingerprints, steps, and AOT reproducibility metadata; do not treat the report
+as arbitrary compiled-FWS VM execution or as a replacement for Wasm behavior tests.
+
+Run the focused FWS matrix with the normal workspace tasks:
+
+```bash
+pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-vitest
+pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script
+pnpm exec turbo run test build:check --filter @mission-platform/forge-web-script-runtime
+pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-forge-web-script
+```
+
+## Technical Reference
+
+### Shared Configuration
+
+Most workspaces use the `defineVitestConfig` utility from `@mission-platform/vite-config`. This provides a standardized
+environment:
+
+- **Environment**: `jsdom` by default.
+- **Globals**: Enabled (no need to import `describe`, `it`, `expect` unless desired).
+- **Plugins**: Includes `@vitejs/plugin-vue` and i18n block ignoring.
+- **Coverage**: Preconfigured `v8` provider.
+
+**Example `vitest.config.ts`:**
+
+```typescript
+import { defineVitestConfig } from "@mission-platform/vite-config/vitest";
 
 export default defineVitestConfig({
   overrides: {
     // Package-specific overrides
-  }
+  },
 });
 ```
 
-### Estructura del directorio
+### Directory Structure
 
-- `src/**/*.spec.ts`: Pruebas unitarias y pruebas de componentes.
-- `src/**/*.stories.tsx`: Historias de libros de cuentos (también utilizadas como definiciones de pruebas de interacción).
-- `apps/storybook/vitest.config.ts`: Configuración principal para pruebas de interacción basadas en navegador.
+- `src/**/*.spec.ts`: Unit tests and component tests.
+- `src/**/*.stories.tsx`: Storybook stories (also used as interaction test definitions).
+- `apps/storybook/vitest.config.ts`: Main configuration for browser-based interaction tests.
 
-### Resumen de guiones
+### Scripts Summary
 
-| Guión | Comando | Propósito |
-|:----------------|:--------------------------|:--------------------------------------------|
-| `test`          | `pnpm exec turbo run test`                              | Ejecute todas las tareas de prueba del espacio de trabajo.            |
-| `test:watch`    | `pnpm --filter @mission-platform/components test:watch` | Ejecute pruebas de componentes en modo reloj.      |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Generar un informe de cobertura de componentes. |
-| Óxido/WASM | `cargo test --workspace` | Ejecute pruebas de cajas nativas de Rust. |
+| Script          | Command                                                    | Purpose                                                |
+| :-------------- | :--------------------------------------------------------- | :----------------------------------------------------- |
+| `test`          | `pnpm exec turbo run test`                                 | Run all workspace test tasks.          |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Run components tests in watch mode.    |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Generate a components coverage report. |
+| Rust/WASM       | `cargo test --workspace`                                   | Run native Rust crate tests.           |
 
-Los paquetes contenedores de Wasm se prueban a través de las tareas de su paquete propietario. Por ejemplo, ejecute el paquete del escáner y su
-contenedor juntos al cambiar el comportamiento del escáner:
+Wasm wrapper packages are tested through their owning package tasks. For example, run the scanner package and its
+wrapper together when changing scanner behavior:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/code-scanner...
 ```
 
-## Documentación relacionada
+## Related Documentation
 
-- [Configuración de desarrollo](development-setup.md)
-- [Mejores prácticas](best-practices.md)
-- [Desarrollo de paquetes](package-development.md)
+- [Development Setup](development-setup.md)
+- [Best Practices](best-practices.md)
+- [Package Development](package-development.md)
