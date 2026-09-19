@@ -1,5 +1,13 @@
 # @mission-platform/forge-cms-jekyll
 
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [0878d97]
+  - @mission-platform/forge-plugin-api@0.4.2
+  - @mission-platform/forge-cms-plugin-api@1.0.2
+
 ## 0.2.3
 
 ### Patch Changes

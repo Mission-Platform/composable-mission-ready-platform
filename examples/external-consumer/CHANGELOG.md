@@ -1,5 +1,14 @@
 # external-consumer-example
 
+## 0.1.6
+
+### Patch Changes
+
+- @mission-platform/email-components@1.1.2
+  - @mission-platform/components@3.2.1
+  - @mission-platform/forms@2.2.2
+  - @mission-platform/typography@1.1.2
+
 ## 0.1.5
 
 ### Patch Changes

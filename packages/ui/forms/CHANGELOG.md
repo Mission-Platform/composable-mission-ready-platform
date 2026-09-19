@@ -1,5 +1,17 @@
 # @mission-platform/forms
 
+## 2.2.2
+
+### Patch Changes
+
+- @mission-platform/content@1.2.2
+  - @mission-platform/components@3.2.1
+  - @mission-platform/float@1.2.1
+  - @mission-platform/icons@2.0.3
+  - @mission-platform/layouts@2.1.2
+  - @mission-platform/select@1.2.1
+  - @mission-platform/typography@1.1.2
+
 ## 2.2.1
 
 ### Patch Changes

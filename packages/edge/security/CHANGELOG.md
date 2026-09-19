@@ -1,8 +1,8 @@
-# @mission-platform/scripts
+# @mission-platform/edge-security
 
-## 0.0.1
+## 0.1.0
 
-### Patch Changes
+### Minor Changes
 
 - 0878d97: feat(platform): implement review recommendations across security, tooling, and testing
   

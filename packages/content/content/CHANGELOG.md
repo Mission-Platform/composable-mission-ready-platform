@@ -1,5 +1,19 @@
 # @mission-platform/content
 
+## 1.2.2
+
+### Patch Changes
+
+- @mission-platform/forge-plugin-react@0.2.2
+  - @mission-platform/forge-plugin-solid@0.2.2
+  - @mission-platform/forge-plugin-svelte@0.2.2
+  - @mission-platform/forge-plugin-vue@0.3.2
+  - @mission-platform/forge-plugin-web-components@0.2.2
+  - @mission-platform/components@3.2.1
+  - @mission-platform/float@1.2.1
+  - @mission-platform/icons@2.0.3
+  - @mission-platform/typography@1.1.2
+
 ## 1.2.1
 
 ### Patch Changes

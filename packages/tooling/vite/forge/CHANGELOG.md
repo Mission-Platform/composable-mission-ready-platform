@@ -1,5 +1,13 @@
 # @mission-platform/vite-plugin-forge
 
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [0878d97]
+  - @mission-platform/forge-plugin-api@0.4.2
+  - @mission-platform/forge-router-plugin-api@0.1.4
+
 ## 2.0.1
 
 ### Patch Changes
