@@ -20,7 +20,25 @@ export type {
   TsdownBuildContext,
   ViteBuildContext,
 } from "./framework.js";
-export { assertTargetIntentionsLowered } from "./framework.js";
+export {
+  assertTargetIntentionsLowered,
+  findActionableSpan,
+  semanticModuleSchema,
+  targetContextSchema,
+  targetIntentionsSchema,
+  TargetIntentionsValidationError,
+  targetLoweredModuleSchema,
+  validateAgainstSchema,
+  validateTargetIntentions,
+} from "./framework.js";
+export type {
+  DeclarativeSchema,
+  SchemaFieldRule,
+  SchemaFieldType,
+  SchemaValidationIssue,
+  SchemaValidationOptions,
+  TargetIntentionsValidationResult,
+} from "./framework.js";
 export type { FrameworkOutputPluginSelection } from "./framework.js";
 export {
   CompilerDiagnosticError,
